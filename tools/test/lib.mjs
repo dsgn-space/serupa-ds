@@ -29,7 +29,8 @@ export function tokensCss(t = tokens()) {
   let css = (t.type.fonts || []).map((f) => `@font-face{font-family:"${f.family}";src:url("${path.join(PROJECT, f.file)}") format("woff2");font-weight:${f.weight};font-style:${f.style};font-display:block${f.unicodeRange ? `;unicode-range:${f.unicodeRange}` : ''}}`).join('');
   css += `:root{${root}}`;
   for (const th of themes) {
-    css += `[data-theme="${th}"]{` + t.color.tokens.filter((x) => x.value && typeof x.value === 'object' && x.value[th] != null && Object.keys(x.value).length > 1).map((x) => `--${esc(x.name)}:${ref(x.value[th])};`).join('') + '}';
+    // Every group: a brand can set its own sizes, shadows and motion too (Modern), not only colors.
+    css += `[data-theme="${th}"]{` + Object.values(t).flatMap((g) => (g && Array.isArray(g.tokens) ? g.tokens : [])).filter((x) => x.value && typeof x.value === 'object' && x.value[th] != null && Object.keys(x.value).length > 1).map((x) => `--${esc(x.name)}:${ref(x.value[th])};`).join('') + '}';
   }
   return { css, themes };
 }

@@ -192,10 +192,22 @@ describe('Contrast axis', () => {
     }
   });
 
+  test('more contrast outranks a brand\'s own neutrals: Modern\'s softer borders still step up', () => {
+    const border = () => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = 'var(--border)'; const c = getComputedStyle(p).color; p.remove(); return c; };
+    for (const [mode, strong] of [['light', 'rgb(113, 113, 122)'], ['dark', 'rgb(161, 161, 170)']]) {
+      axes('emerald', mode);
+      const soft = border();
+      root.setAttribute('data-contrast', 'more');
+      expect(border(), mode).toBe(strong);   // zinc-500 / zinc-400, as in every brand
+      expect(border()).not.toBe(soft);
+      root.removeAttribute('data-contrast');
+    }
+  });
+
   test('the brand keeps its hue: each brand gets its own stronger shade, from the axes and in a nested section', () => {
     const hue = (host: HTMLElement) => { const p = document.createElement('span'); host.appendChild(p); p.style.color = 'var(--primary)'; const c = getComputedStyle(p).color; p.remove(); return c; };
     const swatch = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
-    for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'emerald-300'], ['blue', 'dark', 'blue-300']]) {
+    for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'teal-300'], ['blue', 'dark', 'blue-300']]) {
       axes(brand, mode);
       root.setAttribute('data-contrast', 'more');
       expect(hue(document.body), `${brand}-${mode}`).toBe(swatch(shade));
@@ -210,11 +222,11 @@ describe('Contrast axis', () => {
     const blue = document.createElement('section');
     blue.setAttribute('data-theme', 'blue-light');
     document.body.append(emerald, blue);
-    expect(hue(emerald)).toBe(swatch('emerald-300'));
+    expect(hue(emerald)).toBe(swatch('teal-300'));
     expect(hue(blue)).toBe(swatch('blue-800'));
     // …and without it, the normal shades.
     root.removeAttribute('data-contrast');
-    expect(hue(emerald)).toBe(swatch('emerald-400'));
+    expect(hue(emerald)).toBe(swatch('teal-400'));
     expect(hue(blue)).toBe(swatch('blue-600'));
     emerald.remove();
     blue.remove();

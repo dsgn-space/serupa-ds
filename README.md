@@ -3,7 +3,7 @@
 A design system by **Diki**. Tokens, themes, utility classes and accessible React components that every project starts from, so new projects are quicker to build, look consistent, and pick up fixes with a version bump.
 
 - **Token-driven.** Every color, size, space, radius, shadow, motion and type value is a design token. Components never hardcode a value.
-- **Six themes.** Blue, Violet and Emerald, each light and dark, switched with one attribute and no component changes.
+- **Six themes.** Blue, Violet and Modern (the teal `emerald` brand), each light and dark, switched with one attribute and no component changes.
 - **Accessible by default.** WCAG 2.2 AA in every theme (contrast, target size, focus), full keyboard support, visible focus, correct roles and labels, checked by the test suite on every story in every theme.
 - **Works anywhere.** ES modules for React 19 apps, or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
 
