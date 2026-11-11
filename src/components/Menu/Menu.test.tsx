@@ -469,7 +469,7 @@ describe('Menu', () => {
     await expect.element(page.getByRole('menuitem', { name: 'Edit', exact: true })).toBeInTheDocument();
   });
 
-  test('shortcut as keys follows the platform: ["mod", "shift", "K"] is "⇧⌘K" (Meta) on an Apple device, modifiers in each platform's order, and "Ctrl+Shift+K" (Control) elsewhere', async () => {
+  test(`shortcut as keys follows the platform: ["mod", "shift", "K"] is "⇧⌘K" (Meta) on an Apple device, modifiers in each platform's order, and "Ctrl+Shift+K" (Control) elsewhere`, async () => {
     const items = (id: string) => [...menuOf(id).querySelectorAll<HTMLElement>('[role=menuitem]')].map((i) => [i.querySelector('kbd')!.textContent, i.getAttribute('aria-keyshortcuts')]);
     const menu = (id: string) => <Menu open trigger={<Button id={id}>More</Button>}>
       <MenuItem shortcut={['mod', 'shift', 'K']}>Search</MenuItem>
