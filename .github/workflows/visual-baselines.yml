@@ -17,13 +17,18 @@ on:
   pull_request:
     types: [labeled]
 
+# A newer run of the same workflow on the same branch or pull request cancels the one before it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:
   render:
     if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
-    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4

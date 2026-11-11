@@ -7,10 +7,10 @@ one, update to that tag.
 
 ## Reporting a vulnerability
 
-Please report it privately, not in a public issue or merge request: email
-<contact-project+diki-stwn-serupa-ds-88615499-issue-@incoming.gitlab.com>. You don't need a GitLab account. The
-email becomes a confidential issue that only the maintainers can see, and replies come back to you by email. Say what
-is affected (a component, `theme.js`, the CLI, the build), the version, and how to reproduce it.
+Please report it privately, not in a public issue or pull request: open
+<https://github.com/dsgn-space/serupa-ds/security/advisories/new> (the repository's **Security** tab, **Report a
+vulnerability**). Say what is affected (a component, `theme.js`, the CLI, the build), the version, and how to
+reproduce it.
 
 What happens next:
 

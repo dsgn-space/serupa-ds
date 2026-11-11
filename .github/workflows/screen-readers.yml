@@ -7,8 +7,11 @@ on:
   schedule:
     - cron: '0 4 * * *'
   workflow_dispatch:
-  pull_request:
-    paths: ['.github/workflows/screen-readers.yml']
+
+# A newer run of this workflow on the same branch cancels the one before it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
