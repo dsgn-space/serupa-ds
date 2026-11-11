@@ -573,9 +573,15 @@ sbom:
 # Security scanning in place of GitHub's CodeQL: GitLab's secret detection on every merge request (a key or token
 # committed by mistake, in seconds), and its SAST (Semgrep's rules for JavaScript and TypeScript) on main after a
 # merge and every night. Their images bring their own tools, so none of the setup above.
+# Dependency scanning (the template's Gemnasium job: package-lock.json against GitLab's advisory database, with an
+# SBOM) is an Ultimate feature: it runs on main after a merge and every night, not on merge requests, so it costs a
+# merge request nothing. Its rule keeps the template's own check of $GITLAB_FEATURES, so on a plan without the
+# feature (Free, after the group's trial) the job is simply not created. npm audit in "types and lint" still covers
+# every merge request on any plan.
 include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
 
 secret_detection:
   tags: [x86]
@@ -594,6 +600,18 @@ semgrep-sast:
   needs: []
   rules:
     - if: ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) || ($CI_PIPELINE_SOURCE == "schedule")
+
+gemnasium-dependency_scanning:
+  tags: [x86]
+  before_script: []
+  after_script: []
+  cache: []
+  needs: []
+  rules:
+    - if: $DEPENDENCY_SCANNING_DISABLED == 'true' || $DEPENDENCY_SCANNING_DISABLED == '1'
+      when: never
+    - if: (($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) || $CI_PIPELINE_SOURCE == "schedule") && $GITLAB_FEATURES =~ /\bdependency_scanning\b/
+      exists: [package-lock.json]
 
 # Every SAST analyzer the template may add (only Semgrep's applies to this repo).
 .sast-analyzer:
