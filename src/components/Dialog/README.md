@@ -62,6 +62,13 @@ Drawn from the `FullScreen` story.
 
 - Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 
+### Do and don't
+
+- **Do:** Ask the question in the title, and name the buttons for what they do: "Delete Atlas?", with Keep project and Delete project. (`DoAskTheQuestion`)
+- **Don't:** Ask "Are you sure?" with OK and Cancel: people have to read the rest to learn what OK does. (`DontAreYouSure`)
+- **Do:** Put the main action last in `footer`, where reading ends. (`DoMainActionLast`)
+- **Don't:** Put it first: people pass it on the way to Cancel, and the order differs from every other dialog. (`DontMainActionFirst`)
+
 ## Behavior
 
 - Opening moves focus to the first thing in it that takes focus. To choose another, pass its ref as `initialFocus` (Cancel in a confirmation, so Enter doesn't delete), or put `data-autofocus` on it (React's `autoFocus` runs while the dialog is still hidden, so it can't). Closing moves focus back to where it was. When closing takes that away (a confirmation that deletes the row it was opened from), pass `finalFocus`, such as the next row or the list's heading, so focus doesn't fall to the top of the page.
