@@ -2,6 +2,8 @@
 
 Native radios for one choice from a short list. `RadioGroup` names them, holds the value and lays them out; each `Radio` is drawn from tokens like Checkbox, sits centered on its label's first line, and the whole label picks it. Arrow keys move the choice, as browsers do for radios.
 
+**Also called:** radio button, radio group.
+
 ```jsx
 const { Radio, RadioGroup, Field } = window.Serupa;
 

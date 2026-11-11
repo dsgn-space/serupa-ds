@@ -2,6 +2,8 @@
 
 A bar of three to five main destinations fixed along the bottom of a phone screen, where a thumb reaches: each an icon over a short label, the current page marked. From 768px up it hides by default, where [Navbar](../Navbar/README.md) shows its links.
 
+**Also called:** tab bar, bottom navigation bar.
+
 ```tsx
 import { BottomNav, BottomNavLink } from "serupa-ds";
 

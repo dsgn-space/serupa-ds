@@ -2,6 +2,8 @@
 
 A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three sizes with Input's text sizes and side padding, a height set in `rows`, a resize handle, and optional auto-resize, a character count and a row of actions under the text. Focus, invalid, read-only and disabled states look like Input's, and field colors come from the same alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
 
+**Also called:** text box, multiline text field.
+
 ```jsx
 const { Textarea } = window.Serupa;
 

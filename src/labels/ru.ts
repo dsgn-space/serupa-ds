@@ -195,6 +195,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Сочетания клавиш',
   generalShortcuts: 'Общие',
   showShortcuts: 'Показать сочетания клавиш',
+  singleKeyShortcuts: 'Сочетания из одной клавиши',
+  singleKeyHint: 'Сочетания из одной клавиши, например ?, вне текстовых полей. Отключите их, если они срабатывают случайно.',
   opensInNewTab: '(откроется в новой вкладке)',
   loadMore: 'Загрузить ещё',
   showingOf: (shown, total) => `Показано ${shown} из ${total}`,
