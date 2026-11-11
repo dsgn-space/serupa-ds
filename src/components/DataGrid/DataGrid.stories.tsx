@@ -26,7 +26,7 @@ const apply = (rows: DataGridRow[], changes: DataGridCellChange[]) => rows.map((
   return next;
 });
 
-function Editable(props: { size?: 'sm' | 'md' }) {
+function Editable(props: { size?: 'sm' | 'md' | 'lg' }) {
   const [rows, setRows] = React.useState(ROWS);
   return <DataGrid aria-label="Stock" columns={COLUMNS} rows={rows} onRowsChange={(_, { changes }) => setRows((r) => apply(r, changes))} size={props.size} />;
 }
