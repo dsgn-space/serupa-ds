@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
+import { SerupaProvider } from '../../internal/provider';
 import { Dashboard, type DashboardData } from './Dashboard';
 
 const active = () => document.activeElement as HTMLElement;
@@ -33,6 +34,12 @@ describe('Patterns/Dashboard', () => {
     await render(<Dashboard data={{ ...empty, projects: [{ name: 'A', href: '#a', status: 'Active', updated: '2026-11-06' }], storage: { used: 2, limit: 10 } }} />);
     const meters = screen.getByRole('meter', { name: 'Storage' }).elements();
     expect(meters.at(-1)?.getAttribute('aria-valuetext')).toMatch(/GB$/);
+  });
+
+  test('a project\'s Updated day reads in the reader\'s locale, and keeps the ISO day in dateTime', async () => {
+    await render(<SerupaProvider locale="en-US"><Dashboard data={{ ...empty, projects: [{ name: 'A', href: '#a', status: 'Active', updated: '2026-11-06' }] }} /></SerupaProvider>);
+    const time = document.querySelector('tbody time') as HTMLTimeElement;
+    expect([time.textContent, time.dateTime]).toEqual(['Nov 6, 2026', '2026-11-06']);
   });
 
   test('the recent projects are a table of links, and "All projects" sits by its heading', async () => {

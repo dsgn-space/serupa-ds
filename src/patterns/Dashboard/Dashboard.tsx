@@ -12,6 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } fro
 import { StatsRow, type Stat } from '../../blocks/StatsRow/StatsRow';
 import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/ActivityFeed';
 import { EmptyFirstRun } from '../../blocks/EmptyStates/EmptyStates';
+import { useLocale } from '../../internal/provider';
 
 /* Dashboard: the page an account lands on. Key numbers, how much of the plan is used, the latest projects and what
    the team did, with skeletons while it loads and a first-run state before there's anything to show. For an app to
@@ -84,11 +85,20 @@ const demo: DashboardData = {
   })),
 };
 
+// "6 Nov 2026" in the reader's locale for "2026-11-06", read as that calendar day wherever the reader is; anything
+// else as it came. The <time> keeps the ISO day in dateTime.
+function shortDay(iso: string, locale: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return iso;
+  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+}
+
 const PAGE = 4;
 const gb = (n: number) => `${n.toLocaleString(undefined, { maximumFractionDigits: 1 })} GB`;
 
 /** The dashboard page: a skip link, a header, then main with the h1 and its parts. */
 export function Dashboard({ data = demo, loading = false, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false }: DashboardProps) {
+  const locale = useLocale();
   const [shown, setShown] = React.useState(PAGE);
   const firstRun = !loading && data.projects.length === 0;
   const events = onLoadMoreActivity ? data.activity : data.activity.slice(0, shown);
@@ -135,7 +145,7 @@ export function Dashboard({ data = demo, loading = false, name = 'Ana', onCreate
                         <TableRow key={p.href}>
                           <TableCell><Link href={p.href}>{p.name}</Link></TableCell>
                           <TableCell>{p.status}</TableCell>
-                          <TableCell><time dateTime={p.updated}>{p.updated}</time></TableCell>
+                          <TableCell><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
                         </TableRow>
                       ))}</TableBody>
                     </Table>
