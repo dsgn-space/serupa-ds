@@ -1,4 +1,4 @@
-// exports: List, ListItem, type ListItemProps, ListLoadingItems, type ListLoadingItemsProps, type ListProps
+// exports: List, ListItem, type ListItemOwnProps, type ListItemProps, ListLoadingItems, type ListLoadingItemsProps, type ListProps
 interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     children?: React.ReactNode | undefined;
     variant?: "card" | "plain" | undefined;
@@ -6,20 +6,29 @@ interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     as?: "ol" | "ul" | undefined;
     busy?: boolean | undefined;
 }
-interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "onClick" | "title"> {
+interface ListItemOwnProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "onClick" | "title"> {
     title: React.ReactNode;
     description?: React.ReactNode | undefined;
     leading?: IconSource | undefined;
     trailing?: React.ReactNode | undefined;
     href?: string | undefined;
     onClick?: ((event: React.MouseEvent<HTMLElement>) => void) | undefined;
-    as?: React.ElementType | undefined;
-    linkProps?: Record<string, unknown> | undefined;
     selected?: boolean | undefined;
     disabled?: boolean | undefined;
 }
+type ListItemProps<C extends React.ElementType = "a"> = ListItemOwnProps & {
+    as?: C | undefined;
+    linkProps?: (Partial<React.ComponentPropsWithoutRef<C>> & {
+        [data: `data-${string}`]: boolean | number | string | undefined;
+    }) | undefined;
+};
 declare const List: React.ForwardRefExoticComponent<ListProps & React.RefAttributes<HTMLUListElement>>;
-declare const ListItem: React.ForwardRefExoticComponent<ListItemProps & React.RefAttributes<HTMLLIElement>>;
+declare const ListItem: {
+    <C extends React.ElementType = "a">(props: ListItemProps<C> & {
+        ref?: React.Ref<HTMLLIElement>;
+    }): null | React.ReactElement;
+    displayName?: string | undefined;
+};
 interface ListLoadingItemsProps {
     rows?: number | undefined;
     description?: boolean | undefined;

@@ -116,14 +116,15 @@ function dismiss(id?: string): void {
   emit();
   for (const x of gone) { const then = page.onClose.get(x.id); if (then) { page.onClose.delete(x.id); then(); } }
 }
-type Message<A> = ToastOptions | string | ((arg: A) => ToastOptions | string);
+/** What a toast.promise step shows: options, the text alone, or a function of the result (or the error) that returns either. */
+export type ToastMessage<A> = ToastOptions | string | ((arg: A) => ToastOptions | string);
 export interface ToastPromiseMessages<T> {
   /** While it's pending: neutral, and it stays until the promise settles. */
   loading: ToastOptions | string;
   /** Once it resolves, replacing the loading toast; success tone. A function gets the value. */
-  success: Message<T>;
+  success: ToastMessage<T>;
   /** Once it rejects, replacing the loading toast; danger tone, said at once. A function gets the reason. */
-  error: Message<unknown>;
+  error: ToastMessage<unknown>;
 }
 const asOptions = (m: ToastOptions | string): ToastOptions => (typeof m === 'string' ? { title: m } : m);
 /* toast.promise: "Saving…" while the promise is pending, then "Saved" or "Couldn't save" in its place (the same id),
@@ -137,7 +138,7 @@ function promise<T>(work: Promise<T> | (() => Promise<T>), messages: ToastPromis
   // A message function that throws (GR234) mustn't leave "Saving…" up for good or reject where no one catches it: a
   // throwing success message shows the error message for what it threw; a throwing error message closes the toast.
   // Either way development warns, so the bug in the message function is still seen.
-  const settle = <A,>(m: Message<A>, arg: A, tone: ToastTone): void => {
+  const settle = <A,>(m: ToastMessage<A>, arg: A, tone: ToastTone): void => {
     let o: ToastOptions;
     try { o = asOptions(typeof m === 'function' ? m(arg) : m); } catch (thrown) {
       if (process.env.NODE_ENV !== 'production') warnOnce('toast-promise-threw', 'toast.promise: the ' + (tone === 'success' ? 'success' : 'error') + ' message threw (' + String(thrown) + '), so ' + (tone === 'success' ? 'the error message shows instead.' : 'the toast closes.'));

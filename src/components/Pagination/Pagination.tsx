@@ -26,8 +26,8 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   onPageChange?: ((page: number) => void) | undefined;
   /** Makes every page a link to this URL instead of a button (it still calls onPageChange on click). */
   getHref?: ((page: number) => string) | undefined;
-  /** With getHref, what renders each page link: your router's link component. Default: the link set with configure({ link }), else 'a'. */
-  linkAs?: React.ElementType | undefined;
+  /** With getHref, what renders each page link: your router's link component, one that takes href (React Router's maps it to to). Default: the link set with configure({ link }), else 'a'. */
+  linkAs?: React.ElementType<{ href: string }> | undefined;
   /** Pages shown on each side of the current one. Default: 1. Fewer show when the row wouldn't fit on one line. */
   siblings?: number | undefined;
   /** Pages always shown at the start and the end. Default: 1. Fewer show, after the siblings, when the row wouldn't fit. */

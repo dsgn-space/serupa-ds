@@ -1,4 +1,4 @@
-// exports: toast, Toaster, type ToasterPosition, type ToasterProps, type ToastOptions, type ToastPromiseMessages, type ToastTone, type ToastUndoOptions
+// exports: toast, Toaster, type ToasterPosition, type ToasterProps, type ToastMessage, type ToastOptions, type ToastPromiseMessages, type ToastTone, type ToastUndoOptions
 interface ToastLabels {
     notifications: string;
     toastShortcut: (key: string) => string;
@@ -23,11 +23,11 @@ interface ToastOptions {
 }
 declare function show(options: string | ToastOptions): string;
 declare function dismiss(id?: string): void;
-type Message<A> = ((arg: A) => string | ToastOptions) | string | ToastOptions;
+type ToastMessage<A> = ((arg: A) => string | ToastOptions) | string | ToastOptions;
 interface ToastPromiseMessages<T> {
     loading: string | ToastOptions;
-    success: Message<T>;
-    error: Message<unknown>;
+    success: ToastMessage<T>;
+    error: ToastMessage<unknown>;
 }
 declare function promise<T>(work: (() => Promise<T>) | Promise<T>, messages: ToastPromiseMessages<T>): Promise<T>;
 interface ToastUndoOptions extends Omit<ToastOptions, "action"> {
