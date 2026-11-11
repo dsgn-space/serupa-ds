@@ -15,7 +15,7 @@ import { PROJECT, done, fail, report } from './lib.mjs';
 
 const pkg = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), 'utf8'));
 const drift = Object.entries(VERSIONS).filter(([name, v]) => pkg.devDependencies[name] !== v).map(([name, v]) => `${name}: ${v}, the repository has ${pkg.devDependencies[name]}`);
-const out = files({ name: 'my-app', serupa: 'github:diki-stwn-group/serupa-ds#v1.2.3', brand: 'violet' });
+const out = files({ name: 'my-app', serupa: 'github:diki-stwn/serupa-ds#v1.2.3', brand: 'violet' });
 const app = JSON.parse(out['package.json']);
 const main = out['src/main.tsx'];
 const order = ['serupa-ds/tokens.css', 'serupa-ds/base.css', 'serupa-ds/bundle.css'].map((f) => main.indexOf(f));
@@ -75,7 +75,7 @@ const shipped = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), '
 
 done(report('Starter app', [
   { name: 'it pins the React, Vite, TypeScript and types the repository tests with', ok: !drift.length, detail: drift.join('; ') },
-  { name: 'the app installs the given serupa-ds and builds, checks types and serves with Vite', ok: app.dependencies['serupa-ds'] === 'github:diki-stwn-group/serupa-ds#v1.2.3' && app.scripts.build === 'vite build' && app.scripts.typecheck === 'tsc --noEmit' && app.scripts.dev === 'vite', detail: out['package.json'] },
+  { name: 'the app installs the given serupa-ds and builds, checks types and serves with Vite', ok: app.dependencies['serupa-ds'] === 'github:diki-stwn/serupa-ds#v1.2.3' && app.scripts.build === 'vite build' && app.scripts.typecheck === 'tsc --noEmit' && app.scripts.dev === 'vite', detail: out['package.json'] },
   { name: 'the page sets the brand and mode, and the stylesheets load tokens, base, then bundle', ok: out['index.html'].includes('<html lang="en" data-brand="violet" data-mode="auto">') && order.every((n, i) => n > 0 && (i === 0 || n > order[i - 1])), detail: main },
   { name: 'the app has a skip link, a main landmark it targets, one h1, and a labelled field', ok: /<SkipLink \/>/.test(out['src/App.tsx']) && /as="main" id="main"/.test(out['src/App.tsx']) && (out['src/App.tsx'].match(/level=\{1\}/g) || []).length === 1 && /<Field label="Email"/.test(out['src/App.tsx']) },
   { name: 'theme.js is served and built as its own file ahead of the app, and the build trims the CSS', ok: /injectTo: 'head-prepend'/.test(out['vite.config.ts']) && /emitFile/.test(out['vite.config.ts']) && /serupaPurge\(\{ components: true \}\)/.test(out['vite.config.ts']) },

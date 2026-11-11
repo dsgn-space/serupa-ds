@@ -465,7 +465,7 @@ It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Cop
 
 A second skill, `skills/serupa-review/SKILL.md`, reviews a change to an app's UI. It checks what lint can't judge: a widget built by hand where a component exists, the app's part of accessibility, the right feedback for a message, and the words. Findings come grouped as Must fix, Should fix and Nice to have, each with its problem, fix and what happens if it's skipped, and end with a one-line verdict. The `serupa-agents` section points agents at it too.
 
-Or install the skill with the `skills` command, `npx skills add diki-stwn-group/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
+Or install the skill with the `skills` command, `npx skills add diki-stwn/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
 
 ## Browser support
 
