@@ -93,10 +93,31 @@ export const Cards: Story = {
   </Field>,
 };
 export const CardsInvalid: Story = {
-  render: () => <Field group label="Interests" error="Pick at least one.">
+  render: () => <Field group label="Interests" error="Choose at least one.">
     <CheckboxGroup name="interests" variant="card">
       <Checkbox value="design" description="Components, tokens and patterns">Design</Checkbox>
       <Checkbox value="code">Engineering</Checkbox>
     </CheckboxGroup>
   </Field>,
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the label says what a tick turns on. */
+export const DoPositiveLabel: Story = { name: 'Do: a positive label', args: { children: 'Email me about orders' } };
+/** Don't: a negative label, where a tick means no. */
+export const DontNegativeLabel: Story = { name: "Don't: a negative label", args: { children: "Don't email me about orders" } };
+/** Do: cards for add-ons that each carry a detail. */
+export const DoCardsWithDetails: Story = {
+  name: 'Do: cards with details',
+  render: () => <CheckboxGroup aria-label="Add-ons" variant="card" defaultValue={['wrap']}>
+    <Checkbox value="wrap" description="Rp 15.000">Gift wrap</Checkbox>
+    <Checkbox value="card" description="A printed note, free">Greeting card</Checkbox>
+  </CheckboxGroup>,
+};
+/** Don't: cards for options that need no explanation. */
+export const DontCardsForShortOptions: Story = {
+  name: "Don't: cards for short options",
+  render: () => <CheckboxGroup aria-label="Colour" variant="card" defaultValue={['red']}>
+    {['Red', 'Green', 'Blue'].map((c) => <Checkbox key={c} value={c.toLowerCase()}>{c}</Checkbox>)}
+  </CheckboxGroup>,
 };

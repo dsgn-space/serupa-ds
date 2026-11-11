@@ -19,5 +19,8 @@ t('each story gets a row per theme, the changed ones marked, with the picture at
 t('a new story has no "before"; the other shots that changed are named', /\| blue-light \(changed\) \| new \|/.test(md) && md.includes('Also changed: blue-light-hover, axes.'));
 t('not required: says so; required: asks for the label', md.includes('isn\'t required') && sheet({ status, base: 'a', head: 'b', repo: 'o/r', required: true }).includes('add the **design-qa** label'));
 t('no picture changed: says there is nothing to review', sheet({ status: `M\tsrc/x.ts`, base: 'a', head: 'b', repo: 'o/r', required: false }).includes('nothing to review'));
-t('on GitLab the pictures are its raw files', sheet({ status, base: 'a', head: 'b', repo: 'g/r', required: false, gitlab: 'https://gitlab.com' }).includes('https://gitlab.com/g/r/-/raw/b/'));
+// The picture links, parsed, so the check is on each link's host and path rather than on text anywhere in the sheet.
+const links = (text) => [...text.matchAll(/https?:\/\/[^\s"'<>)]+/g)].map((m) => new URL(m[0]));
+t('on GitLab the pictures are its raw files', links(sheet({ status, base: 'a', head: 'b', repo: 'g/r', required: false, gitlab: 'https://gitlab.com' }))
+  .some((u) => u.host === 'gitlab.com' && u.pathname.startsWith('/g/r/-/raw/b/')));
 done(report('Design QA', R));

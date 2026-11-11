@@ -38,7 +38,7 @@ for (const f of fs.readdirSync(path.join(PROJECT, 'docs', 'rfcs')).filter((x) =>
   t(`docs/rfcs/${f} starts with its title and a status`, text.startsWith(`# RFC: ${f.replace(/\.md$/, '')}\n`) && /^\*\*Status:\*\* /m.test(text));
   // Once its major is in the changelog, the RFC says so, rather than asking for comments on what already shipped (GR131).
   const v = f.replace(/\.md$/, '');
-  if (read('CHANGELOG.md').includes(`\n## [${v}]`)) t(`docs/rfcs/${f}: ${v} has shipped, so its status says "Released in ${v}"`, new RegExp(`^\\*\\*Status:\\*\\* Released in ${v.replace(/\./g, '\\.')}\\b`, 'm').test(text), `set the status line to "**Status:** Released in ${v} (<date>)."`);
+  if (read('CHANGELOG.md').includes(`\n## [${v}]`)) t(`docs/rfcs/${f}: ${v} has shipped, so its status says "Released in ${v}"`, new RegExp(`^\\*\\*Status:\\*\\* Released in ${v.replace(/[\\^$.*+?()[\]{}|/-]/g, '\\$&')}\\b`, 'm').test(text), `set the status line to "**Status:** Released in ${v} (<date>)."`);
 }
 
 // The upgrade guide.

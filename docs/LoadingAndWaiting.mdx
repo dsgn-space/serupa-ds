@@ -1,0 +1,44 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Loading and waiting" />
+
+# Loading and waiting
+
+People wait best when they can see that something is happening and, where you know it, how long it will take. Most waits are short, and the components are built so a short wait shows nothing at all.
+
+## Pick by what you know about the wait
+
+| The wait is… | Use |
+| --- | --- |
+| Content arriving whose layout you know, such as a list, a card or a profile | [Loader](?path=/docs/components-feedback-loader--docs) `variant="skeleton"`, shaped like what's coming |
+| A result whose length you can't tell, such as a search | [Loader](?path=/docs/components-feedback-loader--docs) (a ring or dots) where the result will appear |
+| Something you can measure, such as an upload, an import or an export | [Progress](?path=/docs/components-feedback-progress--docs), with the value |
+| An action someone just clicked, such as Save or Send | The [Button](?path=/docs/components-actions-button--docs)'s own `loading` |
+| A form or editor saving as people type | [SaveStatus](?path=/docs/components-feedback-savestatus--docs) |
+| Work that carries on in the background after people move on | A [Toast](?path=/docs/components-feedback-toast--docs) from `toast.promise`, replaced by its result |
+| The next page of a long list | [LoadMore](?path=/docs/components-navigation-loadmore--docs) |
+
+## Timing
+
+- **300ms before it shows.** A Loader, and a Button's spinner, wait 300ms before appearing. Most requests finish sooner, so nothing flashes on and off. Use `delay={0}` only where the wait is sure to be long.
+- **500ms once it shows.** Once a loader is showing, it stays at least 500ms, so work ending at 320ms doesn't flash a spinner for 20ms. For this to work, keep the Loader mounted and pass `loading={false}` when the work ends, rather than removing it.
+- **Keep the space.** A loader, a skeleton and a loading button keep the size of what they stand for, so nothing on the page jumps when the content arrives.
+
+## For screen readers
+
+- A Loader with a `label` is announced as busy ("Loading orders"). On a page with several skeletons, name one and leave the rest decorative (`label=""`), so the wait is said once.
+- Mark the region that's being replaced with `aria-busy="true"` while it loads, and take it off when it's done.
+- Progress says its value; give it a label that says what is loading ("Uploading report.pdf").
+
+## When the wait fails
+
+Don't leave a spinner turning forever. Put a message where the content would have been, saying what didn't load and offering Try again: an [Alert](?path=/docs/components-feedback-alert--docs) in place of a section, SaveStatus's error for a save, or an [ErrorBoundary](?path=/docs/components-feedback-errorboundary--docs) around a widget that can break. When the connection is gone, [OfflineBanner](?path=/docs/components-feedback-offlinebanner--docs) says so once for the whole app. When the content has loaded and there is nothing to show, that's an [EmptyState](?path=/docs/components-feedback-emptystate--docs), not an error.
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| A skeleton of a few rows, shaped like the list that's coming | A full-screen spinner over a page whose layout you know |
+| Progress with a value for an upload | A turning ring for a 2-minute import |
+| "Save changes" with a spinner, the same width | "Saving…" that makes the button grow and shrink |
+| An error with Try again after a request fails | A loader left turning with no way out |

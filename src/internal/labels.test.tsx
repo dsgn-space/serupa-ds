@@ -92,7 +92,7 @@ test('blocks and patterns show curly apostrophes', () => {
       if (t.startsWith('/*')) { inComment = !t.includes('*/'); return; }
       if (t.startsWith('//') || t.startsWith('*') || line.includes('warnOnce')) return;
       const code = line.replace(/\s\/\/ .*$/, '');
-      if (/"[^"]*[A-Za-z]'[A-Za-z][^"]*"|`[^`]*[A-Za-z]'[A-Za-z][^`]*`|[>}][^<>{}]*[A-Za-z]'[A-Za-z][^<>{}]*[<{]/.test(code)) found.push(file.replace('../', '') + ':' + (i + 1) + ': ' + t);
+      if (/"[^"]*[A-Za-z]'[A-Za-z][^"]*"|`[^`]*[A-Za-z]'[A-Za-z][^`]*`|[>}][^<>{}]*[A-Za-z]'[A-Za-z][^<>{}]*[<{]/.test(code)) found.push(file.replace(/^\.\.\//, '') + ':' + (i + 1) + ': ' + t);
     });
   }
   expect(found).toEqual([]);

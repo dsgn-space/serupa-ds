@@ -47,7 +47,7 @@
 
 # Groups
 - combobox "Country":
-  - option "Pick a plan" [disabled] [selected]
+  - option "Choose a plan" [disabled] [selected]
 
 # LongOptions
 - combobox "Country":

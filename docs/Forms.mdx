@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Forms" />
+
+# Forms
+
+A form asks people for something, tells them clearly when an answer won't do, and keeps what they typed. Each component below handles its own part. This page is how the parts work together, with links to the details.
+
+## Labels
+
+- Every control has a visible label: wrap it in a [Field](?path=/docs/components-forms-field--docs). A row checkbox in a table, with no room for one, takes an `aria-label` instead.
+- Keep labels short and specific: "Work email", not "Please enter your email address".
+- Put format help in the Field's `hint` ("Like name@example.com"), never only in a placeholder, which goes as soon as someone types.
+- A set of checkboxes or radios that answer one question is one Field with `group`, so its label becomes the fieldset's legend.
+
+## Required and optional
+
+Mark the smaller set. When most fields are required, mark the few that aren't with `optional` ("(optional)"). When most can be left empty, mark the required ones with `required` (a `*`, and `aria-required` for screen readers). Don't mark both on one form.
+
+## When to check
+
+- Check a field when someone leaves it or submits the form, never on every keystroke: an error that appears while people are still typing tells them off for something they haven't finished.
+- Once a field shows an error, check it again as they type, so the error goes as soon as the answer is right.
+- Say what's wrong and how to fix it: "Enter a date in the future", not "Invalid date". The same words go in the field's error and in the summary.
+
+## When the submit fails
+
+1. Show an [ErrorSummary](?path=/docs/components-forms-errorsummary--docs) at the top of the form, listing the problems in the order of the fields. It takes focus, so everyone, screen reader users included, learns the submit failed, and each line links to its field.
+2. Show the same message on each field, with the Field's `error`.
+3. Prefix the page's `<title>` with "Error: " while the summary shows.
+4. Keep everything people typed. Never clear a form because one field is wrong.
+
+A short form of one or two fields can skip the summary: move focus to the first field with an error instead.
+
+## Sending and saving
+
+- The submit [Button](?path=/docs/components-actions-button--docs) shows `loading` while the form is sent, and blocks a second click, so nothing is sent twice. A promise from `onClick`, or a React form `action`, does this by itself. Keep its label as it was ("Save changes"), so the width doesn't jump.
+- A form that saves as people go, with no Save button, shows a [SaveStatus](?path=/docs/components-feedback-savestatus--docs) near its title: Saving, Saved, or an error with Try again.
+- A form in a [Dialog](?path=/docs/components-overlays-dialog--docs) takes `unsaved` while it has changes, so closing it by accident asks "Discard changes?" first.
+- When the save fails for a reason that isn't a field, say so with an [Alert](?path=/docs/components-feedback-alert--docs) at the top of the form, and keep the changes. [Messages and feedback](?path=/docs/guides-messages-and-feedback--docs) says which message to use when.
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| "Work email", with "Like name@example.com" as the hint | "Please enter your email address here", with the format only in the placeholder |
+| Show the error when someone leaves the field | Show "Invalid email" after the first letter |
+| "Enter your full name" | "Name is invalid" |
+| Keep the answers when the submit fails, and focus the summary | Clear the form, or leave focus on the button with nothing said |

@@ -197,25 +197,48 @@ mode, and a new script is picked up with no entry anywhere. Run with `node`, a s
 
 When a test fails, it names what changed. If the change is intended, run with `--update` and commit the new baselines with the change.
 
+### The merge queue
+
+`main` takes changes only through GitHub's merge queue (the `main` ruleset: Require merge queue, merge commits, up to five pull requests a group, required check `test`). A pull request's own run is the quick check; the queue runs everything on the commit that becomes `main`, so two pull requests that pass alone and break together never reach it, and `main`'s own run is build only. The repository variable `SERUPA_QUEUE` is `1` while the queue is on; without it, a pull request and `main` each run everything (`ci.yml`, the `plan` job).
+
 ### The CI runner
 
-On GitLab, every job runs on the project's own runner: a Google Cloud VM (`n2d-standard-8`: 8 vCPU, 32 GB, Ubuntu 24.04, in `asia-southeast2`; the free trial allows 8 vCPU in all) with Docker and `gitlab-runner`, registered as a project runner that takes untagged jobs, with GitLab's instance runners turned off for the project. It must be x86: Chrome for Testing, which `setup.mjs` installs and the baselines were rendered with, has no Linux ARM build. A second runner, `serupa-arm` (Oracle Cloud's Always Free Ampere A1: 4 OCPU, 24 GB, Ubuntu 24.04, in `ap-batam-1`, with a 1 SGD budget alert), takes untagged jobs too. Untagged jobs (build, the checks, the Storybook checks, types and lint, the changeset and fix proof job, consumer, frameworks and the nightly jobs that take no screenshot) go to whichever runner is free; none takes a screenshot or has a timing budget. Jobs tagged `x86` (the component tests and Visual, cross-browser and cross-browser components, mutation, benchmarks, the nightly canary components and flake hunt, and GitLab's security scanners) run only on x64 runners, so serupa-runner carries the `x86` tag. On Arm, `setup.mjs` installs Playwright's own arm64 build of the same Chromium revision; a job there runs about 1.6 to 1.9 times slower than on serupa-runner (measured 9 Nov 2026), which is why both take the portable jobs rather than splitting them by machine. serupa-arm is set up the same way, with `--run-untagged` and no tag, `--description serupa-arm`. If either is down, the other takes the untagged jobs; the `x86` jobs wait for an x64 runner. A burst runner on x64 is registered with the `x86` tag and untagged jobs on. On a fresh server, as root:
+Jobs run in Playwright's image (`mcr.microsoft.com/playwright:v1.64.1-noble`, pinned by digest), capped at 4 CPUs, on GitHub's own runners or on the project's. Two repository variables pick where (Settings > Secrets and variables > Actions > Variables), each a JSON value for `runs-on`:
+
+- `SERUPA_X86_RUNNER`: jobs with a screenshot or a timing budget (the component tests, Visual, cross-browser, mutation, benchmarks, flake hunt, Update baselines). They need x64: Chrome for Testing, which `setup.mjs` installs and the baselines are drawn with, has no Linux Arm build, and the mount-time and INP budgets were measured on x64. Self-hosted: `["self-hosted","linux","x86"]`.
+- `SERUPA_RUNNER`: everything else (build, types and lint, fix proof, the checks, Storybook checks, coverage, consumer, frameworks), Arm included. Self-hosted: `["self-hosted","linux"]`.
+
+Unset, both are `ubuntu-24.04` (GitHub's runners, free for a public repository). The project's machines:
+
+- `serupa-runner`: x64, 2 jobs at a time (each about 4 cores and 16 GB; four at a time broke the timing budgets). Labels `self-hosted, linux, x86`.
+- `serupa-arm`: Oracle Cloud Ampere A1, 4 OCPU, 24 GB, 2 jobs, 1.6 to 1.9 times slower. Labels `self-hosted, linux` only.
+- The IBM burst runner (`/mnt/project-files/design-system/ibm-burst-runner*`): x64, up to 28 jobs, deletes itself when idle. Labels `self-hosted, linux, x86`.
+
+Each job slot is one GitHub runner (`actions-runner`, one folder and one service per slot), on a machine with Docker. Self-hosted runners take only this repository's own branches: fork pull requests need a maintainer's approval to run (Settings > Actions > General > "Require approval for all external contributors"). On a fresh server, as root, with a registration token from Settings > Actions > Runners > New self-hosted runner (it lasts an hour and is typed only on the server):
 
 ```sh
 curl -fsSL https://get.docker.com | sh
-curl -fsSL https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | bash
-apt-get install -y gitlab-runner unattended-upgrades
-read -rsp 'Runner token (glrt-...): ' RT; echo
-gitlab-runner register --non-interactive --url https://gitlab.com --token "$RT" --executor docker \
-  --docker-image node:26-alpine --docker-pull-policy if-not-present --docker-shm-size 2147483648 --docker-volumes /srv/runner-cache:/cache --description serupa-runner
+apt-get install -y unattended-upgrades jq
+useradd -m -G docker runner || true
+read -rsp 'Registration token: ' RT; echo
+V=$(curl -fsSL https://api.github.com/repos/actions/runner/releases/latest | jq -r .tag_name | tr -d v)
+ARCH=$(uname -m | sed 's/x86_64/x64/;s/aarch64/arm64/')
+LABELS=x86; [ "$ARCH" = arm64 ] && LABELS=""
+for i in 1 2; do   # one per job slot: 2 on serupa-runner and serupa-arm
+  d=/home/runner/slot$i; mkdir -p "$d" && cd "$d"
+  curl -fsSL "https://github.com/actions/runner/releases/download/v$V/actions-runner-linux-$ARCH-$V.tar.gz" | tar xz
+  chown -R runner "$d"
+  sudo -u runner ./config.sh --unattended --url https://github.com/<owner>/serupa-ds --token "$RT" \
+    --name "$(hostname)-$i" --labels "$LABELS" --work _work --replace
+  ./svc.sh install runner && ./svc.sh start
+done
 unset RT
-sed -i 's/^concurrent = .*/concurrent = 2/' /etc/gitlab-runner/config.toml && gitlab-runner restart
 echo '0 4 * * 0 root docker system prune -af --filter until=168h' > /etc/cron.d/docker-prune
 ```
 
-The token comes from Settings > CI/CD > Runners > New project runner, is typed only on the server, and lives only in its `/etc/gitlab-runner/config.toml`. `if-not-present` keeps Playwright's image (about 2 GB) between jobs, and the runner keeps the jobs' cache (npm's, and Node and Chrome for Testing under `.ci-home/`) in `/srv/runner-cache`, one folder both job slots share, so a job's setup takes seconds. The image's own Chromium is a later patch (156.0.8078.80) than the baselines' Chrome for Testing (156.0.8078.4), so `PLAYWRIGHT_BROWSERS_PATH` points at `.ci-home/ms-playwright` and `setup.mjs` fills it once. Two jobs at a time leaves each test job four cores and 16 GB for its pages; four at a time made the mount-time and INP budgets fail. To replace the server, make a new one, run the above, and delete the old runner in the same settings page.
+The setup action keeps npm's download cache and Chrome for Testing (`~/.cache/ms-playwright`, `PLAYWRIGHT_BROWSERS_PATH`) in GitHub's cache, so a job's setup is a download, not an install. The image's own Chromium is a later patch (156.0.8078.80) than the baselines' Chrome for Testing (156.0.8078.4), which `tools/test/visual.mjs` refuses, so jobs never use `/ms-playwright` for Chromium (cross-browser uses it for Firefox and WebKit).
 
-**Baselines belong to CI.** Screenshots and computed styles differ a little between machines (fonts, anti-aliasing), so `baseline-visual/` and `baseline-utilities.json` are rendered in CI's own image: on GitLab, run `node tools/setup.mjs && npm run build-storybook && node tools/test/visual.mjs --update` inside `mcr.microsoft.com/playwright:v1.64.1-noble` with `PLAYWRIGHT_BROWSERS_PATH` and `HOME` set as `.gitlab-ci.yml` sets them, and commit only the pictures your change meant to change (on GitHub, the `update-visual-baselines` label and the Update baselines workflow did this). The Design QA workflow then shows each changed story in all six themes, before and after, in its job summary, to look at before merging; with the repository variable `DESIGN_QA` set to `required` it also waits for the `design-qa` label, added after the last change to a picture. Locally, Visual snapshots can fail for that reason alone. Utility classes don't depend on the installed fonts (the page's line height is fixed), and a CHANGED class prints what changed, property by property, or what it does now when its effect is too long to keep as text.
+**Baselines belong to CI.** Screenshots and computed styles differ a little between machines (fonts, anti-aliasing), so `baseline-visual/` and `baseline-utilities.json` are rendered in CI's own image on an x86 runner: add the `update-visual-baselines` label and the Update baselines workflow draws them and commits them to the branch. The Design QA workflow then shows each changed story in all six themes, before and after, in its job summary, to look at before merging; with the repository variable `DESIGN_QA` set to `required` it also waits for the `design-qa` label, added after the last change to a picture. Locally, Visual snapshots can fail for that reason alone. Utility classes don't depend on the installed fonts (the page's line height is fixed), and a CHANGED class prints what changed, property by property, or what it does now when its effect is too long to keep as text.
 
 **When `tokens.json` or `tokens.css` is reported out of date:** the tokens are written in `tokens/serupa.tokens.json` (the W3C format, ADR-0014); `tools/tokens/source.mjs` makes `tokens.json` from it and `tools/tokens/build.mjs` makes `tokens.css` from `tokens.json`. Run `npm run tokens` (or `npm run build`, which runs it first) and commit the generated files with the source change. CI checks they match.
 

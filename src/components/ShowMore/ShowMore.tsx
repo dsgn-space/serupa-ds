@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
+import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { useSettings } from '../../internal/provider';
 import { Button } from '../Button/Button';
 import { en as words } from './labels';
@@ -38,7 +39,8 @@ export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>
   const open = controlled ? !!props.expanded : own;
   const content = React.useRef<HTMLDivElement | null>(null);
   const [cut, setCut] = React.useState(false);
-  // Whether the closed text is cut: measured after each render while closed, and when its box changes size.
+  // Whether the closed text is cut: measured after each render while closed, when its box changes size, and when a
+  // web font arrives (the text rewraps in a box that keeps its size, so no ResizeObserver fires).
   useIsoLayoutEffect(() => {
     const n = content.current;
     if (!n || open) return;
@@ -46,7 +48,8 @@ export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>
     measure();
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
     if (ro) ro.observe(n);
-    return () => { if (ro) ro.disconnect(); };
+    const stop = onFontsLoaded(measure);
+    return () => { if (ro) ro.disconnect(); stop(); };
   }, [open, lines, props.children]);
   const toggle = () => { if (!controlled) setOwn(!open); if (props.onExpandedChange) props.onExpandedChange(!open); };
   return (

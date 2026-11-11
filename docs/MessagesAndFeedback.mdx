@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Messages and feedback" />
+
+# Messages and feedback
+
+Pick a message by two things: how soon people need to act, and how long the message stays true. A message that is too loud for what it says trains people to ignore the loud ones; one that is too quiet gets missed.
+
+## Pick by urgency and how long it lasts
+
+| The message is… | Use |
+| --- | --- |
+| About one field's answer | The [Field](?path=/docs/components-forms-field--docs)'s `error`, and on submit an [ErrorSummary](?path=/docs/components-forms-errorsummary--docs) |
+| A confirmation of what people just did, when the page doesn't show it: "Link copied", "Invite sent" | A [Toast](?path=/docs/components-feedback-toast--docs) |
+| About the page or a task, staying until it's dealt with: a failed payment, an expiring trial | An [Alert](?path=/docs/components-feedback-alert--docs) near what it's about |
+| A decision people must make before they can go on | A [Dialog](?path=/docs/components-overlays-dialog--docs) with `alert` |
+| Where saving is, on a page that saves by itself | [SaveStatus](?path=/docs/components-feedback-savestatus--docs) |
+| The connection is gone, for the whole app | [OfflineBanner](?path=/docs/components-feedback-offlinebanner--docs) |
+| Something people may want later, after its toast is gone | [NotificationCenter](?path=/docs/components-overlays-notificationcenter--docs) |
+| A short status in a table or a card: Paid, Overdue | A [Badge](?path=/docs/components-feedback-badge--docs) |
+| A list or a search with nothing in it | An [EmptyState](?path=/docs/components-feedback-emptystate--docs) |
+
+## Tone
+
+Use the tone that matches what happened, and no louder: `success` for something done, `warning` for something to watch, `danger` for something that failed or will be lost, and `info` or neutral for the rest. Color is never the only sign: the info, success, warning and danger tones each have their own icon, and the words carry the meaning.
+
+## Writing the message
+
+- Say what happened, then what to do: "Payment failed. Update your card to keep your plan."
+- Keep a toast to a few words: "Changes saved", not "Your changes have been saved successfully."
+- Name the action on its button ("Update card", "Try again"), not "OK".
+- An error never blames the person, and never shows a code alone. Put a code after the words, for support, if it helps.
+
+## How long it stays
+
+- A toast goes by itself after 5 seconds, so it never holds anything people must read. One that needs action, such as a failed upload with Retry, takes `autoDismiss: false` and stays until it's closed.
+- An Alert stays until what it says is no longer true, or until people dismiss it, if it's dismissible.
+- An error on a field stays until the answer is right.
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| A Toast for "Link copied" | An Alert that stays on the page for a confirmation |
+| An Alert by the billing section for a failed payment | A Toast that's gone before people read it |
+| "Couldn't send. Check your connection and try again." | "Error 500" |
+| `danger` for something that failed | `danger` for anything you want people to notice |

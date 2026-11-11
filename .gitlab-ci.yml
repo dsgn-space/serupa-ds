@@ -155,6 +155,9 @@ build:
     - npm run build-storybook
   artifacts:
     paths: [dist/, storybook-static/]
+    # 3 days: main's newest build is also the Storybook link people open (Build > Artifacts), and main merges daily.
+    # Merge request artifacts expire in 3 days too, and the cross-browser ones in 7: the project kept 73 GiB of them
+    # (11 Nov 2026), against the Free plan's 10 GiB per group.
     expire_in: 3 days
 
 types and lint:
@@ -307,7 +310,7 @@ suite:
     - if [ "$CI_JOB_STATUS" = success ]; then rm -rf .test-tmp test-output.txt; fi
   artifacts:
     when: always
-    expire_in: 7 days
+    expire_in: 3 days
     paths:
       - test-output.txt
       - .test-tmp/
@@ -345,7 +348,7 @@ coverage:
     - node tools/test/vitest/coverage-summary.mjs || true
   artifacts:
     when: always
-    expire_in: 7 days
+    expire_in: 3 days
     paths:
       - coverage/coverage-summary.json
 
@@ -445,7 +448,7 @@ cross-browser:
     - if [ "$GROUP" = visual ] && [ "$CI_JOB_STATUS" != success ]; then echo "If these pictures changed on purpose, take them with GITLAB_TOKEN=… node tools/take-cross-baselines.mjs $CI_PIPELINE_ID, look at them and commit them."; fi
   artifacts:
     when: always
-    expire_in: 14 days
+    expire_in: 7 days
     paths: [test-output.txt, tools/test/baseline-visual-firefox/, tools/test/baseline-visual-webkit/]
 
 # Every merge request: the component tests of the components it changes, in Firefox and then WebKit, in one job (two
@@ -479,7 +482,7 @@ cross-browser components:
     - grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150 || true
   artifacts:
     when: always
-    expire_in: 14 days
+    expire_in: 7 days
     paths: [test-output.txt]
 
 # Nightly (the schedule on main, 02:00 Jakarta; Build > Pipeline schedules). Besides the whole suite above:
@@ -604,9 +607,15 @@ sbom:
 # Security scanning in place of GitHub's CodeQL: GitLab's secret detection on every merge request (a key or token
 # committed by mistake, in seconds), and its SAST (Semgrep's rules for JavaScript and TypeScript) on main after a
 # merge and every night. Their images bring their own tools, so none of the setup above.
+# Dependency scanning (the template's Gemnasium job: package-lock.json against GitLab's advisory database, with an
+# SBOM) is an Ultimate feature: it runs on main after a merge and every night, not on merge requests, so it costs a
+# merge request nothing. Its rule keeps the template's own check of $GITLAB_FEATURES, so on a plan without the
+# feature (Free, after the group's trial) the job is simply not created. npm audit in "types and lint" still covers
+# every merge request on any plan.
 include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
 
 secret_detection:
   tags: [x86]
@@ -625,6 +634,18 @@ semgrep-sast:
   needs: []
   rules:
     - if: ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) || ($CI_PIPELINE_SOURCE == "schedule")
+
+gemnasium-dependency_scanning:
+  tags: [x86]
+  before_script: []
+  after_script: []
+  cache: []
+  needs: []
+  rules:
+    - if: $DEPENDENCY_SCANNING_DISABLED == 'true' || $DEPENDENCY_SCANNING_DISABLED == '1'
+      when: never
+    - if: (($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) || $CI_PIPELINE_SOURCE == "schedule") && $GITLAB_FEATURES =~ /\bdependency_scanning\b/
+      exists: [package-lock.json]
 
 # Every SAST analyzer the template may add (only Semgrep's applies to this repo).
 .sast-analyzer:
