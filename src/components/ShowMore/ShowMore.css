@@ -18,7 +18,7 @@
 .dk-show-more__text--cut[data-lines="6"] { --dk-show-more-lines: var(--line-clamp-6); }
 /* Printed, the whole text, and no Show more button, which paper can't press. */
 @media print {
-  .dk-show-more__text--cut { display: block; -webkit-line-clamp: unset; line-clamp: none; overflow: visible; }
+  .dk-show-more__text--cut { display: block; -webkit-line-clamp: none; line-clamp: none; overflow: visible; }
   .dk-show-more > .dk-show-more__toggle { display: none; }
 }
 }

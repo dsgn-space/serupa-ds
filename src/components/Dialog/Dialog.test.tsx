@@ -728,12 +728,14 @@ describe('Dialog: motion (DZ1)', () => {
 describe('Dialog and Drawer on a phone', () => {
   afterAll(async () => { await page.viewport(900, 700); });
   test('under 640px wide the panel pads 16px, not 24px, so the content gets 256px of a 320px screen; wider, 24px', async () => {
-    const pads = () => [...document.querySelectorAll<HTMLElement>('.dk-dialog__panel, .dk-drawer__panel')].map((p) => getComputedStyle(p).paddingInlineStart);
+    // Each panel is its <dialog>'s first child (the <dialog> itself is the margin around it).
+    const panels = () => page.getByRole('dialog').elements().map((d) => d.firstElementChild as HTMLElement);
+    const pads = () => panels().map((p) => getComputedStyle(p).paddingInlineStart);
     await page.viewport(320, 600);
     const screen = await render(<><Dialog open title="Rename" onOpenChange={() => {}}><Input aria-label="Name" /></Dialog><Drawer open title="Filters" onOpenChange={() => {}}>Body</Drawer></>);
     await expect.poll(pads).toEqual(['16px', '16px']);
     // 320 less the 16px margin and the 16px padding on each side: 256px for the content (it was 240).
-    const panel = document.querySelector<HTMLElement>('.dk-dialog__panel')!, cs = getComputedStyle(panel);
+    const panel = panels()[0], cs = getComputedStyle(panel);
     expect(Math.round(panel.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight))).toBe(256);
     await page.viewport(1000, 700);
     await expect.poll(pads).toEqual(['24px', '24px']);

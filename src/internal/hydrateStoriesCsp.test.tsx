@@ -56,7 +56,7 @@ async function boxes(host: HTMLElement) {
     // An icon drawn by name that this page has loaded is still empty right after hydrating: React draws it in a render
     // of its own, which on a busy runner can come after a frame with nothing to see. Measured before it, every
     // element after the icon was one place off from the other hydration's.
-    changed = changed || [...host.querySelectorAll<HTMLElement>('span.dk-icon[data-icon]')].some((s) => !s.firstElementChild && !!getIcon(s.dataset.icon!));
+    changed = changed || [...host.querySelectorAll<HTMLElement>('span[data-icon]')].some((s) => !s.firstElementChild && !!getIcon(s.dataset.icon!));
   }
   settle();
   const o = host.getBoundingClientRect();

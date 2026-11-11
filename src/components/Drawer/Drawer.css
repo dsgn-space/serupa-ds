@@ -5,10 +5,10 @@
    scroll. Slides in from its edge (300ms) and back out to it faster (motion-exit-lg); fades with reduced motion.
    --------------------------------------------------------------- */
 @layer dk.components {
-/* The panel's padding when the app sets no --drawer-padding: space-surface, but 16px under 640px, so a phone (or a
-   desktop at 400% zoom) keeps most of its width for the content rather than 2 × (margin + 24px). */
-.dk-drawer { --dk-drawer-space: var(--space-surface); }
-@media (max-width: 639.98px) { .dk-drawer { --dk-drawer-space: var(--spacing-4); } }
+/* Under 640px wide, space-surface is 16px inside the drawer (24px elsewhere): its panel, and a Card in it, keep most
+   of a phone's width (or a desktop's at 400% zoom) for the content rather than 2 × (margin + 24px).
+   --drawer-padding still sets the panel's padding everywhere. */
+@media (max-width: 639.98px) { .dk-drawer { --space-surface: var(--spacing-4); } }
 .dk-drawer {
   --dk-drawer-width: var(--drawer-width-md, var(--container-sm));
   box-sizing: border-box; position: fixed; inset: var(--spacing-0);
@@ -44,7 +44,7 @@
 .dk-drawer__panel {
   box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4));
   width: var(--dk-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
-  padding: var(--drawer-padding, var(--dk-drawer-space));
+  padding: var(--drawer-padding, var(--space-surface));
   background: var(--drawer-bg, var(--surface-overlay));
   box-shadow: var(--drawer-shadow, var(--elevation-modal));
   position: relative;
@@ -98,8 +98,8 @@
 .dk-drawer__body:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-drawer__footer {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); flex-shrink: 0;
-  margin: var(--spacing-0) calc(var(--spacing-0) - var(--drawer-padding, var(--dk-drawer-space))) calc(var(--spacing-0) - var(--drawer-padding, var(--dk-drawer-space)));
-  padding: var(--spacing-4) var(--drawer-padding, var(--dk-drawer-space));
+  margin: var(--spacing-0) calc(var(--spacing-0) - var(--drawer-padding, var(--space-surface))) calc(var(--spacing-0) - var(--drawer-padding, var(--space-surface)));
+  padding: var(--spacing-4) var(--drawer-padding, var(--space-surface));
   border-top: var(--drawer-border-width, var(--border-width-1)) solid var(--drawer-border, var(--border));
 }
 /* A long label wraps onto more lines instead of ending in an ellipsis (GR74): on a phone the footer is narrowest
@@ -110,7 +110,7 @@
 /* Safe areas: on a phone with a notch or a home bar (with viewport-fit=cover), the panel's padding and the
    footer clear them; elsewhere env() is 0 and nothing changes. */
 .dk-drawer__panel {
-  --dk-drawer-pad: var(--drawer-padding, var(--dk-drawer-space));
+  --dk-drawer-pad: var(--drawer-padding, var(--space-surface));
   padding-top: max(var(--dk-drawer-pad), env(safe-area-inset-top));
   padding-bottom: max(var(--dk-drawer-pad), env(safe-area-inset-bottom));
 }

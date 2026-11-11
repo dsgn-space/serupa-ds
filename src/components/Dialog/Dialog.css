@@ -6,10 +6,10 @@
    faster (motion-exit-md); the fade alone with reduced motion.
    --------------------------------------------------------------- */
 @layer dk.components {
-/* The panel's padding when the app sets no --dialog-padding: space-surface, but 16px under 640px, so a phone (or a
-   desktop at 400% zoom) keeps most of its width for the content rather than 2 × (margin + 24px). */
-.dk-dialog { --dk-dialog-space: var(--space-surface); }
-@media (max-width: 639.98px) { .dk-dialog { --dk-dialog-space: var(--spacing-4); } }
+/* Under 640px wide, space-surface is 16px inside the dialog (24px elsewhere): its panel, and a Card in it, keep most
+   of a phone's width (or a desktop's at 400% zoom) for the content rather than 2 × (margin + 24px).
+   --dialog-padding still sets the panel's padding everywhere. */
+@media (max-width: 639.98px) { .dk-dialog { --space-surface: var(--spacing-4); } }
 .dk-dialog {
   --dk-dialog-width: var(--dialog-width-md, var(--container-lg));
   box-sizing: border-box;
@@ -46,7 +46,7 @@
   width: var(--dk-dialog-width);
   max-width: var(--sizing-full);
   max-height: var(--sizing-full);
-  padding: var(--dialog-padding, var(--dk-dialog-space));
+  padding: var(--dialog-padding, var(--space-surface));
   background: var(--dialog-bg, var(--surface-overlay));
   border-radius: var(--dialog-radius, var(--radius-container));
   box-shadow: var(--dialog-shadow, var(--elevation-modal));
@@ -91,16 +91,16 @@
 .dk-dialog--full { padding: var(--spacing-0); }
 .dk-dialog--full .dk-dialog__panel {
   width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--spacing-0); box-shadow: none;
-  padding-top: max(var(--dialog-padding, var(--dk-dialog-space)), env(safe-area-inset-top));
-  padding-bottom: max(var(--dialog-padding, var(--dk-dialog-space)), env(safe-area-inset-bottom));
+  padding-top: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-top));
+  padding-bottom: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-bottom));
 }
 .dk-dialog--full .dk-dialog__body { flex: auto; }
 @media (max-width: 639.98px) {
   .dk-dialog--full-mobile { padding: var(--spacing-0); }
   .dk-dialog--full-mobile .dk-dialog__panel {
     width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--spacing-0); box-shadow: none;
-    padding-top: max(var(--dialog-padding, var(--dk-dialog-space)), env(safe-area-inset-top));
-    padding-bottom: max(var(--dialog-padding, var(--dk-dialog-space)), env(safe-area-inset-bottom));
+    padding-top: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-top));
+    padding-bottom: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-bottom));
   }
   .dk-dialog--full-mobile .dk-dialog__body { flex: auto; }
 }

@@ -89,7 +89,8 @@ describe('Field', () => {
 
   test('right to left, a Latin label keeps its gap before "(optional)" instead of running into it', async () => {
     await render(<div dir="rtl"><Field label="Address line 2" optional><input id="rtl-opt" /></Field></div>);
-    const label = el('rtl-opt').labels![0], marker = label.querySelector('.dk-field__optional') as HTMLElement;
+    const label = el('rtl-opt').labels![0], marker = label.lastElementChild as HTMLElement;   // the "(optional)" after the words
+    expect(marker.textContent).toBe('(optional)');
     const words = document.createRange();
     words.selectNodeContents(label.firstChild!);
     const w = words.getBoundingClientRect(), m = marker.getBoundingClientRect();
