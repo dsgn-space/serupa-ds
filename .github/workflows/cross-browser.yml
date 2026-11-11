@@ -30,6 +30,9 @@ jobs:
     env:
       # Firefox and WebKit from the image's own browsers.
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      # Firefox won't start with a HOME the container's root doesn't own (GitHub's /github/home), as Playwright's
+      # docs say for containers on GitHub Actions.
+      HOME: /root
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -14,19 +14,14 @@ name: CI
 #   (repository variables SERUPA_RUNNER and SERUPA_X86_RUNNER, JSON: '["self-hosted","linux","x86"]'). Jobs with a
 #   screenshot or a timing budget take SERUPA_X86_RUNNER: the baselines are drawn with Chrome for Testing on x64.
 # - Results are kept: a job that passed on the same tree, against the same base, passes again at once without running.
-# - The nightly jobs are in nightly.yml.
+# - The nightly jobs are in nightly.yml. No workflow_dispatch: a run started by hand runs in the default branch's
+#   cache scope on any ref, which CodeQL rightly counts as cache poisoning; the nightly runs main whole instead.
 
 on:
   pull_request:
   merge_group:
   push:
     branches: [main]
-  workflow_dispatch:
-    inputs:
-      since:
-        description: Test only the components changed since this commit (empty tests everything)
-        required: false
-        default: ''
 
 # A new push to a pull request cancels the run before it. Queue and main runs all finish.
 concurrency:
@@ -63,7 +58,6 @@ jobs:
         env:
           EVENT: ${{ github.event_name }}
           QUEUE: ${{ vars.SERUPA_QUEUE }}
-          INPUT_SINCE: ${{ inputs.since }}
         run: |
           set -euo pipefail
           # full: every job runs. wide: the suite runs unnarrowed.
@@ -71,7 +65,6 @@ jobs:
           case "$EVENT" in
             merge_group) full=1; wide=1 ;;
             push) [ "$QUEUE" = 1 ] || { full=1; wide=1; } ;;
-            workflow_dispatch) full=1; if [ -n "$INPUT_SINCE" ]; then since="$INPUT_SINCE"; else wide=1; fi ;;
             pull_request)
               if [ "$QUEUE" = 1 ]; then since="$(git rev-parse HEAD^1)"; else full=1; wide=1; fi ;;
           esac
@@ -384,6 +377,8 @@ jobs:
     timeout-minutes: 75
     env:
       PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      # Firefox won't start with a HOME the container's root doesn't own (GitHub's /github/home).
+      HOME: /root
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
