@@ -176,7 +176,7 @@ describe('DataGrid', () => {
     const row = (id: string) => document.querySelector(`#${id} tbody tr`)!.getBoundingClientRect().height;
     expect(row('sm')).toBeLessThan(row('md'));
     expect(row('lg')).toBeGreaterThanOrEqual(44);
-    expect([css(document.querySelector('#lg td')!).fontSize, document.getElementById('lg')!.closest('[data-component="data-grid"]')!.className]).toEqual(['16px', 'dk-data-grid dk-data-grid--lg']);
+    expect([css(document.querySelector('#lg td')).fontSize, document.getElementById('lg')!.closest('[data-component="data-grid"]')!.className]).toEqual(['16px', 'dk-data-grid dk-data-grid--lg']);
     expect(Math.abs(row('lgl') - row('lg'))).toBeLessThan(2);
     const lgCell = document.querySelector('#lg td') as HTMLElement;
     const before = lgCell.getBoundingClientRect().height;
