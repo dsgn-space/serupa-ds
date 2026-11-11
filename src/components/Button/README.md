@@ -342,6 +342,14 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-icon-nudge` | `spacing-0` | How far a right icon slides on hover. Off by default (0); set it to `var(--spacing-0\.5)` (2px) where right icons are forward arrows. |
 | `--button-icon-nudge-duration` | `motion-change-sm` | How fast the right icon slides (150ms). |
 | `--button-loading-duration` | `motion-enter-sm` | Cross-fade between the content and the loading spinner (150ms). |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--button-depth` | `depth-control` | The tactile layers over the shadow of the primary, secondary and outline variants at rest. None in the flat brands. |
+| `--button-depth-hover` | `depth-control-hover` | The tactile layers on hover. |
+| `--button-depth-pressed` | `depth-control-pressed` | The tactile layers while the button is held down: it sinks. |
 <!-- token-table:end -->
 
 ### All tokens Button reads

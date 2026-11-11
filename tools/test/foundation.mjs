@@ -85,6 +85,9 @@ for (const c of fs.readdirSync(path.join(P, 'src', 'components')).sort()) {
 }
 const baseFile = path.join(P, 'design-tokens', 'serupa.tokens.json');
 const DT_BASE = fs.existsSync(baseFile) ? JSON.parse(fs.readFileSync(baseFile, 'utf8')) : {};
+// A shared token with no DTCG type (a keyword, a gradient) is in css-values.json instead, under its own name.
+const cssOnlyFile = path.join(P, 'design-tokens', 'css-values.json');
+const CSS_ONLY = fs.existsSync(cssOnlyFile) ? JSON.parse(fs.readFileSync(cssOnlyFile, 'utf8')) : {};
 const ALIASES = new Set(groups.color.tokens.filter((x) => x.value && typeof x.value === 'object' && Object.keys(x.value).length > 1).map((x) => x.name));
 function compDefault(tok) {
   const v = tok.$value;
@@ -92,7 +95,7 @@ function compDefault(tok) {
   const [grp, name] = [v.slice(1, -1).split('.')[0], v.slice(1, -1).split('.').slice(1).join('.')];
   if (grp === 'color') return ALIASES.has(name) || TV.has(name) ? `var(--${name})` : null;
   const node = (DT_BASE[grp] || {})[name];
-  if (!node) return null;
+  if (!node) return (CSS_ONLY[grp] || {})[name] ? `var(--${name.replace(/[\\.]/g, '\\$&')})` : null;
   return `var(--${node.$extensions['com.serupa'].cssVar.slice(2).replace(/[\\.]/g, '\\$&')})`;
 }
 const norm = (v) => v.trim().replace(/^"|"$/g, '').replace(/"/g, "'").replace(/\s+/g, ' ');

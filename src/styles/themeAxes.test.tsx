@@ -2,10 +2,12 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import tokens from '../../tokens.json';
 import { render } from 'vitest-browser-react';
-import { commands, page } from 'vitest/browser';
+import { cdp, commands, page, server } from 'vitest/browser';
 import { Button } from '../components/Button/Button';
 import { Input } from '../components/Input/Input';
-import { contrast, lowContrast, THEMES } from '../../tools/test/vitest/helpers';
+import { Checkbox } from '../components/Checkbox/Checkbox';
+import { Switch } from '../components/Switch/Switch';
+import { contrast, lowContrast, THEMES, withMotion } from '../../tools/test/vitest/helpers';
 
 // Theme axes (ADR-0011): data-brand and data-mode on an element without data-theme give the same colors as the
 // flat data-theme="<brand>-<mode>" themes, through light-dark() pairs that the element's color-scheme resolves.
@@ -38,7 +40,7 @@ const axes = (brand?: string, mode?: string) => {
   if (mode) root.setAttribute('data-mode', mode); else root.removeAttribute('data-mode');
 };
 
-afterEach(() => { for (const a of ['data-brand', 'data-mode', 'data-contrast', 'data-density', 'data-shadow', 'data-type-scale']) root.removeAttribute(a); root.setAttribute('data-theme', 'blue-light'); });
+afterEach(() => { for (const a of ['data-brand', 'data-mode', 'data-contrast', 'data-density', 'data-shadow', 'data-depth', 'data-type-scale']) root.removeAttribute(a); root.setAttribute('data-theme', 'blue-light'); });
 
 describe('Theme axes', () => {
   test('data-brand + data-mode give exactly the colors of each data-theme', () => {
@@ -271,6 +273,72 @@ describe('Density axis', () => {
     expect(shadow('el-brand')).not.toBe(shadow('el-root'));
   });
 
+  test('depth: violet is tactile (data-theme or data-brand), the other brands are flat; a blue section inside violet is flat again; data-depth turns it on or off whatever the brand', async () => {
+    await render(<div>
+      <Button id="dp-page">Save</Button>
+      <section data-brand="blue"><Button id="dp-blue">Save</Button></section>
+      <section data-depth="flat"><Button id="dp-flat">Save</Button></section>
+      <section data-brand="emerald" data-depth="tactile"><Button id="dp-em">Save</Button></section>
+    </div>);
+    const look = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return { image: s.backgroundImage, layers: s.boxShadow.split(/,(?![^(]*\))/).length }; };
+    const tactile = (id: string) => look(id).image.startsWith('linear-gradient') && look(id).layers > 1 && /inset/.test(getComputedStyle(document.getElementById(id)!).boxShadow);
+    const states = () => ['dp-page', 'dp-blue', 'dp-flat', 'dp-em'].map(tactile);
+    for (const th of ['violet-light', 'violet-dark']) { root.setAttribute('data-theme', th); expect(states(), th).toEqual([true, false, false, true]); }
+    axes('violet', 'dark');
+    expect(states(), 'data-brand="violet"').toEqual([true, false, false, true]);
+    for (const th of ['blue-light', 'emerald-dark']) { root.removeAttribute('data-brand'); root.removeAttribute('data-mode'); root.setAttribute('data-theme', th); expect(states(), th).toEqual([false, false, false, true]); }
+    // Flat, the button keeps exactly its own shadow under an empty layer, and no image.
+    root.setAttribute('data-theme', 'blue-light');
+    expect(look('dp-page').image).toBe('none');
+  });
+  test('depth: the sheen never lowers the label below 4.5:1, the forced-colors rule drops it, and the tactile layers are only shadows and an image (no motion)', () => {
+    const css = [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules].map((r) => r.cssText); } catch { return []; } }).join('\n');
+    expect(css).toMatch(/@media \(forced-colors: active\)[^@]*--depth-sheen: none/);
+    const sheen = (tokens.shadow.tokens as (Tok & { tactile?: string })[]).find((t) => t.name === 'depth-sheen')!.tactile!;
+    // The light and the shade stay in the top and bottom quarters, clear of the label.
+    expect(sheen).toMatch(/rgb\(255 255 255 \/ 0\) 25%, rgb\(0 0 0 \/ 0\) 75%/);
+    const deep = (tokens.shadow.tokens as (Tok & { tactile?: string })[]).filter((t) => t.tactile != null);
+    expect(deep.map((t) => t.name).sort()).toEqual(['depth-card-lift', 'depth-control', 'depth-control-hover', 'depth-control-pressed', 'depth-field', 'depth-part', 'depth-press', 'depth-sheen', 'depth-sheen-pressed']);
+    for (const t of deep) expect(t.tactile, t.name).not.toMatch(/translate|scale|transition|animation/);
+  });
+  test('tactile motion: violet presses a Button 1px down, slides the Switch thumb on a spring and draws the Checkbox tick on; the flat brands keep their motion; reduced motion stops all three', async () => {
+    await render(<div>
+      <Button id="tm-btn" data-pressed="">Save</Button>
+      <Switch id="tm-sw">Wi-Fi</Switch>
+      <Checkbox id="tm-cb" defaultChecked>Remember me</Checkbox>
+    </div>);
+    const btn = () => getComputedStyle(document.getElementById('tm-btn')!).transform;
+    const thumb = () => withMotion(() => { const t = getComputedStyle(document.getElementById('tm-sw')!.nextElementSibling!); return [t.transitionTimingFunction.split(', ')[0].slice(0, 7), t.transitionDuration.split(', ')[0]]; });
+    const icon = () => withMotion(() => { const t = getComputedStyle(document.getElementById('tm-cb')!.nextElementSibling!); return [t.animationName, t.animationDuration]; });
+    root.setAttribute('data-theme', 'violet-light');
+    expect([btn(), thumb()]).toEqual(['matrix(1, 0, 0, 1, 0, 1)', ['linear(', '0.3s']]);
+    for (const th of ['blue-light', 'emerald-dark']) {
+      root.setAttribute('data-theme', th);
+      expect([btn(), thumb()], th).toEqual(['matrix(1, 0, 0, 1, 0, 0)', ['cubic-b', '0.1s']]);
+    }
+    // Under the pointer a ticked box draws its tick on: over 150ms in violet, at once (0s) in the flat brands.
+    await page.elementLocator(document.getElementById('tm-cb')!.closest('label')!).hover();
+    expect(icon()).toEqual(['dk-checkbox-draw', '0s']);
+    root.setAttribute('data-theme', 'violet-light');
+    expect(icon()).toEqual(['dk-checkbox-draw', '0.15s']);
+    if (server.browser === 'chromium') {
+      const session = cdp() as unknown as { send: (method: string, params: object) => Promise<unknown> };
+      await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+      try { expect([btn(), thumb()[1], icon()[0]]).toEqual(['matrix(1, 0, 0, 1, 0, 0)', '0s', 'none']); } finally { await session.send('Emulation.setEmulatedMedia', { features: [] }); }
+    }
+  });
+  test('GR333: the recessed surface sits on the other side of the page from the raised one in every theme, so dark keeps depth the right way round', () => {
+    const lum = (c: string) => { const [r, g, b] = c.match(/[\d.]+/g)!.slice(0, 3).map((v) => { const x = Number(v) / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+    const probe = document.createElement('span'); document.body.appendChild(probe);
+    const col = (n: string) => { probe.style.color = `var(--${n})`; return lum(getComputedStyle(probe).color); };
+    for (const th of THEMES) {
+      root.setAttribute('data-theme', th);
+      const [page, muted, raised] = [col('surface'), col('surface-muted'), col('surface-raised')];
+      if (th.endsWith('-dark')) expect([muted < page, raised > page], th).toEqual([true, true]);
+      else expect([muted < page, raised >= page], th).toEqual([true, true]);
+    }
+    probe.remove();
+  });
   test('data-type-scale="fluid" (22): text-2xl and up shrink to 70% on a 320px viewport and reach full size at 1280px; body sizes and fixed sections stay put; browser zoom doubles them by 300% (GR82)', async () => {
     root.setAttribute('data-type-scale', 'fluid');
     await render(<div>

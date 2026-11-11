@@ -111,4 +111,5 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px). |
 | `--textarea-border-width` | `border-width-1` | Border width (1px) |
 | `--textarea-radius` | `radius-control` | Corner radius (6px), like Input and Button |
+| `--textarea-depth` | `depth-field` | The tactile inner shade along the top of the box. None in the flat brands. |
 <!-- token-table:end -->

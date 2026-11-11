@@ -24,7 +24,7 @@
   margin-inline-start: calc(var(--spacing-0) - var(--dk-slider-half));
   border: var(--slider-thumb-border-width, var(--border-width-2)) solid var(--slider-thumb-border, var(--primary));
   border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-thumb-bg, var(--field));
-  box-shadow: var(--slider-thumb-shadow, var(--elevation-part));
+  box-shadow: var(--slider-thumb-depth, var(--depth-part)), var(--slider-thumb-shadow, var(--elevation-part));   /* the tactile layers (none in the flat brands) over its shadow */
   cursor: grab; transition: scale var(--motion-change-sm) var(--ease-settle);
 }
 .dk-slider__thumb:focus { outline: none; }

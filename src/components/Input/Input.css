@@ -22,6 +22,7 @@
   border-radius: var(--input-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   cursor: text; vertical-align: middle;
+  box-shadow: var(--input-depth, var(--depth-field));   /* a tactile brand's inner shade (none in the flat ones) */
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);
 }
 .dk-input--size-sm { --dk-input-h: var(--input-height-sm, var(--control-height-sm)); --dk-input-px: var(--input-padding-x-sm, var(--spacing-2)); --dk-input-icon: var(--input-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
@@ -49,7 +50,7 @@
 /* Focus: the border and a ring hugging it take the focus color (2px in all), and a transparent outline that
    forced-colors mode draws, since box-shadow rings disappear there. The ring shows at once (it fades only on the
    way out), so focus is never late, and a field a popup focuses as it opens doesn't animate on its first frame. */
-.dk-input:focus-within { transition-duration: var(--duration-0); --dk-input-bd: var(--dk-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
+.dk-input:focus-within { transition-duration: var(--duration-0); --dk-input-bd: var(--dk-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-ring), var(--input-depth, var(--depth-field)); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
 .dk-input--invalid { --dk-input-bd: var(--input-invalid, var(--danger)); --dk-input-ring: var(--input-invalid, var(--danger)); }
 @media (hover: hover) { .dk-input--invalid:hover:not(.dk-input--disabled, :has(.dk-input__field:disabled), .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-invalid, var(--danger)); } }
 /* A native constraint (required, type="email", pattern, min…) that fails after people edit the field or try to send the

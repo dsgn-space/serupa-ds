@@ -144,4 +144,10 @@ Each is an optional override: set it on the page, a container or one select. The
 | --- | --- | --- |
 | `--select-border-width` | `border-width-1` | Border width (1px) |
 | `--select-radius` | `radius-control` | Corner radius (6px) |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--select-depth` | `depth-field` | The tactile inner shade along the top of the box. None in the flat brands. |
 <!-- token-table:end -->
