@@ -20,6 +20,11 @@ export default {
         'serupa/color-through-component-token': true,
         'serupa/focus-ring-outline': true,
         'serupa/no-physical-shorthand': true,
+        // Colors come from tokens too (GR276): no hex, no named color (transparent and currentColor are fine), no
+        // color function with literal channels. A relative color, oklch(from var(--token) …), says why in a comment.
+        'color-no-hex': [true, { message: (c) => `${c} is a raw color: read a token, var(--<component>-<part>, var(--<color>))` }],
+        'color-named': ['never', { ignoreProperties: ['/^mask/', '/^--dk-/'], message: (c) => `${c} is a raw color: read a token, var(--<component>-<part>, var(--<color>))` }],
+        'function-disallowed-list': [['rgb', 'rgba', 'hsl', 'hsla', 'hwb', 'lab', 'lch', 'oklab', 'oklch', 'color'], { message: (f) => `${f}() makes a raw color: read a token, or mix tokens with color-mix()` }],
         // Selectors that reach into another block's elements today: the Input-based fields style .dk-input__field,
         // AvatarGroup .dk-avatar__frame, DateRangePicker the calendar's arrows, Image the dialog's body. Each goes
         // when Input, Avatar, Calendar and Dialog get the component token or modifier it needs (SG2 follow-ups).
