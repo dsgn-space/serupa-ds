@@ -3,6 +3,7 @@ import * as React from 'react';
 import { cn, domId, oneOf, omit } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
+import { prefersReducedMotion } from '../../internal/media';
 import { flattenChildren } from '../../internal/children';
 import * as icons from '../../material/builtin';
 import { useSettings } from '../../internal/provider';
@@ -179,7 +180,7 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
     if (grow.current) { grow.current.cancel(); grow.current = null; }
     const fade = typeof panel.getAnimations === 'function' ? panel.getAnimations().find((a) => (a as CSSTransition).transitionProperty === 'opacity') : null;
     const timing = fade && fade.effect ? fade.effect.getTiming() : null;
-    if (!timing || !timing.duration || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!timing || !timing.duration || prefersReducedMotion(panel)) return;
     const to = open ? panel.offsetHeight : 0;
     if (from === to) return;
     // Closing, it slows to a stop on ease-move rather than the fade's ease-exit, which would end what's below at full speed.
