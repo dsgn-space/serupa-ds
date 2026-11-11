@@ -156,7 +156,7 @@ describe('FilterBar', () => {
   });
 
   test('its words come from the labels', async () => {
-    await render(<SerupaProvider labels={idLabels}><FilterBar fields={fields} defaultValue={{ owner: 'Ana' }} resultsCount={3} /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><FilterBar fields={fields} defaultValue={{ owner: 'Ana' }} resultsCount={3} /></SerupaProvider>);
     await expect.element(page.getByRole('button', { name: 'Owner: Ana' })).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Tambah filter' })).toBeVisible();
     await expect.element(page.getByRole('status').filter({ hasText: /hasil/ })).toHaveTextContent('3 hasil');
