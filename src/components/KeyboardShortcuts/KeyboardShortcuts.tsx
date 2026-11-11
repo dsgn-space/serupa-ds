@@ -123,15 +123,16 @@ const none = () => NONE;
    person using the page, from the switch in the help dialog (WCAG 2.1.4): speech input, or a stray key, sets them off
    by accident. The choice is kept in localStorage for every page of the app; where storage is blocked it lasts until
    the page reloads. Keys such as Escape or the arrows aren't character keys, so they keep working. */
-const SINGLE_KEYS = 'serupa-single-key-shortcuts';
+const SINGLE_KEYS_KEY = 'serupa-single-key-shortcuts';
+// module state: a cache of the browser's own localStorage choice; a server only ever reads it as on, and only a click sets it.
 let single: boolean | undefined;
 function singleKeysOn(): boolean {
-  if (single === undefined) { try { single = localStorage.getItem(SINGLE_KEYS) !== 'off'; } catch { single = true; } }
+  if (single === undefined) { try { single = localStorage.getItem(SINGLE_KEYS_KEY) !== 'off'; } catch { single = true; } }
   return single;
 }
 function setSingleKeys(on: boolean): void {
   single = on;
-  try { if (on) localStorage.removeItem(SINGLE_KEYS); else localStorage.setItem(SINGLE_KEYS, 'off'); } catch { /* blocked: this page only */ }
+  try { if (on) localStorage.removeItem(SINGLE_KEYS_KEY); else localStorage.setItem(SINGLE_KEYS_KEY, 'off'); } catch { /* blocked: this page only */ }
   changed();
 }
 const characterKey = (c: Combo): boolean => c.key.length === 1 && !c.mod && !c.ctrl && !c.meta && !c.alt;
