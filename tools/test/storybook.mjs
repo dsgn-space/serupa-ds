@@ -126,6 +126,13 @@ async function checkDocs(e, w) {
     return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
   out.push(t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(24, 24, 27)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark)));
+  // Reflow on the docs themselves (WCAG 1.4.10): at 320px, a 1280px screen at 400% zoom, the page scrolls only up and
+  // down. Inline code and table cells break where they must, and wide code blocks and stories scroll in their own box.
+  await w.page.setViewportSize({ width: 320, height: 640 });
+  await w.page.evaluate(() => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))));
+  const wide = await w.page.evaluate(() => document.documentElement.scrollWidth);
+  await w.page.setViewportSize({ width: 1000, height: 800 });
+  if (!DOCS_REFLOW_KNOWN.has(e.id)) out.push(t(`docs · ${e.title} · at 320px wide the page scrolls only up and down`, wide <= 321, `it scrolls sideways to ${wide}px`));
   return out;
 }
 // WCAG 1.4.12's text spacing, as a user's style sheet sets it.
@@ -157,6 +164,14 @@ const cutOff = () => {
 // wrap, or a story with a fixed width).
 // One that stops failing fails here too, so the list only shrinks.
 const REFLOW_KNOWN = new Set([
+]);
+// The docs pages that still scroll sideways at 320px: a foundation table or swatch row with a fixed width, an anatomy
+// diagram or a Do and don't story wider than the page, or a code block that doesn't keep to its box. Each one fixed
+// comes off the list; a page not on it that scrolls sideways fails.
+const DOCS_REFLOW_KNOWN = new Set([
+  'foundations-colors--docs', 'foundations-themes--docs', 'foundations-spacing--docs', 'components-content-codeblock--docs',
+  'components-feedback-alert--docs', 'components-feedback-emptystate--docs', 'components-feedback-meter--docs', 'components-feedback-progress--docs',
+  'components-forms-calendar--docs', 'components-overlays-dialog--docs', 'components-overlays-notificationcenter--docs', 'changelog--docs',
 ]);
 // The stories whose text a box still cuts off at 200% (queue item TX1).
 const TEXT_200_KNOWN = new Set([
