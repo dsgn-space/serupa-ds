@@ -1,24 +1,11 @@
 'use client';
 import * as React from 'react';
+import { REDUCED_MOTION, mediaList } from './mediaList';
 
 /** The screen widths of the `screen-*` tokens and the `sm:` … `2xl:` utility prefixes, in px (min-width, mobile first). */
 export const BREAKPOINTS = { sm: 640, md: 768, lg: 1024, xl: 1280, '2xl': 1536 } as const;
 /** A breakpoint's name: `'sm'` (640px), `'md'` (768px), `'lg'` (1024px), `'xl'` (1280px) or `'2xl'` (1536px). */
 export type Breakpoint = keyof typeof BREAKPOINTS;
-
-// module state: one MediaQueryList per query text, so reading a query on every render doesn't build a new one each
-// time. It holds only how the visitor's screen answers a query, never a request's data, and the server never fills it.
-const lists = new Map<string, MediaQueryList>();
-function mediaList(query: string): MediaQueryList | null {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return null;
-  let m = lists.get(query);
-  if (!m) {
-    if (lists.size > 100) lists.clear();
-    m = window.matchMedia(query);
-    lists.set(query, m);
-  }
-  return m;
-}
 
 /** Whether a CSS media query matches now, kept up to date as it changes (the window resized, the phone turned, a
  *  setting switched). `useMediaQuery('(hover: hover)')`. Server HTML and hydration use `serverValue` (default
@@ -48,5 +35,5 @@ export function useBreakpoint(name: Breakpoint, options?: { serverValue?: boolea
  *  animation (scrolling smoothly, a count going up, a confetti burst): CSS transitions already follow the setting
  *  through the motion tokens and base.css. False in server HTML and until hydrated. */
 export function useReducedMotion(): boolean {
-  return useMediaQuery('(prefers-reduced-motion: reduce)');
+  return useMediaQuery(REDUCED_MOTION);
 }

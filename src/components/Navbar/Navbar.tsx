@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { useBreakpoint } from '../../internal/media';
 import { config } from '../../internal/config';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
@@ -130,13 +131,8 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
     return () => { if (ro) ro.disconnect(); cancelAnimationFrame(raf); document.removeEventListener('focusin', onFocus); root.style.removeProperty('--dk-navbar-offset'); };
   }, [props.sticky]);
   // closes when the screen grows past the breakpoint, so it isn't open the next time it shrinks
-  React.useEffect(() => {
-    if (!open || typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(min-width: 768px)');
-    const on = () => { if (mq.matches) setOpen(false); };
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, [open]);
+  const wide = useBreakpoint('md');
+  React.useEffect(() => { if (wide) setOpen(false); }, [wide]);
   // A press outside the bar (on the page under the open panel) closes it, as a Popover does. Focus stays where the press puts it.
   React.useEffect(() => {
     if (!open) return;
