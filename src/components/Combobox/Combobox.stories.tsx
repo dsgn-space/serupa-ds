@@ -11,7 +11,7 @@ const usePeopleOptions = () => usePeople().map((p, i) => ({ value: p.name.split(
 const meta = {
   title: 'Components/Forms/Combobox',
   component: Combobox as React.ComponentType<ComboboxSingleProps>,   // one pick; several are in Multiple
-  args: { 'aria-label': 'Country', placeholder: 'Pick a country', options: COUNTRIES, size: 'md', clearable: false, disabled: false },
+  args: { 'aria-label': 'Country', placeholder: 'Choose a country', options: COUNTRIES, size: 'md', clearable: false, disabled: false },
   argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   decorators: [(Story) => <div style={{ maxWidth: 'var(--container-xs)', minHeight: 'var(--spacing-80)' }}><Story /></div>],
 } satisfies Meta<ComboboxSingleProps>;
@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 type Option = ReturnType<typeof usePeopleOptions>[number];
 function Reviewers({ people }: { people: Option[] }) {
   const [team, setTeam] = React.useState<string[]>(() => people.slice(0, 2).map((p) => p.value));
-  return <Field label="Reviewers" hint="Pick everyone who should review this.">
+  return <Field label="Reviewers" hint="Choose everyone who should review this.">
     <Combobox multiple clearable value={team} onValueChange={setTeam} options={people} placeholder="Add a reviewer" name="reviewers" emptyText={people.length ? undefined : 'No team members yet'} />
   </Field>;
 }
@@ -65,7 +65,7 @@ export const WithDescriptions: Story = {
   },
 };
 export const Groups: Story = {
-  args: { 'aria-label': 'Country', placeholder: 'Pick a country', options: [
+  args: { 'aria-label': 'Country', placeholder: 'Choose a country', options: [
     { label: 'Africa', options: ['Côte d’Ivoire', 'Egypt', 'Kenya'] },
     { label: 'Americas', options: ['Argentina', 'Brazil', 'Canada', 'Mexico', 'Peru'] },
     { label: 'Asia and Oceania', options: ['Australia', 'India', 'Japan'] },
@@ -99,7 +99,7 @@ export const Sizes: Story = {
 
 export const States: Story = {
   render: () => <Col>
-    <Combobox aria-label="Empty" options={COUNTRIES} placeholder="Pick a country" />
+    <Combobox aria-label="Empty" options={COUNTRIES} placeholder="Choose a country" />
     <Combobox aria-label="Chosen, clearable" options={COUNTRIES} defaultValue="Japan" clearable />
     <Combobox aria-label="With an icon" options={COUNTRIES} defaultValue="Peru" leftIcon="public" />
     <Combobox aria-label="Invalid" options={COUNTRIES} defaultValue="Norway" invalid />
@@ -110,7 +110,7 @@ export const States: Story = {
 
 export const InAFieldWithAnError: Story = {
   name: 'In a field, with an error',
-  render: () => <Field label="Country" error="Pick the country on your passport." required><Combobox options={COUNTRIES} placeholder="Pick a country" /></Field>,
+  render: () => <Field label="Country" error="Choose the country on your passport." required><Combobox options={COUNTRIES} placeholder="Choose a country" /></Field>,
 };
 
 export const LongOptions: Story = {

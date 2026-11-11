@@ -5,7 +5,7 @@
 
 # Group
 - group "Notifications":
-  - text: Notifications Pick any
+  - text: Notifications Choose any
   - checkbox "Email" [checked]
   - text: Email
   - checkbox "SMS"

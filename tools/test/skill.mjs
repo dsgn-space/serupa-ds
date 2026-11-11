@@ -52,11 +52,17 @@ const pinned = [...prose.matchAll(/serupa-ds#v(\d+\.\d+\.\d+)/g)].map((m) => m[1
 t(`it installs the current version (v${version}; tools/release.mjs stamps it)`, pinned.length && pinned.every((v) => v === version), pinned.join(', ') || 'no serupa-ds#v… install line');
 
 // Length: an agent reads the whole skill before it writes a line, so every word costs each task it's used for, and a
-// long one gets skimmed. 3,000 words on 2026-11-06, the components index included; the budget leaves room for the
-// index to grow. Over it, cut or move detail into the component READMEs it links, rather than raising the number.
-const BUDGET = 3500;
-const wordCount = skill.replace(/^---\n[\s\S]*?\n---\n/, '').split(/\s+/).filter(Boolean).length;
-t(`it stays within ${BUDGET.toLocaleString('en')} words, so agents read all of it`, wordCount <= BUDGET, `${wordCount} words`);
+// long one gets skimmed. The written part (everything but the components index) was about 1,300 words on 2026-11-11.
+// Over 1,500, cut or move detail into the component READMEs it links, rather than raising the number. The index
+// grows by one line per component (registry.mjs writes each guide's first sentence), so it gets a budget per
+// component instead, its name and group heading included: 30 words on average for 14.3.0's 111 components. Over
+// 32, shorten the longest first sentences in the guides.
+const BUDGET = 1500, PER_COMPONENT = 32;
+const wordsOf = (text) => text.split(/\s+/).filter(Boolean).length;
+const wordCount = wordsOf(skill.replace(/^---\n[\s\S]*?\n---\n/, '').replace(index, ''));
+t(`its written part stays within ${BUDGET.toLocaleString('en')} words, so agents read all of it`, wordCount <= BUDGET, `${wordCount} words`);
+const perComponent = wordsOf(index) / Math.max(listed.length, 1);
+t(`its components index takes at most ${PER_COMPONENT} words a component`, perComponent <= PER_COMPONENT, `${perComponent.toFixed(1)} words a component`);
 
 // The review skill beside it (skills/serupa-review/SKILL.md, PN6): it loads, it names only real exports, classes and
 // tokens, and it stays short, since an agent reads it on top of the main skill for every review.
