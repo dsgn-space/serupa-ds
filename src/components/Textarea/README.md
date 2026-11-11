@@ -36,7 +36,7 @@ const { Textarea } = window.Serupa;
 
 ## Anatomy
 
-Drawn from the `Count` story.
+Drawn from the `Actions` story.
 
 1. **Field** (`.dk-textarea__field`): where the text is typed; it can grow with it.
 2. **Count** (`.dk-textarea__count`): how many characters are left, announced as the limit nears.
