@@ -67,6 +67,19 @@ describe('ScrollArea', () => {
     expect(css(el('s')).maskImage).toBe('none');
   });
 
+  test('fade: content that grows while it already scrolls (rows added, a row that wraps once a font loads) fades the end again', async () => {
+    const { rerender } = await render(<ScrollArea id="g" fade aria-label="List" style={{ maxHeight: 100 }}>{rows(10)}</ScrollArea>);
+    const cls = () => [el('g').classList.contains('dk-scroll-area--more-start'), el('g').classList.contains('dk-scroll-area--more-end')];
+    el('g').scrollTop = 10000;
+    await expect.poll(cls).toEqual([true, false]);
+    await rerender(<ScrollArea id="g" fade aria-label="List" style={{ maxHeight: 100 }}>{rows(20)}</ScrollArea>);
+    await expect.poll(cls).toEqual([true, true]);
+    el('g').scrollTop = 10000;
+    await expect.poll(cls).toEqual([true, false]);
+    (el('g').lastElementChild as HTMLElement).style.height = '200px';   // no render: only its size changes
+    await expect.poll(cls).toEqual([true, true]);
+  });
+
   test('the scrollbar thumb reads 3:1 on the surface, and the focus ring too, in all six themes', async () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><ScrollArea id="s" aria-label="List" style={{ maxHeight: 100 }}>{rows(10)}</ScrollArea></div>);
     for (const th of THEMES) {

@@ -30,7 +30,6 @@ export const ScrollArea = /* @__PURE__ */ component<HTMLDivElement, ScrollAreaPr
   const rest = omit(props, OWN);
   const L = useSettings(words).labels;
   const box = React.useRef<HTMLDivElement | null>(null);
-  const scrolls = useScrolls(box);
   const orientation = oneOf(['vertical', 'horizontal', 'both'] as const, props.orientation, 'vertical');
   const across = orientation === 'horizontal';
   const [edges, setEdges] = React.useState<Edges>({ start: true, end: true });
@@ -43,6 +42,8 @@ export const ScrollArea = /* @__PURE__ */ component<HTMLDivElement, ScrollAreaPr
     const next = { start: pos <= 1, end: pos >= room - 1 };
     setEdges((e) => (e.start === next.start && e.end === next.end ? e : next));
   }, [across]);
+  // ...and whenever the box or its content changes size (rows added, a line that wraps once a font loads).
+  const scrolls = useScrolls(box, props.fade ? read : undefined);
   React.useLayoutEffect(() => { if (props.fade) read(); }, [props.fade, scrolls, read]);
 
   const name = props['aria-labelledby'] ? { 'aria-labelledby': props['aria-labelledby'] } : { 'aria-label': props['aria-label'] || L.scrollArea };
