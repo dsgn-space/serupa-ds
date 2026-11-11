@@ -61,7 +61,7 @@
   --chart-1: var(--blue-800);
   --chart-2: var(--orange-600);
   --chart-3: var(--pink-800);
-  --chart-4: var(--lime-600);
+  --chart-4: var(--cyan-600);
   --chart-5: var(--yellow-800);
   --chart-6: var(--teal-600);
   --chart-7: var(--violet-800);
@@ -411,9 +411,9 @@
   --info-border: var(--sky-800);
   --link-visited: var(--violet-300);
   --chart-1: var(--blue-500);
-  --chart-2: var(--orange-600);
+  --chart-2: var(--orange-500);
   --chart-3: var(--pink-600);
-  --chart-4: var(--lime-600);
+  --chart-4: var(--cyan-500);
   --chart-5: var(--yellow-700);
   --chart-6: var(--teal-600);
   --chart-7: var(--violet-500);
@@ -498,7 +498,7 @@
   --chart-1: var(--blue-800);
   --chart-2: var(--orange-600);
   --chart-3: var(--pink-800);
-  --chart-4: var(--lime-600);
+  --chart-4: var(--cyan-600);
   --chart-5: var(--yellow-800);
   --chart-6: var(--teal-600);
   --chart-7: var(--violet-800);
@@ -581,9 +581,9 @@
   --info-border: var(--sky-800);
   --link-visited: var(--fuchsia-300);
   --chart-1: var(--blue-500);
-  --chart-2: var(--orange-600);
+  --chart-2: var(--orange-500);
   --chart-3: var(--pink-600);
-  --chart-4: var(--lime-600);
+  --chart-4: var(--cyan-500);
   --chart-5: var(--yellow-700);
   --chart-6: var(--teal-600);
   --chart-7: var(--violet-500);
@@ -668,7 +668,7 @@
   --chart-1: var(--blue-800);
   --chart-2: var(--orange-600);
   --chart-3: var(--pink-800);
-  --chart-4: var(--lime-600);
+  --chart-4: var(--cyan-600);
   --chart-5: var(--yellow-800);
   --chart-6: var(--teal-600);
   --chart-7: var(--violet-800);
@@ -751,9 +751,9 @@
   --info-border: var(--sky-800);
   --link-visited: var(--violet-300);
   --chart-1: var(--blue-500);
-  --chart-2: var(--orange-600);
+  --chart-2: var(--orange-500);
   --chart-3: var(--pink-600);
-  --chart-4: var(--lime-600);
+  --chart-4: var(--cyan-500);
   --chart-5: var(--yellow-700);
   --chart-6: var(--teal-600);
   --chart-7: var(--violet-500);
@@ -832,7 +832,9 @@
   --info-border: light-dark(var(--sky-300), var(--sky-800));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
   --chart-1: light-dark(var(--blue-800), var(--blue-500));
+  --chart-2: light-dark(var(--orange-600), var(--orange-500));
   --chart-3: light-dark(var(--pink-800), var(--pink-600));
+  --chart-4: light-dark(var(--cyan-600), var(--cyan-500));
   --chart-5: light-dark(var(--yellow-800), var(--yellow-700));
   --chart-7: light-dark(var(--violet-800), var(--violet-500));
   --chart-seq-1: light-dark(var(--blue-200), var(--blue-800));
