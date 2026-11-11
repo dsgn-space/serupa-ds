@@ -553,6 +553,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
 
   // Inline completion's added part, selected once the field shows it.
   const select = React.useRef<[number, number] | null>(null);
+  // every render: the completion is set during typing and the field's value lands in whichever render follows; the
+  // ref is empty on every other render, so this does nothing and measures nothing then.
   React.useLayoutEffect(() => {
     const r = select.current, el = input.current;
     select.current = null;
