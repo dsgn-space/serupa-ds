@@ -253,7 +253,7 @@ export const ChatSteps = /* @__PURE__ */ component<HTMLOListElement, ChatStepsPr
   const rest = omit(props, { steps: 1, className: 1 } as const);
   const said = { running: L.chatStepRunning, done: L.chatStepDone, failed: L.chatStepFailed };
   return (
-    <ol {...rest} ref={ref} className={cn('dk-chat-steps', props.className)} data-component="chat-steps">
+    <ol role="list" {...rest} ref={ref} className={cn('dk-chat-steps', props.className)} data-component="chat-steps">
       {(props.steps || []).map((step) => {
         const status: ChatStepStatus = step.status === 'done' || step.status === 'failed' ? step.status : 'running';
         return (
