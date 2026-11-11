@@ -70,6 +70,29 @@
 </li>
 </ol>
 <div class="dk-chat-message__bubble" dir="auto">The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn&#x27;t block duplicates. I can open a ticket to reverse it.</div>
+<div class="dk-chat-message__branches" role="group" aria-label="Response 2 of 3">
+<button aria-label="Previous response" data-shape="square" title="Previous response" data-component="button" data-variant="ghost" data-size="sm" data-icon-only="" type="button" class="dk-btn dk-btn--ghost dk-btn--size-sm dk-btn--icon-only dk-icon-btn">
+<span class="dk-btn__icon dk-btn__icon--only" aria-hidden="true">
+<span aria-hidden="true" data-icon="chevron_left" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m432-480 156 156q11 11 11 28t-11 28-28 11-28-11l-184-184q-6-6-8.5-13t-2.5-15 2.5-15 8.5-13l184-184q11-11 28-11t28 11 11 28-11 28z">
+</path>
+</svg>
+</span>
+</span>
+</button>
+<span class="dk-chat-message__branch" aria-hidden="true">2 / 3</span>
+<button aria-label="Next response" data-shape="square" title="Next response" data-component="button" data-variant="ghost" data-size="sm" data-icon-only="" type="button" class="dk-btn dk-btn--ghost dk-btn--size-sm dk-btn--icon-only dk-icon-btn">
+<span class="dk-btn__icon dk-btn__icon--only" aria-hidden="true">
+<span aria-hidden="true" data-icon="chevron_right" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m504-480-156-156q-11-11-11-28t11-28 28-11 28 11l184 184q6 6 8.5 13t2.5 15-2.5 15-8.5 13l-184 184q-11 11-28 11t-28-11-11-28 11-28z">
+</path>
+</svg>
+</span>
+</span>
+</button>
+</div>
 </div>
 </div>
 <div class="dk-chat-message dk-chat-message--own" data-component="chat-message">
@@ -145,6 +168,120 @@
 </div>
 </div>
 </div>
+<button type="submit" aria-disabled="true" aria-label="Send" data-shape="square" title="Send" data-component="button" data-variant="primary" data-size="md" data-icon-only="" class="dk-btn dk-btn--primary dk-btn--size-md dk-btn--icon-only dk-icon-btn">
+<span class="dk-btn__icon dk-btn__icon--only" aria-hidden="true">
+<span aria-hidden="true" data-icon="send" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m176-183q-20 8-38-3.5t-18-33.5v-180l320-80-320-80v-180q0-22 18-33.5t38-3.5l616 260q25 11 25 37t-25 37z">
+</path>
+</svg>
+</span>
+</span>
+</button>
+</div>
+</form>
+</div>
+
+<!-- Approval -->
+<div class="flex flex-col border rounded-lg" style="height:460px;max-width:520px">
+<div class="dk-chat flex-auto" data-component="chat">
+<div class="dk-chat__log" role="log" tabindex="0" aria-label="Conversation with Support">
+<div class="dk-chat-message dk-chat-message--own" data-component="chat-message">
+<span class="dk-chat-message__avatar" aria-hidden="true">
+</span>
+<div class="dk-chat-message__main">
+<div class="dk-chat-message__head">
+<span class="dk-chat-message__author">You</span>
+</div>
+<div class="dk-chat-message__bubble" dir="auto">Please reverse the second refund.</div>
+</div>
+</div>
+<div class="dk-chat-message" data-component="chat-message">
+<span class="dk-chat-message__avatar" aria-hidden="true">
+</span>
+<div class="dk-chat-message__main">
+<div class="dk-chat-message__head">
+<span class="dk-chat-message__author">Assistant</span>
+</div>
+<div class="dk-chat-message__bubble" dir="auto">This needs your OK first.</div>
+<div class="dk-chat-message__attachments">
+<div role="group" aria-labelledby="dk-chat-approval_R_7l5_" class="dk-chat-approval" data-component="chat-approval" data-status="pending">
+<div class="dk-chat-approval__title" id="dk-chat-approval_R_7l5_" dir="auto">Reverse refund 2 on order 1042 ($24.00)</div>
+<div class="dk-chat-approval__detail" dir="auto">Charges the customer&#x27;s card again; they get an email.</div>
+<div class="dk-chat-approval__actions">
+<button data-component="button" data-variant="primary" data-size="sm" type="button" class="dk-btn dk-btn--primary dk-btn--size-sm">
+<span class="dk-btn__label">Approve</span>
+</button>
+<button data-component="button" data-variant="secondary" data-size="sm" type="button" class="dk-btn dk-btn--secondary dk-btn--size-sm">
+<span class="dk-btn__label">Deny</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<form class="dk-chat-composer" data-component="chat-composer">
+<div class="dk-chat-composer__row">
+<span class="dk-textarea dk-textarea--size-md dk-textarea--resize-none dk-textarea--auto dk-chat-composer__field" data-component="textarea" data-size="md">
+<textarea aria-label="Message" placeholder="Ask the assistant" rows="1" class="dk-textarea__field" style="--dk-ta-rows:1;--dk-ta-max-rows:6">
+</textarea>
+</span>
+<button type="submit" aria-disabled="true" aria-label="Send" data-shape="square" title="Send" data-component="button" data-variant="primary" data-size="md" data-icon-only="" class="dk-btn dk-btn--primary dk-btn--size-md dk-btn--icon-only dk-icon-btn">
+<span class="dk-btn__icon dk-btn__icon--only" aria-hidden="true">
+<span aria-hidden="true" data-icon="send" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m176-183q-20 8-38-3.5t-18-33.5v-180l320-80-320-80v-180q0-22 18-33.5t38-3.5l616 260q25 11 25 37t-25 37z">
+</path>
+</svg>
+</span>
+</span>
+</button>
+</div>
+</form>
+</div>
+
+<!-- Citations -->
+<div class="flex flex-col border rounded-lg" style="height:460px;max-width:520px">
+<div class="dk-chat flex-auto" data-component="chat">
+<div class="dk-chat__log" role="log" tabindex="0" aria-label="Conversation with Support">
+<div class="dk-chat-message dk-chat-message--own" data-component="chat-message">
+<span class="dk-chat-message__avatar" aria-hidden="true">
+</span>
+<div class="dk-chat-message__main">
+<div class="dk-chat-message__head">
+<span class="dk-chat-message__author">You</span>
+</div>
+<div class="dk-chat-message__bubble" dir="auto">How long do refunds take?</div>
+</div>
+</div>
+<div class="dk-chat-message" data-component="chat-message">
+<span class="dk-chat-message__avatar" aria-hidden="true">
+</span>
+<div class="dk-chat-message__main">
+<div class="dk-chat-message__head">
+<span class="dk-chat-message__author">Assistant</span>
+</div>
+<div class="dk-chat-message__bubble" dir="auto">Card refunds take 5 to 10 business days to show up <a href="https://docs.example.com/refunds" class="dk-chat-citation" data-component="chat-citation">
+<span class="dk-chat-citation__index">1</span>
+<span class="dk-chat-citation__source" dir="auto">docs.example.com</span>
+</a>, and bank transfers up to 3 days <a href="https://www.example.com/help/transfers" interestfor="dk-hcard_R_24l5_" class="dk-chat-citation" data-component="chat-citation">
+<span class="dk-chat-citation__index">2</span>
+<span class="dk-chat-citation__source" dir="auto">example.com</span>
+</a>
+<div id="dk-hcard_R_24l5_" popover="manual" hidden="" class="dk-hover-card" data-component="hover-card" data-state="closed" inert="">
+</div>.</div>
+</div>
+</div>
+</div>
+</div>
+<form class="dk-chat-composer" data-component="chat-composer">
+<div class="dk-chat-composer__row">
+<span class="dk-textarea dk-textarea--size-md dk-textarea--resize-none dk-textarea--auto dk-chat-composer__field" data-component="textarea" data-size="md">
+<textarea aria-label="Message" placeholder="Ask the assistant" rows="1" class="dk-textarea__field" style="--dk-ta-rows:1;--dk-ta-max-rows:6">
+</textarea>
+</span>
 <button type="submit" aria-disabled="true" aria-label="Send" data-shape="square" title="Send" data-component="button" data-variant="primary" data-size="md" data-icon-only="" class="dk-btn dk-btn--primary dk-btn--size-md dk-btn--icon-only dk-icon-btn">
 <span class="dk-btn__icon dk-btn__icon--only" aria-hidden="true">
 <span aria-hidden="true" data-icon="send" class="dk-icon">
@@ -362,13 +499,13 @@
 </svg>
 </span>
 <span class="dk-attachment__body">
-<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_6i9_-meta">
+<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_7i9_-meta">
 <span class="dk-attachment__name-text" dir="auto" title="Invoice March 2026.pdf">
 <span class="dk-attachment__name-start" aria-hidden="true">Invoice March 2026.pdf</span>
-<span class="dk-visually-hidden" id="dk-at_R_6i9_-name">Invoice March 2026.pdf</span>
+<span class="dk-visually-hidden" id="dk-at_R_7i9_-name">Invoice March 2026.pdf</span>
 </span>
 </a>
-<span class="dk-attachment__meta" id="dk-at_R_6i9_-meta" dir="auto">
+<span class="dk-attachment__meta" id="dk-at_R_7i9_-meta" dir="auto">
 <span class="dk-attachment__kind">PDF</span>
 <span class="dk-attachment__size">1.5 MB</span>
 </span>
@@ -508,13 +645,13 @@ Line two after a break</div>
 </svg>
 </span>
 <span class="dk-attachment__body">
-<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_6i9_-meta">
+<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_7i9_-meta">
 <span class="dk-attachment__name-text" dir="auto" title="Invoice March 2026.pdf">
 <span class="dk-attachment__name-start" aria-hidden="true">Invoice March 2026.pdf</span>
-<span class="dk-visually-hidden" id="dk-at_R_6i9_-name">Invoice March 2026.pdf</span>
+<span class="dk-visually-hidden" id="dk-at_R_7i9_-name">Invoice March 2026.pdf</span>
 </span>
 </a>
-<span class="dk-attachment__meta" id="dk-at_R_6i9_-meta" dir="auto">
+<span class="dk-attachment__meta" id="dk-at_R_7i9_-meta" dir="auto">
 <span class="dk-attachment__kind">PDF</span>
 <span class="dk-attachment__size">1.5 MB</span>
 </span>
@@ -600,13 +737,13 @@ Line two after a break</div>
 </svg>
 </span>
 <span class="dk-attachment__body">
-<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_q95_-meta">
+<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_u95_-meta">
 <span class="dk-attachment__name-text" dir="auto" title="Invoice March 2026.pdf">
 <span class="dk-attachment__name-start" aria-hidden="true">Invoice March 2026.pdf</span>
-<span class="dk-visually-hidden" id="dk-at_R_q95_-name">Invoice March 2026.pdf</span>
+<span class="dk-visually-hidden" id="dk-at_R_u95_-name">Invoice March 2026.pdf</span>
 </span>
 </a>
-<span class="dk-attachment__meta" id="dk-at_R_q95_-meta" dir="auto">
+<span class="dk-attachment__meta" id="dk-at_R_u95_-meta" dir="auto">
 <span class="dk-attachment__kind">PDF</span>
 <span class="dk-attachment__size">1.5 MB</span>
 </span>
@@ -710,13 +847,13 @@ Line two after a break</div>
 </svg>
 </span>
 <span class="dk-attachment__body">
-<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_q95_-meta">
+<a class="dk-attachment__name" href="#invoice" aria-describedby="dk-at_R_u95_-meta">
 <span class="dk-attachment__name-text" dir="auto" title="Invoice March 2026.pdf">
 <span class="dk-attachment__name-start" aria-hidden="true">Invoice March 2026.pdf</span>
-<span class="dk-visually-hidden" id="dk-at_R_q95_-name">Invoice March 2026.pdf</span>
+<span class="dk-visually-hidden" id="dk-at_R_u95_-name">Invoice March 2026.pdf</span>
 </span>
 </a>
-<span class="dk-attachment__meta" id="dk-at_R_q95_-meta" dir="auto">
+<span class="dk-attachment__meta" id="dk-at_R_u95_-meta" dir="auto">
 <span class="dk-attachment__kind">PDF</span>
 <span class="dk-attachment__size">1.5 MB</span>
 </span>

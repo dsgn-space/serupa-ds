@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Chat, ChatComposer, ChatDivider, ChatMessage, ChatSteps } from './Chat';
+import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatSteps } from './Chat';
+import type { ChatApprovalStatus } from './Chat';
+import { HoverCard } from '../HoverCard/HoverCard';
 import { Meter } from '../Meter/Meter';
 import { Select } from '../Select/Select';
 import { Avatar } from '../Avatar/Avatar';
@@ -77,7 +79,7 @@ export const AgentReply: Story = {
           { id: 'log', label: 'Read the payment log for order 1042', status: 'done', detail: '2 refunds, 3 minutes apart' },
           { id: 'tickets', label: 'Searched support tickets', status: 'done' },
           { id: 'bank', label: 'Checked the bank\'s status page', status: 'failed', detail: 'It didn\'t answer' },
-        ]}>The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn't block duplicates. I can open a ticket to reverse it.</ChatMessage>
+        ]} branch={2} branches={3}>The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn't block duplicates. I can open a ticket to reverse it.</ChatMessage>
       <ChatMessage own>Yes, please.</ChatMessage>
       <ChatMessage author="Assistant" thinking steps={[{ id: 'ticket', label: 'Opening a ticket', status: 'running' }]} />
     </Chat>
@@ -93,6 +95,39 @@ function AgentTools() {
       formatValue={(v, _min, max) => `${v.toLocaleString('en')} of ${max.toLocaleString('en')} tokens used`} />
   </div>;
 }
+
+// An assistant asks before it acts. Approve or Deny leaves a one-line record in its place, and focus moves to it.
+export const Approval: Story = {
+  render: function Render(args) {
+    const [status, setStatus] = React.useState<ChatApprovalStatus>('pending');
+    return <Frame>
+      <Chat {...args} className="flex-auto">
+        <ChatMessage own>Please reverse the second refund.</ChatMessage>
+        <ChatMessage author="Assistant" attachments={
+          <ChatApproval status={status} onApprove={() => setStatus('approved')} onDeny={() => setStatus('denied')}
+            detail="Charges the customer's card again; they get an email.">Reverse refund 2 on order 1042 ($24.00)</ChatApproval>
+        }>This needs your OK first.</ChatMessage>
+      </Chat>
+      <ChatComposer placeholder="Ask the assistant" />
+    </Frame>;
+  },
+};
+
+// Sources in a reply, as numbered links; the second opens a preview when the pointer or focus rests on it.
+export const Citations: Story = {
+  render: (args) => <Frame>
+    <Chat {...args} className="flex-auto">
+      <ChatMessage own>How long do refunds take?</ChatMessage>
+      <ChatMessage author="Assistant">
+        Card refunds take 5 to 10 business days to show up <ChatCitation href="https://docs.example.com/refunds" index={1} />, and bank transfers
+        up to 3 days <HoverCard trigger={<ChatCitation href="https://www.example.com/help/transfers" index={2} />}>
+          <strong>Bank transfers</strong><p>How long a transfer takes, and what to do when it's late.</p>
+        </HoverCard>.
+      </ChatMessage>
+    </Chat>
+    <ChatComposer placeholder="Ask the assistant" />
+  </Frame>,
+};
 
 // Steps on their own, outside a message: each in progress, done or failed, in words as well as by its icon.
 export const Steps: Story = {

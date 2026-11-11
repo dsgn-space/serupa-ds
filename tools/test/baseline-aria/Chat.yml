@@ -6,7 +6,11 @@
     - listitem: Read the payment log for order 1042 , Done 2 refunds, 3 minutes apart
     - listitem: Searched support tickets , Done
     - listitem: Checked the bank's status page , Failed It didn't answer
-  - text: The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn't block duplicates. I can open a ticket to reverse it. You Yes, please. Assistant
+  - text: The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn't block duplicates. I can open a ticket to reverse it.
+  - group "Response 2 of 3":
+    - button "Previous response"
+    - button "Next response"
+  - text: You Yes, please. Assistant
   - list:
     - listitem: Opening a ticket , In progress
   - progressbar "Thinking…"
@@ -17,6 +21,30 @@
   - option "Balanced" [selected]
   - option "Deep"
 - meter "Context used"
+- button "Send" [disabled]
+
+# Approval
+- log "Conversation with Support":
+  - text: You Please reverse the second refund. Assistant This needs your OK first.
+  - group "Reverse refund 2 on order 1042 ($24.00)":
+    - text: Reverse refund 2 on order 1042 ($24.00) Charges the customer's card again; they get an email.
+    - button "Approve"
+    - button "Deny"
+- textbox "Message":
+  - /placeholder: Ask the assistant
+- button "Send" [disabled]
+
+# Citations
+- log "Conversation with Support":
+  - text: You How long do refunds take? Assistant Card refunds take 5 to 10 business days to show up
+  - link "1 docs.example.com":
+    - /url: https://docs.example.com/refunds
+  - text: ", and bank transfers up to 3 days"
+  - link "2 example.com":
+    - /url: https://www.example.com/help/transfers
+  - text: .
+- textbox "Message":
+  - /placeholder: Ask the assistant
 - button "Send" [disabled]
 
 # ComposerWithFiles

@@ -1,4 +1,4 @@
-// exports: Chat, ChatComposer, type ChatComposerProps, ChatDivider, type ChatDividerProps, ChatMessage, type ChatMessageProps, type ChatProps, type ChatStep, ChatSteps, type ChatStepsProps, type ChatStepStatus
+// exports: Chat, ChatApproval, type ChatApprovalProps, type ChatApprovalStatus, ChatCitation, type ChatCitationProps, ChatComposer, type ChatComposerProps, ChatDivider, type ChatDividerProps, ChatMessage, type ChatMessageProps, type ChatProps, type ChatStep, ChatSteps, type ChatStepsProps, type ChatStepStatus
 interface ChatLabels {
     chatNewMessages: (count: number) => string;
     chatLoadOlder: string;
@@ -16,6 +16,13 @@ interface ChatLabels {
     chatStepRunning: string;
     chatStepDone: string;
     chatStepFailed: string;
+    chatApprove: string;
+    chatDeny: string;
+    chatApproved: string;
+    chatDenied: string;
+    chatResponseOf: (index: number, count: number) => string;
+    chatPreviousResponse: string;
+    chatNextResponse: string;
 }
 interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -38,6 +45,9 @@ interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
     thinking?: boolean | undefined;
     reasoning?: React.ReactNode | undefined;
     reasoningTime?: number | undefined;
+    branch?: number | undefined;
+    branches?: number | undefined;
+    onBranchChange?: ((branch: number) => void) | undefined;
     steps?: readonly ChatStep[] | undefined;
 }
 declare const ChatMessage: React.ForwardRefExoticComponent<ChatMessageProps & React.RefAttributes<HTMLDivElement>>;
@@ -52,6 +62,21 @@ interface ChatStepsProps extends Omit<React.HTMLAttributes<HTMLOListElement>, "c
     steps: readonly ChatStep[];
 }
 declare const ChatSteps: React.ForwardRefExoticComponent<ChatStepsProps & React.RefAttributes<HTMLOListElement>>;
+type ChatApprovalStatus = "approved" | "denied" | "pending";
+interface ChatApprovalProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+    children: React.ReactNode;
+    detail?: React.ReactNode | undefined;
+    status?: ChatApprovalStatus | undefined;
+    onApprove?: (() => void) | undefined;
+    onDeny?: (() => void) | undefined;
+}
+declare const ChatApproval: React.ForwardRefExoticComponent<ChatApprovalProps & React.RefAttributes<HTMLDivElement>>;
+interface ChatCitationProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
+    href: string;
+    index: number;
+    children?: React.ReactNode;
+}
+declare const ChatCitation: React.ForwardRefExoticComponent<ChatCitationProps & React.RefAttributes<HTMLAnchorElement>>;
 interface ChatDividerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     date?: Date | number | string | undefined;
     children?: React.ReactNode;

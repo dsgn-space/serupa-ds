@@ -91,6 +91,16 @@
             "cssVar": "--chat-step-done"
           }
         }
+      },
+      "citation-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "ChatCitation: a source chip's background, so it stands out on a bubble.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chat-citation-bg"
+          }
+        }
       }
     },
     "radius": {
