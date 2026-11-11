@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
+import { announcerIdle } from '../../internal/announce';
 import { SignUp, passwordRules, signUpProblems } from './SignUp';
 
 const active = () => document.activeElement as HTMLElement;
@@ -116,6 +117,22 @@ describe('Patterns/Sign-up', () => {
     await button.click();
     settle();
     await expect.poll(status).toBe('We sent a new code to ana@example.com. It works for 10 minutes.');
+  });
+
+  test('a second wrong code is said again, though the words under the field are the same', async () => {
+    const screen = await render(<SignUp start="code" />);
+    const region = document.querySelector('[data-dk-announcer]') as HTMLElement;
+    await userEvent.click(input('sign-up-code'));
+    await userEvent.keyboard('111111');
+    await screen.getByRole('button', { name: 'Verify email' }).click();
+    await expect.poll(() => region.textContent).toContain('That code isn’t right');
+    await expect.poll(announcerIdle).toBe(true);
+    const heard: string[] = [];
+    const watch = new MutationObserver(() => heard.push(region.textContent || ''));
+    watch.observe(region, { childList: true, characterData: true, subtree: true });
+    await screen.getByRole('button', { name: 'Verify email' }).click();
+    await expect.poll(() => heard.at(-1)).toContain('That code isn’t right');
+    watch.disconnect();
   });
 
   test('a refused account stays on the form', async () => {

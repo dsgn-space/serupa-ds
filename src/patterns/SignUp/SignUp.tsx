@@ -14,6 +14,7 @@ import { PinInput } from '../../components/PinInput/PinInput';
 import { Icon } from '../../components/Icon/Icon';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { Alert } from '../../components/Alert/Alert';
+import { announce } from '../../internal/announce';
 
 /* Sign-up: name, email, an optional phone, a password whose rules are shown before typing, and the terms; then a
    code sent by email; then done. For an app to copy. What it carries (WCAG 2.2):
@@ -111,8 +112,11 @@ export function SignUp({ start = 'form', initial, onSubmit, verify = (c) => c ==
   };
   const check = (e: React.FormEvent) => {
     e.preventDefault();
-    if (code.length < 6) setCodeError('Enter the 6-digit code from the email');
-    else if (!verify(code)) setCodeError('That code isn’t right. Check the latest email, or send a new code');
+    // The same error again (a second wrong code) doesn't change the field's words, so the field doesn't say it again:
+    // it's said here.
+    const show = (message: string) => { if (message === codeError) announce(message); setCodeError(message); };
+    if (code.length < 6) show('Enter the 6-digit code from the email');
+    else if (!verify(code)) show('That code isn’t right. Check the latest email, or send a new code');
     else { setCodeError(''); go('done'); }
   };
 

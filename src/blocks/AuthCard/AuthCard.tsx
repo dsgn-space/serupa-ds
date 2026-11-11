@@ -186,12 +186,17 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
     e.preventDefault();
     if (busy || !verify) return;
     setFailure(false);
-    if (code.length < 6) { setCodeError(l.codeShort); return; }
+    // The same error again (a second wrong code) doesn't change the field's words, so the field doesn't say it again:
+    // it's said here. A check that waits clears the error first, and the field says it when it comes back.
+    const before = codeError;
+    let waited = false;
+    const show = (message: string) => { if (!waited && message === before) announce(message); setCodeError(message); };
+    if (code.length < 6) { show(l.codeShort); return; }
     setCodeError(null);
     answer(verify(code), (ok) => {
-      if (!ok) { setCodeError(l.codeWrong); return; }
+      if (!ok) { show(l.codeWrong); return; }
       go('done');
-    }, setBusy, fail);
+    }, (on) => { if (on) waited = true; setBusy(on); }, fail);
   };
   const title = (text: string) => <Heading level={headingLevel} id={ids.title} ref={heading} tabIndex={-1} className="outline-none">{text}</Heading>;
   const card = 'flex flex-col gap-6 rounded-lg border border-border bg-surface p-6';

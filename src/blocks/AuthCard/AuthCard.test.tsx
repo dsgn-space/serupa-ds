@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
+import { announcerIdle } from '../../internal/announce';
 import { AuthCard } from './AuthCard';
 
 const active = () => document.activeElement as HTMLElement;
@@ -124,6 +125,22 @@ describe('Blocks/Auth card', () => {
     await userEvent.click(page.getByRole('button', { name: 'Back to email and password' }));
     await expect.poll(() => active().textContent).toBe('Sign in');
     expect([active().tagName, (page.getByRole('textbox', { name: 'Email' }).element() as HTMLInputElement).value, (page.getByLabelText('Password', { exact: true }).element() as HTMLInputElement).value]).toEqual(['H1', 'ada@example.com', '']);
+  });
+
+  test('a second wrong code is said again, though the words under the field are the same', async () => {
+    await render(<AuthCard start="code" idPrefix="again" check={() => true} verify={() => false} forgotHref="#" />);
+    const region = document.querySelector('[data-dk-announcer]') as HTMLElement;
+    await userEvent.click(document.getElementById('again-code') as HTMLElement);
+    await userEvent.keyboard('111111');
+    await userEvent.click(page.getByRole('button', { name: 'Verify' }));
+    await expect.poll(() => region.textContent).toContain('That code is not right');
+    await expect.poll(announcerIdle).toBe(true);
+    const heard: string[] = [];
+    const watch = new MutationObserver(() => heard.push(region.textContent || ''));
+    watch.observe(region, { childList: true, characterData: true, subtree: true });
+    await userEvent.click(page.getByRole('button', { name: 'Verify' }));
+    await expect.poll(() => heard.at(-1)).toContain('That code is not right');
+    watch.disconnect();
   });
 
   test('every word can be given in the page language, the errors too', async () => {
