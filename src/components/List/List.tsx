@@ -21,7 +21,8 @@ export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   busy?: boolean | undefined;
 }
 
-export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, 'title' | 'onClick'> {
+/** ListItem's own props; ListItemProps adds `as` and the linkProps that go with it. */
+export interface ListItemOwnProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, 'title' | 'onClick'> {
   /** The item's main line. */
   title: React.ReactNode;
   /** A second, muted line. */
@@ -34,15 +35,20 @@ export interface ListItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement
   href?: string | undefined;
   /** Makes the item's main area a button (when there's no href). */
   onClick?: ((event: React.MouseEvent<HTMLElement>) => void) | undefined;
-  /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a'. Its props go in linkProps. */
-  as?: React.ElementType | undefined;
-  /** Extra props for the link or button (to for a router link, target, aria-*). */
-  linkProps?: Record<string, unknown> | undefined;
   /** Shaded with a primary bar at its start, and aria-current="true" (or aria-pressed for a button). For the current page in a nav list, also pass linkProps={{ "aria-current": "page" }}, which wins. Default: false. */
   selected?: boolean | undefined;
   /** Dims a link or button item and stops it. Default: false. */
   disabled?: boolean | undefined;
 }
+
+/** ListItem's props: its own, `as`, and linkProps typed by the element `as` names (an <a>'s by default), so
+ *  <ListItem as={RouterLink} linkProps={{ to: '/team' }}> checks `to` against RouterLink's props (GR276). */
+export type ListItemProps<C extends React.ElementType = 'a'> = ListItemOwnProps & {
+  /** What renders the link: your router's link component. Default: the link set with configure({ link }), else 'a'. Its props go in linkProps. */
+  as?: C | undefined;
+  /** Extra props for the link or button (to for a router link, target, aria-*, data-*). */
+  linkProps?: (Partial<React.ComponentPropsWithoutRef<C>> & { [data: `data-${string}`]: string | number | boolean | undefined }) | undefined;
+};
 
 /* List: rows of related things (people, files, settings), each a title with an optional description, leading
    avatar or icon and trailing meta or actions. A row can be a link or a button; trailing actions stay outside
@@ -58,8 +64,8 @@ export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List
   }));
 });
 
-/** One row in a List. */
-export const ListItem = /* @__PURE__ */ component<HTMLLIElement, ListItemProps>('ListItem', function ListItem(props, ref) {
+// ListItem before its generic signature (below).
+const ListItemBase = /* @__PURE__ */ component<HTMLLIElement, ListItemProps<React.ElementType>>('ListItem', function ListItem(props, ref) {
   const rest = omit(props, { title: 1, description: 1, leading: 1, trailing: 1, href: 1, onClick: 1, as: 1, linkProps: 1, selected: 1, disabled: 1, className: 1 });
   const lead = asIcon(props.leading as React.ReactNode);
   const body = <>
@@ -69,7 +75,7 @@ export const ListItem = /* @__PURE__ */ component<HTMLLIElement, ListItemProps>(
       {props.description != null ? <span className="dk-list__description">{props.description}</span> : null}
     </span>
   </>;
-  const lp = Object.assign({}, props.linkProps);
+  const lp: Record<string, unknown> = Object.assign({}, props.linkProps);
   let main: React.ReactNode;
   if (props.href != null || props.as) {
     const attrs: Record<string, unknown> = Object.assign(lp, { className: cn('dk-list__main', lp.className), 'aria-current': lp['aria-current'] !== undefined ? lp['aria-current'] : props.selected ? 'true' : undefined });
@@ -95,6 +101,12 @@ export const ListItem = /* @__PURE__ */ component<HTMLLIElement, ListItemProps>(
     </li>
   );
 });
+
+/** One row in a List. `as` renders your router's link, and linkProps are typed with its props. */
+export const ListItem = ListItemBase as {
+  <C extends React.ElementType = 'a'>(props: ListItemProps<C> & { ref?: React.Ref<HTMLLIElement> }): React.ReactElement | null;
+  displayName?: string | undefined;
+};
 
 export interface ListLoadingItemsProps {
   /** How many placeholder rows: about as many as will load, up to a screenful. Default: 3. */
