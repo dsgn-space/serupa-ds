@@ -1,5 +1,0 @@
----
-"serupa-ds": minor
----
-
-Table: column tools. `TableHeaderCell resizable` adds a handle at the header's edge that drags, steps with the arrow keys (Home and End for `minWidth` and `maxWidth`) and fits the column's content on a double-click, with `onWidthChange`; a click or Enter on the handle opens Narrower, Wider and Fit to content buttons, so no width needs a drag. `Table pinStart` and `pinEnd` keep the first and last columns in view while the rest scroll sideways, with a shadow while there's more under them. `TableColumnsMenu` is a "Columns" button with a checkbox per column to show or hide it, reporting `onColumnsChange(columns, { id, visible })`. `TableExpandCell` and `TableDetailRow` open a row's details under it. New labels: `tableResizeColumn`, `tableNarrower`, `tableWider`, `tableFitColumn`, `tableResizeHint`, `tableColumns`, `tableDetails`, `tableRowDetails`, in every pack. New tokens: `--table-resize-active` and `--table-pin-shadow-scrolled`. `striped` now counts only rows of data, so detail rows between them don't swap the shading.
