@@ -33,11 +33,11 @@ export const Default: Story = {
       <style>{'.page-shell__side { position: sticky; top: var(--dk-navbar-offset, 0px); height: calc(100vh - var(--dk-navbar-offset, 0px)); } @media (max-width: 40rem) { .page-shell__side { display: none; } }'}</style>
       <SkipLink />
       <Navbar sticky
-        brand={<a href="#" className="text-base font-semibold text-text no-underline">Acme</a>}
+        brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
         actions={<><Button variant="ghost" size="sm">Docs</Button><Avatar name="Ada Lovelace" size="sm" /></>}>
-        <NavbarLink href="#" active>Dashboard</NavbarLink>
-        <NavbarLink href="#">Projects</NavbarLink>
-        <NavbarLink href="#">Reports</NavbarLink>
+        <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
+        <NavbarLink href="#projects">Projects</NavbarLink>
+        <NavbarLink href="#reports">Reports</NavbarLink>
       </Navbar>
       <div className="flex">
         <div className="page-shell__side">
