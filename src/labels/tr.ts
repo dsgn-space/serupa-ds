@@ -108,7 +108,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Geri',
   cascadeLoading: 'Yükleniyor…',
   cascadeEmpty: 'Seçenek yok',
-  cascadeFailed: 'Seçenekler yüklenemedi',
+  cascadeFailed: 'Seçenekler yüklenemedi. Yeniden denemek için o seçeneği tekrar açın.',
   filterBar: 'Filtreler',
   filterAdd: 'Filtre ekle',
   filterClear: 'Tümünü temizle',

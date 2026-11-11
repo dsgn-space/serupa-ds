@@ -114,7 +114,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Назад',
   cascadeLoading: 'Загрузка…',
   cascadeEmpty: 'Нет вариантов',
-  cascadeFailed: 'Не удалось загрузить варианты',
+  cascadeFailed: 'Не удалось загрузить варианты. Откройте этот вариант снова, чтобы попробовать ещё раз.',
   filterBar: 'Фильтры',
   filterAdd: 'Добавить фильтр',
   filterClear: 'Очистить всё',

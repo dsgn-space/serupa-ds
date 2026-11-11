@@ -111,7 +111,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Voltar',
   cascadeLoading: 'Carregando…',
   cascadeEmpty: 'Nenhuma opção',
-  cascadeFailed: 'Não foi possível carregar as opções',
+  cascadeFailed: 'Não foi possível carregar as opções. Abra essa opção de novo para tentar novamente.',
   filterBar: 'Filtros',
   filterAdd: 'Adicionar filtro',
   filterClear: 'Limpar tudo',

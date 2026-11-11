@@ -107,7 +107,7 @@ export const labels: SerupaLabels = {
   cascadeBack: '返回',
   cascadeLoading: '正在加载…',
   cascadeEmpty: '没有选项',
-  cascadeFailed: '无法加载选项',
+  cascadeFailed: '无法加载选项。请重新打开该选项以重试。',
   filterBar: '筛选',
   filterAdd: '添加筛选',
   filterClear: '全部清除',

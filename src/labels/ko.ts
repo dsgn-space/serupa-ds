@@ -110,7 +110,7 @@ export const labels: SerupaLabels = {
   cascadeBack: '뒤로',
   cascadeLoading: '불러오는 중…',
   cascadeEmpty: '옵션 없음',
-  cascadeFailed: '옵션을 불러올 수 없습니다',
+  cascadeFailed: '옵션을 불러올 수 없습니다. 해당 옵션을 다시 열면 다시 시도합니다.',
   filterBar: '필터',
   filterAdd: '필터 추가',
   filterClear: '모두 지우기',

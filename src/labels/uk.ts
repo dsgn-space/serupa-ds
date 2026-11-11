@@ -113,7 +113,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Назад',
   cascadeLoading: 'Завантаження…',
   cascadeEmpty: 'Немає варіантів',
-  cascadeFailed: 'Не вдалося завантажити варіанти',
+  cascadeFailed: 'Не вдалося завантажити варіанти. Відкрийте цей варіант знову, щоб спробувати ще раз.',
   filterBar: 'Фільтри',
   filterAdd: 'Додати фільтр',
   filterClear: 'Очистити все',

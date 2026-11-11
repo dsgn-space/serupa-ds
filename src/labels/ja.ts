@@ -107,7 +107,7 @@ export const labels: SerupaLabels = {
   cascadeBack: '戻る',
   cascadeLoading: '読み込み中…',
   cascadeEmpty: '選択肢がありません',
-  cascadeFailed: '選択肢を読み込めませんでした',
+  cascadeFailed: '選択肢を読み込めませんでした。その項目をもう一度開くと再試行します。',
   filterBar: 'フィルター',
   filterAdd: 'フィルターを追加',
   filterClear: 'すべてクリア',

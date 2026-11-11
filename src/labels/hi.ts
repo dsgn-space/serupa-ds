@@ -107,7 +107,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'वापस',
   cascadeLoading: 'लोड हो रहा है…',
   cascadeEmpty: 'कोई विकल्प नहीं',
-  cascadeFailed: 'विकल्प लोड नहीं हो सके',
+  cascadeFailed: 'विकल्प लोड नहीं हो सके। फिर से कोशिश करने के लिए वह विकल्प दोबारा खोलें।',
   filterBar: 'फ़िल्टर',
   filterAdd: 'फ़िल्टर जोड़ें',
   filterClear: 'सभी हटाएँ',

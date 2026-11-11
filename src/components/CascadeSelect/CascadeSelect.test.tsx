@@ -172,9 +172,9 @@ describe('CascadeSelect', () => {
     const note = () => panel().querySelector<HTMLElement>('[role=status]');
     expect([note()?.textContent, note()?.getAttribute('aria-busy')]).toEqual(['Loading…', 'true']);
     settle();
-    await until(() => note()?.textContent === 'Couldn’t load the options');
+    // The failure names the way out, and that way works: choosing the option again loads it again.
+    await until(() => note()?.textContent === 'Couldn’t load the options. Open that option again to try again.');
     fail = false;
-    await userEvent.click(option('A'));
     await userEvent.click(option('A'));
     settle();
     await until(() => !!option('A 1'));
