@@ -2,6 +2,7 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { FormattedNumber, formatNumber } from './FormattedNumber';
 
@@ -150,8 +151,9 @@ describe('FormattedNumber: animate', () => {
   test('the change fades in over motion-change-sm while motion is allowed, and the span stays inline', async () => {
     const { rerender } = await render(<FormattedNumber id="a4" value={1} locale="en-US" animate />);
     await rerender(<FormattedNumber id="a4" value={2} locale="en-US" animate />);
-    const s = getComputedStyle(el('a4').querySelector('[data-changed]') as HTMLElement);
+    const span = el('a4').querySelector('[data-changed]') as HTMLElement;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    expect([s.display, s.animationName]).toEqual(['inline', reduced ? 'none' : 'dk-formatted-number-change']);
+    const [display, name] = withMotion(() => { const s = getComputedStyle(span); return [s.display, s.animationName]; });
+    expect([display, name]).toEqual(['inline', reduced ? 'none' : 'dk-formatted-number-change']);
   });
 });
