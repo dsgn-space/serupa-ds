@@ -51,7 +51,7 @@
 .dk-chat-message__reasoning { --dk-chat-turn: 180deg; max-inline-size: var(--sizing-full); color: var(--chat-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-chat-message__reasoning-toggle {
   display: inline-flex; align-items: center; gap: var(--spacing-1); min-block-size: var(--spacing-6); border-radius: var(--rounded-sm);
-  cursor: pointer; list-style: none; font-weight: var(--font-medium);
+  cursor: pointer; touch-action: manipulation; list-style: none; font-weight: var(--font-medium);
 }
 .dk-chat-message__reasoning-toggle::-webkit-details-marker { display: none; }
 @media (hover: hover) { .dk-chat-message__reasoning-toggle:hover { color: var(--chat-text, var(--text)); } }
