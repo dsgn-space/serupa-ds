@@ -42,12 +42,13 @@ Drawn from the `Playground` story.
 - `rows`: objects with an id under `rowKey` (`"id"` by default).
 - `onRowsChange(rows, { changes })` is called once per edit, paste or Delete over a range. `rows` is the new rows with each changed field set to the text typed or pasted; `changes` lists every cell that changed, `{ rowId, column, value }`. Set `rows` from it, or parse and check `changes` first (a number column gets text). A change you don't take leaves the old text. Without `onRowsChange`, nothing is editable.
 - A pasted block fills from the active cell (or the top-left of the range), as far as the grid goes, skipping read-only columns; one value pasted over a range fills all of it.
+- `size`: `sm` for a dense grid on a wide screen, `md` (the default) beside other medium controls, and `lg` on touch screens or where the grid is the page's main task: its rows are at least 44px tall, so each cell is easy to tap.
 
 ### Loading, empty and failed
 
 The grid keeps its header row in every state, so the page doesn't move and people know what's coming.
 
-- **Loading:** set `busy` with no `rows` yet. The grid draws `loadingRows` placeholder rows (3 by default; about as many as will come), each as tall as a real one at either `size`, so nothing jumps when the data arrives. Name the wait in `loadingLabel` ("Loading stock"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `busy` sets `aria-busy` on the grid while it lasts. To reload rows already shown, keep them and set `busy`.
+- **Loading:** set `busy` with no `rows` yet. The grid draws `loadingRows` placeholder rows (3 by default; about as many as will come), each as tall as a real one at every `size`, so nothing jumps when the data arrives. Name the wait in `loadingLabel` ("Loading stock"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `busy` sets `aria-busy` on the grid while it lasts. To reload rows already shown, keep them and set `busy`.
 - **Empty:** no `rows` and a `message` holding an `EmptyState size="sm"`: what's missing, and the action that adds the first one. It's one cell across every column.
 - **Failed:** the same `message` with a danger `Alert`, which says what didn't load and offers Retry in `actions`. A danger Alert is `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
@@ -89,7 +90,7 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
 | `rows` | `DataGridRow[]` | | The data, each with an id. |
 | `rowKey` | `string` | `"id"` | The field that holds a row's id. |
 | `onRowsChange` | `(rows: DataGridRow[], details: { changes: DataGridCellChange[] }) => void` | | The new rows, and `{ rowId, column, value }` for each cell changed. Without it, nothing edits. |
-| `size` | `"sm" \| "md"` | `"md"` | The cells' padding. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | The cells' padding; `lg` also sets 16px text, for rows at least 44px tall. |
 | `busy` | `boolean` | `false` | Rows are loading: sets `aria-busy`, and with no rows shows placeholders. |
 | `loadingRows` | `number` | `3` | How many placeholder rows. |
 | `loadingLabel` | `string` | `"Loading"` | Said once as the placeholders appear. |
@@ -115,9 +116,12 @@ Each is an optional override: set it on the page, a container or one DataGrid. T
 | `--data-grid-input-bg` | `field` | A cell's background while it's edited. |
 | `--data-grid-font-size` | `text-sm` | The cells' text (14px). |
 | `--data-grid-header-weight` | `font-medium` | The header text's weight (500). |
+| `--data-grid-font-size-lg` | `text-base` | The cells' text with size lg (16px). |
 | `--data-grid-padding-x` | `spacing-3` | Space at a cell's sides (12px). |
 | `--data-grid-padding-y` | `spacing-2` | Space above and below a cell's text (8px). |
 | `--data-grid-padding-y-sm` | `spacing-1` | The same with size sm (4px). |
+| `--data-grid-padding-x-lg` | `spacing-4` | A cell's inline padding with size lg (16px). |
+| `--data-grid-padding-y-lg` | `spacing-2.5` | A cell's block padding with size lg (10px): with 16px text, a row at least 44px tall. |
 | `--data-grid-message-padding` | `spacing-6` | Space around the message shown in place of rows (24px). |
 | `--data-grid-border-width` | `border-width-1` | The frame's and lines' width (1px). |
 | `--data-grid-radius` | `radius-surface` | The frame's corners. |

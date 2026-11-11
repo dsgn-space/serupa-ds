@@ -46,6 +46,9 @@ export const Edit: Story = { render: () => <Editable /> };
 
 export const Small: Story = { render: () => <Editable size="sm" /> };
 
+/** Large: 16px text and rows at least 44px tall, for touch screens and a grid that is the page's main task. */
+export const Large: Story = { render: () => <Editable size="lg" /> };
+
 /** Read only: no onRowsChange, so cells move, select and copy, but don't edit. */
 export const ReadOnly: Story = {};
 
