@@ -2,6 +2,8 @@
 
 One slide at a time, with previous and next buttons, a dot per slide and swipe. Use it for a few related pictures or cards, such as product photos. It never moves on its own.
 
+**Also called:** content slider, slideshow.
+
 ```tsx
 import { Carousel, Image } from "serupa-ds";
 

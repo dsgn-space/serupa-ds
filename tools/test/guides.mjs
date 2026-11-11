@@ -9,6 +9,7 @@ import { PROJECT, report, done } from './lib.mjs';
 
 const REQUIRED = ['When to use', 'When not to use', 'Usage', 'Accessibility', 'Props', 'Component tokens'];
 const DIR = path.join(PROJECT, 'src', 'components');
+const COMPONENTS = new Set(fs.readdirSync(DIR).map((n) => n.toLowerCase()));
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 for (const name of fs.readdirSync(DIR).sort()) {
@@ -24,6 +25,14 @@ for (const name of fs.readdirSync(DIR).sort()) {
   const order = REQUIRED.filter((h) => headings.includes(h)).map((h) => headings.indexOf(h));
   const inOrder = order.every((v, i) => !i || v > order[i - 1]);
   t(`${name}: the guide has ${REQUIRED.join(', ')}, in that order`, !missing.length && inOrder, missing.length ? `missing: ${missing.join(', ')}` : `order: ${headings.join(' · ')}`);
+  // Other names (LG1): an optional "**Also called:**" line right under the first paragraph, which Guides/Choose a
+  // component lists. A name another component has (Stepper, Calendar) would send the reader to the wrong page.
+  const also = /^\*\*Also called:\*\* (.+)$/m.exec(md);
+  if (also) {
+    const intro = md.split(/^## /m)[0], names = also[1].replace(/\.\s*$/, '').split(/,\s*/);
+    const taken = names.filter((n) => n.toLowerCase().replace(/\s+/g, '') !== name.toLowerCase() && COMPONENTS.has(n.toLowerCase().replace(/\s+/g, '')));
+    t(`${name}: "Also called" sits in the intro and names no other component`, intro.includes(also[0]) && !taken.length && names.every(Boolean), taken.length ? `another component's name: ${taken.join(', ')}` : 'move it under the first paragraph');
+  }
   // Where an id lands (BC2): the root, the native field inside, or nowhere. A reader needs to know before pointing a
   // <label htmlFor>, aria-describedby or a link at it. A `| \`id\` |` row, or `id` named in prose, under Props.
   const props = (md.split(/^## Props\s*$/m)[1] || '').split(/^## /m)[0];

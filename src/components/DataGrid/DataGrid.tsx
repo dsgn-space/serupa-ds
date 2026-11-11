@@ -11,10 +11,10 @@ import { en as words } from './labels';
 /** A row of data: any object; its id is read from the `rowKey` field ("id" by default). */
 export type DataGridRow = Record<string, unknown>;
 
-/** One column. */
-export interface DataGridColumn {
+/** One column of rows of type R: its key must be one of R's fields, and format gets an R. */
+export interface DataGridColumn<R extends object = DataGridRow> {
   /** The row field it shows, and its id in a change. */
-  key: string;
+  key: Extract<keyof R, string>;
   /** The column's header text. */
   header: string;
   /** Whether its cells can be edited and pasted into. Default: false. */
@@ -24,7 +24,7 @@ export interface DataGridColumn {
   /** Its width, as CSS (120, "8rem", "20%"). Default: as wide as its content needs. */
   width?: number | string | undefined;
   /** The cell's text from the row: what's shown, edited, copied and searched. Default: the field as a string. */
-  format?: ((row: DataGridRow) => string) | undefined;
+  format?: ((row: R) => string) | undefined;
 }
 
 /** One cell changed: by an edit, a paste, or Delete. `value` is the text typed or pasted; parse it yourself. */
@@ -39,17 +39,18 @@ export interface DataGridRowsChangeDetails {
   changes: DataGridCellChange[];
 }
 
-export interface DataGridProps extends Omit<React.TableHTMLAttributes<HTMLTableElement>, 'rows'> {
+/** Typed by its rows: `<DataGrid rows={people} columns={…} />` checks each column's key against a person's fields. */
+export interface DataGridProps<R extends object = DataGridRow> extends Omit<React.TableHTMLAttributes<HTMLTableElement>, 'rows'> {
   /** The columns, in order. */
-  columns: DataGridColumn[];
+  columns: DataGridColumn<R>[];
   /** The rows, in order. */
-  rows: DataGridRow[];
+  rows: R[];
   /** The field that holds each row's id. Default: "id". */
-  rowKey?: string | undefined;
+  rowKey?: Extract<keyof R, string> | undefined;
   /** Called with the new rows after an edit, a paste or Delete over a range, each changed field set to the text
    *  typed or pasted, and every cell that changed in `details.changes`. Set rows from it, or parse the changes
    *  yourself; a change you don't take shows the old text again. Without it, nothing is editable. */
-  onRowsChange?: ((rows: DataGridRow[], details: DataGridRowsChangeDetails) => void) | undefined;
+  onRowsChange?: ((rows: R[], details: DataGridRowsChangeDetails) => void) | undefined;
   /** The cells' size: "sm", "md" (the default) or "lg" (16px text, rows at least 44px, for touch). */
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** Its rows are loading (or reloading): sets aria-busy, and while there are no rows yet, shows placeholder rows
@@ -251,7 +252,7 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
       <p hidden id={base + '-hint'}>{L.dataGridHint}</p>
     </div>
   );
-});
+}) as <R extends object = DataGridRow>(props: DataGridProps<R> & { ref?: React.Ref<HTMLTableElement> | undefined }) => React.ReactElement;
 
 /* The placeholder rows: decorative skeletons in Loader's classes (without Loader's weight), shown after the loader's
    delay, when the label is said once; the grid's aria-busy marks it as loading. */

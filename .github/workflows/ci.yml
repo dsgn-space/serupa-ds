@@ -1,18 +1,17 @@
 name: CI
 
-# Back on GitHub from the GitLab interim (6 to 11 Nov 2026). The jobs are the ones .gitlab-ci.yml grew there, with the
-# merge queue in place of GitLab's merge trains:
+# How a change is tested on its way to main:
 # - A pull request's own run is the quick check: build, types and lint, the fix proof, the checks, and the tests and
 #   Visual of the components it changes (narrowed against the main it merges onto). Storybook's pages, consumer,
 #   frameworks and the cross-browser components run are left to the merge queue.
 # - The merge queue runs everything, unnarrowed, on the commit that becomes main, for a group of up to five pull requests
 #   at once. Main's push run is then build only (the Storybook artifact, and the Release workflow waits on it): the
 #   tests already ran on that exact commit.
-# - Without a merge queue (repository variable SERUPA_QUEUE not "1"), a pull request and main both run everything, as
-#   before merge trains.
+# - Without a merge queue (repository variable SERUPA_QUEUE not "1"), a pull request and main both run everything.
 # - Every job runs in Playwright's Ubuntu 24.04 image, capped at 4 CPUs, on GitHub's runners or on the project's own
 #   (repository variables SERUPA_RUNNER and SERUPA_X86_RUNNER, JSON: '["self-hosted","linux","x86"]'). Jobs with a
-#   screenshot or a timing budget take SERUPA_X86_RUNNER: the baselines are drawn with Chrome for Testing on x64.
+#   screenshot or a timing budget take SERUPA_X86_RUNNER: the baselines are drawn with Chrome for Testing on x64. A pull
+#   request from a fork always runs on GitHub's runners, so code nobody has merged never runs on the project's machines.
 # - Results are kept: a job that passed on the same tree, against the same base, passes again at once without running.
 # - The nightly jobs are in nightly.yml. No workflow_dispatch: a run started by hand runs in the default branch's
 #   cache scope on any ref, which CodeQL rightly counts as cache poisoning; the nightly runs main whole instead.
@@ -90,7 +89,7 @@ jobs:
   # Builds the package and Storybook once; every test job downloads them instead of building its own.
   build:
     needs: plan
-    runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -126,7 +125,7 @@ jobs:
     name: types and lint
     needs: plan
     if: needs.plan.outputs.full == '1' || github.event_name == 'pull_request'
-    runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -155,7 +154,7 @@ jobs:
     name: fix proof
     needs: plan
     if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-repro-test')
-    runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -184,7 +183,7 @@ jobs:
   suite-x86:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
     needs: [plan, build]
-    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -274,7 +273,7 @@ jobs:
   suite-portable:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
     needs: [plan, build]
-    runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -288,7 +287,7 @@ jobs:
   # run checks only that every function it adds runs in a test; the floors are checked on whole runs.
   coverage:
     needs: [plan, build, suite-x86]
-    runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -310,12 +309,8 @@ jobs:
       - shell: bash
         env:
           SINCE: ${{ needs.plan.outputs.since }}
-          HEAD_REF: ${{ github.head_ref }}
         run: |
           set -e
-          # The move from GitLab brings GitLab main's history in one pull request, so against GitHub's old main every
-          # function GitLab already merged looks new. That pull request alone checks against GitLab main instead.
-          if [ "$HEAD_REF" = migrate/from-gitlab ] && [ -n "$SINCE" ]; then SINCE=61aa5acd40a52926578eb51db37d7bd5c4b159be; fi
           if ! ls .vitest/blob/* >/dev/null 2>&1; then echo "No component tests ran, so there is no coverage to check."; exit 0; fi
           if [ -f .vitest/narrowed ]; then echo "Narrowed run; the floors are checked on whole runs."; export SERUPA_NO_FLOORS=1; fi
           node node_modules/vitest/vitest.mjs --merge-reports .vitest/blob --coverage
@@ -332,7 +327,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [22, 24]
-    runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: node:${{ matrix.node }}
       options: --cpus 4
@@ -351,7 +346,7 @@ jobs:
   frameworks:
     needs: [plan, build]
     if: needs.plan.outputs.full == '1'
-    runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -375,7 +370,7 @@ jobs:
     needs: [plan, build]
     if: github.event_name == 'merge_group'
     continue-on-error: true
-    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4

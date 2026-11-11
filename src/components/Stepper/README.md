@@ -2,6 +2,8 @@
 
 Shows where people are in a task split into steps, such as sign-up, checkout or setup. Each step has a numbered circle and a title; completed steps show a check. Use it for 3 to about 7 steps. For switching between views use Tabs, and for a single value use Progress.
 
+**Also called:** progress indicator, steps, wizard steps, progress tracker.
+
 ```tsx
 import { Stepper } from "serupa-ds";
 

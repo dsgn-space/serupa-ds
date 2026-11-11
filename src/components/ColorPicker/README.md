@@ -2,6 +2,8 @@
 
 Picks a color from a set of swatches, or any color by its hex code or with the browser's own picker. With `contrastWith`, it shows the contrast between the picked color and the one it goes on, and warns when text would be hard to read.
 
+**Also called:** color input, swatch picker.
+
 ```tsx
 import { ColorPicker } from "serupa-ds";
 

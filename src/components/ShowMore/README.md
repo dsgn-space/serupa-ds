@@ -2,6 +2,8 @@
 
 Long text cut after a few lines, with a "Show more" button under it that shows the rest. It keeps a list of reviews, comments or product descriptions short enough to scan, while each one is a press away from in full.
 
+**Also called:** read more, expandable text.
+
 ```tsx
 import { ShowMore } from "serupa-ds";
 

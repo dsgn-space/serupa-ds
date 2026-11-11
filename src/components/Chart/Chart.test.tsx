@@ -333,14 +333,19 @@ describe('Chart', () => {
     const { rerender } = await render(<Chart id="c" title="Visitors" categories={[]} series={[]} busy loadingLabel="Loading visitors" height={200} />);
     const e = el('c');
     expect(e.getAttribute('aria-busy')).toBe('true');
-    // Only the title and the placeholder: no table button, no plot, no legend, and nothing a screen reader reads.
-    expect([page.getByRole('button').all().length, e.querySelector('svg'), page.getByRole('progressbar').all().length]).toEqual([0, null, 0]);
+    // The title, the table button (disabled), the placeholder and the legend's empty line: no plot, and nothing a
+    // screen reader reads.
+    const toggle = page.getByRole('button').all();
+    expect([toggle.length, toggle[0] && (toggle[0].element() as HTMLButtonElement).disabled, e.querySelector('svg'), page.getByRole('progressbar').all().length]).toEqual([1, true, null, 0]);
+    const tall = e.getBoundingClientRect().height;
     const art = e.querySelector('[data-component="loader"]') as HTMLElement;
     expect(art.getAttribute('aria-hidden')).toBe('true');
     await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading visitors');
     const block = art.getBoundingClientRect().height;
     await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} height={200} />);
     expect([block, (e.querySelector('svg') as SVGElement).getBoundingClientRect().height, e.hasAttribute('aria-busy')]).toEqual([200, 200, false]);
+    // Nothing below the chart moves when the numbers arrive: the button and the legend's line were already there.
+    expect(e.getBoundingClientRect().height).toBe(tall);
     // Refreshing numbers already shown: the chart stays, busy.
     await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} busy />);
     expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="loader"]')]).toEqual(['true', true, null]);

@@ -2,6 +2,8 @@
 
 A label, an optional hint and an error message around one form control, wired up for screen readers. The label names the control, the hint and error are added to its `aria-describedby`, and an error makes the control invalid. It works with Input, Textarea, Select and any native control, a plain `<select>` with its options included. With `group` it renders a `<fieldset>` and `<legend>` for a set of checkboxes or radios.
 
+**Also called:** form field, form label, fieldset.
+
 ```jsx
 const { Field, Input, Textarea } = window.Serupa;
 
