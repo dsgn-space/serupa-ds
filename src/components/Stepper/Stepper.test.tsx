@@ -240,7 +240,7 @@ describe('Stepper', () => {
       const [w, set] = React.useState(320); setW = set;
       return <div id="box" style={{ width: w + 'px' }}><Stepper id="nar" steps={STEPS} current={2} /><Stepper id="nv" orientation="vertical" steps={STEPS} current={2} /></div>;
     }
-    await render(<Narrow />);
+    await render(<SerupaProvider locale="en"><Narrow /></SerupaProvider>);
     const n = el('nar');
     expect(n.className).toMatch(/dk-stepper--compact/);
     expect(n.scrollWidth).toBeLessThanOrEqual(320);

@@ -240,7 +240,7 @@ export const labels: SerupaLabels = {
   completed: '완료',
   hasError: '오류 있음',
   hasWarning: '확인 필요',
-  stepOf: (step, total) => total + '단계 중 ' + step + '단계',
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => totalText + '단계 중 ' + stepText + '단계',
   tourBack: '이전',
   tourNext: '다음',
   tourDone: '완료',

@@ -5,7 +5,7 @@ import { component } from '../../internal/component';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { showLayer, type Placement } from '../../internal/position';
 import { deepActive, rootOf } from '../../internal/root';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import * as icons from '../../material/builtin';
@@ -70,7 +70,7 @@ function find(t: TourStep['target'], near: Node | null): HTMLElement | null {
 const TABBABLE = 'a[href], button:not(:disabled), input:not(:disabled):not([type=hidden]), select:not(:disabled), textarea:not(:disabled), [tabindex], [contenteditable="true"]';
 
 export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour', function Tour(props, ref) {
-  const sds = useSettings(words);
+  const sds = useSettings(words), locale = useLocale();
   const own = domId('dk-tour', React.useId());
   const id = props.id || own;
   const steps = props.steps || [];
@@ -176,7 +176,7 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour',
         </div>
         {step.content != null ? <div id={id + '-text'} className="dk-tour__text">{step.content}</div> : null}
         <div className="dk-tour__foot">
-          {steps.length > 1 ? <span className="dk-tour__count">{sds.labels.stepOf(at + 1, steps.length)}</span> : null}
+          {steps.length > 1 ? <span className="dk-tour__count">{sds.labels.stepOf(at + 1, steps.length, new Intl.NumberFormat(locale).format(at + 1), new Intl.NumberFormat(locale).format(steps.length))}</span> : null}
           <span className="dk-tour__actions">
             {at > 0 ? <Button size="sm" variant="secondary" onClick={() => go(at - 1)}>{sds.labels.tourBack}</Button> : null}
             <Button size="sm" onClick={next}>{last ? sds.labels.tourDone : sds.labels.tourNext}</Button>

@@ -237,7 +237,7 @@ export const labels: SerupaLabels = {
   completed: 'पूरा हुआ',
   hasError: 'इसमें गड़बड़ी है',
   hasWarning: 'ध्यान देने की ज़रूरत है',
-  stepOf: (step, total) => total + ' में से चरण ' + step,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => totalText + ' में से चरण ' + stepText,
   tourBack: 'पीछे',
   tourNext: 'आगे',
   tourDone: 'हो गया',

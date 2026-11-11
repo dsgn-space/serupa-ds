@@ -3,7 +3,7 @@ interface StepperLabels {
     completed: string;
     hasError: string;
     hasWarning: string;
-    stepOf: (step: number, total: number) => string;
+    stepOf: (step: number, total: number, stepText: string, totalText: string) => string;
 }
 interface StepperStep {
     title: React.ReactNode;
@@ -23,7 +23,7 @@ interface StepperProps extends React.HTMLAttributes<HTMLElement> {
         error?: string;
         warning?: string;
         optional?: string;
-        stepOf?: (step: number, total: number) => string;
+        stepOf?: (step: number, total: number, stepText: string, totalText: string) => string;
     }) | undefined;
 }
 declare const Stepper: React.ForwardRefExoticComponent<StepperProps & React.RefAttributes<HTMLElement>>;
