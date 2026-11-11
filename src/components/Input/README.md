@@ -56,6 +56,13 @@ Drawn from the `Icons` story.
 - Use `actions` for a button that works on what's in the field: Apply for a coupon, Copy for a link, Clear, or Show. Keep it to one or two. Give an icon action a `label` that names what it does to what ("Copy invite link", not "Copy"); a text action shows its label as its words. A button that sends the whole form belongs outside the field, as a Button.
 - Use `prefix` and `suffix` for fixed text people shouldn't type, such as "https://", "@" or "kg". Keep it short, and keep the unit in the label too ("Weight (kg)") when the field makes no sense without it.
 
+### Do and don't
+
+- **Do:** Give a field a width that fits what goes in it: a short field for a postcode says how much to type. (`DoFitWidth`)
+- **Don't:** Make every field full width: a five-digit postcode as wide as a street address looks like it wants more. (`DontFullWidthShort`)
+- **Do:** Say in the error how to put it right, through [Field](../Field/README.md)'s `error`. (`DoHelpfulError`)
+- **Don't:** Only say that something is wrong: "Invalid input" leaves people guessing what to change. (`DontVagueError`)
+
 ## States
 
 | State | Look |

@@ -50,8 +50,8 @@ export interface DataGridProps extends Omit<React.TableHTMLAttributes<HTMLTableE
    *  typed or pasted, and every cell that changed in `details.changes`. Set rows from it, or parse the changes
    *  yourself; a change you don't take shows the old text again. Without it, nothing is editable. */
   onRowsChange?: ((rows: DataGridRow[], details: DataGridRowsChangeDetails) => void) | undefined;
-  /** The cells' size: "sm" or "md" (the default). */
-  size?: 'sm' | 'md' | undefined;
+  /** The cells' size: "sm", "md" (the default) or "lg" (16px text, rows at least 44px, for touch). */
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Its rows are loading (or reloading): sets aria-busy, and while there are no rows yet, shows placeholder rows
    *  the height of real ones. Default: false. */
   busy?: boolean | undefined;
@@ -85,7 +85,7 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
   const base = domId('dk-dg', React.useId());
   const { columns, rows } = props;
   const key = props.rowKey || 'id';
-  const size = oneOf(['sm', 'md'] as const, props.size, 'md');
+  const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const canEdit = !!props.onRowsChange;
   const lastRow = rows.length;   // row 0 is the header row
   const lastCol = columns.length - 1;
@@ -197,7 +197,7 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
   const placeholders = !rows.length && props.busy ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
   const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
   return (
-    <div className={cn('dk-data-grid', size === 'sm' && 'dk-data-grid--sm', props.className)} data-component="data-grid">
+    <div className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.className)} data-component="data-grid">
       <table {...rest} ref={(n) => { table.current = n; setRef(ref, n); }}
         role="grid" aria-busy={props.busy || undefined} aria-rowcount={placeholders ? -1 : rows.length + 1} aria-colcount={columns.length} aria-multiselectable="true" aria-describedby={cn(base + '-hint', props['aria-describedby']) || undefined}
         className="dk-data-grid__table" onKeyDown={onKeyDown} onCopy={onCopy} onPaste={onPaste}>

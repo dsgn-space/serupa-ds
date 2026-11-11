@@ -108,7 +108,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Kembali',
   cascadeLoading: 'Memuatkan…',
   cascadeEmpty: 'Tiada pilihan',
-  cascadeFailed: 'Pilihan tidak dapat dimuatkan',
+  cascadeFailed: 'Pilihan tidak dapat dimuatkan. Buka pilihan itu sekali lagi untuk mencuba lagi.',
   filterBar: 'Penapis',
   filterAdd: 'Tambah penapis',
   filterClear: 'Kosongkan semua',

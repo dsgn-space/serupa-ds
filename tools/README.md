@@ -239,6 +239,17 @@ A fix proves its test: for a pull request with a patch changeset that changes `s
 
 By hand, without GitHub: write the notes under `## [Unreleased]` and run `node tools/release.mjs minor` (or major, patch, or a number). `node tools/release.mjs --check` checks that every file carries the same version (CI runs it), and that `CHANGELOG.md` ends with the link definitions its headings give (`tools/changelog.mjs`): each `## [x.y.z]` links to the compare from the version before it, the oldest to its tag, and `[Unreleased]` to everything since the latest. Every release writes them; `node tools/release.mjs --links` does it by hand. Versions that were never tagged (most before the 5.0.0 rename, and 6.0.0 and 7.1.0) are headings without brackets, so they ask for no link. The README's Versioning section says which kind of release a change needs.
 
+### Rolling back a bad release
+
+A release that breaks projects is never undone in place: projects install by tag (`#vX.Y.Z`), so a tag that moved or vanished would change, or break, what an existing lockfile installs. `tools/tag-release.mjs` and `tools/publish.mjs` never move or replace a tag for the same reason. Instead (GR277):
+
+1. **Projects first.** Tell them to pin the version before it (`npm install gitlab:diki-stwn/serupa-ds#v<previous>`). The tag is still there, prebuilt, so that install copies files and builds nothing.
+2. **Mark it.** Under the bad version's heading in `CHANGELOG.md`, the first line says `**Don't use this version:** <what breaks>. Fixed in <next>.`, and the same goes at the top of its release notes where it has any.
+3. **Fix forward.** On a branch from `main`, revert the change (`git revert -m 1 <merge commit>` for a merge request) or fix it, with a patch changeset that says what was put back. It goes through a merge request and CI like any other, and releases as the next patch.
+4. **Check it.** Install the new tag the way a project does (`npx --package=gitlab:diki-stwn/serupa-ds#v<next> serupa-create check-app`, then `npm run check` and `npm run build` in `check-app`). When it passes, tell projects to move to it. (`node tools/test/consumer.mjs --release` does this for a GitHub release.)
+
+A version that was never tagged needs only step 3. Never delete a tag or force-push `main` to roll back.
+
 ## Design tokens export
 
 ```sh

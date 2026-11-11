@@ -108,7 +108,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Quay lại',
   cascadeLoading: 'Đang tải…',
   cascadeEmpty: 'Không có tùy chọn',
-  cascadeFailed: 'Không tải được các tùy chọn',
+  cascadeFailed: 'Không tải được các tùy chọn. Hãy mở lại tùy chọn đó để thử lại.',
   filterBar: 'Bộ lọc',
   filterAdd: 'Thêm bộ lọc',
   filterClear: 'Xóa tất cả',

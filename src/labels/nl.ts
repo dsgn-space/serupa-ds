@@ -108,7 +108,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'Terug',
   cascadeLoading: 'Laden…',
   cascadeEmpty: 'Geen opties',
-  cascadeFailed: 'Opties konden niet worden geladen',
+  cascadeFailed: 'Opties konden niet worden geladen. Open die optie opnieuw om het nog eens te proberen.',
   filterBar: 'Filters',
   filterAdd: 'Filter toevoegen',
   filterClear: 'Alles wissen',

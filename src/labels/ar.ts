@@ -112,7 +112,7 @@ export const labels: SerupaLabels = {
   cascadeBack: 'رجوع',
   cascadeLoading: 'جارٍ التحميل…',
   cascadeEmpty: 'لا توجد خيارات',
-  cascadeFailed: 'تعذّر تحميل الخيارات',
+  cascadeFailed: 'تعذّر تحميل الخيارات. افتح ذلك الخيار مجددًا لإعادة المحاولة.',
   filterBar: 'عوامل التصفية',
   filterAdd: 'إضافة عامل تصفية',
   filterClear: 'مسح الكل',

@@ -16,6 +16,9 @@
   border: var(--data-grid-border-width, var(--border-width-1)) solid var(--data-grid-line, var(--border));
 }
 .dk-data-grid--sm :is(.dk-data-grid__header, .dk-data-grid__cell) { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }
+.dk-data-grid--lg .dk-data-grid__table { font-size: var(--data-grid-font-size-lg, var(--text-base)); line-height: var(--text-base--line-height); }
+.dk-data-grid--lg :is(.dk-data-grid__header, .dk-data-grid__cell:not(.dk-data-grid__cell--editing), .dk-data-grid__input) { padding: var(--data-grid-padding-y-lg, var(--spacing-2\.5)) var(--data-grid-padding-x-lg, var(--spacing-4)); }
+.dk-data-grid--lg .dk-data-grid__loading > .dk-data-grid__cell { height: calc(var(--text-base--line-height) + var(--data-grid-padding-y-lg, var(--spacing-2\.5)) + var(--data-grid-padding-y-lg, var(--spacing-2\.5))); }   /* a placeholder row as tall as a 16px row */
 .dk-data-grid__table tr > :first-child { border-inline-start: var(--spacing-0); }
 .dk-data-grid__table tr > :last-child { border-inline-end: var(--spacing-0); }
 .dk-data-grid__table thead > tr > * { border-top: var(--spacing-0); }

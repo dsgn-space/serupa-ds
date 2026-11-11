@@ -28,6 +28,10 @@ export default defineConfig({
   oxc: { jsx: { runtime: 'automatic' } },
   // Bundled up front: found mid-run, Vite re-optimizes and reloads, failing the test files already loading.
   optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime', 'axe-core'] },
+  // No file watcher in CI: a run never re-runs on a change, and the watcher walks the whole checkout, npm's cache
+  // (.npm/) included. With 28 jobs on one runner it ran the host out of inotify handles: EMFILE on every file, 4 MB of
+  // log, and a failed shard on main (pipeline 3053377020, 11 Nov 2026).
+  server: { watch: process.env.CI ? null : { ignored: ['**/.npm/**'] } },
   plugins: [{
     // /__slow-picture__.svg answers after a second, so a test can see a picture while it loads in every engine
     // (lazy loading below the fold can't do that: each engine starts lazy pictures at its own distance). With

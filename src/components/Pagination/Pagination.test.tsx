@@ -98,6 +98,17 @@ describe('Pagination', () => {
     expect(calls.join()).toBe('4,fixed4');
   });
 
+  test('linkAs is typed (GR276): a component that takes href passes, one that needs to (React Router\'s Link) doesn\'t', async () => {
+    const HrefLink = (p: { href: string; className?: string; children?: React.ReactNode }) => <a {...p} data-mine="" />;
+    const ToLink = (p: { to: string; children?: React.ReactNode }) => <a href={p.to}>{p.children}</a>;
+    await render(<>
+      <Pagination id="pla" count={3} page={2} getHref={(n) => '#l' + n} linkAs={HrefLink} />
+      {/* @ts-expect-error Pagination passes href, never to */}
+      <Pagination id="plb" count={3} page={2} getHref={(n) => '#m' + n} linkAs={ToLink} />
+    </>);
+    expect(document.querySelector('#pla a[data-mine][href="#l3"]')).not.toBeNull();
+  });
+
   test('getHref: pages are links with your labels and rel prev/next; the next link at the end has no href and aria-disabled; a click follows the link and moves the page', async () => {
     await render(<Pagination id="plink" count={20} defaultPage={20} getHref={(n) => '#page-' + n} previousLabel="Newer" nextLabel="Older"
       pageLabel={(n) => 'Go to ' + n} aria-label="Results" />, { wrapper: EnUS });

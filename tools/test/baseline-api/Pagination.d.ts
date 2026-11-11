@@ -14,7 +14,9 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onCha
     defaultPage?: number | undefined;
     onPageChange?: ((page: number) => void) | undefined;
     getHref?: ((page: number) => string) | undefined;
-    linkAs?: React.ElementType | undefined;
+    linkAs?: React.ElementType<{
+        href: string;
+    }> | undefined;
     siblings?: number | undefined;
     boundaries?: number | undefined;
     size?: "lg" | "md" | "sm" | undefined;

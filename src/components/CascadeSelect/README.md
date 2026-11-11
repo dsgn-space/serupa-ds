@@ -48,7 +48,7 @@ Drawn from the `Open` story.
 - Keep each column short enough to scan; sort options the way people look for them (alphabetically for places).
 - `onValueChange` gets the path of values and the options themselves, so you have the labels without looking them up.
 - Only a last step can be chosen unless `selectParents` is set; then Enter, or a second click, on a parent chooses it.
-- With `loadOptions`, an option without `children` loads them when opened ("Loading…" meanwhile); a failure says so, and opening the option again tries again. Set `isLeaf` on options that have nothing under them, so they don't show a chevron or ask.
+- With `loadOptions`, an option without `children` loads them when opened ("Loading…" meanwhile); a failure says so and how to try again: open that option again. Set `isLeaf` on options that have nothing under them, so they don't show a chevron or ask.
 - A `value` or `defaultValue` with loaded levels (a saved one in an edit form) has its levels loaded right away, one at a time, so the button reads it in words without being opened. Until they arrive, or if a load fails, it shows the values themselves.
 
 ## States

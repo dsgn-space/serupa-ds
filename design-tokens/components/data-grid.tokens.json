@@ -113,6 +113,16 @@
             "cssVar": "--data-grid-header-weight"
           }
         }
+      },
+      "font-size-lg": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-base}",
+        "$description": "The cells' text with size lg (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-font-size-lg"
+          }
+        }
       }
     },
     "spacing": {
@@ -143,6 +153,26 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--data-grid-padding-y-sm"
+          }
+        }
+      },
+      "padding-x-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "A cell's inline padding with size lg (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-padding-x-lg"
+          }
+        }
+      },
+      "padding-y-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2_5}",
+        "$description": "A cell's block padding with size lg (10px): with 16px text, a row at least 44px tall.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-padding-y-lg"
           }
         }
       },

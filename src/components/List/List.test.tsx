@@ -180,6 +180,18 @@ describe('List', () => {
     expect([a.tagName, a.getAttribute('href'), a.getAttribute('aria-disabled'), a.getAttribute('aria-label'), a.tabIndex]).toEqual(['A', null, 'true', 'Team page', -1]);
   });
 
+  test('linkProps is typed by as (GR276): a router link\'s props, an <a>\'s by default, and data-* on either', async () => {
+    await render(<List>
+      <ListItem id="ity-r" as={RouterLink} linkProps={{ to: '/team', 'data-row': 'team' }} title="Team" />
+      <ListItem id="ity-a" href="#a" linkProps={{ target: '_self', 'aria-current': 'page' }} title="A" />
+      {/* @ts-expect-error RouterLink has no tooo */}
+      <ListItem id="ity-x" as={RouterLink} linkProps={{ tooo: '/x' }} title="X" />
+      {/* @ts-expect-error an <a> has no to */}
+      <ListItem id="ity-y" href="#y" linkProps={{ to: '/y' }} title="Y" />
+    </List>);
+    expect([main('ity-r').getAttribute('href'), main('ity-r').dataset.row, main('ity-a').getAttribute('target')]).toEqual(['#router/team', 'team', '_self']);
+  });
+
   test('divided={false}: no lines; unknown variant and as fall back to plain and ul', async () => {
     await render(<List id="lnodiv" divided={false} variant={'boxed' as never} as={'table' as never}><ListItem title="A" /><ListItem title="B" /></List>);
     const l = el('lnodiv');

@@ -13,7 +13,7 @@ export interface CascadeSelectLabels {
   cascadeBack: string;
   cascadeLoading: string;
   cascadeEmpty: string;
-  /** CascadeSelect: a column whose options failed to load (opening its parent again tries again). */
+  /** CascadeSelect: a column whose options failed to load, and the way to try again (opening its parent again). */
   cascadeFailed: string;
 }
 export const en: CascadeSelectLabels = {
@@ -24,7 +24,7 @@ export const en: CascadeSelectLabels = {
   cascadeBack: 'Back',
   cascadeLoading: 'Loading…',
   cascadeEmpty: 'No options',
-  cascadeFailed: 'Couldn’t load the options',
+  cascadeFailed: 'Couldn’t load the options. Open that option again to try again.',
 };
 export const id: CascadeSelectLabels = {
   cascadePlaceholder: 'Pilih…',
@@ -34,5 +34,5 @@ export const id: CascadeSelectLabels = {
   cascadeBack: 'Kembali',
   cascadeLoading: 'Memuat…',
   cascadeEmpty: 'Tidak ada pilihan',
-  cascadeFailed: 'Pilihan gagal dimuat',
+  cascadeFailed: 'Pilihan gagal dimuat. Buka lagi untuk mencoba lagi.',
 };

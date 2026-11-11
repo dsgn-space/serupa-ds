@@ -23,6 +23,8 @@ function symbolsOf(locale?: string): Symbols {
 }
 
 const SPACE = /[\s\u00a0\u202f]/g;
+// The longest text parseNumber reads, spaces aside: room for "Rp -1.000.000.000.000,123456" and a unit, many times over.
+const MAX_LENGTH = 100;
 // Whether the mark groups the digits: a first group of one to three that doesn't start with 0, then groups of three
 // (or of two before the last three, as in hi-IN's 12,34,567).
 const grouped = (t: string, mark: string) => {
@@ -39,6 +41,9 @@ export function parseNumber(text: string, locale?: string): number | null | unde
   // NFKC first: a Japanese or Chinese IME in full-width mode types "－１，５００．５", which is -1500.5 (L8E1).
   const s = arabic(latinDigits(text.normalize('NFKC')), sym).replace(/[\u200e\u200f\u061c]/g, '').replace(/\u2212/g, '-').replace(SPACE, '');
   if (s === '') return null;
+  // No number anyone types is this long, and the split below backtracks on a long one: a pasted log line of 64k
+  // characters took seconds per keystroke (GR277).
+  if (s.length > MAX_LENGTH) return undefined;
   // Text around the number (Rp, $, €, %, a minus) is fine; letters inside it are not. The text may hold dots away
   // from the digits, as unit abbreviations do ("กม.", "कि.मि.", "கி.மீ.").
   const parts = /^((?:[^0-9]*[^0-9.,'\u2019])?)([0-9.,'\u2019]*)((?:[^0-9.,'\u2019][^0-9]*)?)$/.exec(s);
