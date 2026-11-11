@@ -351,7 +351,9 @@
 - button "Loaded"
 - button "Empty"
 - button "Failed"
-- figure "Visitors and sign-ups"
+- figure "Visitors and sign-ups":
+  - text: Visitors and sign-ups
+  - button "Show as table" [disabled]
 
 # LongText
 - figure "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice in a narrow column":
