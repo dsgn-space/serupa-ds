@@ -5,6 +5,7 @@
 **Checked against main (31 October 2026, 11.0.0):** Done: each release tag is prebuilt and carries `dist/`, and each GitHub release also has the packed `.tgz` (README, Install).
 **Date:** 2026-10-17
 **Update (2 November 2026):** Diki chose to keep `serupa-ds` as the final name. Registry publishing no longer waits on a name, only on Diki's go-ahead; until then releases install from GitHub as below.
+**Update (11 November 2026):** For a while the repository lived on GitLab, and releases were installed from its tags the same way (`gitlab:` in place of `github:`). It's back on GitHub, so this decision holds as written.
 **Deciders:** Diki
 
 ## Context
@@ -63,7 +64,7 @@ B fixes the speed and reliability problems with no change for projects and no na
 
 ## Action items
 
-1. [ ] `publish.mjs`: build, commit `dist/` on a detached release commit with `prepare` and devDependencies removed, tag it, attach the tarball as today.
-2. [ ] Fix the README install line to the first real tag once it exists.
-3. [ ] CI: install the tag into a scratch project and import every entry point.
+1. [x] `publish.mjs`: build, commit `dist/` on a detached release commit with `prepare` and devDependencies removed, tag it, attach the tarball as today.
+2. [x] Fix the README install line to the first real tag once it exists.
+3. [x] CI: install the tag into a scratch project and import every entry point. `tools/test/consumer.mjs` packs the build as a release ships it, installs it into an empty project and imports every entry point.
 4. [ ] 5.0: pick the registry with the name.
