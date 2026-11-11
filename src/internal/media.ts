@@ -44,9 +44,43 @@ export function useBreakpoint(name: Breakpoint, options?: { serverValue?: boolea
   return useMediaQuery('(min-width: ' + BREAKPOINTS[name] + 'px)', options);
 }
 
-/** Whether the visitor asked for less motion (`prefers-reduced-motion: reduce`). Use it to skip a JavaScript
- *  animation (scrolling smoothly, a count going up, a confetti burst): CSS transitions already follow the setting
- *  through the motion tokens and base.css. False in server HTML and until hydrated. */
+const REDUCE = '(prefers-reduced-motion: reduce)';
+const REDUCE_ATTR = '[data-motion="reduce"]';
+
+/** Whether motion should be reduced now: the system asks for it (`prefers-reduced-motion: reduce`), or the app's own
+ *  setting does (`data-motion="reduce"` on `<html>`, or on a section around `el`). For a one-off check in an event
+ *  handler or effect; render with `useReducedMotion`. False on the server. */
+export function prefersReducedMotion(el?: Element | null): boolean {
+  if (typeof document === 'undefined') return false;
+  const m = mediaList(REDUCE);
+  if (m && m.matches) return true;
+  const at = el && el.isConnected ? el : document.documentElement;
+  return !!(at && at.closest(REDUCE_ATTR));
+}
+
+// module state: the hooks listening to the data-motion attribute on <html>, and the one observer that tells them. It
+// holds only this page's listeners, never a request's data, and the server never fills it (no document there).
+const attrListeners = new Set<() => void>();
+let attrWatch: MutationObserver | null = null;
+function watchAttr(on: () => void): () => void {
+  attrListeners.add(on);
+  if (!attrWatch && typeof MutationObserver === 'function') {
+    attrWatch = new MutationObserver(() => attrListeners.forEach((fn) => fn()));
+    attrWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-motion'] });
+  }
+  return () => {
+    attrListeners.delete(on);
+    if (!attrListeners.size && attrWatch) { attrWatch.disconnect(); attrWatch = null; }
+  };
+}
+
+/** Whether to show less motion: the visitor asked for it (`prefers-reduced-motion: reduce`), or the app's own
+ *  "Reduce motion" setting put `data-motion="reduce"` on `<html>`. Use it to skip a JavaScript animation (scrolling
+ *  smoothly, a count going up, a confetti burst): CSS transitions already follow both through the motion tokens and
+ *  base.css. False in server HTML and until hydrated. */
 export function useReducedMotion(): boolean {
-  return useMediaQuery('(prefers-reduced-motion: reduce)');
+  const system = useMediaQuery(REDUCE);
+  const subscribe = React.useCallback((on: () => void) => (typeof document === 'undefined' ? () => {} : watchAttr(on)), []);
+  const app = React.useSyncExternalStore(subscribe, () => document.documentElement.matches(REDUCE_ATTR), () => false);
+  return system || app;
 }

@@ -6,7 +6,7 @@ import { hydrateRoot } from 'react-dom/client';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
-import { BREAKPOINTS, useBreakpoint, useMediaQuery, useReducedMotion } from './media';
+import { BREAKPOINTS, prefersReducedMotion, useBreakpoint, useMediaQuery, useReducedMotion } from './media';
 import * as api from '../index';
 
 afterEach(async () => { await page.viewport(1280, 800); });
@@ -68,5 +68,29 @@ describe('media hooks', () => {
     function Peek() { seen.push(useReducedMotion()); return null; }
     await render(<Peek />);
     expect(seen.at(-1)).toBe(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  });
+});
+
+describe('the app\'s own Reduce motion setting', () => {
+  test('prefersReducedMotion and useReducedMotion follow data-motion="reduce" on <html>, and a section around an element', async () => {
+    const html = document.documentElement;
+    const system = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const seen: boolean[] = [];
+    function Peek() { seen.push(useReducedMotion()); return null; }
+    const view = await render(<Peek />);
+    const section = document.body.appendChild(document.createElement('section'));
+    const inner = section.appendChild(document.createElement('b'));
+    try {
+      expect([prefersReducedMotion(), seen.at(-1)]).toEqual([system, system]);
+      html.setAttribute('data-motion', 'reduce');
+      await expect.poll(() => seen.at(-1)).toBe(true);
+      expect(prefersReducedMotion()).toBe(true);
+      html.removeAttribute('data-motion');
+      await expect.poll(() => seen.at(-1)).toBe(system);
+      section.setAttribute('data-motion', 'reduce');
+      expect([prefersReducedMotion(inner), prefersReducedMotion(document.body)]).toEqual([true, system]);
+      inner.remove();
+      expect(prefersReducedMotion(inner)).toBe(system);   // a detached element reads the page
+    } finally { html.removeAttribute('data-motion'); section.remove(); await view.unmount(); }
   });
 });

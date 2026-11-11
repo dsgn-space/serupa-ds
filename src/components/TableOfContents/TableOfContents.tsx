@@ -4,6 +4,7 @@ import { cn, domId, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useServerStyles } from '../../internal/serverStyles';
+import { prefersReducedMotion } from '../../internal/media';
 import { en as words } from './labels';
 
 /** One entry: the id of the heading it goes to, its text, and its level (2 for an h2). */
@@ -29,7 +30,6 @@ export interface TableOfContentsProps extends Omit<React.HTMLAttributes<HTMLElem
 }
 
 const slug = (text: string) => text.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '') || 'section';
-const reduced = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* TableOfContents: an "On this page" list of links to the page's sections, as a navigation landmark. It reads the
    headings from the page (giving an id to one that has none) or takes items. As the page scrolls, the link to the
@@ -137,7 +137,7 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
     if (!h) return;
     e.preventDefault();
     pinned.current = Date.now() + 1000;
-    h.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+    h.scrollIntoView({ behavior: prefersReducedMotion(h) ? 'auto' : 'smooth', block: 'start' });
     if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
     h.focus({ preventScroll: true });
     if (window.location.hash !== '#' + id) window.history.pushState(null, '', '#' + id);
