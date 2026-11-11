@@ -17,12 +17,12 @@ export const en: KeyboardShortcutsLabels = {
   generalShortcuts: 'General',
   showShortcuts: 'Show keyboard shortcuts',
   singleKeyShortcuts: 'Single-key shortcuts',
-  singleKeyHint: 'Shortcuts that are one key, such as ?, outside text fields. Turn them off if they go off by accident.',
+  singleKeyHint: 'Shortcuts that are one key, such as “?”, outside text fields. Turn them off if they go off by accident.',
 };
 export const id: KeyboardShortcutsLabels = {
   keyboardShortcuts: 'Pintasan keyboard',
   generalShortcuts: 'Umum',
   showShortcuts: 'Tampilkan pintasan keyboard',
   singleKeyShortcuts: 'Pintasan satu tombol',
-  singleKeyHint: 'Pintasan yang hanya satu tombol, seperti ?, di luar kolom teks. Matikan jika sering terpicu tanpa sengaja.',
+  singleKeyHint: 'Pintasan yang hanya satu tombol, seperti “?”, di luar kolom teks. Matikan jika sering terpicu tanpa sengaja.',
 };

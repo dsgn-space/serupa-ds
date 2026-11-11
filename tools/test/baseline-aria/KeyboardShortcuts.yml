@@ -24,7 +24,7 @@
     - term: Show keyboard shortcuts
     - definition: "?"
   - switch "Single-key shortcuts" [checked]
-  - text: Single-key shortcuts Shortcuts that are one key, such as ?, outside text fields. Turn them off if they go off by accident.
+  - text: Single-key shortcuts Shortcuts that are one key, such as “?”, outside text fields. Turn them off if they go off by accident.
 
 # Playground
 - paragraph: Press a shortcut, or ? for the list. Press ? to see them all.
@@ -57,5 +57,5 @@
   - term: Show keyboard shortcuts
   - definition: "?"
   - switch "Single-key shortcuts" [checked]
-  - text: Single-key shortcuts Shortcuts that are one key, such as ?, outside text fields. Turn them off if they go off by accident.
+  - text: Single-key shortcuts Shortcuts that are one key, such as “?”, outside text fields. Turn them off if they go off by accident.
 
