@@ -237,7 +237,7 @@ export const labels: SerupaLabels = {
   completed: '已完成',
   hasError: '有错误',
   hasWarning: '需要注意',
-  stepOf: (step, total) => '第 ' + step + ' 步，共 ' + total + ' 步',
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => '第 ' + stepText + ' 步，共 ' + totalText + ' 步',
   tourBack: '上一步',
   tourNext: '下一步',
   tourDone: '完成',

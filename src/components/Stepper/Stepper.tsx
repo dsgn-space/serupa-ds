@@ -35,8 +35,8 @@ export interface StepperProps extends React.HTMLAttributes<HTMLElement> {
   /** Which steps onStepClick makes buttons. 'completed' (default): the ones before the current step. 'all': every
       step but the current one, for a form people can fill in any order. */
   clickable?: 'completed' | 'all' | undefined;
-  /** Words read out or shown: { completed: 'completed', error: 'has an error', warning: 'needs attention', optional: 'Optional', stepOf: (step, total) => `Step ${step} of ${total}` }. */
-  labels?: ({ completed?: string; error?: string; warning?: string; optional?: string; stepOf?: (step: number, total: number) => string }) | undefined;
+  /** Words read out or shown: { completed: 'completed', error: 'has an error', warning: 'needs attention', optional: 'Optional', stepOf: (step, total, stepText, totalText) => `Step ${stepText} of ${totalText}` }; stepText and totalText are the numbers in the locale's digits. */
+  labels?: ({ completed?: string; error?: string; warning?: string; optional?: string; stepOf?: (step: number, total: number, stepText: string, totalText: string) => string }) | undefined;
 }
 
 const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, clickable: 1, labels: 1, className: 1 } as const;
@@ -148,7 +148,7 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>('Ste
           );
         })}
       </ol>
-      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length) + ': '}<span className="dk-stepper__title">{steps[shown].title}</span></p> : null}
+      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, new Intl.NumberFormat(locale).format(shown + 1), new Intl.NumberFormat(locale).format(steps.length)) + ': '}<span className="dk-stepper__title">{steps[shown].title}</span></p> : null}
     </nav>
   );
 });

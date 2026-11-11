@@ -241,7 +241,7 @@ export const labels: SerupaLabels = {
   completed: 'abgeschlossen',
   hasError: 'hat einen Fehler',
   hasWarning: 'braucht Aufmerksamkeit',
-  stepOf: (step, total) => 'Schritt ' + step + ' von ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Schritt ' + stepText + ' von ' + totalText,
   tourBack: 'Zurück',
   tourNext: 'Weiter',
   tourDone: 'Fertig',

@@ -238,7 +238,7 @@ export const labels: SerupaLabels = {
   completed: 'tamamlandı',
   hasError: 'hata var',
   hasWarning: 'dikkat gerekiyor',
-  stepOf: (step, total) => 'Adım ' + step + ' / ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Adım ' + stepText + ' / ' + totalText,
   tourBack: 'Geri',
   tourNext: 'İleri',
   tourDone: 'Bitti',

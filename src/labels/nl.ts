@@ -238,7 +238,7 @@ export const labels: SerupaLabels = {
   completed: 'voltooid',
   hasError: 'bevat een fout',
   hasWarning: 'vraagt aandacht',
-  stepOf: (step, total) => 'Stap ' + step + ' van ' + total,
+  stepOf: (step, total, stepText = String(step), totalText = String(total)) => 'Stap ' + stepText + ' van ' + totalText,
   tourBack: 'Terug',
   tourNext: 'Volgende',
   tourDone: 'Klaar',

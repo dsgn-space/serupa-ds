@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Tour, type TourStep } from './Tour';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -58,7 +59,7 @@ describe('Tour', () => {
 
   test('Next, Back and Done walk the steps; the ring moves, onStepChange and onFinish are called', async () => {
     const onStepChange = vi.fn<(step: number) => void>(), onFinish = vi.fn(), onOpenChange = vi.fn();
-    await render(<Page defaultOpen onStepChange={onStepChange} onFinish={onFinish} onOpenChange={onOpenChange} />);
+    await render(<SerupaProvider locale="en"><Page defaultOpen onStepChange={onStepChange} onFinish={onFinish} onOpenChange={onOpenChange} /></SerupaProvider>);
     expect(button('Back')).toBe(undefined);
     await expect.element(page.getByText('Step 1 of 3')).toBeVisible();
     expect(getComputedStyle(page.getByText('Step 1 of 3').element()).fontVariantNumeric).toBe('tabular-nums');   // the count doesn't shift as the step changes
@@ -208,7 +209,7 @@ describe('Tour', () => {
   });
 
   test('its text reads 4.5:1 on its background in all six themes', async () => {
-    await render(<Page open />);
+    await render(<SerupaProvider locale="en"><Page open /></SerupaProvider>);
     const count = page.getByText('Step 1 of 3').element() as HTMLElement;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
