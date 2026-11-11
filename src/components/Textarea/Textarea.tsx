@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { useValidityMessages } from '../../internal/validity';
 import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -93,7 +94,9 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
     // raises "ResizeObserver loop completed with undelivered notifications" on window.
     const ro = new ResizeObserver(function () { const nw = own.current && own.current.offsetWidth; if (nw !== w) { w = nw as number; cancelAnimationFrame(raf); raf = requestAnimationFrame(fit); } });
     ro.observe(own.current);
-    return function () { cancelAnimationFrame(raf); ro.disconnect(); };
+    // A web font that arrives after the first paint wraps the text differently in a box that keeps its width.
+    const stop = onFontsLoaded(fit);
+    return function () { cancelAnimationFrame(raf); ro.disconnect(); stop(); };
   }, [js, fit]);
 
   const setRefs = useMergedRef(ref, function (node: HTMLTextAreaElement | null) {
