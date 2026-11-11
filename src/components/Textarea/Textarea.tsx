@@ -29,6 +29,10 @@ export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
   invalid?: boolean | undefined;
   /** A character count under the text, "12 / 200" with maxLength (text-colored once it's reached). Linked to the field with aria-describedby. Default: false. */
   showCount?: boolean | undefined;
+  /** A row under the text, inside the box: buttons such as Send or Attach, at the end (a toolbar can start the row with
+      className="me-auto"). They come after the field in the Tab order, and are disabled with it. With showCount, the
+      count moves into this row, at the start. */
+  actions?: React.ReactNode | undefined;
 }
 
 /* Textarea: a multi-line text field, Input's sibling. size "sm", "md" (default) or "lg" (Input's text sizes and
@@ -37,7 +41,7 @@ export interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
    maxLength); maxLength (in characters as people see them, like the count, applied by Textarea rather than the
    browser). Renders <span class="dk-textarea"> around a native <textarea>: className and style go to the box,
    every other prop (value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <textarea>. */
-const OWN = { size: 1, invalid: 1, rows: 1, autoResize: 1, maxRows: 1, resize: 1, showCount: 1, className: 1, style: 1 } as const;
+const OWN = { size: 1, invalid: 1, rows: 1, autoResize: 1, maxRows: 1, resize: 1, showCount: 1, actions: 1, className: 1, style: 1 } as const;
 
 // Whether the browser sizes a field to its content (field-sizing: content: Chromium 123+, Safari 26+). False on the
 // server, which only decides the effects there (they don't run), not the markup.
@@ -107,11 +111,15 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
   // server HTML: applied again right after hydration.
   const restyle = useServerStyles<HTMLSpanElement>();
   if (props.showCount) rest['aria-describedby'] = cn(rest['aria-describedby'], countId);
+  const acts = props.actions != null && props.actions !== false;
+  const count = <span className={cn('dk-textarea__count', max != null && length >= max && 'dk-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span>;
   return (
-    <span className={cn('dk-textarea', 'dk-textarea--size-' + size, invalid && 'dk-textarea--invalid', rest.disabled && 'dk-textarea--disabled', rest.readOnly && 'dk-textarea--readonly', resize === 'none' && 'dk-textarea--resize-none', auto && 'dk-textarea--auto', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={pressFocuses(own)}>
+    <span className={cn('dk-textarea', 'dk-textarea--size-' + size, invalid && 'dk-textarea--invalid', rest.disabled && 'dk-textarea--disabled', rest.readOnly && 'dk-textarea--readonly', resize === 'none' && 'dk-textarea--resize-none', auto && 'dk-textarea--auto', acts && 'dk-textarea--actions', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={pressFocuses(own)}>
       <textarea {...rest} ref={setRefs} rows={rows} className="dk-textarea__field" key="field"
         style={auto ? ({ '--dk-ta-rows': rows, '--dk-ta-max-rows': maxRows || undefined } as React.CSSProperties) : undefined} />
-      {props.showCount ? <span className={cn('dk-textarea__count', max != null && length >= max && 'dk-textarea__count--full')} id={countId} key="count">{max != null ? num(length) + ' / ' + num(max) : num(length)}</span> : null}
+      {props.showCount && !acts ? count : null}
+      {/* A fieldset, so a disabled Textarea disables every button in the row as well; role none, since it groups nothing for a screen reader. */}
+      {acts ? <fieldset className="dk-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}
     </span>
   );
 });
