@@ -71,18 +71,22 @@ describe('Prose', () => {
     await expect.poll(() => el('w').hasAttribute('tabindex')).toBe(false);
   });
   test('a code block that fits once a late web font arrives stops taking focus then, though its box keeps its size', async () => {
-    // The font's rule is added only once the block is measured, so nothing loads it sooner. Monospace is wider than
-    // Inter: the line overflows the 280px inside the block in monospace (about 310px) and fits in Inter (about 252px).
-    // A fixed line height, and no scrollbar to take room (as with overlay scrollbars), so the box's size never changes.
+    // The first font is Inter drawn half as large again (PrWide, loaded before the render), so the line overflows the
+    // 280px inside the block (about 380px) whatever fonts the machine has; the late one (PrLate) is Inter at its size,
+    // about 252px, which fits. Its rule is added only once the block is measured, so nothing loads it sooner. A fixed
+    // line height, and no scrollbar to take room (as with overlay scrollbars), so the box's size never changes.
+    const wide = new FontFace('PrWide', 'url(/fonts/InterVariable-latin.woff2)', { sizeAdjust: '150%' });
+    await wide.load();
+    document.fonts.add(wide);
     const rule = document.createElement('style');
     rule.textContent = "@font-face { font-family: PrLate; src: url(/fonts/InterVariable-latin.woff2) format('woff2'); }";
     try {
-      await render(<div lang="en" style={{ width: '312px' }}><Prose dangerouslySetInnerHTML={{ __html: '<pre id="late" style="font: 14px/20px PrLate, monospace; scrollbar-width: none">Fresh coffee, packed well, sent today</pre>' }} /></div>);
+      await render(<div lang="en" style={{ width: '312px' }}><Prose dangerouslySetInnerHTML={{ __html: '<pre id="late" style="font: 14px/20px PrLate, PrWide; scrollbar-width: none">Fresh coffee, packed well, sent today</pre>' }} /></div>);
       await expect.poll(() => el('late').getAttribute('tabindex')).toBe('0');
       document.head.append(rule);
       await expect.poll(() => el('late').hasAttribute('tabindex'), { timeout: 5000 }).toBe(false);
       expect(el('late').scrollWidth).toBeLessThanOrEqual(el('late').clientWidth + 1);
-    } finally { rule.remove(); }
+    } finally { rule.remove(); document.fonts.delete(wide); }
   });
 
   test('an embed or picture with a width attribute (a 560px video iframe, a 600px svg) is held to a 320px column, so the page doesn\'t scroll sideways (GR77)', async () => {
