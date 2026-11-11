@@ -104,7 +104,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-title-size` | `text-sm` | The title (14px). |
 | `--popover-title-weight` | `font-semibold` | The title's weight (600). |
 | `--popover-width` | `container-3xs` | The panel's width (256px; it never gets wider than the screen). |
-| `--popover-padding` | `spacing-4` | Space inside the panel (16px). |
+| `--popover-padding` | `space-content` | Space inside the panel (16px). |
 | `--popover-gap` | `spacing-2` | Space under the title (8px). |
 | `--popover-offset` | `spacing-2` | The gap between the panel and its trigger (8px). |
 | `--popover-sheet-gap` | `spacing-16` | The room a sheet leaves above it, at its tallest (64px). |

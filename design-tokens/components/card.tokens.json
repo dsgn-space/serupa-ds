@@ -170,7 +170,7 @@
       },
       "padding-lg": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-6}",
+        "$value": "{spacing.space-surface}",
         "$description": "Padding, `lg`",
         "$extensions": {
           "com.serupa": {

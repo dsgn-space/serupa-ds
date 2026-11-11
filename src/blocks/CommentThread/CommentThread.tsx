@@ -113,6 +113,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
   const heading = React.useRef<HTMLHeadingElement | null>(null);
   const shown = comments.filter((c) => !hidden.has(c.id));
   const [busy, setBusy] = React.useState(false);
+  const [saving, setSaving] = React.useState(false);
   // After the render a change makes: the box, button or comment it names is in the page by then.
   const focus = (find: () => HTMLElement | null | undefined) => { window.requestAnimationFrame(() => find()?.focus()); };
   const byId = (elementId: string) => () => document.getElementById(elementId);
@@ -132,10 +133,14 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
   const stopEdit = (cid: string) => { setEditing(null); setEditError(false); setFailed(null); focus(byId(`${id}${cid}-edit-button`)); };
   const save = (c: ThreadComment) => (e: React.FormEvent) => {
     e.preventDefault();
-    if (!onEdit) return;
+    if (!onEdit || saving) return;
     if (!draft.trim()) { setEditError(true); focus(byId(`${id}${c.id}-edit`)); return; }
     setFailed(null);
-    settle(onEdit(c.id, draft.trim()), () => { stopEdit(c.id); announce(l.saved); }, () => { setFailed('save'); announce(l.saveFailed); });
+    // Busy until the save settles, as posting is: a second click doesn't send it twice.
+    const out = onEdit(c.id, draft.trim());
+    setSaving(thenable(out));
+    settle(out, () => { stopEdit(c.id); announce(l.saved); }, () => { setFailed('save'); announce(l.saveFailed); });
+    if (thenable(out)) out.then(() => setSaving(false), () => setSaving(false));
   };
   const remove = (c: ThreadComment) => {
     const at = shown.indexOf(c), next = shown[at + 1] || shown[at - 1];
@@ -169,7 +174,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
                           onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); stopEdit(c.id); } }} />
                       </Field>
                       <div className="flex gap-2">
-                        <Button type="submit" size="sm">{l.save}</Button>
+                        <Button type="submit" size="sm" loading={saving}>{l.save}</Button>
                         <Button variant="ghost" size="sm" onClick={() => stopEdit(c.id)}>{l.cancel}</Button>
                       </div>
                       {failed === 'save' && <p className="text-sm text-danger-text">{l.saveFailed}</p>}
