@@ -31,7 +31,8 @@ Knowing this helps tell a real issue from expected behaviour:
   by `src/internal/strictCsp.test.tsx` and `trustedTypes.test.tsx`). `theme.js` can run inline with a nonce.
 - Text you pass to a component is rendered as text, never as HTML.
 - Scripts store only what's listed under [What's kept in the browser](#whats-kept-in-the-browser), and nothing at all
-  unless you pass a key or load `theme.js` or `debug.js`.
+  unless you pass a key, load `theme.js` or `debug.js`, or someone turns off single-key shortcuts in the KeyboardShortcuts
+  help dialog.
 
 ## What's kept in the browser
 
@@ -44,6 +45,7 @@ this table doesn't list, or when a row no longer matches the code. Nothing here 
 | `src/theme.js` | localStorage | `serupa-theme` | The chosen brand and mode, as JSON. `SerupaTheme.reset()` clears it. |
 | `src/theme.js` | localStorage | `diki-theme` | Read once to move a theme saved under the package's old name to `serupa-theme`, then removed. |
 | `src/debug.js` | sessionStorage | `serupa-debug` | `1` while the debug outlines are on, for the tab only. |
+| `src/components/KeyboardShortcuts/KeyboardShortcuts.tsx` | localStorage | `serupa-single-key-shortcuts` | `off` once someone turns off single-key shortcuts in the help dialog, for every page of the app. Turning them back on removes it. |
 | `src/components/Splitter/Splitter.tsx` | localStorage | your `storageKey` | An uncontrolled Splitter's size, as a number. |
 | `src/patterns/ConsentBanner/ConsentBanner.tsx` | localStorage | your `saveKey` | The cookie choice, `accepted` or `rejected`, so the banner doesn't ask again. |
 | `src/patterns/Onboarding/Onboarding.tsx` | localStorage | your `saveKey` | Which steps are done and whether the checklist was hidden, as JSON. |
