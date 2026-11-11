@@ -57,7 +57,7 @@ Drawn from the `WithDescription` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div>`. |
-| `errors` | `{ field, message }[]` | | Required. The errors, in the fields' order: `field` is the control's id, `message` what's wrong. With none, nothing renders. |
+| `errors` | `{ field, message }[]` | | The errors, in the fields' order: `field` is the control's id, `message` what's wrong. With none, nothing renders. Inside `FormErrors`, leave it out to list the form's messages. |
 | `title` | `ReactNode` | `"There is a problem"`, or `"There are N problems"` | The heading. |
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `2` | The heading's level, to fit the page's outline. |
 | `description` | `ReactNode` | | Text under the heading, before the list. |

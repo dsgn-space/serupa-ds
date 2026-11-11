@@ -93,8 +93,16 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | `'horizontal'`: the label in a column beside the control, the hint and error under the control. It stacks again when narrow. Not with `group` |
 | `layout` | | | Deprecated, removed in 15.0.0: use `orientation` |
 | `id` | string | | The control's id; by default the control's own `id`, or a generated one |
+| `name` | string | | The name that picks this field's message from a surrounding `FormErrors`; by default the control's own `name` |
 
 Field takes one control as its child (any number with `group`). The control keeps its own props, `ref` and `aria-describedby` (Field's ids are added after yours). `className`, `ref` and any other attribute go to the outer element (a `<fieldset>` with `group`, otherwise a `<div>`), which has `data-component="field"`: a ref lets an app scroll to or measure a field with an error.
+
+### FormErrors
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `errors` | `Record<string, ReactNode>` \| null | | The form's errors by field name, as the server sent them. Each Field inside shows its own; a new object shows them all again, `null` clears them |
+| `children` | element | | The form, or the part of it the errors are about |
 
 ## Component tokens
 
