@@ -45,3 +45,16 @@ export const Horizontal: Story = {
     return <SortableList aria-label="Board columns" orientation="horizontal" items={items} getKey={(c) => c.id} getLabel={(c) => c.title} onReorder={setItems} renderItem={(c) => c.title} />;
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const WORDY: Task[] = [
+  { id: 'w1', title: 'Write the launch brief for marketing before the Friday planning meeting', owner: 'Ada' },
+  { id: 'w2', title: 'Review every design token against the new dark theme and fix what fails', owner: 'Grace' },
+];
+/** Do: short item names, read on each handle ("Reorder Write the brief"). */
+export const DoShortNames: Story = { name: 'Do: keep item names short' };
+/** Don't: long names, which every handle and announcement repeats in full. */
+export const DontLongNames: Story = {
+  name: "Don't: name items in sentences",
+  render: () => <div style={{ maxWidth: '24rem' }}><SortableList aria-label="Launch tasks" items={WORDY} getKey={(t) => t.id} getLabel={(t) => t.title} onReorder={() => undefined} renderItem={(t) => t.title} /></div>,
+};

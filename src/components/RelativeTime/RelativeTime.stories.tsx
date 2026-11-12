@@ -30,3 +30,9 @@ export const LongText: Story = {
     </p>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: \`numeric="always"\` in a log, where elapsed time matters more than the calendar. */
+export const DoNumericInLogs: Story = { name: 'Do: count time in logs', args: { date: minutes(1440), numeric: 'always' }, render: (args) => <p style={{ margin: 0 }}>Backup finished <RelativeTime {...args} /></p> };
+/** Don't: calendar words in a log, which say less about how long ago it was. */
+export const DontCalendarWordsInLogs: Story = { name: "Don't: use calendar words in logs", args: { date: minutes(1440) }, render: (args) => <p style={{ margin: 0 }}>Backup finished <RelativeTime {...args} /></p> };

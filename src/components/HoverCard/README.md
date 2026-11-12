@@ -30,6 +30,11 @@ import { HoverCard, Link, Avatar } from "serupa-ds";
 - Keep the card short: a name, a picture, a line or two and a link or two. It's 320px wide and grows taller, scrolling inside itself past the screen's height.
 - It waits 500ms before opening (`openDelay`), so a pointer crossing a list of links doesn't open a card for each. It closes 300ms after the pointer and focus leave both the link and the card (`closeDelay`), so crossing the gap to the card keeps it.
 
+### Do and don't
+
+- **Do:** Keep the card short: a name, a picture, a line or two and a link or two. (`DoShortCard`)
+- **Don't:** Fill it with a page of content: it covers what people were reading. Link to the full page instead. (`DontLongCard`)
+
 ## Accessibility
 
 - **Role and name:** the card is a plain group in the top layer, placed right after the link in the page's order, so a screen reader's reading order reaches it after the link while it's open. The link's own name and target are unchanged.

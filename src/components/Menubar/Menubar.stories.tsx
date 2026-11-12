@@ -64,3 +64,25 @@ export const Disabled: Story = {
 };
 // The stress story (G14): long words, long labels, more items than fit; the visual baselines show how it copes.
 export const LongText: Story = { render: () => <Editor long /> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the names people know, in the usual order. */
+export const DoFamiliarNames: Story = {
+  name: 'Do: use the names people know',
+  render: () => <Menubar aria-label="Editor">
+    <MenubarMenu label="File"><MenuItem>New</MenuItem></MenubarMenu>
+    <MenubarMenu label="Edit"><MenuItem>Undo</MenuItem></MenubarMenu>
+    <MenubarMenu label="View"><MenuItem>Zoom in</MenuItem></MenubarMenu>
+    <MenubarMenu label="Help"><MenuItem>Guides</MenuItem></MenubarMenu>
+  </Menubar>,
+};
+/** Don't: new names in a new order, so people can't find what they know is there. */
+export const DontNewNames: Story = {
+  name: "Don't: rename the usual menus",
+  render: () => <Menubar aria-label="Editor">
+    <MenubarMenu label="Questions"><MenuItem>Guides</MenuItem></MenubarMenu>
+    <MenubarMenu label="Stuff"><MenuItem>New</MenuItem></MenubarMenu>
+    <MenubarMenu label="Display"><MenuItem>Zoom in</MenuItem></MenubarMenu>
+    <MenubarMenu label="Changes"><MenuItem>Undo</MenuItem></MenubarMenu>
+  </Menubar>,
+};

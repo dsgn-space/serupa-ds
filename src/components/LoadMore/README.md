@@ -32,6 +32,11 @@ Drawn from the `LongText` story.
 - Set `hasMore={false}` after the last page. The button gives way to "You've reached the end" (`endText`, or `null` for nothing). If the button had focus, focus moves to that text, or with `null` to the "Showing 30 of 30" line (with no line either, to LoadMore itself, which is not a Tab stop), so it isn't lost.
 - Put it right after the list, inside the same region, so new items appear just above it.
 
+### Do and don't
+
+- **Do:** Pass `count` and `total` when you know them, so people see "Showing 20 of 134". (`DoShowTotal`)
+- **Don't:** Leave them out when you know them: people can't tell how far they are through. (`DontNoTotal`)
+
 ## Accessibility
 
 - **Role and name:** a plain group with a native `<button>` named "Load more" (or `label`). A long `label` wraps onto more lines on a phone instead of being cut off. The summary and end text are plain text.

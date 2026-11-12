@@ -10,6 +10,18 @@
 - textbox "To confirm, type acme/web" [disabled]
 - button "Delete this repository" [disabled]
 
+# DoNameTheThing
+- text: To confirm, type
+- strong: acme/web
+- textbox "To confirm, type acme/web"
+- button "Delete this repository" [disabled]
+
+# DontGenericWord
+- text: To confirm, type
+- strong: DELETE
+- textbox "To confirm, type DELETE"
+- button "Confirm" [disabled]
+
 # LongText
 - text: To confirm, type
 - strong: donaudampfschifffahrtsgesellschaftskapitaenswitwenrentenversicherung/production-eu-west

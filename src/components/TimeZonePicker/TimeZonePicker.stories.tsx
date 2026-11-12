@@ -68,3 +68,9 @@ export const LongText: Story = {
   args: { zones: ['America/Argentina/ComodRivadavia', 'America/North_Dakota/New_Salem', 'Pacific/Port_Moresby'], defaultValue: 'America/North_Dakota/New_Salem' },
   decorators: [(Story) => <div style={{ width: 200 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a Field label that says whose time zone it is. */
+export const DoSayWhose: Story = { name: 'Do: say whose time zone it is', render: (args) => <Field label="Meeting time zone"><TimeZonePicker {...args} aria-label={undefined} /></Field> };
+/** Don't: a bare picker with no visible label. */
+export const DontBarePicker: Story = { name: "Don't: show a bare picker", render: (args) => <TimeZonePicker {...args} /> };

@@ -37,3 +37,9 @@ export const LongText: Story = {
   },
   decorators: [(Story) => <div style={{ width: 280 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a title that names the file, and the lines the step is about highlighted. */
+export const DoTitleAndHighlight: Story = { name: 'Do: name it and mark what matters', args: { lineNumbers: true, highlight: [[6, 7]] } };
+/** Don't: no title and no highlight, so people hunt for what changed. */
+export const DontBareCode: Story = { name: "Don't: leave people to find the change", args: { title: undefined, language: undefined } };

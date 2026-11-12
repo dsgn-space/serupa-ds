@@ -43,6 +43,11 @@ Drawn from the `WithMoreWords` story.
 - Back online, it says "Back online" with a success icon for 2 seconds, then slides away.
 - With reduced motion, it fades without sliding.
 
+### Do and don't
+
+- **Do:** Add one sentence after "You're offline": what still works, or what happens to their changes. (`DoOneSentence`)
+- **Don't:** Explain at length: people don't read a paragraph in a banner. (`DontParagraph`)
+
 ## Accessibility
 
 - **Announcements:** "You’re offline" and "Back online" are said once each through the polite live region the components share, which moves into an open Dialog or Drawer so they're heard there too. The bar isn't a live region itself, so it isn't read twice.

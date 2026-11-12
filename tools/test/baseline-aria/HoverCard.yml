@@ -16,6 +16,36 @@
   - /url: "#dewi"
 - text: on Monday.
 
+# DoShortCard
+- text: Reviewed by
+- link "@dewi":
+  - /url: "#dewi"
+- img "Dewi Lestari"
+- strong: Dewi Lestari
+- text: Design lead, Payments
+- paragraph: Owns the checkout and invoice screens. In Jakarta, usually online 9 to 5 WIB.
+- link "See Dewi's projects":
+  - /url: "#dewi-projects"
+- text: on Monday.
+
+# DontLongCard
+- text: Reviewed by
+- link "@dewi":
+  - /url: "#dewi"
+- img "Dewi Lestari"
+- strong: Dewi Lestari
+- text: Design lead, Payments
+- paragraph: Owns the checkout and invoice screens. In Jakarta, usually online 9 to 5 WIB.
+- link "See Dewi's projects":
+  - /url: "#dewi-projects"
+- paragraph: Dewi joined in 2019 from the agency side, led the 2023 checkout redesign, and now runs the weekly design critique for Payments, Billing and Invoicing.
+- paragraph: "Current projects: invoice PDF export, the refund flow, the card form's error states and the dark theme for receipts."
+- link "Dewi's calendar":
+  - /url: "#dewi-calendar"
+- link "Reviews by Dewi":
+  - /url: "#dewi-reviews"
+- text: on Monday.
+
 # LongText
 - text: Reviewed by
 - link "@dewi":

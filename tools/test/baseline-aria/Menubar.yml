@@ -4,6 +4,20 @@
   - menuitem "Edit" [disabled]
   - menuitem "View"
 
+# DoFamiliarNames
+- menubar "Editor":
+  - menuitem "File"
+  - menuitem "Edit"
+  - menuitem "View"
+  - menuitem "Help"
+
+# DontNewNames
+- menubar "Editor":
+  - menuitem "Questions"
+  - menuitem "Stuff"
+  - menuitem "Display"
+  - menuitem "Changes"
+
 # LongText
 - menubar "Editor":
   - menuitem "Berkas dan dokumen yang dibuka"
