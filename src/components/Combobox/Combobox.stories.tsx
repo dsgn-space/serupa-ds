@@ -43,6 +43,17 @@ const search = (text: string, { signal }: { signal: AbortSignal }) => new Promis
   const t = setTimeout(() => ok(COUNTRIES.filter((c) => c.toLowerCase().includes(text.toLowerCase()))), 400);
   signal.addEventListener('abort', () => { clearTimeout(t); no(new DOMException('Aborted', 'AbortError')); });
 });
+// Free text with suggestions: what's typed is the value, and the first city that starts with it is filled in.
+const CITIES = ['Bandung', 'Bekasi', 'Bogor', 'Denpasar', 'Jakarta', 'Jayapura', 'Makassar', 'Medan', 'Semarang', 'Surabaya', 'Yogyakarta'];
+export const FreeText: Story = {
+  name: 'Free text with suggestions',
+  render: function Render() {
+    const [city, setCity] = React.useState<string | null>('Bandung');
+    return <Field label="City" hint={'Any city; these are suggestions. Value: ' + (city ?? 'none')}>
+      <Combobox freeText inlineComplete value={city} onValueChange={setCity} options={CITIES} limit={5} name="city" />
+    </Field>;
+  },
+};
 export const LoadOptions: Story = {
   name: 'With loadOptions',
   render: () => <Field label="Country"><Combobox placeholder="Search countries" loadOptions={search} clearable /></Field>,

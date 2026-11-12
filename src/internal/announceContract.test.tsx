@@ -13,6 +13,7 @@ import { Button } from '../components/Button/Button';
 import { Combobox } from '../components/Combobox/Combobox';
 import { CommandPalette } from '../components/CommandPalette/CommandPalette';
 import { CopyButton } from '../components/CopyButton/CopyButton';
+import { ChatApproval, ChatMessage } from '../components/Chat/Chat';
 import { DataGrid } from '../components/DataGrid/DataGrid';
 import { Dialog } from '../components/Dialog/Dialog';
 import { EmptyState } from '../components/EmptyState/EmptyState';
@@ -121,6 +122,12 @@ const SITES: Record<string, Site> = {
   'Table: a new sort order': {
     ui: (s) => <Table><TableHead><TableRow><TableHeaderCell sort={s ? 'ascending' : 'none'} onSort={() => {}}>Name</TableHeaderCell></TableRow></TableHead><TableBody><TableRow><TableCell>Apollo</TableCell></TableRow></TableBody></Table>,
     act: (next) => next(), says: /Sorted by Name, ascending/ },
+  'Chat: an approval answered': {
+    ui: (s) => <ChatApproval status={s ? 'approved' : 'pending'}>Reverse refund 2</ChatApproval>,
+    act: (next) => next(), says: /Approved: Reverse refund 2/ },
+  'Chat: the next version of a reply': {
+    ui: () => <ChatMessage branch={1} branches={3} onBranchChange={() => {}}>One</ChatMessage>,
+    act: async () => { await userEvent.click($('button[aria-label="Next response"]')); }, says: /Response 2 of 3/ },
   'CopyButton: copied': {
     ui: () => <CopyButton id="copy" value="https://serupa.dev" />,
     act: async () => { await userEvent.click($('#copy')); }, says: /Copied/ },

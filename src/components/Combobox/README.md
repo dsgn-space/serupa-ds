@@ -1,6 +1,6 @@
 # Combobox
 
-A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked, unless `onCreate` lets people add one. For a short list (under about 10), a Select is simpler.
+A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked, unless `onCreate` lets people add one, or `freeText` makes the typed text the value and the options suggestions. For a short list (under about 10), a Select is simpler.
 
 **Also called:** autocomplete, autosuggest, typeahead.
 
@@ -17,6 +17,9 @@ const [owner, setOwner] = React.useState<string | null>(null);
 const [reviewers, setReviewers] = React.useState<string[]>([]);
 <Combobox aria-label="Reviewers" multiple value={reviewers} onValueChange={setReviewers} options={people} name="reviewers" />
 
+// free text, with suggestions: what's typed is the value
+<Combobox aria-label="City" freeText inlineComplete options={cities} name="city" />
+
 // options from a server: loaded after typing pauses, each older request aborted
 <Combobox aria-label="Person" loadOptions={(text, { signal }) => fetch("/api/people?q=" + encodeURIComponent(text), { signal }).then((r) => r.json())} />
 ```
@@ -27,11 +30,12 @@ const [reviewers, setReviewers] = React.useState<string[]>([]);
 - Several choices from a long list, such as reviewers or tags (`multiple`).
 - Options that come from a server as people type (`loadOptions`).
 - A list people can add to as they pick, such as tags or labels (`onCreate`).
+- Free text with suggestions, such as a search box, a city or a job title, where anything may be typed (`freeText`).
 
 ## When not to use
 
 - A short list (under about 10): use [Select](../Select/README.md).
-- Free text that a list only suggests, such as an address: use [Input](../Input/README.md). Combobox's value is always an option, even one added with `onCreate`.
+- Free text with no list at all: use [Input](../Input/README.md). An address is best as an Input with the browser's own `autocomplete`, which fills it from what the person saved.
 - Picking more than one option from a short list (under about 10): use [checkboxes](../Checkbox/README.md), which show every choice at once.
 
 ## Anatomy
@@ -50,6 +54,8 @@ Drawn from the `Multiple` story.
 - Set `clearable` when no selection is a valid answer, so people can clear it in one click.
 - Group options under headings with `{ label, options }`, as Select's `optgroup`: each group is a `role="group"` named after its heading, typing hides a heading once none of its options match, and `disabled` on a group turns off every option in it.
 - With `onCreate`, people can add an option that isn't listed. While the typed text isn't an option's label (in any case, with or without accents), the list ends with 'Add “text”' (the `createOption` label). It's highlighted when nothing else matches, so Enter adds the text. Picking it calls `onCreate(text)` with the text trimmed. Add the option to `options` and return its value to pick it; with `multiple`, it becomes a tag. Return nothing to leave the pick to you. Leaving the field never adds anything. Added values are new, so give the options as `string[]` (or write `Combobox<string>`), not as a fixed set of values. With `loadOptions`, the row waits for the answer, since the answer may already have the option.
+- With `freeText`, the typed text is the value (`string | null`), as it's typed, and the options only suggest. Picking a suggestion puts its label in the field. Escape and leaving the field keep what's typed, and Enter with no suggestion highlighted sends the form. Add `inlineComplete` to fill in the rest of the first suggestion that starts with the text, selected, so typing on replaces it and Delete or Backspace removes it.
+- With `limit`, the list shows at most that many matches, and "+25 more, keep typing" (the `moreResults` label) under them while more match. When typing stops, the full count is said with it ("30 results. +25 more, keep typing"). Use it when the first few matches are enough, such as recent searches.
 - Write an `emptyText` that says what to try next, and match the `size` to the fields beside it.
 - Long lists are fine: the options are in the page only while the list is open, each label is prepared for matching once per `options` array, and moving the highlight redraws two rows. Only the rows in view are drawn, plus a few either side, as in [VirtualList](../VirtualList/README.md): scrolling and the arrow and Page keys reach every match, each row's `aria-posinset` and `aria-setsize` count every match, and the highlighted option is always drawn, so screen readers can follow it. Keep `options` the same array between renders (state, a constant or `useMemo`), so that work isn't redone. For tens of thousands of options, load the matches as people type with `loadOptions`.
 - With `loadOptions`, Combobox runs the requests: it waits for typing to pause (`debounce`, 250ms), passes an `AbortSignal` that aborts when newer text is typed (hand it to `fetch`), drops any answer that isn't for the latest text, and shows the loading row while it waits and "Couldn’t load options. Type to try again." (the `loadFailed` label) when the promise rejects. Opening the list loads what `""` finds. The picked option keeps its label when later answers leave it out. Enter or leaving the field before the answer for the typed text arrives doesn't lose it: the request goes at once, and the answer decides as a list that was already there would (an exact label is picked; after Enter, else the first match or the add row). Filter on the server: `filter` is ignored. To run the requests yourself instead, use `filter={false}`, `onInputChange` and `loading`.
@@ -72,7 +78,7 @@ Drawn from the `Multiple` story.
 
 ## Accessibility
 
-- The ARIA combobox pattern: `role="combobox"` with `aria-expanded`, `aria-controls` (while the list is open), `aria-autocomplete="list"` and `aria-activedescendant`, and a `role="listbox"` of `role="option"` items with `aria-selected`. The loading message is `role="status"`. Once typing stops, the number of matches ("2 results"), "No results. Try other words." and "Couldn't load" are said through the shared announcer, since a status row that appears with its text already in it isn't read by every screen reader. A string `emptyText` is said in place of it.
+- The ARIA combobox pattern: `role="combobox"` with `aria-expanded`, `aria-controls` (while the list is open), `aria-autocomplete="list"` (`"both"` with `inlineComplete`) and `aria-activedescendant`, and a `role="listbox"` of `role="option"` items with `aria-selected`. The loading message is `role="status"`. Once typing stops, the number of matches ("2 results"), "No results. Try other words." and "Couldn't load" are said through the shared announcer, since a status row that appears with its text already in it isn't read by every screen reader. A string `emptyText` is said in place of it.
 - An option is named by its label alone. A text `description` is its `aria-description`, so it's read after a pause instead of run into the name.
 - When typing stops, the number of matching options is said ("3 results", `labels.resultsCount`).
 - With `multiple`, the listbox has `aria-multiselectable="true"` and each picked option `aria-selected="true"`. Focus stays in the field, so each pick and removal is read out ("Brazil added", "Brazil removed": the `valueAdded` and `valueRemoved` labels). Each tag's remove button is named "Remove" and the label ("Remove Brazil").
@@ -86,7 +92,7 @@ Drawn from the `Multiple` story.
 | Alt+ArrowDown | Open without moving |
 | PageUp, PageDown | Up or down by what the list shows at once, stopping at the first and last option |
 | Enter | Pick the highlighted option (with `multiple`, pick or unpick it, keeping the list open) |
-| Escape | Close and put back the picked label (and stop there, so a surrounding Dialog stays open) |
+| Escape | Close and put back the picked label (with `freeText`, keep the text), and stop there, so a surrounding Dialog stays open |
 | Backspace | With `multiple`, in the empty field: remove the last tag |
 
 Focus stays in the field the whole time.
@@ -113,6 +119,9 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 | `onInputChange` | `(text: string) => void` | | Every change to the text: typing, and the label that picking, clearing, Escape or leaving the field puts back. |
 | `filter` | `false \| (option, text) => boolean` | contains, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße", "ｔｏｋｙｏ" finds "Tokyo", "こーひー" finds "コーヒー") | `false` shows every option you pass. |
 | `onCreate` | `(text: string) => V \| void` | | Adds 'Add “text”' to the end of the list while the text isn't an option's label. Picking it calls this with the trimmed text. Return the new option's value to pick it. |
+| `freeText` | `boolean` | `false` | The typed text is the value (`string \| null`) and the options suggest. `value`, `defaultValue` and `onValueChange` then hold the text. |
+| `inlineComplete` | `boolean` | `false` | With `freeText`: completes the text with the first suggestion that starts with it, the added part selected. |
+| `limit` | `number` | every match | Shows at most this many matches, with "+N more, keep typing" under them. |
 | `clearable` | `boolean` | `false` | A × that clears the selection (every tag, with `multiple`). |
 | `loading` | `boolean` | `false` | A loading row in the list. |
 | `emptyText` | `ReactNode` | `'No results. Try other words.'` | Shown when nothing matches. A string is also what screen readers hear |

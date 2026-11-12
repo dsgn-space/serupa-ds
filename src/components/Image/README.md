@@ -54,6 +54,11 @@ Drawn from the `Removable` story.
 - The remove button only calls `onRemove`; ask for confirmation yourself if removing can't be undone.
 - Once a removed picture is gone, focus moves to the next picture's remove button in the same list, else the one before, so it isn't lost (as with Badge's tags). A handler that moves focus itself is left alone.
 
+### Do and don't
+
+- **Do:** Write alt text that says what the picture shows, or `alt=""` when it is only decoration. (`DoDescribe`)
+- **Don't:** Use the file name as alt text: screen readers read "IMG_2041.jpg" out, which tells nobody anything. (`DontFileName`)
+
 ## Accessibility
 
 - `alt` is required by the types. A failed picture's fallback is a `role="img"` named by the alt text. The `<img>` stays in the frame, hidden under it, so its className, style, id, data-* and ref keep working and the frame keeps its size.

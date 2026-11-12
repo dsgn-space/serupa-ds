@@ -1,6 +1,12 @@
 # Disabled
 - slider "Volume" [disabled]
 
+# DoFormatValue
+- slider "Highest price"
+
+# DontBareNumber
+- slider "Highest price"
+
 # EveryStep
 - slider "Rating"
 

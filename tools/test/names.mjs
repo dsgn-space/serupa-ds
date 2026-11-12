@@ -14,6 +14,7 @@ import { PROJECT, report, done } from './lib.mjs';
 const DEMO = /Sizes|States|Shapes|Locales|Tones|Variants|Destructive|Disabled|Loading|Long(Text|Label)/;
 // "Component/Story": why its repeated names are fine, or what still has to change.
 const KNOWN = {
+  'ErrorSummary/DontJustInvalid': 'the Don\'t draws two "Invalid" links on purpose, to show why each one must name its field',
   'NotificationCenter/Open': 'each "Mark as read" is described by its row\'s title (aria-describedby, TF4 #940), which the snapshot doesn\'t show',
   'NotificationCenter/WithSettings': 'the same list as Open: each "Mark as read" is described by its row\'s title (aria-describedby, TF4 #940)',
   'NumberInput/Currency': 'each field\'s Decrease and Increase sit in that field\'s own labelled group, as in every number field',

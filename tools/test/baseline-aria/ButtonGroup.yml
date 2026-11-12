@@ -1,3 +1,15 @@
+# DoSameVariant
+- group "Align":
+  - button "Left"
+  - button "Center"
+  - button "Right"
+
+# DontMixVariants
+- group "Align":
+  - button "Left"
+  - button "Center"
+  - button "Right"
+
 # LongLabels
 - group "Clipboard":
   - button "Copy every selected row"

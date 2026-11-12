@@ -410,9 +410,11 @@ jobs:
           if [ -n "$failed" ]; then echo "Failed in:$failed"; exit 1; fi
 
   # On a pull request, the first failed job stops the whole run: it can't pass any more, so its runners go to the next.
+  # A failed queue run is out of the queue already, so the rest of it (the cross-browser components above all, up to
+  # 75 minutes on an x86 runner) only keeps runners from the groups behind it. Main's own run goes on to the end.
   stop:
     needs: [build, static, fix-proof, suite-x86, suite-portable, coverage]
-    if: failure() && github.event_name == 'pull_request'
+    if: failure() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:

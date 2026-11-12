@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { ThemePlayground } from '../themePlayground';
+
+<Meta title="Foundations/Theme playground" />
+
+# Theme playground
+
+Pick a brand, a mode and the other theme settings, and see the components together. Then copy the attributes onto your page's `<html>`, or onto any section to theme only that part. Settings left at their default are left out, so the line holds only what you changed.
+
+<ThemePlayground />
+
+Each setting is described under [Themes](?path=/docs/foundations-themes--docs): brand and mode pick the colors, more contrast gives 7:1 text and stronger borders, compact density makes controls shorter, roundness changes every corner, tinted shadows take the brand color, and fluid headings follow the window's width. With `theme.js` on the page, set the brand and mode with it instead, so it can follow the visitor's light or dark setting and remember their choice.

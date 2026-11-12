@@ -40,3 +40,9 @@ export const LongText: Story = {
   args: { title: 'Drag your signed contracts, invoices and receipts here', buttonLabel: 'Choose files from this device', hint: 'Images or PDF, up to 5 MB each, and no more than five files at a time' },
   decorators: [(Story) => <div style={{ width: 220 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a hint that names the allowed types and the largest size, matching `accept` and `maxSize`. */
+export const DoSayLimits: Story = { name: 'Do: say what it takes', args: { multiple: false, maxFiles: undefined, accept: 'image/png,image/jpeg', maxSize: 5_000_000, hint: 'PNG or JPG, up to 5 MB' } };
+/** Don't: limits that people only learn when a file is refused. */
+export const DontHideLimits: Story = { name: "Don't: hide the limits", args: { multiple: false, maxFiles: undefined, accept: 'image/png,image/jpeg', maxSize: 5_000_000, hint: undefined } };
