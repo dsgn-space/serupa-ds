@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Avatar } from './Avatar';
+import { useName } from '../../../.storybook/content';
 
 // A stand-in photo, so the stories work offline.
 const PHOTO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#db2777"/></linearGradient></defs><rect width="80" height="80" fill="url(#g)"/><circle cx="40" cy="32" r="14" fill="#fff" opacity=".85"/><ellipse cx="40" cy="74" rx="26" ry="20" fill="#fff" opacity=".85"/></svg>');
@@ -22,22 +23,26 @@ const Row = ({ children }: { children: React.ReactNode }) => <div className="fle
 
 export const Playground: Story = {};
 
+// The names follow Storybook's Content menu (.storybook/content.ts): the worst case's initials and words.
+const Kind = () => { const ada = useName('Ada Lovelace'), grace = useName('Grace Hopper'); return <Row><Avatar src={PHOTO} name={ada} /><Avatar name={grace} /><Avatar /><Avatar name="Atlas" shape="square" /></Row>; };
 export const Kinds: Story = {
   name: 'Picture, initials and icon',
-  render: () => <Row><Avatar src={PHOTO} name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar /><Avatar name="Atlas" shape="square" /></Row>,
+  render: () => <Kind />,
 };
 
+const Sized = () => { const grace = useName('Grace Hopper'); return <Row>{(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <Avatar key={s} size={s} name={grace} />)}</Row>; };
 export const Sizes: Story = {
-  render: () => <Row>{(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => <Avatar key={s} size={s} name="Grace Hopper" />)}</Row>,
+  render: () => <Sized />,
 };
 
 export const Status: Story = {
   render: () => <Row>{(['online', 'busy', 'away', 'offline'] as const).map((s) => <Avatar key={s} status={s} src={PHOTO} name="Ada Lovelace" />)}</Row>,
 };
 
+const Named = () => { const ada = useName('Ada Lovelace'); return <div className="flex items-center gap-2 text-sm"><Avatar src={PHOTO} name={ada} alt="" size="sm" />{ada}</div>; };
 export const WithName: Story = {
   name: 'Next to a name',
-  render: () => <div className="flex items-center gap-2 text-sm"><Avatar src={PHOTO} name="Ada Lovelace" alt="" size="sm" />Ada Lovelace</div>,
+  render: () => <Named />,
 };
 
 export const LongName: Story = {

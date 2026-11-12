@@ -43,4 +43,10 @@
   @starting-style { .dk-date-picker__popup:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
 }
 @media (forced-colors: active) { .dk-date-picker__popup { border-color: CanvasText; } }
+/* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
+   off it doesn't land in the text and open the keyboard. */
+@media (pointer: coarse) {
+  .dk-date-picker__button { position: relative; isolation: isolate; }
+  .dk-date-picker__button::after { content: ""; position: absolute; --dk-under: calc(var(--z-10) * -1); z-index: var(--dk-under); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
+}
 }

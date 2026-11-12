@@ -35,6 +35,23 @@
   - separator
   - menuitem "Delete" [disabled]
 
+# DoDestructiveLast
+- button "Actions" [expanded]
+- menu "Actions":
+  - menuitem "Edit"
+  - menuitem "Duplicate"
+  - menuitem "Share"
+  - separator
+  - menuitem "Delete"
+
+# DontDestructiveFirst
+- button "Actions" [expanded]
+- menu "Actions":
+  - menuitem "Delete"
+  - menuitem "Edit"
+  - menuitem "Duplicate"
+  - menuitem "Share"
+
 # Groups
 - button "Account" [expanded]
 - menu "Account":
