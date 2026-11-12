@@ -22,6 +22,26 @@
           }
         }
       },
+      "row-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-hover}",
+        "$description": "A List or InlineEdit row on the card, hovered or selected",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-row-bg-hover"
+          }
+        }
+      },
+      "row-bg-hover-filled": {
+        "$type": "color",
+        "$value": "{color.surface-raised}",
+        "$description": "A List or InlineEdit row on a filled card, hovered or selected: a step up, since surface-hover matches the filled card in light",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-row-bg-hover-filled"
+          }
+        }
+      },
       "bg-elevated": {
         "$type": "color",
         "$value": "{color.surface-raised}",
