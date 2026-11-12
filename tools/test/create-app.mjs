@@ -14,7 +14,7 @@ import { SECTION } from '../../bin/serupa-agents.mjs';
 import { PROJECT, done, fail, report } from './lib.mjs';
 
 const pkg = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), 'utf8'));
-const drift = Object.entries(VERSIONS).filter(([name, v]) => pkg.devDependencies[name] !== v).map(([name, v]) => `${name}: ${v}, the repository has ${pkg.devDependencies[name]}`);
+const drift = Object.entries(VERSIONS).filter(([name, v]) => !/^\d+\.\d+\.\d+$/.test(v || '') || pkg.devDependencies[name] !== v).map(([name, v]) => `${name}: ${v}, the repository has ${pkg.devDependencies[name]}`);
 const out = files({ name: 'my-app', serupa: 'github:diki-stwn/serupa-ds#v1.2.3', brand: 'violet' });
 const app = JSON.parse(out['package.json']);
 const main = out['src/main.tsx'];
