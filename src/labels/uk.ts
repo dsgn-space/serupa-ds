@@ -229,6 +229,7 @@ export const labels: SerupaLabels = {
   clearNotifications: 'Очистити все',
   clearNotificationsConfirm: 'Очистити всі сповіщення? Це не можна скасувати.',
   keepNotifications: 'Залишити',
+  notificationSettings: 'Налаштування сповіщень',
   notificationsUnread: (count) => (count ? 'Сповіщення, непрочитаних: ' + n(count) : 'Сповіщення'),
   decrease: 'Зменшити',
   increase: 'Збільшити',

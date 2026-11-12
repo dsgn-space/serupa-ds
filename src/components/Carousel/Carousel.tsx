@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit, useIsoLayoutEffect } from '../../internal/cn';
+import { useBreakpoint } from '../../internal/media';
 import { useServerStyles } from '../../internal/serverStyles';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
@@ -53,25 +54,14 @@ function perAt(per: CarouselProps['perView'], count: number): Record<Bp, number>
   for (const [k] of WIDTHS) { if (per[k] != null) n = Math.min(whole(per[k]), cap); out[k] = n; }
   return out;
 }
-/** The slides per view at the screen width now, following the matchMedia queries as the width changes. */
+/** The slides per view at the screen width now, following the breakpoints as the width changes (the base count in
+ *  server HTML, where CSS lays out the width). */
 function usePerView(per: CarouselProps['perView']): number {
   const map = per != null && typeof per === 'object' ? per : null;
-  const pick = () => {
-    if (!map) return whole(per);
-    let n = whole(map.base);
-    for (const [k, w] of WIDTHS) if (map[k] != null && typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(min-width: ' + w + 'px)').matches) n = whole(map[k]);
-    return n;
-  };
-  const [n, setN] = React.useState(() => map ? whole(map.base) : whole(per));
-  const key = map ? [map.base, map.sm, map.md, map.lg].join() : String(whole(per));
-  useIsoLayoutEffect(() => {
-    setN(pick());
-    if (!map || typeof window === 'undefined' || !window.matchMedia) return;
-    const mqs = WIDTHS.map(([, w]) => window.matchMedia('(min-width: ' + w + 'px)'));
-    const on = () => setN(pick());
-    mqs.forEach((m) => m.addEventListener('change', on));
-    return () => mqs.forEach((m) => m.removeEventListener('change', on));
-  }, [key]);
+  const at = { sm: useBreakpoint('sm'), md: useBreakpoint('md'), lg: useBreakpoint('lg') };
+  if (!map) return whole(per);
+  let n = whole(map.base);
+  for (const [k] of WIDTHS) if (map[k] != null && at[k]) n = whole(map[k]);
   return n;
 }
 

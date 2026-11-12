@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
+import { mediaList } from '../../internal/mediaList';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import type { Placement } from '../../internal/position';
@@ -52,8 +53,7 @@ const NARROW = '(max-width: 639.98px)';
 const noSubscribe = () => () => {};
 // The query is made once, not on every render of every Popover (GR278).
 // module state: browser only. The server snapshot is "not narrow", so a server render never makes the query.
-let narrowQuery: MediaQueryList | undefined;
-const narrowMedia = () => (narrowQuery || (narrowQuery = window.matchMedia(NARROW)));
+const narrowMedia = () => mediaList(NARROW) as MediaQueryList;
 const subscribeNarrow = (on: () => void) => { const m = narrowMedia(); m.addEventListener('change', on); return () => m.removeEventListener('change', on); };
 const isNarrow = () => narrowMedia().matches;
 const notNarrow = () => false;

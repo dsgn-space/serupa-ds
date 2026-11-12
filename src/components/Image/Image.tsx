@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, useMergedRef } from '../../internal/cn';
+import { mediaList } from '../../internal/mediaList';
 import { removeAndRefocus } from '../../internal/removeFocus';
 import { useServerStyles } from '../../internal/serverStyles';
 import { Dialog } from '../Dialog/Dialog';
@@ -101,8 +102,7 @@ const connection = () => (navigator as Navigator & { connection?: Connection }).
 // listeners for each Image).
 // module state: browser only. The server snapshot is "no", so a server render never makes the query or subscribes;
 // what's kept is the visitor's own browser setting.
-let dataQuery: MediaQueryList | undefined;
-const reducedData = () => dataQuery || (typeof matchMedia === 'function' ? (dataQuery = matchMedia(REDUCED)) : null);
+const reducedData = () => mediaList(REDUCED);
 const savingData = () => { const m = reducedData(); return !!(connection() || {}).saveData || !!(m && m.matches); };
 const dataTold = new Set<() => void>();
 let dataHeard = false;

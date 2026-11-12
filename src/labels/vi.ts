@@ -224,6 +224,7 @@ export const labels: SerupaLabels = {
   clearNotifications: 'Xóa tất cả',
   clearNotificationsConfirm: 'Xóa tất cả thông báo? Không thể hoàn tác.',
   keepNotifications: 'Giữ lại',
+  notificationSettings: 'Cài đặt thông báo',
   notificationsUnread: (count) => (count ? 'Thông báo, ' + n(count) + ' chưa đọc' : 'Thông báo'),
   decrease: 'Giảm',
   increase: 'Tăng',

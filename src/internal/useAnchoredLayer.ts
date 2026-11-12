@@ -52,10 +52,10 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     // from @starting-style keyed on data-side (Tooltip's slide) is fixed. placeLayer corrects it on a flip.
     firstSide(p, (placement || fallback || 'bottom').split('-')[0]);
     showLayer(p);
-    // The gap and the page's direction are style reads: once, and again only when sizes change (a density or
+    // The gap and the anchor's direction are style reads: once, and again only when sizes change (a density or
     // theme switch), not on every scroll.
     let offset = 0, rtl = false;
-    const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(); };
+    const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(a); };
     const update = () => {
       if (matchWidth) p.style.minWidth = a.offsetWidth + 'px';
       placeLayer(p, a, placement, offset, fallback, rtl);

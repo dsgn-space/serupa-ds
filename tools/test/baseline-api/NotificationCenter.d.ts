@@ -8,6 +8,7 @@ interface NotificationCenterLabels {
     clearNotifications: string;
     clearNotificationsConfirm: string;
     keepNotifications: string;
+    notificationSettings: string;
     notificationsUnread: (count: number) => string;
 }
 interface NotificationItem {
@@ -29,6 +30,7 @@ interface NotificationCenterProps extends DrawerProps {
     onMarkAllRead?: (() => void) | undefined;
     onClear?: (() => void) | undefined;
     empty?: React.ReactNode | undefined;
+    settingsHref?: string | undefined;
 }
 interface ToastHistoryOptions {
     limit?: number | undefined;

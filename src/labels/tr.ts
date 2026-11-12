@@ -224,6 +224,7 @@ export const labels: SerupaLabels = {
   clearNotifications: 'Tümünü temizle',
   clearNotificationsConfirm: 'Tüm bildirimler temizlensin mi? Bu geri alınamaz.',
   keepNotifications: 'Kalsın',
+  notificationSettings: 'Bildirim ayarları',
   notificationsUnread: (count) => (count ? 'Bildirimler, ' + n(count) + ' okunmamış' : 'Bildirimler'),
   decrease: 'Azalt',
   increase: 'Artır',

@@ -32,7 +32,7 @@ const { Tabs, TabList, Tab, TabPanel } = window.Serupa;
 
 - Choosing a value, such as a period (Day, Week, Month) for the same content: use [SegmentedControl](../SegmentedControl/README.md) instead. It's a radio group, not a set of panels.
 - Steps people go through in order: use [Stepper](../Stepper/README.md) instead.
-- Moving between pages that each have their own URL: use links, in a [Navbar](../Navbar/README.md) or a [Sidebar](../Sidebar/README.md).
+- Moving between the sub-pages of one thing that each have their own URL, such as a project's Overview and Settings: use [TabNav](../TabNav/README.md) instead. It looks like Tabs but is a nav of links. For the app's main pages, use a [Navbar](../Navbar/README.md) or a [Sidebar](../Sidebar/README.md).
 - Sections people may want open side by side, or read one after another: use [Accordion](../Accordion/README.md) instead.
 
 ## Anatomy
@@ -53,6 +53,13 @@ Drawn from the `Pill` story.
 - The browser's find-in-page searches kept panels too. They're `hidden="until-found"`, so a match on another tab selects that tab and shows it, as Accordion opens an item. A disabled tab's panel isn't searched.
 - Show a tab people can't use yet as `disabled` rather than leaving it out, when knowing it exists helps them.
 - Tabs that can be closed: when the selected tab is removed, uncontrolled Tabs select the next enabled tab (or else the previous one) and call `onValueChange`. If focus was on the closed tab (its own close button, or a Delete key you handle), it moves to the tab now selected, not to the page. With `value`, set it to another tab yourself when you remove the selected one; Tabs warns in the console otherwise.
+
+### Do and don't
+
+- **Do:** Keep each label to a word or two, so every tab stays in view. (`DoShortLabels`)
+- **Don't:** Write long labels: the row scrolls, and people miss the tabs past the edge. (`DontLongLabels`)
+- **Do:** Use a [SegmentedControl](../SegmentedControl/README.md) to pick a value, such as a period, for the same content. (`DoSegmentedForValue`)
+- **Don't:** Use tabs for that: tabs say each choice has its own panel, and screen readers announce them that way. (`DontTabsForValue`)
 
 ## Accessibility
 

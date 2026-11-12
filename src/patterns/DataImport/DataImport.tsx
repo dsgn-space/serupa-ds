@@ -8,6 +8,7 @@ import { Link } from '../../components/Link/Link';
 import { Field } from '../../components/Field/Field';
 import { Select } from '../../components/Select/Select';
 import { FileUpload } from '../../components/FileUpload/FileUpload';
+import { withViewTransition } from '../../internal/viewTransition';
 import { Stepper } from '../../components/Stepper/Stepper';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { Badge } from '../../components/Badge/Badge';
@@ -26,6 +27,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } fro
    - 2.4.3, 4.1.3: each new step puts focus on its heading, so the change is said and Tab goes on from there; the
      Stepper above says which step this is in words.
    - 3.3.7: Back keeps the file and the matches, so nothing is chosen twice.
+   Motion (the Motion foundation's "Layout changes"): the next step slides in from the end and Back brings the one
+   before in from the start, mirrored right to left, so the way through reads as a direction. Under reduced motion
+   the steps crossfade; where View Transitions are missing they swap at once.
    Saving the rows is the app's job: onImport stands in for it, and `existing` for the app's own records. */
 
 export interface ImportField { key: 'name' | 'email' | 'phone' | 'city'; label: string; required: boolean }
@@ -147,7 +151,9 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
   const heading = React.useRef<HTMLHeadingElement>(null);
   const moved = React.useRef(false);
   React.useEffect(() => { if (moved.current) heading.current?.focus(); }, [step]);
-  const go = (s: DataImportStep) => { moved.current = true; setErrors([]); setStep(s); };
+  // A step further on comes in from the end, one before from the start; starting a new import goes forward too.
+  const go = (s: DataImportStep, way: 'forward' | 'back' = ORDER.indexOf(s) < ORDER.indexOf(step) ? 'back' : 'forward') =>
+    void withViewTransition(() => { moved.current = true; setErrors([]); setStep(s); }, { types: [way] });
   const fail = (found: ErrorSummaryItem[]) => { setErrors(found); setTries((t) => t + 1); return found.length > 0; };
   const error = (field: string) => errors.find((e) => e.field === field)?.message;
 
@@ -178,7 +184,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
       .then(() => { setResult({ added: good.length - updates, updated: updates, skipped: bad.length }); go('done'); }, () => setFailed(true))
       .finally(() => setBusy(false));
   };
-  const again = () => { setFile(undefined); setFiles([]); setSkip(false); setResult(null); go('upload'); };
+  const again = () => { setFile(undefined); setFiles([]); setSkip(false); setResult(null); go('upload', 'forward'); };
   const columns = [{ value: '-1', label: 'Not in the file' }, ...headers.map((h, i) => ({ value: String(i), label: h || `Column ${i + 1}` }))];
   const summary = errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={3} /> : null;
   const h2 = (text: string) => <Heading level={2} size="lg" ref={heading} tabIndex={-1} className="outline-none">{text}</Heading>;
@@ -189,7 +195,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-12 outline-none">
         <Heading level={1} size="xl">Import customers</Heading>
         <Stepper current={ORDER.indexOf(step) + (step === 'done' ? 1 : 0)} steps={STEPS} size="sm" />
-        <Card className="flex flex-col gap-5">
+        <Card className="flex flex-col gap-5" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>
           {step === 'upload' ? (
             <>
               {h2('Choose a file')}

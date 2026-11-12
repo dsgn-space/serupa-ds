@@ -228,6 +228,7 @@ export const labels: SerupaLabels = {
   clearNotifications: 'مسح الكل',
   clearNotificationsConfirm: 'مسح كل الإشعارات؟ لا يمكن التراجع عن ذلك.',
   keepNotifications: 'الإبقاء عليها',
+  notificationSettings: 'إعدادات الإشعارات',
   notificationsUnread: (count) => (count ? 'الإشعارات، ' + n(count) + ' غير مقروءة' : 'الإشعارات'),
   decrease: 'إنقاص',
   increase: 'زيادة',

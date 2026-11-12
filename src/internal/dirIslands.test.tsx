@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { Button } from '../components/Button/Button';
 import { Breadcrumb, BreadcrumbItem } from '../components/Breadcrumb/Breadcrumb';
 import { Calendar } from '../components/Calendar/Calendar';
 import { List, ListItem } from '../components/List/List';
 import { Pagination } from '../components/Pagination/Pagination';
+import { Popover } from '../components/Popover/Popover';
 import { Progress } from '../components/Progress/Progress';
 import { Table, TableBody, TableCell, TableRow } from '../components/Table/Table';
 import { iconPoints } from '../../tools/test/vitest/helpers';
@@ -53,6 +55,29 @@ describe('direction islands (EX1)', () => {
       await render(<><div id="page2"><Six /></div><div id="island2" dir="rtl"><Six /></div></>);
       expect(sides(document.getElementById('page2')!)).toEqual(LTR);
       expect(sides(document.getElementById('island2')!)).toEqual(RTL);
+    } finally {
+      html.removeAttribute('dir');
+    }
+  });
+
+  test('an overlay opened in a dir="rtl" block on a left-to-right page lines its start up with the trigger\'s right edge, and one in a dir="ltr" block on a right-to-left page with its left edge', async () => {
+    const html = document.documentElement;
+    const edges = async (id: string) => {
+      const trigger = document.querySelector<HTMLElement>(`#${id} button`)!;
+      trigger.click();
+      await expect.poll(() => document.querySelector(`#${id} [role="dialog"]`)?.getBoundingClientRect().width || 0).toBeGreaterThan(0);
+      const t = trigger.getBoundingClientRect(), p = document.querySelector(`#${id} [role="dialog"]`)!.getBoundingClientRect();
+      return { left: Math.round(p.left - t.left), right: Math.round(t.right - p.right) };
+    };
+    const Block = ({ id, dir }: { id: string; dir?: 'rtl' | 'ltr' }) => (
+      <div id={id} dir={dir} style={{ padding: '0 300px' }}><Popover placement="bottom-start" title="Filters" trigger={<Button>Open</Button>}>Text</Popover></div>
+    );
+    try {
+      await render(<Block id="rtl-island" dir="rtl" />);
+      expect((await edges('rtl-island')).right).toBe(0);
+      html.dir = 'rtl';
+      await render(<Block id="ltr-island" dir="ltr" />);
+      expect((await edges('ltr-island')).left).toBe(0);
     } finally {
       html.removeAttribute('dir');
     }

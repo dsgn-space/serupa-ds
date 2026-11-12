@@ -224,6 +224,7 @@ export const labels: SerupaLabels = {
   clearNotifications: 'Kosongkan semua',
   clearNotificationsConfirm: 'Kosongkan semua pemberitahuan? Tindakan ini tidak boleh dibatalkan.',
   keepNotifications: 'Simpan',
+  notificationSettings: 'Tetapan pemberitahuan',
   notificationsUnread: (count) => (count ? 'Pemberitahuan, ' + n(count) + ' belum dibaca' : 'Pemberitahuan'),
   decrease: 'Kurangkan',
   increase: 'Tambah',
