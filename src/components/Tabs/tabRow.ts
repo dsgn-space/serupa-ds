@@ -107,7 +107,8 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
     const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
     if (!fonts || fonts.status === 'loaded') return;
     let live = true;
-    fonts.ready.then(() => { if (live) reveal(true); }, () => {});
+    // fonts.ready only ever resolves (CSS Font Loading), so it needs no rejection handler.
+    void fonts.ready.then(() => { if (live) reveal(true); });
     return () => { live = false; };
   }, [reveal]);
   return [list, fade, place];
