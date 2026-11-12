@@ -163,7 +163,10 @@ jobs:
           SERUPA_SHARD: ${{ matrix.shard }}
       - name: Collect what changed
         run: |
+          # The x86 runner keeps RUNNER_TEMP between jobs, so start empty: adding to what the last job collected
+          # handed over another pull request's pictures (#1646 got #1643's Do/Don't stories).
           out="$RUNNER_TEMP/baselines"
+          rm -rf "$out"
           mkdir -p "$out/files"
           git add -A -- tools/test/baseline-visual tools/test/baseline-utilities.json
           git diff --cached --no-renames --name-only --diff-filter=d -z | xargs -0 -r cp --parents -t "$out/files" --
@@ -217,7 +220,10 @@ jobs:
           BROWSER: ${{ matrix.browser }}
       - name: Collect what changed
         run: |
+          # The x86 runner keeps RUNNER_TEMP between jobs, so start empty: adding to what the last job collected
+          # handed over another pull request's pictures (#1646 got #1643's Do/Don't stories).
           out="$RUNNER_TEMP/baselines"
+          rm -rf "$out"
           mkdir -p "$out/files"
           git config --global --add safe.directory "$PWD"
           git add -A -- "tools/test/baseline-visual-$BROWSER"
