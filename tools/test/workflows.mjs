@@ -69,7 +69,7 @@ for (const f of files) {
 
 // Update baselines' "Join the renders" step, run on what download-artifact makes of one render (straight into parts/)
 // and of two (parts/<name>/ each): missing the first case committed nothing from every Chromium render for a morning.
-{
+if (fs.existsSync(path.join(GH, 'workflows/visual-baselines.yml'))) {
   const lines = fs.readFileSync(path.join(GH, 'workflows/visual-baselines.yml'), 'utf8').split('\n');
   const at = lines.findIndex((l) => /-\s*name:\s*Join the renders\s*$/.test(l));
   const run = lines.findIndex((l, i) => i > at && /^\s*run:\s*\|\s*$/.test(l));
