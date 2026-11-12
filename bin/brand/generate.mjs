@@ -38,6 +38,12 @@ const CORNERS = {
   round: { 'radius-inner': 'rounded-md', 'radius-control': 'rounded-lg', 'radius-surface': 'rounded-xl', 'radius-container': 'rounded-2xl' },
 };
 export const CORNER_PRESETS = ['default', ...Object.keys(CORNERS)];
+// The look a brand takes from a shipped theme: its neutrals, borders and shadows, and (for modern) its corners,
+// spacing, elevation and motion. plain is blue's flat look; modern is emerald's calm one.
+const LOOK_BASE = { plain: 'blue', modern: 'emerald' };
+export const LOOKS = Object.keys(LOOK_BASE);
+// The groups outside color whose roles a theme sets for itself (Modern's corners, room, shadows and motion).
+const LOOK_GROUPS = ['spacing', 'radius', 'shadow', 'transitions'];
 
 // --- color math: sRGB hex <-> OKLCH (Björn Ottosson's OKLab), WCAG 2.2 contrast ---
 const toLin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
@@ -110,13 +116,15 @@ const NAME = /^[a-z][a-z0-9]{0,23}$/;
 
 /**
  * A brand's light and dark themes as CSS, to load after tokens.css.
- * @param {{ name: string, color: string, corners?: string, tokens: any }} o
+ * @param {{ name: string, color: string, corners?: string, look?: string, tokens: any }} o
  * @returns {{ css: string, shades: Record<string,string>, themes: Record<string, Record<string,string>>, picks: object }}
  */
-export function brandTheme({ name, color, corners = 'default', tokens }) {
+export function brandTheme({ name, color, corners = 'default', look = 'plain', tokens }) {
   if (!NAME.test(String(name))) throw new Error(`the name "${name}" can't be a theme name: use lowercase letters and digits, starting with a letter (such as acme)`);
   if (!parseHex(color)) throw new Error(`"${color}" isn't a color: give a hex value, such as #0f766e`);
   if (!CORNER_PRESETS.includes(corners)) throw new Error(`corners takes ${CORNER_PRESETS.join(', ')}, not ${corners}`);
+  if (!LOOKS.includes(look)) throw new Error(`look takes ${LOOKS.join(', ')}, not ${look}`);
+  const from = LOOK_BASE[look];
   const { palette, aliases } = readTokens(tokens);
   const shipped = new Set(tokens.$extensions?.['com.serupa']?.themes?.map((t) => t.id.replace(/-(light|dark)$/, '')) ?? ['blue', 'violet', 'emerald']);
   if (shipped.has(name)) throw new Error(`"${name}" is a theme Serupa ships: pick another name`);
@@ -124,7 +132,7 @@ export function brandTheme({ name, color, corners = 'default', tokens }) {
 
   const { shades, seedStep, hue } = ramp(color, palette);
   const S = (s) => shades[s];
-  const base = (mode) => Object.fromEntries(aliases.map((x) => [x.name, x.value[`blue-${mode}`]]));
+  const base = (mode) => Object.fromEntries(aliases.map((x) => [x.name, x.value[`${from}-${mode}`]]));
   const hexAt = (v, own) => { const r = ref(v); if (!r) return v; if (own[r] !== undefined) return hexAt(own[r], own); const m = /^(.+)-(\d+)$/.exec(r); if (m && m[1] === name) return shades[m[2]]; return palette.get(r); };
   const picks = {};
   const fail = (mode, what) => { throw new Error(`${color} can't make a ${mode} theme: no shade of it gives ${what}. Try a color with more contrast against ${mode === 'light' ? 'white' : 'black'}.`); };
@@ -184,7 +192,15 @@ export function brandTheme({ name, color, corners = 'default', tokens }) {
   const L = picks.light.values, D = picks.dark.values;
   const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
-  const radius = CORNERS[corners];
+  // The look's own roles outside color, the same in light and dark; a corners preset then sets the radius roles.
+  const roles = {};
+  if (from !== 'blue') for (const g of LOOK_GROUPS) for (const x of tokens[g]?.tokens ?? []) {
+    const own = x.value && typeof x.value === 'object' ? x.value[`${from}-light`] : undefined;
+    if (own !== undefined && own !== x.value['blue-light']) roles[x.name] = own;
+  }
+  for (const [k, x] of Object.entries(CORNERS[corners] ?? {})) roles[k] = `{${x}}`;
+  // data-radius="default" puts a theme's own corners back from these.
+  for (const k of ['radius-control', 'radius-surface']) if (roles[k]) roles[`dk-own-${k}`] = roles[k];
   const css = [
     `/* ${name}: a Serupa theme from ${hexOf(parseHex(color))} (${name}-${seedStep}), made by serupa-brand. Load it after tokens.css, then\n`,
     `   set data-theme="${name}-light" or "${name}-dark" (or data-brand="${name}" with data-mode). */\n`,
@@ -195,7 +211,7 @@ export function brandTheme({ name, color, corners = 'default', tokens }) {
     block(`[data-theme="${name}-dark"]`, D),
     block(`:root[data-brand="${name}"]:not([data-theme]), [data-brand="${name}"]:not([data-theme])`, pair),
     block(`:is([data-theme^="${name}-"], [data-brand="${name}"]) [data-mode]:not([data-theme], [data-brand])`, pair),
-    radius ? block(`:is([data-theme^="${name}-"], [data-brand="${name}"])`, Object.fromEntries(Object.entries(radius).map(([k, x]) => [k, `{${x}}`]))) : '',
+    Object.keys(roles).length ? block(`:is([data-theme^="${name}-"], [data-brand="${name}"])`, roles) : '',
     '}\n',
   ].join('');
   return { css, shades, themes, picks: { light: { ...picks.light, values: undefined }, dark: { ...picks.dark, values: undefined } } };

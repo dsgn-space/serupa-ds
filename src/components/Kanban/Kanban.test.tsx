@@ -243,6 +243,9 @@ describe('Kanban', () => {
     expect(document.getElementById('dk')!.querySelectorAll('button')).toHaveLength(0);
   });
 
+  // The count is in the page's locale digits (CI runs these in ar-EG too, where 3 is ٣).
+  const three = new Intl.NumberFormat(navigator.language).format(3);
+
   test('busy with no cards yet: each column keeps its title, shows two placeholder cards and no count; the board says so once', async () => {
     const empty = START().map((c) => ({ ...c, items: [] }));
     const { rerender } = await render(<Kanban id="dk" aria-label="S" busy loadingLabel="Loading tasks" columns={empty} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);

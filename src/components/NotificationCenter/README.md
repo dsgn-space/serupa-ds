@@ -53,7 +53,7 @@ Drawn from the `Open` story.
 
 ## Behavior
 
-- It's a [Drawer](../Drawer/README.md) from the right: it opens and closes like one, and takes its `side`, `size` and `modal` props.
+- It's a [Drawer](../Drawer/README.md) from the right: it opens and closes like one, and takes its `placement`, `size` and `modal` props.
 - Each notification shows its tone icon, title, description and time ("5 min. ago", in [RelativeTime](../RelativeTime/README.md)). Unread ones have a dot at the end and a semibold title.
 - "Mark as read" goes away once chosen, and focus moves to its notification, so it isn't lost.
 - When you take the focused notification out of `items` (an inbox that hides read ones), focus goes to the one now in its place, else the last, else the "No notifications yet" line, not to the page.
@@ -107,7 +107,7 @@ Drawn from the `Open` story.
 | `defaultOpen` | boolean | `false` | Uncontrolled: open at first. |
 | `onOpenChange` | `(open, details) => void` | | Called when people ask to close it. |
 
-`side`, `size`, `modal`, `className`, `ref` and other `<dialog>` attributes go to the [Drawer](../Drawer/README.md).
+`placement`, `size`, `modal`, `className`, `ref` and other `<dialog>` attributes go to the [Drawer](../Drawer/README.md).
 
 ## Component tokens
 

@@ -9,8 +9,8 @@ import { Checkbox } from '../Checkbox/Checkbox';
 const meta = {
   title: 'Components/Overlays/Drawer',
   component: Drawer,
-  args: { open: false, title: 'Filters', description: 'Narrow the list of projects.', side: 'right', size: 'md' },
-  argTypes: { side: { control: 'inline-radio', options: ['right', 'left', 'top', 'bottom'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
+  args: { open: false, title: 'Filters', description: 'Narrow the list of projects.', placement: 'right', size: 'md' },
+  argTypes: { placement: { control: 'inline-radio', options: ['right', 'left', 'top', 'bottom', 'start', 'end'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   render: function Render(args: DrawerProps) {
     const [open, setOpen] = React.useState(false);
     return <>
@@ -30,9 +30,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
-export const Left: Story = { args: { side: 'left', size: 'sm', title: 'Menu', description: undefined } };
-export const Bottom: Story = { args: { side: 'bottom', title: 'Share', description: 'Anyone with the link can view.' } };
-export const Top: Story = { args: { side: 'top', size: 'sm', title: 'Announcements', description: 'What changed this week.' } };
+export const Left: Story = { args: { placement: 'left', size: 'sm', title: 'Menu', description: undefined } };
+export const Bottom: Story = { args: { placement: 'bottom', title: 'Share', description: 'Anyone with the link can view.' } };
+export const Top: Story = { args: { placement: 'top', size: 'sm', title: 'Announcements', description: 'What changed this week.' } };
 export const Small: Story = { args: { size: 'sm', title: 'Filters' } };
 export const Large: Story = { args: { size: 'lg', title: 'Project details', description: 'Everything about Atlas in one place.' } };
 export const NoCloseButton: Story = { args: { closeButton: false, title: 'Filters' } };

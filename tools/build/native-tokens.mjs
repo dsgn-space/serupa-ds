@@ -65,7 +65,9 @@ export function nativeTokens(dir) {
     if (v != null) scalar.push({ name: cssName(tok, p), kind, value: v, description: doc(tok.$description) });
   }
   const aliases = {};
-  for (const [th, tree] of Object.entries(themes)) {
+  // The alias colors only: a brand's own sizes and motion (Modern's radii) aren't per-theme native tokens yet.
+  for (const [th, { color }] of Object.entries(themes)) {
+    const tree = { color };
     const own = new Map([...walk(tree)].map(([p, t]) => [p.join('.'), t]));
     aliases[th] = [...walk(tree)].map(([p, tok]) => ({ name: cssName(tok, p), kind: 'color', value: value(tok, own), description: doc(tok.$description) })).filter((x) => x.value);
   }

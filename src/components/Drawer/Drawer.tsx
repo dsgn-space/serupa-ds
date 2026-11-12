@@ -12,8 +12,12 @@ import { useScrolls } from '../../internal/useScrolls';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { isComposing } from '../../internal/ime';
 import { deepActive } from '../../internal/root';
+import { isRtl } from '../../internal/position';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { project, rubber, settleTime, speed, track, type Samples } from '../../internal/fling';
+
+/** Where a Drawer sits: a physical edge, or the edge the reading starts or ends at. */
+export type DrawerPlacement = 'right' | 'left' | 'top' | 'bottom' | 'start' | 'end';
 
 export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, 'title' | 'open'> {
   /** Whether it's open. Controlled: close it yourself in onOpenChange. */
@@ -22,7 +26,10 @@ export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogE
   defaultOpen?: boolean | undefined;
   /** Called with false when people ask to close it, and why: { reason: 'escape' | 'close' (the ×) | 'outside' (the backdrop) | 'swipe' | 'api' (the browser closed it) }. */
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
-  /** The edge it slides in from: 'right' (default), 'left', 'top' or 'bottom'. */
+  /** The edge it slides in from: 'right' (default), 'left', 'top' or 'bottom', or 'start' and 'end', the edges
+      the reading starts and ends at ('start' is the left in a left-to-right page and the right in a right-to-left one). */
+  placement?: DrawerPlacement | undefined;
+  /** @deprecated Use placement (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as placement is, when placement isn't given. */
   side?: 'right' | 'left' | 'top' | 'bottom' | undefined;
   /** The width of a left or right drawer: 'sm' 320px, 'md' 384px (default) or 'lg' 512px, at most the screen. Top and bottom drawers fit their content. */
   size?: 'sm' | 'md' | 'lg' | undefined;
@@ -54,7 +61,7 @@ export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogE
 
 const FLICK = 0.2;   // px per ms over the last 100ms toward the edge: a let-go this fast closes it, however short (KW5a)
 const INWARD = 24;   // px at most a drag away from the edge moves the panel, against growing resistance
-const OWN = { open: 1, defaultOpen: 1, onOpenChange: 1, side: 1, size: 1, title: 1, description: 1, footer: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, modal: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, className: 1, children: 1 } as const;
+const OWN = { open: 1, defaultOpen: 1, onOpenChange: 1, placement: 1, side: 1, size: 1, title: 1, description: 1, footer: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, modal: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, className: 1, children: 1 } as const;
 
 /* Drawer: a modal panel that slides in from an edge of the screen, for navigation on small screens, filters,
    or details and edits without leaving the page. It's a native <dialog> (showModal) like Dialog: focus stays
@@ -70,7 +77,8 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   const base = domId('dk-drw', React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
   const back = React.useRef<HTMLElement | null>(null);
-  const side = oneOf(['right', 'left', 'top', 'bottom'] as const, props.side, 'right');
+  if (process.env.NODE_ENV !== 'production' && props.side != null) warnOnce('drawer-side', 'Drawer: side is deprecated and removed in 15.0.0. Use placement, which takes the same edges, and start and end.');
+  const side = oneOf(['right', 'left', 'top', 'bottom', 'start', 'end'] as const, props.placement ?? props.side, 'right');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const showClose = props.closeButton !== false;
   const modal = props.modal !== false;
@@ -186,20 +194,22 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   // keeps it open. Let go, the panel carries on from under the finger at the finger's speed (fling.ts): out past its
   // edge and then closed, or back (no motion when reduced).
   const swipe = props.swipeToClose !== false;
-  const horiz = side === 'left' || side === 'right', away = side === 'right' || side === 'bottom' ? 1 : -1;
+  const horiz = side !== 'top' && side !== 'bottom';
   const settling = React.useRef<(() => void) | null>(null);
-  const shift = (d: number) => horiz ? d * away + 'px 0' : '0 ' + d * away + 'px';
-  const drag = React.useRef<{ id: number; x: number; y: number; d: number; at: number; on: boolean; s: Samples } | null>(null);
+  // away: 1 when its edge is the right or bottom one. start and end read the page's direction when a drag starts.
+  const shift = (d: number, away: number) => horiz ? d * away + 'px 0' : '0 ' + d * away + 'px';
+  const drag = React.useRef<{ id: number; x: number; y: number; d: number; at: number; on: boolean; s: Samples; away: number } | null>(null);
   const onSwipeDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const t = e.target as Element;
     if (!swipe || e.pointerType !== 'touch' || !e.isPrimary || t.closest('input, textarea, select, [contenteditable]')) return;
     if (!horiz && t.closest('.dk-drawer__body')) return;
-    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, d: 0, at: 0, on: false, s: [{ t: e.timeStamp, p: 0 }] };
+    const away = side === 'start' || side === 'end' ? ((side === 'end') !== isRtl(e.currentTarget) ? 1 : -1) : side === 'right' || side === 'bottom' ? 1 : -1;
+    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, d: 0, at: 0, on: false, s: [{ t: e.timeStamp, p: 0 }], away };
   };
   const onSwipeMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const g = drag.current;
     if (!g || e.pointerId !== g.id) return;
-    const d = (horiz ? e.clientX - g.x : e.clientY - g.y) * away, across = Math.abs(horiz ? e.clientY - g.y : e.clientX - g.x);
+    const d = (horiz ? e.clientX - g.x : e.clientY - g.y) * g.away, across = Math.abs(horiz ? e.clientY - g.y : e.clientX - g.x);
     if (!g.on) {
       if (across > 10 && across > Math.abs(d)) { drag.current = null; return; }
       if (Math.abs(d) < 10) return;
@@ -214,7 +224,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     // Inward it gives a little and resists (KW5a), as Carousel's ends do, up to INWARD px; while it's inward
     // (data-inward), the panel's ::after (a copy of its background past its edge) fills the gap behind it.
     g.at = d >= 0 ? d : rubber(d, INWARD);
-    e.currentTarget.style.translate = shift(g.at);
+    e.currentTarget.style.translate = shift(g.at, g.away);
     e.currentTarget.toggleAttribute('data-inward', g.at < 0);
   };
   const onSwipeEnd = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -247,7 +257,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     const stop = () => { p.removeEventListener('transitionend', end); delete p.dataset.settling; settling.current = null; };
     p.addEventListener('transitionend', end);
     settling.current = stop;
-    p.style.translate = out ? shift(size) : '';
+    p.style.translate = out ? shift(size, g.away) : '';
   };
   const onClick = (e: React.MouseEvent<HTMLDialogElement>) => { if (rest.onClick) rest.onClick(e); if (backdrop && downOnBackdrop.current && e.target === e.currentTarget && !wasDismissal(e.nativeEvent)) request('outside'); downOnBackdrop.current = false; };
   // A body taller than the panel takes Tab focus, so it can be scrolled from the keyboard when nothing in it is
