@@ -95,7 +95,10 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
       for (const p of parts) {
         // The first one that is drawn: a part can be in the markup more than once (one per item), or hidden in one.
         const hit = [...(frozen.current?.querySelectorAll(p.selector) || []), ...el.querySelectorAll(p.selector)].map(drawnBox).find(Boolean);
-        if (hit) found.push({ n: p.n, x: hit.left - o.left, y: hit.top - o.top, w: hit.right - hit.left, h: hit.bottom - hit.top });
+        // Kept inside the stage: a part wider than a box that scrolls (a long code line) is outlined where it shows,
+        // not past the page's edge, where at 320px it made the docs scroll sideways (WCAG 1.4.10).
+        const l = hit ? Math.max(hit.left, o.left) : 0, r = hit ? Math.min(hit.right, o.right) : 0;
+        if (hit && r > l) found.push({ n: p.n, x: l - o.left, y: hit.top - o.top, w: r - l, h: hit.bottom - hit.top });
       }
       setBoxes((was) => (JSON.stringify(was) === JSON.stringify(found) ? was : found));
     };

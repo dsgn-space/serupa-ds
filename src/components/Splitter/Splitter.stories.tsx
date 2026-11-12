@@ -28,7 +28,7 @@ export const Collapsed: Story = {
 
 export const LongText: Story = {
   render: (args) => (
-    <div style={{ width: 280, height: 'var(--sizing-full)' }}>
+    <div style={{ width: '100%', maxWidth: 280, height: 'var(--sizing-full)' }}>
       <Splitter {...args} style={{ height: 'var(--sizing-full)' }}>
         <Pane>Donaudampfschifffahrtsgesellschaftskapitänskajüte</Pane>
         <Pane>Messages from every team, with long subjects that wrap over several lines</Pane>
