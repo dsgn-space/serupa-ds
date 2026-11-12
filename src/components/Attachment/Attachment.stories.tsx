@@ -79,3 +79,9 @@ export const LongText: Story = {
     <Attachment name="a" />
   </Col>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a failed upload that says why, with no retry when trying again can't work. */
+export const DoNoFutileRetry: Story = { name: 'Do: retry only when it can work', args: { name: 'Site survey.mov', bytes: 140_000_000, type: 'video/quicktime', error: 'Larger than 100 MB' } };
+/** Don't: a retry button for a file that will be refused again. */
+export const DontFutileRetry: Story = { name: "Don't: offer a retry that can't help", args: { name: 'Site survey.mov', bytes: 140_000_000, type: 'video/quicktime', error: 'Larger than 100 MB', onRetry: () => {} } };

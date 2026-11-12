@@ -19,3 +19,9 @@ export const Idle: Story = { args: { status: 'idle' } };
 export const LongText: Story = {
   args: { status: 'error', onRetry: () => {}, errorText: 'Couldn’t save: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung rejected the change because the connection dropped', style: { maxWidth: 240 } },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: say why a save failed and offer to try again. */
+export const DoReasonAndRetry: Story = { name: 'Do: say why and offer a retry', args: { status: 'error', errorText: 'Couldn’t save: you’re offline', onRetry: () => {} } };
+/** Don't: a failure with no reason and no way to try again. */
+export const DontDeadEnd: Story = { name: "Don't: leave a dead end", args: { status: 'error' } };

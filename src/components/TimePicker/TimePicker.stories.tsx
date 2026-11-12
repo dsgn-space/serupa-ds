@@ -34,3 +34,9 @@ export const OverflowNarrow: Story = {
   args: { defaultValue: '23:30' },
   decorators: [(Story) => <div style={{ width: 120 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a label that says which time it is. */
+export const DoSayWhichTime: Story = { name: 'Do: say which time it is', render: () => <Field label="Start time"><TimePicker /></Field> };
+/** Don't: "Time", which doesn't say whether it's the start, the end or a reminder. */
+export const DontJustTime: Story = { name: "Don't: label it just \u201cTime\u201d", render: () => <Field label="Time"><TimePicker /></Field> };

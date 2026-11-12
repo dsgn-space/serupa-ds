@@ -52,3 +52,9 @@ export const LongLabels: Story = {
     style: { maxWidth: '200px' },
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: open the folders down to the selected item, so people see where they are. */
+export const DoOpenToSelection: Story = { name: 'Do: open down to the selection' };
+/** Don't: everything closed, which hides the selected item. */
+export const DontHideSelection: Story = { name: "Don't: hide the selection", args: { defaultExpanded: [] } };

@@ -371,13 +371,19 @@ describe('Tabs on the server', () => {
   });
 
   test('web fonts arriving after the tabs draw (a wider face): the selected tab, pushed past the end, is scrolled back into view', async () => {
+    const row = (id: string) => <div style={{ width: '400px' }}><Tabs id={id} defaultValue="Tab 20"><TabList aria-label="Many">{Array.from({ length: 20 }, (_, i) => <Tab key={i} value={'Tab ' + (i + 1)}>{'Tab ' + (i + 1)}</Tab>)}</TabList></Tabs></div>;
+    // The tabs' real faces load first: one still on its way once the font set below is stood in for would widen the
+    // tabs after they draw, and the row would wait for a ready that only this test resolves (the first poll then
+    // timed out in the merge queue, under load).
+    await render(row('wf-faces'));
+    await document.fonts.ready;
     // Stand in for a page whose fonts are still loading, so the row waits for them.
     let loaded!: () => void;
     const ready = new Promise<FontFaceSet>((r) => { loaded = () => r(document.fonts); });
     Object.defineProperty(document.fonts, 'status', { configurable: true, get: () => 'loading' });
     Object.defineProperty(document.fonts, 'ready', { configurable: true, get: () => ready });
     try {
-      await render(<div style={{ width: '400px' }}><Tabs id="wf" defaultValue="Tab 20"><TabList aria-label="Many">{Array.from({ length: 20 }, (_, i) => <Tab key={i} value={'Tab ' + (i + 1)}>{'Tab ' + (i + 1)}</Tab>)}</TabList></Tabs></div>);
+      await render(row('wf'));
       const list = el('wf').querySelector<HTMLElement>('[role="tablist"]')!;
       const inView = () => { const box = list.getBoundingClientRect(), t = selected('wf').getBoundingClientRect(); return t.left >= box.left - 0.5 && t.right <= box.right + 0.5; };
       await expect.poll(inView).toBe(true);

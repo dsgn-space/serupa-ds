@@ -1,3 +1,23 @@
+# DoOpenToSelection
+- tree "Files":
+  - treeitem "src" [expanded] [level=1]:
+    - text: src
+    - group:
+      - treeitem "components" [expanded] [level=2]:
+        - text: components
+        - group:
+          - treeitem "Button.tsx" [level=3]
+          - treeitem "Menu.tsx" [level=3] [selected]
+      - treeitem "index.ts" [level=2]
+  - treeitem "docs" [level=1]
+  - treeitem "README.md" [level=1]
+
+# DontHideSelection
+- tree "Files":
+  - treeitem "src" [level=1]
+  - treeitem "docs" [level=1]
+  - treeitem "README.md" [level=1]
+
 # LongLabels
 - tree "Files":
   - treeitem "a-folder-with-a-very-long-name-for-every-component" [expanded] [level=1]:

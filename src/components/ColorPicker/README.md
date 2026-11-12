@@ -53,6 +53,11 @@ Drawn from the `ContrastCheck` story.
 - The browser's color picker (the square before the field) picks any color too; when the picked color isn't a swatch, no swatch is checked. With nothing picked, its square shows empty rather than black, and black chosen there is picked when it closes.
 - The contrast ratio is rounded down to one decimal, so 4.49 shows as 4.4 and never looks like a pass. It's written in the locale's numbers ("4,5:1" in Indonesian).
 
+### Do and don't
+
+- **Do:** Set `contrastWith` to the background (or the text color) when people can pick freely, so they see the ratio. (`DoShowContrast`)
+- **Don't:** Let people pick any color with no contrast shown: they choose colors that can't be read where they're used. (`DontPickBlind`)
+
 ## Accessibility
 
 - `role="radiogroup"` named by `aria-label`, `aria-labelledby` or a surrounding [Field](../Field/README.md)'s label, with a `role="radio"` swatch for each color and `aria-checked` on the picked one. In a Field, the hint and error describe the radiogroup, and `aria-required` and `aria-invalid` sit on it. The hex field is its own field, named "Hex code".

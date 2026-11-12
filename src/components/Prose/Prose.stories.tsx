@@ -42,3 +42,9 @@ export const LongContent: Story = {
     <table><thead><tr><th>Name</th><th>Role</th><th>Team</th><th>Location</th><th>Started</th><th>Calls</th></tr></thead><tbody><tr><td>Maximiliana Wolfeschlegelsteinhausen</td><td>Administrator</td><td>Billing and invoicing</td><td>Jakarta Selatan</td><td>2024-03-01</td><td>1,204</td></tr></tbody></table>
   </Prose></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the default column, capped at about 65 characters a line. */
+export const DoReadingWidth: Story = { name: 'Do: keep the reading width' };
+/** Don't: text across the whole width, where lines get too long to follow. */
+export const DontFullWidth: Story = { name: "Don't: stretch text across the page", args: { className: 'max-w-none' } };

@@ -46,6 +46,11 @@ Drawn from the `Alphanumeric` story.
 - The code reads left to right, also on a right-to-left page. Digits typed on an Arabic, Persian or Bengali keyboard, or full-width from a Japanese or Chinese IME (٤٥٦, ４５６), are kept as the ASCII digits they stand for, so the value is always 0–9 (and A–Z with `alphanumeric`).
 - In a narrow container the boxes shrink together and stay square, down to 24px each, so six `lg` or eight `md` boxes still fit a 320px screen. A longer code that doesn't fit even at 24px wraps onto a second row instead of making the page scroll sideways (WCAG 1.4.10).
 
+### Do and don't
+
+- **Do:** Keep the code when it's wrong, and show the error with Field's `error`, so people can fix one character. (`DoKeepCode`)
+- **Don't:** Clear the boxes on an error: people have to type the whole code again. (`DontClearCode`)
+
 ## Accessibility
 
 - **Role and name:** one `<input>` with a text role (a password field with `mask`). Name it with Field's label, `<label htmlFor>`, `aria-label` or `aria-labelledby`. Screen readers read the code, not the boxes, which are `aria-hidden`.

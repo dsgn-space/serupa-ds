@@ -44,3 +44,9 @@ export const Fits: Story = { args: { children: lines(2) } };
 export const LongText: Story = {
   args: { style: { maxHeight: 120, maxWidth: 200 }, children: <p style={{ margin: 0, overflowWrap: 'anywhere' }}>Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a sentence long enough to wrap many times in a narrow column, so the box scrolls down.</p> },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a \`maxHeight\`, so it scrolls inside its box. */
+export const DoGiveSize: Story = { name: 'Do: give it a size' };
+/** Don't: no size, so it never scrolls and pushes the page down instead. */
+export const DontNoSize: Story = { name: "Don't: leave out the size", args: { style: { maxWidth: 360, padding: 12, border: '1px solid var(--border)', borderRadius: 8 } } };

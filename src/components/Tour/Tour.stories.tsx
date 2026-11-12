@@ -65,3 +65,13 @@ export const LongText: Story = {
   args: { open: true },
   render: view((p: Parts) => [{ target: p.create, title: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung, a title long enough to wrap twice', content: 'A long explanation that keeps going, so the panel has to wrap its text across several lines and still keep its buttons in reach at the bottom, even on a narrow phone screen.' }]),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: say what the part does for people. */
+export const DoSayWhatItDoes: Story = { name: 'Do: say what it does for them', args: { open: true } };
+/** Don't: say what the part is, which they can already see. */
+export const DontSayWhatItIs: Story = {
+  name: "Don't: describe what they can see",
+  args: { open: true },
+  render: view((p: Parts) => [{ target: p.search, title: 'Search field', content: 'This is the search field. It is a text box at the top of the page.' }]),
+};

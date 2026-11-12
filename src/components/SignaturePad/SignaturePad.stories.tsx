@@ -46,3 +46,9 @@ export const LongText: Story = {
   args: { defaultMethod: 'type', 'aria-label': 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung signature' },
   decorators: [(Story) => <div style={{ maxWidth: 280 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a Field label that says what signing means. */
+export const DoSayWhatItMeans: Story = { name: 'Do: say what signing means', render: () => <Field label="Sign to accept the terms"><SignaturePad /></Field> };
+/** Don't: a bare pad, so people don't know what they're agreeing to. */
+export const DontBarePad: Story = { name: "Don't: show a bare pad" };
