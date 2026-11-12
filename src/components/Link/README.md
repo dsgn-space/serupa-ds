@@ -43,6 +43,11 @@ Drawn from the `External` story.
 - A bare URL as the text is fine: it breaks across lines, even in a flex row or grid column, rather than push the layout wider.
 - Check any `href` that comes from people, such as a profile's website: allow only `https:`, `http:`, `mailto:` or your own paths. React still renders a `javascript:` link, which runs code when clicked.
 
+### Do and don't
+
+- **Do:** Make the link's words say where it goes: "Read the refund policy". (`DoSayWhere`)
+- **Don't:** Link "click here" or "more": out of its sentence, as in a screen reader's list of links, it says nothing. (`DontClickHere`)
+
 ## Accessibility
 
 - Underlined by default, so a link in a sentence doesn't rely on color alone (WCAG 1.4.1). Use `underline="hover"` only where the place already says it's a link: a nav bar, a footer, a list of links. Color alone doesn't do it in a sentence: the primary color is only 3.1–3.4:1 against body text in the light themes and 1.8–2.6:1 in the dark ones, under the 3:1 that 1.4.1 asks of a link set apart by color.

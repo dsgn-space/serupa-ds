@@ -98,7 +98,10 @@ describe('ShowMore in print', () => {
     const t = text('s'), more = page.getByRole('button', { name: 'Show more' }).element() as HTMLElement;
     await commands.printMedia(true);
     try {
-      expect([Math.round(t.getBoundingClientRect().height) > 40, t.scrollHeight - t.clientHeight <= 1, getComputedStyle(more).display]).toEqual([true, true, 'none']);
+      // Read after the text has had its frames to grow: the button stays in the page, only not shown. It used to be
+      // measured away (the whole text fits on paper), so a read raced the removal (display '' on a detached button).
+      for (let i = 0; i < 3; i++) await new Promise((r) => requestAnimationFrame(r));
+      expect([Math.round(t.getBoundingClientRect().height) > 40, t.scrollHeight - t.clientHeight <= 1, more.isConnected, getComputedStyle(more).display]).toEqual([true, true, true, 'none']);
     } finally { await commands.printMedia(false); }
     expect(Math.round(t.getBoundingClientRect().height)).toBe(40);
   });

@@ -15,6 +15,14 @@
   - text: A short note
 - text: 12 / 280
 
+# DoSizeRows
+- textbox "Describe the problem":
+  - /placeholder: What happened, and what did you expect?
+
+# DontOneRow
+- textbox "Describe the problem":
+  - /placeholder: What happened, and what did you expect?
+
 # LongText
 - textbox "Message":
   - /placeholder: Tell us more

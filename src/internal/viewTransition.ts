@@ -19,5 +19,8 @@ export function withViewTransition(update: () => void, options: { types?: string
   let t: ViewTransition;
   try { t = document.startViewTransition(options.types ? { update: run, types: options.types } : run); }
   catch { t = document.startViewTransition(run); }   // a browser with View Transitions but not yet their types
+  // A transition cut short (the viewport resized, another one started) rejects ready as well as finished; the update
+  // still ran, so neither is an error for the page to see as an unhandled rejection.
+  t.ready.catch(() => {});
   return t.finished.catch(() => {});
 }

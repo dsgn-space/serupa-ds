@@ -343,6 +343,16 @@
             "cssVar": "--checkbox-press-scale"
           }
         }
+      },
+      "draw-duration": {
+        "$type": "duration",
+        "$value": "{transitions.motion-draw}",
+        "$description": "How long the tick takes to draw itself on when ticked under the pointer or keyboard: 150ms in a tactile brand, at once in the flat ones.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-draw-duration"
+          }
+        }
       }
     }
   }

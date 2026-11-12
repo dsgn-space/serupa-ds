@@ -1,3 +1,19 @@
+# DoShortTitles
+- navigation "Progress":
+  - list:
+    - listitem: Account , completed Email and password
+    - listitem: Profile Optional
+    - listitem: Billing Card or invoice
+    - listitem: Review
+
+# DontLongTitles
+- navigation "Progress":
+  - list:
+    - listitem: Create your account with an email and a password , completed
+    - listitem: Tell us about yourself (optional)
+    - listitem: Choose how you would like to pay
+    - listitem: Check everything and finish
+
 # Interactive
 - navigation "Progress":
   - list:

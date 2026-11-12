@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
 import { Button } from '../Button/Button';
 import { Avatar } from '../Avatar/Avatar';
+import { useName } from '../../../.storybook/content';
 
 const links = [
   <NavbarLink key="d" href="#" active>Dashboard</NavbarLink>,
@@ -11,6 +12,9 @@ const links = [
   <NavbarLink key="r" href="#">Reports</NavbarLink>,
 ];
 
+// The signed-in person follows Storybook's Content menu (.storybook/content.ts).
+const Me = () => <Avatar name={useName('Ada Lovelace')} size="sm" />;
+
 const meta = {
   title: 'Components/Navigation/Navbar',
   component: Navbar,
@@ -18,7 +22,7 @@ const meta = {
   parameters: { layout: 'fullscreen' },
   args: {
     brand: <a href="#" className="text-base font-semibold text-text no-underline">Acme</a>,
-    actions: <><Button variant="ghost" size="sm">Docs</Button><Avatar name="Ada Lovelace" size="sm" /></>,
+    actions: <><Button variant="ghost" size="sm">Docs</Button><Me /></>,
     children: links,
   },
   argTypes: { size: { control: 'select', options: ['md', 'lg', 'xl', '2xl', 'full'] }, brand: { control: false }, actions: { control: false }, children: { control: false } },

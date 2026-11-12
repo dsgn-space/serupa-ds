@@ -39,3 +39,15 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: rows sized to the answer, so people see how much to write. */
+export const DoSizeRows: Story = {
+  name: 'Do: size rows to the answer',
+  args: { 'aria-label': 'Describe the problem', placeholder: 'What happened, and what did you expect?', rows: 5 },
+};
+/** Don't: one row for a description, which reads as a one-line answer. */
+export const DontOneRow: Story = {
+  name: "Don't: one row for a long answer",
+  args: { 'aria-label': 'Describe the problem', placeholder: 'What happened, and what did you expect?', rows: 1 },
+};

@@ -50,6 +50,11 @@ Drawn from the `AnnounceComplete` story.
 - The fill moves to a new value over 300ms.
 - Indeterminate: a segment slides across the bar (right to left in right-to-left text, following the nearest `dir`), or a quarter arc turns. Both stand still with `prefers-reduced-motion`.
 
+### Do and don't
+
+- **Do:** Say what's in progress, and how far in the units people count: "Importing contacts, 3 of 8 files". (`DoSayWhat`)
+- **Don't:** Label it only "Loading": it doesn't say what is loading or how long is left. (`DontJustLoading`)
+
 ## Accessibility
 
 - `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`; an indeterminate one has no value. The bar is named by its `label`.

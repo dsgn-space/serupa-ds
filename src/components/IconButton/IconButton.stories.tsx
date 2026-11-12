@@ -62,3 +62,15 @@ export const AsALink: Story = {
 export const LongLabel: Story = {
   args: { label: 'Open the menu with every action for this project, including archive and delete' },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: icons people know at a glance. */
+export const DoKnownIcons: Story = {
+  name: 'Do: icons people know',
+  render: () => <div style={{ display: 'flex', gap: 8 }}><IconButton icon="search" label="Search" variant="ghost" /><IconButton icon="settings" label="Settings" variant="ghost" /><IconButton icon="close" label="Close" variant="ghost" /></div>,
+};
+/** Don't: an icon few people would guess, with nothing in words. */
+export const DontGuessIcon: Story = {
+  name: "Don't: an icon to guess",
+  render: () => <IconButton icon="auto_awesome" label="Summarize the thread" variant="ghost" />,
+};

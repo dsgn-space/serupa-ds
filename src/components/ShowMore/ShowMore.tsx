@@ -44,7 +44,9 @@ export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>
   useIsoLayoutEffect(() => {
     const n = content.current;
     if (!n || open) return;
-    const measure = () => setCut(n.scrollHeight > n.clientHeight + 1);
+    // Not while printing: the whole text fits on paper, and measuring then took the (hidden) button out and put it
+    // back after, a re-render in the middle of printing.
+    const measure = () => { if (!window.matchMedia?.('print').matches) setCut(n.scrollHeight > n.clientHeight + 1); };
     measure();
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
     if (ro) ro.observe(n);

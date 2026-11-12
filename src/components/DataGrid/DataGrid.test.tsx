@@ -95,11 +95,14 @@ describe('DataGrid', () => {
   test('copy gives the range as tab-separated text; paste fills a block from the cell, skipping read-only cells', async () => {
     // Clipboard events with their own DataTransfer, not the system clipboard: the test files run side by side in one
     // browser, and another file's copy between this one's copy and paste pasted the wrong text (11 Nov 2026).
+    // The event carries a clipboard of the test's own: Firefox drops the clipboardData a script passes to
+    // new ClipboardEvent and gives it an empty one of its own, so what the handler set never came back there.
     const clip = (type: 'copy' | 'paste', text = '') => {
-      const data = new DataTransfer();
-      if (text) data.setData('text/plain', text);
-      document.activeElement!.dispatchEvent(new ClipboardEvent(type, { clipboardData: data, bubbles: true, cancelable: true }));
-      return data.getData('text/plain');
+      const held: Record<string, string> = text ? { 'text/plain': text } : {};
+      const ev = new ClipboardEvent(type, { bubbles: true, cancelable: true });
+      Object.defineProperty(ev, 'clipboardData', { value: { setData: (f: string, v: string) => { held[f] = v; }, getData: (f: string) => held[f] ?? '' } });
+      document.activeElement!.dispatchEvent(ev);
+      return held['text/plain'] ?? '';
     };
     const onChange = vi.fn();
     await render(<Live onChange={onChange} />);

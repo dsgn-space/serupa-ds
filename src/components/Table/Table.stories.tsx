@@ -296,3 +296,24 @@ function States(args: React.ComponentProps<typeof Table>) {
   );
 }
 export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const INVOICES = [['INV-1041', '1,240.00'], ['INV-1042', '85.50'], ['INV-1043', '14,520.00']] as const;
+/** Do: amounts end-aligned, so the digits line up by place. */
+export const DoAlignNumbers: Story = {
+  name: 'Do: end-align numbers',
+  args: { caption: 'Invoices' },
+  render: (args) => <Table {...args}>
+    <TableHead><TableRow><TableHeaderCell>Invoice</TableHeaderCell><TableHeaderCell align="end">Amount (USD)</TableHeaderCell></TableRow></TableHead>
+    <TableBody>{INVOICES.map(([id, amount]) => <TableRow key={id}><TableCell>{id}</TableCell><TableCell align="end">{amount}</TableCell></TableRow>)}</TableBody>
+  </Table>,
+};
+/** Don't: amounts start-aligned like text, so thousands and tens sit in one column. */
+export const DontStartNumbers: Story = {
+  name: "Don't: start-align numbers",
+  args: { caption: 'Invoices' },
+  render: (args) => <Table {...args}>
+    <TableHead><TableRow><TableHeaderCell>Invoice</TableHeaderCell><TableHeaderCell>Amount (USD)</TableHeaderCell></TableRow></TableHead>
+    <TableBody>{INVOICES.map(([id, amount]) => <TableRow key={id}><TableCell>{id}</TableCell><TableCell>{amount}</TableCell></TableRow>)}</TableBody>
+  </Table>,
+};

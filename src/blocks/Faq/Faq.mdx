@@ -1,0 +1,45 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Faq.stories';
+
+<Meta of={Stories} />
+
+# FAQ
+
+Questions and answers in groups, with a search field and "Still stuck?" at the end. It's built from Accordion, SearchInput and Highlight.
+
+<Canvas of={Stories.Default} />
+
+## What each part is for
+
+- **A region named by its heading** (1.3.1). Each group has its own heading, and each question is a heading holding a button, so a screen reader can list the questions and jump between them. Pick `headingLevel` to fit the page: groups and questions take the next levels.
+- **Questions open on their own.** Opening one leaves the others as they are, so people can compare two answers.
+- **Find-in-page reaches closed answers.** They're hidden until found, so Ctrl+F or ⌘F finds a word in a closed answer and opens its question.
+- **The search filters the questions** (4.1.3). It matches every word people type, in the question, a plain-text answer and its `keywords`, ignoring case and accents. How many match is shown and said, "1 of 9 questions", and the matched words are marked in each question, with more than color. Groups with no match go. It shows when there are more than six questions; `searchable` turns it on or off.
+- **A link opens a question** (2.4.3). Each question's `id` is its address: a link to `#cancel-plan` from a help article or a support reply opens that question and moves focus to it, on load and when the address changes.
+- **"Still stuck?" is always there** (3.3.5). Pass `contact`, a sentence and a Button or Link, and it comes after the questions. When nothing matches, the no-match text points to it, so the search is never a dead end.
+- **Another language**: every word is in `labels`, and `results` and `noMatch` are functions, so the count and the search fit the sentence.
+
+<Canvas of={Stories.Open} />
+
+<Canvas of={Stories.Searching} />
+
+<Canvas of={Stories.NoMatch} />
+
+<Canvas of={Stories.Short} />
+
+## Writing the questions
+
+- Write each question as people ask it: "How do I cancel my plan?", not "Plan cancellation".
+- Lead the answer with the answer. Say where to go in the order people click: "Go to Settings, then Billing".
+- Put the words people use in `keywords` when the question doesn't hold them: "refund" for "money back", "2fa" for two-step sign-in.
+- Keep an answer short. When it needs more than a few paragraphs, link to a page.
+
+## What stays your app's job
+
+- Writing and updating the questions, and keeping the ids stable once people link to them.
+- The contact part: who people reach, how and how fast.
+- Reading `?q=` from the address into `defaultQuery`, when a help search sends people here.
+
+## Copying it
+
+Copy `Faq.tsx` and `Faq.test.tsx`, and change the imports to `serupa`.

@@ -54,3 +54,24 @@ export const TwoLevels: Story = {
   name: 'Two levels',
   args: { children: [<BreadcrumbItem key="p" href="#">Projects</BreadcrumbItem>, <BreadcrumbItem key="w">Website redesign</BreadcrumbItem>] },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: each item is the title people see on that page, ending with the current page. */
+export const DoPageTitles: Story = {
+  name: 'Do: use the pages’ titles',
+  args: { children: [
+    <BreadcrumbItem key="h" href="/">Home</BreadcrumbItem>,
+    <BreadcrumbItem key="p" href="/projects">Projects</BreadcrumbItem>,
+    <BreadcrumbItem key="w" href="/projects/website">Website redesign</BreadcrumbItem>,
+    <BreadcrumbItem key="s">Settings</BreadcrumbItem>,
+  ] },
+};
+/** Don't: names that don't match the pages, such as "Back" or "Page", or a trail that stops short of the current page. */
+export const DontMadeUpNames: Story = {
+  name: "Don't: make up names",
+  args: { children: [
+    <BreadcrumbItem key="h" href="/">Start</BreadcrumbItem>,
+    <BreadcrumbItem key="p" href="/projects">List</BreadcrumbItem>,
+    <BreadcrumbItem key="w">Back</BreadcrumbItem>,
+  ] },
+};

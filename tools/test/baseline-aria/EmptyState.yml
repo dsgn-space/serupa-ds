@@ -7,6 +7,14 @@
 - heading "Add a cover image" [level=3]
 - button "Upload"
 
+# DoSayWhatNext
+- heading "No invoices yet" [level=3]
+- paragraph: Invoices you send show up here.
+- button "New invoice"
+
+# DontNoData
+- heading "No data" [level=3]
+
 # LongText
 - heading "No projects match every one of the filters you picked" [level=3]
 - paragraph: Try fewer filters, or search for Donaudampfschifffahrtsgesellschaftskapitänskajüte by name instead.

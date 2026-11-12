@@ -25,3 +25,15 @@ export const LongKeys: Story = {
     <p style={{ margin: 0, width: 200 }}>Press <Kbd keys={['mod', 'shift', 'alt', 'P']} /> to open every command, or <Kbd>Page Down</Kbd> to move on.</p>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: `mod` for a shortcut that follows the platform: ⌘K on a Mac, Ctrl+K elsewhere. */
+export const DoMod: Story = {
+  name: 'Do: use mod',
+  render: () => <p style={{ margin: 0 }}>Press <Kbd keys={['mod', 'K']} /> to search.</p>,
+};
+/** Don't: Ctrl written in for a shortcut that is ⌘ on a Mac, so Mac users press the wrong keys. */
+export const DontHardcodeCtrl: Story = {
+  name: "Don't: write Ctrl for everyone",
+  render: () => <p style={{ margin: 0 }}>Press <Kbd keys={['ctrl', 'K']} /> to search.</p>,
+};
