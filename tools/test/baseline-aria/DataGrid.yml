@@ -323,3 +323,313 @@
       - gridcell "9"
       - gridcell "110.000"
 
+# StickyHeader
+- grid "Stock":
+  - rowgroup:
+    - row "SKU Product In stock Price (Rp)":
+      - columnheader "SKU"
+      - columnheader "Product"
+      - columnheader "In stock"
+      - columnheader "Price (Rp)"
+  - rowgroup:
+    - row "SKU-001 Kopi Toraja 250 g 0 85.000":
+      - gridcell "SKU-001" [selected]
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "0"
+      - gridcell "85.000"
+    - row "SKU-002 Kopi Gayo 250 g 7 92.000":
+      - gridcell "SKU-002"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "7"
+      - gridcell "92.000"
+    - row "SKU-003 Teh Melati 100 g 14 24.000":
+      - gridcell "SKU-003"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "14"
+      - gridcell "24.000"
+    - row "SKU-004 Gula Aren 500 g 21 38.000":
+      - gridcell "SKU-004"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "21"
+      - gridcell "38.000"
+    - row "SKU-005 Madu Hutan 350 ml 28 110.000":
+      - gridcell "SKU-005"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "28"
+      - gridcell "110.000"
+    - row "SKU-006 Kopi Toraja 250 g 35 85.000":
+      - gridcell "SKU-006"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "35"
+      - gridcell "85.000"
+    - row "SKU-007 Kopi Gayo 250 g 42 92.000":
+      - gridcell "SKU-007"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "42"
+      - gridcell "92.000"
+    - row "SKU-008 Teh Melati 100 g 49 24.000":
+      - gridcell "SKU-008"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "49"
+      - gridcell "24.000"
+    - row "SKU-009 Gula Aren 500 g 6 38.000":
+      - gridcell "SKU-009"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "6"
+      - gridcell "38.000"
+    - row "SKU-010 Madu Hutan 350 ml 13 110.000":
+      - gridcell "SKU-010"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "13"
+      - gridcell "110.000"
+    - row "SKU-011 Kopi Toraja 250 g 20 85.000":
+      - gridcell "SKU-011"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "20"
+      - gridcell "85.000"
+    - row "SKU-012 Kopi Gayo 250 g 27 92.000":
+      - gridcell "SKU-012"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "27"
+      - gridcell "92.000"
+    - row "SKU-013 Teh Melati 100 g 34 24.000":
+      - gridcell "SKU-013"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "34"
+      - gridcell "24.000"
+    - row "SKU-014 Gula Aren 500 g 41 38.000":
+      - gridcell "SKU-014"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "41"
+      - gridcell "38.000"
+    - row "SKU-015 Madu Hutan 350 ml 48 110.000":
+      - gridcell "SKU-015"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "48"
+      - gridcell "110.000"
+    - row "SKU-016 Kopi Toraja 250 g 5 85.000":
+      - gridcell "SKU-016"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "5"
+      - gridcell "85.000"
+    - row "SKU-017 Kopi Gayo 250 g 12 92.000":
+      - gridcell "SKU-017"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "12"
+      - gridcell "92.000"
+    - row "SKU-018 Teh Melati 100 g 19 24.000":
+      - gridcell "SKU-018"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "19"
+      - gridcell "24.000"
+    - row "SKU-019 Gula Aren 500 g 26 38.000":
+      - gridcell "SKU-019"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "26"
+      - gridcell "38.000"
+    - row "SKU-020 Madu Hutan 350 ml 33 110.000":
+      - gridcell "SKU-020"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "33"
+      - gridcell "110.000"
+    - row "SKU-021 Kopi Toraja 250 g 40 85.000":
+      - gridcell "SKU-021"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "40"
+      - gridcell "85.000"
+    - row "SKU-022 Kopi Gayo 250 g 47 92.000":
+      - gridcell "SKU-022"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "47"
+      - gridcell "92.000"
+    - row "SKU-023 Teh Melati 100 g 4 24.000":
+      - gridcell "SKU-023"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "4"
+      - gridcell "24.000"
+    - row "SKU-024 Gula Aren 500 g 11 38.000":
+      - gridcell "SKU-024"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "11"
+      - gridcell "38.000"
+    - row "SKU-025 Madu Hutan 350 ml 18 110.000":
+      - gridcell "SKU-025"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "18"
+      - gridcell "110.000"
+    - row "SKU-026 Kopi Toraja 250 g 25 85.000":
+      - gridcell "SKU-026"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "25"
+      - gridcell "85.000"
+    - row "SKU-027 Kopi Gayo 250 g 32 92.000":
+      - gridcell "SKU-027"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "32"
+      - gridcell "92.000"
+    - row "SKU-028 Teh Melati 100 g 39 24.000":
+      - gridcell "SKU-028"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "39"
+      - gridcell "24.000"
+    - row "SKU-029 Gula Aren 500 g 46 38.000":
+      - gridcell "SKU-029"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "46"
+      - gridcell "38.000"
+    - row "SKU-030 Madu Hutan 350 ml 3 110.000":
+      - gridcell "SKU-030"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "3"
+      - gridcell "110.000"
+    - row "SKU-031 Kopi Toraja 250 g 10 85.000":
+      - gridcell "SKU-031"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "10"
+      - gridcell "85.000"
+    - row "SKU-032 Kopi Gayo 250 g 17 92.000":
+      - gridcell "SKU-032"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "17"
+      - gridcell "92.000"
+    - row "SKU-033 Teh Melati 100 g 24 24.000":
+      - gridcell "SKU-033"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "24"
+      - gridcell "24.000"
+    - row "SKU-034 Gula Aren 500 g 31 38.000":
+      - gridcell "SKU-034"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "31"
+      - gridcell "38.000"
+    - row "SKU-035 Madu Hutan 350 ml 38 110.000":
+      - gridcell "SKU-035"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "38"
+      - gridcell "110.000"
+    - row "SKU-036 Kopi Toraja 250 g 45 85.000":
+      - gridcell "SKU-036"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "45"
+      - gridcell "85.000"
+    - row "SKU-037 Kopi Gayo 250 g 2 92.000":
+      - gridcell "SKU-037"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "2"
+      - gridcell "92.000"
+    - row "SKU-038 Teh Melati 100 g 9 24.000":
+      - gridcell "SKU-038"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "9"
+      - gridcell "24.000"
+    - row "SKU-039 Gula Aren 500 g 16 38.000":
+      - gridcell "SKU-039"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "16"
+      - gridcell "38.000"
+    - row "SKU-040 Madu Hutan 350 ml 23 110.000":
+      - gridcell "SKU-040"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "23"
+      - gridcell "110.000"
+    - row "SKU-041 Kopi Toraja 250 g 30 85.000":
+      - gridcell "SKU-041"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "30"
+      - gridcell "85.000"
+    - row "SKU-042 Kopi Gayo 250 g 37 92.000":
+      - gridcell "SKU-042"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "37"
+      - gridcell "92.000"
+    - row "SKU-043 Teh Melati 100 g 44 24.000":
+      - gridcell "SKU-043"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "44"
+      - gridcell "24.000"
+    - row "SKU-044 Gula Aren 500 g 1 38.000":
+      - gridcell "SKU-044"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "1"
+      - gridcell "38.000"
+    - row "SKU-045 Madu Hutan 350 ml 8 110.000":
+      - gridcell "SKU-045"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "8"
+      - gridcell "110.000"
+    - row "SKU-046 Kopi Toraja 250 g 15 85.000":
+      - gridcell "SKU-046"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "15"
+      - gridcell "85.000"
+    - row "SKU-047 Kopi Gayo 250 g 22 92.000":
+      - gridcell "SKU-047"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "22"
+      - gridcell "92.000"
+    - row "SKU-048 Teh Melati 100 g 29 24.000":
+      - gridcell "SKU-048"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "29"
+      - gridcell "24.000"
+    - row "SKU-049 Gula Aren 500 g 36 38.000":
+      - gridcell "SKU-049"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "36"
+      - gridcell "38.000"
+    - row "SKU-050 Madu Hutan 350 ml 43 110.000":
+      - gridcell "SKU-050"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "43"
+      - gridcell "110.000"
+    - row "SKU-051 Kopi Toraja 250 g 0 85.000":
+      - gridcell "SKU-051"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "0"
+      - gridcell "85.000"
+    - row "SKU-052 Kopi Gayo 250 g 7 92.000":
+      - gridcell "SKU-052"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "7"
+      - gridcell "92.000"
+    - row "SKU-053 Teh Melati 100 g 14 24.000":
+      - gridcell "SKU-053"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "14"
+      - gridcell "24.000"
+    - row "SKU-054 Gula Aren 500 g 21 38.000":
+      - gridcell "SKU-054"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "21"
+      - gridcell "38.000"
+    - row "SKU-055 Madu Hutan 350 ml 28 110.000":
+      - gridcell "SKU-055"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "28"
+      - gridcell "110.000"
+    - row "SKU-056 Kopi Toraja 250 g 35 85.000":
+      - gridcell "SKU-056"
+      - gridcell "Kopi Toraja 250 g"
+      - gridcell "35"
+      - gridcell "85.000"
+    - row "SKU-057 Kopi Gayo 250 g 42 92.000":
+      - gridcell "SKU-057"
+      - gridcell "Kopi Gayo 250 g"
+      - gridcell "42"
+      - gridcell "92.000"
+    - row "SKU-058 Teh Melati 100 g 49 24.000":
+      - gridcell "SKU-058"
+      - gridcell "Teh Melati 100 g"
+      - gridcell "49"
+      - gridcell "24.000"
+    - row "SKU-059 Gula Aren 500 g 6 38.000":
+      - gridcell "SKU-059"
+      - gridcell "Gula Aren 500 g"
+      - gridcell "6"
+      - gridcell "38.000"
+    - row "SKU-060 Madu Hutan 350 ml 13 110.000":
+      - gridcell "SKU-060"
+      - gridcell "Madu Hutan 350 ml"
+      - gridcell "13"
+      - gridcell "110.000"
+

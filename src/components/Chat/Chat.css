@@ -50,4 +50,10 @@
 .dk-chat-composer__field { flex: auto; min-inline-size: var(--spacing-0); }
 /* Forced colors drop the bubble fills: an outline keeps each message's edge. */
 @media (forced-colors: active) { .dk-chat-message__bubble { border-color: CanvasText; } }
+/* Printed, the whole conversation: the chat and its log grow to fit every message, whatever height the app gave
+   them, instead of printing only the messages scrolled into view. */
+@media print {
+  .dk-chat { block-size: auto !important; max-block-size: none !important; }
+  .dk-chat__log { overflow: visible; flex: none; }
+}
 }

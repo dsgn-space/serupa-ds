@@ -6,7 +6,7 @@ A date people know or copy from a document, such as a date of birth or a passpor
 import { DateField, Field } from "serupa-ds";
 
 <Field label="Date of birth" hint="For example, 27 3 2007" error={error}>
-  <DateField name="dob" autoComplete="bday" max={today} onValueChange={(value, { problem }) => setProblem(problem)} />
+  <DateField name="dob" autoComplete="bday" order="dmy" max={today} onValueChange={(value, { problem }) => setProblem(problem)} />
 </Field>
 ```
 
@@ -31,7 +31,7 @@ Drawn from the `Playground` story.
 
 ## Usage
 
-- Name it with a [Field](../Field/README.md) label ("Date of birth") or `aria-label`, and give an example in the hint, in the boxes' order ("For example, 27 3 2007").
+- Name it with a [Field](../Field/README.md) label ("Date of birth") or `aria-label`, and give an example in the hint, in the boxes' order ("For example, 27 3 2007" with `order="dmy"`, "3 27 2007" with `"mdy"`). Without `order` the boxes follow the locale, so set it whenever the hint is fixed text, and use a day over 12 so the example shows which box is which.
 - Typing is free: nothing is blocked or moved on its own, so a mistake can be read and fixed. A `/`, `.`, `-` or space after a number moves to the next box, and a whole date pasted into any box ("17/08/1945", "1945-08-17", "17 Agustus 1945") fills all three.
 - `onValueChange(value, details)` gives `YYYY-MM-DD`, or `""` until the boxes make a real date. `details.problem` says what's wrong: `"empty"`, `"missing-day"`, `"missing-month"`, `"missing-year"` (also a year under 4 digits), `"not-a-date"` (31 April, month 13), `"before-min"` or `"after-max"`; `details.parts` says in which boxes. Word the error from it, GOV.UK style: "Date of birth must include a month", "Date of birth must be in the past".
 - `min` and `max` don't stop anything being typed; a date outside them still comes as its value, with its problem.

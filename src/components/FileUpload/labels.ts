@@ -48,7 +48,7 @@ export const en: FileUploadLabels = {
   fileAlreadyAdded: (name) => `${name} is already added.`,
   filesAdded: (names) => names.length === 1 ? `${names[0]} added.` : `${names.length} files added.`,
   fileRemoved: (name) => `${name} removed.`,
-  fileError: 'Upload failed',
+  fileError: 'Couldn’t upload',
 };
 const ID_KINDS: Record<string, string> = { image: 'gambar', video: 'video', 'audio file': 'file audio', 'text file': 'file teks' };
 export const id: FileUploadLabels = {
@@ -69,5 +69,5 @@ export const id: FileUploadLabels = {
   fileAlreadyAdded: (name) => `${name} sudah ditambahkan.`,
   filesAdded: (names) => names.length === 1 ? `${names[0]} ditambahkan.` : `${names.length} file ditambahkan.`,
   fileRemoved: (name) => `${name} dihapus.`,
-  fileError: 'Gagal mengunggah',
+  fileError: 'Tidak bisa diunggah',
 };

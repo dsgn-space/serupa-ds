@@ -6,6 +6,10 @@
    faster (motion-exit-md); the fade alone with reduced motion.
    --------------------------------------------------------------- */
 @layer dk.components {
+/* Under 640px wide, space-surface is 16px inside the dialog (24px elsewhere): its panel, and a Card in it, keep most
+   of a phone's width (or a desktop's at 400% zoom) for the content rather than 2 × (margin + 24px).
+   --dialog-padding still sets the panel's padding everywhere. */
+@media (max-width: 639.98px) { .dk-dialog { --space-surface: var(--spacing-4); } }
 .dk-dialog {
   --dk-dialog-width: var(--dialog-width-md, var(--container-lg));
   box-sizing: border-box;
