@@ -18,22 +18,97 @@ name: Update baselines
 # token and no secrets: a dependency the pull request bumps finds nothing there that can write. "commit" runs none of
 # the branch's code. It takes only PNGs under tools/test/baseline-visual*/ and tools/test/baseline-utilities.json from
 # render, checks each one, and pushes them with BOT_TOKEN (so the push starts CI), passed to that one git call.
+#
+# A pull request with a conflict gets no pull_request runs, so a label does nothing there. Run this workflow by hand
+# (Actions > Update baselines > Run workflow, or `gh workflow run visual-baselines.yml -f pr=<number>`) to heal it:
+# it merges the base branch into the pull request first, takes the base's side of every conflicting picture (and of
+# baseline-utilities.json), draws the pictures again on the merged tree, and pushes the merge with them. A conflict
+# in anything else stops it, since only a person can resolve that.
 on:
   pull_request:
     types: [labeled]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: The pull request's number
+        required: true
+        type: number
+      which:
+        description: Which pictures to draw again after the merge
+        type: choice
+        options: [chromium, cross-browser]
+        default: chromium
 
-# A newer run of the same workflow on the same branch or pull request cancels the one before it.
+# A newer run for the same pull request cancels the one before it. Any other label gets a group of its own, so adding
+# it while the pictures are being drawn doesn't cancel them.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: >-
+    ${{ github.workflow }}-${{ (github.event_name == 'workflow_dispatch' || github.event.label.name == 'update-visual-baselines' ||
+    github.event.label.name == 'update-cross-browser-baselines') && (github.event.pull_request.number || inputs.pr) || github.run_id }}
   cancel-in-progress: true
 
 permissions: {}
 
 jobs:
+  # Which pull request, which pictures, and whether to merge the base in first (heal), for both ways in. A fork's
+  # pull request is left alone: its branch can't take the push.
+  pr:
+    if: >-
+      github.event_name == 'workflow_dispatch' || ((github.event.label.name == 'update-visual-baselines' ||
+      github.event.label.name == 'update-cross-browser-baselines') && github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      number: ${{ steps.pr.outputs.number }}
+      head-ref: ${{ steps.pr.outputs.head-ref }}
+      head-sha: ${{ steps.pr.outputs.head-sha }}
+      base-ref: ${{ steps.pr.outputs.base-ref }}
+      base-sha: ${{ steps.pr.outputs.base-sha }}
+      which: ${{ steps.pr.outputs.which }}
+      heal: ${{ steps.pr.outputs.heal }}
+    steps:
+      - id: pr
+        name: Find the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          LABEL: ${{ github.event.label.name }}
+          NUMBER: ${{ github.event.pull_request.number || inputs.pr }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          WHICH: ${{ inputs.which }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          [[ "$NUMBER" =~ ^[0-9]+$ ]] || fail "$NUMBER is not a pull request number"
+          pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$NUMBER")
+          [ "$(jq -r .state <<< "$pull")" = open ] || fail "#$NUMBER isn't open"
+          [ "$(jq -r .head.repo.full_name <<< "$pull")" = "$GITHUB_REPOSITORY" ] || fail "#$NUMBER comes from a fork, so its branch can't take the push"
+          base_ref=$(jq -r .base.ref <<< "$pull")
+          if [ "$EVENT" = workflow_dispatch ]; then
+            heal=1; which=$WHICH; head_sha=$(jq -r .head.sha <<< "$pull")
+          else
+            heal=0; head_sha=$HEAD_SHA
+            if [ "$LABEL" = update-cross-browser-baselines ]; then which=cross-browser; else which=chromium; fi
+          fi
+          {
+            echo "number=$NUMBER"
+            echo "head-ref=$(jq -r .head.ref <<< "$pull")"
+            echo "head-sha=$head_sha"
+            echo "base-ref=$base_ref"
+            # The base's tip now, so render and commit merge the same commit even if the base moves meanwhile.
+            echo "base-sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/$base_ref" --jq .sha)"
+            echo "which=$which"
+            echo "heal=$heal"
+          } | tee -a "$GITHUB_OUTPUT"
+
   render:
-    if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: pr
+    if: needs.pr.outputs.which == 'chromium'
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -45,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ needs.pr.outputs.head-sha }}
           persist-credentials: false
           # The base branch's history too, to find where the pull request started (git merge-base).
           fetch-depth: 0
@@ -57,6 +132,29 @@ jobs:
           git config --global --add safe.directory "$PWD"
           git reset -q
           git clean -ffdxq
+      # Heal (a run by hand): merge the base in, taking the base's side of each conflicting baseline. Render draws
+      # those pictures again on the merged tree; commit makes the same merge and puts render's pictures on top.
+      - name: Merge the base branch in
+        if: needs.pr.outputs.heal == '1'
+        env:
+          BASE_SHA: ${{ needs.pr.outputs.base-sha }}
+          BASE_REF: ${{ needs.pr.outputs.base-ref }}
+        run: &merge-base |
+          set -euo pipefail
+          git config --global --add safe.directory "$PWD"
+          git fetch --quiet origin "$BASE_SHA"
+          id=(-c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com")
+          if git "${id[@]}" merge --quiet --no-edit -m "Merge $BASE_REF into the branch (Update baselines)" "$BASE_SHA"; then exit 0; fi
+          baseline='^tools/test/(baseline-visual(-firefox|-webkit)?/.*\.png|baseline-utilities\.json)$'
+          others=$(git diff --name-only --diff-filter=U | grep -Ev "$baseline" || true)
+          if [ -n "$others" ]; then
+            echo "::error::These conflict and aren't pictures, so resolve them by hand: $(tr '\n' ' ' <<< "$others")"
+            exit 1
+          fi
+          git diff --name-only --diff-filter=U -z | while IFS= read -r -d '' f; do
+            if git cat-file -e "$BASE_SHA:$f" 2> /dev/null; then git checkout --quiet "$BASE_SHA" -- "$f"; else git rm --quiet -- "$f"; fi
+          done
+          git "${id[@]}" commit --quiet --no-edit
       - uses: ./.github/actions/setup
       - name: Render the baselines
         run: |
@@ -66,7 +164,7 @@ jobs:
           node tools/test/run.mjs --group visual --update --since "$base"
           node tools/test/utilities.mjs --update
         env:
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          BASE_REF: ${{ needs.pr.outputs.base-ref }}
       - name: Collect what changed
         run: |
           out="$RUNNER_TEMP/baselines"
@@ -81,7 +179,8 @@ jobs:
           retention-days: 1
 
   render-cross:
-    if: github.event.label.name == 'update-cross-browser-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: pr
+    if: needs.pr.outputs.which == 'cross-browser'
     name: render (${{ matrix.browser }})
     strategy:
       fail-fast: false
@@ -101,14 +200,21 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ needs.pr.outputs.head-sha }}
           persist-credentials: false
+          fetch-depth: 0
       # As in render: start from HEAD's tree alone, not from what an earlier job on this runner left staged.
       - name: Drop what an earlier job left staged
         run: |
           git config --global --add safe.directory "$PWD"
           git reset -q
           git clean -ffdxq
+      - name: Merge the base branch in
+        if: needs.pr.outputs.heal == '1'
+        env:
+          BASE_SHA: ${{ needs.pr.outputs.base-sha }}
+          BASE_REF: ${{ needs.pr.outputs.base-ref }}
+        run: *merge-base
       - uses: ./.github/actions/setup
         with:
           browsers: "false"
@@ -138,7 +244,7 @@ jobs:
           retention-days: 1
 
   commit:
-    needs: [render, render-cross]
+    needs: [pr, render, render-cross]
     # One of the two renders ran (its label), and neither failed.
     if: always() && !failure() && !cancelled() && (needs.render.result == 'success' || needs.render-cross.result == 'success')
     runs-on: ubuntu-24.04
@@ -148,8 +254,15 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ needs.pr.outputs.head-sha }}
           persist-credentials: false
+          fetch-depth: 0
+      - name: Merge the base branch in
+        if: needs.pr.outputs.heal == '1'
+        env:
+          BASE_SHA: ${{ needs.pr.outputs.base-sha }}
+          BASE_REF: ${{ needs.pr.outputs.base-ref }}
+        run: *merge-base
       # Each render's files land in one folder, and their lists of removed files are joined.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -205,22 +318,28 @@ jobs:
           while IFS= read -r f; do mkdir -p -- "$(dirname -- "$f")"; cp -- "$in/files/$f" "$f"; done < "$RUNNER_TEMP/changed.txt"
           [ -s "$RUNNER_TEMP/changed.txt" ] && git add --pathspec-from-file="$RUNNER_TEMP/changed.txt"
           [ -s "$in/deleted.txt" ] && git rm --quiet --pathspec-from-file="$in/deleted.txt"
-          if git diff --cached --quiet; then echo "Baselines unchanged."; exit 0; fi
-          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit --quiet -m "Update test baselines on the CI runner"
+          if git diff --cached --quiet; then
+            echo "Baselines unchanged."
+            # A heal still pushes its merge.
+            [ "$HEAL" = 1 ] || exit 0
+          else
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit --quiet -m "Update test baselines on the CI runner"
+          fi
           # The token goes to this one push only. The push is refused if the branch moved on since render.
           auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
           echo "::add-mask::$auth"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$HEAD_REF"
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REF: ${{ needs.pr.outputs.head-ref }}
+          HEAL: ${{ needs.pr.outputs.heal }}
 
   # One comment on the pull request with what the refresh changed (K9): each picture beside the old one, the size
   # changes, the other baselines counted. Runs the base branch's own tools/baseline-report.mjs, never the pull
   # request's code, and edits its earlier comment (found by the report's first line) instead of adding another.
   report:
-    needs: commit
+    needs: [pr, commit]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -229,7 +348,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.base.ref }}
+          ref: ${{ needs.pr.outputs.base-ref }}
           persist-credentials: false
           fetch-depth: 0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -238,8 +357,8 @@ jobs:
       - name: Post or update the comment
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_NUMBER: ${{ needs.pr.outputs.number }}
+          BASE_REF: ${{ needs.pr.outputs.base-ref }}
         run: |
           set -euo pipefail
           git fetch --quiet origin "refs/pull/$PR_NUMBER/head:refs/remotes/pr/head"
