@@ -39,6 +39,7 @@ import { Slider } from '../components/Slider/Slider';
 import { Switch } from '../components/Switch/Switch';
 import { TableSelectCell } from '../components/Table/Table';
 import { Textarea } from '../components/Textarea/Textarea';
+import { MentionInput } from '../components/MentionInput/MentionInput';
 import { TimePicker } from '../components/TimePicker/TimePicker';
 import { TimeZonePicker } from '../components/TimeZonePicker/TimeZonePicker';
 
@@ -74,6 +75,8 @@ const CONTROLS: { [K in Named]: Control | string } = {
     change: (r) => fill($(r, 'input'), 'Gemini'), changed: { title: 'Gemini' } },
   Textarea: { el: (form) => <Textarea aria-label="Notes" name="notes" form={form} defaultValue="One" />, initial: { notes: 'One' },
     change: async (r) => { await userEvent.clear($(r, 'textarea')); await userEvent.type($(r, 'textarea'), 'Two'); }, changed: { notes: 'Two' } },
+  MentionInput: { el: (form) => <MentionInput aria-label="Comment" name="comment" form={form} options={[{ id: 'ayu', label: 'Ayu Lestari' }]} defaultValue="Hi" />, initial: { comment: 'Hi' },
+    change: async (r) => { await userEvent.clear($(r, 'textarea')); await userEvent.type($(r, 'textarea'), 'Bye @ay{Enter}'); }, changed: { comment: 'Bye @Ayu Lestari ' } },
   PasswordInput: { el: (form) => <PasswordInput aria-label="Password" name="pw" form={form} defaultValue="secret" />, initial: { pw: 'secret' },
     change: (r) => fill($(r, 'input'), 'hunter2'), changed: { pw: 'hunter2' } },
   SearchInput: { el: (form) => <SearchInput aria-label="Search" name="q" form={form} defaultValue="cats" />, initial: { q: 'cats' },

@@ -23,15 +23,15 @@ const bodyOf = (id: string, inner: Element) => [...panel(id).children].find((c) 
 const box = () => { const r = panel().getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round); };
 // The panel slides in: read positions once every finite animation has ended (headless WebKit can start it late).
 
-type Ctl = { setOpen: (v: boolean) => void; setSide: (s: DrawerProps['side']) => void; setSize: (s: DrawerProps['size']) => void; setBd: (v: boolean) => void };
+type Ctl = { setOpen: (v: boolean) => void; setSide: (s: DrawerProps['placement']) => void; setSize: (s: DrawerProps['size']) => void; setBd: (v: boolean) => void };
 function App(props: { asks: boolean[]; ctl: Partial<Ctl>; dref?: React.Ref<HTMLDialogElement>; why?: string[] }) {
-  const [open, setOpen] = React.useState(false), [side, setSide] = React.useState<DrawerProps['side']>('right'), [size, setSize] = React.useState<DrawerProps['size']>('md'), [bd, setBd] = React.useState(true);
+  const [open, setOpen] = React.useState(false), [side, setSide] = React.useState<DrawerProps['placement']>('right'), [size, setSize] = React.useState<DrawerProps['size']>('md'), [bd, setBd] = React.useState(true);
   Object.assign(props.ctl, { setOpen, setSide, setSize, setBd });
   const rows = []; for (let i = 0; i < 60; i++) rows.push(<p key={i}>Row {i}</p>);
   return <div style={{ height: '2000px' }}>
     <Button id="opener" onClick={() => setOpen(true)}>Filters</Button>
     <button id="behind">Behind</button>
-    <Drawer id="drw" open={open} side={side} size={size} closeOnBackdrop={bd} onOpenChange={(v, d) => { props.asks.push(v); if (props.why) props.why.push(d.reason); setOpen(v); }} title="Filters" description="Narrow the list." ref={props.dref} className="extra"
+    <Drawer id="drw" open={open} placement={side} size={size} closeOnBackdrop={bd} onOpenChange={(v, d) => { props.asks.push(v); if (props.why) props.why.push(d.reason); setOpen(v); }} title="Filters" description="Narrow the list." ref={props.dref} className="extra"
       footer={[<Button key={1} variant="secondary">Reset</Button>, <Button key={2} id="apply">Apply</Button>]}>
       <Input id="q" aria-label="Search" />{rows}
     </Drawer>
@@ -222,7 +222,7 @@ describe('Drawer', () => {
     await userEvent.keyboard('{Escape}');
     await expect.poll(() => d().open).toBe(false);
     // Bottom: dragged by the header (here its title), not the body (which scrolls).
-    await screen.rerender(one('c', { side: 'bottom' }));
+    await screen.rerender(one('c', { placement: 'bottom' }));
     await expect.poll(() => d().open).toBe(true);
     await swipe(0, 300, { from: el('swb') });
     expect(d().open).toBe(true);
@@ -430,23 +430,53 @@ describe('Drawer', () => {
     await expect.poll(() => asks.join()).toBe('false close,false escape,false api');
   });
 
-  test('right-to-left page: side="right" still opens on the right, the edge it slides in from', async () => {
+  test('right-to-left page: placement="right" still opens on the right, the edge it slides in from', async () => {
     document.documentElement.dir = 'rtl';
     try {
-      await render(<Drawer id="drr" open side="right" title="Filters" />);
+      await render(<Drawer id="drr" open placement="right" title="Filters" />);
       await settled();
       const r = panel('drr').getBoundingClientRect();
       expect([Math.round(r.right), Math.round(r.left) > 0]).toEqual([window.innerWidth, true]);
     } finally { document.documentElement.dir = ''; }
   });
 
-  test('right-to-left page: side="left" opens on the left', async () => {
+  test('right-to-left page: placement="left" opens on the left', async () => {
     document.documentElement.dir = 'rtl';
     try {
-      await render(<Drawer id="drl2" open side="left" title="Menu" />);
+      await render(<Drawer id="drl2" open placement="left" title="Menu" />);
       await settled();
       expect(Math.round(panel('drl2').getBoundingClientRect().left)).toBe(0);
     } finally { document.documentElement.dir = ''; }
+  });
+
+  test('placement="start" and "end" follow the reading: start is the left edge, and the right one in a right-to-left page, where a drag to the right closes it', async () => {
+    const edges = () => ['dst', 'den'].map((id) => { const r = panel(id).getBoundingClientRect(); return [Math.round(r.left) === 0, Math.round(r.right) === window.innerWidth]; });
+    const screen = await render(<><Drawer id="dst" open modal={false} placement="start" title="Menu" /><Drawer id="den" open modal={false} placement="end" title="Details" /></>);
+    await settled();
+    expect(edges()).toEqual([[true, false], [false, true]]);
+    document.documentElement.dir = 'rtl';
+    try {
+      const why: string[] = [];
+      await screen.rerender(<><Drawer id="dst" open modal={false} placement="start" title="Menu" onOpenChange={(_, d) => why.push(d.reason)} /><Drawer id="den" open modal={false} placement="end" title="Details" /></>);
+      await settled();
+      expect(edges()).toEqual([[false, true], [true, false]]);
+      const p = panel('dst'), r = p.getBoundingClientRect(), x = r.left + 40, y = r.top + 40;
+      const ev = (name: string, cx: number) => p.dispatchEvent(new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: 'touch', clientX: cx, clientY: y }));
+      ev('pointerdown', x);
+      for (let i = 1; i <= 4; i++) { await new Promise((f) => setTimeout(f, 100)); ev('pointermove', x + 50 * i); }
+      ev('pointerup', x + 200);
+      await expect.poll(() => why.join()).toBe('swipe');
+    } finally { document.documentElement.dir = ''; }
+  });
+
+  test('side, the old name of placement, still places it, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<Drawer id="dold" open placement={undefined} {...{ side: 'left' } as const} title="Menu" />);
+      await settled();
+      expect(el('dold').getAttribute('data-side')).toBe('left');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('drawer-side'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 
   test('a parent that keeps open true: Escape asks each time and it stays open, even when the browser force-closes it on a second Escape', async () => {

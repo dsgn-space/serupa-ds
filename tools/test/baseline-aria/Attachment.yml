@@ -28,7 +28,7 @@
     - button "Remove Notes.docx"
 
 # Kinds
-- text: Contract signed.pdf PDF 482 kB Site photo.jpg Image 3.4 MB Q3 budget.xlsx Spreadsheet 88 kB Meeting notes.docx Document 24 kB Pitch.pptx Slides 13 MB Assets.zip Archive 48 MB checkout.tsx Code 6.2 kB Voice note.m4a Audio 920 kB Demo.mp4 Video 210 MB backup.bin File 512 byte scan-0042 PDF Floor plan Image
+- text: Contract signed.pdf PDF 482 kB Site photo.jpg Image 3.4 MB Q3 budget.xlsx Spreadsheet 88 kB Meeting notes.docx Document 24 kB Pitch.pptx Slides 13 MB Assets.zip Archive 48 MB checkout.tsx Code 6.2 kB Voice note.m4a Audio 920 kB Demo.mp4 Video 210 MB backup.bin File 512 bytes scan-0042 PDF Floor plan Image
 
 # Linked
 - link "Invoice March 2026.pdf":

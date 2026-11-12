@@ -61,8 +61,9 @@ R.push({ name: 'every name a README or guide imports from serupa-ds is exported'
 // DataGrid (10 Nov 2026), a new component over the table's own props, takes them to 237,313, so 237,800.
 // ListItem generic over `as`, with linkProps typed by it (GR276, 11 Nov 2026), takes them to 239,131, so 239,600.
 // DataGrid generic over its rows, with three DataGrid cases added to consumer.tsx (GR356, 11 Nov 2026), takes them to 240,285, so 240,800.
-// Lightbox and its LightboxItem type (12 Nov 2026) take them to 241,557, so 241,800.
-const BUDGET = { Types: 101000, Instantiations: 241800 };
+// MentionInput and its MentionOption type (12 Nov 2026) take them to 241,591, so 241,800.
+// Lightbox and its LightboxItem type (12 Nov 2026) add about 760 more, so 242,600.
+const BUDGET = { Types: 101000, Instantiations: 242600 };
 const diag = built && spawnSync(process.execPath, [tsc, '-p', path.join(HERE, 'types'), '--extendedDiagnostics'], { cwd: PROJECT, encoding: 'utf8' });
 for (const [what, budget] of Object.entries(BUDGET)) {
   const n = diag ? Number((diag.stdout.match(new RegExp(`^${what}:\\s+(\\d+)`, 'm')) || [])[1]) : NaN;

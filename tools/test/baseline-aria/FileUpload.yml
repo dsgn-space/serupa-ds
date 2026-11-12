@@ -47,7 +47,7 @@
 - paragraph: Images or PDF, up to 5 MB each
 - list "Chosen files":
   - listitem:
-    - text: site-photo.png 70 byte Complete
+    - text: site-photo.png 70 bytes Complete
     - button "Remove site-photo.png"
   - listitem:
     - text: site-plan.pdf 246 kB

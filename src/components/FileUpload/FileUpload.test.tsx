@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
+import { formatNumber } from '../FormattedNumber/formatNumber';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 
@@ -293,8 +294,8 @@ describe('FileUpload', () => {
     expect([w.opened, changes, names(el), new FormData(document.getElementById('rof') as HTMLFormElement).getAll('doc').length]).toEqual([0, [], 'a.pdf', 1]);
   });
 
-  test('formatFileSize steps by 1000: 0 B, 12 B, 999 B, 1 kB, 1.5 kB, 10 MB, 3.3 GB; 1024 is 1 kB', () => {
-    expect([0, 12, 999, 1000, 1500, 10_000_001, 3.25e9, 1024].map((b) => formatFileSize(b)).join('|')).toBe('0 B|12 B|999 B|1 kB|1.5 kB|10 MB|3.3 GB|1 kB');
+  test('formatFileSize steps by 1000: 0 bytes, 12 bytes, 999 bytes, 1 kB, 1.5 kB, 10 MB, 3.3 GB; 1024 is 1 kB', () => {
+    expect([0, 12, 999, 1000, 1500, 10_000_001, 3.25e9, 1024].map((b) => formatFileSize(b)).join('|')).toBe('0 bytes|12 bytes|999 bytes|1 kB|1.5 kB|10 MB|3.3 GB|1 kB');
   });
 
   test('contrast: text 4.5:1 (also while dragging), the icon and outline (also invalid) 3:1, in all six themes', async () => {
@@ -526,8 +527,13 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
   test('formatFileSize: a size that rounds up to 1000 of a unit is written in the next one, as formatNumber bytes does', () => {
     expect([1e6 - 1, 1e9 - 1, 999.6 * 1000].map((b) => [formatFileSize(b), formatFileSize(b, 'en-US')])).toEqual([['1 MB', '1 MB'], ['1 GB', '1 GB'], ['1 MB', '1 MB']]);
   });
-  test('formatFileSize with a locale matches formatNumber bytes; without one it stays as it was; an index from map() is not a locale', () => {
+  test('formatFileSize with a locale matches formatNumber bytes; without one it writes en-US; an index from map() is not a locale', () => {
     expect([formatFileSize(1_500_000, 'de-DE'), formatFileSize(1_500_000), formatFileSize(2048, 1 as unknown as string)]).toEqual(['1,5 MB', '1.5 MB', '2 kB']);
+  });
+  test('formatFileSize writes a size the one way FormattedNumber does, locale or not: 512 bytes, 1 byte, and 2 PB rather than 2000 TB (GR271)', () => {
+    const sizes = [512, 1, 0, 2e15, 999.6 * 1e12];
+    expect(sizes.map((b) => formatFileSize(b))).toEqual(sizes.map((b) => formatNumber(b, 'en-US', { format: 'bytes' })));
+    expect(sizes.map((b) => formatFileSize(b))).toEqual(['512 bytes', '1 byte', '0 bytes', '2 PB', '1 PB']);
   });
   test('GR119: the same refusal twice puts a new alert in, so a screen reader says it again', async () => {
     await render(<FileUpload id="fr" accept="image/png" />);

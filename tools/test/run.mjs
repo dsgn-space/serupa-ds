@@ -13,7 +13,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -64,7 +64,8 @@ if (arg('--since')) {
   // The docs' Upgrading page renders the pending changesets (docs/upgrades.ts, the next major's breaking entries), so
   // a changed changeset re-checks that page in Storybook (GR284). It is a page, not a component: no tests or pictures.
   if (names && diff.stdout.split('\n').some((l) => /^\.changeset\/[\w-]+\.md$/.test(l.split('\t')[2] || ''))) names.add('docs/Upgrading.mdx');
-  direct = changed;
+  // A change that tests everything still runs the components it edits itself in every language (touchedComponents).
+  direct = changed ?? (diff.status === 0 ? touchedComponents(scopeFiles(diff.stdout)) : null);
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
   // --narrowed-only (a pull request's cross-browser jobs): a change that reaches beyond the component folders (shared

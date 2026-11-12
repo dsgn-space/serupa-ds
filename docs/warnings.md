@@ -38,6 +38,10 @@ A date component (Calendar, DatePicker, DateRangePicker) got a string it can't r
 
 A date component got a date and time as a string (`"2026-10-24T00:00:00Z"`, as an API often sends a date). It's read as the day it writes, 24 October, and the time is ignored, so the day doesn't move with the reader's time zone. Pass the `"yyyy-mm-dd"` day itself (`value.slice(0, 10)`) to say that's what you mean.
 
+## drawer-side
+
+Drawer's `side` is deprecated, and removed in 15.0.0. It still works as `placement` does. Rename it to `placement`, the name the API naming table gives to where a floating part sits (CONTRIBUTING.md). `placement` also takes `start` and `end`, the edges the reading starts and ends at, so a navigation drawer opens from the right in a right-to-left page with no code of yours. A NotificationCenter passes both to its Drawer.
+
 ## fab-position
 
 Fab's `position` is deprecated, and removed in 15.0.0. It still works as `placement` does. Rename it to `placement`, the name the API naming table gives to where a floating part sits (CONTRIBUTING.md).
