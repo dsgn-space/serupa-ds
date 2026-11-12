@@ -128,4 +128,13 @@ describe('TableOfContents', () => {
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
+
+  test('the current section keeps the weight of the others, so a long title wraps the same as it becomes current while the page scrolls; the line beside it marks it (GR269)', async () => {
+    await render(<Page />);
+    await expect.poll(current).toBe('Alpha');
+    const [a, b] = links();
+    expect(getComputedStyle(a).fontWeight).toBe(getComputedStyle(b).fontWeight);
+    expect(getComputedStyle(a).borderInlineStartColor).not.toBe(getComputedStyle(b).borderInlineStartColor);
+    expect([/inset/.test(getComputedStyle(a).boxShadow), getComputedStyle(b).boxShadow]).toEqual([true, 'none']);
+  });
 });

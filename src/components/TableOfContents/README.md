@@ -31,7 +31,7 @@ const { TableOfContents } = window.Serupa;
 Drawn from the `Playground` story.
 
 1. **Title** (`.dk-toc__title`): "On this page"; it names the landmark.
-2. **Link** (`.dk-toc__link`): one section; deeper ones step in, and the current one is marked by its weight and a line in primary.
+2. **Link** (`.dk-toc__link`): one section; deeper ones step in, and the current one is marked by a line in primary, twice as wide as the others.
 
 ## Usage
 
@@ -42,7 +42,7 @@ Drawn from the `Playground` story.
 
 ## Accessibility
 
-- **Role and name:** a `nav` landmark named by its title (or `aria-label` with `title={null}`), holding a list of links. The current section's link has `aria-current="location"`, and is marked by weight and a line, not by color alone.
+- **Role and name:** a `nav` landmark named by its title (or `aria-label` with `title={null}`), holding a list of links. The current section's link has `aria-current="location"`, and is marked by a wider line, not by color alone.
 - **Keyboard:** Tab moves through the links; Enter follows one. Focus then moves to the section's heading, so the next Tab continues from there in the content.
 - **Motion:** the scroll is smooth only when the reader hasn't asked for reduced motion.
 - **Contrast:** links read 4.5:1 on the page, the current section's line 3:1, in all six themes (`TableOfContents.test.tsx`).
