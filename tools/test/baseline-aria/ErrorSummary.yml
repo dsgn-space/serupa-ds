@@ -11,6 +11,32 @@
     - link "Start date must be today or in the future":
       - /url: "#es-date"
 
+# DoSayHowToFix
+- heading "There are 3 problems" [level=2]
+- list:
+  - listitem:
+    - link "Enter your full name":
+      - /url: "#es-name"
+  - listitem:
+    - link "Enter an email address in the right format, like name@example.com":
+      - /url: "#es-email"
+  - listitem:
+    - link "Start date must be today or in the future":
+      - /url: "#es-date"
+
+# DontJustInvalid
+- heading "There are 3 problems" [level=2]
+- list:
+  - listitem:
+    - link "Invalid":
+      - /url: "#es-name"
+  - listitem:
+    - link "Invalid":
+      - /url: "#es-email"
+  - listitem:
+    - link "Error":
+      - /url: "#es-date"
+
 # FromTheServer
 - heading "There are 2 problems" [level=2]
 - list:
