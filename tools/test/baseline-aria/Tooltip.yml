@@ -13,6 +13,16 @@
 # Disabled
 - button "Download"
 
+# DoNameIcon
+- button "Download"
+- tooltip "Download"
+
+# DontNeededInfo
+- text: New password
+- textbox "New password"
+- button "Show password"
+- button "Password rules"
+
 # Left
 - button "Download"
 - tooltip "Download as PDF"

@@ -434,7 +434,10 @@ describe('Tabs on the server', () => {
       await userEvent.click(tabs[2]);
       const moves = tabs[2].getAnimations({ subtree: true }).filter((a): a is CSSTransition => a instanceof CSSTransition && (a.effect as KeyframeEffect).pseudoElement === '::after');
       const start = moves.find((a) => a.transitionProperty === 'translate'), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0].translate)) : NaN;
-      expect([moves.map((a) => a.transitionProperty).sort(), Math.round(shift)]).toEqual([['scale', 'translate'], Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft)]);
+      // When no slide is found, the message says why: whether the page has it (document.getAnimations, so only
+      // getAnimations({ subtree }) missed it), where the line starts from, and whether the click was taken for a key.
+      const why = () => JSON.stringify({ page: document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.target === tabs[2]).map((a) => `${(a as CSSTransition).transitionProperty} ${(a.effect as KeyframeEffect).pseudoElement}`), from: tabs[2].style.getPropertyValue('--dk-tabs-from-shift') || getComputedStyle(tabs[2]).getPropertyValue('--dk-tabs-from-shift'), now: getComputedStyle(tabs[2], '::after').translate, instant: tabs[2].hasAttribute('data-instant') });
+      expect([moves.map((a) => a.transitionProperty).sort(), Math.round(shift)], why()).toEqual([['scale', 'translate'], Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft)]);
       await Promise.all(moves.map((a) => a.finished.catch(() => {})));
       expect([getComputedStyle(tabs[2], '::after').translate, getComputedStyle(tabs[2], '::after').scale]).toEqual(['none', 'none']);
 

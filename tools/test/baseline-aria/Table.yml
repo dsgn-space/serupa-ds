@@ -106,6 +106,42 @@
       - row "Split into two boxes.":
         - cell "Split into two boxes."
 
+# DoAlignNumbers
+- table "Invoices":
+  - caption: Invoices
+  - rowgroup:
+    - row "Invoice Amount (USD)":
+      - columnheader "Invoice"
+      - columnheader "Amount (USD)"
+  - rowgroup:
+    - row "INV-1041 1,240.00":
+      - cell "INV-1041"
+      - cell "1,240.00"
+    - row "INV-1042 85.50":
+      - cell "INV-1042"
+      - cell "85.50"
+    - row "INV-1043 14,520.00":
+      - cell "INV-1043"
+      - cell "14,520.00"
+
+# DontStartNumbers
+- table "Invoices":
+  - caption: Invoices
+  - rowgroup:
+    - row "Invoice Amount (USD)":
+      - columnheader "Invoice"
+      - columnheader "Amount (USD)"
+  - rowgroup:
+    - row "INV-1041 1,240.00":
+      - cell "INV-1041"
+      - cell "1,240.00"
+    - row "INV-1042 85.50":
+      - cell "INV-1042"
+      - cell "85.50"
+    - row "INV-1043 14,520.00":
+      - cell "INV-1043"
+      - cell "14,520.00"
+
 # FixedLayout
 - table "Team members":
   - caption: Team members

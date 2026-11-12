@@ -58,6 +58,22 @@ describe('withViewTransition', () => {
     } finally { await session.send('Emulation.setEmulatedMedia', { features: [] }); }
   });
 
+  test('a transition cut short (the viewport resizes, another one starts) rejects nothing the page has to catch', async () => {
+    if (!('startViewTransition' in document)) return;
+    const go: Go = {};
+    await render(<List go={go} />);
+    const unhandled: unknown[] = [];
+    const seen = (e: PromiseRejectionEvent) => { unhandled.push(e.reason); e.preventDefault(); };
+    window.addEventListener('unhandledrejection', seen);
+    try {
+      const done = go.flip!();
+      document.startViewTransition(() => {}).finished.catch(() => {});   // skips the first one before it is ready
+      await done;
+      await new Promise((r) => setTimeout(r, 100));
+      expect(unhandled.map(String)).toEqual([]);
+    } finally { window.removeEventListener('unhandledrejection', seen); }
+  });
+
   test('without View Transitions the update just happens, at once', async () => {
     const go: Go = {};
     await render(<List go={go} />);
@@ -67,25 +83,5 @@ describe('withViewTransition', () => {
       await go.flip!();
       expect([...document.querySelectorAll('#vt li')].map((li) => li.id)).toEqual(['c', 'b', 'a']);
     } finally { if (own) Object.defineProperty(Document.prototype, 'startViewTransition', own); }
-  });
-  test('a transition the browser aborts (the window resized mid-way) leaves no unhandled rejection: ready, updateCallbackDone and finished are all handled', async () => {
-    const real = (document as { startViewTransition?: unknown }).startViewTransition;
-    const aborted = () => { const p = Promise.reject(new DOMException('Transition was aborted because of invalid state', 'InvalidStateError')); return p; };
-    const unhandled: unknown[] = [];
-    const seen = (e: PromiseRejectionEvent) => { unhandled.push(e.reason); e.preventDefault(); };
-    window.addEventListener('unhandledrejection', seen);
-    document.startViewTransition = ((arg: { update: () => void } | (() => void)) => {
-      (typeof arg === 'function' ? arg : arg.update)();
-      return { ready: aborted(), updateCallbackDone: aborted(), finished: aborted(), skipTransition() {} } as unknown as ViewTransition;
-    }) as typeof document.startViewTransition;
-    try {
-      let ran = false;
-      await withViewTransition(() => { ran = true; }, { types: ['forward'] });
-      await new Promise((r) => setTimeout(r, 50));
-      expect([ran, unhandled.length]).toEqual([true, 0]);
-    } finally {
-      window.removeEventListener('unhandledrejection', seen);
-      if (real) document.startViewTransition = real as typeof document.startViewTransition; else delete (document as { startViewTransition?: unknown }).startViewTransition;
-    }
   });
 });

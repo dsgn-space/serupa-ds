@@ -5,8 +5,8 @@
 // on the page's other axes together (right to left, more contrast, compact density; <Story>-axes.png), so a mirroring,
 // contrast-token or control-height regression shows up too.
 //   node tools/test/visual.mjs            check
-//   node tools/test/visual.mjs --update   accept the current look as the new baseline (a picture that differs
-//                                         by less than half the tolerance keeps its old file)
+//   node tools/test/visual.mjs --update   accept the current look as the new baseline (in Chromium a picture
+//                                         that differs past 0.01%; in Firefox and WebKit past the tolerance)
 //   SERUPA_SHARD=2/3 node tools/test/visual.mjs   every third story, starting with the second (CI runs the shards
 //                                                in parallel)
 // A story without a baseline fails the check; --update (or the "update-visual-baselines" label) writes one.
@@ -27,10 +27,7 @@ import path from 'node:path';
 import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
-// --update keeps the old file only below half of that. Two shots of one story differ a little from run to run, so a
-// real change that sits near the tolerance (#1599: a few words of error text, 0.25%) could pass as unchanged in the
-// baseline run and fail in the check after it.
-const KEEP = TOLERANCE / 2;
+const REDRAW = 0.0001;            // share past which Chromium's --update rewrites a picture (see "--update in Chromium")
 const DIR = path.join(HERE, `baseline-visual${suffix}`);
 const update = process.argv.includes('--update');
 // Firefox and WebKit (SERUPA_BROWSER, baseline-visual-<engine>/): what differs between engines is layout, text and
@@ -209,10 +206,13 @@ async function compare(page, name, el) {
   const after = await crashed();
   if (after) return after;
   const file = path.join(DIR, `${name}.png`);
-  // --update rewrites a baseline only when the new picture differs past KEEP, so re-rendering on another run doesn't
-  // commit hundreds of pictures that only changed in anti-aliasing.
+  // --update in Chromium rewrites a baseline that differs past 0.01%, well under the tolerance: on CI's pinned image a
+  // render is the same run to run, so such a difference is a real change, and keeping one under the tolerance leaves a
+  // stale picture that the next pull request to redraw would commit instead (Menu kept ⌘ for weeks after it drew
+  // Ctrl). The floor is for the few stories that flip a pixel or two between runs (Popover's arrow edge), which would
+  // otherwise be rewritten every time. Firefox and WebKit keep the tolerance.
   if (update) {
-    if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > KEEP) fs.writeFileSync(file, shot);
+    if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > (LIGHT ? TOLERANCE : REDRAW)) fs.writeFileSync(file, shot);
     return null;
   }
   // A missing baseline fails: only --update (or the "update-visual-baselines" label) writes one, so a
@@ -330,11 +330,11 @@ async function checkSheets(e, page) {
 R.push(...(await inParallel(sheetPages, pages, checkSheets)).flat());
 await b.close();
 close();
-// A baseline whose story is gone: --update (run whole, not sharded) removes it, and the check fails on it.
+// A baseline whose story is gone: --update removes it (in shard 1, since every shard knows every story), and the check fails on it.
 // Foundations/ pictures count only when the sheets ran, and none is removed when a page didn't render.
 const orphans = saved().filter((f) => !expected.has(f) && (!only || only.has(f.split('/')[0])) && (f.split('/')[0] !== 'Foundations' || (sheetPages.length && !sheetsFailed)));
 if (update) {
-  if (shards === 1) for (const f of orphans) fs.rmSync(path.join(DIR, f));
+  if (shard === 1) for (const f of orphans) fs.rmSync(path.join(DIR, f));
   console.log(`Visual baseline saved: ${stories.length} stories, ${sheetPages.length} Foundations pages.`);
   process.exit(sheetsFailed ? 1 : 0);
 }

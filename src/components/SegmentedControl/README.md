@@ -114,6 +114,7 @@ Each is an optional override: set it on the page, a container or one control. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--segmented-control-indicator-shadow` | `elevation-part` | The selected segment's shadow. |
+| `--segmented-control-indicator-depth` | `depth-part` | The tactile layers over the selected segment's shadow. None in the flat brands. |
 
 **Radius**
 

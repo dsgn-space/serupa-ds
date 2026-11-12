@@ -6,7 +6,7 @@ name: Update baselines
 # its branch; the new baselines are committed back to the branch. Review them in
 # the pull request's Files changed tab before merging.
 # Only the components the pull request changes (and the ones that use them) are re-rendered, as in CI, and a
-# picture is rewritten only when it differs past half the check's tolerance, so the commit holds only real changes and
+# picture is rewritten only when it differs past the check's tolerance, so the commit holds only real changes and
 # two pull requests that change different components don't conflict over each other's pictures.
 #
 # The "update-cross-browser-baselines" label does the same for Firefox's and WebKit's pictures
@@ -25,7 +25,11 @@ name: Update baselines
 # pushes the merge and adds the label, whose run then draws the pictures again on the merged tree. A conflict in
 # anything else stops it, since only a person can resolve that. Heal runs none of the branch's code: a run by hand
 # belongs to the default branch, so the branch's code there could write to main's caches.
+# Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone. One with a
+# conflict anywhere else is left for its author, with a notice in the run.
 on:
+  push:
+    branches: [main]
   pull_request:
     types: [labeled]
   workflow_dispatch:
@@ -42,10 +46,11 @@ on:
 
 # A newer run for the same pull request cancels the one before it. Any other label gets a group of its own, so adding
 # it while the pictures are being drawn doesn't cancel them. Heal has its own group: the run its label starts must not
-# cancel it.
+# cancel it. After main moves again, the newer heal replaces the older one.
 concurrency:
   group: >-
-    ${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && format('heal-{0}', inputs.pr) ||
+    ${{ github.workflow }}-${{ github.event_name == 'push' && 'heal-after-main' ||
+    github.event_name == 'workflow_dispatch' && format('heal-{0}', inputs.pr) ||
     (github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines')
     && github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -53,8 +58,46 @@ concurrency:
 permissions: {}
 
 jobs:
+  # After a push to main: the open pull requests from this repository that now conflict with it. GitHub works out
+  # whether one merges in the background, so a pull request it hasn't decided yet is asked again for up to a minute.
+  dirty:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      prs: ${{ steps.find.outputs.prs }}
+    steps:
+      - id: find
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          prs=()
+          for n in $(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&base=main&per_page=100" \
+              --jq ".[] | select(.head.repo.full_name == \"$GITHUB_REPOSITORY\" and .draft == false) | .number"); do
+            for _ in 1 2 3 4 5 6; do
+              state=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$n" --jq .mergeable_state)
+              [ "$state" = unknown ] || break
+              sleep 10
+            done
+            if [ "$state" = dirty ]; then prs+=("$n"); fi
+          done
+          json=$(printf '%s\n' "${prs[@]}" | jq -R 'select(length > 0) | tonumber' | jq -cs '.[:5]')
+          echo "Conflicting: $json"
+          echo "prs=$json" >> "$GITHUB_OUTPUT"
+
   heal:
-    if: github.event_name == 'workflow_dispatch'
+    needs: dirty
+    if: >-
+      always() && (github.event_name == 'workflow_dispatch' ||
+      (needs.dirty.result == 'success' && needs.dirty.outputs.prs != '[]'))
+    name: heal (#${{ matrix.pr }})
+    strategy:
+      fail-fast: false
+      matrix:
+        pr: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('[{0}]', inputs.pr) || needs.dirty.outputs.prs) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -65,7 +108,7 @@ jobs:
         id: pr
         env:
           GH_TOKEN: ${{ github.token }}
-          NUMBER: ${{ inputs.pr }}
+          NUMBER: ${{ matrix.pr }}
         run: |
           set -euo pipefail
           fail() { echo "::error::$1"; exit 1; }
@@ -84,8 +127,12 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: Merge the base branch in
+        id: merge
         env:
           BASE_REF: ${{ steps.pr.outputs.base-ref }}
+          # By hand, a conflict outside the pictures fails the run; after a push to main it only leaves a notice.
+          LEVEL: ${{ github.event_name == 'workflow_dispatch' && 'error' || 'notice' }}
+          NUMBER: ${{ matrix.pr }}
         run: |
           set -euo pipefail
           base=$(git rev-parse "origin/$BASE_REF")
@@ -94,7 +141,9 @@ jobs:
           baseline='^tools/test/(baseline-visual(-firefox|-webkit)?/.*\.png|baseline-utilities\.json)$'
           others=$(git diff --name-only --diff-filter=U | grep -Ev "$baseline" || true)
           if [ -n "$others" ]; then
-            echo "::error::These conflict and aren't pictures, so resolve them by hand: $(tr '\n' ' ' <<< "$others")"
+            echo "::$LEVEL::#$NUMBER: these conflict and aren't pictures, so resolve them by hand: $(tr '\n' ' ' <<< "$others")"
+            git merge --abort
+            [ "$LEVEL" = notice ] && { echo "skip=1" >> "$GITHUB_OUTPUT"; exit 0; }
             exit 1
           fi
           git diff --name-only --diff-filter=U -z | while IFS= read -r -d '' f; do
@@ -104,10 +153,11 @@ jobs:
       # BOT_TOKEN, so the push starts CI and the label starts this workflow's render on the merged branch. The push is
       # refused if the branch moved on since the checkout.
       - name: Push the merge and add the label
+        if: steps.merge.outputs.skip != '1'
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           HEAD_REF: ${{ steps.pr.outputs.head-ref }}
-          NUMBER: ${{ inputs.pr }}
+          NUMBER: ${{ matrix.pr }}
           LABEL: ${{ inputs.which == 'cross-browser' && 'update-cross-browser-baselines' || 'update-visual-baselines' }}
         run: |
           set -euo pipefail
@@ -118,6 +168,13 @@ jobs:
 
   render:
     if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    name: render (${{ matrix.shard }})
+    # Four shards side by side, as CI's Visual jobs: a whole run took 21 minutes in one job. Shard 1 also draws the
+    # Foundations pages, rewrites baseline-utilities.json and removes pictures whose story is gone.
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [1/4, 2/4, 3/4, 4/4]
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
@@ -150,19 +207,23 @@ jobs:
           npm run build
           npm run build-storybook
           node tools/test/run.mjs --group visual --update --since "$base"
-          node tools/test/utilities.mjs --update
+          if [ "$SERUPA_SHARD" = 1/4 ]; then node tools/test/utilities.mjs --update; fi
         env:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
+          SERUPA_SHARD: ${{ matrix.shard }}
       - name: Collect what changed
         run: |
+          # The x86 runner keeps RUNNER_TEMP between jobs, so start empty: adding to what the last job collected
+          # handed over another pull request's pictures (#1646 got #1643's Do/Don't stories).
           out="$RUNNER_TEMP/baselines"
+          rm -rf "$out"
           mkdir -p "$out/files"
           git add -A -- tools/test/baseline-visual tools/test/baseline-utilities.json
           git diff --cached --no-renames --name-only --diff-filter=d -z | xargs -0 -r cp --parents -t "$out/files" --
           git diff --cached --no-renames --name-only --diff-filter=D > "$out/deleted.txt"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: baselines
+          name: baselines-chromium-${{ strategy.job-index }}
           path: ${{ runner.temp }}/baselines
           retention-days: 1
 
@@ -209,7 +270,10 @@ jobs:
           BROWSER: ${{ matrix.browser }}
       - name: Collect what changed
         run: |
+          # The x86 runner keeps RUNNER_TEMP between jobs, so start empty: adding to what the last job collected
+          # handed over another pull request's pictures (#1646 got #1643's Do/Don't stories).
           out="$RUNNER_TEMP/baselines"
+          rm -rf "$out"
           mkdir -p "$out/files"
           git config --global --add safe.directory "$PWD"
           git add -A -- "tools/test/baseline-visual-$BROWSER"

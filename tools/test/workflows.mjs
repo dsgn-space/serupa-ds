@@ -7,9 +7,12 @@
 //   id-token: write, so a hijacked package or a pull request's code never runs beside a token that outlives the job
 //   or can sign for the repository;
 // - Dependabot waits 7 days before it offers a new release (cooldown).
+// Also runs Update baselines' "Join the renders" step on both layouts download-artifact makes.
 //   node tools/test/workflows.mjs
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { PROJECT, report, done } from './lib.mjs';
 
 const R = [];
@@ -62,6 +65,32 @@ for (const f of files) {
       if (runs) t(`${f}: job ${lines[h].trim().slice(0, -1)} runs dependencies, so it can't ask for an OIDC token (id-token: write)`, oidc < 0, `line ${h + oidc + 1}`);
     }
   }
+}
+
+// Update baselines' "Join the renders" step, run on what download-artifact makes of one render (straight into parts/)
+// and of two (parts/<name>/ each): missing the first case committed nothing from every Chromium render for a morning.
+if (fs.existsSync(path.join(GH, 'workflows/visual-baselines.yml'))) {
+  const lines = fs.readFileSync(path.join(GH, 'workflows/visual-baselines.yml'), 'utf8').split('\n');
+  const at = lines.findIndex((l) => /-\s*name:\s*Join the renders\s*$/.test(l));
+  const run = lines.findIndex((l, i) => i > at && /^\s*run:\s*\|\s*$/.test(l));
+  const indent = lines[run + 1]?.search(/\S/) ?? -1;
+  const body = [];
+  for (let i = run + 1; i < lines.length && (!lines[i].trim() || lines[i].search(/\S/) >= indent); i++) body.push(lines[i].slice(indent));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'join-'));
+  const put = (f, text = '') => { fs.mkdirSync(path.dirname(path.join(tmp, f)), { recursive: true }); fs.writeFileSync(path.join(tmp, f), text); };
+  const joined = (layout) => {
+    fs.rmSync(tmp, { recursive: true, force: true });
+    for (const [f, text] of layout) put(f, text);
+    const r = spawnSync('bash', ['-c', body.join('\n')], { env: { ...process.env, RUNNER_TEMP: tmp }, encoding: 'utf8' });
+    const out = path.join(tmp, 'baselines');
+    const files = r.status === 0 ? fs.readdirSync(path.join(out, 'files'), { recursive: true, encoding: 'utf8' }).filter((f) => f.endsWith('.png')).sort() : [];
+    return { files, deleted: r.status === 0 ? fs.readFileSync(path.join(out, 'deleted.txt'), 'utf8').trim().split('\n').sort() : [], error: r.stderr.trim() };
+  };
+  const one = joined([['parts/files/tools/test/baseline-visual/A/x.png'], ['parts/deleted.txt', 'tools/test/baseline-visual/A/y.png\n']]);
+  t('visual-baselines.yml: Join the renders takes a lone render download-artifact put straight into parts/', at >= 0 && one.files.length === 1 && one.deleted[0] === 'tools/test/baseline-visual/A/y.png', JSON.stringify(one));
+  const two = joined([['parts/baselines-firefox/files/tools/test/baseline-visual-firefox/A/x.png'], ['parts/baselines-firefox/deleted.txt', 'a\n'], ['parts/baselines-webkit/files/tools/test/baseline-visual-webkit/A/x.png'], ['parts/baselines-webkit/deleted.txt', 'b\n']]);
+  t('visual-baselines.yml: Join the renders takes every render of several, each in its own folder', two.files.length === 2 && two.deleted.join() === 'a,b', JSON.stringify(two));
+  fs.rmSync(tmp, { recursive: true, force: true });
 }
 
 const dependabot = fs.readFileSync(path.join(GH, 'dependabot.yml'), 'utf8');

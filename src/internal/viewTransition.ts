@@ -19,10 +19,8 @@ export function withViewTransition(update: () => void, options: { types?: string
   let t: ViewTransition;
   try { t = document.startViewTransition(options.types ? { update: run, types: options.types } : run); }
   catch { t = document.startViewTransition(run); }   // a browser with View Transitions but not yet their types
-  // An aborted transition (the window resized, the page hidden) rejects all three: the change itself has still been
-  // made, so none of them is an error for the caller, and an unhandled one would be reported as one.
-  const ok = () => {};
-  t.ready.catch(ok);
-  t.updateCallbackDone.catch(ok);
-  return t.finished.catch(ok);
+  // A transition cut short (the viewport resized, another one started) rejects ready as well as finished; the update
+  // still ran, so neither is an error for the page to see as an unhandled rejection.
+  t.ready.catch(() => {});
+  return t.finished.catch(() => {});
 }
