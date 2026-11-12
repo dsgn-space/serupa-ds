@@ -49,3 +49,13 @@ export const Sizes: Story = {
     {(['sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'] as const).map((size) => <Heading key={size} level={2} size={size}>An h2 that looks {size}</Heading>)}
   </div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a short heading, quick to scan. */
+export const DoShort: Story = { name: 'Do: keep it short', args: { children: 'Billing' } };
+/** Don't: a sentence as the heading, which wraps and is slow to scan. */
+export const DontSentence: Story = {
+  name: "Don't: a sentence as the heading",
+  args: { children: 'Here you can see and change everything about how and when you are billed' },
+  decorators: [(Story) => <div style={{ maxWidth: 360 }}><Story /></div>],
+};

@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { cn, domId, oneOf, omit, setRef } from '../../internal/cn';
 import { component } from '../../internal/component';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
 import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
@@ -89,7 +90,7 @@ const parseTsv = (text: string) => text.replace(/\r\n?/g, '\n').replace(/\n$/, '
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProps>('DataGrid', function DataGrid(props, ref) {
   const rest = omit(props, OWN);
-  const L = useSettings(words).labels;
+  const L = useSettings(words).labels, locale = useLocale();
   const base = domId('dk-dg', React.useId());
   const { columns, rows } = props;
   const key = props.rowKey || 'id';
@@ -181,7 +182,8 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     for (let r = range.r1; r <= range.r2; r++) lines.push(columns.slice(range.c1, range.c2 + 1).map((col) => textOf(col, rows[r - 1])).join('\t'));
     e.preventDefault();
     e.clipboardData.setData('text/plain', lines.join('\n'));
-    announce(L.dataGridCopied((range.r2 - range.r1 + 1) * (range.c2 - range.c1 + 1)));
+    const cells = (range.r2 - range.r1 + 1) * (range.c2 - range.c1 + 1);
+    announce(L.dataGridCopied(cells, displayNumber(cells, locale)));
   };
   const onPaste = (e: React.ClipboardEvent<HTMLTableElement>) => {
     props.onPaste?.(e);
@@ -195,7 +197,7 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     if (one) { for (let r = range.r1; r <= range.r2; r++) for (let c = range.c1; c <= range.c2; c++) put(r, c, block[0][0]); }
     else { const r0 = range ? range.r1 : cur.r, c0 = range ? range.c1 : cur.c; block.forEach((line, i) => line.forEach((v, j) => put(r0 + i, c0 + j, v))); }
     change(list);
-    if (list.length) announce(L.dataGridPasted(list.length));
+    if (list.length) announce(L.dataGridPasted(list.length, displayNumber(list.length, locale)));
   };
 
   const pick = (p: Pos, e: React.MouseEvent) => { if (edit) return; move(p, e.shiftKey && p.r > 0); };

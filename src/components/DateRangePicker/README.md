@@ -46,6 +46,11 @@ Drawn from the `Disabled` story.
 - Opening it with only a start asks for the end.
 - Each field reads typed text on blur and Enter, like DatePicker. Text that can't be used puts back the last good day, and a typed start after the end clears the end. Switching to another window or browser tab isn't leaving the field: the text waits until people come back.
 
+### Do and don't
+
+- **Do:** Wrap it in a [Field](../Field/README.md) with one label and the format in the `hint`, and name the ends for the task ("Check-in", "Check-out"). (`DoNameEnds`)
+- **Don't:** Show a bare range: people can't tell what the dates are for or how to type them. (`DontBareRange`)
+
 ## Accessibility
 
 - The calendar fades and grows in out of the field over 150ms, and fades and shrinks back over 100ms when it closes; with `prefers-reduced-motion` it only fades. The motion is a transition, so closing it while it opens turns back from where it is. The calendar stays while it fades out, inert, and focus goes back to the field at once. Firefox and Safari can't keep a closing popup in the top layer yet, so there it closes at once. From the keyboard there is no motion: opened by Alt+ArrowDown or Enter on the calendar button it is there at once, and Escape takes it away at once.

@@ -37,6 +37,11 @@ Drawn from the `InACard` story.
 - Keep the shape the same across a list: squares for things, `shape="circle"` when it sits among Avatars.
 - `icon` takes a Material Symbols name, a custom icon or an element, as [Icon](../Icon/README.md) does.
 
+### Do and don't
+
+- **Do:** Pick the `tone` for what the row is about: `neutral` for most things, and a status only where the row is that status. (`DoNeutralTones`)
+- **Don't:** Color tiles for decoration: a real warning no longer stands out from the rest. (`DontDecorativeTones`)
+
 ## Accessibility
 
 - Decorative by default: the tile is `aria-hidden`, since the title beside it says what the row is. When the icon says something the text doesn't, such as that a row is locked, pass `label`: the tile becomes `role="img"` named by it.

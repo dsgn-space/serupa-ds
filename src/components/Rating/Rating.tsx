@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { useMergedRef, cn, domId, oneOf, SIZES } from '../../internal/cn';
 import { component } from '../../internal/component';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
 import { useFormReset } from '../../internal/useFormReset';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
 import { useServerStyles } from '../../internal/serverStyles';
@@ -56,7 +57,7 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Ra
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // a Field's <label for> can't name a group, so it's aria-labelledby
   const { invalid, value: valueIn, defaultValue, onValueChange, max: maxIn, allowHalf, clearable, readOnly, disabled, name, form, required, size: sizeIn, className, onKeyDown, onPointerLeave, autoFocus, ...rest } = props;
   const nameRef = useNameCheck('Rating', NAME_HOW.group);
-  const sds = useSettings(words);
+  const sds = useSettings(words), locale = useLocale();
   const size = oneOf(SIZES, sizeIn, 'md');
   const max = typeof maxIn === 'number' && maxIn >= 1 ? Math.floor(maxIn) : 5;
   const step = allowHalf ? 0.5 : 1;
@@ -102,7 +103,7 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Ra
 
   if (readOnly) {
     const said = value == null ? 0 : Math.round(value * 10) / 10;
-    return <div {...rest} ref={ref2} role="img" aria-label={rest['aria-label'] ? rest['aria-label'] + ', ' + sds.labels.ratingValue(said, max) : sds.labels.ratingValue(said, max)}
+    return <div {...rest} ref={ref2} role="img" aria-label={rest['aria-label'] ? rest['aria-label'] + ', ' + sds.labels.ratingValue(said, max, displayNumber(said, locale), displayNumber(max, locale)) : sds.labels.ratingValue(said, max, displayNumber(said, locale), displayNumber(max, locale))}
       className={classes} data-component="rating" data-size={size}>{stars.map((s) => box(null, s.i, s.fill))}</div>;
   }
   // With allowHalf the whole star's radio takes the presses (the half's is for keys and screen readers, Rating.css):
@@ -116,7 +117,7 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Ra
     return choices.map((v) => {
       const whole = v === i + 1, split = allowHalf && whole;
       return <input key={v} type="radio" className={cn('dk-rating__choice', allowHalf && !whole && 'dk-rating__choice--half')}
-        name={name || auto} form={form} value={v} checked={picked === v} disabled={disabled} required={required} aria-label={sds.labels.ratingStars(v)}
+        name={name || auto} form={form} value={v} checked={picked === v} disabled={disabled} required={required} aria-label={sds.labels.ratingStars(v, displayNumber(v, locale))}
         onChange={(e) => { if (!split || !((e.nativeEvent as MouseEvent).detail > 0)) set(v); }}
         onClick={(e) => {
           const pointer = e.detail > 0, want = split && pointer && startHalf(e) ? i + 0.5 : v;

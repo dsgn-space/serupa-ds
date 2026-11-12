@@ -49,6 +49,11 @@ Drawn from the `Open` story.
 - Each `MenubarMenu` holds what a [Menu](../Menu/README.md) holds: `MenuItem`, `MenuSub`, `MenuGroup`, `MenuSeparator`, `MenuCheckboxItem` and `MenuRadioGroup`. Their props and rules are Menu's. `shortcut` only shows a hint: wire the shortcut yourself.
 - `defaultOpen` on one menu opens it on arrival, for a walkthrough or a screenshot.
 
+### Do and don't
+
+- **Do:** Keep to the names people know, in the usual order: File, Edit, View, then your own, then Help. (`DoFamiliarNames`)
+- **Don't:** Rename or reorder the usual menus: people can't find what they know is there. (`DontNewNames`)
+
 ## Accessibility
 
 - **Role and name:** `role="menubar"`, named by `aria-label` or `aria-labelledby`. Each name is a `menuitem` button with `aria-haspopup="menu"` and `aria-expanded`, and its menu is a `menu` named by it. A disabled menu's name has `aria-disabled` and stays reachable.

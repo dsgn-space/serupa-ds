@@ -1,3 +1,49 @@
+# DoTwoLevels
+- navigation "On this page":
+  - paragraph: On this page
+  - list:
+    - listitem:
+      - link "Introduction":
+        - /url: "#toc-intro"
+    - listitem:
+      - link "Installation":
+        - /url: "#toc-install"
+    - listitem:
+      - link "With npm":
+        - /url: "#toc-npm"
+    - listitem:
+      - link "From a CDN":
+        - /url: "#toc-cdn"
+    - listitem:
+      - link "Usage":
+        - /url: "#toc-usage"
+    - listitem:
+      - link "Theming":
+        - /url: "#toc-theming"
+    - listitem:
+      - link "Questions people ask":
+        - /url: "#toc-faq"
+
+# DontDeepLevels
+- navigation "On this page":
+  - paragraph: On this page
+  - list:
+    - listitem:
+      - link "Install":
+        - /url: "#toc-deep-a"
+    - listitem:
+      - link "With npm":
+        - /url: "#toc-deep-b"
+    - listitem:
+      - link "On Windows":
+        - /url: "#toc-deep-c"
+    - listitem:
+      - link "Behind a proxy":
+        - /url: "#toc-deep-d"
+    - listitem:
+      - link "Usage":
+        - /url: "#toc-deep-e"
+
 # FromHeadings
 - heading "Introduction" [level=2]
 - paragraph: Text of the introduction section.

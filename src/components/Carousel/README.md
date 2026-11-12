@@ -58,6 +58,11 @@ Drawn from the `Controlled` story.
 - With `perView`, the slides share the width, 16px apart (`--carousel-slide-gap`). `index` is the first slide shown, the buttons and a swipe still move one slide, and they stop once the last slide is in view. The dots count pages: with 3 per view and 7 slides, three dots for slides 1–3, 4–6 and 5–7, named "1–3 of 7" (the `slidesOf` label). `{ base, sm, md, lg }` follows the screen width (from 640, 768 and 1024px up) as it changes. With as many slides as fit, or fewer, there are no buttons or dots.
 - In RTL (a `dir` attribute or CSS `direction`) the row runs right to left, and the buttons and arrow keys follow it.
 
+### Do and don't
+
+- **Do:** Give every slide the same size and ratio (Image's `ratio` helps), so the controls don't jump. (`DoSameRatio`)
+- **Don't:** Mix ratios: the height changes and the arrows and dots jump as people move through. (`DontMixedRatios`)
+
 ## Accessibility
 
 - **Role and name:** the `<section>` is a region named by `label`, with `aria-roledescription` "carousel" (the `carouselRole` label, "korsel" in Indonesian). Each slide is a group named "2 of 5" (`aria-roledescription` from `slideRole`). The slides not shown are `inert` and hidden, so Tab and screen readers only reach the current one (the ones in view, with `perView`).

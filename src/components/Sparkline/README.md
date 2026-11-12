@@ -34,6 +34,11 @@ Drawn from the `Area` story.
 - Several sparklines that will be compared need the same `min` and `max`, or each fills its own box and a small change looks as large as a big one.
 - Its size is set by `--sparkline-width` and `--sparkline-height`: set them in em to follow the text around it.
 
+### Do and don't
+
+- **Do:** Show the latest number as text beside it: the sparkline is the shape of the trend. (`DoShowLatest`)
+- **Don't:** Show the line alone: people can't read a value off its shape. (`DontLineAlone`)
+
 ## Accessibility
 
 - **Role and name:** `role="img"`, named by `label` and a summary: "Sign-ups: from 12 to 21, low 11, high 21", in the provider's number format. The words are a label (`sparklineSummary`), so `<SerupaProvider labels>` and the language packs translate them.

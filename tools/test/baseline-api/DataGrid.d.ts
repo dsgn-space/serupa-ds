@@ -1,8 +1,8 @@
 // exports: DataGrid, type DataGridCellChange, type DataGridColumn, type DataGridProps, type DataGridRow, type DataGridRowsChangeDetails
 interface DataGridLabels {
     dataGridEdit: (column: string) => string;
-    dataGridCopied: (count: number) => string;
-    dataGridPasted: (count: number) => string;
+    dataGridCopied: (count: number, formatted: string) => string;
+    dataGridPasted: (count: number, formatted: string) => string;
     dataGridHint: string;
 }
 type DataGridRow = Record<string, unknown>;

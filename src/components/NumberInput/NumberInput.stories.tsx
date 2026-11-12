@@ -55,3 +55,15 @@ export const States: Story = {
     <Field label="Read-only"><NumberInput defaultValue={12} readOnly /></Field>
   </div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the unit in the label, and min, max and step set to the real limits. */
+export const DoUnitInLabel: Story = {
+  name: 'Do: put the unit in the label',
+  render: () => <div style={{ maxWidth: 240 }}><Field label="Weight (kg)"><NumberInput defaultValue={2.5} min={0} max={30} step={0.5} /></Field></div>,
+};
+/** Don't: a bare number, where people have to guess the unit. */
+export const DontNoUnit: Story = {
+  name: "Don't: leave the unit out",
+  render: () => <div style={{ maxWidth: 240 }}><Field label="Weight"><NumberInput defaultValue={2.5} /></Field></div>,
+};

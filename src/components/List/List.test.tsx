@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
+import { Card as SurfaceCard } from '../Card/Card';
 import { IconButton } from '../IconButton/IconButton';
 import { page } from 'vitest/browser';
 import { List, ListItem, ListLoadingItems } from './List';
@@ -201,6 +202,26 @@ describe('List', () => {
   test('tokens (--list-padding-y, --list-title-color) override one list', async () => {
     await render(<List id="ltok" style={{ '--list-padding-y': '5px', '--list-title-color': 'rgb(1, 2, 3)' } as React.CSSProperties}><ListItem title="T" /></List>);
     expect([css(q('#ltok > li > :first-child')).paddingTop, css(q('#ltok > li > :first-child > span:last-child > span:first-child')).color]).toEqual(['5px', 'rgb(1, 2, 3)']);
+  });
+
+  test('a selected row shows on a filled Card and on a muted panel, as on the page, with its text at 4.5:1, in all six themes', async () => {
+    await render(<div style={{ width: '420px' }}>
+      <SurfaceCard id="filled" variant="filled"><List aria-label="On a filled card"><ListItem id="sfill" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard>
+      <div id="muted" className="bg-surface-muted"><List aria-label="On a muted panel"><ListItem id="smuted" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
+      <div id="raised" className="bg-surface-muted"><SurfaceCard id="inner"><List aria-label="On a card on a muted panel"><ListItem id="sinner" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard></div>
+    </div>);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const [row, under] of [['sfill', 'filled'], ['smuted', 'muted'], ['sinner', 'inner']] as const) {
+        const fill = css(el(row)).backgroundColor, back = css(el(under)).backgroundColor;
+        if (contrast(fill, back) < 1.03) low.push(`${th} ${row}: fill ${fill} on ${back}`);
+        const desc = css(titleOf(row).nextElementSibling).color;
+        if (contrast(desc, fill) < 4.5) low.push(`${th} ${row}: description ${contrast(desc, fill).toFixed(2)}`);
+      }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
   });
 
   test('contrast: titles and descriptions keep 4.5:1 on plain and shaded rows, the selected bar 3:1, in all six themes', async () => {

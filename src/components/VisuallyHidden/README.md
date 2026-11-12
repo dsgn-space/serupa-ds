@@ -33,6 +33,11 @@ const { VisuallyHidden } = window.Serupa;
 - Pick the element with `as`: a heading level that fits the page's outline, or `div` for a skip link.
 - Put a skip link first in the page, pointing at the main content's `id`.
 
+### Do and don't
+
+- **Do:** Keep it short and put it right after what it explains ("3 unread messages"). (`DoRightAfter`)
+- **Don't:** Put it far from what it explains: a screen reader says "unread messages … 3". (`DontFarAway`)
+
 ## Accessibility
 
 - It's clipped to 1px and taken out of the layout, not `display: none`, so screen readers still read it.

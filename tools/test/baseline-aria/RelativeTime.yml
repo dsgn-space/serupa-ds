@@ -1,3 +1,13 @@
+# DoNumericInLogs
+- paragraph:
+  - text: Backup finished
+  - time: 1 day ago
+
+# DontCalendarWordsInLogs
+- paragraph:
+  - text: Backup finished
+  - time: yesterday
+
 # InASentence
 - paragraph:
   - text: Edited by Ada

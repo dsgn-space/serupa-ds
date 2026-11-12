@@ -261,8 +261,8 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
   // does nothing, so a toast doesn't mention it.
   const shortcut = sds.labels.toastShortcut(HOTKEY);
   React.useEffect(() => { page.hint = shortcut; return () => { page.hint = ''; }; }, [shortcut]);
-  const times = sds.labels.toastRepeated;
-  React.useEffect(() => { page.repeated = times; return () => { page.repeated = null; }; }, [times]);
+  const times = sds.labels.toastRepeated, locale = useLocale();
+  React.useEffect(() => { page.repeated = (n) => times(n, displayNumber(n, locale)); return () => { page.repeated = null; }; }, [times, locale]);
   const undoText = sds.labels.undo;
   React.useEffect(() => { page.undoWord = undoText; return () => { page.undoWord = ''; }; }, [undoText]);
   const back = React.useRef<HTMLElement | null>(null);
@@ -331,7 +331,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
   const shown = list.slice(-max), waiting = list.length - shown.length;
   // The waiting line fades in and out (FO1), and glides with the toasts; once gone, it fades out with its last words.
   const [moreWas, setMoreWas] = React.useState({ waiting: 0, words: '' });
-  const words = waiting > 0 ? sds.labels.moreToasts(waiting) : moreWas.words;
+  const words = waiting > 0 ? sds.labels.moreToasts(waiting, displayNumber(waiting, locale)) : moreWas.words;
   if (waiting !== moreWas.waiting || (waiting > 0 && words !== moreWas.words)) setMoreWas({ waiting: waiting, words: waiting > 0 ? words : moreWas.words });
   const moreRef = React.useRef<HTMLLIElement | null>(null);
   const moreLeaving = waiting === 0 && words !== '';
@@ -551,7 +551,7 @@ function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; in
       onFocus={() => setFocused(true)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false); }}>
       {icon ? <span className="dk-toast__icon" aria-hidden="true"><Icon icon={icon} /></span> : null}
       <div className="dk-toast__content">
-        <p className="dk-toast__title" id={titleId}>{t.title}{t.count > 1 ? <span className="dk-toast__count"><span aria-hidden="true">{'×' + displayNumber(t.count, locale, { useGrouping: false })}</span><span className="dk-visually-hidden">{', ' + sds.labels.toastRepeated(t.count)}</span></span> : null}</p>
+        <p className="dk-toast__title" id={titleId}>{t.title}{t.count > 1 ? <span className="dk-toast__count"><span aria-hidden="true">{'×' + displayNumber(t.count, locale, { useGrouping: false })}</span><span className="dk-visually-hidden">{', ' + sds.labels.toastRepeated(t.count, displayNumber(t.count, locale))}</span></span> : null}</p>
         {t.description != null ? <p className="dk-toast__description" id={descId}>{t.description}</p> : null}
       </div>
       {t.action ? <Button className="dk-toast__action" size="sm" variant="secondary" onClick={() => { t.action!.onClick(); toast.dismiss(t.id); }}>{t.action.label}</Button> : null}
