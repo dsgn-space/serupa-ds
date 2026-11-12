@@ -15,8 +15,9 @@ export function parsePlacement(p: string | undefined, fallback: Placement): [Sid
   return [m[1] as Side, (m[2] as Align) || 'center'];
 }
 
-/** Whether the page runs right to left: a style read, so a caller placing often reads it once and passes it on. */
-export const isRtl = (): boolean => getComputedStyle(document.documentElement).direction === 'rtl';
+/** Whether text at `el` (the page, by default) runs right to left: a style read, so a caller placing often reads it
+    once and passes it on. Read at the anchor, a dir="rtl" block on a left-to-right page counts, and the other way. */
+export const isRtl = (el: Element = document.documentElement): boolean => getComputedStyle(el).direction === 'rtl';
 
 /** Where to put the floating element (left, top in viewport px), the side it ended up on, and a maxHeight when it's
     taller than the room it has: then it takes that height and scrolls inside, so all of it stays on screen. On the
