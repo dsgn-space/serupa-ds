@@ -36,7 +36,9 @@ export const Sparkline = /* @__PURE__ */ component<SVGSVGElement, SparklineProps
   const rest = omit(props, { data: 1, label: 1, format: 1, area: 1, min: 1, max: 1, className: 1 });
   const sds = useSettings(words), locale = useLocale();
   const data = (props.data || []).filter((v) => typeof v === 'number' && isFinite(v));
-  const low = Math.min(...data), high = Math.max(...data);
+  // A loop, not Math.min(...data): spreading a long series (about 150,000 points in Chromium) overflows the stack.
+  let low = Infinity, high = -Infinity;
+  for (const v of data) { if (v < low) low = v; if (v > high) high = v; }
   const lo = typeof props.min === 'number' && isFinite(props.min) ? props.min : low;
   const hi = typeof props.max === 'number' && isFinite(props.max) ? props.max : high;
   const x = (i: number) => at(data.length > 1 ? (i / (data.length - 1)) * W : W / 2);
