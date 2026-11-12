@@ -85,7 +85,7 @@
       "name": "Identify Input Purpose",
       "level": "AA",
       "conformance": "Supports",
-      "remarks": "Input and the fields built on it pass `autoComplete` to the native field, and PhoneInput sets `tel-national`. The app sets the purpose of each field about the user."
+      "remarks": "Input and the fields built on it pass `autoComplete` to the native field, and PhoneInput sets `tel`, so autofill brings the saved number with its country code. The app sets the purpose of each field about the user."
     },
     {
       "id": "1.4.1",
