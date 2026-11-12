@@ -72,3 +72,18 @@ export const LongLabel: Story = {
   args: { variant: 'text', label: 'Loading every report for the last twelve months' },
   render: (args) => <div style={{ width: 160 }}><Loader {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const ROWS = ['Atlas', 'Northwind', 'Lumen'];
+/** Do: one ring for the area that's loading. */
+export const DoOnePerArea: Story = {
+  name: 'Do: one per area',
+  render: () => <div style={{ display: 'grid', placeItems: 'center', width: 320, height: 132, border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}><Loader label="Loading projects" /></div>,
+};
+/** Don't: a ring on every row, which spins in many places at once. */
+export const DontOnePerRow: Story = {
+  name: "Don't: one per row",
+  render: () => <div style={{ display: 'flex', flexDirection: 'column', width: 320, border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
+    {ROWS.map((r) => <div key={r} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--spacing-3)' }}>{r}<Loader size="sm" label={`Loading ${r}`} /></div>)}
+  </div>,
+};

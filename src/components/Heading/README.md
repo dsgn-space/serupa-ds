@@ -27,6 +27,11 @@ const { Heading } = window.Serupa;
 - It has no margins: space it with the layout, such as a [Stack](../Stack/README.md).
 - Keep headings short, so they wrap less and are quick to scan.
 
+### Do and don't
+
+- **Do:** Keep headings short, so they're quick to scan: "Billing". (`DoShort`)
+- **Don't:** Write a sentence as the heading: it wraps and is slow to scan. (`DontSentence`)
+
 ## Accessibility
 
 - Pick the level from the page's outline, never from the look: that's what `size` is for.

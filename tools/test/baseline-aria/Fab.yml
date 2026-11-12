@@ -7,6 +7,14 @@
 - button "New project" [disabled]
 - button "Compose" [disabled]
 
+# DoOneFab
+- button "New project"
+
+# DontSeveral
+- button "New project"
+- button "Import"
+- button "Share"
+
 # Extended
 - button "Compose"
 
