@@ -128,7 +128,7 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-panel-bg` | `surface-overlay` | The panel's background. |
 | `--cascade-select-panel-border` | `border-overlay` | The panel's outline. |
 | `--cascade-select-divider` | `border` | The line between columns. |
-| `--cascade-select-option-hover` | `surface-muted` | An option under the pointer. |
+| `--cascade-select-option-hover` | `highlight` | An option under the pointer, as Combobox's and Menu's. |
 | `--cascade-select-option-on` | `primary-subtle` | The highlighted option in each column. |
 
 **Radius**
