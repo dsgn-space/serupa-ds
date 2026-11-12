@@ -1,8 +1,10 @@
-// exports: Drawer, type DrawerProps
+// exports: Drawer, type DrawerPlacement, type DrawerProps
+type DrawerPlacement = "bottom" | "end" | "left" | "right" | "start" | "top";
 interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "open" | "title"> {
     open?: boolean | undefined;
     defaultOpen?: boolean | undefined;
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
+    placement?: DrawerPlacement | undefined;
     side?: "bottom" | "left" | "right" | "top" | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     title?: React.ReactNode | undefined;

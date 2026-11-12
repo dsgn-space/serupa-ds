@@ -37,7 +37,8 @@ function resolve(value: number | bigint, o: FormatNumberOptions): [number | bigi
       const rounded = () => { const f = 10 ** Math.min(20, Math.max(0, digits())); return Math.round(n * f) / f; };
       while ((n >= 1000 || rounded() >= 1000) && i < BYTES.length - 1) { n /= 1000; i++; }
       const signed = Number(value) < 0 ? -n : n;
-      return [signed, { style: 'unit', unit: BYTES[i], unitDisplay: 'short', maximumFractionDigits: digits(), ...own }];
+      // Bytes by their long name (512 bytes, 1 byte), since the short one is the same word unpluralised in English (512 byte).
+      return [signed, { style: 'unit', unit: BYTES[i], unitDisplay: i ? 'short' : 'long', maximumFractionDigits: digits(), ...own }];
     }
     default: return [value, own];
   }
