@@ -35,7 +35,7 @@ export const LongText: Story = {
     lineNumbers: true,
     code: Array.from({ length: 12 }, (_, i) => `const line${i + 1} = "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung";`).join('\n'),
   },
-  decorators: [(Story) => <div style={{ width: 280 }}><Story /></div>],
+  decorators: [(Story) => <div style={{ width: '100%', maxWidth: 280 }}><Story /></div>],
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").

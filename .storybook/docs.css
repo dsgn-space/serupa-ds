@@ -64,7 +64,7 @@ html, body { background-color: var(--surface); }
 .sb-dodont__pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
 .sb-dodont__item { display: flex; flex-direction: column; margin: 0; border: 1px solid var(--border); border-top: 4px solid var(--success); border-radius: 8px; background: var(--surface); overflow: hidden; }
 .sb-dodont__item--dont { border-top-color: var(--danger); }
-.sb-dodont__stage { flex: auto; display: grid; place-items: center; padding: 24px 16px; }
+.sb-dodont__stage { flex: auto; display: grid; place-items: safe center; padding: 24px 16px; overflow-x: auto; }   /* safe: a story wider than a narrow column (at 320px) starts at the left and scrolls, not cut on both sides */
 .sb-dodont__stage .docs-story, .sb-dodont__stage .sbdocs-preview { margin: 0; border: 0; box-shadow: none; background: transparent; }
 .sb-dodont__caption { padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface-muted); color: var(--text); font: 400 14px/20px var(--font-sans); }
 .sb-dodont__caption p { margin: 4px 0 0; }
@@ -87,6 +87,12 @@ html, body { background-color: var(--surface); }
 
 /* A docs block that scrolls sideways (the contrast matrix) is in the tab order so a keyboard can scroll it: show where focus is. */
 .sbdocs [role="region"][tabindex="0"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+/* A token table or swatch grid wider than the page scrolls in its own box (Wide in docs/blocks.tsx), not the page. */
+/* Scrolls only once its content is wider than the page (Wide in docs/blocks.tsx), so a page that fits lays out as before.
+   A box that scrolls keeps its child's margins inside; the table's 16px goes on the box, so it still collapses with the text around it. */
+.sb-wide--scrolls { overflow-x: auto; }
+.sb-wide--scrolls:has(> table) { margin-block: 16px; }
+.sb-wide--scrolls > table { margin-block: 0; }
 .sbdocs-content .sb-copy-guide { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); color: var(--text-muted); }
 
 /* Reflow (WCAG 1.4.10 on the docs themselves): at 320px, which is a 1280px screen at 400% zoom, a page scrolls
@@ -101,4 +107,7 @@ html, body { background-color: var(--surface); }
   .docblock-argstable :is(th, td) { padding-inline: 8px !important; }
   .docblock-argstable th { overflow-wrap: normal; }
   :has(> .docblock-argstable) > div:has(> button[aria-label="Reset controls"]) { display: none; }
+  /* The page's own 40px gutters, and the anatomy frame's 24px, left a 256px Calendar 190px: a phone keeps 16px and 12px. */
+  .sbdocs.sbdocs-wrapper { padding-inline: 16px; }
+  .sb-anatomy { padding-inline: 12px; }
 }

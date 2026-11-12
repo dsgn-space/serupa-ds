@@ -174,6 +174,25 @@ export function ReadmeSections({ headings, reserve }: { headings: string[]; /** 
   return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
 }
 
+/** A table or swatch grid wider than a narrow screen scrolls in its own box instead of pushing the page sideways
+ * (WCAG 1.4.10 at 320px). While it does, it's a named region Tab reaches, so the arrow keys scroll it; when it fits,
+ * it's no tab stop. */
+function Wide({ label, children }: { label: string; children: React.ReactNode }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [scrolls, setScrolls] = React.useState(false);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = () => setScrolls(el.scrollWidth > el.clientWidth + 1);
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    if (el.firstElementChild) ro.observe(el.firstElementChild);
+    check();
+    return () => ro.disconnect();
+  }, []);
+  return <div ref={ref} className={scrolls ? 'sb-wide sb-wide--scrolls' : 'sb-wide'} role={scrolls ? 'region' : undefined} aria-label={scrolls ? label : undefined} tabIndex={scrolls ? 0 : undefined}>{children}</div>;
+}
+
 const code = (s?: string) => (s || '').split(/`([^`]+)`/).map((x, i) => (i % 2 ? <code key={i}>{x}</code> : x));
 const cell: React.CSSProperties = { padding: '6px 10px', borderBottom: '1px solid var(--border)', verticalAlign: 'middle', textAlign: 'left' };
 const val = (v: Token['value']) => (typeof v === 'string' ? v : Object.values(v)[0]);
@@ -192,12 +211,12 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
   };
   return <div data-token-sheet={group}>
     {g.note && <p>{code(g.note)}</p>}
-    <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <Wide label={`${group} tokens`}><table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
       <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th>{preview && preview !== 'none' && <th style={cell}>Preview</th>}<th style={cell}>Use</th></tr></thead>
       <tbody>{g.tokens.map((t) => <tr key={t.name}>
         <td style={cell}><code>--{t.name}</code></td><td style={cell}><code>{val(t.value)}</code></td>
         {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={cell}>{code(t.usage)}</td></tr>)}</tbody>
-    </table>
+    </table></Wide>
   </div>;
 }
 
@@ -206,26 +225,26 @@ const SHADES = /^([a-z]+)-(50|100|200|300|400|500|600|700|800|900|950)$/;
 export function Palette() {
   const fam: Record<string, Token[]> = {};
   for (const t of T.color.tokens) { const m = SHADES.exec(t.name); if (m && (typeof t.value === 'string' || Object.keys(t.value).length === 1)) (fam[m[1]] ||= []).push(t); }
-  return <div data-token-sheet="palette" style={{ display: 'grid', gap: 8 }}>
+  return <Wide label="Palette"><div data-token-sheet="palette" style={{ display: 'grid', gap: 8 }}>
     {Object.entries(fam).map(([f, list]) => <div key={f} style={{ display: 'grid', gridTemplateColumns: '80px repeat(11, 1fr)', gap: 4, alignItems: 'center', fontSize: 12 }}>
       <strong>{f}</strong>
       {list.map((t) => <div key={t.name} title={`--${t.name}: ${val(t.value)}`}><div style={{ height: 36, borderRadius: 6, background: `var(--${t.name})` }} /><div>{t.name.split('-')[1]}</div><code style={{ fontSize: 10 }}>{val(t.value)}</code></div>)}
     </div>)}
-  </div>;
+  </div></Wide>;
 }
 
 /** The alias colors: a live swatch in the theme picked in the toolbar, and the palette color in every theme. */
 export function Aliases() {
   const themes = T.color.themes;
   const list = T.color.tokens.filter((t) => typeof t.value === 'object' && Object.keys(t.value).length > 1);
-  return <table data-token-sheet="aliases" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
+  return <Wide label="Alias colors"><table data-token-sheet="aliases" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
     <thead><tr><th style={cell}>Alias</th><th style={cell}>Now</th>{themes.map((th) => <th key={th.id} style={cell}>{th.name}</th>)}<th style={cell}>Use</th></tr></thead>
     <tbody>{list.map((t) => <tr key={t.name}>
       <td style={cell}><code>--{t.name}</code></td>
       <td style={cell}><div style={{ height: 24, width: 40, borderRadius: 4, background: `var(--${t.name})`, border: '1px solid var(--border)' }} /></td>
       {themes.map((th) => <td key={th.id} style={cell}><code>{String((t.value as Record<string, string>)[th.id]).replace(/[{}]/g, '')}</code></td>)}
       <td style={cell}>{code(t.usage)}</td></tr>)}</tbody>
-  </table>;
+  </table></Wide>;
 }
 
 /** The chart colors (CH1) in the theme picked in the toolbar: the 8 series as touching bars with the gap between
