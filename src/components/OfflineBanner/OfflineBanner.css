@@ -60,7 +60,7 @@
   transition: color var(--motion-change-md) var(--ease-move);
 }
 .dk-offline-banner[data-state="back"] .dk-offline-banner__icon { color: var(--offline-banner-icon-online, var(--success)); }
-.dk-offline-banner__title { font-weight: var(--font-semibold); }
+.dk-offline-banner__title { text-wrap: balance; font-weight: var(--font-semibold); }
 @media (forced-colors: active) {
   .dk-offline-banner { border-color: CanvasText; }
   .dk-offline-banner__icon, .dk-offline-banner[data-state="back"] .dk-offline-banner__icon { color: CanvasText; }
