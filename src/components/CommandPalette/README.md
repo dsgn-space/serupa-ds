@@ -61,6 +61,11 @@ Drawn from the `Default` story.
 - The list grows to 320px, then scrolls, keeping the active row in view.
 - Escape or a click on the backdrop closes it with nothing chosen.
 
+### Do and don't
+
+- **Do:** Write each `label` as the action in a few words, starting with the word people would type ("New project"). (`DoActionFirst`)
+- **Don't:** Write wordy labels ("Click here to create a brand new project"): they're slow to type toward and to scan. (`DontWordyLabels`)
+
 ## Accessibility
 
 - **Role and name:** a modal `<dialog>` named "Command palette" (`labels.commandPalette`, or your `aria-label`). The search field is a `role="combobox"` with `aria-expanded`, `aria-controls`, `aria-autocomplete="list"` and `aria-activedescendant`, over a `role="listbox"` with one `role="group"` per group, named by its heading, of `role="option"` rows. A disabled command has `aria-disabled="true"`.

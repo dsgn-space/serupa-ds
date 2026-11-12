@@ -37,3 +37,9 @@ export const InALink: Story = { name: 'In a link home', render: (args) => <a hre
 export const LightOnly: Story = { name: 'No dark version', args: { darkSrc: undefined, markDarkSrc: undefined } };
 // The stress story (G14): a wide logo in a narrow box shrinks to fit, keeping its shape.
 export const Overflow: Story = { name: 'Wider than its box', render: (args) => <div style={{ width: 80, border: '1px dashed currentColor' }}><Logo {...args} alt={args.alt} size="lg" /></div> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a \`darkSrc\` drawn for dark backgrounds. */
+export const DoDarkVersion: Story = { name: 'Do: give it a dark version' };
+/** Don't: only the light logo, which is dark on dark in a dark theme. */
+export const DontNoDarkVersion: Story = { name: "Don't: leave out the dark version", args: { darkSrc: undefined, markDarkSrc: undefined } };

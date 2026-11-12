@@ -53,3 +53,19 @@ export const LongText: Story = {
   args: { items: [...items, { id: 'toc-long', label: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column', level: 3 }] },
   decorators: [(Story) => <div style={{ width: 200 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: two levels, which people can scan. */
+export const DoTwoLevels: Story = { name: 'Do: keep to two levels', decorators: narrow };
+/** Don't: four levels, which turn the list into a maze. */
+export const DontDeepLevels: Story = {
+  name: "Don't: go four levels deep",
+  decorators: narrow,
+  args: { items: [
+    { id: 'toc-deep-a', label: 'Install', level: 2 },
+    { id: 'toc-deep-b', label: 'With npm', level: 3 },
+    { id: 'toc-deep-c', label: 'On Windows', level: 4 },
+    { id: 'toc-deep-d', label: 'Behind a proxy', level: 5 },
+    { id: 'toc-deep-e', label: 'Usage', level: 2 },
+  ] },
+};

@@ -5,6 +5,20 @@
   - heading "What is a workspace?" [level=3]
   - text: A workspace holds your team’s projects, members and billing. Most companies need only one.
 
+# DoShortHelp
+- text: Workspace
+- button "Help" [expanded]
+- dialog "What is a workspace?":
+  - heading "What is a workspace?" [level=3]
+  - text: A workspace holds your team’s projects, members and billing. Most companies need only one.
+
+# DontLongHelp
+- text: Workspace
+- button "Help" [expanded]
+- dialog "What is a workspace?":
+  - heading "What is a workspace?" [level=3]
+  - text: A workspace holds your team’s projects, members and billing. Each workspace has its own plan and invoices, and people can belong to several. Admins can add and remove members, change roles, set up single sign-on, export data, move projects between workspaces and close the workspace. Most companies need only one, but agencies often keep one per client so billing stays separate.
+
 # InAField
 - text: Tax ID
 - 'button "Help: tax ID"'

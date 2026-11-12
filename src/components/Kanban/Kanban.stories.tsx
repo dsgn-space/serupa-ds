@@ -39,3 +39,16 @@ export const LongText: Story = {
     { id: 'b', title: 'Many', limit: 4, items: Array.from({ length: 12 }, (_, i) => ({ id: 'm' + i, title: 'Card ' + (i + 1) })) },
   ]} />,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a short, unique name for each card, which is read on its buttons and in every announcement. */
+export const DoNameCards: Story = { name: 'Do: name each card', render: () => <Board /> };
+/** Don't: cards all called "Task", which screen readers can't tell apart as they move. */
+export const DontVagueCards: Story = {
+  name: "Don't: give cards the same name",
+  render: () => <Board columns={[
+    { id: 'todo', title: 'To do', items: [{ id: 'v1', title: 'Task' }, { id: 'v2', title: 'Task' }] },
+    { id: 'doing', title: 'In progress', items: [{ id: 'v3', title: 'Task' }] },
+    { id: 'done', title: 'Done', items: [] },
+  ]} />,
+};

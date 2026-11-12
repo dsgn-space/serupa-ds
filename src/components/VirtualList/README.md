@@ -49,6 +49,11 @@ import { VirtualList, ListItem } from "serupa-ds";
 - Rows not measured yet count as the average height of those seen. When a row above the view turns out taller or shorter, or the average changes, the row at the top of the view stays where it is, so what's seen stays still, even after a jump to the middle of a long list.
 - On the server it draws the first 20 rows.
 
+### Do and don't
+
+- **Do:** Use it for long lists (hundreds of rows or more), where drawing only the rows in view pays off. (`DoLongList`)
+- **Don't:** Use it for a handful of rows: a plain [List](../List/README.md) is simpler and scrolls with the page. (`DontShortList`)
+
 ## Accessibility
 
 - **Role and name:** a `<ul role="list">` (or `<ol>`) named by your `aria-label`. Each drawn row has `aria-posinset` and `aria-setsize`, so screen readers say "5,001 of 10,000" though only a few rows are in the page.

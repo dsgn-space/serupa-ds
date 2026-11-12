@@ -62,3 +62,25 @@ export const LongText: Story = {
     </>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: an icon and one or two short words for each destination. */
+export const DoShortLabels: Story = {
+  name: 'Do: one or two short words',
+  render: (args) => <BottomNav {...args}>
+    <BottomNavLink href="#home" icon="home" active>Home</BottomNavLink>
+    <BottomNavLink href="#inbox" icon="inbox">Inbox</BottomNavLink>
+    <BottomNavLink href="#search" icon="search">Search</BottomNavLink>
+    <BottomNavLink href="#account" icon="person">Account</BottomNavLink>
+  </BottomNav>,
+};
+/** Don't: long labels, which wrap and crowd the bar on a phone. */
+export const DontLongLabels: Story = {
+  name: "Don't: write long labels",
+  render: (args) => <BottomNav {...args}>
+    <BottomNavLink href="#home" icon="home" active>Your home feed</BottomNavLink>
+    <BottomNavLink href="#inbox" icon="inbox">Messages and mentions</BottomNavLink>
+    <BottomNavLink href="#search" icon="search">Search everything</BottomNavLink>
+    <BottomNavLink href="#account" icon="person">Account settings</BottomNavLink>
+  </BottomNav>,
+};

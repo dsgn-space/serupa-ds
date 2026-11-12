@@ -36,3 +36,9 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the handle named after the pane it resizes, so screen readers say what moving it changes. */
+export const DoNameHandle: Story = { ...Playground, name: 'Do: name the handle after its pane' };
+/** Don't: a generic name, which says nothing about which pane it resizes. */
+export const DontGenericHandle: Story = { ...Playground, name: "Don't: give the handle a generic name", args: { separatorLabel: 'Resize' } };

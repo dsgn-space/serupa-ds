@@ -4,6 +4,7 @@ import { Chart, type ChartProps } from './Chart';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
 import { EmptyState } from '../EmptyState/EmptyState';
+import { useLocale } from '../../internal/provider';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const meta = {
@@ -109,3 +110,19 @@ function States(args: ChartProps) {
   );
 }
 export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const REVENUE = { type: 'bar', title: 'Revenue', categories: ['Jan', 'Feb', 'Mar'], hideLegend: true, series: [{ name: 'Revenue', values: [1250000, 1830000, 1610000] }] } as const;
+/** Do: \`formatValue\` for money, so the axis, tooltip, table and what's read out all say "$1.8M". */
+export const DoFormatMoney: Story = {
+  name: 'Do: format money as money',
+  render: function Render() {
+    const money = new Intl.NumberFormat(useLocale(), { style: 'currency', currency: 'USD', notation: 'compact' });
+    return <Chart {...REVENUE} categories={[...REVENUE.categories]} series={[{ ...REVENUE.series[0], values: [...REVENUE.series[0].values] }]} formatValue={(v) => money.format(v)} />;
+  },
+};
+/** Don't: bare numbers for money, which people have to count the digits of. */
+export const DontRawNumbers: Story = {
+  name: "Don't: leave money as bare numbers",
+  render: () => <Chart {...REVENUE} categories={[...REVENUE.categories]} series={[{ ...REVENUE.series[0], values: [...REVENUE.series[0].values] }]} />,
+};

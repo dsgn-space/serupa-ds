@@ -1,3 +1,60 @@
+# DoFewLinks
+- banner:
+  - link "Acme":
+    - /url: "#"
+  - navigation "Main":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#"
+      - listitem:
+        - link "Projects":
+          - /url: "#"
+      - listitem:
+        - link "Team":
+          - /url: "#"
+      - listitem:
+        - link "Reports":
+          - /url: "#"
+  - button "Docs"
+  - img "Ada Lovelace"
+
+# DontEveryPage
+- banner:
+  - link "Acme":
+    - /url: "#"
+  - navigation "Main":
+    - list:
+      - listitem:
+        - link "Dashboard":
+          - /url: "#dashboard"
+      - listitem:
+        - link "Projects":
+          - /url: "#projects"
+      - listitem:
+        - link "Team":
+          - /url: "#team"
+      - listitem:
+        - link "Reports":
+          - /url: "#reports"
+      - listitem:
+        - link "Billing":
+          - /url: "#billing"
+      - listitem:
+        - link "Integrations":
+          - /url: "#integrations"
+      - listitem:
+        - link "Audit log":
+          - /url: "#audit-log"
+      - listitem:
+        - link "Settings":
+          - /url: "#settings"
+      - listitem:
+        - link "Help center":
+          - /url: "#help-center"
+  - button "Docs"
+  - img "Ada Lovelace"
+
 # Menus
 - banner:
   - link "Acme":

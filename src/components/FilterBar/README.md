@@ -48,6 +48,11 @@ Drawn from the `Playground` story.
 - A `boolean` filter is on as soon as it's added, with no editor to open first; its chip opens a switch to turn it off.
 - Put a sort or a view switch in `actions`, so it sits with the filters and before the count.
 
+### Do and don't
+
+- **Do:** Give `resultsCount` whenever you know it: it tells people what their filters did, and screen readers hear it change. (`DoShowCount`)
+- **Don't:** Leave it out when you know it: people can't tell whether a filter narrowed anything. (`DontHideCount`)
+
 ## Accessibility
 
 - **Role and name:** the bar is a `group` named "Filters" (or `aria-label`), with the chips in a list. Each chip is a button that says its filter in full, and opens a dialog named by the field; its × is "Remove filter: Status".
