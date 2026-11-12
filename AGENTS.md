@@ -29,13 +29,13 @@ npm run test:unit
 node tools/test/run.mjs --since main
 ```
 
-Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
+Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`; the pre-push hook that `npm install` sets up runs it on every push) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
 
 ## Pull requests and CI
 
 The repo is on GitHub. Every change goes on its own branch and pull request, never straight to `main`. Turn on auto-merge once a pull request is ready: it joins the merge queue when its own checks pass, and the queue merges it when the queue's run passes. Never merge one that isn't green, and never bypass the queue.
 
-- A pull request's own run (`.github/workflows/ci.yml`) is the quick check: build, types and lint, the changeset check, the fix proof, the checks, and the tests (in English) and Visual of the components it changes.
+- A pull request's own run (`.github/workflows/ci.yml`) is the quick check: `fresh` (main changed a component whose pictures the branch changed, or the other way round: merge main and redraw them), build, types and lint, the changeset check, the fix proof, the checks, and the tests (in English) and Visual of the components it changes.
 - The merge queue runs every job on the commit that becomes `main` (up to five pull requests at once): the component tests in the other languages, Storybook's pages, consumer and frameworks too, with the tests narrowed as a pull request's are, against the group before it. `main`'s own run is then build only, and the nightly flake hunt tests `main` whole, with the coverage floors.
 - Without the queue (repository variable `SERUPA_QUEUE` not `1`), a pull request runs everything itself.
 - Jobs run in Playwright's image on GitHub's runners or the project's own (repository variables `SERUPA_RUNNER` and `SERUPA_X86_RUNNER`; see "The CI runner" in `tools/README.md`). The nightly jobs are in `.github/workflows/nightly.yml`, `.github/workflows/cross-browser.yml`, `.github/workflows/canary.yml` and `.github/workflows/screen-readers.yml`.
