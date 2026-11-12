@@ -2,7 +2,7 @@ import * as React from 'react';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, keepMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, keepMotion, settled } from '../../../tools/test/vitest/helpers';
 import * as Serupa from '../../index';
 import { config, configure } from '../../internal/config';
 import { Loader } from '../Loader/Loader';
@@ -226,7 +226,8 @@ describe('Button', () => {
     expect([onClick.mock.calls.length, onSubmit.mock.calls.length]).toEqual([0, 0]);
     expect([el('dr-on').hasAttribute('aria-describedby'), el('dr-on').hasAttribute('aria-disabled')]).toEqual([false, false]);
     expect([el('dr-link').tabIndex, el('dr-link').getAttribute('aria-disabled'), el('dr-link').hasAttribute('href')]).toEqual([0, 'true', false]);
-    expect(getComputedStyle(b).opacity).toBe('0.5');
+    // It looks disabled through its muted colors, not by fading (see 'Button disabled').
+    expect([getComputedStyle(b).opacity, getComputedStyle(b).cursor]).toEqual(['1', 'not-allowed']);
   });
 
   test('disabledReason in a Tooltip with the same words: focus shows the tooltip (a disabled button never could), and the reason is read once, from the tooltip', async () => {
@@ -675,5 +676,35 @@ describe('loading ring', () => {
     </>);
     await expect.poll(() => q('#ring-btn .dk-btn__spinner')).toBeTruthy();
     expect(q('#ring-btn .dk-btn__spinner').outerHTML).toBe(q('#ring-loader .dk-btn__spinner').outerHTML);
+  });
+});
+
+describe('Button disabled', () => {
+  test('a disabled label reads at least 3:1 in every variant and theme, as disabled fields do, and 4.5:1 with more contrast; nothing is faded with opacity', async () => {
+    const VARIANTS = ['primary', 'secondary', 'outline', 'ghost', 'link'] as const;
+    await render(<div id="dis" style={{ background: 'var(--surface)', padding: 8 }}>
+      {VARIANTS.flatMap((v) => [<Button key={v} variant={v} disabled>Save</Button>, <Button key={v + 'd'} variant={v} destructive disabled>Delete</Button>])}
+      <Button href="#x" disabled>Docs</Button>
+    </div>);
+    const buttons = [...document.querySelectorAll<HTMLElement>('#dis > *')];
+    const back = (b: HTMLElement) => { const bg = getComputedStyle(b).backgroundColor; return /rgba\(0, 0, 0, 0\)|transparent/.test(bg) ? getComputedStyle(b.parentElement!).backgroundColor : bg; };
+    const low: string[] = [];
+    // Colors read at once, not part-way through the color transition a theme change starts.
+    const still = document.head.appendChild(document.createElement('style'));
+    still.textContent = '#dis * { transition: none !important; }';
+    // The theme and contrast go on the buttons' own box, as an app scopes them to a section.
+    const box = document.getElementById('dis')!;
+    for (const more of [false, true]) {
+      if (more) box.setAttribute('data-contrast', 'more');
+      for (const th of THEMES) {
+        box.setAttribute('data-theme', th);
+        for (const b of buttons) {
+          const need = more ? 4.5 : 3, r = contrast(getComputedStyle(b).color, back(b));
+          if (r < need || getComputedStyle(b).opacity !== '1') low.push(`${th}${more ? ' more' : ''} ${b.dataset.variant}${b.hasAttribute('data-destructive') ? ' destructive' : ''} ${r.toFixed(2)} opacity ${getComputedStyle(b).opacity}`);
+        }
+      }
+    }
+    still.remove();
+    expect(low).toEqual([]);
   });
 });

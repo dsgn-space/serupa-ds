@@ -88,3 +88,17 @@ html, body { background-color: var(--surface); }
 /* A docs block that scrolls sideways (the contrast matrix) is in the tab order so a keyboard can scroll it: show where focus is. */
 .sbdocs [role="region"][tabindex="0"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .sbdocs-content .sb-copy-guide { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); color: var(--text-muted); }
+
+/* Reflow (WCAG 1.4.10 on the docs themselves): at 320px, which is a 1280px screen at 400% zoom, a page scrolls
+   only up and down. On a narrow screen inline code wraps and breaks anywhere it must (token names, signatures and
+   paths have no spaces), and so do table cells (the props table's headings aside), so a table narrows to the page instead of
+   pushing it wider. The props table leaves out its Control column (the story's Controls panel has them) and uses
+   less padding. A wide screen keeps the tables as they were: breaking anywhere would narrow their columns there too. */
+@media (max-width: 639.98px) {
+  .sbdocs-content :not(pre) > code { white-space: normal; overflow-wrap: anywhere; }
+  .sbdocs-content :is(td, th) { overflow-wrap: anywhere; }
+  .docblock-argstable :is(th, td):nth-child(4) { display: none; }
+  .docblock-argstable :is(th, td) { padding-inline: 8px !important; }
+  .docblock-argstable th { overflow-wrap: normal; }
+  :has(> .docblock-argstable) > div:has(> button[aria-label="Reset controls"]) { display: none; }
+}

@@ -197,7 +197,7 @@ When a test fails, it names what changed. If the change is intended, run with `-
 
 ### The merge queue
 
-`main` takes changes only through GitHub's merge queue (the `main` ruleset: Require merge queue, merge commits, up to five pull requests a group, required check `test`). A pull request's own run is the quick check; the queue runs everything on the commit that becomes `main`, so two pull requests that pass alone and break together never reach it, and `main`'s own run is build only. The repository variable `SERUPA_QUEUE` is `1` while the queue is on; without it, a pull request and `main` each run everything (`ci.yml`, the `plan` job).
+`main` takes changes only through GitHub's merge queue (the `main` ruleset: Require merge queue, merge commits, up to five pull requests a group, required check `test`, a 30-minute status check timeout). A pull request's own run is the quick check; the queue runs everything on the commit that becomes `main`, so two pull requests that pass alone and break together never reach it, and `main`'s own run is build only. A queue run normally takes 12 to 15 minutes; one that hasn't finished in 30 is failed and its pull requests leave the queue, so when Actions is slow, hold re-queues until runs start promptly again, then re-enable auto-merge two or three pull requests at a time. The repository variable `SERUPA_QUEUE` is `1` while the queue is on; without it, a pull request and `main` each run everything (`ci.yml`, the `plan` job).
 
 ### The CI runner
 

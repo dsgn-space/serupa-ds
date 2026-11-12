@@ -82,8 +82,9 @@ else {
   t('the classes the docs name exist in dist/bundle.css', !unknown.length, unknown.slice(0, 12).join(', '));
 }
 // Choose a component (docs/ChooseAComponent.mdx) places every component next to the ones it can be mistaken for, so a
-// new one is placed when it merges. The few with nothing alike are listed here instead; adding one is a decision.
-const ALONE = ['Container', 'Divider', 'FormattedNumber', 'Heading', 'Highlight', 'Icon', 'Kbd', 'Logo', 'Prose', 'RelativeTime', 'SkipLink', 'VisuallyHidden'];
+// new one is placed when it merges. A component with nothing alike can be listed here instead; adding one is a
+// decision. Since 11 Nov 2026 every component is on the page, the ones for showing text and values included.
+const ALONE = [];
 const choose = fs.readFileSync(path.join(PROJECT, 'docs', 'ChooseAComponent.mdx'), 'utf8');
 const unplaced = fs.readdirSync(DIR).filter((n) => fs.existsSync(path.join(DIR, n, `${n}.tsx`)) && !ALONE.includes(n) && !choose.includes(`-${n.toLowerCase()}--docs)`));
 t('Choose a component: every component is on the page, or on the nothing-alike list in tools/test/guides.mjs', !unplaced.length, `not placed: ${unplaced.join(', ')}`);

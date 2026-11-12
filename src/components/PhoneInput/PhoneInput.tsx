@@ -242,7 +242,7 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
           {options}
         </select>
       </span>
-      <input autoComplete="tel-national" {...rest} ref={setRef} type="tel" inputMode="tel" className="dk-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />
+      <input autoComplete="tel" {...rest} ref={setRef} type="tel" inputMode="tel" className="dk-input__field" value={text} onChange={onChange} onKeyDown={onKeyDown} />
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={toE164(shown, country)} disabled={rest.disabled} /> : null}
     </span>
   );
