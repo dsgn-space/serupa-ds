@@ -25,12 +25,14 @@ describe('hover fills in fields and popups show in all six themes', () => {
   test('the date, clock and country buttons, a day in the calendar (one of another month too) and a cascade option: the fill differs from what is under it, and the text on it keeps 4.5:1', { timeout: 60000 }, async () => {
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     await render(<div style={{ padding: 40 }}>
-      <DatePicker aria-label="Due" defaultValue={new Date(2026, 10, 12)} />
+      <DatePicker aria-label="Due" defaultValue={new Date(2026, 9, 14)} />
       <TimePicker aria-label="At" />
       <PhoneInput aria-label="Phone" />
       <CascadeSelect aria-label="Place" options={[{ value: 'a', label: 'Asia', children: [{ value: 'b', label: 'Bali' }] }, { value: 'e', label: 'Europe' }]} />
     </div>);
-    const byLabel = (re: RegExp) => [...document.querySelectorAll<HTMLElement>('button')].find((b) => re.test(b.getAttribute('aria-label') || ''))!;
+    // Found by their markup, not their words, so the test reads the same in every locale.
+    const dateButton = () => document.querySelector<HTMLElement>('button[aria-haspopup="dialog"]')!;
+    const place = () => document.querySelector<HTMLElement>('button[aria-label="Place"]')!;
     const flat: string[] = [];
     const check = async (name: string, el: HTMLElement, text = false) => {
       await userEvent.hover(el);
@@ -43,18 +45,19 @@ describe('hover fills in fields and popups show in all six themes', () => {
       }
       document.documentElement.setAttribute('data-theme', 'blue-light');
     };
-    await check('date button', byLabel(/date/i));
+    await check('date button', dateButton());
     await check('clock button', document.querySelector<HTMLElement>('button[aria-controls][tabindex="-1"]')!);
     await check('country', document.querySelector<HTMLElement>('select')!.parentElement!);
-    await userEvent.click(byLabel(/date/i));
+    await userEvent.click(dateButton());
     await expect.poll(() => document.querySelector('[role="grid"]')).not.toBeNull();
     const days = [...document.querySelectorAll<HTMLElement>('[role="grid"] button')];
-    await check('day', days.find((d) => !d.closest('[aria-selected="true"]') && !d.hasAttribute('aria-current') && /\b2026\b/.test(d.getAttribute('aria-label') || '') && /November/.test(d.getAttribute('aria-label') || ''))!, true);
-    await check('day of another month', days[0]!, true);
+    // October 2026 starts on a Thursday, so the first day shown belongs to September in every week layout.
+    await check('day', days[15], true);
+    await check('day of another month', days[0], true);
     await userEvent.keyboard('{Escape}');
-    await userEvent.click(byLabel(/place/i));
+    await userEvent.click(place());
     await expect.poll(() => document.querySelectorAll('[role="option"]').length).toBeGreaterThan(1);
-    await check('cascade option', document.querySelectorAll<HTMLElement>('[role="option"]')[1]!, true);
+    await check('cascade option', document.querySelectorAll<HTMLElement>('[role="option"]')[1], true);
     still.remove();
     expect(flat).toEqual([]);
   });
