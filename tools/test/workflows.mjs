@@ -83,7 +83,7 @@ for (const f of files) {
     for (const [f, text] of layout) put(f, text);
     const r = spawnSync('bash', ['-c', body.join('\n')], { env: { ...process.env, RUNNER_TEMP: tmp }, encoding: 'utf8' });
     const out = path.join(tmp, 'baselines');
-    const files = r.status === 0 ? fs.readdirSync(path.join(out, 'files'), { recursive: true }).filter((f) => f.endsWith('.png')).sort() : [];
+    const files = r.status === 0 ? fs.readdirSync(path.join(out, 'files'), { recursive: true, encoding: 'utf8' }).filter((f) => f.endsWith('.png')).sort() : [];
     return { files, deleted: r.status === 0 ? fs.readFileSync(path.join(out, 'deleted.txt'), 'utf8').trim().split('\n').sort() : [], error: r.stderr.trim() };
   };
   const one = joined([['parts/files/tools/test/baseline-visual/A/x.png'], ['parts/deleted.txt', 'tools/test/baseline-visual/A/y.png\n']]);
