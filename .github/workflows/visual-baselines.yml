@@ -18,18 +18,104 @@ name: Update baselines
 # token and no secrets: a dependency the pull request bumps finds nothing there that can write. "commit" runs none of
 # the branch's code. It takes only PNGs under tools/test/baseline-visual*/ and tools/test/baseline-utilities.json from
 # render, checks each one, and pushes them with BOT_TOKEN (so the push starts CI), passed to that one git call.
+#
+# A pull request with a conflict gets no pull_request runs, so a label does nothing there. Run this workflow by hand
+# (Actions > Update baselines > Run workflow, or `gh workflow run visual-baselines.yml -f pr=<number>`) to heal it:
+# "heal" merges the base branch in, takes the base's side of every conflicting picture (and of baseline-utilities.json),
+# pushes the merge and adds the label, whose run then draws the pictures again on the merged tree. A conflict in
+# anything else stops it, since only a person can resolve that. Heal runs none of the branch's code: a run by hand
+# belongs to the default branch, so the branch's code there could write to main's caches.
 on:
   pull_request:
     types: [labeled]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: The pull request's number
+        required: true
+        type: number
+      which:
+        description: Which pictures to draw again after the merge
+        type: choice
+        options: [chromium, cross-browser]
+        default: chromium
 
-# A newer run of the same workflow on the same branch or pull request cancels the one before it.
+# A newer run for the same pull request cancels the one before it. Any other label gets a group of its own, so adding
+# it while the pictures are being drawn doesn't cancel them. Heal has its own group: the run its label starts must not
+# cancel it.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: >-
+    ${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && format('heal-{0}', inputs.pr) ||
+    (github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines')
+    && github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 permissions: {}
 
 jobs:
+  heal:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Find the pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ inputs.pr }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          [[ "$NUMBER" =~ ^[0-9]+$ ]] || fail "$NUMBER is not a pull request number"
+          pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$NUMBER")
+          [ "$(jq -r .state <<< "$pull")" = open ] || fail "#$NUMBER isn't open"
+          [ "$(jq -r .head.repo.full_name <<< "$pull")" = "$GITHUB_REPOSITORY" ] || fail "#$NUMBER comes from a fork, so its branch can't take the push"
+          {
+            echo "head-ref=$(jq -r .head.ref <<< "$pull")"
+            echo "head-sha=$(jq -r .head.sha <<< "$pull")"
+            echo "base-ref=$(jq -r .base.ref <<< "$pull")"
+          } | tee -a "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.pr.outputs.head-sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Merge the base branch in
+        env:
+          BASE_REF: ${{ steps.pr.outputs.base-ref }}
+        run: |
+          set -euo pipefail
+          base=$(git rev-parse "origin/$BASE_REF")
+          id=(-c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com")
+          if git "${id[@]}" merge --quiet --no-edit -m "Merge $BASE_REF into the branch (Update baselines)" "$base"; then exit 0; fi
+          baseline='^tools/test/(baseline-visual(-firefox|-webkit)?/.*\.png|baseline-utilities\.json)$'
+          others=$(git diff --name-only --diff-filter=U | grep -Ev "$baseline" || true)
+          if [ -n "$others" ]; then
+            echo "::error::These conflict and aren't pictures, so resolve them by hand: $(tr '\n' ' ' <<< "$others")"
+            exit 1
+          fi
+          git diff --name-only --diff-filter=U -z | while IFS= read -r -d '' f; do
+            if git cat-file -e "$base:$f" 2> /dev/null; then git checkout --quiet "$base" -- "$f"; else git rm --quiet -- "$f"; fi
+          done
+          git "${id[@]}" commit --quiet --no-edit
+      # BOT_TOKEN, so the push starts CI and the label starts this workflow's render on the merged branch. The push is
+      # refused if the branch moved on since the checkout.
+      - name: Push the merge and add the label
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          HEAD_REF: ${{ steps.pr.outputs.head-ref }}
+          NUMBER: ${{ inputs.pr }}
+          LABEL: ${{ inputs.which == 'cross-browser' && 'update-cross-browser-baselines' || 'update-visual-baselines' }}
+        run: |
+          set -euo pipefail
+          auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
+          echo "::add-mask::$auth"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$HEAD_REF"
+          GH_TOKEN=$BOT_TOKEN gh pr edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$LABEL"
+
   render:
     if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
