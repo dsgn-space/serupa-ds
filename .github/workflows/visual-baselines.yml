@@ -151,9 +151,12 @@ jobs:
             [ "$LEVEL" = notice ] && { echo "skip=1" >> "$GITHUB_OUTPUT"; exit 0; }
             exit 1
           fi
-          git diff --name-only --diff-filter=U -z | while IFS= read -r -d '' f; do
+          # The list is read whole first: git diff, still writing it, holds the index lock that each checkout below
+          # needs ("index.lock: File exists" failed every heal of #1604 and #1674 on 12 Nov).
+          git diff --name-only --diff-filter=U -z > "$RUNNER_TEMP/conflicted"
+          while IFS= read -r -d '' f; do
             if git cat-file -e "$base:$f" 2> /dev/null; then git checkout --quiet "$base" -- "$f"; else git rm --quiet -- "$f"; fi
-          done
+          done < "$RUNNER_TEMP/conflicted"
           git "${id[@]}" commit --quiet --no-edit
       # BOT_TOKEN, so the push starts CI and the label starts this workflow's render on the merged branch. The push is
       # refused if the branch moved on since the checkout.
