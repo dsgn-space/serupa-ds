@@ -36,3 +36,17 @@ export const Overflow: Story = {
   args: { columns: 3, gap: 2, children: [<Box key="a" wrap>Donaudampfschifffahrtsgesellschaftskapitänskajüte</Box>, <Box key="b">A cell with a long sentence that wraps</Box>, <Box key="c">Short</Box>] },
   render: (args) => <div style={{ width: 240 }}><Grid {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: `columns="auto"` with a `minColumnWidth`, so a narrow screen gets fewer, wider columns. */
+export const DoAutoColumns: Story = {
+  name: 'Do: let the columns fit',
+  args: { minColumnWidth: '8rem', gap: 2, children: cells(4) },
+  decorators: [(Story) => <div style={{ width: 320 }}><Story /></div>],
+};
+/** Don't: a fixed four columns, which stay four on a phone and squeeze each cell. */
+export const DontFixedColumns: Story = {
+  name: "Don't: fix the column count",
+  args: { columns: 4, gap: 2, children: cells(4) },
+  decorators: [(Story) => <div style={{ width: 320 }}><Story /></div>],
+};

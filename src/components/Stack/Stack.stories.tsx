@@ -55,3 +55,20 @@ export const Overflow: Story = {
   args: { direction: 'row', wrap: true, gap: 2, children: [<Box key="1" wrap>Donaudampfschifffahrtsgesellschaftskapitänskajüte</Box>, <Box key="2">A box with a long label</Box>, <Box key="3">Three</Box>, <Box key="4">Four</Box>] },
   render: (args) => <div style={{ width: 240 }}><Stack {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a larger gap between groups and a smaller one inside them, so the groups read as groups. */
+export const DoNestedGaps: Story = {
+  name: 'Do: space groups apart',
+  render: () => (
+    <Stack gap={6}>
+      <Stack gap={2}><Box>Name</Box><Box>Email</Box></Stack>
+      <Stack gap={2}><Box>Street</Box><Box>City</Box></Stack>
+    </Stack>
+  ),
+};
+/** Don't: one gap for everything, so nothing shows which items belong together. */
+export const DontOneGap: Story = {
+  name: "Don't: use one gap everywhere",
+  args: { gap: 4, children: [<Box key="n">Name</Box>, <Box key="e">Email</Box>, <Box key="s">Street</Box>, <Box key="c">City</Box>] },
+};
