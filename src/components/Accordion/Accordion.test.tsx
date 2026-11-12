@@ -114,6 +114,15 @@ describe('Accordion', () => {
     await expect.poll(() => pn.getBoundingClientRect().height).toBe(0);
   }));
 
+  test('opening one item while another closes still glides: the new one fades, unclips and grows, and the old one folds', () => withMotion(async () => {
+    await render(<Faq />);
+    const props = (n: number) => panel('adef', n).getAnimations().map((a) => (a as CSSTransition).transitionProperty ?? a.id).filter((p) => /opacity|clip-path|height/.test(p)).sort();
+    await userEvent.click(trigger('adef', 1));
+    await settled(el('adef'), { subtree: true });
+    await userEvent.click(trigger('adef', 2));
+    expect([state('adef'), props(2), props(1)]).toEqual(['0100', ['clip-path', 'dk-accordion-height', 'opacity'], ['clip-path', 'dk-accordion-height', 'opacity']]);
+  }));
+
   test('type="single": opening one closes the other; collapsible (default): the open one closes again; a disabled item doesn\'t open, and fades to 50%', async () => {
     await render(<Faq />);
     await userEvent.click(trigger('adef', 1));
