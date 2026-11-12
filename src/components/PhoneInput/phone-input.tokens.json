@@ -34,8 +34,8 @@
       },
       "bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The country part's background on hover.",
+        "$value": "{color.secondary}",
+        "$description": "The country part's background on hover, as the other buttons inside fields.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--phone-input-bg-hover"

@@ -144,8 +144,8 @@
       },
       "option-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "An option under the pointer.",
+        "$value": "{color.highlight}",
+        "$description": "An option under the pointer, as Combobox's and Menu's.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--cascade-select-option-hover"
