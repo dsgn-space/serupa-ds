@@ -168,7 +168,9 @@ async function checkDocs(e, w) {
     return `it scrolls sideways to ${document.documentElement.scrollWidth}px; first to stick out: ${name}`;
   }));
   await w.page.setViewportSize({ width: 1000, height: 800 });
-  if (!DOCS_REFLOW_KNOWN.has(e.id)) out.push(t(`docs · ${e.title} · at 320px wide the page scrolls only up and down`, !wide, wide || ''));
+  // A known page that no longer scrolls sideways fails too, so the list only shrinks.
+  const known = DOCS_REFLOW_KNOWN.has(e.id);
+  out.push(t(`docs · ${e.title} · at 320px wide the page scrolls only up and down${known ? ' (a known gap, RF1)' : ''}`, known ? !!wide : !wide, known ? (wide ? '' : 'it no longer scrolls sideways at 320px: take it out of DOCS_REFLOW_KNOWN') : wide || ''));
   return out;
 }
 // WCAG 1.4.12's text spacing, as a user's style sheet sets it.
@@ -201,13 +203,9 @@ const cutOff = () => {
 // One that stops failing fails here too, so the list only shrinks.
 const REFLOW_KNOWN = new Set([
 ]);
-// The docs pages that still scroll sideways at 320px: a foundation table or swatch row with a fixed width, an anatomy
-// diagram or a Do and don't story wider than the page, or a code block that doesn't keep to its box. Each one fixed
-// comes off the list; a page not on it that scrolls sideways fails.
+// The docs pages that still scroll sideways at 320px. Each one fixed comes off the list (one still on it that
+// passes fails); a page not on it that scrolls sideways fails.
 const DOCS_REFLOW_KNOWN = new Set([
-  'foundations-colors--docs', 'foundations-themes--docs', 'foundations-spacing--docs', 'components-content-codeblock--docs',
-  'components-feedback-alert--docs', 'components-feedback-emptystate--docs', 'components-feedback-meter--docs', 'components-feedback-progress--docs',
-  'components-forms-calendar--docs', 'components-overlays-dialog--docs', 'components-overlays-notificationcenter--docs', 'changelog--docs',
 ]);
 // The stories whose text a box still cuts off at 200% (queue item TX1).
 const TEXT_200_KNOWN = new Set([
