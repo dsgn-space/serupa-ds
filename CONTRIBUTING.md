@@ -55,7 +55,13 @@ do, say so and stop here.
    - **Examples compile:** every `tsx` and `jsx` block in its README type-checks against the built types, imports and all (`node tools/test/doc-snippets.mjs`, after a build). A sketch can leave out its imports, `…` stands for content, and names it never declares (`open`, `setOpen`) count as `any`.
 4. `npm run tokens` (after a change to `tokens/serupa.tokens.json` too), `npm run build`, then `node tools/test/api.mjs --update` and `node tools/test/size.mjs --update <Name>` for its baselines.
 5. **Run the reviews below,** the motion review and the worst-case review, and before its first release the bug bash. Put what they found in the pull request.
-6. **It starts as beta:** `@beta` in the doc comment on its export (the generator writes it), so editors, its Storybook page and the README's index say so. Take the tag off, with a patch changeset, once it has shipped in a release with its bug bash done and nothing it found is still open.
+6. **It starts as beta:** `@beta` in the doc comment on its export (the generator writes it), so editors, its Storybook page and the README's index say so. Beta means its API may still change in a minor release. Take the tag off, with a patch changeset, once all four hold:
+   - it has shipped in a release;
+   - its bug bash is done, and nothing it found is still open;
+   - its API hasn't changed in a breaking way for four weeks (`git log tools/test/baseline-api/<Name>.d.ts` shows when it last did);
+   - it has its Do and don't pair.
+
+   Each Release pull request lists the betas that meet all four, and that release either takes their tags off or names the open bug that keeps each one in beta, so no component stays beta just because nobody looked.
 7. `npx changeset` (minor, "Added: <Name> …"), open the pull request, and add the `update-visual-baselines` label so CI draws its screenshots. Review them.
 
 ## Reviews by eye
