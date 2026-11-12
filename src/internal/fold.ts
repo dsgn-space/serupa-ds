@@ -19,6 +19,6 @@ const CYRILLIC = /[иИуУ]\u0306|[іІ]\u0308/g;
 /** Lowercased, without accents or width differences, with ł→l, ø→o, æ→ae, ß→ss, ς→σ and the like. Vowel signs and tone
     marks (Hindi, Thai…) and Japanese voicing marks are kept: they make a different word. */
 export function fold(s: string): string {
-  return s.normalize('NFKD').replace(CYRILLIC, (m) => m.normalize('NFC')).replace(ACCENTS, '').toLowerCase().replace(/[łđðøæœßħıþŧŋĸς]/g, (c) => LETTERS[c])
+  return s.normalize('NFKD').replace(CYRILLIC, (m) => m.normalize('NFC')).replace(ACCENTS, '').toLowerCase().replace(/[łđðøæœßħıþŧŋĸς]/g, (c) => LETTERS[c] ?? c)
     .replace(/[\u30a1-\u30f6]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60));
 }

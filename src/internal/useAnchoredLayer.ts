@@ -50,7 +50,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     }
     // A first guess at the side before it shows: showing resolves the layer's first style, which is when an entry
     // from @starting-style keyed on data-side (Tooltip's slide) is fixed. placeLayer corrects it on a flip.
-    firstSide(p, (placement || fallback || 'bottom').split('-')[0]);
+    firstSide(p, (placement || fallback || 'bottom').split('-')[0] ?? 'bottom');
     showLayer(p);
     // The gap and the anchor's direction are style reads: once, and again only when sizes change (a density or
     // theme switch), not on every scroll.
