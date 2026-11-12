@@ -5,8 +5,8 @@
 // on the page's other axes together (right to left, more contrast, compact density; <Story>-axes.png), so a mirroring,
 // contrast-token or control-height regression shows up too.
 //   node tools/test/visual.mjs            check
-//   node tools/test/visual.mjs --update   accept the current look as the new baseline (a picture that differs
-//                                         only within the tolerance keeps its old file)
+//   node tools/test/visual.mjs --update   accept the current look as the new baseline (in Chromium any picture
+//                                         that differs at all; in Firefox and WebKit only past the tolerance)
 //   SERUPA_SHARD=2/3 node tools/test/visual.mjs   every third story, starting with the second (CI runs the shards
 //                                                in parallel)
 // A story without a baseline fails the check; --update (or the "update-visual-baselines" label) writes one.
@@ -205,10 +205,12 @@ async function compare(page, name, el) {
   const after = await crashed();
   if (after) return after;
   const file = path.join(DIR, `${name}.png`);
-  // --update rewrites a baseline only when the new picture differs past the tolerance, so re-rendering on another
-  // run doesn't commit hundreds of pictures that only changed in anti-aliasing.
+  // --update in Chromium rewrites a baseline whenever the new picture differs at all: on CI's pinned image a render is
+  // byte-identical run to run, so a difference is a real change, and keeping one under the tolerance leaves a stale
+  // picture that the next pull request to redraw would commit instead (Menu kept ⌘ for weeks after it drew Ctrl).
+  // Firefox and WebKit keep the tolerance, since their anti-aliasing isn't shown to be that steady.
   if (update) {
-    if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > TOLERANCE) fs.writeFileSync(file, shot);
+    if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > (LIGHT ? TOLERANCE : 0)) fs.writeFileSync(file, shot);
     return null;
   }
   // A missing baseline fails: only --update (or the "update-visual-baselines" label) writes one, so a
