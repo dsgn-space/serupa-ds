@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Alert } from '../Alert';
 import { Badge } from '../Badge';
 import { Button } from '../Button';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { Loader } from '../Loader';
 import { Card } from '../Card';
 import { DescriptionItem, DescriptionList } from './DescriptionList';
@@ -78,7 +79,7 @@ function States(args: React.ComponentProps<typeof DescriptionList>) {
   return (
     <div style={{ maxWidth: 560, display: 'grid', gap: '12px' }}>
       <div style={{ display: 'flex', gap: '8px' }}>
-        {(['loading', 'loaded', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+        <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState} options={(['loading', 'loaded', 'failed'] as const).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))} />
       </div>
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>The project didn't load. Check your connection and try again.</Alert>
         : state === 'loaded' ? <Record {...args} />

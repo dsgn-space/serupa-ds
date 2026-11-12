@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Chart, type ChartProps } from './Chart';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { useLocale } from '../../internal/provider';
 
@@ -101,7 +102,7 @@ function States(args: ChartProps) {
   return (
     <div style={{ display: 'grid', gap: '12px' }}>
       <div style={{ display: 'flex', gap: '8px' }}>
-        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+        <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState} options={(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))} />
       </div>
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Visitors didn't load. Check your connection and try again.</Alert>
         : state === 'empty' ? <EmptyState size="sm" title="No visitors yet" description="Visits show here from the day the site goes live." />
