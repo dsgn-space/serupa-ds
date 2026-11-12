@@ -4,6 +4,14 @@
 - link "Help":
   - /url: "#help"
 
+# DoKnownIcons
+- button "Search"
+- button "Settings"
+- button "Close"
+
+# DontGuessIcon
+- button "Summarize the thread"
+
 # LongLabel
 - button "Open the menu with every action for this project, including archive and delete"
 
