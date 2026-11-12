@@ -250,7 +250,7 @@ describe('CommandPalette', () => {
       const actBg = css(act).backgroundColor;
       check('active', act, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);
       // Every word in the active row, its shortcut's "+" too, on the highlight.
-      for (const e of act.querySelectorAll('*')) if ([...e.childNodes].some((n) => n.nodeType === 3 && n.textContent!.trim()) && css(e).backgroundColor === 'rgba(0, 0, 0, 0)') check(`active "${e.textContent!.trim()}"`, e, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);
+      for (const e of act.querySelectorAll('*')) if ([...e.childNodes].some((n) => n.nodeType === 3 && n.textContent!.trim()) && css(e).backgroundColor === 'rgba(0, 0, 0, 0)') check(`active "${e.textContent.trim()}"`, e, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(low).toEqual([]);
