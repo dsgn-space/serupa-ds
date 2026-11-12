@@ -5,6 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
 import { Toaster } from '../../components/Toast/Toast';
 import { CommentThread, type ThreadComment } from './CommentThread';
+import { useContent, useNameMap } from '../../../.storybook/content';
 
 /* Comment thread (BL8): comments, a reply box, and edit and delete for your own, as a block an app copies.
    CommentThread.mdx says what each part is for. The stories put it on a small page (a skip link, main and an h1),
@@ -16,9 +17,14 @@ const comments: ThreadComment[] = [
   { id: '3', author: { name: 'Budi Santoso' }, body: 'Checked it on an old Android phone too: it fits on one line.', date: ago(12) },
 ];
 
-/** Keeps the comments in state, so replying, editing and deleting work in the story. */
+// The other people follow Storybook's Content menu (.storybook/content.ts), and a change of menu starts the thread again.
 function Live({ initial }: { initial: readonly ThreadComment[] }) {
-  const [list, setList] = React.useState(initial);
+  return <Thread key={useContent()} initial={initial} />;
+}
+/** Keeps the comments in state, so replying, editing and deleting work in the story. */
+function Thread({ initial }: { initial: readonly ThreadComment[] }) {
+  const as = useNameMap(initial.filter((c) => !c.mine).map((c) => c.author.name));
+  const [list, setList] = React.useState(() => initial.map((c) => (c.mine ? c : { ...c, author: { ...c.author, name: as(c.author.name) } })));
   const wait = () => new Promise((resolve) => { window.setTimeout(resolve, 600); });
   return <>
     <CommentThread comments={list} maxLength={500}

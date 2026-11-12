@@ -4,6 +4,7 @@ import { Sidebar, SidebarItem, SidebarSection } from './Sidebar';
 import { Badge } from '../Badge/Badge';
 import { Avatar } from '../Avatar/Avatar';
 import { IconButton } from '../IconButton/IconButton';
+import { useName } from '../../../.storybook/content';
 
 const items = [
   <SidebarSection key="a">
@@ -20,6 +21,8 @@ const items = [
   </SidebarSection>,
 ];
 
+// The signed-in person follows Storybook's Content menu (.storybook/content.ts): a long name in the worst case.
+const Me = ({ nameShown = true }: { nameShown?: boolean }) => { const name = useName('Ada Lovelace'); return nameShown ? <div className="flex items-center gap-2 text-sm text-text"><Avatar name={name} size="sm" /><span>{name}</span></div> : <div className="flex justify-center"><Avatar name={name} size="sm" /></div>; };
 const meta = {
   title: 'Components/Navigation/Sidebar',
   component: Sidebar,
@@ -27,7 +30,7 @@ const meta = {
   parameters: { layout: 'fullscreen' },
   args: {
     header: <strong className="block px-3 py-1 text-base text-text">Acme</strong>,
-    footer: <div className="flex items-center gap-2 text-sm text-text"><Avatar name="Ada Lovelace" size="sm" /><span>Ada Lovelace</span></div>,
+    footer: <Me />,
     children: items,
   },
   argTypes: { header: { control: false }, footer: { control: false }, children: { control: false } },
@@ -39,7 +42,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 
 export const Collapsed: Story = {
-  args: { collapsed: true, header: <strong className="block text-center text-base text-text">A</strong>, footer: <div className="flex justify-center"><Avatar name="Ada Lovelace" size="sm" /></div> },
+  args: { collapsed: true, header: <strong className="block text-center text-base text-text">A</strong>, footer: <Me nameShown={false} /> },
 };
 
 export const Toggle: Story = {
