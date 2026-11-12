@@ -24,14 +24,18 @@ Comments with who wrote them and when, a reply box with a character count, and E
 - **Ctrl+Enter (⌘+Enter on a Mac) sends** the reply or the edit, as in most comment boxes; Enter alone starts a new line, so nobody posts by accident.
 - **Edit keeps focus where you are** (2.4.3). Focus moves into the comment's own box. Save, Cancel or Escape brings it back to Edit. Saving says "Comment saved".
 - **Delete has Undo instead of a confirmation.** The comment leaves the list at once, and focus moves to the next comment (or the one before, or the heading), so it isn't lost. A toast offers Undo, which brings the comment back and focuses it. `onDelete` only runs once the toast has gone without Undo. The toast's time stops while it's hovered or focused, and F8 reaches it.
+- **Loading says so once** (4.1.3). With `loading`, skeleton comments stand in for the list, which says it's busy; only the first is named ("Loading comments"), so a screen reader hears it once. The reply box is there from the start.
 - **Another language**: every word is in `labels`, with English defaults. `replyHint` is a function of the limit.
 
 <Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.Loading} />
 
 ## What stays your app's job
 
 - Storing comments, and deciding who can edit or delete which (`mine`).
 - Showing an error when posting or saving fails. The box keeps its text, so nothing is lost.
+- Telling people when the comments fail to load: show `EmptyLoadFailed` (Empty states) in the thread's place, with Try again.
 - Rendering a `Toaster` once in the app, for Delete's Undo.
 
 ## Copying it

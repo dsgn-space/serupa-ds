@@ -49,5 +49,8 @@ export const Default: Story = { render: () => <Page><Paged size={4} /></Page> };
 /** After the last page: the button gives way to the end text. */
 export const AllLoaded: Story = { render: () => <Page><Paged size={6} /></Page> };
 
+/** While the first page loads: skeleton rows under the heading, named once for screen readers. */
+export const Loading: Story = { render: () => <Page><ActivityFeed events={[]} hasMore={false} onLoadMore={() => {}} loading /></Page> };
+
 /** Nothing has happened yet. */
 export const Empty: Story = { render: () => <Page><ActivityFeed events={[]} hasMore={false} onLoadMore={() => {}} emptyText="Nothing has happened here yet. Changes and comments will show up here." /></Page> };

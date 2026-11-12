@@ -61,6 +61,9 @@ const team: MentionOption[] = [
   { id: 'budi', label: 'Budi Santoso', description: 'Engineering' },
   { id: 'citra', label: 'Citra Dewi', description: 'Product' },
 ];
+/** While the comments load: skeleton comments, named once for screen readers, with the reply box already there. */
+export const Loading: Story = { render: () => <Page><CommentThread comments={[]} onReply={() => {}} loading /></Page> };
+
 /** With people: type "@" in the reply box to mention someone; mentions in comments are bold, and onReply gets who to notify. */
 export const WithMentions: Story = {
   name: 'With mentions',

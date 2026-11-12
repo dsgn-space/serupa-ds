@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
+import { Loader } from '../../components/Loader/Loader';
 import { LoadMore } from '../../components/LoadMore/LoadMore';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Timeline, TimelineItem, type TimelineStatus } from '../../components/Timeline/Timeline';
@@ -15,6 +16,8 @@ import { Timeline, TimelineItem, type TimelineStatus } from '../../components/Ti
      its tooltip (RelativeTime).
    - 2.4.3 / 4.1.3: "Load more" (LoadMore) keeps focus on the button as new events land above it, says how many
      were added, and moves focus to the end text after the last page, so focus is never lost.
+   - 4.1.3: while the first page loads, the list says it's busy (aria-busy) and its skeleton rows are named once
+     ("Loading: Activity"), not once per row; the heading is there from the start, so the page doesn't jump.
    - Each word is a prop or a label, English by default. */
 
 function line(e: ActivityEvent): React.ReactNode {
@@ -58,15 +61,31 @@ export interface ActivityFeedProps {
   loadMoreLabel?: string | undefined;
   /** Shown after the last page. Default: LoadMore's "You’ve reached the end". */
   endText?: string | undefined;
+  /** The first page is on its way: skeleton rows in place of the events. Default: false. */
+  loading?: boolean | undefined;
+  /** How many skeleton rows to show while loading. Default: 3. */
+  loadingCount?: number | undefined;
+  /** The skeletons' one name. Default: "Loading: " and the title. */
+  loadingText?: string | undefined;
 }
 
 /** Who did what and when, newest first, with "Load more" that keeps focus in place and says how many were added. */
-export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, emptyText = 'No activity yet', loadMoreLabel, endText }: ActivityFeedProps) {
+export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, emptyText = 'No activity yet', loadMoreLabel, endText, loading = false, loadingCount = 3, loadingText }: ActivityFeedProps) {
   const id = React.useId();
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} id={id}>{title}</Heading>
-      {events.length === 0 ? <p className="text-sm text-text-muted">{emptyText}</p> : (
+      {loading ? (
+        <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
+          {Array.from({ length: loadingCount }, (_, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <Loader variant="skeleton" shape="circle" label="" className="shrink-0" />
+              {/* One name for all of them: the first row is named, the others are only pictures. */}
+              <Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? (loadingText ?? 'Loading: ' + title) : ''} className="min-w-0 flex-1" />
+            </li>
+          ))}
+        </ul>
+      ) : events.length === 0 ? <p className="text-sm text-text-muted">{emptyText}</p> : (
         <Timeline>
           {events.map((e) => (
             <TimelineItem key={e.id} status={e.status}
@@ -80,7 +99,7 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
           ))}
         </Timeline>
       )}
-      {events.length > 0 && <LoadMore onLoadMore={onLoadMore} hasMore={hasMore} count={events.length} total={total} label={loadMoreLabel} endText={endText} />}
+      {!loading && events.length > 0 && <LoadMore onLoadMore={onLoadMore} hasMore={hasMore} count={events.length} total={total} label={loadMoreLabel} endText={endText} />}
     </section>
   );
 }

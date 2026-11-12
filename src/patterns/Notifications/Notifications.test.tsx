@@ -22,6 +22,21 @@ describe('Patterns/Notifications', () => {
     expect(active().getAttribute('href')).toBe('#main');
   });
 
+  test('loading: the count says so over busy placeholder rows; the notifications that arrive keep which ones are read', async () => {
+    const items = [
+      { id: 'a', title: 'Ana mentioned you', read: false },
+      { id: 'b', title: 'Export finished', read: true },
+    ];
+    const screen = await render(<Notifications items={[]} loading />);
+    expect(status()).toBe('Loading notifications');
+    expect(document.querySelector('main ul')!.getAttribute('aria-busy')).toBe('true');
+    await expect.element(screen.getByRole('button', { name: 'Mark all as read' })).toBeDisabled();
+    expect(document.querySelector('main')!.textContent).not.toContain('No notifications yet');
+    await screen.rerender(<Notifications items={items} />);
+    await expect.poll(status).toBe('1 unread');   // not 2: "Export finished" came in read
+    await expect.element(screen.getByRole('button', { name: 'Notifications, 1 unread' })).toBeInTheDocument();
+  });
+
   test('Mark as read: the count and the bell follow, and onMarkRead hears it; Mark all as read ends at "All caught up"', async () => {
     const onMarkRead = vi.fn(), onMarkAllRead = vi.fn();
     const screen = await render(<Notifications onMarkRead={onMarkRead} onMarkAllRead={onMarkAllRead} />);

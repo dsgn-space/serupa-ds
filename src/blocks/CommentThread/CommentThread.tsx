@@ -5,6 +5,7 @@ import { Avatar } from '../../components/Avatar/Avatar';
 import { Button } from '../../components/Button/Button';
 import { Field } from '../../components/Field/Field';
 import { Heading } from '../../components/Heading/Heading';
+import { Loader } from '../../components/Loader/Loader';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { MentionInput, mentionsIn, type MentionOption } from '../../components/MentionInput/MentionInput';
@@ -24,6 +25,7 @@ import { announce } from '../../internal/announce';
      a mention in a comment is bold as well as named, so it isn't shown by color alone (1.4.1).
    - 4.1.3: posting and saving are said once, politely. Delete waits for the toast to go (toast.undo), so Undo is a
      real undo and nothing is gone until then.
+   - 4.1.3: while the comments load, the list says it's busy and its skeletons are named once ("Loading comments").
    - Each word is a label, English by default. */
 
 export interface ThreadComment {
@@ -41,6 +43,8 @@ export interface ThreadComment {
 export interface CommentThreadLabels {
   title: string;
   noComments: string;
+  /** The skeletons' one name while the comments load. */
+  loading: string;
   reply: string;
   /** Under the reply box: the limit in words. */
   replyHint: (max: number) => string;
@@ -68,6 +72,7 @@ export interface CommentThreadLabels {
 const english: CommentThreadLabels = {
   title: 'Comments',
   noComments: 'No comments yet. Start the conversation.',
+  loading: 'Loading comments',
   reply: 'Reply',
   replyHint: (max) => `Up to ${max} characters.`,
   mentionHint: 'Type @ to mention someone.',
@@ -102,6 +107,10 @@ export interface CommentThreadProps {
   /** The longest reply, in characters. Default: 1000. */
   maxLength?: number | undefined;
   headingLevel?: 2 | 3 | 4 | undefined;
+  /** The comments are on their way: skeleton comments in place of the list. The reply box is there already. Default: false. */
+  loading?: boolean | undefined;
+  /** How many skeleton comments to show while loading. Default: 2. */
+  loadingCount?: number | undefined;
   labels?: Partial<CommentThreadLabels> | undefined;
 }
 
@@ -136,7 +145,7 @@ const thenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof 
 const settle = (out: void | PromiseLike<unknown>, done: () => void, failed: () => void) => { if (thenable(out)) out.then(done, failed); else done(); };
 
 /** Comments with who and when, a reply box with a character count, and edit and delete with undo for your own. */
-export function CommentThread({ comments, onReply, onEdit, onDelete, people, maxLength = 1000, headingLevel = 2, labels }: CommentThreadProps) {
+export function CommentThread({ comments, onReply, onEdit, onDelete, people, maxLength = 1000, headingLevel = 2, loading = false, loadingCount = 2, labels }: CommentThreadProps) {
   const l = { ...english, ...labels };
   const id = React.useId();
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
@@ -193,7 +202,17 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} id={id} ref={heading} tabIndex={-1} className="outline-none">{l.title}</Heading>
-      {shown.length === 0 ? <p className="text-sm text-text-muted">{l.noComments}</p> : (
+      {loading ? (
+        <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
+          {Array.from({ length: loadingCount }, (_, i) => (
+            <li key={i} className="flex items-start gap-3">
+              <Loader variant="skeleton" shape="circle" label="" className="shrink-0" />
+              {/* One name for all of them: the first is named, the others are only pictures. */}
+              <Loader variant="skeleton" shape="text" size="sm" lines={3} label={i === 0 ? l.loading : ''} className="min-w-0 flex-1" />
+            </li>
+          ))}
+        </ul>
+      ) : shown.length === 0 ? <p className="text-sm text-text-muted">{l.noComments}</p> : (
         <ol role="list" className="m-0 flex list-none flex-col gap-4 p-0">
           {shown.map((c) => (
             <li key={c.id}>

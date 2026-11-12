@@ -19,3 +19,6 @@ export const SecondOpen: Story = { args: { defaultSelected: 'm2' } };
 
 /** No messages yet: an empty state that says what will show up here, in place of two empty panes. */
 export const Empty: Story = { args: { messages: [] } };
+
+/** While the messages load: the list's pane with placeholder rows, named once for screen readers. */
+export const Loading: Story = { args: { messages: [], loading: true } };
