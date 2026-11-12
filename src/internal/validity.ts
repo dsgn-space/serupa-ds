@@ -47,7 +47,7 @@ function shown(v: string | undefined, type: string, locale: string): string | un
   if (type === 'number' || type === 'range') { const n = Number(v); return v.trim() && isFinite(n) ? new Intl.NumberFormat(locale, { maximumFractionDigits: 20 }).format(n) : v; }
   const m = /^(\d{4,})-(\d\d)(?:-(\d\d))?(?:T(\d\d):(\d\d))?$|^(\d\d):(\d\d)(?::\d\d(?:\.\d+)?)?$/.exec(v);
   if (!m) return v;
-  const at = m[6] ? new Date(2000, 0, 1, +m[6], +m[7]) : new Date(+m[1], +m[2] - 1, m[3] ? +m[3] : 1, m[4] ? +m[4] : 0, m[5] ? +m[5] : 0);
+  const at = m[6] ? new Date(2000, 0, 1, +m[6], Number(m[7])) : new Date(Number(m[1]), Number(m[2]) - 1, m[3] ? +m[3] : 1, m[4] ? +m[4] : 0, m[5] ? +m[5] : 0);
   const style: Intl.DateTimeFormatOptions | null = type === 'date' && m[3] && !m[4] ? { dateStyle: 'medium' }
     : type === 'month' && !m[3] ? { year: 'numeric', month: 'long' }
     : type === 'datetime-local' && m[4] ? { dateStyle: 'medium', timeStyle: 'short' }

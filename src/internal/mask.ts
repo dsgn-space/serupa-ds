@@ -16,8 +16,8 @@ const SLOTS: Record<string, { take: RegExp; upper: boolean }> = {
 export function parseMask(mask: string): Slot[] {
   const out: Slot[] = [];
   for (let i = 0; i < mask.length; i++) {
-    const c = mask[i];
-    if (c === '\\' && i + 1 < mask.length) out.push(mask[++i]);
+    const c = mask.charAt(i);
+    if (c === '\\' && i + 1 < mask.length) out.push(mask.charAt(++i));
     else out.push(SLOTS[c] || c);
   }
   return out;
@@ -41,7 +41,7 @@ function afterLead(start: string, text: string): string {
   if (!want.length) return text;
   let i = 0;
   for (const c of want) {
-    while (i < text.length && LOOSE.test(text[i]) && text[i] !== c) i++;
+    while (i < text.length && LOOSE.test(text.charAt(i)) && text[i] !== c) i++;
     if (text[i] !== c) return text;
     i++;
   }
@@ -64,9 +64,10 @@ export function applyMask(slots: Slot[], typed: string): { text: string; ends: n
   const ends: number[] = [];
   for (const slot of slots) {
     if (typeof slot === 'string') { pending += slot; continue; }
-    while (i < chars.length && !slot.take.test(chars[i])) i++;
-    if (i >= chars.length) break;
-    text += pending + (slot.upper ? chars[i].toUpperCase() : chars[i]);
+    while (i < chars.length && !slot.take.test(chars[i] ?? '')) i++;
+    const c = chars[i];
+    if (c === undefined) break;
+    text += pending + (slot.upper ? c.toUpperCase() : c);
     pending = '';
     ends.push(text.length);
     i++;

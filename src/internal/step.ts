@@ -4,7 +4,7 @@
 /** How many decimals a number is written with: 0.25 → 2, 1e-7 → 7, 1.5e-3 → 4, 100 → 0. */
 export function decimals(n: number): number {
   if (!isFinite(n)) return 0;
-  const [mantissa, exp] = String(n).split('e');
+  const [mantissa = '', exp] = String(n).split('e');
   const frac = (mantissa.split('.')[1] || '').length;
   return Math.max(0, frac - Number(exp || 0));
 }

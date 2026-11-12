@@ -13,7 +13,7 @@ const SLOPE = 3;
 /** Adds a position (in px, along the gesture) at time `t` (an event's timeStamp) and drops the samples the window has passed. */
 export function track(s: Samples, t: number, p: number): void {
   s.push({ t, p });
-  while (s.length > 2 && s[0].t < t - WINDOW) s.shift();
+  while (s.length > 2 && (s[0]?.t ?? t) < t - WINDOW) s.shift();
 }
 
 /** The pointer's speed over the window, in px per ms, signed along the gesture. */
