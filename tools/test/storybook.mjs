@@ -1,5 +1,6 @@
 // Storybook (npm run build-storybook first): every story and docs page renders without errors (and no docs page
-// prints a Markdown table as raw text), and every
+// prints a Markdown table as raw text), every docs page's own content passes axe's WCAG 2.2 AA checks in blue-light
+// and blue-dark, and every
 // story passes axe's WCAG 2.2 AA checks in all six themes, and once more in blue-light with data-contrast="more"
 // (text in a disabled control is exempt from contrast, as WCAG 1.4.3 says). In the first theme, each story also
 // takes the WCAG 1.4.12 text spacing (line height 1.5, letter spacing 0.12em, word spacing 0.16em, paragraph
@@ -93,6 +94,18 @@ const only = onlyComponents();
 const mine = (e) => { const p = e.importPath.split('/'); return !only || only.has(p[1] === 'docs' ? `docs/${p[2]}` : p[3]); };
 const docs = Object.values(entries).filter((e) => e.type === 'docs' && mine(e)).filter((_, i) => i % shards === shard - 1);
 const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
+// axe on a docs page's own content (GR348): its prose, tables, the props table and the docs' own blocks. The stories
+// on it are checked on their own in every theme, and Storybook's object editor (.rejt-tree) puts its <li>s outside a
+// list upstream, so both are left out.
+async function docsAxe(w) {
+  // An anatomy picture (docs/anatomy.tsx) turns inert, and so leaves the tab order, once its story has opened what it opens.
+  await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x instanceof HTMLElement && x.inert), null, { timeout: 5000 }).catch(() => {});
+  if (!(await w.page.evaluate(() => 'axe' in window))) await w.page.addScriptTag({ content: axe });
+  return w.page.evaluate(async () => {
+    const r = await window.axe.run({ include: [['#storybook-docs']], exclude: [['.docs-story'], ['.rejt-tree']] }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
+    return r.violations.map((v) => `${v.id}: ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(', ')}`);
+  });
+}
 async function checkDocs(e, w) {
   const out = [];
   const notReady = await open(w, e, 'blue-light');
@@ -102,6 +115,18 @@ async function checkDocs(e, w) {
   const rawTables = await w.page.evaluate(() => [...document.querySelectorAll('#storybook-docs p')].map((q) => q.textContent || '').filter((x) => /\|\s*:?-{3,}:?\s*\|/.test(x)).map((x) => 'raw Markdown table: ' + x.slice(0, 60)));
   missing.push(...rawTables);
   out.push(t(`docs · ${e.title}`, ok && !w.errors.length && !missing.length, [notReady, ...w.errors, ...missing].filter(Boolean).slice(0, 3).join(' | ')));
+  // Headings (GR361): each id once, so a link to a section or the table of contents lands on it, and no level skipped.
+  // Headings inside a story's canvas belong to the story, not to the page.
+  const headings = notReady ? null : await w.page.evaluate(() => {
+    const hs = [...document.querySelectorAll('#storybook-docs :is(h1, h2, h3, h4, h5, h6)')].filter((h) => !h.closest('.docs-story, .sb-story, #storybook-root'));
+    const ids = hs.map((h) => h.id).filter(Boolean), twice = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
+    const skips = [];
+    hs.reduce((prev, h) => { const l = +h.tagName[1]; if (prev && l > prev + 1) skips.push(`h${prev} to h${l} at "${h.textContent.trim().slice(0, 30)}"`); return l; }, 0);
+    return { twice, skips };
+  });
+  if (headings) out.push(t(`docs · ${e.title} · headings: each id once, no level skipped`, !headings.twice.length && !headings.skips.length,
+    [...headings.twice.map((id) => `id "${id}" twice`), ...headings.skips].slice(0, 4).join(' | ')));
+  if (!notReady) { const v = await docsAxe(w); out.push(t(`docs · ${e.title} · axe (WCAG 2.2 AA), blue-light`, !v.length, v.slice(0, 3).join(' | '))); }
   // In a dark mode the whole docs page follows the theme, so dark components aren't shown on white.
   const darkNotReady = await open(w, e, 'blue-dark');
   const dark = await w.page.evaluate(() => {
@@ -131,6 +156,7 @@ async function checkDocs(e, w) {
     return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
   out.push(t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(24, 24, 27)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark)));
+  if (!darkNotReady) { const v = await docsAxe(w); out.push(t(`docs · ${e.title} · axe (WCAG 2.2 AA), blue-dark`, !v.length, v.slice(0, 3).join(' | '))); }
   // Reflow on the docs themselves (WCAG 1.4.10): at 320px, a 1280px screen at 400% zoom, the page scrolls only up and
   // down. Inline code and table cells break where they must, and wide code blocks and stories scroll in their own box.
   // Stories that measure themselves re-lay out a moment after the resize, so the page has up to 2s to settle. One
@@ -203,6 +229,9 @@ async function pageRules(page) {
     if (twice.length) v.push(`page: the id ${twice.slice(0, 3).map((x) => `"${x}"`).join(', ')} is used twice`);
     return v;
   }, PAGE_RULES);
+  // A story that opens on a modal dialog (a delete that failed) keeps Tab inside the dialog, as it should: the page
+  // behind it is inert, so its skip link is checked by the story without the dialog.
+  if (await page.evaluate(() => !!document.querySelector('dialog:modal, [aria-modal="true"]'))) return out;
   await page.evaluate(() => { document.activeElement?.blur(); window.scrollTo(0, 0); });
   await page.keyboard.press('Tab');
   const skip = await page.evaluate(() => {

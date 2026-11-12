@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 /** Three plans billed monthly: the current one says so instead of offering a button, and the recommended one is marked in words. */
 export const Monthly: Story = {};
 
-/** Billed yearly: the price per month, what is paid once a year, and the saving in the yearly option's name. */
+/** Billed yearly: the price per month, what is paid once a year, the saving in the yearly option's name, and that plans renew every year until cancelled. */
 export const Yearly: Story = { args: { defaultPeriod: 'yearly' } };
 
 /** In Indonesian rupiah, with the words in Indonesian: money is written the locale's way. */
@@ -49,6 +49,8 @@ export const Indonesian: Story = {
       period: 'Periode tagihan', monthly: 'Bulanan', yearly: (s) => (s > 0 ? `Tahunan, hemat ${s}%` : 'Tahunan'), perMonth: 'per bulan',
       billedYearly: (t) => `${t} ditagih per tahun`, current: 'Paket Anda saat ini', recommended: 'Disarankan',
       included: (p) => `Termasuk di ${p}`, choose: (p) => `Pilih ${p}`,
+      renews: (p) => `Paket berbayar diperpanjang setiap ${p === 'yearly' ? 'tahun' : 'bulan'} dengan harga yang tertera sampai Anda membatalkannya.`,
+      cancel: 'Batalkan kapan saja di pengaturan Tagihan',
     },
   },
   render: (args) => <SerupaProvider locale="id-ID"><div lang="id"><Page title="Tagihan" section="Paket"><Pricing {...args} /></Page></div></SerupaProvider>,

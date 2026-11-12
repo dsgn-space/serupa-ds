@@ -119,6 +119,27 @@ describe('Patterns/Checkout', () => {
     await expect.element(screen.getByRole('heading', { name: 'Delivery and payment' })).toBeVisible();
   });
 
+  test('failed starts on the review as after a failed try, and trying again places the order; placed starts on the confirmation', async () => {
+    const screen = await render(<Checkout initial={filled} failed />);
+    await expect.element(screen.getByRole('heading', { name: 'Check your order' })).toBeVisible();
+    expect(document.querySelector('main')!.textContent).toContain('Your order wasn’t placed. Nothing was charged. Try again, or use another card.');
+    await screen.getByRole('button', { name: /Place order/ }).click();
+    await vi.waitFor(() => expect(active().textContent).toBe('Thank you, your order is placed'));
+    await screen.unmount();
+    const done = await render(<Checkout initial={filled} placed />);
+    await expect.element(done.getByRole('heading', { name: 'Thank you, your order is placed' })).toBeVisible();
+    expect(document.querySelector('main')!.textContent).toContain('We’ve sent the receipt to ada@example.com');
+  });
+
+  test('failed or placed with answers missing starts on the details, as startAtReview does', async () => {
+    for (const start of [{ failed: true }, { placed: true }]) {
+      const screen = await render(<Checkout initial={{ name: 'Ada' }} {...start} />);
+      await expect.element(screen.getByRole('heading', { name: 'Delivery and payment' })).toBeVisible();
+      expect(document.body.textContent).not.toContain('wasn’t placed');
+      await screen.unmount();
+    }
+  });
+
   test('the order summary keeps role="list", and long words wrap inside the review cards at 320 px', async () => {
     const long = 'Kundendienstwissensdatenbankabteilung';
     await render(<div style={{ width: 320 }}><Checkout lines={[{ id: 'x', name: long + 'sbecher', quantity: 1, price: 100 }]}
