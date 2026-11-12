@@ -150,7 +150,7 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-check` | `primary` | The check next to the selected option. |
 | `--combobox-listbox-shadow` | `elevation-overlay` | The list's shadow. |
 | `--combobox-listbox-radius` | `radius-surface` | The list's corners (8px). |
-| `--combobox-option-radius` | `radius-control` | An option's corners (6px). |
+| `--combobox-option-radius` | `radius-control` | An option's corners. Unset, they nest in the list's: its radius less its padding and border (3px), following the brand and data-radius. |
 | `--combobox-listbox-max-height` | `spacing-60` | The list's height before it scrolls (240px). |
 | `--combobox-listbox-max-width` | `container-md` | The list's widest, unless the field is wider (448px). Longer labels wrap. |
 | `--combobox-option-height` | `control-height-md` | An option's least height (32px). |
