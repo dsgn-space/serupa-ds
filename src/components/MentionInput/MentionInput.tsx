@@ -62,7 +62,7 @@ const MAX_QUERY = 40;
 export function mentionQuery(text: string, caret: number, trigger = '@'): Query | null {
   const start = text.lastIndexOf(trigger, caret - 1);
   if (start < 0 || caret - start - trigger.length > MAX_QUERY) return null;
-  const before = start ? text[start - 1] : ' ';
+  const before = start ? text.charAt(start - 1) : ' ';
   if (!/[\s([{"'“‘]/.test(before)) return null;
   const q = text.slice(start + trigger.length, caret);
   if (/[\n\r]/.test(q) || /^\s|\s$/.test(q)) return null;   // a space ends it: "@Ayu L" goes on, "@Ayu " stops
@@ -202,8 +202,8 @@ export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, Menti
       e.preventDefault();
       if (!pickable.length) return;
       const step = e.key === 'ArrowDown' ? 1 : -1;
-      setActive(pickable[(at + step + pickable.length) % pickable.length]);
-    } else if ((e.key === 'Enter' || e.key === 'Tab') && !e.shiftKey && current >= 0) {
+      setActive(pickable[(at + step + pickable.length) % pickable.length] ?? -1);
+    } else if ((e.key === 'Enter' || e.key === 'Tab') && !e.shiftKey && shown[current]) {
       e.preventDefault();
       pick(shown[current]);
     } else if (e.key === 'Escape') {
