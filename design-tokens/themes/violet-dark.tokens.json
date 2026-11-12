@@ -105,6 +105,16 @@
         }
       }
     },
+    "surface-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-800}",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page (zinc-50 light, zinc-800 dark).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--surface-hover"
+        }
+      }
+    },
     "surface-raised": {
       "$type": "color",
       "$value": "{color.zinc-800}",

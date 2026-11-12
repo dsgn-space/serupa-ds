@@ -9,6 +9,14 @@
 - progressbar "Course progress"
 - progressbar "Loading"
 
+# DoSayWhat
+- text: Importing contacts
+- progressbar "Importing contacts"
+
+# DontJustLoading
+- text: Loading
+- progressbar "Loading"
+
 # Indeterminate
 - text: Preparing your export
 - progressbar "Preparing your export"

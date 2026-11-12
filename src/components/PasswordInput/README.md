@@ -36,6 +36,11 @@ Drawn from the `CapsLockOn` story.
 - Match the `size` to the other fields in the form.
 - A press anywhere on the box other than the reveal button, such as on the icon or the side padding, focuses the field with the caret at the end, as Input's box does.
 
+### Do and don't
+
+- **Do:** Put the password rules in the hint, so people see them before they type. (`DoRulesUpFront`)
+- **Don't:** Show the rules only in an error: people learn them by failing. (`DontRulesOnlyInError`)
+
 ## Accessibility
 
 - The show/hide button takes presses over at least 24px (WCAG 2.5.8), even at size `sm` where it's 22px: a box behind it reaches past its edges without moving anything.

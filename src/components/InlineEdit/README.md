@@ -102,7 +102,7 @@ Each is an optional override: set it on the page, a container or one InlineEdit.
 | `--inline-edit-placeholder` | `text-muted` | The placeholder when the text is empty. |
 | `--inline-edit-text-disabled` | `text-muted` | The text of a disabled InlineEdit. |
 | `--inline-edit-icon` | `text-muted` | The pencil. |
-| `--inline-edit-bg-hover` | `surface-muted` | The button's background on hover. |
+| `--inline-edit-bg-hover` | `surface-hover` | The button's background on hover. |
 | `--inline-edit-error` | `danger-text` | The validation message. |
 | `--inline-edit-focus-ring` | `focus-ring` | The button's keyboard focus ring. |
 | `--inline-edit-radius` | `radius-control` | The button's corners (6px). |

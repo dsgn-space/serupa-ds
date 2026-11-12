@@ -1,6 +1,12 @@
 # Disabled
 - searchbox "Search projects" [disabled]: Atlas
 
+# DoSayWhat
+- searchbox "Search invoices"
+
+# DontBareSearch
+- searchbox "Search"
+
 # Filtering
 - searchbox "Filter projects"
 - list:

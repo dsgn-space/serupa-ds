@@ -1,3 +1,21 @@
+# DoMarkMatches
+- list:
+  - listitem:
+    - mark: Sã
+    - text: o Paulo, Brazil
+  - listitem:
+    - mark: Sa
+    - text: ntiago, Chile
+  - listitem:
+    - mark: Sa
+    - text: n José, Costa Rica
+
+# DontEmphasis
+- paragraph:
+  - text: Shipping is
+  - mark: free
+  - text: on every order this week.
+
 # InOptions
 - textbox "Filter cities": sa
 - listbox "Cities":

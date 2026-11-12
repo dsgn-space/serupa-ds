@@ -46,6 +46,11 @@ Drawn from the `Invalid` story.
 - The browser's own clear button is hidden, so there's only one ×.
 - A press anywhere else on the box, on the search icon or the side padding, focuses the field with the caret at the end, as Input's box does.
 
+### Do and don't
+
+- **Do:** Say in the placeholder what can be searched: "Search invoices by number or customer". (`DoSayWhat`)
+- **Don't:** Write only "Search...": people have to guess what they can find. (`DontBareSearch`)
+
 ## Accessibility
 
 - The clear button takes presses over at least 24px (WCAG 2.5.8), even at size `sm` where it's 22px: a box behind it reaches past its edges without moving anything.

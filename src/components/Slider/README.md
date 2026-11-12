@@ -50,6 +50,11 @@ Drawn from the `Marks` story.
 - `marks` draws a tick for each mark between the ends, and its label centered under it. With labels, the slider is taller by one line of small text, so nothing overlaps what follows. `true` draws a mark per step, or one per `largeStep` steps past 100 marks. Marks off the track are left out. A press on a label moves the nearest thumb there.
 - `showValue` shows the value, as `formatValue` writes it (without one, the number in the locale's digits: "٤٠" in `ar-EG`), in a small chip over a thumb while it's focused, hovered or dragged. The chip floats and takes no room, so leave space above the slider. Near an end, the chip and the end mark labels move inward, so they stay inside the slider's box.
 
+### Do and don't
+
+- **Do:** Use `formatValue` for a value with a unit or currency, and write the mark labels the same way. (`DoFormatValue`)
+- **Don't:** Leave a price or a measurement as a bare number: people and screen readers can't tell its unit. (`DontBareNumber`)
+
 ## Accessibility
 
 - The slider takes a press over at least 24px of height (WCAG 2.5.8), past the 20px thumb, without taking more room, and 44px on a touch screen, as Apple and Material ask.

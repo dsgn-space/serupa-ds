@@ -54,7 +54,7 @@
       },
       "row-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-hover}",
         "$description": "A body row on hover, and every other row when striped (muted text keeps 4.5:1).",
         "$extensions": {
           "com.serupa": {
@@ -64,7 +64,7 @@
       },
       "row-bg-selected": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-hover}",
         "$description": "A selected row's background.",
         "$extensions": {
           "com.serupa": {

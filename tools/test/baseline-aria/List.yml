@@ -1,3 +1,13 @@
+# DoTitleAndDetail
+- list "Members":
+  - listitem: Ana Ruiz ana@example.com Admin
+  - listitem: Kenji Mori kenji@example.com Editor
+
+# DontCrammedTitle
+- list "Members":
+  - listitem: Ana Ruiz, ana@example.com, Admin since March
+  - listitem: Kenji Mori, kenji@example.com, Editor since June
+
 # Files
 - list "Files":
   - listitem: Quarterly report.pdf 2.4 MB Yesterday

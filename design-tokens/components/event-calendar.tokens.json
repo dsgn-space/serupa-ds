@@ -174,7 +174,7 @@
       },
       "more-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-hover}",
         "$description": "\"+N more\" under the pointer.",
         "$extensions": {
           "com.serupa": {
