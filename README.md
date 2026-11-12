@@ -95,7 +95,7 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. A theme sw
 
 ### 4. Ship it
 
-`bundle.css` holds every utility class (nearly 2 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
+`bundle.css` holds every utility class (about 1.5 MB). For production, trim it to the classes your code uses. With Vite, add the plugin that comes with the package, and keep importing `bundle.css` as above:
 
 ```js
 // vite.config.js
@@ -140,7 +140,7 @@ npx serupa-usage src
 | --- | --- |
 | `tokens.css` | Every token as a CSS variable, the six themes, and the fonts. Load it first. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, and `data-print-urls` on a container prints each outside link's address after it. |
-| `dist/components.css` | The component styles (`dk-*`), about 205 KB (27 KB gzipped). |
+| `dist/components.css` | The component styles (`dk-*`), about 380 KB (53 KB gzipped, 40 KB with Brotli). |
 | `dist/utilities.css` | The utility classes, apart from masks and gradients. |
 | `dist/utilities-extra.css` | The masks (`mask-*`) and gradients (`bg-linear-*`, `bg-radial`, `bg-conic`, and the `from-`, `via-` and `to-` stops): a quarter of the utility rules, which few pages use. Import it after `bundle.css` or `utilities.css`. |
 | `dist/bundle.css` | `components.css` + `utilities.css`. |

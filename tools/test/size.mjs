@@ -200,6 +200,25 @@ totals.push({ name: `Built-in label text (enLabels): ${kib(labels)} KiB gzipped,
 const phoneData = gz((await esbuild.build({ stdin: { contents: "export { PHONE_COUNTRIES } from './src/components/PhoneInput/phone.ts';", resolveDir: PROJECT, loader: 'ts' }, bundle: true, minify: true, write: false, format: 'esm', logLevel: 'silent' })).outputFiles[0].contents);
 totals.push({ name: `PhoneInput's country table (PHONE_COUNTRIES): ${kib(phoneData)} KiB gzipped, within ${PHONE_DATA} KiB`, ok: phoneData <= PHONE_DATA * 1024 && phoneData >= 1024,
   detail: phoneData < 1024 ? 'not measured: the table should bundle from src/components/PhoneInput/phone.ts' : `${over(phoneData - PHONE_DATA * 1024)} over; if the countries are worth it, raise PHONE_DATA in tools/test/size.mjs` });
+// The sizes Getting started and the README quote, which decide which stylesheet a plain page links: each must be
+// within 15% of the build, so the prose can't drift from it (components.css was "about 290 KB" at 384 KB, 11 Nov 2026).
+const raw = (f) => fs.statSync(path.join(PROJECT, 'dist', f)).size;
+const QUOTED = [
+  ['docs/GettingStarted.mdx', /`components\.css` \(about ([\d.]+) KB\)/, raw('components.css'), 'components.css'],
+  ['docs/GettingStarted.mdx', /every utility class, about ([\d.]+) MB/, raw('bundle.css'), 'bundle.css', 1024 ** 2],
+  ['docs/GettingStarted.mdx', /the component styles \(about ([\d.]+) KB\)/, raw('components.css'), 'components.css'],
+  ['docs/GettingStarted.mdx', /to about ([\d.]+) KB with Brotli/, brotli['bundle.css'], 'bundle.css with Brotli'],
+  ['docs/GettingStarted.mdx', /and `components\.css` to about ([\d.]+) KB/, brotli['components.css'], 'components.css with Brotli'],
+  ['README.md', /every utility class \(about ([\d.]+) MB\)/, raw('bundle.css'), 'bundle.css', 1024 ** 2],
+  ['README.md', /\(`dk-\*`\), about ([\d.]+) KB \(([\d.]+) KB gzipped/, raw('components.css'), 'components.css'],
+  ['README.md', /\(`dk-\*`\), about [\d.]+ KB \(([\d.]+) KB gzipped/, size['components.css'], 'components.css gzipped'],
+];
+for (const [doc, re, bytes, what, unit = 1024] of QUOTED) {
+  const m = fs.readFileSync(path.join(PROJECT, doc), 'utf8').match(re);
+  const said = m ? Number(m[1]) * unit : 0;
+  totals.push({ name: `${doc} quotes ${what} within 15% of the build (${m ? m[0] : 'not found'}; built ${kib(bytes)} KiB)`, ok: !!m && Math.abs(said - bytes) <= bytes * 0.15,
+    detail: m ? `the build is ${kib(bytes)} KiB: update the number in ${doc}` : `the sentence that quotes it changed: update ${re} in tools/test/size.mjs` });
+}
 const LABEL = { alone: 'imported alone', share: 'adds to the whole package', css: 'adds to components.css' };
 const overAlone = new Set(folders.filter((n) => budgets[n] && measured[n].alone > budgets[n].alone * 1024));
 const made = Object.fromEntries(await Promise.all([...overAlone].map(async (n) => [n, await inputsOf(pick(names[n]))])));
