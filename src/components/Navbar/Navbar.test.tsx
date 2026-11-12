@@ -292,7 +292,9 @@ describe('Navbar', () => {
     // brand box itself never reaches its anonymous text, which was cut off with no ellipsis.
     const b = q('#nav .dk-navbar__brand > span');
     expect(b?.textContent).toBe('Kommunikationsplattform');
-    expect([Math.round(b.getBoundingClientRect().right) <= Math.round(el('act').getBoundingClientRect().left), b.scrollWidth > b.clientWidth, css(b).overflow, css(b).textOverflow, document.documentElement.scrollWidth <= 320]).toEqual([true, true, 'hidden', 'ellipsis', true]);
+    // The message gives the edges, so a failure says by how much the brand runs under the actions.
+    const edges = () => JSON.stringify({ brandEnd: b.getBoundingClientRect().right, boxEnd: q('#nav .dk-navbar__brand').getBoundingClientRect().right, actionsStart: el('act').getBoundingClientRect().left, brand: [b.scrollWidth, b.clientWidth] });
+    expect([Math.round(b.getBoundingClientRect().right) <= Math.round(el('act').getBoundingClientRect().left), b.scrollWidth > b.clientWidth, css(b).overflow, css(b).textOverflow, document.documentElement.scrollWidth <= 320], edges()).toEqual([true, true, 'hidden', 'ellipsis', true]);
     await resize(1100);
     expect(b.scrollWidth > b.clientWidth).toBe(false);
   });

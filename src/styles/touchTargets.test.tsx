@@ -9,6 +9,11 @@ import { SegmentedControl } from '../components/SegmentedControl/SegmentedContro
 import { Slider } from '../components/Slider/Slider';
 import { Splitter } from '../components/Splitter/Splitter';
 import { Switch } from '../components/Switch/Switch';
+import { PasswordInput } from '../components/PasswordInput/PasswordInput';
+import { NumberInput } from '../components/NumberInput/NumberInput';
+import { Combobox } from '../components/Combobox/Combobox';
+import { DatePicker } from '../components/DatePicker/DatePicker';
+import { TimePicker } from '../components/TimePicker/TimePicker';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
 // and Material ask for 44 to 48px), the Splitter's 8px handle a 24px-wide one, with nothing moving and no two
@@ -69,6 +74,45 @@ describe('touch-sized targets (EQ1)', () => {
       $('[role="separator"]').scrollIntoView({ block: 'center' });
       const h = box('[role="separator"]'), y = h.top + h.height / 2;
       expect([document.elementFromPoint(h.left - 6, y)?.closest('[role="separator"]'), document.elementFromPoint(h.right + 6, y)?.closest('[role="separator"]')]).toEqual([$('[role="separator"]'), $('[role="separator"]')]);
+    });
+  });
+});
+
+// The 24px buttons inside a field: on a touch screen each takes a press anywhere up the field's height and
+// 10px toward the text, so a finger a little off the eye or the calendar button doesn't land in the text and open the
+// keyboard. Two steppers side by side stop halfway into the gap between them. With a mouse they keep their 24px.
+function Fields() {
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '64px', padding: '64px', width: '320px' }}>
+    <PasswordInput className="hit-password" aria-label="Password" />
+    <NumberInput className="hit-number" aria-label="Guests" defaultValue={2} />
+    <Combobox className="hit-combobox" aria-label="Fruit" options={['Apple', 'Banana']} />
+    <DatePicker className="hit-date" aria-label="Due" />
+    <TimePicker className="hit-time" aria-label="Start" />
+  </div>;
+}
+/** The fields, by their hit-… class; the button checked is the field's first (the number field's minus stepper). */
+const FIELDS = ['password', 'number', 'combobox', 'date', 'time'];
+/** For each field's button: does a press 6px before its start edge, and one 1px inside the field's top edge, take it? */
+const reach = () => FIELDS.map((name) => {
+  const field = $('.hit-' + name), b = field.querySelector('button')!; b.scrollIntoView({ block: 'center' });
+  const r = b.getBoundingClientRect(), f = field.getBoundingClientRect(), cy = r.top + r.height / 2, cx = r.left + r.width / 2;
+  const hit = (x: number, y: number) => document.elementFromPoint(x, y)?.closest('button') === b;
+  return [name, hit(r.left - 6, cy), hit(cx, f.top + 2)];
+});
+
+describe('touch-sized buttons inside fields', () => {
+  test('with a mouse: a press beside the button or above it lands in the field, not on the button', async () => {
+    await render(<Fields />);
+    expect(reach()).toEqual(FIELDS.map((s) => [s, false, false]));
+  });
+
+  test('on a touch screen: the button takes a press 6px toward the text and up to the field\'s edge; the two steppers split the gap', async () => {
+    await render(<Fields />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      expect(reach()).toEqual(FIELDS.map((s) => [s, true, true]));
+      const [minus, plus] = [...$('.hit-number').querySelectorAll('button')], a = minus.getBoundingClientRect(), b = plus.getBoundingClientRect(), y = a.top + a.height / 2;
+      expect([document.elementFromPoint(a.right - 1, y)?.closest('button'), document.elementFromPoint(b.left + 1, y)?.closest('button')]).toEqual([minus, plus]);
     });
   });
 });
