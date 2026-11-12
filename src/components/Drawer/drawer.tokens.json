@@ -121,7 +121,7 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.space-surface}",
-        "$description": "Padding inside the panel (24px).",
+        "$description": "Padding inside the panel (24px; 16px on screens under 640px wide).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--drawer-padding"

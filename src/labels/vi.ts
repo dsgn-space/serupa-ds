@@ -60,7 +60,7 @@ export const labels: SerupaLabels = {
   lowContrast: (min) => 'dưới ' + min.replace('.', ',') + ':1, có thể khó đọc',
   loadingResults: 'Đang tải…',
   loadFailed: 'Không tải được các lựa chọn. Hãy gõ để thử lại.',
-  noResults: 'Không có kết quả',
+  noResults: 'Không có kết quả. Hãy thử từ khác.',
   resultsCount: (count) => n(count) + ' kết quả',
   showOptions: 'Hiện các lựa chọn',
   clearValue: (label) => (label ? 'Xóa ' + label : 'Xóa'),

@@ -26,7 +26,7 @@ export interface ComboboxLabels {
 export const en: ComboboxLabels = {
   loadingResults: 'Loading…',
   loadFailed: 'Couldn’t load options. Type to try again.',
-  noResults: 'No results',
+  noResults: 'No results. Try other words.',
   resultsCount: (count, formatted = String(count)) => formatted + (count === 1 ? ' result' : ' results'),
   showOptions: 'Show options',
   clearValue: (label) => label ? 'Clear ' + label : 'Clear',
@@ -38,7 +38,7 @@ export const en: ComboboxLabels = {
 export const id: ComboboxLabels = {
   loadingResults: 'Memuat…',
   loadFailed: 'Gagal memuat pilihan. Ketik untuk mencoba lagi.',
-  noResults: 'Tidak ada hasil',
+  noResults: 'Tidak ada hasil. Coba kata lain.',
   resultsCount: (count, formatted = String(count)) => formatted + ' hasil',
   showOptions: 'Tampilkan pilihan',
   clearValue: (label) => label ? 'Hapus ' + label : 'Hapus',

@@ -42,7 +42,7 @@ Drawn from the `Upload` story.
 - Pass `type` when you have it (a `File`'s `type`, or the server's content type): it picks the icon before the extension does. `kind` overrides both, for a file whose name says nothing ("scan-0042").
 - `bytes` is shown in steps of 1000, as phones and macOS count: 1,482,000 is "1.5 MB". Leave it out when you don't know the size.
 - While uploading, set `progress` from 0 to 100, or `null` when you can't tell. Take it away when the upload is done.
-- A failed upload: set `error` to what went wrong ("Larger than 100 MB"), or `true` for "Upload failed". Pass `onRetry` only when trying again can work.
+- A failed upload: set `error` to what went wrong ("Larger than 100 MB"), or `true` for "Couldn’t upload". Pass `onRetry` only when trying again can work.
 - Put several in a `<ul role="list">` with one per `<li>`, in a wrapping row or a column. Each grows to its content, up to 320px (`--attachment-max-width`), and never wider than its container.
 - `attachmentKind(name, type)` returns the kind on its own, for a filter or your own icon. It runs in a Server Component too.
 
@@ -84,7 +84,7 @@ Drawn from the `Upload` story.
 | `href` | `string` | | Makes the name a link. |
 | `download` | `boolean \| string` | | With `href`, the link's `download` attribute. |
 | `progress` | `number \| null` | | 0 to 100 while uploading; `null` when unknown. |
-| `error` | `ReactNode \| boolean` | | A failed upload's message; `true` says "Upload failed". |
+| `error` | `ReactNode \| boolean` | | A failed upload's message; `true` says "Couldn’t upload". |
 | `onRetry` | `() => void` | | Adds "Try again" to a failed upload. |
 | `onRemove` | `() => void` | | Adds the remove button. |
 | `removeLabel` | `(name: string) => string` | `` `Remove ${name}` `` | The remove button's name. |

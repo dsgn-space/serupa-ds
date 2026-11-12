@@ -104,4 +104,10 @@
 .dk-chat-citation:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-chat-citation__index { font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
 .dk-chat-citation__source { min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Printed, the whole conversation: the chat and its log grow to fit every message, whatever height the app gave
+   them, instead of printing only the messages scrolled into view. */
+@media print {
+  .dk-chat { block-size: auto !important; max-block-size: none !important; }
+  .dk-chat__log { overflow: visible; flex: none; }
+}
 }

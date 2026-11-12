@@ -136,13 +136,13 @@ describe('Attachment', () => {
     await expect.element(page.getByRole('progressbar', { name: 'x.png' })).toHaveAttribute('aria-valuenow', '100');
   });
 
-  test('error: a danger outline and "Upload failed" (or its own message), no bar; "Try again" with onRetry, named with the file', async () => {
+  test('error: a danger outline and "Couldn’t upload" (or its own message), no bar; "Try again" with onRetry, named with the file', async () => {
     let tries = 0;
     await render(<><Attachment id="f" name="Pitch.pptx" progress={50} error onRetry={() => tries++} /><Attachment id="g" name="Demo.mp4" error="Larger than 100 MB" /></>);
     expect([root('f').classList.contains('dk-attachment--error'), root('f').querySelector('[role=progressbar]'), part(root('f'), 'error').textContent.replace(/^error/, '')])
-      .toEqual([true, null, 'Upload failed']);
+      .toEqual([true, null, 'Couldn’t upload']);
     const retry = page.getByRole('button', { name: 'Try again Pitch.pptx' });
-    await expect.element(retry).toHaveAccessibleDescription(/Upload failed/);
+    await expect.element(retry).toHaveAccessibleDescription(/Couldn’t upload/);
     await userEvent.click(retry);
     expect(tries).toBe(1);
     expect([part(root('g'), 'error').textContent.replace(/^error/, ''), root('g').querySelectorAll('button').length]).toEqual(['Larger than 100 MB', 0]);

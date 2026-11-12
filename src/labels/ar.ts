@@ -64,7 +64,7 @@ export const labels: SerupaLabels = {
   lowContrast: (min) => 'أقل من ' + min + ':1، وقد يصعب قراءته',
   loadingResults: 'جارٍ التحميل…',
   loadFailed: 'تعذّر تحميل الخيارات. اكتب لإعادة المحاولة.',
-  noResults: 'لا نتائج',
+  noResults: 'لا نتائج. جرّب كلمات أخرى.',
   resultsCount: (count) => results(count),
   showOptions: 'عرض الخيارات',
   clearValue: (label) => (label ? 'مسح ' + label : 'مسح'),

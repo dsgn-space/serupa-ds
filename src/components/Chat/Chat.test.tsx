@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { cdp, page, server, userEvent } from 'vitest/browser';
+import { cdp, commands, page, server, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
@@ -545,5 +545,19 @@ describe('Chat: watching messages grow (GR240)', () => {
       api.set!(31, 'A long answer that wraps over several lines in this narrow log. '.repeat(8));
       await expect.poll(() => atBottom(log())).toBe(true);
     } finally { proto.observe = realObserve; }
+  });
+});
+
+describe('Chat in print', () => {
+  test('printed, the log shows every message, not only the ones scrolled into view; on screen it still scrolls', async () => {
+    await render(<div style={{ height: 160, display: 'flex' }}><Chat aria-label="Support" style={{ flex: 'auto' }}>{msgs(0, 30)}</Chat></div>);
+    const l = log();
+    expect(l.scrollHeight).toBeGreaterThan(l.clientHeight + 100);
+    await commands.printMedia(true);
+    try {
+      expect(l.scrollHeight - l.clientHeight).toBeLessThanOrEqual(1);
+      expect(l.getBoundingClientRect().height).toBeGreaterThan(600);
+    } finally { await commands.printMedia(false); }
+    expect(l.scrollHeight).toBeGreaterThan(l.clientHeight + 100);
   });
 });
