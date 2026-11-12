@@ -348,6 +348,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-field}",
+        "$description": "The tactile inner shade along the top of the box. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-depth"
+          }
+        }
+      }
     }
   }
 }

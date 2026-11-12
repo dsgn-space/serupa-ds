@@ -363,7 +363,7 @@
   --highlight: var(--zinc-700);
   --pressed: var(--zinc-600);
   --surface: var(--zinc-900);
-  --surface-muted: var(--zinc-800);
+  --surface-muted: var(--zinc-950);
   --surface-raised: var(--zinc-800);
   --surface-overlay: var(--zinc-800);
   --field: var(--zinc-800);
@@ -533,7 +533,7 @@
   --highlight: var(--zinc-700);
   --pressed: var(--zinc-600);
   --surface: var(--zinc-900);
-  --surface-muted: var(--zinc-800);
+  --surface-muted: var(--zinc-950);
   --surface-raised: var(--zinc-800);
   --surface-overlay: var(--zinc-800);
   --field: var(--zinc-800);
@@ -703,7 +703,7 @@
   --highlight: var(--zinc-700);
   --pressed: var(--zinc-600);
   --surface: var(--zinc-900);
-  --surface-muted: var(--zinc-800);
+  --surface-muted: var(--zinc-950);
   --surface-raised: var(--zinc-800);
   --surface-overlay: var(--zinc-800);
   --field: var(--zinc-800);
@@ -789,7 +789,7 @@
   --highlight: light-dark(var(--zinc-200), var(--zinc-700));
   --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-900));
-  --surface-muted: light-dark(var(--zinc-50), var(--zinc-800));
+  --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field: light-dark(var(--white), var(--zinc-800));
@@ -981,6 +981,15 @@
   --radius-surface: var(--rounded-lg);
   --radius-container: var(--rounded-xl);
   --radius-pill: var(--rounded-full);
+  --depth-control: var(--shadow-none);
+  --depth-control-hover: var(--shadow-none);
+  --depth-control-pressed: var(--shadow-none);
+  --depth-sheen: none;
+  --depth-sheen-pressed: none;
+  --depth-part: var(--shadow-none);
+  --depth-field: var(--shadow-none);
+  --depth-card-lift: var(--shadow-none);
+  --depth-press: var(--spacing-0);
   --border-width-0: 0px;
   --border-width-1: 1px;
   --border-width-2: 2px;
@@ -1322,6 +1331,9 @@
   --ease-elastic: linear(0, 0.004 0.5%, 0.015 1%, 0.033 1.5%, 0.058 2%, 0.088 2.5%, 0.124 3%, 0.164 3.5%, 0.258 4.5%, 0.363 5.5%, 0.595 7.5%, 0.828 9.5%, 0.936 10.5%, 1.035 11.5%, 1.123 12.5%, 1.199 13.5%, 1.261 14.5%, 1.31 15.5%, 1.344 16.5%, 1.364 17.5%, 1.372 18.5%, 1.368 19.5%, 1.354 20.5%, 1.316 22%, 1.263 23.5%, 1.135 26.5%, 1.03 29%, 0.975 30.5%, 0.93 32%, 0.896 33.5%, 0.874 35%, 0.863 36.5%, 0.862 38%, 0.876 40%, 0.907 42.5%, 1.001 48.5%, 1.034 51.5%, 1.048 54%, 1.051 57%, 1.035 61%, 0.993 68.5%, 0.982 73%, 0.985 78.5%, 1.005 89.5%, 1.005 98%, 1.004 99.5%, 1);
   --motion-press: var(--duration-100);
   --motion-release: var(--duration-300);
+  --motion-draw: var(--duration-0);
+  --motion-toggle: var(--motion-press);
+  --ease-toggle: var(--ease-move);
   --motion-hover: var(--duration-150);
   --motion-enter-sm: var(--duration-150);
   --motion-enter-md: var(--duration-200);
@@ -1507,6 +1519,87 @@
   --elevation-raised: var(--shadow-md);
   --elevation-overlay: var(--shadow-lg);
   --elevation-modal: var(--shadow-xl);
+}
+[data-theme^="blue-"], [data-brand="blue"] {
+  --depth-control: var(--shadow-none);
+  --depth-control-hover: var(--shadow-none);
+  --depth-control-pressed: var(--shadow-none);
+  --depth-sheen: none;
+  --depth-sheen-pressed: none;
+  --depth-part: var(--shadow-none);
+  --depth-field: var(--shadow-none);
+  --depth-card-lift: var(--shadow-none);
+  --depth-press: var(--spacing-0);
+  --motion-draw: var(--duration-0);
+  --motion-toggle: var(--motion-press);
+  --ease-toggle: var(--ease-move);
+  --ease-spring: var(--ease-spring-snappy);
+}
+[data-theme^="violet-"], [data-brand="violet"] {
+  --depth-control: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 2px 4px -1px rgb(0 0 0 / 0.1);
+  --depth-control-hover: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.14);
+  --depth-control-pressed: inset 0 1px 3px 0 light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.4));
+  --depth-sheen: linear-gradient(to bottom, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 25%, rgb(0 0 0 / 0) 75%, rgb(0 0 0 / 0.06));
+  --depth-sheen-pressed: linear-gradient(to bottom, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0) 60%);
+  --depth-part: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), 0 1px 2px 0 rgb(0 0 0 / 0.16);
+  --depth-field: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35));
+  --depth-card-lift: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 8px 16px -6px rgb(0 0 0 / 0.16), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --depth-press: var(--spacing-px);
+  --motion-draw: var(--duration-150);
+  --motion-toggle: var(--motion-release);
+  --ease-toggle: var(--ease-spring-snappy);
+  --ease-spring: var(--ease-spring-soft);
+}
+[data-theme^="emerald-"], [data-brand="emerald"] {
+  --depth-control: var(--shadow-none);
+  --depth-control-hover: var(--shadow-none);
+  --depth-control-pressed: var(--shadow-none);
+  --depth-sheen: none;
+  --depth-sheen-pressed: none;
+  --depth-part: var(--shadow-none);
+  --depth-field: var(--shadow-none);
+  --depth-card-lift: var(--shadow-none);
+  --depth-press: var(--spacing-0);
+  --motion-draw: var(--duration-0);
+  --motion-toggle: var(--motion-press);
+  --ease-toggle: var(--ease-move);
+  --ease-spring: var(--ease-spring-snappy);
+}
+[data-depth="tactile"] {
+  --depth-control: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 2px 4px -1px rgb(0 0 0 / 0.1);
+  --depth-control-hover: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.14);
+  --depth-control-pressed: inset 0 1px 3px 0 light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.4));
+  --depth-sheen: linear-gradient(to bottom, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 25%, rgb(0 0 0 / 0) 75%, rgb(0 0 0 / 0.06));
+  --depth-sheen-pressed: linear-gradient(to bottom, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0) 60%);
+  --depth-part: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), 0 1px 2px 0 rgb(0 0 0 / 0.16);
+  --depth-field: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35));
+  --depth-card-lift: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 8px 16px -6px rgb(0 0 0 / 0.16), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --depth-press: var(--spacing-px);
+  --motion-draw: var(--duration-150);
+  --motion-toggle: var(--motion-release);
+  --ease-toggle: var(--ease-spring-snappy);
+  --ease-spring: var(--ease-spring-soft);
+}
+[data-depth="flat"] {
+  --depth-control: var(--shadow-none);
+  --depth-control-hover: var(--shadow-none);
+  --depth-control-pressed: var(--shadow-none);
+  --depth-sheen: none;
+  --depth-sheen-pressed: none;
+  --depth-part: var(--shadow-none);
+  --depth-field: var(--shadow-none);
+  --depth-card-lift: var(--shadow-none);
+  --depth-press: var(--spacing-0);
+  --motion-draw: var(--duration-0);
+  --motion-toggle: var(--motion-press);
+  --ease-toggle: var(--ease-move);
+  --ease-spring: var(--ease-spring-snappy);
+}
+@media (forced-colors: active) {
+:root, [data-theme], [data-brand], [data-depth] {
+  --depth-sheen: none;
+  --depth-sheen-pressed: none;
+}
 }
 [data-type-scale="fluid"] {
   --text-2xl: clamp(1.25rem, 1.1667rem + 0.4167vw, 1.5rem);

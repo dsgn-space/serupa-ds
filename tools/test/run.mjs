@@ -95,8 +95,9 @@ const steps = [
   // With SERUPA_ONLY, the tests that go through every story (STORY_WIDE) run too, on those components' stories.
   // SERUPA_SHARD=2/3 with --group components: every third test file (CI runs the shards side by side). A shard with
   // coverage also writes Vitest's blob report (.vitest/blob/ in Vitest 5), which CI's coverage job merges into one coverage
-  // report and checks against the floors.
-  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, ...(process.env.SERUPA_COVERAGE ? ['--reporter=default', '--reporter=blob'] : [])] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
+  // report and checks against the floors. A narrowed run may have fewer files than shards: a shard left with none passes
+  // (without --passWithNoTests, Vitest stops on --shard=3/3 over one file).
+  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests', ...(process.env.SERUPA_COVERAGE ? ['--reporter=default', '--reporter=blob'] : [])] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
   // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
   // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
   ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {

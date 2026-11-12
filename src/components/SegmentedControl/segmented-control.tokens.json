@@ -103,6 +103,16 @@
             "cssVar": "--segmented-control-indicator-shadow"
           }
         }
+      },
+      "indicator-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The tactile layers over the selected segment's shadow. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--segmented-control-indicator-depth"
+          }
+        }
       }
     },
     "radius": {
