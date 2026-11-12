@@ -46,10 +46,13 @@ const tokens = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'ut
 const names = new Set(tokens.map((t) => t.name));
 const ROLES = ['motion-press', 'motion-release', 'motion-hover', 'motion-enter-sm', 'motion-enter-md', 'motion-enter-lg', 'motion-exit-sm', 'motion-exit-md', 'motion-exit-lg', 'motion-change-sm', 'motion-change-md', 'motion-change-lg', 'motion-loop-spinner', 'motion-loop-placeholder', 'motion-loop-blink', 'motion-loop-progress', 'motion-ripple', 'motion-ripple-fade', 'motion-stagger', 'motion-stagger-limit', 'motion-sequence', 'ease-enter', 'ease-exit', 'ease-move', 'ease-settle', 'ease-pop', 'ease-spring', 'ease-fling', 'ease-celebrate'];
 const roles = ROLES.map((r) => [r, tokens.find((t) => t.name === r)]);
-const badRoles = roles.filter(([, t]) => !t || !/^\{(?:duration|delay|ease)-[\w-]+\}$/.test(t.value) || !names.has(t.value.slice(1, -1))).map(([r, t]) => `${r}: ${t ? t.value : 'missing'}`);
-const value = (n) => { const t = tokens.find((x) => x.name === n); const v = t.value.slice(1, -1); return parseInt(tokens.find((x) => x.name === v)?.value, 10); };
+// A brand can set its own role (Modern's quicker motion): the value is then one per theme, and each must name the scale.
+const each = (t) => (t && typeof t.value === 'object' ? Object.values(t.value) : [t?.value]);
+const themes = [...new Set(roles.flatMap(([, t]) => (t && typeof t.value === 'object' ? Object.keys(t.value) : [])))];
+const badRoles = roles.filter(([, t]) => !t || each(t).some((v) => !/^\{(?:duration|delay|ease)-[\w-]+\}$/.test(v) || !names.has(v.slice(1, -1)))).map(([r, t]) => `${r}: ${t ? JSON.stringify(t.value) : 'missing'}`);
+const value = (n, th) => { const t = tokens.find((x) => x.name === n); const v = (typeof t.value === 'object' ? t.value[th] : t.value).slice(1, -1); return parseInt(tokens.find((x) => x.name === v)?.value, 10); };
 const springs = Object.entries(SPRINGS).filter(([n, z]) => tokens.find((t) => t.name === n)?.value !== spring(z)).map(([n]) => n);
-const exitsShorter = ['sm', 'md', 'lg'].filter((s) => !(badRoles.length === 0 && value(`motion-exit-${s}`) < value(`motion-enter-${s}`)));
+const exitsShorter = ['sm', 'md', 'lg'].flatMap((s) => (themes.length ? themes : [null]).filter((th) => !(badRoles.length === 0 && value(`motion-exit-${s}`, th) < value(`motion-enter-${s}`, th))).map((th) => (th ? `${s} (${th})` : s)));
 
 done(report('Motion tokens', [
   { name: 'component CSS takes its durations, delays and easings from the motion tokens', ok: found.length === 0, detail: `raw values: ${found.join(' | ')}. Use a motion role (motion-enter-sm, ease-enter, …) or a duration-*/ease-* token` },
