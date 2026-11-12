@@ -52,6 +52,24 @@ describe('Blocks/Activity feed', () => {
     expect(page.getByRole('button').elements()).toHaveLength(0);
   });
 
+  test('loading: the list is busy, only the first skeleton is named, and there is no Load more until it ends', async () => {
+    const screen = await render(<ActivityFeed events={[]} hasMore onLoadMore={() => {}} loading loadingCount={4} />);
+    const feed = page.getByRole('region', { name: 'Activity' });
+    const list = feed.getByRole('list').element();
+    expect(list.getAttribute('aria-busy')).toBe('true');
+    expect(feed.getByRole('listitem').elements()).toHaveLength(4);
+    await expect.poll(() => feed.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading: Activity']);
+    expect(page.getByRole('button').elements()).toHaveLength(0);
+    expect(page.getByText('No activity yet').elements()).toHaveLength(0);   // not empty: still loading
+    await screen.rerender(<ActivityFeed events={[]} hasMore onLoadMore={() => {}} title="Aktivitas" loading loadingText="Memuat aktivitas" />);
+    await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat aktivitas']);
+    await screen.rerender(<ActivityFeed events={all.slice(0, 2)} hasMore onLoadMore={() => {}} title="Aktivitas" />);
+    const loaded = page.getByRole('region', { name: 'Aktivitas' });
+    expect(loaded.getByRole('list').element().hasAttribute('aria-busy')).toBe(false);
+    expect(loaded.getByRole('listitem').elements()).toHaveLength(2);
+    await expect.element(page.getByRole('button', { name: 'Load more' })).toBeVisible();
+  });
+
   test('every word can be given in the page language', async () => {
     await render(<ActivityFeed events={[{ id: '1', actor: { name: 'Ana Putri' }, action: 'mengomentari', target: { label: 'Desain ulang' }, date: ago(5) }]}
       title="Aktivitas" headingLevel={3} hasMore onLoadMore={() => {}} loadMoreLabel="Muat lagi" />);
