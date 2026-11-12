@@ -32,6 +32,7 @@ interface UseStepsOptions {
     validate?: ((index: number) => boolean | Promise<boolean>) | undefined;
     onComplete?: (() => void) | undefined;
     defaultStep?: number | undefined;
+    transition?: boolean | undefined;
 }
 interface UseSteps {
     current: number;
@@ -45,6 +46,7 @@ interface UseSteps {
         id: string;
         hidden: boolean;
         "aria-labelledby": string;
+        style?: React.CSSProperties;
     };
     headingProps: (index: number) => {
         id: string;
