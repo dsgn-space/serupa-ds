@@ -114,6 +114,7 @@ const s = useSteps({ steps, validate: (i) => checkStep(i), onComplete: submit })
 - Every step stays rendered, and the others are `hidden`. Whatever was typed in a step, controlled or not, is still there on the way back, so nothing is asked for twice (WCAG 3.3.7).
 - When the step changes, focus moves to its heading (`tabIndex={-1}`), so a screen reader says which step people are on. It doesn't move focus on the first render.
 - A second `next()` while a check is still running does nothing, so a double press of Next moves one step.
+- With `transition: true`, each step slides in from the way people are going: forward from the end, back from the start, mirrored right to left. It runs as a View Transition, so under reduced motion the steps only crossfade, and where View Transitions are missing they swap at once. `panelProps` then names the open step for it, in `style`.
 
 | Returns | Type | Notes |
 | --- | --- | --- |
@@ -121,10 +122,10 @@ const s = useSteps({ steps, validate: (i) => checkStep(i), onComplete: submit })
 | `next` / `back` / `goTo(i)` | functions | `next` and `goTo` resolve to whether they moved. |
 | `isFirst` / `isLast` | `boolean` | For the Back button and the Next or Submit label. |
 | `stepperProps` | object | Spread on Stepper: `steps` with errors marked, `current` and `onStepClick`. |
-| `panelProps(i)` | `{ id, hidden, aria-labelledby }` | Spread on each step's container. |
+| `panelProps(i)` | `{ id, hidden, aria-labelledby, style? }` | Spread on each step's container. |
 | `headingProps(i)` | `{ id, tabIndex, ref }` | Spread on each step's heading. |
 
-Options: `steps` (as Stepper takes them), `validate(index)`, `onComplete()` and `defaultStep` (default `0`).
+Options: `steps` (as Stepper takes them), `validate(index)`, `onComplete()`, `defaultStep` (default `0`) and `transition` (default `false`).
 
 ## Component tokens
 
