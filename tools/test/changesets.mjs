@@ -50,7 +50,9 @@ t('bullets alone are one entry each, and plain text is one', JSON.stringify(entr
 // the check, compared with the commit before it.
 {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-changeset-check-'));
-  const git = (...a) => execFileSync('git', ['-C', dir, '-c', 'user.name=t', '-c', 'user.email=t@t', ...a], { encoding: 'utf8' });
+  // Without GIT_* from the caller: run from a git hook (GIT_DIR set), -C alone would commit into the caller's repository.
+  const env = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith('GIT_')));
+  const git = (...a) => execFileSync('git', ['-C', dir, '-c', 'user.name=t', '-c', 'user.email=t@t', ...a], { encoding: 'utf8', env });
   const put = (f, text) => { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), text); };
   for (const f of ['tools/changeset-check.mjs', 'tools/changesets.mjs']) put(f, read(f));
   const pkg = { name, version: '1.0.0', scripts: { test: 'a' }, devDependencies: { vitest: '1.0.0' }, dependencies: {} };

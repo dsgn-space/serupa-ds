@@ -31,6 +31,10 @@ if [ -z "$since" ]; then
   git fetch -q origin main || { echo "pre-push: couldn't fetch origin/main; run node tools/ci.mjs --since origin/main yourself." >&2; exit 1; }
   since=origin/main
 fi
+# Git runs a hook with GIT_DIR (and in a worktree GIT_WORK_TREE, GIT_INDEX_FILE) set to this repository. The checks
+# make throwaway repositories of their own, and with these set their commits landed in this branch instead (six
+# commits and the tree replaced by four files, on a worktree, 12 Nov). Clear every variable that points git here.
+unset $(git rev-parse --local-env-vars)
 steps=tokens,build,typecheck,lint,components
 echo "pre-push: node tools/ci.mjs --only $steps --since $since, five minutes at most (SERUPA_SKIP_PREPUSH=1 skips it)" >&2
 if command -v timeout >/dev/null 2>&1; then
