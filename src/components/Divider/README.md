@@ -41,6 +41,11 @@ Drawn from the `LongLabel` story.
 - A vertical divider takes the height of the row it's in, so put it in a row, such as `<Stack direction="row">`.
 - Use `decorative` when the groups are already clear without it.
 
+### Do and don't
+
+- **Do:** Keep a label to a word or two, such as "or". (`DoShortLabel`)
+- **Don't:** Write a sentence as the label: it reads as a heading squeezed into a line. (`DontSentenceLabel`)
+
 ## Accessibility
 
 - It's a separator to screen readers (an `<hr>`, or `role="separator"` with `aria-orientation`). When it only decorates, such as between items that are already grouped, use `decorative`.

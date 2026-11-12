@@ -43,3 +43,15 @@ export const LongValue: Story = {
   args: { defaultValue: 'correct horse battery staple and a much longer passphrase', defaultVisible: true },
   render: (args) => <div style={{ width: 200 }}><PasswordInput {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the rules in the hint, before people type. */
+export const DoRulesUpFront: Story = {
+  name: 'Do: rules in the hint',
+  render: () => <div style={{ maxWidth: 320 }}><Field label="New password" hint="At least 12 characters"><PasswordInput autoComplete="new-password" /></Field></div>,
+};
+/** Don't: the rules only in an error, after people have tried. */
+export const DontRulesOnlyInError: Story = {
+  name: "Don't: rules only in an error",
+  render: () => <div style={{ maxWidth: 320 }}><Field label="New password" error="Use at least 12 characters"><PasswordInput autoComplete="new-password" defaultValue="hunter2" /></Field></div>,
+};
