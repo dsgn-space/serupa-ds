@@ -485,3 +485,13 @@ test('the value bubble writes its digits at one width, so it keeps its width as 
   }
   expect(new Set(widths).size).toBe(1);
 });
+
+test('a max off the step grid is never reached, as with a native range input: min 0, max 10, step 3 stops at 9 for a value of 10, End and a step up (GR271)', async () => {
+  await render(<Slider id="og" aria-label="Off grid" min={0} max={10} step={3} defaultValue={10} />);
+  expect(now('og')).toBe(9);
+  thumb('og').focus();
+  await userEvent.keyboard('{Home}{End}');
+  expect(now('og')).toBe(9);
+  await userEvent.keyboard('{ArrowRight}');
+  expect(now('og')).toBe(9);
+});

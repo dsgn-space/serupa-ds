@@ -22,7 +22,7 @@ export function typeahead(typed: Typed, key: string, labels: readonly string[], 
   typed.at = now;
   const n = labels.length;
   const find = (word: string, from: number) => {
-    for (let s = 0; s < n; s++) { const i = (from + s + n) % n; if (fold(labels[i].trim()).startsWith(word)) return i; }
+    for (let s = 0; s < n; s++) { const i = (from + s + n) % n; if (fold((labels[i] ?? '').trim()).startsWith(word)) return i; }
     return -1;
   };
   // The same letter over and over steps on; a longer word may stay on the item it already matches.
