@@ -74,3 +74,9 @@ function States(args: React.ComponentProps<typeof VirtualList>) {
   );
 }
 export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a long list, where drawing only the rows in view pays off. */
+export const DoLongList: Story = { name: 'Do: use it for long lists' };
+/** Don't: a handful of rows, which a plain List draws more simply. */
+export const DontShortList: Story = { name: "Don't: use it for a few rows", args: { count: 4 } };

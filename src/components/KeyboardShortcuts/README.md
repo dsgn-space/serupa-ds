@@ -54,6 +54,11 @@ Drawn from the `LongText` story.
 - Symbols such as <kbd>?</kbd> match whatever the keyboard layout needs to type them, so Shift isn't checked. Letters and digits also match by their position, so <kbd>alt</kbd>+<kbd>K</kbd> works on a Mac, where Option changes the character. A letter matches by position only when the key types no Latin letter (Option on a Mac, a Cyrillic or Greek layout), so on AZERTY or Dvorak it goes by the letter typed.
 - The dialog lists each group in the order its first shortcut was set up, with "Show keyboard shortcuts" under General. With one group, it has no heading. The same keys and description are listed once, however many components set them up.
 
+### Do and don't
+
+- **Do:** Give each shortcut a `description` and a `group`, so the list has headings to scan by. (`DoGroupShortcuts`)
+- **Don't:** Leave shortcuts without a group: they pile up in one long list. (`DontUngrouped`)
+
 ## Accessibility
 
 - **Keyboard:**

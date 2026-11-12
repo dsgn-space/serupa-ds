@@ -47,6 +47,11 @@ Drawn from the `ByArea` story.
 - A `+` code PhoneInput doesn't know warns once in the console; its digits are read as a number in the picked country.
 - A press on the box past the number field focuses the field with the caret at the end, as the text cursor over the box promises; the country menu keeps its own press.
 
+### Do and don't
+
+- **Do:** Label it with [Field](../Field/README.md) and say in the hint what the number is for ("We'll text you a code"). (`DoSayWhy`)
+- **Don't:** Ask without saying why: people wonder whether to give a real number. (`DontNoReason`)
+
 ## Accessibility
 
 - The country menu is a native `<select>` named "Country", under the visible calling code. Phones open their own picker, and screen readers announce it as a menu with its value. Each option says the country's name in the locale's words and its calling code ("Indonesia (+62)").

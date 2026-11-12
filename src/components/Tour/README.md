@@ -49,6 +49,11 @@ The element the step points at gets a 2px primary ring (`[data-tour-target]`), s
 - The page stays usable while it's open: nothing is dimmed and a press outside doesn't end it, so they can try what a step points at.
 - Placement says where the panel goes ('bottom' by default); it flips when there's no room.
 
+### Do and don't
+
+- **Do:** Say what each part does for people, in a title and a sentence or two. (`DoSayWhatItDoes`)
+- **Don't:** Describe what the part is ("This is the search field"): they can already see that. (`DontSayWhatItIs`)
+
 ## Accessibility
 
 - **Role and name:** each step is a `dialog` named by its title (a heading, level 2 by default: `headingLevel` fits it to the page) and described by its text.

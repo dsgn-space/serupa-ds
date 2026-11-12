@@ -44,3 +44,15 @@ export const LongText: Story = {
     shortcuts: [{ keys: ['mod', 'shift', 'alt', 'pagedown'], description: 'Move the selected conversation to the next Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung folder', group: 'Organizing very long conversation lists' }],
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: shortcuts in groups, under headings people scan by. */
+export const DoGroupShortcuts: Story = {
+  name: 'Do: group the shortcuts',
+  args: { defaultOpen: true, shortcuts: [{ keys: ['mod', 'B'], description: 'Bold', group: 'Editor' }, { keys: ['mod', 'I'], description: 'Italic', group: 'Editor' }] },
+};
+/** Don't: shortcuts with no group, which pile up in one long list. */
+export const DontUngrouped: Story = {
+  name: "Don't: leave them ungrouped",
+  args: { defaultOpen: true, shortcuts: [{ keys: ['mod', 'B'], description: 'Bold' }, { keys: ['mod', 'I'], description: 'Italic' }] },
+};

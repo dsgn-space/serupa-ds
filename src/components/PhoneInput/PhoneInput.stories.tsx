@@ -64,3 +64,9 @@ export const LongValue: Story = {
   args: { defaultValue: '+62 812 3456 7890 1234' },
   render: (args) => <div style={{ width: 200 }}><PhoneInput {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a hint that says what the number is for. */
+export const DoSayWhy: Story = { name: 'Do: say what the number is for', render: () => <div style={{ maxWidth: 320 }}><Field label="Mobile number" hint="We'll text you a code"><PhoneInput defaultCountry="ID" /></Field></div> };
+/** Don't: no reason, so people wonder whether to give a real number. */
+export const DontNoReason: Story = { name: "Don't: ask without saying why", render: () => <div style={{ maxWidth: 320 }}><Field label="Phone"><PhoneInput defaultCountry="ID" /></Field></div> };

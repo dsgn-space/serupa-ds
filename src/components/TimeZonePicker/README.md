@@ -31,6 +31,11 @@ import { TimeZonePicker } from "serupa-ds";
 - Zones go by their current names ("Europe/Kyiv", "Asia/Kolkata", "Asia/Ho_Chi_Minh"), the ones servers, databases and `Temporal` use, even where the browser still lists an older spelling. A value under an old name ("Europe/Kiev") shows too, and the picker hands back the current one. Typing the old name ("kiev") still finds it, as do common abbreviations and big cities that share a zone ("pst", "wib", "mumbai").
 - The cities are as the IANA names spell them, in English ("New York"); the zone names are the browser's, in the locale (`locale`, the provider's, or the browser's).
 
+### Do and don't
+
+- **Do:** Put it in a [Field](../Field/README.md) with a label that says whose time zone it is ("Meeting time zone"). (`DoSayWhose`)
+- **Don't:** Show a bare picker: people can't tell whether it's their zone or the event's. (`DontBarePicker`)
+
 ## Accessibility
 
 - **Role and name:** a Combobox: an `input` with `role="combobox"` and a `listbox` of `option`s. Each option is named by its city, and its offset and zone name are its `aria-description`, so a screen reader hears both.

@@ -10,6 +10,33 @@
   - status: 95 results
 - code: "{\"status\":[\"open\"]}"
 
+# DoShowCount
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Status is Open or Pending"
+      - 'button "Remove filter: Status"'
+    - listitem:
+      - button "Due is Nov 2 – 8, 2026"
+      - 'button "Remove filter: Due"'
+    - listitem:
+      - button "Add filter"
+  - button "Clear all"
+  - status: 24 results
+
+# DontHideCount
+- group "Filters":
+  - list:
+    - listitem:
+      - button "Status is Open or Pending"
+      - 'button "Remove filter: Status"'
+    - listitem:
+      - button "Due is Nov 2 – 8, 2026"
+      - 'button "Remove filter: Due"'
+    - listitem:
+      - button "Add filter"
+  - button "Clear all"
+
 # Empty
 - group "Filters":
   - list:

@@ -78,3 +78,24 @@ export const LongText: Story = {
     <ChatMessage author="سارة">مرحبا، كيف يمكنني مساعدتك؟</ChatMessage>
   </Chat></Frame>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const Rina = <Avatar size="sm" name="Rina Kusuma" />;
+/** Do: a ChatDivider with the date where the day changes. */
+export const DoDateDividers: Story = {
+  name: 'Do: mark where the day changes',
+  render: (args) => <Frame><Chat {...args} className="flex-auto">
+    <ChatDivider date={at(-1440)}>23 Oct 2026</ChatDivider>
+    <ChatMessage own time={at(-1440)}>Is the March invoice ready?</ChatMessage>
+    <ChatDivider date={at(0)}>24 Oct 2026</ChatDivider>
+    <ChatMessage author="Rina Kusuma" avatar={Rina} time={at(0)}>Yes, it's on its way to your inbox.</ChatMessage>
+  </Chat></Frame>,
+};
+/** Don't: messages from different days run together, so "yesterday" and "today" can't be told apart. */
+export const DontNoDividers: Story = {
+  name: "Don't: run the days together",
+  render: (args) => <Frame><Chat {...args} className="flex-auto">
+    <ChatMessage own time={at(-1440)}>Is the March invoice ready?</ChatMessage>
+    <ChatMessage author="Rina Kusuma" avatar={Rina} time={at(0)}>Yes, it's on its way to your inbox.</ChatMessage>
+  </Chat></Frame>,
+};

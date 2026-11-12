@@ -53,6 +53,11 @@ Drawn from the `Playground` story.
 - Collapsing and bringing back with Enter or a double-click slides: the handle and the second pane glide to their new place while the first pane wipes out or in with them, over 200ms. Press Enter again mid-way and it turns back from where it is. Dragging, the arrow keys and a `size` your code sets move at once, and with reduced motion so does the toggle.
 - In a right-to-left page the first pane is on the right, and the arrow keys follow what you see: ArrowLeft moves the handle left.
 
+### Do and don't
+
+- **Do:** Name the handle after the pane it resizes (`separatorLabel="Folders"`). (`DoNameHandle`)
+- **Don't:** Give it a generic name ("Resize"): screen reader users can't tell which pane it changes. (`DontGenericHandle`)
+
 ## Accessibility
 
 - **Role and name:** the WAI-ARIA window splitter pattern. The handle is a focusable `role="separator"` with `aria-orientation`, `aria-valuenow` (the first pane's size in percent), `aria-valuemin`, `aria-valuemax` and `aria-controls` pointing at the first pane. It's named by `separatorLabel`, or "Resize panes" (the `resizePanes` label, "Ubah ukuran panel" in `idLabels`).

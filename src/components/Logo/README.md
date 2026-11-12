@@ -35,6 +35,11 @@ Drawn from the `Default` story.
 - `size` sets the height (24, 32 or 40px); the width follows the picture's shape. SVG files keep it sharp at every size.
 - It isn't a link. Put it in the app's link home (a router link, or `<a href="/">`), name the link ("Acme home") and pass `alt=""`, so a screen reader doesn't read the name twice.
 
+### Do and don't
+
+- **Do:** Give it `darkSrc` (and `markDarkSrc`) wherever it can show on dark. (`DoDarkVersion`)
+- **Don't:** Ship only the light logo: in a dark theme it's dark on dark. (`DontNoDarkVersion`)
+
 ## Accessibility
 
 - **Role and name:** an `img` named by `alt`, the brand's name. With `alt=""` inside a named link, it's left out and the link carries the name.

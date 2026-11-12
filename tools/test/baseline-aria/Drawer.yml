@@ -1,6 +1,34 @@
 # Bottom
 - button "Open filters"
 
+# DoFooterActions
+- button "Open filters"
+- dialog "Filters":
+  - heading "Filters" [level=2]
+  - paragraph: Narrow the list of projects.
+  - button "Close"
+  - text: Name
+  - textbox "Name":
+    - /placeholder: Search projects
+  - checkbox "Only mine"
+  - text: Only mine
+  - button "Reset"
+  - button "Apply"
+
+# DontBodyActions
+- button "Open filters"
+- dialog "Filters":
+  - heading "Filters" [level=2]
+  - paragraph: Narrow the list of projects.
+  - button "Close"
+  - text: Name
+  - textbox "Name":
+    - /placeholder: Search projects
+  - checkbox "Only mine"
+  - text: Only mine
+  - button "Apply"
+  - button "Reset"
+
 # Large
 - button "Open filters"
 

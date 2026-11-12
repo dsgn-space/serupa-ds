@@ -12,6 +12,22 @@
   - /placeholder: This conversation is closed
 - button "Send" [disabled]
 
+# DoDateDividers
+- log "Conversation with Support":
+  - text: 23 Oct 2026 You
+  - time: Oct 23, 2026
+  - text: Is the March invoice ready? 24 Oct 2026 Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Yes, it's on its way to your inbox.
+
+# DontNoDividers
+- log "Conversation with Support":
+  - text: You
+  - time: Oct 23, 2026
+  - text: Is the March invoice ready? Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Yes, it's on its way to your inbox.
+
 # Empty
 - log "Conversation with Support"
 - textbox "Message":

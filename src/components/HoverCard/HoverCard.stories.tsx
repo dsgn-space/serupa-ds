@@ -53,3 +53,19 @@ export const LongText: Story = {
   },
   decorators: [centered], parameters: { centered: true },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a short card: a name, a picture, a line or two and a link. */
+export const DoShortCard: Story = { name: 'Do: keep the card short', args: { open: true }, decorators: [centered], parameters: { centered: true } };
+/** Don't: a page of content, which hides what it was hovering over; link to the full page instead. */
+export const DontLongCard: Story = {
+  name: "Don't: fill the card",
+  args: { open: true, children: <div className="flex flex-col gap-3">
+    {person}
+    <p className="m-0">Dewi joined in 2019 from the agency side, led the 2023 checkout redesign, and now runs the weekly design critique for Payments, Billing and Invoicing.</p>
+    <p className="m-0">Current projects: invoice PDF export, the refund flow, the card form's error states and the dark theme for receipts.</p>
+    <Link href="#dewi-calendar">Dewi's calendar</Link>
+    <Link href="#dewi-reviews">Reviews by Dewi</Link>
+  </div> },
+  decorators: [centered], parameters: { centered: true },
+};
