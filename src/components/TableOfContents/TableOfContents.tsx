@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit } from '../../internal/cn';
+import { reducedMotion as reduced } from '../../internal/mediaList';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useServerStyles } from '../../internal/serverStyles';
-import { prefersReducedMotion } from '../../internal/media';
 import { en as words } from './labels';
 
 /** One entry: the id of the heading it goes to, its text, and its level (2 for an h2). */
@@ -137,7 +137,7 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
     if (!h) return;
     e.preventDefault();
     pinned.current = Date.now() + 1000;
-    h.scrollIntoView({ behavior: prefersReducedMotion(h) ? 'auto' : 'smooth', block: 'start' });
+    h.scrollIntoView({ behavior: reduced(h) ? 'auto' : 'smooth', block: 'start' });
     if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
     h.focus({ preventScroll: true });
     if (window.location.hash !== '#' + id) window.history.pushState(null, '', '#' + id);

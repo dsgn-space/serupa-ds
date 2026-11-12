@@ -204,3 +204,14 @@ describe('EventCalendar', () => {
     }
   });
 });
+
+describe('EventCalendar and the screen width', () => {
+  test('a re-render reads the width without making a new media query each time (one shared list per query)', async () => {
+    const screen = await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} />);
+    const spy = vi.spyOn(window, 'matchMedia');
+    try {
+      for (let k = 0; k < 3; k++) await screen.rerender(<EventCalendar events={EVENTS} defaultMonth={MARCH} maxPerDay={k + 2} />);
+      expect(spy).not.toHaveBeenCalled();
+    } finally { spy.mockRestore(); }
+  });
+});

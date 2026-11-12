@@ -34,6 +34,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* A word longer than its line (a URL, an ID, a German compound in the app's own text) breaks instead of widening
+     the page (WCAG 1.4.10). break-word, unlike anywhere, leaves min-content sizes alone, so tables and flex items
+     size as before. */
+  overflow-wrap: break-word;
 }
 
 /* Form controls use the page's type instead of the browser's. */

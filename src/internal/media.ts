@@ -1,24 +1,11 @@
 'use client';
 import * as React from 'react';
+import { REDUCED_MOTION, REDUCE_ATTR, mediaList, reducedMotion } from './mediaList';
 
 /** The screen widths of the `screen-*` tokens and the `sm:` … `2xl:` utility prefixes, in px (min-width, mobile first). */
 export const BREAKPOINTS = { sm: 640, md: 768, lg: 1024, xl: 1280, '2xl': 1536 } as const;
 /** A breakpoint's name: `'sm'` (640px), `'md'` (768px), `'lg'` (1024px), `'xl'` (1280px) or `'2xl'` (1536px). */
 export type Breakpoint = keyof typeof BREAKPOINTS;
-
-// module state: one MediaQueryList per query text, so reading a query on every render doesn't build a new one each
-// time. It holds only how the visitor's screen answers a query, never a request's data, and the server never fills it.
-const lists = new Map<string, MediaQueryList>();
-function mediaList(query: string): MediaQueryList | null {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return null;
-  let m = lists.get(query);
-  if (!m) {
-    if (lists.size > 100) lists.clear();
-    m = window.matchMedia(query);
-    lists.set(query, m);
-  }
-  return m;
-}
 
 /** Whether a CSS media query matches now, kept up to date as it changes (the window resized, the phone turned, a
  *  setting switched). `useMediaQuery('(hover: hover)')`. Server HTML and hydration use `serverValue` (default
@@ -44,18 +31,11 @@ export function useBreakpoint(name: Breakpoint, options?: { serverValue?: boolea
   return useMediaQuery('(min-width: ' + BREAKPOINTS[name] + 'px)', options);
 }
 
-const REDUCE = '(prefers-reduced-motion: reduce)';
-const REDUCE_ATTR = '[data-motion="reduce"]';
-
 /** Whether motion should be reduced now: the system asks for it (`prefers-reduced-motion: reduce`), or the app's own
  *  setting does (`data-motion="reduce"` on `<html>`, or on a section around `el`). For a one-off check in an event
  *  handler or effect; render with `useReducedMotion`. False on the server. */
 export function prefersReducedMotion(el?: Element | null): boolean {
-  if (typeof document === 'undefined') return false;
-  const m = mediaList(REDUCE);
-  if (m && m.matches) return true;
-  const at = el && el.isConnected ? el : document.documentElement;
-  return !!(at && at.closest(REDUCE_ATTR));
+  return reducedMotion(el);
 }
 
 // module state: the hooks listening to the data-motion attribute on <html>, and the one observer that tells them. It
@@ -79,7 +59,7 @@ function watchAttr(on: () => void): () => void {
  *  smoothly, a count going up, a confetti burst): CSS transitions already follow both through the motion tokens and
  *  base.css. False in server HTML and until hydrated. */
 export function useReducedMotion(): boolean {
-  const system = useMediaQuery(REDUCE);
+  const system = useMediaQuery(REDUCED_MOTION);
   // React subscribes only in the browser, so watchAttr always has a document.
   const app = React.useSyncExternalStore(watchAttr, () => document.documentElement.matches(REDUCE_ATTR), () => false);
   return system || app;

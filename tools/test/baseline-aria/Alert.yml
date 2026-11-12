@@ -3,6 +3,27 @@
   - text: Changes saved.
   - button "Dismiss"
 
+# DoMatchTone
+- status:
+  - paragraph: New version available
+  - text: Reload the page to get the latest changes.
+
+# DoWhatAndNext
+- alert:
+  - paragraph: Payment failed
+  - text: Your card was declined. Update it by Friday to keep your plan.
+  - button "Update card"
+
+# DontAlarmingTone
+- alert:
+  - paragraph: New version available
+  - text: Reload the page to get the latest changes.
+
+# DontGenericError
+- alert:
+  - paragraph: Error
+  - text: Something went wrong.
+
 # LongText
 - status:
   - paragraph: Your payment method was declined by the bank, so the renewal didn't go through

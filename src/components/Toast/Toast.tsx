@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn, oneOf, useIsoLayoutEffect } from '../../internal/cn';
+import { reducedMotion } from '../../internal/mediaList';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
@@ -16,7 +17,6 @@ import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
 import { en as ownWords } from './labels';
 import { repeatQuiet } from '../../internal/timing';
-import { prefersReducedMotion } from '../../internal/media';
 import { deepActive } from '../../internal/root';
 import { pageShared } from '../../internal/pageShared';
 
@@ -387,7 +387,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
   useIsoLayoutEffect(() => {
     const was = before.current, region = self.current;
     before.current = null;
-    if (!was || !region || prefersReducedMotion(region)) return;
+    if (!was || !region || reducedMotion(region)) return;
     const cs = getComputedStyle(region), ms = parseFloat(cs.getPropertyValue('--dk-toast-move')) || 0;
     if (!ms) return;
     for (const e of region.querySelectorAll<HTMLElement>(MOVES)) {
@@ -531,7 +531,7 @@ function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; in
     if (!g.on) return;
     const away = v * dir;   // px per ms, the way it was dragged
     const out = e.type === 'pointerup' && (away > FLICK || (Math.abs(g.d) > w / 3 && away > -0.1));
-    if (out && !prefersReducedMotion(el)) {
+    if (out && !reducedMotion(el)) {
       el.style.transition = ['translate', 'opacity'].map((p) => p + ' ' + settleTime(w - Math.abs(g.d), Math.max(0, away)) + 'ms var(--ease-fling)').join(', ');
       el.style.translate = dir * w + 'px 0';
       el.style.opacity = '0';
