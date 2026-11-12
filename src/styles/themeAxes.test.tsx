@@ -38,7 +38,7 @@ const axes = (brand?: string, mode?: string) => {
   if (mode) root.setAttribute('data-mode', mode); else root.removeAttribute('data-mode');
 };
 
-afterEach(() => { for (const a of ['data-brand', 'data-mode', 'data-contrast', 'data-density', 'data-shadow', 'data-type-scale']) root.removeAttribute(a); root.setAttribute('data-theme', 'blue-light'); });
+afterEach(() => { for (const a of ['data-brand', 'data-mode', 'data-contrast', 'data-density', 'data-shadow', 'data-type-scale', 'data-radius']) root.removeAttribute(a); root.setAttribute('data-theme', 'blue-light'); });
 
 describe('Theme axes', () => {
   test('data-brand + data-mode give exactly the colors of each data-theme', () => {
@@ -239,6 +239,24 @@ describe('Density axis', () => {
     const h = (id: string) => document.getElementById(id)!.getBoundingClientRect().height;
     expect([h('b-sm'), h('b-md'), h('b-lg'), h('b-back')]).toEqual([24, 28, 36, 32]);
     expect(document.getElementById('i-md')!.closest('[data-component="input"]')!.getBoundingClientRect().height).toBe(28);
+  });
+  test('data-radius: sharp and round reshape every radius role on any brand, and default puts the theme\'s back in a section', async () => {
+    root.setAttribute('data-theme', 'violet-light');
+    await render(<div>
+      <Button id="r-page">Save</Button>
+      <div id="r-surface" style={{ borderRadius: 'var(--radius-surface)' }}>Card</div>
+      <section data-radius="default"><Button id="r-default">Save</Button></section>
+      <section data-brand="blue"><Button id="r-blue">Save</Button></section>
+      <section data-theme="blue-light" data-radius="default"><Button id="r-blue-default">Save</Button></section>
+      <div id="r-pill" style={{ borderRadius: 'var(--radius-pill)' }}>Tag</div>
+    </div>);
+    const r = (id: string) => getComputedStyle(document.getElementById(id)!).borderTopLeftRadius;
+    expect([r('r-page'), r('r-surface'), r('r-default'), r('r-blue-default')]).toEqual(['6px', '8px', '6px', '6px']);
+    root.setAttribute('data-radius', 'sharp');
+    expect([r('r-page'), r('r-surface'), r('r-default'), r('r-blue'), r('r-blue-default')]).toEqual(['2px', '4px', '6px', '2px', '6px']);
+    root.setAttribute('data-radius', 'round');
+    expect([r('r-page'), r('r-surface'), r('r-default'), r('r-blue')]).toEqual(['12px', '16px', '6px', '12px']);
+    expect(r('r-pill')).toBe('9999px');
   });
   test('data-shadow="brand" (73): the box shadows take a deep shade of the brand color at the same opacity; a section with its own brand and data-shadow takes its own; neutral puts the black back', async () => {
     root.setAttribute('data-shadow', 'brand');

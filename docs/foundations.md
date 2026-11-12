@@ -63,6 +63,8 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Density**: `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
 
+**Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). `data-radius="default"` puts the theme's own corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
+
 **Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
 **Fluid type**: `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Line heights stay as they are. `data-type-scale="fixed"` puts the fixed sizes back for one section.
@@ -406,6 +408,15 @@ A container nested inside another should have a smaller radius than its parent.
 | `radius-surface` | `rounded-lg` (8px) | Alerts, tables, lists, accordions, drop zones, and the floating surfaces: menus, popovers, list boxes, toasts |
 | `radius-container` | `rounded-xl` (12px) | Cards, dialogs, drawers and carousels |
 | `radius-pill` | `rounded-full` | Tracks and thumbs, steps, round buttons and swatches |
+
+**Roundness.** `data-radius` on the page or a section reshapes the four roles at once, in every theme:
+
+| Role | `sharp` | Default | `round` |
+| --- | --- | --- | --- |
+| `radius-inner` | 2px | 4px | 6px |
+| `radius-control` | 2px | 6px | 12px |
+| `radius-surface` | 4px | 8px | 16px |
+| `radius-container` | 4px | 12px | 24px |
 
 Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart.
 
