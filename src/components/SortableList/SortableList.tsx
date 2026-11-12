@@ -43,7 +43,9 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
   const sds = useSettings(words);
   const { getKey, getLabel } = props;
   const items: readonly unknown[] = props.items || [];   // missing items (a plain-JS caller): an empty list, not a TypeError
-  const [drag, setDrag] = React.useState<Drag | null>(null);
+  const [held, setDrag] = React.useState<Drag | null>(null);
+  // Rows taken away while one is held (another user deleted them) bring its place back inside the list.
+  const drag = held && held.to > items.length - 1 ? { ...held, to: Math.max(0, items.length - 1) } : held;
   const current = React.useRef(drag);
   current.current = drag;
   const hintId = domId('dk-sl', React.useId()) + '-hint';
