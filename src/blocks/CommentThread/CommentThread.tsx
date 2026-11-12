@@ -7,6 +7,7 @@ import { Field } from '../../components/Field/Field';
 import { Heading } from '../../components/Heading/Heading';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Textarea } from '../../components/Textarea/Textarea';
+import { MentionInput, mentionsIn, type MentionOption } from '../../components/MentionInput/MentionInput';
 import { toast } from '../../components/Toast/Toast';
 import { announce } from '../../internal/announce';
 
@@ -19,6 +20,8 @@ import { announce } from '../../internal/announce';
      limit (Textarea); an empty reply says what to do in words, next to the box.
    - 2.4.3: Edit puts focus in the comment's own box, and Save or Cancel brings it back to Edit. Delete moves focus to
      the next comment (or the one before, or the heading), so it isn't lost, and Undo brings the comment back focused.
+   - With people, the boxes are MentionInputs: "@" lists who can be mentioned, the hint says so in words (3.3.2), and
+     a mention in a comment is bold as well as named, so it isn't shown by color alone (1.4.1).
    - 4.1.3: posting and saving are said once, politely. Delete waits for the toast to go (toast.undo), so Undo is a
      real undo and nothing is gone until then.
    - Each word is a label, English by default. */
@@ -41,6 +44,8 @@ export interface CommentThreadLabels {
   reply: string;
   /** Under the reply box: the limit in words. */
   replyHint: (max: number) => string;
+  /** Under the reply box, after the limit, when people can be mentioned. */
+  mentionHint: string;
   post: string;
   posted: string;
   empty: string;
@@ -65,6 +70,7 @@ const english: CommentThreadLabels = {
   noComments: 'No comments yet. Start the conversation.',
   reply: 'Reply',
   replyHint: (max) => `Up to ${max} characters.`,
+  mentionHint: 'Type @ to mention someone.',
   post: 'Post reply',
   posted: 'Reply posted',
   empty: 'Write a reply first.',
@@ -83,10 +89,14 @@ const english: CommentThreadLabels = {
 
 export interface CommentThreadProps {
   comments: readonly ThreadComment[];
-  /** Posts a reply. Return its promise: the button shows it's working, and the box clears once it succeeds. */
-  onReply: (body: string) => void | PromiseLike<unknown>;
-  /** Saves an edited comment. Return its promise to keep the box open until it's saved. */
-  onEdit?: ((id: string, body: string) => void | PromiseLike<unknown>) | undefined;
+  /** Posts a reply. Return its promise: the button shows it's working, and the box clears once it succeeds.
+   *  details.mentions: the people it mentions, in order, to notify. */
+  onReply: (body: string, details: { mentions: MentionOption[] }) => void | PromiseLike<unknown>;
+  /** Saves an edited comment. Return its promise to keep the box open until it's saved. details.mentions: who it
+   *  mentions now. */
+  onEdit?: ((id: string, body: string, details: { mentions: MentionOption[] }) => void | PromiseLike<unknown>) | undefined;
+  /** Who can be mentioned with "@" in the reply and edit boxes. Without it, they're plain Textareas. */
+  people?: readonly MentionOption[] | undefined;
   /** Deletes a comment for good, once the Undo toast has gone without Undo. */
   onDelete?: ((id: string) => void) | undefined;
   /** The longest reply, in characters. Default: 1000. */
@@ -95,11 +105,38 @@ export interface CommentThreadProps {
   labels?: Partial<CommentThreadLabels> | undefined;
 }
 
+// The reply and edit boxes: a MentionInput when people can be mentioned, else a Textarea; both count and grow.
+// Ctrl+Enter (⌘+Enter on a Mac) sends the box's form, as in most comment boxes; Enter alone is a new line.
+function Box({ people, value, onValue, onKeyDown, ...rest }: { people: readonly MentionOption[] | undefined; value: string; onValue: (v: string) => void; maxLength: number; rows?: number; onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement> }) {
+  const keys = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (onKeyDown) onKeyDown(e);
+    if (!e.defaultPrevented && e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !isComposing(e)) { e.preventDefault(); e.currentTarget.form?.requestSubmit(); }
+  };
+  return people
+    ? <MentionInput {...rest} onKeyDown={keys} options={people} value={value} onValueChange={onValue} showCount autoResize />
+    : <Textarea {...rest} onKeyDown={keys} value={value} onChange={(e) => onValue(e.target.value)} showCount autoResize />;
+}
+
+// A comment's text with each mention of someone in people in bold, so it reads as a mention without color.
+function Mentions({ text, people }: { text: string; people: readonly MentionOption[] }) {
+  const out: React.ReactNode[] = [];
+  let at = 0;
+  for (const p of mentionsIn(text, people)) {
+    const i = text.indexOf('@' + p.label, at);
+    if (i < 0) continue;
+    if (i > at) out.push(text.slice(at, i));
+    out.push(<strong key={i} className="font-semibold">{'@' + p.label}</strong>);
+    at = i + 1 + p.label.length;
+  }
+  out.push(text.slice(at));
+  return <>{out}</>;
+}
+
 const thenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 const settle = (out: void | PromiseLike<unknown>, done: () => void, failed: () => void) => { if (thenable(out)) out.then(done, failed); else done(); };
 
 /** Comments with who and when, a reply box with a character count, and edit and delete with undo for your own. */
-export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength = 1000, headingLevel = 2, labels }: CommentThreadProps) {
+export function CommentThread({ comments, onReply, onEdit, onDelete, people, maxLength = 1000, headingLevel = 2, labels }: CommentThreadProps) {
   const l = { ...english, ...labels };
   const id = React.useId();
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
@@ -124,7 +161,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
     if (busy) return;
     if (!reply.trim()) { setError(true); focus(byId(`${id}-reply`)); return; }
     setError(false); setFailed(null);
-    const out = onReply(reply.trim());
+    const body = reply.trim(), out = onReply(body, { mentions: people ? mentionsIn(body, people) : [] });
     setBusy(thenable(out));
     settle(out, () => { setReply(''); announce(l.posted); }, () => { setFailed('post'); announce(l.postFailed); });
     if (thenable(out)) out.then(() => setBusy(false), () => setBusy(false));
@@ -137,7 +174,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
     if (!draft.trim()) { setEditError(true); focus(byId(`${id}${c.id}-edit`)); return; }
     setFailed(null);
     // Busy until the save settles, as posting is: a second click doesn't send it twice.
-    const out = onEdit(c.id, draft.trim());
+    const body = draft.trim(), out = onEdit(c.id, body, { mentions: people ? mentionsIn(body, people) : [] });
     setSaving(thenable(out));
     settle(out, () => { stopEdit(c.id); announce(l.saved); }, () => { setFailed('save'); announce(l.saveFailed); });
     if (thenable(out)) out.then(() => setSaving(false), () => setSaving(false));
@@ -170,8 +207,9 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
                   {editing === c.id ? (
                     <form onSubmit={save(c)} className="flex flex-col gap-2">
                       <Field label={l.editBox} id={`${id}${c.id}-edit`} error={editError ? l.editEmpty : undefined}>
-                        <Textarea value={draft} onChange={(e) => { setDraft(e.target.value); if (editError && e.target.value.trim()) setEditError(false); }} maxLength={maxLength} showCount autoResize
-                          onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); stopEdit(c.id); } }} />
+                        <Box people={people} value={draft} onValue={(v) => { setDraft(v); if (editError && v.trim()) setEditError(false); }} maxLength={maxLength}
+                          // Escape cancels the edit, unless it's closing the mention list (aria-controls is there while that's open).
+                          onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e) && !e.currentTarget.hasAttribute('aria-controls')) { e.preventDefault(); stopEdit(c.id); } }} />
                       </Field>
                       <div className="flex gap-2">
                         <Button type="submit" size="sm" loading={saving}>{l.save}</Button>
@@ -179,7 +217,7 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
                       </div>
                       {failed === 'save' && <p className="text-sm text-danger-text">{l.saveFailed}</p>}
                     </form>
-                  ) : <p className="whitespace-pre-wrap wrap-break-word">{c.body}</p>}
+                  ) : <p className="whitespace-pre-wrap wrap-break-word">{people ? <Mentions text={c.body} people={people} /> : c.body}</p>}
                   {c.mine && editing !== c.id && (onEdit || onDelete) && (
                     <div className="flex gap-2">
                       {onEdit && <Button variant="ghost" size="sm" id={`${id}${c.id}-edit-button`} onClick={() => startEdit(c)}>{l.edit}</Button>}
@@ -193,8 +231,8 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, maxLength =
         </ol>
       )}
       <form onSubmit={post} noValidate className="flex flex-col gap-2">
-        <Field label={l.reply} id={`${id}-reply`} hint={l.replyHint(maxLength)} error={error ? l.empty : undefined}>
-          <Textarea value={reply} onChange={(e) => { setReply(e.target.value); if (error && e.target.value.trim()) setError(false); }} maxLength={maxLength} showCount autoResize rows={3} />
+        <Field label={l.reply} id={`${id}-reply`} hint={people ? l.replyHint(maxLength) + ' ' + l.mentionHint : l.replyHint(maxLength)} error={error ? l.empty : undefined}>
+          <Box people={people} value={reply} onValue={(v) => { setReply(v); if (error && v.trim()) setError(false); }} maxLength={maxLength} rows={3} />
         </Field>
         <Button type="submit" className="self-start" loading={busy}>{l.post}</Button>
         {failed === 'post' && <p className="text-sm text-danger-text">{l.postFailed}</p>}
