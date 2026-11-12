@@ -31,7 +31,7 @@ The first page a new account sees: a welcome, a checklist of setup steps with ho
 
 <Canvas of={Stories.Hidden} />
 
-## What stays the app's job
+## What stays your app's job
 
 - **Doing each step.** The links go to the app's own pages. When a step is done there, mark it done on the server, so the checklist is right when the person comes back.
 - **Keeping progress.** `saveKey` keeps it in this browser's localStorage, which is enough for a demo. Keep it on your server with `onChange`, and pass it back as `initial`, so it follows the person to another device.
