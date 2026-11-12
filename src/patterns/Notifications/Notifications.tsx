@@ -9,15 +9,19 @@ import { Navbar, NavbarLink } from '../../components/Navbar/Navbar';
 import { NotificationCenter, type NotificationItem } from '../../components/NotificationCenter/NotificationCenter';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
+import { EmptyState } from '../../components/EmptyState/EmptyState';
 
 /* Notifications: a bell in the Navbar that opens the recent ones in a drawer, and a full inbox page with a filter,
    mark as read and mark all as read. Both read the same list. For an app to copy. What it carries (WCAG 2.2):
    - 4.1.2, 1.3.1: the bell is named with its count ("Notifications, 3 unread"), so the number is heard, not only seen.
-   - 1.4.1: an unread notification says "Unread" in words and has a bolder title, not only a colored dot.
+   - 1.4.1: an unread notification says "Unread" in words, besides the dot before it and its bolder title, which
+     are what make it stand out at a glance (the same dot and weight as the drawer's).
    - 4.1.3: the count above the list is a status, so marking one read or changing the filter is said politely.
    - 2.4.3: marking one read on the page takes its button away (and, under "Unread", the notification too), so focus
      goes to the next unread one's button, or the heading when none are left; after Mark all as read it goes to the
      heading. Never to the top of the page. In the drawer, focus stays in the drawer.
+   - People choose what interrupts them: "Notification settings" sits by the heading, and the empty state links there
+     too (the Ethical design rule: turning notifications off takes no more steps than turning them on).
    Storing what's read is the app's job: onMarkRead and onMarkAllRead hear it. */
 
 export interface NotificationsProps {
@@ -27,6 +31,8 @@ export interface NotificationsProps {
   onMarkRead?: ((id: string) => void) | undefined;
   /** All were marked read. */
   onMarkAllRead?: (() => void) | undefined;
+  /** Where "Notification settings" leads: the page where people choose which notifications they get. Default: "#settings-notifications". */
+  settingsHref?: string | undefined;
 }
 
 // Times are minutes before the page loaded, so they read the same whenever the page is drawn.
@@ -43,7 +49,7 @@ const demo: NotificationItem[] = [
 type Filter = 'all' | 'unread';
 
 /** The notifications page: a skip link, a Navbar with the bell, then main with the inbox. */
-export function Notifications({ items = demo, onMarkRead, onMarkAllRead }: NotificationsProps) {
+export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications' }: NotificationsProps) {
   const [read, setRead] = React.useState<ReadonlySet<string>>(() => new Set(items.filter((n) => n.read).map((n) => n.id)));
   const [filter, setFilter] = React.useState<Filter>('all');
   const [open, setOpen] = React.useState(false);
@@ -95,17 +101,26 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead }: Notif
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-8 outline-none">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Heading level={1} ref={heading} tabIndex={-1} className="outline-none">Notifications</Heading>
-          <Button variant="outline" disabled={!unread} onClick={() => markAll(true)}>Mark all as read</Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="ghost" leftIcon="settings" href={settingsHref}>Notification settings</Button>
+            <Button variant="outline" disabled={!unread} onClick={() => markAll(true)}>Mark all as read</Button>
+          </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
             options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread' }]} />
           <p role="status" className="m-0 text-sm text-text-muted">{unread ? `${unread} unread` : 'All caught up'}</p>
         </div>
-        {shown.length ? (
+        {!items.length ? (
+          <EmptyState icon="notifications" title="No notifications yet" headingLevel={2} variant="dashed"
+            description="When someone mentions you, an export finishes or a payment needs you, it shows up here."
+            actions={<Button variant="outline" leftIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />
+        ) : shown.length ? (
           <List variant="card" divided aria-label={filter === 'unread' ? 'Unread notifications' : 'All notifications'}>
             {shown.map((n) => (
-              <ListItem key={n.id} title={<span className={n.read ? undefined : 'font-semibold'}>{n.title}</span>}
+              <ListItem key={n.id}
+                // The drawer's unread dot before the title (and room for it on read ones, so the titles line up).
+                title={<span className="flex items-baseline gap-2"><span className={'dk-notification-center__dot self-center' + (n.read ? ' invisible' : '')} aria-hidden="true" /><span className={n.read ? undefined : 'font-semibold'}>{n.title}</span></span>}
                 description={<>{n.description ? <>{n.description} · </> : null}<RelativeTime date={n.time ?? now} />{n.read ? null : <> · Unread</>}</>}
                 trailing={n.read ? null : <Button id={`read-${n.id}`} size="sm" variant="ghost" aria-label={typeof n.title === 'string' ? `Mark as read: ${n.title}` : undefined} onClick={() => markRead(n.id, true)}>Mark as read</Button>} />
             ))}

@@ -52,7 +52,7 @@ const SAMPLES: [string, () => React.ReactElement][] = [
   ['Progress', () => <Progress aria-label="Upload" value={40} />],
   ['Alert', () => <Alert title="Saved">Your changes are live.</Alert>],
   ['Card', () => <Card>A card</Card>],
-  ['Accordion', () => <Accordion><AccordionItem value="a" title="Shipping">Two days.</AccordionItem></Accordion>],
+  ['Accordion', () => <Accordion headingLevel={2}><AccordionItem value="a" title="Shipping">Two days.</AccordionItem></Accordion>],
 ];
 
 type Scale = [string, number][];

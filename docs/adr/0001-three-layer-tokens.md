@@ -48,5 +48,5 @@ A is the right model. Its weaknesses are naming discipline and how the values ar
 
 ## Action items
 
-1. [ ] Add the consistent names (`-text`, `-<part>-color`, `-border`) as aliases in a minor release; remove the old ones at 5.0 (audit item 4; needs Diki's OK, since it renames tokens).
-2. [ ] Add a naming test that fails on a new component token outside the agreed suffixes, so the split doesn't come back.
+1. [x] Add the consistent names (`-text`, `-<part>-color`, `-border`) as aliases in a minor release; remove the old ones at 5.0 (audit item 4; needs Diki's OK, since it renames tokens). Done in the majors since: component tokens end in `-bg`, `-text`, `-color` or `-border`, and none use the old `-fg`.
+2. [ ] Add a naming test that fails on a new component token outside the agreed suffixes, so the split doesn't come back. Still open: no check in `tools/test/` names the suffixes yet.

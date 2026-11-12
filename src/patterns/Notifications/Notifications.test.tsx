@@ -78,6 +78,31 @@ describe('Patterns/Notifications', () => {
     expect(status()).toBe('All caught up');
   });
 
+  test('unread ones have the drawer\'s dot before the title, in primary, and a semibold title; read ones keep the room for it, hidden', async () => {
+    await render(<Notifications />);
+    const rows = titles(), dot = (li: Element) => li.querySelector('span[aria-hidden="true"]:empty') as HTMLElement;
+    const seen = rows.map((li) => getComputedStyle(dot(li)).visibility);
+    expect(seen).toEqual(['visible', 'visible', 'visible', 'hidden', 'hidden']);
+    const probe = document.createElement('span'); probe.style.color = 'var(--primary)'; document.body.append(probe);
+    expect(getComputedStyle(dot(rows[0])).backgroundColor).toBe(getComputedStyle(probe).color);
+    probe.remove();
+    expect([dot(rows[0]).getAttribute('aria-hidden'), dot(rows[0]).getBoundingClientRect().width, dot(rows[0]).getBoundingClientRect().left]).toEqual(['true', 8, dot(rows[3]).getBoundingClientRect().left]);
+    expect(getComputedStyle(dot(rows[0]).nextElementSibling!).fontWeight).toBe('600');
+  });
+
+  test('"Notification settings" by the heading leads to settingsHref, so turning notifications off is one step away', async () => {
+    const screen = await render(<Notifications settingsHref="/settings#notifications" />);
+    await expect.element(screen.getByRole('link', { name: 'Notification settings' })).toHaveAttribute('href', '/settings#notifications');
+  });
+
+  test('with no notifications at all: an empty state that says what will show up here and links to the settings, and Mark all as read off', async () => {
+    const screen = await render(<Notifications items={[]} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'No notifications yet' })).toBeVisible();
+    await expect.element(screen.getByRole('link', { name: 'Choose what you hear about' })).toHaveAttribute('href', '#settings-notifications');
+    await expect.element(screen.getByRole('button', { name: 'Mark all as read' })).toBeDisabled();
+    expect([document.querySelectorAll('main ul').length, status()]).toEqual([0, 'All caught up']);
+  });
+
   test('at 320 px nothing scrolls the page sideways', async () => {
     await render(<div style={{ width: 320 }}><Notifications /></div>);
     const main = document.querySelector('main') as HTMLElement;
