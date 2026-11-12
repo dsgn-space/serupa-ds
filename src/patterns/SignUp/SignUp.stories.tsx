@@ -19,3 +19,12 @@ export const PasswordRules: Story = { args: { initial: { name: 'Ana Lima', email
 
 /** The second step: the code from the email, with a way back that keeps every answer. */
 export const Code: Story = { args: { start: 'code', initial: { name: 'Ana Lima', email: 'ana@example.com' } } };
+
+/** The account wasn't created (the server refused, or the network failed): the form stays with every answer, and
+    says what happened over the button. Here `onSubmit` rejects again on another try. */
+export const SubmitFails: Story = {
+  args: { failed: true, initial: { name: 'Ana Lima', email: 'ana@example.com', password: 'tide-pool-lantern', terms: true }, onSubmit: () => Promise.reject(new Error('offline')) },
+};
+
+/** Done: the account is ready, with the way in. */
+export const Done: Story = { args: { start: 'done', initial: { name: 'Ana Lima', email: 'ana@example.com' } } };

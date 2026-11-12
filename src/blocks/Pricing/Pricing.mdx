@@ -17,9 +17,10 @@ Plans side by side, billed monthly or yearly. Each plan says what it includes an
 - **Yearly prices are shown per month**, with what is paid once a year written underneath, so the two periods compare fairly and the real charge isn't hidden.
 - **The current plan and the recommended plan say so in words** (1.4.1). The recommended plan also has a stronger border and the primary button, but the word carries the meaning. The current plan has no button, because there's nothing to choose.
 - **One action per plan, named after it**: "Choose Pro", not a row of "Choose" buttons that sound the same in a list of buttons (2.4.6). If `onChoose` returns a promise, the button shows that it's working until it settles.
+- **It says the plans renew, and where to cancel, before anyone chooses.** Under the plans, a line reads "Paid plans renew every month at the price shown until you cancel" (every year when billed yearly), with a link: "Cancel any time in Billing settings". Point `cancelHref` at your billing settings. That follows the Ethical design rule: say when a plan renews and what it will cost before someone chooses it, and how to cancel. The line is left out when every plan is free.
 - **Long words wrap inside the card**, such as a German "Datenschutzgrundverordnung", so nothing runs out of it at any width (1.4.10).
 - **Money is written the reader's way.** Prices follow the locale: "$12" in English, "Rp 150.000" in Indonesian.
-- **Another language**: every word is in `labels`, with English defaults. `yearly`, `billedYearly`, `included` and `choose` are functions, so word order can follow the language.
+- **Another language**: every word is in `labels`, with English defaults. `yearly`, `billedYearly`, `included`, `choose` and `renews` are functions, so word order can follow the language.
 
 <Canvas of={Stories.Yearly} />
 
@@ -29,7 +30,7 @@ Plans side by side, billed monthly or yearly. Each plan says what it includes an
 
 - The plans, their prices and the currency, and which plan the person is on.
 - What happens after a plan is chosen: a checkout, a confirmation, or a change of plan.
-- Taxes, and any small print about renewals or refunds, which belongs near the plans in words.
+- Taxes and refunds, which belong near the plans in words, and a billing settings page where cancelling takes no more steps than choosing a plan did.
 
 ## Copying it
 

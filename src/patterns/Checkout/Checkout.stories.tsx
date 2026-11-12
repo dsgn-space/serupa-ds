@@ -26,3 +26,10 @@ export const Prefilled: Story = { args: { initial: filled } };
 
 /** The review step: everything before it's placed, each part with a way back to change it. */
 export const Review: Story = { args: { initial: filled, startAtReview: true } };
+
+/** The order wasn't placed (the card was declined, or the network failed): the review step stays, with every answer,
+    and says nothing was charged and what to try. Here `onPlaceOrder` rejects again on another try. */
+export const OrderFails: Story = { args: { initial: filled, failed: true, onPlaceOrder: () => Promise.reject(new Error('declined')) } };
+
+/** The confirmation: the order is placed, and it says where the receipt went and what happens next. */
+export const Placed: Story = { args: { initial: filled, placed: true } };
