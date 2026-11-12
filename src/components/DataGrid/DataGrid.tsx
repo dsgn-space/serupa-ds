@@ -105,8 +105,10 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
   const focusCell = React.useRef(false);
   const cur = { r: Math.min(at.r, lastRow), c: Math.min(at.c, Math.max(lastCol, 0)) };
 
-  // The range: from the anchor to the active cell, in body rows only.
-  const range = anchor ? { r1: Math.max(1, Math.min(anchor.r, cur.r)), r2: Math.max(anchor.r, cur.r), c1: Math.min(anchor.c, cur.c), c2: Math.max(anchor.c, cur.c) }
+  // The range: from the anchor to the active cell, in body rows only. Rows or columns taken away since (a filter,
+  // another user) take the anchor back inside the grid, as they do the active cell.
+  const from = anchor && { r: Math.min(anchor.r, lastRow), c: Math.min(anchor.c, Math.max(lastCol, 0)) };
+  const range = from ? { r1: Math.max(1, Math.min(from.r, cur.r)), r2: Math.max(from.r, cur.r), c1: Math.min(from.c, cur.c), c2: Math.max(from.c, cur.c) }
     : cur.r > 0 ? { r1: cur.r, r2: cur.r, c1: cur.c, c2: cur.c } : null;
   const inRange = (r: number, c: number) => !!range && r >= range.r1 && r <= range.r2 && c >= range.c1 && c <= range.c2;
 

@@ -114,6 +114,25 @@ describe('DataGrid', () => {
     expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: 'Madu' }, { rowId: 'b', column: 'qty', value: '2' }, { rowId: 'c', column: 'name', value: 'Aren' }, { rowId: 'c', column: 'qty', value: '5' }]);
   });
 
+  test('rows taken away while a range reaches past them (a filter, another user): copy and Delete use the rows that are left', async () => {
+    const clip = () => {
+      const held: Record<string, string> = {};
+      const ev = new ClipboardEvent('copy', { bubbles: true, cancelable: true });
+      Object.defineProperty(ev, 'clipboardData', { value: { setData: (f: string, v: string) => { held[f] = v; }, getData: (f: string) => held[f] ?? '' } });
+      document.activeElement!.dispatchEvent(ev);
+      return held['text/plain'] ?? '';
+    };
+    const onChange = vi.fn();
+    const grid = (rows: DataGridRow[]) => <DataGrid aria-label="Stock" columns={COLS} rows={rows} onRowsChange={(_, { changes }) => onChange(changes)} />;
+    const { rerender } = await render(grid(ROWS));
+    await userEvent.click(cell('Gula'));
+    await userEvent.keyboard('{Shift>}{ArrowUp}{/Shift}');
+    await rerender(grid(ROWS.slice(0, 2)));
+    expect(clip()).toBe('Teh');
+    await userEvent.keyboard('{Delete}');
+    expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: '' }]);
+  });
+
   test('a click picks a cell, Shift+click extends, a double click edits', async () => {
     await render(<Live />);
     await userEvent.click(cell('Kopi'));
