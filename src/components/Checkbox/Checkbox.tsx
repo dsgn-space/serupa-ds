@@ -9,6 +9,8 @@ import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { warnOnce } from '../../internal/warn';
+import { markKeyFocus } from '../../internal/keyFocus';
+import { listenForInput } from '../../internal/lastInput';
 import { delegateFocus, useAutoFocus } from '../../internal/focus';
 import { en as words } from './labels';
 
@@ -229,6 +231,9 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
     own.current.setCustomValidity(need ? labels.selectAtLeastOne : '');
     said.current = need;
   });
+  // The ring for keyboard focus where the browser's :focus-visible leaves one out (internal/keyFocus.ts).
+  markKeyFocus(rest);
+  useIsoLayoutEffect(listenForInput, []);
   const base = domId('dk-cb', React.useId()), labelId = base + '-label', descId = base + '-desc';
   const hasLabel = props.children != null && props.children !== false && props.children !== '';
   const hasDesc = props.description != null && props.description !== false && props.description !== '';
