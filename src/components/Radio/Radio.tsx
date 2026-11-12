@@ -23,9 +23,9 @@ export interface RadioGroupProps<V extends string | number = string | number> ex
   orientation?: 'vertical' | 'horizontal' | undefined;
   /** The radios' size, unless a Radio sets its own. */
   size?: 'sm' | 'md' | 'lg' | undefined;
-  /** 'default' (a radio beside its label) or 'card' (each radio a bordered card, for plans, delivery options and
-   *  other choices with a description), unless a Radio sets its own. Default: 'default'. */
-  variant?: 'default' | 'card' | undefined;
+  /** 'plain' (a radio beside its label) or 'card' (each radio a bordered card, for plans, delivery options and
+   *  other choices with a description), unless a Radio sets its own. Default: 'plain'. 'default' is the deprecated name for 'plain', removed in 15.0.0. */
+  variant?: 'plain' | 'card' | 'default' | undefined;
   /** A danger border on every unchecked radio, and aria-invalid on the group. Field sets it from its error. */
   invalid?: boolean | undefined;
   /** Disables every radio. */
@@ -46,9 +46,9 @@ export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   description?: React.ReactNode | undefined;
   /** A danger border (while unchecked) and focus ring, and aria-invalid. In a group, set invalid on the RadioGroup. */
   invalid?: boolean | undefined;
-  /** 'default' or 'card': the radio, label and description in a bordered card that's pressed as a whole, with a
+  /** 'plain' or 'card' ('default' is the deprecated name for 'plain', removed in 15.0.0): the radio, label and description in a bordered card that's pressed as a whole, with a
    *  primary border and tint once checked. In a RadioGroup, the group's variant by default. */
-  variant?: 'default' | 'card' | undefined;
+  variant?: 'plain' | 'card' | 'default' | undefined;
 }
 
 interface RadioContextValue {
@@ -62,7 +62,7 @@ interface RadioContextValue {
   readOnly: boolean;
   select(value: unknown, event: React.ChangeEvent<HTMLInputElement>): void;
 }
-const VARIANTS = ['default', 'card'] as const;
+const VARIANTS = ['plain', 'card', 'default'] as const;
 const RadioContext = /* @__PURE__ */ React.createContext<RadioContextValue | null>(null);
 
 /* RadioGroup: one choice from a set of Radios. It names them (name, or a generated one), holds the value
@@ -75,6 +75,7 @@ const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orient
 export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupProps>('RadioGroup', function RadioGroup(props: RadioGroupProps, ref) {
   const nameRef = useNameCheck('RadioGroup', NAME_HOW.group);   // warns when it has no accessible name
   const rest = omit(props, GROUP_OWN);
+  if (process.env.NODE_ENV !== 'production' && props.variant === 'default') warnOnce('variant-default', "RadioGroup: variant 'default' is deprecated and removed in 15.0.0. Use 'plain', the name List, Accordion and VirtualList give the same look.", 'variant-default:RadioGroup');
   const autoName = domId('dk-rg', React.useId());
   const controlled = props.value !== undefined;
   const [picked, setPicked] = React.useState<string | number | null | undefined>(props.defaultValue), cur = controlled ? props.value : picked;
@@ -131,11 +132,12 @@ const OWN = { size: 1, variant: 1, invalid: 1, description: 1, children: 1, clas
 /** A native radio with its label (ref, value and every input attribute go to the <input>); className and style go to the <label> around it. In a RadioGroup, the group sets name and checked. */
 export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>('Radio', function Radio(props, ref) {
   const nameRef = useNameCheck('Radio', NAME_HOW.label, ref);   // warns when it has no accessible name
+  if (process.env.NODE_ENV !== 'production' && props.variant === 'default') warnOnce('variant-default', "Radio: variant 'default' is deprecated and removed in 15.0.0. Use 'plain', the name List, Accordion and VirtualList give the same look.", 'variant-default:Radio');
   if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Radio: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Radio');
   const ctx = React.useContext(RadioContext);
   const rest = omit(props, OWN);
   const size = oneOf(SIZES, props.size, oneOf(SIZES, ctx && ctx.size, 'md'));
-  const card = oneOf(VARIANTS, props.variant, oneOf(VARIANTS, ctx && ctx.variant, 'default')) === 'card';
+  const card = oneOf(VARIANTS, props.variant, oneOf(VARIANTS, ctx && ctx.variant, 'plain')) === 'card';
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;   // a group's invalid is on the group
   if (ctx) {
