@@ -75,6 +75,11 @@ export interface CheckoutProps {
   initial?: Partial<CheckoutDetails> | undefined;
   /** Starts on the review step, when every answer in `initial` is good. */
   startAtReview?: boolean | undefined;
+  /** Starts as after placing the order failed: the review step, saying the order wasn't placed. Needs every answer
+      in `initial` to be good. */
+  failed?: boolean | undefined;
+  /** Starts on the confirmation, as after the order was placed. Needs every answer in `initial` to be good. */
+  placed?: boolean | undefined;
   /** Places the order. A rejected promise keeps the review step and says the order wasn't placed. */
   onPlaceOrder?: ((order: CheckoutOrder) => void | Promise<unknown>) | undefined;
 }
@@ -117,13 +122,14 @@ type Part = 'address' | 'delivery' | 'payment';
 const FIRST: Record<Part, string> = { address: `#${id('name')}`, delivery: 'input[name="delivery"]:checked', payment: `#${id('cardNumber')}` };
 
 /** The checkout page: a skip link, a header, then main with the form (or the review, or the confirmation) and the order summary. */
-export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 900, initial, startAtReview, onPlaceOrder }: CheckoutProps) {
+export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 900, initial, startAtReview, failed: startFailed, placed, onPlaceOrder }: CheckoutProps) {
   const [d, setD] = React.useState<CheckoutDetails>(() => ({ ...blank, ...initial }));
-  const [step, setStep] = React.useState<Step>(() => (startAtReview && !checkoutProblems({ ...blank, ...initial }).length ? 'review' : 'details'));
+  const [good] = React.useState(() => !checkoutProblems({ ...blank, ...initial }).length);
+  const [step, setStep] = React.useState<Step>(() => (!good ? 'details' : placed ? 'placed' : startAtReview || startFailed ? 'review' : 'details'));
   const [errors, setErrors] = React.useState<ErrorSummaryItem[]>([]);
   const [tries, setTries] = React.useState(0);
   const [busy, setBusy] = React.useState(false);
-  const [failed, setFailed] = React.useState(false);
+  const [failed, setFailed] = React.useState(() => good && !placed && !!startFailed);
 
   const subtotal = lines.reduce((sum, l) => sum + l.quantity * l.price, 0);
   const deliveryCost = d.delivery === 'express' ? expressPrice : 0;

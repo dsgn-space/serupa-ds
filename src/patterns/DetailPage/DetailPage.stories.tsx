@@ -14,3 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 /** The Overview tab: the breadcrumb, the name as the h1, and the details, each editable in place. */
 export const Default: Story = {};
+
+/** The delete didn't go through: the dialog stays open, says so, and the delete can be tried again. Here `onDelete`
+    rejects every time. */
+export const DeleteFails: Story = { args: { deleteFailed: true, onDelete: () => Promise.reject(new Error('offline')) } };

@@ -16,3 +16,6 @@ export const Default: Story = {};
 
 /** Another message open: it's marked in the list, and its text is in the second pane. */
 export const SecondOpen: Story = { args: { defaultSelected: 'm2' } };
+
+/** No messages yet: an empty state that says what will show up here, in place of two empty panes. */
+export const Empty: Story = { args: { messages: [] } };

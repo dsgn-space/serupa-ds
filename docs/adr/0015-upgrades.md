@@ -1,6 +1,7 @@
 # ADR-0015: Majors start as an RFC, and a script makes their renames
 
-**Status:** Proposed
+**Status:** Accepted
+**Accepted:** 11 November 2026, after the next major's RFC, `serupa-migrate` and the Upgrading page had been in use since 2 November.
 Queue items 93 (RFCs), 40 (an upgrade guide per major), 205 (codemods) and I8 (a migration command for the rename).
 
 ## Context

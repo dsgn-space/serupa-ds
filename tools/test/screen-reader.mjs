@@ -61,6 +61,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
     if (reader === 'voiceover') {
       await macOSActivate('Playwright');
       await page.locator('body').focus();
+      // Interacting nests: the page reloads in the same window, so VoiceOver was still inside the last case's web
+      // content, and a second interact went a level deeper. Every second case (Checkbox and Tabs) then heard "You
+      // are currently on a button, inside of web content" and Tab never left Start. Each case starts one level out.
+      if (i > 0) await voiceOver.stopInteracting();
       await voiceOver.interact();
     }
     await page.waitForTimeout(500);

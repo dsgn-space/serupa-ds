@@ -29,6 +29,10 @@ One thing, here a project: where it sits, its name and details, its parts in tab
 - **Dates in the reader's locale.** Created reads "14 September 2026" in en-GB, from `Intl.DateTimeFormat` with the provider's locale, and keeps the ISO date in `<time dateTime>`.
 - **A skip link** first, into main, as on every page.
 
+A delete that fails, as `deleteFailed` starts it:
+
+<Canvas of={Stories.DeleteFails} />
+
 ## What stays the app's job
 
 - **Storing the changes.** `onRename` gets a saved name or description, `onRemoveTask` a task once its Undo has passed, and `onDelete` the delete: return its promise, and the button shows it's busy until it settles. If it rejects, the dialog says the delete failed; put the reason in your own logs.
