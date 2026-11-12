@@ -54,6 +54,11 @@ Drawn from the `Default` story.
 - **Move to…:** each card's menu lists the other columns; picking one puts the card at the end of that column and keeps focus on it. It's the way to move a card with one tap or click (WCAG 2.5.7).
 - A narrow board scrolls sideways in its own box, so the page doesn't.
 
+### Do and don't
+
+- **Do:** Give each card a short, unique name with `getLabel` ("Fix login"): it's read on its buttons and in every announcement. (`DoNameCards`)
+- **Don't:** Give cards the same name ("Task"): screen reader users can't tell which one moved. (`DontVagueCards`)
+
 ## Accessibility
 
 - **Roles and names:** the board is a `group` named by `aria-label`; each column a `section` (a region) named by its heading, with its cards in a list named the same way.

@@ -38,6 +38,11 @@ Drawn from the `Failed` story.
 - Idle renders an empty line of the same height, so the page doesn't move when it starts.
 - A new status cross-fades with the one before it, in the same place: the old one fades out (inert, hidden from screen readers) while the new one fades in, with a short scale and blur when motion is allowed. The first status just shows.
 
+### Do and don't
+
+- **Do:** Say why a save failed in `errorText` when you know, and pass `onRetry`. (`DoReasonAndRetry`)
+- **Don't:** Show a failure with no reason and no retry: people can't tell what went wrong or what to do. (`DontDeadEnd`)
+
 ## Accessibility
 
 - **Announcements:** "Saved" and the error are said once, politely, when the status changes to them. "Saving…" isn't, since it comes and goes with every save, and neither is the time ticking ("2 minutes ago"). A SaveStatus that first renders with "saved" says nothing, but one that first renders with "error" (shown only once a save fails) says the error.

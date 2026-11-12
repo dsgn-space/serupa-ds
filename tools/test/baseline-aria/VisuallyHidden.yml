@@ -1,3 +1,9 @@
+# DoRightAfter
+- paragraph: 3 unread messages
+
+# DontFarAway
+- paragraph: "unread messages In your inbox: 3"
+
 # IconLabel
 - link "Settings":
   - /url: "#"

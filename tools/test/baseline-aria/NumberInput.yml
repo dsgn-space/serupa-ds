@@ -27,6 +27,18 @@
 - button "Decrease"
 - button "Increase"
 
+# DoUnitInLabel
+- text: Weight (kg)
+- spinbutton "Weight (kg)": "2.5"
+- button "Decrease"
+- button "Increase"
+
+# DontNoUnit
+- text: Weight
+- spinbutton "Weight": "2.5"
+- button "Decrease"
+- button "Increase"
+
 # Locales
 - text: Harga (id-ID, rupiah)
 - spinbutton "Harga (id-ID, rupiah)": Rp 1.500.000

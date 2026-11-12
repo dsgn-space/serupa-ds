@@ -2,6 +2,16 @@
 - separator "Sidebar"
 - text: Press Enter on the handle to bring the sidebar back.
 
+# DoNameHandle
+- text: Folders
+- separator "Folders"
+- text: Messages
+
+# DontGenericHandle
+- text: Folders
+- separator "Resize"
+- text: Messages
+
 # LongText
 - text: Donaudampfschifffahrtsgesellschaftskapitänskajüte
 - separator "Folders"

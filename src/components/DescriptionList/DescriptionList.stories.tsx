@@ -89,3 +89,18 @@ function States(args: React.ComponentProps<typeof DescriptionList>) {
   );
 }
 export const LoadingAndErrors: Story = { name: 'Loading and failed', render: (args) => <States {...args} /> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const Bill = ({ all }: { all?: boolean }) => (
+  <Card style={{ maxWidth: 320 }}>
+    <DescriptionList layout="split" style={{ fontSize: 'var(--text-sm)' }}>
+      <DescriptionItem term="Subtotal" emphasis={all}>Rp 240.000</DescriptionItem>
+      <DescriptionItem term="Delivery" emphasis={all}>Free</DescriptionItem>
+      <DescriptionItem term="Total" emphasis>Rp 240.000</DescriptionItem>
+    </DescriptionList>
+  </Card>
+);
+/** Do: emphasis on the one item people look for, the total. */
+export const DoEmphasizeOne: Story = { name: 'Do: emphasize the total only', render: () => <Bill /> };
+/** Don't: every item emphasized, so nothing stands out. */
+export const DontEmphasizeAll: Story = { name: "Don't: emphasize every item", render: () => <Bill all /> };

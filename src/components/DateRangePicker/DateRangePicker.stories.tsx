@@ -35,3 +35,9 @@ export const OverflowNarrow: Story = {
   render: (args) => <div style={{ width: 200 }}><DateRangePicker {...args} /></div>,
 };
 export const WithPresets: Story = { args: { presets: true, defaultValue: { start: new Date(2025, 2, 10), end: new Date(2025, 2, 14) } } };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: one Field label for the range, the format in the hint, and each end named for the task. */
+export const DoNameEnds: Story = { name: 'Do: label the range and its ends', render: () => <Field label="Stay" hint="mm/dd/yyyy"><DateRangePicker startLabel="Check-in" endLabel="Check-out" /></Field> };
+/** Don't: a bare range with no label or format. */
+export const DontBareRange: Story = { name: "Don't: leave the range unlabelled" };

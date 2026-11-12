@@ -55,6 +55,11 @@ Drawn from the `Controlled` story.
 - The buttons are out of the Tab order, since the arrow keys do the same, and are disabled at the limits.
 - Holding − or + repeats: one step on the press, then after 400ms one every 50ms, until the pointer goes up or leaves the button, Escape is pressed, or the limit is reached. A screen reader's click is one step.
 
+### Do and don't
+
+- **Do:** Put the unit in the label, "Weight (kg)", and set `min`, `max` and `step` to the real limits. (`DoUnitInLabel`)
+- **Don't:** Leave the unit out: people have to guess whether it's kilograms or pounds. (`DontNoUnit`)
+
 ## Accessibility
 
 - Each stepper button takes presses over at least 24px (WCAG 2.5.8), even at size `sm` where it's 22px: a box behind it reaches past its edges without moving anything.

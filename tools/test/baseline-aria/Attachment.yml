@@ -5,6 +5,13 @@
 - button "Try again Pitch.pptx" [disabled]: Try again
 - button "Remove Pitch.pptx" [disabled]
 
+# DoNoFutileRetry
+- text: Site survey.mov Video 140 MB Larger than 100 MB
+
+# DontFutileRetry
+- text: Site survey.mov Video 140 MB Larger than 100 MB
+- button "Try again Site survey.mov": Try again
+
 # InARow
 - list:
   - listitem:

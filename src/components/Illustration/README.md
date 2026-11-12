@@ -32,6 +32,11 @@ Drawn from the `Search` story.
 - One per view. `md` (160px) suits a page, `sm` (96px) a side panel or a dialog, `lg` (224px) a full error page.
 - Recolor it with the tokens below, not by editing paths: `--illustration-accent` set to `var(--danger)` makes the error picture red.
 
+### Do and don't
+
+- **Do:** Pick the picture that matches the title: `search` for no results, `error` for a failure. (`DoMatchTitle`)
+- **Don't:** Pick a picture that says something else, such as `success` over "No results". (`DontMismatch`)
+
 ## Accessibility
 
 - **Role and name:** hidden from screen readers by default (`aria-hidden`), because the text beside it says the same thing. With `label`, it's `role="img"` with that name: use it only when the picture adds something the text doesn't.

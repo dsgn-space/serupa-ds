@@ -45,6 +45,11 @@ Drawn from the `Disabled` story.
 - In the list: ↑ ↓ move one time, PageUp and PageDown four, Ctrl+Home and Ctrl+End to the ends, Enter picks, Escape closes, Tab closes and moves on. Typing while the list is open moves the highlight to the nearest time, and Enter then keeps what was typed. Focus stays in the field throughout, the clock button included.
 - The list fades and grows in from the edge facing the field, and fades and shrinks back out a little faster on close, inert while it goes, as Menu, Popover and DatePicker do. Closed mid-way, it turns back from where it is. Under reduced motion it only fades. From the keyboard there is no motion: opened by an arrow the list is there at once, and Escape takes it away at once.
 
+### Do and don't
+
+- **Do:** Wrap it in a [Field](../Field/README.md) with a label that says which time it is ("Start time"). (`DoSayWhichTime`)
+- **Don't:** Label it just "Time": people can't tell whether it's the start, the end or a reminder. (`DontJustTime`)
+
 ## Accessibility
 
 - The field is an ARIA combobox (`aria-haspopup="listbox"`, `aria-expanded`, `aria-activedescendant`) and the list a `role="listbox"` with `aria-selected` on the chosen time. The check is decorative.

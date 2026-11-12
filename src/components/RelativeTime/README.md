@@ -36,6 +36,11 @@ import { RelativeTime } from "serupa-ds";
 - Every RelativeTime on the page updates on one shared clock every 15 seconds, and at once when the tab comes back into view. The clock stops when none is mounted.
 - Rendered on the server, it shows the server's words at the time of the request (one moment for every RelativeTime rendered in the same second), hydrates without a mismatch, and switches to the browser's clock straight after.
 
+### Do and don't
+
+- **Do:** Use `numeric="always"` where elapsed time matters more than the calendar, such as in logs ("1 day ago"). (`DoNumericInLogs`)
+- **Don't:** Use calendar words in a log: "yesterday" says less about how long ago it was. (`DontCalendarWordsInLogs`)
+
 ## Accessibility
 
 - It's a `<time>` with a machine-readable `datetime`, read out as its words.

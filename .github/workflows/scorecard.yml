@@ -2,11 +2,9 @@ name: Scorecard
 
 # OpenSSF Scorecard: scores the repository's supply-chain practice (pinned actions, token permissions, branch
 # protection, signed releases, code review…). Findings show under Security → Code scanning, and the score is
-# published at https://scorecard.dev so the README can show its badge. Runs on main, weekly, and when branch
-# protection changes.
+# published at https://scorecard.dev so the README can show its badge. Runs weekly and when branch protection
+# changes: the score is about the repository's settings and pins, which a push to main rarely moves.
 on:
-  push:
-    branches: [main]
   schedule:
     - cron: '23 5 * * 1'
   branch_protection_rule:

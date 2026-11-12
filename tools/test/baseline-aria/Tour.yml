@@ -25,6 +25,26 @@
   - text: Search by name or owner. Results update as you type. Step 1 of 3
   - button "Next"
 
+# DoSayWhatItDoes
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Find a project":
+  - heading "Find a project" [level=2]
+  - button "Close"
+  - text: Search by name or owner. Results update as you type. Step 1 of 3
+  - button "Next"
+
+# DontSayWhatItIs
+- searchbox "Search projects"
+- button "New project"
+- button "Help"
+- dialog "Search field":
+  - heading "Search field" [level=2]
+  - button "Close"
+  - text: This is the search field. It is a text box at the top of the page.
+  - button "Done"
+
 # Last
 - searchbox "Search projects"
 - button "New project"

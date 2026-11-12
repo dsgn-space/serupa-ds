@@ -49,6 +49,11 @@ Drawn from the `Bottom` story, opened.
 - When it holds only text, set `initialFocus="panel"`: there's no control inside to focus.
 - On a phone, a panel by its button is small to tap and covers what's around it. Set `sheet="mobile"` and under 640px it becomes a sheet along the foot of the screen, the screen's width, as Dialog's `fullScreen="mobile"` fills it; `sheet` makes it one everywhere. For a sheet people pull taller, or one with a backdrop, use a bottom [Drawer](../Drawer/README.md) with `snapPoints`.
 
+### Do and don't
+
+- **Do:** Keep it small: a few fields or a short paragraph. (`DoKeepSmall`)
+- **Don't:** Put a long form in a popover: it needs scrolling. Use a Drawer or a Dialog instead. (`DontLongForm`)
+
 ## Accessibility
 
 - The panel is a `role="dialog"` named by its title (or `aria-label`); the trigger has `aria-expanded` and `aria-controls`.

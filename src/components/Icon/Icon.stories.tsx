@@ -34,3 +34,14 @@ export const CommonIcons: Story = {
       <div key={n} className="flex flex-col items-center gap-1 text-xs"><Icon name={n} aria-label={n} /><code className="wrap-anywhere text-center">{n}</code></div>)}
   </div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const row = (items: Array<[string, string]>) => (
+  <ul role="list" style={{ display: 'grid', gap: 8, margin: 0, padding: 0, listStyle: 'none' }}>
+    {items.map(([name, label]) => <li key={label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name={name} />{label}</li>)}
+  </ul>
+);
+/** Do: one icon for one meaning everywhere: `delete` wherever something is deleted. */
+export const DoOneMeaning: Story = { name: 'Do: one icon per meaning', render: () => row([['delete', 'Delete file'], ['delete', 'Delete comment'], ['delete', 'Delete project']]) };
+/** Don't: different icons for the same action, so people wonder whether they do different things. */
+export const DontMixedIcons: Story = { name: "Don't: mix icons for one action", render: () => row([['delete', 'Delete file'], ['remove', 'Delete comment'], ['close', 'Delete project']]) };

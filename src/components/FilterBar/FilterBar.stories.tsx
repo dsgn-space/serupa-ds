@@ -49,3 +49,9 @@ export const LongText: Story = {
   },
   decorators: [(Story) => <div style={{ maxWidth: 320 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: \`resultsCount\`, so people see what their filters did. */
+export const DoShowCount: Story = { name: 'Do: show the results count' };
+/** Don't: no count, so people can't tell whether a filter narrowed anything. */
+export const DontHideCount: Story = { name: "Don't: leave out the count", args: { resultsCount: undefined } };

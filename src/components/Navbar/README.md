@@ -50,6 +50,11 @@ Drawn from the `Playground` story.
 - For a section with several pages, use a `NavbarMenu` with a `label` and its links, grouped in `NavbarMenuGroup`s with a `title` when there are more than a handful. Give each `NavbarMenuLink` a short `description` when the name alone doesn't say what's there. Keep a panel to what fits on one screen: it's a way in, not a site map.
 - A NavbarMenu's button doesn't go anywhere itself. Give the section's own page a link in its panel, such as "All products".
 
+### Do and don't
+
+- **Do:** Keep the links to the main pages, a few short words each. (`DoFewLinks`)
+- **Don't:** Put every page in the bar: most fold away, and the main ones get lost among them. (`DontEveryPage`)
+
 ## Accessibility
 
 - It's a `<header>` (the banner landmark, when it's the page's top-level header) holding a `<nav>` named "Main", so people can jump to the links.

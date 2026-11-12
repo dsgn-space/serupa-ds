@@ -20,6 +20,22 @@
 - definition:
   - time: 14 March 2026
 
+# DoEmphasizeOne
+- term: Subtotal
+- definition: Rp 240.000
+- term: Delivery
+- definition: Free
+- term: Total
+- definition: Rp 240.000
+
+# DontEmphasizeAll
+- term: Subtotal
+- definition: Rp 240.000
+- term: Delivery
+- definition: Free
+- term: Total
+- definition: Rp 240.000
+
 # LoadingAndErrors
 - button "Loading" [pressed]
 - button "Loaded"

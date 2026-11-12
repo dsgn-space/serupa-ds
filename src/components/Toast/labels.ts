@@ -6,23 +6,23 @@ export interface ToastLabels {
   /** Toaster: said once, after the first toast with an action, so keyboard and screen reader users know how to reach it. */
   toastShortcut: (key: string) => string;
   /** Toaster: the line for toasts waiting past the limit. */
-  moreToasts: (count: number) => string;
+  moreToasts: (count: number, formatted: string) => string;
   /** A toast shown again while it was still up: the count read with it and said once the burst stops ("12 times"). */
-  toastRepeated: (count: number) => string;
+  toastRepeated: (count: number, formatted: string) => string;
   /** toast.undo: the button that takes the action back. */
   undo: string;
 }
 export const en: ToastLabels = {
   notifications: 'Notifications',
   toastShortcut: (key) => 'Press ' + key + ' to reach it.',
-  moreToasts: (n) => '+' + n + ' more',
-  toastRepeated: (n) => n + ' times',
+  moreToasts: (n, formatted = String(n)) => '+' + formatted + ' more',
+  toastRepeated: (n, formatted = String(n)) => formatted + ' times',
   undo: 'Undo',
 };
 export const id: ToastLabels = {
   notifications: 'Notifikasi',
   toastShortcut: (key) => 'Tekan ' + key + ' untuk menjangkaunya.',
-  moreToasts: (n) => '+' + n + ' lainnya',
-  toastRepeated: (n) => n + ' kali',
+  moreToasts: (n, formatted = String(n)) => '+' + formatted + ' lainnya',
+  toastRepeated: (n, formatted = String(n)) => formatted + ' kali',
   undo: 'Urungkan',
 };

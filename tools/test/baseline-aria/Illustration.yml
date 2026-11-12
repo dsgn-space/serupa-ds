@@ -1,3 +1,11 @@
+# DoMatchTitle
+- heading "No results for “mars”" [level=3]
+- paragraph: Check the spelling or try a broader search.
+
+# DontMismatch
+- heading "No results for “mars”" [level=3]
+- paragraph: Check the spelling or try a broader search.
+
 # Empty
 
 

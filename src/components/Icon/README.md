@@ -117,6 +117,11 @@ Icons take the text color (`currentColor`). Set it with an alias, never a palett
 | Menu open | `expand_more`, `chevron_right` |
 | Success / error / warning / info | `check_circle`, `error`, `warning`, `info` |
 
+### Do and don't
+
+- **Do:** Use one icon for one meaning across the product: `delete` wherever something is deleted. (`DoOneMeaning`)
+- **Don't:** Mix icons for the same action: people wonder whether `remove` and `close` do something different. (`DontMixedIcons`)
+
 ## Accessibility
 
 - **Role and name:** icons are decorative by default (`aria-hidden`). Give an icon an `aria-label` only when it's the sole carrier of meaning, such as a status icon without text. With `aria-label` or `aria-labelledby` it becomes `role="img"` with that name.
