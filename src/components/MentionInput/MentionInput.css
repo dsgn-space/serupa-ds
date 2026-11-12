@@ -1,0 +1,45 @@
+/* ---------------------------------------------------------------
+   MentionInput: a Textarea, and a list of people to mention that opens under the line the caret is on, as Combobox's
+   list looks (an overlay surface, options with an Avatar, the highlighted one barred at its start). Every value
+   reads one of its own tokens (mention-input.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-mention-input { position: relative; display: block; }
+/* An empty box at the caret, one line tall, that the list is placed against. */
+/* Placed in pixels at the caret by MentionInput.tsx (style.left and top), from where the text lays it out in either direction. */
+.dk-mention-input__anchor { position: absolute; inset-block-start: var(--spacing-0); inline-size: var(--spacing-0); pointer-events: none; }
+.dk-mention-input__popup {
+  --dk-mention-input-nest: max(var(--spacing-0), calc(var(--mention-input-listbox-radius, var(--radius-surface)) - var(--mention-input-listbox-padding, var(--spacing-1)) - var(--border-width-1)));
+  --dk-mention-input-offset: var(--mention-input-offset, var(--spacing-1));
+  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--mention-input-z-index, var(--z-popover));
+  min-width: var(--spacing-60); max-width: min(calc(var(--sizing-full) - var(--spacing-4)), var(--mention-input-listbox-max-width, var(--container-md)));
+  display: flex; flex-direction: column; max-height: var(--mention-input-listbox-max-height, var(--spacing-60)); overflow: hidden;
+  margin: var(--spacing-0); padding: var(--mention-input-listbox-padding, var(--spacing-1));
+  border: var(--border-width-1) solid var(--mention-input-listbox-border, var(--border-overlay));
+  border-radius: var(--mention-input-listbox-radius, var(--radius-surface)); background: var(--mention-input-listbox-bg, var(--surface-overlay));
+  box-shadow: var(--mention-input-listbox-shadow, var(--elevation-overlay));
+  color: var(--mention-input-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
+}
+.dk-mention-input__popup[hidden] { display: none; }
+.dk-mention-input__listbox { flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; }
+.dk-mention-input__option {
+  --dk-bar: var(--border-width-2);
+  display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-height: var(--mention-input-option-height, var(--control-height-md));
+  padding: var(--spacing-1\.5) var(--mention-input-option-padding-x, var(--spacing-2));
+  border-radius: var(--mention-input-option-radius, var(--dk-mention-input-nest, var(--radius-control))); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+}
+.dk-mention-input__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
+.dk-mention-input__option--active { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--mention-input-option-indicator, var(--primary)); }
+.dk-mention-input__option[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-mention-input__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.dk-mention-input__description { color: var(--mention-input-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-mention-input__option--active .dk-mention-input__description { color: var(--mention-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */
+.dk-mention-input__message { padding: var(--spacing-1\.5) var(--mention-input-option-padding-x, var(--spacing-2)); color: var(--mention-input-description-color, var(--text-muted)); }
+@media (forced-colors: active) {
+  .dk-mention-input__popup { border-color: CanvasText; }
+  .dk-mention-input__option--active { outline: var(--border-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--border-width-2)); }
+}
+
+/* The list is an on-screen layer: it doesn't print. */
+@media print { .dk-mention-input__popup { display: none !important; } }
+}

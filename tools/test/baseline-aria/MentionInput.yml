@@ -1,0 +1,54 @@
+# Default
+- textbox "Comment":
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: Thanks @Ayu Lestari, this reads well. @Budi Santoso can you check the API part?
+
+# Disabled
+- textbox "Comment" [disabled]:
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: Sent to @Dimas Pratama
+
+# DoSayHow
+- text: Comment Type @ to mention someone.
+- textbox "Comment"
+
+# DontHide
+- text: Comment
+- textbox "Comment"
+
+# InAField
+- text: Comment Type @ to mention someone; they get a notification.
+- textbox "Comment":
+  - /placeholder: Add a comment. Type @ to mention someone.
+- button "Comment" [disabled]
+
+# Invalid
+- textbox "Comment" [invalid]:
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: "@"
+
+# LongText
+- textbox "Comment":
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung, @Ayu Lestari, and a sentence long enough to wrap twice in a narrow column.
+
+# Playground
+- textbox "Comment":
+  - /placeholder: Add a comment. Type @ to mention someone.
+
+# ReadOnly
+- textbox "Comment":
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: Sent to @Dimas Pratama
+
+# Sizes
+- textbox "Comment, sm":
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: Size sm, with @Citra Dewi
+- textbox "Comment, md":
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: Size md, with @Citra Dewi
+- textbox "Comment, lg":
+  - /placeholder: Add a comment. Type @ to mention someone.
+  - text: Size lg, with @Citra Dewi
+

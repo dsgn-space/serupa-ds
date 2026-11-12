@@ -24,6 +24,7 @@ import { Input } from '../components/Input/Input';
 import { Loader } from '../components/Loader/Loader';
 import { LoadMore } from '../components/LoadMore/LoadMore';
 import { SerupaProvider } from './provider';
+import { MentionInput } from '../components/MentionInput/MentionInput';
 import { NumberInput } from '../components/NumberInput/NumberInput';
 import { OfflineBanner } from '../components/OfflineBanner/OfflineBanner';
 import { Progress } from '../components/Progress/Progress';
@@ -92,6 +93,9 @@ const SITES: Record<string, Site> = {
   'LoadMore: what a load added': {
     ui: (s) => <SerupaProvider locale="en-US"><LoadMore onLoadMore={() => {}} count={s ? 40 : 20} total={134} /></SerupaProvider>,   // pinned: the digits follow the browser's locale
     act: (next) => next(), says: /20 more loaded\. Showing 40 of 134/ },
+  'MentionInput: how many people match once typing stops': {
+    ui: () => <MentionInput aria-label="Comment" options={[{ id: 'a', label: 'Mars' }, { id: 'b', label: 'Mercury' }, { id: 'c', label: 'Venus' }]} />,
+    act: async () => { await userEvent.click($('textarea')); await userEvent.keyboard('@M'); }, says: /[2٢] results/ },
   'NumberInput: typed text that isn\'t a number': {
     ui: () => <NumberInput id="qty" aria-label="Quantity" defaultValue={5} />,
     act: async () => { await userEvent.fill($('#qty'), 'abc'); $('#qty').blur(); }, says: /“abc” wasn’t accepted/, assertive: true },
