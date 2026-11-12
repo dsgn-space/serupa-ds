@@ -37,9 +37,10 @@
 - definition: Rp 240.000
 
 # LoadingAndErrors
-- button "Loading" [pressed]
-- button "Loaded"
-- button "Failed"
+- radiogroup "State":
+  - radio "Loading" [checked]
+  - radio "Loaded"
+  - radio "Failed"
 - term: Name
 - definition
 - term: Owner

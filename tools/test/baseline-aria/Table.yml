@@ -169,10 +169,11 @@
       - cell "87"
 
 # LoadingAndErrors
-- button "Loading" [pressed]
-- button "Loaded"
-- button "Empty"
-- button "Failed"
+- radiogroup "State":
+  - radio "Loading" [checked]
+  - radio "Loaded"
+  - radio "Empty"
+  - radio "Failed"
 - table "Team members":
   - caption: Team members
   - rowgroup:
