@@ -17,8 +17,8 @@
   - button "Next image"
 
 # DontFileNames
-- dialog "IMG_2041.jpg":
-  - heading "IMG_2041.jpg" [level=2]
+- dialog "IMG_final.jpg":
+  - heading "IMG_final.jpg" [level=2]
   - paragraph: 1 of 4
   - button "Close"
   - figure "Bromo, before sunrise"
