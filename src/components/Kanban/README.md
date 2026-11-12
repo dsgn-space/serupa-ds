@@ -60,8 +60,10 @@ Drawn from the `Default` story.
 - **Failed:** in place of the board, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
+type Task = { id: string; title: string };
 {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>The board didn't load.</Alert>
-  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} busy={state === 'loading'} loadingLabel="Loading tasks" … />}
+  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} busy={state === 'loading'} loadingLabel="Loading tasks"
+      getKey={(t: Task) => t.id} getLabel={(t: Task) => t.title} renderCard={(t: Task) => t.title} onMove={setColumns} />}
 ```
 
 ### Do and don't
