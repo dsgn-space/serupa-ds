@@ -161,6 +161,7 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | `--dialog-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--dialog-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--dialog-shadow` | `elevation-modal` | The panel's shadow. |
+| `--dialog-depth` | `depth-surface` | The dialog's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--dialog-radius` | `radius-container` | The panel's corners (12px). |
 | `--dialog-width-sm` | `container-sm` | size="sm" (384px). |
 | `--dialog-width-md` | `container-lg` | size="md", the default (512px). |

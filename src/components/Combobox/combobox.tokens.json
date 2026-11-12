@@ -113,6 +113,16 @@
             "cssVar": "--combobox-listbox-shadow"
           }
         }
+      },
+      "listbox-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "The list box's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--combobox-listbox-depth"
+          }
+        }
       }
     },
     "radius": {

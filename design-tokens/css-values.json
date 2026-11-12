@@ -27,13 +27,13 @@
     },
     "depth-sheen": {
       "css": "none",
-      "tactile": "linear-gradient(to bottom, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 25%, rgb(0 0 0 / 0) 75%, rgb(0 0 0 / 0.06))",
-      "description": "Depth (tactile): a background image over a filled control (the primary and destructive Button, a FAB): lighter at the top, a touch darker at the bottom. Light and shade stay in the top and bottom quarters, clear of the label, so the label keeps its contrast (4.5:1 and up, white on red-600 the lowest). `none` in the flat brands."
+      "tactile": "linear-gradient(to bottom, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 40%)",
+      "description": "Depth (tactile): a background image over a filled control (the primary and destructive Button, a FAB): a soft light from the top edge that fades out before the middle, clear of the label, so the label keeps its contrast (4.5:1 and up, white on red-600 the lowest). `none` in the flat brands."
     },
     "depth-sheen-pressed": {
       "css": "none",
-      "tactile": "linear-gradient(to bottom, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0) 60%)",
-      "description": "Depth (tactile): `depth-sheen` while the control is held down: the light at the top goes out and a shade comes in, so it looks pushed in."
+      "tactile": "linear-gradient(to bottom, rgb(0 0 0 / 0.06), rgb(0 0 0 / 0) 40%)",
+      "description": "Depth (tactile): `depth-sheen` while the control is held down: the light at the top goes out and a faint shade comes in, so it looks pushed in."
     },
     "depth-press": {
       "css": "{spacing-0}",

@@ -5717,11 +5717,11 @@
     "depth-control": {
       "$type": "shadow",
       "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added over the shadow of a raised control at rest (the filled, outline and secondary Button, IconButton, ToggleButton, FAB): a faint highlight along the top edge, a soft shade along the bottom and a little lift. Nothing in the flat brands.",
+      "$description": "Depth (tactile): layers added over the shadow of a raised control at rest (the filled, outline and secondary Button, IconButton, ToggleButton, FAB): a short, soft two-layer shadow that lifts it off the page, and in dark mode a faint light along the top edge. Nothing in the flat brands.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--depth-control",
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 2px 4px -1px rgb(0 0 0 / 0.1)"
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.08)"
         }
       }
     },
@@ -5732,7 +5732,7 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--depth-control-hover",
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.14)"
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 3px 8px -1px rgb(0 0 0 / 0.12)"
         }
       }
     },
@@ -5743,18 +5743,18 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--depth-control-pressed",
-          "tactile": "inset 0 1px 3px 0 light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.4))"
+          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.35))"
         }
       }
     },
     "depth-part": {
       "$type": "shadow",
       "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added to a part that sits on a control and moves: the Switch thumb, the Slider thumb, the SegmentedControl indicator. A top highlight and a small, close shadow.",
+      "$description": "Depth (tactile): layers added to a part that sits on a control and moves: the Switch thumb, the Slider thumb, the SegmentedControl indicator. A hairline edge and a soft, short shadow, like a physical knob.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--depth-part",
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), 0 1px 2px 0 rgb(0 0 0 / 0.16)"
+          "tactile": "0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 1px 0 rgb(0 0 0 / 0.06), 0 2px 6px 0 rgb(0 0 0 / 0.14)"
         }
       }
     },
@@ -5769,6 +5769,28 @@
         }
       }
     },
+    "depth-well": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): a track or groove sunk into the page, deeper than `depth-field`: the Switch track, the Slider, Progress and Meter tracks, an unticked Checkbox or Radio. A soft shade along the top.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-well",
+          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4))"
+        }
+      }
+    },
+    "depth-surface": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): layers added inside a surface that floats over the page (menus, popovers, list boxes, date and time pickers, hover cards, tooltips, toasts, dialogs, drawers): a crisp hairline around it and, in dark mode, a faint light along the top edge, so it reads as a raised pane rather than a flat sheet. Over its elevation shadow.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-surface",
+          "tactile": "0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07))"
+        }
+      }
+    },
     "depth-card-lift": {
       "$type": "shadow",
       "$value": "{shadow.shadow-none}",
@@ -5776,7 +5798,7 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--depth-card-lift",
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 8px 16px -6px rgb(0 0 0 / 0.16), 0 2px 4px -2px rgb(0 0 0 / 0.08)"
+          "tactile": "0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14)"
         }
       }
     }

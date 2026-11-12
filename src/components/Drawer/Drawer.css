@@ -46,7 +46,7 @@
   width: var(--dk-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
   padding: var(--drawer-padding, var(--space-surface));
   background: var(--drawer-bg, var(--surface-overlay));
-  box-shadow: var(--drawer-shadow, var(--elevation-modal));
+  box-shadow: var(--drawer-depth, var(--depth-surface)), var(--drawer-shadow, var(--elevation-modal));
   position: relative;
 }
 /* Behind the panel's outer edge, a copy of its background while a drag pulls it away from the edge (up to 24px,

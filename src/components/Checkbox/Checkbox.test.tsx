@@ -156,7 +156,7 @@ describe('Checkbox', () => {
     await render(<><button type="button">Before</button><Checkbox id="f">Focus me</Checkbox></>);
     await page.getByRole('button', { name: 'Before' }).click();
     await userEvent.tab();
-    await expect.poll(() => { const s = css(input('f')); return `${s.outlineStyle} ${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`; }).toBe(`solid ${color('var(--focus-ring)')} 2px 2px none`);
+    await expect.poll(() => { const s = css(input('f')); return `${s.outlineStyle} ${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow.replace(/(, )?rgba\(0, 0, 0, 0\) 0px 0px 0px 0px/g, '') || 'none'}`; }).toBe(`solid ${color('var(--focus-ring)')} 2px 2px none`);
   });
 
   test('invalid: aria-invalid and a danger border', async () => {

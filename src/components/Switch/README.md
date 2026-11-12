@@ -154,4 +154,5 @@ Each is an optional override: set it on the page, a container or one switch. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--switch-thumb-depth` | `depth-part` | The thumb's tactile layers: a highlight and a close shadow. None in the flat brands. |
+| `--switch-track-depth` | `depth-well` | The track's tactile layers: a groove the thumb slides in. None in the flat brands. |
 <!-- token-table:end -->

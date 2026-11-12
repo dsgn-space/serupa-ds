@@ -12,7 +12,7 @@
   margin: var(--spacing-0); padding: var(--hover-card-padding, var(--spacing-4)); overflow-y: auto; overscroll-behavior: contain;
   border: var(--hover-card-border-width, var(--border-width-1)) solid var(--hover-card-border, var(--border-overlay)); border-radius: var(--hover-card-radius, var(--radius-surface));
   background: var(--hover-card-bg, var(--surface-overlay)); color: var(--hover-card-text, var(--text));
-  box-shadow: var(--hover-card-shadow, var(--elevation-overlay));
+  box-shadow: var(--hover-card-depth, var(--depth-surface)), var(--hover-card-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start; overflow-wrap: break-word;
   transform-origin: var(--dk-layer-origin, top);
 }

@@ -995,6 +995,8 @@
   --depth-sheen-pressed: none;
   --depth-part: var(--shadow-none);
   --depth-field: var(--shadow-none);
+  --depth-well: var(--shadow-none);
+  --depth-surface: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --border-width-0: 0px;
@@ -1535,6 +1537,8 @@
   --depth-sheen-pressed: none;
   --depth-part: var(--shadow-none);
   --depth-field: var(--shadow-none);
+  --depth-well: var(--shadow-none);
+  --depth-surface: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --motion-draw: var(--duration-0);
@@ -1543,14 +1547,16 @@
   --ease-spring: var(--ease-spring-snappy);
 }
 [data-theme^="violet-"], [data-brand="violet"] {
-  --depth-control: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 2px 4px -1px rgb(0 0 0 / 0.1);
-  --depth-control-hover: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.14);
-  --depth-control-pressed: inset 0 1px 3px 0 light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.4));
-  --depth-sheen: linear-gradient(to bottom, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 25%, rgb(0 0 0 / 0) 75%, rgb(0 0 0 / 0.06));
-  --depth-sheen-pressed: linear-gradient(to bottom, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0) 60%);
-  --depth-part: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), 0 1px 2px 0 rgb(0 0 0 / 0.16);
+  --depth-control: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.08);
+  --depth-control-hover: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 3px 8px -1px rgb(0 0 0 / 0.12);
+  --depth-control-pressed: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.35));
+  --depth-sheen: linear-gradient(to bottom, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 40%);
+  --depth-sheen-pressed: linear-gradient(to bottom, rgb(0 0 0 / 0.06), rgb(0 0 0 / 0) 40%);
+  --depth-part: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 1px 0 rgb(0 0 0 / 0.06), 0 2px 6px 0 rgb(0 0 0 / 0.14);
   --depth-field: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35));
-  --depth-card-lift: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 8px 16px -6px rgb(0 0 0 / 0.16), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --depth-well: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4));
+  --depth-surface: 0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07));
+  --depth-card-lift: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14);
   --depth-press: var(--spacing-px);
   --motion-draw: var(--duration-150);
   --motion-toggle: var(--motion-release);
@@ -1565,6 +1571,8 @@
   --depth-sheen-pressed: none;
   --depth-part: var(--shadow-none);
   --depth-field: var(--shadow-none);
+  --depth-well: var(--shadow-none);
+  --depth-surface: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --motion-draw: var(--duration-0);
@@ -1573,14 +1581,16 @@
   --ease-spring: var(--ease-spring-snappy);
 }
 [data-depth="tactile"] {
-  --depth-control: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 2px 4px -1px rgb(0 0 0 / 0.1);
-  --depth-control-hover: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.14);
-  --depth-control-pressed: inset 0 1px 3px 0 light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.4));
-  --depth-sheen: linear-gradient(to bottom, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 25%, rgb(0 0 0 / 0) 75%, rgb(0 0 0 / 0.06));
-  --depth-sheen-pressed: linear-gradient(to bottom, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0) 60%);
-  --depth-part: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), 0 1px 2px 0 rgb(0 0 0 / 0.16);
+  --depth-control: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.08);
+  --depth-control-hover: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 3px 8px -1px rgb(0 0 0 / 0.12);
+  --depth-control-pressed: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.35));
+  --depth-sheen: linear-gradient(to bottom, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 40%);
+  --depth-sheen-pressed: linear-gradient(to bottom, rgb(0 0 0 / 0.06), rgb(0 0 0 / 0) 40%);
+  --depth-part: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 1px 0 rgb(0 0 0 / 0.06), 0 2px 6px 0 rgb(0 0 0 / 0.14);
   --depth-field: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35));
-  --depth-card-lift: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 8px 16px -6px rgb(0 0 0 / 0.16), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --depth-well: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4));
+  --depth-surface: 0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07));
+  --depth-card-lift: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14);
   --depth-press: var(--spacing-px);
   --motion-draw: var(--duration-150);
   --motion-toggle: var(--motion-release);
@@ -1595,6 +1605,8 @@
   --depth-sheen-pressed: none;
   --depth-part: var(--shadow-none);
   --depth-field: var(--shadow-none);
+  --depth-well: var(--shadow-none);
+  --depth-surface: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --motion-draw: var(--duration-0);

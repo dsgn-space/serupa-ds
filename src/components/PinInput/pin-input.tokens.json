@@ -140,6 +140,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-field}",
+        "$description": "Each box's tactile layers: a well to type into, like Input. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pin-input-depth"
+          }
+        }
+      }
     }
   }
 }

@@ -295,10 +295,11 @@ describe('Density axis', () => {
     const css = [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules].map((r) => r.cssText); } catch { return []; } }).join('\n');
     expect(css).toMatch(/@media \(forced-colors: active\)[^@]*--depth-sheen: none/);
     const sheen = (tokens.shadow.tokens as (Tok & { tactile?: string })[]).find((t) => t.name === 'depth-sheen')!.tactile!;
-    // The light and the shade stay in the top and bottom quarters, clear of the label.
-    expect(sheen).toMatch(/rgb\(255 255 255 \/ 0\) 25%, rgb\(0 0 0 \/ 0\) 75%/);
+    // The light fades out by 40% of the height, at most 10% white: where a label's text starts (about a fifth of the
+    // way down) it is under 5% white, so white on red-600 (4.83:1 flat) stays above 4.5:1.
+    expect(sheen).toMatch(/^linear-gradient\(to bottom, rgb\(255 255 255 \/ 0\.1\), rgb\(255 255 255 \/ 0\) 40%\)$/);
     const deep = (tokens.shadow.tokens as (Tok & { tactile?: string })[]).filter((t) => t.tactile != null);
-    expect(deep.map((t) => t.name).sort()).toEqual(['depth-card-lift', 'depth-control', 'depth-control-hover', 'depth-control-pressed', 'depth-field', 'depth-part', 'depth-press', 'depth-sheen', 'depth-sheen-pressed']);
+    expect(deep.map((t) => t.name).sort()).toEqual(['depth-card-lift', 'depth-control', 'depth-control-hover', 'depth-control-pressed', 'depth-field', 'depth-part', 'depth-press', 'depth-sheen', 'depth-sheen-pressed', 'depth-surface', 'depth-well']);
     for (const t of deep) expect(t.tactile, t.name).not.toMatch(/translate|scale|transition|animation/);
   });
   test('tactile motion: violet presses a Button 1px down, slides the Switch thumb on a spring and draws the Checkbox tick on; the flat brands keep their motion; reduced motion stops all three', async () => {

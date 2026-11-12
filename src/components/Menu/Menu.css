@@ -26,7 +26,7 @@
   border-radius: var(--menu-radius, var(--radius-surface));
   background: var(--menu-bg, var(--surface-overlay));
   color: var(--menu-item-text, var(--text));
-  box-shadow: var(--menu-shadow, var(--elevation-overlay));
+  box-shadow: var(--menu-depth, var(--depth-surface)), var(--menu-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--text-sm--line-height);

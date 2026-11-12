@@ -207,6 +207,7 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | Token | Default | Use |
 | --- | --- | --- |
 | `--menu-shadow` | `elevation-overlay` | The menu's shadow. |
+| `--menu-depth` | `depth-surface` | The menu's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 
 **Border**
 
