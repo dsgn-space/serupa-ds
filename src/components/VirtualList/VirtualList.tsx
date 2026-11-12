@@ -25,7 +25,7 @@ export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListEle
 
 /* VirtualList: a List of any length that draws only the rows in view, plus a few either side (useVirtual in
    src/internal/virtual.ts). The <ul> is the scroller, up to 384px tall (--virtual-list-height), and keyboard
-   scrollable (tabIndex 0); an empty ::before and ::after stand in for the rows not drawn. Each drawn row gets aria-posinset and
+   scrollable (tabIndex 0, none while it has no rows: an empty box isn't a stop); an empty ::before and ::after stand in for the rows not drawn. Each drawn row gets aria-posinset and
    aria-setsize, so screen readers still say "row 5,001 of 10,000". A row with focus stays drawn when it scrolls out
    of view, so focus is never lost. className and every other prop go to the <ul>. */
 /** A List of thousands of rows that draws only the ones in view: same rows, same look, fast at any length.
@@ -59,7 +59,7 @@ export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualLi
   const setNode = useMergedRef(ref, (n: HTMLUListElement | null) => { attach(n); });
   return React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
     ref: setNode,
-    'data-component': 'virtual-list', role: rest.role ?? 'list', tabIndex: rest.tabIndex ?? 0,
+    'data-component': 'virtual-list', role: rest.role ?? 'list', tabIndex: rest.tabIndex ?? (count ? 0 : undefined),
     className: cn('dk-list', 'dk-virtual-list', variant === 'card' && 'dk-list--card', props.divided !== false && 'dk-list--divided', props.className),
     style: { ...props.style, '--dk-vl-before': r.before + 'px', '--dk-vl-after': r.after + 'px' } as React.CSSProperties,
     // A row Tab reaches is scrolled into view by the list, not only the browser: Firefox scrolled with the guessed

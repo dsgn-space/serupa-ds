@@ -32,7 +32,7 @@ import { VirtualList, ListItem } from "serupa-ds";
 ### Loading, empty and failed
 
 - **Loading:** until the first rows arrive, show a [List](../List/README.md#loading-empty-and-failed) with `busy` and a `ListLoadingItems` in the rows' shape (`description`, and `leading` set to `'icon'` or the Avatar's size), with as many rows as fill the view: six for the default 384px of 56px rows. Each placeholder is as tall as the VirtualList row that replaces it, and the `label` ("Loading members") is said once, after the loader's delay.
-- **Empty:** in place of the VirtualList, an [EmptyState](../EmptyState/README.md) that says what's missing and offers the action that adds the first one. An empty VirtualList is an empty box people can still Tab to.
+- **Empty:** in place of the VirtualList, an [EmptyState](../EmptyState/README.md) that says what's missing and offers the action that adds the first one. An empty VirtualList is an empty box: it leaves the Tab order, but says nothing.
 - **Failed:** in place of the VirtualList, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
@@ -57,7 +57,7 @@ import { VirtualList, ListItem } from "serupa-ds";
 ## Accessibility
 
 - **Role and name:** a `<ul role="list">` (or `<ol>`) named by your `aria-label`. Each drawn row has `aria-posinset` and `aria-setsize`, so screen readers say "5,001 of 10,000" though only a few rows are in the page.
-- **Keyboard:** the list takes focus (`tabIndex` 0) and scrolls with the arrows, Page Up, Page Down, Home and End. Links and buttons in rows are reached with Tab; the row with focus is never removed while it has focus.
+- **Keyboard:** the list takes focus (`tabIndex` 0, while it has rows) and scrolls with the arrows, Page Up, Page Down, Home and End. Links and buttons in rows are reached with Tab; the row with focus is never removed while it has focus.
 - **Contrast:** row text reads 4.5:1 and the focus ring 3:1 in all six themes (`VirtualList.test.tsx`).
 - **What's still yours:** the name, and a search or filter for lists people need to find a row in.
 
