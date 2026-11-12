@@ -31,6 +31,11 @@ const { IconButton } = window.Serupa;
 - Give icon buttons in one row the same `size` and `variant`, and match the size of the buttons and fields beside them.
 - Use `shape="round"` only where round buttons are the pattern; square follows Button's corners.
 
+### Do and don't
+
+- **Do:** Use icons people know at a glance, such as search, settings and close. (`DoKnownIcons`)
+- **Don't:** Leave people to guess a newer action from its icon: give it words, as a [Button](../Button/README.md) with a `leftIcon`. (`DontGuessIcon`)
+
 ## Accessibility
 
 - The label is the button's name: say what it does ("Delete file"), not what it shows ("Trash can").

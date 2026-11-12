@@ -3,6 +3,15 @@
 - textbox "Email" [disabled]:
   - /placeholder: you@example.com
 
+# DoHintForFormat
+- text: Date of birth For example, 31/12/1990
+- textbox "Date of birth"
+
+# DontPlaceholderFormat
+- text: Date of birth
+- textbox "Date of birth":
+  - /placeholder: DD/MM/YYYY
+
 # Group
 - group "Notifications":
   - text: Notifications Choose any
