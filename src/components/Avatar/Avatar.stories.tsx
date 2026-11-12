@@ -53,3 +53,15 @@ export const LongName: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: circles for people, squares for a team, workspace or app. */
+export const DoShapeByKind: Story = {
+  name: 'Do: circles for people, squares for things',
+  render: () => <Row><Avatar src={PHOTO} name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar name="Atlas" shape="square" /><Avatar name="Design team" shape="square" /></Row>,
+};
+/** Don't: a workspace in a circle among people, where it reads as one more person. */
+export const DontMixShapes: Story = {
+  name: "Don't: one shape for everything",
+  render: () => <Row><Avatar src={PHOTO} name="Ada Lovelace" /><Avatar name="Grace Hopper" /><Avatar name="Atlas" /><Avatar name="Design team" /></Row>,
+};

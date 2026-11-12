@@ -177,6 +177,16 @@
             "cssVar": "--slider-thumb-shadow"
           }
         }
+      },
+      "thumb-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The tactile layers over each thumb's shadow. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-thumb-depth"
+          }
+        }
       }
     }
   }
