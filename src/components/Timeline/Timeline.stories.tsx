@@ -51,3 +51,17 @@ export const LongText: Story = {
   },
   render: (args) => <div style={{ width: 240 }}><Timeline {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the status in the title, so it reads without the marker's color. */
+export const DoStatusInTitle: Story = { name: 'Do: say the status in the title' };
+/** Don't: a generic title where only the marker's color says something went wrong. */
+export const DontColorOnly: Story = {
+  name: "Don't: status only in the color",
+  args: { children: <>
+    <TimelineItem title="Update" time="12 Mar, 09:14" dateTime="2026-03-12T09:14" status="primary">Two items, paid by card.</TimelineItem>
+    <TimelineItem title="Update" time="12 Mar, 09:15" dateTime="2026-03-12T09:15" status="success" />
+    <TimelineItem title="Update" time="13 Mar, 18:40" dateTime="2026-03-13T18:40" status="warning">New estimate: 15 March.</TimelineItem>
+    <TimelineItem title="Update" time="15 Mar, 08:02" dateTime="2026-03-15T08:02" />
+  </> },
+};

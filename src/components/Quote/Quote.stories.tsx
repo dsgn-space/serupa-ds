@@ -52,3 +52,12 @@ export const LongText: Story = {
     avatar: <Avatar name="Maximiliane Wolfeschlegelsteinhausenbergerdorff" size="sm" alt="" />,
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a testimonial of two or three sentences, with who said it. */
+export const DoKeepItShort: Story = { name: 'Do: keep it short' };
+/** Don't: a whole paragraph, which people skip. */
+export const DontWholeParagraph: Story = {
+  name: "Don't: quote a whole paragraph",
+  args: { children: 'We had tried three other libraries before this one, and each time we ended up rewriting half of the components ourselves because the defaults never quite fit what our designers had drawn. This time we moved our whole settings area onto it in a week, which none of us expected, and after that the support tickets about settings stopped almost completely. Our designers now hand over screens that use the same names as the code, and our reviews have become much shorter because there is far less to argue about.' },
+};
