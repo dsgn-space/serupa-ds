@@ -110,7 +110,7 @@
     "typecheck": "node tools/build/registry.mjs && node node_modules/typescript/bin/tsc -p . && node node_modules/typescript/bin/tsc -p tools",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
-    "prepare": "node tools/build/build.mjs",
+    "prepare": "node tools/git-hooks/install.mjs && node tools/build/build.mjs",
     "pretest": "node tools/build/build.mjs",
     "test": "node tools/test/run.mjs",
     "tokens": "node tools/tokens/source.mjs && node tools/tokens/build.mjs && node tools/tokens/export.mjs && node tools/tokens/readme-tables.mjs && node tools/tokens/badge-palette.mjs",

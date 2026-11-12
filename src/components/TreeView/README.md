@@ -53,6 +53,20 @@ Drawn from the `Multiple` story.
 - When the focused item leaves the page from outside (you take it out of `items`, or close its parent through `expanded`), focus goes to its nearest parent in view, else the item now in its place, not to the page.
 - Your `onKeyDown` runs before the tree's own keys, so `e.preventDefault()` in it keeps the tree from acting on that key.
 
+### Loading and failed
+
+- **The first load:** in place of the tree, a few skeleton [Loader](../Loader/README.md) lines (`size="md"`) in a box with `aria-busy`. Give the first a `label` ("Loading files") and the others `label=""`. Render the tree once its top level is here: an empty tree has nothing to focus.
+- **A folder that loads when it opens:** give it `children: []` so it can open, then load its children in `onExpandedChange`. Until they come, its one child is a disabled "Loading…" item: people can reach it and hear it, but not pick it. When the children arrive, focus on that item goes to the first of them.
+- **Failed:** the same item says so: "Didn't load. Close and open the folder to try again." Closing and opening the folder loads it again. When the whole tree fails, show a danger [Alert](../Alert/README.md) with Retry in `actions` in its place.
+
+```tsx
+const children = kids === 'loading' ? [{ id: 'docs-wait', label: 'Loading…', disabled: true }]
+  : kids === 'failed' ? [{ id: 'docs-wait', label: "Didn't load. Close and open the folder to try again.", disabled: true }]
+  : kids;   // [] until the folder first opens
+<TreeView aria-label="Files" items={[{ id: 'docs', label: 'docs', icon: 'folder', children }]} expanded={open}
+  onExpandedChange={(next) => { setOpen(next); if (next.includes('docs') && (kids === 'failed' || !kids.length)) loadDocs(); }} />
+```
+
 ### Do and don't
 
 - **Do:** Open the folders down to the selected item with `defaultExpanded`, so people see where they are. (`DoOpenToSelection`)

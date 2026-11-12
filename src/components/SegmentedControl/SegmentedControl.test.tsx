@@ -420,4 +420,14 @@ describe('SegmentedControl', () => {
       .toEqual(['Period*', 'Shown on the chart / Pick one', 'true', 'true', 'true']);   // the * is aria-hidden
     expect([...g.querySelectorAll('button')].every((b) => b.disabled)).toBe(true);
   });
+
+  test('the selection\'s corners nest in the track\'s: its radius less the gap around it, with the default corners and with data-radius="round" (GR269)', async () => {
+    const nest = (outer: Element, inner: Element) => { const o = getComputedStyle(outer), i = getComputedStyle(inner); return [parseFloat(i.borderStartStartRadius), Math.max(0, parseFloat(o.borderStartStartRadius) - (inner.getBoundingClientRect().left - outer.getBoundingClientRect().left))]; };
+    await render(<div id="sn-host"><Col><Period /></Col></div>);
+    const e = el('per'), first = items('per')[0];
+    expect(nest(e, first)).toEqual([3, 3]);
+    el('sn-host').setAttribute('data-radius', 'round');
+    const [r, want] = nest(e, first);
+    expect([r, r]).toEqual([want, 9]);
+  });
 });

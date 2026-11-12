@@ -1,0 +1,28 @@
+#!/bin/sh
+# Runs what CI requires on a pull request (node tools/ci.mjs --since origin/main) before a push leaves this machine, so a
+# pull request doesn't take a CI round, or a merge-queue group, to find what this run finds. npm install sets it up
+# (tools/git-hooks/install.mjs). A push that deletes a branch or carries no change to test skips it.
+# SERUPA_SKIP_PREPUSH=1 skips it for one push (a bot, or a push of baselines CI drew); git push --no-verify does too.
+zero=0000000000000000000000000000000000000000
+run=
+branches=
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue
+  run=1
+  branches="$branches ${remote_ref#refs/heads/}"
+done
+[ -n "$run" ] || exit 0
+# Never while Update baselines draws the branch's pictures (the update-visual-baselines label is on): its push of the
+# pictures would be refused and the drawing thrown away. This holds even when SERUPA_SKIP_PREPUSH skips the checks.
+if command -v gh >/dev/null 2>&1; then
+  for b in $branches; do
+    if gh pr list --head "$b" --state open --json labels --jq '.[].labels[].name' 2>/dev/null | grep -qx update-visual-baselines; then
+      echo "pre-push: Update baselines is drawing $b's pictures (the update-visual-baselines label is on). Push after it commits them and takes the label off." >&2
+      exit 1
+    fi
+  done
+fi
+[ "${SERUPA_SKIP_PREPUSH:-}" = 1 ] && exit 0
+git fetch -q origin main || { echo "pre-push: couldn't fetch origin/main; run node tools/ci.mjs --since origin/main yourself." >&2; exit 1; }
+echo "pre-push: node tools/ci.mjs --since origin/main (SERUPA_SKIP_PREPUSH=1 skips it)" >&2
+exec node tools/ci.mjs --since origin/main </dev/null

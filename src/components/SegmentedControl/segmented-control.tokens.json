@@ -129,7 +129,7 @@
       "indicator-radius": {
         "$type": "dimension",
         "$value": "{radius.radius-inner}",
-        "$description": "The selected segment's corners (4px).",
+        "$description": "The selection's and each segment's corners. Unset, they nest in the track's: its radius less its padding and border (3px), following the brand and data-radius.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--segmented-control-indicator-radius"

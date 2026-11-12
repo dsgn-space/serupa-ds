@@ -31,7 +31,7 @@ A page of rows to search, filter, sort, select and page through, with the view k
 
 <Canvas of={Stories.NoResults} />
 
-## What stays the app's job
+## What stays your app's job
 
 - **Writing the address.** `onSearchChange` gets the new query string: write it with `history.replaceState` (or your router's equivalent), so typing doesn't add a history entry per letter. Pass the address's query string back as `search` when the page loads.
 - **Searching on the server** for long lists: debounce the search, keep the count in step with what the server says, and show the table's loading state while it answers.

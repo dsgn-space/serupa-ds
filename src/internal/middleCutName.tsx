@@ -11,8 +11,8 @@ const LETTER = /[\p{L}\p{M}]/u;
  *  (up to 10 of it) stay; in a joining script the cut moves back to the start of the word it would split. */
 function nameCut(chars: string[], ext: number): number {
   let at = Math.max(0, chars.length - Math.min(chars.length, Math.min(ext, 10) + 6));
-  if (at > 0 && JOINS.test(chars[at - 1]) && JOINS.test(chars[at])) {
-    while (at > 0 && LETTER.test(chars[at - 1])) at--;
+  if (at > 0 && JOINS.test(chars[at - 1] ?? '') && JOINS.test(chars[at] ?? '')) {
+    while (at > 0 && LETTER.test(chars[at - 1] ?? '')) at--;
   }
   return at;
 }

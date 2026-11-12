@@ -16,7 +16,9 @@
 @media (hover: hover) { .dk-combobox__button:hover:not(:disabled) { background: var(--combobox-chevron-bg-hover, var(--secondary)); color: var(--combobox-chevron-hover, var(--text)); } }
 .dk-combobox__button:disabled { cursor: not-allowed; }
 .dk-combobox[data-state="open"] .dk-combobox__toggle .dk-icon { --dk-combobox-turn: 180deg; rotate: var(--dk-combobox-turn); }
+/* An option's corners nest in the list's: its radius less the padding and border between them (8 - 4 - 1 = 3px). */
 .dk-combobox__popup {
+  --dk-combobox-nest: max(var(--spacing-0), calc(var(--combobox-listbox-radius, var(--radius-surface)) - var(--combobox-listbox-padding, var(--spacing-1)) - var(--border-width-1)));
   --dk-combobox-offset: var(--combobox-offset, var(--spacing-1));
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--combobox-z-index, var(--z-popover));
   /* At least as wide as the field (set by the script), at most 28rem, so one long label wraps instead of widening the list. */
@@ -68,7 +70,7 @@
 .dk-combobox__option {
   display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-height: var(--combobox-option-height, var(--control-height-md));
   padding: var(--spacing-1\.5) var(--combobox-option-padding-x, var(--spacing-2));
-  border-radius: var(--combobox-option-radius, var(--radius-control)); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  border-radius: var(--combobox-option-radius, var(--dk-combobox-nest, var(--radius-control))); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .dk-combobox__option { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .dk-combobox__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }

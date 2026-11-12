@@ -14,7 +14,7 @@ name: CI
 #   (repository variables SERUPA_RUNNER and SERUPA_X86_RUNNER, JSON: '["self-hosted","linux","x86"]'). Jobs with a
 #   screenshot or a timing budget take SERUPA_X86_RUNNER: the baselines are drawn with Chrome for Testing on x64. A pull
 #   request from a fork always runs on GitHub's runners, so code nobody has merged never runs on the project's machines.
-#   The merge queue and main run every job on SERUPA_X86_RUNNER, a pull request on GitHub's runners.
+#   The x86 jobs take SERUPA_X86_RUNNER for the merge queue, main and same-repository pull requests (up to eight at once).
 # - Results are kept: a job that passed on the same tree, against the same base, passes again at once without running.
 # - The nightly jobs are in nightly.yml. No workflow_dispatch: a run started by hand runs in the default branch's
 #   cache scope on any ref, which CodeQL rightly counts as cache poisoning; the nightly runs main whole instead.
@@ -44,7 +44,11 @@ jobs:
     if: github.head_ref != 'changeset-release/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
+      hold: ${{ steps.hold.outputs.hold }}
       wide: ${{ steps.plan.outputs.wide }}
       full: ${{ steps.plan.outputs.full }}
       since: ${{ steps.plan.outputs.since }}
@@ -61,6 +65,25 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
+      # Held: the pull request carries the update-visual-baselines label, so Update baselines is drawing its pictures
+      # now and will push them (a new run) or, with nothing to change, start this run again once the label is off.
+      # Testing this commit meanwhile would only be done twice. The bot's own picture commit is never held.
+      - id: hold
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          subject=$(git log -1 --format=%s HEAD^2)
+          labels=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" --jq '.[].name')
+          # Heal's merge is held too: its label comes right after the push.
+          if [ "$subject" != "Update test baselines on the CI runner" ] && { grep -qx update-visual-baselines <<< "$labels" ||
+            grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; then
+            echo "hold=1" >> "$GITHUB_OUTPUT"
+            echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
       - id: plan
         shell: bash
         env:
@@ -118,14 +141,53 @@ jobs:
             echo "x86=$(echo "$x86" | tr -d ' \n')"; echo "x86any=$x86any"; echo "portable=$(echo "$portable" | tr -d ' \n')"
           } >> "$GITHUB_OUTPUT"
           echo "full=${full:-no} wide=${wide:-no} since=${since:-none} visual=${visual:-no} tests=${tests:-no}"
+          # Size: each pull request costs a CI run, often a redraw and a queue run, so a tiny one belongs in its thread's
+          # next batch and a huge one is hard to review and conflicts with everything. Pictures and other baselines
+          # don't count. A warning only: it never fails the run.
+          if [ "$EVENT" = pull_request ]; then
+            lines=$(git diff --numstat HEAD^1 HEAD -- . ':(exclude)tools/test/baseline-*' ':(exclude)package-lock.json' | awk '$1 != "-" { n += $1 + $2 } END { print n + 0 }')
+            if [ "$lines" -lt 15 ]; then echo "::warning title=Small pull request::$lines changed lines: fold it into the thread's next batch instead of its own CI run, redraw and queue run."
+            elif [ "$lines" -gt 3000 ]; then echo "::warning title=Big pull request::$lines changed lines (pictures aside): split it by component, or expect conflicts and a long review."; fi
+          fi
 
   # Builds the package and Storybook once; every test job downloads them instead of building its own.
+  # Fails in seconds when the branch's pictures can't match the tree it merges into: one side changed a component's
+  # pictures and the other changed that component, or the pictures of one that uses it (tools/fresh.mjs). Without it the queue finds out on
+  # Visual after 15 minutes and builds every group behind it again. In the queue it compares the newest pull request
+  # with the group before it.
+  fresh:
+    if: (github.event_name == 'pull_request' || github.event_name == 'merge_group') && github.head_ref != 'changeset-release/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          EVENT: ${{ github.event_name }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          QUEUE_BASE: ${{ github.event.merge_group.base_sha }}
+          QUEUE_REF: ${{ github.event.merge_group.head_ref }}
+        run: |
+          if [ "$EVENT" = merge_group ]; then
+            # gh-readonly-queue/main/pr-<number>-<sha>: the pull request this group adds.
+            n=$(echo "$QUEUE_REF" | sed -E 's|.*/pr-([0-9]+)-.*|\1|')
+            node tools/fresh.mjs --base "$QUEUE_BASE" --head "$(gh api "repos/$GH_REPO/pulls/$n" --jq .head.sha)"
+          else
+            # The main this run tests against: the first parent of the merge commit GitHub made for it.
+            node tools/fresh.mjs --base "$(gh api "repos/$GH_REPO/commits/$GITHUB_SHA" --jq '.parents[0].sha')" --head "$PR_HEAD"
+          fi
+
   build:
     needs: plan
-    # The merge queue and main run every job on the project's x86 runners, a pull request on GitHub's. GitHub runs
-    # about twenty jobs at a time for the whole repository, so queue jobs waited there behind pull requests and CodeQL
-    # while the x86 runners stood idle; now a queue group never waits on a pull request's run.
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    if: needs.plan.outputs.hold != '1'
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -160,8 +222,8 @@ jobs:
   static:
     name: types and lint
     needs: plan
-    if: needs.plan.outputs.full == '1' || github.event_name == 'pull_request'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    if: needs.plan.outputs.hold != '1' && (needs.plan.outputs.full == '1' || github.event_name == 'pull_request')
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -189,7 +251,7 @@ jobs:
   fix-proof:
     name: fix proof
     needs: plan
-    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-repro-test')
+    if: needs.plan.outputs.hold != '1' && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-repro-test')
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -220,9 +282,9 @@ jobs:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
     needs: [plan, build]
     if: needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
-    # A pull request's own run takes GitHub's runners (x64, the same image, so the same pictures), leaving the
-    # project's x86 runners to the merge queue and main: a queue group then starts its tests at once.
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
+    # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
+    # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -230,9 +292,10 @@ jobs:
     strategy:
       # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
       fail-fast: ${{ github.event_name == 'pull_request' }}
-      # A pull request takes at most four of GitHub's runners for these at once: GitHub runs about twenty jobs at a time
-      # for the whole repository, so one pull request doesn't hold up the others.
-      max-parallel: ${{ github.event_name == 'pull_request' && 4 || 16 }}
+      # A pull request takes at most eight x86 runners at once, a queue group sixteen, so pull requests can't fill the
+      # 30 and starve the queue. The queue's other jobs stay on GitHub's runners: with every queue job on the x86
+      # runners (12 Nov), five groups left 27 jobs waiting for them while GitHub's runners stood idle.
+      max-parallel: ${{ github.event_name == 'pull_request' && 8 || 16 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -316,7 +379,7 @@ jobs:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
     needs: [plan, build]
     if: needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -331,7 +394,7 @@ jobs:
   coverage:
     needs: [plan, build, suite-x86]
     if: needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -371,7 +434,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [22, 24]
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: node:${{ matrix.node }}
       options: --cpus 4
@@ -390,7 +453,7 @@ jobs:
   frameworks:
     needs: [plan, build]
     if: needs.plan.outputs.full == '1'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -410,7 +473,7 @@ jobs:
   # A failed queue run is out of the queue already, so the rest of it (the cross-browser components above all, up to
   # 75 minutes on an x86 runner) only keeps runners from the groups behind it. Main's own run goes on to the end.
   stop:
-    needs: [build, static, fix-proof, suite-x86, suite-portable, coverage]
+    needs: [fresh, build, static, fix-proof, suite-x86, suite-portable, coverage]
     if: failure() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -426,7 +489,7 @@ jobs:
   # One check that passes only when every job this run needed passed: the required check, on pull requests and in the
   # merge queue alike.
   test:
-    needs: [plan, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks]
+    needs: [plan, fresh, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -434,8 +497,10 @@ jobs:
       - env:
           RESULTS: ${{ toJSON(needs) }}
           HEAD_REF: ${{ github.head_ref }}
+          HOLD: ${{ needs.plan.outputs.hold }}
         run: |
           if [ "$HEAD_REF" = changeset-release/main ]; then echo "Release pull request: CI is started on it by the Release workflow."; exit 0; fi
+          if [ "$HOLD" = 1 ]; then echo "Held while Update baselines draws the pictures: CI runs on its commit, or again here when nothing changed."; exit 1; fi
           # Skipped is fine (a job this kind of run doesn't need); anything else but success fails.
           bad=$(echo "$RESULTS" | jq -r 'to_entries[] | select(.value.result != "success" and .value.result != "skipped") | "\(.key): \(.value.result)"')
           if [ -n "$bad" ]; then echo "$bad"; exit 1; fi

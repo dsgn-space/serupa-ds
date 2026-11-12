@@ -212,4 +212,15 @@ describe('Avatar', () => {
     expect(error).not.toHaveBeenCalled();
     error.mockRestore();
   });
+
+  test('a photo has a hairline just inside its circle (black at 10%, white at 10% in dark), so a face on white keeps its shape on a white page (GR269)', async () => {
+    await render(<Avatar id="ae" src={IMG} name="Ada Lovelace" size="xl" />);
+    const img = () => document.getElementById('ae')!.querySelector('img')!;
+    await expect.poll(() => img().complete).toBe(true);
+    const edge = (th: string) => { document.documentElement.setAttribute('data-theme', th); const s = css(img()); return [s.outlineStyle, s.outlineWidth, s.outlineOffset, s.outlineColor, s.borderTopLeftRadius]; };
+    try {
+      expect(edge('blue-light')).toEqual(['solid', '1px', '-1px', 'rgba(0, 0, 0, 0.1)', '9999px']);
+      expect(edge('emerald-dark')).toEqual(['solid', '1px', '-1px', 'rgba(255, 255, 255, 0.1)', '9999px']);
+    } finally { document.documentElement.removeAttribute('data-theme'); }
+  });
 });

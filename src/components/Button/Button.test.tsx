@@ -2,7 +2,7 @@ import * as React from 'react';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, keepMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, forcedColors, keepMotion, settled } from '../../../tools/test/vitest/helpers';
 import * as Serupa from '../../index';
 import { config, configure } from '../../internal/config';
 import { Loader } from '../Loader/Loader';
@@ -705,5 +705,23 @@ describe('Button disabled', () => {
     }
     still.remove();
     expect(low).toEqual([]);
+  });
+});
+
+describe('Button pressed', () => {
+  test('in forced colors (Windows High Contrast) a pressed button (aria-pressed) stands out from one not pressed, as a ToggleButton does', async () => {
+    const variants = ['primary', 'secondary', 'outline', 'ghost'] as const;
+    await render(<div>{variants.flatMap((v) => [
+      <Button key={v + 'on'} id={v + '-on'} variant={v} aria-pressed>On</Button>,
+      <Button key={v + 'off'} id={v + '-off'} variant={v} aria-pressed={false}>Off</Button>,
+    ])}</div>);
+    // Its colors ease to the system ones as forced colors come on, so it's read once they've arrived.
+    const differ = () => variants.map((v) => {
+      const on = getComputedStyle(el(v + '-on')), off = getComputedStyle(el(v + '-off'));
+      return [v, on.backgroundColor !== off.backgroundColor && on.color !== off.color];
+    });
+    await forcedColors(async (active) => {
+      if (active) await expect.poll(differ).toEqual(variants.map((v) => [v, true]));
+    });
   });
 });
