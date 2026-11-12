@@ -28,6 +28,8 @@ interface DataGridProps<R extends object = DataGridRow> extends Omit<React.Table
     rowKey?: Extract<keyof R, string> | undefined;
     onRowsChange?: ((rows: R[], details: DataGridRowsChangeDetails) => void) | undefined;
     size?: "lg" | "md" | "sm" | undefined;
+    stickyHeader?: boolean | undefined;
+    containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
     busy?: boolean | undefined;
     loadingRows?: number | undefined;
     loadingLabel?: string | undefined;

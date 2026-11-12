@@ -4,6 +4,7 @@ import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
 import { ActivityFeed, type ActivityEvent } from './ActivityFeed';
+import { useNameMap } from '../../../.storybook/content';
 
 /* Activity feed (BL7): who did what and when, as a block an app copies. ActivityFeed.mdx says what each part is for.
    The stories put it on a small page (a skip link, main and an h1). Times are minutes before now, so they read the
@@ -24,10 +25,13 @@ function Page({ children }: { children: React.ReactNode }) {
 }
 
 /** Loads two more events per press, after a short wait. */
+// The people follow Storybook's Content menu (.storybook/content.ts): the worst case's long and right-to-left names.
 function Paged({ size }: { size: number }) {
+  const as = useNameMap(events.map((e) => e.actor.name));
+  const named = events.map((e) => ({ ...e, actor: { ...e.actor, name: as(e.actor.name) } }));
   const [shown, setShown] = React.useState(size);
   const more = () => new Promise<void>((resolve) => { window.setTimeout(() => { setShown((n) => Math.min(n + 2, events.length)); resolve(); }, 600); });
-  return <ActivityFeed events={events.slice(0, shown)} total={events.length} hasMore={shown < events.length} onLoadMore={more} />;
+  return <ActivityFeed events={named.slice(0, shown)} total={events.length} hasMore={shown < events.length} onLoadMore={more} />;
 }
 
 const meta = {

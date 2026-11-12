@@ -8,7 +8,7 @@
 .dk-date-picker__button {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box;
   width: var(--control-height-sm); height: var(--control-height-sm); margin: var(--spacing-0); padding: var(--spacing-0);
-  border: var(--spacing-0); border-radius: var(--rounded-sm); background: transparent; color: var(--date-picker-button, var(--text-muted)); cursor: pointer; touch-action: manipulation;
+  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--date-picker-button, var(--text-muted)); cursor: pointer; touch-action: manipulation;
 }
 .dk-date-picker__button .dk-icon { font-size: var(--dk-input-icon); }
 @media (hover: hover) { .dk-date-picker__button:hover:not(:disabled) { background: var(--date-picker-button-bg-hover, var(--secondary)); color: var(--date-picker-button-hover, var(--text)); } }
@@ -43,4 +43,10 @@
   @starting-style { .dk-date-picker__popup:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
 }
 @media (forced-colors: active) { .dk-date-picker__popup { border-color: CanvasText; } }
+/* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
+   off it doesn't land in the text and open the keyboard. */
+@media (pointer: coarse) {
+  .dk-date-picker__button { position: relative; isolation: isolate; }
+  .dk-date-picker__button::after { content: ""; position: absolute; --dk-under: calc(var(--z-10) * -1); z-index: var(--dk-under); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
+}
 }

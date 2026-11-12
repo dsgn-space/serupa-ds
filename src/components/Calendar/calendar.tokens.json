@@ -112,6 +112,16 @@
           }
         }
       },
+      "today-color-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. It stays semibold.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-today-color-hover"
+          }
+        }
+      },
       "selected-bg": {
         "$type": "color",
         "$value": "{color.primary}",

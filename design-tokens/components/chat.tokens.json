@@ -86,7 +86,7 @@
     "radius": {
       "bubble-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-xl}",
+        "$value": "{radius.radius-container}",
         "$description": "A bubble's corners (12px).",
         "$extensions": {
           "com.serupa": {

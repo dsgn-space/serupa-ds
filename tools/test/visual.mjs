@@ -326,11 +326,11 @@ async function checkSheets(e, page) {
 R.push(...(await inParallel(sheetPages, pages, checkSheets)).flat());
 await b.close();
 close();
-// A baseline whose story is gone: --update (run whole, not sharded) removes it, and the check fails on it.
+// A baseline whose story is gone: --update removes it (in shard 1, since every shard knows every story), and the check fails on it.
 // Foundations/ pictures count only when the sheets ran, and none is removed when a page didn't render.
 const orphans = saved().filter((f) => !expected.has(f) && (!only || only.has(f.split('/')[0])) && (f.split('/')[0] !== 'Foundations' || (sheetPages.length && !sheetsFailed)));
 if (update) {
-  if (shards === 1) for (const f of orphans) fs.rmSync(path.join(DIR, f));
+  if (shard === 1) for (const f of orphans) fs.rmSync(path.join(DIR, f));
   console.log(`Visual baseline saved: ${stories.length} stories, ${sheetPages.length} Foundations pages.`);
   process.exit(sheetsFailed ? 1 : 0);
 }

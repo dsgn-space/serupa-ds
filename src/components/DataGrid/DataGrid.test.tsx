@@ -95,11 +95,14 @@ describe('DataGrid', () => {
   test('copy gives the range as tab-separated text; paste fills a block from the cell, skipping read-only cells', async () => {
     // Clipboard events with their own DataTransfer, not the system clipboard: the test files run side by side in one
     // browser, and another file's copy between this one's copy and paste pasted the wrong text (11 Nov 2026).
+    // The event carries a clipboard of the test's own: Firefox drops the clipboardData a script passes to
+    // new ClipboardEvent and gives it an empty one of its own, so what the handler set never came back there.
     const clip = (type: 'copy' | 'paste', text = '') => {
-      const data = new DataTransfer();
-      if (text) data.setData('text/plain', text);
-      document.activeElement!.dispatchEvent(new ClipboardEvent(type, { clipboardData: data, bubbles: true, cancelable: true }));
-      return data.getData('text/plain');
+      const held: Record<string, string> = text ? { 'text/plain': text } : {};
+      const ev = new ClipboardEvent(type, { bubbles: true, cancelable: true });
+      Object.defineProperty(ev, 'clipboardData', { value: { setData: (f: string, v: string) => { held[f] = v; }, getData: (f: string) => held[f] ?? '' } });
+      document.activeElement!.dispatchEvent(ev);
+      return held['text/plain'] ?? '';
     };
     const onChange = vi.fn();
     await render(<Live onChange={onChange} />);
@@ -218,3 +221,28 @@ describe('DataGrid', () => {
   });
 });
 const focus = () => document.activeElement as HTMLElement;
+
+describe('DataGrid stickyHeader', () => {
+  const MANY: DataGridRow[] = Array.from({ length: 60 }, (_, i) => ({ id: 'r' + i, name: 'Item ' + (i + 1), qty: i, sku: 'S' + i }));
+  test('in a frame with a height, the header stays in view as the keyboard moves down 60 rows, and the active cell is never under it', async () => {
+    await render(<DataGrid aria-label="Stock" stickyHeader containerProps={{ style: { maxHeight: 240 }, id: 'frame' }} columns={COLS} rows={MANY} />);
+    const frame = document.getElementById('frame') as HTMLElement, head = frame.querySelector('th') as HTMLElement;
+    expect(frame.className).toContain('dk-data-grid');
+    await userEvent.click(cell('Item 1'));
+    const hidden: string[] = [];
+    for (let i = 1; i < 60; i++) {
+      await userEvent.keyboard('{ArrowDown}');
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const f = frame.getBoundingClientRect(), h = head.getBoundingClientRect(), c = (document.activeElement as HTMLElement).getBoundingClientRect();
+      if (Math.abs(h.top - f.top - frame.clientTop) > 1 || c.top < h.bottom - 1 || c.bottom > f.bottom + 1) hidden.push(`${focused()}: head ${Math.round(h.top - f.top)}, cell ${Math.round(c.top - h.bottom)} below it`);
+    }
+    expect(focused()).toBe('Item 60');
+    expect(frame.scrollTop).toBeGreaterThan(0);
+    expect(hidden).toEqual([]);
+    // Back up to the top, the cell scrolls in below the header, not under it.
+    await userEvent.keyboard('{Control>}{Home}{/Control}');
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    expect((document.activeElement as HTMLElement).getBoundingClientRect().top).toBeGreaterThanOrEqual(head.getBoundingClientRect().bottom - 1);
+  });
+});
+

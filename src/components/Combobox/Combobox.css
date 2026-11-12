@@ -8,7 +8,7 @@
 .dk-combobox { padding-inline-end: var(--spacing-1); }
 .dk-combobox__button {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; padding: var(--spacing-1);
-  border: var(--spacing-0); border-radius: var(--rounded-sm); background: transparent;
+  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent;
   color: var(--combobox-chevron, var(--text-muted)); cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
@@ -87,4 +87,10 @@
 .dk-combobox--multiple .dk-input__field { flex: auto; width: var(--spacing-16); height: auto; min-height: var(--spacing-5); }
 @media (prefers-reduced-motion: reduce) { .dk-combobox__button, .dk-combobox__button .dk-icon { transition: none; } }
 @media (forced-colors: active) { .dk-combobox__option--active { outline: var(--border-width-1) solid Highlight; } }
+/* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
+   off it doesn't land in the text and open the keyboard. */
+@media (pointer: coarse) {
+  .dk-combobox__button { position: relative; isolation: isolate; }
+  .dk-combobox__button::after { content: ""; position: absolute; --dk-under: calc(var(--z-10) * -1); z-index: var(--dk-under); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
+}
 }

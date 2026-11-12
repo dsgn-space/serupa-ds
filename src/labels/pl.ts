@@ -63,7 +63,7 @@ export const labels: SerupaLabels = {
   lowContrast: (min) => 'poniżej ' + min.replace('.', ',') + ':1, może być trudny do odczytania',
   loadingResults: 'Wczytywanie…',
   loadFailed: 'Nie udało się wczytać opcji. Pisz dalej, aby spróbować ponownie.',
-  noResults: 'Brak wyników',
+  noResults: 'Brak wyników. Spróbuj innych słów.',
   resultsCount: (count) => p3(count, 'wynik', 'wyniki', 'wyników', 'wyniku'),
   showOptions: 'Pokaż opcje',
   clearValue: (label) => (label ? 'Wyczyść: ' + label : 'Wyczyść'),

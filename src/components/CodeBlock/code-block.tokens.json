@@ -11,7 +11,7 @@
       "focus-ring": { "$type": "color", "$value": "{color.focus-ring}", "$description": "The ring inside the frame when the code scrolls and has keyboard focus.", "$extensions": { "com.serupa": { "cssVar": "--code-block-focus-ring" } } }
     },
     "radius": {
-      "radius": { "$type": "dimension", "$value": "{radius.rounded-md}", "$description": "The corners (6px).", "$extensions": { "com.serupa": { "cssVar": "--code-block-radius" } } }
+      "radius": { "$type": "dimension", "$value": "{radius.radius-control}", "$description": "The corners (6px).", "$extensions": { "com.serupa": { "cssVar": "--code-block-radius" } } }
     },
     "spacing": {
       "padding": { "$type": "dimension", "$value": "{spacing.spacing-4}", "$description": "Space around the code (16px).", "$extensions": { "com.serupa": { "cssVar": "--code-block-padding" } } }

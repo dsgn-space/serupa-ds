@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Chat, ChatComposer, ChatDivider, ChatMessage } from './Chat';
 import { Avatar } from '../Avatar/Avatar';
 import { Attachment } from '../Attachment/Attachment';
+import { useName } from '../../../.storybook/content';
 
 const meta = {
   title: 'Components/Content/Chat',
@@ -15,18 +16,17 @@ type Story = StoryObj<typeof meta>;
 // A fixed moment, so the times read the same in every picture.
 const at = (min: number) => new Date(Date.UTC(2026, 9, 24, 9, 0) + min * 60_000);
 const Frame = ({ children }: { children: React.ReactNode }) => <div className="flex flex-col border rounded-lg" style={{ height: 460, maxWidth: 520 }}>{children}</div>;
-const Rina = <Avatar size="sm" name="Rina Kusuma" />;
-
-const Conversation = (props: { sending?: boolean; failed?: boolean }) => <>
+// The support agent follows Storybook's Content menu (a long name in the worst case).
+const Conversation = (props: { sending?: boolean; failed?: boolean }) => { const name = useName('Rina Kusuma'), Rina = <Avatar size="sm" name={name} />; return <>
   <ChatDivider date={at(0)}>24 Oct 2026</ChatDivider>
-  <ChatMessage author="Rina Kusuma" avatar={Rina} time={at(0)}>Hi! How can I help you today?</ChatMessage>
+  <ChatMessage author={name} avatar={Rina} time={at(0)}>Hi! How can I help you today?</ChatMessage>
   <ChatMessage own time={at(1)}>My invoice for March shows the wrong address.</ChatMessage>
   <ChatMessage own hideAuthor attachments={<Attachment name="Invoice March 2026.pdf" bytes={1_482_000} href="#invoice" />}>Here it is.</ChatMessage>
-  <ChatMessage author="Rina Kusuma" avatar={Rina} time={at(4)}>Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta.</ChatMessage>
-  <ChatMessage author="Rina Kusuma" avatar={Rina} hideAuthor>A new invoice is on its way to your inbox.</ChatMessage>
+  <ChatMessage author={name} avatar={Rina} time={at(4)}>Thanks, I can see it. I've corrected the address to Jl. Sudirman 12, Jakarta.</ChatMessage>
+  <ChatMessage author={name} avatar={Rina} hideAuthor>A new invoice is on its way to your inbox.</ChatMessage>
   {props.sending ? <ChatMessage own status="sending">Great, thank you!</ChatMessage> : null}
   {props.failed ? <ChatMessage own status="failed" onRetry={() => {}}>Can you also send the receipt?</ChatMessage> : null}
-</>;
+</>; };
 
 export const Playground: Story = {
   render: (args) => <Frame><Chat {...args} className="flex-auto"><Conversation /></Chat><ChatComposer /></Frame>,

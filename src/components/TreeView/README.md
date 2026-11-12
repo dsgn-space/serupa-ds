@@ -108,7 +108,7 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-focus-ring` | `focus-ring` | The ring inside the focused row. |
 | `--tree-view-item-bg-pressed` | `pressed` | A row's fill while it's held down. |
 | `--tree-view-radius` | `radius-control` | The tree's corners (6px). |
-| `--tree-view-item-radius` | `rounded-sm` | A row's corners (4px). |
+| `--tree-view-item-radius` | `radius-inner` | A row's corners (4px). |
 | `--tree-view-padding` | `spacing-1` | Space inside the tree (4px). |
 | `--tree-view-indent` | `spacing-4` | How much further in each level starts (16px). |
 | `--tree-view-item-padding-x` | `spacing-1` | Space at a row's start and end (4px). |

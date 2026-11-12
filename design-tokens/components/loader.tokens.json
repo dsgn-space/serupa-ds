@@ -138,7 +138,7 @@
       },
       "skeleton-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "Corners of the skeleton rect (6px)",
         "$extensions": {
           "com.serupa": {
@@ -148,7 +148,7 @@
       },
       "skeleton-text-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-sm}",
+        "$value": "{radius.radius-inner}",
         "$description": "Corners of the skeleton's text lines (4px)",
         "$extensions": {
           "com.serupa": {

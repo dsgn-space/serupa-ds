@@ -16,7 +16,7 @@ import { en as fileWords } from '../FileUpload/labels';
 import { en as boundary } from '../ErrorBoundary/labels';
 import { MiddleCutName } from '../../internal/middleCutName';
 
-// Its own words, FileUpload's "Upload failed" for a failed one and ErrorBoundary's "Try again" for its retry button.
+// Its own words, FileUpload's "Couldn’t upload" for a failed one and ErrorBoundary's "Try again" for its retry button.
 const words = /* @__PURE__ */ Object.assign({}, boundary, fileWords, ownWords);
 
 export { attachmentKind };
@@ -37,7 +37,7 @@ export interface AttachmentProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   download?: boolean | string | undefined;
   /** While the file uploads, how far along, from 0 to 100, as a bar under the name; null when you can't tell (the bar moves on its own). Leave it out once it's done. */
   progress?: number | null | undefined;
-  /** The upload failed: a danger outline and this message under the name; true shows "Upload failed". */
+  /** The upload failed: a danger outline and this message under the name; true shows "Couldn’t upload". */
   error?: React.ReactNode | boolean | undefined;
   /** Called by the "Try again" button, shown only with error. */
   onRetry?: (() => void) | undefined;

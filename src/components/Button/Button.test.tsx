@@ -545,16 +545,15 @@ describe('Button micro-interactions', () => {
     await render(<Motion />);
     const label = q('#busy .dk-btn__label');
     expect(getComputedStyle(label).opacity).toBe('1');   // its style before loading, for the transition to start from
-    // What starts on the label, heard as it starts (transitionrun), and its opacity each frame: neither depends on
-    // catching the 150ms fade still running at one moment, which a slow engine (WebKit in CI) can miss.
-    const ran: string[] = [], seen: number[] = [];
+    // What starts on the label, heard as it starts (transitionrun), and how long it lasts: neither depends on catching
+    // the 150ms fade part way at one moment, which WebKit in CI misses (its samples went 1 1 0 0, frames apart).
+    const ran: string[] = [];
     label.addEventListener('transitionrun', (ev) => ran.push(ev.propertyName));
     await frame();
     setBusy(true);
-    const t0 = performance.now();
-    while (performance.now() - t0 < 400) { seen.push(parseFloat(getComputedStyle(label).opacity)); await frame(); }
-    expect([...new Set(ran)].sort(), 'the label fades and blurs on transitions').toEqual(['filter', 'opacity']);
-    expect(seen.some((o) => o > 0 && o < 1), 'part way through: ' + seen.join(' ')).toBe(true);
+    await expect.poll(() => [...new Set(ran)].sort(), { message: 'the label fades and blurs on transitions' }).toEqual(['filter', 'opacity']);
+    const { transitionProperty, transitionDuration } = getComputedStyle(label), lasts = transitionDuration.split(', ').map(parseFloat);
+    expect(transitionProperty.split(', ').map((p, i) => [p, lasts[i % lasts.length] > 0]), 'each over a time, not at once').toEqual([['opacity', true], ['filter', true]]);
     expect(getComputedStyle(q('#busy .dk-btn__loader')).animationName).toBe('dk-btn-loader-in');
     // They cross as one change: the label blurs on its way out, the spinner starts blurred (blur-xs) and sharpens.
     const ld = q('#busy .dk-btn__loader'), grow = ld.getAnimations().find((a) => (a as CSSAnimation).animationName === 'dk-btn-loader-in')!;

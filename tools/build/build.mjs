@@ -26,6 +26,7 @@ import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
 import { buildUtilities } from '../utilities/build.mjs';
 import { compactCss } from './compact-css.mjs';
+import { withMotionAttribute } from './motion-attribute.mjs';
 import { split } from '../utilities/extra.mjs';
 import { buildRegistry, cascade } from './registry.mjs';
 import { editorData } from './editor-data.mjs';
@@ -69,7 +70,8 @@ const banner = (what) => `/*! Serupa v${version} by Diki · ${what} · CHANGELOG
 // gzipped, and compacted: no spaces or line breaks around { } ; : , > (compact-css.mjs, about 5 KiB gzipped across
 // components.css and utilities.css, 9 Nov 2026). Only whitespace goes, and each rule still ends its line, so devtools
 // still reads well. The /*! banner lines stay.
-const bare = (css) => compactCss(css.replace(/\/\*(?!!)[\s\S]*?\*\//g, ''));
+// Each reduced-motion rule also answers an app's own setting, data-motion="reduce" (motion-attribute.mjs).
+const bare = (css) => compactCss(withMotionAttribute(css.replace(/\/\*(?!!)[\s\S]*?\*\//g, '')));
 fs.writeFileSync(path.join(D, 'components.css'), banner('components') + bare(components));
 // The masks and gradients ship apart, in utilities-extra.css (tools/utilities/extra.mjs): a quarter of the rules, for
 // the few pages that use them.

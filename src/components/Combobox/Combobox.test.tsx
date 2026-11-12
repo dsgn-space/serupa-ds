@@ -303,7 +303,7 @@ describe('Combobox', () => {
     expect([s.open, s.opts, s.active]).toEqual(['true', ['Côte d’Ivoire'], 'Côte d’Ivoire']);
     await userEvent.keyboard('xyz');
     const m = statusOf('cb');
-    expect([st('cb').opts.length, m.textContent, m.getAttribute('role')]).toEqual([0, 'No results', null]);
+    expect([st('cb').opts.length, m.textContent, m.getAttribute('role')]).toEqual([0, 'No results. Try other words.', null]);
     await userEvent.keyboard('{Escape}');
     s = st('cb');
     expect([s.open, s.text]).toEqual(['false', 'Egypt']);
@@ -614,8 +614,8 @@ describe('Combobox', () => {
     await render(<SerupaProvider locale="en"><Countries /></SerupaProvider>);
     el('cb').focus();
     await userEvent.keyboard('{ArrowDown}zzz');
-    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('No results');
-    expect([statusOf('cb').textContent, statusOf('cb').getAttribute('role'), popOf('cb').querySelectorAll('[role=status], [aria-live]').length]).toEqual(['No results', null, 0]);
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('No results. Try other words.');
+    expect([statusOf('cb').textContent, statusOf('cb').getAttribute('role'), popOf('cb').querySelectorAll('[role=status], [aria-live]').length]).toEqual(['No results. Try other words.', null, 0]);
     await selectAll(); await userEvent.keyboard('an');
     await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('2 results');
     seen.disconnect();
@@ -891,7 +891,7 @@ describe('Combobox loadOptions (DG1)', () => {
     expect(st('p').text).toBe('Canada');
     await userEvent.keyboard('{Control>}a{/Control}xyz');
     s.calls.at(-1)!.ok([]);
-    await expect.poll(() => status('p')).toBe('No results');
+    await expect.poll(() => status('p')).toBe('No results. Try other words.');
     await userEvent.keyboard('{Escape}');
     expect(st('p').text).toBe('Canada');
     await userEvent.keyboard('{Control>}a{/Control}q');

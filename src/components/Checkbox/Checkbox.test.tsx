@@ -388,8 +388,13 @@ describe('CheckboxGroup', () => {
     await userEvent.keyboard(' ');
     expect(b.checked).toBe(false);
     expect(document.activeElement).toBe(b);
-    expect(css(card(b)).outlineStyle).toBe('solid');
-    expect(css(b).outlineStyle).toBe('none');
+    // The ring follows the browser's own :focus-visible, which Firefox doesn't turn on for Space pressed after a
+    // click (Chromium does). So the ring is checked on focus that asks to be seen (focusVisible), in every engine; not
+    // by Tab, which Safari on a Mac sends past checkboxes unless full keyboard access is on.
+    a.focus({ focusVisible: true });
+    expect([document.activeElement === a, css(card(a)).outlineStyle, css(a).outlineStyle]).toEqual([true, 'solid', 'none']);
+    b.focus({ focusVisible: true });
+    expect([css(card(b)).outlineStyle, css(card(a)).outlineStyle, css(b).outlineStyle]).toEqual(['solid', 'none', 'none']);
     await expect.element(page.getByRole('checkbox', { name: 'Greeting card', exact: true })).toHaveAccessibleDescription('A printed note');
     expect(lowContrast([['checked card border', 'var(--primary)', 'var(--surface)', 3]])).toEqual([]);
   });

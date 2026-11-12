@@ -17,7 +17,7 @@ const reader = process.platform === 'darwin' ? 'voiceover' : process.platform ==
 if (!reader) fail('Screen readers run on macOS (VoiceOver) or Windows (NVDA): this check runs in the nightly screen-reader workflow.');
 if (!fs.existsSync(path.join(PROJECT, 'dist', 'serupa.iife.js'))) fail('Build first: npm run build');
 
-const { voiceOver, nvda } = await import('@guidepup/guidepup');
+const { voiceOver, nvda, macOSActivate } = await import('@guidepup/guidepup');
 const { webkit, chromium } = await import('playwright');
 const sr = reader === 'voiceover' ? voiceOver : nvda;
 const engine = reader === 'voiceover' ? webkit : chromium;
@@ -45,18 +45,36 @@ const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 // it then names. capture: true keeps all of it.
 await sr.start({ capture: true });
 const b = await engine.launch({ headless: false });
+// One window for every case: a new window for each left every second one without the keyboard (VoiceOver heard Tab
+// land on Start, the page's first control, in Checkbox and Tabs), as macOS gave focus back and forth on each close.
+const page = await b.newPage();
 try {
-  for (const [name, tree, steps] of CASES) {
-    const page = await b.newPage();
+  for (const [i, [name, tree, steps]] of CASES.entries()) {
     const url = writePage('screen-reader.html', `<button id="start">Start</button><div id="root"></div><script>
 var h = React.createElement, S = Serupa;
 ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`, { react: true });
-    await page.goto(url);
+    await page.goto(`${url}?case=${i}`);
     await page.bringToFront();
+    // VoiceOver's keys go to the frontmost app, and Playwright's WebKit starts in the background ("Playwright is
+    // launched in the background"): every key went to the desktop, and every case failed. Bring the app forward
+    // (Guidepup names it "Playwright"), then put VoiceOver's cursor in the page.
+    if (reader === 'voiceover') {
+      await macOSActivate('Playwright');
+      await page.locator('body').focus();
+      await voiceOver.interact();
+    }
     await page.waitForTimeout(500);
     await page.focus('#start');
     const misses = [];
     for (const [key, words] of steps) {
+      // Let the reader finish what it is saying (VoiceOver reads the Start button and then its usage hint) before the
+      // key: a key pressed mid-hint was lost, and the log held only the hint (Checkbox and Tabs, run 43161653323).
+      for (let last = '', still = 0, end = Date.now() + 8000; still < 3 && Date.now() < end;) {
+        await page.waitForTimeout(400);
+        const now = (await sr.spokenPhraseLog()).join(' | ');
+        still = now === last ? still + 1 : 0;
+        last = now;
+      }
       await sr.clearSpokenPhraseLog();
       await sr.press(/** @type {string} */ (key), { capture: true });
       const missed = (heard) => /** @type {string[]} */ (words).filter((w) => !w.split('|').some((alt) => heard.toLowerCase().includes(alt)));
@@ -71,7 +89,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
       if (missing.length) misses.push(`${key}: no "${missing.join('", "')}" in "${heard}"`);
     }
     t(name, !misses.length, misses.join('; '));
-    await page.close();
   }
 } finally {
   await b.close();

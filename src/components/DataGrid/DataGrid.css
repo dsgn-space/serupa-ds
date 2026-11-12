@@ -24,6 +24,11 @@
 .dk-data-grid__table thead > tr > * { border-top: var(--spacing-0); }
 .dk-data-grid__table tbody > tr:last-child > * { border-bottom: var(--spacing-0); }
 .dk-data-grid__header { background: var(--data-grid-header-bg, var(--surface-muted)); color: var(--data-grid-header-text, var(--text-muted)); font-weight: var(--data-grid-header-weight, var(--font-medium)); }
+/* stickyHeader: the header row stays at the top of a frame with a height while the rows scroll under it, over the
+   rows (the selected range and the editing input sit above plain cells), and what the keyboard reaches scrolls in
+   below it (DataGrid measures the header into --dk-data-grid-head; until then, one md row). */
+.dk-data-grid--sticky .dk-data-grid__header { position: sticky; top: 0; z-index: var(--z-20); }
+.dk-data-grid--sticky { scroll-padding-top: var(--dk-data-grid-head, var(--spacing-10)); }
 .dk-data-grid__cell--center { text-align: center; }
 .dk-data-grid__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
 .dk-data-grid__cell--selected { background: var(--data-grid-selected-bg, var(--primary-subtle)); }

@@ -35,6 +35,12 @@ await t('no-physical-shorthand: right and left differ (padding, inset, border-wi
 .dk-y { border-radius: var(--radius-md) 0 0 var(--radius-md); }
 .dk-z { border-radius: 0 var(--radius-md); }`), ['serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand', 'serupa/no-physical-shorthand']);
 
+await t('radius-through-role: roles, a component token, none, xs and full pass', layered(`.dk-x { border-radius: var(--x-radius, var(--radius-control)); }
+.dk-y { border-start-start-radius: var(--radius-surface); border-radius: var(--rounded-full); --dk-y-r: var(--rounded-none); }
+.dk-z { border-radius: var(--z-radius, var(--rounded-xs)); }`), [], { 'serupa/radius-through-role': true });
+await t('radius-through-role: a middle step of the rounded scale, alone or as a default, is flagged', layered(`.dk-x { border-radius: var(--rounded-md); }
+.dk-y { border-radius: var(--y-radius, var(--rounded-lg)); }
+.dk-z { border-end-end-radius: var(--rounded-sm); --z-item-radius: var(--rounded-xl); }`), ['serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role'], { 'serupa/radius-through-role': true });
 const combobox = path.join(PROJECT, 'src', 'components', 'Combobox', 'Combobox.css');
 const own = (known) => ({ 'serupa/own-block': known ? [true, { known }] : true });
 await t('own-block: its own elements, and another block placed or sized, fed a custom property, or used as context, pass', layered(`.dk-combobox__popup { inset-block-start: var(--spacing-1); }

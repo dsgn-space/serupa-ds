@@ -18,20 +18,163 @@ name: Update baselines
 # token and no secrets: a dependency the pull request bumps finds nothing there that can write. "commit" runs none of
 # the branch's code. It takes only PNGs under tools/test/baseline-visual*/ and tools/test/baseline-utilities.json from
 # render, checks each one, and pushes them with BOT_TOKEN (so the push starts CI), passed to that one git call.
+#
+# A pull request with a conflict gets no pull_request runs, so a label does nothing there. Run this workflow by hand
+# (Actions > Update baselines > Run workflow, or `gh workflow run visual-baselines.yml -f pr=<number>`) to heal it:
+# "heal" merges the base branch in, takes the base's side of every conflicting picture (and of baseline-utilities.json),
+# pushes the merge and adds the label, whose run then draws the pictures again on the merged tree. A conflict in
+# anything else stops it, since only a person can resolve that. Heal runs none of the branch's code: a run by hand
+# belongs to the default branch, so the branch's code there could write to main's caches.
+# Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone. One with a
+# conflict anywhere else is left for its author, with a notice in the run.
 on:
+  push:
+    branches: [main]
   pull_request:
     types: [labeled]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: The pull request's number
+        required: true
+        type: number
+      which:
+        description: Which pictures to draw again after the merge
+        type: choice
+        options: [chromium, cross-browser]
+        default: chromium
 
-# A newer run of the same workflow on the same branch or pull request cancels the one before it.
+# A newer run for the same pull request cancels the one before it. Any other label gets a group of its own, so adding
+# it while the pictures are being drawn doesn't cancel them. Heal has its own group: the run its label starts must not
+# cancel it. After main moves again, the newer heal replaces the older one.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: >-
+    ${{ github.workflow }}-${{ github.event_name == 'push' && 'heal-after-main' ||
+    github.event_name == 'workflow_dispatch' && format('heal-{0}', inputs.pr) ||
+    (github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines')
+    && github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 permissions: {}
 
 jobs:
+  # After a push to main: the open pull requests from this repository that now conflict with it. GitHub works out
+  # whether one merges in the background, so a pull request it hasn't decided yet is asked again for up to a minute.
+  dirty:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      prs: ${{ steps.find.outputs.prs }}
+    steps:
+      - id: find
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          prs=()
+          for n in $(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&base=main&per_page=100" \
+              --jq ".[] | select(.head.repo.full_name == \"$GITHUB_REPOSITORY\" and .draft == false) | .number"); do
+            for _ in 1 2 3 4 5 6; do
+              state=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$n" --jq .mergeable_state)
+              [ "$state" = unknown ] || break
+              sleep 10
+            done
+            if [ "$state" = dirty ]; then prs+=("$n"); fi
+          done
+          json=$(printf '%s\n' "${prs[@]}" | jq -R 'select(length > 0) | tonumber' | jq -cs '.[:5]')
+          echo "Conflicting: $json"
+          echo "prs=$json" >> "$GITHUB_OUTPUT"
+
+  heal:
+    needs: dirty
+    if: >-
+      always() && (github.event_name == 'workflow_dispatch' ||
+      (needs.dirty.result == 'success' && needs.dirty.outputs.prs != '[]'))
+    name: heal (#${{ matrix.pr }})
+    strategy:
+      fail-fast: false
+      matrix:
+        pr: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('[{0}]', inputs.pr) || needs.dirty.outputs.prs) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Find the pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ matrix.pr }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+          [[ "$NUMBER" =~ ^[0-9]+$ ]] || fail "$NUMBER is not a pull request number"
+          pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$NUMBER")
+          [ "$(jq -r .state <<< "$pull")" = open ] || fail "#$NUMBER isn't open"
+          [ "$(jq -r .head.repo.full_name <<< "$pull")" = "$GITHUB_REPOSITORY" ] || fail "#$NUMBER comes from a fork, so its branch can't take the push"
+          {
+            echo "head-ref=$(jq -r .head.ref <<< "$pull")"
+            echo "head-sha=$(jq -r .head.sha <<< "$pull")"
+            echo "base-ref=$(jq -r .base.ref <<< "$pull")"
+          } | tee -a "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.pr.outputs.head-sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Merge the base branch in
+        id: merge
+        env:
+          BASE_REF: ${{ steps.pr.outputs.base-ref }}
+          # By hand, a conflict outside the pictures fails the run; after a push to main it only leaves a notice.
+          LEVEL: ${{ github.event_name == 'workflow_dispatch' && 'error' || 'notice' }}
+          NUMBER: ${{ matrix.pr }}
+        run: |
+          set -euo pipefail
+          base=$(git rev-parse "origin/$BASE_REF")
+          id=(-c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com")
+          if git "${id[@]}" merge --quiet --no-edit -m "Merge $BASE_REF into the branch (Update baselines)" "$base"; then exit 0; fi
+          baseline='^tools/test/(baseline-visual(-firefox|-webkit)?/.*\.png|baseline-utilities\.json)$'
+          others=$(git diff --name-only --diff-filter=U | grep -Ev "$baseline" || true)
+          if [ -n "$others" ]; then
+            echo "::$LEVEL::#$NUMBER: these conflict and aren't pictures, so resolve them by hand: $(tr '\n' ' ' <<< "$others")"
+            git merge --abort
+            [ "$LEVEL" = notice ] && { echo "skip=1" >> "$GITHUB_OUTPUT"; exit 0; }
+            exit 1
+          fi
+          git diff --name-only --diff-filter=U -z | while IFS= read -r -d '' f; do
+            if git cat-file -e "$base:$f" 2> /dev/null; then git checkout --quiet "$base" -- "$f"; else git rm --quiet -- "$f"; fi
+          done
+          git "${id[@]}" commit --quiet --no-edit
+      # BOT_TOKEN, so the push starts CI and the label starts this workflow's render on the merged branch. The push is
+      # refused if the branch moved on since the checkout.
+      - name: Push the merge and add the label
+        if: steps.merge.outputs.skip != '1'
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          HEAD_REF: ${{ steps.pr.outputs.head-ref }}
+          NUMBER: ${{ matrix.pr }}
+          LABEL: ${{ inputs.which == 'cross-browser' && 'update-cross-browser-baselines' || 'update-visual-baselines' }}
+        run: |
+          set -euo pipefail
+          auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
+          echo "::add-mask::$auth"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$HEAD_REF"
+          GH_TOKEN=$BOT_TOKEN gh pr edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$LABEL"
+
   render:
     if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    name: render (${{ matrix.shard }})
+    # Four shards side by side, as CI's Visual jobs: a whole run took 21 minutes in one job. Shard 1 also draws the
+    # Foundations pages, rewrites baseline-utilities.json and removes pictures whose story is gone.
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [1/4, 2/4, 3/4, 4/4]
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
@@ -64,9 +207,10 @@ jobs:
           npm run build
           npm run build-storybook
           node tools/test/run.mjs --group visual --update --since "$base"
-          node tools/test/utilities.mjs --update
+          if [ "$SERUPA_SHARD" = 1/4 ]; then node tools/test/utilities.mjs --update; fi
         env:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
+          SERUPA_SHARD: ${{ matrix.shard }}
       - name: Collect what changed
         run: |
           out="$RUNNER_TEMP/baselines"
@@ -76,7 +220,7 @@ jobs:
           git diff --cached --no-renames --name-only --diff-filter=D > "$out/deleted.txt"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: baselines
+          name: baselines-chromium-${{ strategy.job-index }}
           path: ${{ runner.temp }}/baselines
           retention-days: 1
 
@@ -155,14 +299,20 @@ jobs:
         with:
           pattern: baselines*
           path: ${{ runner.temp }}/parts
+      # download-artifact puts each artifact in a folder of its name, except when the pattern finds only one: that
+      # one lands in parts/ itself. Missing that case committed nothing from every Chromium render ("0 changed").
       - name: Join the renders
         run: |
           set -euo pipefail
           in="$RUNNER_TEMP/baselines"; mkdir -p "$in/files"; : > "$in/deleted.txt"
-          for d in "$RUNNER_TEMP"/parts/*/; do
+          for d in "$RUNNER_TEMP/parts" "$RUNNER_TEMP"/parts/*/; do
             if [ -d "$d/files" ]; then cp -a "$d/files/." "$in/files/"; fi
             if [ -f "$d/deleted.txt" ]; then cat "$d/deleted.txt" >> "$in/deleted.txt"; fi
           done
+          # Never "unchanged" when a render handed over pictures.
+          if [ -n "$(find "$RUNNER_TEMP/parts" -type f -name '*.png' -print -quit)" ] && [ -z "$(find "$in/files" -type f -print -quit)" ]; then
+            echo "::error::The renders handed over pictures, but none were joined"; exit 1
+          fi
       # Render ran the branch's code, so nothing it handed over is trusted: only regular files, only a PNG under
       # tools/test/baseline-visual(-firefox|-webkit)/<folder>/ or the utilities JSON, 2 MiB each and 100 MiB in all, and each one
       # written to a path inside tools/test/ (not through a symlink the branch put there).

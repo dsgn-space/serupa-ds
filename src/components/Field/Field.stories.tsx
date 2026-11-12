@@ -60,3 +60,15 @@ export const Horizontal: Story = {
   </div>,
   decorators: [(Story) => <div style={{ maxWidth: 560 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: format help in the hint, which stays in view while people type. */
+export const DoHintForFormat: Story = {
+  name: 'Do: format help in the hint',
+  render: () => <div style={{ width: 280 }}><Field label="Date of birth" hint="For example, 31/12/1990"><Input inputMode="numeric" autoComplete="bday" /></Field></div>,
+};
+/** Don't: format help only in the placeholder, gone at the first keystroke. */
+export const DontPlaceholderFormat: Story = {
+  name: "Don't: format help in the placeholder",
+  render: () => <div style={{ width: 280 }}><Field label="Date of birth"><Input inputMode="numeric" autoComplete="bday" placeholder="DD/MM/YYYY" /></Field></div>,
+};
