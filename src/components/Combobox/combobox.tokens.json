@@ -139,7 +139,7 @@
       "option-radius": {
         "$type": "dimension",
         "$value": "{radius.radius-control}",
-        "$description": "An option's corners (6px).",
+        "$description": "An option's corners. Unset, they nest in the list's: its radius less its padding and border (3px), following the brand and data-radius.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--combobox-option-radius"

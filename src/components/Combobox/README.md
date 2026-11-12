@@ -163,7 +163,7 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--combobox-listbox-radius` | `radius-surface` | The list's corners (8px). |
-| `--combobox-option-radius` | `radius-control` | An option's corners (6px). |
+| `--combobox-option-radius` | `radius-control` | An option's corners. Unset, they nest in the list's: its radius less its padding and border (3px), following the brand and data-radius. |
 
 **Sizing**
 

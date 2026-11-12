@@ -119,4 +119,16 @@ for (const f of linking) {
   }
 }
 t('every Storybook link in the docs, guides and stories goes to a page or story that exists', !broken.length, broken.slice(0, 12).join(', '));
+// Patterns and blocks (PT0, BL0): each docs page says when to use it before what each part is for, as a component's
+// guide does, so nobody copies a whole screen for a job it isn't meant for.
+for (const group of ['patterns', 'blocks']) {
+  const root = path.join(PROJECT, 'src', group);
+  for (const name of fs.readdirSync(root).sort()) {
+    const file = path.join(root, name, `${name}.mdx`);
+    if (!fs.existsSync(file)) continue;
+    const headings = [...fs.readFileSync(file, 'utf8').replace(/```[\s\S]*?```/g, '').matchAll(/^## (.+?)\s*$/gm)].map((m) => m[1]);
+    const when = headings.findIndex((h) => /^(When to use|Which one to use)/.test(h)), parts = headings.indexOf('What each part is for');
+    t(`${group}/${name}: the page says when to use it, before what each part is for`, when >= 0 && (parts < 0 || when < parts), `headings: ${headings.join(' · ')}`);
+  }
+}
 done(report('Usage guides', R));
