@@ -2,8 +2,8 @@
 interface ToastLabels {
     notifications: string;
     toastShortcut: (key: string) => string;
-    moreToasts: (count: number) => string;
-    toastRepeated: (count: number) => string;
+    moreToasts: (count: number, formatted: string) => string;
+    toastRepeated: (count: number, formatted: string) => string;
     undo: string;
 }
 type ToastTone = "danger" | "info" | "neutral" | "success" | "warning";

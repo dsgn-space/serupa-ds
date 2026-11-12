@@ -2,7 +2,7 @@
 interface CascadeSelectLabels {
     cascadePlaceholder: string;
     cascadePath: (labels: string[]) => string;
-    cascadeLevel: (level: number) => string;
+    cascadeLevel: (level: number, formatted: string) => string;
     cascadeHasMore: (rtl: boolean) => string;
     cascadeBack: string;
     cascadeLoading: string;
