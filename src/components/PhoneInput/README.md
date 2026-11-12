@@ -52,7 +52,7 @@ Drawn from the `ByArea` story.
 - The country menu is a native `<select>` named "Country", under the visible calling code. Phones open their own picker, and screen readers announce it as a menu with its value. Each option says the country's name in the locale's words and its calling code ("Indonesia (+62)").
 - In a right-to-left page the calling code still reads left to right, "+20" and "مصر (+20)", in the prefix and in each option.
 - The menu draws its own focus ring inside the box, so it's clear whether the menu or the number has focus.
-- The number is `type="tel"` with `inputmode="tel"` and `autocomplete="tel-national"`, so phones show the dial pad and browsers can fill it in.
+- The number is `type="tel"` with `inputmode="tel"` and `autocomplete="tel"`, so phones show the dial pad and browsers fill in the saved number with its country code. The field reads a "+44 …" and moves the country to match. `tel-national` would fill the digits alone under the default country, a wrong number that looks right.
 - Backspace next to a space or dash removes the digit before it, so deleting never gets stuck on the grouping.
 - The calling code keeps 4.5:1 and the chevron 3:1 on the field in all six themes (`PhoneInput.test.tsx`).
 

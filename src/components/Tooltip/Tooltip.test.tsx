@@ -388,7 +388,7 @@ describe('Tooltip: delay, the old name of openDelay', () => {
   test('still waits as openDelay does, and warns once that it is deprecated', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<Tooltip content="Old name" delay={0}><button id="old-delay">Old</button></Tooltip>);
+      await render(<Tooltip content="Old name" {...{ delay: 0 }}><button id="old-delay">Old</button></Tooltip>);
       await userEvent.hover(document.getElementById('old-delay')!);
       await expect.poll(() => document.querySelector('[role=tooltip]')?.textContent).toBe('Old name');
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('tooltip-delay'))).toHaveLength(1);

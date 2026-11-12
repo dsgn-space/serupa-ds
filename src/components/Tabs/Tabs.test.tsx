@@ -364,6 +364,29 @@ describe('Tabs on the server', () => {
     expect([fit.hasAttribute('data-fade-before'), fit.hasAttribute('data-fade-after'), css(fit).maskImage]).toEqual([false, false, 'none']);
   });
 
+  test('web fonts arriving after the tabs draw (a wider face): the selected tab, pushed past the end, is scrolled back into view', async () => {
+    // Stand in for a page whose fonts are still loading, so the row waits for them.
+    let loaded!: () => void;
+    const ready = new Promise<FontFaceSet>((r) => { loaded = () => r(document.fonts); });
+    Object.defineProperty(document.fonts, 'status', { configurable: true, get: () => 'loading' });
+    Object.defineProperty(document.fonts, 'ready', { configurable: true, get: () => ready });
+    try {
+      await render(<div style={{ width: '400px' }}><Tabs id="wf" defaultValue="Tab 20"><TabList aria-label="Many">{Array.from({ length: 20 }, (_, i) => <Tab key={i} value={'Tab ' + (i + 1)}>{'Tab ' + (i + 1)}</Tab>)}</TabList></Tabs></div>);
+      const list = el('wf').querySelector<HTMLElement>('[role="tablist"]')!;
+      const inView = () => { const box = list.getBoundingClientRect(), t = selected('wf').getBoundingClientRect(); return t.left >= box.left - 0.5 && t.right <= box.right + 0.5; };
+      await expect.poll(inView).toBe(true);
+      // The real face arrives wider than the fallback: every tab grows and the selected one ends up past the end.
+      list.style.letterSpacing = '4px';
+      await new Promise((r) => requestAnimationFrame(r));
+      expect(inView()).toBe(false);
+      loaded();
+      await expect.poll(inView).toBe(true);
+    } finally {
+      delete (document.fonts as unknown as Record<string, unknown>).status;
+      delete (document.fonts as unknown as Record<string, unknown>).ready;
+    }
+  });
+
   test('the fade grows in and shrinks away (177) once the list scrolls: its width is a typed property, so it transitions instead of jumping; on mount it is just there', async () => {
     await withMotion(async () => {
       await render(<div style={{ width: '200px' }}><Tabs id="fd"><TabList aria-label="Fade">{['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'].map((t) => <Tab key={t} value={t}>{t}</Tab>)}</TabList></Tabs></div>);

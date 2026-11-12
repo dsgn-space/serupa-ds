@@ -188,6 +188,15 @@ export const TRANSFORMS = [
       ...notesFor(src, /\bdk-combobox__more\b/g, 'the "Keep typing to narrow" line is gone: remove this rule'),
     ] }),
   },
+  // Deprecated in 14.x and removed in 15.0.0. The new names already work, so these are safe to run before upgrading.
+  // The old names are common words (position, delay, layout), so what's left of them isn't listed.
+  propRename('15.0.0', 'tooltip-open-delay', 'Tooltip', 'delay', 'openDelay', { leftovers: false }),
+  propRename('15.0.0', 'switch-loading', 'Switch', 'pending', 'loading', { leftovers: false }),
+  propRename('15.0.0', 'field-orientation', 'Field', 'layout', 'orientation', { leftovers: false }),
+  propRename('15.0.0', 'splitter-orientation', 'Splitter', 'direction', 'orientation', { leftovers: false }),
+  propRename('15.0.0', 'fab-placement', 'Fab', 'position', 'placement', { leftovers: false }),
+  propRename('15.0.0', 'toaster-placement', 'Toaster', 'position', 'placement', { leftovers: false }),
+  propRename('15.0.0', 'offline-banner-on-online-change', 'OfflineBanner', 'onChange', 'onOnlineChange', { leftovers: false }),
 ];
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);

@@ -32,7 +32,7 @@ const { Tabs, TabList, Tab, TabPanel } = window.Serupa;
 
 - Choosing a value, such as a period (Day, Week, Month) for the same content: use [SegmentedControl](../SegmentedControl/README.md) instead. It's a radio group, not a set of panels.
 - Steps people go through in order: use [Stepper](../Stepper/README.md) instead.
-- Moving between pages that each have their own URL: use links, in a [Navbar](../Navbar/README.md) or a [Sidebar](../Sidebar/README.md).
+- Moving between the sub-pages of one thing that each have their own URL, such as a project's Overview and Settings: use [TabNav](../TabNav/README.md) instead. It looks like Tabs but is a nav of links. For the app's main pages, use a [Navbar](../Navbar/README.md) or a [Sidebar](../Sidebar/README.md).
 - Sections people may want open side by side, or read one after another: use [Accordion](../Accordion/README.md) instead.
 
 ## Anatomy

@@ -25,7 +25,7 @@ declare const ContextMenu: React.ForwardRefExoticComponent<ContextMenuProps & Re
 interface MenuItemOwnProps {
     onSelect?: ((event: React.SyntheticEvent) => void) | undefined;
     icon?: IconSource | undefined;
-    shortcut?: string | undefined;
+    shortcut?: readonly string[] | string | undefined;
     destructive?: boolean | undefined;
     disabled?: boolean | undefined;
 }
