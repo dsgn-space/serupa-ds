@@ -14,7 +14,7 @@ name: CI
 #   (repository variables SERUPA_RUNNER and SERUPA_X86_RUNNER, JSON: '["self-hosted","linux","x86"]'). Jobs with a
 #   screenshot or a timing budget take SERUPA_X86_RUNNER: the baselines are drawn with Chrome for Testing on x64. A pull
 #   request from a fork always runs on GitHub's runners, so code nobody has merged never runs on the project's machines.
-#   The x86 jobs of the merge queue and main take SERUPA_X86_RUNNER; a pull request's take GitHub's runners.
+#   The x86 jobs take SERUPA_X86_RUNNER for the merge queue, main and same-repository pull requests (up to eight at once).
 # - Results are kept: a job that passed on the same tree, against the same base, passes again at once without running.
 # - The nightly jobs are in nightly.yml. No workflow_dispatch: a run started by hand runs in the default branch's
 #   cache scope on any ref, which CodeQL rightly counts as cache poisoning; the nightly runs main whole instead.
@@ -250,9 +250,9 @@ jobs:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
     needs: [plan, build]
     if: needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
-    # A pull request's own run takes GitHub's runners (x64, the same image, so the same pictures), leaving the
-    # project's x86 runners to the merge queue and main: a queue group then starts its tests at once.
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
+    # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
+    # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -260,11 +260,10 @@ jobs:
     strategy:
       # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
       fail-fast: ${{ github.event_name == 'pull_request' }}
-      # A pull request takes at most two of GitHub's runners for these at once: GitHub runs about twenty jobs at a time
-      # for the whole repository, and the queue's builds, checks and Storybook run there. The x86 runners hold the
-      # queue's component and Visual jobs alone: with every queue job on them (12 Nov), five groups left 27 jobs
-      # waiting for them while GitHub's runners stood idle.
-      max-parallel: ${{ github.event_name == 'pull_request' && 2 || 16 }}
+      # A pull request takes at most eight x86 runners at once, a queue group sixteen, so pull requests can't fill the
+      # 30 and starve the queue. The queue's other jobs stay on GitHub's runners: with every queue job on the x86
+      # runners (12 Nov), five groups left 27 jobs waiting for them while GitHub's runners stood idle.
+      max-parallel: ${{ github.event_name == 'pull_request' && 8 || 16 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
