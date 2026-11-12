@@ -251,8 +251,17 @@ async function checkStory(e, page) {
         if (!(await el.count())) el = page.locator('#storybook-root :is(button, a[href], input, select, textarea, [tabindex="0"]):not(:disabled, [aria-disabled="true"]):visible').first();
         if (!(await el.count())) continue;
         if (state === 'focus' && !(await el.evaluate((n) => n.closest('[data-visual-target]')))) el = page.locator('#storybook-root');
-        if (state === 'hover') await el.hover({ timeout: 5000 }).catch(() => {});
-        else if (!(await tabTo(page, el))) {
+        if (state === 'hover') {
+          await el.hover({ timeout: 5000 }).catch(() => {});
+          // A hovered tooltip trigger (an IconButton's label) opens its tooltip after the hover delay. The shot waits
+          // for it: without the wait, a shot taken at about the delay caught it on some runs and not on others
+          // (IconButton's Sizes and shapes, 0.19% apart).
+          await page.waitForFunction(() => {
+            const on = [...document.querySelectorAll(':hover')].pop()?.closest('[interestfor]');
+            const tip = on && document.getElementById(on.getAttribute('interestfor') ?? '');
+            return !tip || tip.dataset.state === 'open';
+          }, null, { timeout: 3000 }).catch(() => {});
+        } else if (!(await tabTo(page, el))) {
           out.push({ name, ok: false, detail: 'Tab never reaches the element to focus; mark one that takes keyboard focus with data-visual-target, or tag the story "!visual"' });
           continue;
         }
