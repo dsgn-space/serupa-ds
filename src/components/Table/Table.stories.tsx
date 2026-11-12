@@ -178,7 +178,7 @@ export const Virtual: Story = {
 
 export const Overflow: Story = {
   render: (args) => (
-    <div style={{ width: 280 }}>
+    <div style={{ width: '100%', maxWidth: 280 }}>
       <Table {...args} caption="Team members, with every role and how many calls each made this quarter">
         <TableHead>
           <TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role and permissions</TableHeaderCell><TableHeaderCell align="end">Calls this quarter</TableHeaderCell></TableRow>

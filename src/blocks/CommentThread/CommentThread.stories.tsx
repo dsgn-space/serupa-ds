@@ -5,6 +5,7 @@ import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
 import { Toaster } from '../../components/Toast/Toast';
 import { CommentThread, type ThreadComment } from './CommentThread';
+import type { MentionOption } from '../../components/MentionInput/MentionInput';
 import { useContent, useNameMap } from '../../../.storybook/content';
 
 /* Comment thread (BL8): comments, a reply box, and edit and delete for your own, as a block an app copies.
@@ -18,16 +19,16 @@ const comments: ThreadComment[] = [
 ];
 
 // The other people follow Storybook's Content menu (.storybook/content.ts), and a change of menu starts the thread again.
-function Live({ initial }: { initial: readonly ThreadComment[] }) {
-  return <Thread key={useContent()} initial={initial} />;
+function Live({ initial, people }: { initial: readonly ThreadComment[]; people?: readonly MentionOption[] }) {
+  return <Thread key={useContent()} initial={initial} people={people} />;
 }
 /** Keeps the comments in state, so replying, editing and deleting work in the story. */
-function Thread({ initial }: { initial: readonly ThreadComment[] }) {
+function Thread({ initial, people }: { initial: readonly ThreadComment[]; people?: readonly MentionOption[] | undefined }) {
   const as = useNameMap(initial.filter((c) => !c.mine).map((c) => c.author.name));
   const [list, setList] = React.useState(() => initial.map((c) => (c.mine ? c : { ...c, author: { ...c.author, name: as(c.author.name) } })));
   const wait = () => new Promise((resolve) => { window.setTimeout(resolve, 600); });
   return <>
-    <CommentThread comments={list} maxLength={500}
+    <CommentThread comments={list} maxLength={500} people={people}
       onReply={(body) => wait().then(() => setList((c) => [...c, { id: String(Date.now()), author: { name: 'You' }, body, date: Date.now(), mine: true }]))}
       onEdit={(id, body) => setList((c) => c.map((x) => (x.id === id ? { ...x, body, edited: true } : x)))}
       onDelete={(id) => setList((c) => c.filter((x) => x.id !== id))} />
@@ -54,3 +55,14 @@ export const Default: Story = { render: () => <Page><Live initial={comments} /><
 
 /** No comments yet: an invitation, and the reply box. */
 export const Empty: Story = { render: () => <Page><Live initial={[]} /></Page> };
+
+const team: MentionOption[] = [
+  { id: 'ana', label: 'Ana Putri', description: 'Design' },
+  { id: 'budi', label: 'Budi Santoso', description: 'Engineering' },
+  { id: 'citra', label: 'Citra Dewi', description: 'Product' },
+];
+/** With people: type "@" in the reply box to mention someone; mentions in comments are bold, and onReply gets who to notify. */
+export const WithMentions: Story = {
+  name: 'With mentions',
+  render: () => <Page><Live people={team} initial={[comments[0], { ...comments[1], body: 'Good catch, @Ana Putri. I’ll try 20px and bold.' }, comments[2]]} /></Page>,
+};
