@@ -67,6 +67,14 @@ const english = /* @__PURE__ */ new Intl.PluralRules('en');
 export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed }: DetailPageProps) {
   const [name, setName] = React.useState(project.name);
   const [description, setDescription] = React.useState(project.description);
+  // A new name or description from the app (another project opened, or the saved one coming back) replaces the one
+  // shown; one the app passes again unchanged keeps an edit it hasn't stored yet.
+  const [given, setGiven] = React.useState({ name: project.name, description: project.description });
+  if (given.name !== project.name || given.description !== project.description) {
+    setGiven({ name: project.name, description: project.description });
+    if (given.name !== project.name) setName(project.name);
+    if (given.description !== project.description) setDescription(project.description);
+  }
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
   const [asking, setAsking] = React.useState(!!deleteFailed);
   const [deleted, setDeleted] = React.useState(false);
