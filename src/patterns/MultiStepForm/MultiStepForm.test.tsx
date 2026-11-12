@@ -70,6 +70,28 @@ describe('Patterns/Multi-step form', () => {
     await expect.poll(() => latin(active().textContent)).toMatch(/There are 4 problems/);
   });
 
+  test('every kind of field keeps what is picked: the countries, the currency, the payments and the number of cards reach the review', async () => {
+    await render(<MultiStepForm initial={{ ...ANSWERS, country: '' }} />);
+    await userEvent.selectOptions(input('apply-country'), 'Malaysia');
+    await userEvent.click(page.getByRole('button', { name: 'Continue' }));
+    await expect.poll(() => active().textContent).toBe('Contact person');
+    await userEvent.click(page.getByRole('checkbox', { name: 'Post the cards to the business address' }));
+    await userEvent.fill(input('apply-cardLine1'), 'Orchard Road 1');
+    await userEvent.fill(input('apply-cardCity'), 'Singapore');
+    await userEvent.fill(input('apply-cardPostcode'), '238801');
+    await userEvent.selectOptions(input('apply-cardCountry'), 'Singapore');
+    await userEvent.click(page.getByRole('button', { name: 'Continue' }));
+    await expect.poll(() => active().textContent).toBe('The account');
+    await userEvent.selectOptions(input('apply-currency'), 'US dollar (USD)');
+    await userEvent.click(page.getByRole('radio', { name: '50 to 500 a month' }));
+    await userEvent.fill(input('apply-cards'), '5');
+    await userEvent.click(page.getByRole('button', { name: 'Continue' }));
+    await expect.poll(() => active().textContent).toBe('Check your answers');
+    const review = latin(page.getByRole('region', { name: 'Check your answers' }).element().textContent);
+    for (const said of ['Malaysia', 'Orchard Road 1', 'Singapore', 'US dollar (USD)', '50 to 500 a month']) expect(review).toContain(said);
+    expect(review).toMatch(/Debit cards\s*5/);
+  });
+
   test('the review shows every answer; Change opens that step, and its button comes back to the answers', async () => {
     await render(<MultiStepForm start={3} initial={ANSWERS} />);
     const review = () => page.getByRole('region', { name: 'Check your answers' }).element().textContent;
