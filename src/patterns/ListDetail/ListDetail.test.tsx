@@ -23,6 +23,17 @@ describe('Patterns/List and detail', () => {
     expect(active().getAttribute('href')).toBe('#main');
   });
 
+  test('loading: the list\'s pane, busy, with placeholder rows named once; the messages then open as usual', async () => {
+    const screen = await render(<ListDetail messages={[]} loading />);
+    await expect.element(page.getByRole('region', { name: 'Messages' })).toBeVisible();
+    expect(document.querySelector('main ul')!.getAttribute('aria-busy')).toBe('true');
+    await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading messages']);
+    expect(document.querySelector('main')!.textContent).not.toContain('No messages yet');
+    await screen.rerender(<ListDetail />);
+    await expect.poll(() => page.getByRole('progressbar').elements()).toHaveLength(0);
+    await expect.element(page.getByRole('region', { name: /^Messages \(/ })).toBeVisible();
+  });
+
   test('wide: choosing a message opens it beside the list, marks it and keeps focus on it', async () => {
     const onSelect = vi.fn();
     const screen = await render(<ListDetail onSelect={onSelect} />);

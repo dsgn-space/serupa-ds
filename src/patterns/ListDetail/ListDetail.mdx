@@ -23,10 +23,13 @@ A list of things beside the one that's open, like messages in an inbox: two pane
 - **On a wide screen, focus stays in the list** when a message opens, so the arrow keys and Tab keep moving through the list.
 - **On a phone, one pane at a time** (1.4.10). Choosing a message shows it alone with "Back to messages" first, and focus goes to its heading. Back shows the list with focus on the message it came from, still marked, so the place in the list is never lost (2.4.3).
 - **Before anything is chosen on a phone**, the list shows alone. On a wide screen the first message opens, so the second pane is never empty.
+- **While they load** (`loading`), the list's pane shows placeholder rows under its heading. It says it's busy, and only the first row is named ("Loading messages"), so a screen reader hears it once.
 - **With no messages**, an empty state says what will show up here, in place of two empty panes.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.SecondOpen} />
+
+<Canvas of={Stories.Loading} />
 
 <Canvas of={Stories.Empty} />
 
