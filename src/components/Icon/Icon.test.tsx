@@ -118,6 +118,12 @@ describe('Icon', () => {
       .toEqual(['left', 'none', 'none', '-1 1', 'right', 'none']);
   });
 
+  test('mirror: the panel and dock icons flip in right-to-left text too, where a sidebar sits on the right; menu_open and backspace with them', async () => {
+    const names = ['left_panel_close', 'right_panel_open', 'dock_to_left', 'menu_open', 'keyboard_backspace', 'toc'];
+    await render(<p dir="rtl">{names.map((n) => <Icon key={n} id={n} icon={{ name: n, d: 'M0 0' }} />)}</p>);
+    expect(names.map((n) => getComputedStyle(document.querySelector(`#${n} svg`)!).scale)).toEqual(names.map(() => '-1 1'));
+  });
+
   test('a decorative Icon is aria-hidden; with aria-label it is role="img"', async () => {
     await render(<><Icon id="deco" name="home" /><Icon id="meaning" name="error" aria-label="Error" /></>);
     expect(document.getElementById('deco')!.getAttribute('aria-hidden')).toBe('true');
