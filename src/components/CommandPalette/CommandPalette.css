@@ -25,6 +25,7 @@
 .dk-command-palette__option--disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-command-palette__icon { display: inline-flex; flex: none; color: var(--command-palette-muted, var(--text-muted)); }
 .dk-command-palette__option--active .dk-command-palette__icon { color: inherit; }
+.dk-command-palette__option--active { --kbd-separator: currentColor; }   /* the shortcut's "+": muted, it is under 4.5:1 on the highlight */
 .dk-command-palette__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-command-palette__keys { flex: none; margin-inline-start: auto; }
 .dk-command-palette__empty { margin: var(--spacing-0); padding: var(--spacing-6) var(--spacing-2); text-align: center; color: var(--command-palette-muted, var(--text-muted)); }

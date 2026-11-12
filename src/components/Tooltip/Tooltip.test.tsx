@@ -7,6 +7,7 @@ import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
+import { Kbd } from '../Kbd/Kbd';
 import { hoverLeave } from '../../internal/timing';
 import { Tooltip, coolTooltips } from './Tooltip';
 
@@ -259,6 +260,19 @@ describe('Tooltip', () => {
       const s = getComputedStyle(tipOf('b')), r = contrast(s.color, s.backgroundColor);
       if (r < 4.5) low.push(`${th} ${r.toFixed(2)}`);
     }
+    expect(low).toEqual([]);
+  });
+
+  test('a shortcut in the tooltip (Kbd) keeps its "+" at 4.5:1 on the tooltip in all six themes', async () => {
+    await render(<Tooltip content={<>Save <Kbd keys={['mod', 'S']} /></>} open><button id="b">B</button></Tooltip>);
+    const plus = [...tipOf('b').querySelectorAll('*')].find((e) => e.textContent === '+')!;
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const r = contrast(getComputedStyle(plus).color, getComputedStyle(tipOf('b')).backgroundColor);
+      if (r < 4.5) low.push(`${th} ${r.toFixed(2)}`);
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(low).toEqual([]);
   });
 });
