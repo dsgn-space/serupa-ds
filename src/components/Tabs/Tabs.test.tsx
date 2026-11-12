@@ -568,9 +568,12 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
       const edge = pills[0].offsetLeft - span(pills[0]) + nums(getComputedStyle(pills[0], '::before').clipPath.split(' round')[0])[3];
       expect(Math.abs(edge - pills[0].offsetLeft)).toBeGreaterThan(8);
       await userEvent.click(pills[1]);
-      const cut = slides(pills[1], '::before')[0];
+      const all = slides(pills[1], '::before');
+      const cut = all[0];
       const first = nums(String((cut.effect as KeyframeEffect).getKeyframes()[0].clipPath).split(' round')[0]);
-      expect(Math.abs(pills[1].offsetLeft - span(pills[1]) + first[3] - edge)).toBeLessThan(1);
+      // WebKit started this one 8px off: the message says which slide it read and from what, for the next run.
+      const why = JSON.stringify({ edge, left: pills[1].offsetLeft, span: span(pills[1]), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1].style.getPropertyValue('--dk-tabs-from-' + k)) });
+      expect(Math.abs(pills[1].offsetLeft - span(pills[1]) + first[3] - edge), why).toBeLessThan(1);
     });
   });
 });

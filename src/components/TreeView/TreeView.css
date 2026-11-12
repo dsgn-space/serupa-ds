@@ -37,7 +37,6 @@
 .dk-tree-view__item--selected > .dk-tree-view__row {
   background: var(--tree-view-item-bg-selected, var(--highlight));
   box-shadow: inset var(--dk-bar) 0 0 var(--tree-view-item-indicator, var(--primary));
-  font-weight: var(--font-medium);
 }
 .dk-tree-view__item:focus-visible > .dk-tree-view__row { outline: var(--focus-ring-width) solid var(--tree-view-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-tree-view__item--disabled > .dk-tree-view__row { opacity: var(--opacity-disabled); cursor: not-allowed; }

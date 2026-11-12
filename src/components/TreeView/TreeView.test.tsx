@@ -401,4 +401,12 @@ describe('TreeView target size (GQ6)', () => {
     await expect.poll(() => shown()).toBe('a,a1,a2');
     expect(document.activeElement).toBe(el('after'));
   });
+
+  test('picking an item keeps its label at the weight of the others, so a label that fits on one line never wraps when picked; the start bar marks it (GR269)', async () => {
+    await render(<div style={{ width: '120px' }}><Tree /></div>);
+    await userEvent.click(row('c'));
+    expect(item('c').getAttribute('aria-selected')).toBe('true');
+    expect(css(row('c')).fontWeight).toBe(css(row('a')).fontWeight);
+    expect(css(row('c')).boxShadow).toMatch(/inset/);
+  });
 });

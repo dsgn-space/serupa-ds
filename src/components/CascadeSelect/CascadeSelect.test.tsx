@@ -327,4 +327,13 @@ describe('CascadeSelect', () => {
     await until(() => !!panel() && !panel().hidden && document.activeElement !== button());
     expect(css(button()).borderTopColor).toBe(ring);
   });
+
+  test('the chosen path keeps its labels at the weight of the others, so a long name wraps the same once picked; a start bar marks each (GR269)', async () => {
+    await render(<CascadeSelect aria-label="Wilayah" options={regions} defaultValue={['jabar', 'bandung', 'coblong']} />);
+    await userEvent.click(button());
+    const on = [...panel().querySelectorAll<HTMLElement>('[aria-selected=true]')], off = panel().querySelector<HTMLElement>('[role=option]:not([aria-selected=true])')!;
+    expect(on.map((o) => css(o).fontWeight)).toEqual(on.map(() => css(off).fontWeight));
+    expect(on.map((o) => /inset/.test(css(o).boxShadow))).toEqual([true, true, true]);
+    expect(css(off).boxShadow).toBe('none');
+  });
 });

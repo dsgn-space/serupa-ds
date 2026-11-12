@@ -9,6 +9,12 @@ The four empty states most apps need. Each one says what happened in words and o
 
 <Canvas of={Stories.FirstRun} />
 
+## When to use them
+
+- A list, page or search with nothing to show, where the next step should be clear.
+- Not while content is still loading: show a Loader until you know it's empty.
+- Not for an error that stops the whole page: use the Error pages pattern.
+
 ## Which one to use
 
 - **EmptyFirstRun**: someone's first visit, before they've made anything. Say what the place is for, and give the one button that makes the first item. A guide link is optional, for people who want to read first.
