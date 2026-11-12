@@ -30,15 +30,17 @@ jobs:
         run: |
           set -uo pipefail
           since=$(date -u -d '-6 hours' +%Y-%m-%dT%H:%M:%SZ)
-          gh api "repos/$GH_REPO/actions/runs?event=merge_group&created=>$since&per_page=100" \
-            --jq '.workflow_runs[] | select(.status != "completed") | "\(.id) \(.head_sha) \(.head_branch)"' |
+          # The list is read whole first: a gh call inside the loop would otherwise read the loop's own input.
+          runs=$(gh api "repos/$GH_REPO/actions/runs?event=merge_group&created=>$since&per_page=100" \
+            --jq '.workflow_runs[] | select(.status != "completed") | "\(.id) \(.head_sha) \(.head_branch)"') || exit 1
           while read -r id sha branch; do
+            [ -n "$id" ] || continue
             # Only a 404 counts as gone: any other answer leaves the run alone until the next sweep.
-            status=$(gh api -i "repos/$GH_REPO/git/ref/heads/$branch" 2>/dev/null | head -1 | awk '{print $2}')
+            status=$(gh api -i "repos/$GH_REPO/git/ref/heads/$branch" </dev/null 2>/dev/null | awk 'NR == 1 { print $2 }')
             [ "$status" = 404 ] || continue
             # Merged: main holds the group's commit, so its runs finish as they are.
-            merged=$(gh api "repos/$GH_REPO/compare/$sha...main" --jq .status 2>/dev/null || echo unknown)
+            merged=$(gh api "repos/$GH_REPO/compare/$sha...main" --jq .status </dev/null 2>/dev/null || echo unknown)
             case "$merged" in identical|ahead|unknown) continue ;; esac
             echo "Cancelling run $id: its queue group $branch was dropped."
-            gh run cancel "$id" || true
-          done
+            gh run cancel "$id" </dev/null || true
+          done <<< "$runs"

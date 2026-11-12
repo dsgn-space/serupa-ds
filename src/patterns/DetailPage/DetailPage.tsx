@@ -41,6 +41,8 @@ export interface DetailPageProps {
   onRemoveTask?: ((id: string) => void) | undefined;
   /** The project's name was typed and Delete pressed. Return its promise, so the button shows it's busy. */
   onDelete?: (() => unknown) | undefined;
+  /** Starts with the delete dialog open, as after a delete that failed: it says so, and the delete can be tried again. */
+  deleteFailed?: boolean | undefined;
 }
 
 const demo: Project = {
@@ -62,13 +64,13 @@ function day(iso: string, locale: string): string {
 const english = /* @__PURE__ */ new Intl.PluralRules('en');
 
 /** The detail page: a skip link, a header, then main with the breadcrumb, the h1, the tabs and the danger zone. */
-export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete }: DetailPageProps) {
+export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed }: DetailPageProps) {
   const [name, setName] = React.useState(project.name);
   const [description, setDescription] = React.useState(project.description);
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
-  const [asking, setAsking] = React.useState(false);
+  const [asking, setAsking] = React.useState(!!deleteFailed);
   const [deleted, setDeleted] = React.useState(false);
-  const [failed, setFailed] = React.useState(false);
+  const [failed, setFailed] = React.useState(!!deleteFailed);
   const locale = useLocale();
   // The Undo toasts still open, and whether the project is gone: once it is, they close without removing anything,
   // since the delete took their tasks with it.

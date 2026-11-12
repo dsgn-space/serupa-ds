@@ -1,7 +1,8 @@
 // Usage guides: every component's README.md has the sections docs/usage-guide-template.md requires, so each
 // Storybook page says when to use the component, when not to, and how it meets accessibility; and every test or
 // tool file a guide names (`tools/test/menu.mjs`, `Menu.test.tsx`) exists; and every class the docs name exists in
-// dist/bundle.css (npm run build first), so a page never recommends one that does nothing.
+// dist/bundle.css (npm run build first), so a page never recommends one that does nothing; and every Storybook link
+// in the docs, guides and stories opens a page or story that exists.
 //   node tools/test/guides.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -89,15 +90,33 @@ const unplaced = fs.readdirSync(DIR).filter((n) => fs.existsSync(path.join(DIR, 
 t('Choose a component: every component is on the page, or on the nothing-alike list in tools/test/guides.mjs', !unplaced.length, `not placed: ${unplaced.join(', ')}`);
 const placedAlone = ALONE.filter((n) => choose.includes(`-${n.toLowerCase()}--docs)`) || !fs.existsSync(path.join(DIR, n, `${n}.tsx`)));
 t('Choose a component: the nothing-alike list names only components that exist and are not on the page', !placedAlone.length, `take off the list: ${placedAlone.join(', ')}`);
-// Every docs page link in docs/ (?path=/docs/<id>--docs) goes to a page that exists: a component's stories or an
-// MDX page, by its title as Storybook makes the id ("Guides/Choose a component" → guides-choose-a-component).
+// Every Storybook link (?path=/docs/<id>--docs or ?path=/story/<id>--<story>) in the docs pages, the doc blocks, the
+// guides and the stories goes to a page that exists: a component's stories or an MDX page, by its title as Storybook
+// makes the id ("Guides/Choose a component" → guides-choose-a-component). A story link also names a story the file exports.
 const storyId = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const titles = new Set();
-const walk = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, e.name); if (e.isDirectory()) { if (e.name !== 'node_modules' && e.name !== 'generated') walk(p); } else if (/\.(stories\.tsx|mdx)$/.test(e.name)) for (const m of fs.readFileSync(p, 'utf8').matchAll(/(?:^\s*title: |<Meta title=)['"]([^'"]+)['"]/gm)) titles.add(storyId(m[1])); } };
+const kebab = (name) => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2').toLowerCase();
+const titles = new Set(), stories = new Set(), linking = [];
+const walk = (dir) => {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) { if (e.name !== 'node_modules' && e.name !== 'generated') walk(p); continue; }
+    if (/\.(mdx?|tsx)$/.test(e.name)) linking.push(p);
+    if (!/\.(stories\.tsx|mdx)$/.test(e.name)) continue;
+    const text = fs.readFileSync(p, 'utf8');
+    for (const m of text.matchAll(/(?:^\s*title: |<Meta title=)['"]([^'"]+)['"]/gm)) {
+      const id = storyId(m[1]);
+      titles.add(id);
+      for (const x of text.matchAll(/^export const (\w+)\s*(?::[^=]+)?=/gm)) stories.add(`${id}--${kebab(x[1])}`);
+    }
+  }
+};
 walk(path.join(PROJECT, 'src')); walk(path.join(PROJECT, 'docs'));
 const broken = [];
-for (const f of fs.readdirSync(path.join(PROJECT, 'docs')).filter((n) => n.endsWith('.mdx'))) {
-  for (const m of fs.readFileSync(path.join(PROJECT, 'docs', f), 'utf8').matchAll(/\?path=\/docs\/([a-z0-9-]+)--docs/g)) if (!titles.has(m[1])) broken.push(`${f}: ${m[1]}`);
+for (const f of linking) {
+  for (const m of fs.readFileSync(f, 'utf8').matchAll(/\?path=\/(docs|story)\/([a-z0-9-]+?)--([a-z0-9-]+)/g)) {
+    const ok = m[1] === 'docs' ? m[3] === 'docs' && titles.has(m[2]) : stories.has(`${m[2]}--${m[3]}`);
+    if (!ok) broken.push(`${path.relative(PROJECT, f)}: ${m[0].slice(6)}`);
+  }
 }
-t('every docs page link in docs/*.mdx goes to a page that exists', !broken.length, broken.slice(0, 12).join(', '));
+t('every Storybook link in the docs, guides and stories goes to a page or story that exists', !broken.length, broken.slice(0, 12).join(', '));
 done(report('Usage guides', R));
