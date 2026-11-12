@@ -134,7 +134,12 @@ function scripts(t, all) {
 function axes(t, varying, line) {
   const themes = t.color.themes.map((x) => x.id);
   const brands = [...new Set(themes.map((id) => id.split('-')[0]))];
-  const pair = (x, b) => `light-dark(${x.value[b + '-light']}, ${x.value[b + '-dark']})`;
+  // light-dark() takes colors only, so a size, shadow, duration or easing that a brand sets (its radii, elevation and
+  // motion: the Modern brand's 8px controls) is the same in both modes and is written as it is.
+  const pair = (x, b) => {
+    const [l, d] = [x.value[b + '-light'], x.value[b + '-dark']];
+    return l === d ? l : `light-dark(${l}, ${d})`;
+  };
   const byBrand = varying.filter((x) => new Set(brands.map((b) => pair(x, b))).size > 1);
   // The full set goes on the root when it has an axis, and on any nested data-mode element, so a dark section works
   // inside a page with no axes or with data-theme (whose flat values can't flip). :where() keeps it at one
@@ -176,9 +181,11 @@ function contrastAndDensity(all, line) {
   const nested = ':is([data-mode], [data-brand], [data-theme])';
   let css = `[data-theme$="-light"] { color-scheme: light; }\n[data-theme$="-dark"] { color-scheme: dark; }\n`;
   // Also on nested data-mode elements, which redeclare the normal colors.
-  css += `[data-contrast="more"], [data-contrast="more"] [data-mode] {\n${pairs}}\n`;
+  // :not(#dk-more) here too: a brand that sets a neutral of its own (Modern's borders) writes it in its brand rules,
+  // which weigh up to three attributes, and asking for more contrast must still beat them.
+  css += `[data-contrast="more"]:not(#dk-more), [data-contrast="more"] [data-mode]:not(#dk-more) {\n${pairs}}\n`;
   if (brand) css += `[data-contrast="more"]:not(#dk-more), [data-contrast="more"] ${nested}:not(#dk-more) {\n${brand}}\n`;
-  css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *) {\n${pairs}}\n`;
+  css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *, #dk-more) {\n${pairs}}\n`;
   if (brand) css += `:root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) ${nested}:not([data-contrast="normal"], [data-contrast="normal"] *, #dk-more) {\n${brand}}\n`;
   css += '}\n';
   const compact = all.filter((x) => x.compact != null);
@@ -214,9 +221,18 @@ function tintedShadows(all, line) {
   const at = (x) => (typeof x.value === 'object' ? Object.values(x.value)[0] : x.value);
   // The elevation roles (elevation-overlay → shadow-lg) are set again beside the shadows they name: a custom property's
   // var() is worked out where it's set, so one set only on :root would keep the root's shadow inside data-shadow="brand".
-  const roles = all.filter((x) => box.some((b) => at(x) === `{${b.name}}`)).map((x) => line(x.name, at(x))).join('');
+  const roleTokens = all.filter((x) => box.some((b) => at(x) === `{${b.name}}`));
+  const roles = roleTokens.map((x) => line(x.name, at(x))).join('');
   let css = `[data-shadow="brand"] {\n${box.map((x) => line(x.name, at(x).replace(/rgb\(0 0 0 \/ ([\d.]+)\)/g, TINT))).join('')}${roles}}\n`;
   css += `[data-shadow="neutral"] {\n${box.map((x) => line(x.name, at(x))).join('')}${roles}}\n`;
+  // A brand that maps a role to another shadow (Modern's softer elevation) sets it again in its own sections.
+  const brands = [...new Set(Object.keys(roleTokens.find((x) => typeof x.value === 'object')?.value || {}).map((id) => id.split('-')[0]))];
+  for (const b of brands) {
+    const own = roleTokens.filter((x) => typeof x.value === 'object' && x.value[`${b}-light`] !== at(x));
+    if (!own.length) continue;
+    const brand = `:is([data-theme^="${b}-"], [data-brand="${b}"])`;
+    css += `${brand}:is([data-shadow]), ${brand} [data-shadow] {\n${own.map((x) => line(x.name, x.value[`${b}-light`])).join('')}}\n`;
+  }
   return css;
 }
 
@@ -230,7 +246,10 @@ function tintedShadows(all, line) {
 function depth(t, all, line) {
   const deep = all.filter((x) => x.tactile != null);
   if (!deep.length) return '';
+  // A token a brand also sets for itself (Modern's soft ease-spring) is flat at that brand's own value.
+  const themed = (x) => !!x.value && typeof x.value === 'object';
   const tactile = (x) => line(x.name, x.tactile), flat = (x) => line(x.name, x.value);
+  const flatIn = (b) => (x) => (themed(x) ? line(x.name, x.value[`${b}-light`] ?? x.value[Object.keys(x.value)[0]]) : flat(x));
   const brands = new Map();
   for (const th of t.color.themes) {
     const b = th.id.split('-')[0];
@@ -238,9 +257,9 @@ function depth(t, all, line) {
   }
   let css = '';
   if ([...brands.values()].some(Boolean))
-    for (const [b, on] of brands) css += `[data-theme^="${b}-"], [data-brand="${b}"] {\n${deep.map(on ? tactile : flat).join('')}}\n`;
+    for (const [b, on] of brands) css += `[data-theme^="${b}-"], [data-brand="${b}"] {\n${deep.map(on ? tactile : flatIn(b)).join('')}}\n`;
   css += `[data-depth="tactile"] {\n${deep.map(tactile).join('')}}\n`;
-  css += `[data-depth="flat"] {\n${deep.map(flat).join('')}}\n`;
+  css += `[data-depth="flat"] {\n${deep.filter((x) => !themed(x)).map(flat).join('')}}\n`;
   const images = deep.filter((x) => x.value === 'none');
   if (images.length) css += `@media (forced-colors: active) {\n:root, [data-theme], [data-brand], [data-depth] {\n${images.map(flat).join('')}}\n}\n`;
   return css;
