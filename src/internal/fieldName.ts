@@ -13,6 +13,6 @@ export function fieldName(el: HTMLInputElement | null): string {
   };
   const by = el.getAttribute('aria-labelledby');
   const text = by ? by.split(/\s+/).map((id) => read(byId(el, id))).join(' ')
-    : el.getAttribute('aria-label') || read(el.labels && el.labels[0]);
+    : el.getAttribute('aria-label') || read(el.labels?.[0] ?? null);
   return text.replace(/\s+/g, ' ').trim();
 }

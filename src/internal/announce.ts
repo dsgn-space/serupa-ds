@@ -71,8 +71,9 @@ export function announce(text: string, options?: { assertive?: boolean }): void 
   // At most one message waits: a burst is said as one, so nothing is dropped and nothing is said late.
   // Joined as sentences: ". " after a message that doesn't end in its own stop, a space after one that does
   // ("Picked up Apollo, position 1 of 3. Apollo, position 2 of 3."), never "3.. Apollo".
-  if (!ch.queue.length) ch.queue.push(text);
-  else if (!said(ch.queue[0], text)) ch.queue[0] += (/[.!?…。]$/.test(ch.queue[0]) ? ' ' : '. ') + text;
+  const [first] = ch.queue;
+  if (first === undefined) ch.queue.push(text);
+  else if (!said(first, text)) ch.queue[0] = first + (/[.!?…。]$/.test(first) ? ' ' : '. ') + text;
   pump(ch);
 }
 
