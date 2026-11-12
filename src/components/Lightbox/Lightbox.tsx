@@ -4,6 +4,8 @@ import { cn, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { useServerStyles } from '../../internal/serverStyles';
+import { quickArrival } from '../../internal/timing';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import { Dialog } from '../Dialog/Dialog';
 import { Icon } from '../Icon/Icon';
@@ -51,14 +53,18 @@ const SWIPE = 48;   // px a touch has to move sideways to turn the page
 function Stage({ item }: { item: LightboxItem }) {
   const [state, setState] = React.useState<'loading' | 'loaded' | 'error'>('loading');
   const [own, setOwn] = React.useState<[number, number] | null>(null);
+  // A picture that arrives within quickArrival ms (cached, or a data: URL) just shows; one that takes longer fades in.
+  const since = React.useRef(0);
+  React.useEffect(() => { since.current = performance.now(); }, []);
+  const [fades, setFades] = React.useState(false);
   const given: [number, number] | null = item.width && item.height ? [item.width, item.height] : null;
   const [w, h] = own || given || [4, 3];
   return (
-    <span className="dk-lightbox__stage" data-state={state} style={{ '--dk-lightbox-ratio': w + ' / ' + h, '--dk-lightbox-w': own || given ? w + 'px' : '100%' } as React.CSSProperties}>
+    <span className="dk-lightbox__stage" data-state={state} data-fades={fades || undefined} style={{ '--dk-lightbox-ratio': w + ' / ' + h, '--dk-lightbox-w': own || given ? w + 'px' : '100%' } as React.CSSProperties}>
       {state === 'error'
         ? <span className="dk-lightbox__fallback" aria-hidden="true"><Icon icon={icons.BrokenImage} /></span>
         : <img src={item.src} alt="" className="dk-lightbox__img" decoding="async"
-            onLoad={(e) => { const i = e.currentTarget; if (i.naturalWidth > 0) setOwn([i.naturalWidth, i.naturalHeight]); setState('loaded'); }}
+            onLoad={(e) => { const i = e.currentTarget; if (i.naturalWidth > 0) setOwn([i.naturalWidth, i.naturalHeight]); setFades(performance.now() - since.current > quickArrival); setState('loaded'); }}
             onError={() => setState('error')} />}
     </span>
   );
@@ -79,6 +85,7 @@ export const Lightbox = /* @__PURE__ */ component<HTMLDialogElement, LightboxPro
   const index = Math.min(Math.max(0, indexProp ?? ownIndex), Math.max(0, count - 1));
   const item = items[index];
   const root = React.useRef<HTMLDivElement>(null);
+  const restyle = useServerStyles(root);   // the stage's shape, under a strict Content Security Policy after hydrating
 
   const setOpen = (o: boolean, d: OpenChangeDetails) => { if (openProp === undefined) setOwnOpen(o); if (onOpenChange) onOpenChange(o, d); };
   const go = (to: number) => {
@@ -144,7 +151,7 @@ export const Lightbox = /* @__PURE__ */ component<HTMLDialogElement, LightboxPro
       description={count > 1 ? sds.labels.imageOf(index + 1, count) : undefined}
       className={cn('dk-lightbox', className)} data-component="lightbox">
       {item ? (
-        <div ref={root} className="dk-lightbox__body" data-index={index} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => { start.current = null; }}>
+        <div ref={restyle} className="dk-lightbox__body" data-index={index} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => { start.current = null; }}>
           <figure className="dk-lightbox__figure">
             <Stage key={item.src} item={item} />
             {item.caption != null ? <figcaption className="dk-lightbox__caption">{item.caption}</figcaption> : null}

@@ -21,6 +21,7 @@ import { Field } from '../components/Field/Field';
 import { FileUpload } from '../components/FileUpload/FileUpload';
 import { InlineEdit } from '../components/InlineEdit/InlineEdit';
 import { Input } from '../components/Input/Input';
+import { Lightbox } from '../components/Lightbox/Lightbox';
 import { Loader } from '../components/Loader/Loader';
 import { LoadMore } from '../components/LoadMore/LoadMore';
 import { SerupaProvider } from './provider';
@@ -89,6 +90,9 @@ const SITES: Record<string, Site> = {
   'InlineEdit: a failed save': {
     ui: () => <InlineEdit label="Slug" defaultValue="apollo" validate={(x) => (x.includes(' ') ? 'Use dashes instead of spaces.' : null)} />,
     act: async () => { await userEvent.click($('[data-component="inline-edit"] button')); await userEvent.fill($('[data-component="inline-edit"] input'), 'apollo plan'); await userEvent.keyboard('{Enter}'); }, says: /Use dashes instead of spaces/ },
+  'Lightbox: the picture it moved to, and where it is (the Lightbox is a dialog on top)': {
+    ui: (s) => <Lightbox open={!!s} items={[{ src: 'data:image/gif;base64,R0lGODlhAQABAAAAACw=', alt: 'Mars' }, { src: 'data:image/gif;base64,R0lGODlhAQABAAAAACw=', alt: 'Venus' }]} />,
+    act: async (next) => { await next(); await expect.poll(() => document.activeElement?.closest('dialog')?.textContent).toContain('Mars'); await userEvent.keyboard('{End}'); }, says: /Venus, [2٢]/ },
   'LoadMore: what a load added': {
     ui: (s) => <SerupaProvider locale="en-US"><LoadMore onLoadMore={() => {}} count={s ? 40 : 20} total={134} /></SerupaProvider>,   // pinned: the digits follow the browser's locale
     act: (next) => next(), says: /20 more loaded\. Showing 40 of 134/ },

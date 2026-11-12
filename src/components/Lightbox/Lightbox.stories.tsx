@@ -36,7 +36,7 @@ function Gallery(args: React.ComponentProps<typeof Lightbox>) {
   const [index, setIndex] = React.useState(0);
   return (
     <>
-      <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8, listStyle: 'none', margin: 0, padding: 0, maxWidth: 560 }}>
+      <ul role="list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8, listStyle: 'none', margin: 0, padding: 0, maxWidth: 560 }}>
         {photos.map((p, i) => (
           <li key={p.src}>
             <button type="button" aria-haspopup="dialog" onClick={() => { setIndex(i); setOpen(true); }} style={{ all: 'unset', display: 'block', cursor: 'zoom-in', borderRadius: 8 }}>
@@ -66,4 +66,4 @@ export const LongText: Story = {
 /** Do: open it from the picture people pressed, and name each picture in its alt text: it's the dialog's title. */
 export const DoName: Story = { name: 'Do: name each picture', args: { defaultIndex: 0 } };
 /** Don't: title pictures with their file names. The alt text is the dialog's title and what a screen reader says on each move. */
-export const DontFileNames: Story = { name: "Don't: name pictures by file", args: { items: photos.map((p, i) => ({ ...p, alt: 'IMG_20' + (41 + i) + '.jpg' })) } };
+export const DontFileNames: Story = { name: "Don't: name pictures by file", args: { items: photos.map((p, i) => ({ ...p, alt: ['IMG_final.jpg', 'IMG_final_copy.jpg', 'IMG_edit.jpg', 'IMG_edit_copy.jpg'][i] ?? 'IMG.jpg' })) } };
