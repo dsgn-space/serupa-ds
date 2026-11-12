@@ -32,10 +32,11 @@ export function toDay(v: unknown, who?: string): Date | null {
       if (process.env.NODE_ENV !== 'production' && who && v.trim()) warnOnce('date-string', `${who}: "${v.trim()}" isn't a "yyyy-mm-dd" day, so no date is shown. Pass the day as "yyyy-mm-dd" or a Date.`, who + ':string');
       return null;
     }
-    if (process.env.NODE_ENV !== 'production' && who && m[4])
-      warnOnce('datetime-string', `${who}: "${v.trim()}" is a date and time; it's read as ${m[1]}-${m[2]}-${m[3]}, the day it writes, and its time is ignored. Pass the "yyyy-mm-dd" day itself.`, who + ':datetime');
-    const d = new Date(2000, +m[2] - 1, +m[3]); d.setFullYear(+m[1]);
-    const real = d.getMonth() === +m[2] - 1 && d.getDate() === +m[3];
+    const [, y = '', mo = '', da = '', time] = m;
+    if (process.env.NODE_ENV !== 'production' && who && time)
+      warnOnce('datetime-string', `${who}: "${v.trim()}" is a date and time; it's read as ${y}-${mo}-${da}, the day it writes, and its time is ignored. Pass the "yyyy-mm-dd" day itself.`, who + ':datetime');
+    const d = new Date(2000, +mo - 1, +da); d.setFullYear(+y);
+    const real = d.getMonth() === +mo - 1 && d.getDate() === +da;
     if (process.env.NODE_ENV !== 'production' && who && !real) warnOnce('date-string', `${who}: "${v.trim()}" is not a day of the calendar, so no date is shown. Check the month and the day.`, who + ':string');
     return real ? d : null;
   }
@@ -104,15 +105,18 @@ export function parseDate(text: string, locale?: string, now: Date = new Date())
   // "12. März 2025"): the four-digit number (or else the last) is the year and the other is the day (L8E8).
   const month = monthIn(text, locale);
   if (month) {
-    if (nums.length !== 2) return null;
-    const y = nums.findIndex((n) => n.length === 4), yi = y < 0 ? 1 : y;
-    return fromParts([nums[1 - yi], String(month), nums[yi]], ['day', 'month', 'year'], now);
+    const [a, b] = nums;
+    if (a === undefined || b === undefined || nums.length !== 2) return null;
+    // The four-digit one is the year; with none, the last.
+    const [day, year] = a.length === 4 ? [b, a] : [a, b];
+    return fromParts([day, String(month), year], ['day', 'month', 'year'], now);
   }
   // Digits alone, as typed on a number keypad: 6 or 8 of them, split in the locale's order (11222001 and 112201 in
   // en-US, 22112001 in de-DE), or as an ISO yyyymmdd. When both make a date (20011122 in de-DE is also 20.01.1122),
   // the one nearer now wins.
-  if (nums.length === 1 && (nums[0].length === 6 || nums[0].length === 8)) {
-    const run = nums[0], yl = run.length - 4;
+  const run = nums.length === 1 ? nums[0] : undefined;
+  if (run !== undefined && (run.length === 6 || run.length === 8)) {
+    const yl = run.length - 4;
     const read = (order: readonly string[]) => { let i = 0; const parts = order.map((k) => { const n = k === 'year' ? yl : 2; i += n; return run.slice(i - n, i); }); return fromParts(parts, order, now); };
     const mine = read(own), iso = yl === 4 ? read(['year', 'month', 'day']) : null;
     if (!mine || !iso) return mine || iso;
@@ -121,7 +125,7 @@ export function parseDate(text: string, locale?: string, now: Date = new Date())
   if (nums.length !== 3) return null;
   // A leading 4-digit year is ISO (2001-11-22), unless the locale itself writes the year first in another order
   // (Kyrgyz: year-day-month).
-  return fromParts(nums, /^\d{4}$/.test(nums[0]) && own[0] !== 'year' ? ['year', 'month', 'day'] : own, now);
+  return fromParts(nums, /^\d{4}$/.test(nums[0] ?? '') && own[0] !== 'year' ? ['year', 'month', 'day'] : own, now);
 }
 // Month names in the locale and in English, long and short, as they stand alone and inside a date (Russian "май"
 // and "мая"), folded and without a closing dot.
@@ -140,7 +144,8 @@ function monthsOf(locale?: string): string[][] {
           const d = new Date(2000, i, 1), part = inDate.formatToParts(d).find((p) => p.type === 'month');
           for (const name of [alone.format(d), part ? part.value : '']) {
             const f = fold(name).replace(/\.$/, '');
-            if (f && !/^\d+$/.test(f) && !m[i].includes(f)) m[i].push(f);
+            const names = m[i];
+            if (f && names && !/^\d+$/.test(f) && !names.includes(f)) names.push(f);
           }
         }
       }
@@ -158,22 +163,24 @@ function monthIn(text: string, locale?: string): number {
   let found = 0;
   for (const w of words.map((x) => fold(x))) {
     const hits = months.map((names, i) => (names.some((n) => n === w || (w.length >= 3 && n.startsWith(w))) ? i + 1 : 0)).filter(Boolean);
-    if (hits.length === 1) { if (found && found !== hits[0]) return 0; found = hits[0]; }
+    const [hit] = hits;
+    if (hit !== undefined && hits.length === 1) { if (found && found !== hit) return 0; found = hit; }
   }
   return found;
 }
 function fromParts(nums: string[], order: readonly string[], now: Date): Date | null {
-  const v: Record<string, number> = {};
-  order.forEach((k, i) => { v[k] = Number(nums[i]); });
-  if (nums[order.indexOf('year')].length <= 2) {
+  const part = (k: string) => nums[order.indexOf(k)] ?? '';
+  const month = Number(part('month')), day = Number(part('day'));
+  let year = Number(part('year'));
+  if (part('year').length <= 2) {
     const y = now.getFullYear();
-    v.year += y - (y % 100);
-    if (v.year - y > 49) v.year -= 100;
-    else if (y - v.year > 50) v.year += 100;
+    year += y - (y % 100);
+    if (year - y > 49) year -= 100;
+    else if (y - year > 50) year += 100;
   }
   const d = new Date(2000, 0, 1);
-  d.setFullYear(v.year, v.month - 1, v.day);   // so years 0–99 typed with four digits stay themselves, not 19xx
-  return d.getFullYear() === v.year && d.getMonth() === v.month - 1 && d.getDate() === v.day ? d : null;
+  d.setFullYear(year, month - 1, day);   // so years 0–99 typed with four digits stay themselves, not 19xx
+  return d.getFullYear() === year && d.getMonth() === month - 1 && d.getDate() === day ? d : null;
 }
 /** A date in the locale's short numeric form, as people type it: 11/22/2001. */
 export const formatDate = (d: Date, locale?: string) => numeric(locale).format(d);

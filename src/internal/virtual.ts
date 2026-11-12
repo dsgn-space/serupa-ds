@@ -56,10 +56,13 @@ export interface VirtualRange {
 // The tallest scroll range drawn as is, under every browser's limit; past it, the range is scaled down to it.
 const CAP = 15_000_000;
 
+// A row offset. The offsets always hold count + 1 of them, so the default is only there for TypeScript.
+const at = (o: Float64Array, i: number) => o[i] ?? 0;
+
 // The last index whose start is at or above y.
 function find(o: Float64Array, y: number): number {
   let lo = 0, hi = o.length - 2;
-  while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (o[mid] <= y) lo = mid; else hi = mid - 1; }
+  while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (at(o, mid) <= y) lo = mid; else hi = mid - 1; }
   return Math.max(0, lo);
 }
 
@@ -80,9 +83,9 @@ const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n
 // Where the rows' top is for a scroll position: the position itself, or past CAP the same fraction of the rows (or
 // the rows' top a key or the wheel asked for, while the scroll position is still the one it set).
 function topAt(L: Live, p: number, height: number): number {
-  const total = L.offsets[L.offsets.length - 1];
+  const total = at(L.offsets, L.offsets.length - 1);
   if (total <= CAP) return p;
-  if (L.pending && Math.abs(L.pending.p - p) < 1) return L.offsets[L.pending.i] - L.pending.at;
+  if (L.pending && Math.abs(L.pending.p - p) < 1) return at(L.offsets, L.pending.i) - L.pending.at;
   L.pending = null;
   const room = Math.max(0, CAP - height);
   return room ? Math.min(1, p / room) * Math.max(0, total - height) : 0;
@@ -94,15 +97,15 @@ function viewAt(L: Live, el: HTMLElement): View {
   const p = el.scrollTop, height = el.clientHeight, v = topAt(L, Math.max(0, p - L.origin), height), i = find(L.offsets, v);
   if (Math.abs(p - L.seen) >= 1) L.pin = null;   // the user scrolled
   L.seen = p;
-  return { i, at: L.offsets[i] - v, height, p };
+  return { i, at: at(L.offsets, i) - v, height, p };
 }
 
 // Past CAP: puts the rows' top at v, and the scroll position at the same fraction.
 function go(L: Live, el: HTMLElement, v: number) {
-  const h = el.clientHeight, span = Math.max(0, L.offsets[L.offsets.length - 1] - h), room = Math.max(0, CAP - h);
+  const h = el.clientHeight, span = Math.max(0, at(L.offsets, L.offsets.length - 1) - h), room = Math.max(0, CAP - h);
   v = clamp(v, 0, span);
   const i = find(L.offsets, v);
-  L.pending = { i, at: L.offsets[i] - v, p: span ? (v / span) * room : 0 };
+  L.pending = { i, at: at(L.offsets, i) - v, p: span ? (v / span) * room : 0 };
   L.top = v;
   el.scrollTop = L.pending.p;
 }
@@ -136,14 +139,14 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     for (const [i, h] of store.sizes) if (i < count) { sum += h; n++; }
     const g = n ? sum / n : estimate;
     const o = new Float64Array(count + 1);
-    for (let i = 0; i < count; i++) o[i + 1] = o[i] + (store.sizes.get(i) ?? g);
+    for (let i = 0; i < count; i++) o[i + 1] = at(o, i) + (store.sizes.get(i) ?? g);
     return o;
   }, [count, estimate, store]);
 
   // The rows' top: the view's row where it is now, so measuring keeps that row where it was. Past CAP, the scroll
   // position (view.p) is put at the same fraction of CAP, and the rows are drawn shifted by the difference.
-  const total = offsets[count], scaled = total > CAP;
-  const top = view ? clamp(offsets[Math.min(view.i, count)] - view.at, 0, Math.max(0, total - view.height)) : 0;
+  const total = at(offsets, count), scaled = total > CAP;
+  const top = view ? clamp(at(offsets, Math.min(view.i, count)) - view.at, 0, Math.max(0, total - view.height)) : 0;
   const shift = scaled && view ? view.p - top : 0;
   let start: number, end: number;
   // Until the scroller has a height (a popup still hidden when it was read: WebKit reports the opened one's a frame
@@ -153,7 +156,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     start = Math.max(0, find(offsets, top) - overscan);
     end = Math.min(count, find(offsets, top + view.height) + 1 + overscan);
     // Past CAP near the top, overscan rows that would start above the scroll range aren't drawn.
-    while (start < end - 1 && offsets[start + 1] + shift <= 0) start++;
+    while (start < end - 1 && at(offsets, start + 1) + shift <= 0) start++;
   }
 
   // Follow the scroll and the scroller's size (a ResizeObserver also reports once as soon as it starts). Past CAP,
@@ -178,21 +181,21 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       // PageUp and PageDown: a screen at once, not the browser's smooth scroll. The rows it measures on the way move
       // the view's row, the list scrolls by as much to keep it, and the animation then carried on from there: the first
       // PageUp after End went back one row of eight (GR142).
-      if ((e.key === 'PageUp' || e.key === 'PageDown') && !(L.offsets[L.offsets.length - 1] > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
+      if ((e.key === 'PageUp' || e.key === 'PageDown') && !(at(L.offsets, L.offsets.length - 1) > CAP) && !e.defaultPrevented && !e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !(t !== scroller && t.closest(EDITABLE))) {
         e.preventDefault();
-        scroller.scrollTop += by(scroller.clientHeight);
+        scroller.scrollTop += by?.(scroller.clientHeight) ?? 0;
         read();
         return;
       }
-      if (!by || !(L.offsets[L.offsets.length - 1] > CAP) || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (t !== scroller && t.closest(EDITABLE))) return;
+      if (!by || !(at(L.offsets, L.offsets.length - 1) > CAP) || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || (t !== scroller && t.closest(EDITABLE))) return;
       e.preventDefault();
       step(by(scroller.clientHeight));
     };
     const onWheel = (e: WheelEvent) => {
-      if (!(L.offsets[L.offsets.length - 1] > CAP) || e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      if (!(at(L.offsets, L.offsets.length - 1) > CAP) || e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
       const d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? scroller.clientHeight : 1), v = L.top;
       // At either end, the page scrolls instead.
-      if (d < 0 ? v <= 0 : v >= L.offsets[L.offsets.length - 1] - scroller.clientHeight) return;
+      if (d < 0 ? v <= 0 : v >= at(L.offsets, L.offsets.length - 1) - scroller.clientHeight) return;
       e.preventDefault();
       step(d);
     };
@@ -227,7 +230,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
       // The last row pinned at the bottom edge goes to the very end, and the first at the top to the very start: the
       // offsets can be a pixel off the drawn rows (measured while the list was still growing in), the ends can't (GR101).
       const max = el.scrollHeight - el.clientHeight;
-      const want = pin ? (pin.end ? (pin.i === count - 1 ? max - L.origin : offsets[pin.i + 1] - el.clientHeight) : pin.i === 0 ? 0 : offsets[pin.i]) : top;
+      const want = pin ? (pin.end ? (pin.i === count - 1 ? max - L.origin : at(offsets, pin.i + 1) - el.clientHeight) : pin.i === 0 ? 0 : at(offsets, pin.i)) : top;
       const to = clamp(want + L.origin, 0, max);
       if (Math.abs(to - el.scrollTop) >= 1) { el.scrollTop = to; L.seen = el.scrollTop; }
       // Already there, as the browser clamped it when the rows below measured shorter: the scroll event the clamp sent
@@ -259,7 +262,7 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
     const el = node.current;
     live.current.pin = null;
     if (!el || index < 0 || index >= count) return;
-    const o = scaled ? 0 : live.current.origin, a = offsets[index] + o, b = offsets[index + 1] + o, h = el.clientHeight;
+    const o = scaled ? 0 : live.current.origin, a = at(offsets, index) + o, b = at(offsets, index + 1) + o, h = el.clientHeight;
     // From where the rows' top is now, the nearest top that shows the row.
     const now = scaled ? top : el.scrollTop;
     const want = a < now ? a : b > now + h ? b - h : now;
@@ -273,8 +276,8 @@ export function useVirtual(options: VirtualOptions): VirtualRange {
   // every render: Home and End use this render's rows and offsets (past CAP, scrollToIndex goes to the very top or bottom).
   useIsoLayoutEffect(() => { toEdge.current = (last) => { if (count) scrollToIndex(last ? count - 1 : 0); }; });
 
-  const drawn = offsets[end] - offsets[start];
-  const before = scaled ? Math.max(0, offsets[start] + shift) : offsets[start];
-  const after = scaled ? Math.max(0, CAP - before - drawn) : total - offsets[end];
-  return { ref, start, end, before, after, offsetOf: (i: number) => offsets[clamp(i, 0, count)] + shift, scrollToIndex };
+  const drawn = at(offsets, end) - at(offsets, start);
+  const before = scaled ? Math.max(0, at(offsets, start) + shift) : at(offsets, start);
+  const after = scaled ? Math.max(0, CAP - before - drawn) : total - at(offsets, end);
+  return { ref, start, end, before, after, offsetOf: (i: number) => at(offsets, clamp(i, 0, count)) + shift, scrollToIndex };
 }
