@@ -56,12 +56,12 @@ Drawn from the `Default` story.
 
 ### Loading and failed
 
-- **Loading:** pass the columns you know with no cards, and `loading`. Each column keeps its title and shows two placeholder cards with no count, nothing can be moved, and the board is `aria-busy`. `loading` can be what's said ("Loading tasks"): it's said once, after the loader's delay, so a quick load says nothing. `true` says "Loading…".
+- **Loading:** set `busy` and pass the columns you know with no cards yet. Each column keeps its title and shows two placeholder cards with no count, and the board is `aria-busy`, so nothing below it moves when the cards arrive. Name the wait in `loadingLabel` ("Loading tasks"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh cards already shown, keep them in and set `busy`: they stay until the new ones arrive.
 - **Failed:** in place of the board, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
 {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>The board didn't load.</Alert>
-  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} loading={state === 'loading' && 'Loading tasks'} … />}
+  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} busy={state === 'loading'} loadingLabel="Loading tasks" … />}
 ```
 
 ### Do and don't
@@ -101,7 +101,8 @@ Drawn from the `Default` story.
 | `onMove` | `(columns, move) => void` | | Required. The new columns and the move, when a card is dropped somewhere new. |
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | The column headings' level. |
 | `disabled` | `boolean` | `false` | Shows the cards without handles or menus. |
-| `loading` | `boolean` \| `string` | `false` | Each column shows its title and two placeholder cards, with no count, and the board is busy. A string is what's said as they appear ("Loading tasks"); `true` says "Loading…". |
+| `busy` | `boolean` | `false` | Its cards are loading: sets `aria-busy`, and while no column has cards yet, each shows two placeholder cards and no count. |
+| `loadingLabel` | `string` | `"Loading…"` | Said once as the placeholder cards appear. |
 
 `id`, `className`, `ref` and other props go to the board's `<div>`.
 

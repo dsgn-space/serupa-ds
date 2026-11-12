@@ -47,9 +47,11 @@ export interface KanbanProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement
   headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** Shows the cards without handles or "Move to…" menus. Default: false. */
   disabled?: boolean | undefined;
-  /** The cards are loading: each column shows its title and two placeholder cards, with no count, and the board is
-      busy. true, or what's said once as they appear ("Loading tasks"). Default: false; true says "Loading" (labels.loading). */
-  loading?: boolean | string | undefined;
+  /** Its cards are loading (or reloading): sets aria-busy on the board, and while no column has cards yet, each
+      shows its title and two placeholder cards, with no count. Default: false. */
+  busy?: boolean | undefined;
+  /** Said once as the placeholder cards appear ("Loading tasks"), after the loader's delay. Default: "Loading…" (labels.loading). */
+  loadingLabel?: string | undefined;
 }
 
 type Place = { column: number; index: number };
@@ -124,7 +126,7 @@ const KanbanCard = /* @__PURE__ */ React.memo(function KanbanCard(props: KanbanC
 /** A board of columns of cards that people move by dragging, by keyboard or from a "Move to…" menu, with every move announced.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unknown>>('Kanban', function Kanban(props, ref) {
-  const rest = omit(props, { columns: 1, getKey: 1, getLabel: 1, renderCard: 1, onMove: 1, headingLevel: 1, disabled: 1, loading: 1, className: 1 } as const);
+  const rest = omit(props, { columns: 1, getKey: 1, getLabel: 1, renderCard: 1, onMove: 1, headingLevel: 1, disabled: 1, busy: 1, loadingLabel: 1, className: 1 } as const);
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const { getKey, getLabel } = props;
   const columns = props.columns || [];
@@ -348,11 +350,12 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   const targets = kept.current;
 
   const mergedRef = useMergedRef(ref, (n) => { board.current = n; });
-  const loading = props.loading ? (typeof props.loading === 'string' ? props.loading : L.loading) : null;
+  // Placeholders only for the first load: cards already shown stay while new ones load.
+  const loading = props.busy && columns.every((c) => !c.items.length) ? (props.loadingLabel || L.loading) : null;
   const off = props.disabled || loading != null;
   return (<>
     {/* Disabled or loading, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}
-    <div tabIndex={off ? 0 : undefined} aria-busy={loading != null || undefined} {...rest} ref={mergedRef} role={rest.role ?? 'group'}
+    <div tabIndex={off ? 0 : undefined} aria-busy={props.busy || undefined} {...rest} ref={mergedRef} role={rest.role ?? 'group'}
       className={cn('dk-kanban', drag && 'dk-kanban--moving', props.disabled && 'dk-kanban--disabled', props.className)} data-component="kanban">
       {shown.map((col, c) => {
         const count = columns[c].items.length, over = col.limit != null && count > col.limit, titleId = base + '-col-' + c;

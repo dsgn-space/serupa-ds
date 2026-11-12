@@ -227,9 +227,9 @@ describe('Kanban', () => {
     expect(document.getElementById('dk')!.querySelectorAll('button')).toHaveLength(0);
   });
 
-  test('loading: each column keeps its title, shows two placeholder cards and no count; the board is busy and says so once', async () => {
+  test('busy with no cards yet: each column keeps its title, shows two placeholder cards and no count; the board says so once', async () => {
     const empty = START().map((c) => ({ ...c, items: [] }));
-    const { rerender } = await render(<Kanban id="dk" aria-label="S" loading="Loading tasks" columns={empty} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    const { rerender } = await render(<Kanban id="dk" aria-label="S" busy loadingLabel="Loading tasks" columns={empty} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
     const board = document.getElementById('dk')!;
     expect([board.getAttribute('aria-busy'), board.tabIndex]).toEqual(['true', 0]);   // nothing inside takes focus, so the board does
     expect(names()).toEqual(['To do: ', 'Doing: ', 'Done: ']);
@@ -242,8 +242,10 @@ describe('Kanban', () => {
     expect(names()).toEqual(['To do: abc', 'Doing: d', 'Done: ']);
   });
 
-  test('loading={true} says the shared "Loading…" label', async () => {
-    await render(<Kanban aria-label="S" loading columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+  test('busy with cards already shown keeps them (a reload); with no cards, it says the shared "Loading…" label', async () => {
+    const { rerender } = await render(<Kanban id="dk" aria-label="S" busy columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    expect([document.getElementById('dk')!.getAttribute('aria-busy'), names(), count(columns()[0]).textContent]).toEqual(['true', ['To do: abc', 'Doing: d', 'Done: '], '3']);
+    await rerender(<Kanban aria-label="S" busy columns={START().map((c) => ({ ...c, items: [] }))} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
     expect(document.querySelectorAll('[aria-busy="true"] li')).toHaveLength(6);
     await said('Loading…');
   });

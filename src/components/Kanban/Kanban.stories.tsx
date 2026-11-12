@@ -65,7 +65,7 @@ function States() {
       </div>
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>The board didn't load. Check your connection and try again.</Alert>
         : state === 'loaded' ? <Board />
-        : <Kanban aria-label="Sprint 42" loading="Loading tasks" columns={BOARD.map((c) => ({ ...c, items: [] }))} getKey={(t) => t.id} getLabel={(t) => t.title} renderCard={Card} onMove={() => {}} />}
+        : <Kanban aria-label="Sprint 42" busy loadingLabel="Loading tasks" columns={BOARD.map((c) => ({ ...c, items: [] }))} getKey={(t) => t.id} getLabel={(t) => t.title} renderCard={Card} onMove={() => {}} />}
     </div>
   );
 }
