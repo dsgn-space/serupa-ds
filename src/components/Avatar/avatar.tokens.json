@@ -71,6 +71,16 @@
             "cssVar": "--avatar-status-offline"
           }
         }
+      },
+      "edge": {
+        "$type": "color",
+        "$value": "{color.picture-edge}",
+        "$description": "The hairline just inside the photo's edge, so a face on white keeps its shape on a white page.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--avatar-edge"
+          }
+        }
       }
     },
     "sizing": {

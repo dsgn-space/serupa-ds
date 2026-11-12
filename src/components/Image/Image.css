@@ -61,6 +61,13 @@
 .dk-image:has(.dk-image__view:focus-visible) { overflow: visible; }
 .dk-image__view:focus-visible { outline: var(--focus-ring-width) solid var(--image-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-image__view .dk-image__img { border-radius: inherit; }
+/* A hairline just inside a loaded photo's edge (picture-edge: black at 10%, white at 10% in dark), so a picture with a
+   white or black background keeps its shape on a page of the same color. Not with fit="contain", where the box is
+   wider or taller than the picture. */
+.dk-image--loaded:not(.dk-image--contain) .dk-image__img {
+  border-radius: inherit;
+  outline: var(--border-width-1) solid var(--image-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--border-width-1));
+}
 /* dim: in a dark color scheme, a layer of --image-dim at 20% over a loaded picture darkens it a shade (light-dark(), so it
    follows the frame's color-scheme: a *-dark theme, a data-mode or the screen's). The remove button stays above it. */
 .dk-image--dim.dk-image--loaded::after {
@@ -82,5 +89,5 @@
 .dk-image__stage.dk-image--loading .dk-image__full { opacity: var(--opacity-0); }
 .dk-image__stage.dk-image--loaded .dk-image__full { transition: opacity var(--motion-enter-md) var(--ease-enter); }
 @media (prefers-reduced-motion: reduce) { .dk-image--loading::before { display: none; } .dk-image--fades.dk-image--loaded .dk-image__img, .dk-image__stage.dk-image--loaded .dk-image__full { transition: none; } }   /* a still fill; the picture appears at once */
-@media (forced-colors: active) { .dk-image--dim.dk-image--loaded::after { display: none; } .dk-image { border: var(--border-width-1) solid CanvasText; } .dk-image--loading::before { display: none; } }
+@media (forced-colors: active) { .dk-image--dim.dk-image--loaded::after { display: none; } .dk-image__img { outline: none; } .dk-image { border: var(--border-width-1) solid CanvasText; } .dk-image--loading::before { display: none; } }
 }

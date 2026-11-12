@@ -51,6 +51,16 @@
             "cssVar": "--image-focus-ring"
           }
         }
+      },
+      "edge": {
+        "$type": "color",
+        "$value": "{color.picture-edge}",
+        "$description": "The hairline just inside a loaded photo's edge, so a white or black picture keeps its shape on a page of the same color. Not with fit=\"contain\".",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--image-edge"
+          }
+        }
       }
     },
     "border": {
