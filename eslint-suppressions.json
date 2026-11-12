@@ -83,6 +83,17 @@
       "count": 2
     }
   },
+  "src/components/MentionInput/MentionInput.tsx": {
+    "jsx-a11y-x/click-events-have-key-events": {
+      "count": 1
+    },
+    "jsx-a11y-x/interactive-supports-focus": {
+      "count": 1
+    },
+    "jsx-a11y-x/no-static-element-interactions": {
+      "count": 1
+    }
+  },
   "src/components/Menu/Menu.stories.tsx": {
     "jsx-a11y-x/no-noninteractive-tabindex": {
       "count": 1
