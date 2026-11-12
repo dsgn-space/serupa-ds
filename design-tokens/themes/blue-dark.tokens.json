@@ -217,6 +217,25 @@
         }
       }
     },
+    "picture-edge": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "hex": "#ffffff",
+        "alpha": 0.102
+      },
+      "$description": "Alias. A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color: black at 10% in light themes, white at 10% in dark.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--picture-edge"
+        }
+      }
+    },
     "surface-inverse": {
       "$type": "color",
       "$value": "{color.zinc-50}",

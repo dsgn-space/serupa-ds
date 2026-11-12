@@ -102,6 +102,7 @@ Each is an optional override: set it on the page, a container or one image. The 
 | `--image-dim` | `black` | With dim, the layer that darkens a photo in a dark color scheme (at 20%). |
 | `--image-fallback-color` | `text-muted` | The broken-image icon (3:1 on bg). |
 | `--image-focus-ring` | `focus-ring` | A viewable picture's keyboard focus ring. |
+| `--image-edge` | `picture-edge` | The hairline just inside a loaded photo's edge, so a white or black picture keeps its shape on a page of the same color. Not with fit="contain". |
 | `--image-radius` | `radius-surface` | The frame's corners with rounded (8px). |
 | `--image-min-size` | `spacing-12` | The least width and height of an 'auto' frame before the picture arrives (48px). |
 | `--image-fallback-icon` | `spacing-6` | The broken-image icon's size (24px). |
