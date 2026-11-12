@@ -95,6 +95,12 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+      # As in render: start from HEAD's tree alone, not from what an earlier job on this runner left staged.
+      - name: Drop what an earlier job left staged
+        run: |
+          git config --global --add safe.directory "$PWD"
+          git reset -q
+          git clean -ffdxq
       - uses: ./.github/actions/setup
         with:
           browsers: "false"
