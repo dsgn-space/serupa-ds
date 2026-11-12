@@ -6,7 +6,7 @@ A short hint about one element, shown while it's hovered or focused: what an ico
 const { Tooltip, IconButton, Button } = window.Serupa;
 
 <Tooltip content="Download as PDF">
-  <IconButton icon="download" label="Download" hideTitle />
+  <IconButton icon="download" label="Download" />
 </Tooltip>
 
 <Tooltip content="Ctrl + S" placement="bottom">
@@ -37,7 +37,7 @@ const { Tooltip, IconButton, Button } = window.Serupa;
 - Keep `content` to a short line of text, a few words where you can.
 - A label in the element cut with an ellipsis (a long Button label in a narrow column) shows in full on its own line over `content`, since the tooltip takes the place of the title the Button would give it. Screen readers don't hear it twice: that line is hidden from them, as it is already the element's name. With `role="label"` the content is the name, so it isn't added.
 - Use `role="label"` only when the tooltip is the element's only name; otherwise keep the default, which adds to the element's own name.
-- On an IconButton that has a Tooltip, set `hideTitle` so the browser's own title doesn't show as well.
+- An IconButton already shows its label in a Tooltip. Wrap it in your own only to say more than the label: yours replaces the built-in one.
 - A Tooltip can be the `trigger` of a Menu or Popover (`<Menu trigger={<Tooltip content="More"><IconButton … /></Tooltip>}>`): the props and ref they add pass through to the element, with its own handlers run first and its own id kept.
 - Keep the default `placement` unless it covers something people need to see.
 

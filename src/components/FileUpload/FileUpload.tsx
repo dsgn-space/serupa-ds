@@ -231,7 +231,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   React.useEffect(() => {
     if (refocus == null) return;
     setRefocus(null);
-    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>('li > button:last-child') : [];
+    const left = list.current ? list.current.querySelectorAll<HTMLButtonElement>('li > button:last-of-type') : [];
     const to = left.length ? left[Math.min(refocus, left.length - 1)] : chooser.current;
     if (to) to.focus();
   }, [refocus, files]);
