@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/labels/en.ts"],
+  "sourcesContent": ["// serupa-ds/labels/en: every built-in word in English, the default. A language pack is an entry of its own, so a\n// project loads only the languages it imports: import { labels, locale } from \"serupa-ds/labels/<language>\", then\n// <SerupaProvider locale={locale} labels={labels}>.\nexport { DEFAULT_LABELS as labels } from '../internal/labels';\n/** The locale the words are written for. */\nexport const locale = 'en';\n"],
+  "mappings": ";AAGA,SAA2B,sBAAc;AAElC,IAAM,SAAS;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/ShowMore/labels.ts"],
+  "sourcesContent": ["// ShowMore's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface ShowMoreLabels {\n  /** ShowMore: the button that shows the rest of the text. */\n  showMore: string;\n  /** ShowMore: the same button once the text is open. */\n  showLess: string;\n}\nexport const en: ShowMoreLabels = {\n  showMore: 'Show more',\n  showLess: 'Show less',\n};\nexport const id: ShowMoreLabels = {\n  showMore: 'Tampilkan lebih banyak',\n  showLess: 'Tampilkan lebih sedikit',\n};\n"],
+  "mappings": ";AAQO,IAAM,KAAqB;AAAA,EAChC,UAAU;AAAA,EACV,UAAU;AACZ;AACO,IAAM,KAAqB;AAAA,EAChC,UAAU;AAAA,EACV,UAAU;AACZ;",
+  "names": []
+}

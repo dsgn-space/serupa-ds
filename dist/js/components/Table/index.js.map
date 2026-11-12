@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Table/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody } from './Table';\nexport type { SortDirection, TableActionBarProps, TableBodyProps, TableCellProps, TableColumnOption, TableColumnsChangeDetails, TableColumnsMenuProps, TableDetailRowProps, TableExpandCellProps, TableFootProps, TableHeadProps, TableHeaderCellProps, TableLoadingRowsProps, TableMessageRowProps, TableProps, TableRowProps, TableSelectCellProps, TableVirtualBodyProps } from './Table';\n"],
+  "mappings": ";AACA,SAAS,OAAO,gBAAgB,WAAW,WAAW,kBAAkB,gBAAgB,iBAAiB,WAAW,WAAW,iBAAiB,kBAAkB,iBAAiB,UAAU,iBAAiB,wBAAwB;",
+  "names": []
+}

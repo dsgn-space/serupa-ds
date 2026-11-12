@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Chat/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { Chat, ChatComposer, ChatDivider, ChatMessage } from './Chat';\nexport type { ChatComposerProps, ChatDividerProps, ChatMessageProps, ChatProps } from './Chat';\n"],
+  "mappings": ";AACA,SAAS,MAAM,cAAc,aAAa,mBAAmB;",
+  "names": []
+}

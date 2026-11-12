@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/DateField/labels.ts"],
+  "sourcesContent": ["// DateField's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface DateFieldLabels {\n  /** DateField: the label over the day's box. */\n  dateFieldDay: string;\n  /** DateField: the label over the month's box. */\n  dateFieldMonth: string;\n  /** DateField: the label over the year's box. */\n  dateFieldYear: string;\n}\nexport const en: DateFieldLabels = {\n  dateFieldDay: 'Day',\n  dateFieldMonth: 'Month',\n  dateFieldYear: 'Year',\n};\nexport const id: DateFieldLabels = {\n  dateFieldDay: 'Tanggal',\n  dateFieldMonth: 'Bulan',\n  dateFieldYear: 'Tahun',\n};\n"],
+  "mappings": ";AAUO,IAAM,KAAsB;AAAA,EACjC,cAAc;AAAA,EACd,gBAAgB;AAAA,EAChB,eAAe;AACjB;AACO,IAAM,KAAsB;AAAA,EACjC,cAAc;AAAA,EACd,gBAAgB;AAAA,EAChB,eAAe;AACjB;",
+  "names": []
+}
