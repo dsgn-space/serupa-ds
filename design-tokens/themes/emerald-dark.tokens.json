@@ -2,7 +2,7 @@
   "color": {
     "primary": {
       "$type": "color",
-      "$value": "{color.emerald-400}",
+      "$value": "{color.teal-400}",
       "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 (emerald 700) with white text; dark themes: brand 400 with brand-950 text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
       "$extensions": {
         "com.serupa": {
@@ -12,7 +12,7 @@
     },
     "primary-hover": {
       "$type": "color",
-      "$value": "{color.emerald-300}",
+      "$value": "{color.teal-300}",
       "$description": "Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark). More contrast: brand 900 / brand 200.",
       "$extensions": {
         "com.serupa": {
@@ -22,7 +22,7 @@
     },
     "primary-subtle": {
       "$type": "color",
-      "$value": "{color.emerald-950}",
+      "$value": "{color.teal-950}",
       "$description": "Alias. Brand tint for selected rows and badges (brand 50 light, brand 950 dark).",
       "$extensions": {
         "com.serupa": {
@@ -32,7 +32,7 @@
     },
     "on-primary": {
       "$type": "color",
-      "$value": "{color.emerald-950}",
+      "$value": "{color.teal-950}",
       "$description": "Alias. Text and icons on `primary` fills (white in light themes, brand 950 in dark).",
       "$extensions": {
         "com.serupa": {
@@ -42,7 +42,7 @@
     },
     "secondary": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
+      "$value": "{color.zinc-800}",
       "$description": "Alias. Secondary button fill; hover fill for outline and ghost buttons.",
       "$extensions": {
         "com.serupa": {
@@ -52,7 +52,7 @@
     },
     "secondary-hover": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
+      "$value": "{color.zinc-700}",
       "$description": "Alias. Hover state of `secondary`.",
       "$extensions": {
         "com.serupa": {
@@ -62,7 +62,7 @@
     },
     "highlight": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
+      "$value": "{color.zinc-800}",
       "$description": "The keyboard-highlighted item in a list: Menu items, Combobox and TimePicker options, the Sidebar's current page. One step stronger than `secondary` in light (about 1.3:1 on `surface`); in dark it shares `secondary`'s zinc-700 (1.7:1 on `surface`, 1.4:1 on `surface-overlay`), so a `primary` bar keeps 3:1 on it in every brand, paired with a 2px `primary` bar at the item's start. Text on it keeps 4.5:1.",
       "$extensions": {
         "com.serupa": {
@@ -72,7 +72,7 @@
     },
     "pressed": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
+      "$value": "{color.zinc-700}",
       "$description": "Alias. The fill while a row, tab, day or page button is held down (`:active`): one step past its hover. `text` keeps 7:1+ on it.",
       "$extensions": {
         "com.serupa": {
@@ -82,7 +82,7 @@
     },
     "surface": {
       "$type": "color",
-      "$value": "{color.zinc-900}",
+      "$value": "{color.zinc-950}",
       "$description": "Alias. Page and card background (white light, zinc-900 dark).",
       "$extensions": {
         "com.serupa": {
@@ -92,7 +92,7 @@
     },
     "surface-muted": {
       "$type": "color",
-      "$value": "{color.zinc-800}",
+      "$value": "{color.zinc-900}",
       "$description": "Alias. Secondary panels, sidebars, table headers.",
       "$extensions": {
         "com.serupa": {
@@ -102,7 +102,7 @@
     },
     "surface-raised": {
       "$type": "color",
-      "$value": "{color.zinc-800}",
+      "$value": "{color.zinc-900}",
       "$description": "Alias. A raised card (Card `elevated`). One step up from `surface` in dark, where a shadow doesn't show.",
       "$extensions": {
         "com.serupa": {
@@ -112,7 +112,7 @@
     },
     "surface-overlay": {
       "$type": "color",
-      "$value": "{color.zinc-800}",
+      "$value": "{color.zinc-900}",
       "$description": "Alias. Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast and the Combobox, DatePicker and TimePicker lists.",
       "$extensions": {
         "com.serupa": {
@@ -122,7 +122,7 @@
     },
     "field": {
       "$type": "color",
-      "$value": "{color.zinc-800}",
+      "$value": "{color.zinc-900}",
       "$description": "Alias. Background of text inputs, selects and other form fields.",
       "$extensions": {
         "com.serupa": {
@@ -132,7 +132,7 @@
     },
     "field-readonly": {
       "$type": "color",
-      "$value": "{color.zinc-900}",
+      "$value": "{color.zinc-950}",
       "$description": "Alias. Background of a read-only or disabled form field: a step flatter than `field` (zinc-50 in light, the page's zinc-900 in dark), so it reads as not editable while its `field-border` still outlines it.",
       "$extensions": {
         "com.serupa": {
@@ -221,7 +221,7 @@
     },
     "text-inverse": {
       "$type": "color",
-      "$value": "{color.zinc-900}",
+      "$value": "{color.zinc-950}",
       "$description": "Alias. Text on `surface-inverse`.",
       "$extensions": {
         "com.serupa": {
@@ -231,7 +231,16 @@
     },
     "border": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "hex": "#ffffff",
+        "alpha": 0.122
+      },
       "$description": "Alias. Default borders and dividers.",
       "$extensions": {
         "com.serupa": {
@@ -241,7 +250,16 @@
     },
     "border-strong": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "hex": "#ffffff",
+        "alpha": 0.22
+      },
       "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
       "$extensions": {
         "com.serupa": {
@@ -251,7 +269,16 @@
     },
     "border-raised": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "hex": "#ffffff",
+        "alpha": 0.122
+      },
       "$description": "Alias. A raised card's edge: invisible in light (white on white), a 1px lighter edge in dark.",
       "$extensions": {
         "com.serupa": {
@@ -261,7 +288,7 @@
     },
     "border-overlay": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
+      "$value": "{color.zinc-700}",
       "$description": "Alias. The edge of a top-layer surface. In dark it is one step stronger than `border`, so a menu stands off the page.",
       "$extensions": {
         "com.serupa": {
@@ -271,7 +298,7 @@
     },
     "focus-ring": {
       "$type": "color",
-      "$value": "{color.emerald-400}",
+      "$value": "{color.teal-400}",
       "$description": "Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme). More contrast: brand 700 / brand 300.",
       "$extensions": {
         "com.serupa": {
@@ -571,7 +598,7 @@
     },
     "chart-1": {
       "$type": "color",
-      "$value": "{color.blue-500}",
+      "$value": "{color.teal-600}",
       "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -591,7 +618,7 @@
     },
     "chart-3": {
       "$type": "color",
-      "$value": "{color.pink-600}",
+      "$value": "{color.purple-500}",
       "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -601,7 +628,7 @@
     },
     "chart-4": {
       "$type": "color",
-      "$value": "{color.cyan-500}",
+      "$value": "{color.blue-400}",
       "$description": "Alias. Chart series 4 (cyan): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -621,7 +648,7 @@
     },
     "chart-6": {
       "$type": "color",
-      "$value": "{color.teal-600}",
+      "$value": "{color.pink-500}",
       "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -651,7 +678,7 @@
     },
     "chart-seq-1": {
       "$type": "color",
-      "$value": "{color.blue-800}",
+      "$value": "{color.teal-800}",
       "$description": "Alias. Sequential ramp, step 1 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -661,7 +688,7 @@
     },
     "chart-seq-2": {
       "$type": "color",
-      "$value": "{color.blue-600}",
+      "$value": "{color.teal-600}",
       "$description": "Alias. Sequential ramp, step 2 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -671,7 +698,7 @@
     },
     "chart-seq-3": {
       "$type": "color",
-      "$value": "{color.blue-500}",
+      "$value": "{color.teal-500}",
       "$description": "Alias. Sequential ramp, step 3 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -681,7 +708,7 @@
     },
     "chart-seq-4": {
       "$type": "color",
-      "$value": "{color.blue-300}",
+      "$value": "{color.teal-300}",
       "$description": "Alias. Sequential ramp, step 4 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -691,7 +718,7 @@
     },
     "chart-seq-5": {
       "$type": "color",
-      "$value": "{color.blue-100}",
+      "$value": "{color.teal-100}",
       "$description": "Alias. Sequential ramp, step 5 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before, and the last is 3:1+.",
       "$extensions": {
         "com.serupa": {
@@ -731,7 +758,7 @@
     },
     "chart-div-4": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
+      "$value": "{color.zinc-800}",
       "$description": "Alias. Diverging ramp, step 4 of 7 (the middle, no change): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
@@ -741,7 +768,7 @@
     },
     "chart-div-5": {
       "$type": "color",
-      "$value": "{color.blue-800}",
+      "$value": "{color.teal-800}",
       "$description": "Alias. Diverging ramp, step 5 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
@@ -751,7 +778,7 @@
     },
     "chart-div-6": {
       "$type": "color",
-      "$value": "{color.blue-500}",
+      "$value": "{color.teal-500}",
       "$description": "Alias. Diverging ramp, step 6 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
@@ -761,7 +788,7 @@
     },
     "chart-div-7": {
       "$type": "color",
-      "$value": "{color.blue-300}",
+      "$value": "{color.teal-300}",
       "$description": "Alias. Diverging ramp, step 7 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle; the ends are 3:1+.",
       "$extensions": {
         "com.serupa": {
@@ -771,7 +798,7 @@
     },
     "chart-grid": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
+      "$value": "{color.zinc-800}",
       "$description": "Alias. Chart grid lines: quiet, behind the data.",
       "$extensions": {
         "com.serupa": {
@@ -801,11 +828,189 @@
     },
     "chart-gap": {
       "$type": "color",
-      "$value": "{color.zinc-900}",
+      "$value": "{color.zinc-950}",
       "$description": "Alias. The gap drawn between neighbouring bars, slices and areas, so each one has 3:1+ against what touches it (WCAG 1.4.11). The page color: set it to the card's on a raised surface.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--chart-gap"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "space-surface": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-8}",
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px; 32px in Modern.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--space-surface"
+        }
+      }
+    },
+    "space-section": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-12}",
+      "$description": "Between groups or sections of a page. 32px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--space-section"
+        }
+      }
+    }
+  },
+  "radius": {
+    "radius-control": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-lg}",
+      "$description": "A control or an item people press or type in: buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree. 6px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--radius-control"
+        }
+      }
+    },
+    "radius-surface": {
+      "$type": "dimension",
+      "$value": "{radius.rounded-xl}",
+      "$description": "A surface that holds content or floats over the page: alerts, tables, lists, accordions, drop zones, and menus, popovers, list boxes and toasts. 8px.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--radius-surface"
+        }
+      }
+    }
+  },
+  "shadow": {
+    "elevation-rest": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-2xs}",
+      "$description": "Level 1, resting: something sitting on the page with a hairline lift, such as an outline card.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-rest"
+        }
+      }
+    },
+    "elevation-part": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-xs}",
+      "$description": "A part raised over the control or content it sits on: a slider thumb, the indicator of a segmented control, carousel arrows, a table head once the rows scroll under it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-part"
+        }
+      }
+    },
+    "elevation-raised": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-sm}",
+      "$description": "Level 2, raised: a card raised by hover or on purpose, an item being dragged, a navbar once the page scrolls under it, a tooltip.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-raised"
+        }
+      }
+    },
+    "elevation-overlay": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-md}",
+      "$description": "Level 3, floating: menus, popovers, list boxes, date and time pickers, hover cards, toasts, a floating action button.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-overlay"
+        }
+      }
+    },
+    "elevation-modal": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-lg}",
+      "$description": "Level 4, modal: dialogs and drawers, over the overlay backdrop.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-modal"
+        }
+      }
+    }
+  },
+  "transitions": {
+    "motion-release": {
+      "$type": "duration",
+      "$value": "{transitions.duration-150}",
+      "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-release"
+        }
+      }
+    },
+    "motion-enter-md": {
+      "$type": "duration",
+      "$value": "{transitions.duration-150}",
+      "$description": "A medium surface appearing: dialogs and toasts.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-enter-md"
+        }
+      }
+    },
+    "motion-enter-lg": {
+      "$type": "duration",
+      "$value": "{transitions.duration-200}",
+      "$description": "A large surface appearing: drawers and sheets.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-enter-lg"
+        }
+      }
+    },
+    "motion-exit-md": {
+      "$type": "duration",
+      "$value": "{transitions.duration-100}",
+      "$description": "A medium surface leaving: dialogs and toasts.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-exit-md"
+        }
+      }
+    },
+    "motion-exit-lg": {
+      "$type": "duration",
+      "$value": "{transitions.duration-150}",
+      "$description": "A large surface leaving: drawers and sheets.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-exit-lg"
+        }
+      }
+    },
+    "motion-change-md": {
+      "$type": "duration",
+      "$value": "{transitions.duration-150}",
+      "$description": "A panel opening or collapsing in place, or an indicator sliding to the selected option: Accordion, Sidebar, SegmentedControl, Tabs.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-change-md"
+        }
+      }
+    },
+    "motion-change-lg": {
+      "$type": "duration",
+      "$value": "{transitions.duration-200}",
+      "$description": "Something travelling far on screen: a progress or meter fill moving to its value, a carousel slide.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-change-lg"
+        }
+      }
+    },
+    "ease-pop": {
+      "$type": "cubicBezier",
+      "$value": "{transitions.ease-out-quart}",
+      "$description": "Something small popping into place: a check mark, a count, a dot. Overshoots a touch, then settles.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--ease-pop"
         }
       }
     }
