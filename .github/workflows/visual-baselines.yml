@@ -9,9 +9,14 @@ name: Update baselines
 # picture is rewritten only when it differs past the check's tolerance, so the commit holds only real changes and
 # two pull requests that change different components don't conflict over each other's pictures.
 #
+# The "update-cross-browser-baselines" label does the same for Firefox's and WebKit's pictures
+# (tools/test/baseline-visual-firefox/ and -webkit/, which the nightly Cross-browser run compares with): every story is
+# drawn again in each engine, in the image Cross-browser uses, since those pictures fall behind whenever a story's look
+# changes and nothing else redraws them.
+#
 # The branch's code (its build, its dependencies, its Playwright action) runs only in "render", which has a read-only
 # token and no secrets: a dependency the pull request bumps finds nothing there that can write. "commit" runs none of
-# the branch's code. It takes only PNGs under tools/test/baseline-visual/ and tools/test/baseline-utilities.json from
+# the branch's code. It takes only PNGs under tools/test/baseline-visual*/ and tools/test/baseline-utilities.json from
 # render, checks each one, and pushes them with BOT_TOKEN (so the push starts CI), passed to that one git call.
 on:
   pull_request:
@@ -75,8 +80,67 @@ jobs:
           path: ${{ runner.temp }}/baselines
           retention-days: 1
 
+  render-cross:
+    if: github.event.label.name == 'update-cross-browser-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    name: render (${{ matrix.browser }})
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    # The runner, image, browsers and fonts of Cross-browser's visual jobs (cross-browser.yml).
+    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      options: --cpus 4
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+      HOME: /root
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      # As in render: start from HEAD's tree alone, not from what an earlier job on this runner left staged.
+      - name: Drop what an earlier job left staged
+        run: |
+          git config --global --add safe.directory "$PWD"
+          git reset -q
+          git clean -ffdxq
+      - uses: ./.github/actions/setup
+        with:
+          browsers: "false"
+      - run: apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
+      # Whole, not only what the pull request changes: these pictures drift with every change to a story's look.
+      - name: Render the baselines
+        run: |
+          npm run build
+          npm run build-storybook
+          node tools/test/run.mjs --browser "$BROWSER" --group visual --update
+        env:
+          BROWSER: ${{ matrix.browser }}
+      - name: Collect what changed
+        run: |
+          out="$RUNNER_TEMP/baselines"
+          mkdir -p "$out/files"
+          git config --global --add safe.directory "$PWD"
+          git add -A -- "tools/test/baseline-visual-$BROWSER"
+          git diff --cached --no-renames --name-only --diff-filter=d -z | xargs -0 -r cp --parents -t "$out/files" --
+          git diff --cached --no-renames --name-only --diff-filter=D > "$out/deleted.txt"
+        env:
+          BROWSER: ${{ matrix.browser }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: baselines-${{ matrix.browser }}
+          path: ${{ runner.temp }}/baselines
+          retention-days: 1
+
   commit:
-    needs: render
+    needs: [render, render-cross]
+    # One of the two renders ran (its label), and neither failed.
+    if: always() && !failure() && !cancelled() && (needs.render.result == 'success' || needs.render-cross.result == 'success')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -86,19 +150,28 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+      # Each render's files land in one folder, and their lists of removed files are joined.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: baselines
-          path: ${{ runner.temp }}/baselines
+          pattern: baselines*
+          path: ${{ runner.temp }}/parts
+      - name: Join the renders
+        run: |
+          set -euo pipefail
+          in="$RUNNER_TEMP/baselines"; mkdir -p "$in/files"; : > "$in/deleted.txt"
+          for d in "$RUNNER_TEMP"/parts/*/; do
+            if [ -d "$d/files" ]; then cp -a "$d/files/." "$in/files/"; fi
+            if [ -f "$d/deleted.txt" ]; then cat "$d/deleted.txt" >> "$in/deleted.txt"; fi
+          done
       # Render ran the branch's code, so nothing it handed over is trusted: only regular files, only a PNG under
-      # tools/test/baseline-visual/<folder>/ or the utilities JSON, 2 MiB each and 100 MiB in all, and each one
+      # tools/test/baseline-visual(-firefox|-webkit)/<folder>/ or the utilities JSON, 2 MiB each and 100 MiB in all, and each one
       # written to a path inside tools/test/ (not through a symlink the branch put there).
       - name: Check the files
         run: |
           set -euo pipefail
           in="$RUNNER_TEMP/baselines"
           mkdir -p "$in/files"; touch "$in/deleted.txt"   # an empty upload carries neither
-          png='^tools/test/baseline-visual/[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*\.png$'
+          png='^tools/test/baseline-visual(-firefox|-webkit)?/[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*\.png$'
           fail() { echo "::error::$1"; exit 1; }
           inside() { case "$(realpath -m -- "$1")" in "$GITHUB_WORKSPACE/tools/test/"*) ;; *) fail "$1 leads outside tools/test/";; esac; }
           [ -z "$(find "$in" -mindepth 1 ! -type f ! -type d)" ] || fail "render handed over something that isn't a regular file"
@@ -177,8 +250,8 @@ jobs:
           else gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/report.md"; fi
 
   unlabel:
-    needs: [render, commit]
-    if: always() && github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: [render, render-cross, commit]
+    if: always() && (github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines') && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
@@ -188,4 +261,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --remove-label update-visual-baselines
+          LABEL: ${{ github.event.label.name }}
+        run: gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --remove-label "$LABEL"
