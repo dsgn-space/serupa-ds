@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tab, TabList, TabPanel, Tabs } from './Tabs';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 
 const meta = {
   title: 'Components/Navigation/Tabs',
@@ -56,3 +57,25 @@ export const Overflow: Story = {
   ),
 };
 export const Vertical: Story = { args: { orientation: 'vertical' } };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a word or two per tab, so every tab is in view. */
+export const DoShortLabels: Story = {
+  name: 'Do: short labels',
+  render: () => <Tabs defaultValue="overview" style={{ maxWidth: 320 }}><TabList aria-label="Project"><Tab value="overview">Overview</Tab><Tab value="activity">Activity</Tab><Tab value="members">Members</Tab></TabList></Tabs>,
+};
+/** Don't: long labels, which push tabs out of view. */
+export const DontLongLabels: Story = {
+  name: "Don't: long labels",
+  render: () => <Tabs defaultValue="overview" style={{ maxWidth: 320 }}><TabList aria-label="Project"><Tab value="overview">Project overview</Tab><Tab value="activity">Recent team activity</Tab><Tab value="members">Members and roles</Tab></TabList></Tabs>,
+};
+/** Do: a SegmentedControl to pick a value for the same content. */
+export const DoSegmentedForValue: Story = {
+  name: 'Do: a SegmentedControl for a value',
+  render: () => <SegmentedControl aria-label="Period" defaultValue="week" options={[{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }]} />,
+};
+/** Don't: tabs to pick a period: they promise separate panels. */
+export const DontTabsForValue: Story = {
+  name: "Don't: tabs for a value",
+  render: () => <Tabs defaultValue="week" style={{ maxWidth: 320 }}><TabList aria-label="Period"><Tab value="day">Day</Tab><Tab value="week">Week</Tab><Tab value="month">Month</Tab></TabList></Tabs>,
+};

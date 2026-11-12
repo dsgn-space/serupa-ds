@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Switch } from './Switch';
+import { Checkbox } from '../Checkbox/Checkbox';
+import { Button } from '../Button/Button';
 
 const meta = {
   title: 'Components/Forms/Switch',
@@ -46,4 +48,26 @@ export const LongLabel: Story = {
       </Switch>
     </div>
   ),
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: name the setting; the switch shows on or off. */
+export const DoNameTheSetting: Story = {
+  name: 'Do: name the setting',
+  render: () => <div style={{ maxWidth: 280 }}><Switch labelPosition="start" className="w-full justify-between" defaultChecked>Email notifications</Switch></div>,
+};
+/** Don't: a label that states the state, and changes with it. */
+export const DontLabelTheState: Story = {
+  name: "Don't: label the state",
+  render: () => <div style={{ maxWidth: 280 }}><Switch labelPosition="start" className="w-full justify-between" defaultChecked>Notifications are on</Switch></div>,
+};
+/** Do: checkboxes in a form that waits for Save. */
+export const DoCheckboxInForm: Story = {
+  name: 'Do: checkboxes in a form',
+  render: () => <Col><Checkbox defaultChecked>Send me the weekly summary</Checkbox><Checkbox>Send me product news</Checkbox><div><Button>Save preferences</Button></div></Col>,
+};
+/** Don't: switches that wait for Save, so a flip seems to do nothing. */
+export const DontSwitchInForm: Story = {
+  name: "Don't: switches that wait for Save",
+  render: () => <Col><Switch defaultChecked>Weekly summary</Switch><Switch>Product news</Switch><div><Button>Save preferences</Button></div></Col>,
 };
