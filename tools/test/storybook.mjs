@@ -128,11 +128,16 @@ async function checkDocs(e, w) {
   out.push(t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(24, 24, 27)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark)));
   // Reflow on the docs themselves (WCAG 1.4.10): at 320px, a 1280px screen at 400% zoom, the page scrolls only up and
   // down. Inline code and table cells break where they must, and wide code blocks and stories scroll in their own box.
+  // Stories that measure themselves re-lay out a moment after the resize, so the page has up to 2s to settle. One
+  // still wider names the outermost box that sticks out.
   await w.page.setViewportSize({ width: 320, height: 640 });
-  await w.page.evaluate(() => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))));
-  const wide = await w.page.evaluate(() => document.documentElement.scrollWidth);
+  const wide = await w.page.waitForFunction(() => document.documentElement.scrollWidth <= 321, null, { timeout: 2000, polling: 100 }).then(() => null, () => w.page.evaluate(() => {
+    const out = [...document.querySelectorAll('#storybook-docs *')].find((el) => el.getBoundingClientRect().right > 322 && el.parentElement.getBoundingClientRect().right <= 322);
+    const name = out ? `${out.tagName.toLowerCase()}${out.id ? '#' + out.id : ''}${typeof out.className === 'string' && out.className ? '.' + out.className.split(' ')[0] : ''} "${out.textContent.trim().slice(0, 40)}"` : 'nothing in the docs';
+    return `it scrolls sideways to ${document.documentElement.scrollWidth}px; first to stick out: ${name}`;
+  }));
   await w.page.setViewportSize({ width: 1000, height: 800 });
-  if (!DOCS_REFLOW_KNOWN.has(e.id)) out.push(t(`docs · ${e.title} · at 320px wide the page scrolls only up and down`, wide <= 321, `it scrolls sideways to ${wide}px`));
+  if (!DOCS_REFLOW_KNOWN.has(e.id)) out.push(t(`docs · ${e.title} · at 320px wide the page scrolls only up and down`, !wide, wide || ''));
   return out;
 }
 // WCAG 1.4.12's text spacing, as a user's style sheet sets it.
