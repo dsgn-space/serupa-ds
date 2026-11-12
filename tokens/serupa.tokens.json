@@ -786,6 +786,22 @@
         }
       }
     },
+    "surface-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-50}",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page (zinc-50 light, zinc-800 dark).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{zinc-800}",
+            "violet-light": "{zinc-50}",
+            "violet-dark": "{zinc-800}",
+            "emerald-light": "{zinc-50}",
+            "emerald-dark": "{zinc-800}"
+          }
+        }
+      }
+    },
     "surface-raised": {
       "$type": "color",
       "$value": "{color.white}",
