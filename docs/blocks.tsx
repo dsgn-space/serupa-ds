@@ -190,7 +190,7 @@ function Wide({ label, children }: { label: string; children: React.ReactNode })
     check();
     return () => ro.disconnect();
   }, []);
-  return <div ref={ref} className="sb-wide" role={scrolls ? 'region' : undefined} aria-label={scrolls ? label : undefined} tabIndex={scrolls ? 0 : undefined}>{children}</div>;
+  return <div ref={ref} className={scrolls ? 'sb-wide sb-wide--scrolls' : 'sb-wide'} role={scrolls ? 'region' : undefined} aria-label={scrolls ? label : undefined} tabIndex={scrolls ? 0 : undefined}>{children}</div>;
 }
 
 const code = (s?: string) => (s || '').split(/`([^`]+)`/).map((x, i) => (i % 2 ? <code key={i}>{x}</code> : x));
