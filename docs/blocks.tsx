@@ -285,6 +285,32 @@ export function IconGallery() {
   </div>;
 }
 
+// The other names each component is known by: the "**Also called:**" line under its README's first paragraph.
+const readmes = import.meta.glob('../src/components/*/README.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const otherNames = Object.entries(readmes).flatMap(([file, md]) => {
+  const name = /components\/(\w+)\//.exec(file)![1], line = /^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(md)?.[1];
+  return line ? line.split(/,\s*/).map((other) => ({ other, name })) : [];
+}).sort((a, b) => a.other.localeCompare(b.other, 'en', { sensitivity: 'base' }));
+
+/** "Know it by another name?": every other name a component is known by (snackbar, dropzone, modal), filtered as you
+ * type, each linked to the Serupa component that does the job. */
+export function OtherNames() {
+  const [q, setQ] = React.useState('');
+  const term = q.trim().toLowerCase();
+  const rows = otherNames.filter((r) => !term || r.other.toLowerCase().includes(term) || r.name.toLowerCase().includes(term));
+  return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ maxWidth: 320 }}><SearchInput aria-label="Find a name" placeholder="Find a name, such as snackbar" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+    <p role="status" style={{ margin: 0, color: 'var(--text-muted)' }}>{rows.length ? `${rows.length} of ${otherNames.length} names` : 'No component goes by that name. Try the tables above, or the sidebar search.'}</p>
+    {rows.length ? <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+      <thead><tr><th style={cell}>You may know it as</th><th style={cell}>In Serupa</th></tr></thead>
+      <tbody>{rows.map((r) => <tr key={`${r.other}-${r.name}`}>
+        <td style={cell}>{r.other}</td>
+        <td style={cell}><a href={`?path=/docs/${docsId[r.name] || `components-${r.name.toLowerCase()}`}--docs`} target="_top">{r.name}</a></td>
+      </tr>)}</tbody>
+    </table> : null}
+  </div>;
+}
+
 /** Icons at the system's sizes, with what each is for. */
 export function IconSizes() {
   const sizes: ['xs' | 'sm' | 'md' | 'lg' | 'xl', number, string][] = [['xs', 14, '`sm` buttons, `text-xs`'], ['sm', 16, '`md` buttons, inline with `text-sm`'], ['md', 20, '`lg` buttons, list rows, `text-base`'], ['lg', 24, 'The default: toolbars, navigation'], ['xl', 40, 'Empty states']];
@@ -434,7 +460,7 @@ export function UpgradeGuide() {
     const prev = Number(m.version.split('.')[0]) - 1;
     const mine = auto.filter((t) => t.version === m.version);
     const intro = m.next
-      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://gitlab.com/diki-stwn-group/serupa-ds/-/tree/main/docs/rfcs) has the proposal.`
+      ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://github.com/dsgn-space/serupa-ds/tree/main/docs/rfcs) has the proposal.`
       : m.date ? `Released ${m.date}.` : '';
     const run = mine.length
       ? `**Made for you:** \`npx serupa-migrate src --from ${prev}\` (add \`--write\` to change the files) makes ${mine.length === 1 ? 'this change' : 'these changes'}:\n\n${mine.map((t) => `- ${t.title}`).join('\n')}`

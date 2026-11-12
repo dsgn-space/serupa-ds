@@ -2,6 +2,8 @@
 
 A one-time code or PIN, shown as one box per character, such as the 6-digit code texted at sign-in. It's one native field under the boxes, so a phone's "from Messages" suggestion, a paste and a password manager fill every box at once, and forms, labels and screen readers treat it as an Input.
 
+**Also called:** OTP input, one-time code input, verification code input.
+
 ```tsx
 import { PinInput, Field } from "serupa-ds";
 

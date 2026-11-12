@@ -1,14 +1,17 @@
 name: Nightly
 
-# The jobs GitLab's nightly schedule ran on main (02:00 Jakarta), back on GitHub: the whole suite twice more (a flake
+# Every night on main (02:00 Jakarta): the whole suite twice more (a flake
 # hunt), mutation testing, the benchmarks and the bundle size trend, and the SBOM. Cross-browser, Canary and Screen
 # readers have their own workflows. A red run here is something to look at, not a broken main.
 on:
   schedule:
     - cron: '0 19 * * *'
   workflow_dispatch:
-  pull_request:
-    paths: ['.github/workflows/nightly.yml']
+
+# A newer run of this workflow on the same branch cancels the one before it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -19,7 +22,6 @@ env:
 jobs:
   flake-hunt:
     name: flake hunt (${{ matrix.group }})
-    if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -50,7 +52,6 @@ jobs:
 
   mutation:
     name: mutation (${{ matrix.shard }}/6)
-    if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -99,8 +100,7 @@ jobs:
           if [ -f .bench-history/last.json ]; then PREVIOUS="--previous .bench-history/last.json"; fi
           node tools/test/bench.mjs .bench --json bench.json $PREVIOUS
           mkdir -p .bench-history && cp bench.json .bench-history/last.json
-      - if: github.event_name != 'pull_request'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .bench-history
           key: bench-history-${{ github.run_id }}
@@ -137,8 +137,7 @@ jobs:
           if [ -f .size-history/last.json ]; then PREVIOUS="--previous .size-history/last.json"; fi
           node tools/test/size.mjs --json size.json $PREVIOUS
           mkdir -p .size-history && cp size.json .size-history/last.json
-      - if: github.event_name != 'pull_request'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .size-history
           key: size-history-${{ github.run_id }}

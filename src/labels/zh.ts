@@ -188,6 +188,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: '键盘快捷键',
   generalShortcuts: '通用',
   showShortcuts: '显示键盘快捷键',
+  singleKeyShortcuts: '单键快捷键',
+  singleKeyHint: '像 ? 这样只按一个键的快捷键（在文本框之外）。如果误触发，请关闭它们。',
   opensInNewTab: '（在新标签页中打开）',
   loadMore: '加载更多',
   showingOf: (shown, total) => `显示 ${shown} / ${total}`,

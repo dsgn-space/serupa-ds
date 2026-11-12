@@ -192,6 +192,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Tastenkürzel',
   generalShortcuts: 'Allgemein',
   showShortcuts: 'Tastenkürzel anzeigen',
+  singleKeyShortcuts: 'Tastenkürzel mit einer Taste',
+  singleKeyHint: 'Kürzel aus einer Taste wie ?, außerhalb von Textfeldern. Schalten Sie sie aus, wenn sie versehentlich auslösen.',
   opensInNewTab: '(öffnet in einem neuen Tab)',
   loadMore: 'Mehr laden',
   showingOf: (shown, total) => `${shown} von ${total} angezeigt`,

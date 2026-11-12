@@ -2,6 +2,8 @@
 
 The "Skip to content" link that keyboard and screen reader users need first on every page (WCAG 2.4.1 Bypass Blocks). It's out of sight until Tab reaches it, then shows at the top of the page; following it moves focus to the main content, past the header and navigation.
 
+**Also called:** skip to content link.
+
 ```tsx
 import { SkipLink } from "serupa-ds";
 

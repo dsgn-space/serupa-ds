@@ -2,6 +2,8 @@
 
 An inline text link: underlined, in the primary color or the surrounding text's. `external` opens a new tab and says so, and `as` renders your router's link so client-side navigation keeps working.
 
+**Also called:** anchor, hyperlink.
+
 ```jsx
 const { Link, Text } = window.Serupa;
 

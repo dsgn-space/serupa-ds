@@ -35,6 +35,7 @@ Drawn from the `WithDescription` story.
 - Use the same words as each field's own error, so the link and the field say the same thing. Say what's wrong and how to fix it ("Enter your full name"), not just "Invalid".
 - Each error's `field` is the id of the control to fix: an `<input>`, `<select>` or `<textarea>`, or a group's first radio or checkbox. A RadioGroup's or Rating's own id works too: the link focuses its checked radio, or else its first one that can be picked.
 - Clear `errors` (or stop rendering it) once the form is sent. Leave it as it is while the person fixes fields: it updates on the next submit.
+- For errors the server sends by field name, put it inside `FormErrors` (from Field) and leave `errors` out: it lists the messages the form's Fields still show, each linking to its control, in the order the server sent them. It takes focus for each new set of errors, not when fixing a field takes one away.
 - Prefix the page's `<title>` with "Error: " while it shows, so the problem is also said when the page reloads.
 - When it takes focus, the Fields in the same form don't also announce their new errors, so the list is read once.
 
@@ -56,7 +57,7 @@ Drawn from the `WithDescription` story.
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div>`. |
-| `errors` | `{ field, message }[]` | | Required. The errors, in the fields' order: `field` is the control's id, `message` what's wrong. With none, nothing renders. |
+| `errors` | `{ field, message }[]` | | The errors, in the fields' order: `field` is the control's id, `message` what's wrong. With none, nothing renders. Inside `FormErrors`, leave it out to list the form's messages. |
 | `title` | `ReactNode` | `"There is a problem"`, or `"There are N problems"` | The heading. |
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `2` | The heading's level, to fit the page's outline. |
 | `description` | `ReactNode` | | Text under the heading, before the list. |

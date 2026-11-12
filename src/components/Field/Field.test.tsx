@@ -11,7 +11,8 @@ import { Input } from '../Input/Input';
 import { Radio, RadioGroup } from '../Radio/Radio';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { Textarea } from '../Textarea/Textarea';
-import { Field } from './Field';
+import { Field, FormErrors } from './Field';
+import { Checkbox } from '../Checkbox/Checkbox';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 
@@ -297,5 +298,38 @@ describe('Field: layout, the old name of orientation', () => {
       expect(document.querySelector('[data-component="field"][data-layout="horizontal"]')).not.toBeNull();
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('field-layout'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
+  });
+});
+
+describe('FormErrors', () => {
+  test('each Field shows the server message for its control\'s name: aria-invalid, and the message in its description; a field without one stays valid', async () => {
+    await render(<FormErrors errors={{ email: 'That email is taken', other: 'Not on this page' }}>
+      <Field id="fe-email" label="Email"><Input name="email" /></Field>
+      <Field id="fe-name" label="Name"><Input name="name" /></Field>
+    </FormErrors>);
+    expect(el('fe-email').getAttribute('aria-invalid')).toBe('true');
+    const msg = described('fe-email').map((id) => document.getElementById(id)?.textContent).join(' ');
+    expect(msg).toContain('That email is taken');
+    expect(el('fe-name').getAttribute('aria-invalid')).toBeNull();
+  });
+
+  test('editing a field takes its message away; the next errors object brings it back; its own error prop wins', async () => {
+    function Form({ errors }: { errors: Record<string, string> }) {
+      return <FormErrors errors={errors}>
+        <Field id="fe2-email" label="Email"><Input name="email" /></Field>
+        <Field id="fe2-code" label="Code" error="Enter the code"><Input name="code" /></Field>
+        <Field label="Terms" name="terms"><Checkbox id="fe2-terms">I agree</Checkbox></Field>
+      </FormErrors>;
+    }
+    const screen = await render(<Form errors={{ email: 'That email is taken', code: 'Server says no', terms: 'Agree to the terms' }} />);
+    expect(document.getElementById('fe2-code')!.closest('[data-component="field"]')!.textContent).toContain('Enter the code');
+    expect(document.body.textContent).not.toContain('Server says no');
+    await userEvent.type(el('fe2-email'), 'x');
+    expect(el('fe2-email').getAttribute('aria-invalid')).toBeNull();
+    expect(document.body.textContent).not.toContain('That email is taken');
+    await userEvent.click(el('fe2-terms'));
+    expect(document.body.textContent).not.toContain('Agree to the terms');
+    await screen.rerender(<Form errors={{ email: 'That email is taken' }} />);
+    expect(el('fe2-email').getAttribute('aria-invalid')).toBe('true');
   });
 });

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Textarea } from './Textarea';
+import { Button } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
 
 const meta = {
   title: 'Components/Forms/Textarea',
@@ -14,6 +16,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 export const AutoResize: Story = { name: 'Auto-resize', args: { autoResize: true, maxRows: 6, placeholder: 'Grows as you type, up to 6 lines' } };
+/** A comment box: Attach and Send in a row under the text, inside the box, with the count at its start. */
+export const Actions: Story = {
+  name: 'With actions',
+  args: { 'aria-label': 'Comment', placeholder: 'Add a comment', autoResize: true, rows: 2, maxRows: 8, showCount: true, maxLength: 2000,
+    actions: <><IconButton icon="attach_file" label="Attach a file" size="sm" variant="ghost" /><Button size="sm">Comment</Button></> },
+};
 export const Count: Story = { name: 'Character count', args: { showCount: true, maxLength: 280, defaultValue: 'A short note' } };
 
 export const States: Story = {

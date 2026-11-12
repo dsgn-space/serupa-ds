@@ -11,22 +11,22 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 
 ## Getting started
 
-### 1. Install a released version from GitLab
+### 1. Install a released version from GitHub
 
 ```sh
-npm install gitlab:diki-stwn-group/serupa-ds#v14.2.0
+npm install github:dsgn-space/serupa-ds#v14.3.0
 ```
 
-The repository lives on [GitLab](https://gitlab.com/diki-stwn-group/serupa-ds) for now, and each release is a tag there. The release files, their SHA-256 and the build attestations that GitHub's Releases page carried return when the repository moves back to GitHub; until then, the tag is the release.
+Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
-Always pin a tag (`#v14.2.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.3.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=gitlab:diki-stwn-group/serupa-ds#v14.2.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v14.3.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -268,14 +268,19 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Carousel](src/components/Carousel/README.md) | One slide at a time, with previous and next buttons, a dot per slide and swipe. |
 | [Chat](src/components/Chat/README.md) (beta) | A conversation: messages in a log that stays at the newest one while the reader is there, day dividers, and a composer where Enter sends. |
 | [CodeBlock](src/components/CodeBlock/README.md) (beta) | Code for people to read and copy: an install command, a config file, an example. |
+| [DataGrid](src/components/DataGrid/README.md) (beta) | A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. |
+| [DescriptionList](src/components/DescriptionList/README.md) (beta) | A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. |
 | [FormattedNumber](src/components/FormattedNumber/README.md) | Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. |
 | [Highlight](src/components/Highlight/README.md) | Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](src/components/Combobox/README.md) options and a command palette. |
 | [Icon](src/components/Icon/README.md) | Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. |
+| [IconTile](src/components/IconTile/README.md) | An icon centered in a tinted rounded square (or a circle), to mark what a card, a settings row or an empty state is about at a glance. |
 | [Image](src/components/Image/README.md) | A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails. |
+| [Kanban](src/components/Kanban/README.md) (beta) | A board of columns of cards, such as a sprint or a sales pipeline, that people move by dragging a handle, by keyboard, or from each card's "Move to…" menu. |
 | [Kbd](src/components/Kbd/README.md) | Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states. |
 | [List](src/components/List/README.md) | Rows of related things: people, files, notifications, settings. |
 | [Logo](src/components/Logo/README.md) (beta) | The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. |
 | [RelativeTime](src/components/RelativeTime/README.md) | Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours". |
+| [ShowMore](src/components/ShowMore/README.md) (beta) | Long text cut after a few lines, with a "Show more" button under it that shows the rest. |
 | [SortableList](src/components/SortableList/README.md) | A list people put in their own order: tasks by priority, steps in a flow, columns in a table. |
 | [Table](src/components/Table/README.md) | A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. |
 | [VirtualList](src/components/VirtualList/README.md) (beta) | A [List](src/components/List/README.md) of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. |
@@ -284,7 +289,8 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
-| [Chart](src/components/Chart/README.md) (beta) | A line or bar chart of a few series over the same categories, such as visitors per month or orders per region. |
+| [Chart](src/components/Chart/README.md) (beta) | A line, bar or area chart of a few series over the same categories, such as visitors per month or orders per region, or a donut of one series' shares, such as traffic by source. |
+| [EventCalendar](src/components/EventCalendar/README.md) (beta) | A month of events: meetings, deadlines, bookings. |
 | [Sparkline](src/components/Sparkline/README.md) (beta) | A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value. |
 | [Timeline](src/components/Timeline/README.md) | An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content. |
 
@@ -309,14 +315,17 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | Component | What it's for |
 | --- | --- |
 | [Calendar](src/components/Calendar/README.md) | A month of days to pick one from, with full keyboard navigation. |
+| [CascadeSelect](src/components/CascadeSelect/README.md) (beta) | One choice made through a hierarchy, such as Provinsi › Kabupaten/Kota › Kecamatan or Category › Subcategory › Item. |
 | [Checkbox](src/components/Checkbox/README.md) | A native checkbox with its label, for turning one option on or off, or picking any number from a list. |
 | [ColorPicker](src/components/ColorPicker/README.md) | Picks a color from a set of swatches, or any color by its hex code or with the browser's own picker. |
 | [Combobox](src/components/Combobox/README.md) | A text field with a list of options that narrows as you type: pick a country, an assignee, a project. |
+| [DateField](src/components/DateField/README.md) (beta) | A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labelled boxes, in the locale's order. |
 | [DatePicker](src/components/DatePicker/README.md) | A date field: people type a date, or pick one from a calendar that opens under the field. |
 | [DateRangePicker](src/components/DateRangePicker/README.md) | Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. |
 | [ErrorSummary](src/components/ErrorSummary/README.md) | After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. |
 | [Field](src/components/Field/README.md) | A label, an optional hint and an error message around one form control, wired up for screen readers. |
 | [FileUpload](src/components/FileUpload/README.md) | A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. |
+| [FilterBar](src/components/FilterBar/README.md) (beta) | The filters on a list or a table, as a row of chips. |
 | [InlineEdit](src/components/InlineEdit/README.md) | Text people can change where it is: a project name, a card title, a slug. |
 | [Input](src/components/Input/README.md) | A single-line text field: a native `<input>` in a box that can hold icons. |
 | [NumberInput](src/components/NumberInput/README.md) | A field for a number, with − and + buttons at the end. |
@@ -328,6 +337,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [SearchInput](src/components/SearchInput/README.md) | A search field: a search icon at the start, and a × at the end once something is typed. |
 | [SegmentedControl](src/components/SegmentedControl/README.md) | Picks one of a few options shown side by side, such as a view (List, Board) or a period (Day, Week, Month). |
 | [Select](src/components/Select/README.md) | A native `<select>` styled like Input: the same three heights (24, 32 and 44px), colors, focus ring and states, with a chevron and an optional left icon. |
+| [SignaturePad](src/components/SignaturePad/README.md) (beta) | A place to sign: people draw their signature with a mouse, pen or finger, or type their full name instead. |
 | [Slider](src/components/Slider/README.md) | Picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. |
 | [Switch](src/components/Switch/README.md) | An on/off setting that takes effect at once. |
 | [Textarea](src/components/Textarea/README.md) | A multi-line text field, Input's sibling: a native `<textarea>` in a box. |
@@ -350,6 +360,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Grid](src/components/Grid/README.md) | Cells in equal columns, or as many columns as fit, with the same space between them from the spacing scale. |
 | [Heading](src/components/Heading/README.md) | A heading, `h1` to `h6`, in the system's type. |
 | [Prose](src/components/Prose/README.md) | Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post. |
+| [ScrollArea](src/components/ScrollArea/README.md) (beta) | A box whose content scrolls inside it, such as a long activity list in a card or a row of chips in a narrow column. |
 | [Stack](src/components/Stack/README.md) | Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. |
 | [Text](src/components/Text/README.md) | Body text in the system's type: a paragraph, a caption, an error line. |
 | [VisuallyHidden](src/components/VisuallyHidden/README.md) | Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. |
@@ -358,6 +369,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 
 | Component | What it's for |
 | --- | --- |
+| [BottomNav](src/components/BottomNav/README.md) (beta) | A bar of three to five main destinations fixed along the bottom of a phone screen, where a thumb reaches: each an icon over a short label, the current page marked. |
 | [Breadcrumb](src/components/Breadcrumb/README.md) | Shows where the current page sits: links to the pages above it, from the top level down, with chevrons between them. |
 | [LoadMore](src/components/LoadMore/README.md) | The end of a list that loads in pages: "Showing 20 of 134" over a Load more button, or infinite scroll, and an announcement of what each load added. |
 | [Navbar](src/components/Navbar/README.md) | The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). |
@@ -365,6 +377,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Sidebar](src/components/Sidebar/README.md) | A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). |
 | [SkipLink](src/components/SkipLink/README.md) | The "Skip to content" link that keyboard and screen reader users need first on every page (WCAG 2.4.1 Bypass Blocks). |
 | [Stepper](src/components/Stepper/README.md) | Shows where people are in a task split into steps, such as sign-up, checkout or setup. |
+| [TableOfContents](src/components/TableOfContents/README.md) (beta) | An "On this page" list of links to the sections of a long page, as a navigation landmark. |
 | [Tabs](src/components/Tabs/README.md) | Switches between related panels in one place, such as a project's Overview, Activity and Settings. |
 | [TreeView](src/components/TreeView/README.md) | Nested items that open and close, such as folders and files, a table of contents or categories. |
 
@@ -373,15 +386,17 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | Component | What it's for |
 | --- | --- |
 | [CommandPalette](src/components/CommandPalette/README.md) (beta) | A search over the app's commands and pages in a dialog, opened with ⌘K (Ctrl+K off Apple devices) from anywhere: type a few letters, move with the arrows, press Enter. |
+| [ContextualHelp](src/components/ContextualHelp/README.md) (beta) | A small "?" or "i" button beside a label, heading or value that opens a sentence or two of explanation in a panel next to it: a toggletip. |
 | [Dialog](src/components/Dialog/README.md) | A modal window over a dimmed page, for a task or a decision that needs attention before people go on: inviting someone, confirming a delete, editing a few fields. |
 | [Drawer](src/components/Drawer/README.md) | A modal panel that slides in from an edge of the screen: navigation on small screens, filters, or details and edits without leaving the page. |
 | [HoverCard](src/components/HoverCard/README.md) | A preview of what a link points to: a person, a page, a repository. |
 | [KeyboardShortcuts](src/components/KeyboardShortcuts/README.md) | Keyboard shortcuts for an app, in one place: `useShortcut` sets one up where it's used, and `<KeyboardShortcuts>` is the help dialog that lists them all, opened with <kbd>?</kbd>. |
 | [Menu](src/components/Menu/README.md) | A list of actions behind a button: a row's "More" menu, an "Actions" dropdown, a user menu. |
+| [Menubar](src/components/Menubar/README.md) (beta) | An application's menu bar: File, Edit, View along the top of an editor or tool, each opening a menu. |
 | [NotificationCenter](src/components/NotificationCenter/README.md) | A drawer of past notifications with read states: newest first, unread ones with a dot and a bolder title, and buttons to mark them read or clear the list. |
 | [Popover](src/components/Popover/README.md) | A small panel next to its trigger for content people interact with: a short form, filters, details with links. |
 | [Tooltip](src/components/Tooltip/README.md) | A short hint about one element, shown while it's hovered or focused: what an icon button does, a keyboard shortcut, why something is unavailable. |
-| [Tour](src/components/Tour/README.md) (beta) | A short guided walk through a page: one step at a time, a small panel points at a part of the page, says what it's for, and offers Back, Next and Done. |
+| [Tour](src/components/Tour/README.md) | A short guided walk through a page: one step at a time, a small panel points at a part of the page, says what it's for, and offers Back, Next and Done. |
 
 <!-- components:end -->
 
@@ -484,7 +499,7 @@ It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Cop
 
 A second skill, `skills/serupa-review/SKILL.md`, reviews a change to an app's UI. It checks what lint can't judge: a widget built by hand where a component exists, the app's part of accessibility, the right feedback for a message, and the words. Findings come grouped as Must fix, Should fix and Nice to have, each with its problem, fix and what happens if it's skipped, and end with a one-line verdict. The `serupa-agents` section points agents at it too.
 
-Or install the skill with the `skills` command, `npx skills add diki-stwn/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
+Or install the skill with the `skills` command, `npx skills add dsgn-space/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
 
 ## Browser support
 
@@ -520,7 +535,7 @@ What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, an
 
 ## Credits
 
-Serupa is designed and built by **Diki** ([@diki-stwn](https://gitlab.com/diki-stwn)). It was called the Diki Design System up to version 4. It isn't open source: all rights are reserved ([LICENSE](LICENSE)), and `package.json` says so with `"license": "UNLICENSED"`.
+Serupa is designed and built by **Diki** ([@diki-stwn](https://github.com/diki-stwn)). It was called the Diki Design System up to version 4. It isn't open source: all rights are reserved ([LICENSE](LICENSE)), and `package.json` says so with `"license": "UNLICENSED"`.
 
 The system is self-contained: every file it needs is in it, and nothing loads from another server. It builds on these open-source works; their licenses are in `licenses/`.
 

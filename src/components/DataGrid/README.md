@@ -2,6 +2,8 @@
 
 A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. The app keeps the rows; `onRowsChange` gives the new rows and which cells changed.
 
+**Also called:** spreadsheet, editable data table.
+
 ```tsx
 import { DataGrid } from "serupa-ds";
 
@@ -40,6 +42,7 @@ Drawn from the `Playground` story.
 - Name it with `aria-label` or `aria-labelledby`.
 - `columns`: `key` (the row field), `header`, and optionally `editable`, `align` (`"end"` for numbers), `width`, and `format(row)` for the text shown, edited and copied (a price with separators). The grid writes a cell's text as it gets it: without `format`, a number shows in Latin digits whatever the locale, so a spreadsheet takes it back as a number.
 - `rows`: objects with an id under `rowKey` (`"id"` by default).
+- It's typed by its rows. With `rows={people}` (a `Person[]`), each column's `key` and `rowKey` must be one of a person's fields, so a misspelt key doesn't compile, and `format(row)` and `onRowsChange(rows)` get `Person`s, with no casts. In Storybook, give `meta` a typed DataGrid (`const Grid = DataGrid<Person>`).
 - `onRowsChange(rows, { changes })` is called once per edit, paste or Delete over a range. `rows` is the new rows with each changed field set to the text typed or pasted; `changes` lists every cell that changed, `{ rowId, column, value }`. Set `rows` from it, or parse and check `changes` first (a number column gets text). A change you don't take leaves the old text. Without `onRowsChange`, nothing is editable.
 - A pasted block fills from the active cell (or the top-left of the range), as far as the grid goes, skipping read-only columns; one value pasted over a range fills all of it.
 - `size`: `sm` for a dense grid on a wide screen, `md` (the default) beside other medium controls, and `lg` on touch screens or where the grid is the page's main task: its rows are at least 44px tall, a comfortable target for a finger.
@@ -91,8 +94,8 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | `string` | | Goes to the `<table>`. |
-| `columns` | `DataGridColumn[]` | | `{ key, header, editable?, align?, width?, format? }`. |
-| `rows` | `DataGridRow[]` | | The data, each with an id. |
+| `columns` | `DataGridColumn<R>[]` | | `{ key, header, editable?, align?, width?, format? }`; `key` is one of the rows' fields. |
+| `rows` | `R[]` | | The data, each with an id. Its type types the columns. |
 | `rowKey` | `string` | `"id"` | The field that holds a row's id. |
 | `onRowsChange` | `(rows: DataGridRow[], details: { changes: DataGridCellChange[] }) => void` | | The new rows, and `{ rowId, column, value }` for each cell changed. Without it, nothing edits. |
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` | The cells' padding; `lg` also sets 16px text, for rows at least 44px tall. |

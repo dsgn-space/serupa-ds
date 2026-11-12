@@ -2,6 +2,8 @@
 
 What a page or a panel shows when there's nothing in it yet, or nothing matches: an icon, a few words saying what's empty, what it means, and the action that fills it.
 
+**Also called:** blank slate, zero state.
+
 ```jsx
 const { EmptyState, Button } = window.Serupa;
 
