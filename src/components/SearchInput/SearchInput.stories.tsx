@@ -38,3 +38,9 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the placeholder says what can be searched. */
+export const DoSayWhat: Story = { name: 'Do: say what it searches', args: { 'aria-label': 'Search invoices', placeholder: 'Search invoices by number or customer' } };
+/** Don't: a bare "Search...", which leaves people guessing what they can find. */
+export const DontBareSearch: Story = { name: "Don't: just say search", args: { 'aria-label': 'Search', placeholder: 'Search...' } };
