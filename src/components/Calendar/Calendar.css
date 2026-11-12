@@ -24,7 +24,7 @@
 .dk-calendar__menus { display: flex; flex: auto; justify-content: center; gap: var(--spacing-1); }
 .dk-calendar__menu {
   height: var(--control-height-sm); padding-block: var(--spacing-0); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--calendar-menu-border, var(--field-border));
-  border-radius: var(--rounded-md); background: var(--calendar-menu-bg, var(--field)); color: var(--calendar-title-color, var(--text));
+  border-radius: var(--radius-control); background: var(--calendar-menu-bg, var(--field)); color: var(--calendar-title-color, var(--text));
   font: inherit; font-weight: var(--calendar-title-weight, var(--font-semibold)); cursor: pointer; touch-action: manipulation;
 }
 .dk-calendar__menu:focus { outline: none; }

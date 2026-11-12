@@ -222,7 +222,7 @@ Each is an optional override: set it on the page, a container or one Chat. The l
 | `--chat-focus-ring` | `focus-ring` | The ring around the focused conversation. |
 | `--chat-step-done` | `success-text` | ChatSteps: a done step's check (3:1 on the surface). |
 | `--chat-citation-bg` | `surface` | ChatCitation: a source chip's background, so it stands out on a bubble. |
-| `--chat-bubble-radius` | `rounded-xl` | A bubble's corners (12px). |
+| `--chat-bubble-radius` | `radius-container` | A bubble's corners (12px). |
 | `--chat-padding` | `spacing-4` | Space around the conversation and the composer (16px). |
 | `--chat-gap` | `spacing-3` | Space between messages (12px). |
 | `--chat-bubble-padding-x` | `spacing-3` | Space at a bubble's sides (12px). |

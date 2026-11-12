@@ -29,7 +29,7 @@
 .dk-chat-message__author { color: var(--chat-text, var(--text)); font-weight: var(--font-medium); overflow-wrap: anywhere; }
 .dk-chat-message__bubble {
   max-inline-size: var(--sizing-full); padding: var(--chat-bubble-padding-y, var(--spacing-2)) var(--chat-bubble-padding-x, var(--spacing-3));
-  border: var(--border-width-1) solid transparent; border-radius: var(--chat-bubble-radius, var(--rounded-xl));
+  border: var(--border-width-1) solid transparent; border-radius: var(--chat-bubble-radius, var(--radius-container));
   background: var(--chat-bubble-bg, var(--surface-muted)); color: var(--chat-text, var(--text)); white-space: pre-wrap; overflow-wrap: anywhere;
 }
 .dk-chat-message--own .dk-chat-message__bubble { background: var(--chat-own-bubble-bg, var(--primary-subtle)); }

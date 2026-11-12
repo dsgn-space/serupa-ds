@@ -186,7 +186,7 @@
     "radius": {
       "tip-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "The tooltip's corners (6px).",
         "$extensions": {
           "com.serupa": {

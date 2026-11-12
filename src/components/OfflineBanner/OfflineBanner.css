@@ -12,7 +12,7 @@
   max-inline-size: min(var(--container-sm), var(--sizing-full));
   padding: var(--offline-banner-padding-y, var(--spacing-2)) var(--offline-banner-padding-x, var(--spacing-4));
   border: var(--border-width-1) solid var(--offline-banner-border-color, var(--border-overlay));
-  border-radius: var(--offline-banner-radius, var(--rounded-lg));
+  border-radius: var(--offline-banner-radius, var(--radius-surface));
   background: var(--offline-banner-bg, var(--surface-overlay));
   color: var(--offline-banner-text, var(--text));
   box-shadow: var(--offline-banner-shadow, var(--shadow-lg));
