@@ -65,6 +65,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
     await page.focus('#start');
     const misses = [];
     for (const [key, words] of steps) {
+      // Let the reader finish what it is saying (VoiceOver reads the Start button and then its usage hint) before the
+      // key: a key pressed mid-hint was lost, and the log held only the hint (Checkbox and Tabs, run 43161653323).
+      for (let last = '', still = 0, end = Date.now() + 8000; still < 3 && Date.now() < end;) {
+        await page.waitForTimeout(400);
+        const now = (await sr.spokenPhraseLog()).join(' | ');
+        still = now === last ? still + 1 : 0;
+        last = now;
+      }
       await sr.clearSpokenPhraseLog();
       await sr.press(/** @type {string} */ (key), { capture: true });
       const missed = (heard) => /** @type {string[]} */ (words).filter((w) => !w.split('|').some((alt) => heard.toLowerCase().includes(alt)));
