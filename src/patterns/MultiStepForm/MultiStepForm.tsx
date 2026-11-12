@@ -224,7 +224,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                 {text(1, 'phone', 'Phone', 'tel', { type: 'tel', className: 'max-w-64' }, 'Only for when we need to check something quickly.')}
                 <Heading level={3} size="base">Where to post the cards</Heading>
                 <Checkbox id={id('sameAddress')} checked={a.sameAddress} onCheckedChange={set('sameAddress')}
-                  description={a.line1 ? address(a.line1, a.city).replace('\n', ', ') : undefined}>
+                  description={a.line1 ? [a.line1, a.city].filter((p) => p.trim()).join(', ') : undefined}>
                   Post the cards to the business address
                 </Checkbox>
                 {a.sameAddress ? null : (
