@@ -41,6 +41,11 @@ const { Tooltip, IconButton, Button } = window.Serupa;
 - A Tooltip can be the `trigger` of a Menu or Popover (`<Menu trigger={<Tooltip content="More"><IconButton … /></Tooltip>}>`): the props and ref they add pass through to the element, with its own handlers run first and its own id kept.
 - Keep the default `placement` unless it covers something people need to see.
 
+### Do and don't
+
+- **Do:** Name an icon-only button in a word or two. (`DoNameIcon`)
+- **Don't:** Hide what people need to finish the task, such as a password rule, in a tooltip: touch screens never show it. Put it in the [Field](../Field/README.md)'s `hint`. (`DontNeededInfo`)
+
 ## Accessibility
 
 - It shows on keyboard focus as well as hover, and only for the focus ring (not after a click). A tap on a touch screen doesn't show it, and a press anywhere outside hides it.

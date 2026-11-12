@@ -3,23 +3,26 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HoverCard, type HoverCardProps } from './HoverCard';
 import { Avatar } from '../Avatar/Avatar';
 import { Link } from '../Link/Link';
+import { useName } from '../../../.storybook/content';
 
 // Room on every side of the link, so the card opens where the story asks instead of flipping.
 const centered = (Story: React.ComponentType) => <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 420 }}><Story /></div>;
 
-const person = (
+// The person follows Storybook's Content menu (.storybook/content.ts): a long name in the worst case.
+const Person = () => { const name = useName('Dewi Lestari'); return (
   <div className="flex flex-col gap-3">
     <div className="flex items-center gap-3">
-      <Avatar name="Dewi Lestari" size="lg" />
+      <Avatar name={name} size="lg" />
       <div className="flex flex-col">
-        <strong>Dewi Lestari</strong>
+        <strong>{name}</strong>
         <span className="text-text-muted">Design lead, Payments</span>
       </div>
     </div>
     <p className="m-0">Owns the checkout and invoice screens. In Jakarta, usually online 9 to 5 WIB.</p>
     <Link href="#dewi-projects">See Dewi's projects</Link>
   </div>
-);
+); };
+const person = <Person />;
 
 const meta = {
   title: 'Components/Overlays/HoverCard',

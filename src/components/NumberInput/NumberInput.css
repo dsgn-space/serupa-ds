@@ -22,4 +22,12 @@
    1px past each edge. The stacking context keeps that box under the icon, and the button paints over the text next to it. */
 .dk-number-input__step { position: relative; isolation: isolate; }
 .dk-number-input__step::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
+/* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
+   off it doesn't land in the text and open the keyboard. */
+@media (pointer: coarse) {
+  .dk-number-input__step::after { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
+  /* The two steppers split the gap between them, so a press there takes the nearer one. */
+  .dk-number-input__step:not(:last-child)::after { --dk-half-gap: calc(var(--number-input-stepper-gap, var(--spacing-0\.5)) / -2); inset-inline-end: var(--dk-half-gap); }
+  .dk-number-input__step + .dk-number-input__step::after { --dk-half-gap: calc(var(--number-input-stepper-gap, var(--spacing-0\.5)) / -2); inset-inline-start: var(--dk-half-gap); }
+}
 }

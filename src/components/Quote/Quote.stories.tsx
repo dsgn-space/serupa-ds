@@ -1,11 +1,20 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Avatar } from '../Avatar/Avatar';
-import { Quote } from './Quote';
+import { Quote, type QuoteProps } from './Quote';
+import { useName } from '../../../.storybook/content';
+
+/* Who said it follows Storybook's Content menu (.storybook/content.ts), in the words and on the Avatar alike. */
+function Said(args: QuoteProps) {
+  const name = useName('Ada Rahman'), swap = (n: unknown) => (n === 'Ada Rahman' ? name : n);
+  const avatar = React.isValidElement<{ name?: string }>(args.avatar) ? React.cloneElement(args.avatar, { name: swap(args.avatar.props.name) as string }) : args.avatar;
+  return <Quote {...args} author={swap(args.author) as QuoteProps['author']} avatar={avatar} />;
+}
 
 const meta = {
   title: 'Components/Content/Quote',
   component: Quote,
+  render: (args) => <Said {...args} />,
   args: {
     children: 'We moved our whole settings area onto it in a week, and the support tickets about it stopped.',
     author: 'Ada Rahman',

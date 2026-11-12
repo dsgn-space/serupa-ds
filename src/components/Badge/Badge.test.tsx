@@ -414,7 +414,8 @@ describe('Badge', () => {
     expect([s.outlineStyle, s.outlineWidth, s.outlineOffset, s.boxShadow]).toEqual(['solid', '2px', '2px', 'none']);
   });
 
-  test(`hover and pressed keep 4.5:1 text: ${TONES.length} tones × 3 styles × 2 states in all six themes`, async () => {
+  // One test a style: the 69 hovers and presses together outran a two-minute limit in WebKit (about 20 s in Firefox).
+  test.each(VARIANTS)(`hover and pressed keep 4.5:1 text: ${TONES.length} tones × %s × 2 states in all six themes`, async (v) => {
     await show();
     const off = document.createElement('style');
     off.textContent = '.dk-badge, .dk-badge::before { transition: none !important; }';
@@ -433,16 +434,16 @@ describe('Badge', () => {
       document.documentElement.setAttribute('data-theme', 'blue-light');
     };
     try {
-      for (const t of TONES) for (const v of VARIANTS) {
+      for (const t of TONES) {
         const e = q(`[data-it="${t}"][data-v="${v}"]`);
-        // Hovered again until it takes: once in a while Firefox misses one of these 69 moves.
+        // Hovered again until it takes: once in a while Firefox misses one of these moves.
         await expect.poll(async () => { await userEvent.hover(e); return e.matches(':hover'); }).toBe(true);
         measure(e, 'hover');
         await press(e, async () => { await expect.poll(() => e.matches(':active')).toBe(true); measure(e, 'pressed'); });
       }
     } finally { off.remove(); }
     expect(low).toEqual([]);
-    expect(n).toBe(TONES.length * 3 * 2 * 6);
+    expect(n).toBe(TONES.length * 2 * 6);
   }, 120_000);
 
   test('onClick with onRemove: the badge is the button, no nested × button, and a warning', async () => {
