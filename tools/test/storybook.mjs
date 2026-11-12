@@ -82,14 +82,14 @@ async function switchTo(w, run) {
   return '';
 }
 
-// SERUPA_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
-// the docs pages are checked in the first shard.
+// SERUPA_SHARD=2/4 checks every fourth story and every fourth docs page, starting with the second (CI runs the shards
+// in parallel). The docs pages were all in the first shard, which made it the slowest by four minutes.
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
 // SERUPA_ONLY (run.mjs --since on a pull request): only the stories and docs pages of the components it touches.
 const only = onlyComponents();
 // ./src/components/<Name>/…, or a page of docs/ by its file (./docs/Upgrading.mdx is "docs/Upgrading.mdx").
 const mine = (e) => { const p = e.importPath.split('/'); return !only || only.has(p[1] === 'docs' ? `docs/${p[2]}` : p[3]); };
-const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs' && mine(e)) : [];
+const docs = Object.values(entries).filter((e) => e.type === 'docs' && mine(e)).filter((_, i) => i % shards === shard - 1);
 const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
 async function checkDocs(e, w) {
   const out = [];

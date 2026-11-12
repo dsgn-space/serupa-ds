@@ -114,6 +114,28 @@ describe('Patterns/Data import', () => {
     }
   });
 
+  test('each step slides as a step: back on Back, forward on Continue', async () => {
+    const start = document.startViewTransition;
+    const types: string[][] = [];
+    document.startViewTransition = ((arg: { update: () => void; types: string[] }) => {
+      types.push(arg.types);
+      arg.update();
+      return { finished: Promise.resolve(), ready: Promise.resolve(), updateCallbackDone: Promise.resolve(), skipTransition() {} } as unknown as ViewTransition;
+    }) as typeof document.startViewTransition;
+    try {
+      await render(<DataImport start="match" file={FILE} />);
+      const panel = page.getByRole('heading', { name: 'Match columns' }).element().closest<HTMLElement>('[style]')!;
+      expect([panel.style.viewTransitionName, panel.style.getPropertyValue('view-transition-class')]).toEqual(['data-import-step', 'step']);
+      await userEvent.click(page.getByRole('button', { name: 'Back' }));
+      await expect.poll(() => active().textContent).toBe('Choose a file');
+      await userEvent.click(page.getByRole('button', { name: 'Continue' }));
+      await expect.poll(() => active().textContent).toBe('Match columns');
+      expect(types).toEqual([['back'], ['forward']]);
+    } finally {
+      document.startViewTransition = start;
+    }
+  });
+
   test('Back from checking goes to the matches, kept', async () => {
     await render(<DataImport start="check" file={FILE} />);
     await userEvent.click(page.getByRole('button', { name: 'Back' }));

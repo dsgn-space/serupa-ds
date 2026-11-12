@@ -121,6 +121,27 @@
    motion-change-md and ease-move, and the old and new pictures crossfade over the same time. */
 ::view-transition-group(*) { animation-duration: var(--motion-change-md); animation-timing-function: var(--ease-move); }
 
+/* Steps (withViewTransition(update, { types: ['forward'] }) or ['back']): a panel with view-transition-class: step
+   (and a view-transition-name) slides in the direction of travel. Forward, the new step comes in from the end
+   and the old one leaves toward the start; back, the other way; mirrored right to left. Under reduced motion
+   it only crossfades, like every View Transition. */
+@keyframes dk-step-from-end { from { opacity: 0; translate: var(--spacing-8) 0; } }
+@keyframes dk-step-to-start { to { opacity: 0; translate: calc(-1 * var(--spacing-8)) 0; } }
+@keyframes dk-step-from-start { from { opacity: 0; translate: calc(-1 * var(--spacing-8)) 0; } }
+@keyframes dk-step-to-end { to { opacity: 0; translate: var(--spacing-8) 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-new(.step) { animation-duration: var(--motion-enter-md); animation-timing-function: var(--ease-enter); }
+  ::view-transition-old(.step) { animation-duration: var(--motion-exit-md); animation-timing-function: var(--ease-exit); }
+  :root:active-view-transition-type(forward)::view-transition-new(.step),
+  :root:dir(rtl):active-view-transition-type(back)::view-transition-new(.step) { animation-name: dk-step-from-end; }
+  :root:active-view-transition-type(forward)::view-transition-old(.step),
+  :root:dir(rtl):active-view-transition-type(back)::view-transition-old(.step) { animation-name: dk-step-to-start; }
+  :root:active-view-transition-type(back)::view-transition-new(.step),
+  :root:dir(rtl):active-view-transition-type(forward)::view-transition-new(.step) { animation-name: dk-step-from-start; }
+  :root:active-view-transition-type(back)::view-transition-old(.step),
+  :root:dir(rtl):active-view-transition-type(forward)::view-transition-old(.step) { animation-name: dk-step-to-end; }
+}
+
 /* Respect reduced motion across the page: no smooth scrolling, near-instant transitions. A component (a dk- class)
    keeps only its fades: its own reduced-motion rules leave a short opacity fade where it helps (a popup appearing),
    which a 0s duration here would beat, since an !important in an earlier layer wins over the later ones. Colors,

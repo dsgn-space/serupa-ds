@@ -24,7 +24,7 @@ const landed = () => settled();
 let setPos: (p: ToasterPosition) => void = () => {};
 function App() {
   const [pos, set] = React.useState<ToasterPosition>('bottom-end'); setPos = set;
-  return <Toaster position={pos} className="extra" />;
+  return <Toaster placement={pos} className="extra" />;
 }
 beforeEach(() => { React.act(() => toast.dismiss()); });
 
@@ -187,7 +187,7 @@ describe('Toast', () => {
   });
 
   test('focus not obscured: tabbing to a button under a persistent bottom-end toast scrolls it clear of the toast (WCAG 2.4.11, GR222)', async () => {
-    await render(<><div style={{ height: '150vh' }} /><button id="under" style={{ display: 'block', marginInlineStart: 'auto' }}>Save</button><div style={{ height: '150vh' }} /><Toaster position="bottom-end" autoDismiss={false} /></>);
+    await render(<><div style={{ height: '150vh' }} /><button id="under" style={{ display: 'block', marginInlineStart: 'auto' }}>Save</button><div style={{ height: '150vh' }} /><Toaster placement="bottom-end" autoDismiss={false} /></>);
     React.act(() => { toast({ title: 'Upload failed', description: 'The file was too large to upload in one go.' }); });
     await expect.poll(() => toasts().length).toBe(1);
     const t = toasts()[0];
@@ -877,7 +877,7 @@ describe('Toaster: position, the old name of placement', () => {
   test('still places the stack as placement does, and warns once that it is deprecated', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<Toaster position="top-center" />);
+      await render(<Toaster {...{ position: 'top-center' } as const} />);
       expect(document.querySelector('[data-component="toaster"]')!.getAttribute('data-position')).toBe('top-center');
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('toaster-position'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
