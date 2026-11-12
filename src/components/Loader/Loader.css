@@ -186,9 +186,9 @@
   --dk-loader-glint: color-mix(in srgb, currentColor var(--loader-skeleton-shine, var(--opacity-5)), transparent);
   position: relative;
   overflow: hidden;
-  display: block; flex-shrink: 0; width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--loader-skeleton-radius, var(--rounded-md));
+  display: block; flex-shrink: 0; width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--loader-skeleton-radius, var(--radius-control));
 }
-.dk-loader__line > .dk-loader__bone { height: 1em; border-radius: var(--loader-skeleton-text-radius, var(--rounded-sm)); }
+.dk-loader__line > .dk-loader__bone { height: 1em; border-radius: var(--loader-skeleton-text-radius, var(--radius-inner)); }
 .dk-loader__line:last-child:not(:first-child) > .dk-loader__bone { width: var(--sizing-3-5); }   /* a paragraph's last line: 3/5 wide */
 .dk-loader--shape-circle > .dk-loader__bone { border-radius: var(--rounded-full); }
 /* The shine is a layer three bones wide, sliding on translate (the compositor) from its last third on the bone to its first. */

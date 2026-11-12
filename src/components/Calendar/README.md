@@ -97,6 +97,8 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 Each is an optional override: set it on the page, a container or one calendar. The list lives in `src/components/Calendar/calendar.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from calendar.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--calendar-title-color` | `text` | The month and year. |
@@ -106,17 +108,39 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-weekday-color` | `text-muted` | The weekday names (4.5:1 on surface). |
 | `--calendar-day-color` | `text` | Days of the shown month. |
 | `--calendar-outside-color` | `text-muted` | Days of the months before and after. |
-| `--calendar-day-bg-hover` | `surface-muted` | A day under the pointer. |
+| `--calendar-outside-color-hover` | `text` | A day of the months before and after, under the pointer: full text, so it keeps 4.5:1 on the hover fill. |
+| `--calendar-day-bg-hover` | `secondary` | A day or preset under the pointer, as Pagination's pages. |
 | `--calendar-day-bg-pressed` | `pressed` | A day while it's pressed, one step past hover. |
 | `--calendar-today-color` | `primary` | Today's number (4.5:1 on surface). |
+| `--calendar-today-color-hover` | `text` | Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. It stays semibold. |
 | `--calendar-selected-bg` | `primary` | The selected day. |
 | `--calendar-selected-color` | `on-primary` | Its number. |
 | `--calendar-range-bg` | `primary-subtle` | Days between the start and end of a range (DateRangePicker). |
 | `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--calendar-day-size` | `control-height-md` | Each day's square (32px). |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--calendar-day-radius` | `radius-control` | A day's corners (6px). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--calendar-gap` | `spacing-2` | Space between the header and the days (8px). |
+
+**Type**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--calendar-title-weight` | `font-semibold` | The month and year (600). |
 | `--calendar-today-weight` | `font-semibold` | Today's number (600). |
 <!-- token-table:end -->

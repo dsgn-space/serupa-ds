@@ -28,4 +28,9 @@
   mask-image: linear-gradient(to left, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
 }
 @media (forced-colors: active) { @supports (scrollbar-color: auto) { .dk-scroll-area { scrollbar-color: auto; } } }
+/* Printed, paper has no scrollbar: a vertical box (or one that scrolls both ways) grows to its whole content, whatever height the app gave it (style
+   or class, hence !important), and the edge fade goes, so nothing past the part in view is dropped. */
+@media print {
+  .dk-scroll-area--vertical, .dk-scroll-area--both { overflow: visible; block-size: auto !important; max-block-size: none !important; mask-image: none; }
+}
 }

@@ -95,7 +95,7 @@ Hover fills use `danger-hover`, `danger-subtle-hover` and `danger-subtle`; keybo
 | `md` *(default)* | 32px (`control-height-md`) | 12px | `text-sm` (14px) | 16px | 6px |
 | `lg` | 44px (`control-height-lg`) | 20px | `text-base` (16px) | 20px | 8px |
 
-All sizes use `font-medium` and `rounded-md`. `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars.
+All sizes use `font-medium` and `radius-control` (6px; a brand can change it). `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars.
 
 ### Content
 
@@ -365,7 +365,7 @@ Every value comes from a token. Colors, spacing, sizes, borders and micro-intera
 | Height | `control-height-sm` / `control-height-md` / `control-height-lg` (shared with every control, so a Button lines up with an Input) |
 | Padding, gap, icon size | `spacing-2` / `spacing-3` / `spacing-5`; `spacing-1`, `spacing-1.5`, `spacing-2`; `spacing-3.5`, `spacing-4`, `spacing-5` |
 | Type | `font-sans`, `font-medium`, `tracking-normal`, `text-xs`, `text-sm`, `text-base` (each with its `--line-height`) |
-| Shape | `rounded-md`, `border-width-1`, `shadow-xs`, `shadow-none` |
+| Shape | `radius-control`, `border-width-1`, `shadow-xs`, `shadow-none` |
 | Focus ring | `focus-ring-width` (the ring), `focus-ring-offset` (the gap), `focus-ring` (the color) |
 | States | `opacity-disabled` (disabled), `opacity-0` (content hidden while loading), `underline-offset-4` (link) |
 | Motion | `duration-150` and `ease-in-out` for colors and the focus ring; `scale-97`, `duration-100`, `spacing-0.5`, `duration-150`, `opacity-20`, `duration-500`, `duration-300`, `ease-out` for the micro-interactions; `scale-50`, `scale-100`, `scale-0`, `spacing-0` and `rounded-full` inside them |

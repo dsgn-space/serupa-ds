@@ -14,6 +14,10 @@
 //                                   color/style) whose right and left values differ, or a border-radius whose corners
 //                                   differ left to right, is physical: it stays put in right-to-left text. Use the
 //                                   -block / -inline longhands (padding-block, padding-inline-start) instead
+//   serupa/radius-through-role      a component's corners read a radius role (radius-inner, -control, -surface,
+//                                   -container, -pill), not a step of the rounded scale, so a brand that makes its
+//                                   controls or surfaces rounder (or squarer) reaches every component (GR244).
+//                                   rounded-none, rounded-xs (a hairline curve on a text mark) and rounded-full pass
 //   serupa/own-block                a component's CSS styles its own blocks' elements (dk-block__element) only. Another
 //                                   block it may position or size, or feed through that block's custom properties,
 //                                   but not reach into, so a change inside one component can't break another. A block
@@ -157,6 +161,23 @@ const physical = rule('serupa/no-physical-shorthand', {
   });
 });
 
+// Corners through the radius roles (GR244): the rounded scale's middle steps are what the roles point at, so a
+// component that names one directly keeps its corners when a brand changes the role.
+const RADIUS_PROP = /^(border(-(start|end)-(start|end)|-(top|bottom)-(left|right))?-radius|--[a-z0-9-]+-radius)$/;
+const SCALE_STEP = /^--rounded-(sm|md|lg|xl|2xl|3xl|4xl)?$/;
+const radiusRole = rule('serupa/radius-through-role', {
+  rejected: (n) => `var(--${n}) is a step of the rounded scale: use the radius role it stands for (radius-inner, radius-control, radius-surface, radius-container or radius-pill), so a brand's corners reach this component`,
+}, (root, flag, m) => {
+  root.walkDecls((decl) => {
+    if (!RADIUS_PROP.test(decl.prop.toLowerCase())) return;
+    valueParser(decl.value).walk((n) => {
+      if (n.type !== 'function' || n.value !== 'var') return;
+      const name = n.nodes[0]?.value || '';
+      if (SCALE_STEP.test(name)) flag(decl, m.rejected(name.slice(2)), name);
+    });
+  });
+});
+
 // The last compound of a selector (what the rule styles), past any combinator, with :is()/:where()/:not() kept.
 const subject = (sel) => sel.split(/\s*[>+~]\s*|\s+(?![^(]*\))/).filter(Boolean).at(-1) || '';
 const ownBlock = rule('serupa/own-block', {
@@ -182,4 +203,4 @@ const ownBlock = rule('serupa/own-block', {
   for (const k of known) if (!used.has(k)) flag(root, m.stale(k, folder));
 });
 
-export default [layer, raw, color, focus, physical, ownBlock];
+export default [layer, raw, color, focus, physical, radiusRole, ownBlock];

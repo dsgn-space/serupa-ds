@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { css } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -89,5 +89,17 @@ describe('ShowMore', () => {
     await expect.element(page.getByRole('button', { name: 'Tampilkan lebih sedikit' })).toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Tampilkan lebih banyak' })).toBeInTheDocument();
     expect(css(text('e')).webkitLineClamp).toBe('3');
+  });
+});
+
+describe('ShowMore in print', () => {
+  test('printed, closed text shows in full and the Show more button is left out, since paper can\'t press it', async () => {
+    await render(<Narrow><ShowMore id="s" lines={2}>{LONG}</ShowMore></Narrow>);
+    const t = text('s'), more = page.getByRole('button', { name: 'Show more' }).element() as HTMLElement;
+    await commands.printMedia(true);
+    try {
+      expect([Math.round(t.getBoundingClientRect().height) > 40, t.scrollHeight - t.clientHeight <= 1, getComputedStyle(more).display]).toEqual([true, true, 'none']);
+    } finally { await commands.printMedia(false); }
+    expect(Math.round(t.getBoundingClientRect().height)).toBe(40);
   });
 });

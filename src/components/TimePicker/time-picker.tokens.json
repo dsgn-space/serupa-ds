@@ -24,8 +24,8 @@
       },
       "button-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The clock button's background on hover.",
+        "$value": "{color.secondary}",
+        "$description": "The clock button's background on hover, as the other buttons inside fields.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--time-picker-button-bg-hover"

@@ -65,7 +65,7 @@ export const labels: SerupaLabels = {
   lowContrast: (min) => 'нижче ' + min.replace('.', ',') + ':1, може бути важко читати',
   loadingResults: 'Завантаження…',
   loadFailed: 'Не вдалося завантажити варіанти. Почніть вводити, щоб спробувати знову.',
-  noResults: 'Нічого не знайдено',
+  noResults: 'Нічого не знайдено. Спробуйте інші слова.',
   resultsCount: (count) => p3(count, 'результат', 'результати', 'результатів', 'результату'),
   showOptions: 'Показати варіанти',
   clearValue: (label) => (label ? 'Очистити: ' + label : 'Очистити'),

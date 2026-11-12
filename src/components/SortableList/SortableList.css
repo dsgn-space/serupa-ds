@@ -30,7 +30,7 @@
 .dk-sortable-list__handle {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   min-width: var(--sortable-list-handle-size, var(--spacing-6)); min-height: var(--sortable-list-handle-size, var(--spacing-6));
-  margin: var(--spacing-0); padding: var(--spacing-0); border: 0; border-radius: var(--rounded-sm);
+  margin: var(--spacing-0); padding: var(--spacing-0); border: 0; border-radius: var(--radius-inner);
   background: transparent; color: var(--sortable-list-handle, var(--text-muted)); cursor: grab; touch-action: none;
 }
 .dk-sortable-list__handle .dk-icon { font-size: var(--spacing-5); }

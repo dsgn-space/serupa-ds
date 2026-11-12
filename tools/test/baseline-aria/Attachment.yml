@@ -1,7 +1,7 @@
 # Disabled
 - text: Invoice March 2026.pdf PDF 1.5 MB
 - button "Remove Invoice March 2026.pdf" [disabled]
-- text: Pitch.pptx Slides 13 MB Upload failed
+- text: Pitch.pptx Slides 13 MB Couldn’t upload
 - button "Try again Pitch.pptx" [disabled]: Try again
 - button "Remove Pitch.pptx" [disabled]
 
@@ -55,7 +55,7 @@
 - button "Remove Assets.zip"
 - text: Demo.mp4 Video 210 MB Larger than 100 MB
 - button "Remove Demo.mp4"
-- text: Pitch.pptx Slides 13 MB Upload failed
+- text: Pitch.pptx Slides 13 MB Couldn’t upload
 - button "Try again Pitch.pptx": Try again
 - button "Remove Pitch.pptx"
 

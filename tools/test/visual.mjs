@@ -6,7 +6,7 @@
 // contrast-token or control-height regression shows up too.
 //   node tools/test/visual.mjs            check
 //   node tools/test/visual.mjs --update   accept the current look as the new baseline (a picture that differs
-//                                         only within the tolerance keeps its old file)
+//                                         by less than half the tolerance keeps its old file)
 //   SERUPA_SHARD=2/3 node tools/test/visual.mjs   every third story, starting with the second (CI runs the shards
 //                                                in parallel)
 // A story without a baseline fails the check; --update (or the "update-visual-baselines" label) writes one.
@@ -27,6 +27,10 @@ import path from 'node:path';
 import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
+// --update keeps the old file only below half of that. Two shots of one story differ a little from run to run, so a
+// real change that sits near the tolerance (#1599: a few words of error text, 0.25%) could pass as unchanged in the
+// baseline run and fail in the check after it.
+const KEEP = TOLERANCE / 2;
 const DIR = path.join(HERE, `baseline-visual${suffix}`);
 const update = process.argv.includes('--update');
 // Firefox and WebKit (SERUPA_BROWSER, baseline-visual-<engine>/): what differs between engines is layout, text and
@@ -194,16 +198,21 @@ async function switchTo(page, theme) {
 // null when nothing to report.
 async function compare(page, name, el) {
   // A story that crashed after it first drew (on a theme switched in place, a hover, a focus) shows Storybook's error
-  // screen instead: fail it, and never write that screen as a baseline (#1610 committed React's error #300 so).
-  if (await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay'))) {
-    return { name, ok: false, detail: `Storybook shows an error: ${(await page.locator('#error-message').textContent({ timeout: 1000 }).catch(() => '')).trim().slice(0, 200) || 'see the story'}` };
-  }
+  // screen instead: fail it, and never write that screen as a baseline (#1610 committed React's error #300 so). It is
+  // asked again after the shot, since the screen can come up while the shot waits for the page to settle (#1620's
+  // baseline run saved it so): a failure after a switched theme is then shot again from a fresh load.
+  const crashed = async () => (await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay')))
+    && { name, ok: false, detail: `Storybook shows an error: ${(await page.locator('#error-message').textContent({ timeout: 1000 }).catch(() => '')).trim().slice(0, 200) || 'see the story'}` };
+  const before = await crashed();
+  if (before) return before;
   const shot = await stableShot(page, el);
+  const after = await crashed();
+  if (after) return after;
   const file = path.join(DIR, `${name}.png`);
-  // --update rewrites a baseline only when the new picture differs past the tolerance, so re-rendering on another
-  // run doesn't commit hundreds of pictures that only changed in anti-aliasing.
+  // --update rewrites a baseline only when the new picture differs past KEEP, so re-rendering on another run doesn't
+  // commit hundreds of pictures that only changed in anti-aliasing.
   if (update) {
-    if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > TOLERANCE) fs.writeFileSync(file, shot);
+    if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > KEEP) fs.writeFileSync(file, shot);
     return null;
   }
   // A missing baseline fails: only --update (or the "update-visual-baselines" label) writes one, so a

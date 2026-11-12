@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, forcedColors, iconPoints, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, iconPoints, press } from '../../../tools/test/vitest/helpers';
 import { Calendar, type CalendarProps } from './Calendar';
 
 const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -377,5 +377,26 @@ describe('Calendar presets (RU11)', () => {
     await userEvent.click(page.getByRole('button', { name: 'Launch' }));
     expect(document.querySelector('#co [data-date="2025-06-15"]')!.closest('td')!.getAttribute('aria-selected')).toBe('true');
     expect(document.querySelector('#cn [role=group]')).toBe(null);
+  });
+});
+
+describe('a day under the pointer', () => {
+  test('today keeps 4.5:1 on the hover fill in all six themes, as do the other days', async () => {
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; }'; document.head.appendChild(still);
+    await render(<Calendar aria-label="Pick a day" />);
+    const days = [...document.querySelectorAll<HTMLElement>('[role="grid"] button')];
+    const today = days.find((d) => d.getAttribute('aria-current') === 'date')!, other = days.find((d) => d !== today && !d.getAttribute('aria-disabled'))!;
+    const low: string[] = [];
+    for (const [name, day] of [['today', today], ['another day', other]] as const) {
+      await userEvent.hover(day);
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(day).color, css(day).backgroundColor);
+        if (r < 4.5) low.push(`${th} ${name} ${r.toFixed(2)}`);
+      }
+      document.documentElement.setAttribute('data-theme', 'blue-light');
+    }
+    still.remove();
+    expect(low).toEqual([]);
   });
 });

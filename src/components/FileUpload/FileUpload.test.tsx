@@ -560,7 +560,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     expect(screen.container.querySelectorAll('[role=progressbar]').length).toBe(0);
     const retry = screen.getByRole('button', { name: 'Try again b.pdf' });
     await expect.element(retry).toHaveAccessibleDescription('The server is busy.');
-    await expect.element(screen.getByRole('button', { name: 'Try again a.png' })).toHaveAccessibleDescription('Upload failed');
+    await expect.element(screen.getByRole('button', { name: 'Try again a.png' })).toHaveAccessibleDescription('Couldn’t upload');
     await userEvent.click(retry);
     expect(retried).toEqual(['b.pdf']);
     expect(items(el).map((li) => li.className.includes('--error'))).toEqual([true, true, false]);
@@ -596,7 +596,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     await screen.rerender(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'uploading' }], [c, { state: 'done' }]])} />);
     await expect.poll(said).toBe('a.png: complete');
     await screen.rerender(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'error' }], [c, { state: 'done' }]])} />);
-    await expect.poll(said).toBe('b.pdf: Upload failed');
+    await expect.poll(said).toBe('b.pdf: Couldn’t upload');
     await screen.rerender(<SerupaProvider labels={idLabels}><FileUpload multiple files={[a]} fileStatus={() => ({ state: 'uploading' })} /></SerupaProvider>);
     await screen.rerender(<SerupaProvider labels={idLabels}><FileUpload multiple files={[a]} fileStatus={() => ({ state: 'done' })} /></SerupaProvider>);
     await expect.poll(said).toBe('a.png: selesai');

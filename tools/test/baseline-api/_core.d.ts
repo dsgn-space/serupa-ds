@@ -1,4 +1,4 @@
-// exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, version, withoutTransitions, withViewTransition
+// exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, version, withoutTransitions, withViewTransition
 import * as React from "react";
 type ThemeBrand = "blue" | "emerald" | "violet" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
@@ -106,6 +106,7 @@ declare function useMediaQuery(query: string, options?: {
 declare function useBreakpoint(name: Breakpoint, options?: {
     serverValue?: boolean | undefined;
 }): boolean;
+declare function prefersReducedMotion(el?: Element | null): boolean;
 declare function useReducedMotion(): boolean;
 interface CopyToClipboardOptions {
     copiedLabel?: string | undefined;
@@ -137,6 +138,7 @@ declare global {
             getIcon: typeof getIcon;
             idLabels: typeof idLabels;
             plural: typeof plural;
+            prefersReducedMotion: typeof prefersReducedMotion;
             registerIcons: typeof registerIcons;
             SerupaProvider: typeof SerupaProvider;
             useCollator: typeof useCollator;
