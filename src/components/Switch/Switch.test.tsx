@@ -47,7 +47,7 @@ describe('Switch', () => {
     await render(<div>
       <Switch id="occ" onChange={() => calls.push('change')} onCheckedChange={(v, e) => calls.push(v + ' ' + e.type)}>Wi-Fi</Switch>
       <Switch id="ocr" readOnly onCheckedChange={(v) => calls.push('ro ' + v)}>Locked</Switch>
-      <Switch id="ocp" pending onCheckedChange={(v) => calls.push('busy ' + v)}>Saving</Switch>
+      <Switch id="ocp" loading onCheckedChange={(v) => calls.push('busy ' + v)}>Saving</Switch>
     </div>);
     const sw = (id: string) => document.getElementById(id) as HTMLInputElement;
     await userEvent.click(sw('occ'));
@@ -177,13 +177,13 @@ describe('Switch', () => {
     expect(new FormData(document.getElementById('ro-form') as HTMLFormElement).get('wifi')).toBe('on');
   });
 
-  test('pending: aria-busy and a ring turning on the thumb; clicks and Space leave it, onChange doesn\'t run, it stays focusable and submitted, and the ring keeps 3:1 on the thumb on and off in all six themes', async () => {
+  test('loading: aria-busy and a ring turning on the thumb; clicks and Space leave it, onChange doesn\'t run, it stays focusable and submitted, and the ring keeps 3:1 on the thumb on and off in all six themes', async () => {
     const onChange = vi.fn();
     function Saving() {
       const [on, setOn] = React.useState(false), [busy, setBusy] = React.useState(false);
       return <form id="pd-form">
         <Switch id="pd" name="sync" checked={on} loading={busy} onChange={(e) => { onChange(); setOn(e.currentTarget.checked); setBusy(true); }}>Sync</Switch>
-        <Switch id="pd-on" defaultChecked pending>Backup</Switch>
+        <Switch id="pd-on" defaultChecked loading>Backup</Switch>
         <button type="button" id="pd-done" onClick={() => { setBusy(false); }}>Saved</button>
       </form>;
     }
@@ -206,7 +206,7 @@ describe('Switch', () => {
     const t = lab('pd-on').querySelector('input + span')!.getBoundingClientRect(), r = lab('pd-on').querySelector('input + span > span')!.getBoundingClientRect();
     expect([r.width > 0, r.left >= t.left, r.right <= t.right, r.top >= t.top, r.bottom <= t.bottom]).toEqual([true, true, true, true, true]);
     const low: string[] = [];
-    function Off() { return <Switch id="pd-off" pending>Off</Switch>; }
+    function Off() { return <Switch id="pd-off" loading>Off</Switch>; }
     await render(<Off />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -219,10 +219,10 @@ describe('Switch', () => {
     expect(low).toEqual([]);
   });
 
-  test('L8E74 pending and controlled (checked with onChange): no React warning while it waits, and it stays as it was', async () => {
+  test('L8E74 loading and controlled (checked with onChange): no React warning while it waits, and it stays as it was', async () => {
     const warned: unknown[] = [], warn = console.error;
     console.error = (...a: unknown[]) => { warned.push(a[0]); };
-    try { await render(<Switch id="pdc" checked pending onChange={() => {}}>Saving</Switch>); } finally { console.error = warn; }
+    try { await render(<Switch id="pdc" checked loading onChange={() => {}}>Saving</Switch>); } finally { console.error = warn; }
     expect([el('pdc').checked, warned]).toEqual([true, []]);
   });
 

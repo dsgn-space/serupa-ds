@@ -25,7 +25,7 @@ function Fabs({ fabRef }: { fabRef?: React.Ref<HTMLButtonElement> }) {
     <Fab id="fext" icon="edit" label="Compose" extended placement="bottom-start" />
     <Fab id="fst" icon="add" label="Static" placement="static" />
     {/* @ts-expect-error: an unknown position */}
-    <Fab id="fbad" icon="add" label="Bad" position="middle" style={{ '--fab-size': '50px', '--fab-offset': '10px' } as React.CSSProperties} />
+    <Fab id="fbad" icon="add" label="Bad" placement="middle" style={{ '--fab-size': '50px', '--fab-offset': '10px' } as React.CSSProperties} />
     <div dir="rtl"><Fab id="frtl" icon="add" label="RTL" placement="top-end" /></div>
   </div>;
 }
