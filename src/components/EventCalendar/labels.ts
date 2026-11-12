@@ -8,9 +8,9 @@ export interface EventCalendarLabels {
   monthView: string;
   agendaView: string;
   /** EventCalendar: how many events a day holds, read with the day ("Tuesday, March 4, 2025, 3 events"). */
-  eventCount: (count: number) => string;
+  eventCount: (count: number, formatted: string) => string;
   /** EventCalendar: the button for the events a day has no room for ("+2 more"). */
-  moreEvents: (count: number) => string;
+  moreEvents: (count: number, formatted: string) => string;
   /** EventCalendar: an event that takes the whole day, in place of its time. */
   allDay: string;
   /** EventCalendar: an event's time, from start to end ("10:00 AM to 10:30 AM"). */
@@ -25,8 +25,8 @@ export const en: EventCalendarLabels = {
   calendarView: 'View',
   monthView: 'Month',
   agendaView: 'Agenda',
-  eventCount: (count) => (count === 0 ? 'No events' : count === 1 ? '1 event' : count + ' events'),
-  moreEvents: (count) => '+' + count + ' more',
+  eventCount: (count, formatted = String(count)) => (count === 0 ? 'No events' : formatted + (count === 1 ? ' event' : ' events')),
+  moreEvents: (count, formatted = String(count)) => '+' + formatted + ' more',
   allDay: 'All day',
   eventTime: (from, to) => from + ' to ' + to,
   repeats: 'Repeats',
@@ -37,8 +37,8 @@ export const id: EventCalendarLabels = {
   calendarView: 'Tampilan',
   monthView: 'Bulan',
   agendaView: 'Agenda',
-  eventCount: (count) => (count === 0 ? 'Tidak ada acara' : count + ' acara'),
-  moreEvents: (count) => '+' + count + ' lagi',
+  eventCount: (count, formatted = String(count)) => (count === 0 ? 'Tidak ada acara' : formatted + ' acara'),
+  moreEvents: (count, formatted = String(count)) => '+' + formatted + ' lagi',
   allDay: 'Sepanjang hari',
   eventTime: (from, to) => from + ' sampai ' + to,
   repeats: 'Berulang',

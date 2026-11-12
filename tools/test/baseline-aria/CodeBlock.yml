@@ -4,6 +4,21 @@
 - region "SignIn.tsx":
   - code: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
 
+# DoTitleAndHighlight
+- text: SignIn.tsx
+- button "Copy code"
+- region "SignIn.tsx":
+  - code:
+    - text: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form>"
+    - mark: <Field label="Email"><Input type="email" autoComplete="email" /></Field>
+    - mark: <Button type="submit">Sign in</Button>
+    - text: "</form> ); }"
+
+# DontBareCode
+- button "Copy code"
+- region "Code":
+  - code: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
+
 # LanguageOnly
 - text: sh
 - button "Copy code"

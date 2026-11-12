@@ -126,7 +126,7 @@ Each is an optional override: set it on the page, a container or one control. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--segmented-control-radius` | `radius-control` | The control's corners (6px). |
-| `--segmented-control-indicator-radius` | `radius-inner` | The selected segment's corners (4px). |
+| `--segmented-control-indicator-radius` | `radius-inner` | The selection's and each segment's corners. Unset, they nest in the track's: its radius less its padding and border (3px), following the brand and data-radius. |
 
 **Sizing**
 

@@ -1,7 +1,8 @@
 /* ---------------------------------------------------------------
    TableOfContents: a small muted title, then a list of links in text-sm, each 28px tall at least, with a 2px line
-   along its start edge. Deeper entries step in 12px a level. The current section's link is in the text color and
-   medium weight, its line in primary; the others are muted, darkening under the pointer.
+   along its start edge. Deeper entries step in 12px a level. The current section's link is in the text color with
+   its line in primary and twice as wide (an inset bar, so the text doesn't move), at the weight of the others so a
+   long title wraps the same as it becomes current; the others are muted, darkening under the pointer.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-toc { font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--table-of-contents-muted, var(--text-muted)); }
@@ -13,6 +14,8 @@
 }
 @media (hover: hover) { .dk-toc__link:hover { color: var(--table-of-contents-title, var(--text)); } }
 .dk-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
-.dk-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); font-weight: var(--font-medium); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
-@media (forced-colors: active) { .dk-toc__link[aria-current="location"] { border-inline-start-color: Highlight; } }
+.dk-toc__link { --dk-bar: var(--border-width-2); }
+.dk-toc__link:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
+.dk-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--dk-bar) 0 0 var(--table-of-contents-line-current, var(--primary)); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
+@media (forced-colors: active) { .dk-toc__link[aria-current="location"] { border-inline-start-color: Highlight; outline: var(--border-width-1) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--border-width-1)); } }
 }

@@ -29,7 +29,15 @@ The page where an order is paid for: a delivery address, a delivery speed, an op
 
 <Canvas of={Stories.Review} />
 
-## What stays the app's job
+When `onPlaceOrder` rejects, the review step stays with every answer, and says the order wasn't placed, that nothing was charged and what to try. `failed` starts it there, as this story does.
+
+<Canvas of={Stories.OrderFails} />
+
+Once the order is placed, the confirmation says where the receipt went and what happens next (`placed` starts it there).
+
+<Canvas of={Stories.Placed} />
+
+## What stays your app's job
 
 - **Taking the payment.** Use your payment provider's own card fields where it requires them (they keep card numbers off your server), its 3-D Secure step, and its own error messages, put into words a person can act on. `onPlaceOrder` gets the order; reject its promise when the payment fails.
 - **Checking the address** with a postcode lookup, and the countries you deliver to, with each country's own address fields.

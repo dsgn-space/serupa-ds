@@ -24,6 +24,7 @@ A new account in two short steps: name, email, an optional phone, a password and
 - **The terms** are a checkbox the person ticks, never ticked for them, with links to read them.
 - **Create account with problems** shows an Error summary that takes focus and links to each field, and each field says what to do (3.3.1, 3.3.3).
 - **The code step** says where the code went and for how long it works. The code field fills from the email on a phone, and pasting works (3.3.8).
+- **A sign-up the server refuses says so.** When `onSubmit` rejects, the form stays with every answer and an alert over the button says the account wasn't created and what to try. `failed` starts it there.
 - **Change email** goes back with every answer kept, so nothing is typed twice (3.3.7).
 - **Each new step puts focus on its heading**, so a screen reader says where they are (2.4.3).
 
@@ -31,7 +32,11 @@ A new account in two short steps: name, email, an optional phone, a password and
 
 <Canvas of={Stories.Code} />
 
-## What stays the app's job
+<Canvas of={Stories.SubmitFails} />
+
+<Canvas of={Stories.Done} />
+
+## What stays your app's job
 
 - **Creating the account and sending the code.** `onSubmit` gets the answers once they pass the checks: return its promise, and the button shows it's busy. Reject it to stay on the form, and say why.
 - **Checking the code.** `verify` stands in for your server here. Offer "Send a new code" once a little time has passed.

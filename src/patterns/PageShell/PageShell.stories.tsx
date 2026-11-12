@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Navbar, NavbarLink } from '../../components/Navbar/Navbar';
+import { Navbar, NavbarLink, NavbarMenu, NavbarMenuLink } from '../../components/Navbar/Navbar';
 import { Sidebar, SidebarItem, SidebarSection } from '../../components/Sidebar/Sidebar';
 import { Button } from '../../components/Button/Button';
 import { Avatar } from '../../components/Avatar/Avatar';
@@ -31,8 +31,8 @@ export const Default: Story = {
   render: () => (
     <div className="min-h-screen bg-surface text-text">
       {/* The Sidebar stays beside main and below the bar while the page scrolls, and gives its room to main on a phone,
-          where the Navbar's menu has the same links. */}
-      <style>{'.page-shell__side { position: sticky; top: var(--dk-navbar-offset, 0px); height: calc(100vh - var(--dk-navbar-offset, 0px)); } @media (max-width: 40rem) { .page-shell__side { display: none; } }'}</style>
+          where the Navbar's menu has the same links under "Workspace". */}
+      <style>{'.page-shell__side { position: sticky; top: var(--dk-navbar-offset, 0px); height: calc(100vh - var(--dk-navbar-offset, 0px)); } @media (max-width: 40rem) { .page-shell__side { display: none; } } @media (min-width: 40.01rem) { .page-shell__phone { display: none; } }'}</style>
       <SkipLink />
       <Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
@@ -40,14 +40,20 @@ export const Default: Story = {
         <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#reports">Reports</NavbarLink>
+        {/* The Sidebar's links, for a phone, where the Sidebar is gone. */}
+        <NavbarMenu label="Workspace" className="page-shell__phone">
+          <NavbarMenuLink href="#home" active>Home</NavbarMenuLink>
+          <NavbarMenuLink href="#workspace-projects">Projects</NavbarMenuLink>
+          <NavbarMenuLink href="#team">Team</NavbarMenuLink>
+        </NavbarMenu>
       </Navbar>
       <div className="flex">
         <div className="page-shell__side">
           <Sidebar aria-label="Workspace">
             <SidebarSection>
-              <SidebarItem href="#" icon="home" label="Home" active />
-              <SidebarItem href="#" icon="folder" label="Projects" />
-              <SidebarItem href="#" icon="group" label="Team" />
+              <SidebarItem href="#home" icon="home" label="Home" active />
+              <SidebarItem href="#workspace-projects" icon="folder" label="Projects" />
+              <SidebarItem href="#team" icon="group" label="Team" />
             </SidebarSection>
           </Sidebar>
         </div>

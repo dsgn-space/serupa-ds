@@ -47,7 +47,8 @@ const surface = () => rgb(color('var(--surface)'));
 async function hold<T>(target: Element, during: () => Promise<T> | T, { ms = 400, at }: { ms?: number; at?: { x: number; y: number } } = {}): Promise<T> {
   // userEvent calls start once awaited (then), so chain one now and look while the button is down.
   const click = userEvent.click(target, { delay: ms, position: at, force: true }).then(() => {});
-  await expect.poll(() => target.matches(':active') || target.hasAttribute('disabled'), { interval: 10 }).toBe(true);
+  // WebKit can take over a second to start the press (the queue's run missed it in the default second).
+  await expect.poll(() => target.matches(':active') || target.hasAttribute('disabled'), { interval: 10, timeout: 5000 }).toBe(true);
   const out = await during();
   await click;
   return out;

@@ -80,7 +80,7 @@ function Gallery() {
       </div>
       <div className="flex flex-col gap-4">
         <Card>
-          <CardHeader title="Storage" description="Your team's files across every project." />
+          <CardHeader headingLevel={2} title="Storage" description="Your team's files across every project." />
           <CardBody>
             <Progress value={72} label="72 of 100 GB used" />
           </CardBody>

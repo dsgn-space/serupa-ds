@@ -438,12 +438,12 @@ describe('Menu', () => {
     expect(sub('ds')).toBe(null);
   });
 
-  test('look: 4px padding, 8px corners, shadow-lg; 32px items, text-sm, 6px corners, 16px icons', async () => {
+  test('look: 4px padding, 8px corners, shadow-lg; 32px items, text-sm, 3px corners nested in the menu\'s, 16px icons', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
     await settled();
     const m = menuOf('mb'), it = m.querySelector<HTMLElement>('[role="menuitem"]')!, s = getComputedStyle(m), i = getComputedStyle(it);
-    expect([s.paddingTop, s.borderTopLeftRadius, it.offsetHeight, i.fontSize, i.borderTopLeftRadius]).toEqual(['4px', '8px', 32, '14px', '6px']);
+    expect([s.paddingTop, s.borderTopLeftRadius, it.offsetHeight, i.fontSize, i.borderTopLeftRadius]).toEqual(['4px', '8px', 32, '14px', '3px']);
     expect(s.boxShadow).toMatch(/10px 15px -3px/);
     expect(getComputedStyle(it.querySelector('[data-icon]')!).fontSize).toBe('16px');
   });
@@ -926,5 +926,15 @@ describe('Menu labels line up', () => {
     await expect.poll(() => !!sub && sub.matches(':popover-open')).toBe(true);
     const item = sub.querySelector<HTMLElement>('[role="menuitem"]')!;
     expect(lefts(sub).map((l) => l - Math.round(item.getBoundingClientRect().left))).toEqual([8, 8]);
+  });
+
+  test('an item\'s corners nest in the menu\'s: its radius less the gap around the item, with the default corners and with data-radius="round" (GR269)', async () => {
+    const nest = (outer: Element, inner: Element) => { const o = getComputedStyle(outer), i = getComputedStyle(inner); return [parseFloat(i.borderStartStartRadius), Math.max(0, parseFloat(o.borderStartStartRadius) - (inner.getBoundingClientRect().left - outer.getBoundingClientRect().left))]; };
+    await render(<div id="mn-host"><Menu defaultOpen trigger={<Button id="mn-t">More</Button>}><MenuItem id="mn-a" onSelect={() => {}}>Action</MenuItem></Menu></div>);
+    const menu = el('mn-a').closest('[role=menu]')!;
+    expect(nest(menu, el('mn-a'))).toEqual([3, 3]);
+    el('mn-host').setAttribute('data-radius', 'round');
+    const [r, want] = nest(menu, el('mn-a'));
+    expect([r, r]).toEqual([want, 11]);
   });
 });

@@ -2,7 +2,7 @@
 // enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.
 export interface ChatLabels {
   /** Chat: the button that jumps to the newest messages while the reader is further up, given how many arrived. */
-  chatNewMessages: (count: number) => string;
+  chatNewMessages: (count: number, formatted: string) => string;
   /** Chat: the button at the top that loads earlier messages, and what it says while they load. */
   chatLoadOlder: string;
   chatLoadingOlder: string;
@@ -36,7 +36,7 @@ export interface ChatLabels {
   chatNextResponse: string;
 }
 export const en: ChatLabels = {
-  chatNewMessages: (count) => count === 1 ? '1 new message' : `${count} new messages`,
+  chatNewMessages: (count, formatted = String(count)) => count === 1 ? `${formatted} new message` : `${formatted} new messages`,
   chatLoadOlder: 'Load earlier messages',
   chatLoadingOlder: 'Loading earlier messages',
   chatSending: 'Sending…',
@@ -61,7 +61,7 @@ export const en: ChatLabels = {
   chatNextResponse: 'Next response',
 };
 export const id: ChatLabels = {
-  chatNewMessages: (count) => `${count} pesan baru`,
+  chatNewMessages: (count, formatted = String(count)) => `${formatted} pesan baru`,
   chatLoadOlder: 'Muat pesan sebelumnya',
   chatLoadingOlder: 'Memuat pesan sebelumnya',
   chatSending: 'Mengirim…',

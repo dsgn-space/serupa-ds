@@ -50,3 +50,13 @@ export const Overflow: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a small `max`, so the row still reads as people, with "+N" for the rest. */
+export const DoSmallMax: Story = { name: 'Do: keep max small' };
+/** Don't: every avatar in the row; past five or so it reads as texture, not people. */
+export const DontShowEveryone: Story = {
+  name: "Don't: show everyone",
+  args: { max: undefined },
+  render: function Render(args) { return <AvatarGroup {...args}>{avatars([...DEMO, 'Barbara Liskov', 'Dennis Ritchie', 'Frances Allen', 'Ken Thompson', 'Radia Perlman', 'Tim Berners-Lee'])}</AvatarGroup>; },
+};

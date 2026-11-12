@@ -58,6 +58,6 @@ The masks and gradients moved out of `utilities.css` and `bundle.css` into `util
 
 ## Action items
 
-1. [ ] 5.0: wrap every stylesheet in `@layer`, drop the fallbacks, update `foundation.py` to check "no fallbacks" instead of "fallback equals token". Migration note: "import `tokens.css` first; your unlayered CSS now always wins".
-2. [ ] 5.0: decide the fate of `diki.iife.js` and `dist/lib/`.
-3. [ ] Now: add a React 19 job to CI (non-breaking).
+1. [x] 5.0: wrap every stylesheet in `@layer`, drop the fallbacks, update `foundation.py` to check "no fallbacks" instead of "fallback equals token". Migration note: "import `tokens.css` first; your unlayered CSS now always wins". Done: the stylesheets are in the `dk.*` layers, and `tools/test/foundation.mjs` fails on a fallback after a shared token.
+2. [x] 5.0: decide the fate of `diki.iife.js` and `dist/lib/`. Both stay: the browser script is now `serupa.iife.js`.
+3. [x] Now: add a React 19 job to CI (non-breaking). React 19 is now the only supported React.

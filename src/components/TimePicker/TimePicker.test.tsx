@@ -318,4 +318,13 @@ describe('TimePicker: autocomplete', () => {
       expect([list.hidden, css(list).display, list.getAnimations().length, list.querySelectorAll('[role=option]').length]).toEqual([true, 'none', 0, 0]);
     });
   });
+
+  test('the chosen time is at the weight of the others, marked by its check, so the list never shifts when it changes (GR269)', async () => {
+    await render(<Ctl changes={[]} />);
+    el('ctl').focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const l = listOf('ctl'), chosen = l.querySelector<HTMLElement>('[aria-selected=true]')!, other = l.querySelector<HTMLElement>('[role=option]:not([aria-selected=true])')!;
+    expect([time(chosen), !!chosen.querySelector('[data-icon]')]).toEqual(['9:00 AM', true]);
+    expect(getComputedStyle(chosen).fontWeight).toBe(getComputedStyle(other).fontWeight);
+  });
 });

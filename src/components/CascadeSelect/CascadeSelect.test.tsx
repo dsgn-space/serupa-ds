@@ -59,6 +59,12 @@ describe('CascadeSelect', () => {
     expect([css(bs[1]).height, css(bs[2]).height]).toEqual(['24px', '44px']);
   });
 
+  test('with no levels, the columns are named "Level 1", "Level 2"… in the locale\'s digits ("Level ١" in ar-EG)', async () => {
+    await render(<SerupaProvider locale="ar-EG"><CascadeSelect aria-label="Wilayah" options={regions} defaultValue={['jabar', 'bandung', 'coblong']} /></SerupaProvider>);
+    await userEvent.click(button());
+    expect(lists().map((l) => document.getElementById(l.getAttribute('aria-labelledby')!)!.textContent)).toEqual(['Level ١', 'Level ٢', 'Level ٣']);
+  });
+
   test('a click opens a dialog named like the field, with a listbox per level of the chosen path, named by levels; the chosen options are highlighted and the last one has focus', async () => {
     await render(<CascadeSelect aria-label="Wilayah" options={regions} levels={levels} defaultValue={['jabar', 'bandung', 'coblong']} />);
     await userEvent.click(button());
@@ -274,7 +280,7 @@ describe('CascadeSelect', () => {
   });
 
   test('in Indonesian: Pilih…, Tingkat 1', async () => {
-    await render(<SerupaProvider labels={idLabels}><CascadeSelect aria-label="Wilayah" options={regions} /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><CascadeSelect aria-label="Wilayah" options={regions} /></SerupaProvider>);
     expect(button().textContent).toBe('Pilih…');
     await userEvent.click(button());
     expect(document.getElementById(lists()[0].getAttribute('aria-labelledby')!)!.textContent).toBe('Tingkat 1');
@@ -320,5 +326,14 @@ describe('CascadeSelect', () => {
     await userEvent.keyboard('{ArrowDown}');
     await until(() => !!panel() && !panel().hidden && document.activeElement !== button());
     expect(css(button()).borderTopColor).toBe(ring);
+  });
+
+  test('the chosen path keeps its labels at the weight of the others, so a long name wraps the same once picked; a start bar marks each (GR269)', async () => {
+    await render(<CascadeSelect aria-label="Wilayah" options={regions} defaultValue={['jabar', 'bandung', 'coblong']} />);
+    await userEvent.click(button());
+    const on = [...panel().querySelectorAll<HTMLElement>('[aria-selected=true]')], off = panel().querySelector<HTMLElement>('[role=option]:not([aria-selected=true])')!;
+    expect(on.map((o) => css(o).fontWeight)).toEqual(on.map(() => css(off).fontWeight));
+    expect(on.map((o) => /inset/.test(css(o).boxShadow))).toEqual([true, true, true]);
+    expect(css(off).boxShadow).toBe('none');
   });
 });
