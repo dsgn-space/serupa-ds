@@ -59,6 +59,12 @@ describe('CascadeSelect', () => {
     expect([css(bs[1]).height, css(bs[2]).height]).toEqual(['24px', '44px']);
   });
 
+  test('with no levels, the columns are named "Level 1", "Level 2"… in the locale\'s digits ("Level ١" in ar-EG)', async () => {
+    await render(<SerupaProvider locale="ar-EG"><CascadeSelect aria-label="Wilayah" options={regions} defaultValue={['jabar', 'bandung', 'coblong']} /></SerupaProvider>);
+    await userEvent.click(button());
+    expect(lists().map((l) => document.getElementById(l.getAttribute('aria-labelledby')!)!.textContent)).toEqual(['Level ١', 'Level ٢', 'Level ٣']);
+  });
+
   test('a click opens a dialog named like the field, with a listbox per level of the chosen path, named by levels; the chosen options are highlighted and the last one has focus', async () => {
     await render(<CascadeSelect aria-label="Wilayah" options={regions} levels={levels} defaultValue={['jabar', 'bandung', 'coblong']} />);
     await userEvent.click(button());

@@ -501,7 +501,7 @@ describe('Toast with a Dialog open', () => {
     await new Promise((r) => setTimeout(r, 1300));
     watch.disconnect();
     expect([...new Set(said)]).toEqual(['Network error', 'Network error. 12 times.']);
-    expect(idLabels.toastRepeated(3)).toBe('3 kali');
+    expect(idLabels.toastRepeated(3, '3')).toBe('3 kali');
   });
 });
 
