@@ -12,8 +12,11 @@ export function decimals(n: number): number {
 export const gridPlaces = (min: number | undefined, step: number) => Math.max(decimals(step), min === undefined ? 0 : decimals(min));
 /** v rounded to the given decimals, without float noise (0.1 + 0.2 → 0.3). Capped at 20, the most toFixed takes. */
 export const roundTo = (v: number, places: number) => Number(v.toFixed(Math.min(20, places)));
-/** v on the nearest grid point of min and step, within min..max. */
+/** v on the nearest grid point of min and step, within min..max. When max isn't on the grid, the highest value is
+    the last grid point below it, as for <input type="range">: min 0, max 10, step 3 stops at 9. */
 export function snap(v: number, min: number, max: number, step: number): number {
-  const n = roundTo(Math.round((v - min) / step) * step + min, gridPlaces(min, step));
-  return Math.min(max, Math.max(min, n));
+  const places = gridPlaces(min, step);
+  const top = roundTo(Math.floor(roundTo((max - min) / step, 9)) * step + min, places);
+  const n = roundTo(Math.round((v - min) / step) * step + min, places);
+  return Math.min(top, Math.max(min, n));
 }
