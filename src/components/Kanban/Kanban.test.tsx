@@ -18,8 +18,6 @@ const said = (text: string | RegExp) => expect.poll(() => document.querySelector
 const columns = () => [...document.querySelectorAll<HTMLElement>('section[data-column]')];
 const count = (col: Element) => col.querySelector('h1, h2, h3, h4, h5, h6')!.nextElementSibling!;
 const names = () => columns().map((c) => c.querySelector('h3')!.textContent + ': ' + [...c.querySelectorAll<HTMLElement>('li[data-key]')].map((li) => li.dataset.key).join(''));
-// A column's count, in the browser's own digits ("٣" in ar-EG), as the board writes it.
-const three = new Intl.NumberFormat().format(3);
 const handle = (name: string) => page.getByRole('button', { name: 'Move ' + name, exact: true });
 
 function Board({ moves, dir, start }: { moves?: KanbanMove<T>[]; dir?: 'rtl'; start?: KanbanColumn<T>[] }) {
