@@ -185,8 +185,11 @@ jobs:
       since: ${{ steps.render.outputs.since }}
     # Four shards side by side, as CI's Visual jobs: a whole run took 21 minutes in one job. Shard 1 also draws the
     # Foundations pages, rewrites baseline-utilities.json and removes pictures whose story is gone.
+    # After a push to main, one shard at a time: the redraw isn't waited on, and the merge queue needs the x86 runners
+    # more. A newer push cancels a redraw still running (concurrency), so a busy hour redraws once.
     strategy:
       fail-fast: true
+      max-parallel: ${{ github.event_name == 'push' && 1 || 4 }}
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
