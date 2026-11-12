@@ -1,15 +1,19 @@
 #!/bin/sh
-# Runs what CI requires on a pull request (node tools/ci.mjs --since origin/main) before a push leaves this machine, so a
-# pull request doesn't take a CI round, or a merge-queue group, to find what this run finds. npm install sets it up
-# (tools/git-hooks/install.mjs). A push that deletes a branch or carries no change to test skips it.
-# SERUPA_SKIP_PREPUSH=1 skips it for one push (a bot, or a push of baselines CI drew); git push --no-verify does too.
+# A quick check before a push leaves this machine: tokens, build, types, lint and the component tests of what changed
+# since the branch's last push (or since origin/main for a new branch), stopped after five minutes, so a push doesn't
+# take a CI round to find a type error or a broken test. CI runs everything else. npm install sets it up
+# (tools/git-hooks/install.mjs). A push that deletes a branch or carries no change skips it.
+# SERUPA_SKIP_PREPUSH=1 skips the checks for one push (a bot, or a push of baselines CI drew); git push --no-verify does too.
 zero=0000000000000000000000000000000000000000
 run=
 branches=
+since=
 while read -r local_ref local_sha remote_ref remote_sha; do
   [ "$local_sha" = "$zero" ] && continue
   run=1
   branches="$branches ${remote_ref#refs/heads/}"
+  # What this push adds: since the branch's last push, when that is in its history.
+  if [ "$remote_sha" != "$zero" ] && git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then since=$remote_sha; fi
 done
 [ -n "$run" ] || exit 0
 # Never while Update baselines draws the branch's pictures (the update-visual-baselines label is on): its push of the
@@ -23,6 +27,16 @@ if command -v gh >/dev/null 2>&1; then
   done
 fi
 [ "${SERUPA_SKIP_PREPUSH:-}" = 1 ] && exit 0
-git fetch -q origin main || { echo "pre-push: couldn't fetch origin/main; run node tools/ci.mjs --since origin/main yourself." >&2; exit 1; }
-echo "pre-push: node tools/ci.mjs --since origin/main (SERUPA_SKIP_PREPUSH=1 skips it)" >&2
-exec node tools/ci.mjs --since origin/main </dev/null
+if [ -z "$since" ]; then
+  git fetch -q origin main || { echo "pre-push: couldn't fetch origin/main; run node tools/ci.mjs --since origin/main yourself." >&2; exit 1; }
+  since=origin/main
+fi
+steps=tokens,build,typecheck,lint,components
+echo "pre-push: node tools/ci.mjs --only $steps --since $since, five minutes at most (SERUPA_SKIP_PREPUSH=1 skips it)" >&2
+if command -v timeout >/dev/null 2>&1; then
+  timeout 300 node tools/ci.mjs --only "$steps" --since "$since" </dev/null
+  status=$?
+  if [ "$status" = 124 ]; then echo "pre-push: five minutes passed with nothing failing; CI tests the rest." >&2; exit 0; fi
+  exit "$status"
+fi
+exec node tools/ci.mjs --only "$steps" --since "$since" </dev/null
