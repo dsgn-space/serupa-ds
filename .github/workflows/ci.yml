@@ -3,8 +3,8 @@ name: CI
 # How a change is tested on its way to main:
 # - A pull request's own run is the quick check: build, types and lint, the fix proof, the checks, and the tests (in
 #   English) and Visual of the components it changes (narrowed against the main it merges onto). The tests in the
-#   other languages, Storybook's pages, consumer, frameworks and the cross-browser components run are left to the
-#   merge queue.
+#   other languages, Storybook's pages, consumer and frameworks are left to the merge queue. Firefox and WebKit are
+#   tested nightly (cross-browser.yml): a difference there doesn't block a merge, so the queue doesn't wait on it.
 # - The merge queue runs every job on the commit that becomes main, for a group of up to five pull requests at once,
 #   with the tests narrowed as a pull request's are, against the group before it (or main): what the group's own change
 #   can affect, on the exact tree it makes. Main's push run is then build only (the Storybook artifact, and the Release
@@ -378,48 +378,6 @@ jobs:
         with:
           name: build
       - run: node tools/test/frameworks.mjs
-
-  # The component tests of the components the group changes, in Firefox and then WebKit. A change beyond the component
-  # folders passes without running (--narrowed-only) and is left to the nightly. A red run is a browser difference to
-  # look at, not a broken main, so nothing waits on it.
-  cross-browser-components:
-    name: cross-browser components
-    needs: [plan, build]
-    if: github.event_name == 'merge_group'
-    continue-on-error: true
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
-    container:
-      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
-      options: --cpus 4
-    timeout-minutes: 75
-    env:
-      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
-      # Firefox won't start with a HOME the container's root doesn't own (GitHub's /github/home).
-      HOME: /root
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          ref: ${{ needs.build.outputs.sha }}
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
-        with:
-          browsers: "false"
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          name: build
-      - shell: bash
-        env:
-          BASE: ${{ github.event.merge_group.base_sha }}
-        run: |
-          apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation >/dev/null)
-          set -o pipefail
-          failed=""
-          for BROWSER in firefox webkit; do
-            echo "== $BROWSER"
-            node tools/test/run.mjs --browser "$BROWSER" --group components --since "$BASE" --narrowed-only 2>&1 | tee -a test-output.txt || failed="$failed $BROWSER"
-          done
-          if [ -n "$failed" ]; then echo "Failed in:$failed"; exit 1; fi
 
   # On a pull request, the first failed job stops the whole run: it can't pass any more, so its runners go to the next.
   stop:
