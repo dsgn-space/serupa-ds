@@ -48,6 +48,11 @@ Drawn from the `Collapsed` story.
 - Where the trail must stay on one line once "…" is pressed, such as a phone header, add `collapse="menu"`: "…" opens a [Menu](../Menu/README.md) of the hidden pages instead of putting them back in the trail.
 - With a router, register its link component once with `configure({ link })`, or pass it as `as` so client-side navigation keeps working.
 
+### Do and don't
+
+- **Do:** Name each item with the title people see on that page, and end with the current page. (`DoPageTitles`)
+- **Don't:** Make up names such as "Start", "List" or "Back": the trail no longer matches the pages it leads to. (`DontMadeUpNames`)
+
 ## Accessibility
 
 - Each link, and the "…" button, takes a press over at least 24×24px (WCAG 2.5.8) without moving the trail. On a touch screen it's 44px high, as Apple and Material ask (the width stays, so links never overlap).

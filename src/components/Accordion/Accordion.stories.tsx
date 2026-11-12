@@ -47,3 +47,15 @@ export const LongText: Story = {
   },
   render: (args) => <div style={{ width: 240 }}><Accordion {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: each title says what's inside, so people open only the one they need. */
+export const DoSayWhatsInside: Story = {
+  name: "Do: titles say what's inside",
+  args: { defaultValue: [] },
+};
+/** Don't: titles like "Details" and "More", which make people open each one to find out. */
+export const DontVagueTitles: Story = {
+  name: "Don't: vague titles",
+  args: { defaultValue: [], children: faq.map(([v, , c], i) => <AccordionItem key={v} value={v} title={['Details', 'More information', 'Other'][i]}>{c}</AccordionItem>) },
+};

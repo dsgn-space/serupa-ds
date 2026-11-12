@@ -11,7 +11,7 @@
   },
   "src/components/Breadcrumb/Breadcrumb.stories.tsx": {
     "jsx-a11y-x/anchor-is-valid": {
-      "count": 10
+      "count": 12
     }
   },
   "src/components/Carousel/Carousel.tsx": {

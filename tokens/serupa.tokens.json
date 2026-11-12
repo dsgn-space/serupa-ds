@@ -15,11 +15,13 @@
         },
         {
           "id": "violet-light",
-          "name": "Violet Light"
+          "name": "Violet Light",
+          "depth": "tactile"
         },
         {
           "id": "violet-dark",
-          "name": "Violet Dark"
+          "name": "Violet Dark",
+          "depth": "tactile"
         },
         {
           "id": "emerald-light",
@@ -771,15 +773,15 @@
     "surface-muted": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. Secondary panels, sidebars, table headers.",
+      "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark).",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{zinc-800}",
+            "blue-dark": "{zinc-950}",
             "violet-light": "{zinc-50}",
-            "violet-dark": "{zinc-800}",
+            "violet-dark": "{zinc-950}",
             "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-950}"
           }
         }
       }
@@ -7563,6 +7565,94 @@
           "themed": true
         }
       }
+    },
+    "depth-control": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): layers added over the shadow of a raised control at rest (the filled, outline and secondary Button, IconButton, ToggleButton, FAB): a faint highlight along the top edge, a soft shade along the bottom and a little lift. Nothing in the flat brands.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 2px 4px -1px rgb(0 0 0 / 0.1)"
+        }
+      }
+    },
+    "depth-control-hover": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): the layers of `depth-control` when the pointer is over the control: the same edges, lifted a little higher.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.14)"
+        }
+      }
+    },
+    "depth-control-pressed": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): the layers while a control is held down, or a toggle is on: an inner shade along the top, so it sinks into the page.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "inset 0 1px 3px 0 light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.4))"
+        }
+      }
+    },
+    "depth-sheen": {
+      "$value": "none",
+      "$description": "Depth (tactile): a background image over a filled control (the primary and destructive Button, a FAB): lighter at the top, a touch darker at the bottom. Light and shade stay in the top and bottom quarters, clear of the label, so the label keeps its contrast (4.5:1 and up, white on red-600 the lowest). `none` in the flat brands.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "linear-gradient(to bottom, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 25%, rgb(0 0 0 / 0) 75%, rgb(0 0 0 / 0.06))"
+        }
+      }
+    },
+    "depth-sheen-pressed": {
+      "$value": "none",
+      "$description": "Depth (tactile): `depth-sheen` while the control is held down: the light at the top goes out and a shade comes in, so it looks pushed in.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "linear-gradient(to bottom, rgb(0 0 0 / 0.08), rgb(0 0 0 / 0) 60%)"
+        }
+      }
+    },
+    "depth-part": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): layers added to a part that sits on a control and moves: the Switch thumb, the Slider thumb, the SegmentedControl indicator. A top highlight and a small, close shadow.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), 0 1px 2px 0 rgb(0 0 0 / 0.16)"
+        }
+      }
+    },
+    "depth-field": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): an inner shade along the top of a field (Input, Textarea, Select), so it reads as a well to type into.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35))"
+        }
+      }
+    },
+    "depth-card-lift": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): layers added to a Card with a link while the pointer is over it: a soft, wider shadow, so the card lifts toward the pointer.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 8px 16px -6px rgb(0 0 0 / 0.16), 0 2px 4px -2px rgb(0 0 0 / 0.08)"
+        }
+      }
+    },
+    "depth-press": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-0}",
+      "$description": "Depth (tactile): how far a pressed Button or link Card moves down while it is held, on top of its press scale, so it reads as pushed into the page. 0 in the flat brands, 1px in a tactile one; 0 under reduced motion.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "{spacing-px}"
+        }
+      }
     }
   },
   "borders": {
@@ -10148,6 +10238,36 @@
       "$value": "{transitions.duration-300}",
       "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this."
     },
+    "motion-draw": {
+      "$type": "duration",
+      "$value": "{transitions.duration-0}",
+      "$description": "A mark drawing itself on: the Checkbox tick revealed from its start to its end when it is ticked under the pointer or keyboard. 0 (it appears at once) in the flat brands; `duration-150` in a tactile one. None under reduced motion.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "{duration-150}"
+        }
+      }
+    },
+    "motion-toggle": {
+      "$type": "duration",
+      "$value": "{transitions.motion-press}",
+      "$description": "How long a thumb takes to slide to its other end (Switch), with `ease-toggle`. `motion-press` in the flat brands; `motion-release` in a tactile one, the time the spring needs to settle. The snappy spring reaches the end in under a third of it (about 95ms), so the toggle still answers within 100ms.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "{motion-release}"
+        }
+      }
+    },
+    "ease-toggle": {
+      "$type": "cubicBezier",
+      "$value": "{transitions.ease-move}",
+      "$description": "A thumb sliding to its other end (Switch). `ease-move` in the flat brands; `ease-spring-snappy` in a tactile one, so the thumb lands with a small overshoot and settles.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "{ease-spring-snappy}"
+        }
+      }
+    },
     "motion-hover": {
       "$type": "duration",
       "$value": "{transitions.duration-150}",
@@ -10270,7 +10390,12 @@
     },
     "ease-spring": {
       "$value": "{transitions.ease-spring-snappy}",
-      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`)."
+      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`). Tactile brands (violet) use `ease-spring-soft`: a slower, softer settle.",
+      "$extensions": {
+        "com.serupa": {
+          "tactile": "{ease-spring-soft}"
+        }
+      }
     },
     "ease-fling": {
       "$type": "cubicBezier",

@@ -24,6 +24,31 @@
         - /url: "#"
     - listitem: Settings
 
+# DoPageTitles
+- navigation "Breadcrumb":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: /
+    - listitem:
+      - link "Projects":
+        - /url: /projects
+    - listitem:
+      - link "Website redesign":
+        - /url: /projects/website
+    - listitem: Settings
+
+# DontMadeUpNames
+- navigation "Breadcrumb":
+  - list:
+    - listitem:
+      - link "Start":
+        - /url: /
+    - listitem:
+      - link "List":
+        - /url: /projects
+    - listitem: Back
+
 # LongLabels
 - navigation "Breadcrumb":
   - list:

@@ -9,6 +9,28 @@
   - button "Is there a warranty?"
 - text: Every product has a one-year warranty against defects.
 
+# DoSayWhatsInside
+- heading "How long does shipping take?" [level=3]:
+  - button "How long does shipping take?"
+- text: Orders ship within 2 business days, and arrive in 3 to 5.
+- heading "Can I return an item?" [level=3]:
+  - button "Can I return an item?"
+- text: Yes, within 30 days of delivery, as long as it is unused.
+- heading "Is there a warranty?" [level=3]:
+  - button "Is there a warranty?"
+- text: Every product has a one-year warranty against defects.
+
+# DontVagueTitles
+- heading "Details" [level=3]:
+  - button "Details"
+- text: Orders ship within 2 business days, and arrive in 3 to 5.
+- heading "More information" [level=3]:
+  - button "More information"
+- text: Yes, within 30 days of delivery, as long as it is unused.
+- heading "Other" [level=3]:
+  - button "Other"
+- text: Every product has a one-year warranty against defects.
+
 # ExpandAll
 - button "Expand all"
 - heading "How long does shipping take?" [level=3]:

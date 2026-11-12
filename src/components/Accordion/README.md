@@ -51,6 +51,11 @@ Drawn from the `Playground` story.
 - The browser's find-in-page (Ctrl+F or ⌘F) searches closed items too, and opens the item a match is in.
 - Closed items keep their content, and its state (a half-filled form, a playing video's position). Set `keepMounted={false}` on an item whose content is heavy and doesn't need to, such as a chart or a long table, so it renders only while open. Find-in-page can't find content that isn't there, so keep the default for text people may search.
 
+### Do and don't
+
+- **Do:** Write titles that say what's inside: "How long does shipping take?". (`DoSayWhatsInside`)
+- **Don't:** Title items "Details", "More information" or "Other": people have to open each one to find what they need. (`DontVagueTitles`)
+
 ## Accessibility
 
 - Follows the WAI-ARIA accordion pattern: each title is a button inside a heading, with `aria-expanded` and `aria-controls`; an open item's content is a region labelled by its title. Closed items aren't regions, so screen readers' landmark lists hold only what's showing, and with `type="multiple"` and more than six items no panel is a region (the APG's advice against crowding the landmarks); the content still follows its heading.

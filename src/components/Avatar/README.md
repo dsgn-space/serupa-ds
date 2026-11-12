@@ -42,6 +42,11 @@ Drawn from the `Status` story.
 - Use circles for people and squares for everything else.
 - Set `statusLabel` when the status means something more specific, such as "in a meeting". By default the status is read through the `avatarStatus` label, so it follows the provider's language ("daring" in `idLabels`).
 
+### Do and don't
+
+- **Do:** Use circles for people and squares for teams, workspaces and apps. (`DoShapeByKind`)
+- **Don't:** Draw a workspace as a circle among people: it reads as one more person. (`DontMixShapes`)
+
 ## Accessibility
 
 - With a name, the avatar is one image (`role="img"`) named by it; the picture inside is decorative. Next to the written name, pass `alt=""` so it isn't read twice.
