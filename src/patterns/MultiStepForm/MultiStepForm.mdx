@@ -1,0 +1,40 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './MultiStepForm.stories';
+
+<Meta of={Stories} />
+
+# Multi-step form
+
+A long form split into short steps: here an application for a business account, with three steps of questions, then every answer shown before anything is sent, then what happens next. It's built on Stepper and its `useSteps` hook.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The form asks for more than fits on one screen, and its questions fall into a few groups people can finish one at a time: an application, a claim, a booking with several parts.
+- Later questions depend on earlier answers, such as a registration number only for a limited company.
+- Not for a short form: five fields on one page are quicker than two steps. Not for settings people change one at a time: use the [Settings form](?path=/docs/patterns-settings-form--docs), where each section saves alone.
+
+## What each part is for
+
+- **A Stepper with every step's name**, and "Step 2 of 4" on a narrow screen, so people know how much is left and that they'll see their answers before sending. Steps already done are buttons back to them.
+- **Every step stays rendered** (`useSteps` hides the others), so Back, the Stepper and "Change" keep every answer, typed or chosen (3.3.7).
+- **An answer asked for once.** The cards go to the business address unless "Post the cards to the business address" is unticked, so nobody types the same address twice (3.3.7). The address it means is shown under the box.
+- **Questions that depend on an answer** appear only once it's given: the registration number follows "Limited company", right under it.
+- **Continue checks the step.** An ErrorSummary takes focus and links to each field, each saying what to write (3.3.1, 3.3.3), and the Stepper marks the step as having a problem in words.
+- **Focus on each new step's heading**, so a screen reader says where it is and Tab goes on from there (2.4.3).
+- **Check your answers** lists every answer by part, each part with a "Change" button named for what it changes. A step opened from there has "Save and go back to your answers", which checks it and returns, instead of walking through the steps again. Nothing is sent before "Send application" (3.3.4).
+- **A failed send keeps every answer**, says nothing was sent, and the button becomes "Try sending again".
+- **The confirmation** gives the reference, says where the copy went, and lists what happens next and when.
+- **"Need help?" in the same place on every step**, the review and the confirmation: after the step, with the same words and links (3.2.6).
+
+<Canvas of={Stories.CheckAnswers} />
+
+<Canvas of={Stories.SendFails} />
+
+## What stays the app's job
+
+- **The questions and their checks.** Replace `Application` and `stepProblems` with your own, with the rules your server applies, so a step finds the problems sending would.
+- **Saving a draft.** For a form that takes more than a few minutes, save the answers as people go (with [SaveStatus](?path=/docs/components-feedback-savestatus--docs) saying so) and pass them back as `initial`, so a closed tab or a timed-out session loses nothing (2.2.6).
+- **Each step in the address.** Put the step in the URL (`?step=2`) and pass it as `start`, so the browser's Back goes back a step and a reload keeps the place, and set `document.title` to the step's name.
+- **Sending.** `onSubmit` gets every answer; reject its promise when sending fails. The reference and what happens next come from your server.
