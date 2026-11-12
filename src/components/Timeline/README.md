@@ -50,6 +50,11 @@ Drawn from the `Alternate` story.
 - `align="alternate"` suits a wide page with short entries. Below 768px it falls back to one side.
 - `orientation="horizontal"` suits a few milestones with short titles: order tracking, a project's phases. Each event is 192px wide (wider when there's room), and past the width it has the timeline scrolls sideways in its own box, so the page never does. Set `stackWhenNarrow` to show the events down a line when its box is under 480px wide, as on a phone, instead of scrolling. A long history of events reads better vertical.
 
+### Do and don't
+
+- **Do:** Put the status in the title: "Delivery delayed". (`DoStatusInTitle`)
+- **Don't:** Give every entry a generic title and leave the status to the marker's color. (`DontColorOnly`)
+
 ## Accessibility
 
 - **Role and name:** an `<ol>`: screen readers announce a list and how many events it has (with `role="list"`, so Safari does too). Name it with `aria-label` or `aria-labelledby` when the page has more than one list.

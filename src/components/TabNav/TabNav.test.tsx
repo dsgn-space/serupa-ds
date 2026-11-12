@@ -118,7 +118,8 @@ describe('TabNav', () => {
       await render(<App />);
       const links = [...el('s').querySelectorAll<HTMLElement>('a')];
       await userEvent.click(el('to'));
-      const move = links[2].getAnimations({ subtree: true }).find((a): a is CSSTransition => a instanceof CSSTransition && a.transitionProperty === 'translate');
+      // The CSS slide, or the script's where the browser starts none (Safari, tabRow.ts).
+      const move = document.getAnimations().find((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === links[2] && e.pseudoElement === '::after' && (a instanceof CSSTransition ? a.transitionProperty === 'translate' : 'translate' in e.getKeyframes()[0]); });
       expect(!!move).toBe(true);
       const from = links[2].offsetLeft + parseFloat(String((move!.effect as KeyframeEffect).getKeyframes()[0].translate));
       expect(Math.abs(from - links[0].offsetLeft)).toBeLessThan(1);

@@ -15,6 +15,40 @@
     - text: Out for delivery
     - time: 15 Mar, 08:02
 
+# DoStatusInTitle
+- list "Order history":
+  - listitem:
+    - text: Order placed
+    - time: 12 Mar, 09:14
+    - text: Two items, paid by card.
+  - listitem:
+    - text: Payment confirmed
+    - time: 12 Mar, 09:15
+  - listitem:
+    - text: Delivery delayed
+    - time: 13 Mar, 18:40
+    - text: "The courier missed the evening run. New estimate: 15 March."
+  - listitem:
+    - text: Out for delivery
+    - time: 15 Mar, 08:02
+
+# DontColorOnly
+- list "Order history":
+  - listitem:
+    - text: Update
+    - time: 12 Mar, 09:14
+    - text: Two items, paid by card.
+  - listitem:
+    - text: Update
+    - time: 12 Mar, 09:15
+  - listitem:
+    - text: Update
+    - time: 13 Mar, 18:40
+    - text: "New estimate: 15 March."
+  - listitem:
+    - text: Update
+    - time: 15 Mar, 08:02
+
 # Dots
 - list "Order history":
   - listitem: Neutral Now

@@ -110,7 +110,7 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-warning-bg` | `warning-subtle` | The fill of a tone="warning" event (its text stays event-text, 4.5:1 on it). |
 | `--event-calendar-danger-tone` | `danger` | The bar at the start of a tone="danger" event. |
 | `--event-calendar-danger-bg` | `danger-subtle` | The fill of a tone="danger" event (its text stays event-text, 4.5:1 on it). |
-| `--event-calendar-more-bg-hover` | `surface-muted` | "+N more" under the pointer. |
+| `--event-calendar-more-bg-hover` | `surface-hover` | "+N more" under the pointer. |
 | `--event-calendar-event-radius` | `radius-inner` | An event's corners. |
 | `--event-calendar-day-height` | `spacing-24` | A day's height in the month (96px): room for the date and three events. |
 <!-- token-table:end -->

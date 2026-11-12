@@ -63,6 +63,8 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Density**: `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
 
+**Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). `data-radius="default"` puts the theme's own corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
+
 **Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
 **Depth**: the violet brand is tactile. Its controls feel physical: buttons carry a faint highlight along the top edge, a soft lift that rises on hover and, when filled, a light sheen; held down they sink under an inner shade. Switch and slider thumbs and the selected segment get a highlight and a close shadow, fields a faint inner shade, and a card with a link lifts toward the pointer. Pages, surfaces and text stay flat. The blue and emerald brands are flat. The look comes from the `depth-*` tokens (`depth-control`, `depth-control-hover`, `depth-control-pressed`, `depth-sheen`, `depth-sheen-pressed`, `depth-part`, `depth-field`, `depth-card-lift`), which are layers added over a component's own shadow and are empty in a flat brand, so components need nothing else. `data-depth="tactile"` turns the look on for any brand, on the page or one section, and `data-depth="flat"` turns it off, violet included. A section with its own `data-brand` takes that brand's depth. The light and shade of a sheen stay in the top and bottom quarters of a control, clear of its label, so every label keeps its contrast. Forced-colors mode drops the sheens along with the shadows. Held down, a button sinks by `depth-press` (1px in a tactile brand, 0 in a flat one) and a card with a link settles back by the same amount. A tactile Switch thumb crosses on a spring (`motion-toggle`, `ease-toggle`) and a Checkbox tick draws itself on (`motion-draw`). Reduced motion keeps the shadows but drops the sinking, the spring and the drawing.
@@ -106,6 +108,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface` | `white` | `zinc-900` | Page and card background. |
 | `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. |
+| `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page. |
 | `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
 | `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
@@ -409,6 +412,15 @@ A container nested inside another should have a smaller radius than its parent.
 | `radius-container` | `rounded-xl` (12px) | Cards, dialogs, drawers and carousels |
 | `radius-pill` | `rounded-full` | Tracks and thumbs, steps, round buttons and swatches |
 
+**Roundness.** `data-radius` on the page or a section reshapes the four roles at once, in every theme:
+
+| Role | `sharp` | Default | `round` |
+| --- | --- | --- | --- |
+| `radius-inner` | 2px | 4px | 6px |
+| `radius-control` | 2px | 6px | 12px |
+| `radius-surface` | 4px | 8px | 16px |
+| `radius-container` | 4px | 12px | 24px |
+
 Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart. The `serupa/radius-through-role` Stylelint rule holds the components to this: a corner that names `rounded-sm` up to `rounded-4xl` fails lint. `rounded-none`, `rounded-xs` (the hairline curve of a text mark, such as Highlight) and `rounded-full` pass.
 
 ## Borders and outlines
@@ -482,14 +494,14 @@ How things sit above one another: the page, raised cards, floating menus and dia
 | Level | What sits there | Surface | Edge | Shadow |
 | --- | --- | --- | --- | --- |
 | 0 · Page | The page, Navbar, Sidebar, tables | `surface` | `border` between regions | none |
-| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted` | none | none, or `inset-shadow-xs` for an input well |
+| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or `inset-shadow-xs` for an input well |
 | 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
 | 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border-raised` | `shadow-md` |
 | 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-overlay` | `border-overlay` | `shadow-lg` |
 | 4 · Modal | Dialog and Drawer, over the `overlay` backdrop | `surface-overlay` | `border-overlay` | `shadow-xl` |
 | Inverse | Tooltip | `surface-inverse` | none | `shadow-md` |
 
-- Higher means bigger shadow and, in dark themes, a lighter surface. Don't skip the surface and edge and rely on the shadow alone.
+- Higher means bigger shadow and, in dark themes, a lighter surface; recessed is darker than the page in both modes. Don't skip the surface and edge and rely on the shadow alone.
 - Keep to one raised level per region. A card inside a card stays at level 1; give the inner one `filled` or no border instead of a second shadow.
 - Elevation means "this is above the page", not "this is important". Use color and type for emphasis.
 
@@ -1005,7 +1017,7 @@ Every interactive component moves through the same seven states, in this order o
 | State | When | How it looks | Tokens |
 | --- | --- | --- | --- |
 | Rest | Nothing is happening | The component's own colors | — |
-| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-muted` or `highlight`), or darker text | `secondary`, `surface-muted`, `highlight` |
+| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-hover` or `highlight`), or darker text | `secondary`, `surface-hover`, `highlight` |
 | Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover: `pressed` for rows, tabs, days and page buttons; filled buttons shrink slightly instead | `pressed`, `--button-press-scale` |
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
 | Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |

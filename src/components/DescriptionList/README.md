@@ -61,6 +61,11 @@ Drawn from the `Default` story.
     </DescriptionList>}
 ```
 
+### Do and don't
+
+- **Do:** Use `emphasis` on the one item people look for, such as the total. (`DoEmphasizeOne`)
+- **Don't:** Emphasize every item: nothing stands out. (`DontEmphasizeAll`)
+
 ## Accessibility
 
 - **Role and name:** a `<dl>` with `<dt>` terms and `<dd>` details; each pair is wrapped in a `<div>`, which HTML allows in a `<dl>`. Give the list a heading before it, or `aria-label`, when the page has several.

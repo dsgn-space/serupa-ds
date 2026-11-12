@@ -44,3 +44,13 @@ export const PageSize: Story = {
     return <div style={{ maxWidth: 640 }}><Pagination {...args} count={Math.ceil(245 / per)} page={page} onPageChange={setPage} pageSize={per} onPageSizeChange={(n, p) => { setPer(n); setPage(p); }} /></div>;
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: say how many items there are and which ones show. */
+export const DoShowTotal: Story = {
+  name: 'Do: show the total',
+  args: { count: 25, defaultPage: 3, total: 245, pageSize: 10 },
+  render: (args) => <div style={{ maxWidth: 640 }}><Pagination {...args} /></div>,
+};
+/** Don't: pagination for one page; everything already shows, so leave it out. */
+export const DontOnePage: Story = { name: "Don't: page a list that fits", args: { count: 1, defaultPage: 1 } };

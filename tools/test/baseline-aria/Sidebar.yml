@@ -21,6 +21,70 @@
         - /url: "#"
   - img "Ada Lovelace"
 
+# DoGroupSections
+- navigation "Main":
+  - strong: Acme
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#"
+    - listitem:
+      - link "Inbox 4":
+        - /url: "#"
+  - text: Workspace
+  - list "Workspace":
+    - listitem:
+      - button "Projects" [expanded]
+      - list:
+        - listitem:
+          - link "Website":
+            - /url: "#"
+        - listitem:
+          - link "Mobile app":
+            - /url: "#"
+    - listitem:
+      - link "Team":
+        - /url: "#"
+    - listitem:
+      - link "Reports":
+        - /url: "#"
+  - img "Ada Lovelace"
+  - text: Ada Lovelace
+
+# DontFlatList
+- navigation "Main":
+  - strong: Acme
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#"
+    - listitem:
+      - link "Inbox":
+        - /url: "#"
+    - listitem:
+      - link "Website":
+        - /url: "#"
+    - listitem:
+      - link "Mobile app":
+        - /url: "#"
+    - listitem:
+      - link "Team":
+        - /url: "#"
+    - listitem:
+      - link "Reports":
+        - /url: "#"
+    - listitem:
+      - link "Invoices":
+        - /url: "#"
+    - listitem:
+      - link "Settings":
+        - /url: "#"
+    - listitem:
+      - link "Help":
+        - /url: "#"
+  - img "Ada Lovelace"
+  - text: Ada Lovelace
+
 # LongLabels
 - navigation "Main":
   - strong: Acme

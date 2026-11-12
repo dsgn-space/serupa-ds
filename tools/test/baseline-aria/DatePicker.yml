@@ -18,6 +18,17 @@
   - text: 11/22/2025
 - button "Choose a date" [disabled]
 
+# DoLabelAndFormat
+- text: Due date mm/dd/yyyy
+- textbox "Due date":
+  - /placeholder: mm/dd/yyyy
+- button "Choose a date"
+
+# DontBareField
+- textbox "Date":
+  - /placeholder: mm/dd/yyyy
+- button "Choose a date"
+
 # German
 - textbox "Date":
   - /placeholder: dd.mm.yyyy

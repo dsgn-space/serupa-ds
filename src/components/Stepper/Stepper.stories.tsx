@@ -47,3 +47,12 @@ export const LongLabels: Story = {
   args: { steps: [{ title: 'Account and sign-in details', description: 'Email address, password and two-step verification' }, { title: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte', optional: true }, { title: 'Billing', description: 'Card or invoice' }, { title: 'Review everything and confirm' }] },
   render: (args) => <div style={{ maxWidth: 320 }}><Stepper {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a word or two a step, with detail in the description and "Optional" from the optional flag. */
+export const DoShortTitles: Story = { name: 'Do: short step titles' };
+/** Don't: whole sentences as titles, with "(optional)" written into one. */
+export const DontLongTitles: Story = {
+  name: "Don't: sentences as step titles",
+  args: { steps: [{ title: 'Create your account with an email and a password' }, { title: 'Tell us about yourself (optional)' }, { title: 'Choose how you would like to pay' }, { title: 'Check everything and finish' }] },
+};

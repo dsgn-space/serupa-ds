@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
-import { cn, omit } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef } from '../../internal/cn';
+import { announce } from '../../internal/announce';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { isComposing } from '../../internal/ime';
 import { activeIn } from '../../internal/root';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { Loader } from '../Loader/Loader';
 import { Icon } from '../Icon/Icon';
 import { RelativeTime } from '../RelativeTime/RelativeTime';
 import { Textarea } from '../Textarea/Textarea';
@@ -152,15 +154,39 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   attachments?: React.ReactNode | undefined;
   /** The text is still arriving (a streamed reply): marked aria-busy, so screen readers wait for it whole. Default: false. */
   streaming?: boolean | undefined;
+  /** A reply that hasn't started yet: "Thinking…" in place of the text, said once by screen readers. Its words replace it when they come. Default: false. */
+  thinking?: boolean | undefined;
+  /** How the reply was reached (an assistant's reasoning), in a section closed by default above the text. */
+  reasoning?: React.ReactNode | undefined;
+  /** How long the reasoning took, in seconds, for the section's toggle: "Thought for 12 seconds". Without it, "Reasoning". */
+  reasoningTime?: number | undefined;
+  /** Which version of a regenerated reply this is, from 1, with branches (how many) and onBranchChange: shows
+   *  "2 / 3" between previous and next buttons under the text. */
+  branch?: number | undefined;
+  /** How many versions of the reply there are; 2 or more shows the switcher. */
+  branches?: number | undefined;
+  /** Called with the version to show, from 1, when previous or next is pressed. */
+  onBranchChange?: ((branch: number) => void) | undefined;
+  /** The steps taken on the way to the reply (tools called, searches), above the text: a ChatSteps list. */
+  steps?: readonly ChatStep[] | undefined;
 }
 
 /** One message in a Chat: author, avatar, time, text and attachments, with sending and failed states.
  *  @beta */
 export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessageProps>('ChatMessage', function ChatMessage(props, ref) {
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { children: 1, author: 1, avatar: 1, time: 1, own: 1, hideAuthor: 1, status: 1, onRetry: 1, attachments: 1, streaming: 1, className: 1 } as const);
+  const rest = omit(props, { children: 1, author: 1, avatar: 1, time: 1, own: 1, hideAuthor: 1, status: 1, onRetry: 1, attachments: 1, streaming: 1, thinking: 1, reasoning: 1, reasoningTime: 1, steps: 1, branch: 1, branches: 1, onBranchChange: 1, className: 1 } as const);
   const own = !!props.own, failed = props.status === 'failed';
+  const hasText = props.children != null && props.children !== '';
+  const time = Number(props.reasoningTime);
   const showAuthor = !props.hideAuthor && (props.author != null || own);
+  const count = Math.floor(Number(props.branches)) || 0, at = Math.min(Math.max(Math.floor(Number(props.branch)) || 1, 1), count);
+  const num = new Intl.NumberFormat(useLocale());
+  const go = (to: number) => {
+    if (to < 1 || to > count || !props.onBranchChange) return;
+    props.onBranchChange(to);
+    announce(L.chatResponseOf(to, count));   // the text changes in place, which the log doesn't read
+  };
   return (
     <div {...rest} ref={ref} className={cn('dk-chat-message', own && 'dk-chat-message--own', failed && 'dk-chat-message--failed', props.hideAuthor && 'dk-chat-message--follow', props.className)}
       data-component="chat-message" aria-busy={props.streaming || undefined}>
@@ -172,7 +198,25 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
             {props.time != null ? <RelativeTime className="dk-chat-message__time" date={props.time} /> : null}
           </div>
         ) : props.hideAuthor ? <span className="dk-visually-hidden">{own ? L.chatYou : props.author}</span> : null}
-        {props.children != null && props.children !== '' ? <div className="dk-chat-message__bubble" dir="auto">{props.children}</div> : null}
+        {props.reasoning != null ? (
+          <details className="dk-chat-message__reasoning">
+            <summary className="dk-chat-message__reasoning-toggle">
+              <Icon icon={icons.ExpandMore} className="dk-chat-message__reasoning-icon" />
+              {props.reasoningTime != null && isFinite(time) && time >= 0 ? L.chatThoughtFor(Math.round(time)) : L.chatReasoning}
+            </summary>
+            <div className="dk-chat-message__reasoning-text" dir="auto">{props.reasoning}</div>
+          </details>
+        ) : null}
+        {props.steps && props.steps.length ? <ChatSteps steps={props.steps} /> : null}
+        {hasText ? <div className="dk-chat-message__bubble" dir="auto">{props.children}</div> : null}
+        {count > 1 ? (
+          <div className="dk-chat-message__branches" role="group" aria-label={L.chatResponseOf(at, count)}>
+            <IconButton icon={icons.ChevronLeft} label={L.chatPreviousResponse} size="sm" aria-disabled={at <= 1 || undefined} onClick={() => go(at - 1)} />
+            <span className="dk-chat-message__branch" aria-hidden>{num.format(at) + ' / ' + num.format(count)}</span>
+            <IconButton icon={icons.ChevronRight} label={L.chatNextResponse} size="sm" aria-disabled={at >= count || undefined} onClick={() => go(at + 1)} />
+          </div>
+        ) : null}
+        {props.thinking && !hasText ? <Loader variant="text" size="sm" delay={0} label={L.chatThinking} className="dk-chat-message__thinking" /> : null}
         {props.attachments ? <div className="dk-chat-message__attachments">{props.attachments}</div> : null}
         {props.status === 'sending' ? <span className="dk-chat-message__status">{L.chatSending}</span> : null}
         {failed ? (
@@ -183,6 +227,126 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
         ) : null}
       </div>
     </div>
+  );
+});
+
+export type ChatStepStatus = 'running' | 'done' | 'failed';
+export interface ChatStep {
+  /** Kept across renders, so a step keeps its place as the list grows. */
+  id: string;
+  /** What the step does, in words: "Searching the help centre". */
+  label: React.ReactNode;
+  status: ChatStepStatus;
+  /** One line more, such as what it found or why it failed. */
+  detail?: React.ReactNode | undefined;
+}
+export interface ChatStepsProps extends React.HTMLAttributes<HTMLOListElement> {
+  /** The steps an assistant takes on its way to a reply (tool calls, searches), in order. */
+  steps: readonly ChatStep[];
+}
+
+const STEP_ICON = { done: icons.CheckCircle, failed: icons.Error } as const;
+
+/** An assistant's steps on its way to a reply, such as the tools it calls, each in progress, done or failed, in words
+ *  as well as by its icon. Put it in a ChatMessage, above the text.
+ *  @beta */
+export const ChatSteps = /* @__PURE__ */ component<HTMLOListElement, ChatStepsProps>('ChatSteps', function ChatSteps(props, ref) {
+  const L = useSettings(words).labels;
+  const rest = omit(props, { steps: 1, children: 1, className: 1 } as const);
+  const said = { running: L.chatStepRunning, done: L.chatStepDone, failed: L.chatStepFailed };
+  return (
+    <ol role="list" {...rest} ref={ref} className={cn('dk-chat-steps', props.className)} data-component="chat-steps">
+      {(props.steps || []).map((step) => {
+        const status: ChatStepStatus = step.status === 'done' || step.status === 'failed' ? step.status : 'running';
+        return (
+          <li key={step.id} className={cn('dk-chat-steps__step', 'dk-chat-steps__step--' + status)} data-status={status}>
+            {status === 'running' ? <Loader size="sm" delay={0} label="" className="dk-chat-steps__icon" /> : <Icon icon={STEP_ICON[status]} className="dk-chat-steps__icon" />}
+            <span className="dk-chat-steps__text">
+              <span className="dk-chat-steps__label">{step.label}<span className="dk-visually-hidden">{', ' + said[status]}</span></span>
+              {step.detail != null ? <span className="dk-chat-steps__detail">{step.detail}</span> : null}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+});
+
+export type ChatApprovalStatus = 'pending' | 'approved' | 'denied';
+export interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** What the assistant will do, in words: "Refund order 1042 ($24.00)". It names the card, and stays as its record. */
+  children: React.ReactNode;
+  /** More about it, such as the command it will run or the fields it will change. */
+  detail?: React.ReactNode | undefined;
+  /** 'pending' (default) asks; 'approved' and 'denied' leave a one-line record of the answer. */
+  status?: ChatApprovalStatus | undefined;
+  /** Called by Approve: do the thing, then set status to 'approved'. */
+  onApprove?: (() => void) | undefined;
+  /** Called by Deny: set status to 'denied'. */
+  onDeny?: (() => void) | undefined;
+}
+
+/** An assistant asks before it acts: what it will do, in words, with Approve and Deny. Once answered (status), it
+ *  becomes a one-line record, said to screen readers, and focus moves to it from the button that was pressed.
+ *  @beta */
+export const ChatApproval = /* @__PURE__ */ component<HTMLDivElement, ChatApprovalProps>('ChatApproval', function ChatApproval(props, ref) {
+  const L = useSettings(words).labels;
+  const rest = omit(props, { children: 1, detail: 1, status: 1, onApprove: 1, onDeny: 1, className: 1 } as const);
+  const status: ChatApprovalStatus = props.status === 'approved' || props.status === 'denied' ? props.status : 'pending';
+  const titleId = domId('dk-chat-approval', React.useId());
+  const node = React.useRef<HTMLDivElement | null>(null);
+  const pressed = React.useRef(false), was = React.useRef(status);
+  const own = useMergedRef(ref, (el: HTMLDivElement | null) => { node.current = el; });
+  React.useEffect(function () {   // once answered: say the record, and keep focus there if a button here had it
+    if (was.current === status) return;
+    was.current = status;
+    const el = node.current;
+    if (status === 'pending' || !el) return;
+    announce(el.textContent);
+    if (pressed.current) el.focus();
+    pressed.current = false;
+  }, [status]);
+  const answer = (fn: (() => void) | undefined) => () => { pressed.current = true; if (fn) fn(); };
+  if (status !== 'pending') return (
+    <div {...rest} ref={own} tabIndex={-1} className={cn('dk-chat-approval', 'dk-chat-approval--' + status, props.className)} data-component="chat-approval" data-status={status}>
+      <Icon icon={status === 'approved' ? icons.CheckCircle : icons.Close} className="dk-chat-approval__icon" />
+      <span>{(status === 'approved' ? L.chatApproved : L.chatDenied) + ': '}{props.children}</span>
+    </div>
+  );
+  return (
+    <div {...rest} ref={own} role="group" aria-labelledby={titleId} className={cn('dk-chat-approval', props.className)} data-component="chat-approval" data-status={status}>
+      <div className="dk-chat-approval__title" id={titleId} dir="auto">{props.children}</div>
+      {props.detail != null ? <div className="dk-chat-approval__detail" dir="auto">{props.detail}</div> : null}
+      <div className="dk-chat-approval__actions">
+        <Button size="sm" variant="primary" onClick={answer(props.onApprove)}>{L.chatApprove}</Button>
+        <Button size="sm" variant="secondary" onClick={answer(props.onDeny)}>{L.chatDeny}</Button>
+      </div>
+    </div>
+  );
+});
+
+export interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  /** Where the source is. */
+  href: string;
+  /** Its number in the reply, from 1. */
+  index: number;
+  /** The source's name; its host ("docs.example.com") when left out. */
+  children?: React.ReactNode;
+}
+
+/** A numbered source in an assistant's reply ("1 docs.example.com"), as a real link. Wrap it in a HoverCard for a
+ *  preview of the page.
+ *  @beta */
+export const ChatCitation = /* @__PURE__ */ component<HTMLAnchorElement, ChatCitationProps>('ChatCitation', function ChatCitation(props, ref) {
+  const rest = omit(props, { index: 1, children: 1, className: 1 } as const);
+  const num = new Intl.NumberFormat(useLocale());
+  let host = '';
+  try { host = new URL(props.href, 'https://localhost').host.replace(/^www\./, ''); } catch { host = props.href; }
+  return (
+    <a {...rest} ref={ref} className={cn('dk-chat-citation', props.className)} data-component="chat-citation">
+      <span className="dk-chat-citation__index">{num.format(props.index)}</span>
+      <span className="dk-chat-citation__source" dir="auto">{props.children != null ? props.children : host}</span>
+    </a>
   );
 });
 

@@ -58,6 +58,11 @@ Drawn from the `LongLabels` story.
 - Horizontal lines stretch between steps, level with the middle of the circles.
 - When a horizontal Stepper is too narrow for its titles side by side (a phone, or 400% zoom), it keeps the circles and lines and shows one line under them: "Step 2 of 4: Profile". It switches back as soon as the titles fit, and the page never scrolls sideways. With many steps the lines shrink to 4px, and if the circles still don't fit they take the `sm` size, so eight steps fit a 320px screen. For descriptions people need to read on a phone, use `orientation="vertical"`.
 
+### Do and don't
+
+- **Do:** Title each step in a word or two, with any detail in `description` and `optional: true` for the "Optional" tag. (`DoShortTitles`)
+- **Don't:** Write sentences as step titles, or "(optional)" into one: the steps crowd and wrap. (`DontLongTitles`)
+
 ## Accessibility
 
 - An `<ol>` inside a `<nav>`. The current step has `aria-current="step"`, and completed, error or warning steps add ", completed", ", has an error" or ", needs attention" for screen readers, so the state isn't shown by color alone.

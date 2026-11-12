@@ -68,3 +68,12 @@ export const DateAndTime: Story = {
     );
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a Field label, with the format in the hint for people who type. */
+export const DoLabelAndFormat: Story = {
+  name: 'Do: label it and give the format',
+  render: () => <Field label="Due date" hint="mm/dd/yyyy"><DatePicker /></Field>,
+};
+/** Don't: no label or format; people can't tell what the date is for or how to type it. */
+export const DontBareField: Story = { name: "Don't: leave it unlabelled", args: { 'aria-label': 'Date' } };

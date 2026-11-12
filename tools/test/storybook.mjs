@@ -35,8 +35,9 @@ async function fresh(w) {
   w.context = await b.newContext({ viewport: { width: 1000, height: 800 } });
   await fixClock(w.context);   // the same today as the screenshots (lib.mjs CLOCK)
   w.page = await w.context.newPage();
-  w.page.on('pageerror', (e) => w.errors.push(e.message));
-  w.page.on('console', (m) => { if (m.type() === 'error') w.errors.push(m.text()); });
+  // Each with where it came from: Firefox's nightly run reported a docs page's error as a bare "Error".
+  w.page.on('pageerror', (e) => { const at = (e.stack || '').split('\n').map((l) => l.trim()).find((l) => /:\d+:\d+\)?$/.test(l)); w.errors.push(`${e.name}: ${e.message}${at ? ` (${at})` : ''}`); });
+  w.page.on('console', (m) => { if (m.type() === 'error') { const l = m.location(); w.errors.push(m.text() + (l?.url ? ` at ${l.url.split('/').pop()}:${l.lineNumber}` : '')); } });
   w.used = 0;
   return w;
 }

@@ -59,6 +59,11 @@ Drawn from the `PageSize` story.
 
 `paginationRange(page, count, siblings, boundaries)` returns the same list of pages and ellipses, for building your own.
 
+### Do and don't
+
+- **Do:** Pass `total` and `pageSize`, so people see how many items there are and which ones show. (`DoShowTotal`)
+- **Don't:** Show pagination when everything fits on one page: leave it out instead. (`DontOnePage`)
+
 ## Accessibility
 
 - It's a `<nav>` landmark named "Pagination" with a list. The current page has `aria-current="page"`; the ellipses are hidden from screen readers.
