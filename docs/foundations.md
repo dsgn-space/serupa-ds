@@ -154,6 +154,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `field-border-hover` | `zinc-600` | `zinc-300` | Field border on hover. |
 | `placeholder` | `zinc-500` | `zinc-400` | Placeholder text (4.5:1+ on `field`). A hint, never a label. |
 | `overlay` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
+| `picture-edge` | black at 10% | white at 10% | A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color. |
 
 ### Contrast, checked in every theme
 
