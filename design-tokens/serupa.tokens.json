@@ -5713,6 +5713,72 @@
           "cssVar": "--elevation-modal"
         }
       }
+    },
+    "depth-control": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): layers added over the shadow of a raised control at rest (the filled, outline and secondary Button, IconButton, ToggleButton, FAB): a faint highlight along the top edge, a soft shade along the bottom and a little lift. Nothing in the flat brands.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-control",
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 2px 4px -1px rgb(0 0 0 / 0.1)"
+        }
+      }
+    },
+    "depth-control-hover": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): the layers of `depth-control` when the pointer is over the control: the same edges, lifted a little higher.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-control-hover",
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), inset 0 -1px 0 0 rgb(0 0 0 / 0.08), 0 4px 8px -2px rgb(0 0 0 / 0.14)"
+        }
+      }
+    },
+    "depth-control-pressed": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): the layers while a control is held down, or a toggle is on: an inner shade along the top, so it sinks into the page.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-control-pressed",
+          "tactile": "inset 0 1px 3px 0 light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.4))"
+        }
+      }
+    },
+    "depth-part": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): layers added to a part that sits on a control and moves: the Switch thumb, the Slider thumb, the SegmentedControl indicator. A top highlight and a small, close shadow.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-part",
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.1)), 0 1px 2px 0 rgb(0 0 0 / 0.16)"
+        }
+      }
+    },
+    "depth-field": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): an inner shade along the top of a field (Input, Textarea, Select), so it reads as a well to type into.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-field",
+          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35))"
+        }
+      }
+    },
+    "depth-card-lift": {
+      "$type": "shadow",
+      "$value": "{shadow.shadow-none}",
+      "$description": "Depth (tactile): layers added to a Card with a link while the pointer is over it: a soft, wider shadow, so the card lifts toward the pointer.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--depth-card-lift",
+          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 8px 16px -6px rgb(0 0 0 / 0.16), 0 2px 4px -2px rgb(0 0 0 / 0.08)"
+        }
+      }
     }
   },
   "borders": {
@@ -8668,6 +8734,17 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--motion-release"
+        }
+      }
+    },
+    "motion-draw": {
+      "$type": "duration",
+      "$value": "{transitions.duration-0}",
+      "$description": "A mark drawing itself on: the Checkbox tick revealed from its start to its end when it is ticked under the pointer or keyboard. 0 (it appears at once) in the flat brands; `duration-150` in a tactile one. None under reduced motion.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--motion-draw",
+          "tactile": "{transitions.duration-150}"
         }
       }
     },

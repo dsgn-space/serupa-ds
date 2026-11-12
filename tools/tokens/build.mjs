@@ -13,6 +13,9 @@
 //   contrast and density axes             data-contrast="more" (and prefers-contrast: more) and data-density="compact"
 //   shadow axis (73)                      data-shadow="brand": the box shadows in a deep shade of the brand color,
 //                                         and the elevation roles again, so they follow
+//   depth axis                            data-depth="tactile" (and the brands whose themes say depth: "tactile",
+//                                         violet): the depth-* tokens get their tactile layers; data-depth="flat"
+//                                         puts the flat ones back. Forced colors drops the sheens.
 //   type scale axis (22)                  data-type-scale="fluid": sizes from 1.5rem up grow with the viewport
 //   :lang() per script (143)              taller lines for Arabic, Devanagari, Thai and CJK; CJK's font by language
 //   .type-*                               one class per complete text style
@@ -69,6 +72,7 @@ export function buildTokensCss(t) {
   css += '}\n';
   css += contrastAndDensity(all, line);   // after :root, so data-density on the root wins over it
   css += tintedShadows(all, line);
+  css += depth(t, all, line);
   css += fluidType(all, styles, line);
   css += scripts(t, all);
   for (const s of styles) {
@@ -202,6 +206,35 @@ function tintedShadows(all, line) {
     const brand = `:is([data-theme^="${b}-"], [data-brand="${b}"])`;
     css += `${brand}:is([data-shadow]), ${brand} [data-shadow] {\n${own.map((x) => line(x.name, x.value[`${b}-light`])).join('')}}\n`;
   }
+  return css;
+}
+
+// Depth: the tactile look. A token with a tactile value (the depth-* layers and sheens) has it in a brand whose themes
+// say depth: "tactile" (violet), and under data-depth="tactile"; its flat value (no layer, no image) is everywhere
+// else. The layers are added to a component's own shadow, never in place of it, so the flat brands look as before
+// and data-shadow still tints the shadow under them. Once any brand is tactile, every brand writes its own depth too,
+// so a blue section inside a violet page is flat again. data-depth comes after the brands: on the same element it
+// wins, and a section can turn the depth on or off whatever its brand. In forced colors the system colors replace
+// backgrounds and shadows go, so the sheens (background images) go too.
+function depth(t, all, line) {
+  const deep = all.filter((x) => x.tactile != null);
+  if (!deep.length) return '';
+  // A token a brand also sets for itself (Modern's soft ease-spring) is flat at that brand's own value.
+  const themed = (x) => !!x.value && typeof x.value === 'object';
+  const tactile = (x) => line(x.name, x.tactile), flat = (x) => line(x.name, x.value);
+  const flatIn = (b) => (x) => (themed(x) ? line(x.name, x.value[`${b}-light`] ?? x.value[Object.keys(x.value)[0]]) : flat(x));
+  const brands = new Map();
+  for (const th of t.color.themes) {
+    const b = th.id.split('-')[0];
+    brands.set(b, brands.get(b) || th.depth === 'tactile');
+  }
+  let css = '';
+  if ([...brands.values()].some(Boolean))
+    for (const [b, on] of brands) css += `[data-theme^="${b}-"], [data-brand="${b}"] {\n${deep.map(on ? tactile : flatIn(b)).join('')}}\n`;
+  css += `[data-depth="tactile"] {\n${deep.map(tactile).join('')}}\n`;
+  css += `[data-depth="flat"] {\n${deep.filter((x) => !themed(x)).map(flat).join('')}}\n`;
+  const images = deep.filter((x) => x.value === 'none');
+  if (images.length) css += `@media (forced-colors: active) {\n:root, [data-theme], [data-brand], [data-depth] {\n${images.map(flat).join('')}}\n}\n`;
   return css;
 }
 

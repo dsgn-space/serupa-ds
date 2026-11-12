@@ -5,7 +5,8 @@
 //
 // Writes
 //   design-tokens/serupa.tokens.json            palette and every scale (the theme-independent tokens)
-//   design-tokens/themes/<theme>.tokens.json  the alias colors for one theme, as references into the palette
+//   design-tokens/themes/<theme>.tokens.json  the alias colors for one theme, as references into the palette; a tactile
+//                                             theme says so (depth), and takes each depth token's tactile value
 //                                             ("{color.blue-600}"); layer one theme file over serupa.tokens.json
 //   design-tokens/components/<name>.tokens.json  component tokens (Button's --button-*), referencing the tokens above
 //   design-tokens/css-values.json             tokens the format has no type for yet (degrees, em, %, viewport
@@ -108,10 +109,15 @@ export function exportTokens(t, componentFiles) {
       const to = full(/\{([^}]+)\}/, String(v)), target = to && grp.tokens.find((y) => y.name === to[1]);
       const tr = target && typed(g, target.name, first(target.value));
       const r = tr ? [tr[0], `{${g}.${pathName(target.name)}}`] : typed(g, x.name, v);
-      if (!r) { setIn(cssOnly, g)[x.name] = { css: String(v), description: (x.usage || '').replace(/^Tailwind /, '') }; continue; }
+      // A depth token's value in a tactile brand (its CSS, light-dark() pairs and all) rides along: the theme files say
+      // which themes are tactile.
+      if (!r) { setIn(cssOnly, g)[x.name] = { css: String(v), ...(x.tactile != null ? { tactile: x.tactile } : {}), description: (x.usage || '').replace(/^Tailwind /, '') }; continue; }
       const tok = { $type: r[0], $value: r[1] };
       if (x.usage) tok.$description = x.usage;
       tok.$extensions = ext(x.name);
+      // A tactile value naming a token of its group is written as a full reference ({transitions.duration-150}), so
+      // tools that resolve references in extensions (Style Dictionary) find it.
+      if (x.tactile != null) { const tt = full(/\{([^}.]+)\}/, String(x.tactile)); tok.$extensions[NS].tactile = tt && grp.tokens.some((y) => y.name === tt[1]) ? `{${g}.${pathName(tt[1])}}` : x.tactile; }
       setIn(base, g)[pathName(x.name)] = tok;
     }
   }
@@ -146,8 +152,9 @@ export function exportTokens(t, componentFiles) {
     const tr = target && typed(g, target.name, first(target.value));
     return tr && { $type: tr[0], $value: `{${g}.${pathName(target.name)}}`, $description: x.usage || '', $extensions: ext(x.name) };
   };
+  const tactile = new Set(t.color.themes.filter((x) => x.depth === 'tactile').map((x) => x.id));
   for (const th of THEMES) {
-    const file = { color: Object.fromEntries(ALIAS.map((x) => [pathName(x.name), { $type: 'color', $value: ref(x.value[th]), $description: x.usage || '', $extensions: ext(x.name) }])) };
+    const file = { ...(tactile.has(th) ? { $extensions: { [NS]: { depth: 'tactile' } } } : {}), color: Object.fromEntries(ALIAS.map((x) => [pathName(x.name), { $type: 'color', $value: ref(x.value[th]), $description: x.usage || '', $extensions: ext(x.name) }])) };
     for (const [g, grp, x] of roles) if (THEMES.every((t2) => roleTok(g, grp, x, t2))) setIn(file, g)[pathName(x.name)] = roleTok(g, grp, x, th);
     files[`themes/${th}.tokens.json`] = file;
   }
