@@ -107,6 +107,8 @@ Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `disabled`,
 Each is an optional override: set it on the page, a container or one textarea. The list lives in `src/components/Textarea/textarea.tokens.json` (also in `design-tokens/components/`). The defaults are the same shared tokens Input uses.
 
 <!-- token-table:start (made from textarea.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--textarea-bg` | `field` | Background |
@@ -119,6 +121,11 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-invalid` | `danger` | Border and ring when invalid |
 | `--textarea-count` | `text-muted` | The character count |
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--textarea-padding-x-sm` | `spacing-2` | Side padding, sm (8px), like Input sm. |
 | `--textarea-padding-x-md` | `spacing-3` | Side padding, md (12px). |
 | `--textarea-padding-x-lg` | `spacing-4` | Side padding, lg (16px). |
@@ -127,6 +134,17 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px). |
 | `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
 | `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--textarea-border-width` | `border-width-1` | Border width (1px) |
 | `--textarea-radius` | `radius-control` | Corner radius (6px), like Input and Button |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--textarea-depth` | `depth-field` | The tactile inner shade along the top of the box. None in the flat brands. |
 <!-- token-table:end -->

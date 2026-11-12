@@ -219,4 +219,5 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--checkbox-press-scale` | `scale-90` | Size of the box while it's held down (90%). 1 turns it off |
+| `--checkbox-draw-duration` | `motion-draw` | How long the tick takes to draw itself on when ticked under the pointer or keyboard: 150ms in a tactile brand, at once in the flat ones. |
 <!-- token-table:end -->
