@@ -2,6 +2,8 @@
 
 Nested items that open and close, such as folders and files, a table of contents or categories. People pick one item, or several, and move through the tree with the arrow keys in one Tab stop.
 
+**Also called:** tree, nested list navigation.
+
 ```tsx
 import { TreeView, type TreeViewItem } from "serupa-ds";
 

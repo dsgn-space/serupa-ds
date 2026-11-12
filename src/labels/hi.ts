@@ -206,6 +206,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'कीबोर्ड शॉर्टकट',
   generalShortcuts: 'सामान्य',
   showShortcuts: 'कीबोर्ड शॉर्टकट दिखाएँ',
+  singleKeyShortcuts: 'एक कुंजी वाले शॉर्टकट',
+  singleKeyHint: '? जैसे एक कुंजी वाले शॉर्टकट, टेक्स्ट फ़ील्ड के बाहर। अगर ये गलती से चल जाते हैं तो इन्हें बंद करें।',
   opensInNewTab: '(नए टैब में खुलता है)',
   loadMore: 'और लोड करें',
   showingOf: (shown, total) => `${total} में से ${shown} दिख रहे हैं`,

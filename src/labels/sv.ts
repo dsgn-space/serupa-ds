@@ -207,6 +207,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Kortkommandon',
   generalShortcuts: 'Allmänt',
   showShortcuts: 'Visa kortkommandon',
+  singleKeyShortcuts: 'Kortkommandon med en tangent',
+  singleKeyHint: 'Kortkommandon med en tangent, som ?, utanför textfält. Stäng av dem om de utlöses av misstag.',
   opensInNewTab: '(öppnas i en ny flik)',
   loadMore: 'Läs in fler',
   showingOf: (shown, total) => `Visar ${shown} av ${total}`,

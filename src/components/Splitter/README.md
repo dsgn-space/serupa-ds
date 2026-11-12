@@ -2,6 +2,8 @@
 
 Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output.
 
+**Also called:** resizable panels, split view, split pane.
+
 ```tsx
 import { Splitter } from "serupa-ds";
 

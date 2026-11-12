@@ -207,6 +207,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Klavye kısayolları',
   generalShortcuts: 'Genel',
   showShortcuts: 'Klavye kısayollarını göster',
+  singleKeyShortcuts: 'Tek tuşlu kısayollar',
+  singleKeyHint: '? gibi tek tuşlu kısayollar, metin alanlarının dışında. Yanlışlıkla çalışıyorlarsa kapatın.',
   opensInNewTab: '(yeni sekmede açılır)',
   loadMore: 'Daha fazla yükle',
   showingOf: (shown, total) => `${total} öğeden ${shown} tanesi gösteriliyor`,

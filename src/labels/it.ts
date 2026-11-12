@@ -210,6 +210,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Scorciatoie da tastiera',
   generalShortcuts: 'Generali',
   showShortcuts: 'Mostra scorciatoie da tastiera',
+  singleKeyShortcuts: 'Scorciatoie a un tasto',
+  singleKeyHint: 'Scorciatoie di un solo tasto, come ?, fuori dai campi di testo. Disattivale se partono per sbaglio.',
   opensInNewTab: '(si apre in una nuova scheda)',
   loadMore: 'Carica altri',
   showingOf: (shown, total) => `${shown} di ${total} mostrati`,

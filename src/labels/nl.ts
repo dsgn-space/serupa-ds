@@ -207,6 +207,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Sneltoetsen',
   generalShortcuts: 'Algemeen',
   showShortcuts: 'Sneltoetsen tonen',
+  singleKeyShortcuts: 'Sneltoetsen met één toets',
+  singleKeyHint: 'Sneltoetsen van één toets, zoals ?, buiten tekstvelden. Zet ze uit als ze per ongeluk afgaan.',
   opensInNewTab: '(opent in een nieuw tabblad)',
   loadMore: 'Meer laden',
   showingOf: (shown, total) => `${shown} van ${total} getoond`,

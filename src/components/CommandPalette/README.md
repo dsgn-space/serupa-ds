@@ -2,6 +2,8 @@
 
 A search over the app's commands and pages in a dialog, opened with ⌘K (Ctrl+K off Apple devices) from anywhere: type a few letters, move with the arrows, press Enter. It gives keyboard users, and people who know what they want, one fast way to every action and page.
 
+**Also called:** command menu, quick switcher, ⌘K menu.
+
 ```tsx
 import { CommandPalette, type Command } from "serupa-ds";
 

@@ -210,6 +210,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Skróty klawiszowe',
   generalShortcuts: 'Ogólne',
   showShortcuts: 'Pokaż skróty klawiszowe',
+  singleKeyShortcuts: 'Skróty jednym klawiszem',
+  singleKeyHint: 'Skróty z jednego klawisza, jak ?, poza polami tekstowymi. Wyłącz je, jeśli uruchamiają się przypadkiem.',
   opensInNewTab: '(otwiera się w nowej karcie)',
   loadMore: 'Wczytaj więcej',
   showingOf: (shown, total) => `Wyświetlono ${shown} z ${total}`,

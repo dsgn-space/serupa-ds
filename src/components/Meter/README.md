@@ -2,6 +2,8 @@
 
 Shows a measurement within a known range: storage used, a plan's seats, a password's strength, a battery level. Give it `low`, `high` and `optimum` and it colors itself by zone, as HTML's `<meter>` does: success in the best zone, warning in the next, danger in the worst. It isn't [Progress](../Progress/README.md), which shows how far along a task is.
 
+**Also called:** gauge.
+
 ```tsx
 import { Meter } from "serupa-ds";
 

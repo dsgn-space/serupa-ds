@@ -74,6 +74,7 @@ dist/purge.js
 dist/serupa-icons.iife.js
 dist/serupa.iife.js
 dist/serupa.iife.js.map
+dist/starter.json
 dist/stylelint.d.ts
 dist/stylelint.js
 dist/testing.d.ts

@@ -210,6 +210,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Atajos de teclado',
   generalShortcuts: 'General',
   showShortcuts: 'Mostrar atajos de teclado',
+  singleKeyShortcuts: 'Atajos de una sola tecla',
+  singleKeyHint: 'Atajos de una tecla, como ?, fuera de los campos de texto. Desactívalos si se activan sin querer.',
   opensInNewTab: '(se abre en una pestaña nueva)',
   loadMore: 'Cargar más',
   showingOf: (shown, total) => `Mostrando ${shown} de ${total}`,

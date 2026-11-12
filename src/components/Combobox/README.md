@@ -2,6 +2,8 @@
 
 A text field with a list of options that narrows as you type: pick a country, an assignee, a project. Only listed options can be picked, unless `onCreate` lets people add one, or `freeText` makes the typed text the value and the options suggestions. For a short list (under about 10), a Select is simpler.
 
+**Also called:** autocomplete, autosuggest, typeahead.
+
 ```tsx
 import { Combobox } from "serupa-ds";
 

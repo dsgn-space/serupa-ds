@@ -2,6 +2,8 @@
 
 Stars to pick a score (how was your stay, how useful was this article) or to show one (a product's average). Picking works like any radio group, with a native radio per star, so it's keyboard, form and screen reader ready.
 
+**Also called:** star rating.
+
 ```tsx
 import { Rating } from "serupa-ds";
 

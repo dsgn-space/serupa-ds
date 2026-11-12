@@ -54,7 +54,7 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
 
 ### Loading, empty and failed
 
-- **Loading:** set `busy` and pass no categories yet. The plot is a placeholder block at its `height`, so nothing jumps when the numbers arrive, and the table button waits. Name the wait in `loadingLabel` ("Loading visitors"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh numbers already shown, keep them in and set `busy`: the chart stays as it is until the new ones arrive.
+- **Loading:** set `busy` and pass no categories yet. The plot is a placeholder block at its `height`, the table button is there but disabled, and the legend keeps its line, so nothing below the chart moves when the numbers arrive. Name the wait in `loadingLabel` ("Loading visitors"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh numbers already shown, keep them in and set `busy`: the chart stays as it is until the new ones arrive.
 - **Empty:** in place of the Chart, an [EmptyState](../EmptyState/README.md) that says why there's nothing yet. A chart of zeros reads as a real result.
 - **Failed:** in place of the Chart, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 

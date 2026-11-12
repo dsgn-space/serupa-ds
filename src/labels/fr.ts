@@ -212,6 +212,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Raccourcis clavier',
   generalShortcuts: 'Général',
   showShortcuts: 'Afficher les raccourcis clavier',
+  singleKeyShortcuts: 'Raccourcis à une touche',
+  singleKeyHint: 'Raccourcis d’une seule touche, comme ?, hors des champs de texte. Désactivez-les s’ils se déclenchent par erreur.',
   opensInNewTab: '(s’ouvre dans un nouvel onglet)',
   loadMore: 'Charger plus',
   showingOf: (shown, total) => `${shown} sur ${total} affichés`,

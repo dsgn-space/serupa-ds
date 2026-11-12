@@ -207,6 +207,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Pintasan papan kekunci',
   generalShortcuts: 'Umum',
   showShortcuts: 'Tunjukkan pintasan papan kekunci',
+  singleKeyShortcuts: 'Pintasan satu kekunci',
+  singleKeyHint: 'Pintasan satu kekunci seperti ?, di luar medan teks. Matikannya jika ia tercetus tanpa sengaja.',
   opensInNewTab: '(dibuka dalam tab baharu)',
   loadMore: 'Muatkan lagi',
   showingOf: (shown, total) => `Menunjukkan ${shown} daripada ${total}`,

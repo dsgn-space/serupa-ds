@@ -2,6 +2,8 @@
 
 A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. It's built from parts (`CardHeader`, `CardBody`, `CardFooter`) that you can mix with any content, and with `href` the whole card is clickable through one link on its title.
 
+**Also called:** tile.
+
 ```jsx
 const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Serupa;
 

@@ -51,7 +51,7 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   /** Called when the "Show as table" or "Show as chart" button is pressed, with the view it asks for. */
   onViewChange?: ((view: ChartView) => void) | undefined;
   /** The numbers are on their way: sets aria-busy. Before the first ones arrive (no categories yet), the plot is a
-      placeholder at its height, and `loadingLabel` is said once, after the loader's delay. With numbers already
+      placeholder at its height (the table button disabled, the legend's line kept), and `loadingLabel` is said once, after the loader's delay. With numbers already
       shown, they stay until the new ones arrive. Default: false. */
   busy?: boolean | undefined;
   /** Said once as the placeholder appears ("Loading visitors"). Default: "Loading…" (labels.loading). */
@@ -337,11 +337,16 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
       aria-busy={rest['aria-busy'] ?? (busy || undefined)}
       aria-labelledby={rest['aria-labelledby'] || (hasTitle && !rest['aria-label'] ? base + '-title' : undefined)}>
       {hasTitle ? <figcaption className="dk-chart__title" id={base + '-title'}>{props.title}</figcaption> : null}
-      {waiting ? null : <Button className="dk-chart__toggle" variant="ghost" size="sm" onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
+      {/* While the first numbers load, the toggle and the legend's line are there already (the toggle disabled, the line
+          empty), so nothing below moves when the chart arrives. */}
+      <Button className="dk-chart__toggle" variant="ghost" size="sm" disabled={waiting || undefined} onClick={() => changeView(view === 'chart' ? 'table' : 'chart')}>
         {view === 'chart' ? labels.chartShowTable : labels.chartShowChart}
-      </Button>}
+      </Button>
       {waiting ? (
-        <div className="dk-chart__frame" ref={frame}><ChartPlaceholder height={height} label={props.loadingLabel || labels.loading} /></div>
+        <>
+          <div className="dk-chart__frame" ref={frame}><ChartPlaceholder height={height} label={props.loadingLabel || labels.loading} /></div>
+          {props.hideLegend ? null : <div className="dk-chart__legend dk-chart__legend--waiting" aria-hidden />}
+        </>
       ) : view === 'table' ? (
         <Table className="dk-chart__table" size="sm" caption={hasTitle ? props.title : rest['aria-label']} hideCaption>
           <TableHead>

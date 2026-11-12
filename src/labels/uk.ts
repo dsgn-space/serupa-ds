@@ -212,6 +212,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Сполучення клавіш',
   generalShortcuts: 'Загальні',
   showShortcuts: 'Показати сполучення клавіш',
+  singleKeyShortcuts: 'Сполучення з однієї клавіші',
+  singleKeyHint: 'Сполучення з однієї клавіші, як-от ?, поза текстовими полями. Вимкніть їх, якщо вони спрацьовують випадково.',
   opensInNewTab: '(відкриється в новій вкладці)',
   loadMore: 'Завантажити ще',
   showingOf: (shown, total) => `Показано ${shown} з ${total}`,
