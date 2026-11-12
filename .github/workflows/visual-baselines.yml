@@ -29,7 +29,8 @@ name: Update baselines
 # Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone. One with a
 # conflict anywhere else is left for its author, with a notice in the run.
 # Every push to main also draws again the components it changed, on main as it now is, and opens a pull request
-# (branch baselines/after-<sha>, queued to merge) with any picture that came out different: one redrawn before
+# (branch baselines/after-main, queued to merge; one at a time, replaced while it is open) with any picture that
+# came out different: one redrawn before
 # another pull request changed a shared look, and merged after it.
 on:
   push:
@@ -175,11 +176,13 @@ jobs:
   # after it passes the check, under its tolerance, with pictures of the old look (#1648's Faq, drawn before #1602's
   # violet). Commit then opens a pull request with what changed.
   render:
-    # Not after merging such a pull request: a story that isn't steady would open one after another.
+    # Not after merging the bot's own pull request: a story that isn't steady would open one after another.
     if: >-
-      github.event_name == 'push' && !contains(github.event.head_commit.message, '/baselines/after-') ||
+      github.event_name == 'push' && !contains(github.event.head_commit.message, '/baselines/after-main') ||
       github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
     name: render (${{ matrix.shard }})
+    outputs:
+      since: ${{ steps.render.outputs.since }}
     # Four shards side by side, as CI's Visual jobs: a whole run took 21 minutes in one job. Shard 1 also draws the
     # Foundations pages, rewrites baseline-utilities.json and removes pictures whose story is gone.
     strategy:
@@ -197,6 +200,7 @@ jobs:
     permissions:
       contents: read
       actions: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -214,11 +218,17 @@ jobs:
           git clean -ffdxq
       - uses: ./.github/actions/setup
       - name: Render the baselines
+        id: render
         run: |
           if [ "$GITHUB_EVENT_NAME" = push ]; then
-            # From the last push run that finished, so a run a newer push cancelled loses nothing; else the push itself.
-            base=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/visual-baselines.yml/runs?event=push&branch=main&status=success&per_page=1" --jq '.workflow_runs[0].head_sha // empty' || true)
+            # While the bot's pull request (baselines/after-main) is open, from where it started, since this run
+            # replaces it; else from the last push run that finished, so a run a newer push cancelled loses nothing;
+            # else the push itself.
+            open=$(gh api "repos/$GITHUB_REPOSITORY/pulls?head=$GITHUB_REPOSITORY_OWNER:baselines/after-main&state=open" --jq '.[0].head.sha // empty' || true)
+            base=${open:+$(gh api "repos/$GITHUB_REPOSITORY/commits/$open" --jq .commit.message | sed -n 's/^Since: \([0-9a-f]\{40\}\)$/\1/p')}
+            [ -n "$base" ] || base=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/visual-baselines.yml/runs?event=push&branch=main&status=success&per_page=1" --jq '.workflow_runs[0].head_sha // empty' || true)
             git cat-file -e "${base:-none}^{commit}" 2>/dev/null && git merge-base --is-ancestor "$base" HEAD || base=$BEFORE
+            echo "since=$base" >> "$GITHUB_OUTPUT"
           else
             base=$(git merge-base "origin/$BASE_REF" HEAD)
           fi
@@ -382,25 +392,30 @@ jobs:
           [ -s "$RUNNER_TEMP/changed.txt" ] && git add --pathspec-from-file="$RUNNER_TEMP/changed.txt"
           [ -s "$in/deleted.txt" ] && git rm --quiet --pathspec-from-file="$in/deleted.txt"
           if git diff --cached --quiet; then echo "Baselines unchanged."; exit 0; fi
+          # After a push to main, the pictures go to one pull request of the bot's own (baselines/after-main), queued
+          # to merge: each run replaces its commit, drawn from where the open one started (Since:), so there is never
+          # more than one, and nothing stale means no pull request.
+          msg="Update test baselines on the CI runner"
+          if [ "$GITHUB_EVENT_NAME" = push ]; then HEAD_REF=baselines/after-main; msg=$(printf '%s\n\nSince: %s' "$msg" "$SINCE"); force=--force; fi
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit --quiet -m "Update test baselines on the CI runner"
-          # After a push to main, the pictures go to a new branch and pull request of their own, queued to merge.
-          if [ "$GITHUB_EVENT_NAME" = push ]; then HEAD_REF="baselines/after-${GITHUB_SHA:0:9}"; fi
-          # The token goes to this one push only. The push is refused if the branch moved on since render.
+            commit --quiet -m "$msg"
+          # The token goes to this one push only. On a pull request the push is refused if the branch moved on since render.
           auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
           echo "::add-mask::$auth"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$HEAD_REF"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push ${force:-} origin "HEAD:refs/heads/$HEAD_REF"
           if [ "$GITHUB_EVENT_NAME" = push ]; then
             git diff --stat HEAD^ HEAD | tail -1
-            url=$(GH_TOKEN=$BOT_TOKEN gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$HEAD_REF" --label no-changeset \
-              --title "Redraw pictures main left behind at ${GITHUB_SHA:0:9}" \
-              --body "Pictures that differ past 0.01% when drawn on main at $GITHUB_SHA: a pull request redrawn before another one changed a shared look merged with the old look. Drawn by run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID.")
+            url=$(GH_TOKEN=$BOT_TOKEN gh pr list --repo "$GITHUB_REPOSITORY" --head "$HEAD_REF" --state open --json url --jq '.[0].url // empty')
+            [ -n "$url" ] || url=$(GH_TOKEN=$BOT_TOKEN gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$HEAD_REF" --label no-changeset \
+              --title "Redraw pictures main left behind" \
+              --body "Pictures that differ past 0.01% when drawn on main as it is: a pull request redrawn before another one changed a shared look merged with the old look. Update baselines replaces this branch's commit after each push to main while it is open.")
             GH_TOKEN=$BOT_TOKEN gh pr merge --repo "$GITHUB_REPOSITORY" --auto --merge "$url"
-            echo "Opened $url"
+            echo "$url"
           fi
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          SINCE: ${{ needs.render.outputs.since }}
 
   # One comment on the pull request with what the refresh changed (K9): each picture beside the old one, the size
   # changes, the other baselines counted. Runs the base branch's own tools/baseline-report.mjs, never the pull
