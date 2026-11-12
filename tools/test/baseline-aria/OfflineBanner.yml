@@ -1,6 +1,14 @@
 # Default
 - strong: You’re offline
 
+# DoOneSentence
+- strong: You’re offline
+- text: Changes are kept on this device and sent when you're back.
+
+# DontParagraph
+- strong: You’re offline
+- text: Changes are kept on this device. When your connection comes back, we send them in the order you made them. If someone else changed the same thing meanwhile, you'll be asked which to keep. Files over 10 MB wait until you're on Wi-Fi.
+
 # DropAndReturn
 - button "Drop the connection"
 

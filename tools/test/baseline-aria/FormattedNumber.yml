@@ -3,6 +3,12 @@
 - button "Add IDR 15,000"
 - button "Add IDR 1,000,000"
 
+# DoFraction
+- text: 45%
+
+# DontWholePercent
+- text: 4,500%
+
 # Formats
 - term: Decimal
 - definition: 1,234.5

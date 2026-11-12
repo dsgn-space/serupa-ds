@@ -32,6 +32,11 @@ const { ToggleButton, ButtonGroup } = window.Serupa;
 - Use `variant="ghost"` in toolbars and the default `outline` elsewhere.
 - Give the toggles in one group the same `size`.
 
+### Do and don't
+
+- **Do:** Group related toggles in a ButtonGroup with a name, in one size. (`DoGroup`)
+- **Don't:** Scatter related toggles in mixed sizes, with no group to name them. (`DontScatter`)
+
 ## Accessibility
 
 - `aria-pressed` tells screen readers it's on or off. Keep the label the same either way ("Bold", not "Make bold" / "Remove bold"), since the state is announced separately.

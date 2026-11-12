@@ -160,6 +160,26 @@
       - 'img "2027 target, East: 600"'
       - 'img "2027 target, West: 380"'
 
+# DoFormatMoney
+- figure "Revenue":
+  - text: Revenue
+  - button "Show as table"
+  - group "Bar chart":
+    - group:
+      - 'img "Jan: $1.3M"'
+      - 'img "Feb: $1.8M"'
+      - 'img "Mar: $1.6M"'
+
+# DontRawNumbers
+- figure "Revenue":
+  - text: Revenue
+  - button "Show as table"
+  - group "Bar chart":
+    - group:
+      - 'img "Jan: 1,250,000"'
+      - 'img "Feb: 1,830,000"'
+      - 'img "Mar: 1,610,000"'
+
 # Donut
 - figure "Traffic by source":
   - text: Traffic by source

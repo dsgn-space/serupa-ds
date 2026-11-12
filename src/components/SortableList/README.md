@@ -50,6 +50,11 @@ Drawn from the `Horizontal` story.
 - `disabled` shows the rows without handles.
 - `orientation="horizontal"` lays the items out in a row (a board's columns, a set of tabs) that scrolls sideways inside itself when it doesn't fit: a drag moves sideways and scrolls at the left and right edges, and Left and Right follow the reading direction, so in right-to-left ArrowLeft moves an item later. Up and Down still move it earlier and later.
 
+### Do and don't
+
+- **Do:** Give each item a short name with `getLabel`: it goes on its handle ("Reorder Write the brief") and in every announcement. (`DoShortNames`)
+- **Don't:** Name items in sentences: every handle and announcement repeats them in full. (`DontLongNames`)
+
 ## Accessibility
 
 - A `<ul role="list">` of `<li>` rows (the role keeps it a list in Safari). Each handle is a button named "Reorder" and the item's name, described by the keyboard instructions, with `aria-pressed` while its row is picked up.

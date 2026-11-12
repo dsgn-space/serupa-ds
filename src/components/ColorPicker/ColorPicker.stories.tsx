@@ -46,3 +46,9 @@ export const Invalid: Story = {
 };
 export const Disabled: Story = { args: { disabled: true } };
 export const ReadOnly: Story = { args: { readOnly: true } };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: \`contrastWith\` when people pick freely, so they see the ratio against where the color goes. */
+export const DoShowContrast: Story = { name: 'Do: show the contrast', args: { contrastWith: '#ffffff' } };
+/** Don't: a free choice with no contrast shown, so people pick colors that can't be read. */
+export const DontPickBlind: Story = { name: "Don't: let people pick blind" };

@@ -73,6 +73,82 @@
     - list "Done":
       - listitem: No cards
 
+# DoNameCards
+- group "Sprint 42":
+  - region "To do":
+    - heading "To do" [level=3]
+    - text: "3"
+    - list "To do":
+      - listitem:
+        - button "Move Fix login on Safari"
+        - text: Fix login on Safari Bug
+        - button "Move Fix login on Safari to…"
+      - listitem:
+        - button "Move Write the release notes"
+        - text: Write the release notes
+        - button "Move Write the release notes to…"
+      - listitem:
+        - button "Move Translate checkout into Indonesian"
+        - text: Translate checkout into Indonesian
+        - button "Move Translate checkout into Indonesian to…"
+  - region "In progress":
+    - heading "In progress" [level=3]
+    - text: 3 of 2 Over limit
+    - list "In progress":
+      - listitem:
+        - button "Move Dark mode for charts"
+        - text: Dark mode for charts
+        - button "Move Dark mode for charts to…"
+      - listitem:
+        - button "Move Invoice PDF export"
+        - text: Invoice PDF export Feature
+        - button "Move Invoice PDF export to…"
+      - listitem:
+        - button "Move Audit form labels"
+        - text: Audit form labels
+        - button "Move Audit form labels to…"
+  - region "In review":
+    - heading "In review" [level=3]
+    - text: 1 of 3
+    - list "In review":
+      - listitem:
+        - button "Move Cart summary block"
+        - text: Cart summary block
+        - button "Move Cart summary block to…"
+  - region "Done":
+    - heading "Done" [level=3]
+    - text: "0"
+    - list "Done":
+      - listitem: No cards
+
+# DontVagueCards
+- group "Sprint 42":
+  - region "To do":
+    - heading "To do" [level=3]
+    - text: "2"
+    - list "To do":
+      - listitem:
+        - button "Move Task"
+        - text: Task
+        - button "Move Task to…"
+      - listitem:
+        - button "Move Task"
+        - text: Task
+        - button "Move Task to…"
+  - region "In progress":
+    - heading "In progress" [level=3]
+    - text: "1"
+    - list "In progress":
+      - listitem:
+        - button "Move Task"
+        - text: Task
+        - button "Move Task to…"
+  - region "Done":
+    - heading "Done" [level=3]
+    - text: "0"
+    - list "Done":
+      - listitem: No cards
+
 # HeadingLevel
 - group "Board":
   - region "To do":

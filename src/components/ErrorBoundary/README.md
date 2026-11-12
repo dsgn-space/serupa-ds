@@ -37,6 +37,11 @@ import { ErrorBoundary } from "serupa-ds";
 - `resetKeys` clears the error when any value in it changes, such as a route or the id being shown.
 - `fallback` replaces the default Alert: an element, or a function of `{ error, reset }`. Don't show `error.message` to people: it's written for developers.
 
+### Do and don't
+
+- **Do:** Say what failed and what still works in `title` and `description` ("Couldn't load the chart"). (`DoSayWhatFailed`)
+- **Don't:** Show `error.message` to people: it's written for developers. (`DontShowErrorMessage`)
+
 ## Accessibility
 
 - The default fallback is a danger [Alert](../Alert/README.md) (`role="alert"`), so screen readers read it as soon as it appears, with a "Try again" button.

@@ -39,6 +39,11 @@ Drawn from the `Default` story.
 - **Content:** a sentence or two, and at most one link to more. The panel is 256px wide and wraps long words. It is a `<div>`, so put the help beside a label or heading, not inside a `<p>`.
 - Put it right after the text it explains, inside the label when it's about a field, so it reads in order.
 
+### Do and don't
+
+- **Do:** Write a sentence or two, with at most one link to more. (`DoShortHelp`)
+- **Don't:** Put a page of text in the 256px panel: link to a help page for the rest. (`DontLongHelp`)
+
 ## Accessibility
 
 - **Role and name:** a `<button>` named by `label` (or "Help" / "Information"), with `aria-expanded` and `aria-controls` pointing at the panel. The panel is a non-modal `role="dialog"` named by its title or the button's name.

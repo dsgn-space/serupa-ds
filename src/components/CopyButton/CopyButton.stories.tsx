@@ -37,3 +37,12 @@ export const VariantsAndSizes: Story = {
     <CopyButton {...args} size="lg">Copy, lg</CopyButton>
   </div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the text beside the button, so people see what they copy and can select it if copying fails. */
+export const DoShowTheText: Story = { ...WithAField, name: 'Do: show the text too' };
+/** Don't: a button alone, where people copy something they can't see. */
+export const DontButtonAlone: Story = {
+  name: "Don't: a button on its own",
+  render: () => <CopyButton value="https://serupa.app/invite/7Hq2" size="md">Copy link</CopyButton>,
+};

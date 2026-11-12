@@ -66,3 +66,22 @@ export const UnsavedChanges: Story = {
     </>;
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+// Open in its own canvas for the pictures; closed on the docs page, so it doesn't cover the guide.
+function OpenDrawer(props: DrawerProps & { docs: boolean }) {
+  const { docs, ...args } = props;
+  const [open, setOpen] = React.useState(!docs);
+  return <><Button onClick={() => setOpen(true)}>Open filters</Button><Drawer {...args} open={open} onOpenChange={setOpen} /></>;
+}
+const filters = <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}><Field label="Name"><Input placeholder="Search projects" /></Field><Checkbox>Only mine</Checkbox></div>;
+/** Do: the actions in \`footer\`, where they stay in view, with the main action last. */
+export const DoFooterActions: Story = {
+  name: 'Do: put the actions in the footer',
+  render: (args, ctx) => <OpenDrawer {...args} docs={ctx.viewMode === 'docs'} footer={<><Button variant="secondary">Reset</Button><Button>Apply</Button></>}>{filters}</OpenDrawer>,
+};
+/** Don't: the actions in the body, main action first, where they scroll away with the content. */
+export const DontBodyActions: Story = {
+  name: "Don't: bury the actions in the body",
+  render: (args, ctx) => <OpenDrawer {...args} docs={ctx.viewMode === 'docs'}>{filters}<div style={{ display: 'flex', gap: 'var(--spacing-2)', marginTop: 'var(--spacing-4)' }}><Button>Apply</Button><Button variant="secondary">Reset</Button></div></OpenDrawer>,
+};

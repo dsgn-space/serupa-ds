@@ -82,3 +82,9 @@ export const LongText: Story = {
   args: { options: long, defaultValue: ['x', 'x3'], defaultOpen: true },
   decorators: [(Story) => <div style={{ width: 220 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: \`levels\` that name each column, so people learn the order. */
+export const DoNameLevels: Story = { name: 'Do: name each level', args: { defaultValue: ['jabar', 'bandung', 'coblong'], defaultOpen: true } };
+/** Don't: the same word on every column, which leaves people guessing what each one holds. */
+export const DontGenericLevels: Story = { name: "Don't: give every level the same name", args: { defaultValue: ['jabar', 'bandung', 'coblong'], defaultOpen: true, levels: ['Pilih', 'Pilih', 'Pilih'] } };

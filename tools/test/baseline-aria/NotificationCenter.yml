@@ -1,3 +1,57 @@
+# DoSayWhatHappened
+- button "Notifications, 2 unread": Notifications
+- dialog "Notifications":
+  - heading "Notifications" [level=2]
+  - button "Close"
+  - list:
+    - listitem:
+      - paragraph: "Unread: Payment failed"
+      - paragraph: The card ending 4242 was declined.
+      - time: 2 min. ago
+      - button "Mark as read"
+    - listitem:
+      - paragraph: "Unread: Invoice sent"
+      - time: 15 min. ago
+      - button "Mark as read"
+    - listitem:
+      - paragraph: Storage almost full
+      - paragraph: 9.6 GB of 10 GB used.
+      - time: 1 hr. ago
+    - listitem:
+      - paragraph: New comment on "Q3 plan"
+      - time: 3 hr. ago
+    - listitem:
+      - paragraph: Export ready
+      - time: yesterday
+  - button "Mark all as read"
+  - button "Clear all"
+
+# DontVagueTitles
+- button "Notifications, 2 unread": Notifications
+- dialog "Notifications":
+  - heading "Notifications" [level=2]
+  - button "Close"
+  - list:
+    - listitem:
+      - paragraph: "Unread: Update"
+      - time: 2 min. ago
+      - button "Mark as read"
+    - listitem:
+      - paragraph: "Unread: Update"
+      - time: 15 min. ago
+      - button "Mark as read"
+    - listitem:
+      - paragraph: Update
+      - time: 1 hr. ago
+    - listitem:
+      - paragraph: Update
+      - time: 3 hr. ago
+    - listitem:
+      - paragraph: Update
+      - time: yesterday
+  - button "Mark all as read"
+  - button "Clear all"
+
 # Empty
 - button "Notifications"
 - dialog "Notifications":

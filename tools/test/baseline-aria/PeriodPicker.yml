@@ -1,0 +1,198 @@
+# Chosen
+- combobox "Report month": March 2025
+
+# Disabled
+- combobox "Report month" [disabled]: March 2025
+
+# InAField
+- text: Billing month The invoice covers the whole month.
+- combobox "Billing month" [invalid]: Choose a month
+- text: Choose a month.
+
+# Locales
+- combobox "Bulan laporan": Agustus 2025
+- combobox "Berichtsmonat": Dezember 2025
+- combobox "Kuartal": Q3 2025
+
+# LongText
+- combobox "Report month": Choose the month the statement covers
+- combobox "Report month": setembro de 2025
+
+# MinAndMax
+- combobox "Report month" [expanded]: January 2025
+- dialog "Choose a month":
+  - button "Previous year"
+  - heading "2025" [level=2]
+  - button "Next year" [disabled]
+  - grid "2025":
+    - rowgroup:
+      - row "January 2025 February 2025 March 2025":
+        - gridcell "January 2025" [selected]:
+          - button "January 2025"
+        - gridcell "February 2025":
+          - button "February 2025"
+        - gridcell "March 2025":
+          - button "March 2025"
+      - row "April 2025 May 2025 June 2025":
+        - gridcell "April 2025":
+          - button "April 2025" [disabled]
+        - gridcell "May 2025":
+          - button "May 2025" [disabled]
+        - gridcell "June 2025":
+          - button "June 2025" [disabled]
+      - row "July 2025 August 2025 September 2025":
+        - gridcell "July 2025":
+          - button "July 2025" [disabled]
+        - gridcell "August 2025":
+          - button "August 2025" [disabled]
+        - gridcell "September 2025":
+          - button "September 2025" [disabled]
+      - row "October 2025 November 2025 December 2025":
+        - gridcell "October 2025":
+          - button "October 2025" [disabled]
+        - gridcell "November 2025":
+          - button "November 2025" [disabled]
+        - gridcell "December 2025":
+          - button "December 2025" [disabled]
+
+# Months
+- combobox "Report month" [expanded]: February 2025
+- dialog "Choose a month":
+  - button "Previous year"
+  - heading "2025" [level=2]
+  - button "Next year"
+  - grid "2025":
+    - rowgroup:
+      - row "January 2025 February 2025 March 2025":
+        - gridcell "January 2025":
+          - button "January 2025"
+        - gridcell "February 2025" [selected]:
+          - button "February 2025"
+        - gridcell "March 2025":
+          - button "March 2025"
+      - row "April 2025 May 2025 June 2025":
+        - gridcell "April 2025":
+          - button "April 2025"
+        - gridcell "May 2025":
+          - button "May 2025"
+        - gridcell "June 2025":
+          - button "June 2025"
+      - row "July 2025 August 2025 September 2025":
+        - gridcell "July 2025":
+          - button "July 2025"
+        - gridcell "August 2025":
+          - button "August 2025"
+        - gridcell "September 2025":
+          - button "September 2025"
+      - row "October 2025 November 2025 December 2025":
+        - gridcell "October 2025":
+          - button "October 2025"
+        - gridcell "November 2025":
+          - button "November 2025"
+        - gridcell "December 2025":
+          - button "December 2025"
+
+# Playground
+- combobox "Report month": Choose a month
+
+# Quarters
+- combobox "Quarter" [expanded]: Q1 2025
+- dialog "Choose a quarter":
+  - button "Previous year"
+  - heading "2025" [level=2]
+  - button "Next year"
+  - grid "2025":
+    - rowgroup:
+      - row "Q1 2025 Q2 2025":
+        - gridcell "Q1 2025" [selected]:
+          - button "Q1 2025"
+        - gridcell "Q2 2025":
+          - button "Q2 2025"
+      - row "Q3 2025 Q4 2025":
+        - gridcell "Q3 2025":
+          - button "Q3 2025"
+        - gridcell "Q4 2025":
+          - button "Q4 2025"
+
+# ReadOnly
+- combobox "Report month": March 2025
+
+# RightToLeft
+- combobox "شهر التقرير" [expanded]: فبراير ٢٠٢٥
+- dialog "Choose a month":
+  - button "Previous year"
+  - heading "٢٠٢٥" [level=2]
+  - button "Next year"
+  - grid "٢٠٢٥":
+    - rowgroup:
+      - row "يناير ٢٠٢٥ فبراير ٢٠٢٥ مارس ٢٠٢٥":
+        - gridcell "يناير ٢٠٢٥":
+          - button "يناير ٢٠٢٥"
+        - gridcell "فبراير ٢٠٢٥" [selected]:
+          - button "فبراير ٢٠٢٥"
+        - gridcell "مارس ٢٠٢٥":
+          - button "مارس ٢٠٢٥"
+      - row "أبريل ٢٠٢٥ مايو ٢٠٢٥ يونيو ٢٠٢٥":
+        - gridcell "أبريل ٢٠٢٥":
+          - button "أبريل ٢٠٢٥"
+        - gridcell "مايو ٢٠٢٥":
+          - button "مايو ٢٠٢٥"
+        - gridcell "يونيو ٢٠٢٥":
+          - button "يونيو ٢٠٢٥"
+      - row "يوليو ٢٠٢٥ أغسطس ٢٠٢٥ سبتمبر ٢٠٢٥":
+        - gridcell "يوليو ٢٠٢٥":
+          - button "يوليو ٢٠٢٥"
+        - gridcell "أغسطس ٢٠٢٥":
+          - button "أغسطس ٢٠٢٥"
+        - gridcell "سبتمبر ٢٠٢٥":
+          - button "سبتمبر ٢٠٢٥"
+      - row "أكتوبر ٢٠٢٥ نوفمبر ٢٠٢٥ ديسمبر ٢٠٢٥":
+        - gridcell "أكتوبر ٢٠٢٥":
+          - button "أكتوبر ٢٠٢٥"
+        - gridcell "نوفمبر ٢٠٢٥":
+          - button "نوفمبر ٢٠٢٥"
+        - gridcell "ديسمبر ٢٠٢٥":
+          - button "ديسمبر ٢٠٢٥"
+
+# Sizes
+- combobox "Month, sm": March 2025
+- combobox "Month, md": March 2025
+- combobox "Month, lg": March 2025
+
+# Years
+- combobox "Fiscal year" [expanded]: "2023"
+- dialog "Choose a year":
+  - button "Previous 12 years"
+  - heading "2016–2027" [level=2]
+  - button "Next 12 years"
+  - grid "2016–2027":
+    - rowgroup:
+      - row "2016 2017 2018":
+        - gridcell "2016":
+          - button "2016"
+        - gridcell "2017":
+          - button "2017"
+        - gridcell "2018":
+          - button "2018"
+      - row "2019 2020 2021":
+        - gridcell "2019":
+          - button "2019"
+        - gridcell "2020":
+          - button "2020"
+        - gridcell "2021":
+          - button "2021"
+      - row "2022 2023 2024":
+        - gridcell "2022":
+          - button "2022"
+        - gridcell "2023" [selected]:
+          - button "2023"
+        - gridcell "2024":
+          - button "2024"
+      - row "2025 2026 2027":
+        - gridcell "2025":
+          - button "2025"
+        - gridcell "2026":
+          - button "2026"
+        - gridcell "2027":
+          - button "2027"
+

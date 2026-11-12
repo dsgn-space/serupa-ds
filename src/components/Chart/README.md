@@ -65,6 +65,11 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
       categories={months} series={[{ name: "Visitors", values: visits }]} />}
 ```
 
+### Do and don't
+
+- **Do:** Pass `formatValue` for money, percentages or units, so the axis, tooltip, table and what's read out all say "$1.8M". (`DoFormatMoney`)
+- **Don't:** Leave money as bare numbers: people count digits to tell a million from a hundred thousand. (`DontRawNumbers`)
+
 ## Accessibility
 
 - **Role and name:** a `<figure>` named by its title (`figcaption`). The plot is a group named by its kind ("Line chart") and described by a summary: how many series and points, from which category to which, and each series' lowest and highest value.

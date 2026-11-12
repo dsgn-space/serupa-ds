@@ -18,6 +18,37 @@
   - button "Cancel"
   - button "Invite"
 
+# DoKeepSmall
+- button "Share" [expanded]
+- dialog "Share":
+  - heading "Share" [level=2]
+  - text: Email
+  - textbox "Email":
+    - /placeholder: name@example.com
+  - button "Cancel"
+  - button "Invite"
+
+# DontLongForm
+- button "Edit profile" [expanded]
+- dialog "Edit profile":
+  - heading "Edit profile" [level=2]
+  - text: First name
+  - textbox "First name"
+  - text: Last name
+  - textbox "Last name"
+  - text: Email
+  - textbox "Email"
+  - text: Phone
+  - textbox "Phone"
+  - text: Company
+  - textbox "Company"
+  - text: Job title
+  - textbox "Job title"
+  - text: City
+  - textbox "City"
+  - text: Country
+  - textbox "Country"
+
 # Filters
 - button "Filters" [expanded]
 - dialog "Filter projects":

@@ -1,0 +1,297 @@
+{
+  "periodPicker": {
+    "$description": "PeriodPicker's component tokens. Each one is an optional override: set the CSS variable (--period-picker-<name>) on the page, a container or one PeriodPicker, and every PeriodPicker inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "The button's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The chosen period on the button, and the popup's text (4.5:1 on both backgrounds).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-text"
+          }
+        }
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.placeholder}",
+        "$description": "The placeholder on the button.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-placeholder"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "The button's outline (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-border"
+          }
+        }
+      },
+      "border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "The button's outline on hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-border-hover"
+          }
+        }
+      },
+      "invalid": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "The outline and focus ring when invalid.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-invalid"
+          }
+        }
+      },
+      "bg-disabled": {
+        "$type": "color",
+        "$value": "{color.field-readonly}",
+        "$description": "The button's background when read-only or disabled.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-bg-disabled"
+          }
+        }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The calendar icon on the button.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-icon"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The focus ring, on the button and on a period.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-focus-ring"
+          }
+        }
+      },
+      "panel-bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The popup's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-panel-bg"
+          }
+        }
+      },
+      "panel-border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The popup's outline.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-panel-border"
+          }
+        }
+      },
+      "period-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A period under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-period-bg-hover"
+          }
+        }
+      },
+      "period-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "A period while pressed.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-period-bg-pressed"
+          }
+        }
+      },
+      "current": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "This month, quarter or year (4.5:1 on panel-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-current"
+          }
+        }
+      },
+      "selected-bg": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The chosen period's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-selected-bg"
+          }
+        }
+      },
+      "selected-text": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "The chosen period's text (4.5:1 on selected-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-selected-text"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "The button's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-radius"
+          }
+        }
+      },
+      "panel-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The popup's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-panel-radius"
+          }
+        }
+      },
+      "period-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "A period's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-period-radius"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "panel-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-overlay}",
+        "$description": "The popup's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-panel-shadow"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "The button's side padding at md (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-padding-x"
+          }
+        }
+      },
+      "panel-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space inside the popup (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-panel-padding"
+          }
+        }
+      },
+      "panel-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-64}",
+        "$description": "The popup's width (256px), at most the screen's less 16px a side.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-panel-width"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the periods (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-gap"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "height-sm": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-sm}",
+        "$description": "The button's height at sm (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-height-sm"
+          }
+        }
+      },
+      "height-md": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "The button's height at md (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-height-md"
+          }
+        }
+      },
+      "height-lg": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-lg}",
+        "$description": "The button's height at lg (44px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-height-lg"
+          }
+        }
+      }
+    },
+    "z-index": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-popover}",
+        "$description": "The popup's stacking level.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-z-index"
+          }
+        }
+      }
+    }
+  }
+}

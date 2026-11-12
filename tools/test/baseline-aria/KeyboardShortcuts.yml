@@ -1,3 +1,60 @@
+# DoGroupShortcuts
+- paragraph: Press a shortcut, or ? for the list. Press ? to see them all.
+- button "Keyboard shortcuts"
+- dialog "Keyboard shortcuts":
+  - heading "Keyboard shortcuts" [level=2]
+  - button "Close"
+  - heading "Editor" [level=3]
+  - term: Bold
+  - definition: Control B
+  - term: Italic
+  - definition: Control I
+  - heading "Navigation" [level=3]
+  - term: Search
+  - definition: Control K
+  - term: Go to inbox
+  - definition: G
+  - heading "Messages" [level=3]
+  - term: New message
+  - definition: C
+  - term: Send
+  - definition: Control Enter
+  - term: Archive
+  - definition: E
+  - heading "General" [level=3]
+  - term: Show keyboard shortcuts
+  - definition: "?"
+  - switch "Single-key shortcuts" [checked]
+  - text: Single-key shortcuts Shortcuts that are one key, such as “?”, outside text fields. Turn them off if they go off by accident.
+
+# DontUngrouped
+- paragraph: Press a shortcut, or ? for the list. Press ? to see them all.
+- button "Keyboard shortcuts"
+- dialog "Keyboard shortcuts":
+  - heading "Keyboard shortcuts" [level=2]
+  - button "Close"
+  - heading "General" [level=3]
+  - term: Bold
+  - definition: Control B
+  - term: Italic
+  - definition: Control I
+  - term: Show keyboard shortcuts
+  - definition: "?"
+  - heading "Navigation" [level=3]
+  - term: Search
+  - definition: Control K
+  - term: Go to inbox
+  - definition: G
+  - heading "Messages" [level=3]
+  - term: New message
+  - definition: C
+  - term: Send
+  - definition: Control Enter
+  - term: Archive
+  - definition: E
+  - switch "Single-key shortcuts" [checked]
+  - text: Single-key shortcuts Shortcuts that are one key, such as “?”, outside text fields. Turn them off if they go off by accident.
+
 # LongText
 - paragraph: Press a shortcut, or ? for the list. Press ? to see them all.
 - button "Keyboard shortcuts"

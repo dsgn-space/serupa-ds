@@ -26,3 +26,12 @@ export const SkipLink: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the hidden words right after what they explain, so they read in order. */
+export const DoRightAfter: Story = { name: 'Do: put it right after what it explains' };
+/** Don't: hidden words far from what they explain, which then read out of order. */
+export const DontFarAway: Story = {
+  name: "Don't: put it far from what it explains",
+  render: () => <p className="text-sm text-text"><VisuallyHidden>unread messages</VisuallyHidden> In your inbox: 3</p>,
+};

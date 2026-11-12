@@ -1,3 +1,101 @@
+# DoReadingWidth
+- article:
+  - heading "Getting started" [level=2]
+  - paragraph:
+    - text: Serupa styles your app's screens with components. Content written in Markdown, such as this help page, has
+    - link "plain links":
+      - /url: "#install"
+    - text: ","
+    - strong: bold
+    - text: ","
+    - emphasis: emphasis
+    - text: and
+    - code: inline code
+    - text: .
+  - list:
+    - listitem: Install the package.
+    - listitem:
+      - text: Import the styles once.
+      - list:
+        - listitem: Or link the CSS file from a plain page.
+    - listitem: Render a component.
+  - heading "Install" [level=3]
+  - list:
+    - listitem: Run the installer.
+    - listitem: Restart the dev server.
+  - code: npm install serupa-ds import "serupa-ds/styles.css";
+  - blockquote:
+    - paragraph: Good defaults make the right thing the easy thing.
+  - table:
+    - rowgroup:
+      - row "Plan Seats Price":
+        - columnheader "Plan"
+        - columnheader "Seats"
+        - columnheader "Price"
+    - rowgroup:
+      - row "Free 3 $0":
+        - cell "Free"
+        - cell "3"
+        - cell "$0"
+      - row "Team 25 $12 a seat":
+        - cell "Team"
+        - cell "25"
+        - cell "$12 a seat"
+  - separator
+  - term: Token
+  - definition: A named value, such as a color or a space.
+  - paragraph:
+    - img "A diagram of the install steps"
+
+# DontFullWidth
+- article:
+  - heading "Getting started" [level=2]
+  - paragraph:
+    - text: Serupa styles your app's screens with components. Content written in Markdown, such as this help page, has
+    - link "plain links":
+      - /url: "#install"
+    - text: ","
+    - strong: bold
+    - text: ","
+    - emphasis: emphasis
+    - text: and
+    - code: inline code
+    - text: .
+  - list:
+    - listitem: Install the package.
+    - listitem:
+      - text: Import the styles once.
+      - list:
+        - listitem: Or link the CSS file from a plain page.
+    - listitem: Render a component.
+  - heading "Install" [level=3]
+  - list:
+    - listitem: Run the installer.
+    - listitem: Restart the dev server.
+  - code: npm install serupa-ds import "serupa-ds/styles.css";
+  - blockquote:
+    - paragraph: Good defaults make the right thing the easy thing.
+  - table:
+    - rowgroup:
+      - row "Plan Seats Price":
+        - columnheader "Plan"
+        - columnheader "Seats"
+        - columnheader "Price"
+    - rowgroup:
+      - row "Free 3 $0":
+        - cell "Free"
+        - cell "3"
+        - cell "$0"
+      - row "Team 25 $12 a seat":
+        - cell "Team"
+        - cell "25"
+        - cell "$12 a seat"
+  - separator
+  - term: Token
+  - definition: A named value, such as a color or a space.
+  - paragraph:
+    - img "A diagram of the install steps"
+
 # LongContent
 - article:
   - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung" [level=2]

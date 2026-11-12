@@ -54,6 +54,11 @@ Drawn from the `States` story.
 - `disabled` and `readOnly` show the text without a button; `disabled` also mutes it (`--inline-edit-text-disabled`, still 4.5:1). Inside a `<fieldset disabled>` the button is disabled: the text is muted the same way, with no hover, pointer or pencil.
 - While someone types with an input method (Japanese, Chinese, Korean), Enter and Escape confirm or cancel the composition, not the edit.
 
+### Do and don't
+
+- **Do:** Set a `placeholder` when the text can be empty, so the empty button still shows something to click. (`DoPlaceholder`)
+- **Don't:** Leave an empty value without a placeholder: there's nothing to see or click. (`DontEmpty`)
+
 ## Accessibility
 
 - At rest it's a `<button>` whose name is the label, the text and "Edit" (from `SerupaProvider` labels: "Ubah" in Indonesian). The visible text is part of the name, so voice control users can say what they see.

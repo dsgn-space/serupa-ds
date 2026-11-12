@@ -57,3 +57,12 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: every slide the same ratio, so the controls stay put. */
+export const DoSameRatio: Story = { name: 'Do: give every slide one ratio' };
+/** Don't: slides of different ratios, so the height and the controls jump as people move. */
+export const DontMixedRatios: Story = {
+  name: "Don't: mix slide ratios",
+  render: (args) => <div style={{ maxWidth: 480 }}><Carousel {...args}>{PICS.map((p, i) => <Image key={p.alt} {...p} alt={p.alt} ratio={(['square', '4:3', 'video'] as const)[i % 3]} rounded={false} />)}</Carousel></div>,
+};

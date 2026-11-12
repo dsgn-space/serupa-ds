@@ -2,6 +2,16 @@
 - combobox "Time" [disabled]: 10:00 AM
 - button "Choose a time" [disabled]
 
+# DoSayWhichTime
+- text: Start time
+- combobox "Start time"
+- button "Choose a time"
+
+# DontJustTime
+- text: Time
+- combobox "Time"
+- button "Choose a time"
+
 # Invalid
 - combobox "Time" [invalid]
 - button "Choose a time"
