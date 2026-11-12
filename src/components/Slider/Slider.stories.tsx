@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Slider } from './Slider';
+import { useLocale } from '../../internal/provider';
 import { Field } from '../Field/Field';
 
 const meta = {
@@ -36,4 +37,24 @@ export const EveryStep: Story = { args: { 'aria-label': 'Rating', defaultValue: 
 export const LongMarks: Story = {
   args: { marks: [{ value: 0, label: 'Completely silent' }, { value: 50, label: 'Halfway there' }, { value: 100, label: 'As loud as it goes' }] },
   decorators: [(Story) => <div style={{ width: 200, paddingBlockEnd: 32 }}><Story /></div>],
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: `formatValue` for a price, so the marks and screen readers say "$40", not "40". */
+export const DoFormatValue: Story = {
+  name: 'Do: format the value',
+  render: function Render(args) {
+    const money = new Intl.NumberFormat(useLocale(), { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    return <Slider {...args} aria-label="Highest price" min={0} max={200} step={5} defaultValue={40} formatValue={(v) => money.format(v)} marks={[0, 100, 200].map((v) => ({ value: v, label: money.format(v) }))} />;
+  },
+  decorators: [(Story) => <div style={{ width: 280, paddingBlockEnd: 32 }}><Story /></div>],
+};
+/** Don't: a bare number for a price, so nobody can tell its unit. */
+export const DontBareNumber: Story = {
+  name: "Don't: leave out the unit",
+  render: function Render(args) {
+    const number = new Intl.NumberFormat(useLocale());
+    return <Slider {...args} aria-label="Highest price" min={0} max={200} step={5} defaultValue={40} marks={[0, 100, 200].map((v) => ({ value: v, label: number.format(v) }))} />;
+  },
+  decorators: [(Story) => <div style={{ width: 280, paddingBlockEnd: 32 }}><Story /></div>],
 };

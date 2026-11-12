@@ -53,3 +53,12 @@ export const Actions: Story = {
 export const Overflow: Story = {
   render: (args) => <div style={{ width: 200 }}><Toolbar {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: related controls in groups, with a divider between the groups. */
+export const DoGroupControls: Story = { name: 'Do: group related controls' };
+/** Don't: a form's Cancel and Save in a toolbar; Tab should reach each one, so use a ButtonGroup. */
+export const DontFormButtons: Story = {
+  name: "Don't: put form buttons in a toolbar",
+  args: { 'aria-label': 'Form actions', children: [<Button key="c" variant="secondary">Cancel</Button>, <Button key="s">Save</Button>] },
+};
