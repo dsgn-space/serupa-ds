@@ -1,4 +1,4 @@
-// exports: Field, type FieldProps
+// exports: Field, type FieldProps, FormErrors, type FormErrorsProps
 interface FieldLabels {
     fieldOptional: string;
 }
@@ -12,7 +12,13 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">
     group?: boolean | undefined;
     orientation?: "horizontal" | "vertical" | undefined;
     layout?: "horizontal" | "vertical" | undefined;
+    name?: string | undefined;
     id?: string | undefined;
     children?: React.ReactNode | undefined;
 }
 declare const Field: React.ForwardRefExoticComponent<FieldProps & React.RefAttributes<HTMLElement>>;
+interface FormErrorsProps {
+    errors?: null | Readonly<Record<string, React.ReactNode>> | undefined;
+    children?: React.ReactNode | undefined;
+}
+declare function FormErrors(props: FormErrorsProps): React.ReactElement;

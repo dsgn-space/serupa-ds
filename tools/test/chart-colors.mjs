@@ -3,9 +3,12 @@
 // with the rest, checked by foundation.mjs. This checks what a pair can't say:
 // - neighbouring series (1 and 2 … 8 and 1) differ by hue for every reader: OKLab ΔE ×100 of 15+ as seen, and 8+
 //   under protanopia and deuteranopia (Machado 2009, severity 1), the dataviz method's floors (GR171);
-// - the first three series pass those floors as every pair too, for charts where any two marks can meet (scatter);
+// - the first four series differ as every pair, for charts where any two marks can meet (a scatter, or two lines
+//   that cross between their markers): ΔE 15+ as seen, 10+ under protanopia and deuteranopia, and 8+ under
+//   tritanopia (Machado 2009, severity 1);
 // - in light themes neighbours also alternate darker and lighter, 1.7:1 apart at least. Dark themes keep their series
-//   in the mid-tone band (OKLCH L 0.48 to 0.67), where pale steps of blue and violet looked alike (GR171);
+//   in the mid-tone band (OKLCH L 0.48 to 0.72), where pale steps of blue and violet looked alike (GR171); 0.72 leaves
+//   room for the dark themes' orange and cyan, which keep the first four apart under deuteranopia;
 // - chart-gap is the page, so each series has 3:1 against the gap between them;
 // - the sequential ramp stands out more from the page at each step, and the diverging one from its middle outward,
 //   each step 1.15:1 from the next at least;
@@ -39,6 +42,7 @@ const linear = (h) => [1, 3, 5].map((i) => { const c = parseInt(h.slice(i, i + 2
 const MACHADO = {
   protan: [[0.152286, 1.052583, -0.204868], [0.114503, 0.786281, 0.099216], [-0.003882, -0.048116, 1.051998]],
   deutan: [[0.367322, 0.860646, -0.227968], [0.280085, 0.672501, 0.047413], [-0.01182, 0.04294, 0.968881]],
+  tritan: [[1.255528, -0.076749, -0.178779], [-0.078411, 0.930809, 0.147602], [0.004733, 0.691367, 0.3039]],
 };
 const oklab = (h, cvd) => {
   let c = linear(h);
@@ -48,7 +52,8 @@ const oklab = (h, cvd) => {
 };
 const dE = (a, b, cvd) => { const x = oklab(a, cvd), y = oklab(b, cvd); return 100 * Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]); };
 const apart = (a, b) => dE(a, b) >= 15 && dE(a, b, 'protan') >= 8 && dE(a, b, 'deutan') >= 8;
-const gaps = (a, b) => `${fmt(dE(a, b))}/${fmt(dE(a, b, 'protan'))}/${fmt(dE(a, b, 'deutan'))}`;
+const gaps = (a, b) => `${fmt(dE(a, b))}/${fmt(dE(a, b, 'protan'))}/${fmt(dE(a, b, 'deutan'))}/${fmt(dE(a, b, 'tritan'))}`;
+const distinct = (a, b) => dE(a, b) >= 15 && dE(a, b, 'protan') >= 10 && dE(a, b, 'deutan') >= 10 && dE(a, b, 'tritan') >= 8;
 
 const series = all.map((x) => x.name).filter((n) => /^chart-\d+$/.test(n));
 const seq = all.map((x) => x.name).filter((n) => /^chart-seq-\d+$/.test(n));
@@ -62,13 +67,13 @@ for (const th of THEMES) {
   const sides = series.map((n) => lum(c(n)) > lum(page));
   const close = near.filter(([a, b]) => !apart(c(a), c(b)));
   t(`${th}: neighbouring series differ by hue, as seen (ΔE 15+) and under protanopia and deuteranopia (8+)`, !close.length, close.map(([a, b]) => `${a}/${b} ${gaps(c(a), c(b))}`).join(', '));
-  const first = [[0, 1], [0, 2], [1, 2]].filter(([a, b]) => !apart(c(series[a]), c(series[b])));
-  t(`${th}: the first three series differ that much as every pair`, !first.length, first.map(([a, b]) => `${series[a]}/${series[b]} ${gaps(c(series[a]), c(series[b]))}`).join(', '));
+  const first = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]].filter(([a, b]) => !distinct(c(series[a]), c(series[b])));
+  t(`${th}: the first four series differ as every pair, as seen (15+) and under protanopia and deuteranopia (10+) and tritanopia (8+)`, !first.length, first.map(([a, b]) => `${series[a]}/${series[b]} ${gaps(c(series[a]), c(series[b]))}`).join(', '));
   t(`${th}: every series is on the same side of the page (all darker, or all lighter)`, sides.every((s) => s === sides[0]));
   if (th.endsWith('-dark')) {
     const L = (h) => oklab(h)[0];
-    const out = series.filter((n) => L(c(n)) < 0.48 || L(c(n)) > 0.67);
-    t(`${th}: every series is a mid-tone (OKLCH L 0.48 to 0.67), so none of them is pale`, !out.length, out.map((n) => `${n} ${fmt(L(c(n)))}`).join(', '));
+    const out = series.filter((n) => L(c(n)) < 0.48 || L(c(n)) > 0.72);
+    t(`${th}: every series is a mid-tone (OKLCH L 0.48 to 0.72), so none of them is pale`, !out.length, out.map((n) => `${n} ${fmt(L(c(n)))}`).join(', '));
   } else {
     const low = near.filter(([, , r]) => r < 1.7);
     t(`${th}: neighbouring series are 1.7:1 apart`, !low.length, low.map(([a, b, r]) => `${a}/${b} ${fmt(r)}`).join(', '));

@@ -7,7 +7,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Radio, RadioGroup } from '../Radio/Radio';
 import { Rating } from '../Rating/Rating';
-import { Field } from '../Field/Field';
+import { Field, FormErrors } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Accordion, AccordionItem } from '../Accordion/Accordion';
 import { Tabs, TabList, Tab, TabPanel } from '../Tabs/Tabs';
@@ -206,5 +206,35 @@ describe('ErrorSummary links to a field that is hidden until found (L8E98)', () 
     await userEvent.click(links[1]);
     await expect.poll(() => document.activeElement?.id).toBe('l8e98-city');
     expect(document.querySelectorAll('[role="tab"]')[1].getAttribute('aria-selected')).toBe('true');
+  });
+});
+
+describe('ErrorSummary inside FormErrors', () => {
+  function Form({ errors }: { errors: Record<string, string> | null }) {
+    return <FormErrors errors={errors}>
+      <button type="button" id="fes-submit">Send</button>
+      <ErrorSummary />
+      <Field label="Email"><Input name="email" /></Field>
+      <Field id="fes-name" label="Name"><Input name="name" /></Field>
+    </FormErrors>;
+  }
+  test('with no errors of its own it lists the messages still showing, each linking to its control, and takes focus for each new errors object but not when one clears', async () => {
+    const screen = await render(<Form errors={null} />);
+    expect(document.querySelector('[data-component="error-summary"]')).toBeNull();
+    document.getElementById('fes-submit')!.focus();
+    await screen.rerender(<Form errors={{ email: 'That email is taken', name: 'Enter your name' }} />);
+    const box = document.querySelector('[data-component="error-summary"]') as HTMLElement;
+    const links = () => [...box.querySelectorAll('a')].map((a) => [a.textContent, a.getAttribute('href')]);
+    const email = document.querySelector('input[name="email"]') as HTMLInputElement;
+    expect(links()).toEqual([['That email is taken', '#' + email.id], ['Enter your name', '#fes-name']]);
+    expect(document.activeElement).toBe(box);
+    await userEvent.click(box.querySelector('a') as HTMLAnchorElement);
+    expect(document.activeElement).toBe(email);
+    await userEvent.type(email, 'x');
+    expect(links()).toEqual([['Enter your name', '#fes-name']]);
+    expect(document.activeElement).toBe(email);
+    await screen.rerender(<Form errors={{ email: 'That email is taken', name: 'Enter your name' }} />);
+    expect(links()).toHaveLength(2);
+    expect(document.activeElement).toBe(box);
   });
 });

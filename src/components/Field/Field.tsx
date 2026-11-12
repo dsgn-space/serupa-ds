@@ -12,6 +12,7 @@ import { summarySaysIt } from '../../internal/summaryFocus';
 import { warnOnce } from '../../internal/warn';
 import { en as words } from './labels';
 import { byId } from '../../internal/root';
+import { FormErrorsContext, useFormErrors } from '../../internal/formErrors';
 
 // module state: a fixed list, never changed.
 const LABELABLE = new Set(['select', 'button', 'meter', 'output', 'progress', 'textarea']);
@@ -37,6 +38,9 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   orientation?: 'vertical' | 'horizontal' | undefined;
   /** @deprecated Use orientation (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as orientation is, when orientation isn't given. */
   layout?: 'vertical' | 'horizontal' | undefined;
+  /** The control's name in the form, which picks its message from a surrounding FormErrors. Default: the name of the
+   *  control passed as the Field's child. */
+  name?: string | undefined;
   /** The control's id; by default the control's own id, or a generated one. */
   id?: string | undefined;
   /** One control (Input, Textarea, Select or any element), or with group, the set. */
@@ -48,9 +52,9 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
    invalid (with error), aria-required (with required) and disabled. group renders a <fieldset> with a <legend>
    instead, for a set of checkboxes or radios, and puts the hint and error on the fieldset. */
 /** The props Field reads from and hands to its control (a component like Input, or a DOM element). */
-type ControlProps = { id?: string; invalid?: boolean; disabled?: boolean; 'aria-describedby'?: string; 'aria-errormessage'?: string; 'aria-required'?: boolean | 'true' | 'false'; 'aria-invalid'?: boolean };
+type ControlProps = { id?: string; name?: string; invalid?: boolean; disabled?: boolean; 'aria-describedby'?: string; 'aria-errormessage'?: string; 'aria-required'?: boolean | 'true' | 'false'; 'aria-invalid'?: boolean };
 
-const OWN = { label: 1, hint: 1, error: 1, required: 1, optional: 1, disabled: 1, group: 1, orientation: 1, layout: 1, id: 1, children: 1, className: 1 } as const;
+const OWN = { label: 1, hint: 1, error: 1, name: 1, required: 1, optional: 1, disabled: 1, group: 1, orientation: 1, layout: 1, id: 1, children: 1, className: 1 } as const;
 
 /** A label, an optional hint and an error message around one form control, wired up for screen readers. className, ref and other attributes go to the outer element (a <fieldset> with group). */
 export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field', function Field(props, ref) {
@@ -58,7 +62,17 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
   const base = domId('dk-f', React.useId());
   const child = React.Children.count(props.children) === 1 && React.isValidElement(props.children) ? (props.children as React.ReactElement<ControlProps>) : null;
   const controlId = props.id || (child && child.props.id) || base + '-control';
-  const hasError = props.error != null && props.error !== false && props.error !== '';
+  // Inside FormErrors: the message for this field's name, unless error is given, and gone once the field is edited.
+  const form = React.useContext(FormErrorsContext);
+  const name = props.name ?? (child ? child.props.name : undefined);
+  const given = props.error != null && props.error !== false && props.error !== '';
+  const fromForm = !given && form && name ? form.message(name) : null;
+  const errorText = given ? props.error : fromForm;
+  const hasError = errorText != null && errorText !== false && errorText !== '';
+  const place = form ? form.place : null;
+  React.useEffect(() => (place && name ? place(name, controlId) : undefined), [place, name, controlId]);
+  // Typing in the field, or any change to it, takes its form message away: it described the value that was sent.
+  const edited = form && name && fromForm != null ? () => form.clear(name) : undefined;
   const hintId = props.hint ? base + '-hint' : null, errorId = hasError ? base + '-error' : null;
   const group = !!props.group;
   const sds = useSettings(words);
@@ -101,7 +115,7 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     ? React.createElement('legend', { className: 'dk-field__label', key: 'label' }, ...labelKids)
     : React.createElement('label', { className: 'dk-field__label', htmlFor: controlId, id: base + '-label', key: 'label', onClick: focusControl, ref: labelRef }, ...labelKids);
   const hint = props.hint ? <div className="dk-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
-  const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string} ref={errorRef}>{props.error}</span></div> : null;
+  const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string} ref={errorRef}>{errorText}</span></div> : null;
   const described = cn(hintId, errorId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
     if (!React.isValidElement(el)) return el;
@@ -127,7 +141,7 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
   const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', props.disabled && 'dk-field--disabled', props.className);
   if (group) {
     return (
-      <fieldset {...rest} ref={ref as React.Ref<HTMLFieldSetElement>} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} data-component="field">
+      <fieldset {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLFieldSetElement>} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} data-component="field">
         {label}
         {hint}
         <FieldContext.Provider value={null}>
@@ -145,9 +159,9 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     </div>
   </FieldContext.Provider>;
   // Horizontal: the label beside a column holding the control, then the hint and the error under it.
-  if (horizontal) return <div {...rest} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
+  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
   return (
-    <div {...rest} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field">
+    <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field">
       {label}
       {hint}
       {body}
@@ -155,3 +169,32 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     </div>
   );
 });
+
+// The edit listeners on the Field's own element, after any of yours: input (typing) and change (a checkbox, a select).
+function listen(rest: { onInput?: React.FormEventHandler<HTMLElement>; onChange?: React.FormEventHandler<HTMLElement> }, edited: (() => void) | undefined) {
+  if (!edited) return {};
+  return {
+    onInput: (e: React.FormEvent<HTMLElement>) => { if (rest.onInput) rest.onInput(e); edited(); },
+    onChange: (e: React.FormEvent<HTMLElement>) => { if (rest.onChange) rest.onChange(e); edited(); },
+  };
+}
+
+export interface FormErrorsProps {
+  /** The form's errors by field name, as the server sent them after a submit: { email: "That email is taken" }. Each
+   *  Field inside shows its own, and an ErrorSummary inside with no errors of its own lists them all. A new object
+   *  (the next submit) shows them all again; null or {} clears them. */
+  errors?: Readonly<Record<string, React.ReactNode>> | null | undefined;
+  /** The form, or the part of it the errors are about. */
+  children?: React.ReactNode | undefined;
+}
+
+/* FormErrors: one map of a form's errors by field name, usually what the server answered a submit with. It renders
+   nothing of its own. Each Field inside finds its message by its control's name (or its own name prop) and shows it
+   as its error, with aria-invalid and the message in the control's description; editing the field takes its message
+   away, since it was about the value that was sent. An ErrorSummary inside with no errors prop lists the messages
+   still showing, each linking to its field, and takes focus when a new errors object arrives. */
+/** A form's errors by field name, from the server: each Field inside shows its own, and an ErrorSummary lists them. */
+export function FormErrors(props: FormErrorsProps): React.ReactElement {
+  const value = useFormErrors(props.errors);
+  return <FormErrorsContext.Provider value={value}>{props.children}</FormErrorsContext.Provider>;
+}

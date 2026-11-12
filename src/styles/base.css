@@ -6,7 +6,7 @@
 @layer dk.base {
 
 /* Sizing includes padding and border everywhere, the way components are measured. */
-:where(*, *::before, *::after) { box-sizing: border-box; }
+:where(*), :where(*)::before, :where(*)::after { box-sizing: border-box; }
 
 /* Native controls, scrollbars and form fields follow the theme's light or dark mode. */
 /* With the data-brand / data-mode axes, tokens.css sets it (light dark for auto), so the root is left alone. */
