@@ -54,3 +54,15 @@ export const LongLabel: Story = {
   args: { label: 'Uploading quarterly-report-Donaudampfschifffahrtsgesellschaftskapitänskajüte-final-v2.pdf' },
   decorators: [(Story) => <div style={{ width: 200 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the label says what's in progress, and the value says how far in useful units. */
+export const DoSayWhat: Story = {
+  name: "Do: say what's in progress",
+  args: { value: 3, max: 8, label: 'Importing contacts', formatValue: (v: number) => `${v} of 8 files` },
+};
+/** Don't: a bare "Loading", which doesn't say what is loading or how far along it is. */
+export const DontJustLoading: Story = {
+  name: "Don't: just say loading",
+  args: { value: 3, max: 8, label: 'Loading', showValue: false },
+};

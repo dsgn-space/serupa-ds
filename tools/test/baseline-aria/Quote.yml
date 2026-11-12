@@ -4,6 +4,18 @@
     - paragraph: We moved our whole settings area onto it in a week, and the support tickets about it stopped.
   - text: Ada Rahman Head of Product, Lumen
 
+# DoKeepItShort
+- figure "Ada Rahman Head of Product, Lumen":
+  - blockquote:
+    - paragraph: We moved our whole settings area onto it in a week, and the support tickets about it stopped.
+  - text: Ada Rahman Head of Product, Lumen
+
+# DontWholeParagraph
+- figure "Ada Rahman Head of Product, Lumen":
+  - blockquote:
+    - paragraph: We had tried three other libraries before this one, and each time we ended up rewriting half of the components ourselves because the defaults never quite fit what our designers had drawn. This time we moved our whole settings area onto it in a week, which none of us expected, and after that the support tickets about settings stopped almost completely. Our designers now hand over screens that use the same names as the code, and our reviews have become much shorter because there is far less to argue about.
+  - text: Ada Rahman Head of Product, Lumen
+
 # Large
 - figure "Ada Rahman Head of Product, Lumen":
   - blockquote:

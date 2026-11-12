@@ -24,3 +24,16 @@ export const LongLabels: Story = {
   args: { 'aria-label': 'Report', defaultValue: 'long', options: [{ value: 'long', label: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte' }, { value: 'wrap', label: 'Quarterly revenue by region and product line' }, { value: 'short', label: 'Day' }] },
   decorators: [(Story) => <div style={{ maxWidth: '16rem' }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: one or two words a segment, so the segments stay short and even. */
+export const DoShortLabels: Story = {
+  name: 'Do: short labels',
+  args: { 'aria-label': 'Sort by', defaultValue: 'newest', options: [{ value: 'newest', label: 'Newest' }, { value: 'oldest', label: 'Oldest' }, { value: 'popular', label: 'Popular' }] },
+};
+/** Don't: sentences as labels, which make uneven segments that cut off in a narrow space. */
+export const DontSentences: Story = {
+  name: "Don't: sentences as labels",
+  args: { 'aria-label': 'Sort by', defaultValue: 'newest', options: [{ value: 'newest', label: 'Newest first' }, { value: 'oldest', label: 'Show the oldest ones first' }, { value: 'popular', label: 'Most popular this week' }] },
+  decorators: [(Story) => <div style={{ maxWidth: '20rem' }}><Story /></div>],
+};

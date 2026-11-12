@@ -51,6 +51,11 @@ Drawn from the `Disabled` story.
 - Form reset brings back `defaultValue`, also for a rating outside the form that `form` names. With `name`, the rating is sent with the form as one value.
 - In a right-to-left page the stars run from the right, and halves fill from the right.
 
+### Do and don't
+
+- **Do:** Label the stars with what's being rated: "How was the delivery?". (`DoSayWhatsRated`)
+- **Don't:** Show stars with no visible label: people have to guess what they're rating. (`DontBareStars`)
+
 ## Accessibility
 
 - **Role and name:** interactive, it's a `role="radiogroup"` named by its Field label or `aria-label`, holding a native radio per choice, named by the `ratingStars` label ("1 star", "3.5 stars"; "3,5 bintang" in `idLabels`). `readOnly` is one `role="img"` named by the `ratingValue` label ("4.3 out of 5", after its own `aria-label`: "Average, 4.3 out of 5").

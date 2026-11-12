@@ -1,3 +1,13 @@
+# DoShortLabel
+- text: Above
+- separator "or"
+- text: Below
+
+# DontSentenceLabel
+- text: Above
+- separator "Or you can continue with one of these other options"
+- text: Below
+
 # LongLabel
 - text: Above
 - separator "or continue with a single sign-on provider"

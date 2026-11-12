@@ -6,6 +6,23 @@
   - radio "4 stars" [disabled]
   - radio "5 stars" [disabled]
 
+# DoSayWhatsRated
+- text: How was the delivery?
+- radiogroup "How was the delivery?":
+  - radio "1 star"
+  - radio "2 stars"
+  - radio "3 stars" [checked]
+  - radio "4 stars"
+  - radio "5 stars"
+
+# DontBareStars
+- radiogroup "Your rating":
+  - radio "1 star"
+  - radio "2 stars"
+  - radio "3 stars" [checked]
+  - radio "4 stars"
+  - radio "5 stars"
+
 # HalfStars
 - radiogroup "Your rating":
   - radio "0.5 stars"
