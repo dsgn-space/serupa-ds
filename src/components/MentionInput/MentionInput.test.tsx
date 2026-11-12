@@ -118,6 +118,20 @@ describe('MentionInput', () => {
     expect([isOpen(), document.activeElement?.textContent]).toEqual([false, 'Before']);
   });
 
+  test('a click outside closes the list, and so does focus moving out without a key (a script, a screen reader)', async () => {
+    await render(<><button type="button">Elsewhere</button><Box /></>);
+    await userEvent.click(box());
+    await userEvent.keyboard('@a');
+    await expect.poll(isOpen).toBe(true);
+    await userEvent.click(page.getByRole('button', { name: 'Elsewhere' }));
+    await expect.poll(isOpen).toBe(false);
+    await userEvent.click(box());
+    await userEvent.keyboard(' @b');
+    await expect.poll(isOpen).toBe(true);
+    (page.getByRole('button', { name: 'Elsewhere' }).element() as HTMLElement).focus();
+    await expect.poll(isOpen).toBe(false);
+  });
+
   test('how many match is said after a pause, and "no results" when nothing does; onSearch gets the query, then null', async () => {
     const onSearch = vi.fn<(q: string | null) => void>();
     await render(<Box onSearch={onSearch} />);
