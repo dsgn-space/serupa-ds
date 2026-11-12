@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    Menu: a list of actions in the top layer next to its button. Surface with a border, 8px corners, shadow-lg,
-   4px padding, at least 192px wide. Items are 32px, text-sm, with an optional muted icon and shortcut; the
+   4px padding, its items' corners nested in its own (3px), at least 192px wide. Items are 32px, text-sm, with an optional muted icon and shortcut; the
    highlighted item (hover or keyboard) gets highlight, a destructive one danger-subtle; from the keyboard it
    also gets a 2px primary bar at its start. Groups have a muted text-xs heading; separators are 1px lines. A MenuSub item has a chevron and stays highlighted while its submenu is open. Every value goes through --menu-* tokens.
    --------------------------------------------------------------- */
@@ -8,6 +8,9 @@
 /* ContextMenu's anchor: a point at the pointer (or the focused element's corner) that the menu is placed from. */
 .dk-menu__point { position: fixed; width: var(--spacing-0); height: var(--spacing-0); pointer-events: none; }
 .dk-menu {
+  /* An item's corners nest in the menu's: its radius less the padding and border between them (8 - 4 - 1 = 3px), so
+     the gap around a highlighted item is even all the way round, whatever the brand or data-radius sets. */
+  --dk-menu-nest: max(var(--spacing-0), calc(var(--menu-radius, var(--radius-surface)) - var(--menu-padding, var(--spacing-1)) - var(--menu-border-width, var(--border-width-1))));
   --dk-menu-offset: var(--menu-offset, var(--spacing-1));
   box-sizing: border-box;
   position: fixed;
@@ -59,7 +62,7 @@
   gap: var(--menu-item-gap, var(--spacing-2));
   min-height: var(--menu-item-height, var(--control-height-md));
   padding: var(--spacing-1) var(--menu-item-padding-x, var(--spacing-2));   /* the block padding only shows on a wrapped label */
-  border-radius: var(--menu-item-radius, var(--radius-control));
+  border-radius: var(--menu-item-radius, var(--dk-menu-nest, var(--radius-control)));
   color: var(--menu-item-text, var(--text));
   text-decoration: none;
   cursor: pointer; touch-action: manipulation;

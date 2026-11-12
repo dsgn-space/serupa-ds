@@ -1150,4 +1150,15 @@ describe('Combobox: limit', () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><Combobox id="lim" aria-label="Item" options={MANY} limit={10} defaultOpen /></SerupaProvider>);
     await expect.poll(() => messagesOf(popOf('lim')).map((m) => m.textContent)).toEqual(['+20 lagi, terus ketik']);
   });
+
+  test('an option\'s corners nest in the list\'s: its radius less the gap around the option, with the default corners and with data-radius="round" (GR269)', async () => {
+    const nest = (outer: Element, inner: Element) => { const o = getComputedStyle(outer), i = getComputedStyle(inner); return [parseFloat(i.borderStartStartRadius), Math.max(0, parseFloat(o.borderStartStartRadius) - (inner.getBoundingClientRect().left - outer.getBoundingClientRect().left))]; };
+    await render(<div id="cn-host"><Combobox id="cn" aria-label="City" options={['Bandung', 'Jakarta']} /></div>);
+    await userEvent.click(el('cn'));
+    const opt = el('cn').parentElement!.querySelector('[role=option]')!, popup = opt.closest('[popover]')!;
+    expect(nest(popup, opt)).toEqual([3, 3]);
+    el('cn-host').setAttribute('data-radius', 'round');
+    const [r, want] = nest(popup, opt);
+    expect([r, r]).toEqual([want, 11]);
+  });
 });
