@@ -186,6 +186,21 @@ describe('Blocks/Comment thread', () => {
     expect(onEdit).toHaveBeenCalledTimes(1);
   });
 
+  test('loading: the list is busy, only the first skeleton is named, the reply box is there, and no empty text', async () => {
+    const screen = await render(<CommentThread comments={[]} onReply={() => {}} loading loadingCount={3} />);
+    const thread = page.getByRole('region', { name: 'Comments' });
+    expect(thread.getByRole('list').element().getAttribute('aria-busy')).toBe('true');
+    expect(thread.getByRole('listitem').elements()).toHaveLength(3);
+    await expect.poll(() => thread.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading comments']);
+    expect(page.getByText('No comments yet').elements()).toHaveLength(0);
+    await expect.element(page.getByRole('textbox')).toBeVisible();
+    await screen.rerender(<CommentThread comments={start} onReply={() => {}} labels={{ loading: 'Memuat komentar' }} loading />);
+    await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat komentar']);
+    await screen.rerender(<CommentThread comments={start} onReply={() => {}} />);
+    expect(thread.getByRole('list').element().hasAttribute('aria-busy')).toBe(false);
+    expect(thread.getByRole('article').elements()).toHaveLength(start.length);
+  });
+
   test('with people, "@" in the reply lists them, the hint says so, mentions are bold, and onReply gets who to notify', async () => {
     const people = [{ id: 'ana', label: 'Ana Putri' }, { id: 'budi', label: 'Budi Santoso' }];
     const onReply = vi.fn<(body: string, d: { mentions: { id: string }[] }) => void>();
