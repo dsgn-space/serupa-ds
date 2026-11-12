@@ -771,7 +771,23 @@
     "surface-muted": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. Secondary panels, sidebars, table headers.",
+      "$description": "Alias. Recessed: secondary panels, sidebars, table headers, filled Cards, wells. A step below `surface` in every theme (zinc-50 light, zinc-950 dark), so what sits on it reads as raised.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{zinc-950}",
+            "violet-light": "{zinc-50}",
+            "violet-dark": "{zinc-950}",
+            "emerald-light": "{zinc-50}",
+            "emerald-dark": "{zinc-950}"
+          }
+        }
+      }
+    },
+    "surface-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-50}",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page (zinc-50 light, zinc-800 dark).",
       "$extensions": {
         "com.serupa": {
           "themes": {

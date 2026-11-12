@@ -44,7 +44,7 @@
       },
       "bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
+        "$value": "{color.surface-hover}",
         "$description": "A link or button item on hover, and a selected item.",
         "$extensions": {
           "com.serupa": {

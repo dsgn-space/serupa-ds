@@ -164,8 +164,8 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-border` | `border` | The frame and the lines between rows. |
 | `--table-header-bg` | `surface-muted` | The header row's background. |
 | `--table-header-text` | `text-muted` | Header text (4.5:1 on header-bg). |
-| `--table-row-bg-hover` | `surface-muted` | A body row on hover, and every other row when striped (muted text keeps 4.5:1). |
-| `--table-row-bg-selected` | `surface-muted` | A selected row's background. |
+| `--table-row-bg-hover` | `surface-hover` | A body row on hover, and every other row when striped (muted text keeps 4.5:1). |
+| `--table-row-bg-selected` | `surface-hover` | A selected row's background. |
 | `--table-row-indicator-selected` | `primary` | The bar at the start of a selected row. |
 | `--table-focus-ring` | `focus-ring` | The keyboard focus ring (sort buttons, a scrolling table). |
 | `--table-sort-bg-pressed` | `pressed` | A sortable header's fill while it's held down. |

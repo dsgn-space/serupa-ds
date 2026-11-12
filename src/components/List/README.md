@@ -127,7 +127,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-bg` | `surface` | The background of variant="card". |
 | `--list-title-color` | `text` | An item's title. |
 | `--list-description-color` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
-| `--list-bg-hover` | `surface-muted` | A link or button item on hover, and a selected item. |
+| `--list-bg-hover` | `surface-hover` | A link or button item on hover, and a selected item. |
 | `--list-bg-pressed` | `pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |
 | `--list-indicator-selected` | `primary` | The bar at the start of a selected item. |
 | `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |

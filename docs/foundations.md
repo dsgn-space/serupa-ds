@@ -103,7 +103,8 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `highlight` | `zinc-200` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text, icons and a primary bar keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. |
 | `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface` | `white` | `zinc-900` | Page and card background. |
-| `surface-muted` | `zinc-50` | `zinc-800` | Secondary panels, sidebars, table headers. |
+| `surface-muted` | `zinc-50` | `zinc-950` | Recessed: secondary panels, sidebars, table headers, filled Cards, wells. A step below `surface` in both modes, so a card on it reads as raised. |
+| `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page. |
 | `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
 | `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
@@ -480,14 +481,14 @@ How things sit above one another: the page, raised cards, floating menus and dia
 | Level | What sits there | Surface | Edge | Shadow |
 | --- | --- | --- | --- | --- |
 | 0 · Page | The page, Navbar, Sidebar, tables | `surface` | `border` between regions | none |
-| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted` | none | none, or `inset-shadow-xs` for an input well |
+| 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or `inset-shadow-xs` for an input well |
 | 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
 | 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border-raised` | `shadow-md` |
 | 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-overlay` | `border-overlay` | `shadow-lg` |
 | 4 · Modal | Dialog and Drawer, over the `overlay` backdrop | `surface-overlay` | `border-overlay` | `shadow-xl` |
 | Inverse | Tooltip | `surface-inverse` | none | `shadow-md` |
 
-- Higher means bigger shadow and, in dark themes, a lighter surface. Don't skip the surface and edge and rely on the shadow alone.
+- Higher means bigger shadow and, in dark themes, a lighter surface; recessed is darker than the page in both modes. Don't skip the surface and edge and rely on the shadow alone.
 - Keep to one raised level per region. A card inside a card stays at level 1; give the inner one `filled` or no border instead of a second shadow.
 - Elevation means "this is above the page", not "this is important". Use color and type for emphasis.
 
@@ -998,7 +999,7 @@ Every interactive component moves through the same seven states, in this order o
 | State | When | How it looks | Tokens |
 | --- | --- | --- | --- |
 | Rest | Nothing is happening | The component's own colors | — |
-| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-muted` or `highlight`), or darker text | `secondary`, `surface-muted`, `highlight` |
+| Hover | A pointer is over it (`:hover`, only on devices that hover) | A neutral fill (`secondary`, `surface-hover` or `highlight`), or darker text | `secondary`, `surface-hover`, `highlight` |
 | Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover: `pressed` for rows, tabs, days and page buttons; filled buttons shrink slightly instead | `pressed`, `--button-press-scale` |
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
 | Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |

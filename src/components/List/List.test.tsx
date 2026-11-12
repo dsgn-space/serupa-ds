@@ -211,8 +211,8 @@ describe('List', () => {
       const title = css(titleOf('iada')).color, desc = css(titleOf('iada').nextElementSibling).color;
       for (const [name, fg, back, need] of [
         ['title', title, 'var(--surface)', 4.5], ['description', desc, 'var(--surface)', 4.5],
-        ['title on a shaded row', title, 'var(--surface-muted)', 4.5], ['description on a shaded row', desc, 'var(--surface-muted)', 4.5],
-        ['selected bar', 'var(--primary)', 'var(--surface-muted)', 3],
+        ['title on a shaded row', title, 'var(--surface-hover)', 4.5], ['description on a shaded row', desc, 'var(--surface-hover)', 4.5],
+        ['selected bar', 'var(--primary)', 'var(--surface-hover)', 3],
       ] as const) {
         const r = contrast(fg, back);
         if (r < need) low.push(`${th} ${name} ${r.toFixed(2)}`);
