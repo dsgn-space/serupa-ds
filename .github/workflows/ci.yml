@@ -222,6 +222,9 @@ jobs:
     strategy:
       # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
       fail-fast: ${{ github.event_name == 'pull_request' }}
+      # A pull request takes at most four x86 runners at once. The runners serve jobs first come first served, so
+      # without a cap a few pull requests fill them all and the merge queue's groups wait until they time out.
+      max-parallel: ${{ github.event_name == 'pull_request' && 4 || 16 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
