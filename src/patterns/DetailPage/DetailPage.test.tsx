@@ -25,6 +25,20 @@ describe('Patterns/Detail page', () => {
     expect(active().getAttribute('href')).toBe('#main');
   });
 
+  test('another project passed in shows its own name and description, not the first one\'s; the same one again keeps an edit', async () => {
+    const a = { name: 'Website redesign', description: 'New pages.', owner: 'Ana Lima', created: '2026-09-14', tasks: [] };
+    const b = { name: 'Mobile app', description: 'The phone app.', owner: 'Budi Santoso', created: '2026-10-01', tasks: [] };
+    const screen = await render(<DetailPage project={a} />);
+    expect(h1()).toBe('Website redesign');
+    await screen.rerender(<DetailPage project={b} />);
+    expect(h1()).toBe('Mobile app');
+    expect(document.querySelector('main')!.textContent).toContain('The phone app.');
+    expect(document.querySelector('main')!.textContent).not.toContain('New pages.');
+    expect(crumbs().at(-1)).toBe('Mobile app');
+    await screen.rerender(<DetailPage project={{ ...b }} />);   // a new object with the same words: nothing to replace
+    expect(h1()).toBe('Mobile app');
+  });
+
   test('a new name saves in place and shows in the h1 and the breadcrumb; an empty one says so and keeps the old', async () => {
     const onRename = vi.fn();
     const screen = await render(<DetailPage onRename={onRename} />);
