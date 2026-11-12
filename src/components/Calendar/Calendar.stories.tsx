@@ -36,3 +36,17 @@ export const LongText: Story = {
 export const WithPresets: Story = {
   args: { defaultMonth: new Date(2025, 8, 1), defaultValue: new Date(2025, 8, 1), presets: [{ label: 'Start of term', value: '2025-09-01' }, { label: 'Mid-term break', value: '2025-10-20' }, { label: 'End of term', value: '2025-12-12' }] },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a heading that says what the day is for, since the grid is named by its month only. */
+export const DoSayWhatFor: Story = {
+  name: 'Do: say what the day is for',
+  render: (args) => (
+    <section aria-labelledby="delivery-day">
+      <h3 id="delivery-day" style={{ margin: '0 0 8px', fontSize: 16 }}>Pick a delivery day</h3>
+      <Calendar {...args} />
+    </section>
+  ),
+};
+/** Don't: a calendar on its own, which only says "March 2025". */
+export const DontUnexplained: Story = { name: "Don't: show it with no context" };

@@ -338,12 +338,11 @@ describe('Input and Textarea: constraint messages in the provider\'s words (216)
     </>);
     const day = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' }).format(new Date(2026, 10, 11));
     const month = new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'long' }).format(new Date(2026, 2, 1));
-    // Firefox has no month field: type="month" falls back to text, which has no max, so nothing is out of range.
-    const months = field('v-fr-month').type === 'month';
     expect([said('v-de'), said('v-fr'), said('v-fr-month'), said('v-ar')]).toEqual([
       deLabels.invalidValue({ reason: 'rangeUnderflow', type: 'number', length: 2, min: '1.000' }),
       'La valeur doit être ' + day + ' ou plus.',
-      months ? frLabels.invalidValue({ reason: 'rangeOverflow', type: 'month', length: 7, max: month }) : '',
+      // Firefox has no month box (type falls back to text), so no max and no message there.
+      (document.getElementById('v-fr-month') as HTMLInputElement).type === 'month' ? frLabels.invalidValue({ reason: 'rangeOverflow', type: 'month', length: 7, max: month }) : '',
       arLabels.invalidValue({ reason: 'rangeOverflow', type: 'number', length: 4, max: new Intl.NumberFormat('ar-EG').format(1000) }),
     ]);
     expect(said('v-ar')).not.toMatch(/1000/);

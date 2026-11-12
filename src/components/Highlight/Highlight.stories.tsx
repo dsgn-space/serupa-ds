@@ -60,3 +60,19 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: mark what the search matched, with the query the list was filtered by. */
+export const DoMarkMatches: Story = {
+  name: 'Do: mark what was searched',
+  render: () => (
+    <ul style={{ margin: 0, paddingInlineStart: 20 }}>
+      {['São Paulo, Brazil', 'Santiago, Chile', 'San José, Costa Rica'].map((c) => <li key={c}><Highlight query="sa">{c}</Highlight></li>)}
+    </ul>
+  ),
+};
+/** Don't: a highlight for emphasis in running text; nothing was searched, so use `<strong>`. */
+export const DontEmphasis: Story = {
+  name: "Don't: highlight for emphasis",
+  render: () => <p style={{ margin: 0, maxWidth: 360 }}><Highlight query="free">Shipping is free on every order this week.</Highlight></p>,
+};

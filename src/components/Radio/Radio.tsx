@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
+import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useFormReset } from '../../internal/useFormReset';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { warnOnce } from '../../internal/warn';
+import { markKeyFocus } from '../../internal/keyFocus';
+import { listenForInput } from '../../internal/lastInput';
 import { delegateFocus, useAutoFocus } from '../../internal/focus';
 
 /** V is the radios' value type: string (or number) as you use them, inferred from value or onValueChange. */
@@ -154,6 +156,9 @@ export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>('Ra
     const onClick = rest.onClick;
     rest.onClick = (e) => { if (onClick) onClick(e); e.preventDefault(); };
   }
+  // The ring for keyboard focus where the browser's :focus-visible leaves one out (internal/keyFocus.ts).
+  markKeyFocus(rest);
+  useIsoLayoutEffect(listenForInput, []);
   const base = domId('dk-rd', React.useId()), labelId = base + '-label', descId = base + '-desc';
   const hasLabel = props.children != null && props.children !== false && props.children !== '';
   const hasDesc = props.description != null && props.description !== false && props.description !== '';

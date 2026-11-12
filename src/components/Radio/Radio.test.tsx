@@ -294,16 +294,14 @@ describe('Radio', () => {
     await userEvent.click(page.getByText('Next day', { exact: true }));
     expect(b.checked).toBe(true);
     expect(onValueChange).toHaveBeenLastCalledWith('b', expect.anything());
+    expect([css(card(b)).outlineStyle, b.hasAttribute('data-key-focus')]).toEqual(['none', false]);   // a click: no ring
+    // An arrow after the click rings the card in every engine: Safari's :focus-visible stays off for an arrow between
+    // radios, which left its keyboard users no ring, so the radio the keyboard has is marked data-key-focus too.
     await userEvent.keyboard('{ArrowUp}');
-    expect(a.checked).toBe(true);
-    expect(document.activeElement).toBe(a);
-    // The ring follows the browser's own :focus-visible, which Safari doesn't turn on for an arrow pressed after a
-    // click (Chromium does). So the ring is checked on focus that asks to be seen (focusVisible), then an arrow on.
-    a.blur();
-    a.focus({ focusVisible: true });
-    expect([document.activeElement === a, css(card(a)).outlineStyle, css(a).outlineStyle]).toEqual([true, 'solid', 'none']);
+    expect([a.checked, document.activeElement === a, a.hasAttribute('data-key-focus')]).toEqual([true, true, true]);
+    expect([css(card(a)).outlineStyle, css(a).outlineStyle]).toEqual(['solid', 'none']);
     await userEvent.keyboard('{ArrowDown}');
-    expect([b.checked, document.activeElement === b]).toEqual([true, true]);
+    expect([b.checked, document.activeElement === b, a.hasAttribute('data-key-focus')]).toEqual([true, true, false]);
     expect([css(card(b)).outlineStyle, css(card(a)).outlineStyle, css(b).outlineStyle]).toEqual(['solid', 'none', 'none']);
     // Its name is the label alone; the description describes it.
     await expect.element(page.getByRole('radio', { name: 'Express', exact: true })).toHaveAccessibleDescription('Next day');

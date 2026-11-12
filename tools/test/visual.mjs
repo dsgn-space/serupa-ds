@@ -210,7 +210,8 @@ async function compare(page, name, el) {
   // render is the same run to run, so such a difference is a real change, and keeping one under the tolerance leaves a
   // stale picture that the next pull request to redraw would commit instead (Menu kept ⌘ for weeks after it drew
   // Ctrl). The floor is for the few stories that flip a pixel or two between runs (Popover's arrow edge), which would
-  // otherwise be rewritten every time. Firefox and WebKit keep the tolerance.
+  // otherwise be rewritten every time. Firefox and WebKit keep the tolerance. Update baselines also redraws after each
+  // push to main, since a picture redrawn before another change to a shared look merges with the old one.
   if (update) {
     if (!fs.existsSync(file) || (await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'))).share > (LIGHT ? TOLERANCE : REDRAW)) fs.writeFileSync(file, shot);
     return null;

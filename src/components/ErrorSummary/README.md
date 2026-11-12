@@ -45,6 +45,11 @@ Drawn from the `WithDescription` story.
 - It takes focus when it appears, and again when its errors change (another failed submit: a field added or gone, or a message that says something new), so the page scrolls to it and a screen reader reads its heading. `autoFocus={false}` turns this off.
 - Clicking an error moves focus to its field and scrolls the field's label to the top, so the question shows above the answer. For a radio or checkbox in a fieldset, the group's legend shows, also when the error names a RadioGroup by its id. A modified click (new tab) or a field that isn't on the page follows the link as usual.
 
+### Do and don't
+
+- **Do:** Say what's wrong and how to fix it, in the field's own words: "Enter your full name". (`DoSayHowToFix`)
+- **Don't:** Write "Invalid" or "Error": people know something is wrong but not what to do. (`DontJustInvalid`)
+
 ## Accessibility
 
 - **Role and name:** a `<div>` named by its heading (`aria-labelledby`), an `<h2>` by default (`headingLevel`), then a list of links. It takes focus (`tabIndex={-1}`) rather than being a live region, so it's read once, in full, when it appears.
