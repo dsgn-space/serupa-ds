@@ -37,11 +37,11 @@ describe('PhoneInput', () => {
     expect(document.activeElement).not.toBe(field('bx-off'));
   });
 
-  test('Input\'s box around a country menu and a tel field (tel-national, inputmode tel); ref to the field, className and style to the box', async () => {
+  test('Input\'s box around a country menu and a tel field (autocomplete tel, so autofill brings the country code; inputmode tel); ref to the field, className and style to the box', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<Wrap><PhoneInput id="p" aria-label="Phone" defaultCountry="ID" ref={ref} className="extra" style={{ marginTop: '2px' }} /></Wrap>);
     const i = field('p'), b = box('p');
-    expect([i.type, i.inputMode, i.getAttribute('autocomplete'), ref.current === i]).toEqual(['tel', 'tel', 'tel-national', true]);
+    expect([i.type, i.inputMode, i.getAttribute('autocomplete'), ref.current === i]).toEqual(['tel', 'tel', 'tel', true]);
     expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['dk-input dk-phone-input dk-input--size-md extra', 'phone-input', '2px', 32]);
     expect([menu('p').getAttribute('aria-label'), menu('p').value, dial('p')]).toEqual(['Country', 'ID', '+62']);
     // Each option names the country in the locale's words, with its calling code, sorted by name.

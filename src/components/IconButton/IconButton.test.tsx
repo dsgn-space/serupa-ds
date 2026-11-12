@@ -25,11 +25,11 @@ function Icons({ ibRef }: { ibRef?: React.Ref<HTMLButtonElement | HTMLAnchorElem
 }
 
 describe('IconButton', () => {
-  test('a ghost icon-only <button>, named by label (aria-label and title); ref and className reach it; md is a 32px square', async () => {
+  test('a ghost icon-only <button>, named by label (aria-label, no native title); ref and className reach it; md is a 32px square', async () => {
     const ref = React.createRef<HTMLButtonElement | HTMLAnchorElement>();
     await render(<Icons ibRef={ref} />);
     const e = el('ib') as HTMLButtonElement;
-    expect([e.tagName, e.type, e.getAttribute('aria-label'), e.title, e.dataset.variant, e.dataset.shape, e.hasAttribute('data-icon-only'), (e.querySelector('[data-icon]') as HTMLElement).dataset.icon]).toEqual(['BUTTON', 'button', 'More actions', 'More actions', 'ghost', 'square', true, 'more_vert']);
+    expect([e.tagName, e.type, e.getAttribute('aria-label'), e.hasAttribute('title'), e.dataset.variant, e.dataset.shape, e.hasAttribute('data-icon-only'), (e.querySelector('[data-icon]') as HTMLElement).dataset.icon]).toEqual(['BUTTON', 'button', 'More actions', false, 'ghost', 'square', true, 'more_vert']);
     expect(e.className).toMatch(/dk-icon-btn/);
     expect(e.className).toMatch(/extra/);
     expect(ref.current).toBe(e);
@@ -56,8 +56,31 @@ describe('IconButton', () => {
       <IconButton id="tbare" icon="settings" label="Settings" />
     </>);
     const tip = (id: string, attr: string) => document.getElementById(el(id).getAttribute(attr)!)!.textContent;
-    expect([el('tdesc').hasAttribute('title'), tip('tdesc', 'aria-describedby'), el('tname').hasAttribute('title'), tip('tname', 'aria-labelledby'), el('tbare').title])
-      .toEqual([false, 'Open the settings', false, 'Settings', 'Settings']);
+    expect([el('tdesc').hasAttribute('title'), tip('tdesc', 'aria-describedby'), el('tdesc').hasAttribute('aria-labelledby'), el('tname').hasAttribute('title'), tip('tname', 'aria-labelledby')])
+      .toEqual([false, 'Open the settings', false, false, 'Settings']);
+  });
+
+  test('its label shows in a tooltip on keyboard focus and on hover, which a native title never did; it names the button once; hideTitle, a title or a disabled button leave it out', async () => {
+    await render(<>
+      <button id="before">Before</button>
+      <IconButton id="tip" icon="settings" label="Settings" />
+      <IconButton id="tipoff" icon="close" label="Close" hideTitle />
+      <IconButton id="tipdis" icon="close" label="Delete" disabled />
+    </>);
+    el('before').focus();
+    await userEvent.tab();
+    expect(document.activeElement).toBe(el('tip'));
+    const shown = () => [...document.querySelectorAll<HTMLElement>('[role="tooltip"]')].filter((t) => t.checkVisibility()).map((t) => t.textContent);
+    await expect.poll(shown).toEqual(['Settings']);
+    // The tooltip is its name (aria-labelledby, the same words as aria-label), not a description read again after it.
+    const named = document.getElementById(el('tip').getAttribute('aria-labelledby') || '');
+    expect([named && named.textContent, el('tip').hasAttribute('aria-describedby'), el('tip').hasAttribute('title')]).toEqual(['Settings', false, false]);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(shown).toEqual([]);
+    expect([el('tipoff').hasAttribute('aria-labelledby'), el('tipdis').hasAttribute('aria-labelledby')]).toEqual([false, true]);
+    await userEvent.hover(el('tipoff'));
+    await new Promise((f) => setTimeout(f, 600));
+    expect(shown()).toEqual([]);
   });
 
   test('a click calls onClick', async () => {
@@ -92,7 +115,8 @@ describe('IconButton', () => {
     const before = warns.length;
     const plain = { id: 'iaria', icon: 'close', 'aria-label': 'Close' } as unknown as IconButtonProps;
     await render(<IconButton {...plain} />);
-    expect([el('iaria').getAttribute('aria-label'), el('iaria').title]).toEqual(['Close', 'Close']);
+    const named = document.getElementById(el('iaria').getAttribute('aria-labelledby') || '');
+    expect([el('iaria').getAttribute('aria-label'), named && named.textContent]).toEqual(['Close', 'Close']);
     await expect.poll(() => warns.slice(before).filter((m) => /aria-label|label/.test(m))).toEqual([]);
   });
 
