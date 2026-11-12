@@ -6,7 +6,7 @@ export interface CascadeSelectLabels {
   /** CascadeSelect: the chosen path as text ("Jawa Barat › Bandung › Coblong"). */
   cascadePath: (labels: string[]) => string;
   /** CascadeSelect: a column's name when levels doesn't give one (level counts from 1). */
-  cascadeLevel: (level: number) => string;
+  cascadeLevel: (level: number, formatted: string) => string;
   /** CascadeSelect: on an option that has options under it, for screen readers, and the hint on how to reach them. */
   cascadeHasMore: (rtl: boolean) => string;
   /** CascadeSelect: the button that goes back a column on a narrow screen, a column while it loads, and an empty one. */
@@ -19,7 +19,7 @@ export interface CascadeSelectLabels {
 export const en: CascadeSelectLabels = {
   cascadePlaceholder: 'Choose…',
   cascadePath: (labels) => labels.join(' › '),
-  cascadeLevel: (level) => 'Level ' + level,
+  cascadeLevel: (level, formatted = String(level)) => 'Level ' + formatted,
   cascadeHasMore: (rtl) => 'More options: press ' + (rtl ? 'Left' : 'Right') + ' arrow',
   cascadeBack: 'Back',
   cascadeLoading: 'Loading…',
@@ -29,7 +29,7 @@ export const en: CascadeSelectLabels = {
 export const id: CascadeSelectLabels = {
   cascadePlaceholder: 'Pilih…',
   cascadePath: (labels) => labels.join(' › '),
-  cascadeLevel: (level) => 'Tingkat ' + level,
+  cascadeLevel: (level, formatted = String(level)) => 'Tingkat ' + formatted,
   cascadeHasMore: (rtl) => 'Ada pilihan lain: tekan panah ' + (rtl ? 'kiri' : 'kanan'),
   cascadeBack: 'Kembali',
   cascadeLoading: 'Memuat…',

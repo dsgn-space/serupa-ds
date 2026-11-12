@@ -2,6 +2,13 @@
 - paragraph: Showing 20 of 134
 - button "Load more"
 
+# DoShowTotal
+- paragraph: Showing 20 of 134
+- button "Load more"
+
+# DontNoTotal
+- button "Load more"
+
 # End
 - paragraph: Showing 134 of 134
 - paragraph: You’ve reached the end

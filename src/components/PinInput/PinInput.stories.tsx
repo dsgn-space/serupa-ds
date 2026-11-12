@@ -36,3 +36,15 @@ export const Overflow: Story = {
   args: { length: 12, defaultValue: '492817' },
   render: (args) => <div style={{ width: 200 }}><PinInput {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: keep the code after an error, so people can fix one character. */
+export const DoKeepCode: Story = {
+  name: 'Do: keep the code on an error',
+  render: (args) => <Field label="Verification code" error="That code doesn't match. Check the last digits."><PinInput {...args} aria-label={undefined} defaultValue="492817" /></Field>,
+};
+/** Don't: clear the boxes on an error, so people type all six again. */
+export const DontClearCode: Story = {
+  name: "Don't: clear the code on an error",
+  render: (args) => <Field label="Verification code" error="That code doesn't match. Check the last digits."><PinInput {...args} aria-label={undefined} /></Field>,
+};

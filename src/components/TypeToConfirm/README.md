@@ -40,6 +40,11 @@ Drawn from the `Default` story.
 - The field turns off autocomplete, spellcheck, autocapitalize and autocorrect, which would change what's typed.
 - `onMatch` is called when it starts or stops matching.
 
+### Do and don't
+
+- **Do:** Make the phrase the thing's own name (`acme/web`), and name the action on the button. (`DoNameTheThing`)
+- **Don't:** Ask for a word like "DELETE" with a "Confirm" button: typing it checks nothing about which thing is going. (`DontGenericWord`)
+
 ## Accessibility
 
 - **Role and name:** a text field labelled "To confirm, type" and the phrase, then a button named by `confirmLabel`.

@@ -40,6 +40,11 @@ Drawn from the `Playground` story.
 - Controlled, `value=""` empties the boxes only when they held a date, so a part typed so far stays.
 - `autoComplete="bday"` for a date of birth lets the browser fill it.
 
+### Do and don't
+
+- **Do:** Give an example in the hint, in the boxes' order ("For example, 27 3 2007" with `order="dmy"`). (`DoExampleHint`)
+- **Don't:** Leave out the example: people guess whether the day or the month comes first. (`DontNoExample`)
+
 ## Accessibility
 
 - **Role and name:** a `group` named by its Field label or `aria-label`, and described by the Field's hint and error. Each box is a text field named by its own label, Day, Month or Year; `inputmode="numeric"` brings up a number keypad without `type="number"`'s spin buttons, its dropped leading zeros or its "e". The boxes the problem is in carry `aria-invalid` (the group can't); the error is read with the group, as its description, when focus enters it.

@@ -4,6 +4,7 @@ import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { announce } from '../../internal/announce';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
 import { isComposing } from '../../internal/ime';
 import { activeIn } from '../../internal/root';
 import { Button } from '../Button/Button';
@@ -43,7 +44,7 @@ const toEnd = (el: HTMLElement) => { el.scrollTop = el.scrollHeight; };
 /** A conversation that stays at its newest message while the reader is there, with day dividers and earlier messages loaded on request.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>('Chat', function Chat(props, ref) {
-  const sds = useSettings(words), L = sds.labels;
+  const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { children: 1, hasOlder: 1, onLoadOlder: 1, loadingOlder: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
   const scroller = React.useRef<HTMLDivElement | null>(null);
   const items = React.Children.toArray(props.children).filter(React.isValidElement);
@@ -126,7 +127,7 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>('Chat',
       </div>
       {unread ? (
         <Button className="dk-chat__jump" variant="secondary" size="sm" rightIcon={<Icon icon={icons.ArrowDownward} />} onClick={jump}>
-          {L.chatNewMessages(unread)}
+          {L.chatNewMessages(unread, displayNumber(unread, locale))}
         </Button>
       ) : null}
     </div>

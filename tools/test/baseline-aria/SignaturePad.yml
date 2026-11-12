@@ -8,6 +8,27 @@
   - button "Undo" [disabled]
   - button "Clear" [disabled]
 
+# DoSayWhatItMeans
+- text: Sign to accept the terms
+- group "Sign to accept the terms":
+  - radiogroup "Signature method":
+    - radio "Draw" [checked]
+    - radio "Type"
+  - paragraph: Draw your signature with a mouse, pen or finger, or choose Type to type your name.
+  - img "Signature area, empty"
+  - button "Undo" [disabled]
+  - button "Clear" [disabled]
+
+# DontBarePad
+- group "Signature":
+  - radiogroup "Signature method":
+    - radio "Draw" [checked]
+    - radio "Type"
+  - paragraph: Draw your signature with a mouse, pen or finger, or choose Type to type your name.
+  - img "Signature area, empty"
+  - button "Undo" [disabled]
+  - button "Clear" [disabled]
+
 # InField
 - text: Sign to accept the terms Draw or type your name.
 - group "Sign to accept the terms":

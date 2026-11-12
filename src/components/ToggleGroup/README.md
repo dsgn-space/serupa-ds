@@ -37,6 +37,11 @@ import { ToggleGroup, ToggleButton } from "serupa-ds";
 - `attached` and `orientation` work as on ButtonGroup: an attached row wider than its container wraps as separate toggles (with `data-wrapped` on the group) and joins again once there's room.
 - Put it in a [Toolbar](../Toolbar/README.md) to give a row of groups one Tab stop with arrow keys.
 
+### Do and don't
+
+- **Do:** Set `size` on the group, so every toggle in it matches. (`DoGroupSize`)
+- **Don't:** Size each toggle on its own: one row ends up with buttons of different heights. (`DontMixedSizes`)
+
 ## Accessibility
 
 - **Role and name:** a `role="group"`. Name it with `aria-label` ("Text alignment"). Each button keeps `aria-pressed`, so screen readers say "Align left, toggle button, pressed".

@@ -99,7 +99,7 @@ const SITES: Record<string, Site> = {
     ui: () => <SortableList items={ITEMS} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => t.name} onReorder={() => {}} />,
     act: async () => { $('button[aria-label$=" Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*2.*3/ },
   'DataGrid: how many cells were copied': {
-    ui: () => <DataGrid aria-label="Stock" columns={[{ key: 'name', header: 'Name' }, { key: 'qty', header: 'Qty' }]} rows={[{ id: 'a', name: 'Kopi', qty: 4 }]} />,
+    ui: () => <SerupaProvider locale="en-US"><DataGrid aria-label="Stock" columns={[{ key: 'name', header: 'Name' }, { key: 'qty', header: 'Qty' }]} rows={[{ id: 'a', name: 'Kopi', qty: 4 }]} /></SerupaProvider>,   // pinned: the count follows the locale's digits
     act: async () => { await userEvent.click(document.querySelector('[role="gridcell"]') as HTMLElement); await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}'); await userEvent.copy(); }, says: /2 cells copied/ },
   'Kanban: picking a card up with Space': {
     ui: () => <Kanban aria-label="Board" columns={[{ id: 'a', title: 'To do', items: ITEMS }, { id: 'b', title: 'Done', items: [] }]} getKey={(t) => t.id} getLabel={(t) => t.name} renderCard={(t) => t.name} onMove={() => {}} />,

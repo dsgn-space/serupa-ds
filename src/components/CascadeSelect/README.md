@@ -64,6 +64,11 @@ Drawn from the `Open` story.
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor; it doesn't open |
 | Loading | "Loading…" in the next column |
 
+### Do and don't
+
+- **Do:** Name each column with `levels`: it labels the columns, and people learn the order. (`DoNameLevels`)
+- **Don't:** Give every column the same name ("Pilih"): people have to guess what each one holds. (`DontGenericLevels`)
+
 ## Accessibility
 
 - **Role and name:** the button is a `combobox` with `aria-haspopup="dialog"` and `aria-expanded`, named by a Field, a `<label>` or `aria-label`; the panel is a `dialog` named the same way. Each column is a `listbox` named by its level, and the highlighted option in each is `aria-selected`. An option with children is described as "More options: press Right arrow" (Left in right-to-left text).

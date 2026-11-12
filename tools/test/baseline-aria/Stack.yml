@@ -7,6 +7,12 @@
   - listitem: Receipts
   - listitem: Contracts
 
+# DoNestedGaps
+- text: Name Email Street City
+
+# DontOneGap
+- text: Name Email Street City
+
 # Gaps
 - text: gap=1 B C gap=2 B C gap=4 B C gap=8 B C
 

@@ -55,6 +55,11 @@ Drawn from the `Overflow` story.
 - Wrap an avatar in a Tooltip to show the name on hover; it still lines up with the others.
 - With `showMore`, "+N" opens a popover listing each hidden avatar with its name, then "N more" for the ones you didn't pass (`total`). With `onMore`, it calls your handler. Without either, "+N" is a picture, not a control.
 
+### Do and don't
+
+- **Do:** Keep `max` small (3 to 5), with "+N" for everyone else. (`DoSmallMax`)
+- **Don't:** Show everyone in one row: past five or so, it reads as texture rather than people. (`DontShowEveryone`)
+
 ## Accessibility
 
 - **Role and name:** `role="group"`, named by `label`. Each avatar keeps its own name (and status), so a screen reader reads every person shown, then "N more".

@@ -32,6 +32,11 @@ const { Fab } = window.Serupa;
 
 - The offset is measured from the safe area. On a phone with a home bar or a notch, and with `viewport-fit=cover` in the viewport meta tag, the button sits above the bar instead of under it.
 
+### Do and don't
+
+- **Do:** Use one FAB, for the action people come to the screen for. (`DoOneFab`)
+- **Don't:** Put several FABs on one screen: they compete and cover the content. (`DontSeveral`)
+
 ## Accessibility
 
 - It's a real `<button>` named by `label`. Put it where it comes in the reading order (often after the main content), since it's fixed but still focused in source order.

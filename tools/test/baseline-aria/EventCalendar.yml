@@ -54,6 +54,166 @@
       - listitem:
         - button "All day Tax filing deadline, Monday, March 31": All day Tax filing deadline
 
+# DoSayWhatToneMeans
+- button "Today"
+- button "Previous month"
+- button "Next month"
+- heading "March 2025" [level=2]
+- radiogroup "View":
+  - radio "Month" [checked]
+  - radio "Agenda"
+- grid "March 2025":
+  - rowgroup:
+    - row "Sunday Monday Tuesday Wednesday Thursday Friday Saturday":
+      - columnheader "Sunday"
+      - columnheader "Monday"
+      - columnheader "Tuesday"
+      - columnheader "Wednesday"
+      - columnheader "Thursday"
+      - columnheader "Friday"
+      - columnheader "Saturday"
+  - rowgroup:
+    - row "Sunday, February 23, 2025, No events Monday, February 24, 2025, No events Tuesday, February 25, 2025, No events Wednesday, February 26, 2025, No events Thursday, February 27, 2025, No events Friday, February 28, 2025, No events Saturday, March 1, 2025, No events":
+      - gridcell "Sunday, February 23, 2025, No events"
+      - gridcell "Monday, February 24, 2025, No events"
+      - gridcell "Tuesday, February 25, 2025, No events"
+      - gridcell "Wednesday, February 26, 2025, No events"
+      - gridcell "Thursday, February 27, 2025, No events"
+      - gridcell "Friday, February 28, 2025, No events"
+      - gridcell "Saturday, March 1, 2025, No events"
+    - row "Sunday, March 2, 2025, No events Monday, March 3, 2025, No events Tuesday, March 4, 2025, No events Wednesday, March 5, 2025, No events Thursday, March 6, 2025, No events Friday, March 7, 2025, No events Saturday, March 8, 2025, No events":
+      - gridcell "Sunday, March 2, 2025, No events"
+      - gridcell "Monday, March 3, 2025, No events"
+      - gridcell "Tuesday, March 4, 2025, No events"
+      - gridcell "Wednesday, March 5, 2025, No events"
+      - gridcell "Thursday, March 6, 2025, No events"
+      - gridcell "Friday, March 7, 2025, No events"
+      - gridcell "Saturday, March 8, 2025, No events"
+    - row "Sunday, March 9, 2025, No events Monday, March 10, 2025, No events Tuesday, March 11, 2025, No events Wednesday, March 12, 2025, 1 event Launch day, Wednesday, March 12, All day Thursday, March 13, 2025, No events Friday, March 14, 2025, 1 event Office closed, Friday, March 14, All day Saturday, March 15, 2025, No events":
+      - gridcell "Sunday, March 9, 2025, No events"
+      - gridcell "Monday, March 10, 2025, No events"
+      - gridcell "Tuesday, March 11, 2025, No events"
+      - gridcell "Wednesday, March 12, 2025, 1 event Launch day, Wednesday, March 12, All day":
+        - text: Wednesday, March 12, 2025, 1 event
+        - list:
+          - listitem:
+            - button "Launch day, Wednesday, March 12, All day": Launch day
+      - gridcell "Thursday, March 13, 2025, No events"
+      - gridcell "Friday, March 14, 2025, 1 event Office closed, Friday, March 14, All day":
+        - text: Friday, March 14, 2025, 1 event
+        - list:
+          - listitem:
+            - button "Office closed, Friday, March 14, All day": Office closed
+      - gridcell "Saturday, March 15, 2025, No events"
+    - row "Sunday, March 16, 2025, No events Monday, March 17, 2025, No events Tuesday, March 18, 2025, No events Wednesday, March 19, 2025, No events Thursday, March 20, 2025, No events Friday, March 21, 2025, No events Saturday, March 22, 2025, No events":
+      - gridcell "Sunday, March 16, 2025, No events"
+      - gridcell "Monday, March 17, 2025, No events"
+      - gridcell "Tuesday, March 18, 2025, No events"
+      - gridcell "Wednesday, March 19, 2025, No events"
+      - gridcell "Thursday, March 20, 2025, No events"
+      - gridcell "Friday, March 21, 2025, No events"
+      - gridcell "Saturday, March 22, 2025, No events"
+    - row "Sunday, March 23, 2025, No events Monday, March 24, 2025, No events Tuesday, March 25, 2025, No events Wednesday, March 26, 2025, No events Thursday, March 27, 2025, No events Friday, March 28, 2025, No events Saturday, March 29, 2025, No events":
+      - gridcell "Sunday, March 23, 2025, No events"
+      - gridcell "Monday, March 24, 2025, No events"
+      - gridcell "Tuesday, March 25, 2025, No events"
+      - gridcell "Wednesday, March 26, 2025, No events"
+      - gridcell "Thursday, March 27, 2025, No events"
+      - gridcell "Friday, March 28, 2025, No events"
+      - gridcell "Saturday, March 29, 2025, No events"
+    - 'row "Sunday, March 30, 2025, No events Monday, March 31, 2025, 1 event Due: tax filing, Monday, March 31, All day Tuesday, April 1, 2025, No events Wednesday, April 2, 2025, No events Thursday, April 3, 2025, No events Friday, April 4, 2025, No events Saturday, April 5, 2025, No events"':
+      - gridcell "Sunday, March 30, 2025, No events"
+      - 'gridcell "Monday, March 31, 2025, 1 event Due: tax filing, Monday, March 31, All day"':
+        - text: Monday, March 31, 2025, 1 event
+        - list:
+          - listitem:
+            - 'button "Due: tax filing, Monday, March 31, All day"': "Due: tax filing"
+      - gridcell "Tuesday, April 1, 2025, No events"
+      - gridcell "Wednesday, April 2, 2025, No events"
+      - gridcell "Thursday, April 3, 2025, No events"
+      - gridcell "Friday, April 4, 2025, No events"
+      - gridcell "Saturday, April 5, 2025, No events"
+
+# DontToneAlone
+- button "Today"
+- button "Previous month"
+- button "Next month"
+- heading "March 2025" [level=2]
+- radiogroup "View":
+  - radio "Month" [checked]
+  - radio "Agenda"
+- grid "March 2025":
+  - rowgroup:
+    - row "Sunday Monday Tuesday Wednesday Thursday Friday Saturday":
+      - columnheader "Sunday"
+      - columnheader "Monday"
+      - columnheader "Tuesday"
+      - columnheader "Wednesday"
+      - columnheader "Thursday"
+      - columnheader "Friday"
+      - columnheader "Saturday"
+  - rowgroup:
+    - row "Sunday, February 23, 2025, No events Monday, February 24, 2025, No events Tuesday, February 25, 2025, No events Wednesday, February 26, 2025, No events Thursday, February 27, 2025, No events Friday, February 28, 2025, No events Saturday, March 1, 2025, No events":
+      - gridcell "Sunday, February 23, 2025, No events"
+      - gridcell "Monday, February 24, 2025, No events"
+      - gridcell "Tuesday, February 25, 2025, No events"
+      - gridcell "Wednesday, February 26, 2025, No events"
+      - gridcell "Thursday, February 27, 2025, No events"
+      - gridcell "Friday, February 28, 2025, No events"
+      - gridcell "Saturday, March 1, 2025, No events"
+    - row "Sunday, March 2, 2025, No events Monday, March 3, 2025, No events Tuesday, March 4, 2025, No events Wednesday, March 5, 2025, No events Thursday, March 6, 2025, No events Friday, March 7, 2025, No events Saturday, March 8, 2025, No events":
+      - gridcell "Sunday, March 2, 2025, No events"
+      - gridcell "Monday, March 3, 2025, No events"
+      - gridcell "Tuesday, March 4, 2025, No events"
+      - gridcell "Wednesday, March 5, 2025, No events"
+      - gridcell "Thursday, March 6, 2025, No events"
+      - gridcell "Friday, March 7, 2025, No events"
+      - gridcell "Saturday, March 8, 2025, No events"
+    - row "Sunday, March 9, 2025, No events Monday, March 10, 2025, No events Tuesday, March 11, 2025, No events Wednesday, March 12, 2025, 1 event Launch, Wednesday, March 12, All day Thursday, March 13, 2025, No events Friday, March 14, 2025, 1 event Office, Friday, March 14, All day Saturday, March 15, 2025, No events":
+      - gridcell "Sunday, March 9, 2025, No events"
+      - gridcell "Monday, March 10, 2025, No events"
+      - gridcell "Tuesday, March 11, 2025, No events"
+      - gridcell "Wednesday, March 12, 2025, 1 event Launch, Wednesday, March 12, All day":
+        - text: Wednesday, March 12, 2025, 1 event
+        - list:
+          - listitem:
+            - button "Launch, Wednesday, March 12, All day": Launch
+      - gridcell "Thursday, March 13, 2025, No events"
+      - gridcell "Friday, March 14, 2025, 1 event Office, Friday, March 14, All day":
+        - text: Friday, March 14, 2025, 1 event
+        - list:
+          - listitem:
+            - button "Office, Friday, March 14, All day": Office
+      - gridcell "Saturday, March 15, 2025, No events"
+    - row "Sunday, March 16, 2025, No events Monday, March 17, 2025, No events Tuesday, March 18, 2025, No events Wednesday, March 19, 2025, No events Thursday, March 20, 2025, No events Friday, March 21, 2025, No events Saturday, March 22, 2025, No events":
+      - gridcell "Sunday, March 16, 2025, No events"
+      - gridcell "Monday, March 17, 2025, No events"
+      - gridcell "Tuesday, March 18, 2025, No events"
+      - gridcell "Wednesday, March 19, 2025, No events"
+      - gridcell "Thursday, March 20, 2025, No events"
+      - gridcell "Friday, March 21, 2025, No events"
+      - gridcell "Saturday, March 22, 2025, No events"
+    - row "Sunday, March 23, 2025, No events Monday, March 24, 2025, No events Tuesday, March 25, 2025, No events Wednesday, March 26, 2025, No events Thursday, March 27, 2025, No events Friday, March 28, 2025, No events Saturday, March 29, 2025, No events":
+      - gridcell "Sunday, March 23, 2025, No events"
+      - gridcell "Monday, March 24, 2025, No events"
+      - gridcell "Tuesday, March 25, 2025, No events"
+      - gridcell "Wednesday, March 26, 2025, No events"
+      - gridcell "Thursday, March 27, 2025, No events"
+      - gridcell "Friday, March 28, 2025, No events"
+      - gridcell "Saturday, March 29, 2025, No events"
+    - row "Sunday, March 30, 2025, No events Monday, March 31, 2025, 1 event Tax filing, Monday, March 31, All day Tuesday, April 1, 2025, No events Wednesday, April 2, 2025, No events Thursday, April 3, 2025, No events Friday, April 4, 2025, No events Saturday, April 5, 2025, No events":
+      - gridcell "Sunday, March 30, 2025, No events"
+      - gridcell "Monday, March 31, 2025, 1 event Tax filing, Monday, March 31, All day":
+        - text: Monday, March 31, 2025, 1 event
+        - list:
+          - listitem:
+            - button "Tax filing, Monday, March 31, All day": Tax filing
+      - gridcell "Tuesday, April 1, 2025, No events"
+      - gridcell "Wednesday, April 2, 2025, No events"
+      - gridcell "Thursday, April 3, 2025, No events"
+      - gridcell "Friday, April 4, 2025, No events"
+      - gridcell "Saturday, April 5, 2025, No events"
+
 # Empty
 - button "Today"
 - button "Previous month"

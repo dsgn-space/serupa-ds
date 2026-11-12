@@ -82,3 +82,16 @@ export const LongLabel: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: one FAB, for the action people come to the screen for. */
+export const DoOneFab: Story = { name: 'Do: one per screen', args: { icon: 'add', label: 'New project' } };
+/** Don't: several FABs, which compete and cover the content. */
+export const DontSeveral: Story = {
+  name: "Don't: several on one screen",
+  render: () => <div className="flex gap-4 items-center">
+    <Fab icon="add" label="New project" placement="static" />
+    <Fab icon="upload" label="Import" placement="static" />
+    <Fab icon="share" label="Share" placement="static" />
+  </div>,
+};

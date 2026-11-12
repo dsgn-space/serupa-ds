@@ -26,6 +26,11 @@ import { Prose } from "serupa-ds";
 - Links are base.css's bare links: Link's colors, underline and focus ring, and a long URL wraps. A visited link takes its own shade (`link-visited`), so readers can see what they've already read; app screens keep Link's one color.
 - A wide table or code block scrolls in its own box instead of widening the page. Images and videos never overflow the column, and an image that fails to load shows its alt text in muted italics.
 
+### Do and don't
+
+- **Do:** Keep the default column, capped at about 65 characters a line, for anything people read. (`DoReadingWidth`)
+- **Don't:** Stretch reading text across a wide screen: lines get too long to follow back to the next. (`DontFullWidth`)
+
 ## Accessibility
 
 - **Role and name:** none of its own. It's a `<div>` by default; use `as="article"` for content that stands on its own, such as a post. The headings inside keep their levels, so start them below the page's own.

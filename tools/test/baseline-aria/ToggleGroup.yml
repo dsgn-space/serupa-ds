@@ -4,6 +4,18 @@
   - button "Align center" [disabled]
   - button "Align right" [disabled]
 
+# DoGroupSize
+- group "Text alignment":
+  - button "Align left" [pressed]
+  - button "Align center"
+  - button "Align right"
+
+# DontMixedSizes
+- group "Text alignment":
+  - button "Align left" [pressed]
+  - button "Align center"
+  - button "Align right"
+
 # LongLabels
 - group "Schedule":
   - button "Every day of the week"

@@ -11,6 +11,35 @@
   - paragraph: "Activity 9: Dewi updated the delivery address for order 1048."
   - paragraph: "Activity 10: Dewi updated the delivery address for order 1049."
 
+# DoGiveSize
+- region "Recent activity":
+  - paragraph: "Activity 1: Dewi updated the delivery address for order 1040."
+  - paragraph: "Activity 2: Dewi updated the delivery address for order 1041."
+  - paragraph: "Activity 3: Dewi updated the delivery address for order 1042."
+  - paragraph: "Activity 4: Dewi updated the delivery address for order 1043."
+  - paragraph: "Activity 5: Dewi updated the delivery address for order 1044."
+  - paragraph: "Activity 6: Dewi updated the delivery address for order 1045."
+  - paragraph: "Activity 7: Dewi updated the delivery address for order 1046."
+  - paragraph: "Activity 8: Dewi updated the delivery address for order 1047."
+  - paragraph: "Activity 9: Dewi updated the delivery address for order 1048."
+  - paragraph: "Activity 10: Dewi updated the delivery address for order 1049."
+  - paragraph: "Activity 11: Dewi updated the delivery address for order 1050."
+  - paragraph: "Activity 12: Dewi updated the delivery address for order 1051."
+
+# DontNoSize
+- paragraph: "Activity 1: Dewi updated the delivery address for order 1040."
+- paragraph: "Activity 2: Dewi updated the delivery address for order 1041."
+- paragraph: "Activity 3: Dewi updated the delivery address for order 1042."
+- paragraph: "Activity 4: Dewi updated the delivery address for order 1043."
+- paragraph: "Activity 5: Dewi updated the delivery address for order 1044."
+- paragraph: "Activity 6: Dewi updated the delivery address for order 1045."
+- paragraph: "Activity 7: Dewi updated the delivery address for order 1046."
+- paragraph: "Activity 8: Dewi updated the delivery address for order 1047."
+- paragraph: "Activity 9: Dewi updated the delivery address for order 1048."
+- paragraph: "Activity 10: Dewi updated the delivery address for order 1049."
+- paragraph: "Activity 11: Dewi updated the delivery address for order 1050."
+- paragraph: "Activity 12: Dewi updated the delivery address for order 1051."
+
 # Faded
 - region "Recent activity":
   - paragraph: "Activity 1: Dewi updated the delivery address for order 1040."

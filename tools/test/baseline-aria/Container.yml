@@ -1,3 +1,9 @@
+# DoSameSize
+- text: Header Main content Footer
+
+# DontMixedSizes
+- text: Header Main content Footer
+
 # FullWidth
 - text: size="full" spans the page, keeping only the side padding.
 

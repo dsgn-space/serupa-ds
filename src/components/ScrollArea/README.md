@@ -29,6 +29,11 @@ import { ScrollArea } from "serupa-ds";
 - With `fade`, an edge with more past it fades out over 32px, a hint that there's more: use it where the scrollbar alone can go unnoticed (a phone, a row of chips). The faded edge isn't for reading, so keep padding at the edges; it fades the box's own border there too, so put a border on a wrapper around it if it needs one.
 - The scrollbar is the browser's own, so dragging, clicking the track, touch and screen readers work as they do everywhere; only its width and colors change.
 
+### Do and don't
+
+- **Do:** Give it a size: a `maxHeight` (or `height`) for the default vertical scroll. (`DoGiveSize`)
+- **Don't:** Leave out the size: it never scrolls, and pushes the rest of the page down. (`DontNoSize`)
+
 ## Accessibility
 
 - **Role and name:** while its content overflows, `role="region"` named by `aria-label`, `aria-labelledby` or "Scrolling content"; when everything fits, a plain `<div>` with no role, no name and no Tab stop.

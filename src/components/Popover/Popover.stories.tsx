@@ -96,3 +96,18 @@ export const LongContent: Story = {
   },
   decorators: [(Story) => <div style={{ minHeight: 360 }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a few fields, small enough to read at a glance. */
+export const DoKeepSmall: Story = { name: 'Do: keep it small', args: { open: true }, parameters: { centered: true }, decorators: [centered] };
+/** Don't: a long form in a popover, which needs scrolling: use a Drawer or a Dialog. */
+export const DontLongForm: Story = {
+  name: "Don't: a long form",
+  args: {
+    open: true, title: 'Edit profile', trigger: <Button variant="outline" leftIcon="edit">Edit profile</Button>,
+    children: <div className="flex flex-col gap-3">
+      {['First name', 'Last name', 'Email', 'Phone', 'Company', 'Job title', 'City', 'Country'].map((l) => <Field key={l} label={l}><Input /></Field>)}
+    </div>,
+  },
+  parameters: { centered: true }, decorators: [centered],
+};
