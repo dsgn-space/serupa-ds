@@ -172,6 +172,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           EVENT: ${{ github.event_name }}
           PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PR: ${{ github.event.pull_request.number }}
           QUEUE_BASE: ${{ github.event.merge_group.base_sha }}
           QUEUE_REF: ${{ github.event.merge_group.head_ref }}
         run: |
@@ -181,7 +182,20 @@ jobs:
             node tools/fresh.mjs --base "$QUEUE_BASE" --head "$(gh api "repos/$GH_REPO/pulls/$n" --jq .head.sha)"
           else
             # The main this run tests against: the first parent of the merge commit GitHub made for it.
-            node tools/fresh.mjs --base "$(gh api "repos/$GH_REPO/commits/$GITHUB_SHA" --jq '.parents[0].sha')" --head "$PR_HEAD"
+            node tools/fresh.mjs --base "$(gh api "repos/$GH_REPO/commits/$GITHUB_SHA" --jq '.parents[0].sha')" --head "$PR_HEAD" || exit 1
+            # A baseline this pull request changes that one in the merge queue changes too (a picture, a size or API
+            # baseline) can't merge behind it: the queue would drop this one, and its branch can't take the fix while
+            # it is queued. Fail now, with what to do, instead (#1691 behind #1690 on Kanban's size, 12 Nov).
+            mine=$(gh api --paginate "repos/$GH_REPO/pulls/$PR/files?per_page=100" --jq '.[].filename' | grep '^tools/test/baseline-' || true)
+            [ -n "$mine" ] || exit 0
+            for n in $(gh api "repos/$GH_REPO/git/matching-refs/heads/gh-readonly-queue/main" --jq '.[].ref' | sed -E 's|.*/pr-([0-9]+)-.*|\1|' | sort -u); do
+              [ "$n" = "$PR" ] && continue
+              both=$(gh api --paginate "repos/$GH_REPO/pulls/$n/files?per_page=100" --jq '.[].filename' | grep -Fx -f <(echo "$mine") || true)
+              if [ -n "$both" ]; then
+                echo "::error::#$n, in the merge queue, changes these baselines too: $(echo $both). Wait for it to merge, merge main, draw or update them again, then push."
+                exit 1
+              fi
+            done
           fi
 
   build:
@@ -472,6 +486,22 @@ jobs:
   # On a pull request, the first failed job stops the whole run: it can't pass any more, so its runners go to the next.
   # A failed queue run is out of the queue already, so the rest of it (the cross-browser components above all, up to
   # 75 minutes on an x86 runner) only keeps runners from the groups behind it. Main's own run goes on to the end.
+  # stop waits for every job it names, so a stale branch's run used to go on for its full length (#1688's queue group:
+  # fresh failed at 19:08, the run ended at 19:21). This one waits for fresh alone and stops the run in seconds.
+  stop-stale:
+    needs: [fresh]
+    if: failure() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: gh run cancel "$RUN_ID"
+
   stop:
     needs: [fresh, build, static, fix-proof, suite-x86, suite-portable, coverage]
     if: failure() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')

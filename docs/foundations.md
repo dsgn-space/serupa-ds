@@ -36,7 +36,7 @@ Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the
 
 ## Themes
 
-Six themes share **one set of foundations**: the same palette, type, spacing, radius, shadows and components. A theme only changes where the alias colors point.
+Six themes share **one set of foundations**: the same palette, type, spacing scale and components. Blue and Violet only change where the alias colors point. Modern (the `emerald` brand) also sets its own shape, elevation, motion and spacing roles; see [Modern](#modern).
 
 | Theme | Brand hue | Mode |
 | --- | --- | --- |
@@ -44,10 +44,26 @@ Six themes share **one set of foundations**: the same palette, type, spacing, ra
 | Blue Dark | `blue` | dark |
 | Violet Light | `violet` | light |
 | Violet Dark | `violet` | dark |
-| Emerald Light | `emerald` | light |
-| Emerald Dark | `emerald` | dark |
+| Modern Light | `emerald` (teal) | light |
+| Modern Dark | `emerald` (teal) | dark |
 
 Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
+
+### Modern
+
+Modern is the `emerald` brand: a calm, neutral interface with one teal accent, in the spirit of Linear, Vercel's Geist and Stripe. Its id stays `emerald`, so pages that already use it keep working. Everything is done with tokens, so components are the same in every theme.
+
+- **One accent.** `primary`, `primary-hover`, `primary-subtle` and `focus-ring` use `teal` (700 / 800 / 50 / 600 in light, 400 / 300 / 950 / 400 in dark). Everything else is neutral `zinc`.
+- **A deeper dark canvas.** In dark, `surface` is `zinc-950`, and raised and overlay surfaces, fields and muted panels are `zinc-900`. Overlay borders are a step softer (`zinc-700`), so edges stay quiet.
+- **See-through hairlines.** `border`, `border-raised` and `border-strong` are ink at low opacity rather than a fixed grey: `zinc-950` at 10% (18% for `border-strong`) in light, white at 12% (22%) in dark. On white they look like `zinc-200` and `zinc-300`, and on a muted panel, a table stripe or a coloured card they stay the same step darker than what's behind them instead of disappearing. Borders that mark a control (`field-border`) and overlay borders stay solid, and `data-contrast="more"` makes them all solid and stronger.
+- **Hairlines, not heavy shadows.** A raised card keeps a 1px edge (`border-raised`), and each elevation role is one step softer: `elevation-rest` is `shadow-2xs`, `part` is `shadow-xs`, `raised` is `shadow-sm`, `overlay` is `shadow-md` and `modal` is `shadow-lg`. `data-shadow` keeps these roles.
+- **8 to 12px corners.** `radius-control` is 8px and `radius-surface` 12px, the same as `radius-container`. `radius-inner` stays 4px for small parts such as checkboxes, and `radius-pill` stays round.
+- **Quick, quiet motion.** Nothing over 200ms: `motion-enter-md`, `motion-exit-lg`, `motion-change-md` and `motion-release` are 150ms, `motion-exit-md` 100ms, `motion-enter-lg` and `motion-change-lg` 200ms. `ease-pop` uses `ease-out-quart` and `ease-celebrate` `ease-out-expo`, so nothing overshoots, and `ease-spring` is the soft spring, which settles without a visible bounce. Reduced motion still turns motion off as in every theme.
+- **Charts lead with the accent.** `chart-1` is teal (`teal-800` light, `teal-600` dark), and the sequential and diverging ramps run in teal, so a sparkline or a first series matches the buttons and links. The other series are re-picked so neighbours still differ for every reader: orange, purple, blue, yellow, pink, violet, red. The first four (teal, orange, purple, blue) stay apart as every pair, including for colour-blind readers, so two lines that cross never look alike.
+- **More room.** `space-surface` is 32px and `space-section` 48px (24px and 32px elsewhere).
+- **Type does the work.** Modern uses the same single typeface (Inter) and type scale as the other themes, whose headings are already semibold.
+
+Contrast is checked like every theme: body text, links and buttons meet 4.5:1, borders that mark a control (`field-border`) and the focus ring meet 3:1, and `data-contrast="more"` steps the teal up to 800 / 300.
 
 **Brand and mode without JavaScript**: `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
 
@@ -63,7 +79,7 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Density**: `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
 
-**Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). `data-radius="default"` puts the theme's own corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
+**Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). Modern's own 8 and 12px corners give way to it too. `data-radius="default"` puts the theme's own corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
 
 **Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
@@ -94,7 +110,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 
 **Use aliases in your UI, the palette for the aliases.** Build screens with `primary`, `text`, `border`… and only reach for a palette color like `blue-600` directly when no alias fits; a palette color looks the same in every theme.
 
-`‹brand›` below is `blue`, `violet` or `emerald`. One exception: Emerald Light uses one step darker for `primary` (`emerald-700`), `primary-hover` (`emerald-800`) and `focus-ring` (`emerald-600`), because white text on `emerald-600` is below 4.5:1.
+`‹brand›` below is `blue`, `violet` or `emerald`. One exception: Modern (`emerald`) uses the `teal` ramp, one step darker in light: `primary` is `teal-700`, `primary-hover` `teal-800` and `focus-ring` `teal-600`, because white text on `teal-600` is below 4.5:1. Its neutral roles in dark are one step deeper too; see [Modern](#modern).
 
 | Alias | Light themes | Dark themes | Use |
 | --- | --- | --- | --- |
@@ -418,8 +434,8 @@ A container nested inside another should have a smaller radius than its parent.
 | Role | `sharp` | Default | `round` |
 | --- | --- | --- | --- |
 | `radius-inner` | 2px | 4px | 6px |
-| `radius-control` | 2px | 6px | 12px |
-| `radius-surface` | 4px | 8px | 16px |
+| `radius-control` | 2px | 6px (8px in Modern) | 12px |
+| `radius-surface` | 4px | 8px (12px in Modern) | 16px |
 | `radius-container` | 4px | 12px | 24px |
 
 Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart. The `serupa/radius-through-role` Stylelint rule holds the components to this: a corner that names `rounded-sm` up to `rounded-4xl` fails lint. `rounded-none`, `rounded-xs` (the hairline curve of a text mark, such as Highlight) and `rounded-full` pass.
