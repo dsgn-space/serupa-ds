@@ -29,7 +29,7 @@ describe('FormattedNumber', () => {
   test('bytes step by 1000 like formatFileSize: one decimal under 10, none above or for bytes; negatives keep their sign', () => {
     const b = (v: number) => formatNumber(v, 'en-US', { format: 'bytes' });
     expect([b(0), b(12), b(999), b(1500), b(820000), b(1500000), b(5e9), b(3e18), b(-2000)])
-      .toEqual([nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 0), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 12), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'short' }, 999),
+      .toEqual([nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'long' }, 0), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'long' }, 12), nf('en-US', { style: 'unit', unit: 'byte', unitDisplay: 'long' }, 999),
         '1.5 kB', '820 kB', '1.5 MB', '5 GB', '3,000 PB', '-2 kB']);
   });
 
@@ -102,7 +102,7 @@ describe('FormattedNumber: bad options, speed and byte rounding (FT1)', () => {
 
   test('bytes step up when the rounded number reaches 1000, and fractional bytes round to whole ones', () => {
     const b = (v: number) => formatNumber(v, 'en-US', { format: 'bytes' });
-    expect([b(999999), b(999.9), b(1.5), b(999999 * 1000), b(-999999), b(999), b(1024)]).toEqual(['1 MB', '1 kB', '2 byte', '1 GB', '-1 MB', '999 byte', '1 kB']);
+    expect([b(999999), b(999.9), b(1.5), b(999999 * 1000), b(-999999), b(999), b(1024)]).toEqual(['1 MB', '1 kB', '2 bytes', '1 GB', '-1 MB', '999 bytes', '1 kB']);
   });
 });
 
@@ -112,7 +112,7 @@ describe('FormattedNumber: no negative zero (GR84)', () => {
     const usd = { format: 'currency' as const, currency: 'USD' };
     expect([formatNumber(-0.004, 'en-US', usd), formatNumber(-0.004, 'de-DE', { format: 'currency', currency: 'EUR' }), formatNumber(-0.0001, 'en-US', { format: 'percent' }),
       formatNumber(-0, 'en-US'), formatNumber(-0.4, 'en-US', { maximumFractionDigits: 0 }), formatNumber(-0.4, 'en-US', { format: 'bytes' })])
-      .toEqual(['$0.00', nf('de-DE', { style: 'currency', currency: 'EUR' }, 0), '0%', '0', '0', '0 byte']);
+      .toEqual(['$0.00', nf('de-DE', { style: 'currency', currency: 'EUR' }, 0), '0%', '0', '0', '0 bytes']);
     expect([formatNumber(-0.006, 'en-US', usd), formatNumber(-1.5, 'en-US'), formatNumber(-1n, 'en-US')]).toEqual(['-$0.01', '-1.5', '-1']);
     // A signDisplay of your own is kept.
     expect(formatNumber(-0, 'en-US', { signDisplay: 'always' })).toBe(nf('en-US', { signDisplay: 'always' }, -0));
