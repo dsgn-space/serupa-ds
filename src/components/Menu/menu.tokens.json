@@ -139,7 +139,7 @@
       "item-radius": {
         "$type": "dimension",
         "$value": "{radius.radius-control}",
-        "$description": "An item's corners (6px).",
+        "$description": "An item's corners. Unset, they nest in the menu's: its radius less its padding and border (3px), following the brand and data-radius.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--menu-item-radius"

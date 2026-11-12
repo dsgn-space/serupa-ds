@@ -27,7 +27,7 @@ Warns well before a signed-in session ends, lets one action keep it going, and l
 
 <Canvas of={Stories.Warning} />
 
-## What stays the app's job
+## What stays your app's job
 
 - **The session on the server.** `onExtend` is called when someone stays: refresh the session there, and reject the promise if that fails. The session then runs out as warned. `onExpire` is called when it ends: sign out on the server.
 - **Matching the server's clock.** Start `duration` from the server's own time-out, and restart the page's timer whenever a request refreshes the session.

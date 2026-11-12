@@ -214,7 +214,7 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | Token | Default | Use |
 | --- | --- | --- |
 | `--menu-radius` | `radius-surface` | The menu's corners (8px). |
-| `--menu-item-radius` | `radius-control` | An item's corners (6px). |
+| `--menu-item-radius` | `radius-control` | An item's corners. Unset, they nest in the menu's: its radius less its padding and border (3px), following the brand and data-radius. |
 | `--menu-border-width` | `border-width-1` | The menu's border. |
 
 **Sizing**

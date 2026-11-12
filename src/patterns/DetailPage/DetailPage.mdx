@@ -33,7 +33,7 @@ A delete that fails, as `deleteFailed` starts it:
 
 <Canvas of={Stories.DeleteFails} />
 
-## What stays the app's job
+## What stays your app's job
 
 - **Storing the changes.** `onRename` gets a saved name or description, `onRemoveTask` a task once its Undo has passed, and `onDelete` the delete: return its promise, and the button shows it's busy until it settles. If it rejects, the dialog says the delete failed; put the reason in your own logs.
 - **Where it goes after the delete.** Here the page says so in place. An app may go to the list instead, with a toast that says what was deleted.
