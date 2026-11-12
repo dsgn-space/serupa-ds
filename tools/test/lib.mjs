@@ -259,6 +259,18 @@ export function scopeFiles(numstat) {
   return numstat.split('\n').filter(Boolean).map((l) => l.split('\t'))
     .filter(([added, removed, f]) => !SHARED_TEST.test(f) && !(ADDITIVE.test(f) && removed === '0' && added !== '-')).map(([, , f]) => f);
 }
+// The component, block or pattern a file is one of (its folder, or one of its baselines), or null.
+const ownerOf = (f) => (/^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
+  || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
+  || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
+  || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f))?.[1] ?? null;
+// The components, blocks and patterns a change edits itself, whatever else it changes: unlike affectedComponents,
+// a file outside their folders (a docs page, shared code) doesn't make it null. run.mjs runs these components' own
+// tests in every language even when the change tests everything in one: #1690 changed Kanban and a docs page, its
+// whole run took Thai, and Kanban's busy tests broke main in Arabic.
+export function touchedComponents(files) {
+  return new Set(files.map(ownerOf).filter((n) => n && n !== 'Introduction.mdx' && !/\.mdx$/.test(n)));
+}
 export function affectedComponents(files) {
   const names = new Set();
   for (const f of files) {
