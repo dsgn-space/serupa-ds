@@ -62,6 +62,11 @@ Drawn from the `Actions` story.
 | Read-only | `field-readonly` background, no hover change, no resize handle; still focusable and selectable |
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor, no resize handle |
 
+### Do and don't
+
+- **Do:** Size `rows` to the answer you expect: 5 or more for a description. (`DoSizeRows`)
+- **Don't:** Give a long answer one row: it reads as a one-line answer, and people write less. (`DontOneRow`)
+
 ## Accessibility
 
 - On iOS the field's text is 16px at every size, so Safari doesn't zoom the page when it takes focus; the box keeps its height.
