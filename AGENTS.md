@@ -36,7 +36,7 @@ Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since 
 The repo is on GitHub. Every change goes on its own branch and pull request, never straight to `main`. Turn on auto-merge once a pull request is ready: it joins the merge queue when its own checks pass, and the queue merges it when the queue's run passes. Never merge one that isn't green, and never bypass the queue.
 
 - A pull request's own run (`.github/workflows/ci.yml`) is the quick check: build, types and lint, the changeset check, the fix proof, the checks, and the tests and Visual of the components it changes.
-- The merge queue runs everything, unnarrowed, on the commit that becomes `main` (up to five pull requests at once): Storybook's pages, consumer, frameworks and the cross-browser component tests too. `main`'s own run is then build only.
+- The merge queue runs every job on the commit that becomes `main` (up to five pull requests at once): Storybook's pages, consumer, frameworks and the cross-browser component tests too, with the tests narrowed as a pull request's are, against the group before it. `main`'s own run is then build only, and a scheduled run tests `main` whole, with the coverage floors, every three hours.
 - Without the queue (repository variable `SERUPA_QUEUE` not `1`), a pull request runs everything itself.
 - Jobs run in Playwright's image on GitHub's runners or the project's own (repository variables `SERUPA_RUNNER` and `SERUPA_X86_RUNNER`; see "The CI runner" in `tools/README.md`). The nightly jobs are in `.github/workflows/nightly.yml`, `.github/workflows/cross-browser.yml`, `.github/workflows/canary.yml` and `.github/workflows/screen-readers.yml`.
 
