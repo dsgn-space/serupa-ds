@@ -292,9 +292,11 @@ describe('Navbar', () => {
     // brand box itself never reaches its anonymous text, which was cut off with no ellipsis.
     const b = q('#nav .dk-navbar__brand > span');
     expect(b?.textContent).toBe('Kommunikationsplattform');
-    // The message gives the edges, so a failure says by how much the brand runs under the actions.
-    const edges = () => JSON.stringify({ brandEnd: b.getBoundingClientRect().right, boxEnd: q('#nav .dk-navbar__brand').getBoundingClientRect().right, actionsStart: el('act').getBoundingClientRect().left, brand: [b.scrollWidth, b.clientWidth] });
-    expect([Math.round(b.getBoundingClientRect().right) <= Math.round(el('act').getBoundingClientRect().left), b.scrollWidth > b.clientWidth, css(b).overflow, css(b).textOverflow, document.documentElement.scrollWidth <= 320], edges()).toEqual([true, true, 'hidden', 'ellipsis', true]);
+    // Measured against the actions' box, the edge people see: the actions scroll sideways inside it, and Firefox's
+    // run had the Sign in button 34px left of the brand's end with the brand ending at the box. The message gives the
+    // edges and the box's scroll, so a failure says by how much.
+    const edges = () => JSON.stringify({ brandEnd: b.getBoundingClientRect().right, boxEnd: q('#nav .dk-navbar__brand').getBoundingClientRect().right, actionsStart: el('act').getBoundingClientRect().left, actionsBox: q('#nav .dk-navbar__actions').getBoundingClientRect().left, scrolled: q('#nav .dk-navbar__actions').scrollLeft, brand: [b.scrollWidth, b.clientWidth] });
+    expect([Math.round(b.getBoundingClientRect().right) <= Math.round(q('#nav .dk-navbar__actions').getBoundingClientRect().left), b.scrollWidth > b.clientWidth, css(b).overflow, css(b).textOverflow, document.documentElement.scrollWidth <= 320], edges()).toEqual([true, true, 'hidden', 'ellipsis', true]);
     await resize(1100);
     expect(b.scrollWidth > b.clientWidth).toBe(false);
   });

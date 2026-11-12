@@ -69,6 +69,11 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 - A press anywhere on the box, on its side padding or past the calendar button, focuses the field with the caret at the end, as the text cursor over the box promises.
 - The calendar opens from the button or Alt+↓ in the field, showing the typed or chosen month with focus on that day. Picking a day or Escape closes it and returns focus to the field. A click outside or Tab past the calendar closes it too, leaving focus where it went. On a touch screen, a finger that starts a scroll outside leaves it open; a tap outside closes it.
 
+### Do and don't
+
+- **Do:** Wrap it in a [Field](../Field/README.md) with a label, and put the format in the `hint` for people who type. (`DoLabelAndFormat`)
+- **Don't:** Show it with no label or format: people can't tell what the date is for or how to type it. (`DontBareField`)
+
 ## Accessibility
 
 - The calendar fades and grows in out of the field over 150ms, and fades and shrinks back over 100ms when it closes; with `prefers-reduced-motion` it only fades. The motion is a transition, so closing it while it opens turns back from where it is. The calendar stays while it fades out, inert, and focus goes back to the field at once. Firefox and Safari can't keep a closing popup in the top layer yet, so there it closes at once. From the keyboard there is no motion: opened by Alt+ArrowDown or Enter on the calendar button it is there at once, and Escape takes it away at once.

@@ -93,3 +93,21 @@ function States(args: ListProps) {
   );
 }
 export const LoadingAndErrors: Story = { name: 'Loading, empty and failed', render: (args) => <States {...args} /> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a short title, with the detail in the description and the status at the end. */
+export const DoTitleAndDetail: Story = {
+  name: 'Do: keep the title short',
+  args: { children: [
+    <ListItem key="a" leading="person" title="Ana Ruiz" description="ana@example.com" trailing={<Badge>Admin</Badge>} />,
+    <ListItem key="b" leading="person" title="Kenji Mori" description="kenji@example.com" trailing={<Badge>Editor</Badge>} />,
+  ] },
+};
+/** Don't: everything in the title, so it wraps and the names stop lining up. */
+export const DontCrammedTitle: Story = {
+  name: "Don't: cram everything into the title",
+  args: { children: [
+    <ListItem key="a" leading="person" title="Ana Ruiz, ana@example.com, Admin since March" />,
+    <ListItem key="b" leading="person" title="Kenji Mori, kenji@example.com, Editor since June" />,
+  ] },
+};

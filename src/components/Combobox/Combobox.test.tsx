@@ -1033,3 +1033,121 @@ describe('loading ring', () => {
     expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
   });
 });
+
+describe('Combobox: freeText, the typed text is the value', () => {
+  const CITIES = ['Jakarta', 'Jayapura', 'Bandung', 'Bogor', 'Surabaya'];
+  function City(props: { inline?: boolean; onValue?: (v: string | null) => void; onSubmit?: () => void; defaultValue?: string }) {
+    return <form onSubmit={(e) => { e.preventDefault(); props.onSubmit?.(); }} style={{ width: '320px' }}>
+      <button type="button" id="before">Before</button>
+      <Combobox id="ft" aria-label="City" name="city" freeText inlineComplete={props.inline} options={CITIES} defaultValue={props.defaultValue} onValueChange={props.onValue} />
+    </form>;
+  }
+
+  test('what is typed is the value as it is typed; the list suggests; leaving the field and Escape keep the text', async () => {
+    const got: (string | null)[] = [];
+    await render(<City onValue={(v) => got.push(v)} />);
+    el('ft').focus();
+    await userEvent.keyboard('Bekasi');
+    expect([got.at(-1), st('ft').open]).toEqual(['Bekasi', 'true']);
+    await userEvent.keyboard('{Escape}');
+    expect([st('ft').text, st('ft').open]).toEqual(['Bekasi', 'false']);
+    el('before').focus();
+    await expect.poll(() => [st('ft').text, (document.querySelector('input[name=city]') as HTMLInputElement).value]).toEqual(['Bekasi', 'Bekasi']);
+    expect(got.at(-1)).toBe('Bekasi');
+  });
+
+  test('picking a suggestion puts its label in the field and makes it the value', async () => {
+    const got: (string | null)[] = [];
+    await render(<City onValue={(v) => got.push(v)} />);
+    el('ft').focus();
+    await userEvent.keyboard('ba{ArrowDown}');
+    expect(st('ft').opts).toEqual(['Bandung', 'Surabaya']);
+    await userEvent.keyboard('{Enter}');
+    expect([st('ft').text, st('ft').open, got.at(-1)]).toEqual(['Surabaya', 'false', 'Surabaya']);
+  });
+
+  test('Enter with no suggestion active sends the form, with the text', async () => {
+    const sent = vi.fn();
+    await render(<City onSubmit={sent} />);
+    el('ft').focus();
+    await userEvent.keyboard('Bekasi{Enter}');
+    expect([sent.mock.calls.length, st('ft').open, st('ft').text]).toEqual([1, 'false', 'Bekasi']);
+  });
+
+  test('emptying the field makes the value null', async () => {
+    const got: (string | null)[] = [];
+    await render(<City defaultValue="Bogor" onValue={(v) => got.push(v)} />);
+    expect(st('ft').text).toBe('Bogor');
+    el('ft').focus();
+    await selectAll();
+    await userEvent.keyboard('{Backspace}');
+    expect(got.at(-1)).toBe(null);
+  });
+
+  test('inlineComplete fills in the first suggestion that starts with the text, the rest selected; typing on replaces it, Backspace removes it', async () => {
+    await render(<City inline />);
+    const f = el('ft');
+    expect(f.getAttribute('aria-autocomplete')).toBe('both');
+    f.focus();
+    await userEvent.keyboard('j');
+    expect([f.value, f.selectionStart, f.selectionEnd]).toEqual(['jakarta', 1, 7]);
+    await userEvent.keyboard('a');
+    expect([f.value, f.selectionStart, f.selectionEnd]).toEqual(['jakarta', 2, 7]);
+    await userEvent.keyboard('y');
+    expect([f.value, f.selectionStart, f.selectionEnd]).toEqual(['jayapura', 3, 8]);
+    await userEvent.keyboard('{Backspace}');
+    expect(f.value).toBe('jay');
+  });
+
+  test('inline completion waits for an input method (Japanese, Chinese, Korean) to confirm its text, then completes it once', async () => {
+    await render(<Combobox id="ime" aria-label="City" freeText inlineComplete options={['東京', '東京都庁', '大阪']} />);
+    const f = el('ime');
+    f.focus();
+    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    const compose = (v: string) => { setValue.call(f, v); f.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertCompositionText', data: v, isComposing: true })); };
+    f.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+    compose('と');
+    compose('東');
+    await settle(30);
+    expect([f.value, f.selectionStart, f.selectionEnd]).toEqual(['東', 1, 1]);   // left alone under the IME
+    f.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '東' }));
+    await settle(30);
+    expect([f.value, f.selectionStart, f.selectionEnd]).toEqual(['東京', 1, 2]);
+  });
+
+  test('inline completion keeps the case typed, and only completes from the start of a label', async () => {
+    await render(<City inline />);
+    const f = el('ft');
+    f.focus();
+    await userEvent.keyboard('BAN');
+    expect(f.value).toBe('BANdung');
+    await selectAll();
+    await userEvent.keyboard('dung');
+    expect(f.value).toBe('dung');
+  });
+});
+
+describe('Combobox: limit', () => {
+  const MANY = Array.from({ length: 30 }, (_, i) => 'Item ' + (i + 1));
+  test('shows at most limit matches, with "+N more, keep typing" under them, said with the count', async () => {
+    const said: string[] = [];
+    const seen = new MutationObserver(() => { const t = document.querySelector('[data-dk-announcer]')?.textContent; if (t) said.push(t); });
+    seen.observe(document.body, { subtree: true, childList: true, characterData: true });
+    await render(<SerupaProvider locale="en-US"><Combobox id="lim" aria-label="Item" options={MANY} limit={5} /></SerupaProvider>);   // digits read as en-US
+    el('lim').focus();
+    await userEvent.keyboard('item');
+    expect(st('lim').opts).toEqual(['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5']);
+    expect(messagesOf(popOf('lim')).map((m) => m.textContent)).toEqual(['+25 more, keep typing']);
+    await expect.poll(() => said.at(-1), { timeout: 3000 }).toBe('30 results. +25 more, keep typing');
+    await userEvent.keyboard(' 2');
+    expect(st('lim').opts).toEqual(['Item 2', 'Item 20', 'Item 21', 'Item 22', 'Item 23']);
+    await userEvent.keyboard('9');
+    expect([st('lim').opts, messagesOf(popOf('lim')).length]).toEqual([['Item 29'], 0]);
+    seen.disconnect();
+  });
+
+  test('its words come from the labels', async () => {
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Combobox id="lim" aria-label="Item" options={MANY} limit={10} defaultOpen /></SerupaProvider>);
+    await expect.poll(() => messagesOf(popOf('lim')).map((m) => m.textContent)).toEqual(['+20 lagi, terus ketik']);
+  });
+});

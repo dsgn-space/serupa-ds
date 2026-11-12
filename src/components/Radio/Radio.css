@@ -43,7 +43,7 @@
 .dk-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--dk-radio-dot); height: var(--dk-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-radio__input:checked + .dk-radio__dot { visibility: visible; }
 /* Focus: the 2px focus-ring outline, 2px out, like Button. The gap is transparent, so it works on tinted backgrounds. */
-.dk-radio__input:focus-visible {
+.dk-radio__input:is(:focus-visible, [data-key-focus]) {
   outline: var(--focus-ring-width) solid var(--dk-radio-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */
@@ -73,10 +73,10 @@
 .dk-radio--card .dk-radio__label { font-weight: var(--radio-card-label-weight, var(--font-medium)); }
 @media (hover: hover) { .dk-radio--card:hover:not(.dk-radio--readonly, :has(.dk-radio__input:disabled)) { border-color: var(--radio-card-border-hover, var(--field-border-hover)); } }
 .dk-radio--card:has(.dk-radio__input:checked) { --dk-radio-card-on: var(--radio-card-border-checked, var(--primary)); border-color: var(--dk-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--dk-radio-card-on); }
-.dk-radio--card:has(.dk-radio__input:focus-visible) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-radio--card .dk-radio__input:focus-visible { outline: none; }
+.dk-radio--card:has(.dk-radio__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-radio--card .dk-radio__input:is(:focus-visible, [data-key-focus]) { outline: none; }
 .dk-radio--card.dk-radio--invalid:not(:has(.dk-radio__input:checked)) { border-color: var(--radio-invalid, var(--danger)); }
-.dk-radio--card.dk-radio--invalid:has(.dk-radio__input:focus-visible) { outline-color: var(--radio-invalid, var(--danger)); }
+.dk-radio--card.dk-radio--invalid:has(.dk-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--danger)); }
 @media (forced-colors: active) { .dk-radio--card:has(.dk-radio__input:checked) { --dk-radio-card-on: Highlight; } }
 @media (forced-colors: active) { .dk-radio__dot { background: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind

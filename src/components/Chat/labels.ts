@@ -16,6 +16,24 @@ export interface ChatLabels {
   chatMessage: string;
   chatSend: string;
   chatStop: string;
+  /** ChatMessage: the status line while a reply hasn't started, said once by screen readers. */
+  chatThinking: string;
+  /** ChatMessage: the reasoning section's toggle, given how many seconds it took, or without a time. */
+  chatThoughtFor: (seconds: number) => string;
+  chatReasoning: string;
+  /** ChatSteps: each step's state in words, after its name. */
+  chatStepRunning: string;
+  chatStepDone: string;
+  chatStepFailed: string;
+  /** ChatApproval: its two buttons, and the record it leaves once the person answers. */
+  chatApprove: string;
+  chatDeny: string;
+  chatApproved: string;
+  chatDenied: string;
+  /** ChatMessage: which of a regenerated reply's versions shows, given its number and how many, and the buttons between them. */
+  chatResponseOf: (index: number, count: number) => string;
+  chatPreviousResponse: string;
+  chatNextResponse: string;
 }
 export const en: ChatLabels = {
   chatNewMessages: (count) => count === 1 ? '1 new message' : `${count} new messages`,
@@ -28,6 +46,19 @@ export const en: ChatLabels = {
   chatMessage: 'Message',
   chatSend: 'Send',
   chatStop: 'Stop',
+  chatThinking: 'Thinking…',
+  chatThoughtFor: (seconds) => seconds === 1 ? 'Thought for 1 second' : `Thought for ${seconds} seconds`,
+  chatReasoning: 'Reasoning',
+  chatStepRunning: 'In progress',
+  chatStepDone: 'Done',
+  chatStepFailed: 'Failed',
+  chatApprove: 'Approve',
+  chatDeny: 'Deny',
+  chatApproved: 'Approved',
+  chatDenied: 'Denied',
+  chatResponseOf: (i, c) => 'Response ' + i + ' of ' + c,
+  chatPreviousResponse: 'Previous response',
+  chatNextResponse: 'Next response',
 };
 export const id: ChatLabels = {
   chatNewMessages: (count) => `${count} pesan baru`,
@@ -40,4 +71,17 @@ export const id: ChatLabels = {
   chatMessage: 'Pesan',
   chatSend: 'Kirim',
   chatStop: 'Berhenti',
+  chatThinking: 'Berpikir…',
+  chatThoughtFor: (seconds) => `Berpikir selama ${seconds} detik`,
+  chatReasoning: 'Penalaran',
+  chatStepRunning: 'Berjalan',
+  chatStepDone: 'Selesai',
+  chatStepFailed: 'Gagal',
+  chatApprove: 'Setujui',
+  chatDeny: 'Tolak',
+  chatApproved: 'Disetujui',
+  chatDenied: 'Ditolak',
+  chatResponseOf: (i, c) => 'Jawaban ' + i + ' dari ' + c,
+  chatPreviousResponse: 'Jawaban sebelumnya',
+  chatNextResponse: 'Jawaban berikutnya',
 };

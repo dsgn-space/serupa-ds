@@ -6841,22 +6841,54 @@
     "radius-inner": {
       "$type": "dimension",
       "$value": "{radius.rounded-sm}",
-      "$description": "A small part inside or beside a control: a checkbox, a key, a clear or stepper button, the indicator of a segmented control, the focus ring of a link in text, inline code. 4px."
+      "$description": "A small part inside or beside a control: a checkbox, a key, a clear or stepper button, the indicator of a segmented control, the focus ring of a link in text, inline code. 4px.",
+      "$extensions": {
+        "com.serupa": {
+          "roundness": {
+            "sharp": "{rounded-xs}",
+            "round": "{rounded-md}"
+          }
+        }
+      }
     },
     "radius-control": {
       "$type": "dimension",
       "$value": "{radius.rounded-md}",
-      "$description": "A control or an item people press or type in: buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree. 6px."
+      "$description": "A control or an item people press or type in: buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree. 6px.",
+      "$extensions": {
+        "com.serupa": {
+          "roundness": {
+            "sharp": "{rounded-xs}",
+            "round": "{rounded-xl}"
+          }
+        }
+      }
     },
     "radius-surface": {
       "$type": "dimension",
       "$value": "{radius.rounded-lg}",
-      "$description": "A surface that holds content or floats over the page: alerts, tables, lists, accordions, drop zones, and menus, popovers, list boxes and toasts. 8px."
+      "$description": "A surface that holds content or floats over the page: alerts, tables, lists, accordions, drop zones, and menus, popovers, list boxes and toasts. 8px.",
+      "$extensions": {
+        "com.serupa": {
+          "roundness": {
+            "sharp": "{rounded-sm}",
+            "round": "{rounded-2xl}"
+          }
+        }
+      }
     },
     "radius-container": {
       "$type": "dimension",
       "$value": "{radius.rounded-xl}",
-      "$description": "A large container: cards, dialogs, drawers and carousels. 12px."
+      "$description": "A large container: cards, dialogs, drawers and carousels. 12px.",
+      "$extensions": {
+        "com.serupa": {
+          "roundness": {
+            "sharp": "{rounded-sm}",
+            "round": "{rounded-3xl}"
+          }
+        }
+      }
     },
     "radius-pill": {
       "$type": "dimension",
