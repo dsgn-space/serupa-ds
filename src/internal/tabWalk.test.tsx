@@ -41,8 +41,11 @@ async function walk(from: HTMLElement, to: HTMLElement, shift: boolean): Promise
     const list = at?.closest<HTMLElement>('[data-component="virtual-list"]');
     if (list && list !== at && !jumped) {
       jumped = true;
+      const drawn = list.textContent;
       list.scrollTop = shift ? 0 : list.scrollHeight;
-      await frame();
+      // Until the rows there are drawn: WebKit sends the scroll event a frame or more later, and a Tab before then
+      // went on from the rows at the top (150 presses reached row 149 of 10,000).
+      for (let f = 0; f < 30 && list.textContent === drawn; f++) await frame();
     }
   }
   return `focus didn't get ${shift ? 'back' : 'through'} in ${STEPS} presses of ${shift ? 'Shift+Tab' : 'Tab'} (last on ${describeEl(document.activeElement)})`;

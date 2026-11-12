@@ -70,7 +70,11 @@
   cursor: pointer; overflow-wrap: anywhere; touch-action: manipulation;
 }
 @media (hover: hover) { .dk-cascade-select__option:hover:not([aria-disabled="true"]) { background: var(--cascade-select-option-hover, var(--highlight)); } }
-.dk-cascade-select__option--on { background: var(--cascade-select-option-on, var(--primary-subtle)); font-weight: var(--font-medium); }
+/* The chosen path: a tint and a 2px primary bar at the start (right in rtl), at the weight of the others so a long
+   name wraps the same once picked. */
+.dk-cascade-select__option { --dk-bar: var(--border-width-2); }
+.dk-cascade-select__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
+.dk-cascade-select__option--on { background: var(--cascade-select-option-on, var(--primary-subtle)); box-shadow: inset var(--dk-bar) 0 0 var(--cascade-select-option-indicator, var(--primary)); }
 .dk-cascade-select__option:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-cascade-select__option[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-cascade-select__label { flex: auto; min-inline-size: var(--spacing-0); }

@@ -72,6 +72,21 @@ html, body { background-color: var(--surface); }
 .sb-dodont__verdict { color: var(--success-text); font-weight: 600; }
 .sb-dodont__item--dont .sb-dodont__verdict { color: var(--danger-text); }
 @media (forced-colors: active) { .sb-dodont__item { border-top-color: CanvasText; } }
+
+/* The boolean switch in every theme: Storybook draws the half that isn't chosen in 50%-alpha text (2.75:1 on its
+   light track), so it takes the text color instead; the chosen half still stands out as the raised chip. */
+.docblock-argstable label:has(> input[role="switch"]:checked) > span:first-of-type,
+.docblock-argstable label:has(> input[role="switch"]:not(:checked)) > span:last-of-type { color: var(--text) !important; opacity: 1 !important; }
+/* "Show code" and "Copy code" under a story: Storybook's gray text is 3:1 on a dark page. */
+[data-theme$="-dark"] .sbdocs-preview-actions button { color: var(--text) !important; background-color: var(--surface-muted) !important; border-color: var(--border) !important; }
+/* "Show 4 more…" in a type's list of values: Storybook's own blue is 3.7:1 on a dark page. */
+[data-theme$="-dark"] .docblock-argstable summary { color: var(--primary) !important; }
+/* Links Storybook draws itself inside the docs' own blocks (a Do and don't caption, a README section) keep its
+   light-theme blue, 3.1:1 on a dark page. */
+[data-theme$="-dark"] a.sbdocs-a:not(.docs-story *) { color: var(--primary) !important; }
+
+/* A docs block that scrolls sideways (the contrast matrix) is in the tab order so a keyboard can scroll it: show where focus is. */
+.sbdocs [role="region"][tabindex="0"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .sbdocs-content .sb-copy-guide { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); color: var(--text-muted); }
 
 /* Reflow (WCAG 1.4.10 on the docs themselves): at 320px, which is a 1280px screen at 400% zoom, a page scrolls

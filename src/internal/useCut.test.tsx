@@ -52,7 +52,8 @@ describe('cut labels', () => {
       expect([label.scrollWidth <= label.clientWidth, item.hasAttribute('title')]).toEqual([true, false]);
       document.head.append(rule);
       await expect.poll(() => label.scrollWidth > label.clientWidth, { timeout: 3000 }).toBe(true);   // the font came and cut it
-      await expect.poll(() => item.getAttribute('title')).toBe('Notification settings');
+      // WebKit once left it untitled after the cut: the message says what the font set and the label read then.
+      await expect.poll(() => item.getAttribute('title'), { message: JSON.stringify({ status: document.fonts.status, scroll: label.scrollWidth, client: label.clientWidth }) }).toBe('Notification settings');
     } finally { rule.remove(); }
   });
 });
