@@ -59,6 +59,13 @@ Drawn from the `Extras` story.
 - Use status tones for status and palette tones for categories. Don't make a category red or green: it reads as a status.
 - Use `subtle` by default and `solid` sparingly: one strong badge per row or card.
 
+### Do and don't
+
+- **Do:** Keep the label to a word or two. (`DoShortLabel`)
+- **Don't:** Put a sentence in a badge: it gets cut off, and the full text shows only on hover. (`DontSentence`)
+- **Do:** Use palette tones for categories, such as teams or topics. (`DoPaletteForCategories`)
+- **Don't:** Use status tones for categories: a red or green team reads as a problem or a success. (`DontStatusForCategories`)
+
 ### Styles
 
 | Style | Light themes | Dark themes | Use for |

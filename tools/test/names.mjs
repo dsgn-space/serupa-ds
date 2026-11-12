@@ -15,6 +15,7 @@ const DEMO = /Sizes|States|Shapes|Locales|Tones|Variants|Destructive|Disabled|Lo
 // "Component/Story": why its repeated names are fine, or what still has to change.
 const KNOWN = {
   'NotificationCenter/Open': 'each "Mark as read" is described by its row\'s title (aria-describedby, TF4 #940), which the snapshot doesn\'t show',
+  'NotificationCenter/WithSettings': 'the same list as Open: each "Mark as read" is described by its row\'s title (aria-describedby, TF4 #940)',
   'NumberInput/Currency': 'each field\'s Decrease and Increase sit in that field\'s own labelled group, as in every number field',
   'Toast/Burst': 'each toast\'s "Dismiss" is described by its title (aria-describedby, TF4), which the snapshot doesn\'t show',
   'Toast/TopCenter': 'each toast\'s "Dismiss" is described by its title (aria-describedby, TF4), which the snapshot doesn\'t show',

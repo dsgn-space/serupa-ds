@@ -46,6 +46,13 @@ Drawn from the `LongText` story.
 - Keep the `title` to a few words and let the message say what happened and what to do. Put the way out in `actions`, such as "Update card".
 - Add `onDismiss` only when the message can be safely ignored; leave it out for problems that still need fixing.
 
+### Do and don't
+
+- **Do:** Say what happened and what to do next, with the way out in `actions`. (`DoWhatAndNext`)
+- **Don't:** Show a generic "Something went wrong": people can't tell what failed or how to fix it. (`DontGenericError`)
+- **Do:** Pick the tone from what happened: `info` for news. (`DoMatchTone`)
+- **Don't:** Use `danger` for something that isn't a problem: red loses its meaning, and real problems get missed. (`DontAlarmingTone`)
+
 ## Accessibility
 
 - `role="alert"` (warning, danger) is read out at once when the alert appears; `role="status"` waits for a pause. A screen reader only announces an alert that's added to the page, so render it when the event happens rather than toggling its text.

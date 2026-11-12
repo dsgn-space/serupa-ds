@@ -119,7 +119,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | --- | --- | --- |
 | `--date-picker-button` | `text-muted` | The calendar button's icon (3:1 on the field). |
 | `--date-picker-button-hover` | `text` | The calendar button's icon on hover. |
-| `--date-picker-button-bg-hover` | `surface-muted` | The calendar button's background on hover. |
+| `--date-picker-button-bg-hover` | `secondary` | The calendar button's background on hover, as the other buttons inside fields (PasswordInput's show and hide, NumberInput's steps). |
 | `--date-picker-focus-ring` | `focus-ring` | The calendar button's keyboard focus ring. |
 | `--date-picker-popup-bg` | `surface-overlay` | The calendar panel's background. |
 | `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |

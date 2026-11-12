@@ -205,6 +205,7 @@ export const labels: SerupaLabels = {
   clearNotifications: '全部清除',
   clearNotificationsConfirm: '清除所有通知？此操作无法撤消。',
   keepNotifications: '保留',
+  notificationSettings: '通知设置',
   notificationsUnread: (count) => (count ? '通知，' + n(count) + ' 条未读' : '通知'),
   decrease: '减少',
   increase: '增加',

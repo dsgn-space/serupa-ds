@@ -1,0 +1,42 @@
+# Default
+- figure "Ada Rahman Head of Product, Lumen":
+  - blockquote:
+    - paragraph: We moved our whole settings area onto it in a week, and the support tickets about it stopped.
+  - text: Ada Rahman Head of Product, Lumen
+
+# Large
+- figure "Ada Rahman Head of Product, Lumen":
+  - blockquote:
+    - paragraph: We moved our whole settings area onto it in a week, and the support tickets about it stopped.
+  - text: Ada Rahman Head of Product, Lumen
+
+# LongText
+- figure "Maximiliane Wolfeschlegelsteinhausenbergerdorff Senior Vice President of Customer Experience and Operations, Donaudampfschifffahrtsgesellschaft":
+  - blockquote:
+    - paragraph: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a quote long enough to wrap several times in a narrow column, because some people have a lot to say.
+  - text: Maximiliane Wolfeschlegelsteinhausenbergerdorff Senior Vice President of Customer Experience and Operations, Donaudampfschifffahrtsgesellschaft
+
+# Paragraphs
+- figure "Ada Rahman Head of Product, Lumen":
+  - blockquote:
+    - paragraph: The first release was rough. The second fixed almost everything we reported.
+    - paragraph: By the third, we stopped keeping a list.
+  - text: Ada Rahman Head of Product, Lumen
+
+# Playground
+- figure "Ada Rahman Head of Product, Lumen":
+  - blockquote:
+    - paragraph: We moved our whole settings area onto it in a week, and the support tickets about it stopped.
+  - text: Ada Rahman Head of Product, Lumen
+
+# WithAvatar
+- figure "Ada Rahman Head of Product, Lumen":
+  - blockquote:
+    - paragraph: We moved our whole settings area onto it in a week, and the support tickets about it stopped.
+  - text: Ada Rahman Head of Product, Lumen
+
+# WordsOnly
+- figure:
+  - blockquote:
+    - paragraph: We moved our whole settings area onto it in a week, and the support tickets about it stopped.
+

@@ -209,6 +209,7 @@ export const labels: SerupaLabels = {
   clearNotifications: 'Alle löschen',
   clearNotificationsConfirm: 'Alle Benachrichtigungen löschen? Das lässt sich nicht rückgängig machen.',
   keepNotifications: 'Behalten',
+  notificationSettings: 'Benachrichtigungseinstellungen',
   notificationsUnread: (count) => (count ? 'Benachrichtigungen, ' + n(count) + ' ungelesen' : 'Benachrichtigungen'),
   decrease: 'Verringern',
   increase: 'Erhöhen',

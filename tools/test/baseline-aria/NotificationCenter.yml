@@ -57,3 +57,33 @@
 - button "Show an error"
 - button "Notifications"
 
+# WithSettings
+- button "Notifications, 2 unread": Notifications
+- dialog "Notifications":
+  - heading "Notifications" [level=2]
+  - button "Close"
+  - list:
+    - listitem:
+      - paragraph: "Unread: Payment failed"
+      - paragraph: The card ending 4242 was declined.
+      - time: 2 min. ago
+      - button "Mark as read"
+    - listitem:
+      - paragraph: "Unread: Invoice sent"
+      - time: 15 min. ago
+      - button "Mark as read"
+    - listitem:
+      - paragraph: Storage almost full
+      - paragraph: 9.6 GB of 10 GB used.
+      - time: 1 hr. ago
+    - listitem:
+      - paragraph: New comment on "Q3 plan"
+      - time: 3 hr. ago
+    - listitem:
+      - paragraph: Export ready
+      - time: yesterday
+  - link "Notification settings":
+    - /url: "#settings/notifications"
+  - button "Mark all as read"
+  - button "Clear all"
+
