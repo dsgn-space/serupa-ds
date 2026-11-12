@@ -71,6 +71,11 @@ Drawn from the `Multiple` story.
 - The list opens under the field in the top layer, at least as wide as the field and up to 240px tall, and flips above when there's no room. With no room above or below either, it takes the roomier side and gets shorter, scrolling inside.
 - It fades and grows in from the edge facing the field, and fades and shrinks back out a little faster on close, inert while it goes, as Menu, Popover and DatePicker do. Closed mid-way, it turns back from where it is. Under reduced motion it only fades. From the keyboard there is no motion: opened by typing or an arrow the list is there at once, and Escape takes it away at once.
 
+### Do and don't
+
+- **Do:** Give it a visible label with [Field](../Field/README.md), which stays in view after something is picked. (`DoVisibleLabel`)
+- **Don't:** Use the placeholder as the only label: it disappears as soon as people pick or type. (`DontPlaceholderLabel`)
+
 ## Accessibility
 
 - The ARIA combobox pattern: `role="combobox"` with `aria-expanded`, `aria-controls` (while the list is open), `aria-autocomplete="list"` (`"both"` with `inlineComplete`) and `aria-activedescendant`, and a `role="listbox"` of `role="option"` items with `aria-selected`. The loading message is `role="status"`. Once typing stops, the number of matches ("2 results"), "No results. Try other words." and "Couldn't load" are said through the shared announcer, since a status row that appears with its text already in it isn't read by every screen reader. A string `emptyText` is said in place of it.

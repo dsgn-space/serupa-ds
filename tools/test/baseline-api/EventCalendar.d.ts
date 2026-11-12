@@ -4,8 +4,8 @@ interface EventCalendarLabels {
     calendarView: string;
     monthView: string;
     agendaView: string;
-    eventCount: (count: number) => string;
-    moreEvents: (count: number) => string;
+    eventCount: (count: number, formatted: string) => string;
+    moreEvents: (count: number, formatted: string) => string;
     allDay: string;
     eventTime: (from: string, to: string) => string;
     repeats: string;

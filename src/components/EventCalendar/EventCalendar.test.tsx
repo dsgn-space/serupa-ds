@@ -5,6 +5,7 @@ import { render as draw } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
+import { idLabels } from '../../internal/labels';
 import { EventCalendar, type CalendarEvent } from './EventCalendar';
 
 // The tests read dates and times as English writes them; the second-language runs would write them otherwise.
@@ -213,5 +214,11 @@ describe('EventCalendar and the screen width', () => {
       for (let k = 0; k < 3; k++) await screen.rerender(<EventCalendar events={EVENTS} defaultMonth={MARCH} maxPerDay={k + 2} />);
       expect(spy).not.toHaveBeenCalled();
     } finally { spy.mockRestore(); }
+  });
+});
+
+describe('EventCalendar labels', () => {
+  test('eventCount and moreEvents say the count as given, in the locale\'s digits ("٢ acara", "+٣ lagi")', () => {
+    expect([idLabels.eventCount(2, '٢'), idLabels.moreEvents(3, '٣'), idLabels.eventCount(0, '٠')]).toEqual(['٢ acara', '+٣ lagi', 'Tidak ada acara']);
   });
 });

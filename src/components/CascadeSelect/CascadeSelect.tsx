@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { cn, domId, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
 import { useFieldControl } from '../../internal/field';
 import { useFormReset } from '../../internal/useFormReset';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
@@ -73,7 +74,7 @@ const keyOf = (values: string[]) => JSON.stringify(values);
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, CascadeSelectProps>('CascadeSelect', function CascadeSelect(props, ref) {
   props = useFieldControl(props);
-  const sds = useSettings(words), L = sds.labels;
+  const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, loadOptions: 1, levels: 1, selectParents: 1, placeholder: 1, size: 1, invalid: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1, readOnly: 1 } as const);
   const base = domId('dk-cs', React.useId());
   const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
@@ -234,7 +235,7 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
     e.preventDefault();
   };
 
-  const labelFor = (c: number) => (props.levels && props.levels[c]) || L.cascadeLevel(c + 1);
+  const labelFor = (c: number) => (props.levels && props.levels[c]) || L.cascadeLevel(c + 1, displayNumber(c + 1, locale));
   const empty = !value.length;
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (

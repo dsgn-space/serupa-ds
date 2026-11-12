@@ -7,6 +7,15 @@
 # Default
 - 'img "Sign-ups, last 12 weeks: from 12 to 18, low 11, high 22"'
 
+# DoShowLatest
+- paragraph:
+  - strong: "18"
+  - text: sign-ups this week
+  - 'img "Sign-ups, last 12 weeks: from 12 to 18, low 11, high 22"'
+
+# DontLineAlone
+- 'img "Sign-ups, last 12 weeks: from 12 to 18, low 11, high 22"'
+
 # Flat
 - 'img "Open incidents: from 5 to 5, low 5, high 5"'
 

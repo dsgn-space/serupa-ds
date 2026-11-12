@@ -8,6 +8,23 @@
     - text: 03/14/2025
   - button "Choose dates" [disabled]
 
+# DoNameEnds
+- text: Stay mm/dd/yyyy
+- group:
+  - textbox "Check-in":
+    - /placeholder: mm/dd/yyyy
+  - textbox "Check-out":
+    - /placeholder: mm/dd/yyyy
+  - button "Choose dates"
+
+# DontBareRange
+- group "Dates":
+  - textbox "Start date":
+    - /placeholder: mm/dd/yyyy
+  - textbox "End date":
+    - /placeholder: mm/dd/yyyy
+  - button "Choose dates"
+
 # InField
 - text: Stay mm/dd/yyyy, from today on
 - group:

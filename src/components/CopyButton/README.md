@@ -43,6 +43,11 @@ Drawn from the `VariantsAndSizes` story.
 - If the browser refuses, it says "Couldn’t copy. Select the text and copy it yourself." (`labels.copyFailed`) and calls `onCopyError`.
 - Your `onClick` runs first; call `event.preventDefault()` in it to stop the copy.
 
+### Do and don't
+
+- **Do:** Show the text beside the button, so people see what they copy and can select it if copying fails. (`DoShowTheText`)
+- **Don't:** Put the button on its own: people copy something they can't check. (`DontButtonAlone`)
+
 ## Accessibility
 
 - It's a real `<button>`. "Copied" is announced in the shared polite status region, and a failure in the assertive one.

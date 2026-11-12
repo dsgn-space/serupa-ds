@@ -1,3 +1,17 @@
+# DoNeutralTones
+- list:
+  - listitem: Documents
+  - listitem: People
+  - listitem: Schedule
+  - listitem: 2 failed uploads
+
+# DontDecorativeTones
+- list:
+  - listitem: Documents
+  - listitem: People
+  - listitem: Schedule
+  - listitem: 2 failed uploads
+
 # InACard
 - paragraph: Backups
 - paragraph: Every night at 02:00, kept for 30 days.

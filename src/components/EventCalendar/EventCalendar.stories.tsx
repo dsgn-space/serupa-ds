@@ -38,3 +38,23 @@ export const LongText: Story = {
     ],
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: say what a color means in the title too. */
+export const DoSayWhatToneMeans: Story = {
+  name: 'Do: say what the color means',
+  args: { events: [
+    { id: 'tax', title: 'Due: tax filing', start: '2025-03-31', allDay: true, tone: 'danger' },
+    { id: 'holiday', title: 'Office closed', start: '2025-03-14', allDay: true, tone: 'warning' },
+    { id: 'launch', title: 'Launch day', start: '2025-03-12', allDay: true, tone: 'success' },
+  ] },
+};
+/** Don't: color alone, which doesn't reach everyone. */
+export const DontToneAlone: Story = {
+  name: "Don't: rely on color alone",
+  args: { events: [
+    { id: 'tax', title: 'Tax filing', start: '2025-03-31', allDay: true, tone: 'danger' },
+    { id: 'holiday', title: 'Office', start: '2025-03-14', allDay: true, tone: 'warning' },
+    { id: 'launch', title: 'Launch', start: '2025-03-12', allDay: true, tone: 'success' },
+  ] },
+};

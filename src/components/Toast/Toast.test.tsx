@@ -387,7 +387,7 @@ describe('Toast', () => {
   });
 
   test('at most 3 show (newest nearest the edge), the rest wait under "+9 more", and none goes off screen; closing one brings the next back; limit sets the number', async () => {
-    await render(<App />);
+    await render(<SerupaProvider locale="en-US"><App /></SerupaProvider>);
     React.act(() => { for (let i = 1; i <= 12; i++) toast({ title: 'Upload ' + i + ' failed', duration: 0 }); });
     await landed();
     expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['Upload 10 failed', 'Upload 11 failed', 'Upload 12 failed'], '+9 more']);
@@ -403,7 +403,7 @@ describe('Toast', () => {
   test('limit={1} shows only the newest; Indonesian words for the waiting line', async () => {
     const { idLabels } = await import('../../internal/labels');
 
-    await render(<SerupaProvider labels={idLabels}><Toaster limit={1} /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><Toaster limit={1} /></SerupaProvider>);
     React.act(() => { toast({ title: 'A', duration: 0 }); toast({ title: 'B', duration: 0 }); toast({ title: 'C', duration: 0 }); });
     expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['C'], '+2 lainnya']);
   });
@@ -492,7 +492,7 @@ describe('Toast with a Dialog open', () => {
 
   test('a burst is said when the toast first shows, and once more with the count a second after the last repeat (not twelve times); Indonesian count words', async () => {
     const said: string[] = [];
-    await render(<App />);
+    await render(<SerupaProvider locale="en-US"><App /></SerupaProvider>);
     const watch = new MutationObserver(() => { const t = q('[data-dk-announcer]').textContent; if (t) said.push(t); });
     watch.observe(q('[data-dk-announcer]'), { childList: true, characterData: true, subtree: true });
     React.act(() => { toast({ title: 'Network error', duration: 0 }); });
@@ -501,7 +501,7 @@ describe('Toast with a Dialog open', () => {
     await new Promise((r) => setTimeout(r, 1300));
     watch.disconnect();
     expect([...new Set(said)]).toEqual(['Network error', 'Network error. 12 times.']);
-    expect(idLabels.toastRepeated(3)).toBe('3 kali');
+    expect(idLabels.toastRepeated(3, '3')).toBe('3 kali');
   });
 });
 
@@ -545,7 +545,7 @@ describe('Toast: motion (DZ1)', () => {
   const frames = async (each: () => void) => { do { each(); await new Promise(requestAnimationFrame); } while (document.getAnimations().length); each(); };
   test('top-center, a fourth toast: the oldest folds toward "+1 more" where it was, and the ones left only ever move down to their place, never fading in again (FO1)', async () => {
     await withMotion(async () => {
-      await render(<App />);
+      await render(<SerupaProvider locale="en-US"><App /></SerupaProvider>);
       setPos('top-center');
       React.act(() => { toast({ title: 'Moved to trash', action: { label: 'Undo', onClick: () => {} } }); });
       React.act(() => { toast({ title: 'Upload failed', tone: 'danger', duration: 0 }); });
@@ -567,7 +567,7 @@ describe('Toast: motion (DZ1)', () => {
 
   test('the waiting line fades in where it stays (the toast pushed out leaves the flow at once), and fades out once none wait (FO1)', async () => {
     await withMotion(async () => {
-      await render(<Toaster limit={1} />);
+      await render(<SerupaProvider locale="en-US"><Toaster limit={1} /></SerupaProvider>);
       React.act(() => { toast({ title: 'One', duration: 0 }); });
       await landed();
       React.act(() => { toast({ title: 'Two', duration: 0 }); });
@@ -653,7 +653,7 @@ describe('Toast: time in the waiting line (FO1)', () => {
   });
 
   test('never shown: with limit={1}, the older of two arriving together waits with its time stopped, and gets all of it once shown', async () => {
-    await render(<Toaster limit={1} />);
+    await render(<SerupaProvider locale="en-US"><Toaster limit={1} /></SerupaProvider>);
     await away();
     React.act(() => { toast({ title: 'Older', duration: 300 }); toast({ title: 'Newer', duration: 0 }); });
     await new Promise((r) => setTimeout(r, 500));
@@ -830,7 +830,7 @@ describe('Toaster on a short screen (GQ1b)', () => {
   test('a phone in landscape (568 by 320): only the toasts that fit show, the rest wait under the "+N more" line, and nothing goes past the top; a taller screen shows them all again', async () => {
     await page.viewport(568, 320);
     try {
-      await render(<Toaster />);
+      await render(<SerupaProvider locale="en-US"><Toaster /></SerupaProvider>);
       React.act(() => { for (let i = 1; i <= 3; i++) toast({ title: 'Report ' + i + ' is ready', description: 'Quarterly numbers for the finance team, with every region and each product line broken out', action: { label: 'Open', onClick: () => {} }, duration: 0 }); });
       await landed();
       const top = () => Math.min(...[...document.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving]), ol > li:not([data-toast])')].map((x) => x.getBoundingClientRect().top));

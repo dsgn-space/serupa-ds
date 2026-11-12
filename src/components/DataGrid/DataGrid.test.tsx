@@ -246,3 +246,9 @@ describe('DataGrid stickyHeader', () => {
   });
 });
 
+
+describe('DataGrid labels', () => {
+  test('copied and pasted say the count as given, in the locale\'s digits ("٤ sel disalin")', () => {
+    expect([idLabels.dataGridCopied(4, '٤'), idLabels.dataGridPasted(2, '٢')]).toEqual(['٤ sel disalin', '٢ sel ditempel']);
+  });
+});

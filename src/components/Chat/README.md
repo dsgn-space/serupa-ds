@@ -96,6 +96,11 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 - While `streaming`, Send becomes Stop; the person can keep typing their next message, and Enter waits until it's done.
 - The field grows from one line to `maxRows` (6), then scrolls.
 
+### Do and don't
+
+- **Do:** Put a `ChatDivider` with a `date` where the day changes, so people see when each message was sent. (`DoDateDividers`)
+- **Don't:** Run messages from different days together: a reply a day later reads as if it came at once. (`DontNoDividers`)
+
 ## Accessibility
 
 - **Role and name:** the conversation is a `log` named by `aria-label`, so screen readers read each new message politely as it's added. A streaming message is `aria-busy` until `streaming` comes off, so it's read once, whole, rather than word by word.

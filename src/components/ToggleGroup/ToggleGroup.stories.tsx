@@ -63,3 +63,16 @@ export const Sizes: Story = {
     {(['sm', 'md', 'lg'] as const).map((size) => <ToggleGroup key={size} {...args} size={size} aria-label={`Text alignment, ${size}`} />)}
   </div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the size on the group, so every toggle in it matches. */
+export const DoGroupSize: Story = { name: 'Do: size the group', args: { size: 'sm' } };
+/** Don't: a size on each toggle, which leaves one row with buttons of different heights. */
+export const DontMixedSizes: Story = {
+  name: "Don't: size each toggle",
+  args: { children: [
+    <ToggleButton key="l" value="left" icon="format_align_left" aria-label="Align left" size="sm" />,
+    <ToggleButton key="c" value="center" icon="format_align_center" aria-label="Align center" size="lg" />,
+    <ToggleButton key="r" value="right" icon="format_align_right" aria-label="Align right" />,
+  ] },
+};

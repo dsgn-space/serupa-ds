@@ -43,6 +43,11 @@ Drawn from the `Playground` story.
 - `defaultMethod="type"` starts on the name field, as on a page most people fill in with a keyboard.
 - A drawing and a typed name are kept apart while people switch; the value follows the method shown.
 
+### Do and don't
+
+- **Do:** Name it with a [Field](../Field/README.md) label that says what signing means ("Sign to accept the terms"). (`DoSayWhatItMeans`)
+- **Don't:** Show a bare pad: people don't know what they're agreeing to. (`DontBarePad`)
+
 ## Accessibility
 
 - **Role and name:** a `group` named by its Field label or `aria-label`, described by its how-to text (and a Field's hint and error). The method switch is a radio group named "Signature method"; when the signature is invalid, it and the name field carry `aria-invalid` (a group can't). The drawing box is an image named "Signature area, empty" or "Signature drawn".
