@@ -167,6 +167,19 @@ describe('PeriodPicker', () => {
     await until(() => focused() === 'June 2024');
   });
 
+  test('an arrow that pages to the end is disabled, and focus moves to the other arrow rather than being lost', async () => {
+    await render(<EnUS><PeriodPicker aria-label="Billing month" min="2024-06" max="2025-03" defaultValue="2025-01" /></EnUS>);
+    await userEvent.click(button());
+    await until(() => focused() === 'January 2025');
+    const prev = page.getByRole('button', { name: 'Previous year' }), next = page.getByRole('button', { name: 'Next year' });
+    await userEvent.click(prev);
+    await expect.element(prev).toBeDisabled();
+    await expect.element(next).toHaveFocus();
+    await userEvent.click(next);
+    await expect.element(next).toBeDisabled();
+    await expect.element(prev).toHaveFocus();
+  });
+
   test('controlled: shows the value it is given, and a pick only asks', async () => {
     const changed = vi.fn();
     function Ctl() { const [v, setV] = React.useState<string | null>('2025-01'); return <><PeriodPicker aria-label="M" value={v} onValueChange={(x) => { changed(x); }} /><button type="button" onClick={() => setV('2024-12')}>Set</button></>; }
