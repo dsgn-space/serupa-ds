@@ -2,9 +2,9 @@ name: CI
 
 # How a change is tested on its way to main:
 # - A pull request's own run is the quick check: build, types and lint, the fix proof, the checks, and the tests (in
-#   English) and Visual of the components it changes (narrowed against the main it merges onto). The tests in the
-#   other languages, Storybook's pages, consumer and frameworks are left to the merge queue. Firefox and WebKit are
-#   tested nightly (cross-browser.yml): a difference there doesn't block a merge, so the queue doesn't wait on it.
+#   English), Visual and Storybook checks of the components it changes (narrowed against the main it merges onto). The
+#   tests in the other languages, consumer and frameworks are left to the merge queue. Firefox and WebKit are tested
+#   nightly (cross-browser.yml): a difference there doesn't block a merge, so the queue doesn't wait on it.
 # - The merge queue runs every job on the commit that becomes main, for a group of up to five pull requests at once,
 #   with the tests narrowed as a pull request's are, against the group before it (or main): what the group's own change
 #   can affect, on the exact tree it makes. Main's push run is then build only (the Storybook artifact, and the Release
@@ -98,7 +98,9 @@ jobs:
           x86="$x86]}"
           # A narrowed run that leaves a group nothing to test (a change to docs, tools or workflows alone) doesn't
           # start its jobs: each would take a runner, set up and run no test.
-          storybook="$full"
+          # Storybook's checks (WCAG in every theme, reflow at 320px, the docs pages) on a pull request too, narrowed to the
+          # stories it changes like Visual: found only in the queue, one story's failure took whole groups down with it.
+          storybook="$full"; [ -n "$visual" ] && storybook=1
           if [ -n "$since" ]; then
             [ "$EVENT" = merge_group ] && git fetch -q --depth=1 origin "$since"
             has() { node tools/test/run.mjs --since "$since" --group "$1" --list | grep -q $'\t'; }
