@@ -44,7 +44,11 @@ jobs:
     if: github.head_ref != 'changeset-release/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
+      hold: ${{ steps.hold.outputs.hold }}
       wide: ${{ steps.plan.outputs.wide }}
       full: ${{ steps.plan.outputs.full }}
       since: ${{ steps.plan.outputs.since }}
@@ -61,6 +65,25 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
+      # Held: the pull request carries the update-visual-baselines label, so Update baselines is drawing its pictures
+      # now and will push them (a new run) or, with nothing to change, start this run again once the label is off.
+      # Testing this commit meanwhile would only be done twice. The bot's own picture commit is never held.
+      - id: hold
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          subject=$(git log -1 --format=%s HEAD^2)
+          labels=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" --jq '.[].name')
+          # Heal's merge is held too: its label comes right after the push.
+          if [ "$subject" != "Update test baselines on the CI runner" ] && { grep -qx update-visual-baselines <<< "$labels" ||
+            grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; then
+            echo "hold=1" >> "$GITHUB_OUTPUT"
+            echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
       - id: plan
         shell: bash
         env:
@@ -118,6 +141,14 @@ jobs:
             echo "x86=$(echo "$x86" | tr -d ' \n')"; echo "x86any=$x86any"; echo "portable=$(echo "$portable" | tr -d ' \n')"
           } >> "$GITHUB_OUTPUT"
           echo "full=${full:-no} wide=${wide:-no} since=${since:-none} visual=${visual:-no} tests=${tests:-no}"
+          # Size: each pull request costs a CI run, often a redraw and a queue run, so a tiny one belongs in its thread's
+          # next batch and a huge one is hard to review and conflicts with everything. Pictures and other baselines
+          # don't count. A warning only: it never fails the run.
+          if [ "$EVENT" = pull_request ]; then
+            lines=$(git diff --numstat HEAD^1 HEAD -- . ':(exclude)tools/test/baseline-*' ':(exclude)package-lock.json' | awk '$1 != "-" { n += $1 + $2 } END { print n + 0 }')
+            if [ "$lines" -lt 15 ]; then echo "::warning title=Small pull request::$lines changed lines: fold it into the thread's next batch instead of its own CI run, redraw and queue run."
+            elif [ "$lines" -gt 3000 ]; then echo "::warning title=Big pull request::$lines changed lines (pictures aside): split it by component, or expect conflicts and a long review."; fi
+          fi
 
   # Builds the package and Storybook once; every test job downloads them instead of building its own.
   # Fails in seconds when the branch's pictures can't match the tree it merges into: one side changed a component's
@@ -169,6 +200,7 @@ jobs:
 
   build:
     needs: plan
+    if: needs.plan.outputs.hold != '1'
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -204,7 +236,7 @@ jobs:
   static:
     name: types and lint
     needs: plan
-    if: needs.plan.outputs.full == '1' || github.event_name == 'pull_request'
+    if: needs.plan.outputs.hold != '1' && (needs.plan.outputs.full == '1' || github.event_name == 'pull_request')
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -233,7 +265,7 @@ jobs:
   fix-proof:
     name: fix proof
     needs: plan
-    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-repro-test')
+    if: needs.plan.outputs.hold != '1' && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-repro-test')
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -495,8 +527,10 @@ jobs:
       - env:
           RESULTS: ${{ toJSON(needs) }}
           HEAD_REF: ${{ github.head_ref }}
+          HOLD: ${{ needs.plan.outputs.hold }}
         run: |
           if [ "$HEAD_REF" = changeset-release/main ]; then echo "Release pull request: CI is started on it by the Release workflow."; exit 0; fi
+          if [ "$HOLD" = 1 ]; then echo "Held while Update baselines draws the pictures: CI runs on its commit, or again here when nothing changed."; exit 1; fi
           # Skipped is fine (a job this kind of run doesn't need); anything else but success fails.
           bad=$(echo "$RESULTS" | jq -r 'to_entries[] | select(.value.result != "success" and .value.result != "skipped") | "\(.key): \(.value.result)"')
           if [ -n "$bad" ]; then echo "$bad"; exit 1; fi
