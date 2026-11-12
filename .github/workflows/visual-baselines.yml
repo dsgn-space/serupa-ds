@@ -6,8 +6,9 @@ name: Update baselines
 # its branch; the new baselines are committed back to the branch. Review them in
 # the pull request's Files changed tab before merging.
 # Only the components the pull request changes (and the ones that use them) are re-rendered, as in CI, and a
-# picture is rewritten only when it differs past the check's tolerance, so the commit holds only real changes and
-# two pull requests that change different components don't conflict over each other's pictures.
+# Chromium picture is rewritten when it differs past 0.01% (tools/test/visual.mjs), so the commit holds only real
+# changes and two pull requests that change different components don't conflict over each other's pictures. A
+# pull request that changes more than components (tokens, shared code, tools) redraws every story.
 #
 # The "update-cross-browser-baselines" label does the same for Firefox's and WebKit's pictures
 # (tools/test/baseline-visual-firefox/ and -webkit/, which the nightly Cross-browser run compares with): every story is
