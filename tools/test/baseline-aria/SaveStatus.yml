@@ -1,3 +1,10 @@
+# DoReasonAndRetry
+- text: "Couldn’t save: you’re offline"
+- button "Try again"
+
+# DontDeadEnd
+- text: Couldn’t save
+
 # Failed
 - text: Couldn’t save
 - button "Try again"

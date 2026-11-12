@@ -39,3 +39,16 @@ export const NotPadded: Story = {
 export const LongText: Story = {
   args: { size: 'prose', children: <div className="rounded-md bg-surface-muted p-4 text-sm text-text wrap-anywhere">A long paragraph keeps to the container's width and wraps, and with the wrap-anywhere utility an unbroken word like DonaudampfschifffahrtsgesellschaftskapitänskajüteDonaudampfschifffahrtsgesellschaftskapitänskajüte breaks rather than pushing the page sideways.</div> },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+const band = (text: string) => <div className="rounded-md bg-surface-muted p-3 text-sm text-text">{text}</div>;
+/** Do: the same `size` for the header, main content and footer, so their edges line up. */
+export const DoSameSize: Story = {
+  name: 'Do: one size for the page',
+  render: () => <div style={{ display: 'grid', gap: 8 }}>{['Header', 'Main content', 'Footer'].map((t) => <Container key={t} size="md">{band(t)}</Container>)}</div>,
+};
+/** Don't: a different size for each part, so the edges step in and out down the page. */
+export const DontMixedSizes: Story = {
+  name: "Don't: mix sizes on one page",
+  render: () => <div style={{ display: 'grid', gap: 8 }}>{([['Header', 'xl'], ['Main content', 'md'], ['Footer', 'lg']] as const).map(([t, s]) => <Container key={t} size={s}>{band(t)}</Container>)}</div>,
+};

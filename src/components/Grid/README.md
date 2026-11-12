@@ -36,6 +36,11 @@ const { Grid, Card } = window.Serupa;
 - Use `as="ul"` when the cells are a list of things.
 - Use the same `gap` as the layout around the grid, so the spacing reads as one system.
 
+### Do and don't
+
+- **Do:** Use `columns="auto"` with a `minColumnWidth` that suits the content, so a narrow screen gets fewer, wider columns. (`DoAutoColumns`)
+- **Don't:** Fix the number of columns on its own: it stays the same on a phone and squeezes every cell. (`DontFixedColumns`)
+
 ## Accessibility
 
 - The reading and tab order follow the children, row by row: keep them in the order people see them.
