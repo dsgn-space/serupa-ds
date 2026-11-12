@@ -49,6 +49,11 @@ Once the script runs, the raised surface under the selected item is the **indica
 - Icon-only segments are at least 24px wide, so even in `sm` their centers are 24px apart, which meets WCAG 2.2's target size (2.5.8).
 - Use `fullWidth` in narrow spaces such as a panel or a phone layout, and match the `size` to the controls beside it.
 
+### Do and don't
+
+- **Do:** Keep each label to one or two words: "Newest", "Oldest", "Popular". (`DoShortLabels`)
+- **Don't:** Write sentences as labels: the segments come out uneven and cut off in a narrow space. (`DontSentences`)
+
 ## Accessibility
 
 - Every option takes a press over at least 24px of height (WCAG 2.5.8), also at `size="sm"`, where options are drawn 18px tall, without taking more room. On a touch screen it's 44px high, as Apple and Material ask (the width stays, so segments never overlap).
