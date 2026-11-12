@@ -78,7 +78,7 @@ Each is an optional override: set it on the page, a container or one ErrorSummar
 | `--error-summary-link` | `danger-text` | Each error's link (4.5:1 on bg). |
 | `--error-summary-focus-ring` | `focus-ring` | The focus ring, on the box when it takes focus and on each link. |
 | `--error-summary-border-width` | `border-width-2` | The border's width (2px). |
-| `--error-summary-radius` | `rounded-md` | The corners (6px). |
+| `--error-summary-radius` | `radius-control` | The corners (6px). |
 | `--error-summary-padding` | `spacing-4` | Space inside, on every side (16px). |
 | `--error-summary-gap` | `spacing-2` | Space between the heading, the description and the list (8px). |
 | `--error-summary-title-weight` | `font-semibold` | The heading's weight. |

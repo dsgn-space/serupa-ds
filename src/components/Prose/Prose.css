@@ -44,12 +44,12 @@
 .dk-prose :where(hr) { margin-block: var(--prose-flow-heading, var(--spacing-8)); }
 .dk-prose :where(code, kbd, samp) { font-family: var(--font-mono); font-size: var(--text-sm); }
 .dk-prose :where(:not(pre) > code) {
-  padding: var(--spacing-0\.5) var(--spacing-1); border-radius: var(--prose-code-radius, var(--rounded-sm));
+  padding: var(--spacing-0\.5) var(--spacing-1); border-radius: var(--prose-code-radius, var(--radius-inner));
   background: var(--prose-code-bg, var(--surface-muted));
 }
 .dk-prose :where(pre) {
   overscroll-behavior-x: contain;
-  overflow-x: auto; padding: var(--prose-pre-padding, var(--spacing-4)); border-radius: var(--prose-pre-radius, var(--rounded-md));
+  overflow-x: auto; padding: var(--prose-pre-padding, var(--spacing-4)); border-radius: var(--prose-pre-radius, var(--radius-control));
   background: var(--prose-code-bg, var(--surface-muted)); line-height: var(--text-sm--line-height); white-space: pre; overflow-wrap: normal;
   direction: ltr; unicode-bidi: isolate; text-align: start;   /* code reads left to right in every script, so an rtl page doesn't turn run(); into ;()run (GR78) */
 }

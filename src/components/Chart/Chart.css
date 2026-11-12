@@ -57,7 +57,7 @@
   position: absolute; inset-block-start: 0; z-index: var(--z-10); pointer-events: none;
   display: grid; grid-template-columns: auto auto auto; gap: var(--spacing-0\.5) var(--spacing-2); align-items: center;
   padding: var(--spacing-2) var(--spacing-3); max-inline-size: min(var(--container-3xs), var(--sizing-full));
-  border: var(--border-width-1) solid var(--chart-tip-border, var(--border-overlay)); border-radius: var(--chart-tip-radius, var(--rounded-md));
+  border: var(--border-width-1) solid var(--chart-tip-border, var(--border-overlay)); border-radius: var(--chart-tip-radius, var(--radius-control));
   background: var(--chart-tip-bg, var(--surface-overlay)); color: var(--chart-tip-text, var(--text));
   box-shadow: var(--chart-tip-shadow, var(--shadow-md));
   font-size: var(--text-xs); line-height: var(--leading-4); overflow-wrap: anywhere;

@@ -137,7 +137,7 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
     if (!h) return;
     e.preventDefault();
     pinned.current = Date.now() + 1000;
-    h.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+    h.scrollIntoView({ behavior: reduced(h) ? 'auto' : 'smooth', block: 'start' });
     if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
     h.focus({ preventScroll: true });
     if (window.location.hash !== '#' + id) window.history.pushState(null, '', '#' + id);

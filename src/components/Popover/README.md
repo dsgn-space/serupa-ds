@@ -100,7 +100,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-shadow` | `elevation-overlay` | The panel's shadow. |
 | `--popover-radius` | `radius-surface` | The panel's corners (8px). |
 | `--popover-border-width` | `border-width-1` | The panel's border (1px). |
-| `--popover-sheet-radius` | `rounded-xl` | A sheet's top corners (12px). |
+| `--popover-sheet-radius` | `radius-container` | A sheet's top corners (12px). |
 | `--popover-title-size` | `text-sm` | The title (14px). |
 | `--popover-title-weight` | `font-semibold` | The title's weight (600). |
 | `--popover-width` | `container-3xs` | The panel's width (256px; it never gets wider than the screen). |
