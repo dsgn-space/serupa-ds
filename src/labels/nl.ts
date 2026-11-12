@@ -206,6 +206,7 @@ export const labels: SerupaLabels = {
   clearNotifications: 'Alles wissen',
   clearNotificationsConfirm: 'Alle meldingen wissen? Dit kan niet ongedaan worden gemaakt.',
   keepNotifications: 'Bewaren',
+  notificationSettings: 'Meldingsinstellingen',
   notificationsUnread: (count) => (count ? 'Meldingen, ' + n(count) + ' ongelezen' : 'Meldingen'),
   decrease: 'Verlagen',
   increase: 'Verhogen',

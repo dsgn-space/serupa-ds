@@ -1,3 +1,25 @@
+# DoCheckboxInForm
+- checkbox "Send me the weekly summary" [checked]
+- text: Send me the weekly summary
+- checkbox "Send me product news"
+- text: Send me product news
+- button "Save preferences"
+
+# DoNameTheSetting
+- switch "Email notifications" [checked]
+- text: Email notifications
+
+# DontLabelTheState
+- switch "Notifications are on" [checked]
+- text: Notifications are on
+
+# DontSwitchInForm
+- switch "Weekly summary" [checked]
+- text: Weekly summary
+- switch "Product news"
+- text: Product news
+- button "Save preferences"
+
 # LongLabel
 - switch "Install updates automatically, including Donaudampfschifffahrtsgesellschaft add-ons"
 - text: Install updates automatically, including Donaudampfschifffahrtsgesellschaft add-ons Updates install overnight while the device is charging and connected to Wi-Fi.

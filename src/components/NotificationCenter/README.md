@@ -49,6 +49,7 @@ Drawn from the `Open` story.
 - Or pass your own `items` (from a server, say): `{ id, title, description?, tone?, time?, read? }`, newest first. Keep `read` in your state and set it in `onMarkRead` and `onMarkAllRead`.
 - Show the unread count on the button that opens it, with a [Badge](../Badge/README.md) `count`, and name the button so the count is heard too ("Notifications, 3 unread"): `labels.notificationsUnread(count)` from `useSerupa()` writes it in the page's language. Hide the Badge (`aria-hidden="true"`) so the number isn't read twice.
 - Give `onMarkRead`, `onMarkAllRead` and `onClear` for the buttons you want; without a handler, its button isn't shown.
+- Give `settingsHref` when your app has notification settings, so people can turn off what they don't want from where they meet too many.
 
 ## Behavior
 
@@ -95,6 +96,7 @@ Drawn from the `Open` story.
 | `onMarkAllRead` | `() => void` | | Shows "Mark all as read" in the footer while one is unread. |
 | `onClear` | `() => void` | | Shows "Clear all" in the footer while the list has any. It can't be undone, so it asks first in the footer ("Clear every notification? This can’t be undone."), with focus on "Keep them"; the destructive "Clear all" beside it calls `onClear`. When the button chosen goes away, focus moves to the other one or to the empty line. |
 | `empty` | ReactNode | `"No notifications yet"` | What shows with none. |
+| `settingsHref` | string | | Where people choose which notifications they get. The footer then starts with a "Notification settings" link to it, so someone who gets too many can turn some off from the drawer. |
 | `description`, `footer`, `unsaved` | never | | Not taken: the list is the content, the footer holds its buttons, and there is nothing to edit. |
 | `open` | boolean | | Controlled: whether it's open. |
 | `defaultOpen` | boolean | `false` | Uncontrolled: open at first. |
