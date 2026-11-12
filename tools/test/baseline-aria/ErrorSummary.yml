@@ -11,6 +11,22 @@
     - link "Start date must be today or in the future":
       - /url: "#es-date"
 
+# FromTheServer
+- heading "There are 2 problems" [level=2]
+- list:
+  - listitem:
+    - link "That email is already registered":
+      - /url: "#es-srv-email"
+  - listitem:
+    - link "Choose a username with no spaces":
+      - /url: "#es-srv-username"
+- text: Email
+- textbox "Email" [invalid]: sam@example.com
+- text: That email is already registered Username
+- textbox "Username" [invalid]: sam lee
+- text: Choose a username with no spaces
+- button "Create account"
+
 # InAForm
 - heading "There are 3 problems" [level=2]
 - list:

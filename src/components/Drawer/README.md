@@ -2,6 +2,8 @@
 
 A modal panel that slides in from an edge of the screen: navigation on small screens, filters, or details and edits without leaving the page. For a short question or form, use Dialog; for something people keep open while they work, put it in the page.
 
+**Also called:** sheet, tray, flyout, side panel.
+
 ```tsx
 import { Drawer, Button } from "serupa-ds";
 

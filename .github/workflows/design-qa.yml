@@ -10,6 +10,11 @@ on:
     types: [opened, synchronize, reopened, labeled, unlabeled]
     paths: ['tools/test/baseline-visual/**']
 
+# A newer run of the same workflow on the same branch or pull request cancels the one before it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pull-requests: read

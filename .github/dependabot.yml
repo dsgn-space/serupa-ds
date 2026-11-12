@@ -1,6 +1,7 @@
-# Weekly update pull requests, grouped so they arrive as a few PRs instead of dozens.
-# Versions in package.json are exact, so each update is one reviewed bump; CI (and the visual baselines) decide
-# whether it lands. Majors come one per PR, since they can need code changes. A release is only offered once it is
+# Weekly update pull requests, two at most: every npm update in one, every action update in the other, so the
+# queue sees one dependency PR a week, not one per tool. Versions in package.json are exact, so each update is one
+# reviewed bump; CI (and the visual baselines) decide whether it lands. A major that needs code changes gets them in
+# that same PR (the tooling lane fixes it there, as it did for Stylelint 18). A release is only offered once it is
 # 7 days old (cooldown), so a hijacked version that npm or GitHub pulls within days never reaches a pull request.
 version: 2
 updates:
@@ -13,14 +14,8 @@ updates:
       default-days: 7
     open-pull-requests-limit: 10
     groups:
-      storybook:
-        patterns: ["storybook", "@storybook/*"]
-      vitest:
-        patterns: ["vitest", "@vitest/*", "vitest-browser-react", "vite"]
-      lint:
-        patterns: ["eslint", "@eslint/*", "eslint-plugin-*", "typescript-eslint", "globals", "stylelint", "stylelint-*"]
-      minor-and-patch:
-        update-types: ["minor", "patch"]
+      npm:
+        patterns: ["*"]
   - package-ecosystem: github-actions
     directories: ["/", "/.github/actions/*"]
     schedule:

@@ -1,6 +1,6 @@
 name: Setup
 description: >-
-  What every CI job needs, as the GitLab jobs had it: run inside Playwright's image (the job's container), tools/setup.mjs
+  What every CI job needs: run inside Playwright's image (the job's container), tools/setup.mjs
   adds the Node major devEngines asks for, npm ci, and the Chromium revision Playwright pins (Chrome for Testing on x64),
   with npm's download cache and the browser kept between runs.
 inputs:

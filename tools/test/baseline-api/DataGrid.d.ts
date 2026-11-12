@@ -6,13 +6,13 @@ interface DataGridLabels {
     dataGridHint: string;
 }
 type DataGridRow = Record<string, unknown>;
-interface DataGridColumn {
-    key: string;
+interface DataGridColumn<R extends object = DataGridRow> {
+    key: Extract<keyof R, string>;
     header: string;
     editable?: boolean | undefined;
     align?: "center" | "end" | "start" | undefined;
     width?: number | string | undefined;
-    format?: ((row: DataGridRow) => string) | undefined;
+    format?: ((row: R) => string) | undefined;
 }
 interface DataGridCellChange {
     rowId: string;
@@ -22,15 +22,17 @@ interface DataGridCellChange {
 interface DataGridRowsChangeDetails {
     changes: DataGridCellChange[];
 }
-interface DataGridProps extends Omit<React.TableHTMLAttributes<HTMLTableElement>, "rows"> {
-    columns: DataGridColumn[];
-    rows: DataGridRow[];
-    rowKey?: string | undefined;
-    onRowsChange?: ((rows: DataGridRow[], details: DataGridRowsChangeDetails) => void) | undefined;
+interface DataGridProps<R extends object = DataGridRow> extends Omit<React.TableHTMLAttributes<HTMLTableElement>, "rows"> {
+    columns: DataGridColumn<R>[];
+    rows: R[];
+    rowKey?: Extract<keyof R, string> | undefined;
+    onRowsChange?: ((rows: R[], details: DataGridRowsChangeDetails) => void) | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     busy?: boolean | undefined;
     loadingRows?: number | undefined;
     loadingLabel?: string | undefined;
     message?: React.ReactNode;
 }
-declare const DataGrid: React.ForwardRefExoticComponent<DataGridProps & React.RefAttributes<HTMLTableElement>>;
+declare const DataGrid: <R extends object = DataGridRow>(props: DataGridProps<R> & {
+    ref?: React.Ref<HTMLTableElement> | undefined;
+}) => React.ReactElement;

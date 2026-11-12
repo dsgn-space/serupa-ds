@@ -114,6 +114,11 @@ scan(path.join(P, 'src'));
 const utilityNames = new Set([...utilities.matchAll(/\.((?:[A-Za-z0-9_-]|\\.)+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')).filter((n) => !n.startsWith('dk-')));
 const runtimeUtilities = [...new Set(code.join('\n').match(/["'`][^"'`\n]*["'`]/g)?.flatMap((q) => q.slice(1, -1).split(/\s+/)) || [])].filter((w) => /^[a-z]/.test(w) && utilityNames.has(w)).sort();
 fs.writeFileSync(path.join(D, 'components.json'), JSON.stringify({ version, runtimeUtilities, components: manifest }, null, 1) + '\n');
+// The versions serupa-create pins in a new app: the ones this release was tested with, from devDependencies, which a
+// release's package.json leaves out (tools/publish.mjs), so bin/serupa-create.mjs reads them here.
+const devDependencies = JSON.parse(read('package.json')).devDependencies;
+const STARTER = ['react', 'react-dom', 'vite', 'typescript', '@types/react', '@types/react-dom', '@types/node', 'eslint', 'typescript-eslint', '@typescript/typescript6', 'eslint-plugin-jsx-a11y-x', 'stylelint'];
+fs.writeFileSync(path.join(D, 'starter.json'), JSON.stringify(Object.fromEntries(STARTER.map((n) => [n, devDependencies[n]])), null, 1) + '\n');
 fs.writeFileSync(path.join(D, 'theme.js'), stamp(read('src/theme.js')));
 // debug.js (204): the opt-in overlay that names each component on a page, its classes, state and overridden tokens.
 // Its contrast guard (203) checks the pairs tools/test/foundation.mjs checks, written in at build.

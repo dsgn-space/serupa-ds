@@ -5,6 +5,7 @@ import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { summaryTookFocus } from '../../internal/summaryFocus';
 import { en as words } from './labels';
+import { FormErrorsContext } from '../../internal/formErrors';
 
 /** One error in the summary: the field it's about and what's wrong. */
 export interface ErrorSummaryItem {
@@ -15,8 +16,9 @@ export interface ErrorSummaryItem {
 }
 
 export interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
-  /** The errors, in the order of the fields on the page. With none, nothing renders. */
-  errors: readonly ErrorSummaryItem[];
+  /** The errors, in the order of the fields on the page. With none, nothing renders. Inside FormErrors, leave it out to
+   *  list the form's messages still showing, each linking to its field. */
+  errors?: readonly ErrorSummaryItem[] | undefined;
   /** The heading. Default: "There is a problem", or "There are N problems". */
   title?: React.ReactNode | undefined;
   /** The heading's level, h2 to h6, to fit the page's outline. Default: 2. */
@@ -39,7 +41,11 @@ export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSumma
   const { errors, title, headingLevel, description, autoFocus, className, ...rest } = props;
   const box = React.useRef<HTMLDivElement | null>(null);
   const heading = React.useId();
-  const list = errors || [];
+  // Inside FormErrors with no errors of its own: the form's messages still showing. It takes focus for a new set of
+  // errors (the next submit), not when editing a field takes one away.
+  const form = React.useContext(FormErrorsContext);
+  const fromForm = errors == null && form != null;
+  const list: readonly ErrorSummaryItem[] = errors || (form ? form.list() : []);
   // Focus when the summary appears and whenever its errors change (another failed submit): a field added or gone, or
   // a message that says something new ("Enter your password", then "The email or password is not right") (GR120).
   // Messages can be elements, so what they say is read from the rendered links.
@@ -47,7 +53,7 @@ export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSumma
   // every render: compares what the errors say now with what they said, and takes focus only when that changed.
   React.useEffect(() => {
     const n = box.current, links = n && n.querySelector('ul');
-    const now = n ? list.map((e) => e.field).join('\n') + '\n' + (links ? links.textContent : '') : '';
+    const now = !n ? '' : fromForm && form ? 'v' + form.version : list.map((e) => e.field).join('\n') + '\n' + (links ? links.textContent : '');
     if (now === said.current) return;
     said.current = now;
     if (now && autoFocus !== false && n) { n.focus(); summaryTookFocus(n); }

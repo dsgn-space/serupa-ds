@@ -188,6 +188,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'キーボードショートカット',
   generalShortcuts: '全般',
   showShortcuts: 'キーボードショートカットを表示',
+  singleKeyShortcuts: '1キーのショートカット',
+  singleKeyHint: '? など 1 つのキーだけのショートカット（テキスト欄の外）。意図せず動く場合はオフにします。',
   opensInNewTab: '(新しいタブで開きます)',
   loadMore: 'さらに読み込む',
   showingOf: (shown, total) => `${total}件中${shown}件を表示`,

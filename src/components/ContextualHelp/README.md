@@ -2,6 +2,8 @@
 
 A small "?" or "i" button beside a label, heading or value that opens a sentence or two of explanation in a panel next to it: a toggletip. Unlike a Tooltip it opens on press, so it works on touch screens and with a keyboard, and what's inside can hold a link.
 
+**Also called:** toggletip, info tip, help popover.
+
 ```tsx
 import { ContextualHelp } from "serupa-ds";
 

@@ -31,11 +31,13 @@ function Editable(props: { size?: 'sm' | 'md' | 'lg' }) {
   return <DataGrid aria-label="Stock" columns={COLUMNS} rows={rows} onRowsChange={(_, { changes }) => setRows((r) => apply(r, changes))} size={props.size} />;
 }
 
+// Typed by its rows: the stories use the default row type.
+const Grid = DataGrid<DataGridRow>;
 const meta = {
   title: 'Components/Content/DataGrid',
-  component: DataGrid,
+  component: Grid,
   args: { 'aria-label': 'Stock', columns: COLUMNS, rows: ROWS },
-} satisfies Meta<typeof DataGrid>;
+} satisfies Meta<typeof Grid>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

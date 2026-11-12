@@ -24,7 +24,7 @@ const OWN_BUDGET: Record<string, number> = {
 // The nightly Benchmarks run takes the fastest of more, so a night's time moves less with the machine.
 const RUNS = inject('bench') ? 15 : 5;
 // With coverage on (CI's full runs), every line counts itself as it runs, which made VirtualList's Playground take
-// 20.8 ms against 20 on a busy runner (8 Nov 2026). Twice the budget there; the narrowed merge request runs and the
+// 20.8 ms against 20 on a busy runner (8 Nov 2026). Twice the budget there; the narrowed pull request runs and the
 // nightly Benchmarks run have no coverage and keep the budget as it is, so a slow story still fails there.
 const SLOWER = inject('coverage') ? 2 : 1;
 const frame = () => new Promise((r) => requestAnimationFrame(() => r(null)));
