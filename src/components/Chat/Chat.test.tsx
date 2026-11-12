@@ -381,3 +381,9 @@ describe('Chat in print', () => {
     expect(l.scrollHeight).toBeGreaterThan(l.clientHeight + 100);
   });
 });
+
+describe('Chat labels', () => {
+  test('chatNewMessages says the count as given, in the locale\'s digits ("٣ pesan baru")', () => {
+    expect([idLabels.chatNewMessages(3, '٣')]).toEqual(['٣ pesan baru']);
+  });
+});
