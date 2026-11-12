@@ -47,10 +47,6 @@
   /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
   outline: var(--focus-ring-width) solid var(--dk-btn-ring); outline-offset: var(--focus-ring-offset);
 }
-.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) {
-  opacity: var(--opacity-disabled);
-  cursor: not-allowed;          /* no hover change; disabled buttons ignore clicks */
-}
 .dk-btn__icon {
   display: inline-flex;
   flex-shrink: 0;
@@ -101,6 +97,17 @@
 .dk-btn--ghost.dk-btn--destructive { color: var(--button-destructive-ghost-text, var(--danger-text)); }
 @media (hover: hover) { .dk-btn--ghost.dk-btn--destructive:hover:not(:disabled, [aria-disabled="true"]) { background: var(--button-destructive-ghost-bg-hover, var(--danger-subtle)); } }
 .dk-btn--link.dk-btn--destructive { color: var(--button-destructive-link-text, var(--danger-text)); }
+/* After the variants and destructive ones, so it wins over each of them. */
+.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) {
+  /* Disabled is drawn in muted colors, not by fading the button's own: a faded label fell to about 2.4:1, fainter than
+     the disabled fields beside it (3.4:1 and up), and stayed there with more contrast. The muted pair follows the
+     contrast axis like every other text. */
+  background: var(--button-disabled-bg, var(--surface-muted)); color: var(--button-disabled-text, var(--text-muted));
+  border-color: var(--button-disabled-border, var(--border));
+  cursor: not-allowed;          /* no hover change; disabled buttons ignore clicks */
+}
+/* Ghost and link buttons have no box of their own, disabled or not. */
+.dk-btn--ghost:disabled, .dk-btn--link:disabled, .dk-btn--ghost[aria-disabled="true"]:not(.dk-btn--loading), .dk-btn--link[aria-disabled="true"]:not(.dk-btn--loading) { background: transparent; border-color: transparent; }
 
 /* Sizes: sm 24px, md 32px, lg 44px */
 .dk-btn--size-sm { height: var(--button-height-sm, var(--control-height-sm)); padding: var(--spacing-0) var(--button-padding-x-sm, var(--spacing-2)); gap: var(--button-gap-sm, var(--spacing-1)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }

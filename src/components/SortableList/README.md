@@ -24,7 +24,7 @@ const [tasks, setTasks] = React.useState([{ id: "brief", title: "Write the brief
 ## When not to use
 
 - An order that follows from the data (date, name, size): offer sorting, such as Table's sortable headers.
-- Moving items between groups or columns, such as a kanban board: that needs more than one list.
+- Moving items between groups or columns, such as a kanban board: use [Kanban](../Kanban/README.md).
 - Very long lists where dragging far is the main job: dragging scrolls at the edges, but offer "Move to top" or a position field as well.
 
 ## Anatomy
