@@ -96,7 +96,7 @@ import { useBreakpoint } from "serupa-ds";
 
 function Navigation() {
   const wide = useBreakpoint("lg", { serverValue: true });
-  return wide ? <Sidebar items={items} /> : <Navbar brand="Acme">{links}</Navbar>;
+  return wide ? <Sidebar>{items}</Sidebar> : <Navbar brand="Acme">{links}</Navbar>;
 }
 ```
 

@@ -84,3 +84,6 @@ html, body { background-color: var(--surface); }
 /* Links Storybook draws itself inside the docs' own blocks (a Do and don't caption, a README section) keep its
    light-theme blue, 3.1:1 on a dark page. */
 [data-theme$="-dark"] a.sbdocs-a:not(.docs-story *) { color: var(--primary) !important; }
+
+/* A docs block that scrolls sideways (the contrast matrix) is in the tab order so a keyboard can scroll it: show where focus is. */
+.sbdocs [role="region"][tabindex="0"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }

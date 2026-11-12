@@ -97,7 +97,7 @@ const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(
 // list upstream, so both are left out.
 async function docsAxe(w) {
   // An anatomy picture (docs/anatomy.tsx) turns inert, and so leaves the tab order, once its story has opened what it opens.
-  await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x.inert), null, { timeout: 5000 }).catch(() => {});
+  await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x instanceof HTMLElement && x.inert), null, { timeout: 5000 }).catch(() => {});
   if (!(await w.page.evaluate(() => 'axe' in window))) await w.page.addScriptTag({ content: axe });
   return w.page.evaluate(async () => {
     const r = await window.axe.run({ include: [['#storybook-docs']], exclude: [['.docs-story'], ['.rejt-tree']] }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
