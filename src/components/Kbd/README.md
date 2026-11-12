@@ -62,6 +62,11 @@ Use `mod` for shortcuts that follow the platform. Any other text shows as it is,
 - Inside a `SerupaProvider` with `platform` set (`"apple"` or `"other"`, worked out on the server from the User-Agent or `Sec-CH-UA-Platform`), the right keys show from the first render, the server's too. Without it, the platform is read in the browser after the page loads, so server-rendered pages show the words first.
 - It sits with the text, so it can go inline in a sentence.
 
+### Do and don't
+
+- **Do:** Use `mod` for a shortcut that follows the platform: Mac users see ⌘K and others see Ctrl+K. (`DoMod`)
+- **Don't:** Write `ctrl` for a shortcut that is ⌘ on a Mac: Mac users press keys that don't work. (`DontHardcodeCtrl`)
+
 ## Accessibility
 
 - A combination is one `<kbd>` holding a `<kbd>` per key, as HTML recommends. Symbols are hidden from screen readers and replaced with the key's name, through the `keyName` label (so "Panah atas" and "Spasi" in `idLabels`); the + between keys is hidden.
