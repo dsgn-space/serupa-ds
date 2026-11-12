@@ -1,4 +1,5 @@
-// Storybook (npm run build-storybook first): every story and docs page renders without errors, and every
+// Storybook (npm run build-storybook first): every story and docs page renders without errors, every docs page's
+// own content passes axe's WCAG 2.2 AA checks in blue-light and blue-dark, and every
 // story passes axe's WCAG 2.2 AA checks in all six themes, and once more in blue-light with data-contrast="more"
 // (text in a disabled control is exempt from contrast, as WCAG 1.4.3 says). In the first theme, each story also
 // takes the WCAG 1.4.12 text spacing (line height 1.5, letter spacing 0.12em, word spacing 0.16em, paragraph
@@ -91,6 +92,18 @@ const only = onlyComponents();
 const mine = (e) => { const p = e.importPath.split('/'); return !only || only.has(p[1] === 'docs' ? `docs/${p[2]}` : p[3]); };
 const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs' && mine(e)) : [];
 const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
+// axe on a docs page's own content (GR348): its prose, tables, the props table and the docs' own blocks. The stories
+// on it are checked on their own in every theme, and Storybook's object editor (.rejt-tree) puts its <li>s outside a
+// list upstream, so both are left out.
+async function docsAxe(w) {
+  // An anatomy picture (docs/anatomy.tsx) turns inert, and so leaves the tab order, once its story has opened what it opens.
+  await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x.inert), null, { timeout: 5000 }).catch(() => {});
+  if (!(await w.page.evaluate(() => 'axe' in window))) await w.page.addScriptTag({ content: axe });
+  return w.page.evaluate(async () => {
+    const r = await window.axe.run({ include: [['#storybook-docs']], exclude: [['.docs-story'], ['.rejt-tree']] }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
+    return r.violations.map((v) => `${v.id}: ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(', ')}`);
+  });
+}
 async function checkDocs(e, w) {
   const out = [];
   const notReady = await open(w, e, 'blue-light');
@@ -108,6 +121,7 @@ async function checkDocs(e, w) {
   });
   if (headings) out.push(t(`docs · ${e.title} · headings: each id once, no level skipped`, !headings.twice.length && !headings.skips.length,
     [...headings.twice.map((id) => `id "${id}" twice`), ...headings.skips].slice(0, 4).join(' | ')));
+  if (!notReady) { const v = await docsAxe(w); out.push(t(`docs · ${e.title} · axe (WCAG 2.2 AA), blue-light`, !v.length, v.slice(0, 3).join(' | '))); }
   // In a dark mode the whole docs page follows the theme, so dark components aren't shown on white.
   const darkNotReady = await open(w, e, 'blue-dark');
   const dark = await w.page.evaluate(() => {
@@ -137,6 +151,7 @@ async function checkDocs(e, w) {
     return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
   out.push(t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(24, 24, 27)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark)));
+  if (!darkNotReady) { const v = await docsAxe(w); out.push(t(`docs · ${e.title} · axe (WCAG 2.2 AA), blue-dark`, !v.length, v.slice(0, 3).join(' | '))); }
   return out;
 }
 // WCAG 1.4.12's text spacing, as a user's style sheet sets it.

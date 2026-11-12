@@ -157,7 +157,7 @@ npx serupa-usage src
 
 ### For your own components
 
-The package also exports what the components use themselves, so a component you build follows the same settings:
+The package also exports what the components use themselves, so a component you build follows the same settings. Guides › Hooks and helpers in Storybook gives each one an example (`docs/HooksAndHelpers.mdx`):
 
 | Export | What it gives |
 | --- | --- |
@@ -168,6 +168,7 @@ The package also exports what the components use themselves, so a component you 
 | `announce(text, { assertive? })` | Says `text` to screen readers through the components' live regions, which move into an open Dialog or Drawer so it's heard there too. `assertive` interrupts: only for errors. |
 | `announcePage({ title?, focus? })` | After a client-side route change, does what a full page load would: focuses the new page's main heading (the `h1` in `<main>`, made focusable with `tabindex="-1"`) and says its title (`document.title` by default) to screen readers, unless the focused heading already says it. `focus` takes an element or a selector, or `false` to leave focus where it is. Call it in an effect once the new page has rendered. |
 | `withViewTransition(update, { types? })` | Runs a state change as a View Transition, so what it moves glides to its new place instead of jumping: a list reordered or filtered, a card expanded, a layout switched. Mark what should travel with `view-transition-name` or the `view-transition-match` class. It uses `motion-change-md` with `ease-move`, only crossfades under reduced motion, and applies the change at once where View Transitions are missing. |
+| `withoutTransitions(change, element?)` | Runs `change`, such as setting `data-theme` on a section, and finishes the color transitions it starts inside `element` (the whole page by default), so a section's new theme arrives at once instead of fading control by control. Motion runs on. `theme.js` does this for the page's own theme switch. |
 | `useBreakpoint(name, { serverValue? })` | Whether the screen is at least `'sm'` (640px), `'md'` (768px), `'lg'` (1024px), `'xl'` (1280px) or `'2xl'` (1536px) wide: the `screen-*` tokens, so markup the hook picks switches at the same width as the `md:` utilities around it. Kept up to date as the window resizes. |
 | `useMediaQuery(query, { serverValue? })` | Whether any CSS media query matches now, such as `'(hover: hover)'`, kept up to date. Server HTML and hydration use `serverValue` (default `false`) and the browser's answer follows right after, so nothing mismatches. Prefer CSS where it can do the job: a hook is for when the markup itself changes. |
 | `useReducedMotion()` | Whether the visitor asked for less motion, to skip an animation you run from JavaScript (a smooth scroll, a count going up). CSS transitions already follow the setting through the motion tokens. |
