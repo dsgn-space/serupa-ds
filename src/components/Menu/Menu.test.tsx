@@ -9,6 +9,7 @@ import { Tooltip } from '../Tooltip/Tooltip';
 import { ContextMenu, keyShortcuts, Menu, MenuCheckboxItem, MenuGroup, MenuItem, MenuRadioGroup, MenuRadioItem, MenuSeparator, MenuSub } from './Menu';
 import { page } from 'vitest/browser';
 import { useShortcut } from '../KeyboardShortcuts/KeyboardShortcuts';
+import { SerupaProvider } from '../../internal/provider';
 
 const modded = (t: Element, key: string) => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -468,6 +469,20 @@ describe('Menu', () => {
     await expect.element(page.getByRole('menuitem', { name: 'Edit', exact: true })).toBeInTheDocument();
   });
 
+  test(`shortcut as keys follows the platform: ["mod", "shift", "K"] is "⇧⌘K" (Meta) on an Apple device, modifiers in each platform's order, and "Ctrl+Shift+K" (Control) elsewhere`, async () => {
+    const items = (id: string) => [...menuOf(id).querySelectorAll<HTMLElement>('[role=menuitem]')].map((i) => [i.querySelector('kbd')!.textContent, i.getAttribute('aria-keyshortcuts')]);
+    const menu = (id: string) => <Menu open trigger={<Button id={id}>More</Button>}>
+      <MenuItem shortcut={['mod', 'shift', 'K']}>Search</MenuItem>
+      <MenuItem shortcut={['alt', 'up']}>Move up</MenuItem>
+      <MenuItem shortcut={['mod', '+']}>Zoom in</MenuItem>
+    </Menu>;
+    const screen = await render(<SerupaProvider platform="other">{menu('kso')}</SerupaProvider>);
+    expect(items('kso')).toEqual([['Ctrl+Shift+K', 'Control+Shift+K'], ['Alt+↑', 'Alt+ArrowUp'], ['Ctrl++', 'Control+Plus']]);
+    await screen.unmount();
+    await render(<SerupaProvider platform="apple">{menu('ksa')}</SerupaProvider>);
+    expect(items('ksa')).toEqual([['⇧⌘K', 'Meta+Shift+K'], ['⌥↑', 'Alt+ArrowUp'], ['⌘+', 'Meta+Plus']]);
+  });
+
   test('keyShortcuts: Mac symbols written together, words with + or spaces, named keys, single letters upper case', () => {
     expect(['⌘K', '⌘⇧K', '⌥⌘I', 'Ctrl+Shift+P', 'ctrl + c', 'Alt F4', 'Cmd+Enter', '⇧Tab', 'Esc', '?', 'Delete'].map(keyShortcuts))
       .toEqual(['Meta+K', 'Meta+Shift+K', 'Alt+Meta+I', 'Control+Shift+P', 'Control+C', 'Alt+F4', 'Meta+Enter', 'Shift+Tab', 'Escape', '?', 'Delete']);
@@ -883,5 +898,33 @@ describe('Menu inside a shadow root (GR60)', () => {
       await userEvent.keyboard('{ArrowUp}');
       expect(root.activeElement?.textContent).toBe('Two');
     } finally { host.remove(); }
+  });
+});
+
+describe('Menu labels line up', () => {
+  // where each label's text starts: the first letter of every item, and of each group's heading (found by the group's name)
+  const textLeft = (l: Element) => { const w = document.createTreeWalker(l, NodeFilter.SHOW_TEXT, (n) => n.textContent!.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP).nextNode()!; const r = document.createRange(); r.selectNodeContents(w); return Math.round(r.getBoundingClientRect().left); };
+  const lefts = (m: Element) => [...m.querySelectorAll<HTMLElement>(':scope > [role^="menuitem"], :scope > [role="group"], :scope > [role="group"] > [role^="menuitem"]')]
+    .map((l) => textLeft(l.getAttribute('role') === 'group' ? document.getElementById(l.getAttribute('aria-labelledby')!)! : l));
+  test('items without an icon or a check keep their space, so every label (and group heading) starts in one column; a menu with neither keeps its plain inset; a submenu works out its own', async () => {
+    await render(<div>
+      <Menu defaultOpen trigger={<Button>Mixed</Button>}>
+        <MenuItem icon="content_copy">Copy</MenuItem>
+        <MenuItem>Paste</MenuItem>
+        <MenuGroup label="View"><MenuCheckboxItem checked>Show grid</MenuCheckboxItem><MenuItem icon="zoom_in">Zoom in</MenuItem><MenuItem>Reset</MenuItem></MenuGroup>
+        <MenuSub label="More"><MenuItem>Rename</MenuItem><MenuItem>Archive</MenuItem></MenuSub>
+      </Menu>
+    </div>);
+    const m = openMenu()!;
+    const all = lefts(m);
+    expect(all).toEqual(Array(7).fill(all[0]));
+    // The label column is past both an icon and a check, each 16px with the 8px gap, after the 8px inset.
+    expect(all[0] - Math.round(m.querySelector<HTMLElement>('[role="menuitem"]')!.getBoundingClientRect().left)).toBe(8 + 24 + 24);
+    // The submenu has no icons or checks: its labels sit at the plain inset.
+    await userEvent.keyboard('{End}{ArrowRight}');
+    const sub = [...document.querySelectorAll<HTMLElement>('[role="menu"]')].find((x) => x !== m && !x.hidden)!;
+    await expect.poll(() => !!sub && sub.matches(':popover-open')).toBe(true);
+    const item = sub.querySelector<HTMLElement>('[role="menuitem"]')!;
+    expect(lefts(sub).map((l) => l - Math.round(item.getBoundingClientRect().left))).toEqual([8, 8]);
   });
 });

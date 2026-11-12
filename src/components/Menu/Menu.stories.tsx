@@ -21,7 +21,7 @@ const meta = {
     return (
       <Menu {...args} open={open}>
         {args.children ?? <>
-          <MenuItem icon="edit" shortcut="⌘E">Edit</MenuItem>
+          <MenuItem icon="edit" shortcut={['mod', 'E']}>Edit</MenuItem>
           <MenuItem icon="content_copy">Duplicate</MenuItem>
           <MenuItem icon="archive" disabled>Archive</MenuItem>
           <MenuSeparator />
@@ -100,14 +100,14 @@ export const Shortcuts: Story = {
   args: {
     trigger: <Button variant="secondary" rightIcon="expand_more">Edit</Button>,
     children: <>
-      <MenuItem icon="undo" shortcut="⌘Z">Undo</MenuItem>
-      <MenuItem icon="redo" shortcut="⇧⌘Z">Redo</MenuItem>
+      <MenuItem icon="undo" shortcut={['mod', 'Z']}>Undo</MenuItem>
+      <MenuItem icon="redo" shortcut={['mod', 'shift', 'Z']}>Redo</MenuItem>
       <MenuSeparator />
-      <MenuItem icon="content_cut" shortcut="⌘X">Cut</MenuItem>
-      <MenuItem icon="content_copy" shortcut="⌘C">Copy</MenuItem>
-      <MenuItem icon="content_paste" shortcut="⌘V" disabled>Paste</MenuItem>
+      <MenuItem icon="content_cut" shortcut={['mod', 'X']}>Cut</MenuItem>
+      <MenuItem icon="content_copy" shortcut={['mod', 'C']}>Copy</MenuItem>
+      <MenuItem icon="content_paste" shortcut={['mod', 'V']} disabled>Paste</MenuItem>
       <MenuSeparator />
-      <MenuItem icon="select_all" shortcut="⌘A">Select all</MenuItem>
+      <MenuItem icon="select_all" shortcut={['mod', 'A']}>Select all</MenuItem>
     </>,
   },
   decorators: [frame({ minHeight: 380 })],
@@ -118,7 +118,7 @@ export const DisabledItems: Story = {
     children: <>
       <MenuItem icon="edit">Rename</MenuItem>
       <MenuItem icon="share" disabled>Share (owners only)</MenuItem>
-      <MenuItem icon="download" shortcut="⌘D" disabled>Download</MenuItem>
+      <MenuItem icon="download" shortcut={['mod', 'shift', 'D']} disabled>Download</MenuItem>
       <MenuSeparator />
       <MenuItem icon="delete" destructive disabled>Delete</MenuItem>
     </>,
@@ -151,8 +151,8 @@ export const Checkable: Story = {
     const [grid, setGrid] = React.useState(true), [rulers, setRulers] = React.useState(false), [sort, setSort] = React.useState('name');
     return <Menu defaultOpen trigger={<Button variant="secondary" rightIcon="expand_more">View</Button>}>
       <MenuGroup label="Show">
-        <MenuCheckboxItem checked={grid} onCheckedChange={setGrid} shortcut="⌘'">Grid</MenuCheckboxItem>
-        <MenuCheckboxItem checked={rulers} onCheckedChange={setRulers} shortcut="⌘R">Rulers</MenuCheckboxItem>
+        <MenuCheckboxItem checked={grid} onCheckedChange={setGrid} shortcut={['mod', "'"]}>Grid</MenuCheckboxItem>
+        <MenuCheckboxItem checked={rulers} onCheckedChange={setRulers} shortcut={['alt', 'R']}>Rulers</MenuCheckboxItem>
       </MenuGroup>
       <MenuSeparator />
       <MenuRadioGroup label="Sort by" value={sort} onValueChange={setSort}>
@@ -181,7 +181,7 @@ export const LongLabels: Story = {
     style: { maxWidth: 280 },
     children: <>
       <MenuItem icon="folder">Move to “Quarterly planning and budget review”</MenuItem>
-      <MenuItem icon="share" shortcut="⌘⇧S">Share with everyone in the Northwind workspace</MenuItem>
+      <MenuItem icon="share" shortcut={['mod', 'shift', 'S']}>Share with everyone in the Northwind workspace</MenuItem>
       <MenuItem icon="delete" destructive>Delete this project and all of its files for good</MenuItem>
     </>,
   },
@@ -190,7 +190,7 @@ export const Submenus: Story = {
   args: {
     trigger: <Button variant="secondary" rightIcon="expand_more">File</Button>,
     children: <>
-      <MenuItem icon="add" shortcut="⌘N">New</MenuItem>
+      <MenuItem icon="add" shortcut={['alt', 'N']}>New</MenuItem>
       <MenuSub icon="share" label="Share">
         <MenuItem icon="mail">Email</MenuItem>
         <MenuItem icon="link">Copy link</MenuItem>
