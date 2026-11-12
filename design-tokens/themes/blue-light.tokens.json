@@ -93,7 +93,7 @@
     "surface-muted": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. Secondary panels, sidebars, table headers.",
+      "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-muted"

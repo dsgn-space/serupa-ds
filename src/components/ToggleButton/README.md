@@ -67,4 +67,5 @@ Each is an optional override: set it on the page, a container or one toggle. The
 | `--toggle-button-bg-pressed` | `primary-subtle` | The background while pressed (on). |
 | `--toggle-button-text-pressed` | `primary` | Text and icon while pressed (4.5:1 on bg-pressed). |
 | `--toggle-button-border-pressed` | `primary` | The outline variant's border while pressed (3:1 on surface). |
+| `--toggle-button-depth-pressed` | `depth-control-pressed` | The tactile layers of an on toggle: it stays sunk. None in the flat brands. |
 <!-- token-table:end -->

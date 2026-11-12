@@ -47,6 +47,15 @@
 .dk-checkbox__icon { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--checkbox-icon-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-checkbox__icon .dk-icon { font-size: var(--dk-checkbox-icon); }
 .dk-checkbox__input:checked + .dk-checkbox__icon, .dk-checkbox__input:indeterminate + .dk-checkbox__icon, .dk-checkbox__input[data-indeterminate] + .dk-checkbox__icon { visibility: visible; }
+/* In a tactile brand the tick draws itself on, from its start to its end (motion-draw: 0, so at once, in the flat
+   brands). Only under the pointer or keyboard focus, like the fill above: boxes ticked from elsewhere (select all)
+   or already ticked when the page loads appear at once. Not under reduced motion. The tick is a filled glyph, so a
+   clip reveals it rather than a stroke. */
+@keyframes dk-checkbox-draw { from { clip-path: inset(var(--spacing-0) var(--sizing-full) var(--spacing-0) var(--spacing-0)); } }
+@media (prefers-reduced-motion: no-preference) {
+  .dk-checkbox__input:focus-visible:checked + .dk-checkbox__icon { animation: dk-checkbox-draw var(--checkbox-draw-duration, var(--motion-draw)) var(--ease-settle); }
+  @media (hover: hover) { .dk-checkbox:hover .dk-checkbox__input:checked + .dk-checkbox__icon { animation: dk-checkbox-draw var(--checkbox-draw-duration, var(--motion-draw)) var(--ease-settle); } }
+}
 /* Focus: the 2px focus-ring outline, 2px out, like Button. The gap is transparent, so it works on tinted backgrounds. */
 .dk-checkbox__input:focus-visible {
   outline: var(--focus-ring-width) solid var(--dk-checkbox-ring); outline-offset: var(--focus-ring-offset);
