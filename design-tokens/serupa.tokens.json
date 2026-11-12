@@ -4882,7 +4882,7 @@
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px.",
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px; 32px in Modern.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--space-surface"

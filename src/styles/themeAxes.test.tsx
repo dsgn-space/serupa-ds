@@ -194,10 +194,22 @@ describe('Contrast axis', () => {
     }
   });
 
+  test('more contrast outranks a brand\'s own neutrals: Modern\'s softer borders still step up', () => {
+    const border = () => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = 'var(--border)'; const c = getComputedStyle(p).color; p.remove(); return c; };
+    for (const [mode, strong] of [['light', 'rgb(113, 113, 122)'], ['dark', 'rgb(161, 161, 170)']]) {
+      axes('emerald', mode);
+      const soft = border();
+      root.setAttribute('data-contrast', 'more');
+      expect(border(), mode).toBe(strong);   // zinc-500 / zinc-400, as in every brand
+      expect(border()).not.toBe(soft);
+      root.removeAttribute('data-contrast');
+    }
+  });
+
   test('the brand keeps its hue: each brand gets its own stronger shade, from the axes and in a nested section', () => {
     const hue = (host: HTMLElement) => { const p = document.createElement('span'); host.appendChild(p); p.style.color = 'var(--primary)'; const c = getComputedStyle(p).color; p.remove(); return c; };
     const swatch = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
-    for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'emerald-300'], ['blue', 'dark', 'blue-300']]) {
+    for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'teal-300'], ['blue', 'dark', 'blue-300']]) {
       axes(brand, mode);
       root.setAttribute('data-contrast', 'more');
       expect(hue(document.body), `${brand}-${mode}`).toBe(swatch(shade));
@@ -212,11 +224,11 @@ describe('Contrast axis', () => {
     const blue = document.createElement('section');
     blue.setAttribute('data-theme', 'blue-light');
     document.body.append(emerald, blue);
-    expect(hue(emerald)).toBe(swatch('emerald-300'));
+    expect(hue(emerald)).toBe(swatch('teal-300'));
     expect(hue(blue)).toBe(swatch('blue-800'));
     // …and without it, the normal shades.
     root.removeAttribute('data-contrast');
-    expect(hue(emerald)).toBe(swatch('emerald-400'));
+    expect(hue(emerald)).toBe(swatch('teal-400'));
     expect(hue(blue)).toBe(swatch('blue-600'));
     emerald.remove();
     blue.remove();
@@ -259,6 +271,20 @@ describe('Density axis', () => {
     root.setAttribute('data-radius', 'round');
     expect([r('r-page'), r('r-surface'), r('r-default'), r('r-blue')]).toEqual(['12px', '16px', '6px', '12px']);
     expect(r('r-pill')).toBe('9999px');
+  });
+  test('data-radius beats Modern\'s own corners, and default puts them back in a section', async () => {
+    root.setAttribute('data-theme', 'emerald-light');
+    await render(<div>
+      <Button id="m-page">Save</Button>
+      <div id="m-surface" style={{ borderRadius: 'var(--radius-surface)' }}>Card</div>
+      <section data-radius="default"><Button id="m-default">Save</Button></section>
+    </div>);
+    const r = (id: string) => getComputedStyle(document.getElementById(id)!).borderTopLeftRadius;
+    expect([r('m-page'), r('m-surface'), r('m-default')]).toEqual(['8px', '12px', '8px']);
+    root.setAttribute('data-radius', 'sharp');
+    expect([r('m-page'), r('m-surface'), r('m-default')]).toEqual(['2px', '4px', '8px']);
+    root.setAttribute('data-radius', 'round');
+    expect([r('m-page'), r('m-surface'), r('m-default')]).toEqual(['12px', '16px', '8px']);
   });
   test('data-shadow="brand" (73): the box shadows take a deep shade of the brand color at the same opacity; a section with its own brand and data-shadow takes its own; neutral puts the black back', async () => {
     root.setAttribute('data-shadow', 'brand');

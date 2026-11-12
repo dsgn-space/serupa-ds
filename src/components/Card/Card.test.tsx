@@ -95,12 +95,13 @@ describe('Card', () => {
     expect(f.boxShadow === 'none' || /0px 0px 0px 0px/.test(f.boxShadow)).toBe(true);
   });
 
-  test('elevated in dark: one step up from the page (zinc-800 on zinc-900) with a zinc-700 edge, in every dark theme', async () => {
+  test('elevated in dark: one step up from the page (zinc-800 on zinc-900, Modern zinc-900 on zinc-950) with an edge one step lighter (Modern\'s is see-through white), in every dark theme', async () => {
     await render(<Variants />);
     for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
       document.documentElement.setAttribute('data-theme', th);
       const e = css(el('el'));
-      expect([th, e.backgroundColor, e.borderTopColor]).toEqual([th, color('var(--zinc-800)'), color('var(--zinc-700)')]);
+      const [bg, edge] = th === 'emerald-dark' ? ['var(--zinc-900)', '#ffffff1f'] : ['var(--zinc-800)', 'var(--zinc-700)'];
+      expect([th, e.backgroundColor, e.borderTopColor]).toEqual([th, color(bg), color(edge)]);
       expect(e.backgroundColor).not.toBe(color('var(--surface)'));
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');

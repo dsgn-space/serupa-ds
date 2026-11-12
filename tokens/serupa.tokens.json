@@ -25,11 +25,11 @@
         },
         {
           "id": "emerald-light",
-          "name": "Emerald Light"
+          "name": "Modern Light"
         },
         {
           "id": "emerald-dark",
-          "name": "Emerald Dark"
+          "name": "Modern Dark"
         }
       ],
       "type": {
@@ -620,16 +620,16 @@
             "blue-dark": "{blue-400}",
             "violet-light": "{violet-600}",
             "violet-dark": "{violet-400}",
-            "emerald-light": "{emerald-700}",
-            "emerald-dark": "{emerald-400}"
+            "emerald-light": "{teal-700}",
+            "emerald-dark": "{teal-400}"
           },
           "contrastMore": {
             "blue-light": "{blue-800}",
             "blue-dark": "{blue-300}",
             "violet-light": "{violet-800}",
             "violet-dark": "{violet-300}",
-            "emerald-light": "{emerald-800}",
-            "emerald-dark": "{emerald-300}"
+            "emerald-light": "{teal-800}",
+            "emerald-dark": "{teal-300}"
           }
         }
       }
@@ -644,16 +644,16 @@
             "blue-dark": "{blue-300}",
             "violet-light": "{violet-700}",
             "violet-dark": "{violet-300}",
-            "emerald-light": "{emerald-800}",
-            "emerald-dark": "{emerald-300}"
+            "emerald-light": "{teal-800}",
+            "emerald-dark": "{teal-300}"
           },
           "contrastMore": {
             "blue-light": "{blue-900}",
             "blue-dark": "{blue-200}",
             "violet-light": "{violet-900}",
             "violet-dark": "{violet-200}",
-            "emerald-light": "{emerald-900}",
-            "emerald-dark": "{emerald-200}"
+            "emerald-light": "{teal-900}",
+            "emerald-dark": "{teal-200}"
           }
         }
       }
@@ -668,8 +668,8 @@
             "blue-dark": "{blue-950}",
             "violet-light": "{violet-50}",
             "violet-dark": "{violet-950}",
-            "emerald-light": "{emerald-50}",
-            "emerald-dark": "{emerald-950}"
+            "emerald-light": "{teal-50}",
+            "emerald-dark": "{teal-950}"
           }
         }
       }
@@ -685,7 +685,7 @@
             "violet-light": "{white}",
             "violet-dark": "{violet-950}",
             "emerald-light": "{white}",
-            "emerald-dark": "{emerald-950}"
+            "emerald-dark": "{teal-950}"
           }
         }
       }
@@ -701,7 +701,7 @@
             "violet-light": "{zinc-100}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-dark": "{zinc-800}"
           }
         }
       }
@@ -717,7 +717,7 @@
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-600}",
             "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-600}"
+            "emerald-dark": "{zinc-700}"
           }
         }
       }
@@ -733,7 +733,7 @@
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-dark": "{zinc-800}"
           }
         }
       }
@@ -749,7 +749,7 @@
             "violet-light": "{zinc-300}",
             "violet-dark": "{zinc-600}",
             "emerald-light": "{zinc-300}",
-            "emerald-dark": "{zinc-600}"
+            "emerald-dark": "{zinc-700}"
           }
         }
       }
@@ -765,7 +765,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-900}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{zinc-950}"
           }
         }
       }
@@ -781,7 +781,7 @@
             "violet-light": "{zinc-50}",
             "violet-dark": "{zinc-950}",
             "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-950}"
+            "emerald-dark": "{black}"
           }
         }
       }
@@ -813,7 +813,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-800}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-900}"
           }
         }
       }
@@ -829,7 +829,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-800}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-900}"
           }
         }
       }
@@ -845,7 +845,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-800}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-900}"
           }
         }
       }
@@ -861,7 +861,7 @@
             "violet-light": "{zinc-50}",
             "violet-dark": "{zinc-900}",
             "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{zinc-950}"
           }
         }
       }
@@ -1043,7 +1043,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-900}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{zinc-950}"
           }
         }
       }
@@ -1058,8 +1058,8 @@
             "blue-dark": "{zinc-700}",
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-light": "#09090b1a",
+            "emerald-dark": "#ffffff1f"
           },
           "contrastMore": {
             "light": "{zinc-500}",
@@ -1078,8 +1078,8 @@
             "blue-dark": "{zinc-600}",
             "violet-light": "{zinc-300}",
             "violet-dark": "{zinc-600}",
-            "emerald-light": "{zinc-300}",
-            "emerald-dark": "{zinc-600}"
+            "emerald-light": "#09090b2e",
+            "emerald-dark": "#ffffff38"
           },
           "contrastMore": {
             "light": "{zinc-600}",
@@ -1098,8 +1098,8 @@
             "blue-dark": "{zinc-700}",
             "violet-light": "{white}",
             "violet-dark": "{zinc-700}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-light": "#09090b1a",
+            "emerald-dark": "#ffffff1f"
           }
         }
       }
@@ -1115,7 +1115,7 @@
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-600}",
             "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-600}"
+            "emerald-dark": "{zinc-700}"
           }
         }
       }
@@ -1130,16 +1130,16 @@
             "blue-dark": "{blue-400}",
             "violet-light": "{violet-500}",
             "violet-dark": "{violet-400}",
-            "emerald-light": "{emerald-600}",
-            "emerald-dark": "{emerald-400}"
+            "emerald-light": "{teal-600}",
+            "emerald-dark": "{teal-400}"
           },
           "contrastMore": {
             "blue-light": "{blue-700}",
             "blue-dark": "{blue-300}",
             "violet-light": "{violet-700}",
             "violet-dark": "{violet-300}",
-            "emerald-light": "{emerald-700}",
-            "emerald-dark": "{emerald-300}"
+            "emerald-light": "{teal-700}",
+            "emerald-dark": "{teal-300}"
           }
         }
       }
@@ -1654,8 +1654,8 @@
             "blue-dark": "{blue-500}",
             "violet-light": "{blue-800}",
             "violet-dark": "{blue-500}",
-            "emerald-light": "{blue-800}",
-            "emerald-dark": "{blue-500}"
+            "emerald-light": "{teal-800}",
+            "emerald-dark": "{teal-600}"
           },
           "utilities": false
         }
@@ -1688,8 +1688,8 @@
             "blue-dark": "{pink-600}",
             "violet-light": "{pink-800}",
             "violet-dark": "{pink-600}",
-            "emerald-light": "{pink-800}",
-            "emerald-dark": "{pink-600}"
+            "emerald-light": "{purple-700}",
+            "emerald-dark": "{purple-500}"
           },
           "utilities": false
         }
@@ -1705,8 +1705,8 @@
             "blue-dark": "{cyan-500}",
             "violet-light": "{cyan-600}",
             "violet-dark": "{cyan-500}",
-            "emerald-light": "{cyan-600}",
-            "emerald-dark": "{cyan-500}"
+            "emerald-light": "{blue-500}",
+            "emerald-dark": "{blue-400}"
           },
           "utilities": false
         }
@@ -1739,8 +1739,8 @@
             "blue-dark": "{teal-600}",
             "violet-light": "{teal-600}",
             "violet-dark": "{teal-600}",
-            "emerald-light": "{teal-600}",
-            "emerald-dark": "{teal-600}"
+            "emerald-light": "{pink-500}",
+            "emerald-dark": "{pink-500}"
           },
           "utilities": false
         }
@@ -1773,7 +1773,7 @@
             "blue-dark": "{red-600}",
             "violet-light": "{red-600}",
             "violet-dark": "{red-600}",
-            "emerald-light": "{red-600}",
+            "emerald-light": "{red-500}",
             "emerald-dark": "{red-600}"
           },
           "utilities": false
@@ -1790,8 +1790,8 @@
             "blue-dark": "{blue-800}",
             "violet-light": "{blue-200}",
             "violet-dark": "{blue-800}",
-            "emerald-light": "{blue-200}",
-            "emerald-dark": "{blue-800}"
+            "emerald-light": "{teal-200}",
+            "emerald-dark": "{teal-800}"
           },
           "utilities": false
         }
@@ -1807,8 +1807,8 @@
             "blue-dark": "{blue-600}",
             "violet-light": "{blue-400}",
             "violet-dark": "{blue-600}",
-            "emerald-light": "{blue-400}",
-            "emerald-dark": "{blue-600}"
+            "emerald-light": "{teal-400}",
+            "emerald-dark": "{teal-600}"
           },
           "utilities": false
         }
@@ -1824,8 +1824,8 @@
             "blue-dark": "{blue-500}",
             "violet-light": "{blue-600}",
             "violet-dark": "{blue-500}",
-            "emerald-light": "{blue-600}",
-            "emerald-dark": "{blue-500}"
+            "emerald-light": "{teal-600}",
+            "emerald-dark": "{teal-500}"
           },
           "utilities": false
         }
@@ -1841,8 +1841,8 @@
             "blue-dark": "{blue-300}",
             "violet-light": "{blue-800}",
             "violet-dark": "{blue-300}",
-            "emerald-light": "{blue-800}",
-            "emerald-dark": "{blue-300}"
+            "emerald-light": "{teal-800}",
+            "emerald-dark": "{teal-300}"
           },
           "utilities": false
         }
@@ -1858,8 +1858,8 @@
             "blue-dark": "{blue-100}",
             "violet-light": "{blue-950}",
             "violet-dark": "{blue-100}",
-            "emerald-light": "{blue-950}",
-            "emerald-dark": "{blue-100}"
+            "emerald-light": "{teal-950}",
+            "emerald-dark": "{teal-100}"
           },
           "utilities": false
         }
@@ -1927,7 +1927,7 @@
             "violet-light": "{zinc-100}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-dark": "{zinc-800}"
           },
           "utilities": false
         }
@@ -1943,8 +1943,8 @@
             "blue-dark": "{blue-800}",
             "violet-light": "{blue-200}",
             "violet-dark": "{blue-800}",
-            "emerald-light": "{blue-200}",
-            "emerald-dark": "{blue-800}"
+            "emerald-light": "{teal-300}",
+            "emerald-dark": "{teal-800}"
           },
           "utilities": false
         }
@@ -1960,8 +1960,8 @@
             "blue-dark": "{blue-500}",
             "violet-light": "{blue-500}",
             "violet-dark": "{blue-500}",
-            "emerald-light": "{blue-500}",
-            "emerald-dark": "{blue-500}"
+            "emerald-light": "{teal-600}",
+            "emerald-dark": "{teal-500}"
           },
           "utilities": false
         }
@@ -1977,8 +1977,8 @@
             "blue-dark": "{blue-300}",
             "violet-light": "{blue-700}",
             "violet-dark": "{blue-300}",
-            "emerald-light": "{blue-700}",
-            "emerald-dark": "{blue-300}"
+            "emerald-light": "{teal-800}",
+            "emerald-dark": "{teal-300}"
           },
           "utilities": false
         }
@@ -1995,7 +1995,7 @@
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-dark": "{zinc-800}"
           },
           "utilities": false
         }
@@ -2046,7 +2046,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-900}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{zinc-950}"
           },
           "utilities": false
         }
@@ -6765,12 +6765,34 @@
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px."
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px; 32px in Modern.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{spacing-6}",
+            "violet-light": "{spacing-6}",
+            "violet-dark": "{spacing-6}",
+            "emerald-light": "{spacing-8}",
+            "emerald-dark": "{spacing-8}"
+          }
+        }
+      }
     },
     "space-section": {
       "$type": "dimension",
       "$value": "{spacing.spacing-8}",
-      "$description": "Between groups or sections of a page. 32px."
+      "$description": "Between groups or sections of a page. 32px.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{spacing-8}",
+            "violet-light": "{spacing-8}",
+            "violet-dark": "{spacing-8}",
+            "emerald-light": "{spacing-12}",
+            "emerald-dark": "{spacing-12}"
+          }
+        }
+      }
     }
   },
   "radius": {
@@ -6882,6 +6904,13 @@
       "$description": "A control or an item people press or type in: buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree. 6px.",
       "$extensions": {
         "com.serupa": {
+          "themes": {
+            "blue-dark": "{rounded-md}",
+            "violet-light": "{rounded-md}",
+            "violet-dark": "{rounded-md}",
+            "emerald-light": "{rounded-lg}",
+            "emerald-dark": "{rounded-lg}"
+          },
           "roundness": {
             "sharp": "{rounded-xs}",
             "round": "{rounded-xl}"
@@ -6895,6 +6924,13 @@
       "$description": "A surface that holds content or floats over the page: alerts, tables, lists, accordions, drop zones, and menus, popovers, list boxes and toasts. 8px.",
       "$extensions": {
         "com.serupa": {
+          "themes": {
+            "blue-dark": "{rounded-lg}",
+            "violet-light": "{rounded-lg}",
+            "violet-dark": "{rounded-lg}",
+            "emerald-light": "{rounded-xl}",
+            "emerald-dark": "{rounded-xl}"
+          },
           "roundness": {
             "sharp": "{rounded-sm}",
             "round": "{rounded-2xl}"
@@ -6908,6 +6944,13 @@
       "$description": "A large container: cards, dialogs, drawers and carousels. 12px.",
       "$extensions": {
         "com.serupa": {
+          "themes": {
+            "blue-dark": "{rounded-xl}",
+            "violet-light": "{rounded-xl}",
+            "violet-dark": "{rounded-xl}",
+            "emerald-light": "{rounded-xl}",
+            "emerald-dark": "{rounded-xl}"
+          },
           "roundness": {
             "sharp": "{rounded-sm}",
             "round": "{rounded-3xl}"
@@ -7563,7 +7606,13 @@
       "$description": "Level 1, resting: something sitting on the page with a hairline lift, such as an outline card.",
       "$extensions": {
         "com.serupa": {
-          "themed": true
+          "themes": {
+            "blue-dark": "{shadow-xs}",
+            "violet-light": "{shadow-xs}",
+            "violet-dark": "{shadow-xs}",
+            "emerald-light": "{shadow-2xs}",
+            "emerald-dark": "{shadow-2xs}"
+          }
         }
       }
     },
@@ -7573,7 +7622,13 @@
       "$description": "A part raised over the control or content it sits on: a slider thumb, the indicator of a segmented control, carousel arrows, a table head once the rows scroll under it.",
       "$extensions": {
         "com.serupa": {
-          "themed": true
+          "themes": {
+            "blue-dark": "{shadow-sm}",
+            "violet-light": "{shadow-sm}",
+            "violet-dark": "{shadow-sm}",
+            "emerald-light": "{shadow-xs}",
+            "emerald-dark": "{shadow-xs}"
+          }
         }
       }
     },
@@ -7583,7 +7638,13 @@
       "$description": "Level 2, raised: a card raised by hover or on purpose, an item being dragged, a navbar once the page scrolls under it, a tooltip.",
       "$extensions": {
         "com.serupa": {
-          "themed": true
+          "themes": {
+            "blue-dark": "{shadow-md}",
+            "violet-light": "{shadow-md}",
+            "violet-dark": "{shadow-md}",
+            "emerald-light": "{shadow-sm}",
+            "emerald-dark": "{shadow-sm}"
+          }
         }
       }
     },
@@ -7593,7 +7654,13 @@
       "$description": "Level 3, floating: menus, popovers, list boxes, date and time pickers, hover cards, toasts, a floating action button.",
       "$extensions": {
         "com.serupa": {
-          "themed": true
+          "themes": {
+            "blue-dark": "{shadow-lg}",
+            "violet-light": "{shadow-lg}",
+            "violet-dark": "{shadow-lg}",
+            "emerald-light": "{shadow-md}",
+            "emerald-dark": "{shadow-md}"
+          }
         }
       }
     },
@@ -7603,7 +7670,13 @@
       "$description": "Level 4, modal: dialogs and drawers, over the overlay backdrop.",
       "$extensions": {
         "com.serupa": {
-          "themed": true
+          "themes": {
+            "blue-dark": "{shadow-xl}",
+            "violet-light": "{shadow-xl}",
+            "violet-dark": "{shadow-xl}",
+            "emerald-light": "{shadow-lg}",
+            "emerald-dark": "{shadow-lg}"
+          }
         }
       }
     },
@@ -10307,7 +10380,18 @@
     "motion-release": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this."
+      "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{duration-300}",
+            "violet-light": "{duration-300}",
+            "violet-dark": "{duration-300}",
+            "emerald-light": "{duration-150}",
+            "emerald-dark": "{duration-150}"
+          }
+        }
+      }
     },
     "motion-draw": {
       "$type": "duration",
@@ -10352,12 +10436,34 @@
     "motion-enter-md": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A medium surface appearing: dialogs and toasts."
+      "$description": "A medium surface appearing: dialogs and toasts.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{duration-200}",
+            "violet-light": "{duration-200}",
+            "violet-dark": "{duration-200}",
+            "emerald-light": "{duration-150}",
+            "emerald-dark": "{duration-150}"
+          }
+        }
+      }
     },
     "motion-enter-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "A large surface appearing: drawers and sheets."
+      "$description": "A large surface appearing: drawers and sheets.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{duration-300}",
+            "violet-light": "{duration-300}",
+            "violet-dark": "{duration-300}",
+            "emerald-light": "{duration-200}",
+            "emerald-dark": "{duration-200}"
+          }
+        }
+      }
     },
     "motion-exit-sm": {
       "$type": "duration",
@@ -10367,12 +10473,34 @@
     "motion-exit-md": {
       "$type": "duration",
       "$value": "{transitions.duration-150}",
-      "$description": "A medium surface leaving: dialogs and toasts."
+      "$description": "A medium surface leaving: dialogs and toasts.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{duration-150}",
+            "violet-light": "{duration-150}",
+            "violet-dark": "{duration-150}",
+            "emerald-light": "{duration-100}",
+            "emerald-dark": "{duration-100}"
+          }
+        }
+      }
     },
     "motion-exit-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A large surface leaving: drawers and sheets."
+      "$description": "A large surface leaving: drawers and sheets.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{duration-200}",
+            "violet-light": "{duration-200}",
+            "violet-dark": "{duration-200}",
+            "emerald-light": "{duration-150}",
+            "emerald-dark": "{duration-150}"
+          }
+        }
+      }
     },
     "motion-change-sm": {
       "$type": "duration",
@@ -10382,12 +10510,34 @@
     "motion-change-md": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A panel opening or collapsing in place, or an indicator sliding to the selected option: Accordion, Sidebar, SegmentedControl, Tabs."
+      "$description": "A panel opening or collapsing in place, or an indicator sliding to the selected option: Accordion, Sidebar, SegmentedControl, Tabs.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{duration-200}",
+            "violet-light": "{duration-200}",
+            "violet-dark": "{duration-200}",
+            "emerald-light": "{duration-150}",
+            "emerald-dark": "{duration-150}"
+          }
+        }
+      }
     },
     "motion-change-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "Something travelling far on screen: a progress or meter fill moving to its value, a carousel slide."
+      "$description": "Something travelling far on screen: a progress or meter fill moving to its value, a carousel slide.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{duration-300}",
+            "violet-light": "{duration-300}",
+            "violet-dark": "{duration-300}",
+            "emerald-light": "{duration-200}",
+            "emerald-dark": "{duration-200}"
+          }
+        }
+      }
     },
     "motion-loop-spinner": {
       "$type": "duration",
@@ -10457,14 +10607,32 @@
     "ease-pop": {
       "$type": "cubicBezier",
       "$value": "{transitions.ease-out-back}",
-      "$description": "Something small popping into place: a check mark, a count, a dot. Overshoots a touch, then settles."
+      "$description": "Something small popping into place: a check mark, a count, a dot. Overshoots a touch, then settles.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{ease-out-back}",
+            "violet-light": "{ease-out-back}",
+            "violet-dark": "{ease-out-back}",
+            "emerald-light": "{ease-out-quart}",
+            "emerald-dark": "{ease-out-quart}"
+          }
+        }
+      }
     },
     "ease-spring": {
       "$value": "{transitions.ease-spring-snappy}",
-      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`). Tactile brands (violet) use `ease-spring-soft`: a slower, softer settle.",
+      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`). Tactile brands (violet) and Modern use `ease-spring-soft`: a slower, softer settle.",
       "$extensions": {
         "com.serupa": {
-          "tactile": "{ease-spring-soft}"
+          "tactile": "{ease-spring-soft}",
+          "themes": {
+            "blue-dark": "{ease-spring-snappy}",
+            "violet-light": "{ease-spring-snappy}",
+            "violet-dark": "{ease-spring-snappy}",
+            "emerald-light": "{ease-spring-soft}",
+            "emerald-dark": "{ease-spring-soft}"
+          }
         }
       }
     },
@@ -10475,7 +10643,18 @@
     },
     "ease-celebrate": {
       "$value": "{transitions.ease-elastic}",
-      "$description": "A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. Give it about three times the motion it answers (`motion-change-lg` or longer) so the wobble reads, and never use it for menus, dialogs, page moves or repeated actions. Off under reduced motion."
+      "$description": "A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. Give it about three times the motion it answers (`motion-change-lg` or longer) so the wobble reads, and never use it for menus, dialogs, page moves or repeated actions. Off under reduced motion.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{ease-elastic}",
+            "violet-light": "{ease-elastic}",
+            "violet-dark": "{ease-elastic}",
+            "emerald-light": "{ease-out-expo}",
+            "emerald-dark": "{ease-out-expo}"
+          }
+        }
+      }
     },
     "transition": {
       "$value": "opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events",
