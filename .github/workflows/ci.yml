@@ -2,7 +2,7 @@ name: CI
 
 # How a change is tested on its way to main:
 # - A pull request's own run is the quick check: build, types and lint, the fix proof, the checks, and the tests and
-#   Visual of the components it changes (narrowed against the main it merges onto). Storybook's pages, consumer,
+#   Visual and Storybook checks of the components it changes (narrowed against the main it merges onto). Consumer,
 #   frameworks and the cross-browser components run are left to the merge queue.
 # - The merge queue runs everything, unnarrowed, on the commit that becomes main, for a group of up to five pull requests
 #   at once. Main's push run is then build only (the Storybook artifact, and the Release workflow waits on it): the
@@ -80,7 +80,9 @@ jobs:
           [ -n "$visual" ] && x86="$x86"',{"group":"visual","shard":"1/4"},{"group":"visual","shard":"2/4"},{"group":"visual","shard":"3/4"},{"group":"visual","shard":"4/4"}'
           x86="$x86]}"
           portable='{"include":[{"group":"checks","shard":"1/2"},{"group":"checks","shard":"2/2"}'
-          [ -n "$full" ] && portable="$portable"',{"group":"storybook","shard":"1/3"},{"group":"storybook","shard":"2/3"},{"group":"storybook","shard":"3/3"}'
+          # Storybook's checks (WCAG in every theme, reflow at 320px, the docs pages) on a pull request too, narrowed to the
+          # stories it changes like Visual: found only in the queue, one story's failure took whole groups down with it.
+          { [ -n "$full" ] || [ -n "$visual" ]; } && portable="$portable"',{"group":"storybook","shard":"1/3"},{"group":"storybook","shard":"2/3"},{"group":"storybook","shard":"3/3"}'
           portable="$portable]}"
           {
             echo "full=$full"; echo "wide=$wide"; echo "since=$since"; echo "tests=$tests"
