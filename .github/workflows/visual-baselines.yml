@@ -509,10 +509,21 @@ jobs:
       - name: Start the held CI run again
         env:
           GH_TOKEN: ${{ github.token }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          LABEL: ${{ github.event.label.name }}
+          DRAWN: ${{ github.event.pull_request.head.sha }}
+          COMMIT: ${{ needs.commit.result }}
         run: |
           set -euo pipefail
           head=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .head.sha)
+          # Someone pushed while the pictures were drawn, so the bot's push was refused: draw them again on the new
+          # head (the label, added with BOT_TOKEN, starts this workflow again) instead of losing the drawing.
+          if [ "$COMMIT" = failure ] && [ "$head" != "$DRAWN" ]; then
+            echo "The branch moved while its pictures were drawn: drawing them again on $head."
+            GH_TOKEN=$BOT_TOKEN gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$LABEL"
+            exit 0
+          fi
           for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=pull_request&head_sha=$head&status=completed" --jq '.workflow_runs[].id'); do
             held=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq '[.jobs[] | select(.name == "build" and .conclusion == "skipped")] | length')
             [ "$held" = 0 ] && continue
