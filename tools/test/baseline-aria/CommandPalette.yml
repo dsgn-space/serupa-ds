@@ -16,6 +16,30 @@
       - option "Switch to dark theme Control Shift L"
       - option "Export as PDF" [disabled]
 
+# DoActionFirst
+- paragraph: "Press Control K anywhere, or the button. Last chosen: Nothing yet."
+- button "Search commands"
+- dialog "Command palette":
+  - combobox "Search commands and pages" [expanded]
+  - listbox "Command palette":
+    - group "Actions":
+      - text: Actions
+      - option "New project" [selected]
+      - option "Invite people"
+      - option "Export as PDF"
+
+# DontWordyLabels
+- paragraph: "Press Control K anywhere, or the button. Last chosen: Nothing yet."
+- button "Search commands"
+- dialog "Command palette":
+  - combobox "Search commands and pages" [expanded]
+  - listbox "Command palette":
+    - group "Actions":
+      - text: Actions
+      - option "Click here to create a brand new project" [selected]
+      - option "Use this to invite more people to the workspace"
+      - option "This exports the current page as a PDF file"
+
 # LongText
 - paragraph: "Press Control K anywhere, or the button. Last chosen: Nothing yet."
 - button "Search commands"

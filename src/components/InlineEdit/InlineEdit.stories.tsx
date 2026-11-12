@@ -48,3 +48,9 @@ export const LongText: Story = {
   args: { defaultValue: 'Apollo launch plan for the third quarter, every region and team, Donaudampfschifffahrtsgesellschaftskapitänskajüte' },
   render: (args) => <div style={{ width: 220 }}><InlineEdit {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a placeholder for text that can be empty, so there's still something to click. */
+export const DoPlaceholder: Story = { name: 'Do: show a placeholder when empty', args: { defaultValue: '', placeholder: 'Add a name' } };
+/** Don't: an empty value with no placeholder, which leaves nothing to see or click. */
+export const DontEmpty: Story = { name: "Don't: leave it blank", args: { defaultValue: '', placeholder: undefined } };

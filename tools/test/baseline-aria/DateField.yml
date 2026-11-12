@@ -19,6 +19,26 @@
   - text: Year
   - textbox "Year" [disabled]: "1990"
 
+# DoExampleHint
+- text: Date of birth For example, 27 3 2007
+- group "Date of birth":
+  - text: Day
+  - textbox "Day"
+  - text: Month
+  - textbox "Month"
+  - text: Year
+  - textbox "Year"
+
+# DontNoExample
+- text: Date of birth
+- group "Date of birth":
+  - text: Day
+  - textbox "Day"
+  - text: Month
+  - textbox "Month"
+  - text: Year
+  - textbox "Year"
+
 # InField
 - text: Date of birth For example, 27 3 2007
 - group "Date of birth":

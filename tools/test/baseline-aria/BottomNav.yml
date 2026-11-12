@@ -20,6 +20,38 @@
       - link "Account":
         - /url: "#account"
 
+# DoShortLabels
+- navigation "Main":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Inbox":
+        - /url: "#inbox"
+    - listitem:
+      - link "Search":
+        - /url: "#search"
+    - listitem:
+      - link "Account":
+        - /url: "#account"
+
+# DontLongLabels
+- navigation "Main":
+  - list:
+    - listitem:
+      - link "Your home feed":
+        - /url: "#home"
+    - listitem:
+      - link "Messages and mentions":
+        - /url: "#inbox"
+    - listitem:
+      - link "Search everything":
+        - /url: "#search"
+    - listitem:
+      - link "Account settings":
+        - /url: "#account"
+
 # LongText
 - main:
   - heading "Inbox" [level=1]

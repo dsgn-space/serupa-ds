@@ -44,6 +44,11 @@ Drawn from the `Playground` story.
 - **Safe areas:** on phones with a home indicator it adds `env(safe-area-inset-bottom)` under the links (and the side insets in landscape). Pages need `viewport-fit=cover` in their viewport meta for the browser to report them.
 - Keep the order the same on every page, and one BottomNav per page.
 
+### Do and don't
+
+- **Do:** Give each link an `icon` and one or two short words ("Home", "Inbox"). (`DoShortLabels`)
+- **Don't:** Write long labels: they wrap and crowd the bar on a phone. (`DontLongLabels`)
+
 ## Accessibility
 
 - **Role and name:** a `<nav>` landmark named by `label`, with a list of links, so screen readers say how many there are. The current one has `aria-current="page"`. Icons are hidden; the label is each link's name.

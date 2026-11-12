@@ -102,3 +102,9 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: an example in the hint, in the boxes' order. */
+export const DoExampleHint: Story = { name: 'Do: give an example in the hint', render: () => <Field label="Date of birth" hint="For example, 27 3 2007"><DateField order="dmy" /></Field> };
+/** Don't: no example, so people guess whether the day or the month comes first. */
+export const DontNoExample: Story = { name: "Don't: leave out the example", render: () => <Field label="Date of birth"><DateField order="dmy" /></Field> };

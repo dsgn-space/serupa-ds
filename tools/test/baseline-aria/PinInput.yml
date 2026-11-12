@@ -4,6 +4,16 @@
 # Disabled
 - textbox "Verification code" [disabled]: "1234"
 
+# DoKeepCode
+- text: Verification code
+- textbox "Verification code" [invalid]: "492817"
+- text: That code doesn't match. Check the last digits.
+
+# DontClearCode
+- text: Verification code
+- textbox "Verification code" [invalid]
+- text: That code doesn't match. Check the last digits.
+
 # Filled
 - textbox "Verification code": "492"
 

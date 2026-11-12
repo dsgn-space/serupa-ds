@@ -53,3 +53,16 @@ export const Sizes: Story = {
     {(['sm', 'md', 'lg'] as const).map((size) => <ToggleButton key={size} {...args} size={size}>Show grid, {size}</ToggleButton>)}
   </div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: related toggles grouped, with a name for the group. */
+export const DoGroup: Story = { ...Toolbar, name: 'Do: group related toggles' };
+/** Don't: related toggles scattered, in mixed sizes, with no group to name them. */
+export const DontScatter: Story = {
+  name: "Don't: scatter them",
+  render: () => <div className="flex gap-4 items-center">
+    <ToggleButton icon="format_bold" aria-label="Bold" defaultPressed size="lg" />
+    <ToggleButton icon="format_italic" aria-label="Italic" />
+    <ToggleButton icon="format_underlined" aria-label="Underline" size="sm" />
+  </div>,
+};

@@ -71,3 +71,12 @@ export const LongText: Story = {
     items: [{ id: 'l1', tone: 'warning', time: ago(5), title: 'The Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung export could not be finished', description: 'Three of the forty-two attachments were larger than the workspace allows, so they were left out of the archive.' }],
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: titles that say what happened ("Payment failed"). */
+export const DoSayWhatHappened: Story = { name: 'Do: say what happened', args: { defaultOpen: true } };
+/** Don't: titles like "Update", which make people open each one to find out. */
+export const DontVagueTitles: Story = {
+  name: "Don't: write vague titles",
+  args: { defaultOpen: true, items: sample.map(({ description: _d, ...n }) => ({ ...n, title: 'Update' })) },
+};
