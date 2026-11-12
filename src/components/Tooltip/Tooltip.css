@@ -6,6 +6,7 @@
 @layer dk.components {
 .dk-tooltip {
   --dk-tooltip-offset: var(--tooltip-offset, var(--spacing-1\.5));
+  --kbd-separator: currentColor;   /* a shortcut's "+" in the tooltip: muted, it is under 4.5:1 on the inverse fill */
   position: fixed;
   inset: auto;
   z-index: var(--tooltip-z-index, var(--z-tooltip));

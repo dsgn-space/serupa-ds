@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useIsoLayoutEffect } from '../../internal/cn';
+import { withViewTransition } from '../../internal/viewTransition';
 import type { StepperProps, StepperStep } from './Stepper';
 
 export interface UseStepsOptions {
@@ -13,6 +14,10 @@ export interface UseStepsOptions {
   onComplete?: (() => void) | undefined;
   /** The step to start on. Default: 0. */
   defaultStep?: number | undefined;
+  /** Slides each step in from the way people are going, as a View Transition: forward from the end, back from the
+      start (mirrored right to left). Under reduced motion the steps only crossfade; without View Transitions they
+      swap at once. panelProps then names the open step for the transition. Default: false. */
+  transition?: boolean | undefined;
 }
 
 export interface UseSteps {
@@ -29,7 +34,7 @@ export interface UseSteps {
   /** Spread on Stepper: steps (with errors marked), current, and onStepClick going back to finished steps. */
   stepperProps: Pick<StepperProps, 'steps' | 'current' | 'onStepClick'>;
   /** Spread on each step's container: every step stays rendered, the others hidden, so what was typed in them stays. */
-  panelProps: (index: number) => { id: string; hidden: boolean; 'aria-labelledby': string };
+  panelProps: (index: number) => { id: string; hidden: boolean; 'aria-labelledby': string; style?: React.CSSProperties };
   /** Spread on each step's heading: focus moves to it when the step changes, so a screen reader says where people are. */
   headingProps: (index: number) => { id: string; tabIndex: -1; ref: (node: HTMLElement | null) => void };
 }
@@ -60,7 +65,13 @@ export function useSteps(options: UseStepsOptions): UseSteps {
     if (h) h.focus();
   }, [current]);
 
-  const move = (to: number) => { moved.current = true; setCurrent(to); };
+  const move = (to: number) => {
+    const update = () => { moved.current = true; setCurrent(to); };
+    if (opts.current.transition) void withViewTransition(update, { types: [to > now.current ? 'forward' : 'back'] });
+    else update();
+  };
+  // With transition, the open step alone carries the name, so the browser pairs the step leaving with the one coming.
+  const vtName = 'dk-steps-' + id.replace(/[^\w-]/g, '');
   const mark = (index: number, ok: boolean) => setFailed((f) => {
     if (ok !== f.has(index)) return f;
     const n = new Set(f);
@@ -100,7 +111,10 @@ export function useSteps(options: UseStepsOptions): UseSteps {
     isFirst: current === 0,
     isLast: current === count - 1,
     stepperProps: { steps, current, onStepClick: (i: number) => { void goTo(i); } },
-    panelProps: (i) => ({ id: `${id}-step-${i}`, hidden: i !== current, 'aria-labelledby': `${id}-title-${i}` }),
+    panelProps: (i) => ({
+      id: `${id}-step-${i}`, hidden: i !== current, 'aria-labelledby': `${id}-title-${i}`,
+      ...(options.transition && i === current ? { style: { viewTransitionName: vtName, viewTransitionClass: 'step' } } : {}),
+    }),
     headingProps: (i) => ({ id: `${id}-title-${i}`, tabIndex: -1, ref: (n) => { if (n) headings.current.set(i, n); else headings.current.delete(i); } }),
   };
 }

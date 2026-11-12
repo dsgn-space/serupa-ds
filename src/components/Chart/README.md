@@ -137,7 +137,7 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--chart-tip-radius` | `rounded-md` | The tooltip's corners (6px). |
+| `--chart-tip-radius` | `radius-control` | The tooltip's corners (6px). |
 
 **Shadow**
 

@@ -407,7 +407,7 @@ A container nested inside another should have a smaller radius than its parent.
 | `radius-container` | `rounded-xl` (12px) | Cards, dialogs, drawers and carousels |
 | `radius-pill` | `rounded-full` | Tracks and thumbs, steps, round buttons and swatches |
 
-Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart.
+Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart. The `serupa/radius-through-role` Stylelint rule holds the components to this: a corner that names `rounded-sm` up to `rounded-4xl` fails lint. `rounded-none`, `rounded-xs` (the hairline curve of a text mark, such as Highlight) and `rounded-full` pass.
 
 ## Borders and outlines
 
@@ -942,6 +942,8 @@ Two kinds of layout change get a direction:
 **Performance.** Animate `opacity`, `transform`, `translate`, `scale` and `rotate`, which the compositor runs without laying the page out again. Animate colors only on small controls. Never animate `width`, `height`, `top`, `left`, margins or padding, and avoid `transition-all`, which animates them too. The one exception is a disclosure panel's height (Accordion), where a jump of everything below reads as a glitch: one panel, only while it moves, never under reduced motion.
 
 **Reduced motion.** When the viewer prefers reduced motion (`prefers-reduced-motion: reduce`), surfaces appear and leave with a fade or not at all, with no sliding or scaling. Loops stop moving: the components' spinners stand still and breathe (opacity) over twice `motion-loop-spinner`, so progress still shows, because a spinner that stops completely reads as stuck; the `animate-spin` utility turns three times slower (`animate-spin-reduced`). `bundle.css` stops `ping`, `pulse` and `bounce`, slows `spin`, turns `animate-enter` into a plain fade and drops the `stagger` delays. Every component's own animations do the same, and yours should too.
+
+**An app's own "Reduce motion" setting.** Put `data-motion="reduce"` on `<html>` and everything gets exactly what the system setting gives: the same fades, still spinners and instant moves, in the components, `base.css` and the utilities. Use it for a "Reduce motion" switch in your app's settings, for people who want less motion in your app without changing it for their whole device. On a section, it reduces motion inside that section. It only ever reduces: there is no attribute that brings motion back when the system asks for less. Save the choice with the rest of the person's settings and set the attribute before the first paint. In JavaScript, `useReducedMotion()` follows both, and `prefersReducedMotion(el)` answers once, for an event handler.
 
 **Scales.** These are what the roles point at, and what utility classes use.
 

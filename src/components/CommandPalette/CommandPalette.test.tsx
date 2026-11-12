@@ -236,8 +236,8 @@ describe('CommandPalette', () => {
     expect(labels().length).toBe(10);
   });
 
-  test('its field, headings, rows and active row read 4.5:1 in all six themes', async () => {
-    await render(<CommandPalette id="p" defaultOpen commands={COMMANDS} />);
+  test('its field, headings, rows and active row, every word in it with the shortcut\'s "+", read 4.5:1 in all six themes', async () => {
+    await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[0], shortcut: ['mod', 'shift', 'H'] }, ...COMMANDS.slice(1)]} />);
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -249,6 +249,8 @@ describe('CommandPalette', () => {
       const act = document.querySelector('[role="option"][aria-selected="true"]')!;
       const actBg = css(act).backgroundColor;
       check('active', act, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);
+      // Every word in the active row, its shortcut's "+" too, on the highlight.
+      for (const e of act.querySelectorAll('*')) if ([...e.childNodes].some((n) => n.nodeType === 3 && n.textContent!.trim()) && css(e).backgroundColor === 'rgba(0, 0, 0, 0)') check(`active "${e.textContent.trim()}"`, e, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(low).toEqual([]);

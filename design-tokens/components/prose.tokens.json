@@ -106,7 +106,7 @@
       },
       "code-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-sm}",
+        "$value": "{radius.radius-inner}",
         "$description": "Inline code's corners.",
         "$extensions": {
           "com.serupa": {
@@ -116,7 +116,7 @@
       },
       "pre-radius": {
         "$type": "dimension",
-        "$value": "{radius.rounded-md}",
+        "$value": "{radius.radius-control}",
         "$description": "A code block's corners (6px).",
         "$extensions": {
           "com.serupa": {

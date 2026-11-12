@@ -39,13 +39,13 @@
 .dk-color-picker__custom { display: flex; align-items: center; gap: var(--spacing-2); }
 .dk-color-picker__native {
   inline-size: var(--dk-cp-size); block-size: var(--dk-cp-size); margin: var(--spacing-0); padding: var(--spacing-0);
-  border: var(--border-width-1) solid var(--color-picker-swatch-border, var(--field-border)); border-radius: var(--rounded-md);
+  border: var(--border-width-1) solid var(--color-picker-swatch-border, var(--field-border)); border-radius: var(--radius-control);
   background: transparent; cursor: pointer; touch-action: manipulation;
 }
 .dk-color-picker__native:focus-visible { outline: var(--focus-ring-width) solid var(--color-picker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-color-picker__native::-webkit-color-swatch-wrapper { padding: var(--spacing-0\.5); }
-.dk-color-picker__native::-webkit-color-swatch { border: 0; border-radius: var(--rounded-sm); }
-.dk-color-picker__native::-moz-color-swatch { border: 0; border-radius: var(--rounded-sm); }
+.dk-color-picker__native::-webkit-color-swatch { border: 0; border-radius: var(--radius-inner); }
+.dk-color-picker__native::-moz-color-swatch { border: 0; border-radius: var(--radius-inner); }
 /* Nothing picked: the well holds #000000 but shows empty, not as black already chosen. */
 .dk-color-picker__native[data-empty]::-webkit-color-swatch { background: transparent !important; }
 .dk-color-picker__native[data-empty]::-moz-color-swatch { background: transparent !important; }

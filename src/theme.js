@@ -83,7 +83,7 @@
     }
     // At once, too, during the app's own View Transition, which a new one would skip.
     var other = document.activeViewTransition && document.activeViewTransition !== mine;
-    if (!shown || !document.startViewTransition || document.hidden || other || matchMedia('(prefers-reduced-motion: reduce)').matches) return go();
+    if (!shown || !document.startViewTransition || document.hidden || other || matchMedia('(prefers-reduced-motion: reduce)').matches || root.matches('[data-motion="reduce"]')) return go();
     var vt, update = function () { go(true); };
     try { vt = document.startViewTransition({ update: update, types: ['serupa-theme'] }); } catch (e) { vt = document.startViewTransition(update); }
     mine = vt;

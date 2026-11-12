@@ -16,9 +16,15 @@ export function mediaList(query: string): MediaQueryList | null {
 }
 
 export const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
-/** Whether less motion is asked for right now, read once, for an effect that is about to animate. False on the server. */
-export function reducedMotion(): boolean {
+export const REDUCE_ATTR = '[data-motion="reduce"]';
+/** Whether less motion is asked for right now, read once, for an effect that is about to animate: the system asks
+ *  (`prefers-reduced-motion: reduce`), or the app's own setting does (`data-motion="reduce"` on `<html>`, or on a
+ *  section around `el`). False on the server. */
+export function reducedMotion(el?: Element | null): boolean {
+  if (typeof document === 'undefined') return false;
   const m = mediaList(REDUCED_MOTION);
-  return !!m && m.matches;
+  if (m && m.matches) return true;
+  const at = el && el.isConnected ? el : document.documentElement;
+  return !!(at && at.closest(REDUCE_ATTR));
 }
 

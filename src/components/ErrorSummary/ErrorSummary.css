@@ -8,7 +8,7 @@
   display: flex; flex-direction: column; gap: var(--error-summary-gap, var(--spacing-2));
   padding: var(--error-summary-padding, var(--spacing-4));
   border: var(--error-summary-border-width, var(--border-width-2)) solid var(--error-summary-border, var(--danger));
-  border-radius: var(--error-summary-radius, var(--rounded-md));
+  border-radius: var(--error-summary-radius, var(--radius-control));
   background: var(--error-summary-bg, var(--surface));
   color: var(--error-summary-text, var(--text));
 }

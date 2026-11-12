@@ -15,11 +15,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 
-/** In a Field: its label names the three boxes as a group, and the hint gives an example in the boxes' order. */
+/** In a Field: its label names the three boxes as a group, and the hint gives an example in the boxes' order (set with `order`, since fixed text can't follow the locale). */
 export const InField: Story = {
   render: () => (
     <Field label="Date of birth" hint="For example, 27 3 2007">
-      <DateField name="dob" autoComplete="bday" />
+      <DateField name="dob" autoComplete="bday" order="dmy" />
     </Field>
   ),
 };
@@ -27,8 +27,8 @@ export const InField: Story = {
 /** With an error: only the box the problem is in is marked, as GOV.UK does. */
 export const Invalid: Story = {
   render: () => (
-    <Field label="Passport expiry date" hint="For example, 12 11 2031" error="The expiry date must include a year">
-      <DateField name="expiry" defaultValue="" />
+    <Field label="Passport expiry date" hint="For example, 27 11 2031" error="The expiry date must include a year">
+      <DateField name="expiry" defaultValue="" order="dmy" />
     </Field>
   ),
 };
@@ -50,7 +50,7 @@ function CheckedDemo() {
   return (
     <form noValidate onSubmit={(e) => { e.preventDefault(); setShown(true); }} style={{ display: 'grid', gap: 12, justifyItems: 'start' }}>
       <Field label="Date of birth" hint="For example, 27 3 2007" error={error}>
-        <DateField name="dob" autoComplete="bday" min="1900-01-01" max="2026-11-09" value={value} onValueChange={(v, d) => { setValue(v); setDetails(d); }} />
+        <DateField name="dob" autoComplete="bday" order="dmy" min="1900-01-01" max="2026-11-09" value={value} onValueChange={(v, d) => { setValue(v); setDetails(d); }} />
       </Field>
       <button type="submit">Continue</button>
       <p style={{ margin: 0 }}>Value: {value || '(none yet)'}</p>

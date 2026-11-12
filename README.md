@@ -14,19 +14,19 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.4.0
+npm install github:dsgn-space/serupa-ds#v14.5.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
-Always pin a tag (`#v14.4.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.5.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v14.4.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v14.5.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -173,7 +173,8 @@ The package also exports what the components use themselves, so a component you 
 | `withoutTransitions(change, element?)` | Runs `change`, such as setting `data-theme` on a section, and finishes the color transitions it starts inside `element` (the whole page by default), so a section's new theme arrives at once instead of fading control by control. Motion runs on. `theme.js` does this for the page's own theme switch. |
 | `useBreakpoint(name, { serverValue? })` | Whether the screen is at least `'sm'` (640px), `'md'` (768px), `'lg'` (1024px), `'xl'` (1280px) or `'2xl'` (1536px) wide: the `screen-*` tokens, so markup the hook picks switches at the same width as the `md:` utilities around it. Kept up to date as the window resizes. |
 | `useMediaQuery(query, { serverValue? })` | Whether any CSS media query matches now, such as `'(hover: hover)'`, kept up to date. Server HTML and hydration use `serverValue` (default `false`) and the browser's answer follows right after, so nothing mismatches. Prefer CSS where it can do the job: a hook is for when the markup itself changes. |
-| `useReducedMotion()` | Whether the visitor asked for less motion, to skip an animation you run from JavaScript (a smooth scroll, a count going up). CSS transitions already follow the setting through the motion tokens. |
+| `useReducedMotion()` | Whether to show less motion: the visitor asked for it, or your app's own setting put `data-motion="reduce"` on `<html>`. Use it to skip an animation you run from JavaScript (a smooth scroll, a count going up). CSS transitions already follow both through the motion tokens. |
+| `prefersReducedMotion(el?)` | The same answer once, outside rendering (an event handler, an effect), for `el`'s section of the page. |
 | `useCopyToClipboard({ copiedLabel?, announce?, timeout? })` | CopyButton's copying for a control that isn't a CopyButton, such as a "Copy link" menu item: `copy(value)` resolves `true` once it's on the clipboard (`false` when the browser refuses), `copied` stays true for `timeout` ms, and it says "Copied", or why it couldn't, to screen readers unless `announce` is `false`. It works inside a modal Dialog and where the clipboard API is refused. |
 
 ```tsx
@@ -281,6 +282,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Kbd](src/components/Kbd/README.md) | Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states. |
 | [List](src/components/List/README.md) | Rows of related things: people, files, notifications, settings. |
 | [Logo](src/components/Logo/README.md) (beta) | The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. |
+| [Quote](src/components/Quote/README.md) (beta) | Quoted words with who said them, for a testimonial, a pull quote, or a quote in a page that isn't [Prose](src/components/Prose/README.md). |
 | [RelativeTime](src/components/RelativeTime/README.md) | Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours". |
 | [ShowMore](src/components/ShowMore/README.md) (beta) | Long text cut after a few lines, with a "Show more" button under it that shows the rest. |
 | [SortableList](src/components/SortableList/README.md) | A list people put in their own order: tasks by priority, steps in a flow, columns in a table. |
@@ -347,12 +349,6 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [TimeZonePicker](src/components/TimeZonePicker/README.md) (beta) | A searchable list of time zones, by city, with each one's offset now and its name in the reader's language. |
 | [TypeToConfirm](src/components/TypeToConfirm/README.md) | A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted. |
 
-### Layout
-
-| Component | What it's for |
-| --- | --- |
-| [Splitter](src/components/Splitter/README.md) | Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. |
-
 ### Layout and type
 
 | Component | What it's for |
@@ -363,6 +359,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Heading](src/components/Heading/README.md) | A heading, `h1` to `h6`, in the system's type. |
 | [Prose](src/components/Prose/README.md) | Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post. |
 | [ScrollArea](src/components/ScrollArea/README.md) (beta) | A box whose content scrolls inside it, such as a long activity list in a card or a row of chips in a narrow column. |
+| [Splitter](src/components/Splitter/README.md) | Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. |
 | [Stack](src/components/Stack/README.md) | Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. |
 | [Text](src/components/Text/README.md) | Body text in the system's type: a paragraph, a caption, an error line. |
 | [VisuallyHidden](src/components/VisuallyHidden/README.md) | Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. |
@@ -379,6 +376,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Sidebar](src/components/Sidebar/README.md) | A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). |
 | [SkipLink](src/components/SkipLink/README.md) | The "Skip to content" link that keyboard and screen reader users need first on every page (WCAG 2.4.1 Bypass Blocks). |
 | [Stepper](src/components/Stepper/README.md) | Shows where people are in a task split into steps, such as sign-up, checkout or setup. |
+| [TabNav](src/components/TabNav/README.md) (beta) | Moves between the sub-pages of one thing, such as a project's Overview, Activity and Settings, when each has its own URL. |
 | [TableOfContents](src/components/TableOfContents/README.md) (beta) | An "On this page" list of links to the sections of a long page, as a navigation landmark. |
 | [Tabs](src/components/Tabs/README.md) | Switches between related panels in one place, such as a project's Overview, Activity and Settings. |
 | [TreeView](src/components/TreeView/README.md) | Nested items that open and close, such as folders and files, a table of contents or categories. |

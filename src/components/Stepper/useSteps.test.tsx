@@ -10,7 +10,7 @@ const el = (id: string) => document.getElementById(id) as HTMLElement;
 const STEPS = [{ title: 'Account' }, { title: 'Profile' }, { title: 'Review' }];
 
 let api: UseSteps;
-function Form(props: { validate?: (i: number) => boolean | Promise<boolean>; onComplete?: () => void; defaultStep?: number }) {
+function Form(props: { validate?: (i: number) => boolean | Promise<boolean>; onComplete?: () => void; defaultStep?: number; transition?: boolean }) {
   const s = useSteps({ steps: STEPS, ...props });
   api = s;
   return (
@@ -97,5 +97,44 @@ describe('useSteps', () => {
     api.back();
     expect(await api.goTo(0)).toBe(false);
     expect(shown()).toEqual([true, false, false]);
+  });
+  test('transition: each move is a View Transition typed by its way, and only the open step is named for it, also after an async check', async () => {
+    const start = document.startViewTransition;
+    const seen: { types: string[]; before: string[]; after: string[] }[] = [];
+    const named = () => [...document.querySelectorAll<HTMLElement>('section')].filter((p) => p.style.viewTransitionName).map((p) => `${p.dataset.testid}:${p.style.getPropertyValue('view-transition-class')}`);
+    document.startViewTransition = ((arg: { update: () => void; types: string[] }) => {
+      const before = named();
+      arg.update();
+      seen.push({ types: arg.types, before, after: named() });
+      return { finished: Promise.resolve(), ready: Promise.resolve(), updateCallbackDone: Promise.resolve(), skipTransition() {} } as unknown as ViewTransition;
+    }) as typeof document.startViewTransition;
+    try {
+      await render(<Form transition validate={async () => { await new Promise((r) => setTimeout(r, 10)); return true; }} />);
+      await userEvent.click(el('next'));
+      await expect.poll(shown).toEqual([false, true, false]);
+      expect(document.activeElement?.textContent).toBe('Profile');
+      await userEvent.click(el('back'));
+      await expect.poll(shown).toEqual([true, false, false]);
+      expect(seen).toEqual([
+        { types: ['forward'], before: ['p0:step'], after: ['p1:step'] },
+        { types: ['back'], before: ['p1:step'], after: ['p0:step'] },
+      ]);
+    } finally {
+      document.startViewTransition = start;
+    }
+  });
+
+  test('without transition, a move is no View Transition and no step is named', async () => {
+    const start = document.startViewTransition;
+    let calls = 0;
+    document.startViewTransition = ((arg: () => void) => { calls++; arg(); return { finished: Promise.resolve() } as unknown as ViewTransition; }) as typeof document.startViewTransition;
+    try {
+      await render(<Form />);
+      await userEvent.click(el('next'));
+      await expect.poll(shown).toEqual([false, true, false]);
+      expect([calls, [...document.querySelectorAll<HTMLElement>('section')].some((p) => p.style.viewTransitionName)]).toEqual([0, false]);
+    } finally {
+      document.startViewTransition = start;
+    }
   });
 });

@@ -1,5 +1,6 @@
-// Storybook (npm run build-storybook first): every story and docs page renders without errors, every docs page's
-// own content passes axe's WCAG 2.2 AA checks in blue-light and blue-dark, and every
+// Storybook (npm run build-storybook first): every story and docs page renders without errors (and no docs page
+// prints a Markdown table as raw text), every docs page's own content passes axe's WCAG 2.2 AA checks in blue-light
+// and blue-dark, and every
 // story passes axe's WCAG 2.2 AA checks in all six themes, and once more in blue-light with data-contrast="more"
 // (text in a disabled control is exempt from contrast, as WCAG 1.4.3 says). In the first theme, each story also
 // takes the WCAG 1.4.12 text spacing (line height 1.5, letter spacing 0.12em, word spacing 0.16em, paragraph
@@ -109,6 +110,9 @@ async function checkDocs(e, w) {
   const notReady = await open(w, e, 'blue-light');
   const ok = !notReady && await w.page.evaluate(() => !document.body.classList.contains('sb-show-errordisplay') && (document.querySelector('#storybook-docs')?.textContent || '').trim().length > 50);
   const missing = await w.page.evaluate(() => [...document.querySelectorAll('blockquote')].map((q) => q.textContent).filter((x) => /Missing README section/.test(x)));
+  // A Markdown table the MDX compiler didn't understand prints as text ("| Block | Use it for |" then "| --- |").
+  const rawTables = await w.page.evaluate(() => [...document.querySelectorAll('#storybook-docs p')].map((q) => q.textContent || '').filter((x) => /\|\s*:?-{3,}:?\s*\|/.test(x)).map((x) => 'raw Markdown table: ' + x.slice(0, 60)));
+  missing.push(...rawTables);
   out.push(t(`docs · ${e.title}`, ok && !w.errors.length && !missing.length, [notReady, ...w.errors, ...missing].filter(Boolean).slice(0, 3).join(' | ')));
   // Headings (GR361): each id once, so a link to a section or the table of contents lands on it, and no level skipped.
   // Headings inside a story's canvas belong to the story, not to the page.
