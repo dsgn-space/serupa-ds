@@ -1,0 +1,177 @@
+{
+  "mentionInput": {
+    "$description": "MentionInput's component tokens. Each one is an optional override: set the CSS variable (--mention-input-<name>) on the page, a container or one MentionInput, and every MentionInput inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "listbox-bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The list's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-listbox-bg"
+          }
+        }
+      },
+      "listbox-border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The list's outline.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-listbox-border"
+          }
+        }
+      },
+      "option-color": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "An option's label, and its second line while it's highlighted.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-option-color"
+          }
+        }
+      },
+      "option-bg-active": {
+        "$type": "color",
+        "$value": "{color.highlight}",
+        "$description": "The highlighted option (hover or arrow keys).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-option-bg-active"
+          }
+        }
+      },
+      "option-indicator": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The 2px bar at the highlighted option's start.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-option-indicator"
+          }
+        }
+      },
+      "description-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "An option's second line and the no-match message.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-description-color"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "listbox-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-overlay}",
+        "$description": "The list's shadow.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-listbox-shadow"
+          }
+        }
+      }
+    },
+    "radius": {
+      "listbox-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The list's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-listbox-radius"
+          }
+        }
+      },
+      "option-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "An option's corners. Unset, they nest in the list's: its radius less its padding and border (3px), following the brand and data-radius.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-option-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "listbox-max-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-60}",
+        "$description": "The list's height before it scrolls (240px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-listbox-max-height"
+          }
+        }
+      },
+      "listbox-max-width": {
+        "$type": "dimension",
+        "$value": "{sizing.container-md}",
+        "$description": "The list's widest (448px). Longer labels wrap.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-listbox-max-width"
+          }
+        }
+      },
+      "option-height": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "An option's least height (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-option-height"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "listbox-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space inside the list (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-listbox-padding"
+          }
+        }
+      },
+      "option-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "Space on each side of an option (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-option-padding-x"
+          }
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The gap between the caret's line and the list (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-offset"
+          }
+        }
+      }
+    },
+    "layout": {
+      "z-index": {
+        "$type": "number",
+        "$value": "{layout.z-popover}",
+        "$description": "The list's stacking order, where the top layer isn't available.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--mention-input-z-index"
+          }
+        }
+      }
+    }
+  }
+}

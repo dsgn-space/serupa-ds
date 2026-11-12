@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>MentionInput — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h('div', { style: { maxWidth: '480px' } }, h(T.MentionInput, { 'aria-label': 'Comment', placeholder: 'Type @ to mention someone', options: [{ id: 'ayu', label: 'Ayu Lestari', description: 'Design lead' }, { id: 'budi', label: 'Budi Santoso', description: 'Engineering' }] })));
+</script>
+</body>
+</html>
