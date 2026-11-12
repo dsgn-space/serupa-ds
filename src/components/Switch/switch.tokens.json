@@ -238,6 +238,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "thumb-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The thumb's tactile layers: a highlight and a close shadow. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--switch-thumb-depth"
+          }
+        }
+      }
     }
   }
 }

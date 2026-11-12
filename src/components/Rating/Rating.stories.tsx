@@ -50,3 +50,14 @@ export const InAGrid: Story = {
   args: { max: 10, size: 'lg', defaultValue: 7 },
   render: (args) => <div style={{ display: 'grid', width: 288 }}><div><Rating {...args} /></div></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a label that says what's being rated. */
+export const DoSayWhatsRated: Story = {
+  name: "Do: say what's being rated",
+  render: (args) => <Field label="How was the delivery?"><Rating {...args} aria-label={undefined} /></Field>,
+};
+/** Don't: stars on their own, where people have to guess what they rate. */
+export const DontBareStars: Story = {
+  name: "Don't: stars with no label",
+};

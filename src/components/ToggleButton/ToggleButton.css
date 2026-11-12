@@ -1,14 +1,17 @@
 /* ---------------------------------------------------------------
    ToggleButton: an outline or ghost Button; pressed (aria-pressed="true"), it's primary-subtle with primary
-   text and, for outline, a primary border. Hover keeps the pressed colors.
+   text and, for outline, a primary border. Hover keeps the pressed colors. In a tactile brand an on toggle stays
+   sunk (depth-control-pressed), like a Button held down.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-toggle-button.dk-toggle-button--pressed {
   background: var(--toggle-button-bg-pressed, var(--primary-subtle)); color: var(--toggle-button-text-pressed, var(--primary));
+  --dk-btn-depth: var(--toggle-button-depth-pressed, var(--depth-control-pressed));
 }
 @media (hover: hover) {
   .dk-toggle-button.dk-toggle-button--pressed:hover:not(:disabled, [aria-disabled="true"]) {
     background: var(--toggle-button-bg-pressed, var(--primary-subtle)); color: var(--toggle-button-text-pressed, var(--primary));
+    --dk-btn-depth: var(--toggle-button-depth-pressed, var(--depth-control-pressed));
   }
 }
 .dk-toggle-button.dk-btn--outline.dk-toggle-button--pressed { border-color: var(--toggle-button-border-pressed, var(--primary)); }

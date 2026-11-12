@@ -65,6 +65,8 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
+**Depth**: the violet brand is tactile. Its controls feel physical: buttons carry a faint highlight along the top edge, a soft lift that rises on hover and, when filled, a light sheen; held down they sink under an inner shade. Switch and slider thumbs and the selected segment get a highlight and a close shadow, fields a faint inner shade, and a card with a link lifts toward the pointer. Pages, surfaces and text stay flat. The blue and emerald brands are flat. The look comes from the `depth-*` tokens (`depth-control`, `depth-control-hover`, `depth-control-pressed`, `depth-sheen`, `depth-sheen-pressed`, `depth-part`, `depth-field`, `depth-card-lift`), which are layers added over a component's own shadow and are empty in a flat brand, so components need nothing else. `data-depth="tactile"` turns the look on for any brand, on the page or one section, and `data-depth="flat"` turns it off, violet included. A section with its own `data-brand` takes that brand's depth. The light and shade of a sheen stay in the top and bottom quarters of a control, clear of its label, so every label keeps its contrast. Forced-colors mode drops the sheens along with the shadows. Held down, a button sinks by `depth-press` (1px in a tactile brand, 0 in a flat one) and a card with a link settles back by the same amount. A tactile Switch thumb crosses on a spring (`motion-toggle`, `ease-toggle`) and a Checkbox tick draws itself on (`motion-draw`). Reduced motion keeps the shadows but drops the sinking, the spring and the drawing.
+
 **Fluid type**: `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Line heights stay as they are. `data-type-scale="fixed"` puts the fixed sizes back for one section.
 
 **Automatic dark mode**: `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
@@ -103,7 +105,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `highlight` | `zinc-200` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text, icons and a primary bar keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. |
 | `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface` | `white` | `zinc-900` | Page and card background. |
-| `surface-muted` | `zinc-50` | `zinc-950` | Recessed: secondary panels, sidebars, table headers, filled Cards, wells. A step below `surface` in both modes, so a card on it reads as raised. |
+| `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. |
 | `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page. |
 | `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
 | `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
@@ -862,6 +864,8 @@ Transition and animation scales are tokens in one `transitions` group (`var(--du
 | --- | --- | --- |
 | `motion-press` | `duration-100` | A control answering while it's held down (Button scales down). |
 | `motion-release` | `duration-300` | A press let go coming back to size with `ease-enter`, settling with no overshoot (Button, Badge). |
+| `motion-toggle` | `motion-press` (tactile: `motion-release`) | A Switch thumb sliding to its new side. |
+| `motion-draw` | `duration-0` (tactile: `duration-150`) | A Checkbox tick drawing itself on, left to right, when the box is ticked under the pointer or keyboard focus. Instant in a flat brand. |
 | `motion-hover` | `duration-150` | Hover and focus changes on a control that stays put: colors, borders, shadows. |
 | `motion-enter-sm` | `duration-150` | A small surface appearing: tooltips, popovers, menus, date pickers. |
 | `motion-enter-md` | `duration-200` | A medium surface appearing: dialogs, toasts. |
@@ -883,7 +887,8 @@ Transition and animation scales are tokens in one `transitions` group (`var(--du
 | `ease-move` | `ease-in-out-cubic` | Something that stays on screen and changes: a thumb sliding, a panel resizing, a color changing. |
 | `ease-settle` | `ease-out-expo` | Something arriving at a new value or let go by the hand: a fill, a slide, a drawer dropped. Most of the travel at once, then a long glide to rest. |
 | `ease-pop` | `ease-out-back` | Something small popping into place: a check mark, a count, a dot. Overshoots by about 4%, then settles. |
-| `ease-spring` | `ease-spring-snappy` | A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. |
+| `ease-spring` | `ease-spring-snappy` (tactile: `ease-spring-soft`) | A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Tactile brands use the softer spring. |
+| `ease-toggle` | `ease-move` (tactile: `ease-spring-snappy`) | A Switch thumb crossing to its new side. The tactile spring overshoots a little and still lands within about 100ms. |
 | `ease-fling` | `ease-out-cubic` | Something the hand let go of mid-motion carrying on to rest at the hand's speed: a drawer or carousel slide flicked. |
 | `ease-celebrate` | `ease-elastic` | A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. |
 

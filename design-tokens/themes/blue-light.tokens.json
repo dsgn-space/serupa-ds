@@ -93,7 +93,7 @@
     "surface-muted": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. Recessed: secondary panels, sidebars, table headers, filled Cards, wells. A step below `surface` in every theme (zinc-50 light, zinc-950 dark), so what sits on it reads as raised.",
+      "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-muted"
