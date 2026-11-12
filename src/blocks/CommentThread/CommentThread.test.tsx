@@ -75,6 +75,9 @@ describe('Blocks/Comment thread', () => {
   test('Escape cancels an edit and brings focus back to Edit', async () => {
     await render(<Harness />);
     await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    // The box takes focus a frame after the click; Escape goes to it once it has, as it does for a person (Firefox
+    // took the key before that frame, on the page, so nothing cancelled).
+    await expect.poll(() => document.activeElement?.tagName).toBe('TEXTAREA');
     await userEvent.keyboard('{Escape}');
     await expect.element(mine().getByRole('button', { name: 'Edit' })).toHaveFocus();
     expect(mine().element().textContent).toContain('Yes, I will try 20px.');

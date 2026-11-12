@@ -71,6 +71,11 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - With `stickyHeader`, give the frame a height through `containerProps`. The frame measures the header and keeps that much scroll padding at the top, so a focused link or button in a row scrolls into view below the header, not under it (WCAG 2.4.11).
 - For thousands of rows, use `TableVirtualBody` in place of `TableBody`: it draws only the rows in view of the frame, plus a few either side, so 10,000 rows scroll as quickly as 20. Give the frame a height (`containerProps={{ style: { maxHeight: 480 } }}`, usually with `stickyHeader`), since without one every row is in view. Columns size to the rows drawn, so set widths (`table-layout: fixed` or a width per header cell) where a column mustn't shift while scrolling. Each drawn row gets `aria-rowindex` and the table `aria-rowcount`, a row with focus stays drawn when it scrolls away, and `striped` shades the same rows as a `TableBody` would. In print it draws every row, up to the first 5,000 (about 100 pages); for more, offer an export (CSV) instead of print. Sorting and filtering stay yours: sort the data, then draw row `index` from it.
 
+### Do and don't
+
+- **Do:** End-align number columns, in the header and the cells, so the digits line up by place. (`DoAlignNumbers`)
+- **Don't:** Leave amounts start-aligned like text: 85.50 and 14,520.00 then look alike at a glance. (`DontStartNumbers`)
+
 ### Loading, empty and failed
 
 The table keeps its header and caption in every state, so the page doesn't move and people know what's coming.

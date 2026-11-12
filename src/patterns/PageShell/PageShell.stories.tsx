@@ -6,6 +6,7 @@ import { Button } from '../../components/Button/Button';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading } from '../../components/Heading/Heading';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
+import { useName } from '../../../.storybook/content';
 
 /* Patterns are whole screens built from the components, for apps to copy (FEC1). Unlike a component's stories they
    are pages, so tools/test/storybook.mjs also runs the page rules on them: one main landmark, everything inside a
@@ -24,7 +25,8 @@ const rows = ['Website redesign', 'Mobile app', 'Billing migration', 'Design tok
 /* The page shell: a skip link first, a sticky Navbar (the banner), a Sidebar beside main, and a footer. The Navbar
    and the Sidebar are both navigation landmarks, so the Sidebar gets its own name ("Workspace"), told apart from the
    Navbar's "Main navigation". main takes the SkipLink's focus, and the Navbar's scroll-padding keeps
-   it below the bar. */
+   it below the bar. The signed-in person follows Storybook's Content menu (.storybook/content.ts). */
+const Me = () => <Avatar name={useName('Ada Lovelace')} size="sm" />;
 export const Default: Story = {
   render: () => (
     <div className="min-h-screen bg-surface text-text">
@@ -34,7 +36,7 @@ export const Default: Story = {
       <SkipLink />
       <Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
-        actions={<><Button variant="ghost" size="sm">Docs</Button><Avatar name="Ada Lovelace" size="sm" /></>}>
+        actions={<><Button variant="ghost" size="sm">Docs</Button><Me /></>}>
         <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#reports">Reports</NavbarLink>

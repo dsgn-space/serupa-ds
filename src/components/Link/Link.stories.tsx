@@ -36,3 +36,15 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the link's words say where it goes. */
+export const DoSayWhere: Story = {
+  name: 'Do: say where it goes',
+  render: () => <Text>Changed your mind? <Link href="#refunds">Read the refund policy</Link> before you send it back.</Text>,
+};
+/** Don't: "click here", which says nothing out of its sentence. */
+export const DontClickHere: Story = {
+  name: "Don't: click here",
+  render: () => <Text>Changed your mind? To read the refund policy, <Link href="#refunds">click here</Link>.</Text>,
+};

@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.4.0
+npm install github:dsgn-space/serupa-ds#v14.5.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -114,6 +114,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Kbd**: Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states. Also called: keycap, keyboard key.
 - **List**: Rows of related things: people, files, notifications, settings.
 - **Logo** (beta): The product's logo at a set height, with a version for dark themes and a small mark for narrow screens.
+- **Quote** (beta): Quoted words with who said them, for a testimonial, a pull quote, or a quote in a page that isn't Prose. Also called: Blockquote, Testimonial, Pull quote.
 - **RelativeTime**: Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours".
 - **ShowMore** (beta): Long text cut after a few lines, with a "Show more" button under it that shows the rest. Also called: read more, expandable text.
 - **SortableList**: A list people put in their own order: tasks by priority, steps in a flow, columns in a table.
@@ -174,10 +175,6 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **TimeZonePicker** (beta): A searchable list of time zones, by city, with each one's offset now and its name in the reader's language.
 - **TypeToConfirm**: A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted.
 
-### Layout
-
-- **Splitter**: Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. Also called: resizable panels, split view, split pane.
-
 ### Layout and type
 
 - **Container**: Centers a page's content with a maximum width, and side padding that grows with the screen: 16px, 24px from 640px and 32px from 1024px wide.
@@ -186,6 +183,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Heading**: A heading, `h1` to `h6`, in the system's type.
 - **Prose**: Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post.
 - **ScrollArea** (beta): A box whose content scrolls inside it, such as a long activity list in a card or a row of chips in a narrow column.
+- **Splitter**: Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. Also called: resizable panels, split view, split pane.
 - **Stack**: Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale.
 - **Text**: Body text in the system's type: a paragraph, a caption, an error line.
 - **VisuallyHidden**: Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. Also called: screen-reader only, sr-only.
@@ -200,6 +198,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Sidebar**: A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). Also called: side navigation, side nav, navigation rail.
 - **SkipLink**: The "Skip to content" link that keyboard and screen reader users need first on every page (WCAG 2.4.1 Bypass Blocks). Also called: skip to content link.
 - **Stepper**: Shows where people are in a task split into steps, such as sign-up, checkout or setup. Also called: progress indicator, steps, wizard steps, progress tracker.
+- **TabNav** (beta): Moves between the sub-pages of one thing, such as a project's Overview, Activity and Settings, when each has its own URL.
 - **TableOfContents** (beta): An "On this page" list of links to the sections of a long page, as a navigation landmark.
 - **Tabs**: Switches between related panels in one place, such as a project's Overview, Activity and Settings. Also called: tabbed interface.
 - **TreeView**: Nested items that open and close, such as folders and files, a table of contents or categories. Also called: tree, nested list navigation.

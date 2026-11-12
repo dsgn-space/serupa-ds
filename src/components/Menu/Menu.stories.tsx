@@ -222,3 +222,26 @@ export const Context: Story = {
     </ContextMenu>;
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the actions people use most come first, and Delete comes last, after a separator. */
+export const DoDestructiveLast: Story = {
+  name: 'Do: destructive action last',
+  args: { children: <>
+    <MenuItem icon="edit">Edit</MenuItem>
+    <MenuItem icon="content_copy">Duplicate</MenuItem>
+    <MenuItem icon="share">Share</MenuItem>
+    <MenuSeparator />
+    <MenuItem icon="delete" destructive>Delete</MenuItem>
+  </> },
+};
+/** Don't: Delete first, where the menu opens and a slip runs it. */
+export const DontDestructiveFirst: Story = {
+  name: "Don't: destructive action first",
+  args: { children: <>
+    <MenuItem icon="delete" destructive>Delete</MenuItem>
+    <MenuItem icon="edit">Edit</MenuItem>
+    <MenuItem icon="content_copy">Duplicate</MenuItem>
+    <MenuItem icon="share">Share</MenuItem>
+  </> },
+};

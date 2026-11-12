@@ -76,6 +76,11 @@ Drawn from the `BottomEnd` story, opened.
 - `shortcut` only shows a hint: wire the shortcut yourself, and show only shortcuts that work. Give it as keys, `['mod', 'K']`, and it follows the platform as [Kbd](../Kbd/README.md) does: "⌘K" on a Mac and "Ctrl+K" elsewhere, with modifiers in each platform's order ("⇧⌘K", "Ctrl+Shift+K") (a SerupaProvider's `platform` decides from the server render). Text (`"Ctrl+Shift+P"`) shows as written, for a shortcut that is the same everywhere.
 - Don't take keys the browser keeps: ⌘N, ⌘T and ⌘W can't be caught at all, and ⌘D, ⌘R and ⌘O already bookmark, reload and open a file. Add Shift or Alt, as the stories do (see [KeyboardShortcuts](../KeyboardShortcuts/README.md)).
 
+### Do and don't
+
+- **Do:** Put the actions people use most first, and a destructive one last, after a separator. (`DoDestructiveLast`)
+- **Don't:** Put Delete first, where the menu opens and a slip of Enter runs it. (`DontDestructiveFirst`)
+
 ## Accessibility
 
 - A `MenuSub` is a `menuitem` with `aria-haspopup="menu"` and `aria-expanded`; its submenu is a `menu` named by the item's label, next to the item at its end edge (on the right, or the left in rtl, flipping when there's no room).
