@@ -32,6 +32,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "depth-pressed": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-control-pressed}",
+        "$description": "The tactile layers of an on toggle: it stays sunk. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--toggle-button-depth-pressed"
+          }
+        }
+      }
     }
   }
 }

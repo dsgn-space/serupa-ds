@@ -187,4 +187,10 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-border-width` | `border-width-1` | Border width (1px) |
 | `--input-radius` | `radius-control` | Corner radius (6px), like Button and Badge |
 | `--input-action-radius` | `radius-inner` | An action's corners (4px), inside the box's. |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--input-depth` | `depth-field` | The tactile inner shade along the top of the box. None in the flat brands. |
 <!-- token-table:end -->

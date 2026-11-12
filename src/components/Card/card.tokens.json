@@ -123,6 +123,16 @@
             "cssVar": "--card-shadow-elevated"
           }
         }
+      },
+      "depth-hover": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-card-lift}",
+        "$description": "The tactile lift added over a link card's shadow while the pointer is over it. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-depth-hover"
+          }
+        }
       }
     },
     "border": {

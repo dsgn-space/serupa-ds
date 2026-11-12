@@ -148,4 +148,10 @@ Each is an optional override: set it on the page, a container or one switch. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--switch-press-scale` | `scale-90` | Size of the thumb while it's held down (90%). 1 turns it off |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--switch-thumb-depth` | `depth-part` | The thumb's tactile layers: a highlight and a close shadow. None in the flat brands. |
 <!-- token-table:end -->
