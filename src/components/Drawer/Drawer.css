@@ -46,6 +46,7 @@
   width: var(--dk-drawer-width); max-width: var(--sizing-full); height: var(--sizing-full);
   padding: var(--drawer-padding, var(--space-surface));
   background: var(--drawer-bg, var(--surface-overlay));
+  --dk-row-hover: var(--drawer-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
   box-shadow: var(--drawer-shadow, var(--elevation-modal));
   position: relative;
 }

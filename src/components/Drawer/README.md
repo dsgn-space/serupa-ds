@@ -108,6 +108,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 <!-- token-table:start (made from drawer.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
+| `--drawer-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the drawer, hovered or selected: a step up from its surface in dark |
 | `--drawer-bg` | `surface-overlay` | The panel's background. |
 | `--drawer-text` | `text` | The panel's text: the body and the footer. |
 | `--drawer-overlay` | `overlay` | The dimmed backdrop over the page. |
