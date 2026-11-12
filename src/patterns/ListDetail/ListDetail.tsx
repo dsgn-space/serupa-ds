@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { flushSync } from 'react-dom';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
@@ -7,6 +8,7 @@ import { List, ListItem } from '../../components/List/List';
 import { Splitter } from '../../components/Splitter/Splitter';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { useLocale } from '../../internal/provider';
+import { withViewTransition } from '../../internal/viewTransition';
 
 /* List and detail: a list of messages beside the one that's open, in two panes on a wide screen and one at a time on
    a phone. For an app to copy. What it carries (WCAG 2.2):
@@ -19,6 +21,10 @@ import { useLocale } from '../../internal/provider';
      still marked as open, so the place in the list is never lost. On a wide screen focus stays in the list.
    - 2.1.1: the panes' divider is a Splitter, moved with the arrow keys as well as by dragging.
    - With no messages, an empty state says what will show up here, instead of two empty panes and "Messages (0)".
+   Motion (the Motion foundation's "Layout changes"): on a phone, an opened message slides in from the end while its
+   subject glides from its row up into the heading, and "Back to messages" plays it the other way, so the message
+   is seen to come from its place in the list and go back to it. Under reduced motion the two views crossfade; where
+   View Transitions are missing they swap at once. The browser's own Back swaps at once: it may animate on its own.
    Loading the messages is the app's job: pass them as `messages`, and onSelect hears which one is open. */
 
 export interface Message { id: string; from: string; subject: string; date: string; body: string }
@@ -74,16 +80,20 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
   const pushed = React.useRef(false);
   const choose = (m: Message) => (e: React.MouseEvent) => {
     e.preventDefault();
-    setPicked(m.id);
+    // On a phone the row is marked open first, so its subject is the named element in the picture taken before.
+    if (wide) setPicked(m.id); else flushSync(() => setPicked(m.id));
     onSelect?.(m.id);
     if (!wide) {
-      setShowing(true); focus.current = 'detail';
       if (!pushed.current) { history.pushState(history.state, ''); pushed.current = true; }
+      void withViewTransition(() => { setShowing(true); focus.current = 'detail'; }, { types: ['forward'] });
     }
   };
   const close = () => { setShowing(false); focus.current = open?.id ?? null; };
   // "Back to messages" closes it at once, and takes back the entry it added, which the listener below then ignores.
-  const back = () => { close(); if (pushed.current) { pushed.current = false; history.back(); } };
+  const back = () => {
+    void withViewTransition(close, { types: ['back'] });
+    if (pushed.current) { pushed.current = false; history.back(); }
+  };
   const closeRef = React.useRef(close);
   // every render: the popstate listener reads the latest close through this ref.
   React.useEffect(() => { closeRef.current = close; });
@@ -93,12 +103,16 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
+  // On a phone, the open message's subject is one element that travels between its row and the heading, and the pane
+  // that holds the list or the message slides as a step (base.css).
+  const subject = (id: string, text: string) => (!wide && open?.id === id ? <span style={{ viewTransitionName: 'list-detail-subject' }}>{text}</span> : text);
+  const pane = wide ? undefined : ({ viewTransitionName: 'list-detail-pane', viewTransitionClass: 'step' } as React.CSSProperties);
   const list = (
     <section aria-labelledby="messages-title" className="flex h-full min-w-0 flex-col gap-3 p-4">
       <Heading level={2} size="lg" id="messages-title">Messages ({messages.length})</Heading>
       <List divided>
         {messages.map((m) => (
-          <ListItem key={m.id} title={m.subject} description={<>{m.from} · <time dateTime={m.date}>{day(m.date, locale, 'medium')}</time></>} href={`#${m.id}`}
+          <ListItem key={m.id} title={subject(m.id, m.subject)} description={<>{m.from} · <time dateTime={m.date}>{day(m.date, locale, 'medium')}</time></>} href={`#${m.id}`}
             linkProps={{ id: `message-${m.id}` }} selected={open?.id === m.id} onClick={choose(m)} />
         ))}
       </List>
@@ -107,7 +121,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
   const detail = open ? (
     <section aria-labelledby="message-title" className="flex min-w-0 flex-col gap-3 p-4">
       {wide ? null : <div><Button variant="ghost" leftIcon="arrow_back" onClick={back}>Back to messages</Button></div>}
-      <Heading level={2} size="lg" id="message-title" ref={heading} tabIndex={-1} className="outline-none">{open.subject}</Heading>
+      <Heading level={2} size="lg" id="message-title" ref={heading} tabIndex={-1} className="outline-none">{subject(open.id, open.subject)}</Heading>
       <p className="m-0 text-sm text-text-muted">From {open.from}, <time dateTime={open.date}>{day(open.date, locale, 'long')}</time></p>
       <p className="m-0 max-w-prose">{open.body}</p>
     </section>
@@ -126,7 +140,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect }: ListD
             <Splitter defaultSize={35} min={25} max={60} separatorLabel="Resize the message list" className="h-96">
               {list}{detail}
             </Splitter>
-          ) : showing && open ? detail : list}
+          ) : <div style={pane}>{showing && open ? detail : list}</div>}
         </div> : (
           <EmptyState icon="inbox" title="No messages yet" headingLevel={2} variant="dashed"
             description="When someone writes to you, their message shows up here." />

@@ -1,0 +1,24 @@
+/* ---------------------------------------------------------------
+   Quote: the quoted words with a rule along their start edge, as Prose draws a blockquote, and who said them
+   underneath in a smaller, muted line, with an optional picture. 'lg' sets the words larger for a pull quote.
+   Every value reads one of its own tokens (quote.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-quote {
+  display: flex; flex-direction: column; gap: var(--quote-gap, var(--spacing-3));
+  margin: 0;
+  padding-inline-start: var(--quote-indent, var(--spacing-4));
+  border-inline-start: var(--quote-border-width, var(--border-width-4)) solid var(--quote-border, var(--border-strong));
+  color: var(--quote-text, var(--text));
+  overflow-wrap: break-word;
+}
+.dk-quote__text { margin: 0; font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-quote__text > * { margin: 0; }
+.dk-quote__text > * + * { margin-block-start: var(--quote-gap, var(--spacing-3)); }
+.dk-quote--lg .dk-quote__text { font-size: var(--quote-size-lg, var(--text-xl)); line-height: var(--quote-line-height-lg, var(--text-xl--line-height)); }
+.dk-quote__by { display: flex; align-items: center; gap: var(--quote-gap, var(--spacing-3)); min-inline-size: 0; }
+.dk-quote__who { display: flex; flex-direction: column; min-inline-size: 0; font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.dk-quote__author { font-weight: var(--quote-author-weight, var(--font-semibold)); }
+.dk-quote__source { color: var(--quote-source, var(--text-muted)); }
+@media (forced-colors: active) { .dk-quote { border-inline-start-color: CanvasText; } }
+}

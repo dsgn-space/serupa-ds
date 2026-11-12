@@ -44,6 +44,13 @@ Drawn from the `LongLabel` story.
 - In a settings list, put the label first and the switch at the end of the row.
 - When a flip saves to a server, set `loading` while the request runs. Flip `checked` in `onChange` (optimistic) or once the save succeeds, and if it fails, put it back and say so in text nearby.
 
+### Do and don't
+
+- **Do:** Name the setting, and let the switch show whether it's on. (`DoNameTheSetting`)
+- **Don't:** Describe the state in the label, such as "Notifications are on": it has to change with every flip. (`DontLabelTheState`)
+- **Do:** Use [checkboxes](../Checkbox/README.md) in a form that waits for Save. (`DoCheckboxInForm`)
+- **Don't:** Use switches there: people expect a switch to apply at once, so a flip seems to do nothing. (`DontSwitchInForm`)
+
 ## States
 
 | State | Look |

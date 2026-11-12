@@ -1,6 +1,18 @@
 # CategoryTones
 - text: red orange amber yellow lime green emerald teal cyan sky blue indigo violet purple fuchsia pink rose
 
+# DoPaletteForCategories
+- text: Design Engineering Marketing
+
+# DoShortLabel
+- text: Overdue
+
+# DontSentence
+- text: This invoice is overdue by 3 days
+
+# DontStatusForCategories
+- text: Design Engineering Marketing
+
 # Extras
 - text: Online Live Scheduled 8 120 Design
 - button "Remove Design"

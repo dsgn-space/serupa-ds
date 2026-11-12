@@ -5,6 +5,9 @@ import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { en as words } from './labels';
+import { useApple } from '../../internal/keys';
+
+export { isApple } from '../../internal/keys';
 
 export interface KbdProps extends React.HTMLAttributes<HTMLElement> {
   /** A combination, one key each: ['mod', 'K'], ['shift', 'enter']. Names below show as symbols on Apple devices. Or pass one key as children. */
@@ -52,8 +55,6 @@ const NAMED: Record<string, [string, string, string, string]> = {
   ins: ['Ins', 'Insert', 'Ins', 'Insert'],
   fn: ['fn', 'Function', 'Fn', 'Function'],
 };
-/** Whether this is an Apple device (⌘ rather than Ctrl); false on the server. */
-export const isApple = () => typeof navigator !== 'undefined' && [(navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform, navigator.platform, navigator.userAgent].some((s) => /Mac|iPhone|iPad|iPod/.test(s || ''));
 
 function Key({ k, apple, say }: { k: string; apple: boolean; say: (name: string) => string }) {
   // "page_up", "Page Up" and "page-up" all find pageup.
@@ -72,11 +73,7 @@ function Key({ k, apple, say }: { k: string; apple: boolean; say: (name: string)
 export const Kbd = /* @__PURE__ */ component<HTMLElement, KbdProps>('Kbd', function Kbd(props, ref) {
   const rest = omit(props, { keys: 1, size: 1, className: 1, children: 1 } as const);
   const sds = useSettings(words), say = sds.labels.keyName;
-  // A SerupaProvider's platform decides from the first render (the server's too); without one, Ctrl on the server
-  // and the device decides after mount.
-  const [found, setFound] = React.useState(false);
-  React.useEffect(() => { if (!sds.platform) setFound(isApple()); }, [sds.platform]);
-  const apple = sds.platform ? sds.platform === 'apple' : found;
+  const apple = useApple();
   const size = props.size === 'sm' ? 'sm' : 'md';
   const keys = props.keys && props.keys.length ? props.keys : typeof props.children === 'string' ? [props.children] : null;
   const cls = cn('dk-kbd', 'dk-kbd--size-' + size, props.className);

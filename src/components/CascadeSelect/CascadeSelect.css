@@ -69,7 +69,7 @@
   display: flex; flex: none; align-items: center; gap: var(--spacing-2); min-block-size: var(--control-height-md); padding: var(--spacing-1) var(--spacing-2); border-radius: var(--radius-inner);
   cursor: pointer; overflow-wrap: anywhere; touch-action: manipulation;
 }
-@media (hover: hover) { .dk-cascade-select__option:hover:not([aria-disabled="true"]) { background: var(--cascade-select-option-hover, var(--surface-muted)); } }
+@media (hover: hover) { .dk-cascade-select__option:hover:not([aria-disabled="true"]) { background: var(--cascade-select-option-hover, var(--highlight)); } }
 .dk-cascade-select__option--on { background: var(--cascade-select-option-on, var(--primary-subtle)); font-weight: var(--font-medium); }
 .dk-cascade-select__option:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-cascade-select__option[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }

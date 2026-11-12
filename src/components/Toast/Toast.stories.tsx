@@ -2,6 +2,9 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { toast, Toaster } from './Toast';
 import { Button } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
+import { Icon } from '../Icon/Icon';
+import * as icons from '../../material/builtin';
 
 const meta = {
   title: 'Components/Feedback/Toast',
@@ -71,4 +74,35 @@ export const LongText: Story = {
   render: (args) => <Showing placement={args.placement} toasts={[
     { title: 'Your export of every project, task and comment from the last year is ready', description: 'Download it within 7 days from Settings. Donaudampfschifffahrtsgesellschaftskapitänskajüte.', tone: 'success', action: { label: 'Download the export', onClick: () => {} } },
   ]} />,
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't"). The Toaster sits in a
+// corner of the screen, so these draw one toast in place, with the Toast's own classes, to sit side by side. data-instant: drawn in place at once, not sliding in.
+function Sketch({ title, description, success, action }: { title: string; description?: string; success?: boolean; action?: string }) {
+  return <div className={success ? 'dk-toast dk-toast--success' : 'dk-toast'} data-instant="" style={{ width: '100%', maxWidth: 360, boxShadow: 'none' }}>
+    {success ? <span className="dk-toast__icon" aria-hidden="true"><Icon icon={icons.CheckCircle} /></span> : null}
+    <div className="dk-toast__content"><p className="dk-toast__title">{title}</p>{description ? <p className="dk-toast__description">{description}</p> : null}</div>
+    {action ? <Button className="dk-toast__action" size="sm" variant="secondary">{action}</Button> : null}
+    <IconButton className="dk-toast__close" icon={icons.Close} label="Dismiss" size="sm" hideTitle />
+  </div>;
+}
+/** Do: a few words that say what happened. */
+export const DoShortTitle: Story = {
+  name: 'Do: say what happened',
+  render: () => <Sketch success title="Changes saved" />,
+};
+/** Don't: a sentence to read before it goes. */
+export const DontWordyTitle: Story = {
+  name: "Don't: a sentence to read",
+  render: () => <Sketch success title="Your changes have been saved successfully to your account." />,
+};
+/** Do: one quick action, such as Undo. */
+export const DoOneQuickAction: Story = {
+  name: 'Do: one quick action',
+  render: () => <Sketch title="Moved to trash" action="Undo" />,
+};
+/** Don't: something people must act on, which can go before they reach it. */
+export const DontMustAct: Story = {
+  name: "Don't: something people must act on",
+  render: () => <Sketch title="Your card was declined" description="Update your card by Friday to keep your plan." action="Update card" />,
 };

@@ -7,15 +7,15 @@ import { Menubar, MenubarMenu, MenuItem, MenuSub, MenuSeparator } from "serupa-d
 
 <Menubar aria-label="Editor">
   <MenubarMenu label="File">
-    <MenuItem icon="add" shortcut="⌘N" onSelect={create}>New</MenuItem>
+    <MenuItem icon="add" shortcut={['alt', 'N']} onSelect={create}>New</MenuItem>
     <MenuSub icon="share" label="Share">
       <MenuItem icon="mail" onSelect={email}>Email</MenuItem>
     </MenuSub>
     <MenuSeparator />
-    <MenuItem icon="print" shortcut="⌘P" onSelect={print}>Print</MenuItem>
+    <MenuItem icon="print" shortcut={['mod', 'P']} onSelect={print}>Print</MenuItem>
   </MenubarMenu>
   <MenubarMenu label="Edit">
-    <MenuItem icon="undo" shortcut="⌘Z" onSelect={undo}>Undo</MenuItem>
+    <MenuItem icon="undo" shortcut={['mod', 'Z']} onSelect={undo}>Undo</MenuItem>
   </MenubarMenu>
 </Menubar>
 ```

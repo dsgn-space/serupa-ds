@@ -51,6 +51,9 @@ export interface NotificationCenterProps extends DrawerProps {
   onClear?: (() => void) | undefined;
   /** What shows with no notifications. Default: "No notifications yet" (labels.noNotifications). */
   empty?: React.ReactNode | undefined;
+  /** Where people choose which notifications they get. Given, the footer starts with a "Notification settings" link
+   *  (labels.notificationSettings) to it, so someone who gets too many can turn some off from here. */
+  settingsHref?: string | undefined;
 }
 
 export interface ToastHistoryOptions {
@@ -97,7 +100,7 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
   const labels = useSettings(words).labels;
   const base = domId('dk-nc', React.useId());
   // The Drawer's own props are named below, so its other attributes (id, aria-*) pass through in rest.
-  const rest = omit(props, { title: 1, description: 1, footer: 1, children: 1, items: 1, onMarkRead: 1, onMarkAllRead: 1, onClear: 1, empty: 1, className: 1, open: 1, defaultOpen: 1, onOpenChange: 1,
+  const rest = omit(props, { title: 1, description: 1, footer: 1, children: 1, items: 1, onMarkRead: 1, onMarkAllRead: 1, onClear: 1, empty: 1, settingsHref: 1, className: 1, open: 1, defaultOpen: 1, onOpenChange: 1,
     side: 1, size: 1, modal: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1 } as const);
   const { items, onMarkRead, onMarkAllRead, onClear } = props;
   // Each footer button only while it has something to do: "Mark all as read" while one is unread, "Clear all" while
@@ -117,7 +120,8 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
     <p className="dk-notification-center__ask" id={askId}>{labels.clearNotificationsConfirm}</p>
     <Button destructive variant="outline" size="sm" onClick={() => { fromFooter.current = true; setAsking(false); onClear?.(); }}>{labels.clearNotifications}</Button>
     <Button ref={keep} variant="ghost" size="sm" aria-describedby={askId} onClick={() => { setAsking(false); requestAnimationFrame(() => clearButton.current?.focus()); }}>{labels.keepNotifications}</Button>
-  </> : markAll || clear ? <>
+  </> : markAll || clear || props.settingsHref ? <>
+    {props.settingsHref ? <Button className="dk-notification-center__settings" href={props.settingsHref} variant="link" size="sm">{labels.notificationSettings}</Button> : null}
     {markAll ? <Button variant="ghost" size="sm" onClick={() => { fromFooter.current = true; onMarkAllRead?.(); }}>{labels.markAllRead}</Button> : null}
     {clear ? <Button ref={clearButton} variant="ghost" size="sm" onClick={() => setAsking(true)}>{labels.clearNotifications}</Button> : null}
   </> : null;

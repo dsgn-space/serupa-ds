@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit } from '../../internal/cn';
+import { useBreakpoint } from '../../internal/media';
 import { component } from '../../internal/component';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from '../../internal/dates';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
@@ -71,12 +72,9 @@ export interface EventCalendarProps extends Omit<React.HTMLAttributes<HTMLDivEle
 // An event as drawn: its start and end read once.
 interface Shown { e: CalendarEvent; from: Date; to: Date; allDay: boolean }
 
-const NARROW = '(max-width: 639.98px)';
 const noSubscribe = () => () => {};
-const subscribeNarrow = (on: () => void) => { const m = window.matchMedia(NARROW); m.addEventListener('change', on); return () => m.removeEventListener('change', on); };
-const isNarrow = () => window.matchMedia(NARROW).matches;
-const notNarrow = () => false;
 const yes = () => true;
+const no = () => false;
 const DAY_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 
 // A start or end as a Date: a "yyyy-mm-dd" string is that local day (new Date() would make it UTC midnight).
@@ -123,7 +121,8 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
   const [ownView, setOwnView] = React.useState<EventCalendarView>(props.defaultView === 'agenda' ? 'agenda' : 'month');
   const chosen: EventCalendarView = props.view === 'agenda' || props.view === 'month' ? props.view : ownView;
-  const narrow = React.useSyncExternalStore(typeof window === 'undefined' ? noSubscribe : subscribeNarrow, typeof window === 'undefined' ? notNarrow : isNarrow, notNarrow);
+  // Under the sm breakpoint, the agenda; the server draws the chosen view, as wide.
+  const narrow = !useBreakpoint('sm', { serverValue: true });
   const view = narrow ? 'agenda' : chosen;
   const setView = (v: EventCalendarView) => { if (props.view === undefined) setOwnView(v); if (props.onViewChange) props.onViewChange(v); };
   const list = React.useMemo(() => toShown(props.events), [props.events]);
@@ -131,7 +130,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
 
   // Today is the reader's, so it's marked only once the page runs in their browser: the server's today may be
   // another day, and the server's HTML would mark it, and put the Tab stop on it, until hydration (GR210).
-  const hydrated = React.useSyncExternalStore(noSubscribe, yes, notNarrow);
+  const hydrated = React.useSyncExternalStore(noSubscribe, yes, no);
   const marked = hydrated ? today : null;
   // The day with the grid's Tab stop: the one the keys or a click chose, kept inside the shown month (adjusted during
   // render, so a new month never draws without its Tab stop), else today in today's month, else the 1st.

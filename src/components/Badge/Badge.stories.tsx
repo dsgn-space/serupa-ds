@@ -63,3 +63,25 @@ export const LongLabel: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a word or two. */
+export const DoShortLabel: Story = {
+  name: 'Do: a word or two',
+  render: () => <Row><Badge tone="warning">Overdue</Badge></Row>,
+};
+/** Don't: a sentence in a badge. */
+export const DontSentence: Story = {
+  name: "Don't: a sentence",
+  render: () => <div style={{ maxWidth: 160 }}><Badge tone="warning">This invoice is overdue by 3 days</Badge></div>,
+};
+/** Do: palette tones for categories, status tones for status. */
+export const DoPaletteForCategories: Story = {
+  name: 'Do: palette tones for categories',
+  render: () => <Row><Badge tone="violet">Design</Badge><Badge tone="sky">Engineering</Badge><Badge tone="amber">Marketing</Badge></Row>,
+};
+/** Don't: status tones for categories, which read as good and bad. */
+export const DontStatusForCategories: Story = {
+  name: "Don't: status tones for categories",
+  render: () => <Row><Badge tone="success">Design</Badge><Badge tone="danger">Engineering</Badge><Badge tone="warning">Marketing</Badge></Row>,
+};
