@@ -2,6 +2,14 @@
 - text: Storage
 - meter "Storage"
 
+# DoSayTheZone
+- text: Storage
+- meter "Storage"
+
+# DontColorOnly
+- text: Storage
+- meter "Storage"
+
 # HighIsGood
 - text: Battery
 - meter "Battery"

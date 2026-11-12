@@ -59,6 +59,11 @@ Without `low` and `high` the bar is primary and `data-state` is `none`. `meterSt
 
 - The value is clamped between `min` and `max`, and the fill moves to a new value over 300ms (at once with `prefers-reduced-motion`).
 
+### Do and don't
+
+- **Do:** Say the zone in words as well as color: "92%, almost full". (`DoSayTheZone`)
+- **Don't:** Leave a bare "92%" where only the color warns: people who can't tell the colors apart miss it. (`DontColorOnly`)
+
 ## Accessibility
 
 - `role="meter"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext` (the shown value). It's named by its `label`.

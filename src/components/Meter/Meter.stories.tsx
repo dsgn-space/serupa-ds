@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Meter } from './Meter';
+import { useLocale } from '../../internal/provider';
 
 const meta = {
   title: 'Components/Feedback/Meter',
@@ -44,4 +45,20 @@ export const Sizes: Story = {
 export const LongLabel: Story = {
   args: { label: 'Storage used by photos, videos and shared documents' },
   decorators: [(Story) => <div style={{ width: 200 }}><Story /></div>],
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the zone in words as well as in color. */
+export const DoSayTheZone: Story = {
+  name: 'Do: say the zone in words',
+  render: function Render(args) {
+    // The words carry the zone; the number keeps the locale's digits, as Meter's own percentage does.
+    const percent = new Intl.NumberFormat(useLocale(), { style: 'percent' });
+    return <Meter {...args} value={92} low={80} high={95} optimum={0} formatValue={(v) => `${percent.format(v / 100)}, almost full`} />;
+  },
+};
+/** Don't: a bare number where only the color says the meter is nearly full. */
+export const DontColorOnly: Story = {
+  name: "Don't: leave it to the color",
+  args: { value: 92, low: 80, high: 95, optimum: 0 },
 };

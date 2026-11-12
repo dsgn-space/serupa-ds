@@ -49,6 +49,11 @@ Drawn from the `Large` story.
 - Don't add quotation marks around the words: the rule already says it's a quote, and marks differ by language.
 - There's no Video component. For a video testimonial, use a `<video>` with `controls`, captions in a `<track kind="captions">`, and no autoplay with sound, and put its Quote of the key line beside it.
 
+### Do and don't
+
+- **Do:** Keep a testimonial to two or three sentences, with who said it. (`DoKeepItShort`)
+- **Don't:** Quote a whole paragraph: people skip it. (`DontWholeParagraph`)
+
 ## Accessibility
 
 - **Role and name:** a `<figure>` holding a `<blockquote>` and a `<figcaption>`, so the attribution is announced with the quote but isn't part of it.
