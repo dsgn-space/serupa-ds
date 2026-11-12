@@ -72,4 +72,13 @@ describe('Sparkline', () => {
       expect(contrast(css(line).stroke, css(document.getElementById('bg')).backgroundColor), th).toBeGreaterThanOrEqual(3);
     }
   });
+
+  test('a long series draws: 200,000 points from a minute-by-minute log span the box instead of throwing', async () => {
+    const data = Array.from({ length: 200_000 }, (_, i) => (i % 1000) + (i === 123_456 ? 5000 : 0));
+    await render(<Sparkline id="long" data={data} label="Requests" />);
+    const ys = points(part(el('long'), 'line')!.getAttribute('d')!).map((p) => p[1]);
+    expect(ys.length).toBe(200_000);
+    // The one peak reaches the top; the first point, the lowest value, sits below it.
+    expect(ys[123_456]).toBeLessThan(ys[0]);
+  });
 });

@@ -142,9 +142,22 @@ export function exportTokens(t, componentFiles) {
     [BASE_FILE]: base,
     'css-values.json': { $description: 'Tokens the W3C Design Tokens format (2025.10) has no type for yet: degrees, em, percentages of a box, viewport units, keywords, CSS shorthands, and text shadows (the shadow type in the format always has a spread, which CSS text-shadow does not allow). Use the CSS value as-is.', ...cssOnly },
   };
+  // A brand's own roles in the other groups (Modern's radii, elevation, motion and spacing): one value per theme, each
+  // naming a token of its group, so they go in the theme files as references too.
+  const roles = Object.entries(GROUPS).filter(([g]) => g !== 'color').flatMap(([g, grp]) => grp.tokens
+    .filter((x) => x.value && typeof x.value === 'object' && new Set(Object.values(x.value)).size > 1).map((x) => [g, grp, x]));
+  // A role whose values the format has no type for (ease-spring is a linear() curve) stays in css-values.json only.
+  const roleTok = (g, grp, x, th) => {
+    const to = full(/\{([^}]+)\}/, String(x.value[th])), target = to && grp.tokens.find((y) => y.name === to[1]);
+    const tr = target && typed(g, target.name, first(target.value));
+    return tr && { $type: tr[0], $value: `{${g}.${pathName(target.name)}}`, $description: x.usage || '', $extensions: ext(x.name) };
+  };
   const tactile = new Set(t.color.themes.filter((x) => x.depth === 'tactile').map((x) => x.id));
-  for (const th of THEMES)
-    files[`themes/${th}.tokens.json`] = { ...(tactile.has(th) ? { $extensions: { [NS]: { depth: 'tactile' } } } : {}), color: Object.fromEntries(ALIAS.map((x) => [pathName(x.name), { $type: 'color', $value: ref(x.value[th]), $description: x.usage || '', $extensions: ext(x.name) }])) };
+  for (const th of THEMES) {
+    const file = { ...(tactile.has(th) ? { $extensions: { [NS]: { depth: 'tactile' } } } : {}), color: Object.fromEntries(ALIAS.map((x) => [pathName(x.name), { $type: 'color', $value: ref(x.value[th]), $description: x.usage || '', $extensions: ext(x.name) }])) };
+    for (const [g, grp, x] of roles) if (THEMES.every((t2) => roleTok(g, grp, x, t2))) setIn(file, g)[pathName(x.name)] = roleTok(g, grp, x, th);
+    files[`themes/${th}.tokens.json`] = file;
+  }
   // component tokens (src/components/<Name>/<name>.tokens.json) are already in the format: published as they are
   for (const [name, data] of componentFiles) files['components/' + name] = data;
   return { files, counts: { typed: Object.values(base).reduce((n, v) => n + Object.keys(v).length, 0), aliases: ALIAS.length, themes: THEMES.length, css: Object.values(cssOnly).reduce((n, v) => n + Object.keys(v).length, 0) } };
