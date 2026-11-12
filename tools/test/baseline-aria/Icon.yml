@@ -39,6 +39,18 @@
 - img "warning"
 - code: warning
 
+# DoOneMeaning
+- list:
+  - listitem: Delete file
+  - listitem: Delete comment
+  - listitem: Delete project
+
+# DontMixedIcons
+- list:
+  - listitem: Delete file
+  - listitem: Delete comment
+  - listitem: Delete project
+
 # Playground
 
 

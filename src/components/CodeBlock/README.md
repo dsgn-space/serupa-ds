@@ -37,6 +37,11 @@ Drawn from the `LineNumbers` story.
 - Long lines scroll sideways, which keeps code's layout. Use `wrap` for prose-like lines, such as a long message string.
 - CodeBlock doesn't color the syntax. The `<code>` has a `language-*` class and the box a `data-language`, for a highlighter you add.
 
+### Do and don't
+
+- **Do:** Give it a `title` that names the file or step, and `highlight` the lines the step is about. (`DoTitleAndHighlight`)
+- **Don't:** Leave out the title and the highlight: people have to hunt for what changed. (`DontBareCode`)
+
 ## Accessibility
 
 - **Role and name:** a `<pre>` with the code as text, read as it is. When it's wider (or taller) than its box it becomes a region named by its title (or its language, or "Code") and a tab stop, so a keyboard can scroll it (WCAG 2.1.1); a box that fits is neither.

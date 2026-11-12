@@ -5,6 +5,7 @@ import { useBreakpoint } from '../../internal/media';
 import { component } from '../../internal/component';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from '../../internal/dates';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
+import { displayNumber } from '../../internal/numbers';
 import * as icons from '../../material/builtin';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
@@ -253,11 +254,11 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
                       className={cn('dk-event-calendar__day', !sameMonth(d, month) && 'dk-event-calendar__day--outside', isToday && 'dk-event-calendar__day--today')}
                       onFocus={(e) => { if (e.target === e.currentTarget && !here) setFocus(d); }}>
                       {/* The day's name is its text, not an aria-label, so it never hides what the cell shows (its events). */}
-                      <span className="dk-visually-hidden">{fmt.full.format(d) + ', ' + sds.labels.eventCount(mine.length)}</span>
+                      <span className="dk-visually-hidden">{fmt.full.format(d) + ', ' + sds.labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
                       <span className="dk-event-calendar__date" aria-hidden>{d.getDate()}</span>
                       {fits.length ? <ul className="dk-event-calendar__events" role="list">{fits.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
                       {more > 0 ? (
-                        <Popover title={fmt.full.format(d)} placement="bottom-start" trigger={<button type="button" tabIndex={here ? 0 : -1} className="dk-event-calendar__more">{sds.labels.moreEvents(more)}</button>}>
+                        <Popover title={fmt.full.format(d)} placement="bottom-start" trigger={<button type="button" tabIndex={here ? 0 : -1} className="dk-event-calendar__more">{sds.labels.moreEvents(more, displayNumber(more, locale))}</button>}>
                           <ul className="dk-event-calendar__events dk-event-calendar__events--all" role="list">{mine.map((s) => <li key={s.e.id}>{eventButton(s, d, 0, true)}</li>)}</ul>
                         </Popover>
                       ) : null}
