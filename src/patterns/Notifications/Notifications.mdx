@@ -25,6 +25,7 @@ A bell in the Navbar that opens the latest notifications in a drawer, and a full
 - **The filter** (All or Unread) is a Segmented control, and the count beside it is a status, so a change is said politely (4.1.3).
 - **Mark as read** is a button on each unread one, named with its title. Its button goes away once it's read (and under "Unread" the notification too), so focus goes to the next unread one's button, or to the heading when none are left. **Mark all as read** puts focus on the heading as it turns disabled. Focus never falls to the top of the page (2.4.3). In the drawer, focus stays in the drawer.
 - **Mark all as read** is off when there's nothing to mark.
+- **While they load** (`loading`), the count says "Loading notifications" over placeholder rows, and Mark all as read waits. Notifications that arrive later keep which ones are already read.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.AllRead} />
@@ -32,6 +33,8 @@ A bell in the Navbar that opens the latest notifications in a drawer, and a full
 - **With none at all**, an empty state says what will show up here and links to the settings, rather than an empty list.
 
 <Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.Loading} />
 
 ## What stays your app's job
 

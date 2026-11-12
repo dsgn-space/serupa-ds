@@ -25,11 +25,14 @@ A page of rows to search, filter, sort, select and page through, with the view k
 - **No results** shown as an empty state that says what found nothing, in words ("No projects match “rocket”"), with "Clear filters" as the way out. Focus goes to the search field when it's pressed.
 - **Pagination** with a summary ("11–20 of 24"). A change to the search or a filter goes back to page 1, so nobody lands on an empty page 3.
 - **The address.** The search, filters, sort and page are written to the query string (`?q=app&status=Active&sort=updated&dir=descending&page=2`), with anything at its default left out, so the plain list has a plain address. `readView` and `writeView` show the mapping.
+- **While the rows load** (`loading`), the count says "Loading projects" once, the table keeps its header over placeholder rows and says it's busy, and the pages wait. Nothing jumps when the rows arrive.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.FromALink} />
 
 <Canvas of={Stories.NoResults} />
+
+<Canvas of={Stories.Loading} />
 
 ## What stays your app's job
 

@@ -34,6 +34,18 @@ describe('Patterns/List with search and filters', () => {
     await expect.element(screen.getByRole('navigation', { name: 'Projects pages' })).toBeVisible();
   });
 
+  test('loading: the count says so, the table keeps its header and is busy, and there are no pages until the rows arrive', async () => {
+    const screen = await render(<ListSearch loading />);
+    expect(status()).toBe('Loading projects');
+    const table = document.querySelector('table')!;
+    expect([table.getAttribute('aria-busy'), table.querySelectorAll('thead th').length, table.querySelectorAll('tbody tr').length]).toEqual(['true', 5, 5]);
+    expect(document.querySelectorAll('tbody input[type="checkbox"]')).toHaveLength(0);
+    expect(document.querySelector('nav[aria-label="Projects pages"]')).toBeNull();
+    await screen.rerender(<ListSearch />);
+    await expect.poll(status).toBe('24 projects');
+    expect([document.querySelector('table')!.hasAttribute('aria-busy'), names().length]).toEqual([false, 10]);
+  });
+
   test('searching and filtering say the new count, go back to page 1 and write the address', async () => {
     const onSearchChange = vi.fn();
     const screen = await render(<ListSearch search="?page=2" onSearchChange={onSearchChange} />);

@@ -22,3 +22,6 @@ export const AllRead: Story = {
 
 /** No notifications yet: an empty state saying what will show up, with a way to the notification settings. */
 export const Empty: Story = { args: { items: [] } };
+
+/** While they load: the count says "Loading notifications" over placeholder rows, and Mark all as read waits. */
+export const Loading: Story = { args: { items: [], loading: true } };

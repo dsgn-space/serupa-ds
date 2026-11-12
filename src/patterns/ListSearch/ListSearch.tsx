@@ -4,7 +4,7 @@ import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Pagination } from '../../components/Pagination/Pagination';
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell, type SortDirection } from '../../components/Table/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableLoadingRows, type SortDirection } from '../../components/Table/Table';
 import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
 import { EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { Toaster, toast } from '../../components/Toast/Toast';
@@ -21,6 +21,8 @@ import { useLocale } from '../../internal/provider';
    - 2.4.8, 3.2.3: the search, filters, sort and page are kept in the address (`?q=&status=&sort=&page=`), so Back,
      a reload and a shared link all show the same list. Writing the address is the app's job: `onSearchChange`
      gets the new query string.
+   - 4.1.3: while the rows load, the results count says "Loading projects" (once, as a status), the table is busy and
+     keeps its header, and its placeholder rows are decorative, so nothing jumps when the rows arrive.
    - Changing the search or a filter goes back to page 1, so nobody lands on an empty page 3, and lets go of the
      selected rows it hides, so "2 selected" never counts rows nobody can see, and a bulk action never reaches them.
    - 4.1.3: Archive and Export say what they did in a toast. Archive takes the rows away at once, with Undo; it's done
@@ -41,6 +43,8 @@ export interface ListSearchProps {
   pageSize?: number | undefined;
   /** Archives the rows for good, by name: called once the "Archived" toast closes without Undo. */
   onArchive?: ((names: string[]) => void) | undefined;
+  /** The rows are on their way: the table keeps its header, with placeholder rows, and says it's busy. Default: false. */
+  loading?: boolean | undefined;
   /** Exports the selected rows, by name. */
   onExport?: ((names: string[]) => void) | undefined;
 }
@@ -89,7 +93,7 @@ export function writeView(v: View): string {
 }
 
 /** The list page: a skip link, a header, then main with the h1, the search and filters, the table and the pages. */
-export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport }: ListSearchProps) {
+export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport, loading = false }: ListSearchProps) {
   const locale = useLocale();
   const [view, setView] = React.useState<View>(() => readView(search));
   const [picked, setPicked] = React.useState<string[]>([]);
@@ -155,13 +159,23 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             { label: 'Status', value: view.status, onChange: (value) => change({ status: value }), options: [{ value: '', label: 'All' }, ...STATUSES] },
             { label: 'Owner', value: view.owner, onChange: (value) => change({ owner: value }), options: [{ value: '', label: 'Anyone' }, ...OWNERS] },
           ]}
-          results={found.length === live ? `${found.length} projects` : `${found.length} of ${live} projects`}
+          results={loading ? 'Loading projects' : found.length === live ? `${found.length} projects` : `${found.length} of ${live} projects`}
           onClearFilters={clear}
           selectedCount={picked.length}
           onClearSelection={() => setPicked([])}
           bulkActions={<><Button size="sm" variant="outline" onClick={exportRows}>Export</Button><Button size="sm" variant="outline" onClick={archive}>Archive</Button></>}
         >
-          {found.length ? (
+          {loading ? (
+            // The header stays, so the columns don't move when the rows arrive; the placeholder rows are decorative.
+            <Table caption="Projects" hideCaption busy>
+              <TableHead><TableRow>
+                <TableHeaderCell><span className="sr-only">Select</span></TableHeaderCell>
+                <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell>
+                <TableHeaderCell>Owner</TableHeaderCell><TableHeaderCell>Updated</TableHeaderCell>
+              </TableRow></TableHead>
+              <TableLoadingRows columns={5} rows={Math.min(pageSize, 5)} label="" />
+            </Table>
+          ) : found.length ? (
             <Table caption="Projects" hideCaption>
               <TableHead><TableRow>
                 <TableSelectCell header label="Select all projects on this page" checked={all}
@@ -188,7 +202,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             }} />
           )}
         </TableToolbar>
-        {pages > 1 ? (
+        {!loading && pages > 1 ? (
           <Pagination count={pages} page={page} onPageChange={(n) => change({ page: n }, true)} total={found.length} pageSize={pageSize}
             aria-label="Projects pages" />
         ) : null}
