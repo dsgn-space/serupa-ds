@@ -171,22 +171,49 @@ jobs:
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$HEAD_REF"
           GH_TOKEN=$BOT_TOKEN gh pr edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$LABEL"
 
+  # After a push to main, the redraw waits for the merge queue to settle: while a group is building, another push is
+  # coming, and it cancelled the redraw before (314 runner-minutes of cancelled redraws on 12 Nov, 12 of 14 runs). The
+  # push that empties the queue (or the first after two hours without a redraw) redraws everything since the last
+  # redraw that finished, so a skipped push loses nothing.
+  settled:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      go: ${{ steps.queue.outputs.go }}
+    steps:
+      - id: queue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          n=$(gh api "repos/$GITHUB_REPOSITORY/git/matching-refs/heads/gh-readonly-queue/main" --jq length)
+          # A queue that never empties still gets a redraw every two hours.
+          last=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/visual-baselines.yml/runs?event=push&branch=main&status=success&per_page=1" --jq '.workflow_runs[0].created_at // "1970-01-01T00:00:00Z"')
+          age=$(( $(date +%s) - $(date -d "$last" +%s) ))
+          if [ "$n" = 0 ] || [ "$age" -gt 7200 ]; then echo go=1 >> "$GITHUB_OUTPUT"
+          else echo "$n queue groups building, last redraw $((age / 60)) minutes ago: the push that empties the queue redraws."; fi
+
   # On a push to main, render draws again the components the pushes since the last finished run changed, on main
   # as it is now: a pull request redrawn before another one changed a shared look (a theme, a token) and merged
   # after it passes the check, under its tolerance, with pictures of the old look (#1648's Faq, drawn before #1602's
   # violet). Commit then opens a pull request with what changed.
   render:
-    # Not after merging the bot's own pull request: a story that isn't steady would open one after another.
+    needs: [settled]
+    # Not after merging the bot's own pull request: a story that isn't steady would open one after another. After a
+    # push, only once the merge queue has nothing building (settled).
     if: >-
-      github.event_name == 'push' && !contains(github.event.head_commit.message, '/baselines/after-main') ||
-      github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+      !cancelled() && (
+      github.event_name == 'push' && needs.settled.outputs.go == '1' && !contains(github.event.head_commit.message, '/baselines/after-main') ||
+      github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository)
     name: render (${{ matrix.shard }})
     outputs:
       since: ${{ steps.render.outputs.since }}
     # Four shards side by side, as CI's Visual jobs: a whole run took 21 minutes in one job. Shard 1 also draws the
     # Foundations pages, rewrites baseline-utilities.json and removes pictures whose story is gone.
     # After a push to main, one shard at a time: the redraw isn't waited on, and the merge queue needs the x86 runners
-    # more. A newer push cancels a redraw still running (concurrency), so a busy hour redraws once.
+    # more. A newer push cancels a redraw still running (concurrency), and while the queue is busy none starts (settled).
     strategy:
       fail-fast: true
       max-parallel: ${{ github.event_name == 'push' && 1 || 4 }}

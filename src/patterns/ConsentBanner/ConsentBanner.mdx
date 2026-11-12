@@ -26,7 +26,7 @@ Asks once whether optional cookies may be set, with accepting and rejecting one 
 
 <Canvas of={Stories.AlreadyAnswered} />
 
-## What stays the app's job
+## What stays your app's job
 
 - **The cookies themselves.** `onChange` gets each answer: set or clear the analytics cookies, and load the analytics script only after "accept". Keep the answer in a cookie of its own (here `saveKey` uses localStorage, enough for a demo) and pass it back as `initial`, so the banner doesn't ask on every page.
 - **The words.** Name what each optional cookie does, in plain words, and link to the full cookie policy from the settings page.

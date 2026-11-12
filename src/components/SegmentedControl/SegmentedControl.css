@@ -6,6 +6,8 @@
 @layer dk.components {
 .dk-segmented {
   --dk-seg-h: var(--segmented-control-height-md, var(--control-height-md));
+  /* The selection's corners nest in the track's: its radius less the padding and border between them (6 - 2 - 1 = 3px). */
+  --dk-seg-nest: max(var(--spacing-0), calc(var(--segmented-control-radius, var(--radius-control)) - var(--segmented-control-padding, var(--spacing-0\.5)) - var(--border-width-1)));
   --dk-seg-inner: calc(var(--dk-seg-h) - 2 * var(--segmented-control-padding, var(--spacing-0\.5)) - 2 * var(--border-width-1));
   /* Segments share the width by content: each column grows from nothing to its label's width, the space handed out
      evenly, so when they don't all fit the short labels stay whole and the long ones give way (EU1). */
@@ -24,7 +26,7 @@
 .dk-segmented__indicator {
   position: absolute; inset-block: var(--segmented-control-padding, var(--spacing-0\.5)); box-sizing: border-box;
   border: var(--border-width-1) solid var(--segmented-control-indicator-border, var(--field-border));
-  border-radius: var(--segmented-control-indicator-radius, var(--radius-inner)); background: var(--segmented-control-indicator, var(--surface));
+  border-radius: var(--segmented-control-indicator-radius, var(--dk-seg-nest, var(--radius-inner))); background: var(--segmented-control-indicator, var(--surface));
   box-shadow: var(--segmented-control-indicator-depth, var(--depth-part)), var(--segmented-control-indicator-shadow, var(--elevation-part));
 }
 /* The indicator sits on the selected segment by left and width, which don't animate. A new choice slides it there by
@@ -35,7 +37,7 @@
    drop-shadow meanwhile. */
 .dk-segmented__indicator[data-slide] { border-color: transparent; background: transparent; box-shadow: none; filter: drop-shadow(var(--drop-shadow-xs)); }
 .dk-segmented__indicator[data-slide]::before, .dk-segmented__indicator[data-slide]::after {
-  --dk-seg-r1: var(--segmented-control-indicator-radius, var(--radius-inner));
+  --dk-seg-r1: var(--segmented-control-indicator-radius, var(--dk-seg-nest, var(--radius-inner)));
   content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1));
   transition: clip-path var(--segmented-control-duration, var(--motion-change-md)) var(--ease-settle);
 }
@@ -51,7 +53,7 @@
 .dk-segmented__item {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--segmented-control-gap, var(--spacing-1\.5));
   min-width: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0) var(--segmented-control-padding-x, var(--spacing-3));
-  border: var(--spacing-0); border-radius: var(--segmented-control-indicator-radius, var(--radius-inner)); background: transparent;
+  border: var(--spacing-0); border-radius: var(--segmented-control-indicator-radius, var(--dk-seg-nest, var(--radius-inner))); background: transparent;
   color: var(--segmented-control-text, var(--text-muted)); font: inherit; font-weight: var(--segmented-control-weight, var(--font-medium)); white-space: nowrap; cursor: pointer; touch-action: manipulation;
   transition: color var(--motion-hover) var(--ease-move), scale var(--motion-release) var(--ease-spring);
 }
