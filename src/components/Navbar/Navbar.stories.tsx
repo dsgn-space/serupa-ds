@@ -71,3 +71,12 @@ const menus = [
 ];
 export const Menus: Story = { args: { children: menus }, render: (args) => <div style={{ minHeight: 320 }}><Navbar {...args} /></div> };
 export const MenusSmallScreen: Story = { name: 'Menus, small screen', args: { children: menus }, render: (args) => <div style={{ maxWidth: 375, minHeight: 280 }}><Navbar {...args} /></div> };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: links to the main pages only, a word or two each. */
+export const DoFewLinks: Story = { name: 'Do: keep to the main pages' };
+/** Don't: every page in the bar, which folds most of them away and buries the main ones. */
+export const DontEveryPage: Story = {
+  name: "Don't: put every page in the bar",
+  args: { children: ['Dashboard', 'Projects', 'Team', 'Reports', 'Billing', 'Integrations', 'Audit log', 'Settings', 'Help center'].map((l, i) => <NavbarLink key={l} href={`#${l.toLowerCase().replace(/ /g, '-')}`} active={i === 0}>{l}</NavbarLink>) },
+};

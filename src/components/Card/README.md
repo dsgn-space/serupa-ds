@@ -69,6 +69,11 @@ Drawn from the `FooterLayouts` story.
 
 The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `prefers-reduced-motion`.
 
+### Do and don't
+
+- **Do:** Give a linked card a `CardHeader` with a `title`, so the title names the link ("Atlas"). (`DoTitleNamesLink`)
+- **Don't:** Leave a linked card without a title: screen readers read all of its text as the link's name. (`DontUntitledLink`)
+
 ## Accessibility
 
 - A card is a plain container: give it `as="section"` with a title when it's a landmark-worthy region, or `as="article"` for a self-contained item.

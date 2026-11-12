@@ -26,6 +26,26 @@ const shown = (on: HTMLElement) => {
   return { x, y, w, h };
 };
 
+/* Safari starts no transition from @starting-style on a pseudo-element, and the line is the tab's ::after, the pill's
+   fill its ::before, so there they jumped into place. Called once the selection has changed: where the slide that's due
+   (a start set, a transition time above 0) didn't start, it runs the same slide with Web Animations, from the same
+   start, for the same time and easing. Where the browser started it, as Chromium and Firefox do, it does nothing. */
+const slideIfStill = (sel: HTMLElement) => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // there at once, as the CSS has it
+  const running = (pseudo: string) => document.getAnimations().some((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === sel && e.pseudoElement === pseudo; });
+  const time = (cs: CSSStyleDeclaration) => ({ duration: (parseFloat(cs.transitionDuration) || 0) * (/ms$/.test(cs.transitionDuration.split(',')[0]) ? 1 : 1000), easing: cs.transitionTimingFunction.split(/,(?![^(]*\))/)[0].trim() || 'ease' });
+  const shift = sel.style.getPropertyValue('--dk-tabs-from-shift');
+  const line = getComputedStyle(sel, '::after'), fill = getComputedStyle(sel, '::before');
+  if (shift && line.content !== 'none' && time(line).duration > 0 && !running('::after')) {
+    sel.animate({ translate: [shift, 'none'], scale: [sel.style.getPropertyValue('--dk-tabs-from-scale') || 'none', 'none'] }, { ...time(line), pseudoElement: '::after' });
+  }
+  const from = ['t', 'r', 'b', 'l'].map((k) => sel.style.getPropertyValue('--dk-tabs-from-' + k));
+  if (from.every(Boolean) && fill.content !== 'none' && /^inset\(/.test(fill.clipPath) && time(fill).duration > 0 && !running('::before')) {
+    const round = fill.clipPath.includes(' round ') ? ' round ' + fill.clipPath.split(' round ')[1].replace(/\)$/, '') : '';
+    sel.animate({ clipPath: [`inset(${from.join(' ')}${round})`, fill.clipPath] }, { ...time(fill), pseudoElement: '::before' });
+  }
+};
+
 /** Runs the row. tab and on are selectors for the tabs and the selected one; value is what's selected, so the row
  *  scrolls it into view when it changes. Returns the ref for the list, which of its edges fade, and place: called
  *  with true just before the selection changes, a slide still running turns back from where it has got to (EH1). */
@@ -100,7 +120,12 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
     measure();
   }, [value, on, vertical, measure]);
   const mounting = React.useRef(true);
-  useIsoLayoutEffect(() => { reveal(mounting.current); mounting.current = false; }, [reveal]);
+  useIsoLayoutEffect(() => {
+    // A changed selection's slide, where the browser didn't start it (slideIfStill), before reveal re-measures the tabs.
+    const sel = !mounting.current && list.current && value != null ? list.current.querySelector<HTMLElement>(on) : null;
+    if (sel && typeof sel.animate === 'function') slideIfStill(sel);
+    reveal(mounting.current); mounting.current = false;
+  }, [reveal]);
   // Again once the web fonts have loaded: tabs drawn first in a fallback font change width when the real one
   // arrives, which can leave the selected tab part way past the end.
   React.useEffect(() => {

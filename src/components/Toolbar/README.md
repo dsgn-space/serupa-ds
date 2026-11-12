@@ -44,6 +44,11 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
 - Inside a text field, the arrows, Home and End stay the field's. Tab leaves the field.
 - A composite with its own arrow keys, such as a SegmentedControl, keeps them. Prefer ToggleButtons in a ButtonGroup, which the toolbar moves through one by one.
 
+### Do and don't
+
+- **Do:** Group related controls, with a [Divider](../Divider/README.md) between the groups. (`DoGroupControls`)
+- **Don't:** Put a form's Cancel and Save in a toolbar: Tab should reach each one, so use a [ButtonGroup](../ButtonGroup/README.md). (`DontFormButtons`)
+
 ## Accessibility
 
 - **Role and name:** a `role="toolbar"` with `aria-orientation`. Name it with `aria-label` or `aria-labelledby`, which you need when a page has more than one toolbar.

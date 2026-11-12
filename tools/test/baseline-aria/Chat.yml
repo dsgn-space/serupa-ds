@@ -1,3 +1,52 @@
+# AgentReply
+- log "Conversation with Support":
+  - text: You Why was order 1042 refunded twice? Assistant
+  - group: Thought for 12 seconds
+  - list:
+    - listitem: Read the payment log for order 1042 , Done 2 refunds, 3 minutes apart
+    - listitem: Searched support tickets , Done
+    - listitem: Checked the bank's status page , Failed It didn't answer
+  - text: The refund button was pressed twice while the first refund was still processing. The second one went through because the payment provider didn't block duplicates. I can open a ticket to reverse it.
+  - group "Response 2 of 3":
+    - button "Previous response"
+    - button "Next response"
+  - text: You Yes, please. Assistant
+  - list:
+    - listitem: Opening a ticket , In progress
+  - progressbar "Thinking…"
+- textbox "Message":
+  - /placeholder: Ask the assistant
+- combobox "Model":
+  - option "Fast"
+  - option "Balanced" [selected]
+  - option "Deep"
+- meter "Context used"
+- button "Send" [disabled]
+
+# Approval
+- log "Conversation with Support":
+  - text: You Please reverse the second refund. Assistant This needs your OK first.
+  - group "Reverse refund 2 on order 1042 ($24.00)":
+    - text: Reverse refund 2 on order 1042 ($24.00) Charges the customer's card again; they get an email.
+    - button "Approve"
+    - button "Deny"
+- textbox "Message":
+  - /placeholder: Ask the assistant
+- button "Send" [disabled]
+
+# Citations
+- log "Conversation with Support":
+  - text: You How long do refunds take? Assistant Card refunds take 5 to 10 business days to show up
+  - link "1 docs.example.com":
+    - /url: https://docs.example.com/refunds
+  - text: ", and bank transfers up to 3 days"
+  - link "2 example.com":
+    - /url: https://www.example.com/help/transfers
+  - text: .
+- textbox "Message":
+  - /placeholder: Ask the assistant
+- button "Send" [disabled]
+
 # ComposerWithFiles
 - text: Site photo.jpg Image 3.4 MB
 - progressbar "Site photo.jpg"
@@ -11,6 +60,22 @@
 - textbox "Message" [disabled]:
   - /placeholder: This conversation is closed
 - button "Send" [disabled]
+
+# DoDateDividers
+- log "Conversation with Support":
+  - text: 23 Oct 2026 You
+  - time: Oct 23, 2026
+  - text: Is the March invoice ready? 24 Oct 2026 Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Yes, it's on its way to your inbox.
+
+# DontNoDividers
+- log "Conversation with Support":
+  - text: You
+  - time: Oct 23, 2026
+  - text: Is the March invoice ready? Rina Kusuma
+  - time: Oct 24, 2026
+  - text: Yes, it's on its way to your inbox.
 
 # Empty
 - log "Conversation with Support"
@@ -84,6 +149,12 @@
   - button "Try again"
 - textbox "Message": Draft reply
 - button "Send"
+
+# Steps
+- list:
+  - listitem: Searched the help centre , Done 3 articles
+  - listitem: Called the orders API , Failed Timed out after 10 seconds
+  - listitem: Trying the orders API again , In progress
 
 # Streaming
 - log "Conversation with Support": You Summarise this contract in three points. Assistant 1. The term is 12 months, renewing

@@ -187,6 +187,11 @@ Once it shows, a loader stays at least 500ms. Without that, work ending at 320ms
 <Loader loading={isFetching} />
 ```
 
+### Do and don't
+
+- **Do:** Show one ring for the area that's loading, with a specific label. (`DoOnePerArea`)
+- **Don't:** Put a ring on every row: the page spins in many places at once. (`DontOnePerRow`)
+
 ## Accessibility
 
 - A loader with a label is a `role="progressbar"` without a value, which is how ARIA says "busy, progress unknown". Its name is `label` ("Loading…").

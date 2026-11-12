@@ -60,6 +60,11 @@ Drawn from the `Open` story.
 - `useToastHistory` records a toast when it's shown, unread. A toast replaced by its id (`toast.promise`'s "Saving…" then "Saved") stays one entry with the newer words. A repeat ("×3" in the Toaster) moves it back to the top, unread again.
 - With no notifications, it says "No notifications yet" (`empty`).
 
+### Do and don't
+
+- **Do:** Write titles that say what happened ("Payment failed", "Invoice sent"). (`DoSayWhatHappened`)
+- **Don't:** Write titles like "Update": people have to open each one to learn what it's about. (`DontVagueTitles`)
+
 ## Accessibility
 
 - **Keyboard:**

@@ -61,3 +61,15 @@ export const LongLabels: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: the same variant on every button in an attached group. */
+export const DoSameVariant: Story = {
+  name: 'Do: give every button one variant',
+  args: { 'aria-label': 'Align', children: [<Button key="l" variant="outline">Left</Button>, <Button key="c" variant="outline">Center</Button>, <Button key="r" variant="outline">Right</Button>] },
+};
+/** Don't: mixed variants, which break the group into pieces that look unrelated. */
+export const DontMixVariants: Story = {
+  name: "Don't: mix variants",
+  args: { 'aria-label': 'Align', children: [<Button key="l">Left</Button>, <Button key="c" variant="outline">Center</Button>, <Button key="r" variant="ghost">Right</Button>] },
+};

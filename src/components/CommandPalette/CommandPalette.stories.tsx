@@ -46,3 +46,23 @@ export const LongText: Story = {
     ],
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: labels that start with the word people type ("New project"). */
+export const DoActionFirst: Story = {
+  name: 'Do: start with the word people type',
+  args: { defaultOpen: true, commands: [
+    { id: 'new', label: 'New project', group: 'Actions', icon: 'add' },
+    { id: 'invite', label: 'Invite people', group: 'Actions', icon: 'person_add' },
+    { id: 'export', label: 'Export as PDF', group: 'Actions', icon: 'download' },
+  ] },
+};
+/** Don't: wordy labels, which take longer to type toward and to scan. */
+export const DontWordyLabels: Story = {
+  name: "Don't: write wordy labels",
+  args: { defaultOpen: true, commands: [
+    { id: 'new', label: 'Click here to create a brand new project', group: 'Actions', icon: 'add' },
+    { id: 'invite', label: 'Use this to invite more people to the workspace', group: 'Actions', icon: 'person_add' },
+    { id: 'export', label: 'This exports the current page as a PDF file', group: 'Actions', icon: 'download' },
+  ] },
+};

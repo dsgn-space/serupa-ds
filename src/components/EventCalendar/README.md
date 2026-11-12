@@ -47,6 +47,11 @@ Drawn from the `Month` story.
 - `maxPerDay` (default 3) is the most a day shows. Past it, the last place shows "+N more", which opens all of the day's events in a Popover.
 - Week and day views, a time grid, and creating or moving events by drag come in later steps.
 
+### Do and don't
+
+- **Do:** Say what a `tone` means in the title too ("Due: tax filing"). (`DoSayWhatToneMeans`)
+- **Don't:** Rely on color alone: it doesn't reach everyone, and red can mean many things. (`DontToneAlone`)
+
 ## Accessibility
 
 - **Role and name:** the month is a `role="grid"` named by its title ("March 2025"). Each day is a cell that starts with its full date and how many events it has ("Tuesday, March 4, 2025, 1 event"), as hidden text so the name never hides the events. Today has `aria-current="date"`. Each event is a button named by what it shows (its time and title), then its day, its whole time and "Repeats" ("2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM").

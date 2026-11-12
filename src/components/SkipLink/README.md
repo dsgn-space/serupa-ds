@@ -27,6 +27,11 @@ import { SkipLink } from "serupa-ds";
 - Its text is "Skip to content" (`labels.skipToContent`, "Langsung ke konten" in Indonesian). Pass children for other words, such as "Skip to results" with `target="results"`.
 - It's a real link to `#main`, so it works before the script loads, and the address shows `#main` after it's followed.
 
+### Do and don't
+
+- **Do:** Say where it goes: "Skip to content", or "Skip to results" with `target="results"`. (`DoSayWhere`)
+- **Don't:** Write "Click here": it says nothing about where it goes. (`DontClickHere`)
+
 ## Accessibility
 
 - **Role and name:** a link, named by its text.

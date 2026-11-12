@@ -40,6 +40,11 @@ formatNumber(1234, "id-ID", { format: "compact" })                  // "1,2 rb",
 - In a table column, numbers line up on tabular digits; align the column to the end too.
 - `animate` makes a changed value show what moved: only the characters that differ from the last value fade in out of a slight blur ("Rp 1.485.000" to "Rp 1.500.000" fades "500"). Use it for a number that changes now and then while someone watches it: a cart total, a dashboard figure after a filter, a count after an action. Leave it off for a value that ticks every second (a timer, a live price), where the fade would never settle, and in long tables.
 
+### Do and don't
+
+- **Do:** Pass `percent` a fraction, as `Intl.NumberFormat` takes it: `0.45` is 45%. (`DoFraction`)
+- **Don't:** Pass a value that's already a percentage: 45 comes out as 4,500%. Divide by 100 first. (`DontWholePercent`)
+
 ## Accessibility
 
 - It's a `<data>` whose `value` holds the number for machines; screen readers read its words.

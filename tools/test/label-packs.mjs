@@ -42,9 +42,10 @@ const SAMPLES = {
   stepOf: [[2, 4, '2', '4']], tableSorted: [['Amount', 'ascending'], ['Amount', 'descending']], tableSelected: [[1, '1'], [3, '3']], tableResizeColumn: [['Name']], tableRowDetails: [['Order 1001']],
   commandsCount: [[0, '0'], [1, '1'], [5, '5']],
   chartKind: [['line'], ['bar'], ['area'], ['donut']], chartShare: [['120', '25%']], chartTotal: [['480']], chartSummary: [['Line chart', 1, 1, 'Jan', 'Jan'], ['Line chart', 2, 12, 'Jan', 'Dec']], chartRange: [['Visitors', '80', 'Feb', '300', 'Nov']], chartPoint: [['Visitors', 'Jan', '120'], [null, 'Jan', '120']],
-  chatNewMessages: [[1], [3]], notificationsUnread: [[1], [2]], eventCount: [[0], [1], [3]], moreEvents: [[1], [2]], eventTime: [['9:30 AM', '10:00 AM']],
+  chatNewMessages: [[1], [3]], chatThoughtFor: [[1], [12]], chatResponseOf: [[2, 3]], notificationsUnread: [[1], [2]], eventCount: [[0], [1], [3]], moreEvents: [[1], [2]], eventTime: [['9:30 AM', '10:00 AM']],
   kanbanMoveTo: [['Fix login']], kanbanCount: [['6', '5']], kanbanGrabbed: [['Fix login', 'To do', 1, 3]], kanbanMoved: [['Fix login', 'Done', 2, 5]], kanbanDropped: [['Fix login', 'Done', 2, 5]], kanbanCancelled: [['Fix login', 'To do', 1, 3]],
   cascadePath: [[['Jawa Barat', 'Kota Bandung']]], cascadeLevel: [[1], [3]], cascadeHasMore: [[false], [true]],
+  periodPlaceholder: [['month'], ['quarter'], ['year']], periodPrevious: [['month'], ['year']], periodNext: [['month'], ['year']], periodQuarter: [[4], [4, '2026']],
   filterIs: [['Status', 'Open or Closed']], filterFrom: [['Due', 'Nov 2, 2026']], filterUntil: [['Due', 'Nov 8, 2026']], filterContains: [['Title', 'bug']], filterAny: [['Status']], filterRemove: [['Status']], filterResults: [[1, '1'], [24, '24']],
   toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
 };
@@ -55,7 +56,7 @@ const SAME_OK = new Set(['menu', 'agendaView', 'formatHint', 'hexCode', 'keyName
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {
-  de: ['tableDetails', 'fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
+  de: ['periodQuarter', 'tableDetails', 'fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
   es: ['generalShortcuts', 'attachmentAudio', 'chartTotal'],
   ms: ['edit', 'attachmentAudio', 'attachmentVideo'],
   nl: ['tableDetails', 'sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo', 'filterBar'],

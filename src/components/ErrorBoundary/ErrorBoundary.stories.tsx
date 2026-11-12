@@ -50,3 +50,12 @@ export const LongText: Story = {
   args: { title: "We couldn't load the quarterly revenue chart for every region", description: 'The rest of the page still works. Donaudampfschifffahrtsgesellschaftskapitänskajüte reported the problem, so try again in a moment.' },
   render: (args) => <div style={{ width: 240 }}><ErrorBoundary {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: say what failed and what still works. */
+export const DoSayWhatFailed: Story = { name: 'Do: say what failed', args: { title: "Couldn't load the chart", description: 'The rest of the page still works.' } };
+/** Don't: the error's message, which is written for developers. */
+export const DontShowErrorMessage: Story = {
+  name: "Don't: show the error message",
+  args: { fallback: ({ error }) => <p style={{ margin: 0 }}>{error instanceof Error ? error.message : String(error)}</p> },
+};

@@ -65,6 +65,11 @@ Drawn from the `Settings` story.
     </List>}
 ```
 
+### Do and don't
+
+- **Do:** Keep the title short, and put the detail in `description` and the status in `trailing`. (`DoTitleAndDetail`)
+- **Don't:** Write everything into the title: it wraps, and people can't scan down the names. (`DontCrammedTitle`)
+
 ## Accessibility
 
 - It's a real list, so screen readers say how many rows there are, Safari's VoiceOver included (`role="list"` keeps the role it would drop from a list without bullets). Name it with `aria-label` when there's no heading over it.

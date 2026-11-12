@@ -8,6 +8,15 @@
 - combobox "Time zone": Jakarta
 - button "Show options"
 
+# DoSayWhose
+- text: Meeting time zone
+- combobox "Meeting time zone"
+- button "Show options"
+
+# DontBarePicker
+- combobox "Time zone"
+- button "Show options"
+
 # LongText
 - combobox "Time zone": New Salem
 - button "Show options"

@@ -53,6 +53,11 @@ Drawn from the `Multiple` story.
 - When the focused item leaves the page from outside (you take it out of `items`, or close its parent through `expanded`), focus goes to its nearest parent in view, else the item now in its place, not to the page.
 - Your `onKeyDown` runs before the tree's own keys, so `e.preventDefault()` in it keeps the tree from acting on that key.
 
+### Do and don't
+
+- **Do:** Open the folders down to the selected item with `defaultExpanded`, so people see where they are. (`DoOpenToSelection`)
+- **Don't:** Start with everything closed when something is selected: the selection is hidden. (`DontHideSelection`)
+
 ## Accessibility
 
 - **Role and name:** a `role="tree"` of `role="treeitem"`s with `aria-level`, `aria-posinset`, `aria-setsize` and `aria-expanded`. The children of an open item are in a `role="group"`. Picked items have `aria-selected`. With `selectionMode="multiple"`, the tree has `aria-multiselectable`. Name it with `aria-label` or `aria-labelledby`.

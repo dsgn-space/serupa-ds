@@ -29,6 +29,11 @@ const { Container } = window.Serupa;
 - Set `padded={false}` when something around it already gives the side padding.
 - Container's tokens (`--container-padding-x`, `--container-padding-x-sm`, `--container-padding-x-lg`) set only its side padding. They're separate from the shared `--container-*` width tokens (`--container-3xs` to `--container-7xl`, behind the `max-w-*` classes), even though `prose` uses one of them (`container-2xl`) for its width.
 
+### Do and don't
+
+- **Do:** Give the header, main content and footer Containers the same `size`, so their edges line up. (`DoSameSize`)
+- **Don't:** Mix sizes on one page: the edges step in and out as people scroll. (`DontMixedSizes`)
+
 ## Accessibility
 
 - Use `as="main"` for the page's main content (once per page), so people can jump to it.

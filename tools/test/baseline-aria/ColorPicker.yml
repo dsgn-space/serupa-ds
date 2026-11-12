@@ -27,6 +27,33 @@
 - textbox "Custom color" [disabled]: "#1d4ed8"
 - textbox "Hex code" [disabled]: 1d4ed8
 
+# DoShowContrast
+- radiogroup "Label color":
+  - radio "Blue" [checked]
+  - radio "Violet"
+  - radio "Emerald"
+  - radio "Red"
+  - radio "Amber"
+  - radio "Yellow"
+  - radio "Black"
+  - radio "White"
+- textbox "Custom color": "#1d4ed8"
+- textbox "Hex code": 1d4ed8
+- text: Contrast 6.7:1
+
+# DontPickBlind
+- radiogroup "Label color":
+  - radio "Blue" [checked]
+  - radio "Violet"
+  - radio "Emerald"
+  - radio "Red"
+  - radio "Amber"
+  - radio "Yellow"
+  - radio "Black"
+  - radio "White"
+- textbox "Custom color": "#1d4ed8"
+- textbox "Hex code": 1d4ed8
+
 # Invalid
 - text: Label color
 - radiogroup "Label color" [invalid]:

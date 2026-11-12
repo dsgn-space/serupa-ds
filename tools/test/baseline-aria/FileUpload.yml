@@ -3,6 +3,15 @@
 - button "Choose files" [disabled]
 - paragraph: Images or PDF, up to 5 MB each
 
+# DoSayLimits
+- paragraph: Drag a file here
+- button "Choose a file"
+- paragraph: PNG or JPG, up to 5 MB
+
+# DontHideLimits
+- paragraph: Drag a file here
+- button "Choose a file"
+
 # Invalid
 - paragraph: Drag files here
 - button "Choose files"

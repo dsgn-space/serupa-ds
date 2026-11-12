@@ -61,6 +61,11 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 - Collapsed, the header and footer have the 64px rail too: pass a logo mark or an avatar then, such as a [Logo](../Logo/README.md) with `variant={collapsed ? "mark" : "full"}`. Longer text there ends in an ellipsis rather than spilling over the page.
 - Collapsing and expanding slide over 200ms without laying out the page on every frame. The column's width changes once: at the start when expanding, and at the end when collapsing. In between, only the sidebar's visible edge moves, so a heavy page beside it doesn't stutter. Toggling again mid-way turns back from where it is. With reduced motion it switches at once.
 
+### Do and don't
+
+- **Do:** Group related pages under `SidebarSection`s with short titles. (`DoGroupSections`)
+- **Don't:** Put every page in one long run: people have to read it top to bottom to find anything. (`DontFlatList`)
+
 ## Accessibility
 
 - It's a `<nav>` landmark with lists of links; section titles name their lists.

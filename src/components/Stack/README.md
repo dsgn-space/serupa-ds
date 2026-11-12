@@ -36,6 +36,11 @@ const { Stack, Button } = window.Serupa;
 - Pick the element with `as`: `ul` or `ol` for a list, `form` or `fieldset` for a form's fields.
 - Nest Stacks for more complex layouts, such as a row of buttons at the end of a column of fields.
 
+### Do and don't
+
+- **Do:** Use a larger gap between groups and a smaller one inside them, such as `gap={6}` between groups and `gap={2}` within. (`DoNestedGaps`)
+- **Don't:** Use one gap for everything: nothing shows which items belong together. (`DontOneGap`)
+
 ## Accessibility
 
 - Stack only lays things out: the reading and tab order stay the order of the children, so keep it the same as what people see.

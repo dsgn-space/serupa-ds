@@ -56,3 +56,9 @@ export const LongValue: Story = {
     </p>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a fraction for \`percent\`: 0.45 is 45%. */
+export const DoFraction: Story = { name: 'Do: pass a fraction for percent', args: { value: 0.45, format: 'percent' } };
+/** Don't: a value that's already a percentage, which comes out a hundred times too big. */
+export const DontWholePercent: Story = { name: "Don't: pass 45 for 45%", args: { value: 45, format: 'percent' } };

@@ -11,6 +11,17 @@
         - /url: "#beacon"
     - paragraph: Updated yesterday
 
+# DoTitleNamesLink
+- heading "Atlas" [level=3]:
+  - link "Atlas":
+    - /url: "#atlas"
+- paragraph: Updated 2 hours ago
+
+# DontUntitledLink
+- link "Atlas. Updated 2 hours ago by the design team, 14 open tasks, due Friday.":
+  - /url: "#atlas"
+- text: Atlas. Updated 2 hours ago by the design team, 14 open tasks, due Friday.
+
 # FooterLayouts
 - heading "Delete project?" [level=3]
 - paragraph: This removes every file in Atlas.

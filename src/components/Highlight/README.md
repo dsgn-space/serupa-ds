@@ -37,6 +37,11 @@ Drawn from the `InOptions` story.
 - A query can also be a list of terms. Overlapping or touching matches become one mark.
 - `highlightRanges(text, query, words)` returns the same matches as `[start, end)` offsets, for drawing them yourself.
 
+### Do and don't
+
+- **Do:** Mark what a search matched, with the same query the list was filtered by. (`DoMarkMatches`)
+- **Don't:** Use it for emphasis in running text, where nothing was searched: use `<strong>` in [Text](../Text/README.md). (`DontEmphasis`)
+
 ## Accessibility
 
 - Matches are `<mark>` elements, which assistive tech exposes as highlighted text; the words themselves are unchanged, so the text reads as written.

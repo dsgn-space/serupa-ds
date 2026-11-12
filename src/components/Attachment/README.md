@@ -62,6 +62,11 @@ Drawn from the `Upload` story.
 - The remove button calls `onRemove`; removing the file is yours. Move focus somewhere sensible afterwards, such as the next file's remove button, since the button goes away with the file.
 - `disabled` turns off the link and both buttons; the name and size stay readable.
 
+### Do and don't
+
+- **Do:** Say what went wrong in `error`, and pass `onRetry` only when trying again can work. (`DoNoFutileRetry`)
+- **Don't:** Offer a retry for a file that will be refused again, such as one over the size limit. (`DontFutileRetry`)
+
 ## Accessibility
 
 - **Role and name:** a plain container, with no role of its own; put it in a list item when there are several. The name is read once, whole, even when it's cut on screen. A linked name is a link named by the file and described by its kind and size ("Q3.xlsx, link, Spreadsheet 88 kB").

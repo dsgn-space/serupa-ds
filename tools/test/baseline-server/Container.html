@@ -1,3 +1,29 @@
+<!-- DoSameSize -->
+<div style="display:grid;gap:8px">
+<div data-component="container" data-size="md" class="dk-container dk-container--md dk-container--padded">
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Header</div>
+</div>
+<div data-component="container" data-size="md" class="dk-container dk-container--md dk-container--padded">
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Main content</div>
+</div>
+<div data-component="container" data-size="md" class="dk-container dk-container--md dk-container--padded">
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Footer</div>
+</div>
+</div>
+
+<!-- DontMixedSizes -->
+<div style="display:grid;gap:8px">
+<div data-component="container" data-size="xl" class="dk-container dk-container--xl dk-container--padded">
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Header</div>
+</div>
+<div data-component="container" data-size="md" class="dk-container dk-container--md dk-container--padded">
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Main content</div>
+</div>
+<div data-component="container" data-size="lg" class="dk-container dk-container--lg dk-container--padded">
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Footer</div>
+</div>
+</div>
+
 <!-- FullWidth -->
 <div data-component="container" data-size="full" class="dk-container dk-container--full dk-container--padded">
 <div class="rounded-md bg-surface-muted p-4 text-sm text-text">size=&quot;full&quot; spans the page, keeping only the side padding.</div>
