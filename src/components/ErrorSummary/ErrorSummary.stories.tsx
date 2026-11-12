@@ -59,3 +59,12 @@ export const LongText: Story = {
     errors: Array.from({ length: 8 }, (_, k) => ({ field: 'long-' + k, message: k % 2 ? 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherungsnummer is missing' : 'Enter a description long enough to wrap onto a second line in a narrow column, so the list shows how it wraps' })),
   },
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: each error says what's wrong and how to fix it. */
+export const DoSayHowToFix: Story = { name: 'Do: say how to fix it' };
+/** Don't: "Invalid", which says something is wrong but not what to do. */
+export const DontJustInvalid: Story = {
+  name: "Don't: just say invalid",
+  args: { errors: [{ field: 'es-name', message: 'Invalid' }, { field: 'es-email', message: 'Invalid' }, { field: 'es-date', message: 'Error' }] },
+};
