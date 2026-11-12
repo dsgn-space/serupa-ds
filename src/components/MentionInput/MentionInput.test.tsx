@@ -21,7 +21,7 @@ const names = () => [...document.querySelectorAll('[role="option"]')].map(label)
 const activeOption = () => document.getElementById(box().getAttribute('aria-activedescendant') || '');
 const active = () => label(activeOption());
 const isOpen = () => !!list() && !list().closest('[hidden]');
-const said = (text: string) => expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain(text);
+const said = (text: RegExp) => expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toMatch(text);
 
 function Box(p: Partial<React.ComponentProps<typeof MentionInput>>) {
   const [v, setV] = React.useState(p.defaultValue || '');
@@ -137,9 +137,9 @@ describe('MentionInput', () => {
     await render(<Box onSearch={onSearch} />);
     await userEvent.click(box());
     await userEvent.keyboard('@bud');
-    await said('1 result');
+    await said(/[1١] result/);   // in the browser's digits
     await userEvent.keyboard('zz');
-    await said('No results');
+    await said(/No results/);
     expect(list().closest('[popover]')!.textContent).toContain('No results. Try other words.');
     expect(onSearch.mock.calls.map((c) => c[0])).toEqual(['', 'b', 'bu', 'bud', 'budz', 'budzz']);
     await userEvent.keyboard('{Escape}');
