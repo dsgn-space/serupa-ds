@@ -340,6 +340,36 @@
             "cssVar": "--button-destructive-focus-ring"
           }
         }
+      },
+      "disabled-bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-disabled-bg"
+          }
+        }
+      },
+      "disabled-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A disabled button's label and icon, in every variant (at least 3:1 on disabled-bg, more with more contrast).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-disabled-text"
+          }
+        }
+      },
+      "disabled-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A disabled outline or secondary button's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-disabled-border"
+          }
+        }
       }
     },
     "spacing": {
