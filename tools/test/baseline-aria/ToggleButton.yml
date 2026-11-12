@@ -1,6 +1,17 @@
 # Controlled
 - button "Mute"
 
+# DoGroup
+- group "Text formatting":
+  - button "Bold" [pressed]
+  - button "Italic"
+  - button "Underline"
+
+# DontScatter
+- button "Bold" [pressed]
+- button "Italic"
+- button "Underline"
+
 # Ghost
 - button "Bold" [pressed]
 - button "Italic"

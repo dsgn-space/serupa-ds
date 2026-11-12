@@ -1,3 +1,9 @@
+# DoShort
+- heading "Billing" [level=2]
+
+# DontSentence
+- heading "Here you can see and change everything about how and when you are billed" [level=2]
+
 # LevelAndSize
 - heading "An h1 that looks lg" [level=1]
 - heading "An h3 that looks 4xl" [level=3]
