@@ -17,7 +17,7 @@ const reader = process.platform === 'darwin' ? 'voiceover' : process.platform ==
 if (!reader) fail('Screen readers run on macOS (VoiceOver) or Windows (NVDA): this check runs in the nightly screen-reader workflow.');
 if (!fs.existsSync(path.join(PROJECT, 'dist', 'serupa.iife.js'))) fail('Build first: npm run build');
 
-const { voiceOver, nvda } = await import('@guidepup/guidepup');
+const { voiceOver, nvda, macOSActivate } = await import('@guidepup/guidepup');
 const { webkit, chromium } = await import('playwright');
 const sr = reader === 'voiceover' ? voiceOver : nvda;
 const engine = reader === 'voiceover' ? webkit : chromium;
@@ -53,6 +53,14 @@ var h = React.createElement, S = Serupa;
 ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`, { react: true });
     await page.goto(url);
     await page.bringToFront();
+    // VoiceOver's keys go to the frontmost app, and Playwright's WebKit starts in the background ("Playwright is
+    // launched in the background"): every key went to the desktop, and every case failed. Bring the app forward
+    // (Guidepup names it "Playwright"), then put VoiceOver's cursor in the page.
+    if (reader === 'voiceover') {
+      await macOSActivate('Playwright');
+      await page.locator('body').focus();
+      await voiceOver.interact();
+    }
     await page.waitForTimeout(500);
     await page.focus('#start');
     const misses = [];
