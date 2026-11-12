@@ -92,6 +92,17 @@
     - text: Out for delivery
     - time: 15 Mar, 08:02
 
+# LoadingAndErrors
+- radiogroup "State":
+  - radio "Loading" [checked]
+  - radio "Loaded"
+  - radio "Failed"
+- list "Order history":
+  - listitem
+  - listitem
+  - listitem
+  - listitem
+
 # LongText
 - list "Order history":
   - listitem:
