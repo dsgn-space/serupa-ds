@@ -4,7 +4,7 @@
 // (the compiler fails when it stops catching it). Nothing here runs.
 import * as React from 'react';
 import {
-  Button, Checkbox, Combobox, DatePicker, DateRangePicker, Dialog, IconButton, Image, Input, Link, NumberInput, RadioGroup, Radio,
+  Button, Checkbox, Combobox, DataGrid, DatePicker, DateRangePicker, Dialog, IconButton, Image, Input, Link, NumberInput, RadioGroup, Radio,
   SegmentedControl, Select, SerupaProvider, Slider, SortableList, Stack, Tabs, toast, announce, configure, enLabels, idLabels, plural, useCollator, useLocale, useSerupa, version,
   type ButtonProps, type CarouselPerView, type ComboboxMultipleProps, type ComboboxSingleProps, type DateRange, type SliderMark, type TreeViewItem, type IconName, type SerupaLabels, type SliderValue, type ToastOptions,
 } from 'serupa-ds';
@@ -158,6 +158,16 @@ export const order = (): number => useCollator({ locale: 'de-DE', sensitivity: '
 // The functions.
 is<Equal<ReturnType<typeof toast>, string>>();
 is<Equal<Parameters<typeof toast.dismiss>, [id?: string]>>();
+// DataGrid is typed by its rows: a column's key is one of the row's fields, format and onRowsChange get the rows' type.
+interface Person { id: string; name: string; born: number }
+const people: Person[] = [{ id: 'a', name: 'Ana', born: 1990 }];
+<DataGrid aria-label="People" rows={people} columns={[{ key: 'name', header: 'Name' }, { key: 'born', header: 'Born', format: (p) => p.born.toFixed(0) }]}
+  onRowsChange={(rows) => { const saved: Person[] = rows; return saved.map((p) => p.name); }} />;
+// @ts-expect-error: a key the rows don't have
+<DataGrid aria-label="People" rows={people} columns={[{ key: 'emial', header: 'Email' }]} />;
+// Untyped rows still work as before.
+<DataGrid aria-label="Any" rows={[{ id: 'a', x: 1 }] as Record<string, unknown>[]} columns={[{ key: 'x', header: 'X' }]} />;
+
 const options: ToastOptions = { title: 'Saved', tone: 'success', action: { label: 'Undo', onClick: () => {} } };
 toast(options);
 toast('Saved');

@@ -2,6 +2,8 @@
 
 Shows how far along a task is when you can tell: an upload, a setup, a quota. Use a bar in forms, cards and lists, and the ring where space is tight. When you can't tell how far along it is, leave `value` out, or use the lighter Loader.
 
+**Also called:** progress bar.
+
 ```tsx
 import { Progress } from "serupa-ds";
 

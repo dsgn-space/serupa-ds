@@ -215,11 +215,11 @@ export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT
 // skips the component, visual and Storybook steps.
 const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
-  String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(release|codeql|changeset|visual-baselines|cross-browser)\.yml)`, 'licenses/.*',
+  String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(?!ci\.yml$)[\w-]+\.yml)`, 'licenses/.*',
   String.raw`tools/test/(?!(lib|run|visual|storybook)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`,
-  // The skill eval's tasks and graded apps, the local-check and release tooling, the GitLab pipeline, and the notes
-  // no story shows (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
-  'tools/skill-eval/.*', String.raw`tools/(ci|local-checks-gate|setup|tag-release)\.mjs`, String.raw`\.gitlab-ci\.yml`,
+  // The skill eval's tasks and graded apps, the local-check and release tooling, and the notes no story shows
+  // (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
+  'tools/skill-eval/.*', String.raw`tools/(ci|setup|tag-release)\.mjs`,
   String.raw`(AGENTS|CLAUDE|ROADMAP|SECURITY)\.md`, 'skills/.*',
   // The docs' Markdown that no page shows (the dev warnings' sections, the ADRs, the RFCs: Storybook builds only
   // .mdx, and docs/blocks.tsx imports foundations.md alone); the checks that read them run whole on every MR.

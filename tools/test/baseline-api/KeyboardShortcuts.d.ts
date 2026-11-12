@@ -3,6 +3,8 @@ interface KeyboardShortcutsLabels {
     keyboardShortcuts: string;
     generalShortcuts: string;
     showShortcuts: string;
+    singleKeyShortcuts: string;
+    singleKeyHint: string;
 }
 interface Shortcut {
     keys: string[];

@@ -2,6 +2,8 @@
 
 Picks one of a few options shown side by side, such as a view (List, Board) or a period (Day, Week, Month). It's a radio group drawn as segments, with the selection sliding between them.
 
+**Also called:** segmented button, button toggle group.
+
 ```tsx
 import { SegmentedControl } from "serupa-ds";
 

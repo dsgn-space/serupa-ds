@@ -165,7 +165,7 @@ check('components: Button and Icon use only tokens', !bad.size, [...bad].sort().
 
 // 6. self-contained (a link the console warnings print isn't something the page loads: internal/warn.ts)
 // nor is the SVG namespace, which a standalone SVG document names (SignaturePad's value).
-const LINKS = ['https://gitlab.com/diki-stwn-group/serupa-ds/-/blob/main/docs/warnings.md#', 'http://www.w3.org/2000/svg'];
+const LINKS = ['https://github.com/dsgn-space/serupa-ds/blob/main/docs/warnings.md#', 'http://www.w3.org/2000/svg'];
 let extra = '';
 for (const f of ['src/styles/base.css', 'src/theme.js']) if (fs.existsSync(path.join(P, f))) extra += read(f);
 const ext = [...(cssRaw + js + extra).matchAll(/(?:https?:)?\/\/[a-z0-9.-]+\.[a-z]{2,}\/[^\s"')]*/g)].map((m) => m[0]).filter((u) => !u.startsWith('//') && !LINKS.some((l) => u.startsWith(l)));

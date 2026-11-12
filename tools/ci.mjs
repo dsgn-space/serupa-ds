@@ -17,7 +17,7 @@
 //                                      build steps always run. The report says which steps came from the earlier run.
 //   node tools/ci.mjs --clean          start from a clean install (npm ci --ignore-scripts), as CI does
 //   node tools/ci.mjs --report <file>  also write the results as Markdown (commit, Node, each step's pass or fail
-//                                      with its test counts), ready to paste under "Local checks" in a merge request
+//                                      with its test counts), ready to paste under "Local checks" in a pull request
 // npm run check -- <options> is the same. Run it before every push (GitLab CI runs the same jobs as the merge gate):
 //   npm run check -- --clean --since origin/main --report local-checks.md
 // Like CI, it runs the component tests in English and in the one second language the commit's hash picks (LOCALES in
@@ -92,7 +92,7 @@ const unknown = [...skip, ...(from ? [from] : []), ...(only || [])].filter((s) =
 if (unknown.length) { console.error(`Unknown step: ${unknown.join(', ')} (see --list)`); process.exit(2); }
 // changeset is a step only with --since: naming it without one would silently run from the top (R8).
 const asked = [...(from ? [from] : []), ...(only || [])].filter((st) => st === 'changeset');
-if (asked.length && !since) { console.error('The changeset step runs only with --since <base> (as CI runs it against the merge request\'s base).'); process.exit(2); }
+if (asked.length && !since) { console.error('The changeset step runs only with --since <base> (as CI runs it against the pull request\'s base).'); process.exit(2); }
 const start = from ? Math.max(0, all.findIndex((st) => st.name === from)) : 0;
 const steps = all.slice(start).filter((st) => !skip.has(st.name) && (!only || only.has(st.name)));
 // Nothing to run is not a pass: an empty summary would say "All passed" (R8).

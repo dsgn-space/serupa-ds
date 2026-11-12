@@ -2,6 +2,8 @@
 
 Text people can change where it is: a project name, a card title, a slug. It shows the text with a pencil on hover; a click, Enter or Space opens a field in the same place, Enter or leaving the field saves, and Escape puts the text back.
 
+**Also called:** click to edit, editable text.
+
 ```tsx
 import { InlineEdit } from "serupa-ds";
 

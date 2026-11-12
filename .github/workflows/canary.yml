@@ -2,13 +2,16 @@ name: Canary
 
 # Every night, the package against what's coming next: TypeScript's nightly (typescript@next) and React's canary
 # (react@canary). It doesn't block pull requests: a red run is a change coming in React or TypeScript to look at
-# before it ships. It also runs on a pull request that changes this file, and on demand from the Actions tab.
+# before it ships. It also runs on demand from the Actions tab.
 on:
   schedule:
     - cron: '0 4 * * *'
   workflow_dispatch:
-  pull_request:
-    paths: ['.github/workflows/canary.yml']
+
+# A newer run of this workflow on the same branch cancels the one before it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

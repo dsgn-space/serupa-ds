@@ -1606,7 +1606,7 @@
     "chart-1": {
       "$type": "color",
       "$value": "{color.blue-800}",
-      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -1623,15 +1623,15 @@
     "chart-2": {
       "$type": "color",
       "$value": "{color.orange-600}",
-      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{orange-600}",
+            "blue-dark": "{orange-500}",
             "violet-light": "{orange-600}",
-            "violet-dark": "{orange-600}",
+            "violet-dark": "{orange-500}",
             "emerald-light": "{orange-600}",
-            "emerald-dark": "{orange-600}"
+            "emerald-dark": "{orange-500}"
           },
           "utilities": false
         }
@@ -1640,7 +1640,7 @@
     "chart-3": {
       "$type": "color",
       "$value": "{color.pink-800}",
-      "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -1656,16 +1656,16 @@
     },
     "chart-4": {
       "$type": "color",
-      "$value": "{color.lime-600}",
-      "$description": "Alias. Chart series 4 (lime): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$value": "{color.cyan-600}",
+      "$description": "Alias. Chart series 4 (cyan): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{lime-600}",
-            "violet-light": "{lime-600}",
-            "violet-dark": "{lime-600}",
-            "emerald-light": "{lime-600}",
-            "emerald-dark": "{lime-600}"
+            "blue-dark": "{cyan-500}",
+            "violet-light": "{cyan-600}",
+            "violet-dark": "{cyan-500}",
+            "emerald-light": "{cyan-600}",
+            "emerald-dark": "{cyan-500}"
           },
           "utilities": false
         }
@@ -1674,7 +1674,7 @@
     "chart-5": {
       "$type": "color",
       "$value": "{color.yellow-800}",
-      "$description": "Alias. Chart series 5 (brown): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 5 (brown): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -1691,7 +1691,7 @@
     "chart-6": {
       "$type": "color",
       "$value": "{color.teal-600}",
-      "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -1708,7 +1708,7 @@
     "chart-7": {
       "$type": "color",
       "$value": "{color.violet-800}",
-      "$description": "Alias. Chart series 7 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 7 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -1725,7 +1725,7 @@
     "chart-8": {
       "$type": "color",
       "$value": "{color.red-600}",
-      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "themes": {

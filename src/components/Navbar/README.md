@@ -2,6 +2,8 @@
 
 The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). Below 768px wide the links fold into a menu button that opens them in a panel under the bar. A NavbarMenu in the bar opens a panel of grouped links with a line about each (a mega menu).
 
+**Also called:** header, top bar, app bar.
+
 ```jsx
 const { Navbar, NavbarLink, Button, Avatar } = window.Serupa;
 

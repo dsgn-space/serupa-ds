@@ -1,6 +1,6 @@
-// The coverage job's check on a merge request (tools/coverage-new-functions.mjs): every function the merge request
+// The coverage job's check on a pull request (tools/coverage-new-functions.mjs): every function the pull request
 // adds to src/ runs in a test. Reads the added lines from a diff, finds the added functions no test ran in a coverage
-// report, and leaves alone the functions the merge request doesn't add; the coverage job runs it on merge requests.
+// report, and leaves alone the functions the pull request doesn't add; the coverage job runs it on pull requests.
 //   node tools/test/coverage-new-functions.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -53,14 +53,14 @@ t('names each added function no test ran, with its file and line',
     { file: 'src/components/A/A.tsx', line: 13, name: '(anonymous)' },
     { file: 'src/components/B/B.tsx', line: 2, name: 'unused' },
   ]), JSON.stringify(unrun));
-t('leaves alone a function the merge request doesn\'t add, and a file it doesn\'t change', !unrun.some((u) => u.name === 'old' || u.file.includes('/D/')));
+t('leaves alone a function the pull request doesn\'t add, and a file it doesn\'t change', !unrun.some((u) => u.name === 'old' || u.file.includes('/D/')));
 t('passes when every added function ran', unrunAdded({ [`${root}/src/components/B/B.tsx`]: { fnMap: { 0: fn('B', 1), 1: fn('unused', 2) }, f: { 0: 1, 1: 3 } } }, added, root).length === 0);
 
-// Wired: the coverage job runs on merge requests and runs the check there, with the floors off on a narrowed run.
-const ci = fs.readFileSync(path.join(PROJECT, '.gitlab-ci.yml'), 'utf8');
-const job = /^coverage:\n([\s\S]*?)\n(?=\S)/m.exec(ci)?.[1] ?? '';
-t('the coverage job runs on every merge request and checks the added functions there',
-  /merge_request_event" && \$SERUPA_CI_MODE == "runner"\s*$/m.test(job) && job.includes('node tools/coverage-new-functions.mjs "$SINCE"'), job.slice(0, 600));
+// Wired: the coverage job runs on pull requests and runs the check there, with the floors off on a narrowed run.
+const ci = fs.readFileSync(path.join(PROJECT, '.github', 'workflows', 'ci.yml'), 'utf8');
+const job = /^ {2}coverage:\n([\s\S]*?)\n(?= {2}\S)/m.exec(ci)?.[1] ?? '';
+t('the coverage job checks the added functions against the pull request\'s base, with the floors off on a narrowed run',
+  job.includes('node tools/coverage-new-functions.mjs "$SINCE"') && job.includes('SINCE: ${{ needs.plan.outputs.since }}') && job.includes('SERUPA_NO_FLOORS=1'), job.slice(0, 600));
 const config = fs.readFileSync(path.join(PROJECT, 'vitest.config.ts'), 'utf8');
 t('the merged report includes coverage-final.json, and the floors can be set aside for a narrowed run', /reporter: \[[^\]]*'json'[^\]]*\]/.test(config) && config.includes('SERUPA_NO_FLOORS'));
 done(report('Added functions run in a test', R));

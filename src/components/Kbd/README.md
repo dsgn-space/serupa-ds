@@ -2,6 +2,8 @@
 
 Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states.
 
+**Also called:** keycap, keyboard key.
+
 ```tsx
 import { Kbd } from "serupa-ds";
 

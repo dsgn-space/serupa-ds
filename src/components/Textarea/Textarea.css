@@ -2,7 +2,7 @@
    Textarea: a multi-line text field, Input's sibling. Sizes sm, md, lg with Input's text sizes (text-xs, text-sm,
    text-base) and side padding; the height comes from rows (or the text, with autoResize). Field colors come
    from the alias tokens (field, field-border, placeholder), like Input. Structure: .dk-textarea (the box) >
-   .dk-textarea__field (the native <textarea>), .dk-textarea__count. Every value goes through --textarea-* tokens.
+   .dk-textarea__field (the native <textarea>), .dk-textarea__count, .dk-textarea__actions. Every value goes through --textarea-* tokens.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-textarea {
@@ -46,6 +46,14 @@
   font-variant-numeric: tabular-nums; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
 .dk-textarea__count--full { color: var(--textarea-count-full, var(--text)); }
+/* actions: a row under the text, inside the box, with the buttons at the end; the count, when shown, starts it. */
+.dk-textarea__actions {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--textarea-actions-gap, var(--spacing-1));
+  min-width: var(--spacing-0); margin: var(--spacing-0); border: 0;
+  padding: var(--spacing-0) var(--textarea-actions-padding, var(--spacing-1\.5)) var(--textarea-actions-padding, var(--spacing-1\.5));
+  cursor: default;
+}
+.dk-textarea__actions .dk-textarea__count { align-self: center; margin-inline-end: auto; padding: var(--spacing-0); padding-inline-start: calc(var(--dk-ta-px) - var(--textarea-actions-padding, var(--spacing-1\.5))); }   /* its text lines up with the field's */
 @media (hover: hover) { .dk-textarea:hover:not(.dk-textarea--disabled, :has(.dk-textarea__field:disabled), .dk-textarea--readonly, :focus-within) { --dk-ta-bd: var(--textarea-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws, since box-shadow rings disappear there. */

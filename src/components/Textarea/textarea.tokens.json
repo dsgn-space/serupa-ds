@@ -163,6 +163,26 @@
             "cssVar": "--textarea-padding-y-lg"
           }
         }
+      },
+      "actions-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The space between the buttons in the actions row (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--textarea-actions-gap"
+          }
+        }
+      },
+      "actions-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--textarea-actions-padding"
+          }
+        }
       }
     },
     "border": {
