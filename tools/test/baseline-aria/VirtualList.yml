@@ -81,10 +81,11 @@
       - /url: "#"
 
 # LoadingAndErrors
-- button "Loading" [pressed]
-- button "Loaded"
-- button "Empty"
-- button "Failed"
+- radiogroup "State":
+  - radio "Loading" [checked]
+  - radio "Loaded"
+  - radio "Empty"
+  - radio "Failed"
 - list "Members":
   - listitem
   - listitem

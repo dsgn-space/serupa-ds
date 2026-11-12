@@ -204,6 +204,9 @@ a.dk-btn[aria-disabled="true"] { pointer-events: none; }
   .dk-btn--loading-cover > .dk-btn__label,
   .dk-btn--loading-cover > .dk-btn__icon { filter: var(--dk-btn-cross-blur); }
 }
+/* A pressed toggle (aria-pressed) in forced colors: the variants' fills are gone there, so the pressed one takes the
+   system highlight, as ToggleButton's does. */
+@media (forced-colors: active) { .dk-btn[aria-pressed="true"] { background: Highlight; color: HighlightText; forced-color-adjust: none; } }
 @media (prefers-reduced-motion: reduce) {
   .dk-btn { --dk-btn-press: var(--scale-100); --dk-btn-press-y: var(--spacing-0); --dk-btn-nudge: var(--spacing-0); --dk-btn-loader-from: var(--scale-100); }
   .dk-btn__loader { animation-name: dk-loader-in; }   /* only fades in: nothing grows */

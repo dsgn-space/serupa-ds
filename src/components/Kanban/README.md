@@ -54,6 +54,18 @@ Drawn from the `Default` story.
 - **Move to…:** each card's menu lists the other columns; picking one puts the card at the end of that column and keeps focus on it. It's the way to move a card with one tap or click (WCAG 2.5.7).
 - A narrow board scrolls sideways in its own box, so the page doesn't.
 
+### Loading and failed
+
+- **Loading:** set `busy` and pass the columns you know with no cards yet. Each column keeps its title and shows two placeholder cards with no count, and the board is `aria-busy`, so nothing below it moves when the cards arrive. Name the wait in `loadingLabel` ("Loading tasks"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh cards already shown, keep them in and set `busy`: they stay until the new ones arrive.
+- **Failed:** in place of the board, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+type Task = { id: string; title: string };
+{state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>The board didn't load.</Alert>
+  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} busy={state === 'loading'} loadingLabel="Loading tasks"
+      getKey={(t: Task) => t.id} getLabel={(t: Task) => t.title} renderCard={(t: Task) => t.title} onMove={setColumns} />}
+```
+
 ### Do and don't
 
 - **Do:** Give each card a short, unique name with `getLabel` ("Fix login"): it's read on its buttons and in every announcement. (`DoNameCards`)
@@ -91,6 +103,8 @@ Drawn from the `Default` story.
 | `onMove` | `(columns, move) => void` | | Required. The new columns and the move, when a card is dropped somewhere new. |
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | The column headings' level. |
 | `disabled` | `boolean` | `false` | Shows the cards without handles or menus. |
+| `busy` | `boolean` | `false` | Its cards are loading: sets `aria-busy`, and while no column has cards yet, each shows two placeholder cards and no count. |
+| `loadingLabel` | `string` | `"Loading…"` | Said once as the placeholder cards appear. |
 
 `id`, `className`, `ref` and other props go to the board's `<div>`.
 

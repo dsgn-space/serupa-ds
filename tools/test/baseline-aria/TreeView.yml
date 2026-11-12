@@ -18,6 +18,18 @@
   - treeitem "docs" [level=1]
   - treeitem "README.md" [level=1]
 
+# LoadingAndErrors
+- tree "Files":
+  - treeitem "src" [expanded] [level=1]:
+    - text: src
+    - group:
+      - treeitem "Loading…" [disabled] [level=2]
+  - treeitem "docs" [expanded] [level=1]:
+    - text: docs
+    - group:
+      - treeitem "Didn’t load. Close and open the folder to try again." [disabled] [level=2]
+  - treeitem "README.md" [level=1]
+
 # LongLabels
 - tree "Files":
   - treeitem "a-folder-with-a-very-long-name-for-every-component" [expanded] [level=1]:

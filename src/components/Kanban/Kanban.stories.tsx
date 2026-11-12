@@ -2,6 +2,9 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Kanban, type KanbanColumn } from './Kanban';
 import { Badge } from '../Badge/Badge';
+import { Alert } from '../Alert/Alert';
+import { Button } from '../Button/Button';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 
 type Task = { id: string; title: string; tag?: string };
 const BOARD: KanbanColumn<Task>[] = [
@@ -52,3 +55,19 @@ export const DontVagueCards: Story = {
     { id: 'done', title: 'Done', items: [] },
   ]} />,
 };
+
+// Loading and failed: the columns keep their titles with placeholder cards and no counts, and a failure offers Retry.
+function States() {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'failed'>('loading');
+  return (
+    <div style={{ display: 'grid', gap: '12px' }}>
+      <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState}
+        options={[{ value: 'loading', label: 'Loading' }, { value: 'loaded', label: 'Loaded' }, { value: 'failed', label: 'Failed' }]} />
+      {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>The board didn't load. Check your connection and try again.</Alert>
+        : state === 'loaded' ? <Board />
+        : <Kanban aria-label="Sprint 42" busy loadingLabel="Loading tasks" columns={BOARD.map((c) => ({ ...c, items: [] }))} getKey={(t) => t.id} getLabel={(t) => t.title} renderCard={Card} onMove={() => {}} />}
+    </div>
+  );
+}
+/** Loading: each column's title and two placeholder cards, with no count. Failed: an Alert with Retry. */
+export const LoadingAndErrors: Story = { name: 'Loading and failed', render: () => <States /> };

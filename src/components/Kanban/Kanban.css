@@ -36,6 +36,7 @@
 .dk-kanban__handle[aria-pressed="true"] { background: var(--kanban-handle-active, var(--primary-subtle)); color: var(--kanban-text, var(--text)); }
 .dk-kanban--moving .dk-kanban__handle { cursor: grabbing; }
 .dk-kanban__menu { flex: none; }
+.dk-kanban__loading > .dk-loader { flex: auto; }
 .dk-kanban__empty { padding: var(--spacing-3); color: var(--kanban-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); text-align: center; }
 /* Forced colors drop the fills and shadow: the target column and the picked-up handle keep a Highlight outline. */
 @media (forced-colors: active) {

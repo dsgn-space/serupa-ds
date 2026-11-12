@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { DataGrid, type DataGridCellChange, type DataGridColumn, type DataGridRow } from './DataGrid';
 
@@ -67,7 +68,7 @@ function States() {
   return (
     <div style={{ display: 'grid', gap: '12px' }}>
       <div style={{ display: 'flex', gap: '8px' }}>
-        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+        <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState} options={(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))} />
       </div>
       <DataGrid aria-label="Stock" columns={COLUMNS} rows={state === 'loaded' ? ROWS : []} busy={state === 'loading'} loadingRows={5} loadingLabel="Loading stock"
         message={state === 'failed'
