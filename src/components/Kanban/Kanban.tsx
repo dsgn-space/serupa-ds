@@ -58,8 +58,11 @@ const SLOP = 4;       // px a press moves before it counts as a drag
 /** columns with the card at `from` moved to `to`. */
 function moveCard<T>(columns: readonly KanbanColumn<T>[], from: Place, to: Place): KanbanColumn<T>[] {
   const out = columns.map((c) => ({ ...c, items: c.items.slice() }));
-  const [it] = out[from.column].items.splice(from.index, 1);
-  out[to.column].items.splice(Math.min(to.index, out[to.column].items.length), 0, it);
+  // A column gone since the card was picked up (the app's columns changed mid-drag) moves nothing.
+  const src = out[from.column], dst = out[to.column];
+  if (!src || !dst) return out;
+  const [it] = src.items.splice(from.index, 1);
+  if (it !== undefined) dst.items.splice(Math.min(to.index, dst.items.length), 0, it);
   return out;
 }
 
@@ -128,8 +131,8 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   const rtl = () => !!board.current && getComputedStyle(board.current).direction === 'rtl';
 
   const find = (key: string | number): Place | null => {
-    for (let c = 0; c < columns.length; c++) {
-      const i = columns[c].items.findIndex((it) => getKey(it) === key);
+    for (const [c, col] of columns.entries()) {
+      const i = col.items.findIndex((it) => getKey(it) === key);
       if (i >= 0) return { column: c, index: i };
     }
     return null;
@@ -137,25 +140,24 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   const from = drag ? find(drag.key) : null;
   // While moving, the board shows the card at its new place; nothing is reported until it's dropped.
   const shown = drag && from ? moveCard(columns, from, drag.to) : columns;
-  const sizeAt = (to: Place, moving: boolean) => columns[to.column].items.length + (moving && from && from.column !== to.column ? 1 : 0);
+  const sizeAt = (to: Place, moving: boolean) => (columns[to.column]?.items.length ?? 0) + (moving && from && from.column !== to.column ? 1 : 0);
 
   const commit = (key: string | number, to: Place) => {
-    const at = find(key);
-    if (!at) return;
-    const item = columns[at.column].items[at.index];
-    const name = getLabel(item), col = columns[to.column];
+    const at = find(key), from = at && columns[at.column], item = at && from?.items[at.index], col = columns[to.column];
+    if (!at || !from || item === undefined || !col) return;
+    const name = getLabel(item);
     const total = col.items.length + (at.column === to.column ? 0 : 1);
     const index = Math.min(to.index, total - 1);
     announce(L.kanbanDropped(name, col.title, index + 1, total));
     if (at.column !== to.column || at.index !== index)
-      props.onMove(moveCard(columns, at, { column: to.column, index }), { item, from: { column: columns[at.column].id, index: at.index }, to: { column: col.id, index } });
+      props.onMove(moveCard(columns, at, { column: to.column, index }), { item, from: { column: from.id, index: at.index }, to: { column: col.id, index } });
   };
   const finish = (d: Drag, drop: boolean) => {
     setDrag(null);
-    const at = find(d.key);
-    if (!at) return;
+    const at = find(d.key), col = at && columns[at.column], item = at && col?.items[at.index];
+    if (!at || !col || item === undefined) return;
     if (drop) commit(d.key, d.to);
-    else announce(L.kanbanCancelled(getLabel(columns[at.column].items[at.index]), columns[at.column].title, at.index + 1, columns[at.column].items.length));
+    else announce(L.kanbanCancelled(getLabel(item), col.title, at.index + 1, col.items.length));
   };
 
   // Keyboard, and a click that didn't drag (a screen reader's virtual click, a tap): pick up, then drop.
@@ -164,10 +166,10 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
     if (props.disabled) return;
     if (dragged.current) { dragged.current = false; return; }
     if (drag && !drag.pointer) { finish(drag, true); return; }
-    const at = find(key);
-    if (!at) return;
+    const at = find(key), col = at && columns[at.column], item = at && col?.items[at.index];
+    if (!at || !col || item === undefined) return;
     setDrag({ key, from: at, to: at, pointer: false });
-    announce(L.kanbanGrabbed(getLabel(columns[at.column].items[at.index]), columns[at.column].title, at.index + 1, columns[at.column].items.length));
+    announce(L.kanbanGrabbed(getLabel(item), col.title, at.index + 1, col.items.length));
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (!drag || drag.pointer || !from || isComposing(e)) return;
@@ -184,9 +186,10 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
     else if (k === 'Tab') { finish(drag, false); return; }
     else if (k !== back && k !== on) return;
     e.preventDefault();
-    if (to.column !== drag.to.column || to.index !== drag.to.index) {
+    const item = columns[from.column]?.items[from.index], col = columns[to.column];
+    if ((to.column !== drag.to.column || to.index !== drag.to.index) && item !== undefined && col) {
       setDrag({ ...drag, to });
-      announce(L.kanbanMoved(getLabel(columns[from.column].items[from.index]), columns[to.column].title, to.index + 1, sizeAt(to, true)));
+      announce(L.kanbanMoved(getLabel(item), col.title, to.index + 1, sizeAt(to, true)));
     }
   };
   // Focus leaving a picked-up card (a click elsewhere) puts it back. Checked a frame later: a move refocuses it first.
@@ -208,7 +211,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
 
   // "Move to…": the card goes to the end of the chosen column.
   const moveTo = (key: string | number, column: number) => {
-    commit(key, { column, index: columns[column].items.length });
+    commit(key, { column, index: columns[column]?.items.length ?? 0 });
     setRefocus(key);
   };
 
@@ -238,7 +241,8 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
       const self = board.current && board.current.querySelector<HTMLElement>(`li[data-key="${CSS.escape(String(p.key))}"]`);
       const middle = p.y - p.gy + (self ? self.getBoundingClientRect().height / 2 : 0);
       let index = 0;
-      if (ls[column]) for (const li of ls[column].children as HTMLCollectionOf<HTMLElement>) {
+      const list = ls[column];
+      if (list) for (const li of list.children as HTMLCollectionOf<HTMLElement>) {
         if (li === self || !li.dataset.key) continue;
         const b = li.getBoundingClientRect();
         if (b.top + b.height / 2 < middle) index++;
@@ -332,7 +336,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   };
   // The "Move to…" columns, kept the same while their ids and titles are, so a drop doesn't redraw every card's menu.
   const kept = React.useRef<{ id: string; title: string }[]>([]);
-  if (kept.current.length !== columns.length || columns.some((c, i) => c.id !== kept.current[i].id || c.title !== kept.current[i].title))
+  if (kept.current.length !== columns.length || columns.some((c, i) => c.id !== kept.current[i]?.id || c.title !== kept.current[i]?.title))
     kept.current = columns.map((c) => ({ id: c.id, title: c.title }));
   const targets = kept.current;
 
@@ -342,7 +346,7 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
     <div tabIndex={props.disabled ? 0 : undefined} {...rest} ref={mergedRef} role={rest.role ?? 'group'}
       className={cn('dk-kanban', drag && 'dk-kanban--moving', props.disabled && 'dk-kanban--disabled', props.className)} data-component="kanban">
       {shown.map((col, c) => {
-        const count = columns[c].items.length, over = col.limit != null && count > col.limit, titleId = base + '-col-' + c;
+        const count = columns[c]?.items.length ?? 0, over = col.limit != null && count > col.limit, titleId = base + '-col-' + c;
         return (
           <section key={col.id} className={cn('dk-kanban__column', drag && drag.to.column === c && 'dk-kanban__column--target', over && 'dk-kanban__column--over')} aria-labelledby={titleId} data-column={col.id}>
             <div className="dk-kanban__header">
