@@ -157,7 +157,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
     const m = document.querySelectorAll('meta[name="theme-color"]');
     return [m.length, m[0] && m[0].getAttribute('content'), getComputedStyle(document.body).backgroundColor].join(' ');
   })));
-  t('theme.js: theme-color is the page\'s surface in all six themes', tints.every((x, k) => x === (k % 2 ? '1 rgb(24, 24, 27) rgb(24, 24, 27)' : '1 rgb(255, 255, 255) rgb(255, 255, 255)')), tints.join(', '));
+  t('theme.js: theme-color is the page\'s surface in all six themes (Modern Dark\'s is zinc-950)', tints.every((x, k) => x === (k % 2 ? (k === 5 ? '1 rgb(9, 9, 11) rgb(9, 9, 11)' : '1 rgb(24, 24, 27) rgb(24, 24, 27)') : '1 rgb(255, 255, 255) rgb(255, 255, 255)')), tints.join(', '));
   await p.evaluate(() => Serupa.theme.reset());
   await p.goto(writePage('theme-color-bare.html', '<p>x</p>', { theme: true, bundle: 'none.css', htmlAttrs: 'data-mode="dark"', extraHead: '<script>window.__early = document.querySelector(\'meta[name="theme-color"]\').content;</script>' }));
   const early = await p.evaluate(() => window.__early);

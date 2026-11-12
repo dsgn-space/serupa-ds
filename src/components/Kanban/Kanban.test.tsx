@@ -227,6 +227,9 @@ describe('Kanban', () => {
     expect(document.getElementById('dk')!.querySelectorAll('button')).toHaveLength(0);
   });
 
+  // The count is in the page's locale digits (CI runs these in ar-EG too, where 3 is ٣).
+  const three = new Intl.NumberFormat(navigator.language).format(3);
+
   test('busy with no cards yet: each column keeps its title, shows two placeholder cards and no count; the board says so once', async () => {
     const empty = START().map((c) => ({ ...c, items: [] }));
     const { rerender } = await render(<Kanban id="dk" aria-label="S" busy loadingLabel="Loading tasks" columns={empty} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
@@ -238,13 +241,13 @@ describe('Kanban', () => {
     expect([board.querySelectorAll('button').length, board.textContent?.includes('No cards'), document.getElementById(board.id + '-hint')]).toEqual([0, false, null]);
     await said('Loading tasks');
     await rerender(<Kanban id="dk" aria-label="S" columns={START()} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
-    expect([board.getAttribute('aria-busy'), board.getAttribute('tabindex'), count(columns()[0]).textContent]).toEqual([null, null, '3']);
+    expect([board.getAttribute('aria-busy'), board.getAttribute('tabindex'), count(columns()[0]).textContent]).toEqual([null, null, three]);
     expect(names()).toEqual(['To do: abc', 'Doing: d', 'Done: ']);
   });
 
   test('busy with cards already shown keeps them (a reload); with no cards, it says the shared "Loading…" label', async () => {
     const { rerender } = await render(<Kanban id="dk" aria-label="S" busy columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
-    expect([document.getElementById('dk')!.getAttribute('aria-busy'), names(), count(columns()[0]).textContent]).toEqual(['true', ['To do: abc', 'Doing: d', 'Done: '], '3']);
+    expect([document.getElementById('dk')!.getAttribute('aria-busy'), names(), count(columns()[0]).textContent]).toEqual(['true', ['To do: abc', 'Doing: d', 'Done: '], three]);
     await rerender(<Kanban aria-label="S" busy columns={START().map((c) => ({ ...c, items: [] }))} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
     expect(document.querySelectorAll('[aria-busy="true"] li')).toHaveLength(6);
     await said('Loading…');
