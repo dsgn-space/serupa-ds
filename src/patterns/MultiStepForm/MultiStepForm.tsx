@@ -190,7 +190,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
         ) : (
           <form noValidate onSubmit={submit}>
             <Card className="flex flex-col gap-5">
-              <section {...s.panelProps(0)} className="flex flex-col gap-4 [&[hidden]]:hidden">
+              <section {...s.panelProps(0)} className="flex flex-col gap-4">
                 {h2(0)}
                 {summary(0)}
                 {text(0, 'business', 'Business name', 'organization', {}, 'As it’s registered, or your own name for a sole trader.')}
@@ -214,7 +214,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                 </Field>
               </section>
 
-              <section {...s.panelProps(1)} className="flex flex-col gap-4 [&[hidden]]:hidden">
+              <section {...s.panelProps(1)} className="flex flex-col gap-4">
                 {h2(1)}
                 {summary(1)}
                 <p className="m-0">The person we contact about the account. They can sign in once it’s open.</p>
@@ -242,7 +242,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                 )}
               </section>
 
-              <section {...s.panelProps(2)} className="flex flex-col gap-4 [&[hidden]]:hidden">
+              <section {...s.panelProps(2)} className="flex flex-col gap-4">
                 {h2(2)}
                 {summary(2)}
                 <Field label="Currency" hint="The account holds money in this currency. You can add others once it’s open.">
@@ -260,7 +260,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
                 </Field>
               </section>
 
-              <section {...s.panelProps(REVIEW)} className="flex flex-col gap-4 [&[hidden]]:hidden">
+              <section {...s.panelProps(REVIEW)} className="flex flex-col gap-4">
                 {h2(REVIEW)}
                 <p className="m-0">Nothing is sent until you send the application.</p>
                 {failed ? <Alert tone="danger" title="Your application wasn’t sent">Nothing you entered is lost. Check your connection and send it again.</Alert> : null}
