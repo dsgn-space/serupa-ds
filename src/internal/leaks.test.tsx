@@ -1,7 +1,8 @@
 /// <reference types="vite/client" />
+import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'vitest';
 
 // Mount and unmount every story three times (G7): whatever a story leaves behind once it's gone has to stay the same
 // from the first time to the third, or it grows in an app each time a page shows the component. Counted here, in
@@ -59,6 +60,7 @@ for (const name of ['ResizeObserver', 'MutationObserver', 'IntersectionObserver'
   Real.prototype.disconnect = function (this: object) { observing.delete(this); return disconnect.call(this); };
 }
 const { storiesToRun } = await import('../../tools/test/vitest/stories');
+const { useLocale } = await import('./provider');
 
 const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 const describeEl = (el: Element) => `<${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ''}${el.className && typeof el.className === 'string' ? `.${el.className.split(' ')[0]}` : ''}>`;
@@ -83,7 +85,13 @@ async function cycle(ui: React.ReactElement) {
   host.remove();
 }
 
+// The provider's one window languagechange listener, for every component, is added the first time any component
+// asks for the browser's locale, and stays (provider.tsx). A story that asks only after its first mount's count (a
+// Toast that appears on a timer) would show it as growth, so it is made here, before any story is counted.
+function AsksForTheLocale() { useLocale(); return null; }
+
 describe('leaks', () => {
+  beforeAll(() => cycle(createElement(AsksForTheLocale)));
   for (const [name, list] of storiesToRun()) {
     test(`${name} stories leave nothing behind that grows each time they mount`, async () => {
       const problems: string[] = [];
