@@ -1,7 +1,7 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, folderForKebab, folderOf, inParallelRetry, internalTestsFor, kebab, scopeFiles, withDependents, report, done } from './lib.mjs';
+import { affectedComponents, touchedComponents, folderForKebab, folderOf, inParallelRetry, internalTestsFor, kebab, scopeFiles, withDependents, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -21,6 +21,9 @@ const none = ['CONTRIBUTING.md', '.github/pull_request_template.md', 'tools/test
   'tools/skill-eval/results/2026-11-06-agentic/with/sign-in.1/src/App.tsx', 'tools/ci.mjs', '.github/workflows/nightly.yml', '.github/workflows/screen-readers.yml', 'AGENTS.md', 'skills/serupa/references/forms.md'];
 t('the release scripts, the Node checks and the other workflows cover no component', affectedComponents(none)?.size === 0, list(affectedComponents(none)));
 for (const f of ['.github/workflows/ci.yml', 'tools/test/lib.mjs', 'tools/test/storybook.mjs', 'tools/test/vitest/setup.ts', 'CHANGELOG.md', 'README.md']) t(`a change to ${f} tests everything`, affectedComponents([f]) === null);
+const touched = touchedComponents(['src/components/Kanban/Kanban.tsx', 'tools/test/baseline-size/Sidebar.json', 'docs/LoadingAndWaiting.mdx', 'src/internal/labels.ts']);
+t('a change that tests everything still names the components it edits itself (Kanban, and Sidebar by its size budget)', list(touched) === 'Kanban, Sidebar' && affectedComponents(['src/components/Kanban/Kanban.tsx', 'docs/LoadingAndWaiting.mdx']) === null, list(touched));
+t('a change to no component folder edits none', touchedComponents(['docs/LoadingAndWaiting.mdx', 'tokens.json']).size === 0);
 const deps = withDependents(new Set(['Button']));
 t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Meter'), list(deps));
 t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));
