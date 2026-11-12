@@ -40,7 +40,7 @@ Drawn from the `Bottom` story.
 
 ## Usage
 
-- Use `side="right"` (the default) for details and filters, and `side="left"` for navigation; use `bottom` for short sheets on small screens. `side` is physical: `right` is the right edge in a right-to-left page too.
+- Use `placement="right"` (the default) for details and filters, and `placement="start"` for navigation, which then opens from the side a right-to-left page starts on too; use `bottom` for short sheets on small screens. `right` and `left` are physical edges, the same in a right-to-left page, and `start` and `end` follow the reading.
 - Give it a `title` that names what's inside ("Filters", "Order #1042").
 - Put the actions in `footer` so they stay in view, with the main action last.
 - Set `closeOnBackdrop={false}` when closing would lose work, such as unsaved edits.
@@ -90,7 +90,8 @@ Drawn from the `Bottom` story.
 | `open` | `boolean` | | Controlled: close it yourself in `onOpenChange`. |
 | `defaultOpen` | `boolean` | `false` | Open at first, then it closes itself (uncontrolled). Escape, the × or the backdrop close it, and `onOpenChange(false)` still comes. |
 | `onOpenChange` | `(open, { reason }) => void` | | Called with `false` on Escape, the ×, or a click on the backdrop. `reason` says which: `'escape'`, `'close'` (the ×), `'outside'` (the backdrop) or `'api'` (the browser closed it, as `dialog.close()` or a `method="dialog"` form do) |
-| `side` | `'right' \| 'left' \| 'top' \| 'bottom'` | `'right'` | The edge it slides in from. These are physical edges, so they stay put in right-to-left pages. |
+| `placement` | `'right' \| 'left' \| 'top' \| 'bottom' \| 'start' \| 'end'` | `'right'` | The edge it slides in from. `right` and `left` are physical edges, so they stay put in right-to-left pages; `start` and `end` are the edges the reading starts and ends at. |
+| `side` | `'right' \| 'left' \| 'top' \| 'bottom'` | | Deprecated, removed in 15.0.0: use `placement`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The width of a left or right drawer: 320, 384 or 512px, never wider than the screen. |
 | `title` | `ReactNode` | | The heading; it also names the drawer. Without one, give it an `aria-label`. |
 | `description` | `ReactNode` | | A muted line under the title. |

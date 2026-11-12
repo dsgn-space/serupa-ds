@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    Drawer: a native <dialog> (showModal) that fills the screen; its panel sits against one edge: full height and
-   320, 384 or 512px wide (left, right), or full width and as tall as its content (top, bottom, rounded on the
+   320, 384 or 512px wide (left, right, start, end), or full width and as tall as its content (top, bottom, rounded on the
    open side). Header, a body that scrolls, and a footer under a line. The page behind is dimmed and doesn't
    scroll. Slides in from its edge (300ms) and back out to it faster (motion-exit-lg); fades with reduced motion.
    --------------------------------------------------------------- */
@@ -21,9 +21,11 @@
 /* Against its edge whether open or closing (FN1): on [open] alone, a right or bottom panel jumped to the
    opposite edge as it began to slide out. */
 .dk-drawer--right { justify-content: flex-end; }
-/* side is physical, like the slide-in: right is the right edge in a right-to-left page too, where flex-end is the left. */
+/* right and left are physical, like the slide-in: right is the right edge in a right-to-left page too, where flex-end is the left. */
 .dk-drawer--right:dir(rtl) { justify-content: flex-start; }
 .dk-drawer--left:dir(rtl) { justify-content: flex-end; }
+/* start and end are logical: the edges the reading starts and ends at, flex-start and flex-end in either direction. */
+.dk-drawer--end { justify-content: flex-end; }
 .dk-drawer--bottom { align-items: flex-end; }
 .dk-drawer--sm { --dk-drawer-width: var(--drawer-width-sm, var(--container-xs)); }
 .dk-drawer--lg { --dk-drawer-width: var(--drawer-width-lg, var(--container-lg)); }
@@ -39,7 +41,7 @@
 .dk-drawer--nonmodal > .dk-dialog { pointer-events: auto; }
 /* Swipe to close: a left or right panel leaves vertical panning to the browser and hands horizontal drags to the
    drawer; a top or bottom one is dragged by its header and footer, so its body still scrolls. */
-.dk-drawer--left .dk-drawer__panel, .dk-drawer--right .dk-drawer__panel { touch-action: pan-y; }
+.dk-drawer--left .dk-drawer__panel, .dk-drawer--right .dk-drawer__panel, .dk-drawer--start .dk-drawer__panel, .dk-drawer--end .dk-drawer__panel { touch-action: pan-y; }
 .dk-drawer--top .dk-drawer__header, .dk-drawer--top .dk-drawer__footer, .dk-drawer--bottom .dk-drawer__header, .dk-drawer--bottom .dk-drawer__footer { touch-action: none; }
 .dk-drawer__panel {
   box-sizing: border-box; display: flex; flex-direction: column; gap: var(--drawer-gap, var(--spacing-4));
@@ -54,6 +56,10 @@
 .dk-drawer__panel[data-inward]::after { content: ""; position: absolute; inset: var(--spacing-0); translate: var(--dk-drawer-from); background: inherit; pointer-events: none; }
 .dk-drawer--right { --dk-drawer-from: var(--sizing-full) 0; }
 .dk-drawer--left { --dk-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
+.dk-drawer--start { --dk-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
+.dk-drawer--end { --dk-drawer-from: var(--sizing-full) 0; }
+.dk-drawer--start:dir(rtl) { --dk-drawer-from: var(--sizing-full) 0; }
+.dk-drawer--end:dir(rtl) { --dk-drawer-from: calc(var(--spacing-0) - var(--sizing-full)) 0; }
 .dk-drawer--top { --dk-drawer-from: 0 calc(var(--spacing-0) - var(--sizing-full)); }
 .dk-drawer--bottom { --dk-drawer-from: 0 var(--sizing-full); }
 .dk-drawer--top .dk-drawer__panel, .dk-drawer--bottom .dk-drawer__panel { width: var(--sizing-full); height: auto; max-height: calc(var(--sizing-full) - var(--spacing-16)); }
@@ -119,6 +125,11 @@
 /* Right to left, the physical edge is the other logical one. */
 .dk-drawer--left .dk-drawer__panel:dir(rtl) { padding-inline-start: var(--dk-drawer-pad); padding-inline-end: max(var(--dk-drawer-pad), env(safe-area-inset-left)); }
 .dk-drawer--right .dk-drawer__panel:dir(rtl) { padding-inline-end: var(--dk-drawer-pad); padding-inline-start: max(var(--dk-drawer-pad), env(safe-area-inset-right)); }
+/* start and end: the logical edge stays, and the safe area is the physical one it lands on. */
+.dk-drawer--start .dk-drawer__panel { padding-inline-start: max(var(--dk-drawer-pad), env(safe-area-inset-left)); }
+.dk-drawer--end .dk-drawer__panel { padding-inline-end: max(var(--dk-drawer-pad), env(safe-area-inset-right)); }
+.dk-drawer--start .dk-drawer__panel:dir(rtl) { padding-inline-start: max(var(--dk-drawer-pad), env(safe-area-inset-right)); }
+.dk-drawer--end .dk-drawer__panel:dir(rtl) { padding-inline-end: max(var(--dk-drawer-pad), env(safe-area-inset-left)); }
 .dk-drawer__footer {
   margin-bottom: calc(var(--spacing-0) - max(var(--dk-drawer-pad), env(safe-area-inset-bottom)));
   padding-bottom: max(var(--spacing-4), env(safe-area-inset-bottom));
