@@ -2,6 +2,8 @@
 
 A short guided walk through a page: one step at a time, a small panel points at a part of the page, says what it's for, and offers Back, Next and Done. Use it to show someone new the few things they need first.
 
+**Also called:** product tour, walkthrough, coach marks.
+
 ```tsx
 import { Tour } from "serupa-ds";
 

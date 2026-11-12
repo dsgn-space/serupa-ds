@@ -189,6 +189,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'Phím tắt',
   generalShortcuts: 'Chung',
   showShortcuts: 'Hiện phím tắt',
+  singleKeyShortcuts: 'Phím tắt một phím',
+  singleKeyHint: 'Phím tắt chỉ một phím, như ?, bên ngoài ô văn bản. Tắt chúng nếu chúng chạy ngoài ý muốn.',
   opensInNewTab: '(mở trong thẻ mới)',
   loadMore: 'Tải thêm',
   showingOf: (shown, total) => `Đang hiện ${shown} trên ${total}`,

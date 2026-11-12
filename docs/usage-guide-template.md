@@ -18,6 +18,8 @@ Rules:
 
 <One or two sentences: what it is and the job it does for the person using the product.>
 
+**Also called:** <Optional. Other names people know it by from other design systems, lowercase, comma-separated: snackbar, notification. Never another Serupa component's name. Guides/Choose a component lists them all.>
+
 ```tsx
 import { <Name> } from "serupa-ds";
 

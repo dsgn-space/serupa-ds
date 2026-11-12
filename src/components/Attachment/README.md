@@ -2,6 +2,8 @@
 
 A file shown as one compact row: an icon for its kind, the name, the kind and size, and, while it uploads, a bar. A failed upload shows why, with a retry button, and `onRemove` adds a remove button. Use it for files in a message, a comment, a record or a form.
 
+**Also called:** file, download link.
+
 ```tsx
 import { Attachment } from "serupa-ds";
 

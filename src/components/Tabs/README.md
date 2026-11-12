@@ -2,6 +2,8 @@
 
 Switches between related panels in one place, such as a project's Overview, Activity and Settings. It follows the WAI-ARIA tabs pattern: `Tabs` holds the state, `TabList` the row of `Tab`s, and each `TabPanel` the content for the tab with the same `value`.
 
+**Also called:** tabbed interface.
+
 ```jsx
 const { Tabs, TabList, Tab, TabPanel } = window.Serupa;
 

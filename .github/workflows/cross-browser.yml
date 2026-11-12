@@ -2,15 +2,18 @@ name: Cross-browser
 
 # Every night, the component tests, the checks and the Storybook checks run in Firefox and WebKit (Safari's engine) as well as Chromium.
 # It doesn't block pull requests: a red run here is a browser difference to look at, not a broken main.
-# It also runs on a pull request that changes this file, and on demand from the Actions tab.
+# It also runs on demand from the Actions tab.
 on:
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
-  pull_request:
-    paths: ['.github/workflows/cross-browser.yml']
 
 # Read the code; nothing here writes to the repository. The report job also writes one issue.
+# A newer run of this workflow on the same branch cancels the one before it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

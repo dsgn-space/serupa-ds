@@ -170,7 +170,7 @@ export const Links: Story = {
     children: <>
       <MenuItem icon="article" href="#docs">Documentation</MenuItem>
       <MenuItem icon="support_agent" href="#support">Contact support</MenuItem>
-      <MenuItem icon="open_in_new" href="https://github.com/diki-stwn/serupa-ds" target="_blank">Source on GitHub</MenuItem>
+      <MenuItem icon="open_in_new" href="https://github.com/dsgn-space/serupa-ds" target="_blank">Source on GitHub</MenuItem>
       <MenuItem icon="new_releases" href="#changelog" disabled>What’s new</MenuItem>
     </>,
   },

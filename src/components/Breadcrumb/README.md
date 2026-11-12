@@ -2,6 +2,8 @@
 
 Shows where the current page sits: links to the pages above it, from the top level down, with chevrons between them. The last item is the current page. On a deep trail, `maxItems` collapses the middle into a "…" button that shows it again.
 
+**Also called:** breadcrumbs, breadcrumb trail.
+
 ```jsx
 const { Breadcrumb, BreadcrumbItem } = window.Serupa;
 

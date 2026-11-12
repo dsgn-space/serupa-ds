@@ -67,7 +67,7 @@ if (arg('--since')) {
   direct = changed;
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
-  // --narrowed-only (a merge request's cross-browser jobs): a change that reaches beyond the component folders (shared
+  // --narrowed-only (a pull request's cross-browser jobs): a change that reaches beyond the component folders (shared
   // code, tooling) would run the whole suite in Firefox and WebKit, 20 to 40 minutes that hold the merge; the nightly
   // run covers those, so the job passes with a note instead.
   if (!names && process.argv.includes('--narrowed-only')) {
@@ -90,7 +90,7 @@ const node = (g) => ([name, f, ...args]) => [name, 'node', [path.join(HERE, f), 
 const vitest = (name, project, g, ...args) => [name, process.execPath, [path.join(PROJECT, 'node_modules', 'vitest', 'vitest.mjs'), 'run', '--project', project, ...args], g];
 const steps = [
   // The component tests next to each component (src/components/<Name>/<Name>.test.tsx), in a browser. With
-  // SERUPA_COVERAGE (CI), on a narrowed run too: the coverage job then checks that every function the merge request
+  // SERUPA_COVERAGE (CI), on a narrowed run too: the coverage job then checks that every function the pull request
   // adds runs (tools/coverage-new-functions.mjs), and leaves the floors for all of src/ to full runs (.vitest/narrowed).
   // With SERUPA_ONLY, the tests that go through every story (STORY_WIDE) run too, on those components' stories.
   // SERUPA_SHARD=2/3 with --group components: every third test file (CI runs the shards side by side). A shard with
