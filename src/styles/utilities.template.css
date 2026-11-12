@@ -1351,7 +1351,9 @@
    bg-surface-muted panel is already that colour in light, so rows there step up to surface-raised instead (white in
    light, zinc-800 in dark). A surface painted inside it gives its rows the usual fill back; Card does the same. */
 .bg-surface-muted { --dk-row-hover: var(--surface-raised); }
-:is(.bg-surface, .bg-surface-raised, .bg-surface-overlay) { --dk-row-hover: var(--surface-hover); }
+.bg-surface { --dk-row-hover: var(--surface-hover); }
+.bg-surface-raised { --dk-row-hover: var(--surface-hover); }
+.bg-surface-overlay { --dk-row-hover: var(--surface-hover); }
 /* background-image: none and gradients */
 .bg-none { background-image: none; }
 .bg-linear-to-t { --dk-gradient-position: to top in oklab; background-image: linear-gradient(var(--dk-gradient-stops)); }
