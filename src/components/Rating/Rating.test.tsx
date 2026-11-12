@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { SerupaProvider } from '../../internal/provider';
 import { Rating } from './Rating';
 import { idLabels } from '../../internal/labels';
 import { Field } from '../Field/Field';
@@ -18,7 +19,7 @@ describe('Rating', () => {
   test('a role="radiogroup" of native radios, one per star, named "1 star"…"5 stars"; a click picks; the stars up to it fill; ref, className and other props reach the group', async () => {
     const ref = React.createRef<HTMLDivElement>();
     const calls: (number | null)[] = [];
-    await render(<Rating id="r" aria-label="Your rating" ref={ref} className="extra" data-x="y" onValueChange={(v) => calls.push(v)} />);
+    await render(<SerupaProvider locale="en-US"><Rating id="r" aria-label="Your rating" ref={ref} className="extra" data-x="y" onValueChange={(v) => calls.push(v)} /></SerupaProvider>);
     const group = page.getByRole('radiogroup', { name: 'Your rating' }).element();
     expect([group === el('r'), ref.current === group, el('r').className, el('r').dataset.x, el('r').dataset.component]).toEqual([true, true, 'dk-rating dk-rating--size-md extra', 'y', 'rating']);
     expect(radios('r').map((r) => r.getAttribute('aria-label'))).toEqual(['1 star', '2 stars', '3 stars', '4 stars', '5 stars']);
@@ -53,7 +54,7 @@ describe('Rating', () => {
   });
 
   test('allowHalf: two choices per star ("2.5 stars"), the start half of a star picks the half; right to left, the half fills from the right', async () => {
-    await render(<div><Rating id="h" aria-label="Half" allowHalf max={4} /><div dir="rtl"><Rating id="rt" aria-label="RTL" allowHalf defaultValue={1.5} max={3} /></div></div>);
+    await render(<SerupaProvider locale="en-US"><div><Rating id="h" aria-label="Half" allowHalf max={4} /><div dir="rtl"><Rating id="rt" aria-label="RTL" allowHalf defaultValue={1.5} max={3} /></div></div></SerupaProvider>);
     expect(radios('h').map((r) => r.getAttribute('aria-label'))).toEqual(['0.5 stars', '1 star', '1.5 stars', '2 stars', '2.5 stars', '3 stars', '3.5 stars', '4 stars']);
     await userEvent.click(stars('h')[2], { position: { x: 4, y: 12 } });
     expect([picked('h'), filled('h')]).toEqual([['2.5'], [24, 24, 12, 0]]);
@@ -94,7 +95,7 @@ describe('Rating', () => {
   });
 
   test('readOnly: one role="img" named "4.3 out of 5" (after its own aria-label), any fraction drawn, no radios', async () => {
-    await render(<div><Rating id="ro" readOnly value={4.3} /><Rating id="ra" readOnly aria-label="Average" value={3.5} /></div>);
+    await render(<SerupaProvider locale="en-US"><div><Rating id="ro" readOnly value={4.3} /><Rating id="ra" readOnly aria-label="Average" value={3.5} /></div></SerupaProvider>);
     expect([page.getByRole('img', { name: '4.3 out of 5' }).element() === el('ro'), radios('ro').length, filled('ro')]).toEqual([true, 0, [24, 24, 24, 24, 7]]);
     expect(el('ra').getAttribute('aria-label')).toBe('Average, 3.5 out of 5');
     // With base.css (svg max-width: 100%), the star in a share-wide fill is still drawn whole and clipped, not shrunk (GI1).
@@ -179,7 +180,7 @@ describe('Rating', () => {
     }
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);
-    expect([idLabels.ratingStars(2.5), idLabels.ratingValue(4.5, 5), idLabels.ratingStars(1)]).toEqual(['2,5 bintang', '4,5 dari 5', '1 bintang']);
+    expect([idLabels.ratingStars(2.5, '2,5'), idLabels.ratingValue(4.5, 5, '4,5', '5'), idLabels.ratingStars(1, '1')]).toEqual(['2,5 bintang', '4,5 dari 5', '1 bintang']);
   });
   test('L8E88 in a required Field (or with aria-required): the radiogroup says it is required', async () => {
     await render(<><Field label="How was your stay?" required><Rating /></Field><Rating aria-label="Food" aria-required /></>);

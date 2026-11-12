@@ -1,7 +1,7 @@
 // exports: Rating, type RatingProps
 interface RatingLabels {
-    ratingStars: (value: number) => string;
-    ratingValue: (value: number, max: number) => string;
+    ratingStars: (value: number, formatted: string) => string;
+    ratingValue: (value: number, max: number, formatted: string, formattedMax: string) => string;
 }
 interface RatingProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
     value?: null | number | undefined;
