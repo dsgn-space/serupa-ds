@@ -79,6 +79,8 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Density**: `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
 
+**Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). Modern's own 8 and 12px corners give way to it too. `data-radius="default"` puts the theme's own corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
+
 **Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
 **Depth**: the violet brand is tactile. Its controls feel physical: buttons carry a faint highlight along the top edge, a soft lift that rises on hover and, when filled, a light sheen; held down they sink under an inner shade. Switch and slider thumbs and the selected segment get a highlight and a close shadow, fields a faint inner shade, and a card with a link lifts toward the pointer. Pages, surfaces and text stay flat. The blue and emerald brands are flat. The look comes from the `depth-*` tokens (`depth-control`, `depth-control-hover`, `depth-control-pressed`, `depth-sheen`, `depth-sheen-pressed`, `depth-part`, `depth-field`, `depth-card-lift`), which are layers added over a component's own shadow and are empty in a flat brand, so components need nothing else. `data-depth="tactile"` turns the look on for any brand, on the page or one section, and `data-depth="flat"` turns it off, violet included. A section with its own `data-brand` takes that brand's depth. The light and shade of a sheen stay in the top and bottom quarters of a control, clear of its label, so every label keeps its contrast. Forced-colors mode drops the sheens along with the shadows. Held down, a button sinks by `depth-press` (1px in a tactile brand, 0 in a flat one) and a card with a link settles back by the same amount. A tactile Switch thumb crosses on a spring (`motion-toggle`, `ease-toggle`) and a Checkbox tick draws itself on (`motion-draw`). Reduced motion keeps the shadows but drops the sinking, the spring and the drawing.
@@ -425,6 +427,15 @@ A container nested inside another should have a smaller radius than its parent.
 | `radius-surface` | `rounded-lg` (8px) | Alerts, tables, lists, accordions, drop zones, and the floating surfaces: menus, popovers, list boxes, toasts |
 | `radius-container` | `rounded-xl` (12px) | Cards, dialogs, drawers and carousels |
 | `radius-pill` | `rounded-full` | Tracks and thumbs, steps, round buttons and swatches |
+
+**Roundness.** `data-radius` on the page or a section reshapes the four roles at once, in every theme:
+
+| Role | `sharp` | Default | `round` |
+| --- | --- | --- | --- |
+| `radius-inner` | 2px | 4px | 6px |
+| `radius-control` | 2px | 6px (8px in Modern) | 12px |
+| `radius-surface` | 4px | 8px (12px in Modern) | 16px |
+| `radius-container` | 4px | 12px | 24px |
 
 Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart. The `serupa/radius-through-role` Stylelint rule holds the components to this: a corner that names `rounded-sm` up to `rounded-4xl` fails lint. `rounded-none`, `rounded-xs` (the hairline curve of a text mark, such as Highlight) and `rounded-full` pass.
 

@@ -48,8 +48,10 @@
   .dk-accordion__item--open > .dk-accordion__panel { clip-path: inset(var(--spacing-0)); transition: opacity var(--dk-accordion-motion), clip-path var(--dk-accordion-motion); }
 }
 /* Closed and settled: hidden="until-found" hides the content (content-visibility) and lets find-in-page reach it,
-   which needs the panel shown; the content's padding goes too, so it takes no height. */
-.dk-accordion__panel:has(> .dk-accordion__clip > .dk-accordion__content[hidden="until-found"]) { visibility: visible; content-visibility: visible; transition: none; }
+   which needs the panel shown; the content's padding goes too, so it takes no height. Only while the item is closed:
+   an item opening still carries until-found for a moment, and when another item's fold reads styles in between (one
+   opens as another closes) its transitions have to be on already, or it snaps open. */
+.dk-accordion__panel:where(.dk-accordion__item:not(.dk-accordion__item--open) > *):has(> .dk-accordion__clip > .dk-accordion__content[hidden="until-found"]) { visibility: visible; content-visibility: visible; transition: none; }
 .dk-accordion__content[hidden="until-found"] { padding-block: var(--spacing-0); }
 .dk-accordion__clip { min-height: var(--spacing-0); overflow: hidden; }
 .dk-accordion__content { overflow-wrap: anywhere; padding-bottom: var(--accordion-padding-y, var(--spacing-4)); color: var(--accordion-content-color, var(--text-muted)); font-size: var(--accordion-content-size, var(--text-sm)); line-height: var(--text-sm--line-height); }

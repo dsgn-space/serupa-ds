@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DateField, type DateFieldChangeDetails } from './DateField';
 import { Field } from '../Field/Field';
+import { Button } from '../Button/Button';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 
@@ -52,7 +53,7 @@ function CheckedDemo() {
       <Field label="Date of birth" hint="For example, 27 3 2007" error={error}>
         <DateField name="dob" autoComplete="bday" order="dmy" min="1900-01-01" max="2026-11-09" value={value} onValueChange={(v, d) => { setValue(v); setDetails(d); }} />
       </Field>
-      <button type="submit">Continue</button>
+      <Button type="submit">Continue</Button>
       <p style={{ margin: 0 }}>Value: {value || '(none yet)'}</p>
     </form>
   );

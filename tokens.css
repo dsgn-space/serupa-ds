@@ -368,6 +368,8 @@
   --dk-more-primary: var(--blue-800);
   --dk-more-primary-hover: var(--blue-900);
   --dk-more-focus-ring: var(--blue-700);
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 [data-theme="blue-dark"] {
   --primary: var(--blue-400);
@@ -474,6 +476,8 @@
   --dk-more-primary: var(--blue-300);
   --dk-more-primary-hover: var(--blue-200);
   --dk-more-focus-ring: var(--blue-300);
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 [data-theme="violet-light"] {
   --primary: var(--violet-600);
@@ -580,6 +584,8 @@
   --dk-more-primary: var(--violet-800);
   --dk-more-primary-hover: var(--violet-900);
   --dk-more-focus-ring: var(--violet-700);
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 [data-theme="violet-dark"] {
   --primary: var(--violet-400);
@@ -686,6 +692,8 @@
   --dk-more-primary: var(--violet-300);
   --dk-more-primary-hover: var(--violet-200);
   --dk-more-focus-ring: var(--violet-300);
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 [data-theme="emerald-light"] {
   --primary: var(--teal-700);
@@ -792,6 +800,8 @@
   --dk-more-primary: var(--teal-800);
   --dk-more-primary-hover: var(--teal-900);
   --dk-more-focus-ring: var(--teal-700);
+  --dk-own-radius-control: var(--rounded-lg);
+  --dk-own-radius-surface: var(--rounded-xl);
 }
 [data-theme="emerald-dark"] {
   --primary: var(--teal-400);
@@ -898,6 +908,8 @@
   --dk-more-primary: var(--teal-300);
   --dk-more-primary-hover: var(--teal-200);
   --dk-more-focus-ring: var(--teal-300);
+  --dk-own-radius-control: var(--rounded-lg);
+  --dk-own-radius-surface: var(--rounded-xl);
 }
 :where(:root:is([data-brand], [data-mode]), [data-mode]):not([data-theme]) {
   color-scheme: light dark;
@@ -998,6 +1010,8 @@
   --dk-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
   --dk-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 :root[data-brand="blue"]:not([data-theme]), [data-brand="blue"]:not([data-theme]) {
   --primary: light-dark(var(--blue-600), var(--blue-400));
@@ -1059,6 +1073,8 @@
   --dk-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
   --dk-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 :root[data-brand="violet"]:not([data-theme]), [data-brand="violet"]:not([data-theme]) {
   --primary: light-dark(var(--violet-600), var(--violet-400));
@@ -1120,6 +1136,8 @@
   --dk-more-primary: light-dark(var(--violet-800), var(--violet-300));
   --dk-more-primary-hover: light-dark(var(--violet-900), var(--violet-200));
   --dk-more-focus-ring: light-dark(var(--violet-700), var(--violet-300));
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 :root[data-brand="emerald"]:not([data-theme]), [data-brand="emerald"]:not([data-theme]) {
   --primary: light-dark(var(--teal-700), var(--teal-400));
@@ -1181,6 +1199,8 @@
   --dk-more-primary: light-dark(var(--teal-800), var(--teal-300));
   --dk-more-primary-hover: light-dark(var(--teal-900), var(--teal-200));
   --dk-more-focus-ring: light-dark(var(--teal-700), var(--teal-300));
+  --dk-own-radius-control: var(--rounded-lg);
+  --dk-own-radius-surface: var(--rounded-xl);
 }
 :is([data-theme^="blue-"], [data-brand="blue"]) [data-mode]:not([data-theme], [data-brand]) {
   --primary: light-dark(var(--blue-600), var(--blue-400));
@@ -1242,6 +1262,8 @@
   --dk-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
   --dk-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 :is([data-theme^="violet-"], [data-brand="violet"]) [data-mode]:not([data-theme], [data-brand]) {
   --primary: light-dark(var(--violet-600), var(--violet-400));
@@ -1303,6 +1325,8 @@
   --dk-more-primary: light-dark(var(--violet-800), var(--violet-300));
   --dk-more-primary-hover: light-dark(var(--violet-900), var(--violet-200));
   --dk-more-focus-ring: light-dark(var(--violet-700), var(--violet-300));
+  --dk-own-radius-control: var(--rounded-md);
+  --dk-own-radius-surface: var(--rounded-lg);
 }
 :is([data-theme^="emerald-"], [data-brand="emerald"]) [data-mode]:not([data-theme], [data-brand]) {
   --primary: light-dark(var(--teal-700), var(--teal-400));
@@ -1364,6 +1388,8 @@
   --dk-more-primary: light-dark(var(--teal-800), var(--teal-300));
   --dk-more-primary-hover: light-dark(var(--teal-900), var(--teal-200));
   --dk-more-focus-ring: light-dark(var(--teal-700), var(--teal-300));
+  --dk-own-radius-control: var(--rounded-lg);
+  --dk-own-radius-surface: var(--rounded-xl);
 }
 :root[data-mode="auto"]:not([data-theme]), [data-mode="auto"]:not([data-theme]) { color-scheme: light dark; }
 :root[data-mode="light"]:not([data-theme]), [data-mode="light"]:not([data-theme]) { color-scheme: light; }
@@ -2035,6 +2061,24 @@
   --depth-sheen: none;
   --depth-sheen-pressed: none;
 }
+}
+[data-radius="sharp"]:not(#dk-radius), [data-radius="sharp"] :is([data-brand], [data-theme]):not([data-radius], #dk-radius) {
+  --radius-inner: var(--rounded-xs);
+  --radius-control: var(--rounded-xs);
+  --radius-surface: var(--rounded-sm);
+  --radius-container: var(--rounded-sm);
+}
+[data-radius="round"]:not(#dk-radius), [data-radius="round"] :is([data-brand], [data-theme]):not([data-radius], #dk-radius) {
+  --radius-inner: var(--rounded-md);
+  --radius-control: var(--rounded-xl);
+  --radius-surface: var(--rounded-2xl);
+  --radius-container: var(--rounded-3xl);
+}
+[data-radius="default"]:not(#dk-radius), [data-radius="default"] :is([data-brand], [data-theme]):not([data-radius], #dk-radius) {
+  --radius-inner: var(--rounded-sm);
+  --radius-control: var(--dk-own-radius-control);
+  --radius-surface: var(--dk-own-radius-surface);
+  --radius-container: var(--rounded-xl);
 }
 [data-type-scale="fluid"] {
   --text-2xl: clamp(1.25rem, 1.1667rem + 0.4167vw, 1.5rem);

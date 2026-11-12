@@ -6863,7 +6863,15 @@
     "radius-inner": {
       "$type": "dimension",
       "$value": "{radius.rounded-sm}",
-      "$description": "A small part inside or beside a control: a checkbox, a key, a clear or stepper button, the indicator of a segmented control, the focus ring of a link in text, inline code. 4px."
+      "$description": "A small part inside or beside a control: a checkbox, a key, a clear or stepper button, the indicator of a segmented control, the focus ring of a link in text, inline code. 4px.",
+      "$extensions": {
+        "com.serupa": {
+          "roundness": {
+            "sharp": "{rounded-xs}",
+            "round": "{rounded-md}"
+          }
+        }
+      }
     },
     "radius-control": {
       "$type": "dimension",
@@ -6877,6 +6885,10 @@
             "violet-dark": "{rounded-md}",
             "emerald-light": "{rounded-lg}",
             "emerald-dark": "{rounded-lg}"
+          },
+          "roundness": {
+            "sharp": "{rounded-xs}",
+            "round": "{rounded-xl}"
           }
         }
       }
@@ -6893,6 +6905,10 @@
             "violet-dark": "{rounded-lg}",
             "emerald-light": "{rounded-xl}",
             "emerald-dark": "{rounded-xl}"
+          },
+          "roundness": {
+            "sharp": "{rounded-sm}",
+            "round": "{rounded-2xl}"
           }
         }
       }
@@ -6909,6 +6925,10 @@
             "violet-dark": "{rounded-xl}",
             "emerald-light": "{rounded-xl}",
             "emerald-dark": "{rounded-xl}"
+          },
+          "roundness": {
+            "sharp": "{rounded-sm}",
+            "round": "{rounded-3xl}"
           }
         }
       }

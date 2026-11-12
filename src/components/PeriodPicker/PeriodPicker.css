@@ -1,0 +1,85 @@
+/* ---------------------------------------------------------------
+   PeriodPicker: a button like Select (the field background, a field-border outline, the control heights) showing the
+   chosen period or a placeholder, with a calendar icon at the end. It opens a popup like DatePicker's (surface-overlay,
+   an outline, the surface corners, the overlay shadow): a header with the year (or the twelve years) between two
+   arrows, then a grid of periods, three across (two for quarters), each a button as tall as a medium control. The
+   chosen one is filled with primary; the current one is primary text in semibold; ones outside min..max are faded
+   and struck through, as Calendar's days are.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-period-picker {
+  --dk-pp-h: var(--period-picker-height-md, var(--control-height-md));
+  --dk-pp-px: var(--period-picker-padding-x, var(--spacing-3));
+  --dk-pp-bd: var(--period-picker-border, var(--field-border));
+  --dk-pp-ring: var(--period-picker-focus-ring, var(--focus-ring));
+  --dk-pp-offset: var(--spacing-1);
+  position: relative; display: inline-flex; inline-size: var(--sizing-full); min-inline-size: var(--spacing-0); vertical-align: middle;
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+}
+.dk-period-picker--size-sm { --dk-pp-h: var(--period-picker-height-sm, var(--control-height-sm)); --dk-pp-px: var(--spacing-2); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-period-picker--size-lg { --dk-pp-h: var(--period-picker-height-lg, var(--control-height-lg)); --dk-pp-px: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-period-picker__button {
+  display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; inline-size: var(--sizing-full); min-block-size: var(--dk-pp-h); margin: var(--spacing-0);
+  padding-block: var(--spacing-0); padding-inline: var(--dk-pp-px); border: var(--border-width-1) solid var(--dk-pp-bd); border-radius: var(--period-picker-radius, var(--radius-control));
+  background: var(--period-picker-bg, var(--field)); color: var(--period-picker-text, var(--text)); font: inherit; text-align: start; cursor: pointer; touch-action: manipulation;
+  transition: border-color var(--motion-hover) var(--ease-move);
+}
+@media (hover: hover) { .dk-period-picker__button:hover:not(:disabled, [aria-readonly="true"], :focus-visible, [aria-expanded="true"]) { --dk-pp-bd: var(--period-picker-border-hover, var(--field-border-hover)); border-color: var(--dk-pp-bd); } }
+/* Focus, as Select and Input: the border and a ring hugging it take the focus color (2px in all), and a transparent
+   outline shows in forced colors. It stays while the popup is open; invalid, both are danger. */
+.dk-period-picker__button:is(:focus-visible, [aria-expanded="true"]) {
+  --dk-pp-bd: var(--dk-pp-ring); transition-duration: var(--duration-0);
+  box-shadow: 0 0 0 var(--border-width-1) var(--dk-pp-bd); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0);
+}
+.dk-period-picker--invalid { --dk-pp-bd: var(--period-picker-invalid, var(--danger)); --dk-pp-ring: var(--period-picker-invalid, var(--danger)); }
+.dk-period-picker--readonly .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); cursor: default; }
+.dk-period-picker--disabled .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-period-picker__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-period-picker__value--empty { color: var(--period-picker-placeholder, var(--placeholder)); }
+.dk-period-picker__icon { flex: none; color: var(--period-picker-icon, var(--text-muted)); font-size: var(--spacing-4); }
+
+.dk-period-picker__panel {
+  box-sizing: border-box; position: fixed; inset: auto; z-index: var(--period-picker-z-index, var(--z-popover));
+  inline-size: var(--period-picker-panel-width, var(--spacing-64)); max-inline-size: calc(var(--sizing-screen-w) - var(--spacing-4) - var(--spacing-4));
+  margin: var(--spacing-0); padding: var(--period-picker-panel-padding, var(--spacing-3));
+  border: var(--border-width-1) solid var(--period-picker-panel-border, var(--border-overlay)); border-radius: var(--period-picker-panel-radius, var(--radius-surface));
+  background: var(--period-picker-panel-bg, var(--surface-overlay)); color: var(--period-picker-text, var(--text)); box-shadow: var(--period-picker-panel-shadow, var(--elevation-overlay));
+  cursor: default; transform-origin: var(--dk-layer-origin, top);
+}
+/* Motion, as DatePicker's popup: in from @starting-style, out with a fade kept in the top layer; gone at once when
+   closed from the keyboard (data-instant). Reduced motion: the fade alone. */
+.dk-period-picker__panel { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit); }
+.dk-period-picker__panel:not([hidden]) { transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+@supports (overlay: auto) {
+  .dk-period-picker__panel[hidden] { transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit), display var(--motion-exit-sm) allow-discrete, overlay var(--motion-exit-sm) allow-discrete; }
+}
+.dk-period-picker__panel[hidden] { display: none; opacity: var(--opacity-0); pointer-events: none; }
+.dk-period-picker__panel[hidden][data-instant] { transition: none; }
+@starting-style { .dk-period-picker__panel:not([hidden]):not([data-instant]) { opacity: var(--opacity-0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .dk-period-picker__panel[hidden] { scale: var(--scale-95); }
+  @starting-style { .dk-period-picker__panel:not([hidden]):not([data-instant]) { scale: var(--scale-95); } }
+}
+.dk-period-picker__header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); margin-block-end: var(--spacing-2); }
+.dk-period-picker__title { flex: auto; margin: var(--spacing-0); text-align: center; color: var(--period-picker-text, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
+.dk-period-picker__grid { inline-size: var(--sizing-full); border-collapse: separate; border-spacing: var(--period-picker-gap, var(--spacing-1)); table-layout: fixed; }
+.dk-period-picker__grid td { padding: var(--spacing-0); }
+.dk-period-picker__period {
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box; inline-size: var(--sizing-full); min-block-size: var(--control-height-md);
+  margin: var(--spacing-0); padding: var(--spacing-1); border: var(--spacing-0); border-radius: var(--period-picker-period-radius, var(--radius-control));
+  background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation; overflow-wrap: anywhere;
+}
+@media (hover: hover) { .dk-period-picker__period:hover:not([aria-disabled="true"], .dk-period-picker__period--selected) { background: var(--period-picker-period-bg-hover, var(--surface-muted)); } }
+.dk-period-picker__period:active:not([aria-disabled="true"], .dk-period-picker__period--selected) { background: var(--period-picker-period-bg-pressed, var(--pressed)); }
+.dk-period-picker__period:focus { outline: none; }
+.dk-period-picker__period:focus-visible { outline: var(--focus-ring-width) solid var(--period-picker-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.dk-period-picker__period--current { color: var(--period-picker-current, var(--primary)); font-weight: var(--font-semibold); }
+.dk-period-picker__period--selected { background: var(--period-picker-selected-bg, var(--primary)); color: var(--period-picker-selected-text, var(--on-primary)); }
+.dk-period-picker__period--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: not-allowed; }
+@media (forced-colors: active) {
+  .dk-period-picker__panel { border-color: CanvasText; }
+  .dk-period-picker__period--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+  .dk-period-picker__period--current { text-decoration: underline; }
+}
+@media print { .dk-period-picker__panel { display: none; } }
+}

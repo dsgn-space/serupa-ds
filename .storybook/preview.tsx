@@ -26,8 +26,8 @@ if (typeof document !== 'undefined') {
   document.head.appendChild(style);
 }
 
-// The toolbar picks a brand and a mode; together they are the page's data-theme, as theme.js sets it. Contrast
-// and density set data-contrast and data-density, the page's other theme axes; their defaults leave the attribute off,
+// The toolbar picks a brand and a mode; together they are the page's data-theme, as theme.js sets it. Contrast,
+// density and roundness set data-contrast, data-density and data-radius, the page's other theme axes; their defaults leave the attribute off,
 // so the system's own "more contrast" setting still applies, as it would in an app.
 // Docs pages without stories (Foundations, Introduction) run no decorator, so the globals are also followed
 // straight from the channel; the theme then paints the whole page (see docs.css).
@@ -41,6 +41,7 @@ const axes = (g: Record<string, unknown>) => {
   const html = document.documentElement;
   if (g.contrast === 'more') html.setAttribute('data-contrast', 'more'); else html.removeAttribute('data-contrast');
   if (g.density === 'compact' || g.density === 'comfortable') html.setAttribute('data-density', g.density); else html.removeAttribute('data-density');
+  if (g.radius === 'sharp' || g.radius === 'round') html.setAttribute('data-radius', g.radius); else html.removeAttribute('data-radius');
   slow(Number(g.motion) || 1);
 };
 // Slow motion (KW21): ×4 or ×10 multiplies every --duration-* and --delay-* token, so a transition can be watched frame
@@ -81,12 +82,12 @@ channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply
 const WithTheme: Decorator = (Story, context) => {
   const theme = `${context.globals.brand || DEFAULT_BRAND}-${context.globals.mode || 'light'}`;
   const dir = context.globals.dir === 'rtl' ? 'rtl' : 'ltr';
-  const { contrast, density, motion } = context.globals;
+  const { contrast, density, radius, motion } = context.globals;
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.setAttribute('dir', dir);
-    axes({ contrast, density, motion });
-  }, [theme, dir, contrast, density, motion]);
+    axes({ contrast, density, radius, motion });
+  }, [theme, dir, contrast, density, radius, motion]);
   const content = CONTENT.some((c) => c.value === context.globals.content) ? context.globals.content as Content : 'demo';
   return <ContentContext.Provider value={content}><Story /></ContentContext.Provider>;
 };
@@ -119,6 +120,11 @@ const preview: Preview = {
       toolbar: { title: 'Density', icon: 'component', dynamicTitle: true, items: [
         { value: 'compact', title: 'Compact' }, { value: 'default', title: 'Default density' }, { value: 'comfortable', title: 'Comfortable' }] },
     },
+    radius: {
+      description: 'Roundness',
+      toolbar: { title: 'Roundness', icon: 'circlehollow', dynamicTitle: true, items: [
+        { value: 'sharp', title: 'Sharp' }, { value: 'default', title: 'Default roundness' }, { value: 'round', title: 'Round' }] },
+    },
     // Slow motion: every duration and delay token ×4 or ×10, to judge an animation frame by frame.
     motion: {
       description: 'Motion speed',
@@ -131,7 +137,7 @@ const preview: Preview = {
       toolbar: { title: 'Content', icon: 'document', dynamicTitle: true, items: CONTENT.map((c) => ({ ...c })) },
     },
   },
-  initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr', contrast: 'default', density: 'default', motion: '1', content: 'demo' },
+  initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr', contrast: 'default', density: 'default', radius: 'default', motion: '1', content: 'demo' },
   // Every story is shot by tools/test/visual.mjs unless its file says tags: ['!visual'], which takes this tag away.
   // A "!" tag only removes a tag, so this one has to be here for it to remove (GR285).
   tags: ['visual'],
@@ -147,7 +153,7 @@ const preview: Preview = {
     options: {
       storySort: (a, b) => {
         const order = ['Introduction', 'Getting started', 'Foundations', 'Components', 'Versioning and tools', 'Upgrading', 'Changelog'];
-        const foundations = ['Design principles', 'Colors', 'Themes', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
+        const foundations = ['Design principles', 'Colors', 'Themes', 'Theme playground', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
           'Content and voice', 'Ethical design', 'Accessibility', 'Utility classes', 'Icons'];
         const at = (list, name) => { const i = list.indexOf(name); return i < 0 ? list.length : i; };
         const x = a.title.split('/'), y = b.title.split('/');

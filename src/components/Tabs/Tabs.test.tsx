@@ -41,6 +41,12 @@ function App(props: { tref?: React.Ref<HTMLDivElement> }) {
 }
 const setup = async (tref?: React.Ref<HTMLDivElement>) => { changes = []; await render(<App tref={tref} />); await expect.poll(() => !!selected('un')).toBe(true); };
 
+/** A tab's slides on one pseudo-element: its CSS transitions, or the ones the script runs where the browser starts none
+ *  (Safari, tabRow.ts). propsOf names what each moves. */
+const slidesOn = (t: HTMLElement, pseudo: string) => document.getAnimations().filter((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === t && e.pseudoElement === pseudo; });
+const propsOf = (a: Animation) => (a instanceof CSSTransition ? [a.transitionProperty] : Object.keys((a.effect as KeyframeEffect).getKeyframes()[0]).filter((k) => !/^(offset|computedOffset|easing|composite)$/.test(k)).map((k) => (k === 'clipPath' ? 'clip-path' : k)));
+const runsOn = (t: HTMLElement) => [...slidesOn(t, '::after'), ...slidesOn(t, '::before')].flatMap(propsOf).filter((k) => /^(translate|scale|clip-path)$/.test(k)).length;
+
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Tabs', () => {
@@ -432,26 +438,50 @@ describe('Tabs on the server', () => {
       await setup();
       const tabs = [...el('un').querySelectorAll<HTMLElement>('[role="tab"]')];
       await userEvent.click(tabs[2]);
-      const moves = tabs[2].getAnimations({ subtree: true }).filter((a): a is CSSTransition => a instanceof CSSTransition && (a.effect as KeyframeEffect).pseudoElement === '::after');
-      const start = moves.find((a) => a.transitionProperty === 'translate'), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0].translate)) : NaN;
-      // When no slide is found, the message says why: whether the page has it (document.getAnimations, so only
-      // getAnimations({ subtree }) missed it), where the line starts from, and whether the click was taken for a key.
+      const moves = slidesOn(tabs[2], '::after');
+      const start = moves.find((a) => propsOf(a).includes('translate')), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0].translate)) : NaN;
+      // When no slide is found, the message says why: what the page runs on the tab, where the line starts from, and
+      // whether the click was taken for a key.
       const why = () => JSON.stringify({ page: document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.target === tabs[2]).map((a) => `${(a as CSSTransition).transitionProperty} ${(a.effect as KeyframeEffect).pseudoElement}`), from: tabs[2].style.getPropertyValue('--dk-tabs-from-shift') || getComputedStyle(tabs[2]).getPropertyValue('--dk-tabs-from-shift'), now: getComputedStyle(tabs[2], '::after').translate, instant: tabs[2].hasAttribute('data-instant') });
-      expect([moves.map((a) => a.transitionProperty).sort(), Math.round(shift)], why()).toEqual([['scale', 'translate'], Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft)]);
+      expect([moves.flatMap(propsOf).sort(), Math.round(shift)], why()).toEqual([['scale', 'translate'], Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft)]);
       await Promise.all(moves.map((a) => a.finished.catch(() => {})));
       expect([getComputedStyle(tabs[2], '::after').translate, getComputedStyle(tabs[2], '::after').scale]).toEqual(['none', 'none']);
 
       const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
       const [from, to] = [pills[2], pills[0]];
       await userEvent.click(to);
-      const cuts = to.getAnimations({ subtree: true }).filter((a): a is CSSTransition => a instanceof CSSTransition && (a.effect as KeyframeEffect).pseudoElement === '::before');
+      const cuts = slidesOn(to, '::before');
       const first = String((cuts[0]?.effect as KeyframeEffect | undefined)?.getKeyframes()[0].clipPath ?? '');
       const px = (c: string) => (c.match(/-?[\d.]+px/g) || []).slice(0, 4).map((n) => Math.round(parseFloat(n)));
       // Cut to the last tab: its start edge is where that tab starts, from this one's (the fill spans both).
-      expect([cuts.map((a) => a.transitionProperty), px(first)[3], /round/.test(first), cuts.some((a) => a.transitionProperty === 'scale')]).toEqual([['clip-path'], Math.round(from.offsetLeft - to.offsetLeft), true, false]);
+      expect([cuts.flatMap(propsOf), px(first)[3], /round/.test(first), cuts.some((a) => propsOf(a).includes('scale'))]).toEqual([['clip-path'], Math.round(from.offsetLeft - to.offsetLeft), true, false]);
       await Promise.all(cuts.map((a) => a.finished.catch(() => {})));
       const rest = getComputedStyle(to, '::before'), r = to.getBoundingClientRect(), box = { w: parseFloat(rest.width), cut: px(rest.clipPath) };
       expect([Math.round(box.w - box.cut[1] - box.cut[3]), box.cut[0], box.cut[2], /round/.test(rest.clipPath)]).toEqual([Math.round(r.width), 0, 0, true]);
+    });
+  });
+
+  test('where the browser starts no slide for the line or the fill (Safari, on a pseudo-element), the script runs it: from the same start, then at rest in place', async () => {
+    await withMotion(async () => {
+      await setup();
+      // The CSS slide turned off, as Safari leaves it: the transition time is there, but nothing starts.
+      const off = document.createElement('style');
+      off.textContent = '.dk-tabs__tab::after, .dk-tabs__tab::before { transition-property: none !important; }';
+      document.head.append(off);
+      try {
+        const scripted = (t: HTMLElement, pseudo: string) => document.getAnimations().filter((a) => !(a instanceof CSSTransition) && (a.effect as KeyframeEffect | null)?.target === t && (a.effect as KeyframeEffect).pseudoElement === pseudo);
+        const tabs = [...el('un').querySelectorAll<HTMLElement>('[role="tab"]')];
+        await userEvent.click(tabs[2]);
+        const [line] = scripted(tabs[2], '::after'), start = (line?.effect as KeyframeEffect | undefined)?.getKeyframes()[0];
+        expect([Math.round(parseFloat(String(start?.translate))), typeof start?.scale]).toEqual([Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft), 'string']);
+        await line.finished;
+        expect(getComputedStyle(tabs[2], '::after').translate).toBe('none');
+        const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
+        await userEvent.click(pills[0]);
+        const [cut] = scripted(pills[0], '::before'), first = String((cut?.effect as KeyframeEffect | undefined)?.getKeyframes()[0].clipPath ?? '');
+        expect([Math.round(parseFloat((first.match(/-?[\d.]+px/g) || [])[3] ?? 'NaN')), /round/.test(first)]).toEqual([Math.round(pills[2].offsetLeft - pills[0].offsetLeft), true]);
+        await cut.finished;
+      } finally { off.remove(); }
     });
   });
 });
@@ -463,7 +493,7 @@ describe('Tabs indicator from the keyboard (KW1)', () => {
       for (const id of ['un', 'dv']) {
         const tabs = [...el(id).querySelectorAll<HTMLElement>('[role="tab"]')];
         const on = () => tabs.find((t) => t.getAttribute('aria-selected') === 'true')!;
-        const runs = (t: HTMLElement) => t.getAnimations({ subtree: true }).filter((a) => a instanceof CSSTransition && /^(translate|scale|clip-path)$/.test(a.transitionProperty)).length;
+        const runs = runsOn;
         // The click comes from the page itself and the slide is read as soon as React has drawn it: a driver click
         // (userEvent) comes back after a round trip, which on a busy runner outlasted the slide. One press (detail 1),
         // as a mouse's: a click with none is a key's, which moves it at once.
@@ -496,7 +526,7 @@ describe('Tabs indicator after a keyboard pick, moved from elsewhere (GR61)', ()
       await render(<App />);
       const tabs = [...document.querySelectorAll<HTMLElement>('#gr61 [role="tab"]')];
       const on = () => tabs.find((t) => t.getAttribute('aria-selected') === 'true')!;
-      const runs = (t: HTMLElement) => t.getAnimations({ subtree: true }).filter((a) => a instanceof CSSTransition && /^(translate|scale|clip-path)$/.test(a.transitionProperty)).length;
+      const runs = runsOn;
       tabs[0].focus();
       await userEvent.keyboard('{ArrowRight}');
       expect([on() === tabs[1], tabs[1].hasAttribute('data-instant'), runs(tabs[1])]).toEqual([true, true, 0]);
@@ -508,8 +538,8 @@ describe('Tabs indicator after a keyboard pick, moved from elsewhere (GR61)', ()
 
 describe('Tabs indicator turned back mid-slide (GQ8)', () => {
   // The selected tab's transitions on one pseudo-element, held halfway.
-  const slides = (t: HTMLElement, pseudo: string) => t.getAnimations({ subtree: true }).filter((a): a is CSSTransition => a instanceof CSSTransition && (a.effect as KeyframeEffect).pseudoElement === pseudo);
-  const halfway = (all: CSSTransition[]) => { for (const a of all) { a.pause(); a.currentTime = Number(a.effect!.getTiming().duration) / 2; } };
+  const slides = slidesOn;
+  const halfway = (all: Animation[]) => { for (const a of all) { a.pause(); a.currentTime = Number(a.effect!.getTiming().duration) / 2; } };
   const nums = (v: string) => (v.match(/-?[\d.]+/g) || []).map(Number);
   test('picking another tab while the line or the fill is still sliding starts the new slide from where it has got to, not from the last tab (EH1)', async () => {
     await withMotion(async () => {
@@ -520,7 +550,7 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
       const at = tabs[2].offsetLeft + nums(getComputedStyle(tabs[2], '::after').translate)[0];
       expect(Math.abs(at - tabs[2].offsetLeft)).toBeGreaterThan(8);
       await userEvent.click(tabs[1]);
-      const move = slides(tabs[1], '::after').find((a) => a.transitionProperty === 'translate')!;
+      const move = slides(tabs[1], '::after').find((a) => propsOf(a).includes('translate'))!;
       const from = tabs[1].offsetLeft + parseFloat(String((move.effect as KeyframeEffect).getKeyframes()[0].translate));
       expect(Math.abs(from - at)).toBeLessThan(1);
 
