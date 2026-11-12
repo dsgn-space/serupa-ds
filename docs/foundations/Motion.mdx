@@ -1,10 +1,17 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../blocks';
+import { MotionGallery } from '../motionGallery';
 
 <Meta title="Foundations/Motion" />
 
 # Motion
 
 <ReadmeSections headings={["Motion"]} reserve={["Motion"]} />
+
+## In practice
+
+Each of these is the real component. Use it, then turn on reduced motion in your system settings and use it again: what's left is the fade, or nothing. Cards are ordered by how often people meet them, which is what decides how much they may move.
+
+<MotionGallery />
 
 <TokenTable group="transitions" preview="duration" />
