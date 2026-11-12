@@ -44,6 +44,14 @@ jobs:
           persist-credentials: false
           # The base branch's history too, to find where the pull request started (git merge-base).
           fetch-depth: 0
+      # The x86 runner keeps its workspace between jobs, and checkout's clean leaves a file another job staged with
+      # git add (it counts as tracked). "Collect what changed" then handed over another pull request's pictures:
+      # React error #300 as Playground/WithState, and #1620's Quote pictures in #1622. Start from HEAD's tree alone.
+      - name: Drop what an earlier job left staged
+        run: |
+          git config --global --add safe.directory "$PWD"
+          git reset -q
+          git clean -ffdxq
       - uses: ./.github/actions/setup
       - name: Render the baselines
         run: |
