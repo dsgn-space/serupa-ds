@@ -67,13 +67,15 @@ On a plain page without a bundler:
 <html lang="en" data-brand="blue" data-mode="auto">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello · Example</title>
   <script src="dist/theme.js"></script>
+  <link rel="preload" href="fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="dist/base.css">
-  <link rel="stylesheet" href="dist/bundle.css">
+  <link rel="stylesheet" href="dist/components.css">   <!-- not bundle.css: 1.5 MB of utility classes would hold up the first paint -->
 </head>
 <body>
-  <div id="root"></div>
+  <main id="root"></main>
   <script src="dist/lib/react.production.min.js"></script>
   <script src="dist/lib/react-dom.production.min.js"></script>
   <script src="dist/serupa.iife.js"></script>   <!-- puts the components on window.Serupa -->
