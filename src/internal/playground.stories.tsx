@@ -14,17 +14,20 @@ import { Textarea } from '../components/Textarea/Textarea';
 const SCOPE: Record<string, unknown> = { React, ...React, ...Serupa };
 const NAMES = Object.keys(SCOPE).filter((n) => /^[A-Za-z_$][\w$]*$/.test(n) && n !== 'default');
 
-type Result = { element: React.ReactNode; error: null } | { element: null; error: string };
-function run(code: string): Result {
+// The code becomes a component of its own, drawn inside the preview, so the hooks it calls are that component's.
+// Called directly (inside Playground's useMemo), its useState was Playground's for one render and gone the next, and
+// any second render (a click, a theme switch) ended in React's "Rendered fewer hooks than expected" (#300).
+type Result = { Preview: React.ComponentType; error: null } | { Preview: null; error: string };
+function compile(code: string): Result {
   try {
     const body = /^\s*</.test(code) ? `return (${code}\n);` : code;
     const js = transform(body, { transforms: ['jsx', 'typescript'], jsxRuntime: 'classic', production: true }).code;
     // The code is the reader's own, run in their own browser, as in any live editor.
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const fn = new Function(...NAMES, js) as (...args: unknown[]) => React.ReactNode;
-    return { element: fn(...NAMES.map((n) => SCOPE[n])), error: null };
+    return { Preview: () => fn(...NAMES.map((n) => SCOPE[n])), error: null };
   } catch (e) {
-    return { element: null, error: e instanceof Error ? e.message : String(e) };
+    return { Preview: null, error: e instanceof Error ? e.message : String(e) };
   }
 }
 
@@ -32,16 +35,16 @@ function Playground({ code: start }: { code: string }) {
   const [code, setCode] = React.useState(start);
   React.useEffect(() => setCode(start), [start]);
   const deferred = React.useDeferredValue(code);
-  const result = React.useMemo(() => run(deferred), [deferred]);
+  const result = React.useMemo(() => compile(deferred), [deferred]);
   return (
     <div className="grid gap-4 md:grid-cols-2 items-start">
       <Textarea aria-label="Code" className="font-mono text-sm" rows={16} spellCheck={false} autoCapitalize="off" autoCorrect="off"
         value={code} onChange={(e) => setCode(e.target.value)} />
       <div aria-label="Preview" role="region" className="min-w-0">
-        {result.error != null
+        {result.Preview == null
           ? <Alert tone="danger" title="The code doesn't run">{result.error}</Alert>
           : <ErrorBoundary resetKeys={[deferred]} fallback={({ error }) => <Alert tone="danger" title="It threw while rendering">{error instanceof Error ? error.message : String(error)}</Alert>}>
-            {result.element}
+            <result.Preview />
           </ErrorBoundary>}
       </div>
     </div>

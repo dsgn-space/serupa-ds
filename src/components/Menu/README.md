@@ -8,7 +8,7 @@ A list of actions behind a button: a row's "More" menu, an "Actions" dropdown, a
 const { Menu, ContextMenu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton, Card } = window.Serupa;
 
 <Menu trigger={<Button variant="secondary" rightIcon="expand_more">Actions</Button>}>
-  <MenuItem icon="edit" shortcut="⌘E" onSelect={edit}>Edit</MenuItem>
+  <MenuItem icon="edit" shortcut={['mod', 'E']} onSelect={edit}>Edit</MenuItem>
   <MenuItem icon="content_copy" onSelect={duplicate}>Duplicate</MenuItem>
   <MenuItem href="/share" icon="link">Share link</MenuItem>
   <MenuSeparator />
@@ -71,15 +71,17 @@ Drawn from the `BottomEnd` story, opened.
 - Keep `disabled` items in place rather than hiding them, so people learn the action exists.
 - Use a `MenuSub` for a set of related choices that would make the menu long ("Share", "Move to"). Keep it to one level where you can: each level is one more step for keyboard and screen reader users, and harder to reach with a pointer. Never put the only way to do something two levels down.
 - Give a `ContextMenu` target `tabIndex={0}` (or use a focusable element), so keyboard users can reach it and press Shift+F10, and say in its hint or a Tooltip that it has one. Leave the browser's own menu where people expect it, such as on text they edit or links: `disabled` does that.
-- For settings, use `MenuCheckboxItem` (on or off, such as "Show grid") or a `MenuRadioGroup` of `MenuRadioItem`s (one of a set, such as a sort order). Put them in their own `MenuGroup` or `MenuRadioGroup`, so the checks line up. The menu's items unmount once it has closed, so you hold the state: `checked` with `onCheckedChange`, and `value` with `onValueChange`.
-- `shortcut` only shows a hint: wire the shortcut yourself, and show only shortcuts that work. Write it the way the platform does ("⌘K" on a Mac, "Ctrl+K" elsewhere).
+- For settings, use `MenuCheckboxItem` (on or off, such as "Show grid") or a `MenuRadioGroup` of `MenuRadioItem`s (one of a set, such as a sort order). Put them in their own `MenuGroup` or `MenuRadioGroup`, to keep settings apart from actions. The menu's items unmount once it has closed, so you hold the state: `checked` with `onCheckedChange`, and `value` with `onValueChange`.
+- Labels line up by themselves. When some of a menu's items have an `icon` (or a check), the items without one keep that space, so every label and group heading starts in one column. Each submenu works this out for its own items. Give icons to all of a menu's items or to none where you can; a few icons among plain items draw the eye to those few.
+- `shortcut` only shows a hint: wire the shortcut yourself, and show only shortcuts that work. Give it as keys, `['mod', 'K']`, and it follows the platform as [Kbd](../Kbd/README.md) does: "⌘K" on a Mac and "Ctrl+K" elsewhere, with modifiers in each platform's order ("⇧⌘K", "Ctrl+Shift+K") (a SerupaProvider's `platform` decides from the server render). Text (`"Ctrl+Shift+P"`) shows as written, for a shortcut that is the same everywhere.
+- Don't take keys the browser keeps: ⌘N, ⌘T and ⌘W can't be caught at all, and ⌘D, ⌘R and ⌘O already bookmark, reload and open a file. Add Shift or Alt, as the stories do (see [KeyboardShortcuts](../KeyboardShortcuts/README.md)).
 
 ## Accessibility
 
 - A `MenuSub` is a `menuitem` with `aria-haspopup="menu"` and `aria-expanded`; its submenu is a `menu` named by the item's label, next to the item at its end edge (on the right, or the left in rtl, flipping when there's no room).
 - `role="menu"` with `menuitem`s, `group`s and `separator`s; only the highlighted item takes focus.
 - A `MenuCheckboxItem` is a `menuitemcheckbox` and a `MenuRadioItem` a `menuitemradio`, with `aria-checked`. The check before the label is hidden from assistive tech, which reads `aria-checked` instead.
-- A `shortcut` is given to assistive tech as `aria-keyshortcuts`, worked out from what's shown ("⌘⇧K" becomes `Meta+Shift+K`, "Ctrl+Shift+P" becomes `Control+Shift+P`), and the shown `<kbd>` is left out of the item's name, so it's read as "Edit" with its shortcut, not "Edit command E". Hyphens separate too ("Cmd-K" is `Meta+K`), a last `+` is the key ("Ctrl++" is `Control+Plus`), and "G then I" is two presses in a row (`G I`). Pass `aria-keyshortcuts` to set it yourself.
+- A `shortcut` is given to assistive tech as `aria-keyshortcuts`, worked out from what's shown ("⌘⇧K" becomes `Meta+Shift+K`, "Ctrl+Shift+P" becomes `Control+Shift+P`; `mod` is `Meta` on a Mac and `Control` elsewhere), and the shown `<kbd>` is left out of the item's name, so it's read as "Edit" with its shortcut, not "Edit command E". Hyphens separate too ("Cmd-K" is `Meta+K`), a last `+` is the key ("Ctrl++" is `Control+Plus`), and "G then I" is two presses in a row (`G I`). Pass `aria-keyshortcuts` to set it yourself.
 - It fades and grows in out of its trigger over 150ms, and fades and shrinks back over 100ms when it closes. Its items arrive and leave with it, as one. With `prefers-reduced-motion` it only fades. The motion is a transition, so closing it while it opens turns back from where it is. Its items stay while it fades out, inert, and focus goes back at once; a submenu open when the menu closes closes and fades with it. A `ContextMenu` and a `MenuSub`'s submenu move the same way. One open on arrival (`defaultOpen`, or `open` on the first render) is there from the first frame. Firefox and Safari can't keep a closing menu in the top layer yet, so there it closes at once. From the keyboard there is no motion: opened by Enter, Space or an arrow (a submenu by ArrowRight) it is there at once, and Escape takes it away at once.
 - Labels, shortcuts and group headings keep 4.5:1 (also on the highlighted item) and icons 3:1, in all six themes (`Menu.test.tsx`).
 
@@ -137,7 +139,7 @@ An id on the target stays on the target.
 | --- | --- | --- | --- |
 | `onSelect` | `(event) => void` | | Runs when it's chosen (click, Enter or Space). The menu then closes and focus goes back to the button, unless you call `event.preventDefault()`. If it moves focus itself (to the next row, after deleting this one), focus stays there |
 | `icon` | icon name \| element | | A muted 16px icon before the label |
-| `shortcut` | string | | A hint at the end, such as `⌘K` (wire the shortcut yourself); also sets `aria-keyshortcuts` |
+| `shortcut` | string \| string[] | | A hint at the end (wire the shortcut yourself). Keys, `['mod', 'K']`, show as ⌘K on a Mac and Ctrl+K elsewhere; text shows as written. Also sets `aria-keyshortcuts` |
 | `destructive` | boolean | `false` | Danger colors |
 | `disabled` | boolean | `false` | Still reachable with the keys (so people learn it exists), but can't be chosen |
 | `as` | component | | Makes it a link with this component instead of the `configure({ link })` one, such as a router's Link. Typed: its props are those of the element `as` names, so `as={RouterLink} to="/settings"` checks `to`, and without `as` they're an `<a>`'s (`href`, `target`, `rel`) |

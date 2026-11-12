@@ -1,0 +1,118 @@
+# Default
+- navigation "Project":
+  - list:
+    - listitem:
+      - link "Overview":
+        - /url: "#overview"
+    - listitem:
+      - link "Activity":
+        - /url: "#activity"
+    - listitem:
+      - link "Members":
+        - /url: "#members"
+    - listitem:
+      - link "Settings":
+        - /url: "#settings"
+
+# DoTabLine
+- navigation "Project":
+  - list:
+    - listitem:
+      - link "Overview":
+        - /url: "#overview"
+    - listitem:
+      - link "Activity":
+        - /url: "#activity"
+    - listitem:
+      - link "Members":
+        - /url: "#members"
+    - listitem:
+      - link "Settings":
+        - /url: "#settings"
+
+# DontPlainLinks
+- navigation "Project":
+  - list:
+    - listitem:
+      - link "Overview":
+        - /url: "#overview"
+    - listitem:
+      - link "Activity":
+        - /url: "#activity"
+    - listitem:
+      - link "Members":
+        - /url: "#members"
+    - listitem:
+      - link "Settings":
+        - /url: "#settings"
+
+# Large
+- navigation "Project":
+  - list:
+    - listitem:
+      - link "Overview":
+        - /url: "#overview"
+    - listitem:
+      - link "Activity":
+        - /url: "#activity"
+    - listitem:
+      - link "Members":
+        - /url: "#members"
+    - listitem:
+      - link "Settings":
+        - /url: "#settings"
+
+# LongLabels
+- navigation "Repository":
+  - list:
+    - listitem:
+      - link "Code":
+        - /url: "#code"
+    - listitem:
+      - link "Issues":
+        - /url: "#issues"
+    - listitem:
+      - link "Merge requests":
+        - /url: "#requests"
+    - listitem:
+      - link "Pipelines":
+        - /url: "#pipelines"
+    - listitem:
+      - link "Donaudampfschifffahrtsgesellschaft":
+        - /url: "#wiki"
+    - listitem:
+      - link "Settings":
+        - /url: "#settings"
+
+# Pill
+- navigation "Project":
+  - list:
+    - listitem:
+      - link "Overview":
+        - /url: "#overview"
+    - listitem:
+      - link "Activity":
+        - /url: "#activity"
+    - listitem:
+      - link "Members":
+        - /url: "#members"
+    - listitem:
+      - link "Settings":
+        - /url: "#settings"
+
+# Playground
+- navigation "Project":
+  - list:
+    - listitem:
+      - link "Overview":
+        - /url: "#overview"
+    - listitem:
+      - link "Activity":
+        - /url: "#activity"
+    - listitem:
+      - link "Members":
+        - /url: "#members"
+    - listitem:
+      - link "Settings":
+        - /url: "#settings"
+

@@ -14,19 +14,19 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.3.0
+npm install github:dsgn-space/serupa-ds#v14.4.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
-Always pin a tag (`#v14.3.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.4.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v14.3.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v14.4.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -67,13 +67,15 @@ On a plain page without a bundler:
 <html lang="en" data-brand="blue" data-mode="auto">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello · Example</title>
   <script src="dist/theme.js"></script>
+  <link rel="preload" href="fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="dist/base.css">
-  <link rel="stylesheet" href="dist/bundle.css">
+  <link rel="stylesheet" href="dist/components.css">   <!-- not bundle.css: 1.5 MB of utility classes would hold up the first paint -->
 </head>
 <body>
-  <div id="root"></div>
+  <main id="root"></main>
   <script src="dist/lib/react.production.min.js"></script>
   <script src="dist/lib/react-dom.production.min.js"></script>
   <script src="dist/serupa.iife.js"></script>   <!-- puts the components on window.Serupa -->

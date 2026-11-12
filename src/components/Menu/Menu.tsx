@@ -15,6 +15,7 @@ import * as icons from '../../material/builtin';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { submenuIntent } from '../../internal/timing';
 import { activeIn } from '../../internal/root';
+import { shortcutShown, useApple } from '../../internal/keys';
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -283,10 +284,11 @@ export interface MenuItemOwnProps {
   onSelect?: ((event: React.SyntheticEvent) => void) | undefined;
   /** An icon before the label: an icon name or any element. */
   icon?: IconSource | undefined;
-  /** A keyboard shortcut shown at the end, such as "⌘K" or "Ctrl+Shift+P". Only a hint: wire the shortcut yourself.
-      It's also given to assistive tech as aria-keyshortcuts ("Meta+K"), worked out from it; pass aria-keyshortcuts
-      to set that yourself. */
-  shortcut?: string | undefined;
+  /** A keyboard shortcut shown at the end. Only a hint: wire the shortcut yourself. As keys, ["mod", "K"] follows the
+      platform, as Kbd does: "⌘K" on an Apple device and "Ctrl+K" elsewhere. As text ("Ctrl+Shift+P") it shows as
+      written. It's also given to assistive tech as aria-keyshortcuts ("Control+K", or "Meta+K" on an Apple device),
+      worked out from it; pass aria-keyshortcuts to set that yourself. */
+  shortcut?: string | readonly string[] | undefined;
   /** Danger colors, for deleting. */
   destructive?: boolean | undefined;
   /** Still reachable with the keys, but can't be chosen (aria-disabled). */
@@ -307,7 +309,7 @@ interface MenuItemBaseProps extends MenuItemOwnProps, Omit<React.HTMLAttributes<
 
 const KEY_NAMES: Record<string, string> = { '⌘': 'Meta', cmd: 'Meta', command: 'Meta', meta: 'Meta', '⌥': 'Alt', opt: 'Alt', option: 'Alt', alt: 'Alt',
   '⇧': 'Shift', shift: 'Shift', '⌃': 'Control', ctrl: 'Control', control: 'Control', '⏎': 'Enter', '↵': 'Enter', enter: 'Enter', return: 'Enter',
-  '⌫': 'Backspace', del: 'Delete', delete: 'Delete', esc: 'Escape', '⎋': 'Escape', tab: 'Tab', space: 'Space', '↑': 'ArrowUp', '↓': 'ArrowDown', '←': 'ArrowLeft', '→': 'ArrowRight', '+': 'Plus', plus: 'Plus' };
+  '⌫': 'Backspace', del: 'Delete', delete: 'Delete', esc: 'Escape', '⎋': 'Escape', tab: 'Tab', space: 'Space', '↑': 'ArrowUp', '↓': 'ArrowDown', '←': 'ArrowLeft', '→': 'ArrowRight', up: 'ArrowUp', down: 'ArrowDown', left: 'ArrowLeft', right: 'ArrowRight', arrowup: 'ArrowUp', arrowdown: 'ArrowDown', arrowleft: 'ArrowLeft', arrowright: 'ArrowRight', escape: 'Escape', '+': 'Plus', plus: 'Plus' };
 /** "⌘⇧K", "Ctrl+Shift+P", "Cmd-K" or "Alt F4" as aria-keyshortcuts wants it: "Meta+Shift+K", "Control+Shift+P",
     "Meta+K", "Alt+F4". A + or - key at the end stays a key ("Ctrl++" is "Control+Plus"), and "G then I" is two
     presses, space-separated: "G I". */
@@ -361,7 +363,10 @@ const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>('
   };
   const isLink = linked && !props.disabled;
   if (!isLink) delete rest.href;
-  if (props.shortcut && rest['aria-keyshortcuts'] == null) rest['aria-keyshortcuts'] = keyShortcuts(props.shortcut);
+  // Keys follow the platform: "mod" is ⌘ (Meta) on an Apple device and Ctrl (Control) elsewhere.
+  const apple = useApple(), keys = props.shortcut, list = typeof keys === 'string' ? null : keys && keys.length ? keys : null;
+  const shown = list ? shortcutShown(list, apple) : keys as string | undefined;
+  if (shown && rest['aria-keyshortcuts'] == null) rest['aria-keyshortcuts'] = keyShortcuts(list ? list.map((k) => (k.toLowerCase() === 'mod' ? (apple ? 'Meta' : 'Control') : k)).join('+') : shown);
   if (isLink && rest.target === '_blank' && rest.rel == null) rest.rel = 'noopener noreferrer';
   // MenuCheckboxItem and MenuRadioItem pass their role and aria-checked: a check slot goes before the label.
   const checkable = !isLink && (rest.role === 'menuitemcheckbox' || rest.role === 'menuitemradio');
@@ -374,7 +379,7 @@ const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>('
     props.icon != null ? <span className="dk-menu__icon" aria-hidden="true">{asIcon(props.icon)}</span> : null,
     <span className="dk-menu__label">{props.children}</span>,
     // Shown, but not part of the item's name ("Copy", not "Copy command K"): aria-keyshortcuts says it.
-    props.shortcut ? <kbd className="dk-menu__shortcut" aria-hidden="true">{props.shortcut}</kbd> : null);
+    shown ? <kbd className="dk-menu__shortcut" aria-hidden="true">{shown}</kbd> : null);
 });
 
 /** One action in a Menu, or with href a link. `as` renders your router's link, typed with its props. */
