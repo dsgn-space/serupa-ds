@@ -186,7 +186,9 @@ jobs:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
     needs: [plan, build]
     if: needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
+    # A pull request's own run takes GitHub's runners (x64, the same image, so the same pictures), leaving the
+    # project's x86 runners to the merge queue and main: a queue group then starts its tests at once.
+    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -194,9 +196,9 @@ jobs:
     strategy:
       # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
       fail-fast: ${{ github.event_name == 'pull_request' }}
-      # A pull request takes at most four x86 runners at once. The runners serve jobs first come first served, so
-      # without a cap a few pull requests fill them all and the merge queue's groups wait until they time out.
-      max-parallel: ${{ github.event_name == 'pull_request' && 4 || 16 }}
+      # A pull request takes at most two of GitHub's runners for these at once: GitHub runs about twenty jobs at a time
+      # for the whole repository, and the queue's builds, checks and Storybook run there too.
+      max-parallel: ${{ github.event_name == 'pull_request' && 2 || 16 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
