@@ -112,6 +112,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-day-bg-hover` | `secondary` | A day or preset under the pointer, as Pagination's pages. |
 | `--calendar-day-bg-pressed` | `pressed` | A day while it's pressed, one step past hover. |
 | `--calendar-today-color` | `primary` | Today's number (4.5:1 on surface). |
+| `--calendar-today-color-hover` | `text` | Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. It stays semibold. |
 | `--calendar-selected-bg` | `primary` | The selected day. |
 | `--calendar-selected-color` | `on-primary` | Its number. |
 | `--calendar-range-bg` | `primary-subtle` | Days between the start and end of a range (DateRangePicker). |
