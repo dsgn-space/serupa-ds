@@ -126,7 +126,7 @@ describe('MentionInput', () => {
     await said('1 result');
     await userEvent.keyboard('zz');
     await said('No results');
-    await expect.element(page.getByText('No results. Try other words.')).toBeVisible();
+    expect(list().closest('[popover]')!.textContent).toContain('No results. Try other words.');
     expect(onSearch.mock.calls.map((c) => c[0])).toEqual(['', 'b', 'bu', 'bud', 'budz', 'budzz']);
     await userEvent.keyboard('{Escape}');
     expect(onSearch).toHaveBeenLastCalledWith(null);

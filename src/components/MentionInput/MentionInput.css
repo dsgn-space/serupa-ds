@@ -6,7 +6,8 @@
 @layer dk.components {
 .dk-mention-input { position: relative; display: block; }
 /* An empty box at the caret, one line tall, that the list is placed against. */
-.dk-mention-input__anchor { position: absolute; top: var(--spacing-0); left: var(--spacing-0); inline-size: var(--spacing-0); pointer-events: none; }
+/* Placed in pixels at the caret by MentionInput.tsx (style.left and top), from where the text lays it out in either direction. */
+.dk-mention-input__anchor { position: absolute; inset-block-start: var(--spacing-0); inline-size: var(--spacing-0); pointer-events: none; }
 .dk-mention-input__popup {
   --dk-mention-input-nest: max(var(--spacing-0), calc(var(--mention-input-listbox-radius, var(--radius-surface)) - var(--mention-input-listbox-padding, var(--spacing-1)) - var(--border-width-1)));
   --dk-mention-input-offset: var(--mention-input-offset, var(--spacing-1));
