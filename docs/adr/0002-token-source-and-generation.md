@@ -65,8 +65,8 @@ B fixes the blocker with the least risk and keeps the door open to C: once gener
 
 ## Action items
 
-1. [ ] `tools/tokens/build.mjs`: `tokens.json` → `tokens.css` (same order, comments, `@font-face`), wired into `npm run build`; test that it matches the committed file.
-2. [ ] Replace the "save the design system page" check with "generated file is up to date".
-3. [ ] Port `export.py` to the same script, so the build needs Node only.
-4. [ ] Generate `utilities.css` from tokens; the existing 25,561-class baseline proves nothing changed.
-5. [ ] Later, if wanted: DTCG source + Style Dictionary (option C).
+1. [x] `tools/tokens/build.mjs`: `tokens.json` → `tokens.css` (same order, comments, `@font-face`), wired into `npm run build`; test that it matches the committed file.
+2. [x] Replace the "save the design system page" check with "generated file is up to date". The build's `tokens` step regenerates the files in every run.
+3. [x] Port `export.py` to the same script, so the build needs Node only. It's `tools/tokens/export.mjs`.
+4. [x] Generate `utilities.css` from tokens (`tools/utilities/`); the existing 25,561-class baseline proves nothing changed.
+5. [x] Later, if wanted: DTCG source + Style Dictionary (option C). Done in [ADR-0014](0014-dtcg-token-source.md); `tools/test/style_dictionary.mjs` builds the export through Style Dictionary.

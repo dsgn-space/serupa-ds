@@ -35,7 +35,8 @@ export function ContrastMatrix() {
   const failing = rows.flatMap((r) => r.themes.filter((t) => t.normal === null || t.normal < r.need)).length;
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
     <p style={{ margin: 0 }}>{PAIRS.length} pairs in {C.themes.length} themes: {failing ? `${failing} below what they need.` : 'every one meets what it needs.'}</p>
-    <div style={{ overflowX: 'auto' }}>
+    {/* eslint-disable-next-line jsx-a11y-x/no-noninteractive-tabindex -- a region that scrolls sideways must take focus so a keyboard can scroll it (WCAG 2.1.1) */}
+    <div role="region" aria-label="Contrast of each pair in each theme" tabIndex={0} style={{ overflowX: 'auto' }}>
       <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
         <thead><tr><th style={cell}>Pair</th><th style={cell}>Needs</th>{C.themes.map((th) => <th key={th.id} style={cell}>{th.name}</th>)}</tr></thead>
         <tbody>{rows.map((r) => <tr key={`${r.fg} ${r.bg} ${r.need}`}>
