@@ -34,8 +34,9 @@ Drawn from the `Large` story.
 
 1. **Rule** (`.dk-quote`): a line along the start edge, as Prose draws a quote.
 2. **Words** (`.dk-quote__text`): the `<blockquote>`.
-3. **Picture** (`avatar`): optional, before who said it.
-4. **Who said it** (`.dk-quote__author`) and **where** (`.dk-quote__source`): the `<figcaption>`.
+3. **Caption** (`.dk-quote__by`): the `<figcaption>`, with the optional picture before the name.
+4. **Author** (`.dk-quote__author`): who said it.
+5. **Source** (`.dk-quote__source`): their role and company, or where it's from.
 
 ## Usage
 

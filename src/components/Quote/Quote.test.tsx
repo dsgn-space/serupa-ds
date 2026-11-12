@@ -30,7 +30,7 @@ describe('Quote', () => {
 
   test('a source alone is shown without an author', async () => {
     await render(<Quote id="q" source="The Annual Report">Words.</Quote>);
-    expect([el('q').querySelector('.dk-quote__author'), el('q').querySelector('.dk-quote__source')?.textContent]).toEqual([null, 'The Annual Report']);
+    expect(el('q').querySelector('figcaption')?.textContent).toBe('The Annual Report');
   });
 
   test("'lg' sets the words larger than 'md'", async () => {
@@ -47,7 +47,7 @@ describe('Quote', () => {
 
   test('its words and its source read 4.5:1 on the page in all six themes', async () => {
     await render(<Quote id="c" author="Ada" source="Lumen">Text</Quote>);
-    const src = el('c').querySelector('.dk-quote__source')!;
+    const src = [...el('c').querySelectorAll('figcaption span')].find((s) => s.textContent === 'Lumen')!;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       expect(contrast(css(el('c')).color, 'var(--surface)'), th).toBeGreaterThanOrEqual(4.5);
