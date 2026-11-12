@@ -4,6 +4,21 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [14.4.0] - 2026-11-12
+
+### Added
+
+- DataGrid is typed by its rows: with `rows={people}`, a column's `key` (and `rowKey`) must be one of a person's fields, and `format(row)` and `onRowsChange(rows)` get people, with no casts. Rows typed `Record<string, unknown>`, as before, work as they did.
+- Field has `FormErrors`, for the errors a server sends back by field name: each Field inside shows its own message on its control (invalid, and in its description) and drops it as soon as the field is edited, and an ErrorSummary inside with no `errors` lists them, links to each field and takes focus for each new set. Field also takes a `name`, for when its control's name isn't the one in the errors.
+- Textarea: `actions` puts a row of buttons under the text, inside the box, such as Attach and Send for a comment box, so a comment field no longer needs ChatComposer or a hand-built frame. The buttons sit at the end of the row, come after the field in the Tab order, and are disabled with it. With `showCount`, the count starts the row.
+
+### Fixed
+
+- Chart colors: series 4 is now cyan instead of lime, and series 2 is a lighter orange in dark themes, so the first four series stay apart for people with red-green or blue-yellow colour blindness. Before, series 2 and 4 looked the same with deuteranopia, which made two lines read as one between their markers. Every series keeps 3:1 on the page and on a raised card in all six themes.
+- A loading Chart keeps its "Show as table" button (disabled) and its legend's line, so the chart is as tall as it will be with numbers and nothing below it moves when they arrive.
+- Base.css: pseudo-elements (::before and ::after) now use border-box sizing too, as the stylesheet always said. The old selector put them inside :where(), where a pseudo-element can't match, so only elements got it. Stylelint 18 found it. serupa-create: the starter app installs the React, Vite, TypeScript, ESLint and Stylelint versions this release was tested with, written into the release at build time (dist/starter.json), so they move with every dependency update (Stylelint 18, ESLint 10.14 and @types/node 26.6.6 in this one).
+- PhoneInput: the number field's `autocomplete` is now `tel`, not `tel-national`. Browser autofill brings the saved number with its country code, and the field moves the country menu to match, where before a saved +44 number went in under the default country.
+
 ## [14.3.0] - 2026-11-11
 
 ### Added
@@ -2302,7 +2317,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v14.3.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v14.4.0...HEAD
+[14.4.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.3.0...v14.4.0
 [14.3.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.2.0...v14.3.0
 [14.2.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.1.0...v14.2.0
 [14.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.0.0...v14.1.0
