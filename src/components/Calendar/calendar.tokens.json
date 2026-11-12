@@ -72,10 +72,20 @@
           }
         }
       },
+      "outside-color-hover": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A day of the months before and after, under the pointer: full text, so it keeps 4.5:1 on the hover fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-outside-color-hover"
+          }
+        }
+      },
       "day-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "A day under the pointer.",
+        "$value": "{color.secondary}",
+        "$description": "A day or preset under the pointer, as Pagination's pages.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--calendar-day-bg-hover"
