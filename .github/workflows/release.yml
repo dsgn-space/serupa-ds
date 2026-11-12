@@ -73,19 +73,39 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+      pull-requests: read
     steps:
+      # GitHub refuses a push to a branch whose pull request is in the merge queue, which turned this run red each
+      # time a main push landed while the Release pull request was queued. Leave it alone then: its merge is a push
+      # to main, and that push's run makes the next Release pull request from whatever is waiting.
+      - id: queued
+        name: Is the Release pull request in the merge queue?
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          n=$(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&head=$GITHUB_REPOSITORY_OWNER:changeset-release/main" --jq '.[0].number // empty')
+          [ -n "$n" ] || exit 0
+          last=$(gh api "repos/$GITHUB_REPOSITORY/issues/$n/timeline?per_page=100" --paginate \
+            --jq '.[] | select(.event == "added_to_merge_queue" or .event == "removed_from_merge_queue") | .event' | tail -1)
+          if [ "$last" = added_to_merge_queue ]; then
+            echo "queued=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::The Release pull request (#$n) is in the merge queue, so it isn't updated now."
+          fi
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           persist-credentials: false
           fetch-depth: 0
       # No npm ci: tools/version.mjs imports only Node's own modules.
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - if: steps.queued.outputs.queued != 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
       # Pinned to a commit: this step holds BOT_TOKEN, so a moved tag can't change it. It commits and pushes the
       # Release pull request through the GitHub API, so it needs no token in git.
-      - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+      - if: steps.queued.outputs.queued != 'true'
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           version-script: node tools/version.mjs
           github-token: ${{ secrets.BOT_TOKEN }}

@@ -60,8 +60,8 @@ Each is an optional override: set it on the page, a container or one Prose. The 
 | `--prose-table-border` | `border` | The line under each table row. |
 | `--prose-caption` | `text-muted` | Figure captions, and the alt text of an image that failed to load. |
 | `--prose-quote-border-width` | `border-width-4` | The width of a blockquote's bar (4px). |
-| `--prose-code-radius` | `rounded-sm` | Inline code's corners. |
-| `--prose-pre-radius` | `rounded-md` | A code block's corners (6px). |
+| `--prose-code-radius` | `radius-inner` | Inline code's corners. |
+| `--prose-pre-radius` | `radius-control` | A code block's corners (6px). |
 | `--prose-flow` | `spacing-4` | Space before each block after the first (16px). |
 | `--prose-flow-heading` | `spacing-8` | Space before a heading, and around a rule (32px). |
 | `--prose-flow-after-heading` | `spacing-3` | Space between a heading and what follows it (12px). |

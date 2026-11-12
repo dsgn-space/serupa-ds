@@ -8,7 +8,7 @@
 .dk-combobox { padding-inline-end: var(--spacing-1); }
 .dk-combobox__button {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; padding: var(--spacing-1);
-  border: var(--spacing-0); border-radius: var(--rounded-sm); background: transparent;
+  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent;
   color: var(--combobox-chevron, var(--text-muted)); cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }

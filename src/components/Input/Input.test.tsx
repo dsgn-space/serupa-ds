@@ -5,6 +5,9 @@ import { page, userEvent } from 'vitest/browser';
 import { color, css, lowContrast, settle, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { labels as deLabels } from '../../labels/de';
+import { labels as frLabels } from '../../labels/fr';
+import { labels as arLabels } from '../../labels/ar';
 import { Input, InputAction } from './Input';
 import { NumberInput } from '../NumberInput/NumberInput';
 import { Textarea } from '../Textarea/Textarea';
@@ -306,7 +309,7 @@ describe('Input', () => {
 describe('Input and Textarea: constraint messages in the provider\'s words (216)', () => {
   const said = (id: string) => { const el = document.getElementById(id) as HTMLInputElement; el.reportValidity(); return el.validationMessage; };
   test('with idLabels, each failed constraint is said in Indonesian; typing clears it and the field is judged again', async () => {
-    const screen = await render(<SerupaProvider labels={idLabels}>
+    const screen = await render(<SerupaProvider locale="id-ID" labels={idLabels}>
       <Input id="v-req" aria-label="Nama" required />
       <Input id="v-mail" aria-label="Email" type="email" defaultValue="nope" />
       <Input id="v-min" aria-label="Umur" type="number" min={18} max={99} defaultValue="12" />
@@ -325,6 +328,23 @@ describe('Input and Textarea: constraint messages in the provider\'s words (216)
     expect([field('v-mail').validity.valid, field('v-mail').validationMessage]).toEqual([true, '']);
     await screen.getByLabelText('Nama').fill('Ani');
     expect(field('v-req').validity.valid).toBe(true);
+  });
+
+  test('a min, max or step in the message is written as the locale writes it: grouped, in its digits, and dates in its own form', async () => {
+    await render(<>
+      <SerupaProvider locale="de-DE" labels={deLabels}><Input id="v-de" aria-label="Betrag" type="number" min={1000} defaultValue="12" /></SerupaProvider>
+      <SerupaProvider locale="fr-FR" labels={frLabels}><Input id="v-fr" aria-label="Date" type="date" min="2026-11-11" defaultValue="2026-01-02" /><Input id="v-fr-month" aria-label="Mois" type="month" max="2026-03" defaultValue="2026-05" /></SerupaProvider>
+      <SerupaProvider locale="ar-EG" labels={arLabels}><Input id="v-ar" aria-label="المبلغ" type="number" max={1000} defaultValue="5000" /></SerupaProvider>
+    </>);
+    const day = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' }).format(new Date(2026, 10, 11));
+    const month = new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'long' }).format(new Date(2026, 2, 1));
+    expect([said('v-de'), said('v-fr'), said('v-fr-month'), said('v-ar')]).toEqual([
+      deLabels.invalidValue({ reason: 'rangeUnderflow', type: 'number', length: 2, min: '1.000' }),
+      'La valeur doit être ' + day + ' ou plus.',
+      frLabels.invalidValue({ reason: 'rangeOverflow', type: 'month', length: 7, max: month }),
+      arLabels.invalidValue({ reason: 'rangeOverflow', type: 'number', length: 4, max: new Intl.NumberFormat('ar-EG').format(1000) }),
+    ]);
+    expect(said('v-ar')).not.toMatch(/1000/);
   });
 
   test('English keeps the browser\'s own message; a message the product set itself stays; a controlled value change clears ours', async () => {

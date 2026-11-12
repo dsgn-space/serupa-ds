@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { transform } from 'lightningcss';
 import { compactCss } from '../build/compact-css.mjs';
+import { withMotionAttribute } from '../build/motion-attribute.mjs';
 import { buildUtilities } from '../utilities/build.mjs';
 import { PROJECT, done, read, report } from './lib.mjs';
 
@@ -30,7 +31,7 @@ t('the /*! banner keeps its own line, and each rule ends its line', out.startsWi
 
 // The files the package ships: each is the same CSS as its source, uncompacted, would be.
 const src = (n) => read(`src/components/${n}/${n}.css`);
-for (const [file, source] of [['base.css', read('src/styles/base.css').replace(/\/\*(?!!)[\s\S]*?\*\//g, '').replaceAll('__VERSION__', JSON.parse(read('package.json')).version)]]) {
+for (const [file, source] of [['base.css', withMotionAttribute(read('src/styles/base.css').replace(/\/\*(?!!)[\s\S]*?\*\//g, '').replaceAll('__VERSION__', JSON.parse(read('package.json')).version))]]) {
   const shipped = fs.readFileSync(path.join(PROJECT, 'dist', file), 'utf8');
   t(`dist/${file} is its source CSS, compacted (the same rules and values)`, printed(shipped) === printed(source), firstDiff(printed(source), printed(shipped)));
 }

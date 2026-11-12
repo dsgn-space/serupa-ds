@@ -4,6 +4,7 @@ import { flushSync } from 'react-dom';
 import { afterEach, beforeEach, describe, expect, inject, test, vi } from 'vitest';
 import { storiesToRun } from '../../tools/test/vitest/stories';
 import { fiberOf, fromRenderProp, fromStory } from '../../tools/test/vitest/storyOwner';
+import { getIcon } from '../icons';
 
 // Every story's server HTML, hydrated on a page with a strict Content Security Policy, has to lay out as the same
 // HTML hydrated on a page without one (GR16). Under style-src-attr 'none' the browser ignores the style attributes in
@@ -52,6 +53,10 @@ async function boxes(host: HTMLElement) {
     changed = settle();
     changed = seen.takeRecords().length > 0 || changed;
     seen.disconnect();
+    // An icon drawn by name that this page has loaded is still empty right after hydrating: React draws it in a render
+    // of its own, which on a busy runner can come after a frame with nothing to see. Measured before it, every
+    // element after the icon was one place off from the other hydration's.
+    changed = changed || [...host.querySelectorAll<HTMLElement>('span[data-icon]')].some((s) => !s.firstElementChild && !!getIcon(s.dataset.icon!));
   }
   settle();
   const o = host.getBoundingClientRect();

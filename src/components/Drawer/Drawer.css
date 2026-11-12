@@ -5,6 +5,10 @@
    scroll. Slides in from its edge (300ms) and back out to it faster (motion-exit-lg); fades with reduced motion.
    --------------------------------------------------------------- */
 @layer dk.components {
+/* Under 640px wide, space-surface is 16px inside the drawer (24px elsewhere): its panel, and a Card in it, keep most
+   of a phone's width (or a desktop's at 400% zoom) for the content rather than 2 × (margin + 24px).
+   --drawer-padding still sets the panel's padding everywhere. */
+@media (max-width: 639.98px) { .dk-drawer { --space-surface: var(--spacing-4); } }
 .dk-drawer {
   --dk-drawer-width: var(--drawer-width-md, var(--container-sm));
   box-sizing: border-box; position: fixed; inset: var(--spacing-0);

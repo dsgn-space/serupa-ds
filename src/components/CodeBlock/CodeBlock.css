@@ -10,7 +10,7 @@
   --dk-code-block-tab: 2;   /* a tab stop, counted in characters: no token measures one */
   min-inline-size: 0; overflow: hidden;
   border: var(--border-width-1) solid var(--code-block-border, var(--border));
-  border-radius: var(--code-block-radius, var(--rounded-md));
+  border-radius: var(--code-block-radius, var(--radius-control));
   background: var(--code-block-bg, var(--surface-muted)); color: var(--code-block-text, var(--text));
 }
 .dk-code-block__header {

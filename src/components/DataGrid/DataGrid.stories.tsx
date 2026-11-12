@@ -46,6 +46,14 @@ export const Playground: Story = {};
 /** Editable: Enter, F2 or typing edits Product, In stock and Price; paste a block copied from a spreadsheet. */
 export const Edit: Story = { render: () => <Editable /> };
 
+const MANY: DataGridRow[] = Array.from({ length: 60 }, (_, i) => ({ id: 'm' + i, sku: 'SKU-' + String(i + 1).padStart(3, '0'), name: ROWS[i % ROWS.length].name, stock: (i * 7) % 50, price: ROWS[i % ROWS.length].price }));
+function Long() {
+  const [rows, setRows] = React.useState(MANY);
+  return <DataGrid aria-label="Stock" stickyHeader containerProps={{ style: { maxHeight: 320 } }} columns={COLUMNS} rows={rows} onRowsChange={(_, { changes }) => setRows((r) => apply(r, changes))} />;
+}
+/** A long grid in a frame 320px tall, with stickyHeader: the column names stay in view while you edit far down it. */
+export const StickyHeader: Story = { render: () => <Long /> };
+
 export const Small: Story = { render: () => <Editable size="sm" /> };
 
 /** Large: 16px text and rows at least 44px tall, for touch screens and a grid that is the page's main task. */

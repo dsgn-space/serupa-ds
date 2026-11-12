@@ -151,9 +151,9 @@ Keep it short and specific, and end with an ellipsis when the wait continues: "L
 <Loader variant="skeleton" shape="rect" className="w-48 h-32" />
 ```
 
-- **text** (default): `lines` lines, each as tall as the size's text line (16, 20 or 24px) with a bar as tall as the type (12, 14 or 16px) and `rounded-sm` corners. Full width; with several lines the last is 60% wide, so it reads as a paragraph. Give it a width class (`w-1/2`, `w-48`) for a short line such as a name.
+- **text** (default): `lines` lines, each as tall as the size's text line (16, 20 or 24px) with a bar as tall as the type (12, 14 or 16px) and `radius-inner` corners. Full width; with several lines the last is 60% wide, so it reads as a paragraph. Give it a width class (`w-1/2`, `w-48`) for a short line such as a name.
 - **circle**: the loader's size (16, 24 or 40px), fully round. `className="size-12"` sets another size.
-- **rect**: full width and 96px tall (`--loader-skeleton-rect-height`), `rounded-md` corners. Set the size with classes (`h-40`, `w-48 h-32`); for a ratio, `h-auto aspect-video`.
+- **rect**: full width and 96px tall (`--loader-skeleton-rect-height`), `radius-control` corners. Set the size with classes (`h-40`, `w-48 h-32`); for a ratio, `h-auto aspect-video`.
 
 Lines and rects stretch to their container and shrink beside an avatar in a row, while the circle keeps its size.
 
@@ -255,8 +255,8 @@ Each is an optional override: set it on the page, a container or one loader. Uns
 | `--loader-label-dim` | `opacity-65` | How strong the text variant's words are between shines (keeps 4.5:1 on `surface`) |
 | `--loader-skeleton-fill` | `opacity-10` | Strength of the skeleton's fill (the text color) |
 | `--loader-skeleton-shine` | `opacity-5` | Strength of the band that sweeps through the skeleton |
-| `--loader-skeleton-radius` | `rounded-md` | Corners of the skeleton rect (6px) |
-| `--loader-skeleton-text-radius` | `rounded-sm` | Corners of the skeleton's text lines (4px) |
+| `--loader-skeleton-radius` | `radius-control` | Corners of the skeleton rect (6px) |
+| `--loader-skeleton-text-radius` | `radius-inner` | Corners of the skeleton's text lines (4px) |
 | `--loader-pixel-dim` | `opacity-15` | How faint a pixel square is between waves |
 | `--loader-pixel-glow` | `spacing-0` | Glow around the lit pixel squares (blur radius); 0 is off. The `glow` prop sets it to `--loader-pixel-glow-size` |
 | `--loader-pixel-divider` | `opacity-10` | Strength of the dividers, in the loader's color; the same next to lit and dim squares |
