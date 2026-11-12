@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as React from 'react';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { Loader } from '../Loader/Loader';
 import { Timeline, TimelineItem } from './Timeline';
 
@@ -74,9 +75,8 @@ function States(args: React.ComponentProps<typeof Timeline>) {
   const [state, setState] = React.useState<'loading' | 'loaded' | 'failed'>('loading');
   return (
     <div style={{ maxWidth: 560, display: 'grid', gap: '12px' }}>
-      <div style={{ display: 'flex', gap: '8px' }}>
-        {(['loading', 'loaded', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
-      </div>
+      <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState}
+        options={[{ value: 'loading', label: 'Loading' }, { value: 'loaded', label: 'Loaded' }, { value: 'failed', label: 'Failed' }]} />
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>The order history didn't load. Check your connection and try again.</Alert>
         : state === 'loaded' ? <Timeline {...args} />
         : <Timeline {...args} aria-busy>

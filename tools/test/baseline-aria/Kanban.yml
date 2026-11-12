@@ -185,9 +185,10 @@
         - button "Move Audit form labels to…"
 
 # LoadingAndErrors
-- button "Loading" [pressed]
-- button "Loaded"
-- button "Failed"
+- radiogroup "State":
+  - radio "Loading" [checked]
+  - radio "Loaded"
+  - radio "Failed"
 - group "Sprint 42":
   - region "To do":
     - heading "To do" [level=3]
