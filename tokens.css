@@ -798,7 +798,7 @@
   --highlight: var(--zinc-800);
   --pressed: var(--zinc-700);
   --surface: var(--zinc-950);
-  --surface-muted: var(--zinc-900);
+  --surface-muted: var(--black);
   --surface-raised: var(--zinc-900);
   --surface-overlay: var(--zinc-900);
   --field: var(--zinc-900);
@@ -1124,7 +1124,7 @@
   --highlight: light-dark(var(--zinc-200), var(--zinc-800));
   --pressed: light-dark(var(--zinc-300), var(--zinc-700));
   --surface: light-dark(var(--white), var(--zinc-950));
-  --surface-muted: light-dark(var(--zinc-50), var(--zinc-900));
+  --surface-muted: light-dark(var(--zinc-50), var(--black));
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
   --field: light-dark(var(--white), var(--zinc-900));
@@ -1307,7 +1307,7 @@
   --highlight: light-dark(var(--zinc-200), var(--zinc-800));
   --pressed: light-dark(var(--zinc-300), var(--zinc-700));
   --surface: light-dark(var(--white), var(--zinc-950));
-  --surface-muted: light-dark(var(--zinc-50), var(--zinc-900));
+  --surface-muted: light-dark(var(--zinc-50), var(--black));
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
   --field: light-dark(var(--white), var(--zinc-900));

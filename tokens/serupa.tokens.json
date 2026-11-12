@@ -781,7 +781,7 @@
             "violet-light": "{zinc-50}",
             "violet-dark": "{zinc-950}",
             "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{black}"
           }
         }
       }
