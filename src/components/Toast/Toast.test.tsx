@@ -877,7 +877,7 @@ describe('Toaster: position, the old name of placement', () => {
   test('still places the stack as placement does, and warns once that it is deprecated', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<Toaster position="top-center" />);
+      await render(<Toaster {...{ position: 'top-center' } as const} />);
       expect(document.querySelector('[data-component="toaster"]')!.getAttribute('data-position')).toBe('top-center');
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('toaster-position'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
