@@ -193,6 +193,8 @@ export const labels: SerupaLabels = {
   keyboardShortcuts: 'اختصارات لوحة المفاتيح',
   generalShortcuts: 'عام',
   showShortcuts: 'عرض اختصارات لوحة المفاتيح',
+  singleKeyShortcuts: 'اختصارات بمفتاح واحد',
+  singleKeyHint: 'اختصارات من مفتاح واحد مثل ?، خارج حقول النص. أوقفها إذا كانت تعمل دون قصد.',
   opensInNewTab: '(يُفتح في علامة تبويب جديدة)',
   loadMore: 'تحميل المزيد',
   showingOf: (shown, total) => `عرض ${shown} من ${total}`,

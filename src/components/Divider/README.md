@@ -2,6 +2,8 @@
 
 A 1px line between content, horizontal or vertical, with an optional label in the middle such as "or".
 
+**Also called:** separator, horizontal rule, vertical rule.
+
 ```jsx
 const { Divider, Stack } = window.Serupa;
 

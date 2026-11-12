@@ -1,3 +1,10 @@
+# Actions
+- textbox "Comment":
+  - /placeholder: Add a comment
+- text: 0 / 2000
+- button "Attach a file"
+- button "Comment"
+
 # AutoResize
 - textbox "Message":
   - /placeholder: Grows as you type, up to 6 lines

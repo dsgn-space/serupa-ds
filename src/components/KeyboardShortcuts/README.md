@@ -42,12 +42,13 @@ Drawn from the `LongText` story.
 - Give it a `description` to list it, and a `group` to put it under a heading. Without a description, it works but isn't listed.
 - Put one `<KeyboardShortcuts />` in the app's layout. Also open it from a help menu or button (`open` and `onOpenChange`), since many people don't know <kbd>?</kbd>.
 - List shortcuts you don't set up with `useShortcut`, such as an editor's, with `shortcuts`.
-- Prefer shortcuts with `mod`. A single letter is quick, but [WCAG 2.1.4](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html) asks that people can turn such shortcuts off or change them, since speech input can trigger them by accident. Pass `enabled` from a setting for that.
+- Prefer shortcuts with `mod`. A single character key (<kbd>?</kbd>, <kbd>N</kbd>) is quick, but speech input or a stray key can set it off, so [WCAG 2.1.4](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html) asks that people can turn it off. The dialog has a **Single-key shortcuts** switch for that whenever one is set up (<kbd>?</kbd> itself, by default): off, every shortcut that is one character key with no mod, ctrl, cmd or alt stops working on every page of the app (kept in `localStorage`), and named keys such as <kbd>F2</kbd> or <kbd>Esc</kbd> keep working. With it off, <kbd>?</kbd> no longer opens the dialog, so keep a help menu item or button that opens it.
 
 ## Behavior
 
 - A shortcut runs when its keys are pressed anywhere on the page, and the browser's default for those keys is prevented.
 - It doesn't run while someone types in a text field (an input, a textarea, a select or an editable area, also inside a web component's shadow root), unless it has `mod`, ctrl or cmd, or `inInputs`. So <kbd>C</kbd> and <kbd>/</kbd> still type.
+- It doesn't run when it's one character key and the person turned **Single-key shortcuts** off in the dialog.
 - It doesn't run while a modal (a Dialog, a Drawer or this help) is open, since the page behind it is inert. It also doesn't run while an input method is composing, or when another handler already handled the key.
 - When two set up the same keys, the newest wins. A panel that opens can take a key from the page, and the page gets it back when the panel closes.
 - Symbols such as <kbd>?</kbd> match whatever the keyboard layout needs to type them, so Shift isn't checked. Letters and digits also match by their position, so <kbd>alt</kbd>+<kbd>K</kbd> works on a Mac, where Option changes the character. A letter matches by position only when the key types no Latin letter (Option on a Mac, a Cyrillic or Greek layout), so on AZERTY or Dvorak it goes by the letter typed.
@@ -59,7 +60,7 @@ Drawn from the `LongText` story.
 
 | Key | Does |
 | --- | --- |
-| <kbd>?</kbd> | Opens the list (`helpKeys`). |
+| <kbd>?</kbd> | Opens the list (`helpKeys`), unless **Single-key shortcuts** is off. |
 | <kbd>Tab</kbd> | Moves through the dialog: its close button. |
 | <kbd>Escape</kbd> | Closes it, and focus goes back to where it was. |
 

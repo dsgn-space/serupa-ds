@@ -72,3 +72,4 @@ html, body { background-color: var(--surface); }
 .sb-dodont__verdict { color: var(--success-text); font-weight: 600; }
 .sb-dodont__item--dont .sb-dodont__verdict { color: var(--danger-text); }
 @media (forced-colors: active) { .sb-dodont__item { border-top-color: CanvasText; } }
+.sbdocs-content .sb-copy-guide { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2); color: var(--text-muted); }

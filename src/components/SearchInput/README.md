@@ -2,6 +2,8 @@
 
 A search field: a search icon at the start, and a × at the end once something is typed. Escape clears it and Enter calls `onSearch`. It uses Input's box, sizes and tokens.
 
+**Also called:** search, search field, search box.
+
 ```tsx
 import { SearchInput } from "serupa-ds";
 

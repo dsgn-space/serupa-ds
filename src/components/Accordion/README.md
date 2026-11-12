@@ -2,6 +2,8 @@
 
 A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. One item open at a time by default, or several with `type="multiple"`.
 
+**Also called:** collapsible, disclosure, expander, expandable section.
+
 ```jsx
 const { Accordion, AccordionItem } = window.Serupa;
 

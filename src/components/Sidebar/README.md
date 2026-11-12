@@ -2,6 +2,8 @@
 
 A vertical nav for an app's pages: an optional header (a logo, a workspace switcher), sections of items with icons, badges and nested groups, and a footer pinned to the bottom (settings, the signed-in user). `collapsed` narrows it to a 64px icon rail.
 
+**Also called:** side navigation, side nav, navigation rail.
+
 ```jsx
 const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Serupa;
 

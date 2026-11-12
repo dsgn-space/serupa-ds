@@ -2,6 +2,8 @@
 
 A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. It checks file types, sizes and counts on the way in. Uploading is up to you: read the files from `onFilesChange`, or send them with a form through `name`.
 
+**Also called:** dropzone, file input, file uploader.
+
 ```tsx
 import { FileUpload } from "serupa-ds";
 

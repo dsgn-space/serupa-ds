@@ -14,7 +14,7 @@ import { SECTION } from '../../bin/serupa-agents.mjs';
 import { PROJECT, done, fail, report } from './lib.mjs';
 
 const pkg = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), 'utf8'));
-const drift = Object.entries(VERSIONS).filter(([name, v]) => pkg.devDependencies[name] !== v).map(([name, v]) => `${name}: ${v}, the repository has ${pkg.devDependencies[name]}`);
+const drift = Object.entries(VERSIONS).filter(([name, v]) => !/^\d+\.\d+\.\d+$/.test(v || '') || pkg.devDependencies[name] !== v).map(([name, v]) => `${name}: ${v}, the repository has ${pkg.devDependencies[name]}`);
 const out = files({ name: 'my-app', serupa: 'github:diki-stwn/serupa-ds#v1.2.3', brand: 'violet' });
 const app = JSON.parse(out['package.json']);
 const main = out['src/main.tsx'];
@@ -79,7 +79,7 @@ done(report('Starter app', [
   { name: 'the page sets the brand and mode, and the stylesheets load tokens, base, then bundle', ok: out['index.html'].includes('<html lang="en" data-brand="violet" data-mode="auto">') && order.every((n, i) => n > 0 && (i === 0 || n > order[i - 1])), detail: main },
   { name: 'the app has a skip link, a main landmark it targets, one h1, and a labelled field', ok: /<SkipLink \/>/.test(out['src/App.tsx']) && /as="main" id="main"/.test(out['src/App.tsx']) && (out['src/App.tsx'].match(/level=\{1\}/g) || []).length === 1 && /<Field label="Email"/.test(out['src/App.tsx']) },
   { name: 'theme.js is served and built as its own file ahead of the app, and the build trims the CSS', ok: /injectTo: 'head-prepend'/.test(out['vite.config.ts']) && /emitFile/.test(out['vite.config.ts']) && /serupaPurge\(\{ components: true \}\)/.test(out['vite.config.ts']) },
-  { name: 'by default the app installs this release by its tag, named from the folder', ok: made.status === 0 && written.name === 'hello-world' && written.dependencies?.['serupa-ds'] === `gitlab:diki-stwn-group/serupa-ds#v${pkg.version}`, detail: made.stderr + JSON.stringify(written) },
+  { name: 'by default the app installs this release by its tag, named from the folder', ok: made.status === 0 && written.name === 'hello-world' && written.dependencies?.['serupa-ds'] === `github:dsgn-space/serupa-ds#v${pkg.version}`, detail: made.stderr + JSON.stringify(written) },
   { name: 'it refuses a folder with files in it, and a brand it doesn\'t have', ok: again.status === 1 && /isn't empty/.test(again.stderr) && brand.status === 2, detail: again.stderr + brand.stderr },
   { name: 'the app\'s AGENTS.md sends its agents to the skill the installed release ships, and CLAUDE.md imports it', ok: out['AGENTS.md'].startsWith('# My app\n') && out['AGENTS.md'].includes(SECTION) && SECTION.includes(SKILL) && shipped && out['CLAUDE.md'] === '@AGENTS.md\n', detail: out['AGENTS.md'] + out['CLAUDE.md'] },
   { name: 'serupa-agents adds the section to a project\'s own AGENTS.md and @AGENTS.md to its CLAUDE.md, keeping what they said', ok: first.status === 0 && once.agents.startsWith('# Shop\n\nUse pnpm.\n\n') && once.agents.endsWith(SECTION) && once.claude === 'Be brief.\n\n@AGENTS.md\n', detail: first.stdout + first.stderr + once.agents + once.claude },
