@@ -80,7 +80,7 @@ function watchAttr(on: () => void): () => void {
  *  base.css. False in server HTML and until hydrated. */
 export function useReducedMotion(): boolean {
   const system = useMediaQuery(REDUCE);
-  const subscribe = React.useCallback((on: () => void) => (typeof document === 'undefined' ? () => {} : watchAttr(on)), []);
-  const app = React.useSyncExternalStore(subscribe, () => document.documentElement.matches(REDUCE_ATTR), () => false);
+  // React subscribes only in the browser, so watchAttr always has a document.
+  const app = React.useSyncExternalStore(watchAttr, () => document.documentElement.matches(REDUCE_ATTR), () => false);
   return system || app;
 }

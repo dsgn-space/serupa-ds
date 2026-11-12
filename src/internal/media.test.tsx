@@ -93,4 +93,10 @@ describe('the app\'s own Reduce motion setting', () => {
       expect(prefersReducedMotion(inner)).toBe(system);   // a detached element reads the page
     } finally { html.removeAttribute('data-motion'); section.remove(); await view.unmount(); }
   });
+  test('server HTML says no, even with data-motion="reduce" on the page: the setting is read once hydrated', () => {
+    const html = document.documentElement;
+    function Peek() { return <i>{String(useReducedMotion())}</i>; }
+    html.setAttribute('data-motion', 'reduce');
+    try { expect(renderToString(<Peek />)).toBe('<i>false</i>'); } finally { html.removeAttribute('data-motion'); }
+  });
 });
