@@ -12,10 +12,10 @@ const groups: FaqGroup[] = [
   { id: 'account', title: 'Your account', questions: [
     { id: 'change-email', question: 'How do I change my email address?', answer: 'Go to Settings, then Account, and choose Change email. We send a link to the new address; the change takes effect once you open it.' },
     { id: 'two-step', question: 'How do I turn on two-step sign-in?', answer: 'Go to Settings, then Security, and choose Turn on two-step sign-in. You can use an authenticator app or a passkey.', keywords: '2fa mfa authenticator passkey' },
-    { id: 'delete-account', question: 'How do I delete my account?', answer: <>
+    { id: 'delete-account', question: 'How do I delete my account?', answer: <div className="flex flex-col gap-2">
       <p className="m-0">Go to Settings, then Account, and choose Delete account. You have 30 days to change your mind before anything is removed.</p>
       <p className="m-0">Export your projects first if you want to keep them: <Link href="#export">how to export</Link>.</p>
-    </>, keywords: 'close remove' },
+    </div>, keywords: 'close remove' },
   ] },
   { id: 'billing', title: 'Billing', questions: [
     { id: 'cancel-plan', question: 'How do I cancel my plan?', answer: 'Go to Settings, then Billing, and choose Cancel plan. It takes two steps, and your plan runs until the end of the period you paid for.', keywords: 'stop subscription' },
