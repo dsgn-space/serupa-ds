@@ -82,14 +82,14 @@ async function switchTo(w, run) {
   return '';
 }
 
-// SERUPA_SHARD=2/4 checks every fourth story starting with the second (CI runs the shards in parallel);
-// the docs pages are checked in the first shard.
+// SERUPA_SHARD=2/4 checks every fourth story and every fourth docs page, starting with the second (CI runs the shards
+// in parallel). The docs pages were all in the first shard, which made it the slowest by four minutes.
 const [shard, shards] = (process.env.SERUPA_SHARD || '1/1').split('/').map(Number);
 // SERUPA_ONLY (run.mjs --since on a pull request): only the stories and docs pages of the components it touches.
 const only = onlyComponents();
 // ./src/components/<Name>/…, or a page of docs/ by its file (./docs/Upgrading.mdx is "docs/Upgrading.mdx").
 const mine = (e) => { const p = e.importPath.split('/'); return !only || only.has(p[1] === 'docs' ? `docs/${p[2]}` : p[3]); };
-const docs = shard === 1 ? Object.values(entries).filter((e) => e.type === 'docs' && mine(e)) : [];
+const docs = Object.values(entries).filter((e) => e.type === 'docs' && mine(e)).filter((_, i) => i % shards === shard - 1);
 const stories = Object.values(entries).filter((e) => e.type === 'story' && mine(e)).filter((_, i) => i % shards === shard - 1);
 async function checkDocs(e, w) {
   const out = [];
@@ -126,6 +126,18 @@ async function checkDocs(e, w) {
     return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
   out.push(t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(24, 24, 27)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark)));
+  // Reflow on the docs themselves (WCAG 1.4.10): at 320px, a 1280px screen at 400% zoom, the page scrolls only up and
+  // down. Inline code and table cells break where they must, and wide code blocks and stories scroll in their own box.
+  // Stories that measure themselves re-lay out a moment after the resize, so the page has up to 2s to settle. One
+  // still wider names the outermost box that sticks out.
+  await w.page.setViewportSize({ width: 320, height: 640 });
+  const wide = await w.page.waitForFunction(() => document.documentElement.scrollWidth <= 321, null, { timeout: 2000, polling: 100 }).then(() => null, () => w.page.evaluate(() => {
+    const out = [...document.querySelectorAll('#storybook-docs *')].find((el) => el.getBoundingClientRect().right > 322 && el.parentElement.getBoundingClientRect().right <= 322);
+    const name = out ? `${out.tagName.toLowerCase()}${out.id ? '#' + out.id : ''}${typeof out.className === 'string' && out.className ? '.' + out.className.split(' ')[0] : ''} "${out.textContent.trim().slice(0, 40)}"` : 'nothing in the docs';
+    return `it scrolls sideways to ${document.documentElement.scrollWidth}px; first to stick out: ${name}`;
+  }));
+  await w.page.setViewportSize({ width: 1000, height: 800 });
+  if (!DOCS_REFLOW_KNOWN.has(e.id)) out.push(t(`docs · ${e.title} · at 320px wide the page scrolls only up and down`, !wide, wide || ''));
   return out;
 }
 // WCAG 1.4.12's text spacing, as a user's style sheet sets it.
@@ -157,6 +169,14 @@ const cutOff = () => {
 // wrap, or a story with a fixed width).
 // One that stops failing fails here too, so the list only shrinks.
 const REFLOW_KNOWN = new Set([
+]);
+// The docs pages that still scroll sideways at 320px: a foundation table or swatch row with a fixed width, an anatomy
+// diagram or a Do and don't story wider than the page, or a code block that doesn't keep to its box. Each one fixed
+// comes off the list; a page not on it that scrolls sideways fails.
+const DOCS_REFLOW_KNOWN = new Set([
+  'foundations-colors--docs', 'foundations-themes--docs', 'foundations-spacing--docs', 'components-content-codeblock--docs',
+  'components-feedback-alert--docs', 'components-feedback-emptystate--docs', 'components-feedback-meter--docs', 'components-feedback-progress--docs',
+  'components-forms-calendar--docs', 'components-overlays-dialog--docs', 'components-overlays-notificationcenter--docs', 'changelog--docs',
 ]);
 // The stories whose text a box still cuts off at 200% (queue item TX1).
 const TEXT_200_KNOWN = new Set([

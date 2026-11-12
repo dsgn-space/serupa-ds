@@ -26,6 +26,9 @@ describe('Blocks/Page header', () => {
     expect([...document.querySelectorAll('h1')].map((h) => h.textContent)).toEqual(['Website redesign']);
     const sections = document.querySelector('nav[aria-label="Project"]')!;
     expect([...sections.querySelectorAll('a')].map((a) => [a.textContent, a.getAttribute('aria-current')])).toEqual([['Overview', 'page'], ['Tasks', null]]);
+    // Drawn as tabs (a TabNav): the current section has the tab line under it, not only a bolder weight.
+    const on = sections.querySelector<HTMLElement>('[aria-current="page"]')!;
+    expect([sections.getAttribute('data-component'), getComputedStyle(on, '::after').content, getComputedStyle(on).textDecorationLine]).toEqual(['tab-nav', '""', 'none']);
   });
 
   test('from the keyboard: the breadcrumb, then the primary action, then the others, then the sections', async () => {

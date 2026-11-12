@@ -10,7 +10,7 @@ import { spawnSync } from 'node:child_process';
 import { PROJECT, read, report, done } from './lib.mjs';
 import { parseChangeset } from '../changesets.mjs';
 import { migrate, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
-import { majorsIn, nextMajor } from '../../docs/upgrades.ts';
+import { majorsIn, nextMajor, upcomingMajor } from '../../docs/upgrades.ts';
 
 const R = [];
 const t = (name, ok, detail = '') => R.push({ name, ok: !!ok, detail });
@@ -54,6 +54,7 @@ t('a minor release is not a major', !at('12.0.0')?.entries.some((e) => e.include
 const pending = nextMajor(version, changesets);
 t(`the next major (${next}) comes from the major changesets`, majors.length ? pending?.version === next && pending.entries.length >= majors.length : pending === null, JSON.stringify(pending?.entries.map((e) => e.slice(0, 50))));
 t('a changeset with single quotes or Windows line ends counts', nextMajor('1.0.0', { a: "---\r\n'serupa-ds': major\r\n---\r\n\r\n- **Breaking.** x.\r\n" })?.entries[0] === '- **Breaking.** x.');
+t('with no major changeset, the guide still shows the next major while serupa-migrate has changes for it, with no entries', JSON.stringify(upcomingMajor('14.3.0', {}, ['13.0.0', '15.0.0'])) === JSON.stringify({ version: '15.0.0', date: '', next: true, entries: [] }) && upcomingMajor('14.3.0', {}, ['13.0.0', '14.0.0']) === null && upcomingMajor('14.3.0', { a: "---\n'serupa-ds': major\n---\n\n- **Breaking.** x.\n" }, ['15.0.0'])?.entries.length === 1);
 const known = new Set([...guide.map((m) => m.version), next]);
 t('each serupa-migrate change belongs to a major in the guide', TRANSFORMS.every((x) => known.has(x.version)), TRANSFORMS.filter((x) => !known.has(x.version)).map((x) => x.id).join(', '));
 
@@ -64,6 +65,8 @@ one('IconButton noTitle → hideTitle, also with a value', '<IconButton icon="x"
 one('a > or quote inside a value doesn\'t end the tag', `<IconButton label={a > b ? "x>y" : 'it\\'s'} onClick={() => { if (a > 1) go(); }}\n  noTitle\n/>`, `<IconButton label={a > b ? "x>y" : 'it\\'s'} onClick={() => { if (a > 1) go(); }}\n  hideTitle\n/>`);
 one('the same word in a value or in another component is left', '<IconButton label="noTitle" /><IconButtonGroup noTitle /><Button noTitle />', '<IconButton label="noTitle" /><IconButtonGroup noTitle /><Button noTitle />');
 one('Table captionHidden → hideCaption', '<Table caption="Orders" captionHidden>', '<Table caption="Orders" hideCaption>');
+one('15.0.0 renames: Tooltip delay, Switch pending, Field layout, Splitter direction, Fab and Toaster position, OfflineBanner onChange', '<Tooltip delay={300} /><Switch pending /><Field layout="horizontal" /><Splitter direction="vertical" /><Fab position="top-start" /><Toaster position="top-center" /><OfflineBanner onChange={f} />', '<Tooltip openDelay={300} /><Switch loading /><Field orientation="horizontal" /><Splitter orientation="vertical" /><Fab placement="top-start" /><Toaster placement="top-center" /><OfflineBanner onOnlineChange={f} />');
+one('15.0.0 renames leave the same words elsewhere: a style\'s position, an Input\'s onChange, a spread', '<div style={{ position: "relative" }} /><Input onChange={f} /><Toaster {...{ position: "top-center" }} />', '<div style={{ position: "relative" }} /><Input onChange={f} /><Toaster {...{ position: "top-center" }} />');
 one('RadioGroup onChange → onValueChange; a Radio\'s own onChange stays', '<RadioGroup onChange={set}><Radio onChange={f} /></RadioGroup>', '<RadioGroup onValueChange={set}><Radio onChange={f} /></RadioGroup>');
 one('Badge size goes, with its value and its line', '<Badge size="sm">A</Badge><Badge tone="x" size={big ? "lg" : \'sm\'}>B</Badge><Badge\n  size="md"\n  tone="x"\n>C</Badge>', '<Badge>A</Badge><Badge tone="x">B</Badge><Badge\n  tone="x"\n>C</Badge>');
 one('CommonIconName → IconName, without importing it twice', "import { type CommonIconName, IconName } from 'serupa-ds';\nlet a: CommonIconName;", "import { type IconName, IconName } from 'serupa-ds';\nlet a: IconName;");

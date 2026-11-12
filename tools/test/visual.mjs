@@ -193,6 +193,11 @@ async function switchTo(page, theme) {
 // Shoots the page (or one element of it) and compares it with baseline-visual/<name>.png (or writes it, with --update).
 // null when nothing to report.
 async function compare(page, name, el) {
+  // A story that crashed after it first drew (on a theme switched in place, a hover, a focus) shows Storybook's error
+  // screen instead: fail it, and never write that screen as a baseline (#1610 committed React's error #300 so).
+  if (await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay'))) {
+    return { name, ok: false, detail: `Storybook shows an error: ${(await page.locator('#error-message').textContent({ timeout: 1000 }).catch(() => '')).trim().slice(0, 200) || 'see the story'}` };
+  }
   const shot = await stableShot(page, el);
   const file = path.join(DIR, `${name}.png`);
   // --update rewrites a baseline only when the new picture differs past the tolerance, so re-rendering on another

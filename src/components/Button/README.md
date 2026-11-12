@@ -95,7 +95,7 @@ Hover fills use `danger-hover`, `danger-subtle-hover` and `danger-subtle`; keybo
 | `md` *(default)* | 32px (`control-height-md`) | 12px | `text-sm` (14px) | 16px | 6px |
 | `lg` | 44px (`control-height-lg`) | 20px | `text-base` (16px) | 20px | 8px |
 
-All sizes use `font-medium` and `rounded-md`. `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars.
+All sizes use `font-medium` and `rounded-md`. `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars.
 
 ### Content
 
@@ -300,6 +300,9 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-destructive-link-text` | `danger-text` | Destructive link text. |
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
 | `--button-destructive-focus-ring` | `danger` | Keyboard focus ring on a destructive button. |
+| `--button-disabled-bg` | `surface-muted` | A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1. |
+| `--button-disabled-text` | `text-muted` | A disabled button's label and icon, in every variant (at least 3:1 on disabled-bg, more with more contrast). |
+| `--button-disabled-border` | `border` | A disabled outline or secondary button's border. |
 
 **Spacing**
 

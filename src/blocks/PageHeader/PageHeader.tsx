@@ -4,7 +4,7 @@ import { Breadcrumb, BreadcrumbItem } from '../../components/Breadcrumb/Breadcru
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Menu, MenuItem } from '../../components/Menu/Menu';
-import { Link } from '../../components/Link/Link';
+import { TabNav, TabNavLink } from '../../components/TabNav/TabNav';
 
 /* Page header (BL1): the top of a page inside an app, built from the components only, for an app to copy.
    What it carries (WCAG 2.2):
@@ -13,8 +13,8 @@ import { Link } from '../../components/Link/Link';
    - 2.4.3: actions come after the title in the reading and Tab order, the primary one first.
    - 1.4.10 reflow: on a phone the secondary actions move into a "More actions" Menu, so nothing is cut off or
      scrolls sideways at 320px; the primary action stays a button you can see.
-   - 2.4.1 and 4.1.2: the section links are a nav landmark with its own name, and the current one says so
-     (aria-current="page"), not by color alone: it's also bold and underlined. */
+   - 2.4.1 and 4.1.2: the section links are a TabNav, a nav landmark with its own name, and the current one says so
+     (aria-current="page"), not by color alone: it has the tab line under it. */
 
 export interface PageHeaderAction {
   /** What the button says. */
@@ -55,7 +55,8 @@ const button = (a: PageHeaderAction, variant: 'primary' | 'secondary') =>
 /** The top of a page: where it is, what it's called, what it's for, and what you can do there. */
 export function PageHeader({ breadcrumb, title, description, primary, secondary = [], sections, sectionsLabel = 'Sections', moreLabel = 'More actions' }: PageHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 border-b border-border pb-4">
+    // With sections, the tab row's own line is the header's bottom edge, so the two don't draw one line twice.
+    <div className={sections?.length ? 'flex flex-col gap-4' : 'flex flex-col gap-4 border-b border-border pb-4'}>
       {breadcrumb?.length ? (
         <Breadcrumb>
           {breadcrumb.map((b, i) => <BreadcrumbItem key={b.label} href={i < breadcrumb.length - 1 ? b.href : undefined}>{b.label}</BreadcrumbItem>)}
@@ -83,15 +84,9 @@ export function PageHeader({ breadcrumb, title, description, primary, secondary 
         ) : null}
       </div>
       {sections?.length ? (
-        <nav aria-label={sectionsLabel}>
-          <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0">
-            {sections.map((s) => (
-              <li key={s.href}>
-                <Link href={s.href} aria-current={s.current ? 'page' : undefined} className={s.current ? 'font-semibold' : 'no-underline'}>{s.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <TabNav aria-label={sectionsLabel}>
+          {sections.map((s) => <TabNavLink key={s.href} href={s.href} current={s.current}>{s.label}</TabNavLink>)}
+        </TabNav>
       ) : null}
     </div>
   );

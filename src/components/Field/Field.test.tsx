@@ -294,7 +294,7 @@ describe('Field: layout, the old name of orientation', () => {
   test('still lays it out as orientation does, and warns once that it is deprecated', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<div style={{ width: '560px' }}><Field id="old-layout" layout="horizontal" label="Name"><Input /></Field></div>);
+      await render(<div style={{ width: '560px' }}><Field id="old-layout" {...{ layout: 'horizontal' } as const} label="Name"><Input /></Field></div>);
       expect(document.querySelector('[data-component="field"][data-layout="horizontal"]')).not.toBeNull();
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('field-layout'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
