@@ -7,7 +7,7 @@ name: CI
 # - The merge queue runs every job on the commit that becomes main, for a group of up to five pull requests at once,
 #   with the tests narrowed as a pull request's are, against the group before it (or main): what the group's own change
 #   can affect, on the exact tree it makes. Main's push run is then build only (the Storybook artifact, and the Release
-#   workflow waits on it). Every three hours a scheduled run tests main whole, unnarrowed, with the coverage floors.
+#   workflow waits on it). Every night the flake hunt tests main whole, unnarrowed, with the coverage floors (nightly.yml).
 # - Without a merge queue (repository variable SERUPA_QUEUE not "1"), a pull request and main both run everything.
 # - Every job runs in Playwright's Ubuntu 24.04 image, capped at 4 CPUs, on GitHub's runners or on the project's own
 #   (repository variables SERUPA_RUNNER and SERUPA_X86_RUNNER, JSON: '["self-hosted","linux","x86"]'). Jobs with a
@@ -22,9 +22,6 @@ on:
   merge_group:
   push:
     branches: [main]
-  # Main whole, unnarrowed, with the coverage floors (a tree that already passed whole passes again at once).
-  schedule:
-    - cron: '40 */3 * * *'
 
 # A new push to a pull request cancels the run before it. Queue and main runs all finish.
 concurrency:
@@ -69,11 +66,10 @@ jobs:
           # A queue group runs every job, with the suite narrowed against the group before it (or main): that is the
           # commit its own change lands on, so it tests what the change can affect on the exact tree that becomes main,
           # and five groups don't each run the whole suite again. Main's push run behind the queue is build only; the
-          # scheduled run tests main whole, with the coverage floors, every three hours.
+          # nightly flake hunt tests main whole, with the coverage floors (nightly.yml).
           full=""; wide=""; since=""; tests=1
           case "$EVENT" in
             merge_group) full=1; since="$QUEUE_BASE" ;;
-            schedule) full=1; wide=1 ;;
             push) if [ "$QUEUE" = 1 ]; then tests=""; else full=1; wide=1; fi ;;
             pull_request)
               if [ "$QUEUE" = 1 ]; then since="$(git rev-parse HEAD^1)"; else full=1; wide=1; fi ;;

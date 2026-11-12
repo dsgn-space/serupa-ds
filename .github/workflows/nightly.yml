@@ -1,7 +1,7 @@
 name: Nightly
 
 # Every night on main (02:00 Jakarta): the whole suite twice more (a flake
-# hunt), mutation testing, the benchmarks and the bundle size trend, and the SBOM. Cross-browser, Canary and Screen
+# hunt; the queue tests each group narrowed, so this is main's whole run, with the coverage floors on the first pass), mutation testing, the benchmarks and the bundle size trend, and the SBOM. Cross-browser, Canary and Screen
 # readers have their own workflows. A red run here is something to look at, not a broken main.
 on:
   schedule:
@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [components, checks]
+        group: [components, checks, visual, storybook]
     runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -42,7 +42,9 @@ jobs:
         run: |
           npm run build && npm run build-storybook
           set -o pipefail
-          for i in 1 2; do node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; done
+          # The first pass of the component tests measures coverage against the floors (vitest.config.ts).
+          if [ "$GROUP" = components ]; then SERUPA_COVERAGE=1 node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; else node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt; fi
+          node tools/test/run.mjs --group "$GROUP" 2>&1 | tee -a test-output.txt
       - if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
