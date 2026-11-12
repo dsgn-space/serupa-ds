@@ -42,3 +42,13 @@ export function nextMajor(current: string, changesets: Record<string, string>): 
   if (!entries.length) return null;
   return { version: `${Number(current.split('.')[0]) + 1}.0.0`, date: '', next: true, entries };
 }
+
+/** The next major for the upgrade guide: the one the major changesets ask for, or, when none does yet, an empty one
+ * while serupa-migrate already has changes for it (props deprecated now and removed then), so the page lists them
+ * before the release. Null when neither. */
+export function upcomingMajor(current: string, changesets: Record<string, string>, transformVersions: string[]): Major | null {
+  const next = nextMajor(current, changesets);
+  if (next) return next;
+  const version = `${Number(current.split('.')[0]) + 1}.0.0`;
+  return transformVersions.includes(version) ? { version, date: '', next: true, entries: [] } : null;
+}

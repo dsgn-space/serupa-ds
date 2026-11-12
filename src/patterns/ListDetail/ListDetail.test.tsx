@@ -37,18 +37,48 @@ describe('Patterns/List and detail', () => {
     await page.viewport(390, 800);
     try {
       const screen = await render(<ListDetail />);
-      expect(regions()).toEqual(['Messages (4)']);
+      await expect.poll(regions).toEqual(['Messages (4)']);
       expect(current()).toBeUndefined();
       await screen.getByRole('link', { name: /New photos/ }).click();
-      expect(regions()).toEqual(['New photos for the home page']);
+      await expect.poll(regions).toEqual(['New photos for the home page']);
       await expect.poll(() => active().textContent).toBe('New photos for the home page');
       await screen.getByRole('button', { name: 'Back to messages' }).click();
-      expect(regions()).toEqual(['Messages (4)']);
+      await expect.poll(regions).toEqual(['Messages (4)']);
       await expect.poll(() => active().id).toBe('message-m3');
       expect(current()).toBe('message-m3');
       const main = document.querySelector('main') as HTMLElement;
       expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
     } finally {
+      await page.viewport(900, 700);
+    }
+  });
+
+  test('phone: a message opens in place: it comes forward with its subject travelling from the row to the heading, and Back plays it back', async () => {
+    await page.viewport(390, 800);
+    const start = document.startViewTransition;
+    const seen: { types: string[]; before: string[]; after: string[] }[] = [];
+    const named = () => [...document.querySelectorAll<HTMLElement>('main *')].filter((el) => el.style.viewTransitionName).map((el) => `${el.style.viewTransitionName}:${(el.textContent || '').slice(0, 20)}`);
+    document.startViewTransition = ((arg: { update: () => void; types: string[] }) => {
+      const before = named();
+      arg.update();
+      seen.push({ types: arg.types, before, after: named() });
+      return { finished: Promise.resolve(), ready: Promise.resolve(), updateCallbackDone: Promise.resolve(), skipTransition() {} } as unknown as ViewTransition;
+    }) as typeof document.startViewTransition;
+    try {
+      const screen = await render(<ListDetail />);
+      await screen.getByRole('link', { name: /New photos/ }).click();
+      await expect.poll(regions).toEqual(['New photos for the home page']);
+      await screen.getByRole('button', { name: 'Back to messages' }).click();
+      await expect.poll(regions).toEqual(['Messages (4)']);
+      expect(seen.map((s) => s.types)).toEqual([['forward'], ['back']]);
+      // The pane slides as a step, and the open message's subject is one named element on both sides of each change.
+      const subject = 'list-detail-subject:New photos for the h';
+      expect(seen[0].before).toContain(subject);
+      expect(seen[0].after).toContain(subject);
+      expect(seen[1].after).toContain(subject);
+      expect(seen.flatMap((s) => [...s.before, ...s.after]).filter((n) => n.startsWith('list-detail-pane:')).length).toBe(4);
+    } finally {
+      document.startViewTransition = start;
       await page.viewport(900, 700);
     }
   });
@@ -60,7 +90,7 @@ describe('Patterns/List and detail', () => {
     try {
       const screen = await render(<ListDetail />);
       await screen.getByRole('link', { name: /New photos/ }).click();
-      expect(regions()).toEqual(['New photos for the home page']);
+      await expect.poll(regions).toEqual(['New photos for the home page']);
       history.back();
       await expect.poll(() => regions()).toEqual(['Messages (4)']);
       await expect.poll(() => active().id).toBe('message-m3');

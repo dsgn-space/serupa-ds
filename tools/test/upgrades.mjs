@@ -10,7 +10,7 @@ import { spawnSync } from 'node:child_process';
 import { PROJECT, read, report, done } from './lib.mjs';
 import { parseChangeset } from '../changesets.mjs';
 import { migrate, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
-import { majorsIn, nextMajor } from '../../docs/upgrades.ts';
+import { majorsIn, nextMajor, upcomingMajor } from '../../docs/upgrades.ts';
 
 const R = [];
 const t = (name, ok, detail = '') => R.push({ name, ok: !!ok, detail });
@@ -54,6 +54,7 @@ t('a minor release is not a major', !at('12.0.0')?.entries.some((e) => e.include
 const pending = nextMajor(version, changesets);
 t(`the next major (${next}) comes from the major changesets`, majors.length ? pending?.version === next && pending.entries.length >= majors.length : pending === null, JSON.stringify(pending?.entries.map((e) => e.slice(0, 50))));
 t('a changeset with single quotes or Windows line ends counts', nextMajor('1.0.0', { a: "---\r\n'serupa-ds': major\r\n---\r\n\r\n- **Breaking.** x.\r\n" })?.entries[0] === '- **Breaking.** x.');
+t('with no major changeset, the guide still shows the next major while serupa-migrate has changes for it, with no entries', JSON.stringify(upcomingMajor('14.3.0', {}, ['13.0.0', '15.0.0'])) === JSON.stringify({ version: '15.0.0', date: '', next: true, entries: [] }) && upcomingMajor('14.3.0', {}, ['13.0.0', '14.0.0']) === null && upcomingMajor('14.3.0', { a: "---\n'serupa-ds': major\n---\n\n- **Breaking.** x.\n" }, ['15.0.0'])?.entries.length === 1);
 const known = new Set([...guide.map((m) => m.version), next]);
 t('each serupa-migrate change belongs to a major in the guide', TRANSFORMS.every((x) => known.has(x.version)), TRANSFORMS.filter((x) => !known.has(x.version)).map((x) => x.id).join(', '));
 
