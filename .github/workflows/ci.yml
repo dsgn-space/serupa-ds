@@ -78,7 +78,9 @@ jobs:
           set -euo pipefail
           subject=$(git log -1 --format=%s HEAD^2)
           labels=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" --jq '.[].name')
-          if [ "$subject" != "Update test baselines on the CI runner" ] && grep -qx update-visual-baselines <<< "$labels"; then
+          # Heal's merge is held too: its label comes right after the push.
+          if [ "$subject" != "Update test baselines on the CI runner" ] && { grep -qx update-visual-baselines <<< "$labels" ||
+            grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; then
             echo "hold=1" >> "$GITHUB_OUTPUT"
             echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi

@@ -261,6 +261,11 @@ jobs:
             [ -n "$base" ] || base=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/visual-baselines.yml/runs?event=push&branch=main&status=success&per_page=1" --jq '.workflow_runs[0].head_sha // empty' || true)
             git cat-file -e "${base:-none}^{commit}" 2>/dev/null && git merge-base --is-ancestor "$base" HEAD || base=$BEFORE
             echo "since=$base" >> "$GITHUB_OUTPUT"
+          elif git log -1 --format=%s | grep -qE '^Merge .+ into the branch \(Update baselines\)$'; then
+            # Heal's merge: the branch's own pictures were drawn before it, so only what the merge brought in (main's
+            # changes and the pictures taken from main's side) is drawn again, not every picture the branch changes:
+            # a theme's pull request otherwise redrew everything each time another pull request's pictures landed.
+            base=$(git rev-parse HEAD^1)
           else
             base=$(git merge-base "origin/$BASE_REF" HEAD)
           fi
@@ -502,7 +507,6 @@ jobs:
       # change, or the drawing failed), start the held run of the branch's newest commit again: the label is off now,
       # so it tests. A pushed commit started its own run.
       - name: Start the held CI run again
-        if: github.event.label.name == 'update-visual-baselines'
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
