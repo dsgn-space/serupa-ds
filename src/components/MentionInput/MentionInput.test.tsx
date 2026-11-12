@@ -99,6 +99,9 @@ describe('MentionInput', () => {
     expect(isOpen()).toBe(false);   // still the one Escape closed
     await userEvent.keyboard(' @');
     await expect.poll(isOpen).toBe(true);
+    // Escape, then the @ deleted and typed again in the same place: a new mention, so the list opens.
+    await userEvent.keyboard('{Escape}{Backspace}@');
+    await expect.poll(isOpen).toBe(true);
   });
 
   test('an email address, a space after @, or a new line doesn\'t open it; leaving the field closes it', async () => {

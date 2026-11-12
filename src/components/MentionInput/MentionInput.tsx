@@ -157,6 +157,7 @@ export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, Menti
     const next = at < 0 ? null : mentionQuery(el.value, at, trigger);
     setQuery((was) => (was && next && was.start === next.start && was.text === next.text ? was : next));
     if (!next || (query && next.start !== query.start)) setActive(0);
+    if (!next) setDismissed(-1);   // that mention is gone (its @ deleted, or the caret left it): a new @ there opens the list
   };
   const change = (next: string) => { if (value === undefined) setOwn(next); if (onValueChange) onValueChange(next); };
 
