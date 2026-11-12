@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { Loader } from '../Loader/Loader';
 import { Timeline, TimelineItem } from './Timeline';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -192,5 +193,23 @@ describe('Timeline orientation="horizontal" (RU12)', () => {
 
   test('the scrolling box\'s focus ring keeps 3:1 on the page in all six themes', () => {
     expect(lowContrast([['focus ring', 'var(--focus-ring)', 'var(--surface)', 3]])).toEqual([]);
+  });
+  // The README's loading recipe: each event's title and time are skeleton lines of their text's size, the list is busy
+  // and the skeletons are decorative (the first Loader's label is said once, through the page's announcer). Each event keeps its height when the events arrive, so nothing jumps.
+  test('the loading recipe: skeleton titles and times keep each event as tall as a loaded one', async () => {
+    function History(p: { busy: boolean }) {
+      return <div style={{ width: 480 }}><Timeline id="tl" aria-label="Order history" aria-busy={p.busy || undefined}>
+        {[0, 1, 2].map((i) => p.busy
+          ? <TimelineItem key={i} title={<Loader variant="skeleton" size="lg" className="w-1/2" label={i === 0 ? 'Loading history' : ''} />} time={<Loader variant="skeleton" size="md" className="w-24" label="" />} />
+          : <TimelineItem key={i} title="Order placed" time="12 Mar, 09:14" dateTime="2026-03-12T09:14" />)}
+      </Timeline></div>;
+    }
+    const heights = () => [...el('tl').children].map((c) => rect(c).height);
+    const { rerender } = await render(<History busy />);
+    expect(el('tl').getAttribute('aria-busy')).toBe('true');
+    expect([...el('tl').querySelectorAll('[data-component="loader"]')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
+    const busy = heights();
+    await rerender(<History busy={false} />);
+    expect(heights()).toEqual(busy);
   });
 });

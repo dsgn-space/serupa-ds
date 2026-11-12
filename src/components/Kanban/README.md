@@ -54,6 +54,16 @@ Drawn from the `Default` story.
 - **Move to…:** each card's menu lists the other columns; picking one puts the card at the end of that column and keeps focus on it. It's the way to move a card with one tap or click (WCAG 2.5.7).
 - A narrow board scrolls sideways in its own box, so the page doesn't.
 
+### Loading and failed
+
+- **Loading:** pass the columns you know with no cards, and `loading`. Each column keeps its title and shows two placeholder cards with no count, nothing can be moved, and the board is `aria-busy`. `loading` can be what's said ("Loading tasks"): it's said once, after the loader's delay, so a quick load says nothing. `true` says "Loading…".
+- **Failed:** in place of the board, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
+
+```tsx
+{state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>The board didn't load.</Alert>
+  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} loading={state === 'loading' && 'Loading tasks'} … />}
+```
+
 ### Do and don't
 
 - **Do:** Give each card a short, unique name with `getLabel` ("Fix login"): it's read on its buttons and in every announcement. (`DoNameCards`)
@@ -91,6 +101,7 @@ Drawn from the `Default` story.
 | `onMove` | `(columns, move) => void` | | Required. The new columns and the move, when a card is dropped somewhere new. |
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | The column headings' level. |
 | `disabled` | `boolean` | `false` | Shows the cards without handles or menus. |
+| `loading` | `boolean` \| `string` | `false` | Each column shows its title and two placeholder cards, with no count, and the board is busy. A string is what's said as they appear ("Loading tasks"); `true` says "Loading…". |
 
 `id`, `className`, `ref` and other props go to the board's `<div>`.
 

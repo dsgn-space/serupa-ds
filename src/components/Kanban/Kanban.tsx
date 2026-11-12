@@ -6,6 +6,7 @@ import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
+import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import { Menu, MenuItem } from '../Menu/Menu';
@@ -46,6 +47,9 @@ export interface KanbanProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement
   headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** Shows the cards without handles or "Move to…" menus. Default: false. */
   disabled?: boolean | undefined;
+  /** The cards are loading: each column shows its title and two placeholder cards, with no count, and the board is
+      busy. true, or what's said once as they appear ("Loading tasks"). Default: false; true says "Loading" (labels.loading). */
+  loading?: boolean | string | undefined;
 }
 
 type Place = { column: number; index: number };
@@ -54,6 +58,13 @@ type Drag = { key: string | number; from: Place; to: Place; pointer: boolean };
 const EDGE = 48;      // px from a scrolling edge where a drag starts scrolling
 const STEP = 16;      // px per frame at the very edge
 const SLOP = 4;       // px a press moves before it counts as a drag
+
+/* Placeholder cards for a column while the board loads: decorative, the card's padding and border around two lines of
+   text. The first column's label is said once, after the loader's delay (a quick load says nothing). */
+function KanbanLoadingCards(props: { label: string }) {
+  const waiting = !useSkeletonShown(props.label);
+  return <>{[0, 1].map((i) => <li key={i} className="dk-kanban__card dk-kanban__loading"><SkeletonArt lines={2} waiting={waiting} /></li>)}</>;
+}
 
 /** columns with the card at `from` moved to `to`. */
 function moveCard<T>(columns: readonly KanbanColumn<T>[], from: Place, to: Place): KanbanColumn<T>[] {
@@ -113,7 +124,7 @@ const KanbanCard = /* @__PURE__ */ React.memo(function KanbanCard(props: KanbanC
 /** A board of columns of cards that people move by dragging, by keyboard or from a "Move to…" menu, with every move announced.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unknown>>('Kanban', function Kanban(props, ref) {
-  const rest = omit(props, { columns: 1, getKey: 1, getLabel: 1, renderCard: 1, onMove: 1, headingLevel: 1, disabled: 1, className: 1 } as const);
+  const rest = omit(props, { columns: 1, getKey: 1, getLabel: 1, renderCard: 1, onMove: 1, headingLevel: 1, disabled: 1, loading: 1, className: 1 } as const);
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const { getKey, getLabel } = props;
   const columns = props.columns || [];
@@ -337,9 +348,11 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
   const targets = kept.current;
 
   const mergedRef = useMergedRef(ref, (n) => { board.current = n; });
+  const loading = props.loading ? (typeof props.loading === 'string' ? props.loading : L.loading) : null;
+  const off = props.disabled || loading != null;
   return (<>
-    {/* Disabled, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}
-    <div tabIndex={props.disabled ? 0 : undefined} {...rest} ref={mergedRef} role={rest.role ?? 'group'}
+    {/* Disabled or loading, nothing inside takes focus, so the board does: keyboard people can still scroll a wide one. */}
+    <div tabIndex={off ? 0 : undefined} aria-busy={loading != null || undefined} {...rest} ref={mergedRef} role={rest.role ?? 'group'}
       className={cn('dk-kanban', drag && 'dk-kanban--moving', props.disabled && 'dk-kanban--disabled', props.className)} data-component="kanban">
       {shown.map((col, c) => {
         const count = columns[c].items.length, over = col.limit != null && count > col.limit, titleId = base + '-col-' + c;
@@ -349,23 +362,23 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
               <H className="dk-kanban__title" id={titleId}>{col.title}</H>
               <span className={cn('dk-kanban__count', over && 'dk-kanban__count--over')}>
                 {over ? <Icon icon={icons.Warning} /> : null}
-                {col.limit == null ? displayNumber(count, locale) : L.kanbanCount(displayNumber(count, locale), displayNumber(col.limit, locale))}
+                {loading != null ? null : col.limit == null ? displayNumber(count, locale) : L.kanbanCount(displayNumber(count, locale), displayNumber(col.limit, locale))}
                 {over ? <span className="dk-kanban__over">{L.kanbanOverLimit}</span> : null}
               </span>
             </div>
             <ul role="list" className="dk-kanban__cards" aria-labelledby={titleId}>
-              {col.items.map((it, index) => {
+              {loading != null ? <KanbanLoadingCards label={c === 0 ? loading : ''} /> : col.items.map((it, index) => {
                 const key = getKey(it), dragging = !!drag && drag.key === key;
                 return <KanbanCard key={key} item={it} itemKey={key} name={getLabel(it)} column={col.id} c={c} index={index}
                   dragging={dragging} pressed={dragging && !drag.pointer} disabled={!!props.disabled} targets={targets}
                   renderCard={props.renderCard} labels={L} hint={base + '-hint'} api={api} />;
               })}
-              {col.items.length ? null : <li className="dk-kanban__empty">{L.kanbanEmpty}</li>}
+              {loading != null || col.items.length ? null : <li className="dk-kanban__empty">{L.kanbanEmpty}</li>}
             </ul>
           </section>
         );
       })}
     </div>
-    {props.disabled ? null : <span hidden id={base + '-hint'}>{L.kanbanInstructions}</span>}
+    {off ? null : <span hidden id={base + '-hint'}>{L.kanbanInstructions}</span>}
   </>);
 }) as <T>(props: KanbanProps<T> & { ref?: React.Ref<HTMLDivElement> | undefined }) => React.ReactElement;

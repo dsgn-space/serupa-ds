@@ -184,6 +184,32 @@
         - text: Audit form labels
         - button "Move Audit form labels to…"
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Failed"
+- group "Sprint 42":
+  - region "To do":
+    - heading "To do" [level=3]
+    - list "To do":
+      - listitem
+      - listitem
+  - region "In progress":
+    - heading "In progress" [level=3]
+    - list "In progress":
+      - listitem
+      - listitem
+  - region "In review":
+    - heading "In review" [level=3]
+    - list "In review":
+      - listitem
+      - listitem
+  - region "Done":
+    - heading "Done" [level=3]
+    - list "Done":
+      - listitem
+      - listitem
+
 # LongText
 - group "Sprint 42":
   - region "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung":

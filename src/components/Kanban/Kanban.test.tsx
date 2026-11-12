@@ -227,6 +227,27 @@ describe('Kanban', () => {
     expect(document.getElementById('dk')!.querySelectorAll('button')).toHaveLength(0);
   });
 
+  test('loading: each column keeps its title, shows two placeholder cards and no count; the board is busy and says so once', async () => {
+    const empty = START().map((c) => ({ ...c, items: [] }));
+    const { rerender } = await render(<Kanban id="dk" aria-label="S" loading="Loading tasks" columns={empty} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    const board = document.getElementById('dk')!;
+    expect([board.getAttribute('aria-busy'), board.tabIndex]).toEqual(['true', 0]);   // nothing inside takes focus, so the board does
+    expect(names()).toEqual(['To do: ', 'Doing: ', 'Done: ']);
+    expect(columns().map((c) => [count(c).textContent, c.querySelectorAll('li').length])).toEqual([['', 2], ['', 2], ['', 2]]);
+    expect([...board.querySelectorAll('[data-component="loader"]')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
+    expect([board.querySelectorAll('button').length, board.textContent?.includes('No cards'), document.getElementById(board.id + '-hint')]).toEqual([0, false, null]);
+    await said('Loading tasks');
+    await rerender(<Kanban id="dk" aria-label="S" columns={START()} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    expect([board.getAttribute('aria-busy'), board.getAttribute('tabindex'), count(columns()[0]).textContent]).toEqual([null, null, '3']);
+    expect(names()).toEqual(['To do: abc', 'Doing: d', 'Done: ']);
+  });
+
+  test('loading={true} says the shared "Loading…" label', async () => {
+    await render(<Kanban aria-label="S" loading columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    expect(document.querySelectorAll('[aria-busy="true"] li')).toHaveLength(6);
+    await said('Loading…');
+  });
+
   test('headingLevel sets the column headings', async () => {
     await render(<Kanban aria-label="S" headingLevel={2} columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
     await expect.element(page.getByRole('heading', { level: 2, name: 'Doing' })).toBeVisible();

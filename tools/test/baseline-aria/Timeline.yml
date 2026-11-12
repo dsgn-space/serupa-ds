@@ -92,6 +92,16 @@
     - text: Out for delivery
     - time: 15 Mar, 08:02
 
+# LoadingAndErrors
+- button "Loading" [pressed]
+- button "Loaded"
+- button "Failed"
+- list "Order history":
+  - listitem
+  - listitem
+  - listitem
+  - listitem
+
 # LongText
 - list "Order history":
   - listitem:

@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as React from 'react';
+import { Alert } from '../Alert/Alert';
+import { Button } from '../Button/Button';
+import { Loader } from '../Loader/Loader';
 import { Timeline, TimelineItem } from './Timeline';
 
 const events = <>
@@ -65,3 +68,24 @@ export const DontColorOnly: Story = {
     <TimelineItem title="Update" time="15 Mar, 08:02" dateTime="2026-03-15T08:02" />
   </> },
 };
+
+// Loading and failed: skeleton titles and times hold each event's place, and a failure offers Retry.
+function States(args: React.ComponentProps<typeof Timeline>) {
+  const [state, setState] = React.useState<'loading' | 'loaded' | 'failed'>('loading');
+  return (
+    <div style={{ maxWidth: 560, display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {(['loading', 'loaded', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+      </div>
+      {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>The order history didn't load. Check your connection and try again.</Alert>
+        : state === 'loaded' ? <Timeline {...args} />
+        : <Timeline {...args} aria-busy>
+            {[0, 1, 2, 3].map((i) => <TimelineItem key={i}
+              title={<Loader variant="skeleton" size="lg" className="w-1/2" label={i === 0 ? 'Loading history' : ''} />}
+              time={<Loader variant="skeleton" size="md" className="w-24" label="" />} />)}
+          </Timeline>}
+    </div>
+  );
+}
+/** Loading: skeleton titles and times, so nothing moves when the events arrive. Failed: an Alert with Retry. */
+export const LoadingAndErrors: Story = { name: 'Loading and failed', render: (args) => <States {...args} /> };

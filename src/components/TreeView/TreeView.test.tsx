@@ -326,6 +326,43 @@ describe('TreeView', () => {
     await press(row('c'), () => expect.poll(() => css(row('c')).backgroundColor).toBe(color('var(--pressed)')));
     await press(row('b'), () => expect(css(row('b')).backgroundColor).not.toBe(color('var(--pressed)')));
   });
+  // The README's recipe for a folder whose children load when it opens: a disabled "Loading…" item holds its place,
+  // which people can reach and read; when the children come, focus on it goes to the first of them; a failure says so
+  // in the same place, and closing and opening the folder tries again.
+  test('a folder that loads on opening: a "Loading…" item, focus kept when the children come, and a retry on failure', async () => {
+    const load = vi.fn<() => 'ok' | 'fail'>().mockReturnValueOnce('fail').mockReturnValue('ok');
+    let finish = () => {};
+    function Lazy() {
+      const [kids, setKids] = React.useState<TreeViewItem[] | 'loading' | 'failed'>([]);
+      const [open, setOpen] = React.useState<string[]>([]);
+      const children: TreeViewItem[] = kids === 'loading' ? [{ id: 'docs-wait', label: 'Loading…', disabled: true }]
+        : kids === 'failed' ? [{ id: 'docs-wait', label: 'Didn’t load. Close and open the folder to try again.', disabled: true }] : kids;
+      return <TreeView aria-label="Files" items={[{ id: 'docs', label: 'docs', children }, { id: 'readme', label: 'README.md' }]} expanded={open}
+        onExpandedChange={(next) => {
+          setOpen(next);
+          if (next.indexOf('docs') >= 0 && (kids === 'failed' || (Array.isArray(kids) && !kids.length))) {
+            setKids('loading');
+            finish = () => setKids(load() === 'ok' ? [{ id: 'intro', label: 'Introduction.mdx' }, { id: 'guide', label: 'Guide.mdx' }] : 'failed');
+          }
+        }} />;
+    }
+    await render(<Lazy />);
+    await userEvent.click(row('docs').firstElementChild as HTMLElement);   // its toggle
+    await expect.poll(() => shown()).toBe('docs,docs-wait,readme');
+    await userEvent.keyboard('{ArrowDown}');
+    expect([focused(), item('docs-wait').getAttribute('aria-disabled'), item('docs-wait').textContent]).toEqual(['docs-wait', 'true', 'Loading…']);
+    React.act(() => finish());
+    await expect.poll(() => item('docs-wait').textContent).toBe('Didn’t load. Close and open the folder to try again.');
+    expect(focused()).toBe('docs-wait');
+    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}');   // to the folder, then close it
+    await expect.poll(() => shown()).toBe('docs,readme');
+    await userEvent.keyboard('{ArrowRight}{ArrowDown}');   // open it again: it tries again
+    await expect.poll(() => item('docs-wait').textContent).toBe('Loading…');
+    expect(focused()).toBe('docs-wait');
+    React.act(() => finish());
+    await expect.poll(() => shown()).toBe('docs,intro,guide,readme');
+    expect(focused()).toBe('intro');
+  });
 });
 
 describe('TreeView target size (GQ6)', () => {
