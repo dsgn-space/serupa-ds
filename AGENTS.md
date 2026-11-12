@@ -46,7 +46,7 @@ Releases are the Release workflow's job again: merging the Release pull request 
 
 ## Every pull request
 
-- **One change per pull request.** Fixes for the same component go in one pull request. Different components go in different ones.
+- **One kind of change per pull request, batched.** Work of the same kind goes in one pull request, even across many components: several fixes, one token or style change applied everywhere, a round of tooling fixes. Every pull request costs a full CI run and a queue slot, so don't open one per component or per tiny fix. Split only work of different kinds, or changes that touch the same baselines as another open pull request.
 - **A fix starts with a test that fails on main.** Write the bug as a user meets it, see the test fail, then fix it. CI runs the changed tests against the base commit's `src/` (`tools/fix-proof.mjs`) and fails when they all pass there; a fix only the screenshots show takes the `no-repro-test` label.
 - **Stay in your lane.** Something else you notice goes in an issue or the work queue, not in this pull request. Remove only what your own change left unused.
 - **Every function you add to `src/` runs in a test.** The coverage job names any added function no test ran (`tools/coverage-new-functions.mjs`), because one untested handler can take main under its coverage floor. Cover it in the component's own tests, or remove it when nothing calls it.

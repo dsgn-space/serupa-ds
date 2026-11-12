@@ -90,6 +90,20 @@ describe('Kanban', () => {
     expect(document.activeElement).toBe(handle('Alpha').element());
   });
 
+  test('a column removed while a card is held over it (another user deleted it): the board still draws, the card is back in its place, and dropping it moves nothing', async () => {
+    const moves: KanbanMove<T>[] = [];
+    const board = (cols: KanbanColumn<T>[]) => <Kanban aria-label="Sprint" columns={cols} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={(_, m) => moves.push(m)} />;
+    const { rerender } = await render(board(START()));
+    await userEvent.click(handle('Alpha'));
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}');
+    await said('Alpha, Done, position 1 of 1.');
+    await rerender(board(START().slice(0, 2)));
+    expect(names()).toEqual(['To do: abc', 'Doing: d']);
+    await userEvent.keyboard(' ');
+    expect(names()).toEqual(['To do: abc', 'Doing: d']);
+    expect(moves).toEqual([]);
+  });
+
   test('keyboard: Enter picks a card up and Enter again drops it where it is; nothing is reported', async () => {
     const moves: KanbanMove<T>[] = [];
     await render(<Board moves={moves} />);
