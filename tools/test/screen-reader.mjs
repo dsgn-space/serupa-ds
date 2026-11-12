@@ -45,13 +45,15 @@ const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 // it then names. capture: true keeps all of it.
 await sr.start({ capture: true });
 const b = await engine.launch({ headless: false });
+// One window for every case: a new window for each left every second one without the keyboard (VoiceOver heard Tab
+// land on Start, the page's first control, in Checkbox and Tabs), as macOS gave focus back and forth on each close.
+const page = await b.newPage();
 try {
-  for (const [name, tree, steps] of CASES) {
-    const page = await b.newPage();
+  for (const [i, [name, tree, steps]] of CASES.entries()) {
     const url = writePage('screen-reader.html', `<button id="start">Start</button><div id="root"></div><script>
 var h = React.createElement, S = Serupa;
 ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`, { react: true });
-    await page.goto(url);
+    await page.goto(`${url}?case=${i}`);
     await page.bringToFront();
     // VoiceOver's keys go to the frontmost app, and Playwright's WebKit starts in the background ("Playwright is
     // launched in the background"): every key went to the desktop, and every case failed. Bring the app forward
@@ -87,7 +89,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
       if (missing.length) misses.push(`${key}: no "${missing.join('", "')}" in "${heard}"`);
     }
     t(name, !misses.length, misses.join('; '));
-    await page.close();
   }
 } finally {
   await b.close();
