@@ -43,6 +43,9 @@ jobs:
               - dist
               - storybook-static
               - src/material/icons.ts
+              # The apps coding agents wrote in the skill evaluations: kept as results, never run or shipped. About a
+              # fifth of the repository's JavaScript and TypeScript (380 files, 30,000 lines), analysed on every run.
+              - tools/skill-eval/results
       - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         with:
           category: /language:${{ matrix.language }}
