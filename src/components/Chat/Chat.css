@@ -81,7 +81,7 @@
 .dk-chat-approval {
   display: flex; flex-direction: column; gap: var(--spacing-2); max-inline-size: var(--sizing-full);
   padding: var(--chat-bubble-padding-y, var(--spacing-2)) var(--chat-bubble-padding-x, var(--spacing-3));
-  border: var(--border-width-1) solid var(--chat-divider, var(--border)); border-radius: var(--chat-bubble-radius, var(--rounded-xl));
+  border: var(--border-width-1) solid var(--chat-divider, var(--border)); border-radius: var(--chat-bubble-radius, var(--radius-container));
   font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere;
 }
 .dk-chat-approval__title { font-weight: var(--font-medium); }
