@@ -1,6 +1,6 @@
 // exports: Chat, ChatApproval, type ChatApprovalProps, type ChatApprovalStatus, ChatCitation, type ChatCitationProps, ChatComposer, type ChatComposerProps, ChatDivider, type ChatDividerProps, ChatMessage, type ChatMessageProps, type ChatProps, type ChatStep, ChatSteps, type ChatStepsProps, type ChatStepStatus
 interface ChatLabels {
-    chatNewMessages: (count: number) => string;
+    chatNewMessages: (count: number, formatted: string) => string;
     chatLoadOlder: string;
     chatLoadingOlder: string;
     chatSending: string;

@@ -85,7 +85,7 @@ describe('Chat', () => {
 
   test('scrolled up, new messages leave the reader where they are and show "2 new messages", which jumps down and focuses the log', async () => {
     const api: { add?: (n: number) => void } = {};
-    await render(<Live api={api} />);
+    await render(<SerupaProvider locale="en-US"><Live api={api} /></SerupaProvider>);
     log().scrollTop = 0;
     log().dispatchEvent(new Event('scroll'));
     React.act(() => api.add!(2));
@@ -559,5 +559,11 @@ describe('Chat in print', () => {
       expect(l.getBoundingClientRect().height).toBeGreaterThan(600);
     } finally { await commands.printMedia(false); }
     expect(l.scrollHeight).toBeGreaterThan(l.clientHeight + 100);
+  });
+});
+
+describe('Chat labels', () => {
+  test('chatNewMessages says the count as given, in the locale\'s digits ("٣ pesan baru")', () => {
+    expect([idLabels.chatNewMessages(3, '٣')]).toEqual(['٣ pesan baru']);
   });
 });
