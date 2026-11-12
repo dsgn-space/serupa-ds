@@ -317,7 +317,7 @@ describe('Density axis', () => {
     // way down) it is under 5% white, so white on red-600 (4.83:1 flat) stays above 4.5:1.
     expect(sheen).toMatch(/^linear-gradient\(to bottom, rgb\(255 255 255 \/ 0\.1\), rgb\(255 255 255 \/ 0\) 40%\)$/);
     const deep = (tokens.shadow.tokens as (Tok & { tactile?: string })[]).filter((t) => t.tactile != null);
-    expect(deep.map((t) => t.name).sort()).toEqual(['depth-card-lift', 'depth-control', 'depth-control-hover', 'depth-control-pressed', 'depth-field', 'depth-part', 'depth-press', 'depth-sheen', 'depth-sheen-pressed', 'depth-surface', 'depth-well']);
+    expect(deep.map((t) => t.name).sort()).toEqual(['depth-card', 'depth-card-lift', 'depth-control', 'depth-control-hover', 'depth-control-pressed', 'depth-field', 'depth-part', 'depth-press', 'depth-sheen', 'depth-sheen-pressed', 'depth-surface', 'depth-well']);
     for (const t of deep) expect(t.tactile, t.name).not.toMatch(/translate|scale|transition|animation/);
   });
   test('tactile motion: violet presses a Button 1px down, slides the Switch thumb on a spring and draws the Checkbox tick on; the flat brands keep their motion; reduced motion stops all three', async () => {

@@ -43,7 +43,8 @@ button.dk-stepper__head:active .dk-stepper__indicator { scale: var(--stepper-pre
 .dk-stepper__indicator .dk-icon { font-size: var(--spacing-4); }
 .dk-stepper--size-sm .dk-stepper__indicator .dk-icon { font-size: var(--spacing-3\.5); }
 .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator {
-  border-color: var(--stepper-active-bg, var(--primary)); background: var(--stepper-active-bg, var(--primary)); color: var(--stepper-active-text, var(--on-primary));
+  border-color: var(--stepper-active-bg, var(--primary)); background: var(--depth-sheen), var(--stepper-active-bg, var(--primary)); color: var(--stepper-active-text, var(--on-primary));
+  box-shadow: var(--stepper-active-depth, var(--depth-part));   /* raised like a pressed-in key in a tactile brand; nothing in the flat ones */
 }
 .dk-stepper__step--current .dk-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-active-bg, var(--primary)); outline-offset: var(--outline-offset-2); }
 .dk-stepper__step--error .dk-stepper__indicator { border-color: var(--stepper-error-bg, var(--danger)); background: var(--stepper-error-bg, var(--danger)); color: var(--stepper-error-text, var(--on-danger)); }

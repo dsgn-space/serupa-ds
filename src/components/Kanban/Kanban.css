@@ -23,6 +23,7 @@
 .dk-kanban__card {
   position: relative; display: flex; align-items: flex-start; gap: var(--spacing-1); padding: var(--kanban-card-padding, var(--spacing-2));
   border: var(--border-width-1) solid var(--kanban-card-border, var(--border)); border-radius: var(--kanban-card-radius, var(--radius-control)); background: var(--kanban-card-bg, var(--surface));
+  box-shadow: var(--kanban-card-depth, var(--depth-card));   /* resting on the column in a tactile brand; nothing in the flat ones */
 }
 .dk-kanban__card--dragging { z-index: var(--z-sticky); box-shadow: var(--kanban-card-shadow, var(--elevation-overlay)); }
 .dk-kanban__content { flex: auto; min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }

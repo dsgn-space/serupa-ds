@@ -93,6 +93,16 @@
             "cssVar": "--sortable-list-item-shadow-active"
           }
         }
+      },
+      "item-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-card}",
+        "$description": "An item's tactile layers at rest: a short, soft shadow. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--sortable-list-item-depth"
+          }
+        }
       }
     },
     "radius": {

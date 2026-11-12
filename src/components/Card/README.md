@@ -143,6 +143,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-shadow` | `elevation-rest` | An outline card's shadow |
 | `--card-shadow-elevated` | `elevation-raised` | An elevated card's shadow |
 | `--card-depth-hover` | `depth-card-lift` | The tactile lift added over a link card's shadow while the pointer is over it. None in the flat brands. |
+| `--card-depth` | `depth-card` | The card's tactile layers at rest: a short, soft shadow. None in the flat brands, and none on a filled card. |
 
 **Border**
 

@@ -997,6 +997,7 @@
   --depth-field: var(--shadow-none);
   --depth-well: var(--shadow-none);
   --depth-surface: var(--shadow-none);
+  --depth-card: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --border-width-0: 0px;
@@ -1539,6 +1540,7 @@
   --depth-field: var(--shadow-none);
   --depth-well: var(--shadow-none);
   --depth-surface: var(--shadow-none);
+  --depth-card: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --motion-draw: var(--duration-0);
@@ -1556,6 +1558,7 @@
   --depth-field: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35));
   --depth-well: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4));
   --depth-surface: 0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07));
+  --depth-card: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.05)), 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 2px 8px -2px rgb(0 0 0 / 0.06);
   --depth-card-lift: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14);
   --depth-press: var(--spacing-px);
   --motion-draw: var(--duration-150);
@@ -1573,6 +1576,7 @@
   --depth-field: var(--shadow-none);
   --depth-well: var(--shadow-none);
   --depth-surface: var(--shadow-none);
+  --depth-card: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --motion-draw: var(--duration-0);
@@ -1590,6 +1594,7 @@
   --depth-field: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35));
   --depth-well: inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4));
   --depth-surface: 0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07));
+  --depth-card: inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.05)), 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 2px 8px -2px rgb(0 0 0 / 0.06);
   --depth-card-lift: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14);
   --depth-press: var(--spacing-px);
   --motion-draw: var(--duration-150);
@@ -1607,6 +1612,7 @@
   --depth-field: var(--shadow-none);
   --depth-well: var(--shadow-none);
   --depth-surface: var(--shadow-none);
+  --depth-card: var(--shadow-none);
   --depth-card-lift: var(--shadow-none);
   --depth-press: var(--spacing-0);
   --motion-draw: var(--duration-0);
