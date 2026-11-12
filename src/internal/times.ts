@@ -84,7 +84,7 @@ export function parseTime(text: string, locale?: string): number | null {
   const m = /^(a|am|a\.m\.|p|pm|p\.m\.)?(\d{1,2})(?:[:.h]?(\d{2})(?:[:.](\d{2}))?)?(a|am|a\.m\.|p|pm|p\.m\.)?$/.exec(s);
   if (!m || (m[4] && Number(m[4]) > 59)) return null;
   const typed = m[1] || m[5];
-  if (typed) { if (ap || (m[1] && m[5])) return null; ap = typed[0]; }
+  if (typed) { if (ap || (m[1] && m[5])) return null; ap = typed.charAt(0); }
   let h = Number(m[2]);
   const min = m[3] ? Number(m[3]) : 0;
   if (min > 59) return null;

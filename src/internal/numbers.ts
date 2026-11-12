@@ -29,7 +29,7 @@ const MAX_LENGTH = 100;
 // (or of two before the last three, as in hi-IN's 12,34,567).
 const grouped = (t: string, mark: string) => {
   const chunks = t.split(mark);
-  return chunks.length > 1 && /^[1-9]\d{0,2}$/.test(chunks[0]) && /^\d{3}$/.test(chunks[chunks.length - 1]) && chunks.slice(1, -1).every((c) => /^\d{2,3}$/.test(c));
+  return chunks.length > 1 && /^[1-9]\d{0,2}$/.test(chunks[0] ?? '') && /^\d{3}$/.test(chunks.at(-1) ?? '') && chunks.slice(1, -1).every((c) => /^\d{2,3}$/.test(c));
 };
 
 /** A typed number in the locale's form, or null when empty, or undefined when it isn't a number (yet).
@@ -47,23 +47,24 @@ export function parseNumber(text: string, locale?: string): number | null | unde
   // Text around the number (Rp, $, €, %, a minus) is fine; letters inside it are not. The text may hold dots away
   // from the digits, as unit abbreviations do ("กม.", "कि.मि.", "கி.மீ.").
   const parts = /^((?:[^0-9]*[^0-9.,'\u2019])?)([0-9.,'\u2019]*)((?:[^0-9.,'\u2019][^0-9]*)?)$/.exec(s);
-  if (!parts || !/[0-9]/.test(parts[2])) return undefined;
+  const [, before = '', digits = '', after = ''] = parts || [];
+  if (!parts || !/[0-9]/.test(digits)) return undefined;
   // A minus before or after the number ("1234.5-"), or accounting parentheses ("(Rp 1.500)"), make it negative.
-  const neg = parts[1].includes('-') || parts[3].includes('-') || (parts[1].includes('(') && parts[3].includes(')'));
-  let t = parts[2];
+  const neg = before.includes('-') || after.includes('-') || (before.includes('(') && after.includes(')'));
+  let t = digits;
   if (/['\u2019]/.test(t)) { if (group !== "'" && group !== '\u2019') return undefined; t = t.replace(/['\u2019]/g, ''); }
   const marks = [...new Set(t.replace(/[0-9-]/g, ''))];
   let normal: string;
-  if (marks.length === 0) normal = t;
+  const [m] = marks;
+  if (m === undefined) normal = t;
   else if (marks.length === 2) {
     // Both marks: the last one is the decimal, the other one groups.
     const last = t[Math.max(t.lastIndexOf('.'), t.lastIndexOf(','))];
     const other = last === '.' ? ',' : '.';
-    const [int, frac, extra] = t.split(last);
+    const [int = '', frac, extra] = t.split(last ?? '.');
     if (extra !== undefined || !grouped(int, other)) return undefined;
     normal = int.split(other).join('') + '.' + frac;
   } else {
-    const m = marks[0];
     if (m === decimal && m !== group) { const [int, frac, extra] = t.split(m); if (extra !== undefined) return undefined; normal = int + '.' + frac; }
     else if (grouped(t, m)) normal = t.split(m).join('');
     else { const [int, frac, extra] = t.split(m); if (extra !== undefined) return undefined; normal = int + '.' + frac; }

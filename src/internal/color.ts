@@ -12,27 +12,28 @@ export function normalizeHex(text: string): string | null {
     return c.every((v) => v < 256) ? '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('') : null;
   }
   const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})(f|ff)?$/i.exec(t);
-  if (!m || (m[2] && m[2].length !== (m[1].length === 3 ? 1 : 2))) return null;
-  const h = m[1].length === 3 ? m[1].replace(/./g, (c) => c + c) : m[1];
+  const [, body = '', alpha] = m || [];
+  if (!m || (alpha && alpha.length !== (body.length === 3 ? 1 : 2))) return null;
+  const h = body.length === 3 ? body.replace(/./g, (c) => c + c) : body;
   return '#' + h.toLowerCase();
 }
 
 /** The relative luminance of a hex color (0 for black, 1 for white). */
 function luminance(hex: string): number {
   const n = parseInt(hex.slice(1), 16);
-  const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255].map((v) => {
+  const lin = (v: number) => {
     const c = v / 255;
     return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  return 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
 }
 
 /** The WCAG 2 contrast ratio between two hex colors, from 1 to 21; null if either isn't one. */
 export function contrastRatio(a: string, b: string): number | null {
   const x = normalizeHex(a), y = normalizeHex(b);
   if (!x || !y) return null;
-  const [hi, lo] = [luminance(x), luminance(y)].sort((p, q) => q - p);
-  return (hi + 0.05) / (lo + 0.05);
+  const lx = luminance(x), ly = luminance(y);
+  return (Math.max(lx, ly) + 0.05) / (Math.min(lx, ly) + 0.05);
 }
 
 export type ColorHue = 'red' | 'orange' | 'yellow' | 'green' | 'teal' | 'blue' | 'purple' | 'pink' | 'brown' | 'gray' | 'black' | 'white';
@@ -44,7 +45,7 @@ export function colorName(hex: string): { hue: ColorHue; tone: ColorTone } | nul
   const x = normalizeHex(hex);
   if (!x) return null;
   const n = parseInt(x.slice(1), 16);
-  const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255].map((v) => v / 255);
+  const r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
   const max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, d = max - min;
   const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
   const tone: ColorTone = l < 0.36 ? 'dark' : l > 0.75 ? 'light' : '';
