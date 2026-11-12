@@ -368,9 +368,8 @@ describe('TreeView target size (GQ6)', () => {
   test('picking an item keeps its label at the weight of the others, so a label that fits on one line never wraps when picked; the start bar marks it (GR269)', async () => {
     await render(<div style={{ width: '120px' }}><Tree /></div>);
     await userEvent.click(row('c'));
-    const label = (id: string) => row(id).querySelector<HTMLElement>('.dk-tree-view__label')!;
     expect(item('c').getAttribute('aria-selected')).toBe('true');
-    expect(css(label('c')).fontWeight).toBe(css(label('a')).fontWeight);
+    expect(css(row('c')).fontWeight).toBe(css(row('a')).fontWeight);
     expect(css(row('c')).boxShadow).toMatch(/inset/);
   });
 });
