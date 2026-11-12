@@ -465,18 +465,20 @@
 <!-- LoadingAndErrors -->
 <div style="display:grid;gap:12px">
 <div style="display:flex;gap:8px">
-<button aria-pressed="true" data-component="button" data-variant="primary" data-size="sm" type="button" class="dk-btn dk-btn--primary dk-btn--size-sm">
-<span class="dk-btn__label">Loading</span>
+<div aria-label="State" role="radiogroup" class="dk-segmented dk-segmented--size-sm" data-component="segmented-control" data-size="sm">
+<button type="button" role="radio" aria-checked="true" tabindex="0" data-value="loading" class="dk-segmented__item dk-segmented__item--selected">
+<span class="dk-segmented__label">Loading</span>
 </button>
-<button aria-pressed="false" data-component="button" data-variant="secondary" data-size="sm" type="button" class="dk-btn dk-btn--secondary dk-btn--size-sm">
-<span class="dk-btn__label">Loaded</span>
+<button type="button" role="radio" aria-checked="false" tabindex="-1" data-value="loaded" class="dk-segmented__item">
+<span class="dk-segmented__label">Loaded</span>
 </button>
-<button aria-pressed="false" data-component="button" data-variant="secondary" data-size="sm" type="button" class="dk-btn dk-btn--secondary dk-btn--size-sm">
-<span class="dk-btn__label">Empty</span>
+<button type="button" role="radio" aria-checked="false" tabindex="-1" data-value="empty" class="dk-segmented__item">
+<span class="dk-segmented__label">Empty</span>
 </button>
-<button aria-pressed="false" data-component="button" data-variant="secondary" data-size="sm" type="button" class="dk-btn dk-btn--secondary dk-btn--size-sm">
-<span class="dk-btn__label">Failed</span>
+<button type="button" role="radio" aria-checked="false" tabindex="-1" data-value="failed" class="dk-segmented__item">
+<span class="dk-segmented__label">Failed</span>
 </button>
+</div>
 </div>
 <div data-component="table" class="dk-table">
 <table aria-busy="true" class="dk-table__table">
