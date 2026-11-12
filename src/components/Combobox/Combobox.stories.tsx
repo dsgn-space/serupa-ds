@@ -106,3 +106,12 @@ export const LongOptions: Story = {
   args: { options: ['The Democratic Republic of São Tomé and Príncipe', 'Saint Vincent and the Grenadines', 'Donaudampfschifffahrtsgesellschaftskapitänskajüte', ...COUNTRIES], defaultValue: 'The Democratic Republic of São Tomé and Príncipe' },
   decorators: [(Story) => <div style={{ width: 200, minHeight: 'var(--spacing-80)' }}><Story /></div>],
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a visible label from Field, which stays in view after something is picked. */
+export const DoVisibleLabel: Story = {
+  name: 'Do: give it a visible label',
+  render: (args) => <Field label="Country"><Combobox {...args} aria-label={undefined} placeholder="Choose a country" /></Field>,
+};
+/** Don't: the placeholder as the only label; it disappears once something is picked or typed. */
+export const DontPlaceholderLabel: Story = { name: "Don't: use the placeholder as the label", args: { placeholder: 'Country' } };
