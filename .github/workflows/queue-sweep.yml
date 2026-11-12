@@ -35,8 +35,9 @@ jobs:
             --jq '.workflow_runs[] | select(.status != "completed") | "\(.id) \(.head_sha) \(.head_branch)"') || exit 1
           while read -r id sha branch; do
             [ -n "$id" ] || continue
-            # Only a 404 counts as gone: any other answer leaves the run alone until the next sweep.
-            status=$(gh api -i "repos/$GH_REPO/git/ref/heads/$branch" </dev/null 2>/dev/null | awk 'NR == 1 { print $2 }')
+            # Only a 404 counts as gone: any other answer leaves the run alone until the next sweep. gh exits 1 on the
+            # 404 itself, so with pipefail the || true keeps that answer from stopping the sweep.
+            status=$(gh api -i "repos/$GH_REPO/git/ref/heads/$branch" </dev/null 2>/dev/null | awk 'NR == 1 { print $2 }') || true
             [ "$status" = 404 ] || continue
             # Merged: main holds the group's commit, so its runs finish as they are.
             merged=$(gh api "repos/$GH_REPO/compare/$sha...main" --jq .status </dev/null 2>/dev/null || echo unknown)

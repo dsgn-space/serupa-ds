@@ -1,0 +1,57 @@
+name: Queue enqueue
+
+# A pull request whose auto-merge was turned on while its checks still ran sometimes stays out of the merge queue when
+# they pass: green, auto-merge on, no queue entry, until someone turns auto-merge off and on again (#1679 and #1680 on
+# 12 Nov). This puts such a pull request in the queue: each time CI finishes on a pull request, and every fifteen minutes.
+# Only one whose auto-merge a person turned on, that is ready to merge (mergeable_state "clean": every required check
+# green, no conflict), and that isn't a draft or already queued. It checks out nothing and runs no code from any branch.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  schedule:
+    - cron: '7-59/15 * * * *'
+
+concurrency:
+  group: queue-enqueue
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  enqueue:
+    if: github.event_name == 'schedule' || github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          # The queue entry is made with the bot's token, as the baselines' pushes are: what the workflow token does
+          # starts no workflow, and the queue's group must start CI.
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          NAME: ${{ github.event.repository.name }}
+        run: |
+          set -uo pipefail
+          prs=$(gh api graphql -f owner="$OWNER" -f name="$NAME" -f query='
+            query($owner: String!, $name: String!) {
+              repository(owner: $owner, name: $name) {
+                pullRequests(states: OPEN, first: 100) {
+                  nodes { id number isDraft autoMergeRequest { enabledAt } mergeQueueEntry { id } }
+                }
+              }
+            }' --jq '.data.repository.pullRequests.nodes[]
+              | select(.isDraft | not) | select(.autoMergeRequest != null) | select(.mergeQueueEntry == null)
+              | "\(.number) \(.id)"') || exit 1
+          while read -r number id; do
+            [ -n "$number" ] || continue
+            state=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" --jq .mergeable_state </dev/null) || continue
+            [ "$state" = clean ] || continue
+            echo "Queueing #$number: green, auto-merge on, not in the queue."
+            GH_TOKEN=$BOT_TOKEN gh api graphql -f id="$id" -f query='mutation($id: ID!) { enqueuePullRequest(input: { pullRequestId: $id }) { clientMutationId } }' </dev/null >/dev/null ||
+              echo "::warning::#$number couldn't be queued"
+          done <<< "$prs"
