@@ -280,7 +280,7 @@ describe('CascadeSelect', () => {
   });
 
   test('in Indonesian: Pilih…, Tingkat 1', async () => {
-    await render(<SerupaProvider labels={idLabels}><CascadeSelect aria-label="Wilayah" options={regions} /></SerupaProvider>);
+    await render(<SerupaProvider locale="id-ID" labels={idLabels}><CascadeSelect aria-label="Wilayah" options={regions} /></SerupaProvider>);
     expect(button().textContent).toBe('Pilih…');
     await userEvent.click(button());
     expect(document.getElementById(lists()[0].getAttribute('aria-labelledby')!)!.textContent).toBe('Tingkat 1');

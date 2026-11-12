@@ -80,7 +80,7 @@ describe('Chat', () => {
 
   test('scrolled up, new messages leave the reader where they are and show "2 new messages", which jumps down and focuses the log', async () => {
     const api: { add?: (n: number) => void } = {};
-    await render(<Live api={api} />);
+    await render(<SerupaProvider locale="en-US"><Live api={api} /></SerupaProvider>);
     log().scrollTop = 0;
     log().dispatchEvent(new Event('scroll'));
     React.act(() => api.add!(2));
