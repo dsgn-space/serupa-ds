@@ -1,0 +1,93 @@
+# Default
+- dialog "The sea under a pale sky":
+  - heading "The sea under a pale sky" [level=2]
+  - paragraph: 2 of 4
+  - button "Close"
+  - figure "Lombok"
+  - button "Previous image"
+  - button "Next image"
+
+# DoName
+- dialog "A hillside at dusk":
+  - heading "A hillside at dusk" [level=2]
+  - paragraph: 1 of 4
+  - button "Close"
+  - figure "Bromo, before sunrise"
+  - button "Previous image" [disabled]
+  - button "Next image"
+
+# DontFileNames
+- dialog "IMG_2041.jpg":
+  - heading "IMG_2041.jpg" [level=2]
+  - paragraph: 1 of 4
+  - button "Close"
+  - figure "Bromo, before sunrise"
+  - button "Previous image" [disabled]
+  - button "Next image"
+
+# Failed
+- dialog "A receipt from March":
+  - heading "A receipt from March" [level=2]
+  - paragraph: 1 of 5
+  - button "Close"
+  - figure "Couldn’t load this picture."
+  - button "Previous image" [disabled]
+  - button "Next image"
+
+# FromAGallery
+- list:
+  - listitem:
+    - button "A hillside at dusk":
+      - img "A hillside at dusk"
+  - listitem:
+    - button "The sea under a pale sky":
+      - img "The sea under a pale sky"
+  - listitem:
+    - button "A tall blue tower":
+      - img "A tall blue tower"
+  - listitem:
+    - button "A green field under a yellow sky":
+      - img "A green field under a yellow sky"
+
+# LongText
+- dialog "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice":
+  - heading "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice" [level=2]
+  - paragraph: 1 of 5
+  - button "Close"
+  - figure "A caption long enough to wrap onto a second and a third line in a narrow dialog, with Donaudampfschifffahrtsgesellschaftskapitän in it"
+  - button "Previous image" [disabled]
+  - button "Next image"
+
+# Loop
+- dialog "A green field under a yellow sky":
+  - heading "A green field under a yellow sky" [level=2]
+  - paragraph: 4 of 4
+  - button "Close"
+  - figure "Rice fields near Ubud"
+  - button "Previous image"
+  - button "Next image"
+
+# Playground
+- dialog "A hillside at dusk":
+  - heading "A hillside at dusk" [level=2]
+  - paragraph: 1 of 4
+  - button "Close"
+  - figure "Bromo, before sunrise"
+  - button "Previous image" [disabled]
+  - button "Next image"
+
+# Single
+- dialog "A hillside at dusk":
+  - heading "A hillside at dusk" [level=2]
+  - button "Close"
+  - figure "Bromo, before sunrise"
+
+# Tall
+- dialog "A tall blue tower":
+  - heading "A tall blue tower" [level=2]
+  - paragraph: 3 of 4
+  - button "Close"
+  - figure
+  - button "Previous image"
+  - button "Next image"
+

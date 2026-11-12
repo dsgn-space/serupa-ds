@@ -1,0 +1,93 @@
+{
+  "lightbox": {
+    "$description": "Lightbox's component tokens. Each one is an optional override: set the CSS variable (--lightbox-<name>) on the page, a container or one Lightbox, and every Lightbox inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "stage-bg": {
+        "$type": "color",
+        "$value": "{color.surface-muted}",
+        "$description": "The stage behind a picture while it loads, or if it fails.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-stage-bg"
+          }
+        }
+      },
+      "caption-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The caption and the count (4.5:1 on the dialog).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-caption-color"
+          }
+        }
+      },
+      "fallback-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The broken-image icon when a picture fails.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-fallback-color"
+          }
+        }
+      },
+      "edge": {
+        "$type": "color",
+        "$value": "{color.picture-edge}",
+        "$description": "A faint line around the picture, so a white one stays apart from a white dialog.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-edge"
+          }
+        }
+      }
+    },
+    "border": {
+      "stage-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The stage's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-stage-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "fallback-icon": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The broken-image icon's size (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-fallback-icon"
+          }
+        }
+      },
+      "stage-max-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-40}",
+        "$description": "Space kept free above and below the stage: the title, the arrows and the screen's edges (160px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-stage-max-height"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the picture, its caption and the arrows (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--lightbox-gap"
+          }
+        }
+      }
+    }
+  }
+}
