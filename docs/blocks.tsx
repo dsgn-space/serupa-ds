@@ -16,7 +16,7 @@ import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
 import changelogSource from '../CHANGELOG.md?raw';
 import pkg from '../package.json';
-import { majorsIn, nextMajor, type Major } from './upgrades';
+import { majorsIn, upcomingMajor, type Major } from './upgrades';
 import { transformsAfter } from '../bin/migrate/transforms.mjs';
 import acr from './acr.json';
 import { componentTests } from './generated/tested';
@@ -436,19 +436,23 @@ type Transform = { version: string; id: string; title: string };
 /** The upgrade guide (40): each major's breaking changes, the next one first while its changesets wait for a release,
  * and what `npx serupa-migrate` changes for it. */
 export function UpgradeGuide() {
-  const next = nextMajor(pkg.version, pendingChangesets);
-  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelogSource)];
   const auto = transformsAfter(null) as Transform[];
+  const next = upcomingMajor(pkg.version, pendingChangesets, auto.map((t) => t.version));
+  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelogSource)];
   return <>{majors.map((m) => {
     const prev = Number(m.version.split('.')[0]) - 1;
     const mine = auto.filter((t) => t.version === m.version);
-    const intro = m.next
+    const intro = m.next && !m.entries.length
+      ? `Not released yet. These props are deprecated now and go in ${m.version}.`
+      : m.next
       ? `Not released yet: these changes are waiting for the next major, so they may still change. [RFCs](https://github.com/dsgn-space/serupa-ds/tree/main/docs/rfcs) has the proposal.`
       : m.date ? `Released ${m.date}.` : '';
     const run = mine.length
       ? `**Made for you:** \`npx serupa-migrate src --from ${prev}\` (add \`--write\` to change the files) makes ${mine.length === 1 ? 'this change' : 'these changes'}:\n\n${mine.map((t) => `- ${t.title}`).join('\n')}`
       : '';
-    const body = m.entries.length ? m.entries.join('\n') : '- No entry of this release is marked breaking; [the Changelog](?path=/docs/changelog--docs) has what changed.';
+    const body = m.entries.length ? m.entries.join('\n')
+      : m.next ? `- Nothing is removed yet. The old names still work in ${prev}.x and warn in development, so you can switch now, before the release.`
+      : '- No entry of this release is marked breaking; [the Changelog](?path=/docs/changelog--docs) has what changed.';
     return <section key={m.version}>
       <Markdown>{[`## ${m.version}${m.next ? ' (next)' : ''}`, intro, run, body].filter(Boolean).join('\n\n')}</Markdown>
     </section>;

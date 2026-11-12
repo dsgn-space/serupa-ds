@@ -4,6 +4,7 @@
    pill: no border; the selected tab is filled in primary. Tabs are 36px tall (32px with size sm, 44px with 16px text with size lg), text-sm,
    font-medium. A 2px focus ring, 50% when disabled. When the row overflows, the edge with more tabs fades out over
    32px. vertical: a column at the start with the line on its end side. Every value goes through --tabs-* tokens.
+   TabNav draws its links with these classes too: its current link (aria-current="page") is drawn as the selected tab.
    --------------------------------------------------------------- */
 @layer dk.components {
 /* The fades' widths, typed (177), so they transition: a fade grows in as tabs scroll past an edge and shrinks away
@@ -74,6 +75,7 @@
   line-height: var(--text-sm--line-height);
   font-weight: var(--tabs-weight, var(--font-medium));
   white-space: nowrap;
+  text-decoration: none;   /* TabNav's tabs are links */
   cursor: pointer; touch-action: manipulation;
   transition: color var(--motion-hover) var(--ease-move), background-color var(--motion-hover) var(--ease-move);
 }
@@ -88,41 +90,41 @@
 
 /* line */
 .dk-tabs--line .dk-tabs__tab { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
-.dk-tabs--line .dk-tabs__tab[aria-selected="true"] { color: var(--tabs-text-selected, var(--text)); }
-.dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { content: ""; position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--tabs-indicator-width, var(--border-width-2)); background: var(--tabs-indicator, var(--primary)); }
+.dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { color: var(--tabs-text-selected, var(--text)); }
+.dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { content: ""; position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--tabs-indicator-width, var(--border-width-2)); background: var(--tabs-indicator, var(--primary)); }
 
 /* pill */
-@media (hover: hover) { .dk-tabs--pill .dk-tabs__tab:hover:not(:disabled):not([aria-selected="true"]) { background: var(--tabs-pill-bg-hover, var(--secondary)); } }
-.dk-tabs--pill .dk-tabs__tab:active:not(:disabled):not([aria-selected="true"]) { background: var(--tabs-pill-bg-pressed, var(--pressed)); }
+@media (hover: hover) { .dk-tabs--pill .dk-tabs__tab:hover:not(:disabled):not([aria-selected="true"], [aria-current="page"]) { background: var(--tabs-pill-bg-hover, var(--secondary)); } }
+.dk-tabs--pill .dk-tabs__tab:active:not(:disabled):not([aria-selected="true"], [aria-current="page"]) { background: var(--tabs-pill-bg-pressed, var(--pressed)); }
 /* The fill is a layer of its own under the label, so it can slide from the tab selected before (below). */
 .dk-tabs--pill .dk-tabs__tab { isolation: isolate; }
-.dk-tabs--pill .dk-tabs__tab[aria-selected="true"] { color: var(--tabs-pill-text-selected, var(--on-primary)); }
+.dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { color: var(--tabs-pill-text-selected, var(--on-primary)); }
 /* The fill spans this tab and the one selected before it (Tabs.tsx sets the span), cut to this tab by clip-path with
    the tab's round corners (GO1). */
-.dk-tabs--pill .dk-tabs__tab[aria-selected="true"]::before {
+.dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::before {
   content: ""; position: absolute; z-index: calc(var(--z-0) - var(--z-10)); background: var(--tabs-pill-bg-selected, var(--primary));
   inset-block: calc(var(--spacing-0) - var(--dk-tabs-span-t, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-b, var(--spacing-0)));
   inset-inline: calc(var(--spacing-0) - var(--dk-tabs-span-l, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-r, var(--spacing-0)));
   clip-path: inset(var(--dk-tabs-span-t, var(--spacing-0)) var(--dk-tabs-span-r, var(--spacing-0)) var(--dk-tabs-span-b, var(--spacing-0)) var(--dk-tabs-span-l, var(--spacing-0)) round var(--tabs-radius, var(--radius-control)));
 }
 /* Tabs.tsx measures the span on the page (left and right), so in right-to-left text the inline start is its right. */
-.dk-tabs--pill .dk-tabs__tab[aria-selected="true"]:dir(rtl)::before { inset-inline: calc(var(--spacing-0) - var(--dk-tabs-span-r, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-l, var(--spacing-0))); }
-.dk-tabs--pill .dk-tabs__tab[aria-selected="true"]:focus-visible::after { content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)), inset 0 0 0 var(--spacing-1) var(--tabs-focus-gap-color, var(--surface)); }
+.dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]):dir(rtl)::before { inset-inline: calc(var(--spacing-0) - var(--dk-tabs-span-r, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-l, var(--spacing-0))); }
+.dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]):focus-visible::after { content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)), inset 0 0 0 var(--spacing-1) var(--tabs-focus-gap-color, var(--surface)); }
 
 /* The selected tab's line or fill slides from where the last one was (EG1): TabList sets where that was, and the new
    one starts there and moves into place. The line stretches as it goes (scale); the pill's fill is cut from the last
    tab's shape to the new one's (clip-path), so its round corners stay round (GO1). Reduced motion: it's there at once. */
-.dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after {
+.dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after {
   transform-origin: top left;
   transition: translate var(--motion-change-md) var(--ease-move), scale var(--motion-change-md) var(--ease-move);
 }
-.dk-tabs--pill .dk-tabs__tab[aria-selected="true"]::before { transition: clip-path var(--motion-change-md) var(--ease-move); }
+.dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::before { transition: clip-path var(--motion-change-md) var(--ease-move); }
 /* Picked from the keyboard (data-instant, KW1): there at once, no slide. */
 .dk-tabs .dk-tabs__tab[data-instant][aria-selected="true"]::after, .dk-tabs .dk-tabs__tab[data-instant][aria-selected="true"]::before { transition: none; }
 @media (prefers-reduced-motion: no-preference) {
   @starting-style {
-    .dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { translate: var(--dk-tabs-from-shift, none); scale: var(--dk-tabs-from-scale, none); }
-    .dk-tabs--pill .dk-tabs__tab[aria-selected="true"]::before { clip-path: inset(var(--dk-tabs-from-t, var(--spacing-0)) var(--dk-tabs-from-r, var(--spacing-0)) var(--dk-tabs-from-b, var(--spacing-0)) var(--dk-tabs-from-l, var(--spacing-0)) round var(--tabs-radius, var(--radius-control))); }
+    .dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { translate: var(--dk-tabs-from-shift, none); scale: var(--dk-tabs-from-scale, none); }
+    .dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::before { clip-path: inset(var(--dk-tabs-from-t, var(--spacing-0)) var(--dk-tabs-from-r, var(--spacing-0)) var(--dk-tabs-from-b, var(--spacing-0)) var(--dk-tabs-from-l, var(--spacing-0)) round var(--tabs-radius, var(--radius-control))); }
   }
 }
 
@@ -135,7 +137,7 @@
 .dk-tabs--vertical .dk-tabs__panel { flex: auto; min-width: var(--spacing-0); padding-top: var(--spacing-0); padding-inline-start: var(--tabs-panel-gap, var(--spacing-4)); }
 .dk-tabs--vertical.dk-tabs--line .dk-tabs__list { border-bottom: var(--spacing-0); border-inline-end: var(--border-width-1) solid var(--tabs-border, var(--border)); }
 .dk-tabs--vertical.dk-tabs--line .dk-tabs__tab { border-radius: var(--tabs-radius, var(--radius-control)); border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
-.dk-tabs--vertical.dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { inset-inline: auto var(--spacing-0); inset-block: var(--spacing-0); width: var(--tabs-indicator-width, var(--border-width-2)); height: auto; }
+.dk-tabs--vertical.dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { inset-inline: auto var(--spacing-0); inset-block: var(--spacing-0); width: var(--tabs-indicator-width, var(--border-width-2)); height: auto; }
 .dk-tabs__panel:focus-visible { outline: var(--focus-ring-width) solid var(--tabs-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-sm); }
 .dk-tabs__panel[hidden]:not([hidden="until-found"]) { display: none; }
 /* A kept panel of another tab is hidden="until-found": hidden, but find-in-page still searches it (Tabs.tsx). Its
@@ -143,7 +145,7 @@
 .dk-tabs__panel[hidden="until-found"] { padding: var(--spacing-0); }
 @media (prefers-reduced-motion: reduce) { .dk-tabs__tab { transition: none; } }
 @media (forced-colors: active) {
-  .dk-tabs--line .dk-tabs__tab[aria-selected="true"]::after { background: Highlight; }
-  .dk-tabs--pill .dk-tabs__tab[aria-selected="true"] { outline: var(--border-width-2) solid Highlight; }
+  .dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { background: Highlight; }
+  .dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { outline: var(--border-width-2) solid Highlight; }
 }
 }

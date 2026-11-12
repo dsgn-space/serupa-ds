@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>TabNav — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(T.TabNav, { 'aria-label': 'Project' },
+    h(T.TabNavLink, { href: '#overview', current: true }, 'Overview'),
+    h(T.TabNavLink, { href: '#activity', icon: 'history' }, 'Activity'),
+    h(T.TabNavLink, { href: '#settings' }, 'Settings')));
+</script>
+</body>
+</html>

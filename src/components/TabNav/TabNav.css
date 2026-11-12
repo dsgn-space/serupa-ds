@@ -1,0 +1,9 @@
+/* ---------------------------------------------------------------
+   TabNav: a nav of links drawn as Tabs (Tabs.css, from its .dk-tabs classes and --tabs-* tokens), so a theme that
+   restyles Tabs restyles TabNav too, and the two match on one page. The current link (aria-current="page") is drawn
+   as the selected tab. This file only turns the list into that row; Tabs.css takes the underline off the links.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-tab-nav__list { margin: var(--spacing-0); list-style: none; }
+.dk-tab-nav__item { display: flex; flex-shrink: 0; }
+}

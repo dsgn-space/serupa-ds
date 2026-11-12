@@ -8,29 +8,29 @@ function Editor(props: { long?: boolean; open?: boolean }) {
   return (
     <Menubar aria-label="Editor">
       <MenubarMenu label={props.long ? 'Berkas dan dokumen yang dibuka' : 'File'}>
-        <MenuItem icon="add" shortcut="⌘N">New</MenuItem>
-        <MenuItem icon="folder_open" shortcut="⌘O">Open…</MenuItem>
+        <MenuItem icon="add" shortcut={['alt', 'N']}>New</MenuItem>
+        <MenuItem icon="folder_open" shortcut={['mod', 'shift', 'O']}>Open…</MenuItem>
         <MenuSub icon="share" label="Share">
           <MenuItem icon="mail">Email</MenuItem>
           <MenuItem icon="link">Copy link</MenuItem>
         </MenuSub>
         <MenuSeparator />
-        <MenuItem icon="print" shortcut="⌘P">{props.long ? 'Print with the page setup chosen for this document last time' : 'Print'}</MenuItem>
+        <MenuItem icon="print" shortcut={['mod', 'P']}>{props.long ? 'Print with the page setup chosen for this document last time' : 'Print'}</MenuItem>
       </MenubarMenu>
       <MenubarMenu label="Edit" defaultOpen={props.open}>
-        <MenuItem icon="undo" shortcut="⌘Z">Undo</MenuItem>
-        <MenuItem icon="redo" shortcut="⇧⌘Z">Redo</MenuItem>
+        <MenuItem icon="undo" shortcut={['mod', 'Z']}>Undo</MenuItem>
+        <MenuItem icon="redo" shortcut={['mod', 'shift', 'Z']}>Redo</MenuItem>
         <MenuSeparator />
-        <MenuItem icon="content_cut" shortcut="⌘X">Cut</MenuItem>
-        <MenuItem icon="content_copy" shortcut="⌘C">Copy</MenuItem>
-        <MenuItem icon="content_paste" shortcut="⌘V">Paste</MenuItem>
+        <MenuItem icon="content_cut" shortcut={['mod', 'X']}>Cut</MenuItem>
+        <MenuItem icon="content_copy" shortcut={['mod', 'C']}>Copy</MenuItem>
+        <MenuItem icon="content_paste" shortcut={['mod', 'V']}>Paste</MenuItem>
       </MenubarMenu>
       <MenubarMenu label="View">
         <MenuGroup label="Show">
           <MenuCheckboxItem checked={ruler} onCheckedChange={setRuler}>Ruler</MenuCheckboxItem>
         </MenuGroup>
-        <MenuItem icon="zoom_in" shortcut="⌘+">Zoom in</MenuItem>
-        <MenuItem icon="zoom_out" shortcut="⌘-">Zoom out</MenuItem>
+        <MenuItem icon="zoom_in" shortcut={['alt', '+']}>Zoom in</MenuItem>
+        <MenuItem icon="zoom_out" shortcut={['alt', '-']}>Zoom out</MenuItem>
       </MenubarMenu>
       <MenubarMenu label="Help">
         <MenuItem icon="help">Help center</MenuItem>
