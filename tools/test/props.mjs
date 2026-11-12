@@ -98,7 +98,7 @@ const isBoolean = (p) => {
 };
 // One name for one idea (CONTRIBUTING.md, API naming table, GR268): these props say it another way. Each maps to
 // the name to use instead.
-const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', pending: 'loading', delay: 'openDelay (and closeDelay)' };
+const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', side: 'placement', pending: 'loading', delay: 'openDelay (and closeDelay)' };
 // Props that still use one of those names, each with why. A deprecated alias of the table's name is fine: it goes in
 // the next scheduled major (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
 const NAME_GAPS = {};

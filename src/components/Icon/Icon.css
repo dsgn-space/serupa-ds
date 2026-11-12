@@ -27,7 +27,8 @@
   vector-effect: non-scaling-stroke;
 }
 /* A directional icon points the way reading goes, so it's flipped in right-to-left text: Material Symbols' arrows and
-   chevrons along the line, and the others Material mirrors (send, reply, undo, redo, open_in_new, logout, lists…),
+   chevrons along the line, and the others Material mirrors (send, reply, undo, redo, open_in_new, logout, lists…), and the panel and dock ones, since a sidebar sits on the
+   other side in right-to-left pages,
    unless mirror={false} (dk-icon--fixed); mirror (dk-icon--mirror) flips any icon. Icons of things (a clock, a check,
    media controls) keep their direction. On the svg, so a transform on the box (Button's hover nudge) still applies. */
 .dk-icon:is([data-icon^="arrow_back"], [data-icon^="arrow_forward"], [data-icon^="arrow_left"], [data-icon^="arrow_right"],
@@ -38,6 +39,8 @@
   [data-icon="login"], [data-icon="exit_to_app"], [data-icon="input"], [data-icon="open_in_new"], [data-icon="launch"],
   [data-icon="call_made"], [data-icon="call_received"], [data-icon="trending_flat"], [data-icon="read_more"], [data-icon="list"],
   [data-icon="format_list_bulleted"], [data-icon^="format_indent_"], [data-icon="short_text"], [data-icon="notes"],
-  [data-icon="subject"], [data-icon="wrap_text"], [data-icon^="label"]):not(.dk-icon--fixed):dir(rtl) > svg,
+  [data-icon="subject"], [data-icon="wrap_text"], [data-icon^="label"], [data-icon="toc"], [data-icon="view_list"], [data-icon="sort"],
+  [data-icon="backspace"], [data-icon="keyboard_backspace"], [data-icon="menu_open"], [data-icon="drive_file_move"],
+  [data-icon^="left_panel_"], [data-icon^="right_panel_"], [data-icon^="dock_to_"]):not(.dk-icon--fixed):dir(rtl) > svg,
 .dk-icon--mirror:dir(rtl) > svg { --dk-icon-flip: -1 1; scale: var(--dk-icon-flip); }
 }
