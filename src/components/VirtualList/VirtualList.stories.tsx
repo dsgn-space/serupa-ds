@@ -4,6 +4,7 @@ import { VirtualList } from './VirtualList';
 import { List, ListItem, ListLoadingItems } from '../List/List';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
@@ -64,7 +65,7 @@ function States(args: React.ComponentProps<typeof VirtualList>) {
   return (
     <div style={{ maxWidth: 480, display: 'grid', gap: '12px' }}>
       <div style={{ display: 'flex', gap: '8px' }}>
-        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+        <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState} options={(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))} />
       </div>
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Members didn't load. Check your connection and try again.</Alert>
         : state === 'empty' ? <EmptyState size="sm" title="No members yet" description="Invite people to work on this project with you." />

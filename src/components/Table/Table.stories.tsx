@@ -4,6 +4,7 @@ import { Table, TableActionBar, TableBody, TableVirtualBody, TableCell, TableCol
 import { Text } from '../Text/Text';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
+import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { Alert } from '../Alert/Alert';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
@@ -276,7 +277,7 @@ function States(args: React.ComponentProps<typeof Table>) {
   return (
     <div style={{ display: 'grid', gap: '12px' }}>
       <div style={{ display: 'flex', gap: '8px' }}>
-        {(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => <Button key={s} size="sm" variant={s === state ? 'primary' : 'secondary'} aria-pressed={s === state} onClick={() => setState(s)}>{s[0].toUpperCase() + s.slice(1)}</Button>)}
+        <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState} options={(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))} />
       </div>
       <Table {...args} caption="Team members" busy={state === 'loading'}>
         {state === 'loaded' ? <Rows /> : <>
