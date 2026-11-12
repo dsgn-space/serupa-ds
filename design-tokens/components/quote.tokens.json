@@ -1,0 +1,107 @@
+{
+  "quote": {
+    "$description": "Quote's component tokens. Each one is an optional override: set the CSS variable (--quote-<name>) on the page, a container or one Quote, and every Quote inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The quoted words (4.5:1 on the page's surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-text"
+          }
+        }
+      },
+      "source": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "Who said it and where (4.5:1 on the page's surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-source"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border-strong}",
+        "$description": "The rule along the quote's start edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-border"
+          }
+        }
+      }
+    },
+    "border": {
+      "border-width": {
+        "$type": "dimension",
+        "$value": "{borders.border-width-4}",
+        "$description": "The rule's width (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-border-width"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "indent": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "Space between the rule and the words (16px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-indent"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the words and who said them, and between a picture and the name (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-gap"
+          }
+        }
+      }
+    },
+    "typography": {
+      "author-weight": {
+        "$type": "fontWeight",
+        "$value": "{typography.font-semibold}",
+        "$description": "The weight of who said it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-author-weight"
+          }
+        }
+      }
+    },
+    "fontSize": {
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-xl}",
+        "$description": "The words' size in a large (pull) quote (text-xl).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-size-lg"
+          }
+        }
+      }
+    },
+    "lineHeight": {
+      "line-height-lg": {
+        "$type": "dimension",
+        "$value": "{fontSize.text-xl--line-height}",
+        "$description": "The words' line height in a large quote (text-xl's).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--quote-line-height-lg"
+          }
+        }
+      }
+    }
+  }
+}
