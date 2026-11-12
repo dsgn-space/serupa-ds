@@ -241,14 +241,20 @@ jobs:
         with:
           pattern: baselines*
           path: ${{ runner.temp }}/parts
+      # download-artifact puts each artifact in a folder of its name, except when the pattern finds only one: that
+      # one lands in parts/ itself. Missing that case committed nothing from every Chromium render ("0 changed").
       - name: Join the renders
         run: |
           set -euo pipefail
           in="$RUNNER_TEMP/baselines"; mkdir -p "$in/files"; : > "$in/deleted.txt"
-          for d in "$RUNNER_TEMP"/parts/*/; do
+          for d in "$RUNNER_TEMP/parts" "$RUNNER_TEMP"/parts/*/; do
             if [ -d "$d/files" ]; then cp -a "$d/files/." "$in/files/"; fi
             if [ -f "$d/deleted.txt" ]; then cat "$d/deleted.txt" >> "$in/deleted.txt"; fi
           done
+          # Never "unchanged" when a render handed over pictures.
+          if [ -n "$(find "$RUNNER_TEMP/parts" -type f -name '*.png' -print -quit)" ] && [ -z "$(find "$in/files" -type f -print -quit)" ]; then
+            echo "::error::The renders handed over pictures, but none were joined"; exit 1
+          fi
       # Render ran the branch's code, so nothing it handed over is trusted: only regular files, only a PNG under
       # tools/test/baseline-visual(-firefox|-webkit)/<folder>/ or the utilities JSON, 2 MiB each and 100 MiB in all, and each one
       # written to a path inside tools/test/ (not through a symlink the branch put there).
