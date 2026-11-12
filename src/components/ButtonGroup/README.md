@@ -40,6 +40,11 @@ An attached row that's wider than its container wraps as separate, spaced button
 
 A button can be a Menu's trigger or sit in a Tooltip, as in a split button (`<Menu trigger={<IconButton … />}>` last): the outer corners go to the first and last buttons, whatever popup follows them.
 
+### Do and don't
+
+- **Do:** Give every button in an attached group the same variant. (`DoSameVariant`)
+- **Don't:** Mix variants in one group: it breaks into pieces that don't look like one control. (`DontMixVariants`)
+
 ## Accessibility
 
 - It's a `role="group"`: name it with `aria-label` when the buttons share a purpose ("Text formatting"), so screen readers announce it on the way in.

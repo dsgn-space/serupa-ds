@@ -84,3 +84,15 @@ export const LongText: Story = {
     </Card>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a linked card named by its CardHeader title, so the link is "Atlas". */
+export const DoTitleNamesLink: Story = {
+  name: 'Do: name the link with a title',
+  render: () => <div style={{ maxWidth: 260 }}><Card href="#atlas"><CardHeader title="Atlas" description="Updated 2 hours ago" /></Card></div>,
+};
+/** Don't: a linked card with no title, so screen readers read its whole text as the link's name. */
+export const DontUntitledLink: Story = {
+  name: "Don't: leave a linked card untitled",
+  render: () => <div style={{ maxWidth: 260 }}><Card href="#atlas"><CardBody>Atlas. Updated 2 hours ago by the design team, 14 open tasks, due Friday.</CardBody></Card></div>,
+};

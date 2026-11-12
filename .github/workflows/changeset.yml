@@ -24,7 +24,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     # The Release pull request is the one that removes the changesets.
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-changeset') && !startsWith(github.head_ref, 'changeset-release/') }}
+    # In the merge queue it only reports: the pull request's own run checked its changesets, and a required check
+    # that is skipped counts as passed.
+    if: ${{ github.event_name != 'merge_group' && !contains(github.event.pull_request.labels.*.name, 'no-changeset') && !startsWith(github.head_ref, 'changeset-release/') }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

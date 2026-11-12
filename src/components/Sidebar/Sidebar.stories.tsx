@@ -67,3 +67,16 @@ export const LongLabels: Story = {
   },
   render: (args) => <div style={{ display: 'flex', height: 320, width: 200 }}><Sidebar {...args} /></div>,
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: related pages grouped under short section titles. */
+export const DoGroupSections: Story = { name: 'Do: group pages into sections' };
+/** Don't: every page in one long list, which people have to read top to bottom. */
+export const DontFlatList: Story = {
+  name: "Don't: list every page in one run",
+  args: { children: (
+    <SidebarSection>
+      {[['home', 'Home'], ['inbox', 'Inbox'], ['folder', 'Website'], ['folder', 'Mobile app'], ['group', 'Team'], ['bar_chart', 'Reports'], ['description', 'Invoices'], ['settings', 'Settings'], ['help', 'Help']].map(([icon, label]) => <SidebarItem key={label} href="#" icon={icon} label={label} />)}
+    </SidebarSection>
+  ) },
+};

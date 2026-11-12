@@ -66,6 +66,11 @@ const [status, setStatus] = useState(new Map<File, FileUploadStatus>());
 - The native input always holds the listed files, including dropped ones, so a form sends exactly what's shown.
 - `readOnly` shows the files without remove buttons and ignores the button and drops; the files are still submitted. `disabled` also fades it and leaves the files out of the form.
 
+### Do and don't
+
+- **Do:** Say the allowed types and the largest size in `hint`, matching `accept` and `maxSize`. (`DoSayLimits`)
+- **Don't:** Leave the limits out: people learn them only when a file is refused. (`DontHideLimits`)
+
 ## Accessibility
 
 - The button is the keyboard and screen-reader way in; dragging is an extra. Messages about refused files are `role="alert"`, so they're announced. They come from labels (`fileWrongType`, `fileTooLarge`, `fileTooMany`, `fileOnlyOne`, `fileFolder`, `fileAlreadyAdded`), Indonesian in `idLabels`, and `onReject` gets the same text.
