@@ -117,8 +117,8 @@ jobs:
           echo "full=${full:-no} wide=${wide:-no} since=${since:-none} visual=${visual:-no} tests=${tests:-no}"
 
   # Builds the package and Storybook once; every test job downloads them instead of building its own.
-  # Fails in seconds when the branch's pictures can't match the tree it merges into: main changed a component since the
-  # branch left it, and one side changed that component's pictures (tools/fresh.mjs). Without it the queue finds out on
+  # Fails in seconds when the branch's pictures can't match the tree it merges into: one side changed a component's
+  # pictures and the other changed that component, or the pictures of one that uses it (tools/fresh.mjs). Without it the queue finds out on
   # Visual after 15 minutes and builds every group behind it again. In the queue it compares the newest pull request
   # with the group before it.
   fresh:

@@ -18,8 +18,15 @@ t('both sides changed one component without any picture: fresh (the queue tests 
 t('different components: fresh', same(staleComponents([png('Meter'), 'src/components/Meter/Meter.css'], [png('Tabs'), 'src/components/Tabs/Tabs.tsx'], alone), []));
 t('shared code or tokens on main leave it to the after-main redraw: fresh',
   same(staleComponents([png('Meter')], ['tokens.json', 'src/internal/labels.ts', 'CHANGELOG.md'], alone), []));
-t('a component main changed reaches the branch\'s through the ones that use it (Button: ToggleButton)',
-  same(staleComponents([png('ToggleButton'), 'src/components/ToggleButton/ToggleButton.css'], ['src/components/Button/Button.css']), ['ToggleButton']));
+const deps = (s) => new Set([...s, ...(s.has('Button') ? ['ToggleButton'] : [])]);
+t('main redrew a component, and the branch redrew one that uses it: stale',
+  same(staleComponents([png('ToggleButton')], [png('Button'), 'src/components/Button/Button.css'], deps), ['ToggleButton']));
+t('the branch redrew a component, and main redrew one that uses it: stale',
+  same(staleComponents([png('Button'), 'src/components/Button/Button.css'], [png('ToggleButton')], deps), ['ToggleButton']));
+t('main changed a component\'s code with no picture (labels), and the branch redrew one that uses it: fresh',
+  same(staleComponents([png('ToggleButton')], ['src/components/Button/Button.tsx'], deps), []));
+t('the real dependency walk: Button\'s pictures on main reach ToggleButton\'s on the branch',
+  same(staleComponents([png('ToggleButton')], [png('Button')]), ['ToggleButton']));
 t('a pattern\'s pictures count as the pattern\'s', same(staleComponents([png('Checkout')], ['src/patterns/Checkout/Checkout.tsx'], alone), ['Checkout']));
 
 done(report('Fresh against main', R));
