@@ -13,8 +13,8 @@ const TAGS = {
 // href (a control either way), and a table cell's type is the same for td and th.
 const BY_NAME = { Button: 'button', TableHeaderCell: 'th' };
 // Rendered as an a, but with its own href and words, so <SkipLink /> is complete: read as an a, jsx-a11y would ask an
-// app for both (anchor-has-content, anchor-is-valid).
-const COMPLETE = ['SkipLink'];
+// app for both (anchor-has-content, anchor-is-valid). ChatCitation writes its own words too (its number and host).
+const COMPLETE = ['SkipLink', 'ChatCitation'];
 
 export function a11yComponents(root) {
   const dir = path.join(root, 'src', 'components');

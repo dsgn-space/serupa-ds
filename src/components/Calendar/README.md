@@ -50,6 +50,11 @@ Drawn from the `MonthYearPicker` story.
 - Today follows the clock: a calendar left open past midnight moves today to the new day without needing a re-render.
 - Today is the visitor's day, not the server's. A server-rendered page marks it once it hydrates, since the server's date can differ (a UTC server and a visitor in Jakarta before 7am). Until then, the Tab stop is on the value or on the month's first day. With no value, the month shown at first is today's on each side. Around a month's turn, that can differ between the server and the visitor, so a server-rendered Calendar with no value should get a `defaultMonth`.
 
+### Do and don't
+
+- **Do:** Put a heading or a line of text near it that says what the day is for ("Pick a delivery day"). (`DoSayWhatFor`)
+- **Don't:** Show it on its own: the grid is named by its month only, so nobody knows what the day is for. (`DontUnexplained`)
+
 ## Accessibility
 
 - A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
