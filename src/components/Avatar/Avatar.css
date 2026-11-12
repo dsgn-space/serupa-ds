@@ -37,7 +37,11 @@
   user-select: none;
 }
 .dk-avatar--square .dk-avatar__frame { border-radius: var(--avatar-radius-square, var(--radius-surface)); }
-.dk-avatar__img { width: var(--sizing-full); height: var(--sizing-full); object-fit: cover; }
+/* A hairline just inside the photo's edge (picture-edge), so a face on white keeps its circle on a white page. */
+.dk-avatar__img {
+  width: var(--sizing-full); height: var(--sizing-full); object-fit: cover; border-radius: inherit;
+  outline: var(--border-width-1) solid var(--avatar-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--border-width-1));
+}
 .dk-avatar .dk-avatar__icon { font-size: var(--dk-avatar-icon); }
 .dk-avatar__status {
   position: absolute;
@@ -61,6 +65,7 @@
 .dk-avatar__status--offline { --dk-avatar-st: var(--avatar-status-offline, var(--field-border)); }
 @media (forced-colors: active) {
   .dk-avatar__frame { border: var(--border-width-1) solid CanvasText; }
+  .dk-avatar__img { outline: none; }
   .dk-avatar__status { background: CanvasText; }
   .dk-avatar__status--away, .dk-avatar__status--offline { background: Canvas; border-color: CanvasText; }
   .dk-avatar__status--busy::after { background: Canvas; }

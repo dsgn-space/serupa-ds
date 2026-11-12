@@ -14,7 +14,7 @@ name: CI
 #   (repository variables SERUPA_RUNNER and SERUPA_X86_RUNNER, JSON: '["self-hosted","linux","x86"]'). Jobs with a
 #   screenshot or a timing budget take SERUPA_X86_RUNNER: the baselines are drawn with Chrome for Testing on x64. A pull
 #   request from a fork always runs on GitHub's runners, so code nobody has merged never runs on the project's machines.
-#   The merge queue and main run every job on SERUPA_X86_RUNNER, a pull request on GitHub's runners.
+#   The x86 jobs take SERUPA_X86_RUNNER for the merge queue, main and same-repository pull requests (up to eight at once).
 # - Results are kept: a job that passed on the same tree, against the same base, passes again at once without running.
 # - The nightly jobs are in nightly.yml. No workflow_dispatch: a run started by hand runs in the default branch's
 #   cache scope on any ref, which CodeQL rightly counts as cache poisoning; the nightly runs main whole instead.
@@ -120,12 +120,42 @@ jobs:
           echo "full=${full:-no} wide=${wide:-no} since=${since:-none} visual=${visual:-no} tests=${tests:-no}"
 
   # Builds the package and Storybook once; every test job downloads them instead of building its own.
+  # Fails in seconds when the branch's pictures can't match the tree it merges into: one side changed a component's
+  # pictures and the other changed that component, or the pictures of one that uses it (tools/fresh.mjs). Without it the queue finds out on
+  # Visual after 15 minutes and builds every group behind it again. In the queue it compares the newest pull request
+  # with the group before it.
+  fresh:
+    if: (github.event_name == 'pull_request' || github.event_name == 'merge_group') && github.head_ref != 'changeset-release/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          EVENT: ${{ github.event_name }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          QUEUE_BASE: ${{ github.event.merge_group.base_sha }}
+          QUEUE_REF: ${{ github.event.merge_group.head_ref }}
+        run: |
+          if [ "$EVENT" = merge_group ]; then
+            # gh-readonly-queue/main/pr-<number>-<sha>: the pull request this group adds.
+            n=$(echo "$QUEUE_REF" | sed -E 's|.*/pr-([0-9]+)-.*|\1|')
+            node tools/fresh.mjs --base "$QUEUE_BASE" --head "$(gh api "repos/$GH_REPO/pulls/$n" --jq .head.sha)"
+          else
+            # The main this run tests against: the first parent of the merge commit GitHub made for it.
+            node tools/fresh.mjs --base "$(gh api "repos/$GH_REPO/commits/$GITHUB_SHA" --jq '.parents[0].sha')" --head "$PR_HEAD"
+          fi
+
   build:
     needs: plan
-    # The merge queue and main run every job on the project's x86 runners, a pull request on GitHub's. GitHub runs
-    # about twenty jobs at a time for the whole repository, so queue jobs waited there behind pull requests and CodeQL
-    # while the x86 runners stood idle; now a queue group never waits on a pull request's run.
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -161,7 +191,7 @@ jobs:
     name: types and lint
     needs: plan
     if: needs.plan.outputs.full == '1' || github.event_name == 'pull_request'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -220,9 +250,9 @@ jobs:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
     needs: [plan, build]
     if: needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
-    # A pull request's own run takes GitHub's runners (x64, the same image, so the same pictures), leaving the
-    # project's x86 runners to the merge queue and main: a queue group then starts its tests at once.
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
+    # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
+    # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -230,9 +260,10 @@ jobs:
     strategy:
       # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
       fail-fast: ${{ github.event_name == 'pull_request' }}
-      # A pull request takes at most four of GitHub's runners for these at once: GitHub runs about twenty jobs at a time
-      # for the whole repository, so one pull request doesn't hold up the others.
-      max-parallel: ${{ github.event_name == 'pull_request' && 4 || 16 }}
+      # A pull request takes at most eight x86 runners at once, a queue group sixteen, so pull requests can't fill the
+      # 30 and starve the queue. The queue's other jobs stay on GitHub's runners: with every queue job on the x86
+      # runners (12 Nov), five groups left 27 jobs waiting for them while GitHub's runners stood idle.
+      max-parallel: ${{ github.event_name == 'pull_request' && 8 || 16 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -316,7 +347,7 @@ jobs:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
     needs: [plan, build]
     if: needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -331,7 +362,7 @@ jobs:
   coverage:
     needs: [plan, build, suite-x86]
     if: needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -371,7 +402,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [22, 24]
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: node:${{ matrix.node }}
       options: --cpus 4
@@ -390,7 +421,7 @@ jobs:
   frameworks:
     needs: [plan, build]
     if: needs.plan.outputs.full == '1'
-    runs-on: ${{ fromJSON((github.event_name != 'pull_request' && vars.SERUPA_X86_RUNNER) || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -410,7 +441,7 @@ jobs:
   # A failed queue run is out of the queue already, so the rest of it (the cross-browser components above all, up to
   # 75 minutes on an x86 runner) only keeps runners from the groups behind it. Main's own run goes on to the end.
   stop:
-    needs: [build, static, fix-proof, suite-x86, suite-portable, coverage]
+    needs: [fresh, build, static, fix-proof, suite-x86, suite-portable, coverage]
     if: failure() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -426,7 +457,7 @@ jobs:
   # One check that passes only when every job this run needed passed: the required check, on pull requests and in the
   # merge queue alike.
   test:
-    needs: [plan, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks]
+    needs: [plan, fresh, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5

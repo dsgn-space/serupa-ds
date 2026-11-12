@@ -413,4 +413,16 @@ describe('Image loading motion', () => {
       expect([asked <= 1, listened <= 1]).toEqual([true, true]);
     } finally { window.matchMedia = real; }
   });
+
+  test('a loaded photo has a hairline just inside its edge (black at 10%, white at 10% in dark), so a white picture keeps its shape on a white page; none with fit="contain" (GR269)', async () => {
+    await render(<Row><Pic id="ed" ratio="video" rounded /><Pic id="ec" ratio="video" fit="contain" /></Row>);
+    await expect.poll(() => ['ed', 'ec'].map((id) => frame(id).dataset.state)).toEqual(['loaded', 'loaded']);
+    const img = (id: string) => css(frame(id).querySelector('img'));
+    const edge = (th: string) => { document.documentElement.setAttribute('data-theme', th); const s = img('ed'); return [s.outlineStyle, s.outlineWidth, s.outlineOffset, s.outlineColor, s.borderTopLeftRadius === css(frame('ed')).borderTopLeftRadius]; };
+    try {
+      expect(edge('blue-light')).toEqual(['solid', '1px', '-1px', 'rgba(0, 0, 0, 0.1)', true]);
+      expect(edge('blue-dark')).toEqual(['solid', '1px', '-1px', 'rgba(255, 255, 255, 0.1)', true]);
+    } finally { document.documentElement.removeAttribute('data-theme'); }
+    expect(img('ec').outlineStyle).toBe('none');
+  });
 });

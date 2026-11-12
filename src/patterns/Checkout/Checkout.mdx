@@ -37,7 +37,7 @@ Once the order is placed, the confirmation says where the receipt went and what 
 
 <Canvas of={Stories.Placed} />
 
-## What stays the app's job
+## What stays your app's job
 
 - **Taking the payment.** Use your payment provider's own card fields where it requires them (they keep card numbers off your server), its 3-D Secure step, and its own error messages, put into words a person can act on. `onPlaceOrder` gets the order; reject its promise when the payment fails.
 - **Checking the address** with a postcode lookup, and the countries you deliver to, with each country's own address fields.
