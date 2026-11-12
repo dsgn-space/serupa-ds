@@ -51,14 +51,16 @@ on:
 
 # A newer run for the same pull request cancels the one before it. Any other label gets a group of its own, so adding
 # it while the pictures are being drawn doesn't cancel them. Heal has its own group: the run its label starts must not
-# cancel it. After main moves again, the newer heal replaces the older one.
+# cancel it. After main moves again, the newer heal replaces the older one. A push to main never cancels the redraw
+# already running (it draws everything since the last one that finished): the newest push waits behind it instead, and
+# replaces any older push still waiting, so each redraw finishes once rather than being started and thrown away.
 concurrency:
   group: >-
     ${{ github.workflow }}-${{ github.event_name == 'push' && 'heal-after-main' ||
     github.event_name == 'workflow_dispatch' && format('heal-{0}', inputs.pr) ||
     (github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines')
     && github.event.pull_request.number || github.run_id }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name != 'push' }}
 
 permissions: {}
 
@@ -488,6 +490,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       pull-requests: write
+      actions: write
     steps:
       - name: Remove the label
         env:
@@ -495,3 +498,21 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           LABEL: ${{ github.event.label.name }}
         run: gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --remove-label "$LABEL"
+      # CI holds a pull request's run while this label is on (ci.yml, plan). When no new commit came of it (nothing to
+      # change, or the drawing failed), start the held run of the branch's newest commit again: the label is off now,
+      # so it tests. A pushed commit started its own run.
+      - name: Start the held CI run again
+        if: github.event.label.name == 'update-visual-baselines'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          head=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .head.sha)
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=pull_request&head_sha=$head&status=completed" --jq '.workflow_runs[].id'); do
+            held=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq '[.jobs[] | select(.name == "build" and .conclusion == "skipped")] | length')
+            [ "$held" = 0 ] && continue
+            echo "Starting held run $id again."
+            gh run rerun "$id" --repo "$GITHUB_REPOSITORY"
+            break
+          done
