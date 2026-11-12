@@ -96,10 +96,14 @@ const titles = new Set();
 const walk = (dir) => { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, e.name); if (e.isDirectory()) { if (e.name !== 'node_modules' && e.name !== 'generated') walk(p); } else if (/\.(stories\.tsx|mdx)$/.test(e.name)) for (const m of fs.readFileSync(p, 'utf8').matchAll(/(?:^\s*title: |<Meta title=)['"]([^'"]+)['"]/gm)) titles.add(storyId(m[1])); } };
 walk(path.join(PROJECT, 'src')); walk(path.join(PROJECT, 'docs'));
 const broken = [];
-for (const f of fs.readdirSync(path.join(PROJECT, 'docs')).filter((n) => n.endsWith('.mdx'))) {
-  for (const m of fs.readFileSync(path.join(PROJECT, 'docs', f), 'utf8').matchAll(/\?path=\/docs\/([a-z0-9-]+)--docs/g)) if (!titles.has(m[1])) broken.push(`${f}: ${m[1]}`);
+// The pages people read: docs/*.mdx, each component's README, and the pattern and block pages.
+const pages = fs.readdirSync(path.join(PROJECT, 'docs')).filter((n) => n.endsWith('.mdx')).map((n) => path.join('docs', n));
+for (const name of fs.readdirSync(DIR)) if (fs.existsSync(path.join(DIR, name, 'README.md'))) pages.push(path.join('src', 'components', name, 'README.md'));
+for (const group of ['patterns', 'blocks']) for (const name of fs.readdirSync(path.join(PROJECT, 'src', group))) if (fs.existsSync(path.join(PROJECT, 'src', group, name, `${name}.mdx`))) pages.push(path.join('src', group, name, `${name}.mdx`));
+for (const f of pages) {
+  for (const m of fs.readFileSync(path.join(PROJECT, f), 'utf8').matchAll(/\?path=\/docs\/([a-z0-9-]+)--docs/g)) if (!titles.has(m[1])) broken.push(`${f}: ${m[1]}`);
 }
-t('every docs page link in docs/*.mdx goes to a page that exists', !broken.length, broken.slice(0, 12).join(', '));
+t('every docs page link in the docs, the guides and the pattern and block pages goes to a page that exists', !broken.length, broken.slice(0, 12).join(', '));
 // Patterns and blocks (PT0, BL0): each docs page says when to use it before what each part is for, as a component's
 // guide does, so nobody copies a whole screen for a job it isn't meant for.
 for (const group of ['patterns', 'blocks']) {
