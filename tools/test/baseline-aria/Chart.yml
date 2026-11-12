@@ -367,10 +367,11 @@
       - 'img "Sign-ups, Dec: 142"'
 
 # LoadingAndErrors
-- button "Loading" [pressed]
-- button "Loaded"
-- button "Empty"
-- button "Failed"
+- radiogroup "State":
+  - radio "Loading" [checked]
+  - radio "Loaded"
+  - radio "Empty"
+  - radio "Failed"
 - figure "Visitors and sign-ups":
   - text: Visitors and sign-ups
   - button "Show as table" [disabled]

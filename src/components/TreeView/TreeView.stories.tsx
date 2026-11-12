@@ -58,3 +58,16 @@ export const LongLabels: Story = {
 export const DoOpenToSelection: Story = { name: 'Do: open down to the selection' };
 /** Don't: everything closed, which hides the selected item. */
 export const DontHideSelection: Story = { name: "Don't: hide the selection", args: { defaultExpanded: [] } };
+
+/** Folders whose children load when they open: "Loading…" holds the place, and a failure says how to try again. */
+export const LoadingAndErrors: Story = {
+  name: 'Loading and failed',
+  args: {
+    defaultValue: [], defaultExpanded: ['src', 'docs'],
+    items: [
+      { id: 'src', label: 'src', icon: 'folder', children: [{ id: 'src-wait', label: 'Loading…', disabled: true }] },
+      { id: 'docs', label: 'docs', icon: 'folder', children: [{ id: 'docs-wait', label: 'Didn’t load. Close and open the folder to try again.', disabled: true }] },
+      { id: 'readme', label: 'README.md', icon: 'draft' },
+    ],
+  },
+};
