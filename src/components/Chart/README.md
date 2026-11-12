@@ -149,6 +149,7 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--chart-tip-shadow` | `shadow-md` | The tooltip's shadow. |
+| `--chart-tip-depth` | `depth-surface` | A tactile brand's hairline edge and, in dark mode, a faint top light, as on every floating pane. None in the flat brands. |
 
 **Border**
 

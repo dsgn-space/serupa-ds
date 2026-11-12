@@ -15,7 +15,7 @@
   border-radius: var(--offline-banner-radius, var(--radius-surface));
   background: var(--offline-banner-bg, var(--surface-overlay));
   color: var(--offline-banner-text, var(--text));
-  box-shadow: var(--offline-banner-shadow, var(--shadow-lg));
+  box-shadow: var(--offline-banner-depth, var(--depth-surface)), var(--offline-banner-shadow, var(--shadow-lg));
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--text-sm--line-height);
