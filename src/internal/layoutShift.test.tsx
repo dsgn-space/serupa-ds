@@ -21,6 +21,7 @@ const KNOWN = new Map<string, string>([
   ['ToggleGroup/LongLabels', 'wraps to fit'],
   ['Stepper/LongLabels', 'stacks to fit'],
   ['Stepper/Narrow', 'stacks to fit'],
+  ['Stepper/DontLongTitles', 'stacks to fit'],
   // Drops page numbers one by one until the row fits.
   ['Pagination/Overflow', 'cuts to fit'],
 ]);

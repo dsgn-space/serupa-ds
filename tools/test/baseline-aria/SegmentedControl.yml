@@ -4,6 +4,18 @@
   - radio "Week" [checked] [disabled]
   - radio "Month" [disabled]
 
+# DoShortLabels
+- radiogroup "Sort by":
+  - radio "Newest" [checked]
+  - radio "Oldest"
+  - radio "Popular"
+
+# DontSentences
+- radiogroup "Sort by":
+  - radio "Newest first" [checked]
+  - radio "Show the oldest ones first"
+  - radio "Most popular this week"
+
 # FullWidth
 - radiogroup "Period":
   - radio "Day"
