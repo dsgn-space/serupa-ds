@@ -49,3 +49,25 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: what happened, and the way out. */
+export const DoWhatAndNext: Story = {
+  name: 'Do: what happened and what to do',
+  render: () => <Col><Alert tone="danger" title="Payment failed" actions={<Button size="sm" variant="secondary">Update card</Button>}>Your card was declined. Update it by Friday to keep your plan.</Alert></Col>,
+};
+/** Don't: a generic error with no way forward. */
+export const DontGenericError: Story = {
+  name: "Don't: a generic error",
+  render: () => <Col><Alert tone="danger" title="Error">Something went wrong.</Alert></Col>,
+};
+/** Do: a tone that matches what happened. */
+export const DoMatchTone: Story = {
+  name: 'Do: a tone that matches',
+  render: () => <Col><Alert tone="info" title="New version available">Reload the page to get the latest changes.</Alert></Col>,
+};
+/** Don't: danger for news, which makes real problems easier to miss. */
+export const DontAlarmingTone: Story = {
+  name: "Don't: an alarming tone",
+  render: () => <Col><Alert tone="danger" title="New version available">Reload the page to get the latest changes.</Alert></Col>,
+};

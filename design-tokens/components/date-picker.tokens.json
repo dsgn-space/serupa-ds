@@ -24,8 +24,8 @@
       },
       "button-bg-hover": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The calendar button's background on hover.",
+        "$value": "{color.secondary}",
+        "$description": "The calendar button's background on hover, as the other buttons inside fields (PasswordInput's show and hide, NumberInput's steps).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--date-picker-button-bg-hover"

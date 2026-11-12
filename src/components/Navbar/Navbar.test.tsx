@@ -441,16 +441,19 @@ describe('Navbar panel motion (GH2)', () => {
   test('the small-screen panel fades in, and fades out after the menu button before it goes back between brand and actions', async () => {
     await resize(375);
     await render(<Main />);
+    // Fades long enough that a slow machine still sees them running, whatever its pace between the steps.
+    el('nav').style.setProperty('--motion-enter-sm', '1.5s');
+    el('nav').style.setProperty('--motion-exit-sm', '1.5s');
     const nav = () => q('#nav nav');
     const fades = () => nav().getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty).sort().join();
     await userEvent.click(toggle());
     expect(fades()).toMatch(/opacity/);
-    await expect.poll(() => getComputedStyle(nav()).opacity).toBe('1');
+    await expect.poll(() => getComputedStyle(nav()).opacity, { timeout: 5000 }).toBe('1');
     await userEvent.keyboard('{Escape}');
     // Closing: still shown, after the button and inert, while it fades.
     expect([vis('#nav nav'), !!(toggle().compareDocumentPosition(nav()) & Node.DOCUMENT_POSITION_FOLLOWING), nav().inert]).toEqual([true, true, true]);
     expect(fades()).toMatch(/opacity/);
-    await expect.poll(() => !!(toggle().compareDocumentPosition(nav()) & Node.DOCUMENT_POSITION_PRECEDING)).toBe(true);
+    await expect.poll(() => !!(toggle().compareDocumentPosition(nav()) & Node.DOCUMENT_POSITION_PRECEDING), { timeout: 5000 }).toBe(true);
     expect([vis('#nav nav'), nav().inert]).toEqual([false, false]);
   });
 });

@@ -19,6 +19,25 @@
       - paragraph: Network error , 3 times
       - button "Dismiss"
 
+# DoOneQuickAction
+- paragraph: Moved to trash
+- button "Undo"
+- button "Dismiss"
+
+# DoShortTitle
+- paragraph: Changes saved
+- button "Dismiss"
+
+# DontMustAct
+- paragraph: Your card was declined
+- paragraph: Update your card by Friday to keep your plan.
+- button "Update card"
+- button "Dismiss"
+
+# DontWordyTitle
+- paragraph: Your changes have been saved successfully to your account.
+- button "Dismiss"
+
 # LongText
 - region "Notifications":
   - list:

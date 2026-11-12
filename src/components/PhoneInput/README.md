@@ -107,7 +107,7 @@ The box and the number use Input's tokens. These style the country part; each is
 | `--phone-input-dial` | `text` | The calling code (4.5:1 on the field). |
 | `--phone-input-chevron` | `text-muted` | The chevron (3:1 on the field). |
 | `--phone-input-divider` | `border` | The line between the country part and the number. |
-| `--phone-input-bg-hover` | `surface-muted` | The country part's background on hover. |
+| `--phone-input-bg-hover` | `secondary` | The country part's background on hover, as the other buttons inside fields. |
 | `--phone-input-focus-ring` | `focus-ring` | The menu's keyboard focus ring. |
 | `--phone-input-gap` | `spacing-1` | Space around the chevron (4px). |
 <!-- token-table:end -->
