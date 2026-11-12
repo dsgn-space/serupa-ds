@@ -1,3 +1,17 @@
+# DoSayWhere
+- paragraph:
+  - text: Changed your mind?
+  - link "Read the refund policy":
+    - /url: "#refunds"
+  - text: before you send it back.
+
+# DontClickHere
+- paragraph:
+  - text: Changed your mind? To read the refund policy,
+  - link "click here":
+    - /url: "#refunds"
+  - text: .
+
 # External
 - paragraph:
   - text: Read

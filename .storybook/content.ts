@@ -58,3 +58,13 @@ export const useNames = (demo: readonly string[]): string[] => {
   const content = useContent();
   return content === 'demo' ? [...demo] : content === 'one' ? demo.slice(0, 1) : PEOPLE[content].map((p) => p.name);
 };
+
+/** One person's name for a story that shows one: the demo name, or the worst case's first (its longest). */
+export const useName = (demo: string): string => useNames([demo])[0] ?? demo;
+
+/** For a story whose data names several people: a function from each demo name to the Content menu's choice, in
+    order. A name the menu has no person for keeps its demo name, so "Empty" and "One item" leave the data whole. */
+export const useNameMap = (demo: readonly string[]): ((name: string) => string) => {
+  const names = useNames(demo);
+  return (name) => { const i = demo.indexOf(name); return i >= 0 && names[i] !== undefined ? names[i] : name; };
+};

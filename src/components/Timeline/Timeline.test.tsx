@@ -164,6 +164,11 @@ describe('Timeline orientation="horizontal" (RU12)', () => {
     expect(document.activeElement).toBe(box);
     await userEvent.keyboard('{ArrowRight}');
     await expect.poll(() => box.scrollLeft).toBeGreaterThan(0);
+    // WebKit scrolls for the arrow smoothly: read where it comes to rest, not a point on the way there, or the
+    // ArrowLeft below starts from a smaller number than the box ends up at.
+    const frame = () => new Promise((ok) => requestAnimationFrame(ok));
+    let last = -1;
+    await expect.poll(async () => { const was = last; await frame(); await frame(); last = box.scrollLeft; return last === was; }).toBe(true);
     const moved = box.scrollLeft;
     await userEvent.keyboard('{ArrowLeft}');
     await expect.poll(() => box.scrollLeft).toBeLessThan(moved);

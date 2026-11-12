@@ -6,7 +6,7 @@ name: Update baselines
 # its branch; the new baselines are committed back to the branch. Review them in
 # the pull request's Files changed tab before merging.
 # Only the components the pull request changes (and the ones that use them) are re-rendered, as in CI, and a
-# picture is rewritten only when it differs past half the check's tolerance, so the commit holds only real changes and
+# picture is rewritten only when it differs past the check's tolerance, so the commit holds only real changes and
 # two pull requests that change different components don't conflict over each other's pictures.
 #
 # The "update-cross-browser-baselines" label does the same for Firefox's and WebKit's pictures
@@ -118,6 +118,13 @@ jobs:
 
   render:
     if: github.event.label.name == 'update-visual-baselines' && github.event.pull_request.head.repo.full_name == github.repository
+    name: render (${{ matrix.shard }})
+    # Four shards side by side, as CI's Visual jobs: a whole run took 21 minutes in one job. Shard 1 also draws the
+    # Foundations pages, rewrites baseline-utilities.json and removes pictures whose story is gone.
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [1/4, 2/4, 3/4, 4/4]
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
     container:
@@ -150,9 +157,10 @@ jobs:
           npm run build
           npm run build-storybook
           node tools/test/run.mjs --group visual --update --since "$base"
-          node tools/test/utilities.mjs --update
+          if [ "$SERUPA_SHARD" = 1/4 ]; then node tools/test/utilities.mjs --update; fi
         env:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
+          SERUPA_SHARD: ${{ matrix.shard }}
       - name: Collect what changed
         run: |
           out="$RUNNER_TEMP/baselines"
@@ -162,7 +170,7 @@ jobs:
           git diff --cached --no-renames --name-only --diff-filter=D > "$out/deleted.txt"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: baselines
+          name: baselines-chromium-${{ strategy.job-index }}
           path: ${{ runner.temp }}/baselines
           retention-days: 1
 

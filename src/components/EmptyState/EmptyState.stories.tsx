@@ -61,3 +61,15 @@ export const LongText: Story = {
     </div>
   ),
 };
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: say what's empty, why, and what to do next. */
+export const DoSayWhatNext: Story = {
+  name: 'Do: say what to do next',
+  args: { icon: 'receipt_long', title: 'No invoices yet', description: 'Invoices you send show up here.', actions: <Button leftIcon="add">New invoice</Button> },
+};
+/** Don't: a bare "No data", which leaves people stuck. */
+export const DontNoData: Story = {
+  name: "Don't: just say no data",
+  args: { icon: 'receipt_long', title: 'No data', description: undefined, actions: undefined },
+};

@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tooltip } from './Tooltip';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { Field } from '../Field/Field';
+import { PasswordInput } from '../PasswordInput/PasswordInput';
 
 const meta = {
   title: 'Components/Overlays/Tooltip',
@@ -65,4 +67,23 @@ export const OnDisabledLooking: Story = {
 export const Disabled: Story = {
   name: 'Disabled (never shows)',
   args: { disabled: true },
+};
+
+// Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
+/** Do: a word or two that names an icon-only button. */
+export const DoNameIcon: Story = {
+  name: 'Do: name an icon button',
+  args: { content: 'Download', open: true, children: <IconButton icon="download" label="Download" variant="secondary" hideTitle /> },
+};
+/** Don't: a rule people need, hidden in a tooltip: nothing on the page shows it, and touch screens never do. */
+export const DontNeededInfo: Story = {
+  name: "Don't: hide what people need",
+  render: () => (
+    <Field label="New password">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <PasswordInput autoComplete="new-password" />
+        <Tooltip content="At least 12 characters, with a number and a symbol"><IconButton icon="info" label="Password rules" variant="ghost" hideTitle /></Tooltip>
+      </div>
+    </Field>
+  ),
 };

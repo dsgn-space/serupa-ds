@@ -4,6 +4,38 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [14.5.0] - 2026-11-12
+
+### Added
+
+- An app's own "Reduce motion" setting. `data-motion="reduce"` on `<html>` gives every component, `base.css` and the utilities exactly the motion the system's `prefers-reduced-motion: reduce` gives them (fades only, still spinners, nothing sliding or scaling), for a switch in your app's settings. On a section, it reduces motion inside that section. It only ever reduces: when the system asks for less motion, the attribute can't bring it back.
+- `prefersReducedMotion(el?)`, a one-off answer for an event handler or effect, and `useReducedMotion()` now follows the attribute too. Accordion's height, TableOfContents' smooth scroll, Toast's swipe away and the stack sliding together, and theme.js's crossfade all follow it.
+- A disabled Button is now readable: it shows muted text on a muted surface instead of fading the whole button to half opacity, so its label keeps a 3:1 contrast (4.5:1 with more contrast) in every theme. Ghost and link buttons keep their clear background. Three new tokens set the look: `--button-disabled-bg`, `--button-disabled-text` and `--button-disabled-border`.
+- DataGrid takes `stickyHeader` and `containerProps`, as Table does: give the frame a height and the header row stays in view while people edit far down a long grid, and the cell the keyboard moves to scrolls in below the header, not under it.
+- IconButton shows its label in a Tooltip on hover and on keyboard focus, in place of the native `title` that showed only after the mouse rested on it. The tooltip is the button's name (no second reading as a description). A Tooltip of your own around it replaces it, and `hideTitle` or a `title` of your own leaves it out.
+- MenuItem's `shortcut` takes keys as Kbd does: `shortcut={['mod', 'K']}` shows "⌘K" on a Mac and "Ctrl+K" elsewhere, with modifiers in each platform's order ("⇧⌘Z", "Ctrl+Shift+Z"), and `aria-keyshortcuts` says Meta or Control to match. Text still shows as written.
+- Two built-in words now say what to do next, in English and every language pack: Combobox's `noResults` is "No results. Try other words." (was "No results"), and FileUpload and Attachment's `fileError` is "Couldn’t upload" (was "Upload failed"), the "Couldn’t …" form the other failure words use. Pass `emptyText`, or your own labels, to keep the old words.
+- NotificationCenter takes `settingsHref`: the drawer's footer then starts with a "Notification settings" link to it, so someone who gets too many notifications can turn some off from where they see them. The label is `notificationSettings`, in English, Indonesian and the other bundled languages that name NotificationCenter's buttons.
+- Quote component, for testimonials, pull quotes and quotes outside Prose: the words in a `<blockquote>`, who said them in a `<figcaption>`, an optional picture, and a large size. 9 component tokens.
+- Steps and opened items now move in a direction. A panel with `view-transition-class: step` slides in from the end when a View Transition of type `forward` runs (`withViewTransition(update, { types: ['forward'] })`) and from the start for `back`, mirrored right to left, with a crossfade under reduced motion (the rules are in `base.css`). The DataImport pattern uses it between its steps. On a phone, the ListDetail pattern opens a message in place: it comes forward while its subject travels from its row into the heading, and Back plays it the other way. The Motion foundation's "Layout changes" says how to do both in your own screens.
+- TabNav and TabNavLink, for moving between the sub-pages of one thing (a project's Overview, Activity and Settings) when each has its own URL. It looks like Tabs, with the same variants, sizes and tokens, but it's a nav of links with `aria-current="page"` on the current one, so people move with Tab and links work as links (open in a new tab, bookmark, share). `as` takes your router's link. PageHeader's `sections` now draw a TabNav, so the current section has the tab line under it instead of only a bolder weight.
+
+### Fixed
+
+- Base.css: a word too long for its line breaks instead of widening the page. Before, only bare links wrapped, so a long URL, ID or compound word in an app's own paragraph, card body or popover made the page scroll sideways on a phone (WCAG 1.4.10). `body` now sets `overflow-wrap: break-word`, which only breaks a word that would otherwise overflow and doesn't change how tables and flex items size.
+- On a phone, Dialog and Drawer pad their panel 16px instead of 24px, so a 320px screen (or a desktop at 400% zoom) gives the content 256px instead of 240px. From 640px wide nothing changes, and `--dialog-padding` and `--drawer-padding` still set it everywhere.
+- The pointer now shows on DatePicker's and DateRangePicker's calendar button, TimePicker's clock button, PhoneInput's country part, a day or preset in Calendar and a CascadeSelect option in the dark themes. Their hover fill was `surface-muted`, which in dark is the same colour as the field and the popup. The buttons in fields now take `secondary` on hover, as PasswordInput's and NumberInput's do. Calendar's days take `secondary` too, as Pagination's pages do, and a day of another month turns to full text under the pointer, so it keeps 4.5:1. CascadeSelect's options take `highlight`, as Combobox's and Menu's do. The component tokens (`--date-picker-button-bg-hover`, `--calendar-day-bg-hover` and the rest) still override each one, and Calendar has a new `--calendar-outside-color-hover`.
+- Menu: labels now line up. When some items have an icon or a check, the items without one keep that space, so every label and group heading starts in one column, as in macOS and Windows menus. Each submenu works this out for its own items. Nothing to change in your code.
+- Serupa-migrate: makes the seven prop renames that 15.0.0 will finish, so a project can move to the new names now, while both still work. Tooltip `delay` becomes `openDelay`, Switch `pending` becomes `loading`, Field `layout` and Splitter `direction` become `orientation`, Fab and Toaster `position` become `placement`, and OfflineBanner `onChange` becomes `onOnlineChange`. Run `npx serupa-migrate src --from 14` to see the changes, and add `--write` to make them.
+- In a right-to-left page, a Field label in Latin script keeps its gap before "(optional)" ("Address line 2 (optional)", not "Address line 2(optional)"), and a toast's count keeps its gap after an English message.
+- An overlay (Popover, Menu, Tooltip, HoverCard, Tour, Combobox and the pickers) opened in a `dir="rtl"` block on a left-to-right page now lines its start up with the trigger's right edge, as one on a right-to-left page does; an English block on a right-to-left page lines up from the left again.
+- ScrollArea, Chat and ShowMore print their whole content. A vertical ScrollArea and a Chat log grow to fit everything instead of printing only the part scrolled into view, and ShowMore prints its full text without the Show more button.
+- Every component's corners now follow the radius roles. Accordion, Calendar, Chart's tooltip, Chat, CodeBlock, ColorPicker, Combobox, CommandPalette, DatePicker, ErrorSummary, Loader's skeleton, OfflineBanner, Popover's sheet, Prose, Rating, Slider, SortableList, Stepper, Tabs, TimePicker, Tour and TreeView named a step of the rounded scale (`rounded-sm` … `rounded-xl`), so a brand that set `--radius-control` or `--radius-surface` left them behind. They now read `radius-inner`, `radius-control`, `radius-surface` or `radius-container`, at the same size as before, and their component radius tokens default to the role. Nothing looks different in the six themes.
+- If your app made these components rounder by overriding `--rounded-md` and its neighbours, override the role (`--radius-control`) or the component's own token (`--code-block-radius`) instead.
+- EventCalendar no longer makes a new media query on every render to check the screen width, and Carousel follows its `perView` breakpoints from the first render in the browser. Both now read the width through the same shared queries as `useBreakpoint`, as do Navbar, Popover, Image, Accordion, Toast and TableOfContents for the screen width, data saving and reduced motion.
+- Splitter's docs are under Components › Layout and type, with Container, Grid and Stack, instead of a "Layout" group of its own.
+- Input and Textarea's constraint messages in a language pack write the min, max and step as the locale does: "1.000" in German, Arabic-Indic digits in Arabic, and a date, month or time in the locale's own form ("11 nov. 2026") instead of the attribute's "2026-11-11".
+
 ## [14.4.0] - 2026-11-12
 
 ### Added
@@ -2317,7 +2349,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v14.4.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v14.5.0...HEAD
+[14.5.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.4.0...v14.5.0
 [14.4.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.3.0...v14.4.0
 [14.3.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.2.0...v14.3.0
 [14.2.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.1.0...v14.2.0

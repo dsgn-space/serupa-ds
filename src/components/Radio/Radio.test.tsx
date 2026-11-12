@@ -297,8 +297,14 @@ describe('Radio', () => {
     await userEvent.keyboard('{ArrowUp}');
     expect(a.checked).toBe(true);
     expect(document.activeElement).toBe(a);
-    expect(css(card(a)).outlineStyle).toBe('solid');
-    expect(css(a).outlineStyle).toBe('none');
+    // The ring follows the browser's own :focus-visible, which Safari doesn't turn on for an arrow pressed after a
+    // click (Chromium does). So the ring is checked on focus that asks to be seen (focusVisible), then an arrow on.
+    a.blur();
+    a.focus({ focusVisible: true });
+    expect([document.activeElement === a, css(card(a)).outlineStyle, css(a).outlineStyle]).toEqual([true, 'solid', 'none']);
+    await userEvent.keyboard('{ArrowDown}');
+    expect([b.checked, document.activeElement === b]).toEqual([true, true]);
+    expect([css(card(b)).outlineStyle, css(card(a)).outlineStyle, css(b).outlineStyle]).toEqual(['solid', 'none', 'none']);
     // Its name is the label alone; the description describes it.
     await expect.element(page.getByRole('radio', { name: 'Express', exact: true })).toHaveAccessibleDescription('Next day');
   });

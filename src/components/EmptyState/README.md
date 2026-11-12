@@ -55,6 +55,11 @@ Drawn from the `LongText` story.
 - Keep it to one primary action.
 - Use `size="sm"` inside a card, a table or a menu, and the default size for a whole page or panel.
 
+### Do and don't
+
+- **Do:** Say what's empty and what to do next: "No invoices yet", with a "New invoice" button. (`DoSayWhatNext`)
+- **Don't:** Say only "No data": it doesn't say whether something broke or how to fill the page. (`DontNoData`)
+
 ## Accessibility
 
 - The title is a heading (`h3` by default), so people can find it; set `headingLevel` to fit the page.
