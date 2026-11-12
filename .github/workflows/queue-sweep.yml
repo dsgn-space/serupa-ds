@@ -1,0 +1,44 @@
+name: Queue sweep
+
+# When the merge queue drops or rebuilds a group (a pull request ahead of it failed, timed out or left), it deletes
+# the group's branch and starts a new group, but GitHub lets the old group's runs go on to the end. They can never
+# merge, yet they hold the runners the new groups wait for. This cancels every merge-queue run whose branch is gone,
+# each time the queue starts a group and every ten minutes. A group that merged also loses its branch; its runs are
+# left alone (main already holds its commit).
+# It checks out nothing and runs no code from any branch: it only reads runs and refs, and cancels runs.
+on:
+  merge_group:
+  schedule:
+    - cron: '*/10 * * * *'
+
+concurrency:
+  group: queue-sweep
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          since=$(date -u -d '-6 hours' +%Y-%m-%dT%H:%M:%SZ)
+          gh api "repos/$GH_REPO/actions/runs?event=merge_group&created=>$since&per_page=100" \
+            --jq '.workflow_runs[] | select(.status != "completed") | "\(.id) \(.head_sha) \(.head_branch)"' |
+          while read -r id sha branch; do
+            # Only a 404 counts as gone: any other answer leaves the run alone until the next sweep.
+            status=$(gh api -i "repos/$GH_REPO/git/ref/heads/$branch" 2>/dev/null | head -1 | awk '{print $2}')
+            [ "$status" = 404 ] || continue
+            # Merged: main holds the group's commit, so its runs finish as they are.
+            merged=$(gh api "repos/$GH_REPO/compare/$sha...main" --jq .status 2>/dev/null || echo unknown)
+            case "$merged" in identical|ahead|unknown) continue ;; esac
+            echo "Cancelling run $id: its queue group $branch was dropped."
+            gh run cancel "$id" || true
+          done
