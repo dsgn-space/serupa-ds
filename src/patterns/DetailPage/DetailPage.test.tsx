@@ -158,6 +158,17 @@ describe('Patterns/Detail page', () => {
     await expect.poll(h1).toBe('Website redesign was deleted');
   });
 
+  test('deleteFailed starts with the dialog open and the alert, as after a delete that failed; a try that works deletes it', async () => {
+    const onDelete = vi.fn(() => Promise.resolve());
+    const screen = await render(<DetailPage deleteFailed onDelete={onDelete} />);
+    const dialog = screen.getByRole('alertdialog', { name: 'Delete Website redesign?' });
+    await expect.element(dialog.getByRole('alert')).toHaveTextContent('Couldn’t delete Website redesign. Try again.');
+    await dialog.getByRole('textbox').fill('Website redesign');
+    await dialog.getByRole('button', { name: 'Delete this project' }).click();
+    await expect.poll(h1).toBe('Website redesign was deleted');
+    expect(onDelete).toHaveBeenCalledTimes(1);
+  });
+
   test('GR177: the failure message goes when the dialog is closed and opened again', async () => {
     const screen = await render(<DetailPage onDelete={() => Promise.reject(new Error('server down'))} />);
     await screen.getByRole('tab', { name: 'Settings' }).click();

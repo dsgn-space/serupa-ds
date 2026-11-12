@@ -5,6 +5,7 @@ import { Button } from '../../components/Button/Button';
 import { Card } from '../../components/Card/Card';
 import { Heading } from '../../components/Heading/Heading';
 import { Icon } from '../../components/Icon/Icon';
+import { Link } from '../../components/Link/Link';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
@@ -17,6 +18,8 @@ import { useLocale } from '../../internal/provider';
      sense out of context.
    - Monthly or yearly is a radio group (SegmentedControl, one choice); the yearly option says the saving in words.
    - 1.4.10: a long word, such as a German compound, wraps inside its card rather than running out of it (GR137).
+   - Ethical design: under the plans, a line says paid plans renew until cancelled and links to where to cancel, before
+     anyone chooses ("Say when a plan renews and what it will cost before someone chooses it, and how to cancel").
    - Prices are written the way the reader's locale writes money. Each word is a label, English by default. */
 
 export type PricingPeriod = 'monthly' | 'yearly';
@@ -55,6 +58,10 @@ export interface PricingLabels {
   included: (plan: string) => string;
   /** A plan's button. */
   choose: (plan: string) => string;
+  /** Under the plans: that paid plans renew, every month or every year, until cancelled. */
+  renews: (period: PricingPeriod) => string;
+  /** The link to where a plan is cancelled, after the renews line. */
+  cancel: string;
 }
 
 const english: PricingLabels = {
@@ -67,6 +74,8 @@ const english: PricingLabels = {
   recommended: 'Recommended',
   included: (plan) => `Included in ${plan}`,
   choose: (plan) => `Choose ${plan}`,
+  renews: (period) => `Paid plans renew every ${period === 'yearly' ? 'year' : 'month'} at the price shown until you cancel.`,
+  cancel: 'Cancel any time in Billing settings',
 };
 
 export interface PricingProps {
@@ -83,6 +92,8 @@ export interface PricingProps {
   /** Each plan's name. Default: 3, under the page's h2. */
   headingLevel?: 2 | 3 | 4 | undefined;
   labels?: Partial<PricingLabels> | undefined;
+  /** Where a plan is cancelled, linked under the plans. Default: "#settings-billing". */
+  cancelHref?: string | undefined;
 }
 
 /** What yearly billing saves over twelve monthly payments, per paid plan, as whole percentages rounded down. */
@@ -92,7 +103,7 @@ function savings(plans: readonly PricingPlan[]) {
 }
 
 /** Plans side by side, monthly or yearly, each with what it includes and one clear action. */
-export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', onPeriodChange, onChoose, headingLevel = 3, labels }: PricingProps) {
+export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', onPeriodChange, onChoose, headingLevel = 3, labels, cancelHref = '#settings-billing' }: PricingProps) {
   const l = { ...english, ...labels };
   const locale = useLocale();
   const [own, setOwn] = React.useState<PricingPeriod>(defaultPeriod);
@@ -133,6 +144,9 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
           );
         })}
       </ul>
+      {plans.some((p) => p.monthly > 0 || p.yearly > 0) && (
+        <p className="text-center text-sm text-text-muted">{l.renews(shown)} <Link href={cancelHref}>{l.cancel}</Link>.</p>
+      )}
     </div>
   );
 }

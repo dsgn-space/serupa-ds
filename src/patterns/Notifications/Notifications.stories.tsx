@@ -19,3 +19,6 @@ export const Default: Story = {};
 export const AllRead: Story = {
   args: { items: [{ id: 'a', title: 'Your export is ready', tone: 'success', time: Date.now() - 60_000 * 30, read: true }] },
 };
+
+/** No notifications yet: an empty state saying what will show up, with a way to the notification settings. */
+export const Empty: Story = { args: { items: [] } };
