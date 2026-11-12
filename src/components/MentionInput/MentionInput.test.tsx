@@ -15,8 +15,11 @@ const PEOPLE: MentionOption[] = [
 ];
 const box = () => document.querySelector('textarea') as HTMLTextAreaElement;
 const list = () => document.querySelector('[role="listbox"]') as HTMLElement;
-const names = () => [...document.querySelectorAll('[role="option"]')].map((o) => o.querySelector('.dk-mention-input__text > span')!.textContent);
-const active = () => document.getElementById(box().getAttribute('aria-activedescendant') || '')?.querySelector('.dk-mention-input__text > span')?.textContent;
+// An option is its avatar, then its text: the name, and the description under it.
+const label = (o: Element | null | undefined) => o?.lastElementChild?.firstElementChild?.textContent;
+const names = () => [...document.querySelectorAll('[role="option"]')].map(label);
+const activeOption = () => document.getElementById(box().getAttribute('aria-activedescendant') || '');
+const active = () => label(activeOption());
 const isOpen = () => !!list() && !list().closest('[hidden]');
 const said = (text: string) => expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain(text);
 
@@ -30,7 +33,7 @@ describe('MentionInput', () => {
     const ref = React.createRef<HTMLTextAreaElement>();
     await render(<MentionInput id="x" ref={ref} className="extra" data-x="y" aria-label="Comment" options={PEOPLE} />);
     const t = box();
-    expect([t.id, ref.current === t, t.dataset.x, t.getAttribute('aria-autocomplete'), t.getAttribute('aria-controls'), t.closest('.dk-mention-input')!.classList.contains('extra')])
+    expect([t.id, ref.current === t, t.dataset.x, t.getAttribute('aria-autocomplete'), t.getAttribute('aria-controls'), t.closest('[data-component="mention-input"]')!.classList.contains('extra')])
       .toEqual(['x', true, 'y', 'list', null, true]);
     expect(t.closest('[data-component="mention-input"]')!.getAttribute('data-state')).toBe('closed');
   });
@@ -45,8 +48,8 @@ describe('MentionInput', () => {
     expect(names()).toEqual(['André Wijaya', 'Budi Santoso']);   // "An" starts André; "Santoso" holds "an"
     await userEvent.keyboard('{Backspace}{Backspace}AND');
     expect(names()).toEqual(['André Wijaya']);
-    const caret = document.querySelector<HTMLElement>('.dk-mention-input__anchor')!.getBoundingClientRect(), pop = list().getBoundingClientRect();
-    expect(pop.top).toBeGreaterThanOrEqual(caret.bottom);   // under the caret's line
+    const field = box().getBoundingClientRect(), pop = list().getBoundingClientRect();
+    expect(pop.top).toBeGreaterThanOrEqual(field.top + parseFloat(getComputedStyle(box()).lineHeight));   // under the caret's (first) line
   });
 
   test('Down and Up move through the options, skipping one that can\'t be picked, and wrap; Enter puts "@Name " in and the caret after it', async () => {
@@ -115,18 +118,18 @@ describe('MentionInput', () => {
     expect([isOpen(), document.activeElement?.textContent]).toEqual([false, 'Before']);
   });
 
-  test('how many match is said after a pause, and "no results" when nothing does; onQueryChange gets the query, then null', async () => {
-    const onQueryChange = vi.fn<(q: string | null) => void>();
-    await render(<Box onQueryChange={onQueryChange} />);
+  test('how many match is said after a pause, and "no results" when nothing does; onSearch gets the query, then null', async () => {
+    const onSearch = vi.fn<(q: string | null) => void>();
+    await render(<Box onSearch={onSearch} />);
     await userEvent.click(box());
     await userEvent.keyboard('@bud');
     await said('1 result');
     await userEvent.keyboard('zz');
     await said('No results');
-    expect(document.querySelector('.dk-mention-input__message')!.textContent).toBe('No results. Try other words.');
-    expect(onQueryChange.mock.calls.map((c) => c[0])).toEqual(['', 'b', 'bu', 'bud', 'budz', 'budzz']);
+    await expect.element(page.getByText('No results. Try other words.')).toBeVisible();
+    expect(onSearch.mock.calls.map((c) => c[0])).toEqual(['', 'b', 'bu', 'bud', 'budz', 'budzz']);
     await userEvent.keyboard('{Escape}');
-    expect(onQueryChange).toHaveBeenLastCalledWith(null);
+    expect(onSearch).toHaveBeenLastCalledWith(null);
   });
 
   test('filter={false} shows the options as given (the app filters), up to maxOptions', async () => {
@@ -156,6 +159,13 @@ describe('MentionInput', () => {
     await expect.element(page.getByRole('textbox', { name: 'Comment' })).toHaveAccessibleDescription('Type @ to mention someone.');
   });
 
+  test('resize passes to the Textarea: "vertical" keeps the handle, "none" takes it off', async () => {
+    const { rerender } = await render(<MentionInput aria-label="Comment" options={PEOPLE} resize="vertical" />);
+    expect(getComputedStyle(box()).resize).toBe('vertical');
+    await rerender(<MentionInput aria-label="Comment" options={PEOPLE} resize="none" />);
+    expect(getComputedStyle(box()).resize).toBe('none');
+  });
+
   test('mentionQuery finds the open mention at the caret; mentionsIn lists who a text mentions, in order, whole names only', () => {
     expect([mentionQuery('Hi @ay', 6), mentionQuery('(@ay', 4), mentionQuery('a@b', 3), mentionQuery('@ ', 2), mentionQuery('@a\nb', 4), mentionQuery('#ta', 3, '#')])
       .toEqual([{ start: 3, text: 'ay' }, { start: 1, text: 'ay' }, null, null, null, { start: 0, text: 'ta' }]);
@@ -168,9 +178,9 @@ describe('MentionInput', () => {
     await userEvent.click(box());
     await userEvent.keyboard('@');
     await expect.poll(isOpen).toBe(true);
-    const pop = document.querySelector('.dk-mention-input__popup') as HTMLElement;
-    const opt = document.querySelectorAll<HTMLElement>('[role="option"]')[1], act = document.querySelector<HTMLElement>('.dk-mention-input__option--active')!;
-    const desc = document.querySelector<HTMLElement>('.dk-mention-input__description')!;
+    const pop = list().closest('[popover]') as HTMLElement;
+    const opt = document.querySelectorAll<HTMLElement>('[role="option"]')[1], act = activeOption()!;
+    const desc = act.lastElementChild!.lastElementChild as HTMLElement;   // Ayu's description
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       expect(contrast(css(opt).color, css(pop).backgroundColor), th).toBeGreaterThanOrEqual(4.5);

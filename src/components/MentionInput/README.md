@@ -17,7 +17,7 @@ const [text, setText] = React.useState("");
 const notify = mentionsIn(text, people).map((p) => p.id);
 
 // a large directory: load the matches as people type, and show them as given
-<MentionInput aria-label="Reply" options={matches} filter={false} onQueryChange={(q) => { if (q != null) search(q); }} />
+<MentionInput aria-label="Reply" options={matches} filter={false} onSearch={(q) => { if (q != null) search(q); }} />
 ```
 
 ## When to use
@@ -35,15 +35,14 @@ const notify = mentionsIn(text, people).map((p) => p.id);
 Drawn from the `Default` story.
 
 1. **Field** (`.dk-textarea`): a [Textarea](../Textarea/README.md), with every prop it takes.
-2. **List** (`.dk-mention-input__popup`): the people who match, under the line the caret is on.
-3. **Option** (`.dk-mention-input__option`): an [Avatar](../Avatar/README.md), the name and a `description` line.
+2. **List** (`.dk-mention-input__popup`): the people who match, under the line the caret is on. Each option shows an [Avatar](../Avatar/README.md), the name and its `description` line.
 
 ## Usage
 
 - Say how it works under the field ("Type @ to mention someone."), in the Field's hint or the placeholder. Nothing else shows that "@" does something.
 - The text stays plain: a mention is "@" and the label, as people see it. Use `mentionsIn(text, options)` when the text is sent, to find who to notify. Labels should be unique, such as a full name, so a mention points to one person.
 - "@" counts only at the start of the text or after a space or an opening bracket, so an email address doesn't open the list. A space right before the caret closes it, and a space inside a name doesn't ("@Ayu L" still matches).
-- `filter` (on by default) keeps the options whose label holds what's typed, ignoring case and accents, with names that start with it first. For a large directory, pass `filter={false}`, load matches in `onQueryChange`, and pass them as `options`.
+- `filter` (on by default) keeps the options whose label holds what's typed, ignoring case and accents, with names that start with it first. For a large directory, pass `filter={false}`, load matches in `onSearch`, and pass them as `options`.
 - `description` tells people with the same first name apart (a role or a team). Mark someone who can't be mentioned here `disabled`, and say why in their description ("Can't see this project").
 - Use `value` with `onValueChange`, which picking a mention also calls. `onChange` gets the textarea's own events, but a mention put in isn't one.
 - It takes `name` and goes into a form like a Textarea: it submits its text and puts `defaultValue` back on reset.
@@ -68,7 +67,7 @@ Drawn from the `Default` story.
 | Down arrow, Up arrow | Highlight the next or previous person, past those who can't be picked, wrapping at the ends |
 | Enter, Tab | Put the highlighted person in |
 | Escape | Close the list for this mention; the next "@" opens it again. A dialog the field is in stays open |
-| Shift+Tab, a click elsewhere | Leave the field, and the list closes |
+| Shift+Tab | Leave the field, and the list closes (as a click outside it does) |
 
 Every other key types. Nothing is taken while an input method is composing a character.
 
@@ -76,11 +75,12 @@ Every other key types. Nothing is taken while an input method is composing a cha
 
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
+| `id` | string | none | Goes to the native `<textarea>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
 | `options` | `MentionOption[]` | | `{ id, label, description?, avatar?, disabled? }`: who can be mentioned. |
 | `value` | `string` | | The text (controlled). |
 | `defaultValue` | `string` | `''` | The text at first. |
 | `onValueChange` | `(value: string) => void` | | Every change, typing or a mention put in. |
-| `onQueryChange` | `(query: string \| null) => void` | | What's typed after "@" while the list is open, then `null`. |
+| `onSearch` | `(query: string \| null) => void` | | What's typed after "@" while the list is open, then `null`. |
 | `onMention` | `(option: MentionOption) => void` | | A mention was put in. |
 | `trigger` | `string` | `'@'` | The character that starts a mention. |
 | `filter` | `boolean` | `true` | Narrows `options` to what's typed. Off when you filter. |

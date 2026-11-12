@@ -25,7 +25,7 @@
   --dk-bar: var(--border-width-2);
   display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-height: var(--mention-input-option-height, var(--control-height-md));
   padding: var(--spacing-1\.5) var(--mention-input-option-padding-x, var(--spacing-2));
-  border-radius: var(--mention-input-option-radius, var(--dk-mention-input-nest)); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  border-radius: var(--mention-input-option-radius, var(--dk-mention-input-nest, var(--radius-control))); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .dk-mention-input__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-mention-input__option--active { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--mention-input-option-indicator, var(--primary)); }
@@ -38,4 +38,7 @@
   .dk-mention-input__popup { border-color: CanvasText; }
   .dk-mention-input__option--active { outline: var(--border-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--border-width-2)); }
 }
+
+/* The list is an on-screen layer: it doesn't print. */
+@media print { .dk-mention-input__popup { display: none !important; } }
 }

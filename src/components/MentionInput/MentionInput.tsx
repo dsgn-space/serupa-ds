@@ -31,7 +31,7 @@ export interface MentionOption {
 
 export interface MentionInputProps extends Omit<TextareaProps, 'value' | 'defaultValue'> {
   /** The people (or things) that can be mentioned. Pass all of them, or, for a large directory, the ones that match
-      the query onQueryChange last gave (with filter={false}). */
+      the query onSearch last gave (with filter={false}). */
   options: readonly MentionOption[];
   /** The text (controlled). Use with onValueChange, which picking a mention also calls. */
   value?: string | undefined;
@@ -41,13 +41,13 @@ export interface MentionInputProps extends Omit<TextareaProps, 'value' | 'defaul
   onValueChange?: ((value: string) => void) | undefined;
   /** Called with what's typed after the trigger while the list is open, and with null when it closes: for loading
       matches from a server. */
-  onQueryChange?: ((query: string | null) => void) | undefined;
+  onSearch?: ((query: string | null) => void) | undefined;
   /** Called when a mention is put in. */
   onMention?: ((option: MentionOption) => void) | undefined;
   /** The character that starts a mention. Default: "@". */
   trigger?: string | undefined;
   /** Narrows options to those whose label holds the query, ignoring case and accents. Turn it off when the app
-      filters (onQueryChange). Default: true. */
+      filters (onSearch). Default: true. */
   filter?: boolean | undefined;
   /** The most options the list shows. Default: 8. */
   maxOptions?: number | undefined;
@@ -111,7 +111,7 @@ function caretAt(el: HTMLTextAreaElement, index: number): { left: number; top: n
 /** A multi-line text field where typing "@" suggests people to mention, at the caret; picking one writes "@Name" into the text.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, MentionInputProps>('MentionInput', function MentionInput(props, ref) {
-  const { options, value, defaultValue, onValueChange, onQueryChange, onMention, trigger = '@', filter = true, maxOptions = 8, className, style, ...rest } = props;
+  const { options, value, defaultValue, onValueChange, onSearch, onMention, trigger = '@', filter = true, maxOptions = 8, className, style, ...rest } = props;
   const L = useSettings(words).labels, locale = useLocale();
   const field = React.useRef<HTMLTextAreaElement | null>(null);
   const [own, setOwn] = React.useState(defaultValue || '');
@@ -134,8 +134,9 @@ export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, Menti
   const current = pickable.indexOf(active) >= 0 ? active : (pickable[0] ?? -1);
 
   const qText = q ? q.text : null;
-  const onQuery = React.useRef(onQueryChange);
-  useIsoLayoutEffect(() => { onQuery.current = onQueryChange; });
+  const onQuery = React.useRef(onSearch);
+  // every render: keeps the latest onSearch without making the query effect run again.
+  useIsoLayoutEffect(() => { onQuery.current = onSearch; });
   const lastQuery = React.useRef<string | null>(null);
   React.useEffect(() => {
     if (qText === lastQuery.current) return;   // not on mount, while nothing is open
@@ -171,6 +172,7 @@ export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, Menti
     change(next);
     if (onMention) onMention(o);
   };
+  // every render: a pick sets caret.current; the caret goes after the mention once the new text has rendered.
   useIsoLayoutEffect(() => {
     const el = field.current;
     if (caret.current == null || !el) return;
