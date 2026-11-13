@@ -134,7 +134,24 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   // year doesn't open on a month where nothing can be picked (L8E78).
   const home = min && compare(today, min) < 0 ? min : max && compare(today, max) > 0 ? max : today;
   const controlledMonth = props.month !== undefined;
-  const [ownMonth, setOwnMonth] = React.useState(() => startOfMonth(props.defaultMonth || value || home));
+  // The month has the same trouble as today when the clock picks it (no month, defaultMonth or value): on the last
+  // day of a month a UTC server draws October and a visitor in Jakarta is in November, and other weeks in the grid
+  // make React throw the server's calendar away. So hydration starts on the month the server drew, read from its
+  // title, and the visitor's month follows right after, as their today does (GR396).
+  const titleId = domId('dk-cal', React.useId()) + '-title';
+  const drawn = React.useRef<number | null>(null);
+  const [ownMonth, setOwnMonth] = React.useState(() => {
+    const given = props.defaultMonth || value;
+    const server = given ? null : serverMonth(titleId);
+    if (server) drawn.current = server.getTime();
+    return startOfMonth(given || server || home);
+  });
+  const homeMonth = startOfMonth(home).getTime();
+  React.useEffect(() => {
+    const was = drawn.current;
+    drawn.current = null;
+    if (was != null && was !== homeMonth) setOwnMonth((m) => (m.getTime() === was ? new Date(homeMonth) : m));
+  }, [homeMonth]);
   const month = controlledMonth && isValid(props.month) ? startOfMonth(props.month) : ownMonth;
   const [focus, setFocus] = React.useState<Date>(() => (value && sameMonth(value, month) ? value : sameMonth(home, month) ? home : month));
   // A value set from outside (a typed date, a "Today" button) brings its month into view, unless the app controls
@@ -206,7 +223,6 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   for (let w = 0; w < 6; w++) { const row: Date[] = []; for (let i = 0; i < 7; i++) row.push(addDays(first, w * 7 + i)); weeks.push(row); }
   const { short, long, full, month: monthName } = formats(locale);
   const title = formats(locale).title.format(month);
-  const titleId = domId('dk-cal', React.useId()) + '-title';
   const selected = (d: Date) => (props.isDateSelected ? props.isDateSelected(d) : sameDay(d, value));
   // A month arrow that reaches min or max turns disabled under focus (FJ1): focus goes to the other arrow.
   const handover = useFocusHandover();
@@ -218,8 +234,8 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
       <div className="dk-calendar__header">
         <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />
-        <h2 className={cn('dk-calendar__title', props.monthYearPicker && 'dk-visually-hidden')} id={titleId} lang={lang} aria-live="polite">{title}</h2>
-        {props.monthYearPicker ? <MonthYear month={month} min={min} max={max} today={today} names={monthName} lang={lang} monthLabel={sds.labels.month} yearLabel={sds.labels.year} onPick={showMonth} /> : null}
+        <h2 className={cn('dk-calendar__title', props.monthYearPicker && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month).slice(0, 7)} lang={lang} aria-live="polite">{title}</h2>
+        {props.monthYearPicker ? <MonthYear month={month} min={min} max={max} today={hydrated ? today : month} names={monthName} lang={lang} monthLabel={sds.labels.month} yearLabel={sds.labels.year} onPick={showMonth} /> : null}
         <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" hideTitle
           disabled={!!max && compare(addMonths(month, 1), max) > 0} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); showMonth(addMonths(month, 1)); }} ref={nextNav} />
       </div>
@@ -258,6 +274,14 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
    readers. Months and years outside min..max aren't offered; a year whose month is out of range clamps to the nearest one.
    They choose what the grid shows, not a value to send, so form="" keeps them out of any form around the calendar:
    a form reset would put them back on their first options (January, the first year) while the grid stayed put (GR87). */
+// The month a server drew, from the title's data-month, while its markup waits for hydration. Null in a render with
+// no server markup: the title isn't in the page yet.
+function serverMonth(titleId: string): Date | null {
+  const at = typeof document === 'undefined' ? null : document.getElementById(titleId);
+  const m = at ? /^(\d{4})-(\d{2})$/.exec(at.getAttribute('data-month') || '') : null;
+  return m ? new Date(Number(m[1]), Number(m[2]) - 1, 1) : null;
+}
+
 function MonthYear(p: { month: Date; min: Date | null; max: Date | null; today: Date; names: Intl.DateTimeFormat; lang: string | undefined; monthLabel: string; yearLabel: string; onPick: (m: Date) => void }) {
   const y = p.month.getFullYear();
   const from = p.min ? p.min.getFullYear() : Math.min(y, p.today.getFullYear() - 100);
