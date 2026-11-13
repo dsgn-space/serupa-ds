@@ -66,6 +66,9 @@
   background: transparent; color: inherit; font: inherit; text-align: start; white-space: nowrap; cursor: pointer; touch-action: manipulation;
 }
 @media (hover: hover) { .dk-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+/* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
+.dk-calendar__preset { transition: background-color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { .dk-calendar__preset { transition: none; } }
 .dk-calendar__preset:active:not([aria-disabled="true"], [aria-pressed="true"]) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
 .dk-calendar__preset:focus { outline: none; }
 .dk-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }

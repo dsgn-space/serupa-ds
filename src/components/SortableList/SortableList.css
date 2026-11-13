@@ -37,6 +37,9 @@
 .dk-sortable-list__handle .dk-icon { font-size: var(--spacing-5); }
 .dk-sortable-list__item--dragging .dk-sortable-list__handle { cursor: grabbing; color: var(--sortable-list-handle-active, var(--text)); }
 @media (hover: hover) { .dk-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--secondary)); } }
+/* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
+.dk-sortable-list__handle { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { .dk-sortable-list__handle { transition: none; } }
 .dk-sortable-list__handle:active { background: var(--sortable-list-handle-bg-pressed, var(--secondary-hover)); color: var(--sortable-list-handle-active, var(--text)); }
 .dk-sortable-list__handle:focus-visible { outline: var(--focus-ring-width) solid var(--sortable-list-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-sortable-list--sorting { cursor: grabbing; -webkit-user-select: none; user-select: none; }
