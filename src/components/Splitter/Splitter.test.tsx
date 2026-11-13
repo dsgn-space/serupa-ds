@@ -126,6 +126,19 @@ describe('Splitter', () => {
     expect([now('s'), document.activeElement]).toEqual([20, h]);
   });
 
+  test('a drag keeps the handle under the pointer where it was grabbed: taken by its far side, it moves as far as the pointer does, with no jump as the drag starts', async () => {
+    await render(<Two min={10} max={90} />);
+    const h = handle('s'), y = el('s').getBoundingClientRect().top + 50;
+    const at = (type: string, x: number) => h.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 1, button: 0, clientX: x, clientY: y }));
+    const start = h.getBoundingClientRect();
+    const grab = start.right - 1;   // the handle's far side
+    at('pointerdown', grab);
+    at('pointermove', grab + 40);
+    await expect.poll(() => Math.round(h.getBoundingClientRect().left - start.left)).toBe(40);
+    at('pointermove', grab - 30);
+    await expect.poll(() => Math.round(h.getBoundingClientRect().left - start.left)).toBe(-30);
+    at('pointerup', grab - 30);
+  });
   test('a press on the handle without dragging, then a press elsewhere in the Splitter, puts the handle there (2.5.7, FG1); that press doesn\'t reach what\'s under it; the handle again or Escape cancels', async () => {
     const clicks: string[] = [];
     await render(<div onClick={(e) => clicks.push((e.target as HTMLElement).textContent || '')}><Two /></div>);
