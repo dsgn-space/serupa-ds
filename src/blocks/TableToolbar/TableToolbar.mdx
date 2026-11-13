@@ -19,6 +19,8 @@ The controls above a table: a search field, filters, a count of the results, and
 - **A search landmark** named after what the table lists ("Search and filter projects"), so a screen reader can jump straight to it. Each control has a visible label (2.4.6).
 - **The search field** filters as people type. Enter doesn't submit anything.
 - **Filters** are Selects whose first option means "no filter" (`value: ''`), such as "All" or "Anyone".
+- **Filters as chips**, for a data table with many fields: pass a FilterBar as `filterBar`. It sits under the search field, in the same landmark. Each chip says its filter in words ("Status is Active"), its × removes it, and Add filter offers the rest. Leave FilterBar's `resultsCount` out, since `results` already says the count.
+- **A column picker**: pass Table's TableColumnsMenu as `columns`, and draw the table from the same list. It sits beside the count, outside the search landmark, since it changes what the table shows rather than which rows.
 - **The results count**, "3 of 8 projects", is a status region. Screen readers read it out each time it changes, without moving focus (4.1.3). Say the total too, so it's clear the list is filtered.
 - **Clear filters** shows only while a search or a filter is set. Pressing it empties them all and puts focus in the search field, since the button itself goes away (2.4.3).
 - **Bulk actions** come from TableActionBar. With rows selected, it shows "2 selected", your actions and Clear selection. It says the count when it changes, and when the selection is cleared it moves focus to the table's "Select all". That's why the table is this block's child: the bar must come just before it.
