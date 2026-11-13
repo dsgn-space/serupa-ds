@@ -146,12 +146,12 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
   const clear = () => change({ q: '', status: '', owner: '' });
 
   return (
-    <div className="min-h-screen bg-surface text-text">
+    <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <header className="border-b border-border px-4 py-3">
+      <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 outline-none">
+      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Heading level={1}>Projects</Heading>
           <Button href="#new-project">New project</Button>

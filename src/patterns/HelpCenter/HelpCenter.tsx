@@ -88,9 +88,9 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
   };
 
   return (
-    <div className="min-h-screen bg-surface text-text">
+    <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <header className="border-b border-border px-4 py-3">
+      <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-10 px-4 py-8 outline-none">
