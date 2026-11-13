@@ -122,12 +122,12 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
   const total = subtotal - discount + tax;
 
   // A new total is said once it settles, not at first and not for each step of a quantity held down.
-  const said = React.useRef(total);
+  const said = React.useRef(total), totalSaid = l.totalIs(money(total));
   React.useEffect(() => {
     if (total === said.current) return;
-    const t = window.setTimeout(() => { said.current = total; announce(l.totalIs(money(total))); }, 500);
+    const t = window.setTimeout(() => { said.current = total; announce(totalSaid); }, 500);
     return () => window.clearTimeout(t);
-  });
+  }, [total, totalSaid]);
 
   const nameOf = (id: string) => document.getElementById(`${base}-${id}`);
   const remove = (item: CartItem) => {
@@ -160,7 +160,7 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
       {shown.length ? <>
         <ul role="list" className="m-0 flex list-none flex-col p-0">
           {shown.map((item) => (
-            <li key={item.id} className="flex flex-wrap items-center gap-3 border-b border-border py-3 first:pt-0">
+            <li key={item.id} className="flex flex-wrap items-center gap-3 border-b border-border py-3">
               {item.image ? <Image src={item.image} alt="" ratio="square" rounded frameProps={{ className: 'w-16 shrink-0' }} /> : null}
               <div className="flex min-w-0 flex-auto basis-40 flex-col gap-1 wrap-anywhere">
                 {item.href
