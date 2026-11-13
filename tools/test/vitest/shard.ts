@@ -52,10 +52,19 @@ export function shareOut(names: string[], count: number): string[][] {
 }
 
 export class TimedSequencer extends BaseSequencer {
+  private name(f: TestSpecification) { return path.relative(this.ctx.config.root, f.moduleId).split(path.sep).join('/'); }
+
   override async shard(files: TestSpecification[]): Promise<TestSpecification[]> {
     const { index, count } = this.ctx.config.shard!;
-    const name = (f: TestSpecification) => path.relative(this.ctx.config.root, f.moduleId).split(path.sep).join('/');
-    const mine = new Set(shareOut(files.map(name), count)[index - 1]);
-    return files.filter((f) => mine.has(name(f)));
+    const mine = new Set(shareOut(files.map((f) => this.name(f)), count)[index - 1]);
+    return files.filter((f) => mine.has(this.name(f)));
+  }
+
+  // The slow files first, then Vitest's own order. With no cache (CI) Vitest starts the biggest files first, and the
+  // slowest are short: activity.test.tsx (78 lines, 372 s) started two minutes into its shard and ended it two
+  // minutes after every other file.
+  override async sort(files: TestSpecification[]): Promise<TestSpecification[]> {
+    const sorted = await super.sort(files);
+    return sorted.map((f, i) => ({ f, i, s: SECONDS[this.name(f)] ?? 0 })).sort((a, b) => b.s - a.s || a.i - b.i).map((x) => x.f);
   }
 }
