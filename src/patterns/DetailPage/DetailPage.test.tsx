@@ -25,6 +25,28 @@ describe('Patterns/Detail page', () => {
     expect(active().getAttribute('href')).toBe('#main');
   });
 
+  test('loading: an h1, the way back, and one busy placeholder named "Loading project"; then the project replaces it', async () => {
+    const screen = await render(<DetailPage loading />);
+    expect([document.querySelectorAll('h1').length, h1()]).toEqual([1, 'Project']);
+    await expect.element(screen.getByRole('link', { name: 'Back to projects' })).toHaveAttribute('href', '#projects');
+    expect(document.querySelector('main')!.getAttribute('aria-busy')).toBe('true');
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading project']);
+    expect(screen.getByRole('tab').elements()).toHaveLength(0);
+    await screen.rerender(<DetailPage />);
+    expect(h1()).toBe('Website redesign');
+    expect(document.querySelector('main')!.hasAttribute('aria-busy')).toBe(false);
+  });
+
+  test('a failed load says so in place of the page, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<DetailPage loading loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load this project' })).toBeVisible();
+    expect(document.querySelector('main')!.hasAttribute('aria-busy')).toBe(false);
+    expect(screen.getByRole('tab').elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
   test('another project passed in shows its own name and description, not the first one\'s; the same one again keeps an edit', async () => {
     const a = { name: 'Website redesign', description: 'New pages.', owner: 'Ana Lima', created: '2026-09-14', tasks: [] };
     const b = { name: 'Mobile app', description: 'The phone app.', owner: 'Budi Santoso', created: '2026-10-01', tasks: [] };
