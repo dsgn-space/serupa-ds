@@ -46,6 +46,7 @@ Drawn from the `Playground` story.
 - `onRowsChange(rows, { changes })` is called once per edit, paste or Delete over a range. `rows` is the new rows with each changed field set to the text typed or pasted; `changes` lists every cell that changed, `{ rowId, column, value }`. Set `rows` from it, or parse and check `changes` first (a number column gets text). A change you don't take leaves the old text. Without `onRowsChange`, nothing is editable.
 - A pasted block fills from the active cell (or the top-left of the range), as far as the grid goes, skipping read-only columns; one value pasted over a range fills all of it.
 - A long grid: give the frame a height with `containerProps` (`style={{ maxHeight: 480 }}`) and add `stickyHeader`, so the column names stay in view while people edit far down it. The cell the keyboard moves to scrolls in below the header, not under it.
+- In print, the frame shows the whole grid instead of its scrolled window, the header row repeats on every page, and a row isn't split across pages.
 - `size`: `sm` for a dense grid on a wide screen, `md` (the default) beside other medium controls, and `lg` on touch screens or where the grid is the page's main task: its rows are at least 44px tall, a comfortable target for a finger.
 
 ### Loading, empty and failed

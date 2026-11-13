@@ -63,10 +63,71 @@
 .dk-event-calendar__events--all .dk-event-calendar__time, .dk-event-calendar__agenda .dk-event-calendar__time { flex: initial; min-width: var(--spacing-0); }
 .dk-event-calendar__events--all .dk-event-calendar__title, .dk-event-calendar__agenda .dk-event-calendar__title { overflow: visible; white-space: normal; overflow-wrap: anywhere; }
 
+/* The week and day views: the days' hours in a box that scrolls, an hour --event-calendar-hour-height tall, opened
+   at the first event or 8 AM. The weekday names and the all-day events are pinned at the top; the hour scale sits at
+   the start, with the time zone over it. An event takes its time's place and length (half an hour at least); events
+   that overlap share the day's width side by side; one under 45 minutes is a single line. Today has a line at the time now, in the today color. */
+.dk-event-calendar__scroll {
+  --dk-evc-hour: var(--event-calendar-hour-height, var(--spacing-12));
+  --dk-evc-head: var(--spacing-10);
+  --dk-evc-row: calc(var(--spacing-6) + var(--spacing-1));
+  --dk-evc-pin: calc(var(--dk-evc-row) * var(--dk-evc-all-day) + var(--spacing-1));
+  max-height: var(--event-calendar-hours-max-height, var(--container-xl));
+  overflow: auto; overscroll-behavior: contain;
+  border: var(--border-width-1) solid var(--event-calendar-border, var(--border));
+}
+.dk-event-calendar__hours-grid { border-style: hidden; }
+/* A day is never narrower than --spacing-24, in rem, so larger text widens the week and the box scrolls sideways
+   rather than cutting off an event's time. */
+.dk-event-calendar__hours-grid[data-days="7"] { --dk-evc-days: 7; min-width: calc(var(--spacing-16) + var(--spacing-24) * var(--dk-evc-days)); }
+.dk-event-calendar__hours-grid thead th, .dk-event-calendar__zone {
+  position: sticky; top: var(--spacing-0); z-index: var(--z-20); box-sizing: border-box; height: var(--dk-evc-head);
+  background: var(--event-calendar-bg, var(--surface)); border-bottom: var(--border-width-1) solid var(--event-calendar-border, var(--border));
+}
+.dk-event-calendar__zone { width: var(--spacing-16); padding: var(--spacing-1); color: var(--event-calendar-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); vertical-align: bottom; }
+.dk-event-calendar__head-date { font-variant-numeric: tabular-nums; color: var(--event-calendar-text, var(--text)); font-weight: var(--font-semibold); }
+.dk-event-calendar__head--today, .dk-event-calendar__head--today .dk-event-calendar__head-date { color: var(--event-calendar-today, var(--primary)); }
+.dk-event-calendar__column { height: auto; padding: var(--spacing-0); }
+.dk-event-calendar__scale { padding: var(--spacing-0); vertical-align: top; border-inline-end: var(--border-width-1) solid var(--event-calendar-border, var(--border)); }
+/* The all-day row, as tall in every day as the day with the most of them. */
+.dk-event-calendar__pinned {
+  position: sticky; top: var(--dk-evc-head); z-index: var(--z-10); box-sizing: border-box; height: var(--dk-evc-pin); padding: var(--spacing-0\.5) var(--spacing-1);
+  background: var(--event-calendar-bg, var(--surface)); border-bottom: var(--border-width-1) solid var(--event-calendar-border, var(--border));
+}
+.dk-event-calendar__hours {
+  position: relative; height: calc(var(--dk-evc-hour) * var(--dk-evc-hours));
+  --dk-evc-hours: 24;
+  background-image: linear-gradient(to bottom, var(--event-calendar-border, var(--border)) var(--border-width-1), transparent var(--border-width-1));
+  background-size: var(--sizing-full) var(--dk-evc-hour);
+}
+.dk-event-calendar__scale .dk-event-calendar__hours { background-image: none; }
+.dk-event-calendar__hours > [data-hour] {
+  position: absolute; inset-inline: var(--spacing-0) var(--spacing-2); top: calc(var(--dk-evc-hour) * var(--dk-evc-at)); translate: var(--spacing-0) calc(var(--spacing-0) - var(--sizing-1-2));
+  color: var(--event-calendar-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.dk-event-calendar__timed { position: absolute; inset: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.dk-event-calendar__timed > li {
+  --dk-evc-x: calc(var(--dk-evc-lane) / var(--dk-evc-lanes)); --dk-evc-w: calc(1 / var(--dk-evc-lanes));
+  position: absolute; box-sizing: border-box; padding: var(--border-width-1) var(--spacing-0\.5);
+  top: calc(var(--dk-evc-hour) * var(--dk-evc-at)); height: calc(var(--dk-evc-hour) * var(--dk-evc-for));
+  inset-inline-start: calc(var(--sizing-full) * var(--dk-evc-x)); width: calc(var(--sizing-full) * var(--dk-evc-w));
+}
+/* In the hours an event fills its time: the time over the title, both wrapping, cut at its bottom. */
+.dk-event-calendar__timed .dk-event-calendar__event { height: var(--sizing-full); flex-direction: column; align-items: stretch; gap: var(--spacing-0); padding: var(--spacing-0\.5) var(--spacing-1); overflow: hidden; }
+.dk-event-calendar__timed .dk-event-calendar__title { white-space: normal; hyphens: auto; }
+.dk-event-calendar__timed .dk-event-calendar__time { white-space: normal; }
+/* Under 45 minutes there's room for one line: the time and the title side by side, the title cut short. */
+.dk-event-calendar__timed > li[data-short] .dk-event-calendar__event { flex-direction: row; align-items: center; gap: var(--spacing-1); padding-block: var(--spacing-0); }
+.dk-event-calendar__timed > li[data-short] .dk-event-calendar__title { white-space: nowrap; overflow-wrap: normal; }
+.dk-event-calendar__now {
+  position: absolute; inset-inline: var(--spacing-0); z-index: var(--z-10); top: calc(var(--dk-evc-hour) * var(--dk-evc-at));
+  border-top: var(--border-width-2) solid var(--event-calendar-now, var(--primary)); pointer-events: none;
+}
+
 .dk-event-calendar__agenda { display: flex; flex-direction: column; gap: var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-event-calendar__agenda-date { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-semibold); }
 .dk-event-calendar__agenda-day--today .dk-event-calendar__agenda-date { color: var(--event-calendar-today, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }
 .dk-event-calendar__agenda .dk-event-calendar__event { padding-block: var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); flex-wrap: wrap; }
 .dk-event-calendar__empty { margin: var(--spacing-0); color: var(--event-calendar-muted, var(--text-muted)); }
-@media (forced-colors: active) { .dk-event-calendar__event { border: var(--border-width-1) solid ButtonText; border-inline-start-width: var(--border-width-2); } .dk-event-calendar__day--today .dk-event-calendar__date { text-decoration: underline; } }
+@media (forced-colors: active) { .dk-event-calendar__now { border-top-color: Highlight; } .dk-event-calendar__event { border: var(--border-width-1) solid ButtonText; border-inline-start-width: var(--border-width-2); } .dk-event-calendar__day--today .dk-event-calendar__date { text-decoration: underline; } }
 }

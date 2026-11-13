@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { act } from 'react';
+import { renderToString } from 'react-dom/server';
+import { hydrateRoot } from 'react-dom/client';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
@@ -33,6 +36,21 @@ describe('Blocks/Product grid', () => {
     expect(ids.filter((x, i) => ids.indexOf(x) !== i)).toEqual([]);
     const cards = [...document.querySelectorAll<HTMLElement>('li[aria-labelledby]')];
     expect(cards.map((c) => c.contains(document.getElementById(c.getAttribute('aria-labelledby')!)))).toEqual([true, true, true, true]);
+  });
+
+  test('server-rendered, a card hydrates without a mismatch: the rating, a <div>, isn\'t inside a <p>', async () => {
+    const html = renderToString(grid());
+    const host = document.createElement('div');
+    host.innerHTML = html;   // as the browser parses it: a <div> ends an open <p>
+    document.body.append(host);
+    const errors: unknown[] = [];
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    await act(async () => { root = hydrateRoot(host, grid(), { onRecoverableError: (e) => errors.push(e) }); });
+    error.mockRestore();
+    expect([errors, host.querySelectorAll('p > div, p div').length]).toEqual([[], 0]);
+    act(() => root!.unmount());
+    host.remove();
   });
 
   test('a list of cards, each named by its product, whose name is a heading holding the one link to its page', async () => {

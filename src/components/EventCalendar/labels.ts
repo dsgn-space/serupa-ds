@@ -3,10 +3,17 @@
 export interface EventCalendarLabels {
   /** EventCalendar: the button that shows the month with today in it. */
   goToToday: string;
-  /** EventCalendar: the view switch's name and its two options. */
+  /** EventCalendar: the view switch's name and its options. */
   calendarView: string;
   monthView: string;
+  weekView: string;
+  dayView: string;
   agendaView: string;
+  /** EventCalendar: Previous and Next in the week and day views (the month view says "Previous month"). */
+  previousWeek: string;
+  nextWeek: string;
+  previousDay: string;
+  nextDay: string;
   /** EventCalendar: how many events a day holds, read with the day ("Tuesday, March 4, 2025, 3 events"). */
   eventCount: (count: number, formatted: string) => string;
   /** EventCalendar: the button for the events a day has no room for ("+2 more"). */
@@ -24,7 +31,13 @@ export const en: EventCalendarLabels = {
   goToToday: 'Today',
   calendarView: 'View',
   monthView: 'Month',
+  weekView: 'Week',
+  dayView: 'Day',
   agendaView: 'Agenda',
+  previousWeek: 'Previous week',
+  nextWeek: 'Next week',
+  previousDay: 'Previous day',
+  nextDay: 'Next day',
   eventCount: (count, formatted = String(count)) => (count === 0 ? 'No events' : formatted + (count === 1 ? ' event' : ' events')),
   moreEvents: (count, formatted = String(count)) => '+' + formatted + ' more',
   allDay: 'All day',
@@ -36,7 +49,13 @@ export const id: EventCalendarLabels = {
   goToToday: 'Hari ini',
   calendarView: 'Tampilan',
   monthView: 'Bulan',
+  weekView: 'Minggu',
+  dayView: 'Hari',
   agendaView: 'Agenda',
+  previousWeek: 'Minggu sebelumnya',
+  nextWeek: 'Minggu berikutnya',
+  previousDay: 'Hari sebelumnya',
+  nextDay: 'Hari berikutnya',
   eventCount: (count, formatted = String(count)) => (count === 0 ? 'Tidak ada acara' : formatted + ' acara'),
   moreEvents: (count, formatted = String(count)) => '+' + formatted + ' lagi',
   allDay: 'Sepanjang hari',

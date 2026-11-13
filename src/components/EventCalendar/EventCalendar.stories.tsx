@@ -18,7 +18,7 @@ const meta = {
   title: 'Components/Data display/EventCalendar',
   component: EventCalendar,
   args: { events: EVENTS, defaultMonth: new Date(2025, 2, 1), locale: 'en-US', weekStartsOn: 0, maxPerDay: 3 },
-  argTypes: { defaultView: { control: 'inline-radio', options: ['month', 'agenda'] } },
+  argTypes: { defaultView: { control: 'inline-radio', options: ['month', 'week', 'day', 'agenda'] } },
 } satisfies Meta<typeof EventCalendar>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -26,6 +26,10 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 export const Month: Story = {};
 export const Agenda: Story = { args: { defaultView: 'agenda' } };
+// The week of the offsite: all-day events on top, and two that overlap side by side.
+const WEEK: CalendarEvent[] = [...EVENTS, { id: 'call', title: 'Partner call', start: '2025-03-18T15:30', end: '2025-03-18T16:30', tone: 'success' }];
+export const Week: Story = { args: { events: WEEK, defaultMonth: new Date(2025, 2, 18), defaultView: 'week' } };
+export const Day: Story = { args: { events: WEEK, defaultMonth: new Date(2025, 2, 18), defaultView: 'day' } };
 export const Empty: Story = { args: { events: [] , defaultView: 'agenda' } };
 export const Indonesian: Story = { args: { locale: 'id-ID', weekStartsOn: 1 } };
 // The stress story (G14): a long title, a long word, and more events than a day holds.

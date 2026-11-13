@@ -1,6 +1,6 @@
 # EventCalendar
 
-A month of events: meetings, deadlines, bookings. People see what's on each day, move through the month by keyboard, and open an event. On a phone, or by choice, the same month shows as an agenda: a list of the days that have events.
+A month of events: meetings, deadlines, bookings. People see what's on each day, move through the month by keyboard, and open an event. A week or a day shows the hours, with each event at its time. On a phone, or by choice, the month shows as an agenda: a list of the days that have events.
 
 **Also called:** scheduler, agenda.
 
@@ -30,8 +30,8 @@ import { EventCalendar } from "serupa-ds";
 
 Drawn from the `Month` story.
 
-1. **Toolbar** (`.dk-event-calendar__toolbar`): Today, Previous and Next, the month's title and the Month and Agenda switch.
-2. **Title** (`.dk-event-calendar__heading`): the month shown, said when it changes.
+1. **Toolbar** (`.dk-event-calendar__toolbar`): Today, Previous and Next, the title and the Month, Week, Day and Agenda switch.
+2. **Title** (`.dk-event-calendar__heading`): the month, week or day shown, said when it changes.
 3. **Grid** (`.dk-event-calendar__grid`): the weeks of the month, with the weekday names above.
 4. **Day** (`.dk-event-calendar__day`): one date and its events; today's date is marked by colour and weight, and in the agenda by colour and an underline, so it never rests on colour alone.
 5. **Event** (`.dk-event-calendar__event`): a button with the event's time and title, and a bar of its tone at its start.
@@ -45,7 +45,10 @@ Drawn from the `Month` story.
 - `tone` colors an event (`primary`, `info`, `success`, `warning`, `danger`). Say what it means in the title too: color alone doesn't reach everyone.
 - Open details from `onEventClick`, in a [Dialog](../Dialog/README.md) or [Drawer](../Drawer/README.md), and give focus back to the event when it closes.
 - `maxPerDay` (default 3) is the most a day shows. Past it, the last place shows "+N more", which opens all of the day's events in a Popover.
-- Week and day views, a time grid, and creating or moving events by drag come in later steps.
+- The week and day views show the hours in a box that scrolls, opened at 8 AM or the first event if it's earlier. Each event sits at its time, as tall as it lasts (half an hour at least, so it's still a target with its title showing). Events that overlap share the day's width side by side. All-day events are in a row on top, which stays with the weekday names as the hours scroll. Today has a line at the time now, and the time zone shows over the hour scale.
+- Previous and Next move a week or a day in those views. `onMonthChange` still gets the month whenever the shown week or day moves into another one, so pass the events of the weeks that cross into the next month too.
+- Below 640px wide, the week shows as the agenda, as the month does: seven columns don't fit a phone. The day view stays. A day in the week is never narrower than 96px at the default text size and grows with larger text, so with large text the week scrolls sideways in its box rather than cutting off an event's time.
+- Creating events by selecting a time, and moving or resizing them by drag, come in a later step.
 
 ### Do and don't
 
@@ -54,8 +57,8 @@ Drawn from the `Month` story.
 
 ## Accessibility
 
-- **Role and name:** the month is a `role="grid"` named by its title ("March 2025"). Each day is a cell that starts with its full date and how many events it has ("Tuesday, March 4, 2025, 1 event"), as hidden text so the name never hides the events. Today has `aria-current="date"`. Each event is a button named by what it shows (its time and title), then its day, its whole time and "Repeats" ("2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM").
-- **Keyboard:** one Tab stop on the days. Arrow keys move a day or a week, Home and End go to the week's start and end, and PageUp and PageDown go a month. Moving past the month shows the next one. Tab from a day goes to its events and "+N more", and Escape on an event goes back to its day. Previous, Next and Today are buttons before the grid.
+- **Role and name:** the month is a `role="grid"` named by its title ("March 2025"). The week and day views are a grid with a single row, named by their title ("March 2 – 8, 2025"). Each day in that row is a cell, so the names, keys and Tab stop work as in the month. The hour scale, the time zone and the line at the time now are hidden from screen readers, since each event already says its time. Each day is a cell that starts with its full date and how many events it has ("Tuesday, March 4, 2025, 1 event"), as hidden text so the name never hides the events. Today has `aria-current="date"`. Each event is a button named by what it shows (its time and title), then its day, its whole time and "Repeats" ("2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM").
+- **Keyboard:** one Tab stop on the days. Arrow keys move a day or a week, Home and End go to the week's start and end, and PageUp and PageDown go a month (a week or a day in those views). Moving past the month shows the next one. Tab from a day goes to its events and "+N more", and Escape on an event goes back to its day. Previous, Next and Today are buttons before the grid.
 - **Changes are said:** the month's title is a polite live region, so Previous, Next, Today and paging say the new month.
 - **Reading order:** the agenda is an ordered list of days, each with a heading one level below the title, so a screen reader can jump by day.
 - **Contrast:** dates, weekday names and event text read 4.5:1 in all six themes (`EventCalendar.test.tsx`).
@@ -68,7 +71,7 @@ Drawn from the `Month` story.
 | Tab | Into the grid at the focused day (one stop), then to that day's events and "+N more" |
 | Arrow keys | A day left or right, a week up or down; past the month shows the next one |
 | Home, End | The start or end of the week |
-| PageUp, PageDown | The same day a month before or after |
+| PageUp, PageDown | The same day a month before or after; in the week and day views, a week or a day |
 | Enter, Space (on an event) | Opens it (`onEventClick`) |
 | Escape (on an event) | Back to its day |
 
@@ -79,10 +82,10 @@ Drawn from the `Month` story.
 | `events` | `CalendarEvent[]` | required | `{ id, title, start, end?, allDay?, repeating?, tone? }`. |
 | `onEventClick` | `(event) => void` | | An event is clicked, or pressed with Enter or Space. |
 | `month` | `Date` | | The month shown (controlled), any day in it. Use with `onMonthChange`. |
-| `defaultMonth` | `Date` | today's | The month shown at first. |
+| `defaultMonth` | `Date` | today's | The month shown at first, any day in it. The week and day views open on that day. |
 | `onMonthChange` | `(month: Date) => void` | | The month's first day, when Previous, Next, Today or the keyboard changes it. |
-| `view` | `'month' \| 'agenda'` | | The view (controlled). Use with `onViewChange`. |
-| `defaultView` | `'month' \| 'agenda'` | `'month'` | Below 640px wide, the month shows as the agenda. |
+| `view` | `'month' \| 'week' \| 'day' \| 'agenda'` | | The view (controlled). Use with `onViewChange`. |
+| `defaultView` | `'month' \| 'week' \| 'day' \| 'agenda'` | `'month'` | Below 640px wide, the month and the week show as the agenda. |
 | `onViewChange` | `(view) => void` | | The view switch changed the view. |
 | `maxPerDay` | `number` | `3` | The most a day shows before "+N more". |
 | `locale` | `string` | provider's | Month, weekday and time names, and the first day of the week. |
@@ -119,6 +122,7 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-danger-bg` | `danger-subtle` | The fill of a tone="danger" event (its text stays event-text, 4.5:1 on it). |
 | `--event-calendar-more-bg-hover` | `surface-hover` | "+N more" under the pointer. |
 | `--event-calendar-more-bg-pressed` | `pressed` | The "+N more" button's background while it's held down, one step past hover. |
+| `--event-calendar-now` | `primary` | The line across today at the time now, in the week and day views. |
 
 **Radius**
 
@@ -131,4 +135,6 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | Token | Default | Use |
 | --- | --- | --- |
 | `--event-calendar-day-height` | `spacing-24` | A day's height in the month (96px): room for the date and three events. |
+| `--event-calendar-hour-height` | `spacing-12` | An hour's height in the week and day views (48px): half an hour holds an event's time and title. |
+| `--event-calendar-hours-max-height` | `container-xl` | How tall the week and day views' hours get before they scroll (576px, twelve hours). |
 <!-- token-table:end -->
