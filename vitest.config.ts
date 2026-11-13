@@ -11,6 +11,7 @@ import { playwright } from '@vitest/browser-playwright';
 import { buildUtilities } from './tools/utilities/build.mjs';
 import { buildRegistry } from './tools/build/registry.mjs';
 import { TOUCH } from './tools/test/vitest/touch.ts';
+import { TimedSequencer } from './tools/test/vitest/shard.ts';
 import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, writeAriaBaseline } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
@@ -47,6 +48,9 @@ export default defineConfig({
     },
   }],
   test: {
+    // --shard splits by each file's time (tools/test/vitest/shard.ts), not by the hash of its path. Vitest reads the
+    // sequencer from here only, for every project.
+    sequence: { sequencer: TimedSequencer },
     projects: [{
       extends: true,
       test: {

@@ -1,0 +1,29 @@
+# Default
+- paragraph:
+  - text: Offer ends in
+  - 'timer "Offer ends in: 4 minutes, 59 seconds"': 4:59
+
+# Ended
+- paragraph:
+  - 'timer "Offer ends in: The offer has ended"': The offer has ended
+
+# Hours
+- paragraph:
+  - text: Offer ends in
+  - 'timer "Offer ends in: 1 hour, 4 minutes, 59 seconds"': 1:04:59
+
+# LongText
+- paragraph:
+  - text: Registration closes in
+  - 'timer "Registration closes in: 2 days, 3 hours, 4 minutes, 5 seconds"': 2 days, 3 hours, 4 minutes, 5 seconds
+
+# Playground
+- paragraph:
+  - text: Offer ends in
+  - 'timer "Offer ends in: 4 minutes, 59 seconds"': 4:59
+
+# Words
+- paragraph:
+  - text: Offer ends in
+  - 'timer "Offer ends in: 4 minutes, 59 seconds"': 4 minutes, 59 seconds
+

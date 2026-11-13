@@ -94,7 +94,8 @@ const steps = [
   // SERUPA_COVERAGE (CI), on a narrowed run too: the coverage job then checks that every function the pull request
   // adds runs (tools/coverage-new-functions.mjs), and leaves the floors for all of src/ to full runs (.vitest/narrowed).
   // With SERUPA_ONLY, the tests that go through every story (STORY_WIDE) run too, on those components' stories.
-  // SERUPA_SHARD=2/3 with --group components: every third test file (CI runs the shards side by side). A shard with
+  // SERUPA_SHARD=2/3 with --group components: a third of the test files by time (tools/test/vitest/shard.ts; CI runs
+  // the shards side by side). A shard with
   // coverage also writes Vitest's blob report (.vitest/blob/ in Vitest 5), which CI's coverage job merges into one coverage
   // report and checks against the floors. A narrowed run may have fewer files than shards: a shard left with none passes
   // (without --passWithNoTests, Vitest stops on --shard=3/3 over one file).
@@ -123,7 +124,8 @@ const steps = [
   ...(update.length ? [['Public API', 'api.mjs', ...update], ['Utility classes', 'utilities.mjs', ...update]].map(node('checks')) : []),
   // Every other script in tools/test/ is a check (package, tokens, icons, guides, …), run by Vitest's checks project
   // (vitest.config.ts): a new one needs no entry here.
-  // SERUPA_SHARD=2/3 with --group checks: every third file (CI runs the shards in parallel).
+  // SERUPA_SHARD=2/3 with --group checks: a third of the checks by time (tools/test/vitest/shard.ts; CI runs the
+  // shards in parallel).
   vitest('Checks (Vitest)', 'checks', 'checks', ...(process.env.SERUPA_SHARD && arg('--group') === 'checks' ? [`--shard=${process.env.SERUPA_SHARD}`] : [])),
   ...Object.entries(GROUPS).flatMap(([g, list]) => list.map(node(g))),
 ];

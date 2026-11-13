@@ -104,7 +104,9 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
   const hydrated = React.useSyncExternalStore(never, yes, no);
   const now = new Date(), current = now.getFullYear() * PER[unit] + Math.floor(now.getMonth() / (12 / PER[unit]));
   const [open, setOpenState] = React.useState(() => !!props.defaultOpen && !props.disabled && !props.readOnly);
-  const [focus, setFocus] = React.useState<number>(() => clamp(value ?? current));
+  // The period in focus, kept within min..max when they change while the popup is open.
+  const [held, setFocus] = React.useState<number>(() => clamp(value ?? current));
+  const focus = clamp(held);
   const page = pageOf(focus, unit), count = pageSize(unit), cols = COLS[unit];
 
   const button = React.useRef<HTMLButtonElement | null>(null);
