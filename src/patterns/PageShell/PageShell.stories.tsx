@@ -27,8 +27,8 @@ const rows = ['Website redesign', 'Mobile app', 'Billing migration', 'Design tok
    Navbar's "Main navigation". main takes the SkipLink's focus, and the Navbar's scroll-padding keeps
    it below the bar. The signed-in person follows Storybook's Content menu (.storybook/content.ts). */
 const Me = () => <Avatar name={useName('Ada Lovelace')} size="sm" />;
-export const Default: Story = {
-  render: () => (
+function Shell({ collapsed = false }: { collapsed?: boolean }) {
+  return (
     <div className="min-h-screen bg-surface text-text">
       {/* The Sidebar stays beside main and below the bar while the page scrolls, and gives its room to main on a phone,
           where the Navbar's menu has the same links under "Workspace". */}
@@ -49,7 +49,7 @@ export const Default: Story = {
       </Navbar>
       <div className="flex">
         <div className="page-shell__side">
-          <Sidebar aria-label="Workspace">
+          <Sidebar aria-label="Workspace" collapsed={collapsed}>
             <SidebarSection>
               <SidebarItem href="#home" icon="home" label="Home" active />
               <SidebarItem href="#workspace-projects" icon="folder" label="Projects" />
@@ -70,5 +70,11 @@ export const Default: Story = {
       </div>
       <footer className="border-t border-border p-6 text-sm text-text-muted">© 2026 Acme</footer>
     </div>
-  ),
-};
+  );
+}
+
+export const Default: Story = { render: () => <Shell /> };
+
+/** The Sidebar collapsed to an icon rail, for more room in main: each item keeps its name, read out and shown as a
+    tooltip, so the rail is as usable as the full Sidebar. */
+export const CollapsedSidebar: Story = { render: () => <Shell collapsed /> };

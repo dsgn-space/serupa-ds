@@ -28,6 +28,15 @@ describe('VirtualList', () => {
     expect(css(e).overflowY).toBe('auto');
   });
 
+  test('with no rows it leaves the Tab order: an empty box is no stop; a tabIndex given still wins', async () => {
+    const screen = await render(<VirtualList id="v" aria-label="Rows" count={0} renderItem={item} />);
+    expect(el('v').hasAttribute('tabindex')).toBe(false);
+    await screen.rerender(<VirtualList id="v" aria-label="Rows" count={2} renderItem={item} />);
+    expect(el('v').tabIndex).toBe(0);
+    await screen.rerender(<VirtualList id="v" aria-label="Rows" count={0} tabIndex={0} renderItem={item} />);
+    expect(el('v').tabIndex).toBe(0);
+  });
+
   test('of 10,000 rows it draws only those in view and a few more; each says where it is in the whole list', async () => {
     await render(<VirtualList id="v" aria-label="Rows" count={10000} renderItem={item} />);
     await expect.poll(() => rows('v').length).toBeLessThan(30);

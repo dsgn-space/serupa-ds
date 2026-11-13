@@ -54,3 +54,6 @@ export const Loading: Story = { render: () => <Page><ActivityFeed events={[]} ha
 
 /** Nothing has happened yet. */
 export const Empty: Story = { render: () => <Page><ActivityFeed events={[]} hasMore={false} onLoadMore={() => {}} emptyText="Nothing has happened here yet. Changes and comments will show up here." /></Page> };
+
+/** The first load failed: under the heading, what happened and Try again, said once. */
+export const LoadFailed: Story = { render: () => <Page><ActivityFeed events={[]} hasMore={false} onLoadMore={() => {}} loadFailed onRetry={() => {}} /></Page> };

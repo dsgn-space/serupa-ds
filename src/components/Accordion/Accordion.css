@@ -26,7 +26,7 @@
 .dk-accordion__trigger:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-accordion__trigger[aria-disabled="true"] { cursor: default; }
 /* A word longer than the line (a German compound, a URL) breaks instead of pushing the page sideways (WCAG 1.4.10). */
-.dk-accordion__title { min-width: var(--spacing-0); overflow-wrap: anywhere; }
+.dk-accordion__title { text-wrap: balance; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-accordion__icon.dk-icon { flex-shrink: 0; color: var(--accordion-icon-color, var(--text-muted)); font-size: var(--accordion-icon-size, var(--spacing-5)); transition: rotate var(--accordion-duration, var(--motion-change-md)) var(--ease-move); }
 .dk-accordion__item--open > .dk-accordion__heading .dk-accordion__icon { rotate: var(--dk-accordion-turn); }
 /* Motion (EH2): the content unfolds on the compositor while Accordion.tsx grows or shrinks the panel's height over

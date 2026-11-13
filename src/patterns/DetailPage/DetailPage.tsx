@@ -13,7 +13,9 @@ import { TypeToConfirm } from '../../components/TypeToConfirm/TypeToConfirm';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { Alert } from '../../components/Alert/Alert';
 import { useLocale } from '../../internal/provider';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Detail page: one thing (a project) with where it sits, its name and details editable in place, its parts in tabs,
    small removals that can be undone, and a delete that can't, behind typing its name. For an app to copy. What it
@@ -43,6 +45,12 @@ export interface DetailPageProps {
   onDelete?: (() => unknown) | undefined;
   /** Starts with the delete dialog open, as after a delete that failed: it says so, and the delete can be tried again. */
   deleteFailed?: boolean | undefined;
+  /** The project is on its way: a busy placeholder for its details, named once ("Loading project"), in place of the page. Default: false. */
+  loading?: boolean | undefined;
+  /** The project failed to load: a "Couldn’t load this project" message with Try again, which calls onRetry, in place of the page. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demo: Project = {
@@ -64,9 +72,17 @@ function day(iso: string, locale: string): string {
 const english = /* @__PURE__ */ new Intl.PluralRules('en');
 
 /** The detail page: a skip link, a header, then main with the breadcrumb, the h1, the tabs and the danger zone. */
-export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed }: DetailPageProps) {
+export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed, loading = false, loadFailed = false, onRetry }: DetailPageProps) {
   const [name, setName] = React.useState(project.name);
   const [description, setDescription] = React.useState(project.description);
+  // A new name or description from the app (another project opened, or the saved one coming back) replaces the one
+  // shown; one the app passes again unchanged keeps an edit it hasn't stored yet.
+  const [given, setGiven] = React.useState({ name: project.name, description: project.description });
+  if (given.name !== project.name || given.description !== project.description) {
+    setGiven({ name: project.name, description: project.description });
+    if (given.name !== project.name) setName(project.name);
+    if (given.description !== project.description) setDescription(project.description);
+  }
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
   const [asking, setAsking] = React.useState(!!deleteFailed);
   const [deleted, setDeleted] = React.useState(false);
@@ -121,8 +137,16 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
-        {deleted ? (
+      <main id="main" aria-busy={loading && !loadFailed ? true : undefined} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+        {loadFailed || loading ? (
+          // The name isn't known yet, so the h1 says only what the page is; the way back stays.
+          <>
+            <Link href="#projects">Back to projects</Link>
+            <Heading level={1} className="sr-only">Project</Heading>
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load this project" onRetry={() => onRetry?.()} headingLevel={2} />
+              : <Card><Loader variant="skeleton" shape="text" lines={4} label="Loading project" /></Card>}
+          </>
+        ) : deleted ? (
           <div className="flex flex-col gap-3">
             <Heading level={1} ref={goneHeading} tabIndex={-1} className="outline-none">{name} was deleted</Heading>
             <p className="m-0 text-text-muted">Its tasks and files are gone too.</p>

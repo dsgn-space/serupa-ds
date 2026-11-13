@@ -3,6 +3,7 @@ import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
+import { Loader } from '../../components/Loader/Loader';
 import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
@@ -37,6 +38,9 @@ export interface SettingsFormProps {
   onSave?: (<K extends keyof SettingsValues>(section: K, values: SettingsValues[K]) => void | Promise<unknown>) | undefined;
   /** "Back to the dashboard" was followed, after any unsaved changes were discarded: go there. */
   onLeave?: (() => void) | undefined;
+  /** The saved settings are on their way: each section shows placeholder fields, and the form starts from `initial` once
+      they're in. Default: false. */
+  loading?: boolean | undefined;
 }
 
 const demo: SettingsValues = {
@@ -87,7 +91,34 @@ function useSection<K extends keyof SettingsValues>(key: K, saved0: SettingsValu
 }
 
 /** The settings page: a skip link, a header with the way back, then main with the h1 and a section per group. */
-export function SettingsForm({ initial = demo, onSave, onLeave }: SettingsFormProps) {
+export function SettingsForm({ loading = false, ...props }: SettingsFormProps) {
+  // The form takes `initial` when it mounts, so it mounts once the settings are in, not before.
+  return loading ? <Loading /> : <Loaded {...props} />;
+}
+
+// While the settings load: the same page, with a busy placeholder per section, named once ("Loading settings").
+function Loading() {
+  return (
+    <div className="min-h-screen bg-surface text-text">
+      <SkipLink />
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+        <p className="m-0 text-base font-semibold">Acme</p>
+        <Link href="#dashboard">Back to the dashboard</Link>
+      </header>
+      <main id="main" aria-busy="true" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-6 outline-none">
+        <Heading level={1}>Settings</Heading>
+        {['Profile', 'Notifications'].map((t, i) => (
+          <section key={t} aria-labelledby={'settings-loading-' + i} className="flex flex-col gap-3">
+            <Heading level={2} size="lg" id={'settings-loading-' + i}>{t}</Heading>
+            <Loader variant="skeleton" shape="text" lines={i === 0 ? 6 : 3} label={i === 0 ? 'Loading settings' : ''} />
+          </section>
+        ))}
+      </main>
+    </div>
+  );
+}
+
+function Loaded({ initial = demo, onSave, onLeave }: Omit<SettingsFormProps, 'loading'>) {
   const profile = useSection('profile', initial.profile, profileProblems, onSave);
   const notes = useSection('notifications', initial.notifications, () => [], onSave);
   const { confirm, dialog } = useUnsavedChanges(profile.dirty || notes.dirty);

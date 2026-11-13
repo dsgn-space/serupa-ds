@@ -37,7 +37,7 @@
 .dk-tour:focus { outline: none; }
 .dk-tour:focus-visible { outline: var(--focus-ring-width) solid var(--tour-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-tour__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-2); }
-.dk-tour__title { margin: var(--spacing-0); min-width: var(--spacing-0); overflow-wrap: anywhere; font-size: var(--tour-title-size, var(--text-base)); line-height: var(--text-base--line-height); font-weight: var(--tour-title-weight, var(--font-semibold)); }
+.dk-tour__title { text-wrap: balance; margin: var(--spacing-0); min-width: var(--spacing-0); overflow-wrap: anywhere; font-size: var(--tour-title-size, var(--text-base)); line-height: var(--text-base--line-height); font-weight: var(--tour-title-weight, var(--font-semibold)); }
 .dk-tour__close { flex-shrink: 0; margin-block-start: calc(var(--spacing-0) - var(--spacing-1)); margin-inline-end: calc(var(--spacing-0) - var(--spacing-2)); }
 .dk-tour__text { overflow-wrap: anywhere; }
 .dk-tour__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-2); }

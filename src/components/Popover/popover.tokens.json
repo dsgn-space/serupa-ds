@@ -2,6 +2,16 @@
   "popover": {
     "$description": "Popover's component tokens. Each one is an optional override: set the CSS variable (--popover-<name>) on the page, a container or one popover, and everything inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
     "color": {
+      "row-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-hover-raised}",
+        "$description": "A List or InlineEdit row in the popover, hovered or selected: a step up from its surface in dark",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--popover-row-bg-hover"
+          }
+        }
+      },
       "bg": {
         "$type": "color",
         "$value": "{color.surface-overlay}",

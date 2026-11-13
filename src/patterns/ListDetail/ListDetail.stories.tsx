@@ -22,3 +22,6 @@ export const Empty: Story = { args: { messages: [] } };
 
 /** While the messages load: the list's pane with placeholder rows, named once for screen readers. */
 export const Loading: Story = { args: { messages: [], loading: true } };
+
+/** The messages failed to load: what happened and Try again, said once. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };

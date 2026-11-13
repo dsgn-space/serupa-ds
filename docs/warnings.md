@@ -177,3 +177,7 @@ The element given to a Popover, Menu, ContextMenu or Tooltip as its trigger does
 ## utc-date
 
 A date component got a `Date` at UTC midnight, which is the day before in a time zone behind UTC. A `Date` made from `"yyyy-mm-dd"` is UTC. Pass the `"yyyy-mm-dd"` string itself instead.
+
+## variant-default
+
+Checkbox, CheckboxGroup, Radio and RadioGroup's `variant` value `'default'` is deprecated, and removed in 15.0.0. It still draws the plain look. Rename it to `'plain'`, the name List, Accordion and VirtualList give the same look.

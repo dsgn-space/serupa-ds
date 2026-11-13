@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { StatsRow, type Stat } from './StatsRow';
 
 const STATS: Stat[] = [
@@ -70,5 +70,14 @@ describe('Blocks/Stats row', () => {
     await render(<StatsRow title="This month" stats={STATS} />);
     const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('nav'));
     expect(bare.map((l) => l.getAttribute('role'))).toEqual(['list']);
+  });
+
+  test('a failed load: "Couldn’t load This month" in its place, said once, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<StatsRow title="This month" stats={[]} loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load This month' })).toBeVisible();
+    expect(screen.getByRole('list').elements()).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });

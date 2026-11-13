@@ -27,6 +27,8 @@ One thing, here a project: where it sits, its name and details, its parts in tab
 - **A delete that fails says so.** The dialog stays open with an alert, "Couldn’t delete Website redesign. Try again.", and focus stays on its button, so the person knows the delete didn't go through and can try again (3.3.1, 4.1.3). Never leave a rejected promise unhandled: the person can't tell whether the record is gone.
 - **The dialog counts what's still there**, "its 1 task and files", with the word that fits the number, so it says exactly what will be lost (3.3.4). Undo toasts still open when the delete goes through close without removing anything more.
 - **Dates in the reader's locale.** Created reads "14 September 2026" in en-GB, from `Intl.DateTimeFormat` with the provider's locale, and keeps the ISO date in `<time dateTime>`.
+- **While the project loads**, set `loading`: the page keeps an h1 and the way back to the projects, with one placeholder for the details named "Loading project", and main is busy until it arrives (4.1.3).
+- **A load that fails says so.** Set `loadFailed` and pass `onRetry`: the page says "Couldn’t load this project" with Try again, in place of the details (3.3.1).
 - **A skip link** first, into main, as on every page.
 
 A delete that fails, as `deleteFailed` starts it:

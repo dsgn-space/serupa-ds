@@ -22,9 +22,12 @@ A settings page made of sections, each with its own Save, its own errors and its
 - **"Saved", said.** SaveStatus says "Saved" politely when a save finishes, or "Couldn't save" with Try again if it fails, without moving focus (4.1.3). The changes stay in the fields either way.
 - **Switches for on and off**, each with its own label and a line on what it sends, so nobody has to guess what "Weekly summary" means.
 - **"Discard changes?" before leaving.** While any section has unsaved changes, following "Back to the dashboard" asks first, with Keep editing focused, and closing the tab asks the browser's own question (`useUnsavedChanges`). With nothing unsaved, the link just goes.
+- **While the settings load** (`loading`), the page and its section headings are there with placeholder fields, busy, named once ("Loading settings"). The form starts from `initial` once they're in.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.SaveFails} />
+
+<Canvas of={Stories.Loading} />
 
 ## What stays your app's job
 
