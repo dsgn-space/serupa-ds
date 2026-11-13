@@ -44,6 +44,8 @@ describe('TagGroup', () => {
     expect(focused()).toBe('mobile');
     await userEvent.keyboard('{ArrowDown}');
     expect(focused()).toBe('mobile');
+    await userEvent.keyboard('{ArrowUp}');
+    expect(focused()).toBe('checkout');
     await userEvent.keyboard('{Home}');
     expect(focused()).toBe('design');
     await userEvent.keyboard('{ArrowDown}');

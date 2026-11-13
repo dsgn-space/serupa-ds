@@ -16,7 +16,7 @@
   font-size: var(--text-sm); cursor: default; touch-action: manipulation;
 }
 .dk-tag-group__tag:has(.dk-tag-group__remove) { padding-inline-end: var(--spacing-0\.5); }
-.dk-tag-group__tag[aria-selected] { cursor: pointer; }
+.dk-tag-group__tag[aria-selected] { cursor: pointer; touch-action: manipulation; }
 .dk-tag-group__tag:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-tag-group__tag--selected {
   border-color: var(--tag-group-border-selected, var(--primary)); background: var(--tag-group-bg-selected, var(--primary-subtle)); color: var(--tag-group-text-selected, var(--primary));
@@ -33,7 +33,7 @@
 .dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); }
 .dk-tag-group__more {
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm);
-  text-decoration: underline; cursor: pointer;
+  text-decoration: underline; cursor: pointer; touch-action: manipulation;
 }
 .dk-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 @media (forced-colors: active) { .dk-tag-group__tag { border-color: CanvasText; } .dk-tag-group__tag--selected { border-width: var(--border-width-2); } }
