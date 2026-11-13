@@ -64,6 +64,15 @@ describe('PeriodPicker', () => {
     expect(feb.className).toContain('dk-period-picker__period--selected');
   });
 
+  test('a max brought in while the popup is open, before the month in focus: the month that can be reached is the max, not one that is disabled', async () => {
+    const { rerender } = await render(<EnUS><PeriodPicker aria-label="Report month" defaultValue="2025-06" max="2025-12" /></EnUS>);
+    await userEvent.click(button());
+    await until(() => focused() === 'June 2025');
+    await rerender(<EnUS><PeriodPicker aria-label="Report month" defaultValue="2025-06" max="2025-03" /></EnUS>);
+    const reachable = periods().filter((p) => p.tabIndex === 0);
+    expect(reachable.map((p) => [p.getAttribute('data-value'), p.getAttribute('aria-disabled')])).toEqual([['2025-03', null]]);
+  });
+
   test('picking a month calls onValueChange with "2025-05" and its first and last days, closes, and focus goes back to the button', async () => {
     const changed = vi.fn();
     await render(<EnUS><form id="f"><PeriodPicker aria-label="Report month" name="month" onValueChange={changed} /></form></EnUS>);
