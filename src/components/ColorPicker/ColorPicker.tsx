@@ -172,7 +172,7 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
       default: return;
     }
     e.preventDefault();
-    choose(swatches[(n + swatches.length) % swatches.length].value, true);
+    { const s = swatches[(n + swatches.length) % swatches.length]; if (s) choose(s.value, true); }
   };
 
   const onInvalid = (e: React.FormEvent<HTMLInputElement>) => {

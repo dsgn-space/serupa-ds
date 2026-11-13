@@ -188,7 +188,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
       default: return;
     }
     e.preventDefault();
-    choose(usable[(n + usable.length) % usable.length].value, true);
+    { const o = usable[(n + usable.length) % usable.length]; if (o) choose(o.value, true); }
   };
   // onFocus and onBlur fire when focus enters or leaves the control, not as the arrow keys move it between segments.
   const crossing = (e: React.FocusEvent<HTMLDivElement>) => !(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget));

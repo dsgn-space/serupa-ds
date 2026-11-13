@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-react';
 import { iconPoints, settle } from '../../../tools/test/vitest/helpers';
 import { renderToString } from 'react-dom/server';
 import { hydrateRoot } from 'react-dom/client';
-import { loadIcon } from '../../icons';
+import { ICONS, loadIcon } from '../../icons';
 import { Close } from '../../material/builtin';
 import { NAMED_ICONS } from '../../material/named';
 import { Checkbox } from '../Checkbox/Checkbox';
@@ -32,6 +32,17 @@ describe('Icon', () => {
     expect(svgs.length).toBeGreaterThan(8);
     for (const svg of svgs) expect(Math.round(svg.getBoundingClientRect().width), svg.outerHTML.slice(0, 80)).toBe(16);
     host.remove();
+  });
+
+  test('a custom icon draws its markup as elements: groups keep their shapes, and a dashed attribute takes its React name', async () => {
+    ICONS['test-mark'] = '<g fill-rule="evenodd" opacity="0.5"><path d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="4"/></g><path d="M2 2h4v4H2z"/>';
+    try {
+      await render(<span id="cm"><Icon name="test-mark" /></span>);
+      const svg = document.querySelector('#cm svg')!;
+      expect([...svg.children].map((n) => n.tagName)).toEqual(['g', 'path']);
+      const g = svg.querySelector('g')!;
+      expect([g.getAttribute('fill-rule'), g.getAttribute('opacity'), [...g.children].map((n) => n.tagName)]).toEqual(['evenodd', '0.5', ['path', 'circle']]);
+    } finally { delete ICONS['test-mark']; }
   });
 
   test('an imported icon draws on the first render, on the server too', async () => {

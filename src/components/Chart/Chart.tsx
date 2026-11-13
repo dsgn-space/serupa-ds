@@ -81,7 +81,8 @@ export function niceTicks(lo: number, hi: number, count: number): number[] {
   const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw * (1 - 1e-9)) ?? 10 * mag;
   const out: number[] = [];
   for (let v = Math.floor(lo / step + 1e-9) * step; v < hi + step * (1 - 1e-9); v += step) out.push(+v.toPrecision(12));
-  if (out[out.length - 1] < hi - 1e-9 * step) out.push(+(out[out.length - 1] + step).toPrecision(12));
+  const end = out[out.length - 1] ?? lo;
+  if (end < hi - 1e-9 * step) out.push(+(end + step).toPrecision(12));
   return out;
 }
 
@@ -170,7 +171,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
   if (onZero || (lo >= 0 && lo <= hi / 2)) lo = Math.min(lo, 0);
   if (onZero || (hi <= 0 && hi >= lo / 2)) hi = Math.max(hi, 0);
   const ticks = niceTicks(lo, hi, Math.max(2, Math.floor((height - PAD_TOP - AXIS) / 48)));
-  const t0 = ticks[0], tN = ticks[ticks.length - 1];
+  const t0 = ticks[0] ?? lo, tN = ticks[ticks.length - 1] ?? hi;
   const tickText = ticks.map(fmt);
   const start = Math.ceil(Math.max(...tickText.map((t) => t.length)) * CHAR) + 10;
   const pw = Math.max(1, width - start - PAD_END), ph = Math.max(1, height - PAD_TOP - AXIS);
@@ -198,19 +199,19 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
     : [labels.chartSummary(kind, series.length, n, categories[0] ?? '', categories[n - 1] ?? '')];
   if (donut && slices.length) {
     const min = slices.reduce((a, b) => (b.v < a.v ? b : a)), max = slices.reduce((a, b) => (b.v > a.v ? b : a));
-    summary.push(labels.chartTotal(fmt(total)), labels.chartRange(series[0].name, share(min.v), min.name, share(max.v), max.name));
+    summary.push(labels.chartTotal(fmt(total)), labels.chartRange(series[0]?.name ?? '', share(min.v), min.name, share(max.v), max.name));
   }
   if (!donut) series.forEach((sr, s) => {
     const mine = all.filter((p) => p.s === s);
     if (!mine.length) return;
     const min = mine.reduce((a, b) => (b.v < a.v ? b : a)), max = mine.reduce((a, b) => (b.v > a.v ? b : a));
-    summary.push(labels.chartRange(sr.name, fmt(min.v), categories[min.i], fmt(max.v), categories[max.i]));
+    summary.push(labels.chartRange(sr.name, fmt(min.v), categories[min.i] ?? '', fmt(max.v), categories[max.i] ?? ''));
   });
 
   // One point is in the tab order: the one focused last, else the first with a value.
   const current: Spot | null = donut
     ? (slices.length ? { s: 0, i: last && last.i < slices.length ? last.i : 0 } : null)
-    : last && val(last.s, last.i) != null ? last : all.length ? { s: all[0].s, i: all[0].i } : null;
+    : last && val(last.s, last.i) != null ? last : all[0] ? { s: all[0].s, i: all[0].i } : null;
   const onKeyDown = (e: React.KeyboardEvent<SVGSVGElement>) => {
     if (!current || e.altKey || e.ctrlKey || e.metaKey) return;
     const { s, i } = current;
@@ -288,7 +289,9 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
 
   // The ring: centered, as big as the box allows, a slice per share clockwise from the top (mirrored in right to left).
   const cx = width / 2, cy = height / 2, R = Math.max(12, Math.min(width, height) / 2 - 6), IN = R * 0.62;
-  const angles = slices.reduce<number[]>((a, sl) => [...a, a[a.length - 1] + (2 * Math.PI * sl.v) / (total || 1)], [-Math.PI / 2]);
+  const angles = slices.reduce<number[]>((a, sl) => [...a, (a[a.length - 1] ?? 0) + (2 * Math.PI * sl.v) / (total || 1)], [-Math.PI / 2]);
+  // Slice k runs from angle(k) to angle(k + 1).
+  const angle = (k: number) => angles[k] ?? 0;
   const ring = (a0: number, a1: number, r0: number, r1: number) => {
     const p = (a: number, r: number) => `${at(cx + r * Math.cos(a))} ${at(cy + r * Math.sin(a))}`;
     if (a1 - a0 >= 2 * Math.PI - 1e-6) return `M${p(-Math.PI / 2, r1)}A${at(r1)} ${at(r1)} 0 1 1 ${p(Math.PI / 2, r1)}A${at(r1)} ${at(r1)} 0 1 1 ${p(-Math.PI / 2, r1)}ZM${p(-Math.PI / 2, r0)}A${at(r0)} ${at(r0)} 0 1 0 ${p(Math.PI / 2, r0)}A${at(r0)} ${at(r0)} 0 1 0 ${p(-Math.PI / 2, r0)}Z`;
@@ -299,9 +302,9 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
   const tipRows = shown == null ? []
     : donut ? (slices[shown] ? [{ s: shown, name: '', text: share(slices[shown].v) }] : [])
       : series.map((sr, s) => ({ s, name: sr.name, v: val(s, shown) })).filter((r) => r.v != null).map((r) => ({ s: r.s, name: r.name, text: fmt(r.v!) }));
-  const mid = donut && shown != null ? (angles[shown] + angles[shown + 1]) / 2 : 0;
+  const mid = donut && shown != null ? (angle(shown) + angle(shown + 1)) / 2 : 0;
   const tip = shown == null || !tipRows.length ? null
-    : donut ? { i: shown, title: slices[shown].name, x: flip(cx + R * Math.cos(mid)), y: cy + R * Math.sin(mid) }
+    : donut ? { i: shown, title: slices[shown]?.name, x: flip(cx + R * Math.cos(mid)), y: cy + R * Math.sin(mid) }
       : { i: shown, title: categories[shown], x: xAt(shown), y: Math.min(...tipRows.map((r) => py(r.s, shown))) };
   // Beside the category, on the other side near the edge, inside the frame: set through the CSSOM, which a strict
   // style-src allows.
@@ -389,13 +392,13 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
                     {slices.map((sl, k) => (
                       <path key={k} ref={(el) => { if (el) points.current.set('0:' + k, el); else points.current.delete('0:' + k); }}
                         role="img" aria-label={labels.chartPoint(null, sl.name, share(sl.v))} tabIndex={current && current.i === k ? 0 : -1}
-                        className={'dk-chart__slice dk-chart__point dk-chart--s' + (k + 1)} d={ring(angles[k], angles[k + 1], IN, R)} fill={fill(k, slices.length)}
+                        className={'dk-chart__slice dk-chart__point dk-chart--s' + (k + 1)} d={ring(angle(k), angle(k + 1), IN, R)} fill={fill(k, slices.length)}
                         fillRule="evenodd" data-active={shown === k ? '' : undefined}
                         onPointerEnter={() => { if (k !== hover) { setHover(k); setHushed(false); } }}
                         onFocus={(e) => { setLast({ s: 0, i: k }); setHushed(false); setFocus({ s: 0, i: k, ring: e.currentTarget.matches(':focus-visible') }); }}
                         onBlur={() => setFocus(null)} />
                     ))}
-                    {focus && focus.ring && slices[focus.i] ? <path className="dk-chart__focus" aria-hidden fillRule="evenodd" d={ring(angles[focus.i], angles[focus.i + 1], IN - 3, R + 3)} /> : null}
+                    {focus && focus.ring && slices[focus.i] ? <path className="dk-chart__focus" aria-hidden fillRule="evenodd" d={ring(angle(focus.i), angle(focus.i + 1), IN - 3, R + 3)} /> : null}
                   </g>
                   {slices.length ? <text className="dk-chart__total" aria-hidden x={at(cx)} y={at(cy)} dy="0.32em" textAnchor="middle">{labels.chartTotal(fmt(total))}</text> : null}
                 </>
@@ -436,7 +439,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
                       const common = {
                         ref: (el: SVGElement | null) => { if (el) points.current.set(key, el); else points.current.delete(key); },
                         role: 'img',
-                        'aria-label': labels.chartPoint(series.length > 1 ? sr.name : null, categories[i], fmt(v)),
+                        'aria-label': labels.chartPoint(series.length > 1 ? sr.name : null, categories[i] ?? '', fmt(v)),
                         tabIndex: current && current.s === s && current.i === i ? 0 : -1,
                         'data-active': shown === i ? '' : undefined,
                         onFocus: (e: React.FocusEvent<SVGElement>) => { setLast({ s, i }); setHushed(false); setFocus({ s, i, ring: e.currentTarget.matches(':focus-visible') }); },

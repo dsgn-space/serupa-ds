@@ -81,7 +81,7 @@ const DAY_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 // A start or end as a Date: a "yyyy-mm-dd" string is that local day (new Date() would make it UTC midnight).
 function when(v: Date | string | undefined): Date | null {
   if (v === undefined) return null;
-  if (typeof v === 'string' && DAY_ONLY.test(v)) { const [y, m, d] = v.split('-').map(Number); return new Date(y, m - 1, d); }
+  if (typeof v === 'string' && DAY_ONLY.test(v)) { const [y = NaN, m = NaN, d = NaN] = v.split('-').map(Number); return new Date(y, m - 1, d); }
   const d = v instanceof Date ? v : new Date(v);
   return isValid(d) ? d : null;
 }
@@ -216,7 +216,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const weeks: Date[][] = [];
   for (let w = 0; w < 6; w++) {
     const row = Array.from({ length: 7 }, (_, i) => addDays(first, w * 7 + i));
-    if (w > 0 && !sameMonth(row[0], month)) break;   // as many weeks as the month reaches
+    if (w > 0 && row[0] && !sameMonth(row[0], month)) break;   // as many weeks as the month reaches
     weeks.push(row);
   }
   // The Tab stop: the focused day, or while a month the keys asked for isn't shown yet, today or the 1st.
@@ -239,12 +239,12 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
       {view === 'month' ? (
         <table ref={grid} role="grid" lang={lang} className="dk-event-calendar__grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>
           <thead>
-            <tr>{weeks[0].map((d) => <th key={d.getDay()} scope="col" abbr={fmt.long.format(d)}><span aria-hidden>{fmt.short.format(d)}</span><span className="dk-visually-hidden">{fmt.long.format(d)}</span></th>)}</tr>
+            <tr>{(weeks[0] ?? []).map((d) => <th key={d.getDay()} scope="col" abbr={fmt.long.format(d)}><span aria-hidden>{fmt.short.format(d)}</span><span className="dk-visually-hidden">{fmt.long.format(d)}</span></th>)}</tr>
           </thead>
           <tbody>
             {/* Weeks are keyed by their first day, so a day at the grid's edge keeps its cell, and focus, when its month shows. */}
             {weeks.map((row) => (
-              <tr key={row[0].getTime()}>
+              <tr key={row[0]?.getTime()}>
                 {row.map((d) => {
                   const mine = sameMonth(d, month) ? onDay(list, d) : [], here = sameDay(d, stop), isToday = marked !== null && sameDay(d, marked);
                   const fits = mine.length > max ? mine.slice(0, max - 1) : mine, more = mine.length - fits.length;

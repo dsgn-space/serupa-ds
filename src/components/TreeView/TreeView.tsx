@@ -128,7 +128,8 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     };
     const parents = up(props.items) || [];
     const parent = parents.reverse().find((p) => index(p) >= 0);
-    go(parent != null ? parent : rows[Math.min(Math.max(lastAt.current, 0), rows.length - 1)].item.id);
+    const near = rows[Math.min(Math.max(lastAt.current, 0), rows.length - 1)];
+    if (parent != null) go(parent); else if (near) go(near.item.id);
   }, [rows, focusId]);
 
   const pick = (next: string[]) => {
@@ -169,15 +170,15 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     if (props.onKeyDown) props.onKeyDown(e);
     const t = e.target instanceof HTMLElement ? e.target.closest<HTMLElement>('[role=treeitem]') : null;
     if (e.defaultPrevented || !t || !root.current || e.altKey || isComposing(e)) return;
-    const i = index(t.dataset.id || null);
-    if (i < 0) return;
-    const r = rows[i], item = r.item;
+    const i = index(t.dataset.id || null), r = rows[i];
+    if (!r) return;
+    const item = r.item;
     const rtl = (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && getComputedStyle(root.current).direction === 'rtl';
     const isOpen = openSet.has(item.id);
     let to = -1;
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       to = Math.min(rows.length - 1, Math.max(0, i + (e.key === 'ArrowDown' ? 1 : -1)));
-      if (multi && e.shiftKey && to !== i) choose(rows[to].item);
+      { const row = rows[to]; if (multi && e.shiftKey && to !== i && row) choose(row.item); }
     }
     else if (e.key === (rtl ? 'ArrowLeft' : 'ArrowRight')) {
       if (opens(item) && !isOpen) toggleOpen(item);
@@ -202,7 +203,8 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) to = typeahead(typed.current, e.key, rows.map((x) => textOf(x.item)), i);
     else return;
     e.preventDefault();
-    if (to >= 0 && to !== i) go(rows[to].item.id);
+    const dest = rows[to];
+    if (dest && to !== i) go(dest.item.id);
   };
 
   // The rows read this through context, so none of them redraws because the tree did; see TreeRow. A change

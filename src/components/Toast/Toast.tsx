@@ -85,11 +85,13 @@ function show(options: ToastOptions | string): string {
   // with a count ("×12") whose time starts over. It's said when it first shows, and once more with the count when
   // the burst stops, so screen reader users hear that it happened again without hearing it twelve times.
   const same = o.id || o.action ? -1 : page.items.findIndex((x) => !x.action && x.tone === tone && text(x.title) !== '' && text(x.title) === text(o.title) && text(x.description) === text(o.description));
-  if (same >= 0) {
-    page.items = page.items.map((x, i) => (i === same ? Object.assign({}, x, { count: x.count + 1 }) : x));
+  const was = page.items[same];
+  if (was) {
+    const again = Object.assign({}, was, { count: was.count + 1 });
+    page.items = page.items.map((x, i) => (i === same ? again : x));
     emit();
-    tell(page.items[same]);
-    const rid = page.items[same].id;
+    tell(again);
+    const rid = again.id;
     const wait = page.repeatTimers.get(rid);
     if (wait) clearTimeout(wait);
     page.repeatTimers.set(rid, setTimeout(() => {
@@ -280,7 +282,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
         e.preventDefault();
         back.current = active as HTMLElement | null;
         // The newest one: last in the list, or first when the toasts stack downward from the top.
-        toasts[pos.startsWith('top') ? 0 : toasts.length - 1].focus();
+        toasts[pos.startsWith('top') ? 0 : toasts.length - 1]?.focus();
       } else if (e.key === 'Escape' && inside && back.current) { e.preventDefault(); away(); }
     };
     document.addEventListener('keydown', onKey);
@@ -316,7 +318,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
     if (now && now !== document.body && now.isConnected && !h.toast.contains(now)) return;
     const b = back.current, toasts = region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving])');
     if (b && b.isConnected) { back.current = null; b.focus(); }
-    else if (toasts.length) toasts[Math.min(h.at, toasts.length - 1)].focus();
+    else toasts[Math.min(h.at, toasts.length - 1)]?.focus();
   }, [list]);
   // The newest few show; the rest wait (their time hasn't started) and come back as those close. A burst can't
   // push the stack past the screen's edge.
@@ -358,7 +360,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
   const key = ordered.map((t) => t.id).join(' ');
   if (key !== last.map((t) => t.id).join(' ')) {
     const ids = new Set(ordered.map((t) => t.id)), held = new Set(list.map((t) => t.id));
-    setGone(gone.filter((g) => !ids.has(g.item.id)).concat(last.flatMap((t, at) => (ids.has(t.id) ? [] : [{ item: t, at, after: at ? last[at - 1].id : null, queued: held.has(t.id) }]))));
+    setGone(gone.filter((g) => !ids.has(g.item.id)).concat(last.flatMap((t, at) => (ids.has(t.id) ? [] : [{ item: t, at, after: last[at - 1]?.id ?? null, queued: held.has(t.id) }]))));
     setLast(ordered);
   }
   const rows: Array<{ item: Item; leaving: false | 'closed' | 'queued' }> = ordered.map((t) => ({ item: t, leaving: false }));

@@ -167,7 +167,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
       {s.isFirst ? null : <Button variant="ghost" onClick={s.back} disabled={busy}>Back</Button>}
     </div>
   );
-  const h2 = (i: number) => <Heading level={2} size="xl" {...s.headingProps(i)} className="outline-none">{STEPS[i].title}</Heading>;
+  const h2 = (i: number) => <Heading level={2} size="xl" {...s.headingProps(i)} className="outline-none">{STEPS[i]?.title}</Heading>;
 
   return (
     <div className="min-h-screen bg-surface-muted text-text">

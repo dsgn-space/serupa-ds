@@ -53,7 +53,7 @@ const COLS: Record<PeriodUnit, number> = { month: 3, quarter: 2, year: 3 };
 export function periodIndex(s: string | null | undefined, unit: PeriodUnit): number | null {
   const m = typeof s === 'string' ? /^(\d{4})(?:-(Q?)(\d{1,2}))?$/.exec(s.trim()) : null;
   if (!m) return null;
-  const y = +m[1], i = m[3] ? +m[3] - 1 : -1;
+  const y = Number(m[1]), i = m[3] ? +m[3] - 1 : -1;
   if (unit === 'year') return m[3] ? null : y;
   if (unit === 'quarter') return m[2] && i >= 0 && i < 4 ? y * 4 + i : null;
   return !m[2] && i >= 0 && i < 12 ? y * 12 + i : null;

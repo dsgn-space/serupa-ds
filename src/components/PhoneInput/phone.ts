@@ -94,10 +94,11 @@ const PATTERNS: Record<string, Record<string, string>> = /* @__PURE__ */ (() => 
 // The North American Numbering Plan: +1 and a 10-digit number like the US, the country told by its area code (AREAS).
 const NANP = 'AS AI AG BS BB BM VG KY DM DO GD GU JM MS MP PR KN LC VC SX TT TC VI';
 export const PHONE_COUNTRIES: readonly PhoneCountry[] = /* @__PURE__ */ (() => (ROWS + NANP.replace(/(\w+) ?/g, '|$1 1 - (###)_###-#### 10 10')).split('|').map(function (row) {
-  const [code, dial, trunk, pattern, min, max] = row.split(' ');
-  const c: PhoneCountry = { code, dial, trunk: trunk === '-' ? '' : trunk, pattern: pattern ? pattern.replace(/_/g, ' ') : '#', min: pattern ? +min : 4, max: pattern ? +max : 15 - dial.length };
-  if (AREAS[code]) c.areas = AREAS[code].split(' ');
-  if (PATTERNS[code]) c.patterns = PATTERNS[code];
+  const [code = '', dial = '', trunk = '', pattern, min, max] = row.split(' ');
+  const c: PhoneCountry = { code, dial, trunk: trunk === '-' ? '' : trunk, pattern: pattern ? pattern.replace(/_/g, ' ') : '#', min: pattern ? Number(min) : 4, max: pattern ? Number(max) : 15 - dial.length };
+  const areas = AREAS[code], patterns = PATTERNS[code];
+  if (areas) c.areas = areas.split(' ');
+  if (patterns) c.patterns = patterns;
   return c;
 }))();
 
@@ -109,7 +110,7 @@ export const phoneCountry = (code: string | undefined): PhoneCountry | undefined
 /** The grouping for these national digits: the longest matching start in patterns, else pattern. */
 export function phonePattern(digits: string, country: PhoneCountry): string {
   let best = '', out = country.pattern;
-  for (const k in country.patterns) if (k.length > best.length && digits.startsWith(k)) { best = k; out = country.patterns[k]; }
+  for (const [k, v] of Object.entries(country.patterns ?? {})) if (k.length > best.length && digits.startsWith(k)) { best = k; out = v; }
   return out;
 }
 
@@ -155,7 +156,8 @@ export function parsePhone(value: string, prefer?: string, countries: readonly P
   // Too few digits to tell the area yet: the preferred country while the number could still be its own.
   if (!best && pref && (!pref.areas || pref.areas.some((a) => a.startsWith(n)))) best = pref;
   best = best || group.find((c) => !c.areas) || group[0];
-  return { country: best, national: stripTrunk(n, best) };
+  // group holds the country whose calling code matched, so there is always one.
+  return best && { country: best, national: stripTrunk(n, best) };
 }
 
 /** The national digits with a typed trunk prefix taken off ("0812…" in ID becomes "812…"). */

@@ -83,7 +83,7 @@ function autoSizes(lazy: boolean, srcSet: string | undefined, sizes: string | un
 // no fullSrc, or with least, the smallest, for a reader saving data.
 function largest(srcSet: string | undefined, least?: boolean): string | undefined {
   let best: string | undefined, most = 0;
-  for (const m of (srcSet || '').matchAll(/(?:^|,)\s*(\S+?)\s+(\d+(?:\.\d+)?)[wx]\s*(?=,|$)/g)) if (!best || (least ? +m[2] < most : +m[2] > most)) { most = +m[2]; best = m[1]; }
+  for (const m of (srcSet || '').matchAll(/(?:^|,)\s*(\S+?)\s+(\d+(?:\.\d+)?)[wx]\s*(?=,|$)/g)) if (!best || (least ? Number(m[2]) < most : Number(m[2]) > most)) { most = Number(m[2]); best = m[1] ?? ''; }
   return best;
 }
 

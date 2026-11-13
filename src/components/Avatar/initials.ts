@@ -13,7 +13,7 @@ const INITIAL = /^[\p{L}\p{N}\p{Extended_Pictographic}]/u;
     character ("ß" is "S", not "SS"). */
 function initial(word: string): string {
   const g = graphemes(word).find((c) => INITIAL.test(c));
-  return g ? graphemes(g.toUpperCase())[0] : '';
+  return g ? graphemes(g.toUpperCase())[0] ?? '' : '';
 }
 
 /** The initials of a name: the first letters of the first and last words ("Ada Lovelace" → "AL"), or one letter.
@@ -21,8 +21,8 @@ function initial(word: string): string {
 export function initials(name?: string): string {
   const found = (name || '').trim().split(/\s+/).map(initial).filter(Boolean);
   if (!found.length) return '';
-  if (found.length === 1) return found[0];
-  const first = found[0], last = found[found.length - 1];
+  const first = found[0] ?? '', last = found[found.length - 1] ?? '';
+  if (found.length === 1) return first;
   // In a script whose letters join (Arabic, Syriac, N'Ko, Mongolian…), two initials side by side join into what reads
   // as a word: "محمد عبد الله" would show "ما" ("what"). A zero-width non-joiner keeps them two letters (GR28).
   return first + (JOINING.test(first) && JOINING.test(last) ? '\u200c' : '') + last;
