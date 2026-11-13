@@ -263,7 +263,7 @@ describe('Select', () => {
 
   test('right to left: the chevron sits at the start side\'s opposite (the left), and the text keeps clear of it', async () => {
     await render(<div dir="rtl" style={{ width: '240px' }}><Select id="rtl-s" aria-label="Role" options={['Admin']} /></div>);
-    const chevron = box('rtl-s').querySelector('.dk-select__icon--chevron')!.getBoundingClientRect(), b = box('rtl-s').getBoundingClientRect();
+    const chevron = box('rtl-s').lastElementChild!.getBoundingClientRect(), b = box('rtl-s').getBoundingClientRect();
     expect(chevron.left - b.left).toBeLessThan(b.right - chevron.right);
     expect(parseFloat(css(field('rtl-s')).paddingLeft)).toBeGreaterThan(parseFloat(css(field('rtl-s')).paddingRight));
   });
