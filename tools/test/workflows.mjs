@@ -98,7 +98,7 @@ if (fs.existsSync(path.join(GH, 'workflows/visual-baselines.yml'))) {
 // passes, whether the cancel lands or not.
 {
   const lines = fs.readFileSync(path.join(GH, 'workflows/ci.yml'), 'utf8').split('\n');
-  const job = lines.findIndex((l) => /^  test:\s*$/.test(l));
+  const job = lines.findIndex((l) => /^ {2}test:\s*$/.test(l));
   const run = lines.findIndex((l, i) => i > job && /^\s*run:\s*\|\s*$/.test(l));
   const indent = lines[run + 1]?.search(/\S/) ?? -1;
   const body = [];
