@@ -9,6 +9,7 @@ import type { InputProps } from '../Input/Input';
 import { component } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { pressFocuses } from '../../internal/affix';
+import { activeIn } from '../../internal/root';
 import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
@@ -99,7 +100,7 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   React.useEffect(() => {
     const keep = () => {
       const f = field.current;
-      if (f && document.activeElement === f && f.selectionStart !== null && f.selectionEnd !== null) seen.current = [f.selectionStart, f.selectionEnd, f.selectionDirection || 'none'];
+      if (f && activeIn(f) === f && f.selectionStart !== null && f.selectionEnd !== null) seen.current = [f.selectionStart, f.selectionEnd, f.selectionDirection || 'none'];
     };
     document.addEventListener('selectionchange', keep, true);
     return () => document.removeEventListener('selectionchange', keep, true);
@@ -107,7 +108,7 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   const capture = () => {
     const f = field.current;
     if (!f || f.selectionStart === null || f.selectionEnd === null) return;
-    const s = seen.current && document.activeElement === f ? seen.current : [f.selectionStart, f.selectionEnd, f.selectionDirection || 'none'] as const;
+    const s = seen.current && activeIn(f) === f ? seen.current : [f.selectionStart, f.selectionEnd, f.selectionDirection || 'none'] as const;
     caret.current = [s[0], s[1], s[2], f.scrollLeft, f.scrollWidth];
   };
   const toggle = () => {
