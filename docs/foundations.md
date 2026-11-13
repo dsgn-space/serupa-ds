@@ -287,6 +287,7 @@ Rules of thumb:
 - Headings: `font-semibold`, with `tracking-tight` from `text-2xl` up.
 - `text-5xl` and larger have a line height of 1: add `leading-tight` if a heading can wrap.
 - Don't go below `text-xs` (12px), and keep body text at `text-sm` or larger.
+- A hint or an error under a control is `text-sm` (14px), with a 16px icon centered on its first line, whatever the control's size: Field, FileUpload and InlineEdit draw it this way. `text-xs` is for details inside a compact part, such as a file's size in a list or the details and error inside an Attachment.
 
 ### Text utilities
 
