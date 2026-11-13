@@ -13,6 +13,7 @@ import { useUnsavedChanges } from '../../components/Dialog/Dialog';
 import type { ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Settings form: a settings page of sections, each with its own Save, errors and status, and a question before
    unsaved changes are lost. For an app to copy. What it carries (WCAG 2.2):
@@ -41,6 +42,11 @@ export interface SettingsFormProps {
   /** The saved settings are on their way: each section shows placeholder fields, and the form starts from `initial` once
       they're in. Default: false. */
   loading?: boolean | undefined;
+  /** The saved settings failed to load: a "Couldn’t load your settings" message with Try again, which calls onRetry, in
+      place of the sections. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demo: SettingsValues = {
@@ -91,13 +97,14 @@ function useSection<K extends keyof SettingsValues>(key: K, saved0: SettingsValu
 }
 
 /** The settings page: a skip link, a header with the way back, then main with the h1 and a section per group. */
-export function SettingsForm({ loading = false, ...props }: SettingsFormProps) {
+export function SettingsForm({ loading = false, loadFailed = false, onRetry, ...props }: SettingsFormProps) {
   // The form takes `initial` when it mounts, so it mounts once the settings are in, not before.
-  return loading ? <Loading /> : <Loaded {...props} />;
+  return loading || loadFailed ? <Loading failed={loadFailed} onRetry={onRetry} /> : <Loaded {...props} />;
 }
 
-// While the settings load: the same page, with a busy placeholder per section, named once ("Loading settings").
-function Loading() {
+// While the settings load: the same page, with a busy placeholder per section, named once ("Loading settings"). When
+// they failed to load: the page says so in the sections' place, with Try again.
+function Loading({ failed, onRetry }: { failed: boolean; onRetry: SettingsFormProps['onRetry'] }) {
   return (
     <div className="min-h-screen bg-surface text-text">
       <SkipLink />
@@ -105,9 +112,9 @@ function Loading() {
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link href="#dashboard">Back to the dashboard</Link>
       </header>
-      <main id="main" aria-busy="true" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-6 outline-none">
+      <main id="main" aria-busy={failed ? undefined : true} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-6 outline-none">
         <Heading level={1}>Settings</Heading>
-        {['Profile', 'Notifications'].map((t, i) => (
+        {failed ? <EmptyLoadFailed title="Couldn’t load your settings" onRetry={() => onRetry?.()} headingLevel={2} /> : ['Profile', 'Notifications'].map((t, i) => (
           <section key={t} aria-labelledby={'settings-loading-' + i} className="flex flex-col gap-3">
             <Heading level={2} size="lg" id={'settings-loading-' + i}>{t}</Heading>
             <Loader variant="skeleton" shape="text" lines={i === 0 ? 6 : 3} label={i === 0 ? 'Loading settings' : ''} />
@@ -118,7 +125,7 @@ function Loading() {
   );
 }
 
-function Loaded({ initial = demo, onSave, onLeave }: Omit<SettingsFormProps, 'loading'>) {
+function Loaded({ initial = demo, onSave, onLeave }: Omit<SettingsFormProps, 'loading' | 'loadFailed' | 'onRetry'>) {
   const profile = useSection('profile', initial.profile, profileProblems, onSave);
   const notes = useSection('notifications', initial.notifications, () => [], onSave);
   const { confirm, dialog } = useUnsavedChanges(profile.dirty || notes.dirty);
