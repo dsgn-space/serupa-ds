@@ -1,0 +1,42 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './CartSummary.stories';
+
+<Meta of={Stories} />
+
+# Cart summary
+
+What's in the cart, with a quantity and Remove for each item, a coupon, and the sums down to the total, before people check out. It's built from NumberInput, Input with an Apply action, DescriptionList, Button and Toast.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A cart page, or a cart drawer, where people check what they're buying and change it before they pay.
+- Not for the order summary beside a checkout form: that one is read, not changed. The [Checkout pattern](?path=/docs/patterns-checkout--docs) has it.
+- Not for an order that's placed: show a receipt.
+
+## What each part is for
+
+- **A region named by its heading** (1.3.1). The items are a list, and the sums a description list, each amount after its term, so a screen reader hears "Total, $121.00".
+- **Each control names its item** (2.4.6, 2.5.3). "Quantity, Linen shirt" and "Remove Linen shirt" start with the words people see, so voice control finds them, and a list of them still says which is which.
+- **Remove has Undo, not "Are you sure?"** (3.3.4). The item goes at once, and a toast says so with Undo; it's removed for good (`onRemove`) only when the toast goes. Focus moves to the next item's name, or to the heading when the cart is empty, so it's never lost (2.4.3).
+- **The new total is said** (4.1.3). After a quantity, a removal or a coupon changes it, the total is said once, politely, when it settles, so it's heard without moving focus and not for each step of a quantity held down.
+- **A coupon says why it doesn't apply** (3.3.1). Reject `onApplyCoupon` with an Error whose message says what's wrong and what to do, and it shows as the field's error. One that applies adds a discount line, with Remove coupon beside it. Enter applies too.
+- **Quantities stay within stock.** Give `max` and the field stops there; the smallest is 1, and Remove takes an item out.
+- **Money is the locale's.** Every amount is written the way the reader's locale writes it, and every word is in `labels`.
+
+<Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.Indonesian} />
+
+<Canvas of={Stories.LongText} />
+
+## What stays your app's job
+
+- The items and their prices, saving the cart, and checking stock and the coupon on the server.
+- Tax and delivery: `taxRate` covers one rate on the whole cart. For anything else, work the amounts out on the server and add your own lines.
+- A cart count in the header that follows the items, and the checkout itself.
+
+## Copying it
+
+Copy `CartSummary.tsx` and `CartSummary.test.tsx`, and change the imports to `serupa` (`announce` is exported there too). Keep a `<Toaster />` on the page for Remove's Undo.
