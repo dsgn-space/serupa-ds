@@ -5,6 +5,10 @@ name: Queue enqueue
 # 12 Nov). This puts such a pull request in the queue: each time CI finishes on a pull request, and every fifteen minutes.
 # Only one whose auto-merge a person turned on, that is ready to merge (mergeable_state "clean": every required check
 # green, no conflict), and that isn't a draft or already queued. It checks out nothing and runs no code from any branch.
+# It also puts back one the queue dropped (its last queue or auto-merge event is the queue's own removal) once a new
+# commit since then is green: the queue turns auto-merge off when it drops a pull request, so after Update baselines
+# merged main and drew the pictures again it sat green and out of the queue for hours (13 Nov). Not the Release pull
+# request, which waits for a person; and not one dropped and not changed since, which would only fail again.
 on:
   workflow_run:
     workflows: [CI]
@@ -26,6 +30,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      issues: read
       pull-requests: read
     steps:
       - env:
@@ -41,17 +46,29 @@ jobs:
             query($owner: String!, $name: String!) {
               repository(owner: $owner, name: $name) {
                 pullRequests(states: OPEN, first: 100) {
-                  nodes { id number isDraft autoMergeRequest { enabledAt } mergeQueueEntry { id } }
+                  nodes { id number isDraft headRefName autoMergeRequest { enabledAt } mergeQueueEntry { id } }
                 }
               }
             }' --jq '.data.repository.pullRequests.nodes[]
-              | select(.isDraft | not) | select(.autoMergeRequest != null) | select(.mergeQueueEntry == null)
-              | "\(.number) \(.id)"') || exit 1
-          while read -r number id; do
+              | select(.isDraft | not) | select(.mergeQueueEntry == null)
+              | "\(.number) \(.id) \(if .autoMergeRequest != null then "on" else "off" end) \(.headRefName)"') || exit 1
+          # Dropped by the queue and pushed to since: the last queue, auto-merge or draft event is the queue's removal,
+          # and a commit came after it. A person who turned auto-merge off or made it a draft since then decides.
+          dropped() {
+            gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$1/timeline?per_page=100" --jq '.[] | [.event, (.actor.login // "")] | @tsv' </dev/null |
+              awk -F'\t' '$1 ~ /^(added_to_merge_queue|removed_from_merge_queue|auto_merge_enabled|auto_merge_disabled|convert_to_draft|ready_for_review)$/ { last = $1; by = $2; pushed = 0 }
+                $1 == "committed" || $1 == "head_ref_force_pushed" { pushed = 1 }
+                END { exit !(last == "removed_from_merge_queue" && by == "github-merge-queue[bot]" && pushed) }'
+          }
+          while read -r number id auto ref; do
             [ -n "$number" ] || continue
+            if [ "$auto" = off ]; then
+              [ "$ref" != changeset-release/main ] || continue
+              dropped "$number" || continue
+            fi
             state=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" --jq .mergeable_state </dev/null) || continue
             [ "$state" = clean ] || continue
-            echo "Queueing #$number: green, auto-merge on, not in the queue."
+            echo "Queueing #$number: green, not in the queue, auto-merge $auto (off: the queue dropped it, and it changed since)."
             GH_TOKEN=$BOT_TOKEN gh api graphql -f id="$id" -f query='mutation($id: ID!) { enqueuePullRequest(input: { pullRequestId: $id }) { clientMutationId } }' </dev/null >/dev/null ||
               echo "::warning::#$number couldn't be queued"
           done <<< "$prs"
