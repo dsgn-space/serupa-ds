@@ -4,6 +4,7 @@ import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
 import { Loader } from '../../components/Loader/Loader';
+import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 import { LoadMore } from '../../components/LoadMore/LoadMore';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Timeline, TimelineItem, type TimelineStatus } from '../../components/Timeline/Timeline';
@@ -18,6 +19,7 @@ import { Timeline, TimelineItem, type TimelineStatus } from '../../components/Ti
      were added, and moves focus to the end text after the last page, so focus is never lost.
    - 4.1.3: while the first page loads, the list says it's busy (aria-busy) and its skeleton rows are named once
      ("Loading: Activity"), not once per row; the heading is there from the start, so the page doesn't jump.
+   - 4.1.3, 3.3.3: a failed first load says so once, under the heading, with Try again (EmptyLoadFailed).
    - Each word is a prop or a label, English by default. */
 
 function line(e: ActivityEvent): React.ReactNode {
@@ -67,15 +69,21 @@ export interface ActivityFeedProps {
   loadingCount?: number | undefined;
   /** The skeletons' one name. Default: "Loading: " and the title. */
   loadingText?: string | undefined;
+  /** The load failed: a "Couldn’t load" message with Try again, which calls onRetry, in the list's place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** The failed load's title. Default: "Couldn’t load the activity". */
+  loadFailedText?: string | undefined;
 }
 
 /** Who did what and when, newest first, with "Load more" that keeps focus in place and says how many were added. */
-export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, emptyText = 'No activity yet', loadMoreLabel, endText, loading = false, loadingCount = 3, loadingText }: ActivityFeedProps) {
+export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, emptyText = 'No activity yet', loadMoreLabel, endText, loading = false, loadingCount = 3, loadingText, loadFailed = false, onRetry, loadFailedText = 'Couldn’t load the activity' }: ActivityFeedProps) {
   const id = React.useId();
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} id={id}>{title}</Heading>
-      {loading ? (
+      {loadFailed ? <EmptyLoadFailed title={loadFailedText} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : loading ? (
         <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
           {Array.from({ length: loadingCount }, (_, i) => (
             <li key={i} className="flex items-start gap-2">
@@ -99,7 +107,7 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
           ))}
         </Timeline>
       )}
-      {!loading && events.length > 0 && <LoadMore onLoadMore={onLoadMore} hasMore={hasMore} count={events.length} total={total} label={loadMoreLabel} endText={endText} />}
+      {!loading && !loadFailed && events.length > 0 && <LoadMore onLoadMore={onLoadMore} hasMore={hasMore} count={events.length} total={total} label={loadMoreLabel} endText={endText} />}
     </section>
   );
 }
