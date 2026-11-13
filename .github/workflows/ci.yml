@@ -136,7 +136,7 @@ jobs:
             if ! has storybook; then storybook=""; fi
           fi
           x86any=$(echo "$x86" | jq -r 'if (.include | length) > 0 then 1 else "" end')
-          portable='{"include":[{"group":"checks","shard":"1/2"},{"group":"checks","shard":"2/2"}'
+          portable='{"include":[{"group":"checks","shard":"1/3"},{"group":"checks","shard":"2/3"},{"group":"checks","shard":"3/3"}'
           [ -n "$storybook" ] && portable="$portable"',{"group":"storybook","shard":"1/3"},{"group":"storybook","shard":"2/3"},{"group":"storybook","shard":"3/3"}'
           portable="$portable]}"
           {
