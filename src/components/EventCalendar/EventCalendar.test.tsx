@@ -194,6 +194,128 @@ describe('EventCalendar', () => {
     expect(css(other[0]!).textDecorationLine).toBe('none');
   });
 
+  test('week: the week\'s days side by side, named by the week; Previous and Next move a week, and say it', async () => {
+    const months: Date[] = [];
+    await render(<EventCalendar id="wk" events={EVENTS} defaultMonth={new Date(2025, 2, 4)} defaultView="week" weekStartsOn={0} onMonthChange={(m) => months.push(m)} />);
+    await expect.element(page.getByRole('grid', { name: 'March 2 – 8, 2025' })).toBeInTheDocument();
+    expect([...document.querySelectorAll('[role=gridcell]')].map((c) => c.getAttribute('data-date'))).toEqual(['2025-03-02', '2025-03-03', '2025-03-04', '2025-03-05', '2025-03-06', '2025-03-07', '2025-03-08']);
+    expect(cell('2025-03-04').textContent).toMatch(/^Tuesday, March 4, 2025, 2 events/);
+    expect(names('2025-03-04')).toEqual(['9:30 AM Team standup, Tuesday, March 4, 9:30 AM to 9:45 AM, Repeats', '2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM']);
+    // The day's Tab stop is the day it opened on.
+    expect(cell('2025-03-04').tabIndex).toBe(0);
+    await userEvent.click(page.getByRole('button', { name: 'Next week' }));
+    await expect.element(page.getByRole('heading', { level: 2, name: 'March 9 – 15, 2025' })).toBeInTheDocument();
+    expect(names('2025-03-12')).toEqual(['Launch day, Wednesday, March 12, All day']);
+    for (let i = 0; i < 3; i++) await userEvent.click(page.getByRole('button', { name: 'Next week' }));
+    // Into April: the week that holds both months, and the month is said once it changes.
+    await expect.element(page.getByRole('heading', { level: 2, name: 'March 30 – April 5, 2025' })).toBeInTheDocument();
+    expect(months.map((m) => m.getMonth())).toEqual([3]);
+    await userEvent.click(page.getByRole('button', { name: 'Previous week' }));
+    await expect.element(page.getByRole('heading', { level: 2, name: 'March 23 – 29, 2025' })).toBeInTheDocument();
+    expect(months.map((m) => m.getMonth())).toEqual([3, 2]);
+  });
+
+  test('week: an event takes its time\'s place and length; events that overlap share the width side by side; all-day events sit on top', async () => {
+    await render(<EventCalendar id="wk" defaultMonth={new Date(2025, 2, 18)} defaultView="week" weekStartsOn={0} events={[
+      { id: 'o', title: 'Offsite', start: '2025-03-18', allDay: true },
+      { id: 'l', title: 'Lunch', start: '2025-03-18T12:00', end: '2025-03-18T13:00' },
+      { id: 'd', title: 'Demo', start: '2025-03-18T15:00', end: '2025-03-18T16:00' },
+      { id: 'c', title: 'Call', start: '2025-03-18T15:30', end: '2025-03-18T16:30' },
+      { id: 'q', title: 'Quick sync', start: '2025-03-18T17:00', end: '2025-03-18T17:05' },
+    ]} />);
+    const box = (t: string) => page.getByRole('button', { name: new RegExp('^\\S+ \\S+ ' + t + ',|^' + t + ',') }).element().getBoundingClientRect();
+    const day = cell('2025-03-18').getBoundingClientRect(), lunch = box('Lunch'), demo = box('Demo'), call = box('Call'), quick = box('Quick sync'), all = box('Offsite');
+    // An hour is 48px: lunch is an hour tall, three hours above the demo.
+    expect([Math.round(lunch.height), Math.round(demo.top - lunch.top)]).toEqual([46, 144]);
+    // The demo and the call overlap: half the day's width each, the call beside the demo, half an hour lower.
+    expect([Math.round(demo.width) <= Math.round(day.width / 2), Math.round(call.left) >= Math.round(demo.right), Math.round(call.top - demo.top)]).toEqual([true, true, 24]);
+    // Lunch overlaps nothing: the day's whole width. Five minutes still get half an hour, and a 24px target.
+    expect([Math.round(lunch.width) > Math.round(day.width / 2), Math.round(quick.height)]).toEqual([true, 24]);
+    expect(all.bottom).toBeLessThanOrEqual(lunch.top);
+  });
+
+  test('week: the hours scroll in their box, opened at 8 AM (or the first event), under the weekday names and the all-day row', async () => {
+    const { rerender } = await render(<EventCalendar defaultMonth={new Date(2025, 2, 4)} defaultView="week" weekStartsOn={0} events={EVENTS} />);
+    const grid = page.getByRole('grid').element(), box = grid.parentElement!;
+    expect(box.scrollHeight).toBeGreaterThan(box.clientHeight);
+    const head = grid.querySelector('th')!.getBoundingClientRect();
+    const eight = page.getByRole('grid').element().querySelector('[data-hour="8"]')!.getBoundingClientRect();
+    // The 8 AM line is just under what's pinned: the weekday names and the (empty) all-day row.
+    expect(eight.top - head.bottom).toBeGreaterThan(0);
+    expect(eight.top - head.bottom).toBeLessThan(16);
+    box.scrollTop += 200;
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(Math.round(grid.querySelector('th')!.getBoundingClientRect().top)).toBe(Math.round(box.getBoundingClientRect().top) + 1);
+    // An event at 6 AM opens the hours there instead.
+    await rerender(<EnUS><EventCalendar defaultMonth={new Date(2025, 2, 4)} defaultView="day" events={[{ id: 'e', title: 'Early flight', start: '2025-03-04T06:00', end: '2025-03-04T07:00' }]} /></EnUS>);
+    await expect.element(page.getByRole('grid', { name: 'Tuesday, March 4, 2025' })).toBeInTheDocument();
+    const g = page.getByRole('grid').element(), six = g.querySelector('[data-hour="6"]')!.getBoundingClientRect(), h2 = g.querySelector('th')!.getBoundingClientRect();
+    expect(six.top - h2.bottom).toBeGreaterThan(0);
+    expect(six.top - h2.bottom).toBeLessThan(16);
+  });
+
+  test('day: one day, named by its date; Previous and Next move a day; the keys move it a day, PageDown a day too', async () => {
+    await render(<EventCalendar id="dy" events={EVENTS} defaultMonth={new Date(2025, 2, 4)} defaultView="day" />);
+    await expect.element(page.getByRole('grid', { name: 'Tuesday, March 4, 2025' })).toBeInTheDocument();
+    expect(document.querySelectorAll('[role=gridcell]')).toHaveLength(1);
+    await userEvent.click(page.getByRole('button', { name: 'Next day' }));
+    await expect.element(page.getByRole('heading', { level: 2, name: 'Wednesday, March 5, 2025' })).toBeInTheDocument();
+    await userEvent.click(page.getByRole('button', { name: 'Previous day' }));
+    cell('2025-03-04').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.poll(() => document.activeElement?.getAttribute('data-date')).toBe('2025-03-05');
+    await userEvent.keyboard('{PageDown}');
+    await expect.poll(() => document.activeElement?.getAttribute('data-date')).toBe('2025-03-06');
+    await userEvent.keyboard('{PageUp}');
+    await expect.poll(() => document.activeElement?.getAttribute('data-date')).toBe('2025-03-05');
+  });
+
+  test('week: the keys move a day, PageDown a week; the switch offers Month, Week, Day and Agenda', async () => {
+    const views: string[] = [];
+    await render(<EventCalendar events={EVENTS} defaultMonth={new Date(2025, 2, 4)} weekStartsOn={0} onViewChange={(v) => views.push(v)} />);
+    expect([...document.querySelectorAll('[role=radio]')].map((r) => r.textContent)).toEqual(['Month', 'Week', 'Day', 'Agenda']);
+    await userEvent.click(page.getByRole('radio', { name: 'Week' }));
+    await userEvent.click(page.getByRole('radio', { name: 'Day' }));
+    await userEvent.click(page.getByRole('radio', { name: 'Week' }));
+    expect(views).toEqual(['week', 'day', 'week']);
+    cell('2025-03-04').focus();
+    await userEvent.keyboard('{PageDown}');
+    await expect.poll(() => document.activeElement?.getAttribute('data-date')).toBe('2025-03-11');
+    await expect.element(page.getByRole('heading', { level: 2, name: 'March 9 – 15, 2025' })).toBeInTheDocument();
+    await userEvent.keyboard('{End}');
+    await expect.poll(() => document.activeElement?.getAttribute('data-date')).toBe('2025-03-15');
+  });
+
+  test('week: today has a line at the time now that moves with the clock, and the time zone shows over the hours', async () => {
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'Date'], now: new Date(2025, 2, 4, 10, 0) });
+    try {
+      await render(<EventCalendar events={EVENTS} defaultView="week" weekStartsOn={0} />);
+      const line = () => cell('2025-03-04').querySelector<HTMLElement>('[aria-hidden]:not(span)')!;
+      const hours = () => line().parentElement!.getBoundingClientRect().top;
+      await expect.poll(() => Math.round(line().getBoundingClientRect().top - hours())).toBe(480);
+      vi.advanceTimersByTime(30 * 60000);
+      await expect.poll(() => Math.round(line().getBoundingClientRect().top - hours())).toBe(504);
+      expect(cell('2025-03-05').querySelector('[aria-hidden]:not(span)')).toBeNull();
+      const zone = page.getByRole('grid').element().querySelector('thead td')!;
+      expect([zone.getAttribute('aria-hidden'), zone.textContent.length > 0]).toEqual(['true', true]);
+    } finally { vi.useRealTimers(); }
+  });
+
+  test('below 640px the week shows as the agenda, which fits a phone; the day stays a day', async () => {
+    const [w, h] = [window.innerWidth, window.innerHeight];
+    await page.viewport(360, 700);
+    try {
+      const { rerender } = await render(<EventCalendar events={EVENTS} defaultMonth={new Date(2025, 2, 4)} view="week" />);
+      await expect.element(page.getByText('Design review').first()).toBeInTheDocument();
+      expect(document.querySelector('[role=grid]')).toBeNull();
+      await rerender(<EnUS><EventCalendar events={EVENTS} defaultMonth={new Date(2025, 2, 4)} view="day" /></EnUS>);
+      await expect.element(page.getByRole('grid', { name: 'Tuesday, March 4, 2025' })).toBeInTheDocument();
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(360);
+    } finally {
+      await page.viewport(w, h);
+    }
+  });
+
   test('its text reads 4.5:1 on its background, and an event\'s on each tone, in all six themes', async () => {
     await render(<EventCalendar id="c" events={EVENTS} defaultMonth={MARCH} />);
     const bg = () => css(el('c')).backgroundColor;

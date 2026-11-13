@@ -99,7 +99,7 @@ export function ProductCard({ product: p, currency, onAddToCart, headingLevel = 
       toast({ title: l.notAdded(p.name), tone: 'danger' });
     } finally { setBusy(false); }
   };
-  const nameId = `product-${p.id}-name`;
+  const nameId = `${React.useId()}-name`;   // its own on the page: two grids can hold the same product
   return (
     <Card as="li" padding="md" aria-labelledby={nameId} className="flex h-full min-w-0 flex-col gap-3 wrap-anywhere">
       <Image src={p.image} alt="" ratio="square" rounded />
@@ -110,10 +110,11 @@ export function ProductCard({ product: p, currency, onAddToCart, headingLevel = 
         {sale && <Badge tone="danger">{l.off(Math.floor(Number(((1 - p.price / p.was!) * 100).toFixed(6))))}</Badge>}
       </p>
       {p.rating !== undefined && (
-        <p className="flex flex-wrap items-center gap-2 text-sm text-text-muted">
+        // A <div>, since Rating is one: inside a <p>, server HTML would end the <p> there and hydrating wouldn't match.
+        <div className="flex flex-wrap items-center gap-2 text-sm text-text-muted">
           <Rating readOnly value={p.rating} size="sm" aria-label={l.rating} />
           {p.reviews !== undefined && <span>{l.reviews(p.reviews, formatNumber(p.reviews, locale))}</span>}
-        </p>
+        </div>
       )}
       <div className="mt-auto">
         {p.soldOut
