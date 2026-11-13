@@ -136,7 +136,7 @@ jobs:
             if ! has storybook; then storybook=""; fi
           fi
           x86any=$(echo "$x86" | jq -r 'if (.include | length) > 0 then 1 else "" end')
-          portable='{"include":[{"group":"checks","shard":"1/2"},{"group":"checks","shard":"2/2"}'
+          portable='{"include":[{"group":"checks","shard":"1/3"},{"group":"checks","shard":"2/3"},{"group":"checks","shard":"3/3"}'
           [ -n "$storybook" ] && portable="$portable"',{"group":"storybook","shard":"1/3"},{"group":"storybook","shard":"2/3"},{"group":"storybook","shard":"3/3"}'
           portable="$portable]}"
           {
@@ -419,10 +419,12 @@ jobs:
     steps: *suite-steps
 
   # Coverage of the component tests (V8, floors in vitest.config.ts): the base shards' blobs merged into one. A narrowed
-  # run checks only that every function it adds runs in a test; the floors are checked on whole runs.
+  # run checks only that every function it adds runs in a test; the floors are checked on whole runs. Not in the merge
+  # queue: each pull request's own run already checked the functions it adds, a queue run is narrowed (no floors), and
+  # this job sat after every suite shard, about 1.3 of a queue run's 9 minutes. The nightly run checks the floors.
   coverage:
     needs: [plan, build, suite-x86]
-    if: needs.plan.outputs.tests == '1'
+    if: needs.plan.outputs.tests == '1' && github.event_name != 'merge_group'
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f

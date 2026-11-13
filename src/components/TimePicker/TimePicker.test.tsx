@@ -44,6 +44,19 @@ describe('TimePicker', () => {
     expect([closed, modded(t, 'PageDown'), modded(t, 'ArrowDown'), t.getAttribute('aria-activedescendant') === at]).toEqual([[[false, false], [false, false], 'false'], [false, false], [false, false], true]);
   });
 
+  test('a max brought in while the list is open, past the highlighted time: the highlight moves to the last time left, and Enter picks it', async () => {
+    const { rerender } = await render(<TimePicker id="shrink" aria-label="Time" min="09:00" max="12:00" step={60} />);
+    el('shrink').focus();
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}{ArrowDown}');
+    const options = () => [...listOf('shrink').querySelectorAll('[role="option"]')];
+    expect(el('shrink').getAttribute('aria-activedescendant')).toBe(options()[3]!.id);   // 12:00, the last of four
+    await rerender(<TimePicker id="shrink" aria-label="Time" min="09:00" max="10:00" step={60} />);
+    const last = options()[1]!;   // 10:00
+    expect([options().length, el('shrink').getAttribute('aria-activedescendant')]).toEqual([2, last.id]);
+    const ten = time(last);
+    await userEvent.keyboard('{Enter}');
+    expect(el('shrink').value).toBe(ten);
+  });
   test('switching to another window or tab mid-typing keeps the typed text and says nothing (L8E26)', async () => {
     const calls: string[] = [];
     await render(<TimePicker id="twb" aria-label="Start" locale="de-DE" onInvalidInput={(t, r) => calls.push(t + ':' + r)} />);
