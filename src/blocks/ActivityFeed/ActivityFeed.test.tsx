@@ -70,15 +70,6 @@ describe('Blocks/Activity feed', () => {
     await expect.element(page.getByRole('button', { name: 'Load more' })).toBeVisible();
   });
 
-  test('loadingText, the old name of loadingLabel, still names the skeletons, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<ActivityFeed events={[]} hasMore={false} onLoadMore={() => {}} loading {...{ loadingText: 'Memuat aktivitas' }} />);
-      await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat aktivitas']);
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('activity-feed-loading-text'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
-  });
-
   test('every word can be given in the page language', async () => {
     await render(<ActivityFeed events={[{ id: '1', actor: { name: 'Ana Putri' }, action: 'mengomentari', target: { label: 'Desain ulang' }, date: ago(5) }]}
       title="Aktivitas" headingLevel={3} hasMore onLoadMore={() => {}} loadMoreLabel="Muat lagi" />);

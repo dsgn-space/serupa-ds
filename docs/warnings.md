@@ -6,10 +6,6 @@ A Serupa component warns in the browser console, once, when it can see a mistake
 
 An Accordion with `type="single"` got a `value` with more than one item, so more than one item shows open. Pass one value, or use `type="multiple"`.
 
-## activity-feed-loading-text
-
-ActivityFeed's `loadingText` is deprecated, and removed in 15.0.0. It still works as `loadingLabel` does. Rename it to `loadingLabel`: a prop named `…Text` is shown on screen, and the skeletons' name is only said to screen readers, as Button's and Badge's `loadingLabel` are.
-
 ## bad-locale
 
 A `locale` (on a component or SerupaProvider) that Intl can't read, so it's ignored and the next one is used: the provider's, else the browser's. An underscore is mended first ("en_US" works as "en-US"), so this is something like "english" or "en-". Use a BCP 47 tag such as "en-US" or "id-ID". See Localization.
