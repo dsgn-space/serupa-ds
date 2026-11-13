@@ -743,3 +743,36 @@ describe('Dialog and Drawer on a phone', () => {
   });
 });
 
+
+describe('Dialog: a held Enter (GR406)', () => {
+  // Enter held for half a second repeats. The first press opens the dialog and focus moves to a button in it; the
+  // repeats used to press that button (closing it, or pressing its action), and then the opener again, 30 times a second.
+  test('Enter held on the button that opens it opens it once and presses nothing in it', async () => {
+    let opens = 0, keeps = 0;
+    function App() {
+      const [open, setOpen] = React.useState(false);
+      return <>
+        <button id="he-open" onClick={() => { opens++; setOpen(true); }}>Open</button>
+        <Dialog id="he" open={open} onOpenChange={setOpen} title="Delete the file?" footer={<Button id="he-keep" autoFocus onClick={() => { keeps++; setOpen(false); }}>Keep</Button>} />
+      </>;
+    }
+    await render(<App />);
+    el('he-open').focus();
+    await userEvent.keyboard('{Enter>8}');
+    await expect.poll(() => isOpen('he')).toBe(true);
+    expect([opens, keeps]).toEqual([1, 0]);
+    await userEvent.keyboard('{/Enter}');
+    // Let go and pressed again, Enter presses the focused button as ever.
+    el('he-keep').focus();
+    await userEvent.keyboard('{Enter}');
+    expect(keeps).toBe(1);
+  });
+
+  test('Enter held on one button still repeats there', async () => {
+    let n = 0;
+    await render(<><button id="he-b" onClick={() => { n++; }}>Add</button><Dialog id="he2" open={false} onOpenChange={() => {}} title="T" /></>);
+    el('he-b').focus();
+    await userEvent.keyboard('{Enter>4/}');
+    expect(n).toBeGreaterThan(1);
+  });
+});

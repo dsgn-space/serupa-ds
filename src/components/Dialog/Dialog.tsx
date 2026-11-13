@@ -8,6 +8,7 @@ import { en as words } from './labels';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { modalClosed, modalOpened, modalOpening, wasDismissal } from '../../internal/layers';
+import { listenForInput } from '../../internal/lastInput';
 import { deepActive } from '../../internal/root';
 import * as icons from '../../material/builtin';
 import { useScrolls } from '../../internal/useScrolls';
@@ -101,6 +102,7 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
 
   // Bumped when the browser closed it while open was true: open again, unless the parent said false.
   const [reopened, reopen] = React.useState(0);
+  useIsoLayoutEffect(listenForInput, []);   // a held Enter that opened it doesn't go on to press what focus lands on
   useIsoLayoutEffect(() => {
     const d = el.current;
     if (!d) return;
