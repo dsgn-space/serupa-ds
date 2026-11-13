@@ -121,7 +121,9 @@ describe('Patterns/Team members', () => {
     await expect.element(screen.getByText('Enter at least one email address.')).toBeVisible();
     await userEvent.keyboard('{Escape}');
     await screen.getByRole('button', { name: 'Invite people' }).click();
-    expect(screen.getByText('Enter at least one email address.').elements()).toHaveLength(0);
+    // In the dialog: the page's polite live region may still be saying the old problem.
+    await expect.element(screen.getByRole('dialog')).toBeVisible();
+    expect(screen.getByRole('dialog').getByText('Enter at least one email address.').elements()).toHaveLength(0);
   });
 
   test('loading: one busy list named "Loading members", no rows yet; a failed load says so with Try again', async () => {
