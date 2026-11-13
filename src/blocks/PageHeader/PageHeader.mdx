@@ -23,6 +23,8 @@ The top of a page inside an app: where the page is, what it's called, what it's 
 - **The primary action**, one button, always shown. **The secondary actions** sit beside it on a wide screen and move into a "More actions" Menu on a phone, so none is cut off or makes the page scroll sideways (1.4.10).
 - **More actions**: on a phone the secondary actions move into a menu. Its button has only an icon, so pass its name in the page's language with `moreLabel` (default "More actions"), as you do `sectionsLabel`.
 - **Section links**, a [TabNav](?path=/docs/components-navigation-tabnav--docs) with its own name (`sectionsLabel`), so it's told apart from the breadcrumb and the app's navigation in a screen reader's landmark list. They look like Tabs, and the current one says `aria-current="page"` and has the tab line under it, not only a different color.
+- **An action that can't be used now** (Mark all as read with nothing unread) takes `disabled`: it stays in its place, and in the phone menu, saying it's off, rather than coming and going. `icon` puts an icon before its label.
+- **Moving focus to the title**: when an action takes away the button that had focus, pass `headingRef` and focus the h1, so focus doesn't fall to the top of the page (2.4.3). The h1 then takes focus from a script only, never from Tab.
 - **Reading order** matches the Tab order: breadcrumb, title, primary action, other actions, sections.
 
 <Canvas of={Stories.Simple} />
