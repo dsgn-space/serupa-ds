@@ -219,6 +219,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Сполучення з однієї клавіші, як-от ?, поза текстовими полями. Вимкніть їх, якщо вони спрацьовують випадково.',
   opensInNewTab: '(відкриється в новій вкладці)',
   loadMore: 'Завантажити ще',
+  drawerExpand: 'Розгорнути',
+  drawerCollapse: 'Згорнути',
   showingOf: (shown, total) => `Показано ${shown} з ${total}`,
   loadedMore: (added) => `Завантажено ще: ${added}`,
   moreLoaded: 'Завантажено ще',

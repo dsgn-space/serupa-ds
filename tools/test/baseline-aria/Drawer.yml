@@ -1,6 +1,9 @@
 # Bottom
 - button "Open filters"
 
+# BottomSheet
+- button "Open filters"
+
 # DoFooterActions
 - button "Open filters"
 - dialog "Filters":

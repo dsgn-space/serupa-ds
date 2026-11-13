@@ -214,6 +214,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: '? gibi tek tuşlu kısayollar, metin alanlarının dışında. Yanlışlıkla çalışıyorlarsa kapatın.',
   opensInNewTab: '(yeni sekmede açılır)',
   loadMore: 'Daha fazla yükle',
+  drawerExpand: 'Genişlet',
+  drawerCollapse: 'Daralt',
   showingOf: (shown, total) => `${total} öğeden ${shown} tanesi gösteriliyor`,
   loadedMore: (added) => `${added} öğe daha yüklendi`,
   moreLoaded: 'Daha fazlası yüklendi',
