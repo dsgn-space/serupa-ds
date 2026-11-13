@@ -64,7 +64,7 @@ describe('Navbar', () => {
   test('wide screens: brand, links, then actions on the right, in a Container xl (1280px max, padded); no menu button', async () => {
     await render(<Main />);
     const [b, n, a] = ['#brand', '#nav nav', '#act'].map((s) => Math.round(q(s).getBoundingClientRect().left));
-    expect(b < n && n < a && a > 900).toBe(true);
+    expect(b! < n! && n! < a! && a! > 900).toBe(true);
     const inner = q('#nav .dk-navbar__inner');
     expect([Math.round(inner.getBoundingClientRect().width), css(inner).paddingLeft]).toEqual([1100, '32px']);
     expect(vis('#nav .dk-navbar__toggle')).toBe(false);
@@ -326,7 +326,7 @@ describe('Navbar', () => {
     await expect.poll(() => vis('#nav nav')).toBe(true);
     const n = el('nav'), nav = n.querySelector('nav')!, r = nav.getBoundingClientRect(), top = [...nav.querySelectorAll('a')].map((a) => Math.round(a.getBoundingClientRect().top));
     const gap = Math.round(r.top - n.getBoundingClientRect().bottom);
-    expect([toggle().getAttribute('aria-expanded'), toggle().querySelector<HTMLElement>('[data-icon]')?.dataset.icon, Math.round(r.width), top[0] < top[1] && top[1] < top[2]]).toEqual(['true', 'close', 500, true]);
+    expect([toggle().getAttribute('aria-expanded'), toggle().querySelector<HTMLElement>('[data-icon]')?.dataset.icon, Math.round(r.width), top[0]! < top[1]! && top[1]! < top[2]!]).toEqual(['true', 'close', 500, true]);
     expect(gap <= 0 && gap >= -1).toBe(true);
   });
 
@@ -435,7 +435,7 @@ describe('Navbar', () => {
   test('pressed: a link held down fills with pressed at once, with no fade in (ED1)', async () => {
     await render(<Main />);
     await press(el('lp'), () => {
-      expect([css(el('lp')).backgroundColor, css(el('lp')).transitionDuration.split(',')[0].trim()]).toEqual([color('var(--pressed)'), '0s']);
+      expect([css(el('lp')).backgroundColor, css(el('lp')).transitionDuration.split(',')[0]!.trim()]).toEqual([color('var(--pressed)'), '0s']);
     });
   });
 });

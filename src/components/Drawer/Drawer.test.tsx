@@ -781,9 +781,9 @@ describe('Drawer: motion (DZ1)', () => {
         const exit = await frames();
         d.removeEventListener('scroll', onScroll);
         // In: from past the screen's edge, only ever toward where it rests; out: only ever back past the edge.
-        const rest = enter[enter.length - 1], far = side === 'right' ? innerWidth : innerHeight;
-        expect([enter[0] >= far - 2, enter.every((v, i) => i === 0 || v <= enter[i - 1] + 1), rest < far]).toEqual([true, true, true]);
-        expect([exit[0] <= rest + 1, exit.every((v, i) => i === 0 || v >= exit[i - 1] - 1), exit.filter((v) => v < rest - 1)]).toEqual([true, true, []]);
+        const rest = enter[enter.length - 1]!, far = side === 'right' ? innerWidth : innerHeight;
+        expect([enter[0]! >= far - 2, enter.every((v, i) => i === 0 || v <= enter[i - 1]! + 1), rest < far]).toEqual([true, true, true]);
+        expect([exit[0]! <= rest + 1, exit.every((v, i) => i === 0 || v >= exit[i - 1]! - 1), exit.filter((v) => v < rest - 1)]).toEqual([true, true, []]);
         expect([scrolled, d.scrollLeft, d.scrollTop]).toEqual([[], 0, 0]);
       }
     });
@@ -910,7 +910,7 @@ describe('Drawer: unsaved (13)', () => {
       await rerender(<></>);
       await render(<form><Drawer open title="Rename" onOpenChange={() => {}}><input aria-label="Name" /></Drawer></form>);
       expect(calls()).toHaveLength(1);
-      expect(String(calls()[0][0])).toMatch(/^Drawer: it's inside a <form>/);
+      expect(String(calls()[0]![0])).toMatch(/^Drawer: it's inside a <form>/);
     } finally { warn.mockRestore(); }
   });
 });

@@ -23,7 +23,7 @@ const part = (id: string, name: string): HTMLElement | null => {
     suggestions: text?.querySelector<HTMLElement>(':scope > p:has(> button, > strong)') ?? null,
     actions: kids.find((c) => c !== text && c.getAttribute('aria-hidden') !== 'true') ?? null,
   };
-  return parts[name];
+  return parts[name] ?? null;
 };
 const rect = (e: Element) => e.getBoundingClientRect();
 const near = (a: number, b: number) => Math.abs(a - b) <= 1;
@@ -55,8 +55,8 @@ describe('EmptyState', () => {
     expect([t.tagName, css(t).fontSize, css(t).fontWeight, d.tagName, css(d).fontSize, css(part('edef', 'text')).maxWidth]).toEqual(['H3', '16px', '600', 'P', '14px', '384px']);
     expect(part('edef', 'actions')!.querySelectorAll('button').length).toBe(2);
     const top = ['icon', 'title', 'description', 'actions'].map((n) => rect(part('edef', n)!).top);
-    expect(top[0] < top[1] && top[1] < top[2] && top[2] < top[3]).toBe(true);
-    expect(near(top[1] - (top[0] + 48), 16)).toBe(true);
+    expect(top[0]! < top[1]! && top[1]! < top[2]! && top[2]! < top[3]!).toBe(true);
+    expect(near(top[1]! - (top[0]! + 48), 16)).toBe(true);
   });
 
   test('size sm, dashed, headingLevel 4: 24px padding, a 40px circle, a text-sm <h4>, a 1px dashed frame with 8px corners; nothing for missing parts', async () => {
@@ -132,7 +132,7 @@ describe('EmptyState', () => {
     expect([line.tagName, line.textContent, buttons.map((b) => b.textContent)]).toEqual(['P', 'Did you mean:marsmaze', ['mars', 'maze']]);
     expect(line.parentElement!.className).toBe('dk-empty-state__text');
     expect(buttons.every((b) => b.offsetHeight >= 24 && css(b).textDecorationLine === 'underline')).toBe(true);
-    buttons[1].click();
+    buttons[1]!.click();
     expect(picked).toEqual(['maze']);
     const plain = part('etxt', 'suggestions')!;
     expect([plain.querySelector('button'), plain.querySelector('strong')!.textContent]).toEqual([null, 'mars']);
@@ -147,8 +147,8 @@ describe('EmptyState', () => {
       <SerupaProvider labels={idLabels}><EmptyState id="eid" title="Tidak ada hasil" suggestions={['mars']} onClearFilters={() => cleared++} /></SerupaProvider>
     </>);
     const btns = [...part('eclr', 'actions')!.querySelectorAll('button')];
-    expect([btns.map((b) => b.textContent.replace(/filter_alt_off/, '').trim()), btns[1].offsetHeight]).toEqual([['New search', 'Clear filters'], el('smref').offsetHeight]);
-    btns[1].click();
+    expect([btns.map((b) => b.textContent.replace(/filter_alt_off/, '').trim()), btns[1]!.offsetHeight]).toEqual([['New search', 'Clear filters'], el('smref').offsetHeight]);
+    btns[1]!.click();
     part('eonly', 'actions')!.querySelector('button')!.click();
     expect(cleared).toBe(2);
     expect([part('eid', 'suggestions')!.firstElementChild!.textContent, part('eid', 'actions')!.textContent.replace(/filter_alt_off/, '').trim()]).toEqual(['Mungkin maksud Anda:', 'Hapus filter']);

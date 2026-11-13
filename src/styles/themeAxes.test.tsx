@@ -90,7 +90,7 @@ describe('Theme axes', () => {
     const cases: Array<[string | null, string, string | null, string]> = [[null, 'dark', null, 'blue-dark'], [null, 'dark', 'emerald', 'emerald-dark']];
     for (const th of THEMES) {
       const [brand, mode] = th.split('-'), other = mode === 'light' ? 'dark' : 'light';
-      cases.push([th, other, null, `${brand}-${other}`], [th, mode, null, th], [th, other, 'violet', `violet-${other}`]);
+      cases.push([th, other, null, `${brand}-${other}`], [th, mode!, null, th], [th, other, 'violet', `violet-${other}`]);
     }
     for (const [page, mode, brand, want] of cases) {
       if (page) root.setAttribute('data-theme', page); else axes();
@@ -212,7 +212,7 @@ describe('Contrast axis', () => {
     for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'teal-300'], ['blue', 'dark', 'blue-300']]) {
       axes(brand, mode);
       root.setAttribute('data-contrast', 'more');
-      expect(hue(document.body), `${brand}-${mode}`).toBe(swatch(shade));
+      expect(hue(document.body), `${brand}-${mode}`).toBe(swatch(shade!));
       root.removeAttribute('data-contrast');
     }
     // A violet page asking for more contrast, with an emerald dark section and a flat blue-light one inside it.
@@ -302,9 +302,9 @@ describe('Density axis', () => {
       return plain!.slice(1).map((v, i) => (i < 3 ? Number(v) / 255 : Number(v)));
     };
     const [pr, pg, pb, pa] = rgba('sh-page'), [er, eg, eb] = rgba('sh-em');
-    expect([pb > pr && pb > pg, eg > er && eg > eb, pa, rgba('sh-plain')]).toEqual([true, true, 0.1, [0, 0, 0, 0.1]]);
+    expect([pb! > pr! && pb! > pg!, eg! > er! && eg! > eb!, pa, rgba('sh-plain')]).toEqual([true, true, 0.1, [0, 0, 0, 0.1]]);
     // A deep shade: dark enough to read as shadow.
-    expect(Math.max(pr, pg, pb, er, eg, eb)).toBeLessThan(0.35);
+    expect(Math.max(pr!, pg!, pb!, er!, eg!, eb!)).toBeLessThan(0.35);
   });
   test('the elevation roles (I6) follow data-shadow in a section too: elevation-overlay is shadow-lg wherever it is read', async () => {
     const box = (id: string, v: string) => <div id={id} style={{ boxShadow: `var(${v})` }}>Menu</div>;
@@ -353,7 +353,7 @@ describe('Density axis', () => {
       <Checkbox id="tm-cb" defaultChecked>Remember me</Checkbox>
     </div>);
     const btn = () => getComputedStyle(document.getElementById('tm-btn')!).transform;
-    const thumb = () => withMotion(() => { const t = getComputedStyle(document.getElementById('tm-sw')!.nextElementSibling!); return [t.transitionTimingFunction.split(', ')[0].slice(0, 7), t.transitionDuration.split(', ')[0]]; });
+    const thumb = () => withMotion(() => { const t = getComputedStyle(document.getElementById('tm-sw')!.nextElementSibling!); return [t.transitionTimingFunction.split(', ')[0]!.slice(0, 7), t.transitionDuration.split(', ')[0]]; });
     const icon = () => withMotion(() => { const t = getComputedStyle(document.getElementById('tm-cb')!.nextElementSibling!); return [t.animationName, t.animationDuration]; });
     root.setAttribute('data-theme', 'violet-light');
     expect([btn(), thumb()]).toEqual(['matrix(1, 0, 0, 1, 0, 1)', ['linear(', '0.3s']]);
@@ -373,7 +373,7 @@ describe('Density axis', () => {
     }
   });
   test('GR333: the recessed surface sits on the other side of the page from the raised one in every theme, so dark keeps depth the right way round', () => {
-    const lum = (c: string) => { const [r, g, b] = c.match(/[\d.]+/g)!.slice(0, 3).map((v) => { const x = Number(v) / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+    const lum = (c: string) => { const [r, g, b] = c.match(/[\d.]+/g)!.slice(0, 3).map((v) => { const x = Number(v) / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!; };
     const probe = document.createElement('span'); document.body.appendChild(probe);
     const col = (n: string) => { probe.style.color = `var(--${n})`; return lum(getComputedStyle(probe).color); };
     for (const th of THEMES) {
@@ -412,7 +412,7 @@ describe('Density axis', () => {
         const full = ['ft-h', 'ft-9'].map(px);
         await page.viewport(Math.round(w / 3), 700);
         const zoomed = ['ft-h', 'ft-9'].map((id) => 3 * px(id));
-        zoomed.forEach((z, i) => expect(z / full[i], `${w}px window, 300% zoom`).toBeGreaterThanOrEqual(2));
+        zoomed.forEach((z, i) => expect(z / full[i]!, `${w}px window, 300% zoom`).toBeGreaterThanOrEqual(2));
       }
     } finally { await page.viewport(900, 700); }
   });

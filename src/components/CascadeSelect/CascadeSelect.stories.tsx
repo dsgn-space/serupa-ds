@@ -47,7 +47,7 @@ export const InAField: Story = {
 export const ParentsToo: Story = { name: 'Choosing a parent', args: { selectParents: true, defaultValue: ['jateng'] } };
 
 function fakeLoad(path: CascadeOption[]): Promise<CascadeOption[]> {
-  const last = path[path.length - 1];
+  const last = path[path.length - 1]!;
   return new Promise((done) => setTimeout(() => done(path.length < 3
     ? [1, 2, 3].map((n) => ({ value: last.value + '-' + n, label: last.label + ' ' + n, isLeaf: path.length === 2 }))
     : []), 600));

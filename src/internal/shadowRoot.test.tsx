@@ -33,7 +33,7 @@ describe('focus and ids inside a shadow root (GR60)', () => {
     const { root, done } = await inShadow(<Pagination count={3} defaultPage={2} />);
     try {
       const arrows = ['Previous page', 'Next page'].map((n) => root.querySelector<HTMLButtonElement>(`button[aria-label="${n}"]`)!);
-      arrows[1].focus();
+      arrows[1]!.focus();
       await userEvent.keyboard('{Enter}');
       await expect.poll(() => root.activeElement).toBe(arrows[0]);
     } finally { done(); }
@@ -47,7 +47,7 @@ describe('focus and ids inside a shadow root (GR60)', () => {
     const { root, done } = await inShadow(<List />);
     try {
       const removes = () => [...root.querySelectorAll<HTMLButtonElement>('button[aria-label^="Remove"]')];
-      removes()[1].focus();
+      removes()[1]!.focus();
       await userEvent.keyboard('{Enter}');
       await expect.poll(() => removes().length).toBe(2);
       await expect.poll(() => root.activeElement).toBe(removes()[1]);

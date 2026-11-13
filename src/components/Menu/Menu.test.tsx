@@ -199,7 +199,7 @@ describe('Menu', () => {
       await expect.poll(() => b.getAttribute('aria-expanded')).toBe('true');
       expect(focus()).toBe('Edit');
       await new Promise((r) => setTimeout(r, 250));
-      await userEvent.hover(menuOf('mb').querySelectorAll('[role="menuitem"]')[1]);
+      await userEvent.hover(menuOf('mb').querySelectorAll('[role="menuitem"]')[1]!);
     });
     await expect.poll(() => chosen).toEqual(['dup']);
     expect([b.getAttribute('aria-expanded'), document.activeElement]).toEqual(['false', b]);
@@ -284,7 +284,7 @@ describe('Menu', () => {
   test('hover highlights (focuses) an item; a click outside closes it', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
-    await userEvent.hover(menuOf('mb').querySelectorAll('[role="menuitem"]')[1]);
+    await userEvent.hover(menuOf('mb').querySelectorAll('[role="menuitem"]')[1]!);
     expect(focus()).toBe('Duplicate');
     await userEvent.click(document.body, { position: { x: 800, y: 500 } });
     expect(!!openMenu()).toBe(false);
@@ -465,7 +465,7 @@ describe('Menu', () => {
     </Menu>);
     const items = [...menuOf('ks').querySelectorAll<HTMLElement>('[role=menuitem]')];
     expect(items.map((i) => i.getAttribute('aria-keyshortcuts'))).toEqual(['Meta+E', 'Control+Shift+KeyP', null]);
-    expect([items[0].querySelector('kbd')!.textContent, items[0].querySelector('kbd')!.getAttribute('aria-hidden')]).toEqual(['⌘E', 'true']);
+    expect([items[0]!.querySelector('kbd')!.textContent, items[0]!.querySelector('kbd')!.getAttribute('aria-hidden')]).toEqual(['⌘E', 'true']);
     await expect.element(page.getByRole('menuitem', { name: 'Edit', exact: true })).toBeInTheDocument();
   });
 
@@ -497,7 +497,7 @@ describe('Menu', () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
-    const m = menuOf('mb'), items = m.querySelectorAll<HTMLElement>('[role="menuitem"]'), first = items[0], second = items[1], del = items[items.length - 1];
+    const m = menuOf('mb'), items = m.querySelectorAll<HTMLElement>('[role="menuitem"]'), first = items[0]!, second = items[1]!, del = items[items.length - 1]!;
     const c = (e: Element) => getComputedStyle(e).color, bgOf = (e: Element) => getComputedStyle(e).backgroundColor;
     const low: string[] = [];
     for (const th of THEMES) {
@@ -518,7 +518,7 @@ describe('Menu', () => {
   test('pressed: an item held down fills with pressed, one step past the highlight', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
-    const item = menuOf('mb').querySelectorAll<HTMLElement>('[role="menuitem"]')[1];
+    const item = menuOf('mb').querySelectorAll<HTMLElement>('[role="menuitem"]')[1]!;
     await press(item, () => expect.poll(() => getComputedStyle(item).backgroundColor).toBe(color('var(--pressed)')));
   });
 
@@ -587,7 +587,7 @@ describe('Menu', () => {
     await userEvent.click(el('vb'));
     expect(state()).toEqual([':null', 'checkbox:false', 'checkbox:true', 'checkbox:false']);
     expect(ticks()).toEqual(['-', 'hidden', 'visible', 'hidden']);
-    expect(items()[2].getAttribute('aria-keyshortcuts')).toBe('Meta+R');
+    expect(items()[2]!.getAttribute('aria-keyshortcuts')).toBe('Meta+R');
     await userEvent.keyboard('{ArrowDown}');
     expect(document.activeElement!.textContent).toBe('Show grid');
     await userEvent.keyboard('{Enter}');
@@ -595,10 +595,10 @@ describe('Menu', () => {
     expect(asks).toEqual([true]);
     await userEvent.click(el('vb'));
     expect(state()).toEqual([':null', 'checkbox:true', 'checkbox:true', 'checkbox:false']);
-    await userEvent.click(items()[2]);
+    await userEvent.click(items()[2]!);
     await userEvent.click(el('vb'));
     expect(state()[2]).toBe('checkbox:false');
-    await userEvent.click(items()[3]);
+    await userEvent.click(items()[3]!);
     expect([!!openMenu(), state()[3]]).toEqual([true, 'checkbox:false']);
   });
 
@@ -621,11 +621,11 @@ describe('Menu', () => {
     expect(document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent).toBe('Sort by');
     expect(radios().map((x) => x.getAttribute('aria-checked'))).toEqual(['true', 'false', 'false']);
     expect(document.activeElement!.textContent).toBe('Name');
-    await userEvent.click(radios()[1]);
+    await userEvent.click(radios()[1]!);
     await userEvent.click(el('sb'));
     expect(radios().map((x) => x.getAttribute('aria-checked'))).toEqual(['false', 'true', 'false']);
-    radios()[2].click();
-    expect([asks, radios()[2].getAttribute('aria-checked')]).toEqual([['date'], 'false']);
+    radios()[2]!.click();
+    expect([asks, radios()[2]!.getAttribute('aria-checked')]).toEqual([['date'], 'false']);
   });
 
   test('L8E112: choosing the MenuRadioItem that is chosen already closes the menu but calls no onValueChange', async () => {
@@ -762,7 +762,7 @@ describe('ContextMenu', () => {
     await userEvent.click(el('mo'));
     const m = document.querySelector('[role=menu]') as HTMLElement, b = el('mo').getBoundingClientRect(), r = m.getBoundingClientRect();
     const [x, y] = getComputedStyle(m).transformOrigin.split(' ').map(parseFloat);
-    expect([m.dataset.side, Math.round(y), Math.abs(r.left + x - (b.left + b.width / 2)) <= 1]).toEqual(['bottom', 0, true]);
+    expect([m.dataset.side, Math.round(y!), Math.abs(r.left + x! - (b.left + b.width / 2)) <= 1]).toEqual(['bottom', 0, true]);
   });
 });
 
@@ -919,7 +919,7 @@ describe('Menu labels line up', () => {
     const all = lefts(m);
     expect(all).toEqual(Array(7).fill(all[0]));
     // The label column is past both an icon and a check, each 16px with the 8px gap, after the 8px inset.
-    expect(all[0] - Math.round(m.querySelector<HTMLElement>('[role="menuitem"]')!.getBoundingClientRect().left)).toBe(8 + 24 + 24);
+    expect(all[0]! - Math.round(m.querySelector<HTMLElement>('[role="menuitem"]')!.getBoundingClientRect().left)).toBe(8 + 24 + 24);
     // The submenu has no icons or checks: its labels sit at the plain inset.
     await userEvent.keyboard('{End}{ArrowRight}');
     const sub = [...document.querySelectorAll<HTMLElement>('[role="menu"]')].find((x) => x !== m && !x.hidden)!;

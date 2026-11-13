@@ -33,13 +33,13 @@ export function color(value: string): string {
 const channels = (c: string) => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
 const luminance = (c: string) => {
   const [r, g, b] = channels(c).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; });
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
 };
 
 /** The WCAG 2.1 contrast ratio of two colors (CSS values or var()), in the current theme. */
 export function contrast(fg: string, bg: string): number {
   const [x, y] = [luminance(color(fg)), luminance(color(bg))].sort((m, n) => n - m);
-  return (x + 0.05) / (y + 0.05);
+  return (x! + 0.05) / (y! + 0.05);
 }
 
 /**

@@ -180,10 +180,10 @@ describe('Icon: outlined (I10)', () => {
     const names = (m: object) => Object.keys(m).filter((k) => /^[A-Z]/.test(k)).sort();
     expect(names(outlined)).toEqual(names(filled));
     const f = filled as unknown as Record<string, { name: string; d: string }>, o = outlined as unknown as Record<string, { name: string; d: string }>;
-    expect([o.Home.name, o.Home.d !== f.Home.d, o.Favorite.name, o.Add === f.Add]).toEqual(['home:outlined', true, 'favorite:outlined', true]);
+    expect([o.Home!.name, o.Home!.d !== f.Home!.d, o.Favorite!.name, o.Add === f.Add]).toEqual(['home:outlined', true, 'favorite:outlined', true]);
     const own = names(outlined).filter((k) => o[k] !== f[k]);
-    expect([own.length > 2000, own.every((k) => o[k].name === f[k].name + ':outlined' && o[k].d !== f[k].d)]).toEqual([true, true]);
+    expect([own.length > 2000, own.every((k) => o[k]!.name === f[k]!.name + ':outlined' && o[k]!.d !== f[k]!.d)]).toEqual([true, true]);
     await render(<p><Icon id="ho" icon={o.Home} /><Icon id="hf" icon={f.Home} /></p>);
-    expect([path('ho')!.getAttribute('d'), path('hf')!.getAttribute('d')]).toEqual([o.Home.d, f.Home.d]);
+    expect([path('ho')!.getAttribute('d'), path('hf')!.getAttribute('d')]).toEqual([o.Home!.d, f.Home!.d]);
   });
 });

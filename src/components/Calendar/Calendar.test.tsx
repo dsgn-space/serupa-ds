@@ -194,11 +194,11 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     const seen: string[] = [];
     await render(<Calendar data-testid="cal" monthYearPicker defaultMonth={new Date(2026, 9, 1)} locale="en-US" onMonthChange={(m) => seen.push(m.toISOString().slice(0, 7))} />);
     const [m, y] = menus();
-    expect([m.getAttribute('aria-label'), y.getAttribute('aria-label'), m.selectedOptions[0].text, y.value]).toEqual(['Month', 'Year', 'October', '2026']);
+    expect([m!.getAttribute('aria-label'), y!.getAttribute('aria-label'), m!.selectedOptions[0]!.text, y!.value]).toEqual(['Month', 'Year', 'October', '2026']);
     const now = new Date().getFullYear();
-    expect([+y.options[0].value, +y.options[y.options.length - 1].value]).toEqual([now - 100, now + 10]);
-    await pickOption(y, '2028');
-    await pickOption(m, '3');
+    expect([+y!.options[0]!.value, +y!.options[y!.options.length - 1]!.value]).toEqual([now - 100, now + 10]);
+    await pickOption(y!, '2028');
+    await pickOption(m!, '3');
     expect(title()).toBe('April 2028');
     expect(seen.length).toBe(2);
     expect(cal('.dk-calendar__title').getBoundingClientRect().width).toBeLessThanOrEqual(1);
@@ -208,11 +208,11 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
 
   test('monthYearPicker inside a form: a reset leaves the Month and Year menus on the month the grid shows (GR87)', async () => {
     await render(<form id="f87"><Calendar data-testid="cal" monthYearPicker defaultMonth={new Date(2026, 5, 1)} locale="en-US" /></form>);
-    const f = document.getElementById('f87') as HTMLFormElement, shown = () => [menus()[0].selectedOptions[0].text, menus()[1].value, title()];
+    const f = document.getElementById('f87') as HTMLFormElement, shown = () => [menus()[0]!.selectedOptions[0]!.text, menus()[1]!.value, title()];
     f.reset();
     await new Promise((r) => setTimeout(r, 50));
     expect(shown()).toEqual(['June', '2026', 'June 2026']);
-    await pickOption(menus()[1], '2027');
+    await pickOption(menus()[1]!, '2027');
     f.reset();
     await new Promise((r) => setTimeout(r, 50));
     expect(shown()).toEqual(['June', '2027', 'June 2027']);
@@ -223,14 +223,14 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
   test('monthYearPicker with min and max: only their years, months outside are disabled, and a year that lands outside clamps', async () => {
     await render(<Calendar data-testid="cal" monthYearPicker min="2025-03-10" max="2027-08-20" defaultMonth={new Date(2026, 0, 1)} locale="en-US" />);
     const [m, y] = menus();
-    expect([...y.options].map((o) => o.value)).toEqual(['2025', '2026', '2027']);
-    await pickOption(y, '2025');
+    expect([...y!.options].map((o) => o.value)).toEqual(['2025', '2026', '2027']);
+    await pickOption(y!, '2025');
     expect(title()).toBe('March 2025');
-    expect([...menus()[0].options].filter((o) => o.disabled).map((o) => o.text)).toEqual(['January', 'February']);
-    await pickOption(menus()[1], '2027');
-    await pickOption(menus()[0], '7');
+    expect([...menus()[0]!.options].filter((o) => o.disabled).map((o) => o.text)).toEqual(['January', 'February']);
+    await pickOption(menus()[1]!, '2027');
+    await pickOption(menus()[0]!, '7');
     expect(title()).toBe('August 2027');
-    expect([...menus()[0].options].filter((o) => o.disabled).map((o) => o.text)).toEqual(['September', 'October', 'November', 'December']);
+    expect([...menus()[0]!.options].filter((o) => o.disabled).map((o) => o.text)).toEqual(['September', 'October', 'November', 'December']);
     void m;
   });
 
@@ -366,10 +366,10 @@ describe('Calendar presets (RU11)', () => {
     await expect.element(group).toBeInTheDocument();
     const btns = [...group.element().querySelectorAll('button')];
     expect(btns.map((b) => [b.textContent, b.getAttribute('aria-disabled')])).toEqual([['Today', null], ['Tomorrow', null], ['In a week', 'true']]);
-    await userEvent.click(btns[1]);
+    await userEvent.click(btns[1]!);
     const tomorrow = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
     expect(got).toEqual([iso(tomorrow)]);
-    expect(btns[1].getAttribute('aria-pressed')).toBe('true');
+    expect(btns[1]!.getAttribute('aria-pressed')).toBe('true');
     expect(document.querySelector(`#cp [data-date="${iso(tomorrow)}"]`)!.closest('td')!.getAttribute('aria-selected')).toBe('true');
   });
   test('your own presets jump to their month; without presets there is no list', async () => {

@@ -65,7 +65,7 @@ describe('Progress', () => {
     await render(<Wrap>{LOCALES.map((l) => <SerupaProvider key={l} locale={l}><Progress id={'loc-' + l} value={45} label="Upload" showValue /></SerupaProvider>)}</Wrap>);
     const seen = LOCALES.map((l) => [value('loc-' + l), pb('loc-' + l).getAttribute('aria-valuetext')]);
     expect(seen).toEqual(LOCALES.map((l) => { const t = new Intl.NumberFormat(l, { style: 'percent' }).format(0.45); return [t, t]; }));
-    expect([seen[0][0]!.includes('٤٥'), seen[1][0]!.startsWith('%'), seen[3][0]]).toEqual([true, true, '45%']);
+    expect([seen[0]![0]!.includes('٤٥'), seen[1]![0]!.startsWith('%'), seen[3]![0]]).toEqual([true, true, '45%']);
   });
 
   test('no value: indeterminate, without valuenow or valuetext, a sliding segment', async () => {
@@ -170,7 +170,7 @@ describe('Progress: done', () => {
     rm.forEach((r) => { r.media.mediaText = '(min-width: 0px)'; });
     try {
       expect(withMotion(() => { const s = css(ring); return `${s.animationName} ${s.animationDuration}`; })).toBe('dk-progress-breathe 1.4s');
-    } finally { rm.forEach((r, i) => { r.media.mediaText = was[i]; }); }
+    } finally { rm.forEach((r, i) => { r.media.mediaText = was[i]!; }); }
   });
 
   test('circle with a label: the label names the ring (it has no room to show it), unless aria-label or aria-labelledby does (L8E70)', async () => {

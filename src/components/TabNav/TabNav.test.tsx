@@ -76,7 +76,7 @@ describe('TabNav', () => {
     await userEvent.tab();
     const links = [...el('k').querySelectorAll<HTMLElement>('a')];
     expect(document.activeElement).toBe(links[0]);
-    expect(css(links[0]).boxShadow).toMatch(/0px 0px 0px 2px inset|inset 0px 0px 0px 2px/);
+    expect(css(links[0]!).boxShadow).toMatch(/0px 0px 0px 2px inset|inset 0px 0px 0px 2px/);
     await userEvent.keyboard('{ArrowRight}');
     expect(document.activeElement).toBe(links[0]);
     await userEvent.tab();
@@ -119,10 +119,10 @@ describe('TabNav', () => {
       const links = [...el('s').querySelectorAll<HTMLElement>('a')];
       await userEvent.click(el('to'));
       // The CSS slide, or the script's where the browser starts none (Safari, tabRow.ts).
-      const move = document.getAnimations().find((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === links[2] && e.pseudoElement === '::after' && (a instanceof CSSTransition ? a.transitionProperty === 'translate' : 'translate' in e.getKeyframes()[0]); });
+      const move = document.getAnimations().find((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === links[2] && e.pseudoElement === '::after' && (a instanceof CSSTransition ? a.transitionProperty === 'translate' : 'translate' in e.getKeyframes()[0]!); });
       expect(!!move).toBe(true);
-      const from = links[2].offsetLeft + parseFloat(String((move!.effect as KeyframeEffect).getKeyframes()[0].translate));
-      expect(Math.abs(from - links[0].offsetLeft)).toBeLessThan(1);
+      const from = links[2]!.offsetLeft + parseFloat(String((move!.effect as KeyframeEffect).getKeyframes()[0]!.translate));
+      expect(Math.abs(from - links[0]!.offsetLeft)).toBeLessThan(1);
     });
   });
 

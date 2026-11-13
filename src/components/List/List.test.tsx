@@ -61,7 +61,7 @@ describe('List', () => {
     expect([m.tagName, `${css(m).paddingTop} ${css(m).paddingLeft}`, css(t).fontSize, css(t).fontWeight, css(t.nextElementSibling).fontSize, !!m.querySelector(':scope > span:first-child > [data-component="avatar"]')])
       .toEqual(['DIV', '12px 12px', '14px', '500', '14px', true]);
     expect(Math.round(li.getBoundingClientRect().right - tr.getBoundingClientRect().right)).toBe(12);
-    expect(left[0] < left[1] && left[1] < left[2]).toBe(true);
+    expect(left[0]! < left[1]! && left[1]! < left[2]!).toBe(true);
   });
 
   test('divided: a 1px line between items, none above the first', async () => {
@@ -196,7 +196,7 @@ describe('List', () => {
   test('divided={false}: no lines; unknown variant and as fall back to plain and ul', async () => {
     await render(<List id="lnodiv" divided={false} variant={'boxed' as never} as={'table' as never}><ListItem title="A" /><ListItem title="B" /></List>);
     const l = el('lnodiv');
-    expect([l.tagName, l.className, css(l.children[1]).borderTopWidth]).toEqual(['UL', 'dk-list', '0px']);
+    expect([l.tagName, l.className, css(l.children[1]!).borderTopWidth]).toEqual(['UL', 'dk-list', '0px']);
   });
 
   test('tokens (--list-padding-y, --list-title-color) override one list', async () => {

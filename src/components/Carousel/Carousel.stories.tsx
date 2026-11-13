@@ -29,7 +29,7 @@ export const Controlled: Story = {
     const [i, setI] = React.useState(2);
     return <div style={{ maxWidth: 480 }}>
       <Carousel {...args} index={i} onIndexChange={setI}>{PICS.map((p) => <Image key={p.alt} {...p} alt={p.alt} ratio="4:3" rounded={false} />)}</Carousel>
-      <p>Showing {PICS[i].alt}.</p>
+      <p>Showing {PICS[i]!.alt}.</p>
     </div>;
   },
 };

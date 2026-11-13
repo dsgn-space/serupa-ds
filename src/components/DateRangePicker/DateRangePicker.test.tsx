@@ -21,7 +21,7 @@ const inRange = (tid: string) => ranged(tid).map((b) => b.dataset.date!.slice(5)
 const outside = (tid: string) => [...pop(tid).querySelectorAll('[role=grid]')].flatMap((g) => { const m = g.querySelector<HTMLElement>('tbody tr:nth-child(3) button')!.dataset.date!.slice(0, 7); return [...g.querySelectorAll<HTMLElement>('button[data-date]')].filter((b) => b.dataset.date!.slice(0, 7) !== m); });
 const focused = () => { const a = document.activeElement as HTMLElement; return a.dataset.date || a.getAttribute('aria-label') || a.tagName; };
 const btn = (tid: string) => box(tid).querySelector('button') as HTMLButtonElement;
-const fill = async (tid: string, i: number, text: string, key = '{Tab}') => { await userEvent.fill(fields(tid)[i], text); await userEvent.keyboard(key); };
+const fill = async (tid: string, i: number, text: string, key = '{Tab}') => { await userEvent.fill(fields(tid)[i]!, text); await userEvent.keyboard(key); };
 const str = (r: DateRange) => (r.start ? r.start.toDateString() : '-') + '..' + (r.end ? r.end.toDateString() : '-');
 
 function Trip(props: { value?: DateRange; tref?: React.Ref<HTMLSpanElement> }) {
@@ -39,7 +39,7 @@ describe('DateRangePicker', () => {
   test('switching to another window or tab mid-typing keeps the typed text and says nothing (L8E27)', async () => {
     const calls: string[] = [];
     await render(<DateRangePicker data-testid="drpw" locale="en-US" onInvalidInput={(t, r) => calls.push(t + ':' + r)} />);
-    const f = fields('drpw')[0];
+    const f = fields('drpw')[0]!;
     await userEvent.click(f);
     await userEvent.keyboard('5/1');
     // The window losing focus: the field gets blur (focusout) and stays document.activeElement.
@@ -56,9 +56,9 @@ describe('DateRangePicker', () => {
   test('text typed in either field and put back is reported through onInvalidInput', async () => {
     const calls: string[] = [];
     await render(<DateRangePicker data-testid="drpi" locale="en-US" min={new Date(2026, 0, 1)} onInvalidInput={(t, r) => calls.push(t + ':' + r)} />);
-    await userEvent.fill(fields('drpi')[0], '12/31/2025');
+    await userEvent.fill(fields('drpi')[0]!, '12/31/2025');
     await userEvent.keyboard('{Tab}');
-    await userEvent.fill(fields('drpi')[1], 'later');
+    await userEvent.fill(fields('drpi')[1]!, 'later');
     await userEvent.keyboard('{Enter}');
     expect([vals('drpi'), calls]).toEqual([' – ', ['12/31/2025:unavailable', 'later:unreadable']]);
   });
@@ -66,9 +66,9 @@ describe('DateRangePicker', () => {
   test('an end typed before the start is put back and reported as unavailable, not dropped without a word', async () => {
     const calls: string[] = [];
     await render(<DateRangePicker data-testid="drpo" locale="en-US" onInvalidInput={(t, r) => calls.push(t + ':' + r)} />);
-    await userEvent.fill(fields('drpo')[0], '10/20/2026');
+    await userEvent.fill(fields('drpo')[0]!, '10/20/2026');
     await userEvent.keyboard('{Tab}');
-    await userEvent.fill(fields('drpo')[1], '10/10/2026');
+    await userEvent.fill(fields('drpo')[1]!, '10/10/2026');
     await userEvent.keyboard('{Enter}');
     expect(calls).toEqual(['10/10/2026:unavailable']);
   });
@@ -92,9 +92,9 @@ describe('DateRangePicker', () => {
     const el = box('trip'), [s, e] = fields('trip');
     expect(ref.current).toBe(el);
     expect(el.className).toMatch(/dk-input.*extra/);
-    expect([el.getAttribute('role'), s.getAttribute('aria-label'), e.getAttribute('aria-label'), s.placeholder, btn('trip').getAttribute('aria-label')]).toEqual(['group', 'Start date', 'End date', 'mm/dd/yyyy', 'Choose dates']);
-    expect(!!s.id && document.querySelector('label')!.htmlFor === s.id).toBe(true);
-    expect(!!s.getAttribute('aria-describedby') && s.getAttribute('aria-describedby') === e.getAttribute('aria-describedby')).toBe(true);
+    expect([el.getAttribute('role'), s!.getAttribute('aria-label'), e!.getAttribute('aria-label'), s!.placeholder, btn('trip').getAttribute('aria-label')]).toEqual(['group', 'Start date', 'End date', 'mm/dd/yyyy', 'Choose dates']);
+    expect(!!s!.id && document.querySelector('label')!.htmlFor === s!.id).toBe(true);
+    expect(!!s!.getAttribute('aria-describedby') && s!.getAttribute('aria-describedby') === e!.getAttribute('aria-describedby')).toBe(true);
     expect(vals('trip')).toBe('03/10/2025 – 03/14/2025');
   });
 
@@ -148,7 +148,7 @@ describe('DateRangePicker', () => {
 
   test('Alt+ArrowDown opens it and the keyboard picks both ends; Escape closes it and returns focus; a click outside closes it', async () => {
     await render(<Trip value={{ start: new Date(2025, 2, 18), end: new Date(2025, 3, 2) }} />);
-    fields('trip')[0].focus();
+    fields('trip')[0]!.focus();
     await userEvent.keyboard('{Alt>}{ArrowDown}{/Alt}');
     expect(focused()).toBe('2025-03-18');
     await userEvent.keyboard('{ArrowRight}{Enter}{ArrowDown}{Enter}');
@@ -228,7 +228,7 @@ describe('DateRangePicker', () => {
     </>);
     expect(fields('rq').map((x) => [x.required, x.getAttribute('aria-required')])).toEqual([[true, 'true'], [true, 'true']]);
     expect([box('rq').hasAttribute('required'), box('rq').hasAttribute('aria-required')]).toEqual([false, false]);
-    expect([(document.getElementById('rq-form') as HTMLFormElement).checkValidity(), fields('rq')[0].validity.valid, fields('rq')[1].validity.valueMissing]).toEqual([false, true, true]);
+    expect([(document.getElementById('rq-form') as HTMLFormElement).checkValidity(), fields('rq')[0]!.validity.valid, fields('rq')[1]!.validity.valueMissing]).toEqual([false, true, true]);
     expect(fields('rqf').map((x) => x.getAttribute('aria-required'))).toEqual(['true', 'true']);
   });
 
@@ -249,7 +249,7 @@ describe('DateRangePicker', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const d = pop('trip'), bg = getComputedStyle(d).backgroundColor;
-      const r = getComputedStyle(ranged('trip')[0]), st = getComputedStyle(d.querySelector(':scope p[aria-live]')!), dash = getComputedStyle(box('trip').querySelector(':scope > span[aria-hidden]')!);
+      const r = getComputedStyle(ranged('trip')[0]!), st = getComputedStyle(d.querySelector(':scope p[aria-live]')!), dash = getComputedStyle(box('trip').querySelector(':scope > span[aria-hidden]')!);
       const field = getComputedStyle(box('trip')).backgroundColor;
       const pairs: Array<[string, string, string, number]> = [['day in range', r.color, r.backgroundColor, 4.5], ['status', st.color, bg, 4.5], ['dash', dash.color, field, 4.5]];
       for (const [k, fg, on, min] of pairs) { const x = contrast(fg, on); n++; if (x < min) low.push(`${th} ${k} ${x.toFixed(2)}`); }
@@ -282,10 +282,10 @@ describe('DateRangePicker popup on a phone (GR9)', () => {
           await userEvent.click(btn('gr9'));
           await expect.poll(() => isOpen('gr9')).toBe(true);
           const p = pop('gr9').getBoundingClientRect(), cals = [...pop('gr9').querySelectorAll('[role=grid]')].map((g) => g.getBoundingClientRect());
-          expect(cals[1].top).toBeGreaterThan(cals[0].bottom);   // stacked
+          expect(cals[1]!.top).toBeGreaterThan(cals[0]!.bottom);   // stacked
           expect(p.left).toBeGreaterThanOrEqual(7.5);
           expect(w - p.right).toBeGreaterThanOrEqual(7.5);
-          expect(p.width).toBeLessThan(cals[0].width + 48);   // one month plus its padding, not two across
+          expect(p.width).toBeLessThan(cals[0]!.width + 48);   // one month plus its padding, not two across
           await r.unmount();
         }
       }
@@ -300,10 +300,10 @@ describe('DateRangePicker popup on a phone (GR9)', () => {
     }
     const [s, e] = fields('narrow');
     // The year isn't cut off: each field's text fits it.
-    expect([s.value, s.scrollWidth <= s.clientWidth + 1, e.value, e.scrollWidth <= e.clientWidth + 1]).toEqual(['12/28/2025', true, '01/06/2026', true]);
-    expect(e.getBoundingClientRect().top).toBeGreaterThan(s.getBoundingClientRect().bottom - 1);
+    expect([s!.value, s!.scrollWidth <= s!.clientWidth + 1, e!.value, e!.scrollWidth <= e!.clientWidth + 1]).toEqual(['12/28/2025', true, '01/06/2026', true]);
+    expect(e!.getBoundingClientRect().top).toBeGreaterThan(s!.getBoundingClientRect().bottom - 1);
     // Each line is a full control height, so both fields stay 24px targets (WCAG 2.5.8).
-    expect([s, e].map((f) => f.getBoundingClientRect().height >= 24)).toEqual([true, true]);
+    expect([s, e].map((f) => f!.getBoundingClientRect().height >= 24)).toEqual([true, true]);
     expect(box('narrow').scrollWidth).toBeLessThanOrEqual(box('narrow').clientWidth + 1);
   });
 });
@@ -323,14 +323,14 @@ describe('DateRangePicker presets (RU11)', () => {
     // In reading order the shortcuts come after the days.
     expect(days('pre').at(-1)!.compareDocumentPosition(group) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(presetBtns('pre').map((b) => b.getAttribute('aria-disabled'))).toEqual([null, null, null, 'true', min.getDate() === 1 ? null : 'true', 'true']);
-    const week = presetBtns('pre')[2];
+    const week = presetBtns('pre')[2]!;
     await userEvent.click(week);
     const from = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 6);
     expect(got).toEqual([iso(from) + '..' + iso(t)]);
     expect(isOpen('pre')).toBe(true);
     expect(week.getAttribute('aria-pressed')).toBe('true');
     expect(day('pre', iso(from))?.closest('td')?.getAttribute('aria-selected')).toBe('true');
-    presetBtns('pre')[3].click();   // disabled: nothing happens
+    presetBtns('pre')[3]!.click();   // disabled: nothing happens
     expect(got).toHaveLength(1);
   });
 
@@ -339,7 +339,7 @@ describe('DateRangePicker presets (RU11)', () => {
     const t = new Date(); t.setHours(0, 0, 0, 0);
     await render(<DateRangePicker data-testid="mx" aria-label="Report" locale="en-US" max={t} presets onValueChange={(_r, s) => got.push(s.start + '..' + s.end)} />);
     await userEvent.click(btn('mx'));
-    const month = presetBtns('mx')[4];
+    const month = presetBtns('mx')[4]!;
     expect([month.textContent, month.getAttribute('aria-disabled')]).toEqual(['This month', null]);
     await userEvent.click(month);
     expect(got).toEqual([iso(new Date(t.getFullYear(), t.getMonth(), 1)) + '..' + iso(t)]);
@@ -352,7 +352,7 @@ describe('DateRangePicker presets (RU11)', () => {
       <DateRangePicker data-testid="none" aria-label="Plain" locale="en-US" />
     </>);
     await userEvent.click(btn('own'));
-    await userEvent.click(presetBtns('own')[1]);
+    await userEvent.click(presetBtns('own')[1]!);
     expect(vals('own')).toBe('03/24/2025 – 03/28/2025');
     expect(inRange('own')).toBe('03-25,03-26,03-27');
     await userEvent.click(btn('none'));

@@ -23,7 +23,7 @@ describe('Rating', () => {
     const group = page.getByRole('radiogroup', { name: 'Your rating' }).element();
     expect([group === el('r'), ref.current === group, el('r').className, el('r').dataset.x, el('r').dataset.component]).toEqual([true, true, 'dk-rating dk-rating--size-md extra', 'y', 'rating']);
     expect(radios('r').map((r) => r.getAttribute('aria-label'))).toEqual(['1 star', '2 stars', '3 stars', '4 stars', '5 stars']);
-    expect([stars('r')[0].offsetWidth, filled('r')]).toEqual([24, [0, 0, 0, 0, 0]]);
+    expect([stars('r')[0]!.offsetWidth, filled('r')]).toEqual([24, [0, 0, 0, 0, 0]]);
     await userEvent.click(page.getByRole('radio', { name: '3 stars' }));
     expect([calls, picked('r'), filled('r')]).toEqual([[3], ['3'], [24, 24, 24, 0, 0]]);
   });
@@ -35,18 +35,18 @@ describe('Rating', () => {
     expect(document.activeElement).toBe(radios('k')[1]);
     await userEvent.keyboard('{ArrowRight}{ArrowRight}{ArrowLeft}');
     expect([picked('k'), filled('k')]).toEqual([['3'], [24, 24, 24, 0, 0]]);
-    expect([stars('s')[0].offsetWidth, stars('l')[0].offsetWidth]).toEqual([20, 32]);
+    expect([stars('s')[0]!.offsetWidth, stars('l')[0]!.offsetWidth]).toEqual([20, 32]);
   });
 
   test('keyboard table: ArrowDown picks the next star and ArrowUp the one before; Space picks the focused star, and with clearable clears the picked one (FH1)', async () => {
     const calls: (number | null)[] = [];
     await render(<div><Rating id="ku" aria-label="Up down" defaultValue={2} /><Rating id="ks" aria-label="Space" clearable onValueChange={(v) => calls.push(v)} /></div>);
-    radios('ku')[1].focus();
+    radios('ku')[1]!.focus();
     await userEvent.keyboard('{ArrowDown}{ArrowDown}');
     const down = picked('ku');
     await userEvent.keyboard('{ArrowUp}');
     expect([down, picked('ku')]).toEqual([['4'], ['3']]);
-    radios('ks')[2].focus();   // nothing picked yet
+    radios('ks')[2]!.focus();   // nothing picked yet
     await userEvent.keyboard(' ');
     const first = picked('ks');
     await userEvent.keyboard(' ');
@@ -56,41 +56,41 @@ describe('Rating', () => {
   test('allowHalf: two choices per star ("2.5 stars"), the start half of a star picks the half; right to left, the half fills from the right', async () => {
     await render(<SerupaProvider locale="en-US"><div><Rating id="h" aria-label="Half" allowHalf max={4} /><div dir="rtl"><Rating id="rt" aria-label="RTL" allowHalf defaultValue={1.5} max={3} /></div></div></SerupaProvider>);
     expect(radios('h').map((r) => r.getAttribute('aria-label'))).toEqual(['0.5 stars', '1 star', '1.5 stars', '2 stars', '2.5 stars', '3 stars', '3.5 stars', '4 stars']);
-    await userEvent.click(stars('h')[2], { position: { x: 4, y: 12 } });
+    await userEvent.click(stars('h')[2]!, { position: { x: 4, y: 12 } });
     expect([picked('h'), filled('h')]).toEqual([['2.5'], [24, 24, 12, 0]]);
     expect(document.activeElement).toBe(radios('h')[4]);
-    const s = stars('rt')[1].getBoundingClientRect(), f = (stars('rt')[1].children[1] as HTMLElement).getBoundingClientRect();
-    expect([filled('rt'), Math.round(s.right - f.right), stars('rt')[0].getBoundingClientRect().left > s.left]).toEqual([[24, 12, 0], 0, true]);
+    const s = stars('rt')[1]!.getBoundingClientRect(), f = (stars('rt')[1]!.children[1] as HTMLElement).getBoundingClientRect();
+    expect([filled('rt'), Math.round(s.right - f.right), stars('rt')[0]!.getBoundingClientRect().left > s.left]).toEqual([[24, 12, 0], 0, true]);
   });
 
   test('clearable: picking the current rating again, Backspace or Delete clears it; without clearable they don\'t', async () => {
     const calls: (number | null)[] = [];
     await render(<div><Rating id="c" aria-label="Clear" clearable defaultValue={4} onValueChange={(v) => calls.push(v)} /><Rating id="n" aria-label="Keep" defaultValue={4} /></div>);
-    await userEvent.click(radios('c')[3]);
+    await userEvent.click(radios('c')[3]!);
     expect(picked('c')).toEqual([]);   // the stars under the pointer stay lit until it leaves
-    await userEvent.click(radios('c')[1]);
+    await userEvent.click(radios('c')[1]!);
     await userEvent.keyboard('{Backspace}');
-    await userEvent.click(radios('c')[0]);
+    await userEvent.click(radios('c')[0]!);
     await userEvent.keyboard('{Delete}');
     expect(calls).toEqual([null, 2, null, 1, null]);
-    await userEvent.click(radios('n')[3]);
+    await userEvent.click(radios('n')[3]!);
     await userEvent.keyboard('{Backspace}');
     expect(picked('n')).toEqual(['4']);
   });
 
   test('hovering a star lights up the stars up to it without picking; leaving shows the rating again', async () => {
     await render(<Rating id="v" aria-label="Hover" defaultValue={1} />);
-    await userEvent.hover(radios('v')[3]);
+    await userEvent.hover(radios('v')[3]!);
     expect([filled('v'), picked('v')]).toEqual([[24, 24, 24, 24, 0], ['1']]);
-    await userEvent.unhover(radios('v')[3]);
+    await userEvent.unhover(radios('v')[3]!);
     await userEvent.hover(document.body);
     await expect.poll(() => filled('v')).toEqual([24, 0, 0, 0, 0]);
   });
 
   test('L8E71 disabled, or in a disabled <fieldset>: hovering a star lights nothing, as nothing can be picked; aria-disabled on the group', async () => {
     await render(<div><Rating id="dh" aria-label="Off" disabled defaultValue={1} /><fieldset disabled><Rating id="df" aria-label="Fieldset" defaultValue={1} /></fieldset></div>);
-    await userEvent.hover(el('dh').children[3]);
-    await userEvent.hover(el('df').children[3]);
+    await userEvent.hover(el('dh').children[3]!);
+    await userEvent.hover(el('df').children[3]!);
     expect([filled('dh'), filled('df'), el('df').getAttribute('aria-disabled')]).toEqual([[24, 0, 0, 0, 0], [24, 0, 0, 0, 0], 'true']);
   });
 
@@ -99,7 +99,7 @@ describe('Rating', () => {
     expect([page.getByRole('img', { name: '4.3 out of 5' }).element() === el('ro'), radios('ro').length, filled('ro')]).toEqual([true, 0, [24, 24, 24, 24, 7]]);
     expect(el('ra').getAttribute('aria-label')).toBe('Average, 3.5 out of 5');
     // With base.css (svg max-width: 100%), the star in a share-wide fill is still drawn whole and clipped, not shrunk (GI1).
-    expect(stars('ro').map((s) => Math.round((s.children[1].firstElementChild as Element).getBoundingClientRect().width))).toEqual([24, 24, 24, 24, 24]);
+    expect(stars('ro').map((s) => Math.round((s.children[1]!.firstElementChild as Element).getBoundingClientRect().width))).toEqual([24, 24, 24, 24, 24]);
   });
 
   test('ten lg stars in 320px shrink alike to fit, square and drawn whole, down to the sm size; with room they stay 32px (GK2)', async () => {
@@ -107,10 +107,10 @@ describe('Rating', () => {
       <div style={{ width: '600px' }}><Rating id="wid" readOnly max={10} size="lg" value={7.5} /></div>
       <div style={{ width: '100px' }}><Rating id="tiny" readOnly max={10} size="lg" value={7.5} /></div></div>);
     const w = (e: Element) => Math.round(e.getBoundingClientRect().width * 10) / 10;
-    const box = (id: string) => stars(id).map((s) => [w(s), Math.round(s.getBoundingClientRect().height * 10) / 10, w(s.children[1].firstElementChild as Element)]);
+    const box = (id: string) => stars(id).map((s) => [w(s), Math.round(s.getBoundingClientRect().height * 10) / 10, w(s.children[1]!.firstElementChild as Element)]);
     const nar = box('nar');
     expect(el('nar').getBoundingClientRect().width).toBeLessThanOrEqual(320);
-    expect(nar.every(([sw, sh, draw]) => sw === nar[0][0] && sh === sw && draw === sw && sw < 32 && sw >= 20)).toBe(true);
+    expect(nar.every(([sw, sh, draw]) => sw === nar[0]![0] && sh === sw && draw === sw && sw! < 32 && sw! >= 20)).toBe(true);
     expect(box('wid').every(([sw, sh, draw]) => sw === 32 && sh === 32 && draw === 32)).toBe(true);
     expect(box('tiny').every(([sw]) => sw === 20)).toBe(true);
   });
@@ -124,7 +124,7 @@ describe('Rating', () => {
   test('in a form: name sends the rating; form reset brings the default back; disabled and required reach the radios', async () => {
     await render(<form id="f"><Rating id="fr" aria-label="Form" name="stars" defaultValue={2} required /><Rating id="d" aria-label="Off" disabled defaultValue={3} /></form>);
     const form = el('f') as HTMLFormElement;
-    await userEvent.click(radios('fr')[3]);
+    await userEvent.click(radios('fr')[3]!);
     expect(new FormData(form).get('stars')).toBe('4');
     form.reset();
     await expect.poll(() => picked('fr')).toEqual(['2']);
@@ -140,7 +140,7 @@ describe('Rating', () => {
     await render(<><form id="of" /><Rating id="or" aria-label="Outside" name="stars" form="of" defaultValue={2} /></>);
     const form = el('of') as HTMLFormElement;
     const full = filled('or')[0];
-    await userEvent.click(radios('or')[3]);
+    await userEvent.click(radios('or')[3]!);
     await userEvent.unhover(el('or'));
     expect(new FormData(form).get('stars')).toBe('4');
     form.reset();
@@ -151,12 +151,12 @@ describe('Rating', () => {
   test('in a Field: the label names the group and the hint describes it; error marks it invalid', async () => {
     await render(<Field label="How was your stay?" hint="Pick again to clear." error="Pick a rating."><Rating clearable /></Field>);
     const group = page.getByRole('radiogroup', { name: 'How was your stay?' }).element();
-    expect([group.getAttribute('aria-invalid'), document.getElementById(group.getAttribute('aria-describedby')!.split(' ')[0])!.textContent]).toEqual(['true', 'Pick again to clear.']);
+    expect([group.getAttribute('aria-invalid'), document.getElementById(group.getAttribute('aria-describedby')!.split(' ')[0]!)!.textContent]).toEqual(['true', 'Pick again to clear.']);
   });
 
   test('invalid shows on the stars: the empty ones take the danger color, 3:1 on the page in all six themes', async () => {
     await render(<><Rating id="ok" aria-label="Fine" defaultValue={1} /><Rating id="bad" aria-label="Wrong" invalid defaultValue={1} /></>);
-    const empty = (id: string) => css(stars(id)[4].children[0]).color;
+    const empty = (id: string) => css(stars(id)[4]!.children[0]!).color;
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -174,7 +174,7 @@ describe('Rating', () => {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor;
       for (const [k, layer] of [['fill', 1], ['empty', 0]] as const) {
-        const r = contrast(css(stars('t')[0].children[layer]).color, page);
+        const r = contrast(css(stars('t')[0]!.children[layer]!).color, page);
         if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`);
       }
     }
@@ -203,34 +203,34 @@ describe('Rating', () => {
   describe('target size (WCAG 2.5.8, GR104)', () => {
     // Each radio that takes presses: its box, and the distance between neighbours' centres.
     const targets = (id: string) => radios(id).filter((r) => getComputedStyle(r).pointerEvents !== 'none').map((r) => r.getBoundingClientRect());
-    const pitch = (rs: DOMRect[]) => rs.slice(1).map((r, i) => Math.round((r.left + r.width / 2 - (rs[i].left + rs[i].width / 2)) * 10) / 10);
+    const pitch = (rs: DOMRect[]) => rs.slice(1).map((r, i) => Math.round((r.left + r.width / 2 - (rs[i]!.left + rs[i]!.width / 2)) * 10) / 10);
     test('every size, with and without halves: one target per star, at least 24px apart centre to centre, with no gap between them', async () => {
       await render(<div>{(['sm', 'md', 'lg'] as const).flatMap((sz) => [<Rating key={sz} id={'t-' + sz} aria-label={sz} size={sz} />, <Rating key={sz + 'h'} id={'th-' + sz} aria-label={sz + ' half'} size={sz} allowHalf />])}</div>);
       for (const id of ['t-sm', 'th-sm', 't-md', 'th-md', 't-lg', 'th-lg']) {
         const rs = targets(id);
         expect(rs.length, id).toBe(5);
         expect(pitch(rs).every((d) => d >= 24), id + ': ' + pitch(rs).join(' ')).toBe(true);
-        expect(rs.slice(1).every((r, i) => Math.abs(r.left - rs[i].right) < 0.5), id).toBe(true);
+        expect(rs.slice(1).every((r, i) => Math.abs(r.left - rs[i]!.right) < 0.5), id).toBe(true);
       }
-      expect(Math.round(stars('t-sm')[0].getBoundingClientRect().width)).toBe(20);
+      expect(Math.round(stars('t-sm')[0]!.getBoundingClientRect().width)).toBe(20);
     });
     test('allowHalf: the start half of a star picks the half and the end half the whole, also right to left; hovering shows which', async () => {
       await render(<div><Rating id="hp" aria-label="Halves" allowHalf size="md" /><div dir="rtl"><Rating id="hr" aria-label="RTL" allowHalf size="md" /></div></div>);
-      await userEvent.hover(stars('hp')[1], { position: { x: 5, y: 12 } });
+      await userEvent.hover(stars('hp')[1]!, { position: { x: 5, y: 12 } });
       expect(filled('hp')).toEqual([24, 12, 0, 0, 0]);
-      await userEvent.click(stars('hp')[1], { position: { x: 19, y: 12 } });
+      await userEvent.click(stars('hp')[1]!, { position: { x: 19, y: 12 } });
       expect(picked('hp')).toEqual(['2']);
       expect(document.activeElement).toBe(radios('hp')[3]);
-      await userEvent.click(stars('hp')[3], { position: { x: 5, y: 12 } });
+      await userEvent.click(stars('hp')[3]!, { position: { x: 5, y: 12 } });
       expect(picked('hp')).toEqual(['3.5']);
-      await userEvent.click(stars('hr')[0], { position: { x: 19, y: 12 } });
+      await userEvent.click(stars('hr')[0]!, { position: { x: 19, y: 12 } });
       expect(picked('hr')).toEqual(['0.5']);
-      await userEvent.click(stars('hr')[0], { position: { x: 5, y: 12 } });
+      await userEvent.click(stars('hr')[0]!, { position: { x: 5, y: 12 } });
       expect(picked('hr')).toEqual(['1']);
     });
     test('a press in the gap between two stars picks the nearer one', async () => {
       await render(<Rating id="gp" aria-label="Gap" size="sm" />);
-      const a = stars('gp')[1].getBoundingClientRect(), b = stars('gp')[2].getBoundingClientRect();
+      const a = stars('gp')[1]!.getBoundingClientRect(), b = stars('gp')[2]!.getBoundingClientRect();
       expect(Math.round(b.left - a.right)).toBe(4);
       await userEvent.click(document.body, { position: { x: a.right + 1, y: a.top + 10 } });
       expect(picked('gp')).toEqual(['2']);
@@ -239,9 +239,9 @@ describe('Rating', () => {
     });
     test('allowHalf with clearable: pressing the picked half again clears it; the keys still reach every half', async () => {
       await render(<Rating id="hc" aria-label="Clear" allowHalf clearable defaultValue={1.5} />);
-      await userEvent.click(stars('hc')[1], { position: { x: 4, y: 12 } });
+      await userEvent.click(stars('hc')[1]!, { position: { x: 4, y: 12 } });
       expect(picked('hc')).toEqual([]);
-      radios('hc')[0].focus();
+      radios('hc')[0]!.focus();
       await userEvent.keyboard('{ArrowRight}{ArrowRight}');
       expect(picked('hc')).toEqual(['1.5']);
     });
@@ -257,7 +257,7 @@ describe('Rating', () => {
 describe('Rating in forced colors (GR270)', () => {
   test('an empty star is an outline in the text color, not GrayText, which means disabled; a disabled Rating is all GrayText', async () => {
     await render(<><Rating id="on" aria-label="Score" defaultValue={2} /><Rating id="off" aria-label="Off" defaultValue={2} disabled /></>);
-    const empty = (id: string) => document.getElementById(id)!.querySelectorAll<HTMLElement>('[class$="__empty"]')[4], svg = (id: string) => empty(id).querySelector('svg')!;
+    const empty = (id: string) => document.getElementById(id)!.querySelectorAll<HTMLElement>('[class$="__empty"]')[4]!, svg = (id: string) => empty(id).querySelector('svg')!;
     const r = await forcedColors(async (active) => (active ? {
       grayText: css(Object.assign(document.body.appendChild(document.createElement('span')), { style: 'color: GrayText' })).color,
       on: [css(empty('on')).color, css(svg('on')).stroke !== 'none', css(svg('on')).strokeWidth],

@@ -198,20 +198,20 @@ describe('Splitter collapse motion (GN3b)', () => {
     const root = document.getElementById('m')!, [a, h] = [...root.children] as HTMLElement[];
     const ran: string[] = [];
     root.addEventListener('transitionrun', (ev) => { const t = ev.target as HTMLElement; if (t.parentElement === root && !ev.pseudoElement) ran.push([...t.classList].pop()!.replace('dk-splitter__', '') + ' ' + ev.propertyName); });
-    h.focus();
+    h!.focus();
     await userEvent.keyboard('{Enter}');
     // Closing: already laid out collapsed (the handle at the start), while the first pane stays over its old place, inert.
-    expect([h.getAttribute('aria-valuenow'), Math.round(h.offsetLeft), a.hidden, a.inert, Math.round(a.offsetWidth)]).toEqual(['0', 0, false, true, 200]);
+    expect([h!.getAttribute('aria-valuenow'), Math.round(h!.offsetLeft), a!.hidden, a!.inert, Math.round(a!.offsetWidth)]).toEqual(['0', 0, false, true, 200]);
     await expect.poll(() => root.hasAttribute('data-slide'), { timeout: 2000 }).toBe(false);
-    expect([a.hidden, document.activeElement === h]).toEqual([true, true]);
+    expect([a!.hidden, document.activeElement === h]).toEqual([true, true]);
     await userEvent.keyboard('{Enter}');
-    expect([h.getAttribute('aria-valuenow'), a.hidden, a.inert]).toEqual(['40', false, false]);
+    expect([h!.getAttribute('aria-valuenow'), a!.hidden, a!.inert]).toEqual(['40', false, false]);
     await expect.poll(() => root.hasAttribute('data-slide'), { timeout: 2000 }).toBe(false);
     expect([...new Set(ran)].sort()).toEqual(['handle translate', 'pane--first clip-path', 'pane--second translate']);
     ran.length = 0;
     await userEvent.keyboard('{ArrowRight}');
     await new Promise((r) => setTimeout(r, 50));
-    expect([h.getAttribute('aria-valuenow'), ran, root.hasAttribute('data-slide')]).toEqual(['45', [], false]);   // a step doesn't slide
+    expect([h!.getAttribute('aria-valuenow'), ran, root.hasAttribute('data-slide')]).toEqual(['45', [], false]);   // a step doesn't slide
   });
 
   test('Enter again mid-way turns the slide back from where the handle is, with the first pane\'s clip at the same place, not from either end (GR46)', async () => {
@@ -222,38 +222,38 @@ describe('Splitter collapse motion (GN3b)', () => {
     try {
       await render(<Splitter id="mr" collapsible defaultSize={40} style={{ width: '500px', height: '80px' }}><p>A</p><p>B</p></Splitter>);
       const root = document.getElementById('mr')!, [a, h] = [...root.children] as HTMLElement[];
-      const x = () => Math.round(h.getBoundingClientRect().left - root.getBoundingClientRect().left);
+      const x = () => Math.round(h!.getBoundingClientRect().left - root.getBoundingClientRect().left);
       // Holds every running slide half way, as if Enter came again in the middle of it.
       const halfway = async () => {
-        await expect.poll(() => root.getAttribute('data-slide') === 'run' && h.getAnimations().length > 0, { timeout: 2000 }).toBe(true);
+        await expect.poll(() => root.getAttribute('data-slide') === 'run' && h!.getAnimations().length > 0, { timeout: 2000 }).toBe(true);
         for (const an of root.getAnimations({ subtree: true })) { an.pause(); an.currentTime = Number(an.effect!.getTiming().duration) / 2; }
         return x();
       };
       // Holds a slide that has already set off at its start: the driver's round trip after Enter can be long enough on
       // CI for the turned-back slide to have moved a few pixels before the handle is read (GR46 failed on that).
       const atStart = () => { for (const an of root.getAnimations({ subtree: true })) { an.pause(); an.currentTime = 0; } };
-      h.focus();
+      h!.focus();
       await userEvent.keyboard('{Enter}');
       const closingAt = await halfway();
       expect(closingAt > 20 && closingAt < 180, String(closingAt)).toBe(true);
       await userEvent.keyboard('{Enter}');
       atStart();
       // Opening again: laid out open at once, but the handle is still where it was, and the clip hides the same part.
-      expect([h.getAttribute('aria-valuenow'), root.getAttribute('data-slide-to'), Math.abs(x() - closingAt) <= 2]).toEqual(['40', 'open', true]);
+      expect([h!.getAttribute('aria-valuenow'), root.getAttribute('data-slide-to'), Math.abs(x() - closingAt) <= 2]).toEqual(['40', 'open', true]);
       // closingAt is rounded to the pixel and the clip isn't (inset(0px 99.39px …) against 100): the same place, to the
       // two pixels the handle is checked to above.
-      const cut = /^inset\(0px ([\d.]+)px 0px 0px\)$/.exec(getComputedStyle(a).clipPath);
-      expect(cut && Math.abs(parseFloat(cut[1]) - (200 - closingAt)) <= 2, getComputedStyle(a).clipPath).toBe(true);
+      const cut = /^inset\(0px ([\d.]+)px 0px 0px\)$/.exec(getComputedStyle(a!).clipPath);
+      expect(cut && Math.abs(parseFloat(cut[1]!) - (200 - closingAt)) <= 2, getComputedStyle(a!).clipPath).toBe(true);
       const openingAt = await halfway();
       expect(openingAt > closingAt && openingAt < 200, String(openingAt)).toBe(true);
       // …and back again: from there toward the start.
       await userEvent.keyboard('{Enter}');
       atStart();
-      expect([h.getAttribute('aria-valuenow'), root.getAttribute('data-slide-to'), Math.abs(x() - openingAt) <= 2, Math.round(h.offsetLeft)]).toEqual(['0', 'closed', true, 0]);
+      expect([h!.getAttribute('aria-valuenow'), root.getAttribute('data-slide-to'), Math.abs(x() - openingAt) <= 2, Math.round(h!.offsetLeft)]).toEqual(['0', 'closed', true, 0]);
       for (const an of root.getAnimations({ subtree: true })) an.finish();
       vi.advanceTimersByTime(1000);
       await expect.poll(() => root.hasAttribute('data-slide'), { timeout: 2000 }).toBe(false);
-      expect([x(), a.hidden]).toEqual([0, true]);
+      expect([x(), a!.hidden]).toEqual([0, true]);
     } finally { vi.useRealTimers(); }
   });
 });

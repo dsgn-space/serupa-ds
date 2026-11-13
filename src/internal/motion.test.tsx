@@ -59,7 +59,7 @@ const loops = (a: Animation) => (a.effect as KeyframeEffect).getTiming().iterati
 const target = (a: Animation) => (a.effect as KeyframeEffect).target;
 const label = (a: Animation) => (a instanceof CSSAnimation ? a.animationName : `${(target(a)?.className?.toString() || target(a)?.tagName || '').split(' ')[0]} ${(a as CSSTransition).transitionProperty}`);
 // The KNOWN key: an animation by name, a transition by its element's first class.
-const key = (a: Animation) => (a instanceof CSSAnimation ? a.animationName : (target(a)?.className?.toString() || '').split(' ')[0]);
+const key = (a: Animation) => (a instanceof CSSAnimation ? a.animationName : (target(a)?.className?.toString() || '').split(' ')[0] ?? '');
 
 const seen = new Set<string>();
 // Records a breach; true when KNOWN doesn't list it, so it fails.
@@ -72,7 +72,7 @@ async function promoted(host: Element): Promise<string[]> {
   // Firefox's own stylesheet gives <option> will-change: -moz-fixed-pos-containing-block, which no component sets.
   const own = (v: string) => v !== 'auto' && v.split(',').some((w) => !w.trim().startsWith('-moz-'));
   return [...document.body.querySelectorAll('*')].filter((el) => own(getComputedStyle(el).willChange)).flatMap((el) => {
-    const k = (el.className?.toString() || el.tagName).split(' ')[0];
+    const k = (el.className?.toString() || el.tagName).split(' ')[0]!;
     return note('will-change', k) ? [`${k}: keeps will-change: ${getComputedStyle(el).willChange} at rest; set it only while it moves`] : [];
   });
 }
@@ -94,8 +94,8 @@ function judge(list: Animation[], when: 'mount' | 'interaction', reduced: boolea
     if (el instanceof HTMLElement && el.dataset.side && props.some((p) => p === 'scale' || p === 'transform')) {
       const [x, y] = getComputedStyle(el).transformOrigin.split(' ').map(parseFloat);
       const w = el.offsetWidth, h = el.offsetHeight, side = el.dataset.side;
-      const facing = side === 'bottom' ? y <= 2 : side === 'top' ? y >= h - 2 : side === 'right' ? x <= 2 : side === 'left' ? x >= w - 2 : true;
-      if (!facing) breach('origin', a, `placed on the ${side} of its trigger but scales from ${Math.round(x)}px ${Math.round(y)}px of ${w}×${h}; grow from the edge facing the trigger`);
+      const facing = side === 'bottom' ? y! <= 2 : side === 'top' ? y! >= h - 2 : side === 'right' ? x! <= 2 : side === 'left' ? x! >= w - 2 : true;
+      if (!facing) breach('origin', a, `placed on the ${side} of its trigger but scales from ${Math.round(x!)}px ${Math.round(y!)}px of ${w}×${h}; grow from the edge facing the trigger`);
     }
   }
   return out;
@@ -109,10 +109,10 @@ const list = (v: string) => { const out = ['']; let depth = 0; for (const c of v
 function transitions(css: string): Array<[string, string, string[]]> {
   const out: Array<[string, string, string[]]> = [];
   for (const [, selector, body] of css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-    const props = [...body.matchAll(/(?:^|;)\s*(transition(?:-property)?)\s*:\s*([^;]+)/g)]
-      .flatMap(([, name, value]) => list(value).map((part) => (name === 'transition' ? part.split(/\s+/)[0] : part)));
-    const sel = selector.trim().replace(/\s+/g, ' ');
-    const k = /\.([\w-]+)/.exec(sel.split(',')[0].trim().split(/[\s>+~]+/).pop() || '')?.[1] || sel;
+    const props = [...body!.matchAll(/(?:^|;)\s*(transition(?:-property)?)\s*:\s*([^;]+)/g)]
+      .flatMap(([, name, value]) => list(value!).map((part) => (name === 'transition' ? part.split(/\s+/)[0]! : part)));
+    const sel = selector!.trim().replace(/\s+/g, ' ');
+    const k = /\.([\w-]+)/.exec(sel.split(',')[0]!.trim().split(/[\s>+~]+/).pop() || '')?.[1] || sel;
     if (props.length) out.push([k, sel, props]);
   }
   return out;
@@ -125,10 +125,10 @@ const $ = (host: Element, sel: string) => host.querySelector<HTMLElement>(sel);
 const INTERACT: Record<string, (host: HTMLElement) => Promise<void>> = {
   TimePicker: async (h) => { await userEvent.click($(h, 'button[aria-expanded]')!); },
   Switch: async (h) => { await userEvent.click($(h, '[role=switch]')!); },
-  SegmentedControl: async (h) => { await userEvent.click(h.querySelectorAll<HTMLElement>('[role=radio]')[1]); },
+  SegmentedControl: async (h) => { await userEvent.click(h.querySelectorAll<HTMLElement>('[role=radio]')[1]!); },
   Checkbox: async (h) => { await userEvent.click($(h, 'input[type=checkbox]')!); },
   Accordion: async (h) => { await userEvent.click($(h, 'button')!); },
-  Tabs: async (h) => { const tabs = h.querySelectorAll('[role=tab]'); await userEvent.click(tabs[1]); },
+  Tabs: async (h) => { const tabs = h.querySelectorAll('[role=tab]'); await userEvent.click(tabs[1]!); },
   Sidebar: async (h) => { await userEvent.click($(h, 'button')!); },
   Dialog: async (h) => { await userEvent.click($(h, 'button')!); },
   Drawer: async (h) => { await userEvent.click($(h, 'button')!); },

@@ -43,7 +43,7 @@ describe('PeriodPicker', () => {
     </EnUS>);
     const bs = [...document.querySelectorAll<HTMLButtonElement>('[role=combobox]')];
     expect(bs.map((b) => b.textContent)).toEqual(['November 2026', 'Q4 2026', '2026', 'Choose a quarter']);
-    expect([css(bs[1]).height, css(bs[2]).height]).toEqual(['24px', '44px']);
+    expect([css(bs[1]!).height, css(bs[2]!).height]).toEqual(['24px', '44px']);
   });
 
   test('values are written "yyyy-mm", "yyyy-Qn" and "yyyy"; anything else for the unit is no value', () => {
@@ -59,7 +59,7 @@ describe('PeriodPicker', () => {
     expect(panel().querySelector('h2')!.textContent).toBe('2025');
     expect([...panel().querySelectorAll('tr')].map(shown)).toEqual(['JanFebMar', 'AprMayJun', 'JulAugSep', 'OctNovDec']);
     await until(() => focused() === 'February 2025');
-    const feb = periods()[1], mar = periods()[2];
+    const feb = periods()[1]!, mar = periods()[2]!;
     expect([feb.parentElement!.getAttribute('aria-selected'), feb.tabIndex, mar.getAttribute('aria-current'), periods().filter((p) => p.tabIndex === 0).length]).toEqual(['true', 0, 'date', 1]);
     expect(feb.className).toContain('dk-period-picker__period--selected');
   });
@@ -91,7 +91,7 @@ describe('PeriodPicker', () => {
 
   test('right to left, ArrowLeft goes to the next month', async () => {
     await render(<EnUS><div dir="rtl"><PeriodPicker aria-label="Report month" defaultValue="2025-05" defaultOpen /></div></EnUS>);
-    periods()[4].focus();
+    periods()[4]!.focus();
     await userEvent.keyboard('{ArrowLeft}');
     await until(() => focused() === 'June 2025');
     expect(button().getAttribute('aria-expanded')).toBe('true');
@@ -144,7 +144,7 @@ describe('PeriodPicker', () => {
     const changed = vi.fn();
     await render(<EnUS><PeriodPicker aria-label="Fiscal year" unit="year" defaultValue="2023" onValueChange={changed} /></EnUS>);
     await userEvent.click(button());
-    expect([panel().getAttribute('aria-label'), panel().querySelector('h2')!.textContent, shown(periods()[0]), shown(periods()[11])]).toEqual(['Choose a year', '2016–2027', '2016', '2027']);
+    expect([panel().getAttribute('aria-label'), panel().querySelector('h2')!.textContent, shown(periods()[0]!), shown(periods()[11]!)]).toEqual(['Choose a year', '2016–2027', '2016', '2027']);
     await userEvent.click(page.getByRole('button', { name: 'Next 12 years' }));
     expect(panel().querySelector('h2')!.textContent).toBe('2028–2039');
     await userEvent.click(page.getByRole('button', { name: '2030' }));
@@ -158,7 +158,7 @@ describe('PeriodPicker', () => {
     await until(() => focused() === 'January 2025');
     expect(periods().filter((p) => p.getAttribute('aria-disabled') === 'true').map(shown)).toEqual(['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
     expect([page.getByRole('button', { name: 'Next year' }).element().hasAttribute('disabled'), page.getByRole('button', { name: 'Previous year' }).element().hasAttribute('disabled')]).toEqual([true, false]);
-    periods()[4].click();   // aria-disabled: Playwright won't press it, a pointer still can
+    periods()[4]!.click();   // aria-disabled: Playwright won't press it, a pointer still can
     await settle(50);
     expect([changed.mock.calls.length, button().getAttribute('aria-expanded')]).toEqual([0, 'true']);
     await userEvent.keyboard('{PageDown}');
@@ -186,7 +186,7 @@ describe('PeriodPicker', () => {
     await render(<EnUS><Ctl /></EnUS>);
     await userEvent.click(button());
     await userEvent.click(page.getByRole('button', { name: 'June 2025' }));
-    expect([changed.mock.calls[0][0], button().textContent]).toEqual(['2025-06', 'January 2025']);
+    expect([changed.mock.calls[0]![0], button().textContent]).toEqual(['2025-06', 'January 2025']);
     await userEvent.click(page.getByRole('button', { name: 'Set' }));
     expect(button().textContent).toBe('December 2024');
   });
@@ -197,9 +197,9 @@ describe('PeriodPicker', () => {
       <PeriodPicker aria-label="D" name="d" disabled defaultValue="2025-03" />
     </form></EnUS>);
     const [r, d] = [...document.querySelectorAll<HTMLButtonElement>('[role=combobox]')];
-    await userEvent.click(r);
-    r.focus(); await userEvent.keyboard('{ArrowDown}');
-    expect([r.getAttribute('aria-expanded'), r.getAttribute('aria-readonly'), d.disabled]).toEqual(['false', 'true', true]);
+    await userEvent.click(r!);
+    r!.focus(); await userEvent.keyboard('{ArrowDown}');
+    expect([r!.getAttribute('aria-expanded'), r!.getAttribute('aria-readonly'), d!.disabled]).toEqual(['false', 'true', true]);
     const data = new FormData(document.getElementById('f') as HTMLFormElement);
     expect([data.get('r'), data.get('d')]).toEqual(['2025-03', null]);
   });
@@ -227,7 +227,7 @@ describe('PeriodPicker', () => {
     </>);
     const bs = [...document.querySelectorAll<HTMLButtonElement>('[role=combobox]')];
     expect(bs.map((b) => b.textContent)).toEqual(['Dezember 2025', 'K3 2025', 'Pilih tahun', '٢٠٢٥']);
-    expect(bs[0].getAttribute('lang')).toBe('de-DE');
+    expect(bs[0]!.getAttribute('lang')).toBe('de-DE');
   });
 
   test('contrast in all six themes: text and placeholder 4.5:1 on the field, icon and border 3:1; periods and the title 4.5:1 on the popup, the chosen one on primary, this one in primary', () => {

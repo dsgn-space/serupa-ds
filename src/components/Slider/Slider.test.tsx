@@ -9,7 +9,7 @@ import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const thumb = (id: string, i = 0) => el(id).querySelectorAll<HTMLElement>('[role=slider]')[i];
+const thumb = (id: string, i = 0) => el(id).querySelectorAll<HTMLElement>('[role=slider]')[i]!;
 const now = (id: string, i = 0) => Number(thumb(id, i).getAttribute('aria-valuenow'));
 const rect = (e: Element) => e.getBoundingClientRect();
 // The root holds the track (a div) and the hidden inputs. The track holds the fill (a div), the marks (hidden
@@ -364,12 +364,12 @@ describe('Slider', () => {
     for (const [id, dir] of [['ml', 1], ['mlr', -1]] as const) {
       const labels = [...el(id).querySelectorAll<HTMLElement>(LABEL)], t = track(id);
       expect(labels.map((l) => l.textContent)).toEqual(['0°', 'Half', '100°']);
-      const mid = center(labels[1]);
+      const mid = center(labels[1]!);
       const want = dir === 1 ? t.left + t.width / 2 : t.right - t.width / 2;
-      const text = document.createRange(); text.selectNodeContents(labels[1]);
+      const text = document.createRange(); text.selectNodeContents(labels[1]!);
       const tr = text.getBoundingClientRect();
       expect(Math.abs(tr.left + tr.width / 2 - want)).toBeLessThan(1.5);
-      const start = document.createRange(); start.selectNodeContents(labels[0]);
+      const start = document.createRange(); start.selectNodeContents(labels[0]!);
       const sr = start.getBoundingClientRect();
       expect(Math.abs(sr.left + sr.width / 2 - (dir === 1 ? t.left : t.right))).toBeLessThan(1.5);
       expect(tr.top).toBeGreaterThanOrEqual(rect(thumb(id)).bottom);
@@ -378,7 +378,7 @@ describe('Slider', () => {
     }
     // The thumb still sits on the track's line, and a press on a label moves it there.
     expect(Math.abs(center(thumb('ml')).y - (track('ml').top + track('ml').height / 2))).toBeLessThan(1);
-    const half = el('ml').querySelectorAll<HTMLElement>(LABEL)[1], hr = rect(half), r = rect(el('ml'));
+    const half = el('ml').querySelectorAll<HTMLElement>(LABEL)[1]!, hr = rect(half), r = rect(el('ml'));
     await userEvent.click(el('ml'), { position: { x: hr.left - r.left + hr.width / 2, y: hr.top - r.top + hr.height / 2 } });
     expect(now('ml')).toBe(50);
   });
@@ -433,7 +433,7 @@ describe('Slider at 320px (GM2)', () => {
     }
     expect(el('gm2').scrollWidth).toBe(288);
     // The middle label stays centered on its point.
-    const half = [...el('gm2-l').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')][1].getBoundingClientRect(), t = el('gm2-l').querySelector('[role="slider"]')!.parentElement!.getBoundingClientRect();
+    const half = [...el('gm2-l').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')][1]!.getBoundingClientRect(), t = el('gm2-l').querySelector('[role="slider"]')!.parentElement!.getBoundingClientRect();
     expect(Math.round(half.left + half.width / 2)).toBe(Math.round(t.left + t.width / 2));
   });
   test('a label that changes width after the first fit (a web font arriving) is fitted again, with the slider the same size', async () => {

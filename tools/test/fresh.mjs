@@ -16,7 +16,7 @@ t('main drew a component\'s pictures again that the branch changes with no pictu
 t('both sides changed one component without any picture: fresh (the queue tests the code)',
   same(staleComponents(['src/components/Meter/Meter.css'], ['src/components/Meter/Meter.tsx'], alone), []));
 t('different components: fresh', same(staleComponents([png('Meter'), 'src/components/Meter/Meter.css'], [png('Tabs'), 'src/components/Tabs/Tabs.tsx'], alone), []));
-t('shared code or tokens on main leave it to the after-main redraw: fresh',
+t('shared code on main leaves it to the after-main redraw: fresh',
   same(staleComponents([png('Meter')], ['tokens.json', 'src/internal/labels.ts', 'CHANGELOG.md'], alone), []));
 const deps = (s) => new Set([...s, ...(s.has('Button') ? ['ToggleButton'] : [])]);
 t('main redrew a component, and the branch redrew one that uses it: stale',
@@ -29,6 +29,10 @@ t('main changed a component\'s code with no picture (labels), and the branch red
   same(staleComponents([png('ToggleButton')], ['src/components/Button/Button.tsx'], deps), []));
 t('the real dependency walk: Button\'s pictures on main reach ToggleButton\'s on the branch',
   same(staleComponents([png('ToggleButton')], [png('Button')]), ['ToggleButton']));
+t('a theme change on main (tokens.css) makes every picture the branch drew stale',
+  same(staleComponents([png('Meter'), png('ApiKeys'), 'src/components/Meter/Meter.css'], ['tokens/serupa.tokens.json', 'tokens.json', 'tokens.css'], alone), ['ApiKeys', 'Meter']));
+t('a theme change on main leaves a branch that drew no picture fresh',
+  same(staleComponents(['src/components/Meter/Meter.css'], ['tokens.css', 'src/styles/base.css'], alone), []));
 t('a pattern\'s pictures count as the pattern\'s', same(staleComponents([png('Checkout')], ['src/patterns/Checkout/Checkout.tsx'], alone), ['Checkout']));
 
 done(report('Fresh against main', R));

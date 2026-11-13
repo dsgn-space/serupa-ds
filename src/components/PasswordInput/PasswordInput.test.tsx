@@ -9,7 +9,7 @@ import { PasswordInput } from './PasswordInput';
 // and 0.25px after the end both land 1px out): the 24px box behind it (WCAG 2.5.8) takes presses there.
 const reach = (b: HTMLElement) => {
   const r = b.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  return [[r.left - 0.75, cy], [r.right + 0.25, cy], [cx, r.top - 0.75], [cx, r.bottom + 0.25]].map(([x, y]) => document.elementFromPoint(x, y)?.closest('button') === b);
+  return [[r.left - 0.75, cy], [r.right + 0.25, cy], [cx, r.top - 0.75], [cx, r.bottom + 0.25]].map(([x, y]) => document.elementFromPoint(x!, y!)?.closest('button') === b);
 };
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
@@ -46,7 +46,7 @@ describe('PasswordInput', () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<Wrap><Main pref={ref} /></Wrap>);
     const i = field('pw'), b = box('pw');
-    expect([i.type, i.getAttribute('autocomplete'), ref.current === i, i.spellcheck, i.placeholder, i.labels![0].textContent]).toEqual(['password', 'current-password', true, false, 'Your password', 'Password']);
+    expect([i.type, i.getAttribute('autocomplete'), ref.current === i, i.spellcheck, i.placeholder, i.labels![0]!.textContent]).toEqual(['password', 'current-password', true, false, 'Your password', 'Password']);
     expect([b.className, b.dataset.component, b.style.marginTop, b.getBoundingClientRect().height]).toEqual(['dk-input dk-password-input dk-input--size-md extra', 'password-input', '2px', 32]);
     expect((b.querySelector(':scope > span[aria-hidden]:first-child [data-icon]') as HTMLElement).dataset.icon).toBe('lock');
   });
