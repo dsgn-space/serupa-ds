@@ -153,6 +153,8 @@ export const labels: SerupaLabels = {
   endDate: 'आख़िरी तारीख़',
   chooseStartDate: 'शुरुआत की तारीख़ चुनें',
   chooseEndDate: 'आख़िरी तारीख़ चुनें',
+  inRange: 'सीमा के भीतर',
+  rangeSelected: (range) => 'चुनी गई अवधि: ' + range,
   presets: 'शॉर्टकट',
   today: 'आज',
   tomorrow: 'आने वाला कल',

@@ -1,0 +1,29 @@
+{
+  "rangeCalendar": {
+    "$description": "RangeCalendar's component tokens. Each one is an optional override: set the CSS variable (--range-calendar-<name>) on the page, a container or one RangeCalendar, and every RangeCalendar inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The days themselves follow Calendar's tokens (--calendar-range-bg for the days between the ends).",
+    "color": {
+      "status": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The line under the months that says what to pick next, and the range once it's picked (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--range-calendar-status-color"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "months-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The space between two months side by side, or stacked.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--range-calendar-months-gap"
+          }
+        }
+      }
+    }
+  }
+}

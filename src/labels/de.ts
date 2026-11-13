@@ -157,6 +157,8 @@ export const labels: SerupaLabels = {
   endDate: 'Enddatum',
   chooseStartDate: 'Startdatum wählen',
   chooseEndDate: 'Enddatum wählen',
+  inRange: 'im Zeitraum',
+  rangeSelected: (range) => 'Ausgewählter Zeitraum: ' + range,
   presets: 'Schnellauswahl',
   today: 'Heute',
   tomorrow: 'Morgen',

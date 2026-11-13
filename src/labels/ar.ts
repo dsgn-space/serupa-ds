@@ -158,6 +158,8 @@ export const labels: SerupaLabels = {
   endDate: 'تاريخ الانتهاء',
   chooseStartDate: 'اختر تاريخ البدء',
   chooseEndDate: 'اختر تاريخ الانتهاء',
+  inRange: 'ضمن النطاق',
+  rangeSelected: (range) => 'النطاق المحدد: ' + range,
   presets: 'اختصارات',
   today: 'اليوم',
   tomorrow: 'غدًا',

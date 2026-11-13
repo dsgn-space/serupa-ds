@@ -156,6 +156,8 @@ export const labels: SerupaLabels = {
   endDate: '종료일',
   chooseStartDate: '시작일 선택',
   chooseEndDate: '종료일 선택',
+  inRange: '범위 안',
+  rangeSelected: (range) => '선택한 기간: ' + range,
   presets: '바로가기',
   today: '오늘',
   tomorrow: '내일',

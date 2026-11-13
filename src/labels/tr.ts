@@ -154,6 +154,8 @@ export const labels: SerupaLabels = {
   endDate: 'Bitiş tarihi',
   chooseStartDate: 'Başlangıç tarihini seçin',
   chooseEndDate: 'Bitiş tarihini seçin',
+  inRange: 'aralıkta',
+  rangeSelected: (range) => 'Seçilen aralık: ' + range,
   presets: 'Kısayollar',
   today: 'Bugün',
   tomorrow: 'Yarın',

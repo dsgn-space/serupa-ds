@@ -157,6 +157,8 @@ export const labels: SerupaLabels = {
   endDate: 'Data końcowa',
   chooseStartDate: 'Wybierz datę początkową',
   chooseEndDate: 'Wybierz datę końcową',
+  inRange: 'w zakresie',
+  rangeSelected: (range) => 'Wybrany zakres: ' + range,
   presets: 'Skróty',
   today: 'Dzisiaj',
   tomorrow: 'Jutro',

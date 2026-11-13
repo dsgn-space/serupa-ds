@@ -154,6 +154,8 @@ export const labels: SerupaLabels = {
   endDate: 'Slutdatum',
   chooseStartDate: 'Välj startdatum',
   chooseEndDate: 'Välj slutdatum',
+  inRange: 'inom perioden',
+  rangeSelected: (range) => 'Vald period: ' + range,
   presets: 'Genvägar',
   today: 'I dag',
   tomorrow: 'I morgon',

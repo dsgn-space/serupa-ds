@@ -160,6 +160,8 @@ export const labels: SerupaLabels = {
   endDate: 'Дата окончания',
   chooseStartDate: 'Выбрать дату начала',
   chooseEndDate: 'Выбрать дату окончания',
+  inRange: 'в диапазоне',
+  rangeSelected: (range) => 'Выбранный диапазон: ' + range,
   presets: 'Быстрый выбор',
   today: 'Сегодня',
   tomorrow: 'Завтра',

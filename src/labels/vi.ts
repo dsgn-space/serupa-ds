@@ -154,6 +154,8 @@ export const labels: SerupaLabels = {
   endDate: 'Ngày kết thúc',
   chooseStartDate: 'Chọn ngày bắt đầu',
   chooseEndDate: 'Chọn ngày kết thúc',
+  inRange: 'trong khoảng',
+  rangeSelected: (range) => 'Khoảng đã chọn: ' + range,
   presets: 'Lối tắt',
   today: 'Hôm nay',
   tomorrow: 'Ngày mai',

@@ -154,6 +154,8 @@ export const labels: SerupaLabels = {
   endDate: 'Einddatum',
   chooseStartDate: 'Kies de begindatum',
   chooseEndDate: 'Kies de einddatum',
+  inRange: 'binnen de periode',
+  rangeSelected: (range) => 'Gekozen periode: ' + range,
   presets: 'Snelkeuze',
   today: 'Vandaag',
   tomorrow: 'Morgen',
