@@ -56,7 +56,7 @@ const NAMES = ['Website redesign', 'Mobile app', 'Billing migration', 'Help cent
   'Usage reports', 'Partner portal', 'Price page', 'Referral program', 'API keys', 'Mobile push', 'Accessibility review',
   'Translations', 'Release notes', 'Support chat', 'Backup restore'];
 const demo: Project[] = NAMES.map((name, i) => ({
-  name, status: STATUSES[i % 3], owner: OWNERS[(i * 3) % 4],
+  name, status: STATUSES[i % 3] ?? 'Active', owner: OWNERS[(i * 3) % 4] ?? '',
   updated: new Date(Date.UTC(2026, 9, 28 - i)).toISOString().slice(0, 10),
 }));
 

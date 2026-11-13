@@ -28,7 +28,7 @@ export interface FileUploadLabels {
 }
 // "an image or PDF", "a PNG, JPG or GIF": "an" before a vowel sound ("an SVG", said "ess"; "an MP4").
 function anyOf(types: string[]): string {
-  const first = types[0];
+  const first = types[0] ?? '';
   const an = first === first.toUpperCase() ? /^[AEFHILMNORSX]/.test(first) : /^[aeiou]/.test(first);
   return (an ? 'an ' : 'a ') + (types.length === 1 ? first : types.slice(0, -1).join(', ') + ' or ' + types[types.length - 1]);
 }

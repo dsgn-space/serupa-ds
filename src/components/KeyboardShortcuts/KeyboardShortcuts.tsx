@@ -93,8 +93,7 @@ function onKey(e: KeyboardEvent): void {
   // A modal makes the page behind it inert, so the page's shortcuts wait until it closes.
   if (e.defaultPrevented || isComposing(e) || topModal()) return;
   // The newest wins, so a panel's shortcut overrides the page's while the panel is open.
-  for (let i = entries.length - 1; i >= 0; i--) {
-    const x = entries[i];
+  for (const x of [...entries].reverse()) {
     if (!matches(x, e, x.apple)) continue;
     if (characterKey(x) && !singleKeysOn()) continue;   // turned off in the help dialog
     // The field itself, not its web component's host: a keydown from a shadow root's <input> reaches the document

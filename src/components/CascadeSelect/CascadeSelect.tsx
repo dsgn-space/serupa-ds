@@ -210,10 +210,10 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
       const next = path.slice(0, c).concat(list[i].value);
       setPath(next); setCol(c); focusCol.current = c;
     };
-    if (k === 'ArrowDown') go(enabled.find((i) => i > at) ?? (at < 0 ? enabled[0] : -1));
+    if (k === 'ArrowDown') go(enabled.find((i) => i > at) ?? (at < 0 ? enabled[0] ?? -1 : -1));
     else if (k === 'ArrowUp') go([...enabled].reverse().find((i) => i < at) ?? -1);
-    else if (k === 'Home') go(enabled[0]);
-    else if (k === 'End') go(enabled[enabled.length - 1]);
+    else if (k === 'Home') go(enabled[0] ?? -1);
+    else if (k === 'End') go(enabled[enabled.length - 1] ?? -1);
     else if (k === into) {
       const o = list[at];
       if (!o || !hasMore(o, path.slice(0, c + 1))) return;

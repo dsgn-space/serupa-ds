@@ -98,7 +98,7 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
     let frame = 0;
     // The box the headings scroll in: the page, or a pane of its own (overflow auto or scroll) around them.
     const scroller = (): HTMLElement | null => {
-      for (let e = document.getElementById(list[0])?.parentElement; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
+      for (let e = document.getElementById(list[0] ?? '')?.parentElement; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
         const o = getComputedStyle(e).overflowY;
         if ((o === 'auto' || o === 'scroll' || o === 'overlay') && e.scrollHeight > e.clientHeight) return e;
       }

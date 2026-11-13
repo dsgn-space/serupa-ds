@@ -58,10 +58,10 @@ type Stroke = Point[];
 
 const OWN = { value: 1, defaultValue: 1, onValueChange: 1, defaultMethod: 1, name: 1, form: 1, disabled: 1, readOnly: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
 const r1 = (n: number) => Math.round(n * 10) / 10;
-const pathOf = (s: Stroke) => s.length === 1 ? `M${s[0][0]} ${s[0][1]}h0` : 'M' + s.map((p) => p[0] + ' ' + p[1]).join('L');
+const pathOf = (s: Stroke) => s.length === 1 && s[0] ? `M${s[0][0]} ${s[0][1]}h0` : 'M' + s.map((p) => p[0] + ' ' + p[1]).join('L');
 // The strokes back from an SVG this pad made: each <path d="M x yLx y…"> is one stroke ("h0" ends a dot).
-const strokesOf = (svg: string): Stroke[] => [...svg.matchAll(/<path d="M([^"]+)"/g)].map((m) =>
-  m[1].replace(/h0$/, '').split('L').map((p) => { const [x, y] = p.trim().split(/[\s,]+/).map(Number); return [x, y] as const; }).filter((p) => isFinite(p[0]) && isFinite(p[1])),
+const strokesOf = (svg: string): Stroke[] => [...svg.matchAll(/<path d="M([^"]+)"/g)].map(([, d = '']) =>
+  d.replace(/h0$/, '').split('L').map((p) => { const [x = NaN, y = NaN] = p.trim().split(/[\s,]+/).map(Number); return [x, y] as const; }).filter((p) => isFinite(p[0]) && isFinite(p[1])),
 ).filter((s) => s.length);
 const xml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const SVG = (w: number, h: number, body: string) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
@@ -177,7 +177,7 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
     const s = live.current;
     if (!s) return;
     const p = at(e), q = s[s.length - 1];
-    if (Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) < 1) return;
+    if (q && Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) < 1) return;
     s.push(p);
     redraw();
   };

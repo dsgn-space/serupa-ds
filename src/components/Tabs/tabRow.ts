@@ -18,7 +18,7 @@ const shown = (on: HTMLElement) => {
   if (line.translate && line.translate !== 'none') { const [dx = 0, dy = 0] = nums(line.translate); x += dx; y += dy; }
   if (line.scale && line.scale !== 'none') { const [sx = 1, sy = sx] = nums(line.scale); w *= sx; h *= sy; }
   if (/^inset\(/.test(fill.clipPath)) {
-    const [t = 0, r = t, b = t, l = r] = nums(fill.clipPath.split(' round')[0]);
+    const [t = 0, r = t, b = t, l = r] = nums(fill.clipPath.split(' round')[0] ?? '');
     const span = (k: string) => parseFloat(on.style.getPropertyValue('--dk-tabs-span-' + k)) || 0;
     const left = x - span('l') + l, top = y - span('t') + t;
     w = x + w + span('r') - r - left; h = y + h + span('b') - b - top; x = left; y = top;
@@ -33,7 +33,7 @@ const shown = (on: HTMLElement) => {
 const slideIfStill = (sel: HTMLElement) => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;   // there at once, as the CSS has it
   const running = (pseudo: string) => document.getAnimations().some((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === sel && e.pseudoElement === pseudo; });
-  const time = (cs: CSSStyleDeclaration) => ({ duration: (parseFloat(cs.transitionDuration) || 0) * (/ms$/.test(cs.transitionDuration.split(',')[0]) ? 1 : 1000), easing: cs.transitionTimingFunction.split(/,(?![^(]*\))/)[0].trim() || 'ease' });
+  const time = (cs: CSSStyleDeclaration) => ({ duration: (parseFloat(cs.transitionDuration) || 0) * (/ms$/.test(cs.transitionDuration.split(',')[0] ?? '') ? 1 : 1000), easing: (cs.transitionTimingFunction.split(/,(?![^(]*\))/)[0] ?? '').trim() || 'ease' });
   const shift = sel.style.getPropertyValue('--dk-tabs-from-shift');
   const line = getComputedStyle(sel, '::after'), fill = getComputedStyle(sel, '::before');
   if (shift && line.content !== 'none' && time(line).duration > 0 && !running('::after')) {
@@ -41,7 +41,7 @@ const slideIfStill = (sel: HTMLElement) => {
   }
   const from = ['t', 'r', 'b', 'l'].map((k) => sel.style.getPropertyValue('--dk-tabs-from-' + k));
   if (from.every(Boolean) && fill.content !== 'none' && /^inset\(/.test(fill.clipPath) && time(fill).duration > 0 && !running('::before')) {
-    const round = fill.clipPath.includes(' round ') ? ' round ' + fill.clipPath.split(' round ')[1].replace(/\)$/, '') : '';
+    const round = fill.clipPath.includes(' round ') ? ' round ' + (fill.clipPath.split(' round ')[1] ?? '').replace(/\)$/, '') : '';
     sel.animate({ clipPath: [`inset(${from.join(' ')}${round})`, fill.clipPath] }, { ...time(fill), pseudoElement: '::before' });
   }
 };

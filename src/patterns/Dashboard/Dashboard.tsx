@@ -76,12 +76,12 @@ const demo: DashboardData = {
     { name: 'Mobile app', href: '#mobile-app', status: 'Active', updated: '2026-11-02' },
     { name: 'Data export', href: '#data-export', status: 'Done', updated: '2026-10-30' },
   ],
-  activity: [
+  activity: ([
     ['commented on', 'Website redesign'], ['closed', 'Issue 214'], ['created', 'Billing migration'], ['uploaded 3 files to', 'Help center'],
     ['invited Dewi Lestari to', 'Mobile app'], ['moved to Done', 'Data export'], ['commented on', 'Billing migration'], ['reopened', 'Issue 198'],
     ['renamed', 'Help center'], ['archived', 'Old brand kit'],
-  ].map(([action, target], i) => ({
-    id: `e${i}`, actor: { name: PEOPLE[i % 4] }, action, target: { label: target, href: `#${target.toLowerCase().replace(/\s+/g, '-')}` }, date: day(i),
+  ] satisfies Array<[string, string]>).map(([action, target], i) => ({
+    id: `e${i}`, actor: { name: PEOPLE[i % 4] ?? '' }, action, target: { label: target, href: `#${target.toLowerCase().replace(/\s+/g, '-')}` }, date: day(i),
   })),
 };
 
