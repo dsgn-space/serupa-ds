@@ -13,6 +13,7 @@ import { Button } from '../components/Button/Button';
 import { Combobox } from '../components/Combobox/Combobox';
 import { CommandPalette } from '../components/CommandPalette/CommandPalette';
 import { CopyButton } from '../components/CopyButton/CopyButton';
+import { Countdown } from '../components/Countdown/Countdown';
 import { ChatApproval, ChatMessage } from '../components/Chat/Chat';
 import { DataGrid } from '../components/DataGrid/DataGrid';
 import { Dialog } from '../components/Dialog/Dialog';
@@ -106,6 +107,9 @@ const SITES: Record<string, Site> = {
   'SortableList: picking an item up with Space': {
     ui: () => <SortableList items={ITEMS} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => t.name} onReorder={() => {}} />,
     act: async () => { $('button[aria-label$=" Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*2.*3/ },
+  'Countdown: a step it crosses': {
+    ui: (s) => <SerupaProvider locale="en-US"><Countdown seconds={s === 1 ? 60 : 61} label="Time left" announceAt={[60]} /></SerupaProvider>,
+    act: (next) => next(), says: /Time left: 1 minute/ },
   'DataGrid: how many cells were copied': {
     ui: () => <SerupaProvider locale="en-US"><DataGrid aria-label="Stock" columns={[{ key: 'name', header: 'Name' }, { key: 'qty', header: 'Qty' }]} rows={[{ id: 'a', name: 'Kopi', qty: 4 }]} /></SerupaProvider>,   // pinned: the count follows the locale's digits
     act: async () => { await userEvent.click(document.querySelector('[role="gridcell"]') as HTMLElement); await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}'); await userEvent.copy(); }, says: /2 cells copied/ },
