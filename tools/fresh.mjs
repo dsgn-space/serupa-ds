@@ -1,6 +1,6 @@
-// Fails a pull request, or a merge-queue group, whose screenshots can't match the tree they will merge into: one side
-// (the branch, or main since the branch left it) changed a component's pictures, and the other changed that component
-// or the pictures of one that uses it.
+// Fails a pull request, or a merge-queue group, whose screenshots can't match the tree they will merge into: the branch
+// changed a component's pictures, and main (since the branch left it) changed that component or the pictures of one
+// it shows.
 // The queue then fails on Visual after 15 minutes, and every group behind it is built again; this fails in seconds.
 //   node tools/fresh.mjs --base <main's commit> --head <the branch's commit>
 // It reads both sides' changed files from GitHub (gh api; GH_TOKEN and GH_REPO on a runner) and checks out nothing more.
@@ -13,9 +13,12 @@ import { affectedComponents, withDependents } from './test/lib.mjs';
 const VISUAL = /^tools\/test\/baseline-visual\/([A-Z]\w*)\//;
 const SCOPED = /^(?:src\/(?:components|blocks|patterns)\/[A-Z]|tools\/test\/baseline-visual\/[A-Z])/;
 
-// The components whose pictures can't match after the merge. A side's look changed where its pictures changed, so:
-// - one side changed a component's pictures and the other changed that component (its code or its pictures), or
-// - one side changed a component's pictures and the other changed the pictures of one that uses it (a pattern showing it).
+// The pictures the branch drew that can't match after the merge: the branch changed a component's pictures, and main
+// changed that component (its code or its pictures) or the pictures of one it shows (a pattern showing a Button).
+// Only the branch's own pictures count. Where main drew pictures again, the branch's own Visual run (the components it
+// changes and every one that uses them) already showed its change moves none of those pictures: otherwise it would
+// have drawn them too. Counting them sent a wide pull request back each time main redrew a component it touches,
+// faster than a redraw takes; the queue's Visual still checks the merged tree.
 // A code change with no picture change (labels, behaviour) moves no picture, here or in what uses it.
 export function staleComponents(branchFiles, mainFiles, dependents = withDependents) {
   const side = (files) => {
@@ -26,7 +29,6 @@ export function staleComponents(branchFiles, mainFiles, dependents = withDepende
   const b = side(branchFiles), m = side(mainFiles);
   const stale = new Set();
   for (const n of b.pictures) if (m.touched.has(n) || m.reach.has(n)) stale.add(n);
-  for (const n of m.pictures) if (b.touched.has(n) || b.reach.has(n)) stale.add(n);
   return [...stale].sort();
 }
 
