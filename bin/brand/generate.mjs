@@ -155,7 +155,7 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
     const cands = order(light ? '500' : '200', light ? '800' : '500');
     const primary = cands.includes(seedStep) && passes(seedStep) ? seedStep : cands.find(passes);
     if (!primary) fail(mode, `${light ? 'white' : 'dark'} text at 4.5:1 and 4.5:1 on the ${light ? 'white' : 'dark'} page, with a hover that passes too`);
-    // The ring goes round a field and round an action inside one, so it needs 3:1 on the field's fill too (zinc-700 in dark).
+    // The ring goes round a field and round an action inside one, so it needs 3:1 on the field's fill too (zinc-800 in dark).
     const ring = (need) => (s) => contrast(S(s), surface) >= need && contrast(S(s), overlay) >= need && contrast(S(s), subtle) >= need && contrast(S(s), field) >= need;
     const focus = order(light ? '400' : '200', light ? '800' : '600').find(ring(3));
     if (!focus) fail(mode, 'a focus ring at 3:1 on the surface');
@@ -167,8 +167,8 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
     const violetHue = oklchOf(palette.get('violet-600'))[2];
     const dist = Math.min(Math.abs(hue - violetHue), 360 - Math.abs(hue - violetHue));
     const visited = dist < 30 ? (light ? '{fuchsia-700}' : '{fuchsia-300}') : b['link-visited'];
-    // A text action in a field: primary in light; in dark the first shade lighter than primary with 4.5:1 on the field.
-    const action = light ? primary : STEPS.slice(0, STEPS.indexOf(primary)).reverse().find((x) => contrast(S(x), field) >= 4.5);
+    // A text action in a field: primary in light; in dark primary, or the first shade lighter with 4.5:1 on the field.
+    const action = light ? primary : STEPS.slice(0, STEPS.indexOf(primary) + 1).reverse().find((x) => contrast(S(x), field) >= 4.5);
     if (!action) fail(mode, 'a text action at 4.5:1 on the field');
     picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus };
     Object.assign(b, {

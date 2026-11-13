@@ -150,8 +150,8 @@
     },
     "field": {
       "$type": "color",
-      "$value": "{color.zinc-700}",
-      "$description": "Alias. Background of text inputs, selects and other form fields: white in light, zinc-700 in dark, a fill that sets a field apart from the page and cards around it.",
+      "$value": "{color.zinc-800}",
+      "$description": "Alias. Background of text inputs, selects and other form fields: white in light, zinc-800 in dark, a fill that sets a field apart from the page and cards around it.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field"
@@ -160,8 +160,8 @@
     },
     "field-readonly": {
       "$type": "color",
-      "$value": "{color.zinc-800}",
-      "$description": "Alias. Background of a read-only or disabled form field: a step flatter than `field` (zinc-50 in light, zinc-800 in dark), so it reads as not editable while its `field-border` still outlines it.",
+      "$value": "{color.zinc-900}",
+      "$description": "Alias. Background of a read-only or disabled form field: a step flatter than `field` (zinc-50 in light, zinc-900 in dark), so it reads as not editable while its `field-border` still outlines it.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-readonly"
@@ -210,8 +210,8 @@
     },
     "field-hover": {
       "$type": "color",
-      "$value": "{color.zinc-600}",
-      "$description": "Alias. The fill of a button inside a field under the pointer (a calendar or clock button, Input's icon action, NumberInput's steppers, the country button): `secondary` in light, zinc-600 in dark, a step past the zinc-700 field.",
+      "$value": "{color.zinc-700}",
+      "$description": "Alias. The fill of a button inside a field under the pointer (a calendar or clock button, Input's icon action, NumberInput's steppers, the country button): `secondary` in light, zinc-700 in dark, a step past the zinc-800 field.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-hover"
@@ -220,8 +220,8 @@
     },
     "field-pressed": {
       "$type": "color",
-      "$value": "{color.zinc-500}",
-      "$description": "Alias. The fill of a button inside a field while it's held down, one step past `field-hover` (zinc-200 in light, zinc-500 in dark; text keeps 4.5:1 on it).",
+      "$value": "{color.zinc-600}",
+      "$description": "Alias. The fill of a button inside a field while it's held down, one step past `field-hover` (zinc-200 in light, zinc-600 in dark; text keeps 4.5:1 on it).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-pressed"
@@ -230,8 +230,8 @@
     },
     "field-border-invalid": {
       "$type": "color",
-      "$value": "{color.red-400}",
-      "$description": "Alias. The border of an invalid field: `danger` in light, red-400 in dark, where `danger` (red-600) is under 3:1 on the zinc-700 field. 3:1+ on `field` and `surface` in every theme (WCAG 1.4.11).",
+      "$value": "{color.red-600}",
+      "$description": "Alias. An invalid field's border: `danger` (red 600), 3:1+ on `field` and `surface`. Its own alias so a theme whose field fill is lighter can take a lighter red.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border-invalid"
@@ -240,8 +240,8 @@
     },
     "field-action": {
       "$type": "color",
-      "$value": "{color.teal-300}",
-      "$description": "Alias. A text action inside a field (Input's \"Apply\"): `primary` in light, and in dark the brand one step lighter than `primary` (brand 300), which keeps 4.5:1 on the zinc-700 field.",
+      "$value": "{color.teal-400}",
+      "$description": "Alias. A text action inside a field (Input's \"Apply\"): `primary`, which keeps 4.5:1 on the field. Its own alias so a brand whose primary falls short on the field can take a lighter shade.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-action"
@@ -250,8 +250,8 @@
     },
     "placeholder": {
       "$type": "color",
-      "$value": "{color.zinc-300}",
-      "$description": "Alias. Placeholder text in form fields, and the other muted text inside a field: a prefix or suffix, a character count, the Caps Lock hint (4.5:1+ on `field` and `field-readonly`). zinc-300 in dark, where the field is zinc-700. Placeholders are hints, never labels.",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Placeholder text in form fields, and the other muted text inside a field: a prefix or suffix, a character count, the Caps Lock hint (4.5:1+ on `field` and `field-readonly`). Placeholders are hints, never labels.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--placeholder"
