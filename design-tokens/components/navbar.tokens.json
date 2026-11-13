@@ -215,6 +215,16 @@
             "cssVar": "--navbar-height"
           }
         }
+      },
+      "height-condensed": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-12}",
+        "$description": "A condensed sticky bar's height once the page has scrolled under it (48px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-height-condensed"
+          }
+        }
       }
     },
     "spacing": {

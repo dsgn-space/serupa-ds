@@ -4,6 +4,7 @@ interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
     children?: React.ReactNode | undefined;
     actions?: React.ReactNode | undefined;
     sticky?: boolean | undefined;
+    condense?: boolean | undefined;
     size?: ContainerSize | undefined;
     "aria-label"?: string | undefined;
     menuLabel?: string | undefined;
