@@ -127,7 +127,7 @@ function place(timed: Shown[], d: Date): Placed[] {
   close();
   return out;
 }
-const HOURS = Array.from({ length: 24 }, (_, h) => h);
+const HOURS = /* @__PURE__ */ Array.from({ length: 24 }, (_, h) => h);
 // The hour the time grid opens at: 8 AM, or the first timed event's if earlier.
 const OPEN_AT = 8;
 const iso = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
