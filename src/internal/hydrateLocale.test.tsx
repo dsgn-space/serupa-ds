@@ -61,7 +61,8 @@ describe('hydration without a locale', () => {
       expect(ends.map((e) => [e.value, e.placeholder])).toEqual([['23/10/2026', 'dd/mm/yyyy'], ['25/10/2026', 'dd/mm/yyyy']]);
       expect(host.querySelector<HTMLInputElement>('#tp')!.value).toBe('14.30');
       expect(host.querySelector('#cal')!.textContent).toContain('Oktober 2026');
-      expect(host.querySelector<HTMLInputElement>('#ni')!.value).toBe('1500,25');
+      // NumberInput rewrites its text in an effect after the switch, which WebKit can run after the 50ms.
+      await expect.poll(() => host.querySelector<HTMLInputElement>('#ni')!.value).toBe('1500,25');
     } finally { done(); }
   });
 });

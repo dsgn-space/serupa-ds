@@ -23,6 +23,10 @@ export interface PageHeaderAction {
   onSelect?: () => void;
   /** Or where it goes. */
   href?: string;
+  /** An icon before the label: an icon name or any element. */
+  icon?: React.ComponentProps<typeof Button>['leftIcon'];
+  /** Can't be used now (nothing to do): the button, or the menu item on a phone, says so. */
+  disabled?: boolean;
 }
 export interface PageHeaderSection {
   label: string;
@@ -47,13 +51,17 @@ export interface PageHeaderProps {
   sectionsLabel?: string;
   /** The phone menu's name, in the page's language. Default: "More actions". */
   moreLabel?: string | undefined;
+  /** A ref to the h1. With it, the h1 can take focus from a script (tabIndex -1), for a page that moves focus to its
+      title after an action takes away the button that had it. */
+  headingRef?: React.Ref<HTMLHeadingElement> | undefined;
 }
 
 const button = (a: PageHeaderAction, variant: 'primary' | 'secondary') =>
-  a.href ? <Button key={a.label} href={a.href} variant={variant}>{a.label}</Button> : <Button key={a.label} variant={variant} onClick={a.onSelect}>{a.label}</Button>;
+  a.href && !a.disabled ? <Button key={a.label} href={a.href} variant={variant} leftIcon={a.icon}>{a.label}</Button>
+    : <Button key={a.label} variant={variant} leftIcon={a.icon} disabled={a.disabled} onClick={a.onSelect}>{a.label}</Button>;
 
 /** The top of a page: where it is, what it's called, what it's for, and what you can do there. */
-export function PageHeader({ breadcrumb, title, description, primary, secondary = [], sections, sectionsLabel = 'Sections', moreLabel = 'More actions' }: PageHeaderProps) {
+export function PageHeader({ breadcrumb, title, description, primary, secondary = [], sections, sectionsLabel = 'Sections', moreLabel = 'More actions', headingRef }: PageHeaderProps) {
   return (
     // With sections, the tab row's own line is the header's bottom edge, so the two don't draw one line twice.
     <div className={sections?.length ? 'flex flex-col gap-4' : 'flex flex-col gap-4 border-b border-border pb-4'}>
@@ -64,7 +72,7 @@ export function PageHeader({ breadcrumb, title, description, primary, secondary 
       ) : null}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1">
-          <Heading level={1}>{title}</Heading>
+          {headingRef ? <Heading level={1} ref={headingRef} tabIndex={-1} className="outline-none">{title}</Heading> : <Heading level={1}>{title}</Heading>}
           {description != null ? <p className="m-0 max-w-prose text-text-muted">{description}</p> : null}
         </div>
         {primary || secondary.length ? (
@@ -75,7 +83,7 @@ export function PageHeader({ breadcrumb, title, description, primary, secondary 
                 <div className="hidden flex-wrap gap-2 sm:flex">{secondary.map((a) => button(a, 'secondary'))}</div>
                 <div className="sm:hidden">
                   <Menu placement="bottom-end" trigger={<Button variant="secondary" icon="more_horiz" aria-label={moreLabel} />}>
-                    {secondary.map((a) => <MenuItem key={a.label} href={a.href} onSelect={a.onSelect}>{a.label}</MenuItem>)}
+                    {secondary.map((a) => <MenuItem key={a.label} href={a.disabled ? undefined : a.href} icon={a.icon} disabled={a.disabled} onSelect={a.onSelect}>{a.label}</MenuItem>)}
                   </Menu>
                 </div>
               </>

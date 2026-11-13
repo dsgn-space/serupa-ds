@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
-import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Badge } from '../../components/Badge/Badge';
 import { List, ListItem } from '../../components/List/List';
@@ -12,6 +11,7 @@ import { SegmentedControl } from '../../components/SegmentedControl/SegmentedCon
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Loader } from '../../components/Loader/Loader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Notifications: a bell in the Navbar that opens the recent ones in a drawer, and a full inbox page with a filter,
    mark as read and mark all as read. Both read the same list. For an app to copy. What it carries (WCAG 2.2):
@@ -24,7 +24,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
    - 2.4.3: marking one read on the page takes its button away (and, under "Unread", the notification too), so focus
      goes to the next unread one's button, or the heading when none are left; after Mark all as read it goes to the
      heading. Never to the top of the page. In the drawer, focus stays in the drawer.
-   - People choose what interrupts them: "Notification settings" sits by the heading, and the empty state links there
+   - People choose what interrupts them: "Notification settings" sits by the heading (in More actions on a phone), and the empty state links there
      too (the Ethical design rule: turning notifications off takes no more steps than turning them on).
    Storing what's read is the app's job: onMarkRead and onMarkAllRead hear it. */
 
@@ -110,13 +110,9 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
       <NotificationCenter items={all.slice(0, 5)} open={open} onOpenChange={setOpen} onMarkRead={(id) => markRead(id)} onMarkAllRead={() => markAll()} />
 
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-8 outline-none">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Heading level={1} ref={heading} tabIndex={-1} className="outline-none">Notifications</Heading>
-          <div className="flex flex-wrap gap-2">
-            <Button variant="ghost" leftIcon="settings" href={settingsHref}>Notification settings</Button>
-            <Button variant="outline" disabled={loading || loadFailed || !unread} onClick={() => markAll(true)}>Mark all as read</Button>
-          </div>
-        </div>
+        <PageHeader title="Notifications" headingRef={heading}
+          primary={{ label: 'Mark all as read', disabled: loading || loadFailed || !unread, onSelect: () => markAll(true) }}
+          secondary={[{ label: 'Notification settings', icon: 'settings', href: settingsHref }]} />
         <div className="flex flex-wrap items-center justify-between gap-3">
           <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
             options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread' }]} />
