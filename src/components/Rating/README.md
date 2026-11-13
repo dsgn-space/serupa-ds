@@ -102,7 +102,7 @@ Each is an optional override: set it on the page, a container or one Rating. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--rating-fill` | `warning` | A star's filled part (3:1 on the page). |
-| `--rating-empty` | `field-border` | A star's empty part (3:1 on the page). |
+| `--rating-empty` | `border-control` | A star's empty part (3:1 on the page). |
 | `--rating-invalid` | `danger` | The empty stars' color when invalid (3:1 on the page), so the error shows on the stars as well as in the Field's message. |
 | `--rating-focus-ring` | `focus-ring` | The ring around the focused star. |
 | `--rating-size-sm` | `spacing-5` | A star at size sm (20px). |

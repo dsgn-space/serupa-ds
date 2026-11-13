@@ -15,6 +15,9 @@
 - slider "Volume" [invalid]
 - text: Keep it under 80 for hearing safety
 
+# Large
+- slider "Volume"
+
 # LongMarks
 - slider "Volume"
 

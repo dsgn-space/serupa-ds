@@ -86,7 +86,7 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | --- | --- | --- |
 | `--tag-group-bg` | `surface` | A tag's background. |
 | `--tag-group-text` | `text` | A tag's words (4.5:1 on bg). |
-| `--tag-group-border` | `field-border` | A tag's border (3:1 on the page, so the tag's edge is seen). |
+| `--tag-group-border` | `border-control` | A tag's border (3:1 on the page, so the tag's edge is seen). |
 | `--tag-group-bg-selected` | `primary-subtle` | A picked tag's background. |
 | `--tag-group-text-selected` | `primary` | A picked tag's words and tick (4.5:1 on bg-selected). |
 | `--tag-group-border-selected` | `primary` | A picked tag's border. |

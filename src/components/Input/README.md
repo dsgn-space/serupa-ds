@@ -1,6 +1,6 @@
 # Input
 
-A single-line text field: a native `<input>` in a box that can hold icons. Three sizes at the control heights (24, 32 and 44px, like Button), a focus ring, and invalid, read-only and disabled states. Field colors come from the alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
+A single-line text field: a native `<input>` in a box that can hold icons. Three sizes at the control heights (24, 32 and 44px, like Button), a focus ring, and invalid, read-only and disabled states. Field colors come from the alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the focus ring 3:1 in all six themes.
 
 **Also called:** text input, text field.
 
@@ -85,7 +85,7 @@ Drawn from the `Icons` story.
 - Native constraints (`required`, `type="email"`, `pattern`, `min`, `maxLength`…) show too: a field that fails them takes the `invalid` border once people have edited it or tried to send the form (`:user-invalid`), never on first paint. It's only the color: `aria-invalid` and the message stay yours (set `invalid` and Field's `error` when you check it yourself). To keep the browser out of it, leave out the attribute and check the value in your own code.
 - Each action is a `<button type="button">`, so it never sends a form, after the field in the Tab order. An icon action is named by its `label` (its icon is `aria-hidden`), a text action by its words. A disabled Input disables its actions too. A press on an action presses it, and doesn't move focus into the field. At size `sm` an action is 18px, so the area that takes a press reaches 24px (WCAG 2.5.8). A text action's `primary` words keep 4.5:1 on the field and on its hover, an icon action's icon 3:1, in all six themes (`Input.test.tsx`).
 - Icons are decorative (`aria-hidden`). A press anywhere on the box, on an icon, the side padding or the count, focuses the field with the caret at the end, as the text cursor over the box promises; keep meaning in the label.
-- Text keeps 4.5:1 on `field`, the placeholder 4.5:1 and the border 3:1, in all six themes (`Input.test.tsx`).
+- Text keeps 4.5:1 on `field`, and the placeholder, prefix, suffix and count 4.5:1, in all six themes (`Input.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the accent border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - Use the right `type` (`email`, `tel`, `url`, `search`) and `autoComplete` so phones show the right keyboard and browsers can fill it in. Email and URL fields, and ones with `autoComplete` `username`, `email`, `url` or `one-time-code`, get `autoCapitalize="off"`, `autoCorrect="off"` and `spellCheck={false}`, so a phone doesn't capitalize or "correct" an address. Any of the three you pass wins.
 - The count is linked with `aria-describedby` (after any ids you pass), so screen readers read it when the field gets focus. While typing it's read out only near the limit: once when a few characters are left (10, or a fifth of a short limit) and once when it's reached. The words are the `charactersLeft` label.
 - A native constraint the value fails (`required`, `type`, `minLength`, `maxLength`, `min`, `max`, `step`, `pattern`) is reported by the browser in its own language. Inside a `SerupaProvider` whose labels set `invalidValue` (`idLabels` does), the message is in the provider's words instead ("Isi kolom ini."). It's set when the browser checks the field and cleared on the next keystroke or value change. A message you set yourself with `setCustomValidity` stays. In English the browser's own message is kept.
@@ -145,16 +145,16 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-border-hover` | `field-border-hover` | Border on hover |
 | `--input-placeholder` | `placeholder` | Placeholder text |
 | `--input-icon-color` | `text-muted` | Left and right icons |
-| `--input-affix` | `text-muted` | The `prefix` and `suffix` text |
-| `--input-count` | `text-muted` | The character count |
+| `--input-affix` | `placeholder` | The `prefix` and `suffix` text |
+| `--input-count` | `placeholder` | The character count |
 | `--input-count-full` | `text` | The count once `maxLength` is reached |
 | `--input-focus-ring` | `focus-ring` | Border and ring while focused |
-| `--input-invalid` | `danger` | Border and ring when invalid |
+| `--input-invalid` | `field-border-invalid` | Border and ring when invalid |
 | `--input-action` | `text-muted` | An icon action's icon (3:1 on the field). |
 | `--input-action-hover` | `text` | An icon action's icon on hover. |
-| `--input-action-bg-hover` | `secondary` | An icon action's background on hover. |
-| `--input-action-bg-pressed` | `secondary-hover` | An icon action's background while it's held down, one step past hover. |
-| `--input-action-text` | `primary` | A text action's words, such as Apply (4.5:1 on the field). |
+| `--input-action-bg-hover` | `field-hover` | An icon action's background on hover. |
+| `--input-action-bg-pressed` | `field-pressed` | An icon action's background while it's held down, one step past hover. |
+| `--input-action-text` | `field-action` | A text action's words, such as Apply (4.5:1 on the field). |
 | `--input-action-text-bg-hover` | `primary-subtle` | A text action's background on hover. |
 | `--input-action-focus-ring` | `focus-ring` | The ring around a focused action. |
 | `--input-rejected-color` | `text-muted` | The line under a DatePicker, DateRangePicker, TimePicker or NumberInput saying why typed text was put back. |

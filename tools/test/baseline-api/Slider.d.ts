@@ -20,7 +20,7 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
     max?: number | undefined;
     step?: number | undefined;
     largeStep?: number | undefined;
-    size?: "md" | "sm" | undefined;
+    size?: "lg" | "md" | "sm" | undefined;
     disabled?: boolean | undefined;
     formatValue?: ((value: number) => string) | undefined;
     thumbLabels?: [

@@ -4,7 +4,7 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The track while off",
         "$extensions": {
           "com.serupa": {
@@ -14,7 +14,7 @@
       },
       "track-hover": {
         "$type": "color",
-        "$value": "{color.field-border-hover}",
+        "$value": "{color.border-control-hover}",
         "$description": "The track while off, on hover",
         "$extensions": {
           "com.serupa": {

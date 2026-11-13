@@ -142,7 +142,7 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--stepper-indicator-bg` | `surface` | An upcoming step's circle. |
-| `--stepper-indicator-border` | `field-border` | An upcoming step's ring (3:1 on the surface). |
+| `--stepper-indicator-border` | `border-control` | An upcoming step's ring (3:1 on the surface). |
 | `--stepper-indicator-text` | `text-muted` | An upcoming step's number. |
 | `--stepper-bg-active` | `primary` | The current and completed steps' circle. |
 | `--stepper-active-bg` | `primary` | The old name of `--stepper-bg-active`, read when that isn't set. Removed in 15.0.0. |
@@ -157,7 +157,7 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | `--stepper-warning-text` | `warning-text` | The mark on it. |
 | `--stepper-title-color` | `text` | Step titles. |
 | `--stepper-description-color` | `text-muted` | The line under a title, and "Optional". |
-| `--stepper-connector` | `field-border` | The line to an upcoming step. |
+| `--stepper-connector` | `border-control` | The line to an upcoming step. |
 | `--stepper-connector-complete` | `primary` | The line after a completed step. |
 | `--stepper-focus-ring` | `focus-ring` | A clickable step's keyboard focus ring. |
 

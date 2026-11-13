@@ -62,11 +62,11 @@
   outline: var(--focus-ring-width) solid var(--dk-checkbox-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid: a danger border while unchecked, and a danger focus ring. A checked box keeps its fill. */
-.dk-checkbox--invalid .dk-checkbox__input { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); }
-@media (hover: hover) { .dk-checkbox--invalid:hover .dk-checkbox__input:not(:disabled, [readonly]) { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); } }
+.dk-checkbox--invalid .dk-checkbox__input { --dk-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --dk-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-checkbox--invalid:hover .dk-checkbox__input:not(:disabled, [readonly]) { --dk-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --dk-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
 /* A required box left unticked after people untick it or try to send the form: as Input (:user-invalid). */
-.dk-checkbox__input:user-invalid { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); }
-@media (hover: hover) { .dk-checkbox:hover .dk-checkbox__input:user-invalid { --dk-checkbox-bd: var(--checkbox-invalid, var(--danger)); --dk-checkbox-ring: var(--checkbox-invalid, var(--danger)); } }
+.dk-checkbox__input:user-invalid { --dk-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --dk-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-checkbox:hover .dk-checkbox__input:user-invalid { --dk-checkbox-bd: var(--checkbox-invalid, var(--field-border-invalid)); --dk-checkbox-ring: var(--checkbox-invalid, var(--field-border-invalid)); } }
 .dk-checkbox__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-checkbox__description { color: var(--checkbox-description-color, var(--text-muted)); }
 /* Read-only: no pointer cursor or hover, since a click won't change it. */
@@ -90,8 +90,8 @@
 .dk-checkbox--card:has(.dk-checkbox__input:checked) { --dk-checkbox-card-on: var(--checkbox-card-border-checked, var(--primary)); border-color: var(--dk-checkbox-card-on); box-shadow: inset 0 0 0 var(--checkbox-border-width, var(--border-width-1)) var(--dk-checkbox-card-on); }
 .dk-checkbox--card:has(.dk-checkbox__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--checkbox-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-checkbox--card .dk-checkbox__input:is(:focus-visible, [data-key-focus]) { outline: none; }
-.dk-checkbox--card.dk-checkbox--invalid:not(:has(.dk-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--danger)); }
-.dk-checkbox--card.dk-checkbox--invalid:has(.dk-checkbox__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--checkbox-invalid, var(--danger)); }
+.dk-checkbox--card.dk-checkbox--invalid:not(:has(.dk-checkbox__input:checked)) { border-color: var(--checkbox-invalid, var(--field-border-invalid)); }
+.dk-checkbox--card.dk-checkbox--invalid:has(.dk-checkbox__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--checkbox-invalid, var(--field-border-invalid)); }
 @media (forced-colors: active) { .dk-checkbox--card:has(.dk-checkbox__input:checked) { --dk-checkbox-card-on: Highlight; } }
 @media (forced-colors: active) { .dk-checkbox__icon { color: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind

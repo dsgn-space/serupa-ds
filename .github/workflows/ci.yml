@@ -583,19 +583,31 @@ jobs:
 
   # One check that passes only when every job this run needed passed: the required check, on pull requests and in the
   # merge queue alike.
+  # A held run (plan) ends cancelled, not failed: the check shows grey while the pictures are drawn, where a red X read
+  # as a real failure (#1818, 13 Nov). It still never passes, so the pull request can't merge on it; should the cancel
+  # not land, the step fails as before. Update baselines starts a cancelled held run again just as a failed one.
   test:
     needs: [plan, fresh, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      actions: write
     steps:
       - env:
           RESULTS: ${{ toJSON(needs) }}
           HEAD_REF: ${{ github.head_ref }}
           HOLD: ${{ needs.plan.outputs.hold }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         run: |
           if [ "$HEAD_REF" = changeset-release/main ]; then echo "Release pull request: CI is started on it by the Release workflow."; exit 0; fi
-          if [ "$HOLD" = 1 ]; then echo "Held while Update baselines draws the pictures: CI runs on its commit, or again here when nothing changed."; exit 1; fi
+          if [ "$HOLD" = 1 ]; then
+            echo "Held while Update baselines draws the pictures: CI runs on its commit, or again here when nothing changed."
+            gh run cancel "$RUN_ID" && sleep 120
+            exit 1
+          fi
           # Skipped is fine (a job this kind of run doesn't need); anything else but success fails.
           bad=$(echo "$RESULTS" | jq -r 'to_entries[] | select(.value.result != "success" and .value.result != "skipped") | "\(.key): \(.value.result)"')
           if [ -n "$bad" ]; then echo "$bad"; exit 1; fi

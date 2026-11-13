@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { cn, omit, useMergedRef } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { useAutoFocus } from '../../internal/focus';
-import { addMonths, compare, isoDate, sameDay, startOfMonth, toDay } from '../../internal/dates';
+import { addMonths, compare, isoDate, sameDay, sameMonth, startOfMonth, toDay } from '../../internal/dates';
 import { component } from '../../internal/component';
 import { FieldContext } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -70,9 +70,28 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
   const [anchor, setAnchor] = React.useState<Date | null>(null);
   const [hover, setHover] = React.useState<Date | null>(null);
   const home = () => { const t = new Date(); return min && compare(t, min) < 0 ? min : max && compare(t, max) > 0 ? max : t; };
-  const [ownMonth, setOwnMonth] = React.useState(() => startOfMonth(props.defaultMonth || value.start || home()));
+  const monthsId = domId('dk-range-calendar', React.useId()) + '-months';
+  // With no month, defaultMonth or value, the month is today's, and the server's today may be in another month than
+  // the visitor's (a UTC server late on the 31st, a visitor in Jakarta on the 1st). Hydrating, the first render draws
+  // the month the server's HTML shows (data-month carries it), so nothing mismatches; then an effect moves to the
+  // visitor's (GR396).
+  const fromServer = React.useRef(false);
+  const [ownMonth, setOwnMonth] = React.useState(() => {
+    if (props.defaultMonth || value.start) return startOfMonth(props.defaultMonth || value.start!);
+    const shown = typeof document === 'undefined' ? null : toDay(document.getElementById(monthsId)?.dataset.month, 'RangeCalendar');
+    fromServer.current = !!shown;
+    return startOfMonth(shown || home());
+  });
   const base = props.month ? startOfMonth(props.month) : ownMonth;
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!props.month) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
+  // It acts once, on the first render after hydrating from a server whose month isn't the visitor's.
+  // every render: no list, as it reads the month and onMonthChange of that render.
+  React.useEffect(() => {
+    if (!fromServer.current) return;
+    fromServer.current = false;
+    const h = home();
+    if (!props.month && !sameMonth(ownMonth, h)) showMonth(h);
+  });
   const two = props.months === 2;
   // In a Field, its label names the group: a <label for> can't name a group, so it's aria-labelledby, as RadioGroup's.
   const fieldLabel = React.useContext(FieldContext)?.labelId;
@@ -102,17 +121,26 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
     : '');
   const status = anchor ? L.chooseEndDate : value.start && value.end ? L.rangeSelected(range(value)) : L.chooseStartDate;
 
+  // With two months, a key that crosses into the month the other grid shows moves focus there, and the months stay put.
+  const leave = (first: boolean) => (d: Date) => {
+    if (!two || !sameMonth(d, first ? addMonths(base, 1) : base)) return false;
+    const grid = root.current && root.current.querySelectorAll('[role="grid"]')[first ? 1 : 0];
+    const b = grid && grid.querySelector<HTMLElement>(`[data-date="${isoDate(d)}"]`);
+    if (!b) return false;
+    b.focus();
+    return b.matches(':focus');
+  };
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => showMonth(first ? n : addMonths(n, -1))} value={first ? value.start : value.end}
       min={min} max={max} isDateDisabled={props.isDateDisabled} locale={locale} weekStartsOn={props.weekStartsOn} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
-      isDateSelected={isEnd} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} />
+      isDateSelected={isEnd} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   return (
     <div {...rest} ref={merged} role="group" aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : rest['aria-label'] || L.chooseDates}
       className={cn('dk-range-calendar', two && 'dk-range-calendar--two', props.className)} data-component="range-calendar">
       {/* Escape drops a half-picked range, and goes no further (a Dialog around it stays open); leaving the days puts
           the preview back on the end picked. */}
-      <div className="dk-range-calendar__months" role="presentation"
+      <div className="dk-range-calendar__months" role="presentation" id={monthsId} data-month={isoDate(base)}
         onKeyDown={(e) => { if (e.key === 'Escape' && anchor) { e.preventDefault(); e.stopPropagation(); setAnchor(null); setHover(null); } }}
         onMouseLeave={() => { if (anchor) setHover(anchor); }}>
         {cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}

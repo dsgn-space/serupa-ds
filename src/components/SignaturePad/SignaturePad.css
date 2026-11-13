@@ -11,7 +11,7 @@
 .dk-signature-pad__label { font-weight: var(--font-medium); }
 .dk-signature-pad__box {
   position: relative; block-size: var(--signature-pad-height, var(--spacing-40)); overflow: hidden;
-  border: var(--border-width-1) solid var(--signature-pad-border, var(--field-border)); border-radius: var(--signature-pad-radius, var(--radius-control));
+  border: var(--border-width-1) solid var(--signature-pad-border, var(--border-control)); border-radius: var(--signature-pad-radius, var(--radius-control));
   background: var(--signature-pad-bg, var(--surface));
 }
 .dk-signature-pad--invalid .dk-signature-pad__box { border-color: var(--signature-pad-border-invalid, var(--danger)); }

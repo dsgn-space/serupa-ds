@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
-   Slider: a rounded track (field-border, 3:1 on the surface) with the selected part in primary, and one or two
+   Slider: a rounded track (border-control, 3:1 on the surface) with the selected part in primary, and one or two
    round thumbs (field inside, a 2px primary ring, shadow-sm) centered on their values. sm: 4px track, 16px
-   thumb; md: 6px, 20px. The whole thumb-high strip takes presses. marks: 2px ticks cut into the track (none at its ends), and
+   thumb; md: 6px, 20px; lg: 8px, 24px. The whole thumb-high strip takes presses. marks: 2px ticks cut into the track (none at its ends), and
    muted text-xs labels under it, centered on their values, with room made below. showValue: the value in a small inverse
    chip over the thumb while it's focused, hovered or dragged. Invalid: the fill and ring turn danger. Read-only: no grab cursor, and presses and keys do nothing. Disabled: faded.
    --------------------------------------------------------------- */
@@ -22,7 +22,8 @@
 .dk-slider--inputs .dk-slider__track { margin-inline: var(--dk-slider-half); }
 .dk-slider__input { flex: none; inline-size: var(--slider-input-width, var(--spacing-20)); cursor: auto; touch-action: auto; -webkit-user-select: auto; user-select: auto; }
 .dk-slider--size-sm { --dk-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --dk-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
-.dk-slider__track { position: relative; flex: auto; height: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--field-border)); box-shadow: var(--slider-track-depth, var(--depth-well)); }
+.dk-slider--size-lg { --dk-slider-track: var(--slider-track-height-lg, var(--spacing-2)); --dk-slider-thumb: var(--slider-thumb-size-lg, var(--spacing-6)); }
+.dk-slider__track { position: relative; flex: auto; height: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--border-control)); box-shadow: var(--slider-track-depth, var(--depth-well)); }
 .dk-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
 .dk-slider__thumb {
   position: absolute; inset-block-start: var(--dk-slider-thumb-top); box-sizing: border-box; width: var(--dk-slider-thumb); height: var(--dk-slider-thumb);

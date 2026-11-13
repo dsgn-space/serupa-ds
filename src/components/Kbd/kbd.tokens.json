@@ -14,7 +14,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "A key's outline, thicker at the bottom like a keycap.",
         "$extensions": {
           "com.serupa": {

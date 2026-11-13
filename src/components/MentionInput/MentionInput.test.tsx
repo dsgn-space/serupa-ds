@@ -206,3 +206,96 @@ describe('MentionInput', () => {
     document.documentElement.removeAttribute('data-theme');
   });
 });
+
+// What a mutation run on MentionInput.tsx found no test for (88 of 127 mutants were caught, run 272): each test names
+// the rule a changed operator would have broken without anything failing.
+describe('MentionInput: rules no test covered', () => {
+  test('mentionQuery: a trigger after the caret isn\'t the mention; the query may be 40 characters and no more, counted after the trigger', () => {
+    const forty = 'a'.repeat(40);
+    expect(mentionQuery('ab @c', 3)).toBeNull();
+    expect([mentionQuery('xx @' + forty, 44), mentionQuery('xx @' + forty + 'a', 45)]).toEqual([{ start: 3, text: forty }, null]);
+    expect([mentionQuery('xx ::' + forty, 45, '::'), mentionQuery('xx ::' + forty + 'a', 46, '::')]).toEqual([{ start: 3, text: forty }, null]);
+  });
+
+  test('mentionsIn: a name that ends the text counts, one followed by a digit doesn\'t', () => {
+    expect(mentionsIn('Thanks @Ayu Lestari', PEOPLE).map((p) => p.id)).toEqual(['ayu']);
+    expect(mentionsIn('Thanks @Ayu Lestari2', PEOPLE)).toEqual([]);
+  });
+
+  test('only the active option is selected, only the one that can\'t be picked is disabled, and only one with a description has a second line', async () => {
+    await render(<Box />);
+    await userEvent.click(box());
+    await userEvent.keyboard('@');
+    const options = () => [...document.querySelectorAll('[role="option"]')];
+    expect(options().map((o) => [o.getAttribute('aria-selected'), o.getAttribute('aria-disabled'), o.lastElementChild!.childElementCount]))
+      .toEqual([['true', null, 2], ['false', null, 1], ['false', null, 1], ['false', 'true', 1]]);
+    expect(activeOption()).toBe(options()[0]);
+    expect(list().parentElement!.textContent).not.toMatch(/No results/i);
+    await userEvent.keyboard('zzz');
+    expect([options().length, box().getAttribute('aria-activedescendant')]).toEqual([0, null]);
+    expect(list().parentElement!.textContent).toMatch(/No results/i);
+  });
+
+  test('the pointer over an option makes it the active one; over one that can\'t be picked, or a click on it, does nothing', async () => {
+    const onMention = vi.fn();
+    await render(<Box onMention={onMention} />);
+    await userEvent.click(box());
+    await userEvent.keyboard('@');
+    await userEvent.hover(page.getByRole('option', { name: 'Budi Santoso' }));
+    expect(active()).toBe('Budi Santoso');
+    await userEvent.hover(page.getByRole('option', { name: 'Eka Putri' }));
+    expect(active()).toBe('Budi Santoso');
+    await userEvent.click(page.getByRole('option', { name: 'Eka Putri' }), { force: true });
+    expect([box().value, onMention.mock.calls.length, isOpen()]).toEqual(['@', 0, true]);
+  });
+
+  test('a mention put in before a space keeps that one space, and the caret goes after it', async () => {
+    await render(<Box defaultValue="Hi  there" />);
+    box().focus();
+    box().setSelectionRange(3, 3);
+    await userEvent.keyboard('@ay{Enter}');
+    expect([box().value, box().selectionStart]).toEqual(['Hi @Ayu Lestari there', 16]);
+  });
+
+  test('in a scrolled field the list opens under the caret\'s line where it shows, not where it would be unscrolled', async () => {
+    const lines = Array.from({ length: 20 }, (_, i) => 'line ' + i).join('\n');
+    await render(<Box defaultValue={lines} rows={5} resize="none" />);
+    const t = box(), line = parseFloat(getComputedStyle(t).lineHeight);
+    const at = lines.split('\n').slice(0, 13).join('\n').length;   // the end of line 12
+    t.focus();
+    t.setSelectionRange(at, at);
+    t.scrollTop = 10 * line;
+    await userEvent.keyboard(' @');
+    await expect.poll(isOpen).toBe(true);
+    expect(t.scrollTop).toBeGreaterThan(8 * line);
+    const field = t.getBoundingClientRect(), pop = list().getBoundingClientRect();
+    const shownLine = (12 * line - t.scrollTop) / line;   // which visible line the caret is on, from 0
+    const under = field.top + t.clientTop + parseFloat(getComputedStyle(t).paddingTop) + (shownLine + 1) * line;
+    expect(Math.abs(pop.top - under)).toBeLessThan(line);
+    expect(pop.left).toBeGreaterThan(field.left + t.clientLeft + 20);   // after "line 12 ", not at the field's edge
+    expect(pop.left).toBeLessThan(field.left + 200);
+  });
+
+  test('a form reset puts the text back to defaultValue and closes the list', async () => {
+    await render(<form><MentionInput aria-label="Comment" options={PEOPLE} defaultValue="Hello" /><button type="reset">Reset</button></form>);
+    await userEvent.click(box());
+    await userEvent.keyboard(' @');
+    await expect.poll(isOpen).toBe(true);
+    (document.querySelector('form') as HTMLFormElement).reset();
+    await expect.poll(() => [box().value, isOpen()]).toEqual(['Hello', false]);
+  });
+
+  test('with the list closed Enter is a new line; a key the app already handled moves nothing in the list', async () => {
+    let handle = false;
+    await render(<Box onKeyDown={(e) => { if (handle && e.key === 'ArrowDown') e.preventDefault(); }} />);
+    await userEvent.click(box());
+    await userEvent.keyboard('a{Enter}b @');
+    expect(box().value).toBe('a\nb @');
+    handle = true;
+    await userEvent.keyboard('{ArrowDown}');
+    expect(active()).toBe('Ayu Lestari');
+    handle = false;
+    await userEvent.keyboard('{ArrowDown}');
+    expect(active()).toBe('Budi Santoso');
+  });
+});

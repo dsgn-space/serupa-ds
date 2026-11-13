@@ -68,7 +68,7 @@ Each is an optional override: set it on the page, a container or one ScrollArea.
 <!-- token-table:start (made from scroll-area.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--scroll-area-thumb` | `field-border` | The scrollbar's thumb (3:1 on the surface). |
+| `--scroll-area-thumb` | `border-control` | The scrollbar's thumb (3:1 on the surface). |
 | `--scroll-area-focus-ring` | `focus-ring` | The ring inside its edge while it has focus. |
 | `--scroll-area-fade` | `spacing-8` | How far an edge with more past it fades, with fade (32px). |
 <!-- token-table:end -->

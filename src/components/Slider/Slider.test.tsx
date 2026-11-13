@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
+import { Input } from '../Input/Input';
 import { Slider } from './Slider';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -49,6 +50,20 @@ const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits 
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Slider', () => {
+  test('size="lg" sits beside lg fields: an 8px track, a 24px thumb, and number fields as tall as an lg Input (GR393)', async () => {
+    await render(<div style={{ width: '420px' }}>
+      <Slider id="lg" aria-label="Large" size="lg" defaultValue={40} />
+      <Slider id="lgi" aria-label="Large with fields" size="lg" defaultValue={40} inputs />
+      <Input id="lgf" aria-label="Field" size="lg" />
+    </div>);
+    const lg = document.getElementById('lg')!;
+    const h = (e: Element | null) => e!.getBoundingClientRect().height;
+    // The thumb sits in the track.
+    const thumb = lg.querySelector('[role="slider"]')!;
+    expect([lg.dataset.size, h(thumb.parentElement), h(thumb)]).toEqual(['lg', 8, 24]);
+    expect(h(document.querySelector('#lgi input'))).toBe(h(document.querySelector('#lgf')));
+  });
+
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<Slider id="mk" aria-label="Volume" defaultValue={50} />);
     const t = thumb('mk');

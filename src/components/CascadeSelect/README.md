@@ -73,7 +73,7 @@ Drawn from the `Open` story.
 
 - **Role and name:** the button is a `combobox` with `aria-haspopup="dialog"` and `aria-expanded`, named by a Field, a `<label>` or `aria-label`; the panel is a `dialog` named the same way. Each column is a `listbox` named by its level, and the highlighted option in each is `aria-selected`. An option with children is described as "More options: press Right arrow" (Left in right-to-left text).
 - **Keyboard:** see the table. Focus moves into the panel when it opens, onto the chosen option, and back to the button when it closes.
-- **Contrast:** text and placeholder keep 4.5:1 on `field`, the chevron and border 3:1; option text and level names 4.5:1 on the panel and the highlight; the check 3:1, in all six themes (`CascadeSelect.test.tsx`).
+- **Contrast:** text and placeholder keep 4.5:1 on `field`, the chevron 3:1; option text and level names 4.5:1 on the panel and the highlight; the check 3:1, in all six themes (`CascadeSelect.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the accent border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - **What's still yours:** a name for it (Field, `<label>` or `aria-label`), `levels` that say what each column is, and the error text when a required choice is missing.
 
 ### Keyboard
@@ -124,7 +124,7 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-placeholder` | `placeholder` | The placeholder (4.5:1 on bg). |
 | `--cascade-select-border` | `field-border` | The button's outline (3:1). |
 | `--cascade-select-border-hover` | `field-border-hover` | Its outline under the pointer. |
-| `--cascade-select-invalid` | `danger` | The outline when invalid. |
+| `--cascade-select-invalid` | `field-border-invalid` | The outline when invalid. |
 | `--cascade-select-bg-disabled` | `field-readonly` | The button's background when read-only or disabled. |
 | `--cascade-select-icon` | `text-muted` | The chevron (3:1). |
 | `--cascade-select-muted` | `text-muted` | Level names, notes and the children chevrons (4.5:1 on the panel). |

@@ -39,10 +39,21 @@
     field-sizing: content; min-height: var(--dk-ta-min); max-height: var(--dk-ta-max); overflow-y: auto; overscroll-behavior: contain;
   }
 }
+/* Print: the field grows to all of its text (its height may be the app's or a drag's, set inline, hence !important),
+   rows lines at least so a blank one keeps room to write in, instead of printing only the lines scrolled into view. */
+@media print {
+  @supports (field-sizing: content) {
+    .dk-textarea__field {
+      --dk-ta-min: calc(var(--dk-ta-rows) * 1lh + 2 * var(--dk-ta-py));
+      field-sizing: content; min-block-size: var(--dk-ta-min);
+      block-size: auto !important; max-block-size: none !important; overflow: visible; resize: none;
+    }
+  }
+}
 /* The count sits under the text, at the end, in text-xs with tabular digits; it turns text-colored at maxLength. */
 .dk-textarea__count {
   align-self: flex-end; padding: var(--spacing-0) var(--dk-ta-px) var(--dk-ta-py);
-  color: var(--textarea-count, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
+  color: var(--textarea-count, var(--placeholder)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   font-variant-numeric: tabular-nums; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
 .dk-textarea__count--full { color: var(--textarea-count-full, var(--text)); }
@@ -58,11 +69,11 @@
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws, since box-shadow rings disappear there. */
 .dk-textarea:focus-within { transition-duration: var(--duration-0); --dk-ta-bd: var(--dk-ta-ring); box-shadow: 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--dk-ta-ring), var(--textarea-depth, var(--depth-field)); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.dk-textarea--invalid { --dk-ta-bd: var(--textarea-invalid, var(--danger)); --dk-ta-ring: var(--textarea-invalid, var(--danger)); }
-@media (hover: hover) { .dk-textarea--invalid:hover:not(.dk-textarea--disabled, :has(.dk-textarea__field:disabled), .dk-textarea--readonly, :focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--danger)); } }
+.dk-textarea--invalid { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --dk-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-textarea--invalid:hover:not(.dk-textarea--disabled, :has(.dk-textarea__field:disabled), .dk-textarea--readonly, :focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
 /* A native constraint that fails after people edit it or try to send the form: as Input (:user-invalid). */
-.dk-textarea:has(.dk-textarea__field:user-invalid) { --dk-ta-bd: var(--textarea-invalid, var(--danger)); --dk-ta-ring: var(--textarea-invalid, var(--danger)); }
-@media (hover: hover) { .dk-textarea:has(.dk-textarea__field:user-invalid):hover:not(:focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--danger)); } }
+.dk-textarea:has(.dk-textarea__field:user-invalid) { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); --dk-ta-ring: var(--textarea-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-textarea:has(.dk-textarea__field:user-invalid):hover:not(:focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
 .dk-textarea--readonly { background: var(--textarea-bg-readonly, var(--field-readonly)); }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
 .dk-textarea--disabled, .dk-textarea:where(:has(.dk-textarea__field:disabled)) { background: var(--textarea-bg-readonly, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }

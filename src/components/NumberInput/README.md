@@ -109,8 +109,8 @@ Each is an optional override: set it on the page, a container or one field. The 
 | --- | --- | --- |
 | `--number-input-stepper` | `text-muted` | The − and + icons (3:1 on the field). |
 | `--number-input-stepper-hover` | `text` | The icons on hover. |
-| `--number-input-stepper-bg-hover` | `secondary` | The buttons' background on hover. |
-| `--number-input-stepper-bg-pressed` | `secondary-hover` | A step button's background while it's held down, one step past hover. |
+| `--number-input-stepper-bg-hover` | `field-hover` | The buttons' background on hover. |
+| `--number-input-stepper-bg-pressed` | `field-pressed` | A step button's background while it's held down, one step past hover. |
 | `--number-input-stepper-radius` | `radius-inner` | The buttons' corners (4px). |
 | `--number-input-stepper-padding` | `spacing-1` | Space around each button's icon (4px). |
 | `--number-input-stepper-gap` | `spacing-0.5` | Space between the − and + buttons (2px). |

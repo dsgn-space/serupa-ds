@@ -4,7 +4,7 @@
     "color": {
       "thumb": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The scrollbar's thumb (3:1 on the surface).",
         "$extensions": {
           "com.serupa": {

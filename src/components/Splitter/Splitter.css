@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------
-   Splitter: two panes in a row (or a column) with an 8px handle between them: a 1px field-border line down its
+   Splitter: two panes in a row (or a column) with an 8px handle between them: a 1px border-control line down its
    middle that turns 2px primary on hover, while dragged and on focus (with the focus ring around the handle). The
    cursor shows the direction it moves. Every value reads one of its own tokens (splitter.tokens.json), which fall
    back to the shared ones.
@@ -12,7 +12,7 @@
 .dk-splitter__pane--second { flex: auto; flex-basis: var(--spacing-0); }
 .dk-splitter__pane[hidden] { display: none; }
 .dk-splitter__handle {
-  --dk-splitter-line: var(--splitter-line, var(--field-border));
+  --dk-splitter-line: var(--splitter-line, var(--border-control));
   --dk-splitter-weight: var(--border-width-1);
   display: flex; justify-content: center; flex: none; box-sizing: border-box; touch-action: none; -webkit-user-select: none; user-select: none;
   width: var(--splitter-handle-size, var(--spacing-2)); cursor: col-resize;

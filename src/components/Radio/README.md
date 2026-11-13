@@ -83,7 +83,7 @@ Drawn from the `Disabled` story.
 - They're real radios: Tab moves to the group (to the picked one), arrow keys move the choice, and screen readers announce the position ("2 of 3").
 - Name the group: wrap it in `Field group` (a `<fieldset>` and `<legend>`, with the hint and error describing it), or give the RadioGroup an `aria-label` or `aria-labelledby`.
 - A radio's label (its `children`) names it; a description is read after it. The dot is decorative. In development, a radio with no label and no `aria-label` warns, and so does one given `label=` (put the text in `children`).
-- The label and description keep 4.5:1, and the border, checked fill, dot, focus ring and invalid border 3:1, in all six themes (`Radio.test.tsx`).
+- The label and description keep 4.5:1, and the checked fill, dot, focus ring and invalid border 3:1, in all six themes (`Radio.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label beside the radio, its fill in dark, the accent border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - Native constraints (`required`) show too: a box that fails them takes the `invalid` border once people have changed it or tried to send the form (`:user-invalid`), never on first paint. It's only the color: `aria-invalid` and the message stay yours (set `invalid` and Field's `error` when you check it yourself). To keep the browser out of it, leave out the attribute and check the value in your own code.
 - A form reset checks the radio that was checked first, and an uncontrolled RadioGroup's choice follows it, so the next click works as expected. A controlled group shows its `value` again.
 
@@ -148,7 +148,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-label-color` | `text` | The label |
 | `--radio-description-color` | `text-muted` | The description |
 | `--radio-focus-ring` | `focus-ring` | The focus ring |
-| `--radio-invalid` | `danger` | Border and focus ring when invalid |
+| `--radio-invalid` | `field-border-invalid` | Border and focus ring when invalid |
 | `--radio-card-bg` | `surface` | A card radio's background. |
 | `--radio-card-border` | `border` | A card's border. |
 | `--radio-card-border-hover` | `field-border-hover` | A card's border under the pointer. |

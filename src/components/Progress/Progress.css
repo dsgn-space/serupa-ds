@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    Progress: a bar (full width, 4, 8 or 12px thick, rounded ends) or a ring (24, 40 or 64px), with the done part
-   in the tone's color. The bar's track is the page's surface inside a field-border edge (WCAG 1.4.11): the edge marks the
+   in the tone's color. The bar's track is the page's surface inside a border-control edge (WCAG 1.4.11): the edge marks the
    whole scale at 3:1 and every tone's fill is 3:1 against the page; a secondary track was 1.1:1 on the page, and the
    warning fill 2.9:1 on it. The ring's track stays secondary, since its arc runs along the page. The bar can have a label row above it (the label, and the value at
    the end); the ring can show the value inside. The fill moves to a new value over 300ms. Indeterminate: a
@@ -28,7 +28,7 @@
 .dk-progress--bar .dk-progress__track {
   position: relative; overflow: hidden; height: var(--dk-progress-h);
   border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--surface));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--field-border)), var(--progress-track-depth, var(--depth-well));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--border-control)), var(--progress-track-depth, var(--depth-well));
 }
 .dk-progress__fill {
   height: var(--sizing-full); border-radius: inherit; background: var(--dk-progress-fill);

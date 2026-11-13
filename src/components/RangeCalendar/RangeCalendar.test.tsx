@@ -120,6 +120,22 @@ describe('RangeCalendar', () => {
     await expect.element(page.getByRole('grid', { name: 'January 2027' })).toBeVisible();
   });
 
+  test('two months: an arrow across the edge between them moves focus to the other grid, and the months stay put; past the last, they turn', async () => {
+    const months: Date[] = [];
+    await render(<Stay months={2} onMonthChange={(m) => months.push(m)} />);
+    const shown = () => page.getByRole('grid').elements().map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent);
+    const at = () => (document.activeElement as HTMLElement).dataset.date;
+    day('2026-11-30').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([shown(), at()]).toEqual([['November 2026', 'December 2026'], '2026-12-01']);
+    await userEvent.keyboard('{ArrowLeft}');
+    expect([shown(), at()]).toEqual([['November 2026', 'December 2026'], '2026-11-30']);
+    await userEvent.keyboard('{PageDown}');
+    expect([shown(), at(), months]).toEqual([['November 2026', 'December 2026'], '2026-12-30', []]);
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}');
+    expect([shown(), at(), months]).toEqual([['December 2026', 'January 2027'], '2027-01-01', [new Date(2026, 11, 1)]]);
+  });
+
   test('a disabled day can’t be an end but can sit inside; min and max hold too', async () => {
     const log: [Got, { start: string; end: string }][] = [];
     await render(<Stay log={log} min="2026-11-02" isDateDisabled={(d) => d.getDate() === 12} />);
@@ -142,6 +158,32 @@ describe('RangeCalendar', () => {
     await before.unmount();
     await render(<Stay defaultMonth={undefined} min="2099-05-02" />);
     await expect.element(page.getByRole('grid', { name: 'May 2099' })).toBeVisible();
+  });
+
+  test('hydrated on the 1st from a server still on the 31st: no mismatch, then the visitor\'s month, said to onMonthChange (GR396)', async () => {
+    const { hydrateRoot } = await import('react-dom/client');
+    const { flushSync } = await import('react-dom');
+    const { renderToString } = await import('react-dom/server');
+    const months: string[] = [];
+    const ui = <SerupaProvider locale="en-US"><RangeCalendar onMonthChange={(m) => months.push(m.toDateString())} /></SerupaProvider>;
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const host = document.createElement('div');
+    const errors: string[] = [], logError = console.error;
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    const grid = () => { const g = host.querySelector('[role="grid"]')!; return g.getAttribute('aria-label') ?? document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent; };
+    try {
+      vi.setSystemTime(new Date(2026, 9, 31, 22, 0));
+      host.innerHTML = renderToString(ui);
+      document.body.appendChild(host);
+      expect(grid()).toBe('October 2026');
+      vi.setSystemTime(new Date(2026, 10, 1, 5, 0));
+      console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+      flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+      await new Promise((r) => setTimeout(r, 30));
+      expect(errors).toEqual([]);
+      expect(grid()).toBe('November 2026');
+      expect(months).toEqual([new Date(2026, 10, 1).toDateString()]);
+    } finally { console.error = logError; vi.useRealTimers(); root?.unmount(); host.remove(); }
   });
 
   test('autoFocus focuses the start day', async () => {

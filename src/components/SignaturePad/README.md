@@ -81,7 +81,7 @@ Each is an optional override: set it on the page, a container or one SignaturePa
 | Token | Default | Use |
 | --- | --- | --- |
 | `--signature-pad-bg` | `surface` | The drawing box's background. |
-| `--signature-pad-border` | `field-border` | The drawing box's outline (3:1 on the page). |
+| `--signature-pad-border` | `border-control` | The drawing box's outline (3:1 on the page). |
 | `--signature-pad-border-invalid` | `danger` | The drawing box's outline while the signature is invalid (3:1). |
 | `--signature-pad-ink` | `text` | The drawn strokes and the typed name (4.5:1 on bg). |
 | `--signature-pad-line` | `text-muted` | The line to sign on (3:1 on bg). |
