@@ -73,10 +73,13 @@
   --dk-evc-row: calc(var(--spacing-6) + var(--spacing-1));
   --dk-evc-pin: calc(var(--dk-evc-row) * var(--dk-evc-all-day) + var(--spacing-1));
   max-height: var(--event-calendar-hours-max-height, var(--container-xl));
-  overflow-y: auto; overscroll-behavior: contain;
+  overflow: auto; overscroll-behavior: contain;
   border: var(--border-width-1) solid var(--event-calendar-border, var(--border));
 }
 .dk-event-calendar__hours-grid { border-style: hidden; }
+/* A day is never narrower than --spacing-24, in rem, so larger text widens the week and the box scrolls sideways
+   rather than cutting off an event's time. */
+.dk-event-calendar__hours-grid[data-days="7"] { --dk-evc-days: 7; min-width: calc(var(--spacing-16) + var(--spacing-24) * var(--dk-evc-days)); }
 .dk-event-calendar__hours-grid thead th, .dk-event-calendar__zone {
   position: sticky; top: var(--spacing-0); z-index: var(--z-20); box-sizing: border-box; height: var(--dk-evc-head);
   background: var(--event-calendar-bg, var(--surface)); border-bottom: var(--border-width-1) solid var(--event-calendar-border, var(--border));
@@ -112,7 +115,7 @@
 /* In the hours an event fills its time: the time over the title, both wrapping, cut at its bottom. */
 .dk-event-calendar__timed .dk-event-calendar__event { height: var(--sizing-full); flex-direction: column; align-items: stretch; gap: var(--spacing-0); padding: var(--spacing-0\.5) var(--spacing-1); overflow: hidden; }
 .dk-event-calendar__timed .dk-event-calendar__title { white-space: normal; hyphens: auto; }
-.dk-event-calendar__timed .dk-event-calendar__time { overflow: hidden; white-space: nowrap; }
+.dk-event-calendar__timed .dk-event-calendar__time { white-space: normal; }
 /* Under 45 minutes there's room for one line: the time and the title side by side, the title cut short. */
 .dk-event-calendar__timed > li[data-short] .dk-event-calendar__event { flex-direction: row; align-items: center; gap: var(--spacing-1); padding-block: var(--spacing-0); }
 .dk-event-calendar__timed > li[data-short] .dk-event-calendar__title { white-space: nowrap; overflow-wrap: normal; }

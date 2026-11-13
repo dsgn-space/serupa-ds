@@ -47,7 +47,7 @@ Drawn from the `Month` story.
 - `maxPerDay` (default 3) is the most a day shows. Past it, the last place shows "+N more", which opens all of the day's events in a Popover.
 - The week and day views show the hours in a box that scrolls, opened at 8 AM or the first event if it's earlier. Each event sits at its time, as tall as it lasts (half an hour at least, so it's still a target with its title showing). Events that overlap share the day's width side by side. All-day events are in a row on top, which stays with the weekday names as the hours scroll. Today has a line at the time now, and the time zone shows over the hour scale.
 - Previous and Next move a week or a day in those views. `onMonthChange` still gets the month whenever the shown week or day moves into another one, so pass the events of the weeks that cross into the next month too.
-- Below 640px wide, the week shows as the agenda, as the month does: seven columns don't fit a phone. The day view stays.
+- Below 640px wide, the week shows as the agenda, as the month does: seven columns don't fit a phone. The day view stays. A day in the week is never narrower than 96px at the default text size and grows with larger text, so with large text the week scrolls sideways in its box rather than cutting off an event's time.
 - Creating events by selecting a time, and moving or resizing them by drag, come in a later step.
 
 ### Do and don't
