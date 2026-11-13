@@ -39,6 +39,11 @@ describe('Patterns/Dashboard', () => {
     expect(meters.at(-1)?.getAttribute('aria-valuetext')).toMatch(/GB$/);
   });
 
+  test('the storage amounts read in the provider\'s locale, not the browser\'s', async () => {
+    const screen = await render(<SerupaProvider locale="de-DE"><Dashboard /></SerupaProvider>);
+    await expect.element(screen.getByRole('meter', { name: 'Storage' })).toHaveAttribute('aria-valuetext', '8,6 GB of 10 GB, almost full');
+  });
+
   test('a project\'s Updated day reads in the reader\'s locale, and keeps the ISO day in dateTime', async () => {
     await render(<SerupaProvider locale="en-US"><Dashboard data={{ ...empty, projects: [{ name: 'A', href: '#a', status: 'Active', updated: '2026-11-06' }] }} /></SerupaProvider>);
     const time = document.querySelector('tbody time') as HTMLTimeElement;

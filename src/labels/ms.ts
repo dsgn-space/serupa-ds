@@ -156,6 +156,8 @@ export const labels: SerupaLabels = {
   endDate: 'Tarikh tamat',
   chooseStartDate: 'Pilih tarikh mula',
   chooseEndDate: 'Pilih tarikh tamat',
+  inRange: 'dalam julat',
+  rangeSelected: (range) => 'Julat dipilih: ' + range,
   presets: 'Pintasan',
   today: 'Hari ini',
   tomorrow: 'Esok',

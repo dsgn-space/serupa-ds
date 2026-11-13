@@ -133,6 +133,38 @@ describe('EventCalendar', () => {
     expect(html).toMatch(new RegExp('tabindex="0"[^>]*data-date="' + first + '"|data-date="' + first + '"[^>]*tabindex="0"'));
   });
 
+  test('hydrated on the 1st from a server still on the 31st: no mismatch, then the visitor\'s month, said to onMonthChange (GR396)', async () => {
+    const { hydrateRoot } = await import('react-dom/client');
+    const { flushSync } = await import('react-dom');
+    const months: string[] = [];
+    const ui = <EnUS><EventCalendar events={[]} onMonthChange={(m) => months.push(m.toDateString())} /></EnUS>;
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const host = document.createElement('div');
+    const errors: string[] = [], logError = console.error;
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      vi.setSystemTime(new Date(2026, 9, 31, 22, 0));
+      host.innerHTML = renderToString(ui);
+      document.body.appendChild(host);
+      expect(host.querySelector('h2')!.textContent).toBe('October 2026');
+      vi.setSystemTime(new Date(2026, 10, 1, 5, 0));
+      console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+      flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+      await new Promise((r) => setTimeout(r, 30));
+      expect(errors).toEqual([]);
+      expect(host.querySelector('h2')!.textContent).toBe('November 2026');
+      expect([...host.querySelectorAll('[aria-current="date"]')].map((e) => (e as HTMLElement).dataset.date)).toEqual(['2026-11-01']);
+      expect(months).toEqual([new Date(2026, 10, 1).toDateString()]);
+    } finally { console.error = logError; vi.useRealTimers(); root?.unmount(); host.remove(); }
+  });
+
+  test('a client render with no month opens on today\'s month and calls nothing', async () => {
+    const months: Date[] = [];
+    await render(<EventCalendar id="c" events={[]} onMonthChange={(m) => months.push(m)} />);
+    const now = new Date();
+    expect([el('c').querySelector('h2')!.dataset.month, months.length]).toEqual([now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-01', 0]);
+  });
+
   test('keyboard: Enter and Space on an event open it', async () => {
     const opened: string[] = [];
     await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} onEventClick={(e) => opened.push(e.id)} />);

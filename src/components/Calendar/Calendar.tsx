@@ -58,6 +58,10 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   onDayHover?: ((date: Date) => void) | undefined;
   /** @internal Leaves the days of other months blank, for DateRangePicker's two months side by side. */
   hideOutside?: boolean | undefined;
+  /** @internal A day's name from its date and the full date in words, for RangeCalendar's "start date" and "in the range". */
+  dayLabel?: ((date: Date, name: string) => string) | undefined;
+  /** @internal The month button a neighbouring month already shows, hidden on a wide screen, for RangeCalendar's two months. */
+  pairedNav?: 'previous' | 'next' | undefined;
 }
 
 // The four formats a Calendar draws with, built once per locale rather than on every render (a grid of 42 days
@@ -98,7 +102,7 @@ function formats(locale: string): Formats {
   return f;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, className: 1 } as const;
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
 
@@ -234,7 +238,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
     : Array.isArray(props.presets) && props.presets.length ? props.presets.map((p) => ({ label: p.label, start: toDay(typeof p.value === 'function' ? p.value() : p.value, 'Calendar'), end: null })) : null;
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
-    <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.className)} data-component="calendar">
+    <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.pairedNav && 'dk-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">
       <div className="dk-calendar__header">
         <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />
@@ -255,7 +259,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
                 if (outside && props.hideOutside) return <td key={d.getTime()} role="gridcell" className="dk-calendar__blank" />;
                 return (
                   <td key={d.getTime()} aria-selected={sel} role="gridcell">
-                    <button type="button" tabIndex={sameDay(d, stop) ? 0 : -1} aria-label={full.format(d)} aria-disabled={off || undefined} aria-current={now ? 'date' : undefined}
+                    <button type="button" tabIndex={sameDay(d, stop) ? 0 : -1} aria-label={props.dayLabel ? props.dayLabel(d, full.format(d)) : full.format(d)} aria-disabled={off || undefined} aria-current={now ? 'date' : undefined}
                       className={cn('dk-calendar__day', outside && 'dk-calendar__day--outside', sel && 'dk-calendar__day--selected', now && 'dk-calendar__day--today', off && 'dk-calendar__day--disabled', props.dayClassName && props.dayClassName(d))}
                       data-date={d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')}
                       onClick={() => pick(d)} onFocus={() => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }}

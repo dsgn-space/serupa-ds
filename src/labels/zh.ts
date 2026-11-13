@@ -155,6 +155,8 @@ export const labels: SerupaLabels = {
   endDate: '结束日期',
   chooseStartDate: '选择开始日期',
   chooseEndDate: '选择结束日期',
+  inRange: '在范围内',
+  rangeSelected: (range) => '已选范围：' + range,
   presets: '快捷选项',
   today: '今天',
   tomorrow: '明天',

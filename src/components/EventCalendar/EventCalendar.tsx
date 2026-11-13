@@ -150,7 +150,17 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const today = day(new Date());
   const controlledMonth = props.month !== undefined;
-  const [ownMonth, setOwnMonth] = React.useState(() => startOfMonth(props.defaultMonth && isValid(props.defaultMonth) ? props.defaultMonth : new Date()));
+  const titleId = domId('dk-evc', React.useId()) + '-title';
+  // With no month given, the month is today's, and the server's today may be in another month than the visitor's
+  // (a UTC server late on the 31st, a visitor in Jakarta on the 1st). Hydrating, the first render draws the month the
+  // server's HTML shows (its title carries it), so nothing mismatches; then an effect moves to the visitor's (GR396).
+  const fromServer = React.useRef(false);
+  const [ownMonth, setOwnMonth] = React.useState(() => {
+    if (props.defaultMonth && isValid(props.defaultMonth)) return startOfMonth(props.defaultMonth);
+    const shown = when(typeof document === 'undefined' ? undefined : document.getElementById(titleId)?.dataset.month);
+    fromServer.current = !!shown;
+    return startOfMonth(shown ?? new Date());
+  });
   const month = controlledMonth && isValid(props.month) ? startOfMonth(props.month) : ownMonth;
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
   const [ownView, setOwnView] = React.useState<EventCalendarView>(isView(props.defaultView) ? props.defaultView : 'month');
@@ -167,6 +177,13 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   // Today is the reader's, so it's marked only once the page runs in their browser: the server's today may be
   // another day, and the server's HTML would mark it, and put the Tab stop on it, until hydration (GR210).
   const hydrated = React.useSyncExternalStore(noSubscribe, yes, no);
+  // It acts once, on the first render after hydrating from a server whose month isn't the visitor's.
+  // every render: no list, as it reads the month and onMonthChange of that render.
+  React.useEffect(() => {
+    if (!fromServer.current) return;
+    fromServer.current = false;
+    if (!controlledMonth && !sameMonth(ownMonth, new Date())) showMonth(new Date());
+  });
   const marked = hydrated ? today : null;
   // The day with the grid's Tab stop: the one the keys or a click chose, kept inside the shown month (adjusted during
   // render, so a new month never draws without its Tab stop), else today in today's month, else the 1st.
@@ -229,7 +246,6 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     range: new Intl.DateTimeFormat(locale, { calendar: 'gregory', numberingSystem: 'latn', month: 'long', day: 'numeric', year: 'numeric' }),
     zone: new Intl.DateTimeFormat(locale, { timeZoneName: 'short' }),
   }), [locale]);
-  const titleId = domId('dk-evc', React.useId()) + '-title';
   const level = props.headingLevel && props.headingLevel >= 2 && props.headingLevel <= 6 ? props.headingLevel : 2;
   const H = ('h' + level) as 'h2', H2 = ('h' + Math.min(6, level + 1)) as 'h3';
 
@@ -300,7 +316,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
           <IconButton icon={icons.ChevronRight} label={view === 'week' ? sds.labels.nextWeek : view === 'day' ? sds.labels.nextDay : sds.labels.nextMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__next"
             onClick={() => (hours ? go(addDays(focus, step)) : showMonth(addMonths(month, 1)))} />
         </div>
-        <H className="dk-event-calendar__heading" id={titleId} lang={lang} aria-live="polite">{title}</H>
+        <H className="dk-event-calendar__heading" id={titleId} lang={lang} aria-live="polite" data-month={iso(month)}>{title}</H>
         {narrow ? null : <SegmentedControl size="sm" aria-label={sds.labels.calendarView} value={chosen} onValueChange={(v) => setView(isView(v) ? v : 'month')}
           options={[{ value: 'month', label: sds.labels.monthView }, { value: 'week', label: sds.labels.weekView }, { value: 'day', label: sds.labels.dayView }, { value: 'agenda', label: sds.labels.agendaView }]} />}
       </div>

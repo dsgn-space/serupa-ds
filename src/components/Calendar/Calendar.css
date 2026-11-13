@@ -48,6 +48,9 @@
 .dk-calendar__day--selected { box-shadow: var(--calendar-depth-selected, var(--calendar-selected-depth, var(--depth-part))); background: var(--depth-sheen), var(--calendar-bg-selected, var(--calendar-selected-bg, var(--primary))); color: var(--calendar-color-selected, var(--calendar-selected-color, var(--on-primary))); }
 @media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--depth-sheen), var(--calendar-bg-selected, var(--calendar-selected-bg, var(--primary))); color: var(--calendar-color-selected, var(--calendar-selected-color, var(--on-primary))); } }
 .dk-calendar__day--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: not-allowed; }
+/* Two months side by side (RangeCalendar): the first hides its Next button and the second its Previous, so one pair
+   turns both; stacked on a narrow screen, each keeps both. */
+@media (min-width: 640px) { .dk-calendar--paired-next .dk-calendar__nav--next, .dk-calendar--paired-previous .dk-calendar__nav--prev { visibility: hidden; } }
 /* Ranges (DateRangePicker): days between the ends get a subtle fill; the ends are selected days. */
 .dk-calendar__day--in-range { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
 @media (hover: hover) { .dk-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); } }

@@ -21,6 +21,15 @@ function Cal(props: { picks?: string[]; months?: string[]; cref?: React.Ref<HTML
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Calendar', () => {
+  test('pairedNav (two months side by side) hides the month button the other month shows, on a wide screen only', async () => {
+    await page.viewport(900, 700);
+    await render(<div><Calendar id="a" defaultMonth={new Date(2026, 10, 1)} pairedNav="next" /><Calendar id="b" defaultMonth={new Date(2026, 11, 1)} pairedNav="previous" /></div>);
+    const seen = () => ['a', 'b'].map((id) => Array.from(document.querySelectorAll(`#${id} button[aria-label$="month"]`)).map((b) => css(b).visibility));
+    expect(seen()).toEqual([['visible', 'hidden'], ['hidden', 'visible']]);
+    await page.viewport(400, 700);
+    expect(seen()).toEqual([['visible', 'visible'], ['visible', 'visible']]);
+  });
+
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<Calendar data-testid="mk" locale="en-US" defaultMonth={new Date(2025, 2, 1)} />);
     const t = document.querySelector('[data-testid=mk] [tabindex="0"]') as HTMLElement;
