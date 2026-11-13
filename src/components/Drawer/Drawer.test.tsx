@@ -913,4 +913,75 @@ describe('Drawer: unsaved (13)', () => {
       expect(String(calls()[0]![0])).toMatch(/^Drawer: it's inside a <form>/);
     } finally { warn.mockRestore(); }
   });
+
+  // The sheet's handle: the button named Expand, or Collapse at the tallest stop.
+  const handleOf = (d: HTMLElement) => d.querySelector<HTMLButtonElement>('button[aria-label="Expand"], button[aria-label="Collapse"]');
+  describe('snapPoints (bottom sheet)', () => {
+    const vh = () => (el('bs') as HTMLDialogElement).clientHeight;
+    const height = () => Math.round(panel('bs').getBoundingClientRect().height);
+    const handle = () => handleOf(el('bs'))!;
+    // A touch drag along y from the sheet's header, events 100ms apart, at real times.
+    const pull = async (dy: number, steps = 4, gap = 100) => {
+      const p = el('bs').querySelector('h2')!, r = p.getBoundingClientRect(), x = r.left + 20, y = r.top + 10;
+      const ev = (name: string, cy: number) => p.dispatchEvent(new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: 'touch', clientX: x, clientY: cy }));
+      ev('pointerdown', y);
+      for (let i = 1; i <= steps; i++) { await new Promise((f) => setTimeout(f, gap)); ev('pointermove', y + dy * i / steps); }
+      ev('pointerup', y + dy);
+    };
+    const sheet = (p: Partial<DrawerProps> = {}) => <Drawer id="bs" placement="bottom" defaultOpen title="Route" snapPoints={[0.4, 0.9]} {...p}><p>Body</p></Drawer>;
+
+    test('it opens at the shortest stop; the handle goes to the next and back, named for what it does', async () => {
+      const snaps: number[] = [];
+      await render(sheet({ onSnapChange: (i) => snaps.push(i) }));
+      await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(true);
+      await expect.poll(() => Math.abs(height() - Math.round(vh() * 0.4))).toBeLessThan(2);
+      expect([handle().getAttribute('aria-label'), panel('bs').dataset.snap]).toEqual(['Expand', '0']);
+      await userEvent.click(handle());
+      await expect.poll(() => Math.abs(height() - Math.round(vh() * 0.9))).toBeLessThan(2);
+      expect(handle().getAttribute('aria-label')).toBe('Collapse');
+      await userEvent.click(handle());
+      expect(snaps).toEqual([1, 0]);
+    });
+
+    test('a drag up past the middle goes to the tall stop, a short one goes back, and one well down from the shortest closes it', async () => {
+      const why: string[] = [];
+      await render(sheet({ onOpenChange: (_, d) => why.push(d.reason) }));
+      await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(true);
+      await pull(-40, 4, 150);
+      await expect.poll(() => panel('bs').dataset.snap).toBe('0');
+      await pull(-(vh() * 0.4), 4, 150);
+      await expect.poll(() => panel('bs').dataset.snap).toBe('1');
+      await expect.poll(() => Math.abs(height() - Math.round(vh() * 0.9))).toBeLessThan(2);
+      expect(panel('bs').style.height).toBe('');   // back to its stop's share, so it follows the screen's height
+      await pull(vh() * 0.5, 4, 150);
+      await expect.poll(() => panel('bs').dataset.snap).toBe('0');
+      expect(why).toEqual([]);
+      await pull(vh() * 0.35, 4, 150);
+      await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(false);
+      expect(why).toEqual(['swipe']);
+    });
+
+    test('controlled: snap says where it is, and a drag only reports where to', async () => {
+      const snaps: number[] = [];
+      await render(sheet({ snap: 1, onSnapChange: (i) => snaps.push(i) }));
+      await expect.poll(() => panel('bs').dataset.snap).toBe('1');
+      await userEvent.click(handle());
+      expect([snaps, panel('bs').dataset.snap]).toEqual([[0], '1']);
+    });
+
+    test('other sides, and a single stop, have no handle', async () => {
+      await render(<><Drawer id="r" defaultOpen title="R" snapPoints={[0.5, 1]} /><Drawer id="one" placement="bottom" title="One" snapPoints={[0.5]} /></>);
+      expect([handleOf(el('r')), handleOf(el('one')), el('r').classList.contains('dk-drawer--snaps')]).toEqual([null, null, false]);
+    });
+
+    test('the grip reads 3:1 on the sheet in all six themes', async () => {
+      await render(sheet());
+      await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(true);
+      const grip = handleOf(el('bs'))!.firstElementChild!;   // the handle's grip, drawn inside it
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        expect(contrast(getComputedStyle(grip).backgroundColor, getComputedStyle(panel('bs')).backgroundColor), th).toBeGreaterThanOrEqual(3);
+      }
+    });
+  });
 });

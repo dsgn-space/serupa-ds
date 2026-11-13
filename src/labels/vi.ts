@@ -214,6 +214,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Phím tắt chỉ một phím, như ?, bên ngoài ô văn bản. Tắt chúng nếu chúng chạy ngoài ý muốn.',
   opensInNewTab: '(mở trong thẻ mới)',
   loadMore: 'Tải thêm',
+  drawerExpand: 'Mở rộng',
+  drawerCollapse: 'Thu gọn',
   showingOf: (shown, total) => `Đang hiện ${shown} trên ${total}`,
   loadedMore: (added) => `Đã tải thêm ${added}`,
   moreLoaded: 'Đã tải thêm',

@@ -214,6 +214,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Pintasan satu kekunci seperti ?, di luar medan teks. Matikannya jika ia tercetus tanpa sengaja.',
   opensInNewTab: '(dibuka dalam tab baharu)',
   loadMore: 'Muatkan lagi',
+  drawerExpand: 'Kembangkan',
+  drawerCollapse: 'Kuncupkan',
   showingOf: (shown, total) => `Menunjukkan ${shown} daripada ${total}`,
   loadedMore: (added) => `${added} lagi dimuatkan`,
   moreLoaded: 'Lagi dimuatkan',

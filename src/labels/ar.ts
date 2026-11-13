@@ -218,6 +218,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'اختصارات من مفتاح واحد مثل ?، خارج حقول النص. أوقفها إذا كانت تعمل دون قصد.',
   opensInNewTab: '(يُفتح في علامة تبويب جديدة)',
   loadMore: 'تحميل المزيد',
+  drawerExpand: 'توسيع',
+  drawerCollapse: 'طي',
   showingOf: (shown, total) => `عرض ${shown} من ${total}`,
   loadedMore: (added) => `تم تحميل ${added} أخرى`,
   moreLoaded: 'تم تحميل المزيد',

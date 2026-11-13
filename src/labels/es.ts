@@ -217,6 +217,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Atajos de una tecla, como ?, fuera de los campos de texto. Desactívalos si se activan sin querer.',
   opensInNewTab: '(se abre en una pestaña nueva)',
   loadMore: 'Cargar más',
+  drawerExpand: 'Expandir',
+  drawerCollapse: 'Contraer',
   showingOf: (shown, total) => `Mostrando ${shown} de ${total}`,
   loadedMore: (added) => `${added} más cargados`,
   moreLoaded: 'Se cargaron más',

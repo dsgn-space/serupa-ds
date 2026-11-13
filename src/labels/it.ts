@@ -217,6 +217,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Scorciatoie di un solo tasto, come ?, fuori dai campi di testo. Disattivale se partono per sbaglio.',
   opensInNewTab: '(si apre in una nuova scheda)',
   loadMore: 'Carica altri',
+  drawerExpand: 'Espandi',
+  drawerCollapse: 'Comprimi',
   showingOf: (shown, total) => `${shown} di ${total} mostrati`,
   loadedMore: (added) => `Altri ${added} caricati`,
   moreLoaded: 'Altri elementi caricati',

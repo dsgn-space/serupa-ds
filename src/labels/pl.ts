@@ -217,6 +217,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Skróty z jednego klawisza, jak ?, poza polami tekstowymi. Wyłącz je, jeśli uruchamiają się przypadkiem.',
   opensInNewTab: '(otwiera się w nowej karcie)',
   loadMore: 'Wczytaj więcej',
+  drawerExpand: 'Rozwiń',
+  drawerCollapse: 'Zwiń',
   showingOf: (shown, total) => `Wyświetlono ${shown} z ${total}`,
   loadedMore: (added) => `Wczytano kolejne: ${added}`,
   moreLoaded: 'Wczytano więcej',

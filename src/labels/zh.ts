@@ -213,6 +213,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: '像 ? 这样只按一个键的快捷键（在文本框之外）。如果误触发，请关闭它们。',
   opensInNewTab: '（在新标签页中打开）',
   loadMore: '加载更多',
+  drawerExpand: '展开',
+  drawerCollapse: '收起',
   showingOf: (shown, total) => `显示 ${shown} / ${total}`,
   loadedMore: (added) => `又加载了 ${added} 项`,
   moreLoaded: '已加载更多',
