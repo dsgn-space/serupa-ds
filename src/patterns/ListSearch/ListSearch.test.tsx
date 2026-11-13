@@ -26,6 +26,9 @@ describe('Patterns/List with search and filters', () => {
   test('one main and one h1, the skip link first, a search landmark, and ten rows of 24 with pages', async () => {
     const screen = await render(<ListSearch />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    // The page's title is set off from what's under it by the page header's line, as on the other app pages.
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('h1'))).toBe(true);
     // The app pages' frame: the header on the surface, over a page a step darker, as on the other app pages.
     const bg = (e: Element | null) => getComputedStyle(e!).backgroundColor;
     expect(bg(document.querySelector('header'))).not.toBe('rgba(0, 0, 0, 0)');
