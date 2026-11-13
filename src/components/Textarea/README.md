@@ -61,6 +61,7 @@ Drawn from the `Actions` story.
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change, no resize handle; still focusable and selectable |
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor, no resize handle |
+| Printed | Grows to all of its text, `rows` lines at least, so nothing is cut off at the visible lines (where the browser has `field-sizing: content`) |
 
 ### Do and don't
 

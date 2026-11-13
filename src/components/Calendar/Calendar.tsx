@@ -62,6 +62,9 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   dayLabel?: ((date: Date, name: string) => string) | undefined;
   /** @internal The month button a neighbouring month already shows, hidden on a wide screen, for RangeCalendar's two months. */
   pairedNav?: 'previous' | 'next' | undefined;
+  /** @internal A key moving focus to a day of another month asks this first: true when a neighbouring grid shows that
+   *  month and took the focus, so this one keeps its month. For RangeCalendar's two months. */
+  onLeaveMonth?: ((date: Date) => boolean) | undefined;
 }
 
 // The four formats a Calendar draws with, built once per locale rather than on every render (a grid of 42 days
@@ -102,7 +105,7 @@ function formats(locale: string): Formats {
   return f;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, onLeaveMonth: 1, className: 1 } as const;
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
 
@@ -171,7 +174,10 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
     if (b) b.focus();
   });
 
-  const move = (d: Date) => { setFocus(d); if (!sameMonth(d, month)) showMonth(d); wantFocus.current = true; };
+  const move = (d: Date) => {
+    if (!sameMonth(d, month) && props.onLeaveMonth && props.onLeaveMonth(d)) return;
+    setFocus(d); if (!sameMonth(d, month)) showMonth(d); wantFocus.current = true;
+  };
   const pick = (d: Date) => {
     if (disabled(d)) return;
     if (!controlledValue) setOwnValue(d);
