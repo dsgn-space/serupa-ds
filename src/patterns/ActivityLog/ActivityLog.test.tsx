@@ -55,6 +55,10 @@ describe('Patterns/Activity log', () => {
     await expect.poll(status).toBe('3 events');
     await screen.getByRole('button', { name: 'Export' }).click();
     expect((onExport.mock.calls[0] as [ActivityEvent[]])[0].map((e) => e.id)).toEqual(['e1', 'e3', 'e8']);
+    await screen.getByRole('button', { name: 'Clear the search' }).click();
+    await expect.element(screen.getByRole('searchbox')).toHaveValue('');
+    await screen.getByRole('combobox', { name: 'Type' }).selectOptions('all');
+    await expect.poll(status).toBe('11 events');
   });
 
   test('no matches says so, and Clear filters brings everything back', async () => {

@@ -108,7 +108,7 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load the activity log" onRetry={() => onRetry?.()} headingLevel={2} /> : <>
           <div className="flex flex-wrap items-end gap-3">
             <Field label="Search the log" className="min-w-0 flex-1 basis-60">
-              <SearchInput value={query} onChange={(e) => refine(() => setQuery(e.target.value))} onClear={() => refine(() => setQuery(''))} />
+              <SearchInput value={query} onChange={(e) => refine(() => setQuery(e.target.value))} onClear={() => refine(() => setQuery(''))} clearLabel="Clear the search" />
             </Field>
             <Field label="Type" className="w-44">
               <Select value={kind} onChange={(e) => refine(() => setKind(e.target.value as ActivityKind | 'all'))}
