@@ -6,6 +6,8 @@ import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
 import { Dialog } from '../Dialog/Dialog';
+import { Field } from '../Field/Field';
+import { Input } from '../Input/Input';
 import { InlineEdit } from './InlineEdit';
 
 const root = (id: string) => document.getElementById(id) as HTMLDivElement;
@@ -293,6 +295,22 @@ describe('InlineEdit', () => {
     }
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);
+  });
+
+  test('its error is a Field error\'s size, 14px, with the icon centred on the first line, at every size (GR392)', async () => {
+    await render(<><Field label="Name" error="Name is required"><Input /></Field>
+      {(['sm', 'md', 'lg'] as const).map((sz) => <InlineEdit key={sz} id={'gr392-' + sz} size={sz} label="Slug" defaultValue="apollo" validate={() => 'Use letters only'} />)}</>);
+    const look = (e: Element) => [css(e).fontSize, css(e).lineHeight, css(e).gap, Math.round(e.querySelector('[data-icon]')!.getBoundingClientRect().height)];
+    const want = look(document.querySelector('.dk-field__error')!), got: string[] = [];
+    for (const sz of ['sm', 'md', 'lg']) {
+      await userEvent.click(root('gr392-' + sz).querySelector('button')!);
+      await userEvent.keyboard('{Enter}');
+      await expect.poll(() => root('gr392-' + sz).querySelector('[data-icon="error"]')).not.toBeNull();
+      const e = root('gr392-' + sz).querySelector('[data-icon="error"]')!.parentElement!;
+      if (JSON.stringify(look(e)) !== JSON.stringify(want)) got.push(sz + ' ' + look(e).join(' '));
+      await userEvent.keyboard('{Escape}');
+    }
+    expect([want[0], got]).toEqual(['14px', []]);
   });
 
   test('an error with one long word stays inside the field (GR392)', async () => {
