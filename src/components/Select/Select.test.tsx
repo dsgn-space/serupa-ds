@@ -35,10 +35,10 @@ describe('Select', () => {
       </div>)}
     </div>);
     for (const size of ['sm', 'md', 'lg']) {
-      const ends = [...document.querySelectorAll(`[data-row=${size}] .dk-icon`)].filter((i) => i.getClientRects().length).map((i) => Math.round(i.getBoundingClientRect().right * 2) / 2);
+      const ends = [...document.querySelectorAll(`[data-row=${size}] svg`)].filter((i) => i.getClientRects().length).map((i) => Math.round(i.getBoundingClientRect().right * 2) / 2);
       expect(ends.length).toBe(3);
       expect(new Set(ends).size, `${size}: ${ends.join(', ')}`).toBe(1);
-      const sizes = [...document.querySelectorAll(`[data-row=${size}] .dk-icon`)].filter((i) => i.getClientRects().length).map((i) => Math.round(i.getBoundingClientRect().width));
+      const sizes = [...document.querySelectorAll(`[data-row=${size}] svg`)].filter((i) => i.getClientRects().length).map((i) => Math.round(i.getBoundingClientRect().width));
       expect(new Set(sizes).size, `${size}: ${sizes.join(', ')}`).toBe(1);
     }
   });
