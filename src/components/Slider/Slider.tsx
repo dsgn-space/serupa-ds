@@ -7,7 +7,7 @@ import { useFormReset } from '../../internal/useFormReset';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
 import { snap as snapToGrid } from '../../internal/step';
 import { useFieldLabel } from '../../internal/fieldLabel';
-import { useFieldControl } from '../../internal/field';
+import { FieldContext, useFieldControl } from '../../internal/field';
 import { delegateFocus, useAutoFocus } from '../../internal/focus';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
@@ -235,15 +235,18 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   // after a change, as it does at the end of a drag.
   const typedFrom = React.useRef<number[] | null>(null);
   const fieldDone = () => { const f = typedFrom.current; if (f && latest.current.some((v, k) => v !== f[k])) { commit(); typedFrom.current = latest.current.slice(); } };
+  // Out of a Field's reach (FieldContext null): the Field's id is the slider's, so a field taking it would repeat it,
+  // and a range's two fields would share it. What the Field gives a thumb is passed as the thumb gets it.
   const field = (i: number) => (
-    <NumberInput key={'field' + i} className="dk-slider__input" size={props.size === 'sm' ? 'sm' : 'md'} steppers={false}
+    <FieldContext.Provider key={'field' + i} value={null}><NumberInput className="dk-slider__input" size={props.size === 'sm' ? 'sm' : 'md'} steppers={false}
       value={vals[i]} min={isRange && i === 1 ? vals[0] : min} max={isRange && i === 0 ? vals[1] : max} step={step} largeStep={large}
       disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
       aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
+      aria-describedby={isRange ? undefined : props['aria-describedby']} aria-errormessage={invalid ? props['aria-errormessage'] : undefined}
       onFocus={() => { typedFrom.current = latest.current.slice(); }}
       onValueChange={(v) => { if (v != null) set(i, v); }}
       onKeyUp={(e) => { if (e.key === 'Enter') fieldDone(); }}
-      onBlur={() => { fieldDone(); typedFrom.current = null; }} />
+      onBlur={() => { fieldDone(); typedFrom.current = null; }} /></FieldContext.Provider>
   );
   return (
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); restyle(n); }}

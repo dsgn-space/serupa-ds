@@ -139,6 +139,7 @@ export const labels: SerupaLabels = {
   filterAny: (field) => field + '：全部',
   filterRemove: (field) => '移除筛选：' + field,
   listSelectAll: '全选',
+  tagRemove: (name) => '移除：' + name,
   filterDone: '完成',
   filterResults: (count) => (count === 1 ? '1 个结果' : n(count) + ' 个结果'),
   tocTitle: '本页内容',

@@ -145,6 +145,7 @@ export const labels: SerupaLabels = {
   filterAny: (field) => field + ' : tous',
   filterRemove: (field) => 'Retirer le filtre : ' + field,
   listSelectAll: 'Tout sélectionner',
+  tagRemove: (name) => 'Retirer : ' + name,
   filterDone: 'Terminé',
   filterResults: (count) => (count === 1 ? '1 résultat' : n(count) + ' résultats'),
   tocTitle: 'Sur cette page',

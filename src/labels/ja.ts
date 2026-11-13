@@ -139,6 +139,7 @@ export const labels: SerupaLabels = {
   filterAny: (field) => field + ': すべて',
   filterRemove: (field) => 'フィルターを削除: ' + field,
   listSelectAll: 'すべて選択',
+  tagRemove: (name) => '削除: ' + name,
   filterDone: '完了',
   filterResults: (count) => (count === 1 ? '1 件の結果' : n(count) + ' 件の結果'),
   tocTitle: 'このページの内容',

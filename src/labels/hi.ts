@@ -139,6 +139,7 @@ export const labels: SerupaLabels = {
   filterAny: (field) => field + ': सभी',
   filterRemove: (field) => 'फ़िल्टर हटाएँ: ' + field,
   listSelectAll: 'सभी चुनें',
+  tagRemove: (name) => 'हटाएँ: ' + name,
   filterDone: 'हो गया',
   filterResults: (count) => (count === 1 ? '1 परिणाम' : n(count) + ' परिणाम'),
   tocTitle: 'इस पेज पर',

@@ -140,6 +140,7 @@ export const labels: SerupaLabels = {
   filterAny: (field) => field + ': tümü',
   filterRemove: (field) => 'Filtreyi kaldır: ' + field,
   listSelectAll: 'Tümünü seç',
+  tagRemove: (name) => 'Kaldır: ' + name,
   filterDone: 'Bitti',
   filterResults: (count) => (count === 1 ? '1 sonuç' : n(count) + ' sonuç'),
   tocTitle: 'Bu sayfada',

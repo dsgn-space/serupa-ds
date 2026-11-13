@@ -140,7 +140,7 @@ export function AIChat({ messages, suggestions = [], onSend, onStop, onRegenerat
           </ul>
         </div>
       ) : null}
-      <ChatComposer ref={box} streaming={streaming} onStop={stop} onSend={onSend} />
+      <ChatComposer ref={box} streaming={streaming} onStop={onStop ? stop : undefined} onSend={onSend} />
     </section>
   );
 }

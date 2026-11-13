@@ -1,0 +1,135 @@
+# Default
+- text: Labels
+- grid "Labels":
+  - row "Design Remove Design":
+    - gridcell "Design"
+    - gridcell "Remove Design":
+      - button "Remove Design"
+  - row "Bug Remove Bug":
+    - gridcell "Bug"
+    - gridcell "Remove Bug":
+      - button "Remove Bug"
+  - row "Checkout Remove Checkout":
+    - gridcell "Checkout"
+    - gridcell "Remove Checkout":
+      - button "Remove Checkout"
+  - row "Mobile Remove Mobile":
+    - gridcell "Mobile"
+    - gridcell "Remove Mobile":
+      - button "Remove Mobile"
+  - row "Urgent Remove Urgent":
+    - gridcell "Urgent"
+    - gridcell "Remove Urgent":
+      - button "Remove Urgent"
+
+# Empty
+- text: Labels No labels yet
+- grid "Labels"
+
+# Limited
+- text: Skills
+- grid "Skills":
+  - row "Research":
+    - gridcell "Research"
+  - row "Writing":
+    - gridcell "Writing"
+  - row "Illustration":
+    - gridcell "Illustration"
+- button "Show more"
+
+# LongText
+- text: Labels
+- grid "Labels":
+  - row "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung Remove Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung":
+    - gridcell "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"
+    - gridcell "Remove Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung":
+      - button "Remove Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"
+  - row "A label long enough to wrap twice in a narrow column of a phone screen Remove A label long enough to wrap twice in a narrow column of a phone screen":
+    - gridcell "A label long enough to wrap twice in a narrow column of a phone screen"
+    - gridcell "Remove A label long enough to wrap twice in a narrow column of a phone screen":
+      - button "Remove A label long enough to wrap twice in a narrow column of a phone screen"
+  - row "Design Remove Design":
+    - gridcell "Design"
+    - gridcell "Remove Design":
+      - button "Remove Design"
+  - row "Bug Remove Bug":
+    - gridcell "Bug"
+    - gridcell "Remove Bug":
+      - button "Remove Bug"
+  - row "Checkout Remove Checkout":
+    - gridcell "Checkout"
+    - gridcell "Remove Checkout":
+      - button "Remove Checkout"
+  - row "Mobile Remove Mobile":
+    - gridcell "Mobile"
+    - gridcell "Remove Mobile":
+      - button "Remove Mobile"
+  - row "Urgent Remove Urgent":
+    - gridcell "Urgent"
+    - gridcell "Remove Urgent":
+      - button "Remove Urgent"
+
+# Playground
+- text: Labels
+- grid "Labels":
+  - row "Design":
+    - gridcell "Design"
+  - row "Bug":
+    - gridcell "Bug"
+  - row "Checkout":
+    - gridcell "Checkout"
+  - row "Mobile":
+    - gridcell "Mobile"
+  - row "Urgent":
+    - gridcell "Urgent"
+
+# Selectable
+- text: Skills
+- grid "Skills":
+  - row "Research":
+    - gridcell "Research"
+  - row "Writing" [selected]:
+    - gridcell "Writing"
+  - row "Illustration":
+    - gridcell "Illustration"
+  - row "Typography":
+    - gridcell "Typography"
+  - row "Motion" [selected]:
+    - gridcell "Motion"
+  - row "Prototyping":
+    - gridcell "Prototyping"
+  - row "Accessibility":
+    - gridcell "Accessibility"
+  - row "Data":
+    - gridcell "Data"
+
+# SingleChoice
+- text: Topic
+- grid "Topic":
+  - row "Research" [selected]:
+    - gridcell "Research"
+  - row "Writing":
+    - gridcell "Writing"
+  - row "Illustration":
+    - gridcell "Illustration"
+  - row "Typography":
+    - gridcell "Typography"
+
+# WithDisabled
+- text: Labels
+- grid "Labels":
+  - row "Auto-assigned" [disabled]:
+    - gridcell "Auto-assigned" [disabled]
+  - row "Design Remove Design":
+    - gridcell "Design"
+    - gridcell "Remove Design":
+      - button "Remove Design"
+  - row "Bug Remove Bug":
+    - gridcell "Bug"
+    - gridcell "Remove Bug":
+      - button "Remove Bug"
+  - row "Checkout Remove Checkout":
+    - gridcell "Checkout"
+    - gridcell "Remove Checkout":
+      - button "Remove Checkout"
+
