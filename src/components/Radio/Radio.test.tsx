@@ -163,7 +163,7 @@ describe('Radio', () => {
     const g = document.getElementById('unc')!, tops = [...g.querySelectorAll('[data-component="radio"]')].map((x) => x.getBoundingClientRect().top);
     expect([input('n2').checked, input('n1').checked, input('n1').name, css(input('n1')).width, css(wrap('n1')).fontSize]).toEqual([true, false, 'num', '14px', '12px']);
     expect(mid('n1')).toBeLessThan(1);
-    expect([css(g).flexDirection, css(g).columnGap, tops.every((y) => Math.abs(y - tops[0]) < 1)]).toEqual(['row', '16px', true]);
+    expect([css(g).flexDirection, css(g).columnGap, tops.every((y) => Math.abs(y - tops[0]!) < 1)]).toEqual(['row', '16px', true]);
     await userEvent.click(input('n3'), { force: true });
     await expect.poll(() => input('n3').checked).toBe(true);
     expect(input('n2').checked).toBe(false);
@@ -232,7 +232,7 @@ describe('Radio', () => {
     const ring = color('var(--focus-ring)');
     await expect.poll(() => css(input('s2')).outlineColor).toBe(ring);
     const s = css(input('s2'));
-    expect(`${s.outlineStyle} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`).toBe('solid 2px 2px none');
+    expect(`${s.outlineStyle} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow.replace(/(, )?rgba\(0, 0, 0, 0\) 0px 0px 0px 0px/g, '') || 'none'}`).toBe('solid 2px 2px none');   // the empty tactile layer (flat brand) is no ring
   });
 
   test('hover: field-border-hover; invalid keeps the danger border', async () => {
@@ -281,28 +281,28 @@ describe('Radio', () => {
     </RadioGroup>);
     const [a, b, c] = page.getByRole('radio').elements() as HTMLInputElement[];
     const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
-    expect(card(a).className).toMatch(/dk-radio--card/);
-    expect(card(c).className).not.toMatch(/dk-radio--card/);
+    expect(card(a!).className).toMatch(/dk-radio--card/);
+    expect(card(c!).className).not.toMatch(/dk-radio--card/);
     expect(page.getByRole('radiogroup').element().className).toMatch(/dk-radio-group--card/);
-    const shell = css(card(b));
+    const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
-    expect(css(card(a)).borderTopColor).toBe(color('var(--primary)'));
-    expect(css(card(a)).boxShadow).toContain('0px 0px 0px 1px');
-    expect(css(card(a)).backgroundColor).toBe(css(card(b)).backgroundColor);
-    expect(css(card(b)).borderTopColor).toBe(color('var(--border)'));
+    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a!)).boxShadow).toContain('0px 0px 0px 1px');
+    expect(css(card(a!)).backgroundColor).toBe(css(card(b!)).backgroundColor);
+    expect(css(card(b!)).borderTopColor).toBe(color('var(--border)'));
     // Pressed anywhere on the card, the description included.
     await userEvent.click(page.getByText('Next day', { exact: true }));
-    expect(b.checked).toBe(true);
+    expect(b!.checked).toBe(true);
     expect(onValueChange).toHaveBeenLastCalledWith('b', expect.anything());
-    expect([css(card(b)).outlineStyle, b.hasAttribute('data-key-focus')]).toEqual(['none', false]);   // a click: no ring
+    expect([css(card(b!)).outlineStyle, b!.hasAttribute('data-key-focus')]).toEqual(['none', false]);   // a click: no ring
     // An arrow after the click rings the card in every engine: Safari's :focus-visible stays off for an arrow between
     // radios, which left its keyboard users no ring, so the radio the keyboard has is marked data-key-focus too.
     await userEvent.keyboard('{ArrowUp}');
-    expect([a.checked, document.activeElement === a, a.hasAttribute('data-key-focus')]).toEqual([true, true, true]);
-    expect([css(card(a)).outlineStyle, css(a).outlineStyle]).toEqual(['solid', 'none']);
+    expect([a!.checked, document.activeElement === a, a!.hasAttribute('data-key-focus')]).toEqual([true, true, true]);
+    expect([css(card(a!)).outlineStyle, css(a!).outlineStyle]).toEqual(['solid', 'none']);
     await userEvent.keyboard('{ArrowDown}');
-    expect([b.checked, document.activeElement === b, a.hasAttribute('data-key-focus')]).toEqual([true, true, false]);
-    expect([css(card(b)).outlineStyle, css(card(a)).outlineStyle, css(b).outlineStyle]).toEqual(['solid', 'none', 'none']);
+    expect([b!.checked, document.activeElement === b, a!.hasAttribute('data-key-focus')]).toEqual([true, true, false]);
+    expect([css(card(b!)).outlineStyle, css(card(a!)).outlineStyle, css(b!).outlineStyle]).toEqual(['solid', 'none', 'none']);
     // Its name is the label alone; the description describes it.
     await expect.element(page.getByRole('radio', { name: 'Express', exact: true })).toHaveAccessibleDescription('Next day');
   });

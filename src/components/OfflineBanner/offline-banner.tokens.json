@@ -63,6 +63,16 @@
             "cssVar": "--offline-banner-shadow"
           }
         }
+      },
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "A tactile brand's hairline edge and, in dark mode, a faint top light, as on every floating pane. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--offline-banner-depth"
+          }
+        }
       }
     },
     "radius": {

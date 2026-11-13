@@ -53,12 +53,12 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   /** The numbers are on their way: sets aria-busy. Before the first ones arrive (no categories yet), the plot is a
       placeholder at its height (the table button disabled, the legend's line kept), and `loadingLabel` is said once, after the loader's delay. With numbers already
       shown, they stay until the new ones arrive. Default: false. */
-  busy?: boolean | undefined;
+  loading?: boolean | undefined;
   /** Said once as the placeholder appears ("Loading visitors"). Default: "Loading…" (labels.loading). */
   loadingLabel?: string | undefined;
 }
 
-const OWN = { type: 1, stacked: 1, title: 1, categories: 1, series: 1, formatValue: 1, categoryLabel: 1, height: 1, hideLegend: 1, view: 1, defaultView: 1, onViewChange: 1, busy: 1, loadingLabel: 1, className: 1 } as const;
+const OWN = { type: 1, stacked: 1, title: 1, categories: 1, series: 1, formatValue: 1, categoryLabel: 1, height: 1, hideLegend: 1, view: 1, defaultView: 1, onViewChange: 1, loading: 1, loadingLabel: 1, className: 1 } as const;
 const TYPES = ['line', 'bar', 'area', 'donut'] as const;
 const VIEWS = ['chart', 'table'] as const;
 const COLORS = 8;
@@ -115,7 +115,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
   const rest = omit(props, OWN);
   const locale = useLocale();
   const labels = useSettings(words).labels;
-  const busy = !!props.busy;
+  const busy = !!props.loading;
   const base = domId('dk-chart', React.useId());
   const type = oneOf(TYPES, props.type, 'line');
   const categories = props.categories || [];

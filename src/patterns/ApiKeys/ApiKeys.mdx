@@ -1,0 +1,42 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './ApiKeys.stories';
+
+<Meta of={Stories} />
+
+# API keys
+
+The keys a workspace's scripts and tools use: what each may do, when it was last used, making a new one that's shown once, and revoking one after asking.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- An app with an API that people call from their own scripts, servers or tools.
+- Not for signing in with another service: that's OAuth, where people approve access on the other service's page.
+- Not for a person's own password or two-step codes: that's the Account security pattern.
+
+## What each part is for
+
+- **A table with a caption**, so a screen reader reads each cell with its column: Name, Key, Access, Created, Last used, Expires (1.3.1).
+- **Only the last four characters** of each key, "…7Qx2", so people can match a key to what they stored without the page showing the secret.
+- **Access in words**, "Read only" or "Read and write", not only a color (1.4.1). The form says what each allows before anyone chooses (3.3.2).
+- **Last used** shows which keys nothing uses any more, so they can be revoked. **Expires** limits the harm of a key that leaks; the form offers 90 days first.
+- **A name is required and unique.** A missing or taken name is said next to the field, which gets focus, and what was chosen stays (3.3.1, 3.3.3).
+- **The new key is shown once**, as text with Copy the key, which gets focus, and says plainly that it won't be shown again. Done closes the dialog and focus goes back to Create key.
+- **Revoke asks first.** Whatever uses the key stops working at once, so there's no Undo to offer: the alert dialog says so, with Keep it beside Revoke key (3.3.4). Each Revoke is named with its key, "Revoke Deploy bot".
+- **After a revoke**, focus goes to the next key's Revoke, or to the list's heading when it was the last, and a toast says what was revoked (2.4.3, 4.1.3).
+- **A create or revoke that fails says so** in its dialog, which stays open; a failed revoke says the key still works.
+- **While the keys load**, set `loading`: the table is busy with placeholder rows. **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
+
+## What stays your app's job
+
+- **Making the key.** `onCreate` gets the name, the access and the days until it stops working (or null). Make the key on your server, store only its hash, and return the secret: the page shows it once and keeps only its last four characters.
+- **Revoking it.** `onRevoke` gets the key's id. Return its promise, so a failure keeps the key on the list and says so.
+- **What the access levels mean.** Change the two levels and their words to your API's own scopes, keeping each one's words about what it allows.

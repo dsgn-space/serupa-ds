@@ -106,7 +106,7 @@ function States(args: ChartProps) {
       </div>
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Visitors didn't load. Check your connection and try again.</Alert>
         : state === 'empty' ? <EmptyState size="sm" title="No visitors yet" description="Visits show here from the day the site goes live." />
-        : <Chart {...args} busy={!loaded} loadingLabel="Loading visitors" categories={loaded ? args.categories : []} series={loaded ? args.series : []} />}
+        : <Chart {...args} loading={!loaded} loadingLabel="Loading visitors" categories={loaded ? args.categories : []} series={loaded ? args.series : []} />}
     </div>
   );
 }

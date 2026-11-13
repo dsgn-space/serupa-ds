@@ -165,7 +165,7 @@ describe('Kanban', () => {
     await expect.poll(names).toEqual(['To do: ab', 'Doing: d', 'Done: c']);
     await said('Charlie moved to Done, position 1 of 1.');
     await expect.poll(() => document.activeElement).toBe(handle('Charlie').element());
-    expect(moves[0].to).toEqual({ column: 'done', index: 0 });
+    expect(moves[0]!.to).toEqual({ column: 'done', index: 0 });
   });
 
   test('"Move to…" lists only the other columns', async () => {
@@ -179,13 +179,13 @@ describe('Kanban', () => {
   test('pointer: dragging a handle onto another column drops the card there', async () => {
     const moves: KanbanMove<T>[] = [];
     await render(<Board moves={moves} />);
-    const h = handle('Alpha').element(), target = document.querySelectorAll('ul[role=list]')[2];
+    const h = handle('Alpha').element(), target = document.querySelectorAll('ul[role=list]')[2]!;
     const a = h.getBoundingClientRect(), b = target.getBoundingClientRect();
     h.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerId: 1, clientX: a.x + 4, clientY: a.y + 4 }));
     for (let i = 1; i <= 5; i++) window.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 1, clientX: a.x + 4 + (b.x + 40 - a.x) * i / 5, clientY: a.y + 4 + (b.y + 10 - a.y) * i / 5 }));
     window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 1, clientX: b.x + 40, clientY: b.y + 10 }));
     await expect.poll(names).toEqual(['To do: bc', 'Doing: d', 'Done: a']);
-    expect(moves[0].to).toEqual({ column: 'done', index: 0 });
+    expect(moves[0]!.to).toEqual({ column: 'done', index: 0 });
   });
 
   test('pointer: moves within one place re-render no card, and the card still follows the pointer (GR239)', async () => {
@@ -244,9 +244,9 @@ describe('Kanban', () => {
   // The count is in the page's locale digits (CI runs these in ar-EG too, where 3 is ٣).
   const three = new Intl.NumberFormat(navigator.language).format(3);
 
-  test('busy with no cards yet: each column keeps its title, shows two placeholder cards and no count; the board says so once', async () => {
+  test('loading with no cards yet: each column keeps its title, shows two placeholder cards and no count; the board says so once', async () => {
     const empty = START().map((c) => ({ ...c, items: [] }));
-    const { rerender } = await render(<Kanban id="dk" aria-label="S" busy loadingLabel="Loading tasks" columns={empty} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    const { rerender } = await render(<Kanban id="dk" aria-label="S" loading loadingLabel="Loading tasks" columns={empty} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
     const board = document.getElementById('dk')!;
     expect([board.getAttribute('aria-busy'), board.tabIndex]).toEqual(['true', 0]);   // nothing inside takes focus, so the board does
     expect(names()).toEqual(['To do: ', 'Doing: ', 'Done: ']);
@@ -255,14 +255,14 @@ describe('Kanban', () => {
     expect([board.querySelectorAll('button').length, board.textContent?.includes('No cards'), document.getElementById(board.id + '-hint')]).toEqual([0, false, null]);
     await said('Loading tasks');
     await rerender(<Kanban id="dk" aria-label="S" columns={START()} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
-    expect([board.getAttribute('aria-busy'), board.getAttribute('tabindex'), count(columns()[0]).textContent]).toEqual([null, null, three]);
+    expect([board.getAttribute('aria-busy'), board.getAttribute('tabindex'), count(columns()[0]!).textContent]).toEqual([null, null, three]);
     expect(names()).toEqual(['To do: abc', 'Doing: d', 'Done: ']);
   });
 
-  test('busy with cards already shown keeps them (a reload); with no cards, it says the shared "Loading…" label', async () => {
-    const { rerender } = await render(<Kanban id="dk" aria-label="S" busy columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
-    expect([document.getElementById('dk')!.getAttribute('aria-busy'), names(), count(columns()[0]).textContent]).toEqual(['true', ['To do: abc', 'Doing: d', 'Done: '], three]);
-    await rerender(<Kanban aria-label="S" busy columns={START().map((c) => ({ ...c, items: [] }))} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+  test('loading with cards already shown keeps them (a reload); with no cards, it says the shared "Loading…" label', async () => {
+    const { rerender } = await render(<Kanban id="dk" aria-label="S" loading columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    expect([document.getElementById('dk')!.getAttribute('aria-busy'), names(), count(columns()[0]!).textContent]).toEqual(['true', ['To do: abc', 'Doing: d', 'Done: '], three]);
+    await rerender(<Kanban aria-label="S" loading columns={START().map((c) => ({ ...c, items: [] }))} getKey={(x: T) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
     expect(document.querySelectorAll('[aria-busy="true"] li')).toHaveLength(6);
     await said('Loading…');
   });
@@ -275,7 +275,7 @@ describe('Kanban', () => {
   test('its words come from the labels', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><Board /></SerupaProvider>);
     await expect.element(page.getByRole('button', { name: 'Pindahkan Alpha', exact: true })).toBeVisible();
-    expect(count(columns()[1]).textContent).toBe('1 dari 1');
+    expect(count(columns()[1]!).textContent).toBe('1 dari 1');
   });
 
   test('a narrow board scrolls sideways in its own box, not the page', async () => {
@@ -288,11 +288,11 @@ describe('Kanban', () => {
     await render(<Board start={START().map((c, i) => i === 1 ? { ...c, items: [...c.items, { id: 'e', t: 'Echo' }] } : c)} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const col = columns()[0], card = document.querySelector('li[data-key]')!;
+      const col = columns()[0]!, card = document.querySelector('li[data-key]')!;
       const colBg = css(col).backgroundColor, cardBg = css(card).backgroundColor;
       expect(contrast(css(col.querySelector('h3')).color, colBg), th + ' title').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(count(col)).color, colBg), th + ' count').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(css(count(columns()[1])).color, colBg), th + ' over').toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(count(columns()[1]!)).color, colBg), th + ' over').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(card.lastElementChild).color, cardBg), th + ' card').toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(card.querySelector('button')).color, cardBg), th + ' handle').toBeGreaterThanOrEqual(3);
     }

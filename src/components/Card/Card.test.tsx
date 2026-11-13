@@ -30,10 +30,10 @@ function emulate(feature: 'forced-colors' | 'prefers-reduced-motion'): () => voi
 
 // Colors with alpha, composited over what's behind them, for WCAG contrast.
 type RGBA = [number, number, number, number];
-const rgb = (c: string): RGBA => { const m = (c.match(/[\d.]+/g) || []).map(Number); return [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
-const lum = (c: RGBA) => { const v = c.slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
-const over = (fg: RGBA, bg: RGBA): RGBA => (fg[3] >= 1 ? fg : fg.map((x, i) => (i < 3 ? x * fg[3] + bg[i] * (1 - fg[3]) : 1)) as RGBA);
-const ratio = (a: RGBA, b: RGBA) => { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+const rgb = (c: string): RGBA => { const m = (c.match(/[\d.]+/g) || []).map(Number); return [m[0]!, m[1]!, m[2]!, m[3] ?? 1]; };
+const lum = (c: RGBA) => { const v = c.slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0]! + 0.7152 * v[1]! + 0.0722 * v[2]!; };
+const over = (fg: RGBA, bg: RGBA): RGBA => (fg[3] >= 1 ? fg : fg.map((x, i) => (i < 3 ? x * fg[3] + bg[i]! * (1 - fg[3]) : 1)) as RGBA);
+const ratio = (a: RGBA, b: RGBA) => { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x! + 0.05) / (y! + 0.05); };
 
 const Parts = () => <>
   <CardHeader title="Team plan" description="Up to 10 members" action={<Badge>Active</Badge>} />
@@ -52,7 +52,7 @@ describe('Card', () => {
   test('the title and description hyphenate in the language around them, a long word never overflows, and the body is left as it is (191)', async () => {
     await render(<div lang="de" style={{ width: '200px' }}><Card id="hy"><CardHeader title="Donaudampfschifffahrtsgesellschaftskapitän" description="Rechtsschutzversicherungsgesellschaften" /><CardBody><p id="hyb">Text</p></CardBody></Card></div>);
     const card = el('hy'), parts = [...card.querySelectorAll<HTMLElement>('*')].filter((e) => e.children.length === 0 && /Donau|Rechts/.test(e.textContent ?? ''));
-    expect([parts.length, ...parts.map((e) => css(e).hyphens), parts[0].closest('[lang]')!.getAttribute('lang'), parts.every((e) => e.scrollWidth <= e.clientWidth), card.scrollWidth <= card.clientWidth, css(el('hyb')).hyphens])
+    expect([parts.length, ...parts.map((e) => css(e).hyphens), parts[0]!.closest('[lang]')!.getAttribute('lang'), parts.every((e) => e.scrollWidth <= e.clientWidth), card.scrollWidth <= card.clientWidth, css(el('hyb')).hyphens])
       .toEqual([2, 'auto', 'auto', 'de', true, true, 'manual']);
   });
 
@@ -131,7 +131,7 @@ describe('Card', () => {
     const card = (id: string, w: string) => <div style={{ width: w }}><Card id={id}><CardBody>Body</CardBody><CardFooter><Button variant="outline">Cancel</Button><Button>Save</Button></CardFooter></Card></div>;
     await render(<Col>{card('narrow', '240px')}{card('wide', '480px')}</Col>);
     // The footer is the Save button's parent.
-    const row = (id: string) => { const [a, b] = [...el(id).querySelectorAll('button')].map((n) => n.getBoundingClientRect()), f = el(id).querySelectorAll('button')[1].parentElement!.getBoundingClientRect(); return [Math.round(a.width) === Math.round(f.width), Math.round(b.width) === Math.round(f.width), b.top > a.top]; };
+    const row = (id: string) => { const [a, b] = [...el(id).querySelectorAll('button')].map((n) => n.getBoundingClientRect()), f = el(id).querySelectorAll('button')[1]!.parentElement!.getBoundingClientRect(); return [Math.round(a!.width) === Math.round(f.width), Math.round(b!.width) === Math.round(f.width), b!.top > a!.top]; };
     expect(row('narrow')).toEqual([true, true, true]);
     expect(row('wide')).toEqual([false, false, false]);
   });

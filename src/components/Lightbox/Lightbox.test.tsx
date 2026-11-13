@@ -45,7 +45,7 @@ describe('Lightbox', () => {
     await expect.element(prev()).toBeDisabled();
     await expect.element(page.getByText('First')).toBeVisible();
     await userEvent.click(next());
-    expect([title(), described(), onIndexChange.mock.calls[0][0]]).toEqual(['A green square', '2 of 3', 1]);
+    expect([title(), described(), onIndexChange.mock.calls[0]![0]]).toEqual(['A green square', '2 of 3', 1]);
     await said('A green square, 2 of 3');
     await userEvent.click(next());
     await expect.element(next()).toBeDisabled();
@@ -114,7 +114,7 @@ describe('Lightbox', () => {
   });
 
   test('one picture has no arrows and no count; one that fails shows the broken-image icon and the arrows still work', async () => {
-    const { rerender } = await render(<Lightbox items={[PHOTOS[0]]} defaultOpen />);
+    const { rerender } = await render(<Lightbox items={[PHOTOS[0]!]} defaultOpen />);
     expect([dialog().querySelectorAll('button').length, described()]).toEqual([1, undefined]);   // only the ×
     await rerender(<Lightbox items={[{ src: 'data:image/png;base64,broken', alt: 'A receipt' }, ...PHOTOS]} defaultOpen />);
     await expect.poll(() => dialog().querySelector('[data-state]')?.getAttribute('data-state')).toBe('error');

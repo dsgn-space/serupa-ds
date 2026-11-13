@@ -125,6 +125,16 @@
             "cssVar": "--kanban-card-shadow"
           }
         }
+      },
+      "card-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-card}",
+        "$description": "A card's tactile layers at rest: a short, soft shadow. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-card-depth"
+          }
+        }
       }
     },
     "spacing": {

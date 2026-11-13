@@ -50,9 +50,9 @@ describe('Attachment', () => {
     await render(<div style={{ width: '200px' }}><Attachment id="l" name={long} onRemove={() => {}} /></div>);
     const e = root('l');
     await expect.poll(() => nameParts(e).length).toBe(2);
-    expect(nameParts(e)[1].textContent).toBe('nversicherung-2026.pdf'.slice(-10));
+    expect(nameParts(e)[1]!.textContent).toBe('nversicherung-2026.pdf'.slice(-10));
     expect(e.getBoundingClientRect().width).toBeLessThanOrEqual(200);
-    const start = nameParts(e)[0];
+    const start = nameParts(e)[0]!;
     expect(start.scrollWidth).toBeGreaterThan(start.clientWidth);
   });
 
@@ -81,11 +81,11 @@ describe('Attachment', () => {
       const e = root('c' + i);
       await expect.poll(() => nameParts(e).length).toBe(2);
       const [a, b] = nameParts(e).map((x) => x.textContent);
-      expect(a + b).toBe(n);
-      expect(Array.from(seg.segment(n), (x) => x.index)).toContain(a.length);
+      expect(a! + b!).toBe(n);
+      expect(Array.from(seg.segment(n), (x) => x.index)).toContain(a!.length);
     }
     const [a] = nameParts(root('c3')).map((x) => x.textContent);
-    expect(a.endsWith(' ')).toBe(true);
+    expect(a!.endsWith(' ')).toBe(true);
   });
 
   test('an emoji or a name in another script isn\'t split inside a character', async () => {

@@ -164,7 +164,7 @@ describe('Pagination', () => {
   test('the row stays on one line: in 320px the defaults drop siblings, then boundaries, until it fits; with room again they come back (ET1)', async () => {
     const Box = ({ w }: { w: number }) => <div style={{ width: w + 'px' }}><Pagination id="fit" count={20} defaultPage={10} /></div>;
     const s = await render(<Box w={600} />, { wrapper: EnUS });
-    const fits = () => { const l = q('fit', 'ul'), a = [named('fit', 'Previous page'), named('fit', 'Next page')].map((x) => x.getBoundingClientRect()); return l.scrollWidth <= l.clientWidth && a[0].top === a[1].top && a[1].right <= l.getBoundingClientRect().right + 0.5; };
+    const fits = () => { const l = q('fit', 'ul'), a = [named('fit', 'Previous page'), named('fit', 'Next page')].map((x) => x.getBoundingClientRect()); return l.scrollWidth <= l.clientWidth && a[0]!.top === a[1]!.top && a[1]!.right <= l.getBoundingClientRect().right + 0.5; };
     expect([shown('fit'), fits()]).toEqual(['< 1 … 9 [10] 11 … 20 >', true]);
     await s.rerender(<Box w={320} />);
     await vi.waitFor(() => expect(fits()).toBe(true));
@@ -216,7 +216,7 @@ describe('Pagination', () => {
       await expect.poll(() => css(cur).backgroundColor).toBe(color('var(--primary)'));
       for (const [name, fg, bg] of [['page', css(pg).color, 'var(--surface)'], ['page on hover', css(pg).color, 'var(--secondary)'],
         ['current', css(cur).color, css(cur).backgroundColor], ['ellipsis', css(ell).color, 'var(--surface)']]) {
-        const r = contrast(fg, bg); n++;
+        const r = contrast(fg!, bg!); n++;
         if (r < 4.5) low.push(`${th} ${name} ${r.toFixed(2)}`);
       }
     }
@@ -318,7 +318,7 @@ describe('Pagination before the script runs (GR62)', () => {
     document.body.append(host);
     try {
       const l = host.querySelector<HTMLElement>('ul')!, items = [...l.querySelectorAll<HTMLElement>('li > *')];
-      const h = items[0].getBoundingClientRect().height;
+      const h = items[0]!.getBoundingClientRect().height;
       expect([l.hasAttribute('data-fit'), l.scrollWidth <= l.clientWidth + 1, items.every((i) => i.getBoundingClientRect().height === h), new Set(items.map((i) => i.offsetTop)).size > 1])
         .toEqual([false, true, true, true]);
     } finally { host.remove(); }

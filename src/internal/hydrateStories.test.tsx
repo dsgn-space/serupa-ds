@@ -33,7 +33,7 @@ for (const [name, list] of storiesToRun()) {
   describe(`${name} stories hydrate`, () => {
     for (const [exportName, ui] of list) {
       test(`${exportName}`, async () => {
-        const serverHtml = html[`${name}/${exportName}`];
+        const serverHtml = html[`${name}/${exportName}`]!;
         expect(serverHtml, 'the server render in Node').not.toMatch(/^Error: /);
         expect(await hydrate(ui, serverHtml)).toEqual([]);
       });

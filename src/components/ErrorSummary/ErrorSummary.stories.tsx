@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 export const Default: Story = {};
-export const OneError: Story = { args: { errors: [ERRORS[1]] } };
+export const OneError: Story = { args: { errors: [ERRORS[1]!] } };
 export const WithDescription: Story = { args: { title: 'Check your booking', description: 'Fix these before you send the form again.' } };
 // In a form: each link moves focus to its field and shows the field's label.
 export const InAForm: Story = {

@@ -91,8 +91,8 @@ describe('OfflineBanner', () => {
   test('placement: fixed to the bottom by default, or the top, in the middle; inline stays in the page', async () => {
     await render(<><OfflineBanner id="b" online={false} /><OfflineBanner id="t" online={false} placement="top" /><OfflineBanner id="i" online={false} placement="inline" /></>);
     const [b, t, i] = ['b', 't', 'i'].map((id) => document.getElementById(id)!);
-    expect([css(b).position, css(t).position, css(i).position]).toEqual(['fixed', 'fixed', 'static']);
-    const rb = b.getBoundingClientRect(), rt = t.getBoundingClientRect();
+    expect([css(b!).position, css(t!).position, css(i!).position]).toEqual(['fixed', 'fixed', 'static']);
+    const rb = b!.getBoundingClientRect(), rt = t!.getBoundingClientRect();
     expect(Math.abs(innerHeight - rb.bottom - 16)).toBeLessThan(1);
     expect(Math.abs(rt.top - 16)).toBeLessThan(1);
     expect(Math.abs((rb.left + rb.right) / 2 - innerWidth / 2)).toBeLessThan(1);

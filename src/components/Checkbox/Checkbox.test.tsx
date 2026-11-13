@@ -156,7 +156,7 @@ describe('Checkbox', () => {
     await render(<><button type="button">Before</button><Checkbox id="f">Focus me</Checkbox></>);
     await page.getByRole('button', { name: 'Before' }).click();
     await userEvent.tab();
-    await expect.poll(() => { const s = css(input('f')); return `${s.outlineStyle} ${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`; }).toBe(`solid ${color('var(--focus-ring)')} 2px 2px none`);
+    await expect.poll(() => { const s = css(input('f')); return `${s.outlineStyle} ${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow.replace(/(, )?rgba\(0, 0, 0, 0\) 0px 0px 0px 0px/g, '') || 'none'}`; }).toBe(`solid ${color('var(--focus-ring)')} 2px 2px none`);
   });
 
   test('invalid: aria-invalid and a danger border', async () => {
@@ -374,25 +374,25 @@ describe('CheckboxGroup', () => {
     </CheckboxGroup>);
     const [a, b, c] = page.getByRole('checkbox').elements() as HTMLInputElement[];
     const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
-    expect(card(a).className).toMatch(/dk-checkbox--card/);
-    expect(card(c).className).not.toMatch(/dk-checkbox--card/);
+    expect(card(a!).className).toMatch(/dk-checkbox--card/);
+    expect(card(c!).className).not.toMatch(/dk-checkbox--card/);
     expect(page.getByRole('group').element().className).toMatch(/dk-checkbox-group--card/);
-    const shell = css(card(b));
+    const shell = css(card(b!));
     expect([shell.borderTopWidth, shell.paddingTop, shell.borderTopLeftRadius]).toEqual(['1px', '16px', '8px']);
-    expect(css(card(a)).borderTopColor).toBe(color('var(--primary)'));
-    expect(css(card(a)).boxShadow).toContain('0px 0px 0px 1px');
-    expect(css(card(b)).borderTopColor).toBe(color('var(--border)'));
+    expect(css(card(a!)).borderTopColor).toBe(color('var(--primary)'));
+    expect(css(card(a!)).boxShadow).toContain('0px 0px 0px 1px');
+    expect(css(card(b!)).borderTopColor).toBe(color('var(--border)'));
     await userEvent.click(page.getByText('A printed note', { exact: true }));
-    expect(b.checked).toBe(true);
+    expect(b!.checked).toBe(true);
     expect(onValueChange).toHaveBeenLastCalledWith(['a', 'b'], expect.anything());
-    expect([css(card(b)).outlineStyle, b.hasAttribute('data-key-focus')]).toEqual(['none', false]);   // a click: no ring
+    expect([css(card(b!)).outlineStyle, b!.hasAttribute('data-key-focus')]).toEqual(['none', false]);   // a click: no ring
     // Space after the click rings the card in every engine: Firefox's :focus-visible stays off for a key on a clicked
     // checkbox, which left its keyboard users no ring, so the box the keyboard has is marked data-key-focus too.
     await userEvent.keyboard(' ');
-    expect([b.checked, document.activeElement === b, b.hasAttribute('data-key-focus')]).toEqual([false, true, true]);
-    expect([css(card(b)).outlineStyle, css(b).outlineStyle]).toEqual(['solid', 'none']);
-    b.blur();
-    expect([b.hasAttribute('data-key-focus'), css(card(b)).outlineStyle]).toEqual([false, 'none']);
+    expect([b!.checked, document.activeElement === b, b!.hasAttribute('data-key-focus')]).toEqual([false, true, true]);
+    expect([css(card(b!)).outlineStyle, css(b!).outlineStyle]).toEqual(['solid', 'none']);
+    b!.blur();
+    expect([b!.hasAttribute('data-key-focus'), css(card(b!)).outlineStyle]).toEqual([false, 'none']);
     await expect.element(page.getByRole('checkbox', { name: 'Greeting card', exact: true })).toHaveAccessibleDescription('A printed note');
     expect(lowContrast([['checked card border', 'var(--primary)', 'var(--surface)', 3]])).toEqual([]);
   });

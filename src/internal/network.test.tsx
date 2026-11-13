@@ -34,7 +34,7 @@ function asked(root: Element): string[] {
     for (const attr of ['src', 'poster', 'data']) { const v = el.getAttribute(attr); if (v && elsewhere(v)) out.push(`<${el.tagName.toLowerCase()} ${attr}> ${v}`); }
     for (const attr of ['srcset', 'imagesrcset']) for (const part of (el.getAttribute(attr) || '').split(',')) { const v = part.trim().split(/\s+/)[0]; if (v && elsewhere(v)) out.push(`<${el.tagName.toLowerCase()} ${attr}> ${v}`); }
     if (el.tagName === 'LINK' && /stylesheet|preload|prefetch|preconnect|icon|modulepreload/.test(el.getAttribute('rel') || '') && elsewhere(el.getAttribute('href') || '')) out.push(`<link href> ${el.getAttribute('href')}`);
-    for (const m of (el.getAttribute('style') || '').matchAll(/url\(\s*['"]?([^'")]+)/g)) if (elsewhere(m[1])) out.push(`style url() ${m[1]}`);
+    for (const m of (el.getAttribute('style') || '').matchAll(/url\(\s*['"]?([^'")]+)/g)) if (elsewhere(m[1]!)) out.push(`style url() ${m[1]}`);
   }
   return out;
 }

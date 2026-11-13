@@ -104,4 +104,5 @@ Each is an optional override: set it on the page, a container or one PinInput. T
 | `--pin-input-box-lg` | `control-height-lg` | A box's width and height, size="lg" (44px). |
 | `--pin-input-gap` | `spacing-2` | Space between the boxes (8px). |
 | `--pin-input-border-width` | `border-width-1` | A box's border (1px). |
+| `--pin-input-depth` | `depth-field` | Each box's tactile layers: a well to type into, like Input. None in the flat brands. |
 <!-- token-table:end -->

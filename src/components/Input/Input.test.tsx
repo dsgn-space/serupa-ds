@@ -41,7 +41,7 @@ describe('Input', () => {
       <div data-k="row" style={{ display: 'flex', gap: '8px' }}><Input aria-label="Kode" prefix="#" className="flex-1" /><Button>Pakai</Button></div>
       <Button id="natural">Pakai</Button>
       {/* The same affixed pair in a wider font (a fallback before Inter loads is one): the affixes give way, the box doesn't. */}
-      <div data-k="affixed-wide-font" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', '--font-sans': 'monospace' } as React.CSSProperties}>{fields[1][1]}{fields[1][1]}</div>
+      <div data-k="affixed-wide-font" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', '--font-sans': 'monospace' } as React.CSSProperties}>{fields[1]![1]}{fields[1]![1]}</div>
     </div>);
     await document.fonts.ready;
     const wide = [...document.querySelectorAll<HTMLElement>('[data-k]')].filter((r) => r.scrollWidth > r.clientWidth || [...r.children].some((c) => Math.round(c.getBoundingClientRect().right - r.getBoundingClientRect().right) > 0)).map((r) => r.dataset.k);
@@ -467,7 +467,7 @@ describe('Input actions (RU15)', () => {
   test('actions sit at the end of the box, after the field and its right icon, as buttons that never send a form', async () => {
     let sent = 0;
     await render(<form onSubmit={(e) => { e.preventDefault(); sent++; }}><Input id="cp" aria-label="Coupon code" rightIcon={<b>i</b>} actions={<InputAction label="Apply" />} /></form>);
-    const b = actions('cp')[0];
+    const b = actions('cp')[0]!;
     expect([box('cp').lastElementChild!.className, b.previousElementSibling, b.type, b.textContent]).toEqual(['dk-input__actions', null, 'button', 'Apply']);
     await userEvent.click(b);
     expect(sent).toBe(0);
@@ -480,7 +480,7 @@ describe('Input actions (RU15)', () => {
     </>);
     await expect.element(page.getByRole('button', { name: 'Copy invite link' })).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Apply' })).toBeVisible();
-    expect([actions('ln')[0].querySelector('[aria-hidden]')!.textContent, actions('ln')[0].dataset.component]).toEqual(['c', 'input-action']);
+    expect([actions('ln')[0]!.querySelector('[aria-hidden]')!.textContent, actions('ln')[0]!.dataset.component]).toEqual(['c', 'input-action']);
   });
 
   test('Tab goes from the field to each action in turn, and Enter or Space on one presses it', async () => {
@@ -499,7 +499,7 @@ describe('Input actions (RU15)', () => {
   test('a press on an action presses it, not the field: focus stays out of the field', async () => {
     let n = 0;
     await render(<Input id="pr" aria-label="Coupon code" actions={<InputAction label="Apply" onClick={() => n++} />} />);
-    await userEvent.click(actions('pr')[0]);
+    await userEvent.click(actions('pr')[0]!);
     expect([n, document.activeElement === field('pr')]).toEqual([1, false]);
   });
 
@@ -508,20 +508,20 @@ describe('Input actions (RU15)', () => {
       <Input id="ds" aria-label="Off" disabled actions={<InputAction label="Apply" />} />
       <Input id="on" aria-label="On" actions={<><InputAction label="Apply" disabled /><InputAction label="Keep" /></>} />
     </>);
-    expect([actions('ds')[0].disabled, actions('on')[0].disabled, actions('on')[1].disabled]).toEqual([true, true, false]);
+    expect([actions('ds')[0]!.disabled, actions('on')[0]!.disabled, actions('on')[1]!.disabled]).toEqual([true, true, false]);
     // Disabled alone, it dims as Button does; in a disabled field the box is dimmed already, so it isn't twice (GR282).
-    expect([css(actions('on')[0]).opacity, css(actions('on')[1]).opacity, css(actions('ds')[0]).opacity, css(box('ds')).opacity]).toEqual(['0.5', '1', '1', '0.5']);
+    expect([css(actions('on')[0]!).opacity, css(actions('on')[1]!).opacity, css(actions('ds')[0]!).opacity, css(box('ds')).opacity]).toEqual(['0.5', '1', '1', '0.5']);
   });
 
   test('each action is the field\'s height less its border and a 2px inset at every size, and at least 24px to press', async () => {
     await render(<>
       {(['sm', 'md', 'lg'] as const).map((s) => <Input key={s} id={'h-' + s} size={s} aria-label={s} actions={<InputAction icon={<b>x</b>} label="Clear" />} />)}
     </>);
-    const h = (s: string) => Math.round(actions('h-' + s)[0].getBoundingClientRect().height);
+    const h = (s: string) => Math.round(actions('h-' + s)[0]!.getBoundingClientRect().height);
     expect([h('sm'), h('md'), h('lg')]).toEqual([18, 26, 38]);
-    const sm = actions('h-sm')[0], hit = getComputedStyle(sm, '::after');
+    const sm = actions('h-sm')[0]!, hit = getComputedStyle(sm, '::after');
     expect([sm.getBoundingClientRect().width, parseFloat(hit.top)]).toEqual([18, -3]);
-    expect(Math.round(box('h-md').getBoundingClientRect().right - actions('h-md')[0].getBoundingClientRect().right)).toBe(3);
+    expect(Math.round(box('h-md').getBoundingClientRect().right - actions('h-md')[0]!.getBoundingClientRect().right)).toBe(3);
   });
 
   test('contrast in all six themes: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {

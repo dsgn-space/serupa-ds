@@ -230,6 +230,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "selected-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The selected day's tactile layers: raised, with a soft, short shadow. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-selected-depth"
+          }
+        }
+      }
     }
   }
 }

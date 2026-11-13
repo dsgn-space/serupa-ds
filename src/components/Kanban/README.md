@@ -56,13 +56,13 @@ Drawn from the `Default` story.
 
 ### Loading and failed
 
-- **Loading:** set `busy` and pass the columns you know with no cards yet. Each column keeps its title and shows two placeholder cards with no count, and the board is `aria-busy`, so nothing below it moves when the cards arrive. Name the wait in `loadingLabel` ("Loading tasks"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh cards already shown, keep them in and set `busy`: they stay until the new ones arrive.
+- **Loading:** set `loading` and pass the columns you know with no cards yet. Each column keeps its title and shows two placeholder cards with no count, and the board is `aria-busy`, so nothing below it moves when the cards arrive. Name the wait in `loadingLabel` ("Loading tasks"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh cards already shown, keep them in and set `busy`: they stay until the new ones arrive.
 - **Failed:** in place of the board, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
 type Task = { id: string; title: string };
 {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>The board didn't load.</Alert>
-  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} busy={state === 'loading'} loadingLabel="Loading tasks"
+  : <Kanban aria-label="Sprint 42" columns={state === 'loading' ? STAGES : columns} loading={state === 'loading'} loadingLabel="Loading tasks"
       getKey={(t: Task) => t.id} getLabel={(t: Task) => t.title} renderCard={(t: Task) => t.title} onMove={setColumns} />}
 ```
 
@@ -103,7 +103,7 @@ type Task = { id: string; title: string };
 | `onMove` | `(columns, move) => void` | | Required. The new columns and the move, when a card is dropped somewhere new. |
 | `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | The column headings' level. |
 | `disabled` | `boolean` | `false` | Shows the cards without handles or menus. |
-| `busy` | `boolean` | `false` | Its cards are loading: sets `aria-busy`, and while no column has cards yet, each shows two placeholder cards and no count. |
+| `loading` | `boolean` | `false` | Its cards are loading: sets `aria-busy`, and while no column has cards yet, each shows two placeholder cards and no count. |
 | `loadingLabel` | `string` | `"Loading…"` | Said once as the placeholder cards appear. |
 
 `id`, `className`, `ref` and other props go to the board's `<div>`.
@@ -127,6 +127,7 @@ Each is an optional override: set it on the page, a container or one Kanban. The
 | `--kanban-column-radius` | `radius-surface` | A column's corners (8px). |
 | `--kanban-card-radius` | `radius-control` | A card's corners (6px). |
 | `--kanban-card-shadow` | `elevation-overlay` | The card being dragged. |
+| `--kanban-card-depth` | `depth-card` | A card's tactile layers at rest: a short, soft shadow. None in the flat brands. |
 | `--kanban-gap` | `spacing-3` | Space between columns (12px). |
 | `--kanban-padding` | `spacing-3` | Space inside a column (12px). |
 | `--kanban-card-padding` | `spacing-2` | Space inside a card (8px). |

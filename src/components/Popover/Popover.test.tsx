@@ -252,7 +252,7 @@ describe('Popover', () => {
     await expect.poll(() => isOpen('tshare')).toBe(true);
     const p = panel('tshare'), b = rect(el('tshare')), r = rect(p);
     const [x, y] = getComputedStyle(p).transformOrigin.split(' ').map(parseFloat);
-    expect([p.dataset.side, Math.round(y), near(r.left + x, b.left + b.width / 2)]).toEqual(['bottom', 0, true]);
+    expect([p.dataset.side, Math.round(y!), near(r.left + x!, b.left + b.width / 2)]).toEqual(['bottom', 0, true]);
   });
 });
 
@@ -443,7 +443,7 @@ describe('Popover inside a form (GR170)', () => {
       await rerender(<></>);
       await render(<form><Popover title="Rename" defaultOpen trigger={<Button>Rename</Button>}><input aria-label="Name" /></Popover></form>);
       expect(calls()).toHaveLength(1);
-      expect(String(calls()[0][0])).toMatch(/^Popover: it's inside a <form>/);
+      expect(String(calls()[0]![0])).toMatch(/^Popover: it's inside a <form>/);
     } finally { warn.mockRestore(); }
   });
 });

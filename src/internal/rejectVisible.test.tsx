@@ -24,7 +24,7 @@ describe('a field that puts typed text back says why on screen (GR232)', () => {
     await userEvent.fill(field, 'soon');
     await userEvent.keyboard('{Tab}');
     // The note is the last thing the field is described by.
-    const note = () => { const ids = (field.getAttribute('aria-describedby') || '').split(' ').filter(Boolean); const n = ids.length ? document.getElementById(ids[ids.length - 1]) : null; return n && n.id.endsWith('-rejected') ? n : null; };
+    const note = () => { const ids = (field.getAttribute('aria-describedby') || '').split(' ').filter(Boolean); const n = ids.length ? document.getElementById(ids[ids.length - 1]!) : null; return n && n.id.endsWith('-rejected') ? n : null; };
     await expect.poll(() => note()?.textContent).toBe('“soon” wasn’t accepted, so the previous value was kept.');
     const shown = note()!.getBoundingClientRect().height > 0, read = !!note();
     await userEvent.fill(field, '1');

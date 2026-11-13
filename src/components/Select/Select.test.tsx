@@ -66,7 +66,7 @@ describe('Select', () => {
     const ref = React.createRef<HTMLSelectElement>(), changes: string[] = [];
     await render(<Grid><Role changes={changes} sref={ref} /></Grid>);
     const i = field('md');
-    expect([ref.current === i, box('md').classList.contains('extra'), i.dataset.x, i.labels[0].textContent]).toEqual([true, true, 'y', 'Role']);
+    expect([ref.current === i, box('md').classList.contains('extra'), i.dataset.x, i.labels[0]!.textContent]).toEqual([true, true, 'y', 'Role']);
     expect([...i.options].map((o) => o.value + ':' + o.textContent + (o.disabled ? ':off' : '')).join()).toBe('a:a,b:Bee,c:Sea:off');
     await userEvent.selectOptions(i, 'a');
     await expect.poll(() => field('md').value).toBe('a');
@@ -75,7 +75,7 @@ describe('Select', () => {
 
   test('placeholder: a first empty option that can\'t be picked; an uncontrolled select starts on it in the placeholder color, then the text color once something is picked', async () => {
     await render(<Grid><Select id="ph" placeholder="Choose one" options={['One', 'Two']} aria-label="Placeholder" /></Grid>);
-    const o = field('ph').options[0];
+    const o = field('ph').options[0]!;
     expect([o.value, o.textContent, o.disabled, field('ph').value]).toEqual(['', 'Choose one', true, '']);
     expect(box('ph').className).toMatch(/dk-select--empty/);
     expect(css(field('ph')).color).toBe(color('var(--placeholder)'));
@@ -190,7 +190,7 @@ describe('Select', () => {
   test('in a Field: labelled, described and invalid with the error', async () => {
     await render(<Grid><Field label="Country" error="Pick a country."><Select id="fld" placeholder="Choose" options={['DK']} /></Field></Grid>);
     const i = field('fld');
-    expect([i.labels[0].textContent, i.getAttribute('aria-invalid'), !!i.getAttribute('aria-describedby')]).toEqual(['Country', 'true', true]);
+    expect([i.labels[0]!.textContent, i.getAttribute('aria-invalid'), !!i.getAttribute('aria-describedby')]).toEqual(['Country', 'true', true]);
     expect(box('fld').className).toMatch(/dk-select--invalid/);
   });
 

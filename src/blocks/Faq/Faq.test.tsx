@@ -86,7 +86,7 @@ describe('Blocks/FAQ', () => {
   });
 
   test('one group without a title, six questions or fewer: no group heading, no search, questions one level down', async () => {
-    await render(<Faq groups={[{ id: 'all', questions: groups[0].questions }]} headingLevel={3} defaultOpen={['delete-account']} />);
+    await render(<Faq groups={[{ id: 'all', questions: groups[0]!.questions }]} headingLevel={3} defaultOpen={['delete-account']} />);
     await expect.element(page.getByRole('heading', { level: 3, name: 'Frequently asked questions' })).toBeVisible();
     expect(page.getByRole('heading', { level: 4 }).elements()).toHaveLength(2);
     expect(page.getByRole('searchbox').elements()).toHaveLength(0);

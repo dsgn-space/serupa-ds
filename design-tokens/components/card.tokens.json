@@ -163,6 +163,16 @@
             "cssVar": "--card-depth-hover"
           }
         }
+      },
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-card}",
+        "$description": "The card's tactile layers at rest: a short, soft shadow. None in the flat brands, and none on a filled card.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-depth"
+          }
+        }
       }
     },
     "border": {

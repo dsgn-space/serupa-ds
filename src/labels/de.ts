@@ -326,7 +326,7 @@ export const labels: SerupaLabels = {
   allDay: 'Ganztägig',
   eventTime: (from, to) => from + ' bis ' + to,
   repeats: 'Wiederholt sich',
-  noEvents: 'Keine Termine in diesem Monat.',
+  noEvents: 'Keine Termine in diesem Monat',
   dateFieldDay: 'Tag',
   dateFieldMonth: 'Monat',
   dateFieldYear: 'Jahr',

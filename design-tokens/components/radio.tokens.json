@@ -334,6 +334,28 @@
           }
         }
       }
+    },
+    "shadow": {
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-well}",
+        "$description": "The circle's tactile layers while unselected: sunk into the page. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-depth"
+          }
+        }
+      },
+      "depth-checked": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The circle's tactile layers once selected: raised, with a highlight along the top. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--radio-depth-checked"
+          }
+        }
+      }
     }
   }
 }

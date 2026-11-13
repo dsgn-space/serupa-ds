@@ -91,6 +91,7 @@ Each is an optional override: set it on the page, a container or one tooltip. Th
 | `--tooltip-bg` | `surface-inverse` | The background: the inverse surface, so it stands out in light and dark themes. |
 | `--tooltip-text` | `text-inverse` | The text (4.5:1 on the background). |
 | `--tooltip-shadow` | `elevation-raised` | The shadow. |
+| `--tooltip-depth` | `depth-surface` | The tooltip's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--tooltip-radius` | `radius-control` | The corners (6px). |
 | `--tooltip-padding-x` | `spacing-2` | Padding at the sides (8px). |
 | `--tooltip-padding-y` | `spacing-1` | Padding at the top and bottom (4px). |
