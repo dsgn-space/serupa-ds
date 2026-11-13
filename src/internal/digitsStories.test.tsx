@@ -29,6 +29,7 @@ const LATIN: Record<string, string> = {
   'Kanban/LongText': "the story's generated card titles ('Card ' + n), also in each card's Move button tooltip",
   CodeBlock: 'the code is the story\'s, in ASCII as a program is written (its line numbers are CSS counters, not text)',
   Calendar: 'the grid is Gregorian with Latin digits, so its title and days are too (Calendar.tsx, formats())',
+  RangeCalendar: 'Calendar\'s grid, Gregorian with Latin digits, and the range under it written the same way (RangeCalendar.tsx, range)',
   EventCalendar: 'Gregorian with Latin digits, as Calendar: its dates and times match the day numbers (EventCalendar.tsx, fmt)',
   'CommandPalette/LongText': "the story's own generated labels ('Project number ' + n)",
   'CascadeSelect/LongText': "the story's own generated labels ('Provinsi ' + n)",

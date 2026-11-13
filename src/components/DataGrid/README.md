@@ -27,7 +27,7 @@ import { DataGrid } from "serupa-ds";
 
 - Rows to read, sort, select and act on: use a [Table](../Table/README.md). Its rows and buttons work like the rest of the page; a grid's arrow keys are one more thing to learn.
 - A form for one record: use [Field](../Field/README.md)s.
-- Thousands of rows: use a [Table](../Table/README.md) with `TableVirtualBody`; DataGrid draws every row.
+- Thousands of rows: use a [Table](../Table/README.md) with `TableVirtualBody`; DataGrid draws every row. Moving the active cell or the selection redraws only the rows that change, so the keys keep up in a few hundred rows.
 
 ## Anatomy
 

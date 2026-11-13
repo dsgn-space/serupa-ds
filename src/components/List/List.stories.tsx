@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { List, ListItem, ListLoadingItems, type ListProps } from './List';
+import { List, ListItem, ListLoadingItems, ListSelectAll, type ListProps } from './List';
+import { Stack } from '../Stack/Stack';
 import { Alert } from '../Alert/Alert';
 import { Button } from '../Button/Button';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
@@ -112,3 +113,31 @@ export const DontCrammedTitle: Story = {
     <ListItem key="b" leading="person" title="Kenji Mori, kenji@example.com, Editor since June" />,
   ] },
 };
+
+const files = [
+  { id: 'budget', name: 'Budget 2027.xlsx', size: '48 KB', icon: 'table_chart' },
+  { id: 'notes', name: 'Meeting notes.md', size: '6 KB', icon: 'description' },
+  { id: 'photo', name: 'Team photo.jpg', size: '2.4 MB', icon: 'image' },
+  { id: 'plan', name: 'Launch plan.pdf', size: '310 KB', icon: 'picture_as_pdf' },
+];
+function PickFiles({ start = ['notes', 'photo'], single = false }: { start?: string[]; single?: boolean }) {
+  const [picked, setPicked] = React.useState<string[]>(start);
+  return (
+    <div style={{ maxWidth: 480 }}>
+      {single ? null : (
+        <Stack direction="row" gap={3} align="center" className="mb-2">
+          <ListSelectAll values={files.map((f) => f.id)} selected={picked} onSelectedChange={setPicked} />
+          <Text tone="muted" size="sm">{picked.length} selected</Text>
+        </Stack>
+      )}
+      <List aria-label="Files" variant="card" selectionMode={single ? 'single' : 'multiple'} selected={picked} onSelectedChange={setPicked}>
+        {files.map((f) => <ListItem key={f.id} value={f.id} leading={f.icon} title={f.name} description={f.size}
+          trailing={<IconButton icon="more_vert" label={`More for ${f.name}`} size="sm" />} />)}
+      </List>
+    </div>
+  );
+}
+/** Files picked to act on: a checkbox per row, Select all above. Tab to the list, Up and Down between rows, Space picks, Shift+Down picks a run, Ctrl+A picks all. */
+export const Selectable: Story = { name: 'Picking rows', render: () => <PickFiles /> };
+/** One row at a time, with no checkboxes: the picked row has the primary bar. */
+export const SelectableSingle: Story = { name: 'Picking one row', render: () => <PickFiles single start={['photo']} /> };

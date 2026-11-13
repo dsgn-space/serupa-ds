@@ -217,6 +217,11 @@ jobs:
       options: --cpus 4
     timeout-minutes: 20
     steps:
+      # A job stopped mid-fetch can leave a ref lock in the runner's reused workspace, and every later checkout there
+      # fails on it ("cannot lock ref … .lock: File exists", ibm-burst-18, 13 Nov).
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -250,6 +255,11 @@ jobs:
       options: --cpus 4
     timeout-minutes: 20
     steps:
+      # A job stopped mid-fetch can leave a ref lock in the runner's reused workspace, and every later checkout there
+      # fails on it ("cannot lock ref … .lock: File exists", ibm-burst-18, 13 Nov).
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -279,6 +289,11 @@ jobs:
       options: --cpus 4
     timeout-minutes: 20
     steps:
+      # A job stopped mid-fetch can leave a ref lock in the runner's reused workspace, and every later checkout there
+      # fails on it ("cannot lock ref … .lock: File exists", ibm-burst-18, 13 Nov).
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -324,6 +339,11 @@ jobs:
     steps: &suite-steps
       # A fetch that stalls has no timeout of its own, and one held a queue group for the job's whole 30 minutes
       # (12 Nov): give it five, then fetch once more.
+      # A job stopped mid-fetch can leave a ref lock in the runner's reused workspace, and every later checkout there
+      # fails on it ("cannot lock ref … .lock: File exists", ibm-burst-18, 13 Nov).
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         id: checkout
         timeout-minutes: 5
@@ -444,6 +464,11 @@ jobs:
       options: --cpus 4
     timeout-minutes: 15
     steps:
+      # A job stopped mid-fetch can leave a ref lock in the runner's reused workspace, and every later checkout there
+      # fails on it ("cannot lock ref … .lock: File exists", ibm-burst-18, 13 Nov).
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -484,6 +509,11 @@ jobs:
       options: --cpus 4
     timeout-minutes: 20
     steps:
+      # A job stopped mid-fetch can leave a ref lock in the runner's reused workspace, and every later checkout there
+      # fails on it ("cannot lock ref … .lock: File exists", ibm-burst-18, 13 Nov).
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -503,6 +533,11 @@ jobs:
       options: --cpus 4
     timeout-minutes: 20
     steps:
+      # A job stopped mid-fetch can leave a ref lock in the runner's reused workspace, and every later checkout there
+      # fails on it ("cannot lock ref … .lock: File exists", ibm-burst-18, 13 Nov).
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false

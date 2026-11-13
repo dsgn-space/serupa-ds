@@ -1,4 +1,7 @@
-// exports: List, ListItem, type ListItemOwnProps, type ListItemProps, ListLoadingItems, type ListLoadingItemsProps, type ListProps
+// exports: List, ListItem, type ListItemOwnProps, type ListItemProps, ListLoadingItems, type ListLoadingItemsProps, type ListProps, ListSelectAll, type ListSelectAllProps
+interface ListLabels {
+    listSelectAll: string;
+}
 interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     children?: React.ReactNode | undefined;
     variant?: "card" | "plain" | undefined;
@@ -6,6 +9,10 @@ interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     as?: "ol" | "ul" | undefined;
     loading?: boolean | undefined;
     busy?: boolean | undefined;
+    selectionMode?: "multiple" | "none" | "single" | undefined;
+    selected?: readonly string[] | undefined;
+    defaultSelected?: readonly string[] | undefined;
+    onSelectedChange?: ((values: string[]) => void) | undefined;
 }
 interface ListItemOwnProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "onClick" | "title"> {
     title: React.ReactNode;
@@ -16,6 +23,7 @@ interface ListItemOwnProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "
     onClick?: ((event: React.MouseEvent<HTMLElement>) => void) | undefined;
     selected?: boolean | undefined;
     disabled?: boolean | undefined;
+    value?: string | undefined;
 }
 type ListItemProps<C extends React.ElementType = "a"> = ListItemOwnProps & {
     as?: C | undefined;
@@ -36,4 +44,11 @@ interface ListLoadingItemsProps {
     leading?: "icon" | "lg" | "md" | "sm" | "xl" | "xs" | undefined;
     label?: string | undefined;
 }
+interface ListSelectAllProps extends Omit<CheckboxProps, "checked" | "defaultChecked" | "description" | "indeterminate" | "invalid" | "name" | "onChange" | "onCheckedChange" | "selectAll" | "value" | "variant"> {
+    values: readonly string[];
+    selected: readonly string[];
+    onSelectedChange: (values: string[]) => void;
+    children?: React.ReactNode;
+}
+declare const ListSelectAll: React.ForwardRefExoticComponent<ListSelectAllProps & React.RefAttributes<HTMLInputElement>>;
 declare function ListLoadingItems(props: ListLoadingItemsProps): React.ReactElement;

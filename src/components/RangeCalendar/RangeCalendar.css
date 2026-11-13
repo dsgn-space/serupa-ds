@@ -1,0 +1,10 @@
+/* ---------------------------------------------------------------
+   RangeCalendar: one or two Calendar months side by side (stacked on a narrow screen), and a muted status line under
+   them. The days' looks are Calendar's: the ends filled as selected days, the days between with the range fill.
+   With two months, Calendar hides the first's Next button and the second's Previous on a wide screen.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-range-calendar { display: inline-flex; flex-direction: column; align-items: flex-start; max-inline-size: var(--sizing-full); }
+.dk-range-calendar__months { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--range-calendar-months-gap, var(--spacing-6)); }
+.dk-range-calendar__status { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); color: var(--range-calendar-status-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+}

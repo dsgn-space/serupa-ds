@@ -108,6 +108,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
   const locale = useLocale();
   const [own, setOwn] = React.useState<PricingPeriod>(defaultPeriod);
   const shown = period ?? own;
+  const uid = React.useId();   // the cards' ids are this block's own: a page can show the same plans twice
   // A whole amount without its cents ("$12", not "$12.00"); anything else as the currency writes it.
   const money = (value: number) => formatNumber(value, locale, { format: 'currency', currency, ...(Number.isInteger(value) && { minimumFractionDigits: 0, maximumFractionDigits: 0 }) });
   const saved = savings(plans), best = Math.max(0, ...saved);
@@ -120,10 +121,10 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
         {plans.map((plan) => {
           const perMonth = shown === 'yearly' ? plan.yearly / 12 : plan.monthly;
           return (
-            <Card as="li" key={plan.id} padding="lg" variant={plan.recommended ? 'elevated' : 'outline'} aria-labelledby={`${plan.id}-name`}
+            <Card as="li" key={plan.id} padding="lg" variant={plan.recommended ? 'elevated' : 'outline'} aria-labelledby={`${uid}-${plan.id}-name`}
               className={plan.recommended ? 'flex h-full min-w-0 flex-col gap-4 wrap-anywhere border-primary' : 'flex h-full min-w-0 flex-col gap-4 wrap-anywhere'}>
               <div className="flex flex-wrap items-center gap-2">
-                <Heading level={headingLevel} id={`${plan.id}-name`}>{plan.name}</Heading>
+                <Heading level={headingLevel} id={`${uid}-${plan.id}-name`}>{plan.name}</Heading>
                 {plan.recommended && <Badge tone="primary">{l.recommended}</Badge>}
               </div>
               {plan.description && <p className="text-sm text-text-muted">{plan.description}</p>}

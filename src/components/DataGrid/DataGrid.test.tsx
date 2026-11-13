@@ -311,3 +311,127 @@ describe('DataGrid token names', () => {
     await expect.poll(() => css(cell('Kopi')).backgroundColor).toBe('rgb(4, 5, 6)');
   });
 });
+
+// An arrow key used to redraw every cell (GR397): 300 rows of 8 columns took 80 to 140 ms a key in a development
+// build, so holding an arrow lagged behind. Now only the row left and the row entered draw again. format is called
+// once per cell drawn, so its count says how many were.
+describe('DataGrid with many rows', () => {
+  test('moving the active cell, or growing the selection by a row, redraws only the rows that change', async () => {
+    let drawn = 0;
+    const cols: DataGridColumn[] = [{ key: 'name', header: 'Name', format: (r) => { drawn++; return String(r.name); } }, { key: 'hours', header: 'Hours' }];
+    const rows: DataGridRow[] = Array.from({ length: 200 }, (_, i) => ({ id: 'r' + i, name: 'Row ' + i, hours: i }));
+    await render(<DataGrid aria-label="Hours" columns={cols} rows={rows} />);
+    cell('Row 0').focus();
+    drawn = 0;
+    await userEvent.keyboard('{ArrowDown}');
+    expect([focused(), drawn]).toEqual(['Row 1', 2]);
+    drawn = 0;
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    expect([cell('Row 1').getAttribute('aria-selected'), cell('Row 2').getAttribute('aria-selected'), cell('Row 3').getAttribute('aria-selected')]).toEqual(['true', 'true', 'false']);
+    expect(drawn).toBeLessThanOrEqual(2);
+    drawn = 0;
+    await userEvent.keyboard('{ArrowRight}');
+    expect(drawn).toBeLessThanOrEqual(2);
+  });
+});
+
+// What a mutation run on DataGrid.tsx found no test for (65% of its mutants were caught, run 269): each test here
+// names the rule a changed operator would have broken without anything failing.
+describe('DataGrid: the edges of copy, paste, Delete and editing', () => {
+  const clip = (type: 'copy' | 'paste', text = '', prevent = false) => {
+    const held: Record<string, string> = text ? { 'text/plain': text } : {};
+    const ev = new ClipboardEvent(type, { bubbles: true, cancelable: true });
+    Object.defineProperty(ev, 'clipboardData', { value: { setData: (f: string, v: string) => { held[f] = v; }, getData: (f: string) => held[f] ?? '' } });
+    if (prevent) ev.preventDefault();
+    document.activeElement!.dispatchEvent(ev);
+    return { text: held['text/plain'] ?? '', prevented: ev.defaultPrevented };
+  };
+  // The counts are said in the locale's digits, so the two tests that read them set the locale (CI also runs these in ar-EG).
+  const status = () => [...document.querySelectorAll('[aria-live]')].map((n) => n.textContent).join('|');
+
+  test('one value pasted over a range fills every editable cell of the range, and says how many', async () => {
+    const onChange = vi.fn();
+    await render(<SerupaProvider locale="en-US"><Live onChange={onChange} /></SerupaProvider>);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowRight}{ArrowRight}{/Shift}');
+    clip('paste', '7');
+    expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'a', column: 'name', value: '7' }, { rowId: 'a', column: 'qty', value: '7' }, { rowId: 'b', column: 'name', value: '7' }, { rowId: 'b', column: 'qty', value: '7' }]);
+    await expect.poll(status).toContain('4 cells pasted');
+  });
+
+  test('a row of two values is a block, not one value: it fills from the range\'s first cell and no further', async () => {
+    const onChange = vi.fn();
+    await render(<Live onChange={onChange} />);
+    await userEvent.click(cell('Teh'));
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    clip('paste', 'Madu\t2');
+    expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: 'Madu' }, { rowId: 'b', column: 'qty', value: '2' }]);
+  });
+
+  test('copy says how many cells; a paste into read-only cells changes nothing and says nothing', async () => {
+    const onChange = vi.fn();
+    await render(<SerupaProvider locale="en-US"><Live onChange={onChange} /></SerupaProvider>);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowDown}{ArrowRight}{/Shift}');
+    expect(clip('copy')).toEqual({ text: 'Kopi\t4\nTeh\t9\nGula\t1', prevented: true });
+    await expect.poll(status).toContain('6 cells copied');
+    await userEvent.click(cell('K1'));
+    clip('paste', 'X');
+    expect(onChange).not.toHaveBeenCalled();
+    expect(status()).not.toContain('pasted');
+  });
+
+  test('on a header, or when the app already handled the event, copy and paste are left alone', async () => {
+    const onChange = vi.fn();
+    await render(<Live onChange={onChange} />);
+    await userEvent.click(page.getByRole('columnheader', { name: 'Name' }));
+    expect(clip('copy')).toEqual({ text: '', prevented: false });
+    expect(clip('paste', 'X').prevented).toBe(false);
+    await userEvent.click(cell('Kopi'));
+    expect(clip('copy', '', true).text).toBe('');
+    clip('paste', 'X', true);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test('Delete clears only cells that are editable and hold text; with nothing to clear the app isn\'t called', async () => {
+    const onChange = vi.fn();
+    function Sparse() {
+      const [rows, setRows] = React.useState<DataGridRow[]>([{ id: 'a', name: '', qty: 4, sku: 'K1' }, { id: 'b', name: 'Teh', qty: null, sku: 'T1' }]);
+      return <DataGrid aria-label="Stock" columns={COLS} rows={rows} onRowsChange={(next, { changes }) => { onChange(changes); setRows(next); }} />;
+    }
+    await render(<Sparse />);
+    await userEvent.click(cell('K1'));
+    await userEvent.keyboard('{Delete}');
+    expect(onChange).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Control>}a{/Control}{Backspace}');
+    expect(onChange.mock.calls).toEqual([[[{ rowId: 'a', column: 'qty', value: '' }, { rowId: 'b', column: 'name', value: '' }]]]);
+    await userEvent.keyboard('{Delete}');
+    expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  test('saving the text a cell already has calls nothing; Ctrl or Alt with a letter, and Space, start no edit', async () => {
+    const onChange = vi.fn();
+    await render(<Live onChange={onChange} />);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Enter}{Enter}');
+    expect([onChange.mock.calls.length, focused()]).toEqual([0, 'Teh']);
+    await userEvent.keyboard('{Control>}b{/Control}{Alt>}b{/Alt} ');
+    expect([document.activeElement!.tagName, focused()]).toEqual(['TD', 'Teh']);
+    await userEvent.keyboard('{F2}{Tab}');
+    expect([onChange.mock.calls.length, focused()]).toEqual([0, '9']);
+  });
+
+  test('Ctrl+A selects the body, not the header; Shift+click on a header selects nothing; Shift+ArrowUp from the first row keeps the range in the body', async () => {
+    await render(<Live />);
+    await userEvent.click(cell('Teh'));
+    await userEvent.keyboard('{Control>}a{/Control}');
+    const selected = () => page.getByRole('gridcell', { selected: true }).elements().length;
+    expect([selected(), page.getByRole('columnheader', { selected: true }).elements().length]).toEqual([9, 0]);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.click(page.getByRole('columnheader', { name: 'Qty' }), { modifiers: ['Shift'] });
+    expect([focused(), selected()]).toEqual(['Qty', 0]);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Shift>}{ArrowUp}{/Shift}');
+    expect([focused(), selected()]).toEqual(['Name', 1]);
+  });
+});

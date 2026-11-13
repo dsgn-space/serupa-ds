@@ -130,6 +130,22 @@ describe('TagGroup', () => {
     expect(page.getByRole('row').elements()).toHaveLength(2);
   });
 
+  test('with max, removing the last tag shown moves focus to the next one, which takes its place, not back to the one before', async () => {
+    await render(<Removable max={2} />);
+    row('bug').focus();
+    await userEvent.keyboard('{Delete}');
+    expect([page.getByRole('row').elements().map((r) => r.textContent), focused()]).toEqual([['Design', 'Checkout'], 'checkout']);
+  });
+
+  test('a removed tag is no longer picked: picking another reports only tags still there', async () => {
+    const picks: string[][] = [];
+    await render(<Removable selectionMode="multiple" defaultSelected={['bug']} onSelectedChange={(ids) => picks.push(ids)} />);
+    row('bug').focus();
+    await userEvent.keyboard('{Delete}');
+    await userEvent.keyboard(' ');
+    expect([focused(), picks]).toEqual(['checkout', [['checkout']]]);
+  });
+
   test('Indonesian names the × "Hapus Design"', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><TagGroup aria-label="Label" items={tags} onRemove={() => {}} /></SerupaProvider>);
     await expect.element(page.getByRole('button', { name: 'Hapus Design' })).toBeInTheDocument();
