@@ -85,7 +85,7 @@
 /* From the keyboard, a 2px bar at the item's start too, so low-vision keyboard users keep their place. */
 .dk-menu__item { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .dk-menu__item:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-menu__item:focus-visible { box-shadow: inset var(--dk-bar) 0 0 var(--menu-item-indicator, var(--primary)); }
+.dk-menu__item:focus-visible { box-shadow: inset var(--dk-bar) 0 0 var(--menu-item-indicator, var(--highlight-indicator)); }
 .dk-menu__item:active:not([aria-disabled="true"], .dk-menu__item--destructive) { background: var(--menu-item-bg-pressed, var(--pressed)); }
 .dk-menu__item:focus-visible { outline: var(--focus-ring-width) solid transparent; }   /* shows in forced colors */
 /* MenuCheckboxItem and MenuRadioItem: a check before the label, its space kept while unchecked so labels line up. */
@@ -99,7 +99,6 @@
 .dk-menu__item:focus .dk-menu__shortcut { color: var(--menu-item-text, var(--text)); }
 .dk-menu__item--destructive, .dk-menu__item--destructive .dk-menu__icon { color: var(--menu-danger, var(--danger-text)); }
 .dk-menu__item--destructive:focus { background: var(--menu-danger-bg-active, var(--danger-subtle)); }
-.dk-menu__item--destructive:focus-visible { box-shadow: inset var(--dk-bar) 0 0 var(--menu-danger, var(--danger-text)); }
 .dk-menu__item[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
 /* MenuSub: a chevron at the end, pointing where the submenu opens; the submenu overlaps the menu's padding so
    its first item lines up with the item that opened it. */

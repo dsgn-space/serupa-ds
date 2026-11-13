@@ -124,8 +124,8 @@
       },
       "option-indicator": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The 2px bar at the start of that option, so it is marked by more than a fill.",
+        "$value": "{color.highlight-indicator}",
+        "$description": "The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--select-option-indicator"

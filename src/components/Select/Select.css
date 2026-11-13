@@ -77,12 +77,12 @@
     --dk-bar: var(--border-width-2);
     display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-block-size: var(--select-option-height, var(--control-height-md));
     padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)); border-radius: var(--dk-select-nest, var(--radius-control));
-    background: transparent; color: var(--select-text, var(--text)); cursor: pointer; outline: none;
+    background: transparent; color: var(--select-text, var(--text)); cursor: pointer; touch-action: manipulation; outline: none;
   }
   .dk-select__field option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-  .dk-select__field option:focus-visible:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--primary)); }
+  .dk-select__field option:focus-visible:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--highlight-indicator)); }
   @media (hover: hover) {
-    .dk-select__field option:hover:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--primary)); }
+    .dk-select__field option:hover:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--highlight-indicator)); }
   }
   .dk-select__field option::checkmark { color: var(--select-check, var(--primary)); }
   .dk-select__field option:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }

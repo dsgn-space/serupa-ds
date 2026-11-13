@@ -2,7 +2,7 @@
 
 A native `<select>` styled like Input: the same three heights (24, 32 and 44px), colors, focus ring and states, with a chevron and an optional left icon. It keeps everything the browser gives a select for free: the system picker on phones, type-to-find, and full keyboard and screen-reader support.
 
-Where the browser lets a page style the list (`appearance: base-select`, in Chromium-based browsers today), the open list is drawn like Combobox's: an overlay surface with the shared shadow and corners, rows at control height, the highlight fill and a primary bar on the option under the pointer or keyboard, and a tick on the chosen one. Everywhere else the browser draws its own list. Your code and the way it reads out are the same either way.
+Where the browser lets a page style the list (`appearance: base-select`, in Chromium-based browsers today), the open list is drawn like Combobox's: an overlay surface with the shared shadow and corners, rows at control height, the grey highlight fill on the option under the pointer or keyboard, and a tick on the chosen one. Everywhere else the browser draws its own list. Your code and the way it reads out are the same either way.
 
 **Also called:** dropdown, select input, picker.
 
@@ -70,7 +70,7 @@ Drawn from the `WithIcon` story.
 | Read-only | `field-readonly` background, default cursor, no hover change; the value at full contrast |
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor |
 | Open, where the list is styled | `picker-bg` surface with a `picker-border` border, `picker-radius` corners and `picker-shadow`, at least as wide as the box and at most `picker-max-height` tall, then scrolling. Rows are `option-height` tall (`option-height-touch` on a touch screen) |
-| Option under the pointer or keyboard | `option-bg-active` fill and a 2px `option-indicator` bar at the start edge; in forced-colors mode a `Highlight` outline |
+| Option under the pointer or keyboard | `option-bg-active` fill; with more contrast also a 2px `option-indicator` bar at the start edge, and in forced-colors mode a `Highlight` outline |
 | Chosen option | A tick in `check` at the start |
 | Disabled option | At 50% |
 | Group label | `group-label`, `text-xs` medium |
@@ -82,7 +82,7 @@ Drawn from the `WithIcon` story.
 - `readOnly` is for a value people should see but not change (a review step, a locked setting). The browser has no read-only select, so Select cancels the keys and press that would open or change it, and puts back a value a phone's picker sets. Unlike `disabled`, it stays in the Tab order and keeps its full contrast.
 - Every select needs a name: Field, a `<label htmlFor>` or `aria-label`. The placeholder isn't a label.
 - The chevron and left icon are decorative and don't take clicks: a click anywhere in the box opens the select.
-- Text and placeholder keep 4.5:1 on `field`; the chevron, focus ring and invalid border 3:1, in all six themes. In a styled list, options and group labels keep 4.5:1 on the list and on the highlight fill, and the tick and the bar 3:1 (`Select.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the accent border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
+- Text and placeholder keep 4.5:1 on `field`; the chevron, focus ring and invalid border 3:1, in all six themes. In a styled list, options and group labels keep 4.5:1 on the list and on the highlight fill, and the tick 3:1; with more contrast the bar keeps 3:1 on the fill (`Select.test.tsx`). The fill alone is under 3:1 on the list, by design, as in Combobox and Menu (see `highlight-indicator`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the accent border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - Native constraints (`required` with an empty first option) show too: a field that fails them takes the `invalid` border once people have edited it or tried to send the form (`:user-invalid`), never on first paint. It's only the color: `aria-invalid` and the message stay yours (set `invalid` and Field's `error` when you check it yourself). To keep the browser out of it, leave out the attribute and check the value in your own code.
 
 ### Keyboard
@@ -131,7 +131,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-picker-bg` | `surface-overlay` | The list of options, where the browser draws it with the page's styles (appearance: base-select). |
 | `--select-picker-border` | `border-overlay` | The list's border. |
 | `--select-option-bg-active` | `highlight` | The option under the pointer or the keyboard, as Combobox's. |
-| `--select-option-indicator` | `primary` | The 2px bar at the start of that option, so it is marked by more than a fill. |
+| `--select-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--select-check` | `primary` | The tick by the chosen option. |
 | `--select-group-label` | `text-muted` | A group's name over its options. |
 
