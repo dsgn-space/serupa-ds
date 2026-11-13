@@ -123,6 +123,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--drawer-shadow` | `elevation-modal` | The panel's shadow. |
+| `--drawer-depth` | `depth-surface` | The drawer's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |
 | `--drawer-width-md` | `container-sm` | size="md", the default (384px). |
 | `--drawer-width-lg` | `container-lg` | size="lg" (512px). |

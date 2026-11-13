@@ -78,6 +78,7 @@ Each is an optional override: set it on the page, a container or one HoverCard. 
 | `--hover-card-text` | `text` | The card's text (4.5:1 on bg). |
 | `--hover-card-border` | `border-overlay` | The card's border. |
 | `--hover-card-shadow` | `elevation-overlay` | The card's shadow. |
+| `--hover-card-depth` | `depth-surface` | The card's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--hover-card-radius` | `radius-surface` | The corners (8px). |
 | `--hover-card-border-width` | `border-width-1` | The border's width (1px). |
 | `--hover-card-width` | `container-xs` | The card's width (320px), never wider than the screen. |

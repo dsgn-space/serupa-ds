@@ -232,7 +232,7 @@ describe('Radio', () => {
     const ring = color('var(--focus-ring)');
     await expect.poll(() => css(input('s2')).outlineColor).toBe(ring);
     const s = css(input('s2'));
-    expect(`${s.outlineStyle} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`).toBe('solid 2px 2px none');
+    expect(`${s.outlineStyle} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow.replace(/(, )?rgba\(0, 0, 0, 0\) 0px 0px 0px 0px/g, '') || 'none'}`).toBe('solid 2px 2px none');   // the empty tactile layer (flat brand) is no ring
   });
 
   test('hover: field-border-hover; invalid keeps the danger border', async () => {

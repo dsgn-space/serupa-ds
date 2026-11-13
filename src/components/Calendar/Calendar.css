@@ -45,8 +45,8 @@
 @media (hover: hover) { .dk-calendar__day--outside:hover:not([aria-disabled="true"]) { color: var(--calendar-outside-color-hover, var(--text)); } }   /* muted text would drop under 4.5:1 on the hover fill */
 .dk-calendar__day--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
 @media (hover: hover) { .dk-calendar__day--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; still semibold */
-.dk-calendar__day--selected { background: var(--calendar-selected-bg, var(--primary)); color: var(--calendar-selected-color, var(--on-primary)); }
-@media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-selected-bg, var(--primary)); color: var(--calendar-selected-color, var(--on-primary)); } }
+.dk-calendar__day--selected { box-shadow: var(--calendar-selected-depth, var(--depth-part)); background: var(--depth-sheen), var(--calendar-selected-bg, var(--primary)); color: var(--calendar-selected-color, var(--on-primary)); }
+@media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--depth-sheen), var(--calendar-selected-bg, var(--primary)); color: var(--calendar-selected-color, var(--on-primary)); } }
 .dk-calendar__day--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: not-allowed; }
 /* Ranges (DateRangePicker): days between the ends get a subtle fill; the ends are selected days. */
 .dk-calendar__day--in-range { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }

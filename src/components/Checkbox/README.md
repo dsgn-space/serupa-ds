@@ -220,4 +220,11 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | --- | --- | --- |
 | `--checkbox-press-scale` | `scale-90` | Size of the box while it's held down (90%). 1 turns it off |
 | `--checkbox-draw-duration` | `motion-draw` | How long the tick takes to draw itself on when ticked under the pointer or keyboard: 150ms in a tactile brand, at once in the flat ones. |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--checkbox-depth` | `depth-well` | The box's tactile layers while unticked: sunk into the page. None in the flat brands. |
+| `--checkbox-depth-checked` | `depth-part` | The box's tactile layers once ticked: raised, with a highlight along the top. None in the flat brands. |
 <!-- token-table:end -->
