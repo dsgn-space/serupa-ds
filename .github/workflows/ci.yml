@@ -80,9 +80,11 @@ jobs:
           set -euo pipefail
           subject=$(git log -1 --format=%s HEAD^2)
           labels=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" --jq '.[].name')
-          # Heal's merge is held too: its label comes right after the push.
+          # Heal's merge is held too, on its first attempt: its label comes right after the push. Update baselines starts
+          # the run again once the label is off when the redraw changed nothing, and that attempt has to test, or the
+          # merge commit, still the head, held it for good (#1782, 13 Nov).
           if [ "$subject" != "Update test baselines on the CI runner" ] && { grep -qx update-visual-baselines <<< "$labels" ||
-            grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; then
+            { [ "$GITHUB_RUN_ATTEMPT" = 1 ] && grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; }; then
             echo "hold=1" >> "$GITHUB_OUTPUT"
             echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
