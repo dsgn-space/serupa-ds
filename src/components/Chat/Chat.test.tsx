@@ -506,6 +506,18 @@ describe('ChatComposer', () => {
     expect([stops, sent]).toEqual([1, []]);
   });
 
+  test('streaming without onStop: no Stop that does nothing; Send stays, off until the reply is done', async () => {
+    const sent: string[] = [];
+    const screen = await render(<ChatComposer streaming defaultValue="Next" onSend={(t) => sent.push(t)} />);
+    expect(page.getByRole('button', { name: 'Stop' }).elements()).toHaveLength(0);
+    await expect.element(page.getByRole('button', { name: 'Send' })).toHaveAttribute('aria-disabled', 'true');
+    (page.getByRole('button', { name: 'Send' }).element() as HTMLButtonElement).click();
+    expect(sent).toEqual([]);
+    await screen.rerender(<ChatComposer defaultValue="Next" onSend={(t) => sent.push(t)} />);
+    await userEvent.click(page.getByRole('button', { name: 'Send' }));
+    expect(sent).toEqual(['Next']);
+  });
+
   test('disabled turns the field and button off; aria-label renames the field', async () => {
     await render(<ChatComposer disabled aria-label="Reply to Rina" />);
     await expect.element(page.getByRole('textbox', { name: 'Reply to Rina' })).toBeDisabled();

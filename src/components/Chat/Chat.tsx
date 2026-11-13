@@ -405,7 +405,8 @@ export interface ChatComposerProps extends Omit<React.FormHTMLAttributes<HTMLFor
   onValueChange?: ((value: string) => void) | undefined;
   /** Called with the text when it's sent, by the send button or Enter (Shift+Enter starts a new line). Uncontrolled, the field then empties. */
   onSend?: ((text: string) => void) | undefined;
-  /** A reply is streaming: the send button becomes a stop button that calls onStop. Typing stays possible. Default: false. */
+  /** A reply is streaming: the send button becomes a stop button that calls onStop (without onStop, Send stays, off until
+   *  the reply is done). Typing stays possible. Default: false. */
   streaming?: boolean | undefined;
   /** Called by the stop button while streaming. */
   onStop?: (() => void) | undefined;
@@ -451,9 +452,10 @@ export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatCompo
             if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey && !isComposing(e)) { e.preventDefault(); send(); }
           }} />
         {props.actions}
-        {props.streaming
-          ? <IconButton icon={icons.Stop} label={L.chatStop} variant="secondary" disabled={disabled} onClick={() => { if (props.onStop) props.onStop(); }} />
-          : <IconButton type="submit" icon={icons.Send} label={L.chatSend} variant="primary" disabled={disabled} aria-disabled={empty || undefined} />}
+        {/* Without onStop there's nothing to stop: Send stays, off until the reply is done, rather than a Stop that does nothing. */}
+        {props.streaming && props.onStop
+          ? <IconButton icon={icons.Stop} label={L.chatStop} variant="secondary" disabled={disabled} onClick={props.onStop} />
+          : <IconButton type="submit" icon={icons.Send} label={L.chatSend} variant="primary" disabled={disabled} aria-disabled={empty || props.streaming || undefined} />}
       </div>
     </form>
   );
