@@ -138,6 +138,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': ' + date + ' तक',
   filterAny: (field) => field + ': सभी',
   filterRemove: (field) => 'फ़िल्टर हटाएँ: ' + field,
+  tagRemove: (name) => 'हटाएँ: ' + name,
   filterDone: 'हो गया',
   filterResults: (count) => (count === 1 ? '1 परिणाम' : n(count) + ' परिणाम'),
   tocTitle: 'इस पेज पर',
