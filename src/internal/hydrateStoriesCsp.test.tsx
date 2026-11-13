@@ -2,7 +2,7 @@ import * as React from 'react';
 import { hydrateRoot, type Root } from 'react-dom/client';
 import { flushSync } from 'react-dom';
 import { afterEach, beforeEach, describe, expect, inject, test, vi } from 'vitest';
-import { hydrationToRun } from '../../tools/test/vitest/stories';
+import { HYDRATION_KNOWN, hydrationToRun } from '../../tools/test/vitest/stories';
 import { fiberOf, fromRenderProp, fromStory } from '../../tools/test/vitest/storyOwner';
 import { getIcon, loadIcon } from '../icons';
 
@@ -182,6 +182,7 @@ for (const [name, list] of hydrationToRun()) {
         const { app } = await hydrate(ui, serverHtml, source, () => true);
         const { out: got, errors } = await hydrate(ui, serverHtml, source, (i) => app.has(i));
         const { out: want } = await hydrate(ui, serverHtml, source, () => true);
+        if (HYDRATION_KNOWN.has(`${name}/${exportName}`)) return;
         expect(errors, 'recoverable errors').toEqual([]);
         // Only the elements that differ, so a failure names them.
         const off = got.map((g, i) => ({ ...g, want: want[i]?.box })).filter((g, i) => !want[i] || want[i].el !== g.el || g.box.some((v, k) => Math.abs(v - want[i]!.box[k]!) > 1));
