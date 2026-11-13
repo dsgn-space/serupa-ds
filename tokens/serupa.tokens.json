@@ -885,15 +885,15 @@
     "field-border": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput, SignaturePad, FileUpload's drop area): a soft line, zinc-300 in light and zinc-600 in dark. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-700 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
+      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput): a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{zinc-600}",
+            "blue-dark": "{zinc-700}",
             "violet-light": "{zinc-300}",
-            "violet-dark": "{zinc-600}",
+            "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-300}",
-            "emerald-dark": "{zinc-600}"
+            "emerald-dark": "{zinc-700}"
           },
           "contrastMore": {
             "light": "{zinc-700}",

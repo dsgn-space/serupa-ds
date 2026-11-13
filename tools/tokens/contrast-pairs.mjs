@@ -54,7 +54,7 @@ export const PAIRS = [
   ['info', 'surface', 4.5, 'Info icon'],
   ['primary', 'surface-overlay', 3, 'Brand icons in a popover or dialog'],
   ['danger', 'surface', 3, 'Destructive secondary button border'],
-  // The resting field border is soft by design (zinc-300 in light, zinc-600 in dark): below the 3:1 WCAG 1.4.11 asks
+  // The resting field border is soft by design (zinc-300 in light, zinc-700 in dark): below the 3:1 WCAG 1.4.11 asks
   // of a control's boundary, a deliberate exception. These pairs hold it to 1.3:1, so it never fades out entirely; the
   // focus ring and more contrast keep 3:1. Every other control's edge is border-control, held to 3:1 below.
   ['field-border', 'field', 1.3, 'Field border, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],

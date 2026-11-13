@@ -397,7 +397,7 @@
   --surface-overlay: var(--zinc-800);
   --field: var(--zinc-800);
   --field-readonly: var(--zinc-900);
-  --field-border: var(--zinc-600);
+  --field-border: var(--zinc-700);
   --field-border-hover: var(--blue-500);
   --border-control: var(--zinc-400);
   --border-control-hover: var(--zinc-300);
@@ -631,7 +631,7 @@
   --surface-overlay: var(--zinc-800);
   --field: var(--zinc-800);
   --field-readonly: var(--zinc-900);
-  --field-border: var(--zinc-600);
+  --field-border: var(--zinc-700);
   --field-border-hover: var(--violet-500);
   --border-control: var(--zinc-400);
   --border-control-hover: var(--zinc-300);
@@ -865,7 +865,7 @@
   --surface-overlay: var(--zinc-900);
   --field: var(--zinc-800);
   --field-readonly: var(--zinc-900);
-  --field-border: var(--zinc-600);
+  --field-border: var(--zinc-700);
   --field-border-hover: var(--teal-500);
   --border-control: var(--zinc-400);
   --border-control-hover: var(--zinc-300);
@@ -983,7 +983,7 @@
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field: light-dark(var(--white), var(--zinc-800));
   --field-readonly: light-dark(var(--zinc-50), var(--zinc-900));
-  --field-border: light-dark(var(--zinc-300), var(--zinc-600));
+  --field-border: light-dark(var(--zinc-300), var(--zinc-700));
   --field-border-hover: var(--blue-500);
   --border-control: light-dark(var(--zinc-500), var(--zinc-400));
   --border-control-hover: light-dark(var(--zinc-600), var(--zinc-300));
