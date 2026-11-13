@@ -23,10 +23,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -43,7 +43,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -59,7 +59,88 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
+</span>
+</label>
+</div>
+</div>
+<div class="dk-drawer__footer">
+<button data-component="button" data-variant="secondary" data-size="md" type="button" class="dk-btn dk-btn--secondary dk-btn--size-md">
+<span class="dk-btn__label">Reset</span>
+</button>
+<button data-component="button" data-variant="primary" data-size="md" type="button" class="dk-btn dk-btn--primary dk-btn--size-md">
+<span class="dk-btn__label">Apply</span>
+</button>
+</div>
+</div>
+</dialog>
+
+<!-- BottomSheet -->
+<button data-component="button" data-variant="primary" data-size="md" type="button" class="dk-btn dk-btn--primary dk-btn--size-md">
+<span class="dk-btn__label">Open filters</span>
+</button>
+<dialog aria-modal="true" aria-labelledby="dk-drw_R_2_-title" aria-describedby="dk-drw_R_2_-desc" class="dk-drawer dk-drawer--bottom dk-drawer--md dk-drawer--snaps" data-component="drawer" data-state="closed" data-side="bottom" data-size="md">
+<div class="dk-drawer__panel" data-snap="0" style="--dk-drawer-snap:0.4">
+<button type="button" class="dk-drawer__handle" aria-label="Expand">
+<span class="dk-drawer__grip" aria-hidden="true">
+</span>
+</button>
+<div class="dk-drawer__header">
+<div class="dk-drawer__heading">
+<h2 class="dk-drawer__title" id="dk-drw_R_2_-title">Nearby</h2>
+<p class="dk-drawer__description" id="dk-drw_R_2_-desc">Cafés within a 10-minute walk.</p>
+</div>
+<button aria-label="Close" data-shape="square" data-component="button" data-variant="ghost" data-size="sm" data-icon-only="" type="button" class="dk-btn dk-btn--ghost dk-btn--size-sm dk-btn--icon-only dk-icon-btn dk-drawer__close">
+<span class="dk-btn__icon dk-btn__icon--only" aria-hidden="true">
+<span aria-hidden="true" data-icon="close" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m480-424-196 196q-11 11-28 11t-28-11-11-28 11-28l196-196-196-196q-11-11-11-28t11-28 28-11 28 11l196 196 196-196q11-11 28-11t28 11 11 28-11 28l-196 196 196 196q11 11 11 28t-11 28-28 11-28-11z">
+</path>
+</svg>
+</span>
+</span>
+</button>
+</div>
+<div class="dk-drawer__body">
+<div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
+<div class="dk-field" data-component="field">
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
+<div class="dk-field__control">
+<span class="dk-input dk-input--size-md" data-component="input" data-size="md">
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
+</span>
+</div>
+</div>
+<label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
+<span class="dk-checkbox__control">
+<input type="checkbox" class="dk-checkbox__input"/>
+<span class="dk-checkbox__icon" aria-hidden="true">
+<span aria-hidden="true" data-icon="check" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m382-354 339-339q12-12 28-12t28 12 12 28.5-12 28.5l-367 368q-12 12-28 12t-28-12l-172-172q-12-12-11.5-28.5t12.5-28.5 28.5-12 28.5 12z">
+</path>
+</svg>
+</span>
+</span>
+</span>
+<span class="dk-checkbox__text">
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
+</span>
+</label>
+<label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
+<span class="dk-checkbox__control">
+<input type="checkbox" class="dk-checkbox__input"/>
+<span class="dk-checkbox__icon" aria-hidden="true">
+<span aria-hidden="true" data-icon="check" class="dk-icon">
+<svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true" focusable="false">
+<path d="m382-354 339-339q12-12 28-12t28 12 12 28.5-12 28.5l-367 368q-12 12-28 12t-28-12l-172-172q-12-12-11.5-28.5t12.5-28.5 28.5-12 28.5 12z">
+</path>
+</svg>
+</span>
+</span>
+</span>
+<span class="dk-checkbox__text">
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -100,10 +181,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -120,7 +201,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 </div>
@@ -161,10 +242,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_me_-control" id="dk-f_R_me_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_1be_-control" id="dk-f_R_1be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_me_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_1be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -181,7 +262,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_16e_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_2be_-label">Only mine</span>
 </span>
 </label>
 </div>
@@ -222,10 +303,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -242,7 +323,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -258,7 +339,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -298,10 +379,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -318,7 +399,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -334,7 +415,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -415,10 +496,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -435,7 +516,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -451,7 +532,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -492,10 +573,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -512,7 +593,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -528,7 +609,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -569,10 +650,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -589,7 +670,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -605,7 +686,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -646,10 +727,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -666,7 +747,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -682,7 +763,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -723,10 +804,10 @@
 <div class="dk-drawer__body">
 <div style="display:flex;flex-direction:column;gap:var(--spacing-4)">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_6e_-control" id="dk-f_R_6e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_be_-control" id="dk-f_R_be_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input placeholder="Search projects" id="dk-f_R_6e_-control" type="text" class="dk-input__field"/>
+<input placeholder="Search projects" id="dk-f_R_be_-control" type="text" class="dk-input__field"/>
 </span>
 </div>
 </div>
@@ -743,7 +824,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ae_-label">Only mine</span>
+<span class="dk-checkbox__label" id="dk-cb_R_je_-label">Only mine</span>
 </span>
 </label>
 <label class="dk-checkbox dk-checkbox--size-md" data-component="checkbox" data-size="md">
@@ -759,7 +840,7 @@
 </span>
 </span>
 <span class="dk-checkbox__text">
-<span class="dk-checkbox__label" id="dk-cb_R_ee_-label">Include archived</span>
+<span class="dk-checkbox__label" id="dk-cb_R_re_-label">Include archived</span>
 </span>
 </label>
 </div>
@@ -798,10 +879,10 @@
 </div>
 <div class="dk-drawer__body">
 <div class="dk-field" data-component="field">
-<label class="dk-field__label" for="dk-f_R_2e_-control" id="dk-f_R_2e_-label">Name</label>
+<label class="dk-field__label" for="dk-f_R_3e_-control" id="dk-f_R_3e_-label">Name</label>
 <div class="dk-field__control">
 <span class="dk-input dk-input--size-md" data-component="input" data-size="md">
-<input id="dk-f_R_2e_-control" type="text" class="dk-input__field" value="Atlas"/>
+<input id="dk-f_R_3e_-control" type="text" class="dk-input__field" value="Atlas"/>
 </span>
 </div>
 </div>

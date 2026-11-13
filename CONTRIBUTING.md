@@ -10,7 +10,7 @@ Work on the repository with **Node 26**: `nvm use` (or `fnm use`) reads `.nvmrc`
 2. **Run the fast checks first:** `npm run typecheck`, `npm run lint` and `npm run test:unit` (the component tests, a few seconds). `node tools/test/run.mjs --since main` runs everything your change can affect, as CI will, and `node tools/ci.mjs --since main` runs every job CI requires, with the component tests in all four second languages, so a pull request isn't pushed red.
 3. **A changeset** (`npx changeset`) when a project using the package gets something different: patch, minor or major by the rules in the README's [Versioning](README.md#versioning) section, with a line starting Added, Changed, Deprecated, Removed, Fixed or Security ([.changeset/README.md](.changeset/README.md)). A change only to the tests, tools or workflows takes the `no-changeset` label instead.
 4. **A breaking change goes in a major,** with a migration note in its changeset: what to change, before and after. Names are deprecated first and removed in the next major. It also gets a section in the next major's RFC ([docs/rfcs](docs/rfcs/README.md)), open for comments until the release, and a rename a script can make gets a change in `bin/migrate/transforms.mjs`, so `npx serupa-migrate` makes it for people. The docs' Upgrading page collects the notes on its own.
-5. **Baselines move only on purpose.** When a change is meant to change the API, a size or a picture, update that baseline in the same pull request and say why: `node tools/test/api.mjs --update`, `node tools/test/size.mjs --update <Name>`, and the `update-visual-baselines` label for screenshots (CI commits only the pictures that changed).
+5. **Baselines move only on purpose.** When a change is meant to change the API, a size or a picture, update that baseline in the same pull request and say why: `node tools/test/api.mjs --update`, `node tools/test/size.mjs --update <Name>`, and the `update-visual-baselines` label for screenshots (CI commits only the pictures that changed), or a `Redraw-baselines: visual` trailer on the commit, which adds the label for you.
 
 ## A new component
 
@@ -62,7 +62,7 @@ do, say so and stop here.
    - it has its Do and don't pair.
 
    Each Release pull request lists the betas that meet all four, and that release either takes their tags off or names the open bug that keeps each one in beta, so no component stays beta just because nobody looked.
-7. `npx changeset` (minor, "Added: <Name> …"), open the pull request, and add the `update-visual-baselines` label so CI draws its screenshots. Review them.
+7. `npx changeset` (minor, "Added: <Name> …"), open the pull request, and add the `update-visual-baselines` label (or end the commit with a `Redraw-baselines: visual` trailer) so CI draws its screenshots. Review them.
 
 ## Reviews by eye
 

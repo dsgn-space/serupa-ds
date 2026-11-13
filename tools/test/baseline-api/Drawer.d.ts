@@ -1,4 +1,8 @@
 // exports: Drawer, type DrawerPlacement, type DrawerProps
+interface DrawerLabels {
+    drawerExpand: string;
+    drawerCollapse: string;
+}
 type DrawerPlacement = "bottom" | "end" | "left" | "right" | "start" | "top";
 interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>, "open" | "title"> {
     open?: boolean | undefined;
@@ -18,5 +22,9 @@ interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>
     initialFocus?: React.RefObject<HTMLElement | null> | undefined;
     finalFocus?: React.RefObject<HTMLElement | null> | undefined;
     unsaved?: boolean | undefined;
+    snapPoints?: readonly number[] | undefined;
+    snap?: number | undefined;
+    defaultSnap?: number | undefined;
+    onSnapChange?: ((snap: number) => void) | undefined;
 }
 declare const Drawer: React.ForwardRefExoticComponent<DrawerProps & React.RefAttributes<HTMLDialogElement>>;

@@ -39,7 +39,7 @@ function Gallery(args: React.ComponentProps<typeof Lightbox>) {
       <ul role="list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8, listStyle: 'none', margin: 0, padding: 0, maxWidth: 560 }}>
         {photos.map((p, i) => (
           <li key={p.src}>
-            <button type="button" aria-haspopup="dialog" onClick={() => { setIndex(i); setOpen(true); }} style={{ all: 'unset', display: 'block', cursor: 'zoom-in', borderRadius: 8 }}>
+            <button type="button" aria-haspopup="dialog" onClick={() => { setIndex(i); setOpen(true); }} style={{ display: 'block', margin: 0, padding: 0, border: 0, background: 'none', font: 'inherit', cursor: 'zoom-in', borderRadius: 8 }}>
               <Image src={p.src} alt={p.alt} ratio="square" />
             </button>
           </li>

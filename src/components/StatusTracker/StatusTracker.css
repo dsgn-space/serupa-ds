@@ -1,0 +1,33 @@
+/* ---------------------------------------------------------------
+   StatusTracker: a row of bars, one a day, filling the width (each at least 2px, 2px apart), 32px tall, 2px corners.
+   Up is a solid success bar; degraded a warning bar striped across; down a danger bar half as tall, sitting on the
+   base line; no data a 1px outline. The focused bar takes the focus ring; the pointed one is outlined. Under it a
+   caption line (the day in words, or nothing), the summary, and a legend with the same four shapes.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-status-tracker { --dk-st-h: var(--status-tracker-height, var(--spacing-8)); display: flex; flex-direction: column; gap: var(--spacing-1); min-inline-size: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--status-tracker-text, var(--text)); }
+.dk-status-tracker__days { display: flex; align-items: flex-end; gap: var(--status-tracker-gap, var(--spacing-0\.5)); block-size: var(--dk-st-h); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+.dk-status-tracker__day, .dk-status-tracker__swatch { box-sizing: border-box; border-radius: var(--status-tracker-radius, var(--rounded-xs)); background: var(--dk-st-fill); }
+.dk-status-tracker__day { flex: auto; min-inline-size: var(--spacing-0\.5); block-size: var(--sizing-full); cursor: default; outline: none; }
+.dk-status-tracker__day:focus-visible { outline: var(--focus-ring-width) solid var(--status-tracker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+@media (hover: hover) { .dk-status-tracker__day:hover { box-shadow: 0 0 0 var(--border-width-1) var(--status-tracker-text, var(--text)); } }
+.dk-status-tracker [data-state="up"] { --dk-st-fill: var(--status-tracker-up, var(--success)); }
+.dk-status-tracker [data-state="degraded"] { --dk-st-fill: repeating-linear-gradient(135deg, var(--status-tracker-degraded, var(--warning)) 0 var(--spacing-1), transparent var(--spacing-1) var(--spacing-1\.5)); }
+.dk-status-tracker__day[data-state="degraded"], .dk-status-tracker__key[data-state="degraded"] .dk-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-degraded, var(--warning)); }
+.dk-status-tracker [data-state="down"] { --dk-st-fill: var(--status-tracker-down, var(--danger)); }
+/* Half the strip's height, whatever --status-tracker-height is: the shape that says "down". */
+.dk-status-tracker__day[data-state="down"] { block-size: var(--sizing-1-2); }
+.dk-status-tracker [data-state="none"] { --dk-st-fill: transparent; }
+.dk-status-tracker__day[data-state="none"], .dk-status-tracker__key[data-state="none"] .dk-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-none, var(--field-border)); }
+.dk-status-tracker__caption { min-block-size: var(--text-sm--line-height); overflow-wrap: anywhere; color: var(--status-tracker-text, var(--text)); }
+.dk-status-tracker__summary { margin: var(--spacing-0); overflow-wrap: anywhere; color: var(--status-tracker-muted, var(--text-muted)); }
+.dk-status-tracker__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; color: var(--status-tracker-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-status-tracker__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); }
+.dk-status-tracker__swatch { inline-size: var(--spacing-2); block-size: var(--spacing-3); }
+.dk-status-tracker__key[data-state="down"] .dk-status-tracker__swatch { block-size: var(--spacing-1\.5); align-self: flex-end; margin-block-end: var(--spacing-0\.5); }
+@media (forced-colors: active) {
+  .dk-status-tracker__day, .dk-status-tracker__swatch { forced-color-adjust: none; border: var(--border-width-1) solid CanvasText; }
+  .dk-status-tracker [data-state="up"], .dk-status-tracker [data-state="down"] { --dk-st-fill: CanvasText; }
+  .dk-status-tracker [data-state="degraded"] { --dk-st-fill: repeating-linear-gradient(135deg, CanvasText 0 var(--spacing-1), Canvas var(--spacing-1) var(--spacing-1\.5)); }
+}
+}
