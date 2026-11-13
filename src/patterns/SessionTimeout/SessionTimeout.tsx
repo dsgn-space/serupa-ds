@@ -207,7 +207,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
             </div>
             <Card as="section" aria-labelledby="message-title">
               <form className="flex flex-col gap-4" noValidate onSubmit={(e) => void send(e)}>
-                <Heading level={2} id="message-title">Your message</Heading>
+                <Heading level={2} size="lg" id="message-title">Your message</Heading>
                 {outcome === 'sent' ? <Alert ref={sentRef} tabIndex={-1} tone="success" className="outline-none">Message sent. We’ll reply by email.</Alert> : null}
                 <Field label="Subject" error={missing.subject}>
                   <Input name="subject" value={draft.subject} onChange={type('subject')} />

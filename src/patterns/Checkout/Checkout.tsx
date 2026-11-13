@@ -201,7 +201,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
           <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-6 lg:col-span-2">
             <div className="flex flex-col gap-1">
               <p className="m-0 text-sm text-text-muted">{steps[step]}</p>
-              <Heading level={2} id="checkout-step" ref={stepHeading} tabIndex={-1} className="outline-none">{titles[step]}</Heading>
+              <Heading level={2} size="lg" id="checkout-step" ref={stepHeading} tabIndex={-1} className="outline-none">{titles[step]}</Heading>
             </div>
 
             {step === 'details' ? (
@@ -283,7 +283,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
 
           <aside aria-labelledby="checkout-summary" className="min-w-0 lg:col-span-1">
             <Card className="flex flex-col gap-3">
-              <Heading level={2} id="checkout-summary" className="text-lg">Order summary</Heading>
+              <Heading level={2} size="lg" id="checkout-summary">Order summary</Heading>
               <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
                 {lines.map((l) => (
                   <li key={l.id} className="flex justify-between gap-3 text-sm">
