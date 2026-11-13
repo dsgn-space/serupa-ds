@@ -149,6 +149,7 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | Token | Default | Use |
 | --- | --- | --- |
 | `--cascade-select-panel-shadow` | `elevation-overlay` | The panel's shadow. |
+| `--cascade-select-panel-depth` | `depth-surface` | The panel's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 
 **Spacing**
 

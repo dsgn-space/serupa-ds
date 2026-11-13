@@ -11,7 +11,7 @@ const el = (id: string) => document.getElementById(id) as HTMLInputElement;
 const box = (id: string) => {
   const i = el(id), w = i.closest('label') as HTMLElement, c = css(i), lc = css(w), ir = i.getBoundingClientRect(), th = w.querySelector('input + span')!, tr = th.getBoundingClientRect(), tx = [...w.querySelectorAll('span[id]')].find((s) => !(i.getAttribute('aria-describedby') ?? '').split(' ').includes(s.id)), xr = tx && tx.getBoundingClientRect();
   return {
-    tag: i.tagName + ':' + i.type + ':' + i.getAttribute('role'), root: w.tagName, wrap: w.className, w: ir.width, h: ir.height, app: c.appearance, bg: c.backgroundColor, r: c.borderTopLeftRadius, bs: c.boxShadow,
+    tag: i.tagName + ':' + i.type + ':' + i.getAttribute('role'), root: w.tagName, wrap: w.className, w: ir.width, h: ir.height, app: c.appearance, bg: c.backgroundColor, r: c.borderTopLeftRadius, bs: c.boxShadow.replace(/(, )?rgba\(0, 0, 0, 0\) 0px 0px 0px 0px/g, '') || 'none',   // without the empty tactile layer of a flat brand
     fs: lc.fontSize, op: lc.opacity, cur: lc.cursor, size: w.dataset.size, comp: w.dataset.component, checked: i.checked, disabled: i.matches(':disabled'), thumb: tr.width, thumbBg: css(th).backgroundColor,
     startGap: Math.round((tr.left - ir.left) * 10) / 10, endGap: Math.round((ir.right - tr.right) * 10) / 10, vGap: Math.abs((tr.top + tr.height / 2) - (ir.top + ir.height / 2)),
     mid: xr ? Math.abs((ir.top + ir.height / 2) - (xr.top + Math.min(xr.height, parseFloat(lc.lineHeight)) / 2)) : 0, labelLeft: xr ? xr.left < ir.left : null,
@@ -153,7 +153,7 @@ describe('Switch', () => {
   test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {
     await setup();
     await expect.poll(() => box('inv').bg).toBe(color('var(--field-border)'));
-    expect(css(el('inv')).boxShadow).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
+    expect(css(el('inv')).boxShadow.replace(/, rgba\(0, 0, 0, 0\) 0px 0px 0px 0px$/, '')).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
 

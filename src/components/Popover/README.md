@@ -104,6 +104,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-title-color` | `text` | The title. |
 | `--popover-focus-ring` | `focus-ring` | The panel's focus ring, when it takes focus itself. |
 | `--popover-shadow` | `elevation-overlay` | The panel's shadow. |
+| `--popover-depth` | `depth-surface` | The panel's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--popover-radius` | `radius-surface` | The panel's corners (8px). |
 | `--popover-border-width` | `border-width-1` | The panel's border (1px). |
 | `--popover-sheet-radius` | `radius-container` | A sheet's top corners (12px). |

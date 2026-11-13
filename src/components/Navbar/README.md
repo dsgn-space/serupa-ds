@@ -202,4 +202,5 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | --- | --- | --- |
 | `--navbar-shadow-scrolled` | `elevation-raised` | A sticky bar's shadow once the page has scrolled under it. |
 | `--navbar-menu-shadow` | `elevation-overlay` | A dropdown panel's shadow on wide screens. |
+| `--navbar-menu-depth` | `depth-surface` | The narrow-screen menu's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 <!-- token-table:end -->

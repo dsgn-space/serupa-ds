@@ -103,6 +103,16 @@
             "cssVar": "--time-picker-list-shadow"
           }
         }
+      },
+      "list-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "The list's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--time-picker-list-depth"
+          }
+        }
       }
     },
     "border": {

@@ -99,4 +99,5 @@ Each is an optional override: set it on the page, a container or one key. The li
 | `--kbd-height-md` | `spacing-6` | size="md", the default (24px). |
 | `--kbd-padding-x` | `spacing-1.5` | Space on each side of a key's label (6px). |
 | `--kbd-gap` | `spacing-1` | Space between keys and the + in a combination (4px). |
+| `--kbd-depth` | `depth-control` | The keycap's tactile layers: raised off the page like a Button. None in the flat brands. |
 <!-- token-table:end -->

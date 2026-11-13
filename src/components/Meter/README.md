@@ -111,4 +111,5 @@ Each is an optional override: set it on the page, a container or one meter. The 
 | `--meter-gap` | `spacing-1.5` | Space between the label row and the bar (6px). |
 | `--meter-label-weight` | `font-medium` | The label's weight. |
 | `--meter-duration` | `motion-change-lg` | How long the fill takes to move to a new value. |
+| `--meter-track-depth` | `depth-well` | The track's tactile layers, over its border: a groove the bar fills. None in the flat brands. |
 <!-- token-table:end -->

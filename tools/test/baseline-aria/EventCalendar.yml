@@ -222,7 +222,7 @@
 - radiogroup "View":
   - radio "Month"
   - radio "Agenda" [checked]
-- paragraph: No events this month.
+- paragraph: No events this month
 
 # Indonesian
 - button "Today"

@@ -54,14 +54,14 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
 
 ### Loading, empty and failed
 
-- **Loading:** set `busy` and pass no categories yet. The plot is a placeholder block at its `height`, the table button is there but disabled, and the legend keeps its line, so nothing below the chart moves when the numbers arrive. Name the wait in `loadingLabel` ("Loading visitors"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh numbers already shown, keep them in and set `busy`: the chart stays as it is until the new ones arrive.
+- **Loading:** set `loading` and pass no categories yet. The plot is a placeholder block at its `height`, the table button is there but disabled, and the legend keeps its line, so nothing below the chart moves when the numbers arrive. Name the wait in `loadingLabel` ("Loading visitors"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. When you refresh numbers already shown, keep them in and set `loading`: the chart stays as it is until the new ones arrive.
 - **Empty:** in place of the Chart, an [EmptyState](../EmptyState/README.md) that says why there's nothing yet. A chart of zeros reads as a real result.
 - **Failed:** in place of the Chart, a danger [Alert](../Alert/README.md) that says what didn't load and offers Retry in `actions`. It's `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
 {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Visitors didn't load.</Alert>
   : state === 'loaded' && !months.length ? <EmptyState size="sm" title="No visitors yet" />
-  : <Chart title="Visitors" busy={state === 'loading'} loadingLabel="Loading visitors"
+  : <Chart title="Visitors" loading={state === 'loading'} loadingLabel="Loading visitors"
       categories={months} series={[{ name: "Visitors", values: visits }]} />}
 ```
 
@@ -104,7 +104,7 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
 | `hideLegend` | `boolean` | `false` | With one series, or when the title names them. |
 | `categoryLabel` | `string` | `"Category"` | The first column's heading in the table. |
 | `view`, `defaultView`, `onViewChange` | `'chart' \| 'table'` | `'chart'` | Controlled or not. |
-| `busy` | `boolean` | `false` | Sets `aria-busy`. With no categories yet, the plot is a placeholder at its height. |
+| `loading` | `boolean` | `false` | Sets `aria-busy`. With no categories yet, the plot is a placeholder at its height. |
 | `loadingLabel` | `string` | `"Loading…"` | Said once as the placeholder appears. |
 | `id` | string | none | Goes to the root `<figure>`. |
 
@@ -149,6 +149,7 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--chart-tip-shadow` | `shadow-md` | The tooltip's shadow. |
+| `--chart-tip-depth` | `depth-surface` | A tactile brand's hairline edge and, in dark mode, a faint top light, as on every floating pane. None in the flat brands. |
 
 **Border**
 

@@ -329,8 +329,8 @@ describe('Chart', () => {
     document.documentElement.removeAttribute('data-theme');
   });
 
-  test('busy: before the first numbers, a placeholder as tall as the plot that is said once; with numbers, they stay', async () => {
-    const { rerender } = await render(<Chart id="c" title="Visitors" categories={[]} series={[]} busy loadingLabel="Loading visitors" height={200} />);
+  test('loading: before the first numbers, a placeholder as tall as the plot that is said once; with numbers, they stay', async () => {
+    const { rerender } = await render(<Chart id="c" title="Visitors" categories={[]} series={[]} loading loadingLabel="Loading visitors" height={200} />);
     const e = el('c');
     expect(e.getAttribute('aria-busy')).toBe('true');
     // The title, the table button (disabled), the placeholder and the legend's empty line: no plot, and nothing a
@@ -347,10 +347,10 @@ describe('Chart', () => {
     // Nothing below the chart moves when the numbers arrive: the button and the legend's line were already there.
     expect(e.getBoundingClientRect().height).toBe(tall);
     // Refreshing numbers already shown: the chart stays, busy.
-    await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} busy />);
+    await rerender(<Chart id="c" title="Visitors" categories={CATS} series={TWO} loading />);
     expect([e.getAttribute('aria-busy'), !!e.querySelector('svg'), e.querySelector('[data-component="loader"]')]).toEqual(['true', true, null]);
     // Without a loadingLabel it says the shared "Loading…".
-    await rerender(<Chart id="d" aria-label="Orders" categories={[]} series={[]} busy />);
+    await rerender(<Chart id="d" aria-label="Orders" categories={[]} series={[]} loading />);
     await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading…');
   });
 });
