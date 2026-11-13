@@ -346,11 +346,12 @@ describe('DataGrid: the edges of copy, paste, Delete and editing', () => {
     document.activeElement!.dispatchEvent(ev);
     return { text: held['text/plain'] ?? '', prevented: ev.defaultPrevented };
   };
+  // The counts are said in the locale's digits, so the two tests that read them set the locale (CI also runs these in ar-EG).
   const status = () => [...document.querySelectorAll('[aria-live]')].map((n) => n.textContent).join('|');
 
   test('one value pasted over a range fills every editable cell of the range, and says how many', async () => {
     const onChange = vi.fn();
-    await render(<Live onChange={onChange} />);
+    await render(<SerupaProvider locale="en-US"><Live onChange={onChange} /></SerupaProvider>);
     await userEvent.click(cell('Kopi'));
     await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowRight}{ArrowRight}{/Shift}');
     clip('paste', '7');
@@ -369,7 +370,7 @@ describe('DataGrid: the edges of copy, paste, Delete and editing', () => {
 
   test('copy says how many cells; a paste into read-only cells changes nothing and says nothing', async () => {
     const onChange = vi.fn();
-    await render(<Live onChange={onChange} />);
+    await render(<SerupaProvider locale="en-US"><Live onChange={onChange} /></SerupaProvider>);
     await userEvent.click(cell('Kopi'));
     await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowDown}{ArrowRight}{/Shift}');
     expect(clip('copy')).toEqual({ text: 'Kopi\t4\nTeh\t9\nGula\t1', prevented: true });
