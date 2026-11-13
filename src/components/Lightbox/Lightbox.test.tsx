@@ -73,6 +73,17 @@ describe('Lightbox', () => {
     expect(next().element().querySelector('svg')).toBeTruthy();
   });
 
+  test('the arrow that reaches the end turns off under focus, and focus goes to the other arrow, not out of the dialog', async () => {
+    await render(<Lightbox items={PHOTOS} defaultOpen />);
+    await userEvent.click(next());
+    await userEvent.click(next());
+    expect(title()).toBe('A blue tower');
+    await expect.element(prev()).toHaveFocus();
+    await userEvent.keyboard('{Enter}{Enter}');
+    expect(title()).toBe('A red square');
+    await expect.element(next()).toHaveFocus();
+  });
+
   test('loop goes from the last picture to the first, and back', async () => {
     await render(<Lightbox items={PHOTOS} defaultOpen defaultIndex={2} loop />);
     await expect.element(next()).toBeEnabled();

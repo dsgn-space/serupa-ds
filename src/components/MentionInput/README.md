@@ -40,7 +40,7 @@ Drawn from the `Default` story.
 ## Usage
 
 - Say how it works under the field ("Type @ to mention someone."), in the Field's hint or the placeholder. Nothing else shows that "@" does something.
-- The text stays plain: a mention is "@" and the label, as people see it. Use `mentionsIn(text, options)` when the text is sent, to find who to notify. Labels should be unique, such as a full name, so a mention points to one person.
+- The text stays plain: a mention is "@" and the label, as people see it. Use `mentionsIn(text, options)` when the text is sent, to find who to notify: at each "@" it takes the longest whole name written there, so "@Ayu Lestari" is Ayu Lestari and not also an "Ayu". Labels should be unique, such as a full name, so a mention points to one person.
 - "@" counts only at the start of the text or after a space or an opening bracket, so an email address doesn't open the list. A space right before the caret closes it, and a space inside a name doesn't ("@Ayu L" still matches).
 - `filter` (on by default) keeps the options whose label holds what's typed, ignoring case and accents, with names that start with it first. For a large directory, pass `filter={false}`, load matches in `onSearch`, and pass them as `options`.
 - `description` tells people with the same first name apart (a role or a team). Mark someone who can't be mentioned here `disabled`, and say why in their description ("Can't see this project").

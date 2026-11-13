@@ -130,17 +130,22 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
   }, [total, totalSaid]);
 
   const nameOf = (id: string) => document.getElementById(`${base}-${id}`);
+  // The removals whose Undo is still up, by item: Check out removes them for good first, so the order leaves them out.
+  const pending = React.useRef(new Map<string, string>());
+  const latestCheckout = React.useRef(onCheckout);
+  // every render: keeps the app's latest onCheckout, which Check out calls after the removals have rendered.
+  React.useEffect(() => { latestCheckout.current = onCheckout; });
   const remove = (item: CartItem) => {
     const at = shown.indexOf(item), next = shown[at + 1] || shown[at - 1];
     setHidden((h) => new Set(h).add(item.id));
     // After the list renders without it: the next item's name, or the heading when the cart is empty.
     requestAnimationFrame(() => { (next ? nameOf(next.id) : heading.current)?.focus(); });
-    toast.undo({
+    pending.current.set(item.id, toast.undo({
       title: l.removed(item.name),
       // Gone for good: the app drops it, so it's no longer hidden here, and the same product added again shows.
-      commit: () => { onRemove(item.id); setHidden((h) => { const n = new Set(h); n.delete(item.id); return n; }); },
-      onUndo: () => { setHidden((h) => { const n = new Set(h); n.delete(item.id); return n; }); requestAnimationFrame(() => nameOf(item.id)?.focus()); },
-    });
+      commit: () => { pending.current.delete(item.id); onRemove(item.id); setHidden((h) => { const n = new Set(h); n.delete(item.id); return n; }); },
+      onUndo: () => { pending.current.delete(item.id); setHidden((h) => { const n = new Set(h); n.delete(item.id); return n; }); requestAnimationFrame(() => nameOf(item.id)?.focus()); },
+    }));
   };
   const apply = async () => {
     const typed = code.trim();
@@ -153,7 +158,17 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
       setCouponError(e instanceof Error ? e.message : String(e));
     } finally { setApplying(false); }
   };
-  const checkout = async () => { setBusy(true); try { await onCheckout(); } finally { setBusy(false); } };
+  const checkout = async () => {
+    setBusy(true);
+    try {
+      if (pending.current.size) {
+        for (const id of [...pending.current.values()]) toast.dismiss(id);
+        // Once the app has rendered without them, its onCheckout sees the cart as it now is.
+        await new Promise((done) => setTimeout(done, 0));
+      }
+      await latestCheckout.current();
+    } finally { setBusy(false); }
+  };
 
   return (
     <section aria-labelledby={`${base}-title`} className="flex flex-col gap-4">
