@@ -77,7 +77,9 @@ const server = http.createServer((req, res) => {
 const base = `http://127.0.0.1:${/** @type {import('node:net').AddressInfo} */ (server.address()).port}`;
 
 const b = await browser();
-const known = new Set(['/', ...pages.map((p) => p.path), ...['foundations', 'components', 'patterns', 'blocks', 'guides'].map((s) => '/' + s)]);
+// The site's own pages, which no .mdx gives it: the story, the six themes side by side and the patterns as screens.
+const OWN = ['/about', '/themes', '/showcase'];
+const known = new Set(['/', ...pages.map((p) => p.path), ...['foundations', 'components', 'patterns', 'blocks', 'guides'].map((s) => '/' + s), ...OWN]);
 const workers = await Promise.all(Array.from({ length: PAGES }, async () => {
   const context = await b.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
@@ -112,9 +114,48 @@ await inParallel(pages, workers, async (p, w) => {
   if (p.component && read(p.file).includes('<Controls')) t(`${p.path} shows its props`, seen.api, 'the page has no API table');
 });
 
-// The site's own frame: the front page, an index and a page of each kind, in every theme and on a phone.
+// The front page and the site's own pages: each draws, has one title, and links only to pages the site has.
+{
+  const w = workers[0];
+  for (const at of ['/', ...OWN]) {
+    w.errors.length = 0;
+    const failed = await openUrl(w.page, base + at) || await ready(w.page, false);
+    if (!t(`${at} opens`, !failed, failed)) continue;
+    // A screen (site/src/Screen.tsx) is a story on a page of its own, in a frame: it has drawn once that page has content.
+    const screens = w.page.locator('iframe.site-screen__page');
+    let drawn = '';
+    if (await screens.count()) {
+      await screens.first().scrollIntoViewIfNeeded();
+      drawn = await screens.first().contentFrame().locator('[data-site-frame] > *').first().waitFor({ timeout: 30000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+    }
+    if (at === '/showcase') t('/showcase shows a pattern as a screen', (await screens.count()) === 1 && !drawn, drawn || 'the page has no screen');
+    else if (await screens.count()) t(`${at} draws its screen`, !drawn, drawn);
+    await w.page.waitForTimeout(500);
+    const seen = await w.page.evaluate(() => ({
+      h1: [...document.querySelectorAll('main h1')].map((h) => h.textContent.trim()),
+      broken: document.querySelectorAll('.site-broken').length,
+      links: [...new Set([...document.querySelectorAll('main a[href]')].map((a) => a.getAttribute('href')))],
+    }));
+    const inScreen = await screens.count() ? await screens.first().contentFrame().locator('.site-broken').count() : 0;
+    t(`${at} draws with no error`, !w.errors.length && !seen.broken && !inScreen, [...w.errors.slice(0, 3), seen.broken || inScreen ? 'part of the page shows an error instead of its content' : ''].filter(Boolean).join(' | '));
+    t(`${at} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
+    const lost = seen.links.filter((h) => h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/'));
+    t(`${at}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
+  }
+  // The themes page is the six themes at once, whatever the site's own theme is.
+  await openUrl(w.page, base + '/themes'); await ready(w.page, false);
+  const shown = await w.page.evaluate(() => [...document.querySelectorAll('.site-theme')].map((x) => `${x.getAttribute('data-brand')}-${x.getAttribute('data-mode')}`));
+  const all = tokens().color.themes.map((x) => x.id);
+  t('/themes shows every theme in tokens.json', all.every((id) => shown.includes(id)) && shown.length === all.length, `it shows ${shown.join(', ') || 'none'}`);
+  // A story's own page that names no story says so, rather than staying blank.
+  const none = await openUrl(w.page, base + '/frame/patterns-nothing--default') || await ready(w.page, false);
+  t('/frame/… with no such story says there is none', !none, none);
+}
+
+// The site's own frame: the front page, the site's own pages, an index and a page of each kind, in every theme and on
+// a phone.
 const axe = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
-const FRAME = ['/', '/components', '/components/button', '/foundations/colors', '/getting-started'];
+const FRAME = ['/', ...OWN, '/components', '/components/button', '/foundations/colors', '/getting-started'];
 const themes = tokens().color.themes.map((x) => x.id);
 const w = workers[0];
 for (const at of FRAME) {

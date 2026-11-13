@@ -20,6 +20,9 @@ const commands: Command[] = [
   ...pages.map((p) => ({ id: p.path, label: p.name, group: p.section, keywords: [p.group, p.summary].filter(Boolean), onSelect: () => navigate(p.path) })),
 ];
 
+// The site's own pages, after the docs' sections.
+const EXTRA: Array<[string, string]> = [['/showcase', 'Showcase'], ['/themes', 'Themes'], ['/about', 'About']];
+
 function SectionNav({ section, path }: { section: NavSection; path: string }) {
   return <Sidebar aria-label={section.label} className="site-sidebar">
     {section.groups.map((g) => <SidebarSection key={g.title} title={g.title || undefined}>
@@ -46,6 +49,7 @@ export function Shell({ children, aside }: { children: React.ReactNode; aside?: 
         <ThemeControls />
       </>}>
       {sections.map((s) => <NavbarLink key={s.id} href={s.path} active={section?.id === s.id}>{s.label}</NavbarLink>)}
+      {EXTRA.map(([to, label]) => <NavbarLink key={to} href={to} active={path === to}>{label}</NavbarLink>)}
     </Navbar>
     <CommandPalette commands={commands} open={search} onOpenChange={setSearch} placeholder="Search the docs" emptyText="No page matches" />
     <div className="site-body" data-side={side ? '' : undefined} data-aside={aside ? '' : undefined}>
@@ -64,6 +68,7 @@ export function Shell({ children, aside }: { children: React.ReactNode; aside?: 
     <footer className="site-footer">
       <p>Serupa {__VERSION__}, designed and built by Diki.</p>
       <p className="flex flex-wrap gap-4">
+        <Link href="/about" tone="neutral" underline="hover">The story</Link>
         <Link href="/changelog" tone="neutral" underline="hover">Changelog</Link>
         <Link href="/accessibility-statement" tone="neutral" underline="hover">Accessibility</Link>
         <Link href="/versioning-and-tools" tone="neutral" underline="hover">Versioning</Link>

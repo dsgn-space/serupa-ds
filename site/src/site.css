@@ -122,3 +122,72 @@ ol.site-list { list-style: decimal; }
 .site-stats__item > dt { color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .site-stats__item > dd { margin: 0; font-size: var(--text-3xl); line-height: var(--text-3xl--line-height); font-weight: var(--font-semibold); letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; }
 .site-home__section > .site-h2 { margin-block-start: 0; }
+
+/* ── The front page's bands ──────────────────────────────────────────────────────────────────────────────────── */
+.site-hero { display: grid; gap: var(--spacing-12); align-items: center; }
+.site-hero__text { min-inline-size: 0; }
+.site-hero__art { min-inline-size: 0; padding: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface-muted); }
+.site-hero__switch { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-3); margin-block-end: var(--spacing-4); }
+.site-hero__hint { color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.site-hero__cards { display: grid; gap: var(--spacing-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); align-items: start; }
+.site-hero__col { display: flex; flex-direction: column; gap: var(--spacing-4); min-inline-size: 0; }
+@media (min-width: 40rem) { .site-hero__art { padding: var(--spacing-6); } }
+@media (min-width: 80rem) {
+  .site-hero { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--spacing-16); }
+  .site-hero__title { font-size: var(--text-7xl); line-height: var(--text-7xl--line-height); }
+}
+.site-home > .site-stats { max-inline-size: none; margin-block: 0 var(--spacing-8); }
+.site-band { padding-block: var(--spacing-16); border-block-start: var(--border-width-1) solid var(--border); }
+.site-band__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--spacing-4) var(--spacing-8); margin-block-end: var(--spacing-8); }
+.site-band__title { font-size: var(--text-3xl); line-height: var(--text-3xl--line-height); letter-spacing: var(--tracking-tight); }
+.site-band__lead { max-inline-size: var(--container-2xl); margin-block-start: var(--spacing-2); color: var(--text-muted); font-size: var(--text-lg); line-height: var(--leading-relaxed); }
+@media (min-width: 64rem) { .site-band { padding-block: var(--spacing-20); } .site-band__title { font-size: var(--text-4xl); line-height: var(--text-4xl--line-height); } }
+.site-band .site-grid { margin-block-start: 0; }
+
+/* One theme in small. The view carries the theme's attributes, so its surface and text are that theme's. */
+.site-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); padding: 0; list-style: none; }
+.site-tile__view { display: flex; flex-direction: column; gap: var(--spacing-4); padding: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-surface); background: var(--surface); color: var(--text); }
+.site-tile__name { margin-block-start: var(--spacing-2); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium); }
+
+.site-principles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--spacing-8) var(--spacing-6); padding: 0; list-style: none; }
+.site-principles--two { grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); margin-block-start: var(--spacing-8); }
+.site-principle { padding-block-start: var(--spacing-4); border-block-start: var(--border-width-2) solid var(--primary); }
+.site-principle__n { display: block; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-variant-numeric: tabular-nums; }
+.site-principle__name { margin-block-start: var(--spacing-1); font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
+.site-principle__line { margin-block-start: var(--spacing-2); color: var(--text-muted); line-height: var(--leading-relaxed); }
+
+@media (min-width: 48rem) { .site-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 80rem) { .site-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); } .site-band .site-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+/* ── A story as a screen ─────────────────────────────────────────────────────────────────────────────────────── */
+.site-screen { inline-size: 100%; margin-inline: auto; border: var(--border-width-1) solid var(--border-strong); border-radius: var(--radius-container); background: var(--surface); box-shadow: var(--shadow-xl); overflow: clip; }
+.site-screen__bar { display: flex; align-items: center; gap: var(--spacing-3); padding: var(--spacing-2) var(--spacing-3); border-block-end: var(--border-width-1) solid var(--border); background: var(--surface-muted); }
+.site-screen__dots { display: inline-flex; gap: var(--spacing-1); }
+.site-screen__dots > span { inline-size: var(--spacing-2); block-size: var(--spacing-2); border-radius: var(--radius-pill); background: var(--border-strong); }
+.site-screen__address { flex: auto; min-inline-size: 0; padding: var(--spacing-px) var(--spacing-3); border-radius: var(--radius-pill); background: var(--surface); color: var(--text-muted); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.site-screen__view { overflow: hidden; }
+.site-screen__page { display: block; border: 0; transform-origin: 0 0; background: var(--surface); }
+[dir="rtl"] .site-screen__page { transform-origin: 100% 0; }
+.site-frame { min-block-size: 100dvh; background: var(--surface); color: var(--text); }
+
+/* ── The showcase and the themes page ────────────────────────────────────────────────────────────────────────── */
+.site-showcase__bar, .site-themes__axes { display: flex; flex-wrap: wrap; align-items: end; gap: var(--spacing-4) var(--spacing-6); margin-block-end: var(--spacing-8); }
+.site-showcase__bar > * { min-inline-size: min(100%, 12rem); }
+.site-showcase__stage { padding: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface-muted); }
+@media (min-width: 40rem) { .site-showcase__stage { padding: var(--spacing-8); } }
+.site-showcase__about { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--spacing-4); margin-block-end: var(--spacing-6); }
+.site-showcase__name { font-size: var(--text-2xl); line-height: var(--text-2xl--line-height); letter-spacing: var(--tracking-tight); }
+.site-showcase__state { color: var(--text-muted); font-weight: var(--font-normal); }
+.site-showcase__summary { max-inline-size: var(--container-2xl); margin-block-start: var(--spacing-1); color: var(--text-muted); line-height: var(--leading-relaxed); }
+
+.site-themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--spacing-6); margin-block-end: var(--spacing-8); padding: 0; list-style: none; }
+.site-theme { block-size: 100%; padding: var(--spacing-6); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface-muted); color: var(--text); }
+.site-theme__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-3); margin-block-end: var(--spacing-6); }
+.site-theme__name { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
+.site-sample { display: flex; flex-direction: column; gap: var(--spacing-4); }
+
+/* ── The story ───────────────────────────────────────────────────────────────────────────────────────────────── */
+.site-decisions { margin-block-start: var(--spacing-6); padding: 0; list-style: none; border-block-start: var(--border-width-1) solid var(--border); }
+.site-decision { display: flex; gap: var(--spacing-4); padding-block: var(--spacing-3); border-block-end: var(--border-width-1) solid var(--border); }
+.site-decision__n { flex: none; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--text-sm); line-height: var(--leading-relaxed); font-variant-numeric: tabular-nums; }
+.site-decision > .site-p { max-inline-size: none; margin: 0; }
