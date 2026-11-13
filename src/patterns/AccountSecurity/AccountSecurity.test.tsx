@@ -6,6 +6,10 @@ import { AccountSecurity, passwordProblems } from './AccountSecurity';
 
 const active = () => document.activeElement as HTMLElement;
 const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
+// Text shown in the open dialog itself, not in the page's live region, which can sit inside the dialog and still hold
+// what it last said.
+const inDialog = (text: string | RegExp) => [...document.querySelectorAll('dialog[open] *')]
+  .some((e) => !e.closest('[data-dk-announcer]') && (typeof text === 'string' ? e.textContent?.trim() === text : text.test(e.textContent?.trim() || '')));
 const current = () => page.getByLabelText(/^Current password/);
 const next = () => page.getByLabelText(/^New password/);
 
@@ -58,11 +62,11 @@ describe('Patterns/Account security', () => {
     await expect.element(dialog.getByText('ABCD EFGH')).toBeVisible();
     await expect.element(dialog.getByRole('button', { name: /^Copy the key/ })).toBeVisible();
     await dialog.getByRole('button', { name: 'Turn on' }).click();
-    await expect.element(dialog.getByText('Enter the 6-digit code from your authenticator app.').first()).toBeVisible();
+    await expect.poll(() => inDialog('Enter the 6-digit code from your authenticator app.')).toBe(true);
     await dialog.getByRole('textbox').first().click();
     await userEvent.keyboard('654321');
     await dialog.getByRole('button', { name: 'Turn on' }).click();
-    await expect.element(dialog.getByText(/That code didn’t work/).first()).toBeVisible();
+    await expect.poll(() => inDialog(/^That code didn’t work/)).toBe(true);
     await expect.poll(() => active().id).toBe('two-step-code');
     await userEvent.keyboard('123456');
     await dialog.getByRole('button', { name: 'Turn on' }).click();

@@ -875,13 +875,13 @@ describe('Table column tools (RU10)', () => {
 
 describe('Table loading and messages (GR316)', () => {
   test('busy sets aria-busy; TableLoadingRows draws a placeholder in every cell, its rows as tall as real ones in both sizes, and the wait is said once', async () => {
-    function Loading(props: { size?: 'sm' | 'md'; busy: boolean }) {
-      return <Table id={'tl-' + (props.size || 'md')} size={props.size} busy={props.busy} caption="Projects">
+    function Loading(props: { size?: 'sm' | 'md'; loading: boolean }) {
+      return <Table id={'tl-' + (props.size || 'md')} size={props.size} loading={props.loading} caption="Projects">
         {head()}
-        {props.busy ? <TableLoadingRows columns={3} rows={4} label="Loading projects" /> : body()}
+        {props.loading ? <TableLoadingRows columns={3} rows={4} label="Loading projects" /> : body()}
       </Table>;
     }
-    const { rerender } = await render(<div style={{ width: '600px' }}><Loading busy /><Loading size="sm" busy /></div>);
+    const { rerender } = await render(<div style={{ width: '600px' }}><Loading loading /><Loading size="sm" loading /></div>);
     for (const id of ['tl-md', 'tl-sm']) {
       const table = el(id), rows = [...table.querySelectorAll('tbody tr')] as HTMLElement[];
       expect(table.getAttribute('aria-busy')).toBe('true');
@@ -894,7 +894,7 @@ describe('Table loading and messages (GR316)', () => {
     expect(page.getByRole('progressbar').all().length).toBe(0);
     expect([...el('tl-md').querySelectorAll('tbody td > *')].every((x) => x.getAttribute('aria-hidden') === 'true')).toBe(true);
     const loadingHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
-    await rerender(<div style={{ width: '600px' }}><Loading busy={false} /><Loading size="sm" busy={false} /></div>);
+    await rerender(<div style={{ width: '600px' }}><Loading loading={false} /><Loading size="sm" loading={false} /></div>);
     const realHeights = ['tl-md', 'tl-sm'].map((id) => (el(id).querySelector('tbody tr') as HTMLElement).getBoundingClientRect().height);
     expect(loadingHeights).toEqual(realHeights);
     expect(el('tl-md').hasAttribute('aria-busy')).toBe(false);
@@ -906,5 +906,16 @@ describe('Table loading and messages (GR316)', () => {
     expect([row.tagName, row.children.length, (row.firstElementChild as HTMLTableCellElement).colSpan]).toEqual(['TR', 1, 3]);
     expect(row.getBoundingClientRect().width).toBe((el('tmsg').querySelector('thead tr') as HTMLElement).getBoundingClientRect().width);
     await expect.element(page.getByRole('alert')).toHaveTextContent("Couldn't load projects.");
+  });
+});
+
+describe('Table: busy, the old name of loading', () => {
+  test('still sets aria-busy as loading does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<Table id="old-busy" caption="Projects" {...{ busy: true }}><TableBody><TableRow><TableCell>A</TableCell></TableRow></TableBody></Table>);
+      expect(document.getElementById('old-busy')!.getAttribute('aria-busy')).toBe('true');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('table-busy'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

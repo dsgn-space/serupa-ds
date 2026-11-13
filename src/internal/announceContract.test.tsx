@@ -55,8 +55,8 @@ const SITES: Record<string, Site> = {
   'Button: successText once the action is done': {
     ui: () => <Button id="go" onClick={async () => {}} successText="Invite sent">Send invite</Button>,
     act: async () => { await userEvent.click($('#go')); }, says: /Invite sent/ },
-  'Badge: loadingText when it starts loading': {
-    ui: (s) => <Badge loading={s === 1} loadingText="Refreshing status">Live</Badge>,
+  'Badge: loadingLabel when it starts loading': {
+    ui: (s) => <Badge loading={s === 1} loadingLabel="Refreshing status">Live</Badge>,
     act: (next) => next(), says: /Refreshing status/ },
   'Loader: its label when it shows': {
     ui: (s) => (s ? <Loader label="Loading results" delay={0} /> : <span />),

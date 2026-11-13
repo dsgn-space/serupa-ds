@@ -725,3 +725,16 @@ describe('Button pressed', () => {
     });
   });
 });
+
+describe('Button: loadingText, the old name of loadingLabel', () => {
+  test('is still said when loading starts, as loadingLabel is, and warns once that it is deprecated', async () => {
+    // Tests run in a random order, and the file collects every warning: take this one back out after.
+    const from = warnings.length;
+    try {
+      const { rerender } = await render(<Button {...{ loadingText: 'Saving draft' }}>Save</Button>);
+      await rerender(<Button loading {...{ loadingText: 'Saving draft' }}>Save</Button>);
+      await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '').toContain('Saving draft');
+      expect(warnings.slice(from).filter((m) => m.includes('button-loading-text'))).toHaveLength(1);
+    } finally { warnings.splice(from); }
+  });
+});

@@ -70,7 +70,7 @@ function States() {
       <div style={{ display: 'flex', gap: '8px' }}>
         <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState} options={(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))} />
       </div>
-      <DataGrid aria-label="Stock" columns={COLUMNS} rows={state === 'loaded' ? ROWS : []} busy={state === 'loading'} loadingRows={5} loadingLabel="Loading stock"
+      <DataGrid aria-label="Stock" columns={COLUMNS} rows={state === 'loaded' ? ROWS : []} loading={state === 'loading'} loadingRows={5} loadingLabel="Loading stock"
         message={state === 'failed'
           ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Stock didn't load. Check your connection and try again.</Alert>
           : <EmptyState size="sm" title="No products yet" description="Add a product to start tracking its stock." />} />

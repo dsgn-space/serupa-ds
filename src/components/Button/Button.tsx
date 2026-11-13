@@ -43,7 +43,9 @@ interface ButtonOwnProps {
   icon?: IconSource | undefined;
   /** Shows a centered Loader (ring) and blocks clicks, keys and Enter-key form submission while an action runs, so a request can't be sent twice. Keeps size, colors and keyboard focus; sets aria-busy, aria-disabled and data-loading. Default: false, except that a type="submit" button inside a `<form action={fn}>` is loading while that form is being sent. Set it to override. */
   loading?: boolean | undefined;
-  /** Announced to screen readers (polite status region) when loading starts. Default: 'Loading'. Pass '' to stay silent. */
+  /** Said to screen readers (polite status region) when loading starts, not shown. Default: "Loading…" (labels.loading). Pass '' to stay silent. */
+  loadingLabel?: string | undefined;
+  /** @deprecated Use loadingLabel: a prop named …Text is shown, and these words are only said; removed in 15.0.0. Read as loadingLabel is, when loadingLabel isn't given. */
   loadingText?: string | undefined;
   /** Why it's disabled ("Fill in your name first"). With disabled, the button stays focusable (aria-disabled, so
       keyboard and screen reader users can reach it and hear why) and this is its description; clicks still do
@@ -88,7 +90,7 @@ export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTML
 
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
-const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingText: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
+const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingLabel: 1, loadingText: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
 
@@ -161,10 +163,11 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   const disabled = !!rest.disabled;
   const reasonId = domId('dk-btn-why', React.useId());
   const reason = disabled && props.disabledReason ? props.disabledReason : '';
-  const loadingText = props.loadingText == null ? sds.labels.loading : props.loadingText;
+  if (process.env.NODE_ENV !== 'production' && props.loadingText != null) warnOnce('button-loading-text', 'Button: loadingText is deprecated and removed in 15.0.0. Use loadingLabel, which does the same.');
+  const loadingText = props.loadingLabel ?? props.loadingText ?? sds.labels.loading;
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
   const wasLoading = React.useRef(false);
-  // Announced when loading starts, with the text it has then (a later loadingText change isn't announced again).
+  // Announced when loading starts, with the text it has then (a later loadingLabel change isn't announced again).
   const latestText = React.useRef(loadingText);
   React.useEffect(function () { latestText.current = loadingText; });   // every render: keeps the latest text
   React.useEffect(function () {
@@ -173,7 +176,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   }, [loading]);
 
   // Loading: the spinner sits in the center over the hidden content (label and icons), so the width stays the same.
-  // Decorative (the button announces loadingText itself): Loader's ring, without the rest of Loader (GR311).
+  // Decorative (the button announces loadingLabel itself): Loader's ring, without the rest of Loader (GR311).
   const spin = <LoaderRing className="dk-btn__spinner" />;
   let content: React.ReactNode[] = iconOnly ? [slot(props.icon, 'only')] : [
     slot(props.leftIcon, 'left'),
