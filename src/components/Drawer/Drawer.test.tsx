@@ -983,6 +983,19 @@ describe('Drawer: unsaved (13)', () => {
       });
     });
 
+    test('swipeToClose={false} keeps the drag between stops; only closing by a drag is off', async () => {
+      const why: string[] = [];
+      await render(sheet({ swipeToClose: false, onOpenChange: (_, d) => why.push(d.reason) }));
+      await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(true);
+      await pull(-(vh() * 0.4), 4, 150);
+      await expect.poll(() => panel('bs').dataset.snap).toBe('1');
+      await pull(vh() * 0.5, 4, 150);
+      await expect.poll(() => panel('bs').dataset.snap).toBe('0');
+      await pull(vh() * 0.35, 4, 150);
+      await expect.poll(() => panel('bs').hasAttribute('data-settling')).toBe(false);
+      expect([(el('bs') as HTMLDialogElement).open, why, panel('bs').dataset.snap, panel('bs').style.translate]).toEqual([true, [], '0', '']);
+    });
+
     test('controlled: snap says where it is, and a drag only reports where to', async () => {
       const snaps: number[] = [];
       await render(sheet({ snap: 1, onSnapChange: (i) => snaps.push(i) }));

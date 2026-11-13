@@ -137,7 +137,8 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
     requestAnimationFrame(() => { (next ? nameOf(next.id) : heading.current)?.focus(); });
     toast.undo({
       title: l.removed(item.name),
-      commit: () => onRemove(item.id),
+      // Gone for good: the app drops it, so it's no longer hidden here, and the same product added again shows.
+      commit: () => { onRemove(item.id); setHidden((h) => { const n = new Set(h); n.delete(item.id); return n; }); },
       onUndo: () => { setHidden((h) => { const n = new Set(h); n.delete(item.id); return n; }); requestAnimationFrame(() => nameOf(item.id)?.focus()); },
     });
   };

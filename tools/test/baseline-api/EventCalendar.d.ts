@@ -3,7 +3,13 @@ interface EventCalendarLabels {
     goToToday: string;
     calendarView: string;
     monthView: string;
+    weekView: string;
+    dayView: string;
     agendaView: string;
+    previousWeek: string;
+    nextWeek: string;
+    previousDay: string;
+    nextDay: string;
     eventCount: (count: number, formatted: string) => string;
     moreEvents: (count: number, formatted: string) => string;
     allDay: string;
@@ -20,7 +26,7 @@ interface CalendarEvent {
     repeating?: boolean | undefined;
     tone?: "danger" | "info" | "primary" | "success" | "warning" | undefined;
 }
-type EventCalendarView = "agenda" | "month";
+type EventCalendarView = "agenda" | "day" | "month" | "week";
 interface EventCalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "defaultValue" | "onChange"> {
     events: readonly CalendarEvent[];
     onEventClick?: ((event: CalendarEvent) => void) | undefined;

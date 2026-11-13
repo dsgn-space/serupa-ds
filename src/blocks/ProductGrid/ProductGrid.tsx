@@ -99,7 +99,7 @@ export function ProductCard({ product: p, currency, onAddToCart, headingLevel = 
       toast({ title: l.notAdded(p.name), tone: 'danger' });
     } finally { setBusy(false); }
   };
-  const nameId = `product-${p.id}-name`;
+  const nameId = `${React.useId()}-name`;   // its own on the page: two grids can hold the same product
   return (
     <Card as="li" padding="md" aria-labelledby={nameId} className="flex h-full min-w-0 flex-col gap-3 wrap-anywhere">
       <Image src={p.image} alt="" ratio="square" rounded />
