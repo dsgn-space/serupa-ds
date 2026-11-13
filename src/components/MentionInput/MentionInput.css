@@ -37,7 +37,7 @@
 .dk-mention-input__message { padding: var(--spacing-1\.5) var(--mention-input-option-padding-x, var(--spacing-2)); color: var(--mention-input-description-color, var(--text-muted)); }
 @media (forced-colors: active) {
   .dk-mention-input__popup { border-color: CanvasText; }
-  .dk-mention-input__option--active { outline: var(--border-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--border-width-2)); }
+  .dk-mention-input__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 }
 
 /* The list is an on-screen layer: it doesn't print. */

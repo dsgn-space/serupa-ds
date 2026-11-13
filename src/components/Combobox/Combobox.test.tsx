@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, settle, withMotion, settled } from '../../../tools/test/vitest/helpers';
 import { Combobox, type ComboboxOption, type ComboboxOptionGroup } from './Combobox';
 import { Field } from '../Field/Field';
 import { Loader } from '../Loader/Loader';
@@ -38,6 +38,14 @@ function Countries(props: { cref?: React.Ref<HTMLInputElement> }) {
 const open = async () => { el('before').focus(); await userEvent.keyboard('{Tab}{ArrowDown}'); };
 
 describe('Combobox', () => {
+  test('forced colors: the option the keyboard is on has a focus-width outline drawn inside it, so the scrolling list can\'t clip its sides (GR388)', async () => {
+    await render(<Countries />);
+    await open();
+    const o = activeOf('cb');
+    const r = await forcedColors((active) => active && [css(o).outlineStyle, css(o).outlineWidth, parseFloat(css(o).outlineOffset) < 0]);
+    if (r) expect(r).toEqual(['solid', '2px', true]);
+  });
+
   test('as the list narrows, the typed text is marked in each option, as it was matched: ignoring case and accents (185)', async () => {
     await render(<>
       <Combobox id="chl" aria-label="City" options={['Łódź', 'Kłodzko', 'Lodi', 'Paris']} />
