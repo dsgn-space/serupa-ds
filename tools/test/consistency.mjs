@@ -7,7 +7,7 @@
 // Two rules so far (GR390, GR391):
 //   fade      A control whose fill changes on hover fades at motion-hover, as Button does. Read from the page's own
 //             CSS: every rule with :hover that sets a background names the class it changes, and each element with
-//             that class must have a transition on background-color. Rows and options (ROWS) are passed over
+//             that class the rule reaches must have a transition on background-color. Rows and options (ROWS) are passed over
 //             hundreds of times a day and change at once (foundations.md, Motion), so they are left out.
 //   end icon  The icon at the end of a field (a chevron, a calendar, a clock, show and hide) ends END_GAP from the
 //             field's end edge in every kind of field, and is the same size as the other fields' of that height, so
@@ -41,27 +41,29 @@ const END = ['.dk-combobox__toggle', '.dk-date-picker__button', '.dk-time-picker
 /* c8 ignore start */
 function hoverClasses() {
   const strip = (s) => { let p; do { p = s; s = s.replace(/\([^()]*\)/g, ''); } while (s !== p); return s; };
-  const hover = new Set();
+  const hover = new Map();   // class -> the selectors that fill it on hover, without :hover, so only an element the rule reaches is measured
   const walk = (rules) => {
     for (const r of rules) {
       if (r.cssRules?.length) walk(r.cssRules);
       if (!(r instanceof CSSStyleRule) || !r.selectorText.includes(':hover')) continue;
       if (!r.style.getPropertyValue('background-color') && !r.style.getPropertyValue('background')) continue;
-      for (const part of strip(r.selectorText).split(',')) {
-        if (!part.includes(':hover') || part.includes('::')) continue;
-        const cls = part.trim().split(/[\s>+~]+/).pop().match(/\.(dk-[\w-]+)/);
-        if (cls) hover.add(cls[1]);
+      for (const part of r.selectorText.split(/,(?![^()]*\))/)) {
+        const bare = strip(part);
+        if (!bare.includes(':hover') || bare.includes('::')) continue;
+        const cls = bare.trim().split(/[\s>+~]+/).pop().match(/\.(dk-[\w-]+)/);
+        if (cls) hover.set(cls[1], [...(hover.get(cls[1]) || []), part.replace(/:hover/g, '').trim()]);
       }
     }
   };
   for (const sheet of document.styleSheets) { try { walk(sheet.cssRules); } catch { /* another origin's sheet */ } }
-  return [...hover];
+  return [...hover].map(([cls, sels]) => [cls, [...new Set(sels)].join(', ')]);
 }
 /** Runs in the page. One row per class with a hover fill that is on the page, and one per end-of-field icon. */
 function inPage({ FIELD, END, hover }) {
   const out = [];
-  for (const cls of hover) {
-    const el = [...document.getElementsByClassName(cls)].find((n) => n.getClientRects().length && !n.matches(':disabled, [aria-disabled="true"]'));
+  for (const [cls, sel] of hover) {
+    let el;
+    try { el = [...document.getElementsByClassName(cls)].find((n) => n.getClientRects().length && n.matches(sel) && !n.matches(':disabled, [aria-disabled="true"]')); } catch { continue; }
     if (!el) continue;
     const s = getComputedStyle(el);
     const props = s.transitionProperty.split(',').map((p) => p.trim());
