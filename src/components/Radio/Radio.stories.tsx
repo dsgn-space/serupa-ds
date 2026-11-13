@@ -7,7 +7,7 @@ const meta = {
   component: RadioGroup,
   subcomponents: { Radio },
   args: { 'aria-label': 'Plan', defaultValue: 'pro', orientation: 'vertical', size: 'md' },
-  argTypes: { variant: { control: 'inline-radio', options: ['default', 'card'] }, orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
+  argTypes: { variant: { control: 'inline-radio', options: ['plain', 'card'] }, orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   render: (args) => <RadioGroup {...args}>
     <Radio value="free">Free</Radio>
     <Radio value="pro" description="Everything in Free, plus unlimited projects">Pro</Radio>

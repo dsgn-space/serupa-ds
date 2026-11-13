@@ -1349,11 +1349,12 @@
 :is(.bg-primary, .bg-primary-hover, .bg-danger, .bg-danger-hover, .bg-surface-inverse) :is(.bg-surface, .bg-surface-muted, .bg-surface-raised, .bg-surface-overlay, .bg-field, .bg-secondary, .bg-primary-subtle, .bg-danger-subtle, .bg-success-subtle, .bg-warning-subtle, .bg-info-subtle, .dk-card, .dk-accordion--card, .dk-list--card, .dk-dialog__panel, .dk-drawer__panel, .dk-popover, .dk-menu, .dk-combobox__popup, .dk-date-picker__popup, .dk-time-picker__list, .dk-sidebar, .dk-navbar, .dk-toolbar, .dk-table, .dk-tree-view, .dk-toast, .dk-error-summary, .dk-sortable-list__item, .dk-file-upload__zone) * { --focus-ring: var(--dk-page-focus-ring); }
 /* A row's hover and selected fill (List, InlineEdit: surface-hover, a step off the page) on a recessed surface: a
    bg-surface-muted panel is already that colour in light, so rows there step up to surface-raised instead (white in
-   light, zinc-800 in dark). A surface painted inside it gives its rows the usual fill back; Card does the same. */
+   light, zinc-800 in dark). On a raised or floating surface (zinc-800 in dark) they step up to surface-hover-raised.
+   A surface painted inside gives its rows its own fill; Card, Popover, Dialog and Drawer do the same. */
 .bg-surface-muted { --dk-row-hover: var(--surface-raised); }
 .bg-surface { --dk-row-hover: var(--surface-hover); }
-.bg-surface-raised { --dk-row-hover: var(--surface-hover); }
-.bg-surface-overlay { --dk-row-hover: var(--surface-hover); }
+.bg-surface-raised { --dk-row-hover: var(--surface-hover-raised); }
+.bg-surface-overlay { --dk-row-hover: var(--surface-hover-raised); }
 /* background-image: none and gradients */
 .bg-none { background-image: none; }
 .bg-linear-to-t { --dk-gradient-position: to top in oklab; background-image: linear-gradient(var(--dk-gradient-stops)); }

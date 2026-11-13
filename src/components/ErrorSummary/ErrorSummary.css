@@ -14,7 +14,7 @@
 }
 .dk-error-summary:focus { outline: none; }
 .dk-error-summary:focus-visible { outline: var(--focus-ring-width) solid var(--error-summary-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-error-summary__title { margin: var(--spacing-0); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--error-summary-title-weight, var(--font-semibold)); overflow-wrap: anywhere; }
+.dk-error-summary__title { text-wrap: balance; margin: var(--spacing-0); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--error-summary-title-weight, var(--font-semibold)); overflow-wrap: anywhere; }
 .dk-error-summary__description { overflow-wrap: anywhere; }
 .dk-error-summary__list { display: flex; flex-direction: column; gap: var(--spacing-1); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-error-summary__link { color: var(--error-summary-link, var(--danger-text)); font-weight: var(--font-medium); text-decoration-line: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); overflow-wrap: anywhere; }

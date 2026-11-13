@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.5.0
+npm install github:dsgn-space/serupa-ds#v14.6.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -114,6 +114,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Image**: A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails.
 - **Kanban** (beta): A board of columns of cards, such as a sprint or a sales pipeline, that people move by dragging a handle, by keyboard, or from each card's "Move to…" menu.
 - **Kbd**: Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states. Also called: keycap, keyboard key.
+- **Lightbox**: A set of pictures shown full size, one at a time, over the page. Also called: image viewer, media viewer, photo gallery viewer, slideshow.
 - **List**: Rows of related things: people, files, notifications, settings.
 - **Logo** (beta): The product's logo at a set height, with a version for dark themes and a small mark for narrow screens.
 - **Quote** (beta): Quoted words with who said them, for a testimonial, a pull quote, or a quote in a page that isn't Prose. Also called: Blockquote, Testimonial, Pull quote.
@@ -160,8 +161,10 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **FilterBar** (beta): The filters on a list or a table, as a row of chips.
 - **InlineEdit**: Text people can change where it is: a project name, a card title, a slug. Also called: click to edit, editable text.
 - **Input**: A single-line text field: a native `<input>` in a box that can hold icons. Also called: text input, text field.
+- **MentionInput** (beta): A multi-line text field where typing "@" opens a list of people to mention, at the caret. Also called: mentions, @-mentions, user tagging.
 - **NumberInput**: A field for a number, with − and + buttons at the end. Also called: nudger, quantity input, counter, spin button.
 - **PasswordInput**: A password field with a button at the end that shows and hides what was typed, so people can check it before they submit.
+- **PeriodPicker** (beta): A month, a quarter or a year, picked from a grid: for a report's month, a billing period or a dashboard's quarter.
 - **PhoneInput**: A phone number field with a country menu at the start.
 - **PinInput**: A one-time code or PIN, shown as one box per character, such as the 6-digit code texted at sign-in. Also called: OTP input, one-time code input, verification code input.
 - **Radio**: Native radios for one choice from a short list. Also called: radio button, radio group.
