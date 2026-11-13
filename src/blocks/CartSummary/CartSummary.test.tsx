@@ -67,6 +67,23 @@ describe('Blocks/Cart summary', () => {
     await expect.poll(() => remove.mock.calls).toEqual([['oxford']]);
   });
 
+  test('an item removed for good and then added again (the same product) shows in the cart and its sums', async () => {
+    let add: () => void = () => {};
+    function Shop() {
+      const [list, setList] = React.useState<readonly CartItem[]>(items);
+      add = () => setList((all) => [...all, items[0]!]);
+      return <SerupaProvider locale="en-US"><CartSummary items={list} currency="USD" onCheckout={() => {}} onQuantityChange={() => {}}
+        onRemove={(id) => setList((all) => all.filter((i) => i.id !== id))} /><Toaster /></SerupaProvider>;
+    }
+    await render(<Shop />);
+    await userEvent.click(page.getByRole('button', { name: 'Remove Linen shirt' }));
+    toast.dismiss();
+    await expect.poll(() => rows().length).toBe(1);
+    add();
+    await expect.poll(() => rows().map((r) => r.querySelector('a')?.textContent)).toEqual(['Oxford shirt', 'Linen shirt']);
+    expect(sums()[0]).toContain('$110.00');
+  });
+
   test('removing the last item leaves focus on the heading, and the empty cart says so with a way back', async () => {
     await render(<Cart initial={items.slice(1)} continueHref="/shop" />);
     await userEvent.click(page.getByRole('button', { name: 'Remove Oxford shirt' }));
