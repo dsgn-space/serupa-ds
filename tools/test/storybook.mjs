@@ -126,6 +126,11 @@ async function checkDocs(e, w) {
   });
   if (headings) out.push(t(`docs · ${e.title} · headings: each id once, no level skipped`, !headings.twice.length && !headings.skips.length,
     [...headings.twice.map((id) => `id "${id}" twice`), ...headings.skips].slice(0, 4).join(' | ')));
+  // Links to other pages (a README's "see also", the component and token tables): each lands on a page in the index,
+  // not on Storybook's "Couldn't find story" screen. Read from the page, so a wrong id from any block is caught.
+  const links = notReady ? null : await w.page.evaluate(() => [...document.querySelectorAll('#storybook-docs a[href*="?path=/"]')]
+    .map((a) => /[?&]path=\/(?:docs|story)\/([^&#]+)/.exec(a.getAttribute('href') || '')?.[1]).filter(Boolean));
+  if (links) { const dead = [...new Set(links.filter((id) => !entries[decodeURIComponent(id)]))]; out.push(t(`docs · ${e.title} · every link to another page lands on one`, !dead.length, dead.slice(0, 4).join(' | '))); }
   if (!notReady) { const v = await docsAxe(w); out.push(t(`docs · ${e.title} · axe (WCAG 2.2 AA), blue-light`, !v.length, v.slice(0, 3).join(' | '))); }
   // In a dark mode the whole docs page follows the theme, so dark components aren't shown on white.
   const darkNotReady = await open(w, e, 'blue-dark');

@@ -32,12 +32,15 @@ type TypeStyle = { name: string; fontSize: string; lineHeight: string; fontWeigh
 type TypeGroup = { name: string; note?: string; styles: TypeStyle[] };
 const T = tokens as unknown as Record<string, Group> & { type: { groups: TypeGroup[] }; color: Group & { themes: { id: string; name: string }[] } };
 
-// Each component's sidebar path (Components/Forms/Input), read from its stories' title, so links follow the grouping.
+// Each component's sidebar path (Components/Forms/Input), read from its stories' meta title, so links follow the
+// grouping. Keyed by the component's folder, which README links name. Only a title with a group counts: the first
+// title: in a file can be a story's data (Stepper's steps, Kanban's cards), which once sent their links to no page.
+// storybook.mjs checks that every docs link resolves in Storybook's index.
 const storyFiles = import.meta.glob('../src/components/*/*.stories.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const docsId: Record<string, string> = {};
-for (const src of Object.values(storyFiles)) {
-  const title = /title: '([^']+)'/.exec(src)?.[1];
-  if (title) docsId[title.split('/').pop()!] = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+for (const [file, src] of Object.entries(storyFiles)) {
+  const title = /\btitle:\s*(['"])((?:Components|Foundations|Blocks|Patterns)\/[^'"]+)\1/.exec(src)?.[2];
+  if (title) docsId[file.split('/').at(-2)!] = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 }
 
 /* Heading ids (GR361). markdown-to-jsx gives each heading an id from its text, without looking at the rest of the
