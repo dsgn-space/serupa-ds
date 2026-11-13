@@ -1,0 +1,18 @@
+import { Meta, Title, Description, Primary, Controls, Stories } from '@storybook/addon-docs/blocks';
+import { Guide } from '../../../docs/blocks';
+import * as StoriesCountdown from './Countdown.stories';
+import guide from './README.md?raw';
+
+<Meta of={StoriesCountdown} />
+
+<Title />
+
+<Primary />
+
+<Controls />
+
+<Guide source={guide} />
+
+## Examples
+
+<Stories title="" includePrimary={false} />

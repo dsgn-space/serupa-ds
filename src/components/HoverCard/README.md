@@ -82,7 +82,7 @@ Each is an optional override: set it on the page, a container or one HoverCard. 
 | `--hover-card-radius` | `radius-surface` | The corners (8px). |
 | `--hover-card-border-width` | `border-width-1` | The border's width (1px). |
 | `--hover-card-width` | `container-xs` | The card's width (320px), never wider than the screen. |
-| `--hover-card-padding` | `spacing-4` | Space inside, on every side (16px). |
+| `--hover-card-padding` | `space-content` | Space inside, on every side (16px). |
 | `--hover-card-offset` | `spacing-2` | The gap between the link and the card (8px). |
 | `--hover-card-z-index` | `z-popover` | Its stacking level, for a browser without the top layer. |
 <!-- token-table:end -->
