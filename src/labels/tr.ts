@@ -334,4 +334,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'Kaydırılabilir içerik',
   showMore: 'Daha fazla göster',
   showLess: 'Daha az göster',
+  transferAvailable: 'Kullanılabilir',
+  transferChosen: 'Seçilen',
+  transferAdd: 'Ekle',
+  transferRemove: 'Kaldır',
+  transferAll: 'Tümü',
+  transferAddReason: 'Önce eklenecekleri işaretleyin',
+  transferRemoveReason: 'Önce kaldırılacakları işaretleyin',
+  transferEmpty: 'Yok',
+  transferMoved: (items, list) => items + ', ' + list + ' listesine taşındı.',
 };

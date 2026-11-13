@@ -336,4 +336,13 @@ export const labels: SerupaLabels = {
   scrollArea: '스크롤 콘텐츠',
   showMore: '더 보기',
   showLess: '간단히 보기',
+  transferAvailable: '사용 가능',
+  transferChosen: '선택됨',
+  transferAdd: '추가',
+  transferRemove: '제거',
+  transferAll: '모두',
+  transferAddReason: '먼저 추가할 항목을 선택하세요',
+  transferRemoveReason: '먼저 제거할 항목을 선택하세요',
+  transferEmpty: '없음',
+  transferMoved: (items, list) => items + '을(를) ' + list + '(으)로 옮겼습니다.',
 };

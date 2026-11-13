@@ -334,4 +334,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'Rullbart innehåll',
   showMore: 'Visa mer',
   showLess: 'Visa mindre',
+  transferAvailable: 'Tillgängliga',
+  transferChosen: 'Valda',
+  transferAdd: 'Lägg till',
+  transferRemove: 'Ta bort',
+  transferAll: 'Alla',
+  transferAddReason: 'Kryssa först i dem du vill lägga till',
+  transferRemoveReason: 'Kryssa först i dem du vill ta bort',
+  transferEmpty: 'Inga',
+  transferMoved: (items, list) => items + ' flyttades till ' + list + '.',
 };
