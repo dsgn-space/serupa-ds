@@ -172,7 +172,10 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
   return (
     <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 outline-none">
+      <header className="border-b border-border bg-surface px-4 py-3">
+        <p className="m-0 text-base font-semibold">Acme</p>
+      </header>
+      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
         <Heading level={1} size="2xl">Open a business account</Heading>
         <Stepper {...s.stepperProps} current={sent ? STEPS.length : s.current} onStepClick={sent || busy ? undefined : s.stepperProps.onStepClick} size="sm" aria-label="Application steps" />
         {sent ? (
