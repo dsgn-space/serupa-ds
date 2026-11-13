@@ -172,8 +172,8 @@
     },
     "field-border-hover": {
       "$type": "color",
-      "$value": "{color.teal-800}",
-      "$description": "Alias. Field border on hover: the theme's accent one step stronger than `primary`, away from the page (brand 700 in light, where primary is 600, and teal 800 in emerald; brand 300 in dark, where primary is 400, and teal 300 in emerald).",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Field border on hover: the resting `field-border` one gray step stronger (zinc-400 in light, zinc-600 in dark), so the field answers the pointer without taking the accent, which stays for focus.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border-hover"
