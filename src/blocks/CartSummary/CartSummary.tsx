@@ -133,6 +133,7 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
   // The removals whose Undo is still up, by item: Check out removes them for good first, so the order leaves them out.
   const pending = React.useRef(new Map<string, string>());
   const latestCheckout = React.useRef(onCheckout);
+  // every render: keeps the app's latest onCheckout, which Check out calls after the removals have rendered.
   React.useEffect(() => { latestCheckout.current = onCheckout; });
   const remove = (item: CartItem) => {
     const at = shown.indexOf(item), next = shown[at + 1] || shown[at - 1];
