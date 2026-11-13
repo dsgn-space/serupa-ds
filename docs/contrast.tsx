@@ -39,7 +39,7 @@ export function ContrastMatrix() {
     <div role="region" aria-label="Contrast of each pair in each theme" tabIndex={0} style={{ overflowX: 'auto' }}>
       <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
         <thead><tr><th style={cell}>Pair</th><th style={cell}>Needs</th>{C.themes.map((th) => <th key={th.id} style={cell}>{th.name}</th>)}</tr></thead>
-        <tbody>{rows.map((r) => <tr key={`${r.fg} ${r.bg} ${r.need}`}>
+        <tbody>{rows.map((r, i) => <tr key={`${r.fg} ${r.bg} ${r.need} ${i}`}>
           <td style={cell}><div><code>{r.fg}</code> on <code>{r.bg}</code></div><div style={{ color: 'var(--text-muted)', fontSize: 12 }}>{r.what}</div></td>
           <td style={cell}>{r.need}:1</td>
           {r.themes.map((t) => {

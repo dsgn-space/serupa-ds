@@ -14,7 +14,7 @@ export default tseslint.config(
   // tools/skill-eval/results/ holds agents' answers as they wrote them, which the eval grades: not our code to lint.
   // tools/skill-eval/starts/ holds the files an eval task starts from, and reviews/ the changes the review eval
   // grades a review of: faults included on purpose.
-  { ignores: ['dist/', 'storybook-static/', 'node_modules/', '.test-tmp/', 'tools/test/baseline-api/', '.claude/', '.ci-home/', '.npm/', 'tools/skill-eval/results/', 'tools/skill-eval/starts/', 'tools/skill-eval/reviews/'] },
+  { ignores: ['dist/', 'storybook-static/', 'site-static/', 'node_modules/', '.test-tmp/', '.test-tmp-*/', 'tools/test/baseline-api/', '.claude/', '.ci-home/', '.npm/', 'tools/skill-eval/results/', 'tools/skill-eval/starts/', 'tools/skill-eval/reviews/'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -42,7 +42,7 @@ export default tseslint.config(
     rules: { quotes: 'off' },
   },
   {
-    files: ['src/**/*.{ts,tsx,js}', 'docs/**/*.tsx', '.storybook/**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx,js}', 'docs/**/*.tsx', '.storybook/**/*.{ts,tsx}', 'site/**/*.{ts,tsx}'],
     plugins: { 'react-hooks': reactHooks },
     languageOptions: { globals: globals.browser },
     // The two classic hook rules only. Plugin 7's recommended set also turns on the React Compiler rules
@@ -82,7 +82,7 @@ export default tseslint.config(
     // a native dialog closed by a click on its backdrop, a scrolling pane that takes Tab, a group that hands focus
     // to one item (roving tabindex), Breadcrumb's last item (text, not a link, whatever href says) and a ListItem
     // with href and onClick (the click lands on its link). The queue's TF1 line names the ones to fix in their components.
-    files: ['src/components/**/*.tsx', 'src/blocks/**/*.tsx', 'src/patterns/**/*.tsx', 'docs/**/*.tsx'],
+    files: ['src/components/**/*.tsx', 'src/blocks/**/*.tsx', 'src/patterns/**/*.tsx', 'docs/**/*.tsx', 'site/**/*.tsx'],
     ignores: ['src/**/*.test.tsx'],
     plugins: { 'jsx-a11y-x': jsxA11y },
     settings: { 'jsx-a11y-x': { components: a11yComponents(import.meta.dirname), polymorphicPropName: 'as' } },

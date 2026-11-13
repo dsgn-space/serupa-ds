@@ -5,12 +5,12 @@ import { DocsContext, Markdown } from '@storybook/addon-docs/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
 import foundations from './foundations.md?raw';
-import * as MATERIAL from '../src/material/icons';
 import { Icon } from '../src/components/Icon/Icon';
 import { Button } from '../src/components/Button/Button';
 import { SearchInput } from '../src/components/SearchInput/SearchInput';
 import { CopyButton } from '../src/components/CopyButton/CopyButton';
 import { customIcons, isIconData } from '../src/icons';
+import type { IconData } from '../src/material/types';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
 import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
@@ -278,13 +278,17 @@ export function TypeScale() {
   </div>)}</div>;
 }
 
-const MATERIAL_ICONS = (Object.values(MATERIAL) as unknown[]).filter(isIconData).sort((x, y) => x.name.localeCompare(y.name));
+// The whole icon set (3 MB) is fetched when the gallery is on the page, not with every page that uses these blocks.
+const materialIcons = (): Promise<IconData[]> => import('../src/material/icons')
+  .then((m) => (Object.values(m) as unknown[]).filter(isIconData).sort((x, y) => x.name.localeCompare(y.name)));
 
 /** Every Material Symbol, plus your custom icons: search by name, and a click copies an icon's name. */
 export function IconGallery() {
   const [q, setQ] = React.useState('');
   const [copied, setCopied] = React.useState('');
   const [limit, setLimit] = React.useState(240);
+  const [all, setAll] = React.useState<IconData[] | null>(null);
+  React.useEffect(() => { let live = true; void materialIcons().then((list) => { if (live) setAll(list); }); return () => { live = false; }; }, []);
   const term = q.trim().toLowerCase().replace(/\s+/g, '_');
   React.useEffect(() => setLimit(240), [term]);
   const copy = (text: string) => {
@@ -292,7 +296,7 @@ export function IconGallery() {
     setCopied(text);
   };
   const custom = customIcons.filter((n) => !term || n.includes(term));
-  const material = MATERIAL_ICONS.filter((d) => !term || d.name.includes(term));
+  const material = (all ?? []).filter((d) => !term || d.name.includes(term));
   const tile = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 4px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', cursor: 'pointer', font: 'inherit' } as const;
   const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))', gap: 8 } as const;
   const label = { fontSize: 12, color: 'var(--text-muted)', overflowWrap: 'anywhere', textAlign: 'center' } as const;
@@ -310,8 +314,8 @@ export function IconGallery() {
       <div style={grid}>{custom.map((n) => tileFor(n, <Icon name={n} />))}</div>
     </section> : null}
     <section>
-      <h3 style={heading}>Material Symbols ({material.length})</h3>
-      {material.length ? <div style={grid}>{material.slice(0, limit).map((d) => tileFor(d.name, <Icon icon={d} />))}</div> : <p style={{ margin: 0 }}>No icon matches.</p>}
+      <h3 style={heading}>Material Symbols{all ? ` (${material.length})` : ''}</h3>
+      {!all ? <p style={{ margin: 0, color: 'var(--text-muted)' }}>Loading the icons…</p> : material.length ? <div style={grid}>{material.slice(0, limit).map((d) => tileFor(d.name, <Icon icon={d} />))}</div> : <p style={{ margin: 0 }}>No icon matches.</p>}
       {material.length > limit ? <div style={{ marginTop: 8 }}><Button variant="secondary" size="sm" onClick={() => setLimit(limit + 480)}>Show more ({material.length - limit} left)</Button></div> : null}
     </section>
   </div>;
