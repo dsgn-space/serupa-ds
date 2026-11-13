@@ -90,6 +90,10 @@ Radio, Checkbox or Switch was given `label`, as other libraries name these contr
 
 A Link with `tone="neutral"` and `underline="hover"` looks like plain text until it's hovered, so people can't tell it's a link. Keep the underline, or use `tone="primary"` where the place already says it holds links.
 
+## list-busy
+
+List's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
+
 ## no-name
 
 A control (a slider, a dialog, a group…) has no accessible name, so a screen reader announces only its role. The warning says how to name that kind of control: a Field label, a `<label htmlFor>`, `aria-label` or `aria-labelledby`.

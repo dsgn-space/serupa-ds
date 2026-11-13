@@ -285,7 +285,7 @@ describe('VirtualList', () => {
   test('the loading recipe: ListLoadingItems rows are as tall as the VirtualList rows that replace them', async () => {
     const person = (i: number) => <ListItem leading={<Avatar name={'Ada ' + i} alt="" size="sm" />} title={'Ada ' + i} description="ada@example.com" />;
     await render(<div style={{ width: 400 }}>
-      <List id="wait" aria-label="Members" busy><ListLoadingItems rows={3} description leading="sm" label="Loading members" /></List>
+      <List id="wait" aria-label="Members" loading><ListLoadingItems rows={3} description leading="sm" label="Loading members" /></List>
       <VirtualList id="v" aria-label="Members" count={3} renderItem={person} />
     </div>);
     expect(el('wait').getAttribute('aria-busy')).toBe('true');

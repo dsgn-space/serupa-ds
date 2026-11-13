@@ -69,7 +69,7 @@ function States(args: React.ComponentProps<typeof VirtualList>) {
       </div>
       {state === 'failed' ? <Alert tone="danger" actions={<Button size="sm" onClick={() => setState('loading')}>Retry</Button>}>Members didn't load. Check your connection and try again.</Alert>
         : state === 'empty' ? <EmptyState size="sm" title="No members yet" description="Invite people to work on this project with you." />
-        : state === 'loading' ? <List aria-label="Members" busy><ListLoadingItems rows={6} description leading="sm" label="Loading members" /></List>
+        : state === 'loading' ? <List aria-label="Members" loading><ListLoadingItems rows={6} description leading="sm" label="Loading members" /></List>
         : <VirtualList {...args} />}
     </div>
   );

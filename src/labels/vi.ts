@@ -323,7 +323,7 @@ export const labels: SerupaLabels = {
   allDay: 'Cả ngày',
   eventTime: (from, to) => 'từ ' + from + ' đến ' + to,
   repeats: 'Lặp lại',
-  noEvents: 'Không có sự kiện nào trong tháng này.',
+  noEvents: 'Không có sự kiện nào trong tháng này',
   dateFieldDay: 'Ngày',
   dateFieldMonth: 'Tháng',
   dateFieldYear: 'Năm',
