@@ -151,6 +151,7 @@ One idea has one name in every component. A new prop takes the name in the first
 | What a color means | `tone`: `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `status`, `color`, `intent`, `kind` for a color |
 | The visual style | `variant`, such as `solid`, `subtle`, `outline`, `ghost` | `appearance`, `look` |
 | Busy while something runs | `loading` | `pending`, `busy` |
+| Words only said to screen readers, not shown | `xLabel`, such as `loadingLabel`, `closeLabel` (a label may be shown or only said) | `xText`, which is always shown (`successText`, `emptyText`) |
 | The wait before an overlay opens or closes | `openDelay`, `closeDelay` (ms) | `delay`, `showDelay` |
 | Turning a part off | `hideX` (a part on by default may also take `x={false}`) | `noX`, `xHidden`, `disableX` |
 | Can't be used | `disabled` (and `disabledReason`) | `enabled`, `inactive` |
@@ -158,7 +159,11 @@ One idea has one name in every component. A new prop takes the name in the first
 
 A value named `default` in a prop's union means the prop's default: `tone="default"` must be what you get with no `tone`. A name that reads like one in the "Not" column but means something else stays, with why, in `NAME_KEPT` in `tools/test/props.mjs`: Stack's `direction` is the CSS `flex-direction` it sets, and Loader's `delay` is how long a load runs before the spinner shows.
 
-`node tools/test/props.mjs` holds every prop to the orientation, placement, loading and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
+`node tools/test/props.mjs` holds every prop to the orientation, placement, loading, said-words and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
+
+### Token names
+
+A component token names the part, then the property, then the state: `--<component>-<part>-<property>-<state>`, such as `--tabs-indicator-width`, `--button-bg-disabled` and `--checkbox-bg-checked-hover`. With the state last, a token's states sort together in its table and read as one family. A word that is a part, such as Field's error message in `--field-error-color`, isn't a state. `node tools/test/token-names.mjs` fails a state before the property. The tokens that still put it first are listed in its `GAPS` with their new names, and that list only shrinks. A renamed token keeps its old name as an inner fallback (`var(--button-bg-disabled, var(--button-disabled-bg, …))`) until the next major, as a renamed prop does.
 
 ## Release cadence and support
 

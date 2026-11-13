@@ -90,6 +90,19 @@ describe('SortableList', () => {
     expect([names(), moves]).toEqual([['Mercury', 'Apollo', 'Gemini', 'Artemis'], [{ from: 2, to: 0 }]]);
   });
 
+  test('rows taken away while one is held past them (another user deleted them): the drop reports the place it lands, and says so', async () => {
+    const moves: Array<{ from: number; to: number }> = [];
+    const list = (items: Item[]) => <SortableList id="sl" aria-label="Missions" items={items} getKey={(i) => i.id} getLabel={(i) => i.name} renderItem={(i) => i.name} onReorder={(_, m) => moves.push(m)} />;
+    const { rerender } = await render(list(ITEMS));
+    handle('Apollo').focus();
+    await userEvent.keyboard('{Enter}{End}');
+    await rerender(list(ITEMS.filter((i) => i.name !== 'Gemini' && i.name !== 'Mercury')));
+    expect(names()).toEqual(['Artemis', 'Apollo']);
+    await userEvent.keyboard('{Enter}');
+    expect(moves).toEqual([{ from: 0, to: 1 }]);
+    await said('Dropped Apollo at position 2 of 2.');
+  });
+
   test('Tab or a click elsewhere while an item is picked up puts it back', async () => {
     const moves: Array<{ from: number; to: number }> = [];
     await render(<List moves={moves} />);

@@ -109,9 +109,14 @@ const steps = [
     // in one language took 12 minutes in one job). A narrowed run may have fewer files than shards: a shard left
     // with none passes.
     const shard = process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests'] : [];
+    const ownIn = (l, more) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shard, ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...direct].sort().join(','), ...more }];
+    // A narrowed pull request runs no locale jobs, so its base jobs take the changed components' own tests in all four
+    // languages: a test that failed only in one of them was found in the queue, where it drops every group behind it.
+    // The queue does the same in seconds, so it costs about a minute (SERUPA_OWN keeps the steps in the base part).
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since')) return own.length ? LOCALES.map((l) => ownIn(l, { SERUPA_OWN: '1' })) : [];
     return [
       [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...covered), { SERUPA_LOCALE: locale }],
-      ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shard, ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...direct].sort().join(',') }]) : []),
+      ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => ownIn(l)) : []),
     ];
   })() : []),
   // --update first accepts the current API and utility classes as the baselines the checks compare with.
@@ -132,7 +137,7 @@ if (arg('--group')) {
 if (process.env.SERUPA_PART) {
   const part = process.env.SERUPA_PART;
   if (!['base', 'locale'].includes(part)) { console.error(`Unknown SERUPA_PART "${part}" (base or locale)`); process.exit(2); }
-  steps.splice(0, steps.length, ...steps.filter((step) => Boolean(step[4]?.SERUPA_LOCALE) === (part === 'locale')));
+  steps.splice(0, steps.length, ...steps.filter((step) => Boolean(step[4]?.SERUPA_LOCALE && !step[4]?.SERUPA_OWN) === (part === 'locale')));
 }
 // No component changed (a changeset alone): nothing for the component, visual or Storybook steps to cover.
 // A changed shared test still runs, in the component steps, with nothing else there.

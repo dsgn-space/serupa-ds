@@ -109,8 +109,9 @@ jobs:
           if [ -n "$since" ] && [ "$EVENT" = pull_request ]; then
             if ! git diff --name-only "$since" HEAD | grep -qE '^(src/|docs/|\.storybook/|design-tokens/|tokens/|tokens\.(css|json)$|fonts/|package(-lock)?\.json$|tsconfig\.json$|tsup\.config\.mjs$|\.nvmrc$|README\.md$|CHANGELOG\.md$|\.changeset/[^/]+\.md$|\.github/workflows/ci\.yml$|\.github/actions/|bin/migrate/|tools/(build|tokens|utilities|typescript|icons|fonts)/|tools/setup\.mjs$|tools/test/(lib|run|visual|storybook)\.mjs$|tools/test/baseline-visual/)'; then visual=""; fi
           fi
-          # The component tests in the other languages run in the merge queue only, on the commit that becomes main: a
-          # pull request's own run tests its components in English (and Visual when the pictures can change), the
+          # All the component tests in the other languages run in the merge queue only, on the commit that becomes main: a
+          # pull request's own run tests its components in English, with the changed components' own tests in the other
+          # languages in the same base jobs (run.mjs), and Visual when the pictures can change: the
           # failures a pull request meets most, so they are found before the queue, where one failure drops every
           # group behind it.
           x86='{"include":[

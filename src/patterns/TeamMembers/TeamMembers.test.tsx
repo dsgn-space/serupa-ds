@@ -121,9 +121,10 @@ describe('Patterns/Team members', () => {
     await expect.element(screen.getByText('Enter at least one email address.')).toBeVisible();
     await userEvent.keyboard('{Escape}');
     await screen.getByRole('button', { name: 'Invite people' }).click();
-    // In the dialog: the page's polite live region may still be saying the old problem.
+    // In the dialog: the page's polite live region moves into it and may still be saying the old problem for its
+    // hold (announce.ts), so only the form's own text counts.
     await expect.element(screen.getByRole('dialog')).toBeVisible();
-    expect(screen.getByRole('dialog').getByText('Enter at least one email address.').elements()).toHaveLength(0);
+    expect(screen.getByRole('dialog').getByText('Enter at least one email address.').elements().filter((e) => !e.closest('[data-dk-announcer]'))).toHaveLength(0);
   });
 
   test('loading: one busy list named "Loading members", no rows yet; a failed load says so with Try again', async () => {

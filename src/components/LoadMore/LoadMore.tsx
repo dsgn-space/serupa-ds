@@ -119,7 +119,7 @@ export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>
       onBlur={(e) => { if (rest.onBlur) rest.onBlur(e); if (e.target === e.currentTarget) e.currentTarget.removeAttribute('tabindex'); }}>
       {count != null && total != null ? <p ref={summary} className="dk-load-more__summary" tabIndex={!hasMore && endText === null ? -1 : undefined}>{labels.showingOf(num(count), num(total))}</p> : null}
       {hasMore
-        ? <Button variant="outline" className="dk-load-more__button" wrap loading={busy} loadingText="" onClick={run}>{label != null ? label : labels.loadMore}</Button>
+        ? <Button variant="outline" className="dk-load-more__button" wrap loading={busy} loadingLabel="" onClick={run}>{label != null ? label : labels.loadMore}</Button>
         : endText !== null ? <p className="dk-load-more__end" ref={end} tabIndex={-1}>{endText !== undefined ? endText : labels.allLoaded}</p> : null}
     </div>
   );
