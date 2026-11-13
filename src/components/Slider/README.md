@@ -93,7 +93,7 @@ Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in i
 | `min`, `max` | `number` | `0`, `100` | |
 | `step` | `number` | `1` | Values snap to it. |
 | `largeStep` | `number` | `10` | Steps moved by PageUp, PageDown and Shift with an arrow. |
-| `size` | `'sm' \| 'md'` | `'md'` | 4px track and 16px thumb, or 6px and 20px. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 4px track and 16px thumb, 6px and 20px, or 8px and 24px (`lg`, beside lg fields in a form). |
 | `disabled` | `boolean` | `false` | |
 | `invalid` | `boolean` | `false` | A danger fill and ring, and `aria-invalid` on the thumbs. Field's `error` sets it. |
 | `readOnly` | `boolean` | `false` | Focusable and read out, but it doesn't move; the value is still submitted. |
@@ -134,8 +134,10 @@ Each is an optional override: set it on the page, a container or one slider. The
 | --- | --- | --- |
 | `--slider-track-height-sm` | `spacing-1` | The track's thickness, size="sm" (4px). |
 | `--slider-track-height-md` | `spacing-1.5` | The track's thickness, size="md", the default (6px). |
+| `--slider-track-height-lg` | `spacing-2` | The track's thickness, size="lg" (8px). |
 | `--slider-thumb-size-sm` | `spacing-4` | The thumb, size="sm" (16px). |
 | `--slider-thumb-size-md` | `spacing-5` | The thumb, size="md" (20px). |
+| `--slider-thumb-size-lg` | `spacing-6` | The thumb, size="lg" (24px). |
 | `--slider-input-width` | `spacing-20` | With inputs, each number field's width (80px). |
 
 **Border**

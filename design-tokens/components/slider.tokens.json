@@ -124,6 +124,16 @@
           }
         }
       },
+      "track-height-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The track's thickness, size=\"lg\" (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-track-height-lg"
+          }
+        }
+      },
       "thumb-size-sm": {
         "$type": "dimension",
         "$value": "{spacing.spacing-4}",
@@ -141,6 +151,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--slider-thumb-size-md"
+          }
+        }
+      },
+      "thumb-size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The thumb, size=\"lg\" (24px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-thumb-size-lg"
           }
         }
       },
