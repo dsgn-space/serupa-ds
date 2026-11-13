@@ -11,14 +11,10 @@ Where Serupa is going, by theme. It says what is coming and roughly in what orde
 
 ## Next
 
-- **Charts.** A family of chart components built on the same tokens, themes and accessibility rules as everything else: readable in all six themes, with the numbers available as text.
+- **More charts.** Chart (line and bar) and Sparkline ship in beta today; more kinds follow on the same tokens, themes and accessibility rules: readable in all six themes, with the numbers available as text.
 - **More of each component's details.** The remaining ideas per component (overlays, pickers, forms, navigation), one component at a time.
-
-## Later
-
-- **Page patterns.** Whole screens built from the components, such as sign-in, settings, a dashboard and a data table page, as examples to copy and as tests that the components work together.
-- **A package registry.** Installing from GitHub releases works today. The name is final (`serupa-ds`, chosen 2 November 2026); publishing to a registry waits only on Diki's go-ahead.
+- **More page patterns.** 24 whole screens ship today (`src/patterns/`: sign-in, settings, a dashboard, checkout and more), as examples to copy and as tests that the components work together. New ones come when a product asks for them.
 
 ## Majors
 
-The package keeps its name, `serupa-ds`: Diki chose it on 2 November 2026, so no major is waiting to rename it, and your imports stay as they are. Nothing is marked deprecated today, so no removals are waiting either. A major comes only when something has to stop working, and is written up for comment first, with a migration guide and `npx serupa-migrate` for the renames a script can make.
+15.0.0 is scheduled for 22 December 2026 ([docs/rfcs/15.0.0.md](docs/rfcs/15.0.0.md)). It removes the props deprecated in 14.x, after at least four weeks of warnings, and moves the package to a private registry under a scoped name, `@diki-stwn/serupa-ds` on GitHub Packages, so imports change once. `npx serupa-migrate` makes the renames a script can. A major comes only when something has to stop working, and is written up for comment first, with a migration guide.
