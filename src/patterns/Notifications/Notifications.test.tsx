@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { Notifications } from './Notifications';
 
 const active = () => document.activeElement as HTMLElement;
@@ -106,8 +106,18 @@ describe('Patterns/Notifications', () => {
   });
 
   test('"Notification settings" by the heading leads to settingsHref, so turning notifications off is one step away', async () => {
+    await page.viewport(1024, 768);
     const screen = await render(<Notifications settingsHref="/settings#notifications" />);
     await expect.element(screen.getByRole('link', { name: 'Notification settings' })).toHaveAttribute('href', '/settings#notifications');
+  });
+
+  test('the title opens like every app page (the PageHeader line under it), and on a phone the settings sit in More actions', async () => {
+    await page.viewport(360, 720);
+    const screen = await render(<Notifications settingsHref="/settings#notifications" />);
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('h1'))).toBe(true);
+    await screen.getByRole('button', { name: 'More actions' }).click();
+    await expect.element(screen.getByRole('menuitem', { name: 'Notification settings' })).toHaveAttribute('href', '/settings#notifications');
   });
 
   test('with no notifications at all: an empty state that says what will show up here and links to the settings, and Mark all as read off', async () => {

@@ -59,6 +59,37 @@ describe('Blocks/Page header', () => {
     await expect.element(screen.getByRole('button', { name: 'Weitere Aktionen' })).toBeVisible();
   });
 
+  test('a disabled action says so and does nothing, and an icon shows before its label', async () => {
+    await page.viewport(1024, 768);
+    let ran = 0;
+    const screen = await render(<PageHeader title="Inbox" primary={{ label: 'Mark all as read', disabled: true, onSelect: () => { ran++; } }}
+      secondary={[{ label: 'Settings', icon: 'settings', href: '/settings', disabled: true }]} />);
+    await expect.element(screen.getByRole('button', { name: 'Mark all as read' })).toBeDisabled();
+    await expect.element(screen.getByRole('button', { name: 'Settings' })).toBeDisabled();
+    await expect.poll(() => screen.getByRole('button', { name: 'Settings' }).element().querySelector('svg')).not.toBeNull();
+    expect(ran).toBe(0);
+  });
+
+  test('on a phone, a disabled secondary action is still listed but can\'t be chosen', async () => {
+    await page.viewport(360, 720);
+    const screen = await render(<PageHeader title="Inbox" secondary={[{ label: 'Export', icon: 'download', href: '/export', disabled: true }]} />);
+    await screen.getByRole('button', { name: 'More actions' }).click();
+    const item = screen.getByRole('menuitem', { name: 'Export' }).element();
+    expect([item.getAttribute('aria-disabled'), item.getAttribute('href')]).toEqual(['true', null]);
+  });
+
+  test('with headingRef, the h1 can take focus from a script, for a page that moves focus to its title', async () => {
+    function Page() {
+      const ref = React.useRef<HTMLHeadingElement>(null);
+      return <><PageHeader title="Inbox" headingRef={ref} /><button type="button" onClick={() => ref.current?.focus()}>Done</button></>;
+    }
+    const screen = await render(<Page />);
+    await screen.getByRole('button', { name: 'Done' }).click();
+    expect([active().tagName, active().textContent]).toEqual(['H1', 'Inbox']);
+    // Out of the Tab order: only a script moves focus there.
+    expect(document.querySelector('h1')!.getAttribute('tabindex')).toBe('-1');
+  });
+
   test('with only a title, it shows only the h1: no empty breadcrumb, actions or nav', async () => {
     await render(<PageHeader title="Projects" />);
     expect([document.querySelectorAll('h1').length, document.querySelectorAll('nav, button, a').length]).toEqual([1, 0]);
