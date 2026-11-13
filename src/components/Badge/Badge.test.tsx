@@ -696,12 +696,13 @@ describe('loading ring', () => {
 
 describe('Badge: loadingText, the old name of loadingLabel', () => {
   test('is still said when loading starts, as loadingLabel is, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // Tests run in a random order, and the file collects every warning: take this one back out after.
+    const from = warns.length;
     try {
       const { rerender } = await render(<Badge {...{ loadingText: 'Checking status' }}>Live</Badge>);
       await rerender(<Badge loading {...{ loadingText: 'Checking status' }}>Live</Badge>);
       await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '').toContain('Checking status');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('badge-loading-text'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
+      expect(warns.slice(from).filter((m) => m.includes('badge-loading-text'))).toHaveLength(1);
+    } finally { warns.splice(from); }
   });
 });
