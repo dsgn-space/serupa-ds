@@ -42,11 +42,11 @@ const PARTS: Array<() => Promise<Readonly<Record<string, IconData>>>> = [
 /** The part that would hold a name: the last one whose first name sorts at or before it. */
 export function partOf(name: string): number {
   let i = 0;
-  while (i + 1 < FIRST.length && FIRST[i + 1] <= name) i++;
+  for (let next = FIRST[i + 1]; next !== undefined && next <= name; next = FIRST[i + 1]) i++;
   return i;
 }
 
 /** Loads the part of the icon table that would hold a name. */
 export function loadPart(name: string): Promise<Readonly<Record<string, IconData>>> {
-  return PARTS[partOf(name)]();
+  return PARTS[partOf(name)]?.() ?? Promise.resolve({});
 }

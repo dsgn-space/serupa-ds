@@ -50,9 +50,9 @@ const spot = (el: Element): Spot => { const out: Spot = []; for (let n: Node | n
  *  or a control a disabled <fieldset> turns off, which matches the selector but can't take focus (L8E76). */
 const reach = (el: HTMLElement) => el.tabIndex >= 0 && !el.matches(':disabled') && el.getClientRects().length > 0;
 function recovered(was: Spot): HTMLElement | null {
-  const i = was.findIndex((x) => x.node.isConnected);
-  if (i <= 0) return null;   // the focused element is still there (focus wasn't in the fallback), or nothing is
-  const gone = was[i - 1], parent = was[i].node;
+  const i = was.findIndex((x) => x.node.isConnected), gone = was[i - 1], kept = was[i];
+  if (i <= 0 || !gone || !kept) return null;   // the focused element is still there (focus wasn't in the fallback), or nothing is
+  const parent = kept.node;
   const from = gone.before && gone.before.parentNode === parent ? gone.before.nextSibling : parent.firstChild;
   const to = gone.after && gone.after.parentNode === parent ? gone.after : null;
   let first: HTMLElement | null = null;

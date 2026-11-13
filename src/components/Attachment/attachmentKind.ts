@@ -20,7 +20,7 @@ const EXTS: ReadonlyArray<readonly [AttachmentKind, string]> = [
 /** The kind of a file, from its MIME type first and its extension after: attachmentKind("Q3.xlsx") is "sheet",
  *  attachmentKind("scan", "application/pdf") is "pdf". A file neither tells apart is "other". */
 export function attachmentKind(name: string, type?: string): AttachmentKind {
-  const t = (type || '').toLowerCase().split(';')[0].trim();
+  const t = ((type || '').toLowerCase().split(';')[0] ?? '').trim();
   if (t === 'application/pdf') return 'pdf';
   const main = t.split('/')[0];
   if (main === 'image' || main === 'audio' || main === 'video') return main;

@@ -75,7 +75,7 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
     if (text !== v) {
       const n = Math.min(unmask(slots, v.slice(0, at)).length, ends.length);
       el.value = text;
-      if (activeIn(el) === el) el.setSelectionRange(n ? ends[n - 1] : 0, n ? ends[n - 1] : 0);
+      if (activeIn(el) === el) { const end = ends[n - 1] ?? 0; el.setSelectionRange(end, end); }
     }
     if (change) change(e);
   };

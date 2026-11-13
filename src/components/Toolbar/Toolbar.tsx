@@ -95,6 +95,7 @@ export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>('
     }
     e.preventDefault();
     const next = items[(n + items.length) % items.length];
+    if (!next) return;
     active.current = next;
     sync();
     next.focus();

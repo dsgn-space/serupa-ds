@@ -225,7 +225,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
       </div>
       <table ref={grid} lang={lang} className="dk-calendar__grid" role="grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>
         <thead>
-          <tr>{weeks[0].map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
+          <tr>{(weeks[0] ?? []).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
         </thead>
         <tbody>
           {weeks.map((row, w) => (
