@@ -160,6 +160,10 @@ A value named `default` in a prop's union means the prop's default: `tone="defau
 
 `node tools/test/props.mjs` holds every prop to the orientation, placement, loading and delay rows. The props that still use the old name are listed in its `NAME_GAPS` with the name they move to, and that list only shrinks.
 
+### Token names
+
+A component token names the part, then the property, then the state: `--<component>-<part>-<property>-<state>`, such as `--tabs-indicator-width`, `--button-bg-disabled` and `--checkbox-bg-checked-hover`. With the state last, a token's states sort together in its table and read as one family. A word that is a part, such as Field's error message in `--field-error-color`, isn't a state. `node tools/test/token-names.mjs` fails a state before the property. The tokens that still put it first are listed in its `GAPS` with their new names, and that list only shrinks. A renamed token keeps its old name as an inner fallback (`var(--button-bg-disabled, var(--button-disabled-bg, …))`) until the next major, as a renamed prop does.
+
 ## Release cadence and support
 
 Breaking changes come together, on a schedule, so a project upgrades once rather than every few days (GR247).
