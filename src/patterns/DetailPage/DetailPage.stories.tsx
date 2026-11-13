@@ -18,3 +18,9 @@ export const Default: Story = {};
 /** The delete didn't go through: the dialog stays open, says so, and the delete can be tried again. Here `onDelete`
     rejects every time. */
 export const DeleteFails: Story = { args: { deleteFailed: true, onDelete: () => Promise.reject(new Error('offline')) } };
+
+/** The project is on its way: the way back, and a placeholder for its details, named once ("Loading project"). */
+export const Loading: Story = { args: { loading: true } };
+
+/** The project didn't load: the page says so, and Try again loads it again. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => new Promise((r) => setTimeout(r, 1000)) } };
