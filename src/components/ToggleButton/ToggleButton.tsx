@@ -4,7 +4,7 @@ import { cn, oneOf } from '../../internal/cn';
 import { Button, type ButtonAsButtonProps } from '../Button/Button';
 import { component } from '../../internal/component';
 
-export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' | 'destructive' | 'loading' | 'loadingText'> {
+export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' | 'destructive' | 'loading' | 'loadingLabel' | 'loadingText'> {
   /** Whether it's on (controlled). Use with onPressedChange. */
   pressed?: boolean | undefined;
   /** Whether it starts on (uncontrolled). Default: false. */

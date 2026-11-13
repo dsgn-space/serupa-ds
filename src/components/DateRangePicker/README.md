@@ -67,7 +67,7 @@ Drawn from the `Disabled` story.
 | Enter | In a field, reads the date typed |
 | Alt+Down | In a field, opens the calendar |
 | Enter / Space | On the calendar button, opens the calendar; in it, Calendar's keys pick the start, then the end |
-| Escape | Closes the calendar and returns focus to its button |
+| Escape | Closes the calendar and returns focus to the start field, as DatePicker returns it to its field |
 
 ## Props
 

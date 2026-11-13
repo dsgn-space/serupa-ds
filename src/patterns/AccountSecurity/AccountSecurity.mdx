@@ -1,0 +1,37 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './AccountSecurity.stories';
+
+<Meta of={Stories} />
+
+# Account security
+
+Changing the password, turning two-step verification on and off, and the devices signed in, each with Sign out.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The security page of any account people sign in to.
+- Not for signing in or signing up: those are their own patterns, and this page is reached once signed in.
+- Not for an admin managing other people's accounts: that's Team members.
+
+## What each part is for
+
+- **The password fields say what they hold**, `current-password` and `new-password`, so a password manager fills the first and suggests the second, and paste works (3.3.8, 1.3.5). Show password is on each.
+- **The rules come first.** "At least 12 characters" is in the hint before anyone types, not only in an error after a failed try (3.3.2). Length beats symbols, so there are no rules about character types.
+- **Problems are listed** in an error summary that takes focus and links to each field: a missing current password, a short new one, or the same one again (3.3.1). A save that fails says so with Try again, and keeps what was typed.
+- **Two-step setup works without a camera.** The key is shown as text with Copy, so it can be typed or pasted into the app, and the code box takes a pasted code (3.3.8). A wrong code says what to check, the phone's clock, and the boxes clear with focus in the first, ready for the next code.
+- **Recovery codes come before setup ends**, once, with Copy, so nobody is locked out by a lost phone (3.3.4). Two-step is on from the moment the code works; closing the codes says so in a toast.
+- **Turning two-step off asks first**, in a dialog that says what's left protecting the account, with Keep it on beside Turn off.
+- **Each device says where and when**, "Bandung, Indonesia, last active 6 days ago", and each Sign out is named with its device, "Sign out of Firefox on a Windows PC" (2.4.6). The device in use says "This device" in words and can't be signed out here.
+- **Signing out is immediate**: a session someone may not recognize shouldn't wait for an Undo. Focus goes to the next device's Sign out, or the list's heading, and a toast says it's done (2.4.3, 4.1.3). Sign out everywhere else shows when two or more other devices are signed in.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.TwoStepOn} />
+
+## What stays your app's job
+
+- **Checking and storing.** `onChangePassword` gets the current and new password: return its promise, and reject it if the current one is wrong or saving fails. `onEnableTwoStep` gets the code: reject it if the code is wrong. `onDisableTwoStep`, `onSignOut` and `onSignOutOthers` get those choices.
+- **The setup key and recovery codes**, as `setupKey` and `recoveryCodes`. Generate them on the server, and add a QR code of the key next to the text if you like.
+- **Telling people by email** when the password changes or two-step is turned off, so someone else's change doesn't go unseen.
+- Rendering a `Toaster` once in the app.

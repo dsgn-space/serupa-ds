@@ -19,6 +19,7 @@ interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, "onClick"> 
     disabled?: boolean | undefined;
     type?: "button" | "reset" | "submit" | undefined;
     loading?: boolean | undefined;
+    loadingLabel?: string | undefined;
     loadingText?: string | undefined;
 }
 declare const Badge: React.ForwardRefExoticComponent<BadgeProps & React.RefAttributes<HTMLElement>>;

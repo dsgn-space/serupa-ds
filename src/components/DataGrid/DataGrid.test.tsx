@@ -114,6 +114,25 @@ describe('DataGrid', () => {
     expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: 'Madu' }, { rowId: 'b', column: 'qty', value: '2' }, { rowId: 'c', column: 'name', value: 'Aren' }, { rowId: 'c', column: 'qty', value: '5' }]);
   });
 
+  test('rows taken away while a range reaches past them (a filter, another user): copy and Delete use the rows that are left', async () => {
+    const clip = () => {
+      const held: Record<string, string> = {};
+      const ev = new ClipboardEvent('copy', { bubbles: true, cancelable: true });
+      Object.defineProperty(ev, 'clipboardData', { value: { setData: (f: string, v: string) => { held[f] = v; }, getData: (f: string) => held[f] ?? '' } });
+      document.activeElement!.dispatchEvent(ev);
+      return held['text/plain'] ?? '';
+    };
+    const onChange = vi.fn();
+    const grid = (rows: DataGridRow[]) => <DataGrid aria-label="Stock" columns={COLS} rows={rows} onRowsChange={(_, { changes }) => { onChange(changes); }} />;
+    const { rerender } = await render(grid(ROWS));
+    await userEvent.click(cell('Gula'));
+    await userEvent.keyboard('{Shift>}{ArrowUp}{/Shift}');
+    await rerender(grid(ROWS.slice(0, 2)));
+    expect(clip()).toBe('Teh');
+    await userEvent.keyboard('{Delete}');
+    expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: '' }]);
+  });
+
   test('a click picks a cell, Shift+click extends, a double click edits', async () => {
     await render(<Live />);
     await userEvent.click(cell('Kopi'));
@@ -176,7 +195,7 @@ describe('DataGrid', () => {
 
   test('sizes: sm, md and lg rows grow in that order; lg has 16px text and rows at least 44px tall, editing included, and its placeholders match', async () => {
     await render(<>{(['sm', 'md', 'lg'] as const).map((z) => <DataGrid key={z} id={z} aria-label={z} size={z} columns={COLS} rows={ROWS} onRowsChange={() => {}} />)}
-      <DataGrid id="lgl" aria-label="lg loading" size="lg" columns={COLS} rows={[]} busy /></>);
+      <DataGrid id="lgl" aria-label="lg loading" size="lg" columns={COLS} rows={[]} loading /></>);
     const row = (id: string) => document.querySelector(`#${id} tbody tr`)!.getBoundingClientRect().height;
     expect(row('sm')).toBeLessThan(row('md'));
     expect(row('lg')).toBeGreaterThanOrEqual(44);
@@ -189,7 +208,7 @@ describe('DataGrid', () => {
   });
 
   test('busy with no rows: aria-busy and placeholder rows as tall as real ones, the first named once; then the rows', async () => {
-    const { rerender } = await render(<DataGrid aria-label="Stock" columns={COLS} rows={[]} busy loadingRows={4} loadingLabel="Loading stock" />);
+    const { rerender } = await render(<DataGrid aria-label="Stock" columns={COLS} rows={[]} loading loadingRows={4} loadingLabel="Loading stock" />);
     const grid = page.getByRole('grid').element() as HTMLTableElement;
     expect(grid.getAttribute('aria-busy')).toBe('true');
     expect(grid.getAttribute('aria-rowcount')).toBe('-1');
@@ -201,22 +220,22 @@ describe('DataGrid', () => {
     expect(grid.querySelectorAll('[data-variant="skeleton"]')).toHaveLength(12);
     await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading stock');
     const tall = rows[0].getBoundingClientRect().height;
-    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} busy={false} />);
+    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} loading={false} />);
     expect(grid.hasAttribute('aria-busy')).toBe(false);
     expect(grid.getAttribute('aria-rowcount')).toBe('4');
     expect(Math.abs(grid.querySelector('tbody tr')!.getBoundingClientRect().height - tall)).toBeLessThan(2);
   });
 
-  test('no rows and not busy: the message in one cell across every column; busy with rows keeps them', async () => {
+  test('no rows and not loading: the message in one cell across every column; loading with rows keeps them', async () => {
     const { rerender } = await render(<DataGrid aria-label="Stock" columns={COLS} rows={[]} message={<p>No products yet</p>} />);
     const msg = cell('No products yet') as HTMLTableCellElement;
     expect(msg.colSpan).toBe(3);
     expect(msg.getAttribute('aria-colspan')).toBe('3');
-    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} busy message={<p>No products yet</p>} />);
+    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} loading message={<p>No products yet</p>} />);
     expect(page.getByText('No products yet').query()).toBeNull();
     expect(cell('Kopi')).toBeTruthy();
     expect(page.getByRole('grid').element().getAttribute('aria-busy')).toBe('true');
-    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={[]} busy={false} />);
+    await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={[]} loading={false} />);
     expect(page.getByRole('grid').element().querySelectorAll('tbody tr')).toHaveLength(0);
   });
 });
@@ -250,5 +269,18 @@ describe('DataGrid stickyHeader', () => {
 describe('DataGrid labels', () => {
   test('copied and pasted say the count as given, in the locale\'s digits ("٤ sel disalin")', () => {
     expect([idLabels.dataGridCopied(4, '٤'), idLabels.dataGridPasted(2, '٢')]).toEqual(['٤ sel disalin', '٢ sel ditempel']);
+  });
+});
+
+describe('DataGrid: busy, the old name of loading', () => {
+  test('still sets aria-busy and draws placeholders as loading does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<DataGrid id="old-busy" aria-label="Stock" columns={COLS} rows={[]} {...{ busy: true }} />);
+      const grid = document.querySelector('[role="grid"]')!;
+      expect(grid.getAttribute('aria-busy')).toBe('true');
+      expect(grid.getAttribute('aria-rowcount')).toBe('-1');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('data-grid-busy'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

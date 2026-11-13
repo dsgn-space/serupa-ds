@@ -14,6 +14,10 @@ A `locale` (on a component or SerupaProvider) that Intl can't read, so it's igno
 
 A dot Badge with no label, icon or count is an indicator: too small to click or to remove. Its `onClick`, `href` and `onRemove` are ignored. Name and handle the control it sits on instead.
 
+## badge-loading-text
+
+Badge's `loadingText` is deprecated, and removed in 15.0.0. It still works as `loadingLabel` does. Rename it to `loadingLabel`: a prop named `…Text` is shown on screen, and these words are only said to screen readers, as Chart's, DataGrid's and Kanban's `loadingLabel` are.
+
 ## badge-remove-interactive
 
 A Badge with `onClick` or `href` is a button or a link, which can't hold another button, so its `onRemove` is ignored. Use one or the other.
@@ -22,6 +26,10 @@ A Badge with `onClick` or `href` is a button or a link, which can't hold another
 
 A Button with only an icon has no text for a screen reader to say. Give it an `aria-label` (or `aria-labelledby`, or a `title`), or use IconButton, whose `label` is required.
 
+## button-loading-text
+
+Button's `loadingText` is deprecated, and removed in 15.0.0. It still works as `loadingLabel` does. Rename it to `loadingLabel`: a prop named `…Text` is shown on screen, and these words are only said to screen readers, as Chart's, DataGrid's and Kanban's `loadingLabel` are.
+
 ## combobox-duplicate-value
 
 Two or more of a Combobox's options have the same value. Picking the second one shows the first one's label in the field, and both are marked as selected. Give every option its own value; an id is a good one when labels repeat.
@@ -29,6 +37,10 @@ Two or more of a Combobox's options have the same value. Picking the second one 
 ## command-palette-href
 
 A CommandPalette command's `href` isn't a web page (http or https), a `mailto:` or a `tel:` link, for example `javascript:…`. Choosing it does nothing, so a link built from user data can't run script. Use `onSelect` to run code.
+
+## data-grid-busy
+
+DataGrid's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
 ## date-string
 
@@ -133,6 +145,10 @@ Splitter needs exactly two children, its two panes.
 ## switch-pending
 
 Switch's `pending` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
+
+## table-busy
+
+Table's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
 ## table-row-click
 
