@@ -301,7 +301,7 @@ describe('InlineEdit', () => {
     await render(<><Field label="Name" error="Name is required"><Input /></Field>
       {(['sm', 'md', 'lg'] as const).map((sz) => <InlineEdit key={sz} id={'gr392-' + sz} size={sz} label="Slug" defaultValue="apollo" validate={() => 'Use letters only'} />)}</>);
     const look = (e: Element) => [css(e).fontSize, css(e).lineHeight, css(e).gap, Math.round(e.querySelector('[data-icon]')!.getBoundingClientRect().height)];
-    const want = look(document.querySelector('.dk-field__error')!), got: string[] = [];
+    const want = look(document.querySelector('[data-icon="error"]')!.parentElement!), got: string[] = [];   // the Field's, the only error so far
     for (const sz of ['sm', 'md', 'lg']) {
       await userEvent.click(root('gr392-' + sz).querySelector('button')!);
       await userEvent.keyboard('{Enter}');

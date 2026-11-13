@@ -140,10 +140,11 @@ describe('FileUpload', () => {
 
   test('an error under it is a Field error\'s size, 14px, with the icon centred on the first line (GR392)', async () => {
     await render(<><Field label="Contract" error="Add the signed contract"><FileUpload id="gr392f" /></Field><FileUpload id="gr392" accept="image/*" /></>);
+    const fieldError = document.querySelector('[data-icon="error"]')!.parentElement!;   // the only error until the upload
     await userEvent.upload(input(rootOf('gr392')), [file('notes.txt', 'text/plain', 10)]);
     await expect.poll(() => rootOf('gr392').querySelector('[role=alert] > p')).not.toBeNull();
     const look = (text: Element, icon: Element) => [css(text).fontSize, css(text).lineHeight, css(text).gap, Math.round(icon.getBoundingClientRect().height)];
-    const fieldError = document.querySelector('.dk-field__error')!, own = rootOf('gr392').querySelector('[role=alert] > p')!;
+    const own = rootOf('gr392').querySelector('[role=alert] > p')!;
     expect(look(own, own.querySelector('[data-icon]')!)).toEqual(look(fieldError, fieldError.querySelector('[data-icon]')!));
     expect(css(own).fontSize).toBe('14px');
   });
