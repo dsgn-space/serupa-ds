@@ -7,7 +7,8 @@
 //   id-token: write, so a hijacked package or a pull request's code never runs beside a token that outlives the job
 //   or can sign for the repository;
 // - Dependabot waits 7 days before it offers a new release (cooldown).
-// Also runs Update baselines' "Join the renders" step on both layouts download-artifact makes.
+// Also runs Update baselines' "Join the renders" step on both layouts download-artifact makes, and CI's test check on
+// a held run.
 //   node tools/test/workflows.mjs
 import fs from 'node:fs';
 import os from 'node:os';
@@ -91,6 +92,29 @@ if (fs.existsSync(path.join(GH, 'workflows/visual-baselines.yml'))) {
   const two = joined([['parts/baselines-firefox/files/tools/test/baseline-visual-firefox/A/x.png'], ['parts/baselines-firefox/deleted.txt', 'a\n'], ['parts/baselines-webkit/files/tools/test/baseline-visual-webkit/A/x.png'], ['parts/baselines-webkit/deleted.txt', 'b\n']]);
   t('visual-baselines.yml: Join the renders takes every render of several, each in its own folder', two.files.length === 2 && two.deleted.join() === 'a,b', JSON.stringify(two));
   fs.rmSync(tmp, { recursive: true, force: true });
+}
+
+// CI's required check, on a run plan held for Update baselines: it cancels the run (grey, not a red X) and still never
+// passes, whether the cancel lands or not.
+{
+  const lines = fs.readFileSync(path.join(GH, 'workflows/ci.yml'), 'utf8').split('\n');
+  const job = lines.findIndex((l) => /^  test:\s*$/.test(l));
+  const run = lines.findIndex((l, i) => i > job && /^\s*run:\s*\|\s*$/.test(l));
+  const indent = lines[run + 1]?.search(/\S/) ?? -1;
+  const body = [];
+  for (let i = run + 1; i < lines.length && (!lines[i].trim() || lines[i].search(/\S/) >= indent); i++) body.push(lines[i].slice(indent));
+  const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'hold-'));
+  const held = (ghStatus) => {
+    fs.writeFileSync(path.join(bin, 'gh'), `#!/bin/sh\necho "$*" >> "${bin}/calls"\nexit ${ghStatus}\n`, { mode: 0o755 });
+    fs.writeFileSync(path.join(bin, 'sleep'), '#!/bin/sh\n', { mode: 0o755 });
+    fs.rmSync(path.join(bin, 'calls'), { force: true });
+    const r = spawnSync('bash', ['-c', body.join('\n')], { env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, HOLD: '1', RUN_ID: '42', RESULTS: '{}' }, encoding: 'utf8' });
+    return { status: r.status, calls: fs.existsSync(path.join(bin, 'calls')) ? fs.readFileSync(path.join(bin, 'calls'), 'utf8').trim() : '' };
+  };
+  const cancelled = held(0), refused = held(1);
+  t('ci.yml: a held run cancels itself, and its test check still fails', job >= 0 && cancelled.calls === 'run cancel 42' && cancelled.status === 1, JSON.stringify(cancelled));
+  t('ci.yml: a held run whose cancel is refused fails its test check', refused.status === 1, JSON.stringify(refused));
+  fs.rmSync(bin, { recursive: true, force: true });
 }
 
 const dependabot = fs.readFileSync(path.join(GH, 'dependabot.yml'), 'utf8');
