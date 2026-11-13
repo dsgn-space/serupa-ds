@@ -138,3 +138,108 @@ describe('TableOfContents', () => {
     expect([/inset/.test(getComputedStyle(a!).boxShadow), getComputedStyle(b!).boxShadow]).toEqual([true, 'none']);
   });
 });
+
+// What a mutation run on TableOfContents.tsx found no test for (44 of 80 mutants were caught, run 273): each test
+// names the rule a changed operator would have broken without anything failing.
+describe('TableOfContents: rules no test covered', () => {
+  test('with no container it reads the page\'s <main>, and headings outside it are left out', async () => {
+    await render(<div><h2>Outside</h2><main><h2>Inside</h2><h3>Under it</h3></main><TableOfContents id="toc" /></div>);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['Inside', 'Under it']);
+  });
+
+  test('with no <main> it reads the whole page; an element as container works as a selector does', async () => {
+    function Two() {
+      const [box, setBox] = React.useState<HTMLElement | null>(null);
+      return <div><h2>First</h2><section ref={setBox}><h2>Second</h2></section><TableOfContents id="toc" /><TableOfContents id="toc2" container={box} /></div>;
+    }
+    await render(<Two />);
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['First', 'Second']);
+    await expect.poll(() => [...document.querySelectorAll('#toc2 a')].map((a) => a.textContent)).toEqual(['Second']);
+  });
+
+  test('headings with the same text get ids that differ, also from an id already on the page', async () => {
+    await render(<div><span id="notes" /><main><h2>Notes</h2><h2>Notes</h2><h2>Notes</h2></main><TableOfContents id="toc" /></div>);
+    await expect.poll(() => links().map((a) => a.getAttribute('href'))).toEqual(['#notes-2', '#notes-3', '#notes-4']);
+    expect(new Set([...document.querySelectorAll('[id]')].map((n) => n.id)).size).toBe(document.querySelectorAll('[id]').length);
+  });
+
+  test('the default line is 96px from the top: a heading at 90px is the current section, one at 150px not yet', async () => {
+    await render(<Page toc={<TableOfContents id="toc" container="#art" />} />);
+    await expect.poll(current).toBe('Alpha');
+    const beta = () => document.getElementById('beta-part')!;
+    window.scrollTo(0, beta().getBoundingClientRect().top + window.scrollY - 150);
+    await new Promise((r) => setTimeout(r, 100));
+    expect(current()).toBe('Alpha');
+    window.scrollTo(0, beta().getBoundingClientRect().top + window.scrollY - 90);
+    await expect.poll(current).toBe('Beta part');
+  });
+
+  test('at the foot of the page the last section is current, though its heading can\'t reach the line', async () => {
+    await render(
+      <div>
+        <main id="art"><h2 id="s1">One</h2><p style={{ height: '1500px' }}>…</p><h2 id="s2">Two</h2><p style={{ height: '40px' }}>…</p></main>
+        <div style={{ position: 'fixed', top: 0, right: 0 }}><TableOfContents id="toc" container="#art" offset={20} /></div>
+      </div>,
+    );
+    await expect.poll(current).toBe('One');
+    window.scrollTo(0, document.documentElement.scrollHeight - window.innerHeight - 40);
+    await new Promise((r) => setTimeout(r, 100));
+    expect([current(), document.getElementById('s2')!.getBoundingClientRect().top > 20]).toEqual(['One', true]);
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await expect.poll(current).toBe('Two');
+  });
+
+  test('a pane with overflow: scroll counts as the headings\' scroller too', async () => {
+    await render(
+      <div>
+        <div id="pane" style={{ height: '200px', overflowY: 'scroll' }}><h2 id="q1">One</h2><p style={{ height: '500px' }}>…</p><h2 id="q2">Two</h2><p style={{ height: '500px' }}>…</p></div>
+        <p style={{ height: '2000px' }}>…</p>
+        <TableOfContents id="toc" container="#pane" offset={20} />
+      </div>,
+    );
+    const pane = document.getElementById('pane')!;
+    await expect.poll(current).toBe('One');
+    pane.scrollTop = document.getElementById('q2')!.offsetTop - pane.offsetTop;
+    await expect.poll(current).toBe('Two');
+  });
+
+  test('a click with Ctrl, Meta, Shift or Alt, or another button, is left to the browser: nothing is scrolled, focused or marked', async () => {
+    await render(<Page />);
+    await expect.poll(current).toBe('Alpha');
+    const gamma = page.getByRole('link', { name: 'Gamma' }).element() as HTMLAnchorElement;
+    // The link's own default (going to #c) is stopped after the component has seen the click, so only its part shows.
+    const seen: boolean[] = [];
+    const stop = (e: Event) => { seen.push(e.defaultPrevented); e.preventDefault(); };
+    document.addEventListener('click', stop);
+    try {
+      for (const init of [{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }]) gamma.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, ...init }));
+    } finally { document.removeEventListener('click', stop); }
+    expect([seen, document.activeElement === document.getElementById('c'), location.hash, current()]).toEqual([[false, false, false, false, false], false, '', 'Alpha']);
+  });
+
+  test('while the page scrolls to a clicked section, that section stays the current one', async () => {
+    await render(<Page />);
+    await expect.poll(current).toBe('Alpha');
+    await userEvent.click(page.getByRole('link', { name: 'Gamma' }));
+    const seen = new Set<string | null>();
+    for (let i = 0; i < 20; i++) { seen.add(current()); await new Promise((r) => requestAnimationFrame(() => r(null))); }
+    expect([...seen]).toEqual(['Gamma']);
+  });
+
+  test('the indent counts from the shallowest level given, and an item with no level is level 2', async () => {
+    await render(<TableOfContents id="toc" items={[{ id: 'x', label: 'One', level: 3 }, { id: 'y', label: 'Two', level: 5 }]} />);
+    const depths = (id: string) => [...document.querySelectorAll<HTMLElement>(`#${id} li`)].map((li) => li.style.getPropertyValue('--dk-toc-depth'));
+    expect(depths('toc')).toEqual(['0', '2']);
+    await render(<TableOfContents id="toc3" items={[{ id: 'p', label: 'One' }, { id: 'q', label: 'Two', level: 4 }]} />);
+    expect(depths('toc3')).toEqual(['0', '2']);
+  });
+
+  test('aria-label or aria-labelledby names the landmark in place of the title', async () => {
+    await render(<div><span id="mine">Sections here</span>
+      <TableOfContents id="toc" aria-label="Sections" items={[{ id: 'x', label: 'One' }]} />
+      <TableOfContents id="toc2" aria-labelledby="mine" items={[{ id: 'x', label: 'One' }]} />
+    </div>);
+    expect([document.getElementById('toc')!.getAttribute('aria-labelledby'), document.getElementById('toc2')!.getAttribute('aria-labelledby')]).toEqual([null, 'mine']);
+    await expect.element(page.getByRole('navigation', { name: 'Sections here' })).toBeVisible();
+  });
+});
