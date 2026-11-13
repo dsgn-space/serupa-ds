@@ -1,0 +1,111 @@
+{
+  "status-tracker": {
+    "$description": "StatusTracker's component tokens. Each one is an optional override: set the CSS variable (--status-tracker-<name>) on the page, a container or one StatusTracker, and every part inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "up": {
+        "$type": "color",
+        "$value": "{color.success}",
+        "$description": "An up day's bar (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-up"
+          }
+        }
+      },
+      "degraded": {
+        "$type": "color",
+        "$value": "{color.warning}",
+        "$description": "A degraded day's stripes and outline (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-degraded"
+          }
+        }
+      },
+      "down": {
+        "$type": "color",
+        "$value": "{color.danger}",
+        "$description": "A down day's bar (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-down"
+          }
+        }
+      },
+      "none": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "A day without data: its outline (3:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-none"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The caption (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-text"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The summary and legend (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-muted"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around the focused day.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-focus-ring"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.rounded-xs}",
+        "$description": "A bar's corners (2px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "Space between bars (2px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-gap"
+          }
+        }
+      },
+      "height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "The bars' height (32px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--status-tracker-height"
+          }
+        }
+      }
+    }
+  }
+}

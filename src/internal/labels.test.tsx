@@ -16,6 +16,8 @@ const ARGS: Record<string, unknown[]> = {
   clearValue: ['Email'],
   colorName: ['blue', 'dark'],
   contrast: ['4.5'],
+  statusDay: ['Nov 3, 2026', 'Degraded'],
+  statusSummary: ['99.8%', 90, 2],
   fileMissing: [true],
   filesAdded: [['cat.png', 'dog.png']],
   fileOnlyOne: ['cat.png'],
@@ -52,8 +54,8 @@ function said(set: Record<string, unknown>): Record<string, string> {
   }));
 }
 // Words that are the same in both languages. "Slide" and "Format" are the usual loanwords in Indonesian, and
-// Indonesian writes PDF, Audio and Video too (Attachment's kinds). cascadePath only joins the names it's given.
-const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo', 'attachmentOther', 'cascadePath', 'agendaView']);
+// Indonesian writes PDF, Audio and Video too (Attachment's kinds). cascadePath and statusDay only join what they're given.
+const SAME = new Set(['menu', 'ok', 'hexCode', 'sliderMinimum', 'slideRole', 'formatHint', 'attachmentPdf', 'attachmentAudio', 'attachmentVideo', 'attachmentOther', 'cascadePath', 'agendaView', 'statusDay']);
 // English labels left empty on purpose: invalidValue's "" keeps the browser's own message, already in its user's language.
 const EMPTY_IN_EN = new Set(['invalidValue']);
 

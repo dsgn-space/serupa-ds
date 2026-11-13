@@ -41,6 +41,7 @@ const LATIN: Record<string, string> = {
   'Checkbox/Group': "the story's hint, `${teams.length} picked`",
   PhoneInput: 'the field and its value are ASCII digits, so the calling codes beside them (+20, Egypt (+20)) match what people type and dial (GR45)',
   DataGrid: "a cell's text is the app's (its column's format, or the field as text), the same text it edits, copies and pastes to a spreadsheet",
+  StatusTracker: "the summary is the label pack's statusSummary(percent, days, incidents), as Stepper's",
 };
 // What still writes ASCII digits, until its fix lands. None now.
 const KNOWN = new Set<string>([]);
