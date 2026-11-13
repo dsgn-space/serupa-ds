@@ -28,8 +28,8 @@ export function SignIn({ start = 'password', failed, check = demoCheck, verify =
   return (
     <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-sm flex-col gap-6 px-4 py-12 outline-none">
-        <p className="text-base font-semibold">Acme</p>
+      <main id="main" className="mx-auto flex max-w-md flex-col gap-6 px-4 py-12 outline-none">
+        <p className="m-0 text-base font-semibold">Acme</p>
         <AuthCard idPrefix="sign-in" start={start} failed={failed} check={check} verify={verify} forgotHref="#forgot" doneHref="#dashboard"
           defaultEmail={failed === 'wrong' ? 'ada@example.com' : ''} defaultPassword={failed === 'wrong' ? 'correct hose' : ''}
           labels={{ title: 'Sign in to Acme' }} />

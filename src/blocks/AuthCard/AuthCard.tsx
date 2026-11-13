@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Heading } from '../../components/Heading/Heading';
+import { Card } from '../../components/Card/Card';
 import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
 import { PasswordInput } from '../../components/PasswordInput/PasswordInput';
@@ -198,11 +199,10 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
       go('done');
     }, (on) => { if (on) waited = true; setBusy(on); }, fail);
   };
-  const title = (text: string) => <Heading level={headingLevel} id={ids.title} ref={heading} tabIndex={-1} className="outline-none">{text}</Heading>;
-  const card = 'flex flex-col gap-6 rounded-lg border border-border bg-surface p-6';
+  const title = (text: string) => <Heading level={headingLevel} size="xl" id={ids.title} ref={heading} tabIndex={-1} className="outline-none">{text}</Heading>;
 
   return step === 'password' ? (
-    <section aria-labelledby={ids.title} className={card}>
+    <Card as="section" aria-labelledby={ids.title} className="flex flex-col gap-6">
       {title(l.title)}
       {errors.length ? <ErrorSummary key={tries} errors={errors} headingLevel={(headingLevel + 1) as 2 | 3 | 4} /> : null}
       <form noValidate onSubmit={signIn} className="flex flex-col gap-4" aria-labelledby={ids.title}>
@@ -216,9 +216,9 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
         <Button type="submit" loading={busy}>{l.signIn}</Button>
         {failure ? <p className="m-0 text-sm text-danger-text">{l.failed}</p> : null}
       </form>
-    </section>
+    </Card>
   ) : step === 'code' ? (
-    <section aria-labelledby={ids.title} className={card}>
+    <Card as="section" aria-labelledby={ids.title} className="flex flex-col gap-6">
       {title(l.codeTitle)}
       <p className="m-0 text-sm text-text-muted">{l.codeSent}</p>
       <form noValidate onSubmit={confirm} className="flex flex-col gap-4" aria-labelledby={ids.title}>
@@ -237,12 +237,12 @@ export function AuthCard({ check, verify, onResend, onSignedIn, forgotHref, done
           <Button type="button" variant="ghost" onClick={() => { setCode(''); setCodeError(null); setSent(0); setFailure(false); setPassword(''); go('password'); }}>{l.back}</Button>
         </div>
       </form>
-    </section>
+    </Card>
   ) : (
-    <section aria-labelledby={ids.title} className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-6">
+    <Card as="section" aria-labelledby={ids.title} className="flex flex-col gap-4">
       {title(l.doneTitle)}
       <Alert tone="success">{l.doneMessage}</Alert>
       {doneHref ? <Link href={doneHref} className="self-start">{l.doneLink}</Link> : null}
-    </section>
+    </Card>
   );
 }
