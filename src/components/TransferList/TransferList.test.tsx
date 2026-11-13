@@ -81,6 +81,15 @@ describe('TransferList', () => {
     expect(items('Chosen')).toEqual(['Phone']);
   });
 
+  test('a box checked in one list isn\'t still checked when the app moves its option away and back', async () => {
+    const screen = await render(en(<TransferList aria-label="Columns" options={options} value={[]} />));
+    await screen.getByRole('checkbox', { name: 'Email' }).click();
+    await screen.rerender(en(<TransferList aria-label="Columns" options={options} value={['email']} />));
+    await screen.rerender(en(<TransferList aria-label="Columns" options={options} value={[]} />));
+    await expect.element(screen.getByRole('checkbox', { name: 'Email' })).not.toBeChecked();
+    await expect.element(screen.getByRole('button', { name: 'Add' })).toHaveAttribute('aria-disabled', 'true');
+  });
+
   test('with name, a form submits the chosen values in order, and a reset puts the first ones back', async () => {
     await render(en(<form id="f"><TransferList aria-label="Columns" name="cols" options={options} defaultValue={['phone', 'name']} /></form>));
     const form = document.getElementById('f') as HTMLFormElement;
