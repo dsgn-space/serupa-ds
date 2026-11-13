@@ -29,7 +29,7 @@
 .dk-timeline__body { grid-area: body; min-width: var(--spacing-0); overflow-wrap: anywhere; padding-block-end: var(--timeline-item-gap, var(--spacing-6)); }
 .dk-timeline__item:last-child .dk-timeline__body { padding-block-end: var(--spacing-0); }
 /* The title's first line sits level with the 24px marker. */
-.dk-timeline__title { color: var(--timeline-title-color, var(--text)); font-weight: var(--font-semibold); line-height: var(--timeline-marker-size, var(--spacing-6)); }
+.dk-timeline__title { text-wrap: balance; color: var(--timeline-title-color, var(--text)); font-weight: var(--font-semibold); line-height: var(--timeline-marker-size, var(--spacing-6)); }
 .dk-timeline__time { display: block; color: var(--timeline-time-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-timeline__content { margin-block-start: var(--spacing-2); }
 @media (min-width: 768px) {

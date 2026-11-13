@@ -370,7 +370,7 @@ describe('CheckboxGroup', () => {
     await render(<CheckboxGroup aria-label="Add-ons" variant="card" defaultValue={['a']} onValueChange={onValueChange}>
       <Checkbox value="a" description="Rp 15.000">Gift wrap</Checkbox>
       <Checkbox value="b" description="A printed note">Greeting card</Checkbox>
-      <Checkbox value="c" variant="default">Plain</Checkbox>
+      <Checkbox value="c" variant="plain">Plain</Checkbox>
     </CheckboxGroup>);
     const [a, b, c] = page.getByRole('checkbox').elements() as HTMLInputElement[];
     const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
@@ -406,5 +406,15 @@ describe('CheckboxGroup', () => {
   test('L8E91 autoFocus on a CheckboxGroup focuses its first box, as it does on SegmentedControl and Slider', async () => {
     await render(<><button>Before</button><CheckboxGroup aria-label="Toppings" autoFocus><Checkbox value="ham">Ham</Checkbox><Checkbox value="egg">Egg</Checkbox></CheckboxGroup></>);
     await expect.poll(() => (document.activeElement as HTMLInputElement).value).toBe('ham');
+  });
+  test("variant 'default' is the deprecated name for 'plain': it still draws the plain look, and warns once", async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<CheckboxGroup aria-label="Old" variant="default"><Checkbox value="a">A</Checkbox><Checkbox value="b" variant="default">B</Checkbox></CheckboxGroup>);
+      const items = page.getByRole('checkbox').elements() as HTMLInputElement[];
+      expect(items.map((i) => (i.closest('label') as HTMLElement).className.includes('--card'))).toEqual([false, false]);
+      const said = warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('variant-default'));
+      expect(said).toHaveLength(2);   // once for the group, once for the Checkbox
+    } finally { warn.mockRestore(); }
   });
 });

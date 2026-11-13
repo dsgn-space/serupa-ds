@@ -19,7 +19,7 @@
   border-block-end: var(--border-width-1) solid var(--code-block-border, var(--border));
   font-size: var(--text-xs); line-height: var(--leading-4);
 }
-.dk-code-block__title { min-inline-size: 0; font-weight: var(--font-medium); overflow-wrap: anywhere; }
+.dk-code-block__title { text-wrap: balance; min-inline-size: 0; font-weight: var(--font-medium); overflow-wrap: anywhere; }
 .dk-code-block__language { color: var(--code-block-muted, var(--text-muted)); font-family: var(--font-mono); text-transform: lowercase; }
 .dk-code-block__copy { flex: none; }
 .dk-code-block__pre {

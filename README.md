@@ -14,19 +14,19 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.5.0
+npm install github:dsgn-space/serupa-ds#v14.6.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
-Always pin a tag (`#v14.5.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.6.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v14.5.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v14.6.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -280,6 +280,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Image](src/components/Image/README.md) | A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails. |
 | [Kanban](src/components/Kanban/README.md) (beta) | A board of columns of cards, such as a sprint or a sales pipeline, that people move by dragging a handle, by keyboard, or from each card's "Move to…" menu. |
 | [Kbd](src/components/Kbd/README.md) | Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and empty states. |
+| [Lightbox](src/components/Lightbox/README.md) | A set of pictures shown full size, one at a time, over the page. |
 | [List](src/components/List/README.md) | Rows of related things: people, files, notifications, settings. |
 | [Logo](src/components/Logo/README.md) (beta) | The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. |
 | [Quote](src/components/Quote/README.md) (beta) | Quoted words with who said them, for a testimonial, a pull quote, or a quote in a page that isn't [Prose](src/components/Prose/README.md). |
@@ -332,8 +333,10 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [FilterBar](src/components/FilterBar/README.md) (beta) | The filters on a list or a table, as a row of chips. |
 | [InlineEdit](src/components/InlineEdit/README.md) | Text people can change where it is: a project name, a card title, a slug. |
 | [Input](src/components/Input/README.md) | A single-line text field: a native `<input>` in a box that can hold icons. |
+| [MentionInput](src/components/MentionInput/README.md) (beta) | A multi-line text field where typing "@" opens a list of people to mention, at the caret. |
 | [NumberInput](src/components/NumberInput/README.md) | A field for a number, with − and + buttons at the end. |
 | [PasswordInput](src/components/PasswordInput/README.md) | A password field with a button at the end that shows and hides what was typed, so people can check it before they submit. |
+| [PeriodPicker](src/components/PeriodPicker/README.md) (beta) | A month, a quarter or a year, picked from a grid: for a report's month, a billing period or a dashboard's quarter. |
 | [PhoneInput](src/components/PhoneInput/README.md) | A phone number field with a country menu at the start. |
 | [PinInput](src/components/PinInput/README.md) | A one-time code or PIN, shown as one box per character, such as the 6-digit code texted at sign-in. |
 | [Radio](src/components/Radio/README.md) | Native radios for one choice from a short list. |
