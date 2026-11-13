@@ -40,7 +40,7 @@
 /* Forced colors drop the fills and shadow: the target column and the picked-up handle keep a Highlight outline. */
 @media (forced-colors: active) {
   .dk-kanban__column--target { border-color: Highlight; }
-  .dk-kanban__handle[aria-pressed="true"] { outline: var(--border-width-2) solid Highlight; }
+  .dk-kanban__handle[aria-pressed="true"] { outline: var(--outline-width-2) solid Highlight; }
 }
 @media print { .dk-kanban { overflow: visible; flex-wrap: wrap; } }
 }

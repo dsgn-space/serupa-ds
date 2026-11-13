@@ -101,7 +101,7 @@ Each is an optional override: set it on the page, a container or one Tour. The l
 | `--tour-shadow` | `shadow-lg` | The panel's shadow. |
 | `--tour-radius` | `radius-surface` | The panel's corners (8px). |
 | `--tour-border-width` | `border-width-1` | The panel's edge (1px). |
-| `--tour-ring-width` | `border-width-2` | The ring round the element (2px). |
+| `--tour-ring-width` | `outline-width-2` | The ring round the element (2px). |
 | `--tour-ring-offset` | `outline-offset-2` | The gap between the element and its ring (2px). |
 | `--tour-title-size` | `text-base` | The step's title (16px). |
 | `--tour-title-weight` | `font-semibold` | The step's title. |

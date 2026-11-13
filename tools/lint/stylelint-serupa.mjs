@@ -18,6 +18,8 @@
 //                                   -container, -pill), not a step of the rounded scale, so a brand that makes its
 //                                   controls or surfaces rounder (or squarer) reaches every component (GR244).
 //                                   rounded-none, rounded-xs (a hairline curve on a text mark) and rounded-full pass
+//   serupa/outline-width-token     an outline is sized by an outline-width token (or focus-ring-width for a ring), not a
+//                                   border-width one, so the outline scale (and its contrast-more step) reaches it
 //   serupa/own-block                a component's CSS styles its own blocks' elements (dk-block__element) only. Another
 //                                   block it may position or size, or feed through that block's custom properties,
 //                                   but not reach into, so a change inside one component can't break another. A block
@@ -203,4 +205,19 @@ const ownBlock = rule('serupa/own-block', {
   for (const k of known) if (!used.has(k)) flag(root, m.stale(k, folder));
 });
 
-export default [layer, raw, color, focus, physical, radiusRole, ownBlock];
+// Outlines through the outline scale: a border-width token in an outline happens to match today, but the outline
+// scale is the one a brand or contrast-more changes for outlines.
+const outlineWidth = rule('serupa/outline-width-token', {
+  rejected: (n) => `var(--${n}) is a border width: size an outline with an outline-width token (outline-width-1, -2) or focus-ring-width`,
+}, (root, flag, m) => {
+  root.walkDecls((decl) => {
+    if (!/^outline(-width)?$/.test(decl.prop.toLowerCase())) return;
+    valueParser(decl.value).walk((n) => {
+      if (n.type !== 'function' || n.value !== 'var') return;
+      const name = (n.nodes[0]?.value || '').replace(/^--/, '');
+      if (/^border-width-/.test(name)) flag(decl, m.rejected(name), `--${name}`);
+    });
+  });
+});
+
+export default [layer, raw, color, focus, physical, radiusRole, outlineWidth, ownBlock];

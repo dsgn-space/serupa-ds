@@ -66,7 +66,7 @@
    wider or taller than the picture. */
 .dk-image--loaded:not(.dk-image--contain) .dk-image__img {
   border-radius: inherit;
-  outline: var(--border-width-1) solid var(--image-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--border-width-1));
+  outline: var(--outline-width-1) solid var(--image-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
 /* dim: in a dark color scheme, a layer of --image-dim at 20% over a loaded picture darkens it a shade (light-dark(), so it
    follows the frame's color-scheme: a *-dark theme, a data-mode or the screen's). The remove button stays above it. */
