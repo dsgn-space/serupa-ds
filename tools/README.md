@@ -220,6 +220,8 @@ Jobs run in Playwright's image (`mcr.microsoft.com/playwright:v1.64.1-noble`, pi
 - `SERUPA_X86_RUNNER`: jobs with a screenshot or a timing budget (the component tests, Visual, cross-browser, mutation, benchmarks, flake hunt, Update baselines). They need x64: Chrome for Testing, which `setup.mjs` installs and the baselines are drawn with, has no Linux Arm build, and the mount-time and INP budgets were measured on x64. Self-hosted: `["self-hosted","linux","x86"]`. In `ci.yml` they serve the merge queue, main and pull requests from this repository (a fork's run takes GitHub's runners); a pull request takes at most eight at once and a queue group sixteen (`max-parallel` on `suite-x86`), so pull requests can't starve the queue. The queue's other jobs (build, checks, Storybook, consumer, frameworks) stay on GitHub's runners: the component and Visual jobs are most of a group's minutes, and with every queue job on the x86 runners five groups left 27 jobs waiting for them while GitHub's stood idle.
 - `SERUPA_RUNNER`: everything else (build, types and lint, fix proof, the checks, Storybook checks, coverage, consumer, frameworks), Arm included. Self-hosted: `["self-hosted","linux"]`.
 
+A self-hosted runner keeps its workspace between jobs, so every job that can land on one first deletes any `.lock` file under `.git`: a job stopped in the middle of a fetch leaves one, and every later checkout on that runner failed on it ("cannot lock ref", 13 Nov).
+
 Unset, both are `ubuntu-24.04` (GitHub's runners, free for a public repository). The project's machines:
 
 - `serupa-runner`: x64, 2 jobs at a time (each about 4 cores and 16 GB; four at a time broke the timing budgets). Labels `self-hosted, linux, x86`.
