@@ -15,7 +15,11 @@
     "tools/**/*.mjs",
     "src/**/*.stories.tsx",
     "src/**/*.test.{ts,tsx}",
-    ".storybook/*.{ts,tsx}"
+    ".storybook/*.{ts,tsx}",
+    "site/src/main.tsx",
+    "site/src/blocks.tsx",
+    "site/src/stories.tsx",
+    "site/src/icon-arg.ts"
   ],
   "project": [
     "src/**/*.{ts,tsx,js}!",
@@ -23,7 +27,8 @@
     "!src/blocks/**!",
     "tools/**/*.mjs",
     "bin/*.mjs!",
-    ".storybook/*.{ts,tsx}"
+    ".storybook/*.{ts,tsx}",
+    "site/src/**/*.{ts,tsx}"
   ],
   "ignore": [
     "tools/test/frameworks/**"
