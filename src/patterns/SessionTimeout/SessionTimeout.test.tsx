@@ -25,6 +25,16 @@ describe('Patterns/Session time-out', () => {
     expect(h2s.map(look)).toEqual(h2s.map(() => want));
   });
 
+  test('the title opens like every app page: the PageHeader h1, its size, and the line under it', async () => {
+    await render(<SessionTimeout />);
+    await render(<div id="probe"><Heading level={1}>Probe</Heading></div>);
+    const h1 = document.querySelector('main h1')!;
+    expect(h1.textContent).toBe('Contact support');
+    expect(getComputedStyle(h1).fontSize).toBe(getComputedStyle(document.querySelector('#probe h1')!).fontSize);
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(h1)).toBe(true);
+  });
+
   test('the time left in words', () => {
     expect([timeLeft(120), timeLeft(90), timeLeft(61), timeLeft(45), timeLeft(1), timeLeft(0)])
       .toEqual(['2 minutes', '1 minute 30 seconds', '1 minute 1 second', '45 seconds', '1 second', '0 seconds']);
