@@ -12,7 +12,9 @@ import { Select } from '../../components/Select/Select';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Alert } from '../../components/Alert/Alert';
 import { Toaster, toast } from '../../components/Toast/Toast';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { announce } from '../../internal/announce';
 
 /* Team members: who is on the team, what each may do, inviting more people, and removing someone. For an app to copy.
@@ -25,6 +27,8 @@ import { announce } from '../../internal/announce';
    - 2.4.3: after a removal, focus goes to the next row's button (or the list's heading), never to the top of the page.
    - 3.3.1, 3.3.3: the invite form names each address that isn't one, or is on the team already, and keeps what was
      typed; an invite that fails says so in the dialog, which stays open.
+   - 4.1.3, 3.3.1: while the team loads, the list is busy with one placeholder name ("Loading members"); a failed load
+     says so in its place, with Try again.
    - The owner can't be removed or demoted here, and the row says why in words, not only by a missing button.
    Storing the changes is the app's job: onInvite, onRoleChange, onRemove, onResend and onRevoke get them. */
 
@@ -47,6 +51,12 @@ export interface TeamMembersProps {
   onResend?: ((email: string) => void) | undefined;
   /** A revoked invite's toast closed without Undo: revoke it for good. */
   onRevoke?: ((email: string) => void) | undefined;
+  /** The team is on its way: placeholder rows in place of the members and invites, named once ("Loading members"). Default: false. */
+  loading?: boolean | undefined;
+  /** The team failed to load: a "Couldn’t load your team" message with Try again, which calls onRetry, in their place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demoMembers: TeamMember[] = [
@@ -82,7 +92,7 @@ export function inviteProblem(emails: readonly string[], taken: readonly string[
 }
 
 /** The team page: a skip link, a header, then main with the h1 and Invite people, the members, and the open invites. */
-export function TeamMembers({ members = demoMembers, invites = demoInvites, onInvite, onRoleChange, onRemove, onResend, onRevoke }: TeamMembersProps) {
+export function TeamMembers({ members = demoMembers, invites = demoInvites, onInvite, onRoleChange, onRemove, onResend, onRevoke, loading = false, loadFailed = false, onRetry }: TeamMembersProps) {
   const [roles, setRoles] = React.useState<Record<string, TeamRole>>({});
   const [gone, setGone] = React.useState<ReadonlySet<string>>(new Set());
   const [sent, setSent] = React.useState<TeamInvite[]>([]);
@@ -147,6 +157,15 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
         <PageHeader title="Team" description="Who can see and change this workspace."
           primary={{ label: 'Invite people', onSelect: () => ask(true) }} />
 
+        {loadFailed ? <EmptyLoadFailed title="Couldn’t load your team" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
+          <Card className="flex flex-col gap-3">
+            <Heading level={2} size="lg">Members</Heading>
+            <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
+              {/* One name for all of them: the first row is named, the others are only pictures. */}
+              {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading members' : ''} /></li>)}
+            </ul>
+          </Card>
+        ) : <>
         <Card className="flex flex-col gap-3">
           <Heading level={2} size="lg" ref={membersHeading} tabIndex={-1} className="outline-none">Members ({shown.length})</Heading>
           <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
@@ -191,6 +210,8 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
             </ul>
           ) : <p className="m-0 text-text-muted">No invites waiting.</p>}
         </Card>
+
+        </>}
 
         <Dialog open={inviting} onOpenChange={ask} title="Invite people" description="They get an email with a link to join. It works for 7 days.">
           <form onSubmit={send} noValidate className="flex flex-col gap-4">

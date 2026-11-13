@@ -24,9 +24,14 @@ Who is on a team and what each person may do: change a role in place, invite peo
 - **The invite form names each problem** (3.3.1, 3.3.3). It says which addresses aren't email addresses, or which are on the team or invited already. Focus goes back to the box, and what was typed stays.
 - **An invite that fails says so.** The dialog stays open with an alert, "Couldn’t send the invites. Try again.", and the addresses stay typed (3.3.1, 4.1.3).
 - **Invites waiting** are listed apart from the members, with the role they'll get, so nobody mistakes an invited person for one who can already see the work. Resend says it's sent in a toast.
+- **While the team loads**, set `loading`: the list is busy, with placeholder rows named once, "Loading members" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, and "Couldn’t load your team" with Try again takes the lists' place (3.3.1).
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.JustYou} />
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
 
 ## What stays your app's job
 

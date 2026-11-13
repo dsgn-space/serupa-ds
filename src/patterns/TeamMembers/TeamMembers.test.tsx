@@ -115,4 +115,19 @@ describe('Patterns/Team members', () => {
     await screen.getByRole('button', { name: 'Invite people' }).click();
     expect(screen.getByText('Enter at least one email address.').elements()).toHaveLength(0);
   });
+
+  test('loading: one busy list named "Loading members", no rows yet; a failed load says so with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<TeamMembers loading />);
+    expect(document.querySelector('ul[aria-busy="true"]')).not.toBeNull();
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading members']);
+    expect(screen.getByRole('combobox').elements()).toHaveLength(0);
+    await screen.rerender(<TeamMembers loading loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your team' })).toBeVisible();
+    expect(screen.getByRole('progressbar').elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledOnce();
+    await screen.rerender(<TeamMembers />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Members (4)' })).toBeVisible();
+  });
 });

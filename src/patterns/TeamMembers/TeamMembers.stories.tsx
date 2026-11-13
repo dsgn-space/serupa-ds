@@ -16,3 +16,9 @@ export const Default: Story = {};
 
 /** A new team: only you, and no invites waiting. */
 export const JustYou: Story = { args: { members: [{ id: 'u1', name: 'Ana Lima', email: 'ana@example.com', role: 'owner', you: true }], invites: [] } };
+
+/** The team is on its way: placeholder rows, named once ("Loading members"). */
+export const Loading: Story = { args: { loading: true } };
+
+/** The team didn't load: the page says so, and Try again loads it again. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => new Promise((r) => setTimeout(r, 1000)) } };
