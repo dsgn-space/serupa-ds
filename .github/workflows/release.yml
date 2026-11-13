@@ -131,6 +131,36 @@ jobs:
         with:
           subject-path: ${{ needs.release.outputs.tarball }}
 
+  # The private registry (docs/rfcs/15.0.0.md): the released tarball goes to GitHub Packages, never to the public npm
+  # registry. It waits for 15.0.0, which scopes the package's name (`@diki-stwn/serupa-ds`): until then the name isn't
+  # scoped and the job says so and stops. It holds REGISTRY_TOKEN, Diki's `write:packages` token, so it runs no
+  # dependency code: no checkout, no npm ci, and `--ignore-scripts` on the publish of the already-built tarball.
+  publish:
+    needs: release
+    if: needs.release.outputs.tarball != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-tarball
+      - env:
+          NODE_AUTH_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          TARBALL: ${{ needs.release.outputs.tarball }}
+        run: |
+          set -euo pipefail
+          name=$(tar -xOzf "$TARBALL" package/package.json | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).name')
+          case "$name" in
+            @*/*) ;;
+            *) echo "::notice::$name isn't scoped, so it stays off the registry until 15.0.0 scopes it."; exit 0 ;;
+          esac
+          if [ -z "$NODE_AUTH_TOKEN" ]; then echo "::error::REGISTRY_TOKEN isn't set: see Registry in docs/rfcs/15.0.0.md."; exit 1; fi
+          registry=https://npm.pkg.github.com
+          printf '%s:registry=%s\n//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}\n' "${name%%/*}" "$registry" > "$RUNNER_TEMP/.npmrc"
+          NPM_CONFIG_USERCONFIG="$RUNNER_TEMP/.npmrc" npm publish "$TARBALL" --registry "$registry" --ignore-scripts
+
   # The release as a project installs it (D5): the tarball from the GitHub release, by the URL the README's install
   # line gives, on every Node package.json allows. No npm ci: tools/test/consumer.mjs needs only Node.
   installed:
