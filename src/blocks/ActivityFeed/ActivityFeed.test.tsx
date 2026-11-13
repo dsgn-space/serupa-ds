@@ -73,7 +73,7 @@ describe('Blocks/Activity feed', () => {
   test('loadingText, the old name of loadingLabel, still names the skeletons, and warns once that it is deprecated', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<ActivityFeed events={[]} loading {...{ loadingText: 'Memuat aktivitas' }} />);
+      await render(<ActivityFeed events={[]} hasMore={false} onLoadMore={() => {}} loading {...{ loadingText: 'Memuat aktivitas' }} />);
       await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat aktivitas']);
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('activity-feed-loading-text'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
