@@ -48,12 +48,14 @@ describe('TimePicker', () => {
     const { rerender } = await render(<TimePicker id="shrink" aria-label="Time" min="09:00" max="12:00" step={60} />);
     el('shrink').focus();
     await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}{ArrowDown}');
-    expect(time(document.getElementById(el('shrink').getAttribute('aria-activedescendant')!))).toMatch(/12/);
+    const options = () => [...listOf('shrink').querySelectorAll('[role="option"]')];
+    expect(el('shrink').getAttribute('aria-activedescendant')).toBe(options()[3]!.id);   // 12:00, the last of four
     await rerender(<TimePicker id="shrink" aria-label="Time" min="09:00" max="10:00" step={60} />);
-    const act = el('shrink').getAttribute('aria-activedescendant');
-    expect(time(act ? document.getElementById(act) : null)).toMatch(/10/);
+    const last = options()[1]!;   // 10:00
+    expect([options().length, el('shrink').getAttribute('aria-activedescendant')]).toEqual([2, last.id]);
+    const ten = time(last);
     await userEvent.keyboard('{Enter}');
-    expect(el('shrink').value).toMatch(/10/);
+    expect(el('shrink').value).toBe(ten);
   });
   test('switching to another window or tab mid-typing keeps the typed text and says nothing (L8E26)', async () => {
     const calls: string[] = [];
