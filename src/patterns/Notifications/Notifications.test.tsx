@@ -123,4 +123,15 @@ describe('Patterns/Notifications', () => {
     const main = document.querySelector('main') as HTMLElement;
     expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
   });
+
+  test('a failed load: "Couldn’t load your notifications" in its place, said once, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Notifications loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load your notifications' })).toBeVisible();
+    expect(document.querySelectorAll('main ul > li')).toHaveLength(0);
+    await expect.element(screen.getByRole('button', { name: 'Mark all as read' })).toBeDisabled();
+    expect(status()).toBe('');
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

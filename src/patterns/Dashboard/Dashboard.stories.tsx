@@ -21,3 +21,6 @@ export const Loading: Story = { args: { loading: true } };
 export const FirstRun: Story = {
   args: { data: { stats: [], storage: { used: 0, limit: 10 }, goal: { label: 'Launch checklist', done: 0, total: 5 }, projects: [], activity: [] } },
 };
+
+/** The dashboard failed to load: what happened and Try again, said once, in place of the numbers. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };

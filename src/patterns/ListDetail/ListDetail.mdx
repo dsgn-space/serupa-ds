@@ -26,12 +26,15 @@ A list of things beside the one that's open, like messages in an inbox: two pane
 - **While they load** (`loading`), the list's pane shows placeholder rows under its heading. It says it's busy, and only the first row is named ("Loading messages"), so a screen reader hears it once.
 - **With no messages**, an empty state says what will show up here, in place of two empty panes.
 - **A skip link** first, into main, as on every page.
+- **A failed load says so, with a way out** (4.1.3, 3.3.3). With `loadFailed`, "Couldn’t load" and Try again stand in for the panes, said once, and Try again calls `onRetry`.
 
 <Canvas of={Stories.SecondOpen} />
 
 <Canvas of={Stories.Loading} />
 
 <Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.LoadFailed} />
 
 ## What stays your app's job
 

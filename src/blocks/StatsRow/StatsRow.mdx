@@ -24,10 +24,13 @@ A row of key numbers for the top of a dashboard. Each number shows how it change
 - **While loading**, skeleton cards, the list marked `aria-busy`, and one "Loading" for screen readers, not one per card.
 - **Another language**: pass `labels` with the badge words, the loading name and the trend line's name. The title is used as you give it, never re-cased.
 - **On a phone**, the cards stack in one column (1.4.10).
+- **A failed load says so, with a way out** (4.1.3, 3.3.3). With `loadFailed`, "Couldn’t load" and Try again stand in for the cards, said once, and Try again calls `onRetry`.
 
 <Canvas of={Stories.Plain} />
 
 <Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
 
 ## What stays your app's job
 

@@ -11,12 +11,14 @@ import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Loader } from '../../components/Loader/Loader';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Notifications: a bell in the Navbar that opens the recent ones in a drawer, and a full inbox page with a filter,
    mark as read and mark all as read. Both read the same list. For an app to copy. What it carries (WCAG 2.2):
    - 4.1.2, 1.3.1: the bell is named with its count ("Notifications, 3 unread"), so the number is heard, not only seen.
    - 1.4.1: an unread notification says "Unread" in words, besides the dot before it and its bolder title, which
      are what make it stand out at a glance (the same dot and weight as the drawer's).
+   - 4.1.3, 3.3.3: a failed load says so once, in the list's place, with Try again (EmptyLoadFailed).
    - 4.1.3: while they load, the count says "Loading notifications" and the list is busy, with placeholder rows.
    - 4.1.3: the count above the list is a status, so marking one read or changing the filter is said politely.
    - 2.4.3: marking one read on the page takes its button away (and, under "Unread", the notification too), so focus
@@ -33,6 +35,10 @@ export interface NotificationsProps {
   onMarkRead?: ((id: string) => void) | undefined;
   /** All were marked read. */
   onMarkAllRead?: (() => void) | undefined;
+  /** The notifications failed to load: a "Couldn’t load" message with Try again, which calls onRetry, in their place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
   /** The notifications are on their way: placeholder rows, and the count says "Loading notifications". Default: false. */
   loading?: boolean | undefined;
   /** Where "Notification settings" leads: the page where people choose which notifications they get. Default: "#settings-notifications". */
@@ -53,7 +59,7 @@ const demo: NotificationItem[] = [
 type Filter = 'all' | 'unread';
 
 /** The notifications page: a skip link, a Navbar with the bell, then main with the inbox. */
-export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications', loading = false }: NotificationsProps) {
+export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications', loading = false, loadFailed = false, onRetry }: NotificationsProps) {
   // Marked read here, on top of what the items say, so items that arrive later (after loading) keep their own.
   const [read, setRead] = React.useState<ReadonlySet<string>>(() => new Set());
   const [filter, setFilter] = React.useState<Filter>('all');
@@ -108,15 +114,17 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
           <Heading level={1} ref={heading} tabIndex={-1} className="outline-none">Notifications</Heading>
           <div className="flex flex-wrap gap-2">
             <Button variant="ghost" leftIcon="settings" href={settingsHref}>Notification settings</Button>
-            <Button variant="outline" disabled={loading || !unread} onClick={() => markAll(true)}>Mark all as read</Button>
+            <Button variant="outline" disabled={loading || loadFailed || !unread} onClick={() => markAll(true)}>Mark all as read</Button>
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
             options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread' }]} />
-          <p role="status" className="m-0 text-sm text-text-muted">{loading ? 'Loading notifications' : unread ? `${unread} unread` : 'All caught up'}</p>
+          <p role="status" className="m-0 text-sm text-text-muted">{loadFailed ? '' : loading ? 'Loading notifications' : unread ? `${unread} unread` : 'All caught up'}</p>
         </div>
-        {loading ? (
+        {loadFailed ? (
+          <EmptyLoadFailed title="Couldn’t load your notifications" onRetry={() => onRetry?.()} headingLevel={2} />
+        ) : loading ? (
           // Placeholder rows the shape of a notification; the status above says it's loading, so they're pictures only.
           <ul role="list" aria-busy="true" aria-label="All notifications" className="m-0 flex list-none flex-col gap-4 rounded-lg border border-border bg-surface p-4">
             {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label="" /></li>)}

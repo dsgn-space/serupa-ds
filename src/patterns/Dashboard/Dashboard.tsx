@@ -11,7 +11,7 @@ import { Progress } from '../../components/Progress/Progress';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../components/Table/Table';
 import { StatsRow, type Stat } from '../../blocks/StatsRow/StatsRow';
 import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/ActivityFeed';
-import { EmptyFirstRun } from '../../blocks/EmptyStates/EmptyStates';
+import { EmptyFirstRun, EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
 
 /* Dashboard: the page an account lands on. Key numbers, how much of the plan is used, the latest projects and what
@@ -48,6 +48,10 @@ export interface DashboardProps {
   data?: DashboardData | undefined;
   /** Shows skeletons in place of each part until the data arrives. */
   loading?: boolean | undefined;
+  /** The numbers failed to load: a "Couldn’t load" message with Try again, which calls onRetry, in their place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
   /** The person's name, for the greeting. */
   name?: string | undefined;
   /** "New project" was pressed: in the header, or the first-run state. */
@@ -97,10 +101,10 @@ const PAGE = 4;
 const gb = (n: number) => `${n.toLocaleString(undefined, { maximumFractionDigits: 1 })} GB`;
 
 /** The dashboard page: a skip link, a header, then main with the h1 and its parts. */
-export function Dashboard({ data = demo, loading = false, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false }: DashboardProps) {
+export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false }: DashboardProps) {
   const locale = useLocale();
   const [shown, setShown] = React.useState(PAGE);
-  const firstRun = !loading && data.projects.length === 0;
+  const firstRun = !loading && !loadFailed && data.projects.length === 0;
   const events = onLoadMoreActivity ? data.activity : data.activity.slice(0, shown);
   const more = () => (onLoadMoreActivity ? onLoadMoreActivity() : Promise.resolve().then(() => setShown((n) => n + PAGE)));
   const { used, limit } = data.storage;
@@ -117,7 +121,11 @@ export function Dashboard({ data = demo, loading = false, name = 'Ana', onCreate
           {firstRun ? null : <Button leftIcon="add" onClick={onCreateProject}>New project</Button>}
         </div>
 
-        {firstRun ? (
+        {loadFailed ? (
+          <Card>
+            <EmptyLoadFailed title="Couldn’t load your dashboard" onRetry={() => onRetry?.()} headingLevel={2} />
+          </Card>
+        ) : firstRun ? (
           <Card>
             <EmptyFirstRun title="No projects yet" headingLevel={2} createLabel="New project" onCreate={() => onCreateProject?.()}
               description="A project holds the tasks, files and people for one piece of work. Start one, and its numbers show up here."
