@@ -42,5 +42,5 @@
 .dk-sortable-list--sorting { cursor: grabbing; -webkit-user-select: none; user-select: none; }
 .dk-sortable-list__content { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }   /* a long word wraps inside its row (RF1) */
 @media (prefers-reduced-motion: reduce) { .dk-sortable-list__item { transition: none; } }
-@media (forced-colors: active) { .dk-sortable-list__item--dragging { outline: var(--border-width-2) solid Highlight; } }
+@media (forced-colors: active) { .dk-sortable-list__item--dragging { outline: var(--outline-width-2) solid Highlight; } }
 }

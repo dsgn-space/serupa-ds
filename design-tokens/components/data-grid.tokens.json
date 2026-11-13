@@ -62,15 +62,26 @@
           }
         }
       },
-      "selected-bg": {
+      "bg-selected": {
         "$type": "color",
         "$value": "{color.primary-subtle}",
         "$description": "The selected range's background.",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--data-grid-selected-bg"
+            "cssVar": "--data-grid-bg-selected"
           }
         }
+      },
+      "selected-bg": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "The old name of `--data-grid-bg-selected`, read when that isn't set. Removed in 15.0.0.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--data-grid-selected-bg"
+          }
+        },
+        "$deprecated": "Use --data-grid-bg-selected; removed in 15.0.0."
       },
       "focus-ring": {
         "$type": "color",

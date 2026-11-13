@@ -42,5 +42,5 @@
 .dk-bottom-nav__link--active .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-active, var(--primary-subtle)); }
 .dk-bottom-nav__link:focus-visible { outline: var(--focus-ring-width) solid var(--bottom-nav-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 @media print { .dk-bottom-nav, .dk-bottom-nav__spacer { display: none; } }
-@media (forced-colors: active) { .dk-bottom-nav__link--active .dk-bottom-nav__icon { outline: var(--border-width-1) solid CanvasText; } }
+@media (forced-colors: active) { .dk-bottom-nav__link--active .dk-bottom-nav__icon { outline: var(--outline-width-2) solid CanvasText; } }
 }

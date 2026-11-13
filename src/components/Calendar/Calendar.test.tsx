@@ -161,9 +161,14 @@ describe('Calendar', () => {
     expect([title(), cal<HTMLButtonElement>('.dk-calendar__nav--next').disabled]).toEqual(['June 2025', true]);
   });
 
-  test('--calendar-selected-bg overrides one calendar', async () => {
-    await render(<Calendar data-testid="tok" style={{ '--calendar-selected-bg': 'rgb(1, 2, 3)' } as React.CSSProperties} defaultValue={new Date(2025, 2, 10)} weekStartsOn={0} />);
-    await expect.poll(() => getComputedStyle(q('[data-testid=tok] .dk-calendar__day--selected')).backgroundColor).toBe('rgb(1, 2, 3)');
+  test('--calendar-bg-selected and --calendar-color-selected override one calendar; the old names, state first (--calendar-selected-bg), still work until 15.0.0', async () => {
+    await render(<>
+      <Calendar data-testid="tok" style={{ '--calendar-bg-selected': 'rgb(1, 2, 3)', '--calendar-color-selected': 'rgb(4, 5, 6)' } as React.CSSProperties} defaultValue={new Date(2025, 2, 10)} weekStartsOn={0} />
+      <Calendar data-testid="tok-old" style={{ '--calendar-selected-bg': 'rgb(1, 2, 3)', '--calendar-selected-color': 'rgb(4, 5, 6)' } as React.CSSProperties} defaultValue={new Date(2025, 2, 10)} weekStartsOn={0} />
+    </>);
+    const look = (id: string) => { const c = getComputedStyle(q(`[data-testid=${id}] .dk-calendar__day--selected`)); return `${c.backgroundColor} / ${c.color}`; };
+    await expect.poll(() => look('tok')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6)');
+    await expect.poll(() => look('tok-old')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6)');
   });
 
   test('pressed: a day held down fills with pressed, one step past hover', async () => {

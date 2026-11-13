@@ -16,6 +16,9 @@ describe('Patterns/List and detail', () => {
   test('wide: one main and one h1, the skip link first; the list and the open message are named regions; the first opens', async () => {
     await render(<ListDetail />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    // The page's title is set off from what's under it by the page header's line, as on the other app pages.
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('h1'))).toBe(true);
     expect(regions()).toEqual(['Messages (4)', 'Launch checklist']);
     expect(current()).toBe('message-m1');
     expect(document.querySelector('[role="separator"]')?.getAttribute('aria-label')).toBe('Resize the message list');

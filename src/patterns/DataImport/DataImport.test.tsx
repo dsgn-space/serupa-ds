@@ -41,6 +41,12 @@ describe('Patterns/Data import', () => {
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
     // The app's header, as on the other app pages, a banner landmark before main.
     expect(document.querySelector('header')?.textContent).toBe('Acme');
+    // The page's title in the same type as every app page's h1, in the page header with its line under it.
+    const probe = document.createElement('h1'); probe.className = 'dk-heading dk-heading--1'; document.body.append(probe);
+    expect(getComputedStyle(document.querySelector('main h1')!).fontSize).toBe(getComputedStyle(probe).fontSize);
+    probe.remove();
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('main h1'))).toBe(true);
     expect(document.querySelector('header')?.compareDocumentPosition(document.querySelector('main')!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');

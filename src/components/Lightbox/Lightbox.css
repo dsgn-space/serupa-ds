@@ -21,7 +21,7 @@
 .dk-lightbox__stage[data-fades][data-state="loaded"] .dk-lightbox__img { transition: opacity var(--motion-enter-md) var(--ease-enter); }
 .dk-lightbox__stage[data-state="loaded"]::after {
   content: ""; position: absolute; inset: var(--spacing-0); border-radius: inherit; pointer-events: none;
-  outline: var(--border-width-1) solid var(--lightbox-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--border-width-1));
+  outline: var(--outline-width-1) solid var(--lightbox-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
 .dk-lightbox__fallback { position: absolute; inset: var(--spacing-0); display: grid; place-items: center; color: var(--lightbox-fallback-color, var(--text-muted)); }
 .dk-lightbox__fallback .dk-icon { inline-size: var(--lightbox-fallback-icon, var(--spacing-6)); block-size: var(--lightbox-fallback-icon, var(--spacing-6)); }

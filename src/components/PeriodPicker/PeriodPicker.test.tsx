@@ -244,3 +244,21 @@ describe('PeriodPicker', () => {
     ])).toEqual([]);
   });
 });
+
+describe('PeriodPicker token names', () => {
+  test('the chosen period reads --period-picker-bg-selected and --period-picker-text-selected; the old names, state first (--period-picker-selected-bg), still work until 15.0.0', async () => {
+    const root = document.documentElement.style;
+    await render(<EnUS><PeriodPicker aria-label="Report month" defaultValue="2025-02" /></EnUS>);
+    await userEvent.click(button());
+    const look = () => { const c = css(periods()[1]!); return `${c.backgroundColor} / ${c.color}`; };
+    try {
+      root.cssText += '--period-picker-bg-selected: rgb(1, 2, 3); --period-picker-text-selected: rgb(4, 5, 6)';
+      await expect.poll(look).toBe('rgb(1, 2, 3) / rgb(4, 5, 6)');
+      root.removeProperty('--period-picker-bg-selected'); root.removeProperty('--period-picker-text-selected');
+      root.cssText += '--period-picker-selected-bg: rgb(7, 8, 9); --period-picker-selected-text: rgb(4, 5, 6)';
+      await expect.poll(look).toBe('rgb(7, 8, 9) / rgb(4, 5, 6)');
+    } finally {
+      for (const p of ['--period-picker-bg-selected', '--period-picker-text-selected', '--period-picker-selected-bg', '--period-picker-selected-text']) root.removeProperty(p);
+    }
+  });
+});

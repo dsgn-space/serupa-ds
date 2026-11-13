@@ -31,7 +31,7 @@
 .dk-data-grid--sticky { scroll-padding-top: var(--dk-data-grid-head, var(--spacing-10)); }
 .dk-data-grid__cell--center { text-align: center; }
 .dk-data-grid__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
-.dk-data-grid__cell--selected { background: var(--data-grid-selected-bg, var(--primary-subtle)); }
+.dk-data-grid__cell--selected { background: var(--data-grid-bg-selected, var(--data-grid-selected-bg, var(--primary-subtle))); }
 .dk-data-grid__header:focus-visible, .dk-data-grid__cell:focus-visible, .dk-data-grid__cell--editing {
   outline: var(--focus-ring-width) solid var(--data-grid-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); z-index: var(--z-10);
 }

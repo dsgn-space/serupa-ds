@@ -24,5 +24,5 @@
 .dk-icon-tile--warning { --dk-icon-tile-bg: var(--icon-tile-warning-bg, var(--warning-subtle)); --dk-icon-tile-fg: var(--icon-tile-warning-icon, var(--warning-text)); }
 .dk-icon-tile--danger { --dk-icon-tile-bg: var(--icon-tile-danger-bg, var(--danger-subtle)); --dk-icon-tile-fg: var(--icon-tile-danger-icon, var(--danger-text)); }
 .dk-icon-tile--info { --dk-icon-tile-bg: var(--icon-tile-info-bg, var(--info-subtle)); --dk-icon-tile-fg: var(--icon-tile-info-icon, var(--info-text)); }
-@media (forced-colors: active) { .dk-icon-tile { outline: var(--border-width-1) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--border-width-1)); } }
+@media (forced-colors: active) { .dk-icon-tile { outline: var(--outline-width-1) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-1)); } }
 }

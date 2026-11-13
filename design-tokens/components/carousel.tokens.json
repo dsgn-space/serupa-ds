@@ -66,15 +66,26 @@
           }
         }
       },
-      "dot-active-width": {
+      "dot-width-active": {
         "$type": "dimension",
         "$value": "{spacing.spacing-6}",
         "$description": "The current dot's width (24px).",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--carousel-dot-active-width"
+            "cssVar": "--carousel-dot-width-active"
           }
         }
+      },
+      "dot-active-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The old name of `--carousel-dot-width-active`, read when that isn't set. Removed in 15.0.0.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--carousel-dot-active-width"
+          }
+        },
+        "$deprecated": "Use --carousel-dot-width-active; removed in 15.0.0."
       }
     },
     "spacing": {

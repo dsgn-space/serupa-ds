@@ -41,6 +41,10 @@ await t('radius-through-role: roles, a component token, none, xs and full pass',
 await t('radius-through-role: a middle step of the rounded scale, alone or as a default, is flagged', layered(`.dk-x { border-radius: var(--rounded-md); }
 .dk-y { border-radius: var(--y-radius, var(--rounded-lg)); }
 .dk-z { border-end-end-radius: var(--rounded-sm); --z-item-radius: var(--rounded-xl); }`), ['serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role'], { 'serupa/radius-through-role': true });
+await t('outline-width-token: outline-width and focus-ring-width tokens pass', layered(`.dk-x { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
+.dk-y { outline-width: var(--focus-ring-width); border: var(--border-width-1) solid CanvasText; }`), [], { 'serupa/outline-width-token': true });
+await t('outline-width-token: a border-width token in an outline is flagged', layered(`.dk-x { outline: var(--border-width-1) solid Highlight; }
+.dk-y { outline-width: var(--border-width-2); }`), ['serupa/outline-width-token', 'serupa/outline-width-token'], { 'serupa/outline-width-token': true });
 const combobox = path.join(PROJECT, 'src', 'components', 'Combobox', 'Combobox.css');
 const own = (known) => ({ 'serupa/own-block': known ? [true, { known }] : true });
 await t('own-block: its own elements, and another block placed or sized, fed a custom property, or used as context, pass', layered(`.dk-combobox__popup { inset-block-start: var(--spacing-1); }

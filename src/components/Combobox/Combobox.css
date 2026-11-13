@@ -89,7 +89,7 @@
 .dk-combobox__tags { display: contents; }
 .dk-combobox--multiple .dk-input__field { flex: auto; width: var(--spacing-16); height: auto; min-height: var(--spacing-5); }
 @media (prefers-reduced-motion: reduce) { .dk-combobox__button, .dk-combobox__button .dk-icon { transition: none; } }
-@media (forced-colors: active) { .dk-combobox__option--active { outline: var(--border-width-1) solid Highlight; } }
+@media (forced-colors: active) { .dk-combobox__option--active { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
 /* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
    off it doesn't land in the text and open the keyboard. */
 @media (pointer: coarse) {

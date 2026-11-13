@@ -90,6 +90,6 @@
   .dk-cascade-select__column + .dk-cascade-select__column { border-inline-start: var(--spacing-0); }
   .dk-cascade-select__back { display: inline-flex; }
 }
-@media (forced-colors: active) { .dk-cascade-select__panel { border-color: CanvasText; } .dk-cascade-select__option--on { outline: var(--border-width-1) solid Highlight; } }
+@media (forced-colors: active) { .dk-cascade-select__panel { border-color: CanvasText; } .dk-cascade-select__option--on { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 @media print { .dk-cascade-select__panel { display: none; } }
 }

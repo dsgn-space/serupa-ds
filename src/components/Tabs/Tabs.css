@@ -146,6 +146,6 @@
 @media (prefers-reduced-motion: reduce) { .dk-tabs__tab { transition: none; } }
 @media (forced-colors: active) {
   .dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { background: Highlight; }
-  .dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { outline: var(--border-width-2) solid Highlight; }
+  .dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { outline: var(--outline-width-2) solid Highlight; }
 }
 }

@@ -3,12 +3,14 @@
 //   node tools/test/release-screenshots.mjs
 import { execFileSync } from 'node:child_process';
 import { PROJECT, report, done } from './lib.mjs';
-import { previousTag, screenshotNotes } from '../release-screenshots.mjs';
+import { isLatest, previousTag, screenshotNotes } from '../release-screenshots.mjs';
 
 const R = [];
 const t = (name, ok, detail = '') => R.push({ name, ok: !!ok, detail });
 t('the previous tag is the highest release below this one, prereleases and other tags left out',
   previousTag(['v9.10.0', 'v9.9.1', 'v10.0.0', 'v10.1.0-beta.1', 'latest', 'v12.0.0'], '10.1.0') === 'v10.0.0' && previousTag(['v1.0.0'], '1.0.0') === null);
+t('a release is the latest unless a higher one is out: a 14.x patch after 15.0.0 isn\'t', isLatest(['v14.6.0', 'v14.7.0'], '14.8.0')
+  && !isLatest(['v14.7.0', 'v15.0.0', 'v15.0.1'], '14.7.1') && isLatest(['v14.7.0', 'v15.0.0-beta.1', 'latest'], '14.7.1'));
 const D = 'tools/test/baseline-visual/';
 const status = [`M\t${D}Badge/Extras-blue-light-rest.png`, `M\t${D}Badge/Extras-blue-dark-rest.png`, `M\t${D}Badge/Extras-blue-light-hover.png`,
   `A\t${D}Card/Media-blue-light-rest.png`, `D\t${D}Card/Old-blue-light-rest.png`, `M\ttools/test/other.png`].join('\n');

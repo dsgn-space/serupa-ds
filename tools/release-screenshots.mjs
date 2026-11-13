@@ -17,6 +17,14 @@ export function previousTag(tags, version) {
   return older[0]?.[0] ?? null;
 }
 
+/** Whether `version` is the newest release among `tags`: false for a patch of an older major (14.0.1 after 15.0.0),
+ * which mustn't take GitHub's "Latest" from the new major. */
+export function isLatest(tags, version) {
+  const parse = (v) => /^v?(\d+)\.(\d+)\.(\d+)$/.exec(v)?.slice(1).map(Number);
+  const me = parse(version);
+  return !me || !tags.some((t) => { const v = parse(t); return v && (v[0] - me[0] || v[1] - me[1] || v[2] - me[2]) > 0; });
+}
+
 /** Markdown for the stories whose screenshot changed or is new. `status` is git diff --name-status's output. */
 export function screenshotNotes({ status, prev, tag, repo, max = 12 }) {
   const rows = status.split('\n').map((l) => l.split('\t')).filter(([s, f]) => /^[AM]$/.test(s) && f?.startsWith(DIR) && SHOT.test(f));

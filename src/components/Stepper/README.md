@@ -144,10 +144,14 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | `--stepper-indicator-bg` | `surface` | An upcoming step's circle. |
 | `--stepper-indicator-border` | `field-border` | An upcoming step's ring (3:1 on the surface). |
 | `--stepper-indicator-text` | `text-muted` | An upcoming step's number. |
-| `--stepper-active-bg` | `primary` | The current and completed steps' circle. |
-| `--stepper-active-text` | `on-primary` | The number or check on them. |
-| `--stepper-error-bg` | `danger` | A step with an error. |
-| `--stepper-error-text` | `on-danger` | The mark on it. |
+| `--stepper-bg-active` | `primary` | The current and completed steps' circle. |
+| `--stepper-active-bg` | `primary` | The old name of `--stepper-bg-active`, read when that isn't set. Removed in 15.0.0. |
+| `--stepper-text-active` | `on-primary` | The number or check on them. |
+| `--stepper-active-text` | `on-primary` | The old name of `--stepper-text-active`, read when that isn't set. Removed in 15.0.0. |
+| `--stepper-bg-error` | `danger` | A step with an error. |
+| `--stepper-error-bg` | `danger` | The old name of `--stepper-bg-error`, read when that isn't set. Removed in 15.0.0. |
+| `--stepper-text-error` | `on-danger` | The mark on it. |
+| `--stepper-error-text` | `on-danger` | The old name of `--stepper-text-error`, read when that isn't set. Removed in 15.0.0. |
 | `--stepper-warning-bg` | `warning-subtle` | A step with a warning. |
 | `--stepper-warning-border` | `warning-text` | Its ring. |
 | `--stepper-warning-text` | `warning-text` | The mark on it. |
@@ -194,5 +198,6 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--stepper-active-depth` | `depth-part` | The current and finished circles in a tactile brand: raised like a part, under the top light. Nothing in a flat brand. |
+| `--stepper-depth-active` | `depth-part` | The current and finished circles in a tactile brand: raised like a part, under the top light. Nothing in a flat brand. |
+| `--stepper-active-depth` | `depth-part` | The old name of `--stepper-depth-active`, read when that isn't set. Removed in 15.0.0. |
 <!-- token-table:end -->
