@@ -113,7 +113,6 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
   const from = anchor && { r: Math.min(anchor.r, lastRow), c: Math.min(anchor.c, Math.max(lastCol, 0)) };
   const range = from ? { r1: Math.max(1, Math.min(from.r, cur.r)), r2: Math.max(from.r, cur.r), c1: Math.min(from.c, cur.c), c2: Math.max(from.c, cur.c) }
     : cur.r > 0 ? { r1: cur.r, r2: cur.r, c1: cur.c, c2: cur.c } : null;
-  const inRange = (r: number, c: number) => !!range && r >= range.r1 && r <= range.r2 && c >= range.c1 && c <= range.c2;
 
   const cellEl = (p: Pos) => table.current && table.current.querySelector<HTMLElement>(`[data-cell="${p.r}-${p.c}"]`);
   // Focus follows the active cell once it moved by a key or a click (not on the first render, or when rows change).
@@ -219,6 +218,17 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
   const loading = !!(props.loading ?? props.busy);
   const placeholders = !rows.length && loading ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
   const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
+  // Stable handlers for the memoised rows, reading the latest state through a ref: an arrow key then redraws the two
+  // rows it moves between, not every cell of the grid (GR397).
+  const latest = React.useRef({ pick, save, editable, lastRow, edit });
+  latest.current = { pick, save, editable, lastRow, edit };
+  const api = React.useMemo<RowApi>(() => ({
+    pick: (p, e) => latest.current.pick(p, e),
+    begin: (p, text) => { if (latest.current.editable(p)) setEdit({ text }); },
+    save: (text, then) => latest.current.save(text, then && { r: Math.min(then.r, latest.current.lastRow), c: Math.max(0, then.c) }),
+    blur: (text) => { if (latest.current.edit) latest.current.save(text, null); },
+    cancel: () => { setEdit(null); focusCell.current = true; },
+  }), []);
   const cp = props.containerProps || {};
   return (
     <div {...cp} ref={frame} className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.stickyHeader && 'dk-data-grid--sticky', props.className, cp.className)} data-component="data-grid">
@@ -236,33 +246,9 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
         </thead>
         <tbody>
           {rows.map((row, i) => {
-            const r = i + 1;
-            return (
-              <tr key={String(row[key])} role="row" aria-rowindex={r + 1}>
-                {columns.map((col, c) => {
-                  const active = r === cur.r && c === cur.c, sel = inRange(r, c);
-                  const editing = active && edit;
-                  return (
-                    <td key={col.key} role="gridcell" aria-colindex={c + 1} tabIndex={editing ? -1 : tabStop(r, c)} data-cell={`${r}-${c}`}
-                      aria-selected={sel} aria-readonly={canEdit && !col.editable ? true : undefined}
-                      className={cn('dk-data-grid__cell', col.align && col.align !== 'start' && 'dk-data-grid__cell--' + col.align, sel && 'dk-data-grid__cell--selected', editing && 'dk-data-grid__cell--editing')}
-                      onClick={(e) => pick({ r, c }, e)} onDoubleClick={() => { if (editable({ r, c })) setEdit({ text: textOf(col, row) }); }}>
-                      {editing ? (
-                        <input className="dk-data-grid__input" aria-label={L.dataGridEdit(col.header)} ref={(n) => { if (n && document.activeElement !== n) n.focus(); }} defaultValue={edit.text}
-                          onFocus={(e) => { const n = e.currentTarget.value.length; e.currentTarget.setSelectionRange(n, n); }}
-                          onBlur={(e) => { if (edit) save(e.currentTarget.value, null); }}
-                          onKeyDown={(e) => {
-                            if (isComposing(e)) return;
-                            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setEdit(null); focusCell.current = true; }
-                            else if (e.key === 'Enter') { e.preventDefault(); save(e.currentTarget.value, { r: Math.min(r + 1, lastRow), c }); }
-                            else if (e.key === 'Tab') { e.preventDefault(); save(e.currentTarget.value, { r, c: Math.max(0, Math.min(lastCol, c + (e.shiftKey ? -1 : 1))) }); }
-                          }} />
-                      ) : textOf(col, row)}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
+            const r = i + 1, inside = !!range && r >= range.r1 && r <= range.r2;
+            return <GridRow key={String(row[key])} row={row} r={r} columns={columns} api={api} active={r === cur.r ? cur.c : -1} c1={inside ? range.c1 : -1} c2={inside ? range.c2 : -1}
+              edit={r === cur.r ? edit : null} canEdit={canEdit} editLabel={L.dataGridEdit} />;
           })}
           {placeholders ? <LoadingRows rows={placeholders} columns={columns} label={props.loadingLabel == null ? L.loading : props.loadingLabel} /> : null}
           {message != null && (
@@ -276,6 +262,39 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     </div>
   );
 }) as <R extends object = DataGridRow>(props: DataGridProps<R> & { ref?: React.Ref<HTMLTableElement> | undefined }) => React.ReactElement;
+
+interface RowApi { pick: (p: Pos, e: React.MouseEvent) => void; begin: (p: Pos, text: string) => void; save: (text: string, then: Pos | null) => void; blur: (text: string) => void; cancel: () => void }
+// One body row. Memoised on what it shows: its row, the active column when the active cell is here (else -1), the
+// selected columns c1..c2 when the range crosses it (else -1), and the edit when it's here.
+const GridRow = /* @__PURE__ */ React.memo(function GridRow(p: { row: DataGridRow; r: number; columns: DataGridColumn[]; api: RowApi; active: number; c1: number; c2: number; edit: { text: string } | null; canEdit: boolean; editLabel: (header: string) => string }) {
+  const { row, r, api } = p;
+  return (
+    <tr role="row" aria-rowindex={r + 1}>
+      {p.columns.map((col, c) => {
+        const active = c === p.active, sel = c >= p.c1 && c <= p.c2 && p.c1 >= 0;
+        const editing = active && p.edit;
+        return (
+          <td key={col.key} role="gridcell" aria-colindex={c + 1} tabIndex={active && !editing ? 0 : -1} data-cell={`${r}-${c}`}
+            aria-selected={sel} aria-readonly={p.canEdit && !col.editable ? true : undefined}
+            className={cn('dk-data-grid__cell', col.align && col.align !== 'start' && 'dk-data-grid__cell--' + col.align, sel && 'dk-data-grid__cell--selected', editing && 'dk-data-grid__cell--editing')}
+            onClick={(e) => api.pick({ r, c }, e)} onDoubleClick={() => api.begin({ r, c }, textOf(col, row))}>
+            {editing ? (
+              <input className="dk-data-grid__input" aria-label={p.editLabel(col.header)} ref={(n) => { if (n && document.activeElement !== n) n.focus(); }} defaultValue={editing.text}
+                onFocus={(e) => { const n = e.currentTarget.value.length; e.currentTarget.setSelectionRange(n, n); }}
+                onBlur={(e) => api.blur(e.currentTarget.value)}
+                onKeyDown={(e) => {
+                  if (isComposing(e)) return;
+                  if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); api.cancel(); }
+                  else if (e.key === 'Enter') { e.preventDefault(); api.save(e.currentTarget.value, { r: r + 1, c }); }
+                  else if (e.key === 'Tab') { e.preventDefault(); api.save(e.currentTarget.value, { r, c: Math.min(p.columns.length - 1, c + (e.shiftKey ? -1 : 1)) }); }
+                }} />
+            ) : textOf(col, row)}
+          </td>
+        );
+      })}
+    </tr>
+  );
+});
 
 /* The placeholder rows: decorative skeletons in Loader's classes (without Loader's weight), shown after the loader's
    delay, when the label is said once; the grid's aria-busy marks it as loading. */

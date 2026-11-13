@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Slider } from './Slider';
@@ -542,6 +542,17 @@ describe('Slider inputs', () => {
     expect([fields().length, f.getAttribute('aria-label'), f.value]).toEqual([1, 'Volume', '35']);
     await userEvent.click(f);
     expect([document.activeElement, thumbs()[0].getAttribute('aria-valuenow')]).toEqual([f, '35']);
+  });
+
+  test('in a Field, the fields don\'t take the Field\'s id: no id twice, and a range\'s two fields aren\'t one; the label still names one thumb\'s field', async () => {
+    await render(<En>
+      <Field label="Volume" hint="0 is muted"><Slider defaultValue={35} inputs /></Field>
+      <Field label="Price" hint="In dollars"><Slider defaultValue={[20, 80]} inputs /></Field>
+    </En>);
+    const ids = [...document.querySelectorAll('[id]')].map((n) => n.id);
+    expect(ids.filter((x, i) => ids.indexOf(x) !== i)).toEqual([]);
+    await expect.element(page.getByRole('spinbutton', { name: 'Volume' })).toHaveAccessibleDescription('0 is muted');
+    expect(page.getByRole('spinbutton').elements().map((f) => f.getAttribute('aria-label'))).toEqual([null, 'Minimum', 'Maximum']);
   });
 
   test('disabled and read-only reach the fields', async () => {

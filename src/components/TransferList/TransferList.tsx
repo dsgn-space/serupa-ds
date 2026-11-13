@@ -79,6 +79,11 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
   const left = options.filter((o) => !chosen.includes(o.value));
   const right = chosen.map((v) => options.find((o) => o.value === v) as TransferListOption);
   const names = { left: availableLabel || sds.labels.transferAvailable, right: chosenLabel || sds.labels.transferChosen };
+  // A checked box whose option the app moved to the other list (a controlled value) is forgotten, so it isn't still
+  // checked when it comes back.
+  const keep = (list: TransferListOption[], checked: string[]) => checked.filter((v) => list.some((o) => o.value === v));
+  if (keep(left, checkedLeft).length !== checkedLeft.length) setCheckedLeft(keep(left, checkedLeft));
+  if (keep(right, checkedRight).length !== checkedRight.length) setCheckedRight(keep(right, checkedRight));
   const moveable = (list: TransferListOption[], checked: string[]) => list.filter((o) => !o.disabled && checked.includes(o.value));
 
   const move = (to: 'left' | 'right') => {
