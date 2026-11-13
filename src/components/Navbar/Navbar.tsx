@@ -23,6 +23,10 @@ export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** Keeps the bar at the top while the page scrolls, and keeps what the keyboard focuses (or a #link jumps to)
    *  from scrolling under it. Default: false. */
   sticky?: boolean | undefined;
+  /** On a sticky bar, the bar condenses to 48px (--navbar-height-condensed) as the page scrolls under it: its lower
+   *  edge goes up with the page, then stays, and what's in it stays centered. Where scroll-driven animations aren't
+   *  supported (Firefox), the bar keeps its height. Default: false. */
+  condense?: boolean | undefined;
   /** The content's maximum width, like Container: 'prose', 'md', 'lg', 'xl' (default), '2xl' or 'full'. */
   size?: ContainerSize | undefined;
   /** The links' nav name. Default: "Main". */
@@ -82,7 +86,7 @@ const NavbarContext = /* @__PURE__ */ React.createContext<{ close: () => void; m
 /** The bar across the top: brand, main links and actions. On small screens the links fold into a menu button. */
 export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navbar', function Navbar(props, ref) {
   const sds = useSettings();
-  const rest = omit(props, { brand: 1, children: 1, actions: 1, sticky: 1, size: 1, menuLabel: 1, className: 1, 'aria-label': 1, onKeyDown: 1, onBlur: 1 });
+  const rest = omit(props, { brand: 1, children: 1, actions: 1, sticky: 1, condense: 1, size: 1, menuLabel: 1, className: 1, 'aria-label': 1, onKeyDown: 1, onBlur: 1 });
   const [open, setOpen] = React.useState(false);
   // The NavbarMenu whose panel is open: one at a time.
   const [menu, setMenu] = React.useState<string | null>(null);
@@ -171,7 +175,7 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
   const mergedRef = useMergedRef(ref, (n) => { bar.current = n; });
   return (
     <NavbarContext.Provider value={ctx}>
-      <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.className)}>
+      <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.sticky && props.condense && 'dk-navbar--condense', props.className)}>
         <div className={cn('dk-navbar__inner dk-container dk-container--padded', 'dk-container--' + size)}>
           {props.brand != null ? <div className="dk-navbar__brand">{typeof props.brand === 'string' || typeof props.brand === 'number' ? <span>{props.brand}</span> : props.brand}</div> : null}
           {open || leaving ? null : nav}

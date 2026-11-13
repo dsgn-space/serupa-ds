@@ -37,6 +37,8 @@ export const holdRepeat = 50;
 export const clickAfterDrag = 500;
 /** Toast: the same message again within this long counts as a repeat, not a new toast. */
 export const repeatQuiet = 1000;
+/** Countdown's clock ticks this often: twice a second, so a second changes on time. */
+export const countdownTick = 500;
 /** RelativeTime refreshes "3 minutes ago" this often. */
 export const relativeTick = 15000;
 /** How often a clock shown by the minute moves on: EventCalendar's line at the time now. */

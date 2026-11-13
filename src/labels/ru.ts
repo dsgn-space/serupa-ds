@@ -346,4 +346,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'Прокручиваемое содержимое',
   showMore: 'Показать больше',
   showLess: 'Показать меньше',
+  transferAvailable: 'Доступные',
+  transferChosen: 'Выбранные',
+  transferAdd: 'Добавить',
+  transferRemove: 'Убрать',
+  transferAll: 'Все',
+  transferAddReason: 'Сначала отметьте, что добавить',
+  transferRemoveReason: 'Сначала отметьте, что убрать',
+  transferEmpty: 'Нет',
+  transferMoved: (items, list) => items + ': перемещено в «' + list + '».',
 };

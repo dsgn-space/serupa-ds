@@ -281,6 +281,8 @@ describe('Popover: motion (DZ1)', () => {
       await settled(p);
       await userEvent.click(el('tshare'));
       await new Promise((ok) => setTimeout(ok, 40));
+      // Mid-fade: a busy runner can go 40 ms without a frame, and the fade hasn't moved until one comes.
+      await expect.poll(() => Number(getComputedStyle(p).opacity)).toBeLessThan(1);
       const mid = Number(getComputedStyle(p).opacity);
       await userEvent.click(el('tshare'));
       expect([isOpen('tshare'), p.inert]).toEqual([true, false]);

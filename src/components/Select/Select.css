@@ -28,7 +28,7 @@
   flex: auto; box-sizing: border-box; width: var(--sizing-full); min-width: var(--spacing-0); height: var(--sizing-full);
   margin: var(--spacing-0); border: 0; border-radius: inherit; background: transparent; outline: none;
   padding-block: var(--spacing-0);
-  padding-inline: var(--dk-select-px) calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2)));
+  padding-inline: var(--dk-select-px) calc(var(--spacing-2) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2)));
   color: inherit; font: inherit; letter-spacing: inherit; text-overflow: ellipsis; cursor: pointer; touch-action: manipulation;
 }
 .dk-select--has-icon .dk-select__field { padding-inline-start: calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2))); }
@@ -36,7 +36,9 @@
 .dk-select--empty .dk-select__field { color: var(--select-placeholder, var(--placeholder)); }
 .dk-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
 .dk-select__icon--left { inset-inline-start: var(--dk-select-px); }
-.dk-select__icon--chevron { inset-inline-end: var(--dk-select-px); }
+/* The chevron sits 8px inside the end edge at every size, where Combobox, DatePicker and the other fields put
+   theirs, so the chevrons of a column of fields line up. */
+.dk-select__icon--chevron { inset-inline-end: var(--spacing-2); }
 .dk-select__icon .dk-icon { font-size: var(--dk-select-icon); }
 @media (hover: hover) { .dk-select:hover:not(.dk-select--disabled, :has(.dk-select__field:disabled), .dk-select--readonly, :focus-within) { --dk-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline

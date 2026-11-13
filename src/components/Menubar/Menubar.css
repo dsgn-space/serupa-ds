@@ -24,6 +24,7 @@
   transition: background-color var(--motion-hover);
 }
 @media (hover: hover) { .dk-menubar__item:hover:not([aria-disabled="true"]) { background: var(--menubar-item-bg-hover, var(--highlight)); } }
+.dk-menubar__item:active:not([aria-disabled="true"]) { background: var(--menubar-item-bg-pressed, var(--pressed)); }   /* held down: one step past hover */
 .dk-menubar__item[aria-expanded="true"] { background: var(--menubar-item-bg-open, var(--pressed)); }
 .dk-menubar__item:focus-visible { outline: var(--focus-ring-width) solid var(--menubar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-menubar__item[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }

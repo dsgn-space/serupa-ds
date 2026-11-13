@@ -334,7 +334,8 @@ describe('Image loading motion', () => {
     expect(list).toEqual([['(min-width: 1px)', null, 'auto', '400'], [null, 'image/x-never', null, null]]);
     expect(i.parentElement!.tagName).toBe('PICTURE');
     await expect.poll(() => f.dataset.state).toBe('loaded');
-    expect(i.currentSrc).toBe(WIDE);
+    // Firefox can finish the <img>'s own src first and show the source's a moment later, so this waits for it.
+    await expect.poll(() => i.currentSrc).toBe(WIDE);
     expect(box('src')).toEqual({ ...box('plain') });
     expect([...frame('plain').querySelectorAll('picture')].length).toBe(0);
   });

@@ -80,9 +80,11 @@ jobs:
           set -euo pipefail
           subject=$(git log -1 --format=%s HEAD^2)
           labels=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" --jq '.[].name')
-          # Heal's merge is held too: its label comes right after the push.
+          # Heal's merge is held too, on its first attempt: its label comes right after the push. Update baselines starts
+          # the run again once the label is off when the redraw changed nothing, and that attempt has to test, or the
+          # merge commit, still the head, held it for good (#1782, 13 Nov).
           if [ "$subject" != "Update test baselines on the CI runner" ] && { grep -qx update-visual-baselines <<< "$labels" ||
-            grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; then
+            { [ "$GITHUB_RUN_ATTEMPT" = 1 ] && grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; }; then
             echo "hold=1" >> "$GITHUB_OUTPUT"
             echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
@@ -137,7 +139,9 @@ jobs:
           fi
           x86any=$(echo "$x86" | jq -r 'if (.include | length) > 0 then 1 else "" end')
           portable='{"include":[{"group":"checks","shard":"1/3"},{"group":"checks","shard":"2/3"},{"group":"checks","shard":"3/3"}'
-          [ -n "$storybook" ] && portable="$portable"',{"group":"storybook","shard":"1/3"},{"group":"storybook","shard":"2/3"},{"group":"storybook","shard":"3/3"}'
+          # Storybook in four shards: in three, a queue run that checks every page took up to 11 minutes in one (13 Nov),
+          # the longest job of the run. They go on GitHub's runners, so a fourth costs no x86 runner.
+          [ -n "$storybook" ] && portable="$portable"',{"group":"storybook","shard":"1/4"},{"group":"storybook","shard":"2/4"},{"group":"storybook","shard":"3/4"},{"group":"storybook","shard":"4/4"}'
           portable="$portable]}"
           {
             echo "full=$full"; echo "wide=$wide"; echo "since=$since"; echo "tests=$tests"

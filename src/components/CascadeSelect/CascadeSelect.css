@@ -16,11 +16,11 @@
   position: relative; display: inline-flex; inline-size: var(--sizing-full); min-inline-size: var(--spacing-0); vertical-align: middle;
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
-.dk-cascade-select--size-sm { --dk-cs-h: var(--cascade-select-height-sm, var(--control-height-sm)); --dk-cs-px: var(--spacing-2); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-cascade-select--size-lg { --dk-cs-h: var(--cascade-select-height-lg, var(--control-height-lg)); --dk-cs-px: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-cascade-select--size-sm { --dk-cs-h: var(--cascade-select-height-sm, var(--control-height-sm)); --dk-cs-px: var(--spacing-2); --dk-cs-icon: var(--spacing-3\.5); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-cascade-select--size-lg { --dk-cs-h: var(--cascade-select-height-lg, var(--control-height-lg)); --dk-cs-px: var(--spacing-4); --dk-cs-icon: var(--spacing-5); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-cascade-select__button {
   display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; inline-size: var(--sizing-full); min-block-size: var(--dk-cs-h); margin: var(--spacing-0);
-  padding-block: var(--spacing-0); padding-inline: var(--dk-cs-px); border: var(--border-width-1) solid var(--dk-cs-bd); border-radius: var(--cascade-select-radius, var(--radius-control));
+  padding-block: var(--spacing-0); padding-inline: var(--dk-cs-px) var(--spacing-2); border: var(--border-width-1) solid var(--dk-cs-bd); border-radius: var(--cascade-select-radius, var(--radius-control));
   background: var(--cascade-select-bg, var(--field)); color: var(--cascade-select-text, var(--text)); font: inherit; text-align: start; cursor: pointer; touch-action: manipulation;
   transition: border-color var(--motion-hover) var(--ease-move);
 }
@@ -36,7 +36,7 @@
 .dk-cascade-select--disabled .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-cascade-select__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dk-cascade-select__value--empty { color: var(--cascade-select-placeholder, var(--placeholder)); }
-.dk-cascade-select__chevron { flex: none; color: var(--cascade-select-icon, var(--text-muted)); font-size: var(--spacing-4); }
+.dk-cascade-select__chevron { flex: none; color: var(--cascade-select-icon, var(--text-muted)); font-size: var(--dk-cs-icon, var(--spacing-4)); }   /* 14, 16 or 20px by size, 8px inside the end edge, as Select's chevron */
 
 .dk-cascade-select__panel {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--cascade-select-z-index, var(--z-popover));

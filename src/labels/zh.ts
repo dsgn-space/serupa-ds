@@ -339,4 +339,13 @@ export const labels: SerupaLabels = {
   scrollArea: '可滚动内容',
   showMore: '显示更多',
   showLess: '收起',
+  transferAvailable: '可选',
+  transferChosen: '已选',
+  transferAdd: '添加',
+  transferRemove: '移除',
+  transferAll: '全部',
+  transferAddReason: '请先勾选要添加的项',
+  transferRemoveReason: '请先勾选要移除的项',
+  transferEmpty: '无',
+  transferMoved: (items, list) => '已将' + items + '移到' + list + '。',
 };

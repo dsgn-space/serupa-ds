@@ -339,4 +339,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'スクロールするコンテンツ',
   showMore: 'もっと見る',
   showLess: '表示を減らす',
+  transferAvailable: '選択可能',
+  transferChosen: '選択済み',
+  transferAdd: '追加',
+  transferRemove: '削除',
+  transferAll: 'すべて',
+  transferAddReason: '先に追加する項目をチェックしてください',
+  transferRemoveReason: '先に削除する項目をチェックしてください',
+  transferEmpty: 'なし',
+  transferMoved: (items, list) => items + 'を' + list + 'に移動しました。',
 };

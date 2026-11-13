@@ -340,4 +340,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'Kandungan boleh tatal',
   showMore: 'Tunjukkan lagi',
   showLess: 'Tunjukkan kurang',
+  transferAvailable: 'Tersedia',
+  transferChosen: 'Dipilih',
+  transferAdd: 'Tambah',
+  transferRemove: 'Buang',
+  transferAll: 'Semua',
+  transferAddReason: 'Tandakan yang hendak ditambah dahulu',
+  transferRemoveReason: 'Tandakan yang hendak dibuang dahulu',
+  transferEmpty: 'Tiada',
+  transferMoved: (items, list) => items + ' dipindahkan ke ' + list + '.',
 };

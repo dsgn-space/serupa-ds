@@ -65,6 +65,8 @@ describe('Chat', () => {
     at = await settled();
     await userEvent.keyboard('{ArrowDown}');
     await expect.poll(top).toBeGreaterThan(at);
+    // As below: WebKit stops Home 9px short when it lands while ArrowDown's smooth scroll is still running.
+    await settled();
     await userEvent.keyboard('{Home}');
     await expect.poll(top).toBe(0);
     // Let Home's smooth scroll finish: a PageDown that arrives while it's still running can be dropped (GR202).

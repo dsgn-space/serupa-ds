@@ -11,7 +11,7 @@ import { playwright } from '@vitest/browser-playwright';
 import { buildUtilities } from './tools/utilities/build.mjs';
 import { buildRegistry } from './tools/build/registry.mjs';
 import { TOUCH } from './tools/test/vitest/touch.ts';
-import { ChecksSequencer } from './tools/test/vitest/checks-shard.ts';
+import { TimedSequencer } from './tools/test/vitest/shard.ts';
 import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, writeAriaBaseline } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
@@ -48,6 +48,9 @@ export default defineConfig({
     },
   }],
   test: {
+    // --shard splits by each file's time (tools/test/vitest/shard.ts), not by the hash of its path. Vitest reads the
+    // sequencer from here only, for every project.
+    sequence: { sequencer: TimedSequencer },
     projects: [{
       extends: true,
       test: {
@@ -108,12 +111,10 @@ export default defineConfig({
         // scroll-lock.mjs needs Chromium's switch that shows classic scrollbars, and utilities.mjs compares each
         // class's computed styles with Chromium's baseline, which other engines write differently (538px for 539px);
         // tools/test/compat.mjs is the comparison between engines.
-        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,consistency,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
         environment: 'node',
         // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
         fileParallelism: false,
-        // --shard splits by each file's time (tools/test/vitest/checks-shard.ts), not by the hash of its path.
-        sequence: { sequencer: ChecksSequencer },
       },
     }],
     // npm run test:coverage: which lines of src/ the component tests run (V8, in Chromium), written to coverage/

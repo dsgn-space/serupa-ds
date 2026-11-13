@@ -42,6 +42,16 @@
           }
         }
       },
+      "item-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "Its background while held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--menubar-item-bg-pressed"
+          }
+        }
+      },
       "item-bg-open": {
         "$type": "color",
         "$value": "{color.pressed}",

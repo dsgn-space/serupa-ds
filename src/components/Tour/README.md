@@ -107,7 +107,7 @@ Each is an optional override: set it on the page, a container or one Tour. The l
 | `--tour-title-size` | `text-base` | The step's title (16px). |
 | `--tour-title-weight` | `font-semibold` | The step's title. |
 | `--tour-width` | `container-2xs` | The panel's width (288px), never wider than the screen. |
-| `--tour-padding` | `spacing-4` | Space inside the panel (16px). |
+| `--tour-padding` | `space-content` | Space inside the panel (16px). |
 | `--tour-gap` | `spacing-3` | Space between the title, the text and the buttons (12px). |
 | `--tour-offset` | `spacing-3` | The gap between the element and the panel (12px). |
 | `--tour-z-index` | `z-popover` | Its stacking order, for a browser without the top layer. |

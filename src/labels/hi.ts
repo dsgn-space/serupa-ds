@@ -339,4 +339,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'स्क्रॉल होने वाली सामग्री',
   showMore: 'और दिखाएँ',
   showLess: 'कम दिखाएँ',
+  transferAvailable: 'उपलब्ध',
+  transferChosen: 'चुने गए',
+  transferAdd: 'जोड़ें',
+  transferRemove: 'हटाएँ',
+  transferAll: 'सभी',
+  transferAddReason: 'पहले जोड़ने वाले चुनें',
+  transferRemoveReason: 'पहले हटाने वाले चुनें',
+  transferEmpty: 'कोई नहीं',
+  transferMoved: (items, list) => items + ' को ' + list + ' में ले जाया गया।',
 };

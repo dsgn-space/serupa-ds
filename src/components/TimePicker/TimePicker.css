@@ -7,12 +7,15 @@
 .dk-time-picker { --dk-tp-offset: var(--time-picker-offset, var(--spacing-1)); padding-inline-end: var(--spacing-1); }
 .dk-time-picker__button {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box;
-  width: var(--control-height-sm); height: var(--control-height-sm); margin: var(--spacing-0); padding: var(--spacing-0);
+  margin: var(--spacing-0); padding: var(--spacing-1);   /* the icon plus 4px all round: 22, 24 or 28px by size, as Combobox's button */
   border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: pointer; touch-action: manipulation;
 }
 .dk-time-picker__button .dk-icon { font-size: var(--dk-input-icon); }
 @media (hover: hover) { .dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--secondary)); color: var(--time-picker-button-hover, var(--text)); } }
 .dk-time-picker__button:active:not(:disabled) { background: var(--time-picker-button-bg-pressed, var(--secondary-hover)); color: var(--time-picker-button-hover, var(--text)); }
+/* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
+.dk-time-picker__button { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { .dk-time-picker__button { transition: none; } }
 .dk-time-picker__button:disabled { cursor: not-allowed; }
 .dk-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-popover));

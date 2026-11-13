@@ -179,6 +179,41 @@ describe('Navbar', () => {
     expect(shows()).toBe(false);
   }));
 
+  test('condense: scrolled under, a sticky bar goes up with the page to 48px and stays, its content centered in what shows; a press on the strip it left reaches the page', async () => withMotion(async () => {
+    await render(<div>
+      <Navbar id="ncond" sticky condense brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>
+      <button type="button" id="under" style={{ display: 'block', width: '100%', height: '2000px' }}>Page</button>
+    </div>);
+    const n = el('ncond'), brand = () => [...n.querySelectorAll('span')].find((x) => x.textContent === 'Docs')!.getBoundingClientRect();
+    const shown = () => { const r = n.getBoundingClientRect(); return [Math.round(r.top), Math.round(r.bottom)]; };
+    window.scrollTo(0, 0);
+    await expect.poll(() => window.scrollY).toBe(0);
+    expect(shown()).toEqual([0, 65]);
+    if (!CSS.supports('animation-timeline: scroll()')) return;
+    // 8px down, the lower edge has gone up 8px with the page; past 16px it stays at 48px (and its 1px line).
+    window.scrollTo(0, 8);
+    await expect.poll(() => window.scrollY).toBe(8);
+    await expect.poll(shown).toEqual([-8, 57]);
+    window.scrollTo(0, 600);
+    await expect.poll(() => window.scrollY).toBe(600);
+    await expect.poll(shown).toEqual([-16, 49]);
+    const b = brand();
+    expect(Math.round(b.top + b.height / 2)).toBe(24);
+    // The 16px strip under the condensed bar is the page's: a press there lands on it, not on the bar.
+    expect(document.elementFromPoint(200, 56)?.id).toBe('under');
+    expect(n.contains(document.elementFromPoint(200, 40))).toBe(true);
+  }));
+
+  test('condense needs sticky: a bar that isn\'t sticky keeps its height and doesn\'t move', async () => {
+    await render(<div>
+      <Navbar id="nflat" condense brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>
+      <div style={{ height: '2000px' }} />
+    </div>);
+    window.scrollTo(0, 600);
+    await expect.poll(() => window.scrollY).toBe(600);
+    expect([css(el('nflat')).translate, Math.round(el('nflat').getBoundingClientRect().height)]).toEqual(['none', 65]);
+  });
+
   test('sticky, dark themes: scrolled under, the bar also turns the raised surface, where a shadow barely shows; light themes stay white (GR64)', async () => withMotion(async () => {
     await render(<div>
       <Navbar id="ndark" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>

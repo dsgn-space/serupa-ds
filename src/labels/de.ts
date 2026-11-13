@@ -343,4 +343,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'Scrollbarer Inhalt',
   showMore: 'Mehr anzeigen',
   showLess: 'Weniger anzeigen',
+  transferAvailable: 'Verfügbar',
+  transferChosen: 'Ausgewählt',
+  transferAdd: 'Hinzufügen',
+  transferRemove: 'Entfernen',
+  transferAll: 'Alle',
+  transferAddReason: 'Zuerst die hinzuzufügenden ankreuzen',
+  transferRemoveReason: 'Zuerst die zu entfernenden ankreuzen',
+  transferEmpty: 'Keine',
+  transferMoved: (items, list) => items + ' nach ' + list + ' verschoben.',
 };
