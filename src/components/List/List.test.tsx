@@ -8,7 +8,9 @@ import { Badge } from '../Badge/Badge';
 import { Card as SurfaceCard } from '../Card/Card';
 import { IconButton } from '../IconButton/IconButton';
 import { page } from 'vitest/browser';
-import { List, ListItem, ListLoadingItems } from './List';
+import { SerupaProvider } from '../../internal/provider';
+import { idLabels } from '../../internal/labels';
+import { List, ListItem, ListLoadingItems, ListSelectAll } from './List';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -295,5 +297,142 @@ describe('List: busy, the old name of loading', () => {
       expect(document.getElementById('old-busy')!.getAttribute('aria-busy')).toBe('true');
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('list-busy'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
+  });
+});
+
+describe('List with selectionMode', () => {
+  const files = ['Budget.xlsx', 'Notes.md', 'Photo.jpg', 'Plan.pdf'];
+  function Files({ log = [] as string[][], start = [] as string[], mode = 'multiple' as 'single' | 'multiple', locale = 'en-US' }) {
+    const [sel, setSel] = React.useState<string[]>(start);
+    const on = (x: string[]) => { log.push(x); setSel(x); };
+    return (
+      <SerupaProvider locale={locale} labels={locale === 'id-ID' ? idLabels : undefined}>
+        <button type="button">Before</button>
+        {mode === 'multiple' ? <ListSelectAll values={files.filter((f) => f !== 'Plan.pdf')} selected={sel} onSelectedChange={on} /> : null}
+        <List aria-label="Files" selectionMode={mode} selected={sel} onSelectedChange={on}>
+          {files.map((f) => (
+            <ListItem key={f} value={f} title={f} description="2 MB" disabled={f === 'Plan.pdf'} href={f === 'Notes.md' ? '#notes' : undefined}
+              trailing={<IconButton icon="more_vert" label={'More for ' + f} />} />
+          ))}
+        </List>
+        <button type="button">After</button>
+      </SerupaProvider>
+    );
+  }
+  const row = (name: string) => page.getByRole('row', { name }).element() as HTMLElement;
+  const box = (name: string) => page.getByRole('checkbox', { name }).element() as HTMLInputElement;
+  const at = () => document.activeElement as HTMLElement;
+
+  test('a grid of rows named by their titles, each with a checkbox of the same name; aria-selected and the checkbox follow what is picked', async () => {
+    await render(<Files start={['Photo.jpg']} />);
+    await expect.element(page.getByRole('grid', { name: 'Files' })).toBeVisible();
+    const grid = page.getByRole('grid', { name: 'Files' }).element();
+    expect([grid.tagName, grid.getAttribute('aria-multiselectable')]).toEqual(['UL', 'true']);
+    expect(page.getByRole('row').elements().map((r) => r.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true', 'false']);
+    expect([box('Photo.jpg').checked, box('Budget.xlsx').checked, box('Plan.pdf').disabled]).toEqual([true, false, true]);
+    expect(row('Photo.jpg').classList.contains('dk-list__item--selected')).toBe(true);
+    expect(page.getByRole('gridcell').elements().length).toBe(12);
+  });
+
+  test('one Tab stop: Down and Up move between rows, Right and Left reach the checkbox, the link and the actions in a row', async () => {
+    await render(<Files />);
+    await userEvent.click(page.getByRole('checkbox', { name: 'Select all' }));
+    await userEvent.click(page.getByRole('checkbox', { name: 'Select all' }));
+    await userEvent.keyboard('{Tab}');
+    expect(at()).toBe(row('Budget.xlsx'));
+    await userEvent.keyboard('{ArrowDown}');
+    expect(at()).toBe(row('Notes.md'));
+    await userEvent.keyboard('{ArrowRight}');
+    expect(at()).toBe(box('Notes.md'));
+    await userEvent.keyboard('{ArrowRight}');
+    expect(at().getAttribute('href')).toBe('#notes');
+    await userEvent.keyboard('{ArrowRight}');
+    expect(at().getAttribute('aria-label')).toBe('More for Notes.md');
+    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}{ArrowLeft}');
+    expect(at()).toBe(row('Notes.md'));
+    await userEvent.keyboard('{End}');
+    expect(at()).toBe(row('Plan.pdf'));
+    await userEvent.keyboard('{Home}{Tab}');
+    expect(at().textContent).toBe('After');
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    expect(at()).toBe(row('Budget.xlsx'));
+  });
+
+  test('Space picks the focused row, Shift+Down extends the run, Ctrl+A picks every enabled row; a disabled row is never picked', async () => {
+    const log: string[][] = [];
+    await render(<Files log={log} />);
+    row('Budget.xlsx').focus();
+    await userEvent.keyboard(' ');
+    await userEvent.keyboard('{Shift>}{ArrowDown}{ArrowDown}{/Shift}');
+    expect(log).toEqual([['Budget.xlsx'], ['Budget.xlsx', 'Notes.md'], ['Budget.xlsx', 'Notes.md', 'Photo.jpg']]);
+    await userEvent.keyboard('{ArrowDown} ');
+    expect(log.length).toBe(3);
+    await userEvent.keyboard('{ArrowUp} ');
+    expect(log.at(-1)).toEqual(['Budget.xlsx', 'Notes.md']);
+    await userEvent.keyboard('{Control>}a{/Control}');
+    expect(log.at(-1)).toEqual(['Budget.xlsx', 'Notes.md', 'Photo.jpg']);
+    expect(page.getByRole('checkbox', { name: 'Select all' }).element()).toHaveProperty('checked', true);
+  });
+
+  test('a press on a row or its checkbox picks it, Shift+press picks the run; the link and the actions do their own thing', async () => {
+    const log: string[][] = [];
+    await render(<Files log={log} />);
+    await userEvent.click(page.getByText('Budget.xlsx'));
+    await userEvent.click(box('Budget.xlsx'));
+    await userEvent.click(box('Notes.md'));
+    await userEvent.click(page.getByText('Photo.jpg'), { modifiers: ['Shift'] });
+    expect(log).toEqual([['Budget.xlsx'], [], ['Notes.md'], ['Notes.md', 'Photo.jpg']]);
+    await userEvent.click(page.getByRole('button', { name: 'More for Budget.xlsx' }));
+    await userEvent.click(page.getByText('Plan.pdf'));
+    expect(log.length).toBe(4);
+    row('Notes.md').focus();
+    await userEvent.keyboard('{Enter}');
+    expect(location.hash).toBe('#notes');
+    history.replaceState(null, '', location.pathname);
+  });
+
+  test('ListSelectAll is checked when every row is picked, a dash when some are, and clears them', async () => {
+    await render(<Files start={['Photo.jpg']} />);
+    const all = page.getByRole('checkbox', { name: 'Select all' });
+    expect((all.element() as HTMLInputElement).indeterminate).toBe(true);
+    await userEvent.click(all);
+    expect(page.getByRole('row').elements().map((r) => r.getAttribute('aria-selected'))).toEqual(['true', 'true', 'true', 'false']);
+    await userEvent.click(all);
+    expect(page.getByRole('row').elements().map((r) => r.getAttribute('aria-selected'))).toEqual(['false', 'false', 'false', 'false']);
+  });
+
+  test('single: no checkboxes, a press or Space picks one row and clears the other; Indonesian says "Pilih semua"', async () => {
+    const log: string[][] = [];
+    const r = await render(<Files mode="single" log={log} />);
+    expect(page.getByRole('checkbox').elements().length).toBe(0);
+    expect(page.getByRole('grid').element().hasAttribute('aria-multiselectable')).toBe(false);
+    await userEvent.click(page.getByText('Budget.xlsx'));
+    row('Photo.jpg').focus();
+    await userEvent.keyboard(' ');
+    await userEvent.keyboard(' ');
+    expect(log).toEqual([['Budget.xlsx'], ['Photo.jpg'], []]);
+    await r.rerender(<Files locale="id-ID" />);
+    await expect.element(page.getByRole('checkbox', { name: 'Pilih semua' })).toBeInTheDocument();
+  });
+
+  test('right to left, Left moves into the row', async () => {
+    await render(<div dir="rtl"><Files /></div>);
+    await expect.element(page.getByRole('row', { name: 'Budget.xlsx' })).toBeVisible();
+    row('Budget.xlsx').focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(at()).toBe(box('Budget.xlsx'));
+  });
+
+  test('a picked row reads 4.5:1 with its focus ring 3:1 in all six themes', async () => {
+    await render(<Files start={['Budget.xlsx']} />);
+    row('Budget.xlsx').focus();
+    await userEvent.keyboard('{ArrowDown}{ArrowUp}');
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const r = row('Budget.xlsx'), title = r.querySelector('.dk-list__title') as HTMLElement;
+      expect(contrast(css(title).color, css(r).backgroundColor), th).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(css(r).outlineColor, css(document.body).backgroundColor), th + ' ring').toBeGreaterThanOrEqual(3);
+    }
+    document.documentElement.removeAttribute('data-theme');
   });
 });

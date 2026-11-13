@@ -50,6 +50,22 @@ Drawn from the `Settings` story.
 - Use `variant="card"` for a list that stands on its own; inside a Card or a panel that already has a frame, keep it `plain`.
 - With a router, pass its link component as `as` and its props (such as `to`) in `linkProps`.
 
+### Picking rows
+
+Set `selectionMode="multiple"` when people pick rows to act on several at once: files to move, messages to archive, members to remove. Give each `ListItem` a `value`, keep the picked values in state, and put a `ListSelectAll` and the actions (TableActionBar's pattern) above the list.
+
+```tsx
+const [picked, setPicked] = React.useState<string[]>([]);
+<ListSelectAll values={files.map((f) => f.id)} selected={picked} onSelectedChange={setPicked} />
+<List aria-label="Files" selectionMode="multiple" selected={picked} onSelectedChange={setPicked}>
+  {files.map((f) => <ListItem key={f.id} value={f.id} title={f.name} description={f.size} trailing={<IconButton icon="more_vert" label={`More for ${f.name}`} />} />)}
+</List>
+```
+
+- Each row gets a checkbox named by its title. A press on the row picks it, and Shift with a press picks the run from the last one picked. A row with `href` or `onClick` keeps its link or button: only its checkbox picks it.
+- `selectionMode="single"` picks one row at a time, with no checkboxes: a picked row is shaded with the primary bar.
+- A `disabled` row can't be picked. Leave it out of `ListSelectAll`'s `values`.
+
 ### Loading, empty and failed
 
 - **Loading:** set `loading` on the List and put a `ListLoadingItems` inside it, with `rows` set to about as many as will come and with the shape the rows will have: `description` when they have a second line, and `leading` set to `'icon'` or to the Avatar's size (`'sm'`, `'md'` and so on). Each placeholder is as tall as the real row, so nothing jumps when the data arrives. Name the wait in `label` ("Loading members"): a screen reader hears it once, after the loader's delay, so a quick load says nothing.
@@ -78,6 +94,7 @@ Drawn from the `Settings` story.
 - Selected rows have a bar and `aria-current` or `aria-pressed`, not only a background.
 - Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in all six themes (`List.test.tsx`).
 - **Keyboard:** an item with `href` or `onClick` has one Tab stop, its main area, where Enter (Space too for a button) acts. A disabled one is skipped. Controls in `trailing` are Tab stops of their own. Plain items add none.
+- **With `selectionMode`:** the list is a grid (`role="grid"`, `aria-multiselectable` when multiple) of rows named by their titles, with `aria-selected`. It's one Tab stop: Up and Down move between rows, Home and End go to the ends, Right and Left reach the row's checkbox, link and actions. Space picks the focused row, Shift with Up or Down picks as it moves, Ctrl or Cmd+A picks every row, and Enter follows the row's link or presses its button. A picked row has a checked box and the primary bar, not only a background.
 
 ## Props
 
@@ -91,6 +108,9 @@ Drawn from the `Settings` story.
 | `as` | `'ul'` \| `'ol'` | `'ul'` | `ol` when the order matters |
 | `loading` | boolean | `false` | Its rows are loading: sets `aria-busy` on the list. Pair it with `ListLoadingItems` |
 | `busy` | boolean | | Deprecated, removed in 15.0.0: use `loading`, the API naming table's name |
+| `selectionMode` | `'none'` \| `'single'` \| `'multiple'` | `'none'` | Rows people pick: a grid with one Tab stop, and a checkbox per row when multiple |
+| `selected` / `defaultSelected` | string[] | | The picked rows' values |
+| `onSelectedChange` | `(values) => void` | | Called with the picked rows' values |
 
 `className`, `style`, `ref`, `aria-label` and everything else go to the list, which has `data-component="list"`.
 
@@ -107,9 +127,23 @@ Drawn from the `Settings` story.
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component; its props (such as `to`) go in `linkProps`. Set it once for the app with `configure({ link })`; `as` wins for one link. |
 | `linkProps` | object | none | Extra props for the link or button |
 | `selected` | boolean | `false` | Shaded with a primary bar; `aria-current="true"` on a link (an `aria-current` in `linkProps`, such as `"page"` for the current page of a nav list, wins), `aria-pressed` on a button |
-| `disabled` | boolean | `false` | Dims a link or button row and stops it |
+| `disabled` | boolean | `false` | Dims a link or button row and stops it; with `selectionMode`, it can't be picked |
+| `value` | string | | With `selectionMode`: what `onSelectedChange` reports for this row |
 
 `className`, `ref` and everything else go to the `<li>`.
+
+### ListSelectAll
+
+The "Select all" box over a List with `selectionMode="multiple"`: checked when every row is picked, a dash (said as mixed) when some are. Picks outside `values` are kept.
+
+| Prop | Type | Default | What it does |
+| --- | --- | --- | --- |
+| `values` | string[] | required | The values of the rows it picks: the enabled ones |
+| `selected` | string[] | required | The List's picked values |
+| `onSelectedChange` | `(values) => void` | required | Called with every value, or none of them |
+| `children` | node | `"Select all"` | Its label |
+
+Every other prop goes to the Checkbox.
 
 ### ListLoadingItems
 

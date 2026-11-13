@@ -138,6 +138,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': ' + date + ' まで',
   filterAny: (field) => field + ': すべて',
   filterRemove: (field) => 'フィルターを削除: ' + field,
+  listSelectAll: 'すべて選択',
   filterDone: '完了',
   filterResults: (count) => (count === 1 ? '1 件の結果' : n(count) + ' 件の結果'),
   tocTitle: 'このページの内容',

@@ -139,6 +139,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': hingga ' + date,
   filterAny: (field) => field + ': semua',
   filterRemove: (field) => 'Alih keluar penapis: ' + field,
+  listSelectAll: 'Pilih semua',
   filterDone: 'Selesai',
   filterResults: (count) => (count === 1 ? '1 hasil' : n(count) + ' hasil'),
   tocTitle: 'Di halaman ini',

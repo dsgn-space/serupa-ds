@@ -138,6 +138,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + '：至 ' + date,
   filterAny: (field) => field + '：全部',
   filterRemove: (field) => '移除筛选：' + field,
+  listSelectAll: '全选',
   filterDone: '完成',
   filterResults: (count) => (count === 1 ? '1 个结果' : n(count) + ' 个结果'),
   tocTitle: '本页内容',

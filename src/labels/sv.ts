@@ -139,6 +139,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': till och med ' + date,
   filterAny: (field) => field + ': alla',
   filterRemove: (field) => 'Ta bort filter: ' + field,
+  listSelectAll: 'Markera alla',
   filterDone: 'Klar',
   filterResults: (count) => (count === 1 ? '1 resultat' : n(count) + ' resultat'),
   tocTitle: 'På den här sidan',
