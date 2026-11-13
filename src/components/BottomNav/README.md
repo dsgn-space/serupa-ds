@@ -94,6 +94,7 @@ Each is an optional override: set it on the page, a container or one BottomNav. 
 | `--bottom-nav-text` | `text-muted` | A link's icon and label (4.5:1 on bg). |
 | `--bottom-nav-text-hover` | `text` | A link under the pointer. |
 | `--bottom-nav-icon-bg-hover` | `secondary` | The pill behind the icon under the pointer. |
+| `--bottom-nav-icon-bg-pressed` | `secondary-hover` | The pill behind an item's icon while the item is held down, one step past hover (not on the current item, which keeps its own fill). |
 | `--bottom-nav-text-active` | `primary` | The current page's icon and label (4.5:1 on bg). |
 | `--bottom-nav-icon-bg-active` | `primary-subtle` | The pill behind the current page's icon. |
 | `--bottom-nav-focus-ring` | `focus-ring` | The keyboard focus ring, inside the link. |

@@ -96,6 +96,8 @@ Drawn from the `Month` story.
 Each is an optional override: set it on the page, a container or one EventCalendar. The list lives in `src/components/EventCalendar/event-calendar.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from event-calendar.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--event-calendar-bg` | `surface` | The background. |
@@ -116,6 +118,17 @@ Each is an optional override: set it on the page, a container or one EventCalend
 | `--event-calendar-danger-tone` | `danger` | The bar at the start of a tone="danger" event. |
 | `--event-calendar-danger-bg` | `danger-subtle` | The fill of a tone="danger" event (its text stays event-text, 4.5:1 on it). |
 | `--event-calendar-more-bg-hover` | `surface-hover` | "+N more" under the pointer. |
+| `--event-calendar-more-bg-pressed` | `pressed` | The "+N more" button's background while it's held down, one step past hover. |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--event-calendar-event-radius` | `radius-inner` | An event's corners. |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--event-calendar-day-height` | `spacing-24` | A day's height in the month (96px): room for the date and three events. |
 <!-- token-table:end -->
