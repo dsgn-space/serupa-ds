@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
-import { THEMES, contrast, css, color, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, color, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { BottomNav, BottomNavLink } from './BottomNav';
 import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 
@@ -99,5 +99,18 @@ describe('BottomNav held state', () => {
       return out;
     });
     expect(low).toEqual([]);
+  });
+});
+
+describe('BottomNav motion', () => {
+  test('an item\'s label and icon pill fade to their hover colors over motion-hover (150ms) as the controls beside them do, and the pill fills at once while held', async () => {
+    await page.viewport(414, 800);
+    await render(<Bar />);
+    const a = links()[0]!, pill = a.firstElementChild!;
+    await withMotion(async () => {
+      expect([css(a).transitionProperty, css(a).transitionDuration, css(pill).transitionProperty, css(pill).transitionDuration]).toEqual(['color', '0.15s', 'background-color', '0.15s']);
+      const held = await press(a, () => css(pill).transitionDuration);
+      expect(held).toBe('0s');
+    });
   });
 });

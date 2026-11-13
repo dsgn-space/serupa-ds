@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { Avatar, type AvatarSize } from '../Avatar/Avatar';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { AvatarGroup } from './AvatarGroup';
@@ -288,5 +288,17 @@ describe('AvatarGroup held state', () => {
       return out;
     });
     expect(low).toEqual([]);
+  });
+});
+
+describe('AvatarGroup motion', () => {
+  test('the "+N" fades to its hover fill over motion-hover (150ms) as the controls beside it do, and fills at once while held', async () => {
+    await render(<AvatarGroup id="fade" max={3} onMore={() => {}}>{av(5)}</AvatarGroup>);
+    const f = more('fade')!.firstElementChild!;
+    await withMotion(async () => {
+      expect([css(f).transitionProperty, css(f).transitionDuration]).toEqual(['background-color', '0.15s']);
+      const held = await press(more('fade')!, () => css(f).transitionDuration);
+      expect(held).toBe('0s');
+    });
   });
 });
