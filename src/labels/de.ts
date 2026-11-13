@@ -217,6 +217,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Kürzel aus einer Taste wie ?, außerhalb von Textfeldern. Schalten Sie sie aus, wenn sie versehentlich auslösen.',
   opensInNewTab: '(öffnet in einem neuen Tab)',
   loadMore: 'Mehr laden',
+  drawerExpand: 'Aufklappen',
+  drawerCollapse: 'Zuklappen',
   showingOf: (shown, total) => `${shown} von ${total} angezeigt`,
   loadedMore: (added) => `${added} weitere geladen`,
   moreLoaded: 'Weitere geladen',

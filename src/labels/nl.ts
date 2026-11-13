@@ -214,6 +214,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Sneltoetsen van één toets, zoals ?, buiten tekstvelden. Zet ze uit als ze per ongeluk afgaan.',
   opensInNewTab: '(opent in een nieuw tabblad)',
   loadMore: 'Meer laden',
+  drawerExpand: 'Uitvouwen',
+  drawerCollapse: 'Samenvouwen',
   showingOf: (shown, total) => `${shown} van ${total} getoond`,
   loadedMore: (added) => `${added} meer geladen`,
   moreLoaded: 'Meer geladen',

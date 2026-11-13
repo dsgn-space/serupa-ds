@@ -213,6 +213,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: '? など 1 つのキーだけのショートカット（テキスト欄の外）。意図せず動く場合はオフにします。',
   opensInNewTab: '(新しいタブで開きます)',
   loadMore: 'さらに読み込む',
+  drawerExpand: '展開',
+  drawerCollapse: '折りたたむ',
   showingOf: (shown, total) => `${total}件中${shown}件を表示`,
   loadedMore: (added) => `さらに${added}件を読み込みました`,
   moreLoaded: 'さらに読み込みました',
