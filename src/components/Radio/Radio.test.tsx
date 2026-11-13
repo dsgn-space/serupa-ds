@@ -353,7 +353,7 @@ describe('Radio', () => {
   test("variant 'default' is the deprecated name for 'plain': it still draws the plain look, and warns once", async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<RadioGroup aria-label="Old" variant="default"><Radio value="a">A</Radio><Radio value="b" variant="default">B</Radio></RadioGroup>);
+      await render(<RadioGroup aria-label="Old" {...{ variant: 'default' as const }}><Radio value="a">A</Radio><Radio value="b" {...{ variant: 'default' as const }}>B</Radio></RadioGroup>);
       const items = page.getByRole('radio').elements() as HTMLInputElement[];
       expect(items.map((i) => (i.closest('label') as HTMLElement).className.includes('--card'))).toEqual([false, false]);
       const said = warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('variant-default'));
