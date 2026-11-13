@@ -216,14 +216,11 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
     timeout-minutes: 20
-    outputs:
-      sha: ${{ steps.sha.outputs.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - id: sha
-        run: git config --global --add safe.directory "$PWD" && echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - run: git config --global --add safe.directory "$PWD"
       - uses: ./.github/actions/setup
         with:
           browsers: "false"
@@ -304,8 +301,11 @@ jobs:
   # whose timing budgets were measured on x64, and Visual, whose baselines are drawn with Chrome for Testing on x64.
   suite-x86:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
-    needs: [plan, build]
-    if: needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
+    # Not after build: each job builds what it tests itself (about 25 s), where waiting for the build job took 100 s
+    # (its container, checkout and setup, then the builds) off the front of every run (13 Nov). A held run (plan) skips
+    # them, as it skips build.
+    needs: [plan]
+    if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
     # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
     # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
@@ -330,14 +330,14 @@ jobs:
         continue-on-error: true
         with:
           persist-credentials: false
-          ref: ${{ needs.build.outputs.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: ${{ needs.plan.outputs.since && '0' || '1' }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: steps.checkout.outcome == 'failure'
         timeout-minutes: 10
         with:
           persist-credentials: false
-          ref: ${{ needs.build.outputs.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: ${{ needs.plan.outputs.since && '0' || '1' }}
       # A job that passed on this same tree against the same base passes again without running.
       - id: key
@@ -357,10 +357,16 @@ jobs:
           lookup-only: true
       - if: steps.done.outputs.cache-hit != 'true'
         uses: ./.github/actions/setup
-      - if: steps.done.outputs.cache-hit != 'true'
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          name: build
+      # The same commands as the build job, which stays the required check that the build works: the component tests
+      # need the package alone, every other group Storybook too.
+      - name: Build
+        if: steps.done.outputs.cache-hit != 'true'
+        shell: bash
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          npm run build
+          if [ "$GROUP" != components ]; then npm run build-storybook; fi
       - name: Test suite
         if: steps.done.outputs.cache-hit != 'true'
         shell: bash
@@ -413,8 +419,8 @@ jobs:
   # budget, so any runner, Arm included.
   suite-portable:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
-    needs: [plan, build]
-    if: needs.plan.outputs.tests == '1'
+    needs: [plan]
+    if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1'
     runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -441,7 +447,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          ref: ${{ needs.build.outputs.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: ${{ needs.plan.outputs.since && '0' || '1' }}
       - uses: ./.github/actions/setup
         with:
@@ -481,7 +487,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          ref: ${{ needs.build.outputs.sha }}
+          ref: ${{ github.sha }}
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: build
@@ -500,7 +506,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          ref: ${{ needs.build.outputs.sha }}
+          ref: ${{ github.sha }}
       - uses: ./.github/actions/setup
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
