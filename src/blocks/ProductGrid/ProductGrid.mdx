@@ -1,0 +1,49 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './ProductGrid.stories';
+
+<Meta of={Stories} />
+
+# Product grid
+
+Product cards in a grid that fits the screen, for a shop's category, search or "new this week" page. Each card has a picture, the name as the link to the product, the price, the rating and Add to cart. It's built from Card, Image, Heading, Link, Badge, Rating, Button and Toast.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A page of products people compare and pick from: a category, search results, a collection.
+- Not for one product's own page: lay that out with its pictures, choices and description.
+- Not for a cart or an order: those are line items with quantities, in a list or a table.
+
+## What each part is for
+
+- **A list of cards** (1.3.1). The products are a list, each card is named by its product, and each name is a heading, so a screen reader can count them and jump from one to the next. Pick `headingLevel` to fit the page: the names sit under its h2 by default.
+- **The name is the link** (2.4.4). It's the one link to the product's page. The picture beside it is decorative, so each product is heard once, not twice.
+- **A sale is said in words** (1.4.1). The old price comes after "Was", and the saving is in a Badge ("20% off"). A strike-through alone isn't read out and is easy to miss.
+- **The rating is one image** (1.1.1), named by its value ("Rating, 4.5 out of 5"), with the number of reviews in text beside it.
+- **Add to cart names its product** (2.4.6, 2.5.3). Each button reads "Add to cart, Linen shirt": it starts with the words people see, so voice control finds it, and a list of buttons still says which is which.
+- **Adding says how it went** (4.1.3). The button is busy until `onAddToCart` settles, then a toast says the product is in the cart, or that it couldn't be added and to try again.
+- **Sold out says so in words**, in place of the button.
+- **Money is the locale's.** Prices and review counts are written the way the reader's locale writes them, and every word is in `labels`.
+
+<Canvas of={Stories.AddFails} />
+
+<Canvas of={Stories.Indonesian} />
+
+<Canvas of={Stories.LongText} />
+
+## Writing the cards
+
+- Write the name people search for, without the brand when every product has it.
+- Show the price people pay, with tax when your market expects it. Give `was` only for a real, recent price.
+- Use pictures of the same shape and background, so the grid reads as one set.
+
+## What stays your app's job
+
+- The products, their pictures and prices, sorting and filtering (with a [Table toolbar](?path=/docs/blocks-table-toolbar--docs) or a [FilterBar](?path=/docs/components-forms-filterbar--docs) above the grid), and loading more.
+- What "no products" says: an [Empty state](?path=/docs/blocks-empty-states--docs) with a way out, such as clearing the filters.
+- Adding to the cart, and a cart count in the header that says when it changes.
+
+## Copying it
+
+Copy `ProductGrid.tsx` and `ProductGrid.test.tsx`, and change the imports to `serupa`. Keep a `<Toaster />` on the page for what Add to cart says.
