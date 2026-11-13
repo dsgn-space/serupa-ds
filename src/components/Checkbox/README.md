@@ -121,7 +121,7 @@ Drawn from the `LongLabel` story.
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
 | `indeterminate` | boolean | `false` | A dash, announced as "mixed". Set it from your state: a click clears it natively, and the next render puts it back if the prop is still true |
 | `invalid` | boolean | `false` | A danger border (while unchecked) and focus ring, and `aria-invalid` |
-| `variant` | `'default'` \| `'card'` | the group's, or `'default'` | `'card'`: the box, label and description in a bordered card pressed as a whole |
+| `variant` | `'plain'` \| `'card'` | the group's, or `'plain'` | `'card'`: the box, label and description in a bordered card pressed as a whole |
 | `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), but clicks and Space don't change it; a checked box is still submitted |
 
 | `selectAll` | boolean | `false` | In a `CheckboxGroup`: checks or clears every other box; checked when all are, indeterminate when some are |
@@ -140,7 +140,7 @@ Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disa
 | `name` | `string` | generated | Every box's name, so each checked one is submitted with its value |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | Stacked, or a wrapping row |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | | The boxes' size, unless a Checkbox sets its own |
-| `variant` | `'default'` \| `'card'` | `'default'` | Every box's look, unless one sets its own. Cards fill the column, or share a wrapping row (each at least 192px) with `orientation="horizontal"`, 12px apart |
+| `variant` | `'plain'` \| `'card'` | `'plain'` | Every box's look, unless one sets its own. Cards fill the column, or share a wrapping row (each at least 192px) with `orientation="horizontal"`, 12px apart |
 | `invalid` | boolean | `false` | A danger border on every unchecked box, and `aria-invalid` on each box. Field's `error` sets it |
 | `disabled` | boolean | `false` | Disables every box |
 | `required` | boolean | `false` | At least one box must be checked |

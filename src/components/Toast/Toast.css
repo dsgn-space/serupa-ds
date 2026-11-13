@@ -93,7 +93,7 @@
    isn't split) where hyphenate-limit-chars is supported (191). */
 .dk-toast__content { --dk-toast-hyphen-limit: 10 4 4; hyphenate-limit-chars: var(--dk-toast-hyphen-limit); }   /* letter counts, not a design value */
 .dk-toast__content { overflow-wrap: anywhere; hyphens: auto; display: flex; flex-direction: column; gap: var(--spacing-0\.5); flex: auto; min-width: var(--spacing-0); }
-.dk-toast__title { margin: var(--spacing-0); font-weight: var(--toast-title-weight, var(--font-semibold)); }
+.dk-toast__title { text-wrap: balance; margin: var(--spacing-0); font-weight: var(--toast-title-weight, var(--font-semibold)); }
 /* "×12": the same message came 12 times. */
 .dk-toast__count { unicode-bidi: isolate; margin-inline-start: var(--spacing-1\.5); color: var(--toast-description-color, var(--text-muted)); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; }
 /* "+2 more": toasts waiting past the Toaster's limit. */
