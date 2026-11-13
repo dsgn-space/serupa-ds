@@ -205,6 +205,16 @@
             "cssVar": "--chart-tip-shadow"
           }
         }
+      },
+      "tip-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "A tactile brand's hairline edge and, in dark mode, a faint top light, as on every floating pane. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--chart-tip-depth"
+          }
+        }
       }
     },
     "borders": {

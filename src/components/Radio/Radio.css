@@ -34,11 +34,12 @@
   background: var(--radio-bg, var(--field));
   border: var(--radio-border-width, var(--border-width-1)) solid var(--dk-radio-bd);
   border-radius: var(--rounded-full);
+  box-shadow: var(--radio-depth, var(--depth-well));   /* sunk into the page in a tactile brand; nothing in the flat ones */
   cursor: inherit;
   transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move);
 }
 @media (hover: hover) { .dk-radio:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-border-hover, var(--field-border-hover)); --dk-radio-fill: var(--radio-bg-checked-hover, var(--primary-hover)); } }
-.dk-radio__input:checked { background: var(--dk-radio-fill); border-color: var(--dk-radio-fill); }
+.dk-radio__input:checked { background: var(--depth-sheen), var(--dk-radio-fill); border-color: var(--dk-radio-fill); box-shadow: var(--radio-depth-checked, var(--depth-part)); }
 .dk-radio__dot { position: absolute; inset: var(--spacing-0); width: var(--dk-radio-dot); height: var(--dk-radio-dot); margin: auto; border-radius: var(--rounded-full); background: var(--radio-dot-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-radio__input:checked + .dk-radio__dot { visibility: visible; }
 /* Focus: the 2px focus-ring outline, 2px out, like Button. The gap is transparent, so it works on tinted backgrounds. */

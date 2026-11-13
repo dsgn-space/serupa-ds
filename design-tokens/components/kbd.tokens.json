@@ -98,6 +98,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-control}",
+        "$description": "The keycap's tactile layers: raised off the page like a Button. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kbd-depth"
+          }
+        }
+      }
     }
   }
 }

@@ -131,4 +131,5 @@ Each is an optional override: set it on the page, a container or one pagination.
 | `--pagination-summary-gap` | `spacing-4` | Space between the summary and the pages (16px). |
 | `--pagination-radius` | `radius-control` | A page's corners (6px). |
 | `--pagination-disabled` | `opacity-disabled` | Previous or next when there's no page that way. |
+| `--pagination-current-depth` | `depth-part` | The current page in a tactile brand: raised like a part, under the top light. Nothing in a flat brand. |
 <!-- token-table:end -->

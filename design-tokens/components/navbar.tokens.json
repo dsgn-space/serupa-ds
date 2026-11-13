@@ -315,6 +315,16 @@
             "cssVar": "--navbar-menu-shadow"
           }
         }
+      },
+      "menu-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "The narrow-screen menu's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-depth"
+          }
+        }
       }
     }
   }

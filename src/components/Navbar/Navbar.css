@@ -46,7 +46,7 @@
 .dk-navbar__menu-panel {
   position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-block: var(--spacing-6);
   background: var(--navbar-menu-bg, var(--surface-overlay)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-menu-border, var(--border));
-  box-shadow: var(--navbar-menu-shadow, var(--elevation-overlay));
+  box-shadow: var(--navbar-menu-depth, var(--depth-surface)), var(--navbar-menu-shadow, var(--elevation-overlay));
   opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter);
 }
 @starting-style { .dk-navbar__menu-panel:not([hidden]) { opacity: var(--opacity-0); } }

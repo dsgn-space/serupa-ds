@@ -242,6 +242,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "active-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The current and finished circles in a tactile brand: raised like a part, under the top light. Nothing in a flat brand.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--stepper-active-depth"
+          }
+        }
+      }
     }
   }
 }

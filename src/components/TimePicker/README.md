@@ -106,6 +106,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-option-indicator` | `primary` | The 2px bar at the highlighted time's start. |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
 | `--time-picker-list-shadow` | `elevation-overlay` | The list's shadow. |
+| `--time-picker-list-depth` | `depth-surface` | The list's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--time-picker-list-radius` | `radius-surface` | The list's corners (8px). |
 | `--time-picker-list-max-height` | `spacing-60` | The list's tallest before it scrolls (240px). |
 | `--time-picker-list-min-width` | `spacing-40` | The list's least width (160px). |

@@ -127,6 +127,7 @@ Each is an optional override: set it on the page, a container or one Kanban. The
 | `--kanban-column-radius` | `radius-surface` | A column's corners (8px). |
 | `--kanban-card-radius` | `radius-control` | A card's corners (6px). |
 | `--kanban-card-shadow` | `elevation-overlay` | The card being dragged. |
+| `--kanban-card-depth` | `depth-card` | A card's tactile layers at rest: a short, soft shadow. None in the flat brands. |
 | `--kanban-gap` | `spacing-3` | Space between columns (12px). |
 | `--kanban-padding` | `spacing-3` | Space inside a column (12px). |
 | `--kanban-card-padding` | `spacing-2` | Space inside a card (8px). |

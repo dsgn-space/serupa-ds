@@ -50,7 +50,7 @@
   background: var(--dialog-bg, var(--surface-overlay));
   --dk-row-hover: var(--dialog-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
   border-radius: var(--dialog-radius, var(--radius-container));
-  box-shadow: var(--dialog-shadow, var(--elevation-modal));
+  box-shadow: var(--dialog-depth, var(--depth-surface)), var(--dialog-shadow, var(--elevation-modal));
 }
 /* Motion (DZ1): transitions, not keyframes, so closing while it opens turns back from where it is. In from
    @starting-style; out, the <dialog> stays shown and in the top layer (display and overlay, allow-discrete) until

@@ -130,6 +130,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |
 | `--date-picker-popup-border` | `border-overlay` | Its outline. |
 | `--date-picker-popup-shadow` | `elevation-overlay` | Its shadow. |
+| `--date-picker-popup-depth` | `depth-surface` | The calendar popup's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--date-picker-popup-radius` | `radius-surface` | Its corners (8px). |
 | `--date-picker-popup-padding` | `spacing-3` | Space inside it (12px). |
 | `--date-picker-offset` | `spacing-1` | The gap between the field and the panel (4px). |
