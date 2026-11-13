@@ -162,6 +162,19 @@ describe('Sidebar', () => {
     });
   });
 
+  test('from the keyboard a group opens at once as it closes at once: Enter shows its items with no fold, and Enter again hides them (KW1)', async () => {
+    await withMotion(async () => {
+      const runs = (e: Element) => e.getAnimations().filter((x) => x instanceof CSSTransition).map((x) => (x).transitionProperty).sort();
+      await render(<App />);
+      const b = el('gproj'), list = el(b.getAttribute('aria-controls')!);
+      b.focus();
+      await userEvent.keyboard('{Enter}');
+      expect([b.getAttribute('aria-expanded'), list.hidden, runs(list), css(list).opacity, css(list).clipPath]).toEqual(['true', false, [], '1', 'inset(0px)']);
+      await userEvent.keyboard('{Enter}');
+      expect([b.getAttribute('aria-expanded'), list.hidden]).toEqual(['false', true]);
+    });
+  });
+
   test('defaultOpen={false} keeps a group with the active page closed; the group is still text-colored', async () => {
     await render(<App />);
     expect([el('gteam').getAttribute('aria-expanded'), el('gteam').classList.contains('dk-sidebar__item--active')]).toEqual(['false', true]);

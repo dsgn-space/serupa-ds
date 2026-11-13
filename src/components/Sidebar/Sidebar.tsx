@@ -198,6 +198,7 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
   };
   const listId = domId('dk-sbi', React.useId());
   // A group's nested list unfolds and folds as Accordion's panel does (GM4): it stays (inert) while it folds away.
+  // From the keyboard it opens at once, as it closes at once (KW1).
   const nested = React.useRef<HTMLUListElement | null>(null);
   const exit = useExit(open, nested);
   const rail = ctx.collapsed && ctx.depth === 0;
@@ -245,7 +246,7 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
       <li className="dk-sidebar__li" data-state={open ? 'open' : 'closed'}>
         <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) props.onClick(e); toggle(); }}>{inner(true)}</button>
         <SidebarContext.Provider value={{ collapsed: ctx.collapsed, depth: ctx.depth + 1 }}>
-          <ul ref={nested} id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={!open && !exit.leaving} inert={!open || undefined} data-instant={exit.arrived || undefined}>{kids}</ul>
+          <ul ref={nested} id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={!open && !exit.leaving} inert={!open || undefined} data-instant={exit.instant || undefined}>{kids}</ul>
         </SidebarContext.Provider>
       </li>
     );
