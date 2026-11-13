@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -240,6 +240,20 @@ describe('DataGrid', () => {
   });
 });
 const focus = () => document.activeElement as HTMLElement;
+
+describe('DataGrid in print', () => {
+  test('printed, a grid in a frame with a height shows every row and its header no longer sticks; on screen it still scrolls (GR395)', async () => {
+    const many: DataGridRow[] = Array.from({ length: 60 }, (_, i) => ({ id: 'p' + i, name: 'Item ' + (i + 1), qty: i, sku: 'S' + i }));
+    await render(<DataGrid aria-label="Stock" stickyHeader containerProps={{ style: { maxHeight: 240 }, id: 'pframe' }} columns={COLS} rows={many} />);
+    const frame = document.getElementById('pframe') as HTMLElement, head = frame.querySelector('th') as HTMLElement;
+    expect([frame.scrollHeight > frame.clientHeight + 1, css(head).position]).toEqual([true, 'sticky']);
+    await commands.printMedia(true);
+    try {
+      expect([frame.scrollHeight - frame.clientHeight <= 1, css(head).position, css(frame).overflowY]).toEqual([true, 'static', 'visible']);
+    } finally { await commands.printMedia(false); }
+    expect(frame.scrollHeight > frame.clientHeight + 1).toBe(true);
+  });
+});
 
 describe('DataGrid stickyHeader', () => {
   const MANY: DataGridRow[] = Array.from({ length: 60 }, (_, i) => ({ id: 'r' + i, name: 'Item ' + (i + 1), qty: i, sku: 'S' + i }));
