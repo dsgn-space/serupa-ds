@@ -152,7 +152,7 @@ describe('TransferList with many options', () => {
     const box = (label: string) => page.getByRole('checkbox', { name: label, exact: true }).element() as HTMLInputElement;
     const own = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'indeterminate')!;
     for (const i of document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')) {
-      const label = i.closest('label')!.textContent!.trim();
+      const label = i.closest('label')!.textContent.trim();
       Object.defineProperty(i, 'indeterminate', { configurable: true, get: () => own.get!.call(i) as boolean, set: (v: boolean) => { drawn.add(label); own.set!.call(i, v); } });
     }
     box('Option 5').click();
