@@ -4,6 +4,7 @@ import { cn, omit, useMergedRef } from '../../internal/cn';
 import { useAutoFocus } from '../../internal/focus';
 import { addMonths, compare, isoDate, sameDay, startOfMonth, toDay } from '../../internal/dates';
 import { component } from '../../internal/component';
+import { FieldContext } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
 import { Calendar } from '../Calendar/Calendar';
 import type { DateRange, DateRangeInput } from '../DateRangePicker/DateRangePicker';
@@ -73,6 +74,9 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
   const base = props.month ? startOfMonth(props.month) : ownMonth;
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!props.month) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
   const two = props.months === 2;
+  // In a Field, its label names the group: a <label for> can't name a group, so it's aria-labelledby, as RadioGroup's.
+  const fieldLabel = React.useContext(FieldContext)?.labelId;
+  const labelledBy = rest['aria-labelledby'] ?? (rest['aria-label'] ? undefined : fieldLabel);
 
   const pick = (d: Date) => {
     if (!anchor) { setAnchor(d); setHover(d); return; }
@@ -104,7 +108,7 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
       isDateSelected={isEnd} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} />
   );
   return (
-    <div {...rest} ref={merged} role="group" aria-label={rest['aria-labelledby'] ? undefined : rest['aria-label'] || L.chooseDates}
+    <div {...rest} ref={merged} role="group" aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : rest['aria-label'] || L.chooseDates}
       className={cn('dk-range-calendar', two && 'dk-range-calendar--two', props.className)} data-component="range-calendar">
       {/* Escape drops a half-picked range, and goes no further (a Dialog around it stays open); leaving the days puts
           the preview back on the end picked. */}
