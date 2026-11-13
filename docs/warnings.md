@@ -14,6 +14,10 @@ A `locale` (on a component or SerupaProvider) that Intl can't read, so it's igno
 
 A dot Badge with no label, icon or count is an indicator: too small to click or to remove. Its `onClick`, `href` and `onRemove` are ignored. Name and handle the control it sits on instead.
 
+## badge-loading-text
+
+Badge's `loadingText` is deprecated, and removed in 15.0.0. It still works as `loadingLabel` does. Rename it to `loadingLabel`: a prop named `…Text` is shown on screen, and these words are only said to screen readers, as Chart's, DataGrid's and Kanban's `loadingLabel` are.
+
 ## badge-remove-interactive
 
 A Badge with `onClick` or `href` is a button or a link, which can't hold another button, so its `onRemove` is ignored. Use one or the other.
@@ -21,6 +25,10 @@ A Badge with `onClick` or `href` is a button or a link, which can't hold another
 ## button-icon-label
 
 A Button with only an icon has no text for a screen reader to say. Give it an `aria-label` (or `aria-labelledby`, or a `title`), or use IconButton, whose `label` is required.
+
+## button-loading-text
+
+Button's `loadingText` is deprecated, and removed in 15.0.0. It still works as `loadingLabel` does. Rename it to `loadingLabel`: a prop named `…Text` is shown on screen, and these words are only said to screen readers, as Chart's, DataGrid's and Kanban's `loadingLabel` are.
 
 ## combobox-duplicate-value
 

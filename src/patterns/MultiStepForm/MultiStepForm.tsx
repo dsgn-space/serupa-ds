@@ -161,7 +161,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
   );
   const nav = (
     <div className="flex flex-wrap gap-3">
-      <Button type="submit" loading={busy} loadingText="Sending your application">
+      <Button type="submit" loading={busy} loadingLabel="Sending your application">
         {s.isLast ? (failed ? 'Try sending again' : 'Send application') : reviewed ? 'Save and go back to your answers' : 'Continue'}
       </Button>
       {s.isFirst ? null : <Button variant="ghost" onClick={s.back} disabled={busy}>Back</Button>}

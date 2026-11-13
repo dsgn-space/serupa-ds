@@ -97,7 +97,7 @@ function App() {
     <Badge id="mipd" onClick={hit} onPointerDown={(e) => e.preventDefault()}>Mine</Badge>
     <Badge id="both" onClick={hit} onRemove={() => {}}>Both</Badge>
     <Badge id="ld" tone="success" leftIcon="check" onClick={hit} loading={loading}>Approve request</Badge>
-    <Badge id="ldspan" loading loadingText="Syncing">Syncing</Badge>
+    <Badge id="ldspan" loading loadingLabel="Syncing">Syncing</Badge>
     <Badge id="ldrm" loading onRemove={() => { removed.push('ldrm'); }}>Tag</Badge>
     <div id="ob">
       <Badge>Status</Badge>
@@ -691,5 +691,17 @@ describe('loading ring', () => {
     const ring = () => document.querySelector('#ring-badge [data-component="loader"]');
     await expect.poll(ring).toBeTruthy();
     expect(ring()!.outerHTML).toBe(document.querySelector('#ring-loader > [data-component="loader"]')!.outerHTML);
+  });
+});
+
+describe('Badge: loadingText, the old name of loadingLabel', () => {
+  test('is still said when loading starts, as loadingLabel is, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const { rerender } = await render(<Badge {...{ loadingText: 'Checking status' }}>Live</Badge>);
+      await rerender(<Badge loading {...{ loadingText: 'Checking status' }}>Live</Badge>);
+      await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '').toContain('Checking status');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('badge-loading-text'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

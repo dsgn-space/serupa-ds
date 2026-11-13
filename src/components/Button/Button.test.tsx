@@ -725,3 +725,15 @@ describe('Button pressed', () => {
     });
   });
 });
+
+describe('Button: loadingText, the old name of loadingLabel', () => {
+  test('is still said when loading starts, as loadingLabel is, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const { rerender } = await render(<Button {...{ loadingText: 'Saving draft' }}>Save</Button>);
+      await rerender(<Button loading {...{ loadingText: 'Saving draft' }}>Save</Button>);
+      await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '').toContain('Saving draft');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('button-loading-text'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
+  });
+});

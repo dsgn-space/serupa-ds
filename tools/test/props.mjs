@@ -98,7 +98,7 @@ const isBoolean = (p) => {
 };
 // One name for one idea (CONTRIBUTING.md, API naming table, GR268): these props say it another way. Each maps to
 // the name to use instead.
-const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', side: 'placement', pending: 'loading', busy: 'loading', delay: 'openDelay (and closeDelay)' };
+const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', side: 'placement', pending: 'loading', busy: 'loading', delay: 'openDelay (and closeDelay)', loadingText: 'loadingLabel, when the words are only said' };
 // Props that still use one of those names, each with why. A deprecated alias of the table's name is fine: it goes in
 // the next scheduled major (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
 const NAME_GAPS = {
@@ -111,6 +111,11 @@ const NAME_KEPT = {
   'StackProps.direction': "'row' or 'column', the flex-direction it sets, by the CSS name",
   'LoaderProps.delay': 'how long a load runs before the spinner shows: not an overlay, so not openDelay',
   'DescriptionListProps.layout': "'stacked', 'inline' or 'split': how each term sits beside its description, not an orientation",
+  'ComboboxProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',
+  'ComboboxSingleProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',
+  'ComboboxFreeTextProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',
+  'ComboboxMultipleProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',
+  'TimeZonePickerProps.loadingText': "Combobox's, passed through: shown in the list while options load",
   'TableProps.layout': "'auto' or 'fixed', the table-layout it sets, by the CSS name",
 };
 const nameGaps = new Set();
