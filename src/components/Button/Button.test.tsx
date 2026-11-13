@@ -566,8 +566,12 @@ describe('Button micro-interactions', () => {
     expect([getComputedStyle(label).filter, getComputedStyle(ld).filter.replace('blur(0px)', 'none')]).toEqual(['blur(4px)', 'none']);
     expect([getComputedStyle(label).opacity, getComputedStyle(q('#busy .dk-btn__icon')).opacity, getComputedStyle(q('#busy .dk-btn__loader')).opacity]).toEqual(['0', '0', '1']);
     setBusy(false);
-    await expect.poll(() => getComputedStyle(q('#busy .dk-btn__label')).opacity).toBe('1');
-    await expect.poll(() => getComputedStyle(q('#busy .dk-btn__label')).filter).toBe('none');
+    // Waited for as on the way out (frames, then the fade's end), not polled: WebKit in CI moves a transition on only
+    // at a rendering update, and polling asks for none, so it read the fade's first frame (0.0024) for a second.
+    await expect.poll(() => el('busy').hasAttribute('data-loading')).toBe(false);
+    await eased(el('busy'));
+    const back = q('#busy .dk-btn__label');
+    expect([getComputedStyle(back).opacity, getComputedStyle(back).filter]).toEqual(['1', 'none']);
   });
 
   test('no ripple: pressing adds nothing inside the button, and there is no ripple layer', async () => {

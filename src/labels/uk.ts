@@ -144,6 +144,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': по ' + date,
   filterAny: (field) => field + ': усі',
   filterRemove: (field) => 'Прибрати фільтр: ' + field,
+  listSelectAll: 'Вибрати все',
   tagRemove: (name) => 'Прибрати: ' + name,
   filterDone: 'Готово',
   filterResults: (count) => (count === 1 ? '1 результат' : 'Результатів: ' + n(count)),
