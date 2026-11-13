@@ -8,7 +8,7 @@ const meta = {
   title: 'Components/Forms/Slider',
   component: Slider,
   args: { 'aria-label': 'Volume', defaultValue: 50, min: 0, max: 100, step: 1, size: 'md', disabled: false, invalid: false, readOnly: false },
-  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md'] } },
+  argTypes: { size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   decorators: [(Story) => <div style={{ maxWidth: 'var(--container-sm)' }}><Story /></div>],
 } satisfies Meta<typeof Slider>;
 export default meta;
@@ -34,6 +34,7 @@ export const WithInputs: Story = {
 };
 export const SingleWithInput: Story = { args: { 'aria-label': 'Volume', defaultValue: 35, inputs: true } };
 export const Small: Story = { args: { size: 'sm', defaultValue: 30 } };
+export const Large: Story = { args: { size: 'lg', defaultValue: 60 } };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 70 } };
 export const ReadOnly: Story = { args: { readOnly: true, defaultValue: 40 } };
 export const Invalid: Story = {

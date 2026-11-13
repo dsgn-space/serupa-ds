@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { Field } from '../Field/Field';
 import { RangeCalendar } from './RangeCalendar';
 
 const nov = new Date(2026, 10, 1);
@@ -31,6 +32,15 @@ describe('RangeCalendar', () => {
       'Tuesday, November 3, 2026, Start date', 'Wednesday, November 4, 2026, in the range', 'Thursday, November 5, 2026, End date', 'Friday, November 6, 2026']);
     expect([day('2026-11-03').parentElement!.getAttribute('aria-selected'), day('2026-11-04').classList.contains('dk-calendar__day--in-range')]).toEqual(['true', true]);
     expect(status()).toBe('Selected range: Nov 3 – 5, 2026');
+  });
+
+  test('in a Field, the Field\'s label names the group, as it names a RadioGroup, and its hint describes it; its own aria-label still wins', async () => {
+    await render(<SerupaProvider locale="en-US">
+      <Field label="Stay" hint="Up to 14 nights"><RangeCalendar defaultMonth={nov} /></Field>
+      <Field label="Leave"><RangeCalendar defaultMonth={nov} aria-label="Annual leave" /></Field>
+    </SerupaProvider>);
+    await expect.element(page.getByRole('group', { name: 'Stay' })).toHaveAccessibleDescription('Up to 14 nights');
+    await expect.element(page.getByRole('group', { name: 'Annual leave' })).toBeVisible();
   });
 
   test('two presses pick a range in either order; the days between preview under the pointer; the value changes only when both are picked', async () => {
@@ -132,6 +142,32 @@ describe('RangeCalendar', () => {
     await before.unmount();
     await render(<Stay defaultMonth={undefined} min="2099-05-02" />);
     await expect.element(page.getByRole('grid', { name: 'May 2099' })).toBeVisible();
+  });
+
+  test('hydrated on the 1st from a server still on the 31st: no mismatch, then the visitor\'s month, said to onMonthChange (GR396)', async () => {
+    const { hydrateRoot } = await import('react-dom/client');
+    const { flushSync } = await import('react-dom');
+    const { renderToString } = await import('react-dom/server');
+    const months: string[] = [];
+    const ui = <SerupaProvider locale="en-US"><RangeCalendar onMonthChange={(m) => months.push(m.toDateString())} /></SerupaProvider>;
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const host = document.createElement('div');
+    const errors: string[] = [], logError = console.error;
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    const grid = () => { const g = host.querySelector('[role="grid"]')!; return g.getAttribute('aria-label') ?? document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent; };
+    try {
+      vi.setSystemTime(new Date(2026, 9, 31, 22, 0));
+      host.innerHTML = renderToString(ui);
+      document.body.appendChild(host);
+      expect(grid()).toBe('October 2026');
+      vi.setSystemTime(new Date(2026, 10, 1, 5, 0));
+      console.error = (...a: unknown[]) => { errors.push(a.map(String).join(' ')); };
+      flushSync(() => { root = hydrateRoot(host, ui, { onRecoverableError: (e) => errors.push(String(e)) }); });
+      await new Promise((r) => setTimeout(r, 30));
+      expect(errors).toEqual([]);
+      expect(grid()).toBe('November 2026');
+      expect(months).toEqual([new Date(2026, 10, 1).toDateString()]);
+    } finally { console.error = logError; vi.useRealTimers(); root?.unmount(); host.remove(); }
   });
 
   test('autoFocus focuses the start day', async () => {

@@ -36,7 +36,7 @@ Drawn from the `Playground` story.
 
 ## Accessibility
 
-- **Role and name:** a group named "Choose dates" (or your `aria-label`), holding a grid per month named by its month. The ends are selected days named "…, start date" and "…, end date", and the days between "…, in the range", in words as well as the fill.
+- **Role and name:** a group named "Choose dates" (or your `aria-label`, or a surrounding Field's label, whose hint then describes it), holding a grid per month named by its month. The ends are selected days named "…, start date" and "…, end date", and the days between "…, in the range", in words as well as the fill.
 - **Keyboard:** each month is Calendar's grid (the table below).
 - **Said aloud:** the line under the months says what to pick next ("Choose the end date") and, once both are picked, the range ("Selected range: Nov 3 – 8, 2026"), as a polite live region.
 - **Contrast:** the ends, the days between and the status line read 4.5:1 in all six themes (`RangeCalendar.test.tsx`).
