@@ -23,14 +23,14 @@
    than it needs. */
 @supports (animation-timeline: scroll()) {
   .dk-navbar--condense {
-    --dk-navbar-cut: calc(var(--navbar-height, var(--spacing-16)) - var(--navbar-height-condensed, var(--spacing-12)));
+    --dk-navbar-cut: calc(var(--navbar-height, var(--spacing-16)) - var(--navbar-height-condensed, var(--spacing-12))); --dk-navbar-half: calc(var(--dk-navbar-cut) / 2);
     animation: dk-navbar-lift var(--ease-linear) both, dk-navbar-condense var(--ease-linear) both; animation-timeline: scroll(), scroll();
     animation-range: var(--spacing-0) var(--navbar-height, var(--spacing-16)), var(--spacing-0) var(--dk-navbar-cut);
   }
   .dk-navbar--condense > .dk-navbar__inner { animation: dk-navbar-recenter var(--ease-linear) both; animation-timeline: scroll(); animation-range: var(--spacing-0) var(--dk-navbar-cut); }
 }
-@keyframes dk-navbar-condense { to { translate: var(--spacing-0) calc(var(--dk-navbar-cut) * -1); } }
-@keyframes dk-navbar-recenter { to { translate: var(--spacing-0) calc(var(--dk-navbar-cut) / 2); } }
+@keyframes dk-navbar-condense { to { translate: var(--spacing-0) calc(var(--spacing-0) - var(--dk-navbar-cut)); } }
+@keyframes dk-navbar-recenter { to { translate: var(--spacing-0) var(--dk-navbar-half); } }
 @keyframes dk-navbar-lift { to { box-shadow: var(--navbar-shadow-scrolled, var(--elevation-raised)); background-color: var(--navbar-bg-scrolled, var(--surface-raised)); } }
 /* What the keyboard focuses, or a #link jumps to, scrolls into view below a sticky bar, not under it (WCAG 2.4.11).
    Navbar measures the bar into --dk-navbar-offset; until then, the default bar height. */
