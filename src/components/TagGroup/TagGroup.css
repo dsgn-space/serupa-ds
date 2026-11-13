@@ -1,0 +1,39 @@
+/* ---------------------------------------------------------------
+   TagGroup: tags in a wrapping row, each a bordered pill-cornered box with its words and, when removable, a small ×.
+   A picked tag is primary-subtle with primary words, a primary border and a tick, so it isn't shown by color alone.
+   Every value reads one of its own tokens (tag-group.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-tag-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tag-group-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); }
+.dk-tag-group__label { color: var(--tag-group-label, var(--text)); font-size: var(--text-sm); font-weight: var(--font-medium); }
+.dk-tag-group__empty { color: var(--tag-group-muted, var(--text-muted)); font-size: var(--text-sm); }
+.dk-tag-group__empty:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-tag-group__tags { display: flex; flex-wrap: wrap; gap: var(--tag-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); outline: none; }
+.dk-tag-group__tag {
+  display: inline-flex; align-items: center; gap: var(--spacing-0\.5); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full);
+  min-block-size: var(--control-height-sm); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--field-border));
+  border-radius: var(--tag-group-radius, var(--radius-control)); background: var(--tag-group-bg, var(--surface)); color: var(--tag-group-text, var(--text));
+  font-size: var(--text-sm); cursor: default; touch-action: manipulation;
+}
+.dk-tag-group__tag:has(.dk-tag-group__remove) { padding-inline-end: var(--spacing-0\.5); }
+.dk-tag-group__tag[aria-selected] { cursor: pointer; }
+.dk-tag-group__tag:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+.dk-tag-group__tag--selected {
+  border-color: var(--tag-group-border-selected, var(--primary)); background: var(--tag-group-bg-selected, var(--primary-subtle)); color: var(--tag-group-text-selected, var(--primary));
+}
+.dk-tag-group__tag[aria-disabled="true"] { opacity: var(--opacity-disabled); }
+.dk-tag-group__text { display: inline-flex; align-items: center; gap: var(--spacing-1); min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
+.dk-tag-group__check { flex: none; }
+.dk-tag-group__cell { display: inline-flex; }
+.dk-tag-group__remove {
+  display: inline-grid; place-items: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); margin: var(--spacing-0); padding: var(--spacing-0);
+  border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: pointer; touch-action: manipulation;
+}
+@media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
+.dk-tag-group__more {
+  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm);
+  text-decoration: underline; cursor: pointer;
+}
+.dk-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
+@media (forced-colors: active) { .dk-tag-group__tag { border-color: CanvasText; } .dk-tag-group__tag--selected { border-width: var(--border-width-2); } }
+}

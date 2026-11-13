@@ -1,0 +1,141 @@
+{
+  "tagGroup": {
+    "$description": "TagGroup's component tokens. Each one is an optional override: set the CSS variable (--tag-group-<name>) on the page, a container or one TagGroup, and every TagGroup inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "A tag's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-bg"
+          }
+        }
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A tag's words (4.5:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-text"
+          }
+        }
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "A tag's border (3:1 on the page, so the tag's edge is seen).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-border"
+          }
+        }
+      },
+      "bg-selected": {
+        "$type": "color",
+        "$value": "{color.primary-subtle}",
+        "$description": "A picked tag's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-bg-selected"
+          }
+        }
+      },
+      "text-selected": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A picked tag's words and tick (4.5:1 on bg-selected).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-text-selected"
+          }
+        }
+      },
+      "border-selected": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "A picked tag's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-border-selected"
+          }
+        }
+      },
+      "remove-hover": {
+        "$type": "color",
+        "$value": "{color.surface-hover}",
+        "$description": "The × button's background under the pointer.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-remove-hover"
+          }
+        }
+      },
+      "label": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "The group's label.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-label"
+          }
+        }
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The empty text.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-muted"
+          }
+        }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The focus ring around the focused tag.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-focus-ring"
+          }
+        }
+      },
+      "more": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The Show more and Show less button's words (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-more"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-control}",
+        "$description": "A tag's corners, as other controls'.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The space between tags, and between the label and the tags (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-gap"
+          }
+        }
+      }
+    }
+  }
+}
