@@ -32,7 +32,7 @@
   --dk-pp-bd: var(--dk-pp-ring); transition-duration: var(--duration-0);
   box-shadow: 0 0 0 var(--border-width-1) var(--dk-pp-bd), var(--period-picker-depth, var(--depth-field)); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0);
 }
-.dk-period-picker--invalid { --dk-pp-bd: var(--period-picker-invalid, var(--danger)); --dk-pp-ring: var(--period-picker-invalid, var(--danger)); }
+.dk-period-picker--invalid { --dk-pp-bd: var(--period-picker-invalid, var(--field-border-invalid)); --dk-pp-ring: var(--period-picker-invalid, var(--field-border-invalid)); }
 .dk-period-picker--readonly .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); cursor: default; }
 .dk-period-picker--disabled .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-period-picker__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

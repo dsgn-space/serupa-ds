@@ -117,7 +117,7 @@ Each is an optional override: set it on the page, a container or one slider. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--slider-track` | `field-border` | The track (3:1 on the surface, so the control can be seen). |
+| `--slider-track` | `border-control` | The track (3:1 on the surface, so the control can be seen). |
 | `--slider-fill` | `primary` | The selected part of the track. |
 | `--slider-thumb-bg` | `field` | The thumb's inside. |
 | `--slider-thumb-border` | `primary` | The thumb's ring (3:1 on the surface). |

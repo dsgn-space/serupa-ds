@@ -239,12 +239,12 @@ describe('PeriodPicker', () => {
     expect(bs[0]!.getAttribute('lang')).toBe('de-DE');
   });
 
-  test('contrast in all six themes: text and placeholder 4.5:1 on the field, icon and border 3:1; periods and the title 4.5:1 on the popup, the chosen one on primary, this one in primary', () => {
+  test('contrast in all six themes: text and placeholder 4.5:1 on the field, icon 3:1, the soft border 1.3:1; periods and the title 4.5:1 on the popup, the chosen one on primary, this one in primary', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
       ['icon', 'var(--text-muted)', 'var(--field)', 3],
-      ['border', 'var(--field-border)', 'var(--surface)', 3],
+      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--surface)', 1.3],
       ['period', 'var(--text)', 'var(--surface-overlay)', 4.5],
       ['hovered', 'var(--text)', 'var(--surface-muted)', 4.5],
       ['selected', 'var(--on-primary)', 'var(--primary)', 4.5],

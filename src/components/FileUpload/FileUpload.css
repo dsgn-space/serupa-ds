@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------
-   FileUpload: a drop area (surface-muted, a dashed field-border outline, 8px corners, 24px inside) with an upload
+   FileUpload: a drop area (surface-muted, a dashed border-control outline, 8px corners, 24px inside) with an upload
    icon, a title, an outline button and a muted hint, centered. While files are dragged over it, it turns
    primary-subtle with a primary outline (a Highlight one in forced colors). Under it: messages about files that weren't added (danger), and the
    chosen files as rows (surface, outline, 6px corners) with a type icon, the name, the size and a remove
@@ -13,7 +13,7 @@
 .dk-file-upload__zone {
   position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--file-upload-gap, var(--spacing-2)); text-align: center;
   padding: var(--file-upload-zone-padding, var(--spacing-6));
-  border: var(--border-width-1) dashed var(--file-upload-zone-border, var(--field-border)); border-radius: var(--file-upload-zone-radius, var(--radius-surface));
+  border: var(--border-width-1) dashed var(--file-upload-zone-border, var(--border-control)); border-radius: var(--file-upload-zone-radius, var(--radius-surface));
   background: var(--file-upload-zone-bg, var(--surface-muted)); cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move);
 }

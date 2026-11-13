@@ -14,7 +14,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The control's outline (3:1 on the surface, so it can be seen).",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "indicator-border": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The selected segment's outline.",
         "$extensions": {
           "com.serupa": {

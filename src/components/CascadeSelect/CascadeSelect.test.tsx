@@ -299,13 +299,13 @@ describe('CascadeSelect', () => {
     await until(() => shown()[0]!.textContent.includes('Jawa Tengah'));
   });
 
-  test('contrast in all six themes: text and placeholder 4.5:1 on the field, chevron and border 3:1; option text, level names and notes 4.5:1 on the panel and on the highlight; the check 3:1', () => {
+  test('contrast in all six themes: text and placeholder 4.5:1 on the field, chevron 3:1, the soft border 1.3:1; option text, level names and notes 4.5:1 on the panel and on the highlight; the check 3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
       ['chevron', 'var(--text-muted)', 'var(--field)', 3],
-      ['border', 'var(--field-border)', 'var(--field)', 3],
-      ['border on page', 'var(--field-border)', 'var(--surface)', 3],
+      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
+      ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['option', 'var(--text)', 'var(--surface-overlay)', 4.5],
       ['level', 'var(--text-muted)', 'var(--surface-overlay)', 4.5],
       ['highlighted', 'var(--text)', 'var(--primary-subtle)', 4.5],

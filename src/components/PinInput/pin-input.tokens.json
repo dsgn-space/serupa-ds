@@ -54,7 +54,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.field-border-invalid}",
         "$description": "Every box's border when invalid (3:1 on the surface).",
         "$extensions": {
           "com.serupa": {

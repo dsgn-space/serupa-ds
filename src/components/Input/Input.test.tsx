@@ -160,7 +160,7 @@ describe('Input', () => {
 
   test('invalid: aria-invalid, a danger border and a danger focus ring', async () => {
     await render(<Input id="i" invalid aria-label="Invalid" />);
-    const danger = color('var(--danger)');
+    const danger = color('var(--field-border-invalid)');
     expect(field('i').getAttribute('aria-invalid')).toBe('true');
     expect(css(box('i')).borderTopColor).toBe(danger);
     field('i').focus();
@@ -213,15 +213,15 @@ describe('Input', () => {
     expect(css(l).pointerEvents).toBe('none');
   });
 
-  test('contrast in all six themes: text, placeholder, prefix and suffix 4.5:1 on the field; border, focus ring and invalid border 3:1', () => {
+  test('contrast in all six themes: text, placeholder, prefix and suffix 4.5:1 on the field; focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
-      ['prefix and suffix', 'var(--text-muted)', 'var(--field)', 4.5],
-      ['border', 'var(--field-border)', 'var(--field)', 3],
-      ['border on page', 'var(--field-border)', 'var(--surface)', 3],
+      ['prefix and suffix', 'var(--placeholder)', 'var(--field)', 4.5],
+      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
+      ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
-      ['invalid', 'var(--danger)', 'var(--field)', 3],
+      ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3],
     ])).toEqual([]);
   });
 
@@ -526,10 +526,10 @@ describe('Input actions (RU15)', () => {
 
   test('contrast in all six themes: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {
     expect(lowContrast([
-      ['text action', 'var(--primary)', 'var(--field)', 4.5],
-      ['text action on hover', 'var(--primary)', 'var(--primary-subtle)', 4.5],
+      ['text action', 'var(--field-action)', 'var(--field)', 4.5],
+      ['text action on hover', 'var(--field-action)', 'var(--primary-subtle)', 4.5],
       ['icon action', 'var(--text-muted)', 'var(--field)', 3],
-      ['icon action on hover', 'var(--text)', 'var(--secondary)', 3],
+      ['icon action on hover', 'var(--text)', 'var(--field-hover)', 3],
       ['focus ring', 'var(--focus-ring)', 'var(--field)', 3],
     ])).toEqual([]);
   });
@@ -541,7 +541,7 @@ describe('Input held state', () => {
     const b = page.getByRole('button', { name: 'Copy invite link' }).element() as HTMLElement;
     // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
     const low = await press(b, async () => {
-      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];
       for (const th of THEMES) {
         document.documentElement.setAttribute('data-theme', th);

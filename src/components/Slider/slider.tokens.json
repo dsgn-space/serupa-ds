@@ -4,7 +4,7 @@
     "color": {
       "track": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The track (3:1 on the surface, so the control can be seen).",
         "$extensions": {
           "com.serupa": {
