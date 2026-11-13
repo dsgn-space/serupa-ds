@@ -32,15 +32,26 @@
           }
         }
       },
-      "more-hover-bg": {
+      "more-bg-hover": {
         "$type": "color",
         "$value": "{color.secondary-hover}",
         "$description": "The \"+N\" button's background on hover, with `showMore` or `onMore`.",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--avatar-group-more-hover-bg"
+            "cssVar": "--avatar-group-more-bg-hover"
           }
         }
+      },
+      "more-hover-bg": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "The old name of `--avatar-group-more-bg-hover`, read when that isn't set. Removed in 15.0.0.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--avatar-group-more-hover-bg"
+          }
+        },
+        "$deprecated": "Use --avatar-group-more-bg-hover; removed in 15.0.0."
       },
       "focus-ring": {
         "$type": "color",

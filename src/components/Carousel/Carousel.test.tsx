@@ -459,3 +459,14 @@ describe('Carousel', () => {
     expect(el('cfrag').querySelectorAll(DOTS).length).toBe(3);
   });
 });
+
+describe('Carousel token names', () => {
+  test('the current dot is --carousel-dot-width-active wide (the state last); the old --carousel-dot-active-width still works until 15.0.0', async () => {
+    await render(<>
+      <Carousel id="tk-new" label="New" style={{ '--carousel-dot-width-active': '40px' } as React.CSSProperties}>{slides(2, 'n')}</Carousel>
+      <Carousel id="tk-old" label="Old" style={{ '--carousel-dot-active-width': '32px' } as React.CSSProperties}>{slides(2, 'o')}</Carousel>
+    </>);
+    const w = (id: string) => getComputedStyle(dot(id, 0), '::before').getPropertyValue('--dk-dot-w').trim();
+    expect([w('tk-new'), w('tk-old')]).toEqual(['40px', '32px']);
+  });
+});

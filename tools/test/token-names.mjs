@@ -14,14 +14,8 @@ const PROPERTY = 'bg|text|color|border|width|shadow|outline|fill|layer';
 const WRONG = new RegExp(`-(?:${STATE})-(?:${PROPERTY})(?:-|$)`);
 
 const GAPS = {
-  '--avatar-group-more-hover-bg': '--avatar-group-more-bg-hover',
-  '--button-disabled-bg': '--button-bg-disabled',
-  '--button-disabled-border': '--button-border-disabled',
-  '--button-disabled-text': '--button-text-disabled',
   '--calendar-selected-bg': '--calendar-bg-selected',
   '--calendar-selected-color': '--calendar-color-selected',
-  '--carousel-dot-active-width': '--carousel-dot-width-active',
-  '--data-grid-selected-bg': '--data-grid-bg-selected',
   '--pagination-current-bg': '--pagination-bg-current',
   '--pagination-current-text': '--pagination-text-current',
   '--period-picker-selected-bg': '--period-picker-bg-selected',
@@ -38,12 +32,12 @@ const ALLOW = {
   '--file-upload-error-color': 'the error message under the drop area, as Field\'s',
 };
 
-/** Every cssVar in one tokens.json. */
+/** Every cssVar in one tokens.json, but a renamed token's old name, deprecated until the next major. */
 const vars = (o, out = []) => {
   for (const v of Object.values(o)) {
     if (!v || typeof v !== 'object') continue;
     const c = v.$extensions?.['com.serupa']?.cssVar;
-    if (c) out.push(c); else vars(v, out);
+    if (c) { if (!v.$deprecated) out.push(c); } else vars(v, out);
   }
   return out;
 };

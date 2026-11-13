@@ -284,3 +284,16 @@ describe('DataGrid: busy, the old name of loading', () => {
     } finally { warn.mockRestore(); }
   });
 });
+
+describe('DataGrid token names', () => {
+  test('a selected cell reads --data-grid-bg-selected (the state last); the old --data-grid-selected-bg still works until 15.0.0', async () => {
+    await render(<>
+      <div id="tk-new" style={{ '--data-grid-bg-selected': 'rgb(1, 2, 3)' } as React.CSSProperties}><Live /></div>
+    </>);
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    await expect.poll(() => css(cell('Kopi')).backgroundColor).toBe('rgb(1, 2, 3)');
+    (document.getElementById('tk-new') as HTMLElement).style.cssText = '--data-grid-selected-bg: rgb(4, 5, 6)';
+    await expect.poll(() => css(cell('Kopi')).backgroundColor).toBe('rgb(4, 5, 6)');
+  });
+});

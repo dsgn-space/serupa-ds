@@ -738,3 +738,18 @@ describe('Button: loadingText, the old name of loadingLabel', () => {
     } finally { warnings.splice(from); }
   });
 });
+
+describe('Button token names', () => {
+  test('a disabled button reads --button-bg-disabled, --button-text-disabled and --button-border-disabled (the state last); the old names, state first, still work until 15.0.0', async () => {
+    await render(<>
+      <Button id="tk-new" variant="outline" disabled style={vars({ '--button-bg-disabled': 'rgb(1, 2, 3)', '--button-text-disabled': 'rgb(4, 5, 6)', '--button-border-disabled': 'rgb(7, 8, 9)' })}>New</Button>
+      <Button id="tk-old" variant="outline" disabled style={vars({ '--button-disabled-bg': 'rgb(1, 2, 3)', '--button-disabled-text': 'rgb(4, 5, 6)', '--button-disabled-border': 'rgb(7, 8, 9)' })}>Old</Button>
+      <Button id="tk-both" variant="outline" disabled style={vars({ '--button-bg-disabled': 'rgb(1, 2, 3)', '--button-disabled-bg': 'rgb(9, 9, 9)' })}>Both</Button>
+    </>);
+    const look = (id: string) => { const c = getComputedStyle(el(id)); return [c.backgroundColor, c.color, c.borderTopColor].join(' / '); };
+    await expect.poll(() => look('tk-new')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6) / rgb(7, 8, 9)');
+    await expect.poll(() => look('tk-old')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6) / rgb(7, 8, 9)');
+    // The new name wins over the old one.
+    await expect.poll(() => getComputedStyle(el('tk-both')).backgroundColor).toBe('rgb(1, 2, 3)');
+  });
+});
