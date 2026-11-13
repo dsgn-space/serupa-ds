@@ -40,7 +40,7 @@ interface KanbanProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement>, "chi
     onMove: (columns: KanbanColumn<T>[], move: KanbanMove<T>) => void;
     headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
     disabled?: boolean | undefined;
-    busy?: boolean | undefined;
+    loading?: boolean | undefined;
     loadingLabel?: string | undefined;
 }
 declare const Kanban: <T>(props: KanbanProps<T> & {

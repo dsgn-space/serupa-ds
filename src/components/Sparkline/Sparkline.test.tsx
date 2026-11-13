@@ -79,6 +79,6 @@ describe('Sparkline', () => {
     const ys = points(part(el('long'), 'line')!.getAttribute('d')!).map((p) => p[1]);
     expect(ys.length).toBe(200_000);
     // The one peak reaches the top; the first point, the lowest value, sits below it.
-    expect(ys[123_456]).toBeLessThan(ys[0]);
+    expect(ys[123_456]).toBeLessThan(ys[0]!);
   });
 });

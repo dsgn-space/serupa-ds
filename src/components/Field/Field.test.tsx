@@ -27,7 +27,7 @@ describe('Field', () => {
     await render(<Field id="plain" label="Name" className="extra" data-x="y"><Input ref={ref} /></Field>);
     const f = el('plain').closest('[data-component="field"]') as HTMLElement;
     expect(ref.current).toBe(el('plain'));
-    expect(el('plain').labels?.[0].textContent).toBe('Name');
+    expect(el('plain').labels?.[0]!.textContent).toBe('Name');
     expect(f.className).toMatch(/dk-field extra/);
     expect([f.dataset.x, f.dataset.component]).toEqual(['y', 'field']);
     expect(css(f.querySelector('label')).fontWeight).toBe('500');
@@ -60,8 +60,8 @@ describe('Field', () => {
     const f = el('mail').closest('[data-component="field"]') as HTMLElement;
     const ids = described('mail');
     expect(ids[0]).toBe('own');
-    expect(document.getElementById(ids[1])?.textContent).toBe('For receipts.');
-    expect(document.getElementById(ids[2])?.textContent).toBe('Enter an email address.');
+    expect(document.getElementById(ids[1]!)?.textContent).toBe('For receipts.');
+    expect(document.getElementById(ids[2]!)?.textContent).toBe('Enter an email address.');
     expect(el('mail').getAttribute('aria-invalid')).toBe('true');
     expect(el('mail').parentElement?.className).toMatch(/dk-input--invalid/);
     expect(el('mail').getAttribute('aria-required')).toBe('true');
@@ -81,15 +81,15 @@ describe('Field', () => {
       <Field label="Code" optional="Leave blank if none"><input id="native" /></Field>
       <Field label="Native bad" error="Bad"><input id="native-bad" /></Field>
     </>);
-    expect(el('notes').labels?.[0].textContent).toBe('Notes(optional)');
-    expect(el('native').labels?.[0].textContent).toBe('CodeLeave blank if none');
+    expect(el('notes').labels?.[0]!.textContent).toBe('Notes(optional)');
+    expect(el('native').labels?.[0]!.textContent).toBe('CodeLeave blank if none');
     expect(el('native-bad').getAttribute('aria-invalid')).toBe('true');
     expect(el('native-bad').hasAttribute('invalid')).toBe(false);
   });
 
   test('right to left, a Latin label keeps its gap before "(optional)" instead of running into it', async () => {
     await render(<div dir="rtl"><Field label="Address line 2" optional><input id="rtl-opt" /></Field></div>);
-    const label = el('rtl-opt').labels![0], marker = label.lastElementChild as HTMLElement;   // the "(optional)" after the words
+    const label = el('rtl-opt').labels![0]!, marker = label.lastElementChild as HTMLElement;   // the "(optional)" after the words
     expect(marker.textContent).toBe('(optional)');
     const words = document.createRange();
     words.selectNodeContents(label.firstChild!);
@@ -100,7 +100,7 @@ describe('Field', () => {
 
   test('the default "(optional)" comes from the labels: Indonesian under an id-ID provider', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><Field label="Catatan" optional><input id="opt-id" /></Field></SerupaProvider>);
-    expect(el('opt-id').labels?.[0].textContent).toBe('Catatan(opsional)');
+    expect(el('opt-id').labels?.[0]!.textContent).toBe('Catatan(opsional)');
   });
 
   test('an error that appears or changes after mount is announced politely; one there from the start, or unchanged on a re-render, is not', async () => {
@@ -132,7 +132,7 @@ describe('Field', () => {
   test('a native <select> as the direct child is the control, options and all: the label names it, the hint and error describe it, aria-invalid and aria-required', async () => {
     await render(<Field label="Size" hint="Pick one" error="Required" required><select><option value="">Choose</option><option>S</option></select></Field>);
     const s = document.querySelector('select')!;
-    expect([s.labels?.[0].textContent?.replaceAll('*', ''), s.getAttribute('aria-invalid'), s.getAttribute('aria-required'), (s.getAttribute('aria-describedby') || '').split(' ').length]).toEqual(['Size', 'true', 'true', 2]);
+    expect([s.labels?.[0]!.textContent?.replaceAll('*', ''), s.getAttribute('aria-invalid'), s.getAttribute('aria-required'), (s.getAttribute('aria-describedby') || '').split(' ').length]).toEqual(['Size', 'true', 'true', 2]);
   });
 
   test('disabled disables the control and dims the label', async () => {
@@ -156,7 +156,7 @@ describe('Field', () => {
     expect(el('r1').id).toBe('r1');
     expect(css(fs).borderTopWidth).toBe('0px');
     // The hint is the first thing the fieldset's aria-describedby names.
-    expect(document.getElementById(fs.getAttribute('aria-describedby')!.split(' ')[0])!.getBoundingClientRect().top).toBeGreaterThanOrEqual(legend.getBoundingClientRect().bottom);
+    expect(document.getElementById(fs.getAttribute('aria-describedby')!.split(' ')[0]!)!.getBoundingClientRect().top).toBeGreaterThanOrEqual(legend.getBoundingClientRect().bottom);
     expect(el('c1').matches(':disabled')).toBe(true);
   });
 
@@ -206,7 +206,7 @@ describe('Field', () => {
     expect([input.labels?.[0]?.textContent?.replace(/\*/g, ''), input.getAttribute('aria-required'), input.getAttribute('aria-invalid')]).toEqual(['Email', 'true', 'true']);
     const ids = (input.getAttribute('aria-describedby') || '').split(' ').filter(Boolean);
     expect(ids.map((i) => document.getElementById(i)?.textContent)).toEqual(expect.arrayContaining(['Work address', 'Required']));
-    expect([el('deep').labels?.[0]?.textContent, document.getElementById(described('deep')[0])?.textContent]).toEqual(['Phone', 'Mobile']);
+    expect([el('deep').labels?.[0]?.textContent, document.getElementById(described('deep')[0]!)?.textContent]).toEqual(['Phone', 'Mobile']);
   });
 
   test('a direct child component isn\'t described twice; a group Field inside a Field doesn\'t take its id', async () => {
@@ -261,15 +261,15 @@ describe('Field', () => {
     </div>);
     const f = el('h-in').closest('[data-component="field"]') as HTMLElement;
     const [hintId, errorId] = described('h-in');
-    const label = el('h-in').labels![0].getBoundingClientRect(), box = el('h-in').parentElement!.getBoundingClientRect();
-    const hint = document.getElementById(hintId)!.getBoundingClientRect(), error = document.getElementById(errorId)!.getBoundingClientRect();
+    const label = el('h-in').labels![0]!.getBoundingClientRect(), box = el('h-in').parentElement!.getBoundingClientRect();
+    const hint = document.getElementById(hintId!)!.getBoundingClientRect(), error = document.getElementById(errorId!)!.getBoundingClientRect();
     expect([f.dataset.layout, Math.round(label.width), Math.round(box.left - label.right), Math.round(box.width)]).toEqual(['horizontal', 192, 16, 560 - 192 - 16]);
     // the label's text sits on the input's text line
-    const text = document.createRange(); text.selectNodeContents(el('h-in').labels![0].firstChild!);
+    const text = document.createRange(); text.selectNodeContents(el('h-in').labels![0]!.firstChild!);
     const input = el('h-in').getBoundingClientRect();
     expect(Math.abs((text.getBoundingClientRect().top + text.getBoundingClientRect().bottom) / 2 - (input.top + input.bottom) / 2)).toBeLessThan(2);
     expect([hint.top >= box.bottom, error.top >= hint.bottom, Math.round(hint.left) === Math.round(box.left)]).toEqual([true, true, true]);
-    expect([el('h-in').labels![0].textContent, described('h-in').length, el('h-in').getAttribute('aria-invalid')]).toEqual(['Display name', 2, 'true']);
+    expect([el('h-in').labels![0]!.textContent, described('h-in').length, el('h-in').getAttribute('aria-invalid')]).toEqual(['Display name', 2, 'true']);
   });
 
   test('orientation="horizontal" stacks again when the field is narrower than both columns, and is ignored with group', async () => {
@@ -277,7 +277,7 @@ describe('Field', () => {
       <div style={{ width: '300px' }}><Field id="h-narrow" orientation="horizontal" label="Display name"><Input /></Field></div>
       <div style={{ width: '560px' }}><Field group orientation="horizontal" label="Plan" data-testid="h-group"><RadioGroup name="p"><Radio value="a">A</Radio></RadioGroup></Field></div>
     </>);
-    const label = el('h-narrow').labels![0].getBoundingClientRect(), box = el('h-narrow').parentElement!.getBoundingClientRect();
+    const label = el('h-narrow').labels![0]!.getBoundingClientRect(), box = el('h-narrow').parentElement!.getBoundingClientRect();
     expect([box.top >= label.bottom, Math.round(box.left), Math.round(box.width)]).toEqual([true, Math.round(label.left), 300]);
     const g = document.querySelector('[data-testid="h-group"]') as HTMLElement;
     expect([g.tagName, g.classList.contains('dk-field--horizontal'), g.dataset.layout]).toEqual(['FIELDSET', false, undefined]);

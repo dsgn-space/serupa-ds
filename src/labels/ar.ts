@@ -327,7 +327,7 @@ export const labels: SerupaLabels = {
   allDay: 'طوال اليوم',
   eventTime: (from, to) => 'من ' + from + ' إلى ' + to,
   repeats: 'يتكرر',
-  noEvents: 'لا أحداث هذا الشهر.',
+  noEvents: 'لا أحداث هذا الشهر',
   dateFieldDay: 'اليوم',
   dateFieldMonth: 'الشهر',
   dateFieldYear: 'السنة',

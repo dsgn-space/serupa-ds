@@ -49,7 +49,7 @@ describe('Stepper', () => {
     await render(<EnUS><div style={{ width: '868px' }}><Stepper id="ls" steps={STEPS} current={0} /></div>
       <div style={{ width: '868px', display: 'flex', flexDirection: 'column' }}><Stepper id="lc" steps={STEPS} current={0} onStepClick={() => {}} /></div></EnUS>);
     for (const id of ['ls', 'lc']) {
-      const t = lis(id)[3].querySelector<HTMLElement>(inStep(TITLE))!, a = lis(id)[0].querySelector<HTMLElement>(inStep(TITLE))!;
+      const t = lis(id)[3]!.querySelector<HTMLElement>(inStep(TITLE))!, a = lis(id)[0]!.querySelector<HTMLElement>(inStep(TITLE))!;
       expect([id, t.textContent, Math.round(rect(t).height)]).toEqual([id, 'Review', Math.round(rect(a).height)]);
     }
   });
@@ -66,7 +66,7 @@ describe('Stepper', () => {
     const n = el('st'), li = lis('st');
     expect([n.tagName, n.getAttribute('aria-label'), n.firstElementChild!.tagName, li.length, ref.current === n, n.dataset.component]).toEqual(['NAV', 'Progress', 'OL', 4, true, 'stepper']);
     expect(n.className).toMatch(/extra/);
-    expect([li[0].querySelector(DESC)!.textContent, li[1].querySelector(OPT)!.textContent, n.querySelectorAll(inStep(CONN)).length]).toEqual(['Email and password', 'Optional', 3]);
+    expect([li[0]!.querySelector(DESC)!.textContent, li[1]!.querySelector(OPT)!.textContent, n.querySelectorAll(inStep(CONN)).length]).toEqual(['Email and password', 'Optional', 3]);
   });
 
   test('current=2: steps 1 and 2 complete with a check (read as "…, completed"), step 3 current with aria-current="step", step 4 upcoming with its number; with onStepClick only completed steps are buttons', async () => {
@@ -74,13 +74,13 @@ describe('Stepper', () => {
     const s = steps('st');
     expect(s.map((x) => x.state)).toEqual(['complete', 'complete', 'current', 'upcoming']);
     expect(s.map((x) => x.ind)).toEqual(['check', 'check', '3', '4']);
-    expect([s[0].text, s[2].cur, s.filter((x) => x.cur).length]).toEqual(['Account, completed', 'step', 1]);
+    expect([s[0]!.text, s[2]!.cur, s.filter((x) => x.cur).length]).toEqual(['Account, completed', 'step', 1]);
     expect(s.map((x) => x.btn)).toEqual([true, true, false, false]);
   });
 
   test('forced colors: the current and completed circles are Highlight with HighlightText, kept as is (no backplate hides the number or check)', async () => {
     await render(<Stepper id="hc" steps={STEPS} current={1} />);
-    const ind = (i: number) => lis('hc')[i].querySelector(IND)!;
+    const ind = (i: number) => lis('hc')[i]!.querySelector(IND)!;
     const r = await forcedColors((active) => active && [0, 1, 2].map((i) => css(ind(i)).forcedColorAdjust));
     if (r) expect(r).toEqual(['none', 'none', 'auto']);
   });
@@ -88,7 +88,7 @@ describe('Stepper', () => {
   test('clicking a completed step calls onStepClick with its index; it works from the keyboard too', async () => {
     await setup();
     await userEvent.click(el('st').querySelector('li:first-child button')!);
-    expect([clicks.join(), steps('st')[0].state]).toEqual(['0', 'current']);
+    expect([clicks.join(), steps('st')[0]!.state]).toEqual(['0', 'current']);
     React.act(() => setCur(2));
     el('st').querySelector<HTMLElement>('li:nth-child(2) button')!.focus();
     await userEvent.keyboard('{Enter}');
@@ -100,10 +100,10 @@ describe('Stepper', () => {
     await render(<Back />);
     el('gn1').querySelector<HTMLElement>('li:nth-child(2) button')!.focus();
     await userEvent.keyboard('{Enter}');
-    const head = lis('gn1')[1].querySelector('[tabindex="-1"]')!;
-    expect([steps('gn1')[1].state, document.activeElement === head, head.tagName, head.getAttribute('tabindex')]).toEqual(['current', true, 'DIV', '-1']);
-    await userEvent.click(lis('gn1')[0].querySelector('button')!);
-    expect([steps('gn1')[0].state, document.activeElement === lis('gn1')[0].querySelector('[tabindex="-1"]')]).toEqual(['current', true]);
+    const head = lis('gn1')[1]!.querySelector('[tabindex="-1"]')!;
+    expect([steps('gn1')[1]!.state, document.activeElement === head, head.tagName, head.getAttribute('tabindex')]).toEqual(['current', true, 'DIV', '-1']);
+    await userEvent.click(lis('gn1')[0]!.querySelector('button')!);
+    expect([steps('gn1')[0]!.state, document.activeElement === lis('gn1')[0]!.querySelector('[tabindex="-1"]')]).toEqual(['current', true]);
   });
 
   test('going to a step whose onStepClick moves focus to a field of the app leaves focus there', async () => {
@@ -112,8 +112,8 @@ describe('Stepper', () => {
       return <><Stepper id="mv" steps={STEPS} current={c} onStepClick={(i) => { set(i); field.current!.focus(); }} /><input ref={field} id="mvfield" aria-label="Name" /></>;
     }
     await render(<Back />);
-    await userEvent.click(lis('mv')[0].querySelector('button')!);
-    expect([steps('mv')[0].state, document.activeElement!.id]).toEqual(['current', 'mvfield']);
+    await userEvent.click(lis('mv')[0]!.querySelector('button')!);
+    expect([steps('mv')[0]!.state, document.activeElement!.id]).toEqual(['current', 'mvfield']);
   });
 
   test('inside a shadow root, going to a step leaves focus where the click moved it, and otherwise keeps it on the step (GR95)', async () => {
@@ -128,11 +128,11 @@ describe('Stepper', () => {
     try {
       await render(<Back />, { container: inner });
       const root = host.shadowRoot!, items = () => [...root.getElementById('sgn')!.querySelectorAll('li')];
-      items()[1].querySelector('button')!.focus();
+      items()[1]!.querySelector('button')!.focus();
       await userEvent.keyboard('{Enter}');
-      expect(root.activeElement === items()[1].querySelector('[tabindex="-1"]')).toBe(true);
+      expect(root.activeElement === items()[1]!.querySelector('[tabindex="-1"]')).toBe(true);
       // The app moved focus to a field of its own: it stays there.
-      await userEvent.click(items()[0].querySelector('button')!);
+      await userEvent.click(items()[0]!.querySelector('button')!);
       expect(root.activeElement?.id).toBe('sfield');
     } finally { host.remove(); }
   });
@@ -160,28 +160,28 @@ describe('Stepper', () => {
   test('lines after completed steps are primary, others field-border; only the current circle has a ring', async () => {
     await setup();
     const li = lis('st'), c = (l: Element, s: string) => css(l.querySelector(s));
-    expect(c(li[0], CONN).backgroundColor).not.toBe(c(li[2], CONN).backgroundColor);
-    expect([c(li[2], IND).outlineStyle, c(li[0], IND).outlineStyle]).toEqual(['solid', 'none']);
+    expect(c(li[0]!, CONN).backgroundColor).not.toBe(c(li[2]!, CONN).backgroundColor);
+    expect([c(li[2]!, IND).outlineStyle, c(li[0]!, IND).outlineStyle]).toEqual(['solid', 'none']);
   });
 
   test('status="error": danger circle with a mark, read as "…, needs attention" (labels); aria-label names the nav', async () => {
     await setup();
     const e = steps('err');
-    expect([e[1].state, e[1].ind, e[1].text, el('err').getAttribute('aria-label')]).toEqual(['error', 'priority_high', 'Check, needs attention', 'Import']);
+    expect([e[1]!.state, e[1]!.ind, e[1]!.text, el('err').getAttribute('aria-label')]).toEqual(['error', 'priority_high', 'Check, needs attention', 'Import']);
   });
 
   test('status="warning": a warning-subtle circle with a warning mark, read as "…, needs attention"; it wins over complete', async () => {
     await setup();
     const w = steps('warn');
-    expect([w[1].state, w[1].ind, w[1].text, w[0].state]).toEqual(['warning', 'warning', 'Photos, needs attention', 'complete']);
-    expect(css(lis('warn')[1].querySelector(IND)).backgroundColor).not.toBe(css(lis('err')[1].querySelector(IND)).backgroundColor);
+    expect([w[1]!.state, w[1]!.ind, w[1]!.text, w[0]!.state]).toEqual(['warning', 'warning', 'Photos, needs attention', 'complete']);
+    expect(css(lis('warn')[1]!.querySelector(IND)).backgroundColor).not.toBe(css(lis('err')[1]!.querySelector(IND)).backgroundColor);
   });
 
   test('clickable="all": every step but the current one is a button, upcoming ones too, and clicking one calls onStepClick', async () => {
     await setup();
     expect(steps('any').map((s) => s.btn)).toEqual([true, false, true, true]);
-    await userEvent.click(lis('any')[3].querySelector('button')!);
-    await userEvent.click(lis('any')[0].querySelector('button')!);
+    await userEvent.click(lis('any')[3]!.querySelector('button')!);
+    await userEvent.click(lis('any')[0]!.querySelector('button')!);
     expect(clicks).toEqual([3, 0]);
   });
 
@@ -202,7 +202,7 @@ describe('Stepper', () => {
   test('right-to-left: steps run from the right', async () => {
     await setup();
     const li = lis('rtl');
-    expect(rect(li[0]).left).toBeGreaterThan(rect(li[1]).left);
+    expect(rect(li[0]!).left).toBeGreaterThan(rect(li[1]!).left);
   });
 
   test('contrast: numbers and text keep 4.5:1, circles, rings and marks 3:1, in all six themes', async () => {
@@ -210,17 +210,17 @@ describe('Stepper', () => {
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const page = css(document.body).backgroundColor, li = lis('st'), err = lis('err')[1], warn = lis('warn')[1], c = (l: Element, s: string) => css(l.querySelector(s));
+      const page = css(document.body).backgroundColor, li = lis('st'), err = lis('err')[1]!, warn = lis('warn')[1]!, c = (l: Element, s: string) => css(l.querySelector(s));
       const pairs: Array<[string, string, string, number]> = [
-        ['upcoming number', c(li[3], IND).color, c(li[3], IND).backgroundColor, 4.5],
-        ['upcoming ring', c(li[3], IND).borderTopColor, page, 3],
-        ['current number', c(li[2], IND).color, c(li[2], IND).backgroundColor, 4.5],
-        ['complete circle', c(li[0], IND).backgroundColor, page, 3],
+        ['upcoming number', c(li[3]!, IND).color, c(li[3]!, IND).backgroundColor, 4.5],
+        ['upcoming ring', c(li[3]!, IND).borderTopColor, page, 3],
+        ['current number', c(li[2]!, IND).color, c(li[2]!, IND).backgroundColor, 4.5],
+        ['complete circle', c(li[0]!, IND).backgroundColor, page, 3],
         ['error mark', c(err, IND).color, c(err, IND).backgroundColor, 3],
         ['warning mark', c(warn, IND).color, c(warn, IND).backgroundColor, 3],
         ['warning ring', c(warn, IND).borderTopColor, page, 3],
-        ['title', c(li[0], TITLE).color, page, 4.5],
-        ['description', c(li[0], DESC).color, page, 4.5]];
+        ['title', c(li[0]!, TITLE).color, page, 4.5],
+        ['description', c(li[0]!, DESC).color, page, 4.5]];
       for (const [k, fg, bg, min] of pairs) { const r = contrast(fg, bg); n++; if (r < min) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
     expect([low, n]).toEqual([[], 54]);
@@ -248,11 +248,11 @@ describe('Stepper', () => {
     expect(n.className).toMatch(/dk-stepper--compact/);
     expect(n.scrollWidth).toBeLessThanOrEqual(320);
     const circles = [...n.querySelectorAll(inStep(IND))].map(rect);
-    for (let i = 1; i < circles.length; i++) expect(circles[i].left).toBeGreaterThanOrEqual(circles[i - 1].right);
+    for (let i = 1; i < circles.length; i++) expect(circles[i]!.left).toBeGreaterThanOrEqual(circles[i - 1]!.right);
     const summary = n.querySelector(':scope > p') as HTMLElement;
     expect([summary.textContent, summary.getAttribute('aria-hidden')]).toEqual(['Step 3 of 4: Billing', 'true']);
     // The titles stay in the list for screen readers: clipped to 1px, not removed.
-    const title = lis('nar')[0].querySelector(TEXT) as HTMLElement;
+    const title = lis('nar')[0]!.querySelector(TEXT) as HTMLElement;
     expect([title.textContent, rect(title).width <= 1, css(title).display !== 'none']).toEqual(['Account, completedEmail and password', true, true]);
     expect(el('nv').className).not.toMatch(/compact/);
     setW(720);
@@ -270,7 +270,7 @@ describe('Stepper', () => {
     expect(n.scrollWidth).toBeLessThanOrEqual(288);
     const d = dots('eight');
     expect(d.map((r) => r.width)).toEqual(Array(8).fill(24));
-    for (let i = 1; i < d.length; i++) expect(d[i].left - d[i - 1].right).toBeGreaterThanOrEqual(8);
+    for (let i = 1; i < d.length; i++) expect(d[i]!.left - d[i - 1]!.right).toBeGreaterThanOrEqual(8);
     expect(el('four').className).toMatch(/dk-stepper--compact/);
     expect(el('four').className).not.toMatch(/tight/);
     expect(dots('four').map((r) => r.width)).toEqual(Array(4).fill(32));

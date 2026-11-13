@@ -44,7 +44,7 @@ describe('Fab', () => {
   test('56×56, 24px from the bottom-end corner; size sm at top-start: 40×40, 24px from the top-left corner', async () => {
     await render(<Fabs />);
     const [w, h] = [window.innerWidth, window.innerHeight], f = box('fab');
-    expect([f[2], f[3], f[0] + 56, f[1] + 56]).toEqual([56, 56, w - 24, h - 24]);
+    expect([f[2], f[3], f[0]! + 56, f[1]! + 56]).toEqual([56, 56, w - 24, h - 24]);
     expect(box('fbs')).toEqual([24, 24, 40, 40]);
   });
 
@@ -59,7 +59,7 @@ describe('Fab', () => {
     await render(<Fabs />);
     expect(css(el('fst')).position).not.toBe('fixed');
     const b = box('fbad');
-    expect([b[2], b[0] + 50, b[1] + 50]).toEqual([50, window.innerWidth - 10, window.innerHeight - 10]);
+    expect([b[2], b[0]! + 50, b[1]! + 50]).toEqual([50, window.innerWidth - 10, window.innerHeight - 10]);
   });
 
   test('the corner follows the text direction (top-end is top-left in right-to-left)', async () => {

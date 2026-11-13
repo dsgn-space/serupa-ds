@@ -91,7 +91,7 @@ describe('CopyButton', () => {
     await userEvent.click(el('fa'));
     expect(calls).toBe(1);   // the second press waits for the first
     ready('fetched');
-    const blob = await items[0].getType('text/plain');
+    const blob = await items[0]!.getType('text/plain');
     expect(await blob.text()).toBe('fetched');
     await expect.poll(() => copied).toEqual(['fetched']);
     await expect.poll(announcerIdle).toBe(true);
@@ -158,7 +158,7 @@ describe('CopyButton', () => {
     await render(<CopyButton id="old" value="legacy" />);
     await userEvent.click(el('old'));
     await expect.poll(() => el('old').hasAttribute('data-copied')).toBe(true);
-    expect([exec.mock.calls[0][0], document.activeElement === el('old'), document.querySelector('textarea')]).toEqual(['copy', true, null]);
+    expect([exec.mock.calls[0]![0], document.activeElement === el('old'), document.querySelector('textarea')]).toEqual(['copy', true, null]);
     vi.restoreAllMocks();
   });
 

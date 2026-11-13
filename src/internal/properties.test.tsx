@@ -62,11 +62,11 @@ describe(`round trips over random values (seed ${SEED})`, () => {
       const others = PHONE_COUNTRIES.filter((o) => o.dial === c.dial && o !== c).flatMap((o) => o.areas || []);
       for (let i = 0; i < 10; i++) {
         let national = c.areas ? c.areas[int(r, 0, c.areas.length - 1)] : String(int(r, 1, 9));
-        if (c.trunk && national.startsWith(c.trunk)) continue;
-        while (national.length < int(r, Math.max(c.min, national.length), c.max)) national += String(int(r, 0, 9));
+        if (c.trunk && national!.startsWith(c.trunk)) continue;
+        while (national!.length < int(r, Math.max(c.min, national!.length), c.max)) national += String(int(r, 0, 9));
         // A number that starts with another country's area on the same calling code is that country's.
-        if (others.some((a) => national.startsWith(a))) continue;
-        const e164 = toE164(national, c), text = formatPhone(e164, c.code), p = parsePhone(text, c.code);
+        if (others.some((a) => national!.startsWith(a))) continue;
+        const e164 = toE164(national!, c), text = formatPhone(e164, c.code), p = parsePhone(text, c.code);
         if (!p || p.country.code !== c.code || toE164(p.national, p.country) !== e164) bad.push(`${c.code} ${e164} "${text}" → ${p ? p.country.code + ' ' + p.national : p}`);
       }
     }

@@ -46,7 +46,7 @@ describe('SerupaProvider labels', () => {
     React.act(() => bump(1));   // same words, written inline again
     expect(seen.length).toBe(1);
     React.act(() => bump(2));   // new words
-    expect([seen.length, seen[seen.length - 1].labels.close, seen[0].icons.has('u2_star')]).toEqual([2, 'Keluar', true]);
+    expect([seen.length, seen[seen.length - 1]!.labels.close, seen[0]!.icons.has('u2_star')]).toEqual([2, 'Keluar', true]);
   });
 
   test('a component prop still wins; an inner provider changes only what it sets', async () => {

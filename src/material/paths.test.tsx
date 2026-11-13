@@ -12,22 +12,22 @@ function repeatedControls(d: string): number {
   const tokens = d.match(/[a-z]|-?(?:\d+\.?\d*|\.\d+)/gi) || [];
   let i = 0, cmd = '', x = 0, y = 0, sx = 0, sy = 0, qc: [number, number] | null = null, count = 0;
   while (i < tokens.length) {
-    if (/[a-z]/i.test(tokens[i])) cmd = tokens[i++];
+    if (/[a-z]/i.test(tokens[i]!)) cmd = tokens[i++]!;
     if (cmd !== cmd.toLowerCase()) throw new Error(`absolute command ${cmd} in ${d.slice(0, 40)}`);
-    const a = tokens.slice(i, i + ARGS[cmd]).map(Number);
-    i += ARGS[cmd];
+    const a = tokens.slice(i, i + ARGS[cmd]!).map(Number);
+    i += ARGS[cmd]!;
     if (cmd === 'q') {
-      const cx = x + a[0], cy = y + a[1];
+      const cx = x + a[0]!, cy = y + a[1]!;
       if (qc && cx === 2 * x - qc[0] && cy === 2 * y - qc[1]) count++;
-      qc = [cx, cy]; x += a[2]; y += a[3];
+      qc = [cx, cy]; x += a[2]!; y += a[3]!;
     } else if (cmd === 't') {
-      qc = qc ? [2 * x - qc[0], 2 * y - qc[1]] : [x, y]; x += a[0]; y += a[1];
+      qc = qc ? [2 * x - qc[0], 2 * y - qc[1]] : [x, y]; x += a[0]!; y += a[1]!;
     } else {
       qc = null;
-      if (cmd === 'm') { x += a[0]; y += a[1]; sx = x; sy = y; cmd = 'l'; }
-      else if (cmd === 'l') { x += a[0]; y += a[1]; }
-      else if (cmd === 'h') x += a[0];
-      else if (cmd === 'v') y += a[0];
+      if (cmd === 'm') { x += a[0]!; y += a[1]!; sx = x; sy = y; cmd = 'l'; }
+      else if (cmd === 'l') { x += a[0]!; y += a[1]!; }
+      else if (cmd === 'h') x += a[0]!;
+      else if (cmd === 'v') y += a[0]!;
       else if (cmd === 'z') { x = sx; y = sy; }
     }
   }

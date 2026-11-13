@@ -247,7 +247,7 @@ describe('Button', () => {
     await expect.poll(() => el('pr').getAttribute('aria-busy')).toBe('true');
     await userEvent.click(el('pr'), { force: true });
     expect(onClick).toHaveBeenCalledTimes(1);
-    settle[0][0]();
+    settle[0]![0]();
     await expect.poll(() => el('pr').hasAttribute('data-success')).toBe(true);
     // The check: an empty mark in a hidden layer over the label, after it.
     expect([el('pr').hasAttribute('aria-busy'), el('pr').lastElementChild!.getAttribute('aria-hidden'), el('pr').lastElementChild!.firstElementChild!.matches('span:empty')]).toEqual([false, 'true', true]);
@@ -256,7 +256,7 @@ describe('Button', () => {
     await expect.poll(() => announcer().textContent).toMatch(/Saved$/);
     await expect.poll(() => el('pr').hasAttribute('data-success'), { timeout: 3000 }).toBe(false);
     await userEvent.click(el('pr2'));
-    settle[1][1]();
+    settle[1]![1]();
     await expect.poll(() => el('pr2').hasAttribute('aria-busy')).toBe(false);
     expect(el('pr2').hasAttribute('data-success')).toBe(false);
     settle = [];
@@ -358,7 +358,7 @@ describe('Button', () => {
       await expect.poll(() => document.querySelectorAll(':is(button, a) [data-component="loader"]').length).toBe(4);
       for (const id of ['sub', 'left', 'icononly']) await eased(el(id));
       const geo = ['sub', 'left', 'icononly'].map((id) => {
-        const b = el(id).getBoundingClientRect(), s = el(id).querySelectorAll('[data-component="loader"]'), r = s[0].getBoundingClientRect();
+        const b = el(id).getBoundingClientRect(), s = el(id).querySelectorAll('[data-component="loader"]'), r = s[0]!.getBoundingClientRect();
         return { n: s.length, dx: Math.abs(Math.round(r.left + r.width / 2 - (b.left + b.width / 2))) <= 1, dy: Math.abs(Math.round(r.top + r.height / 2 - (b.top + b.height / 2))) <= 1 };
       });
       expect(geo).toEqual([{ n: 1, dx: true, dy: true }, { n: 1, dx: true, dy: true }, { n: 1, dx: true, dy: true }]);
@@ -439,7 +439,7 @@ describe('Button', () => {
     const [l, , h] = lch('var(--emerald-600)');
     const [ll, , lh] = lch(await hovered('own')), [dl, , dh] = lch(await hovered('own-d'));
     // Its own hue still (not the theme's blue), one step darker or lighter.
-    expect([ll < l - 0.05, dl > l + 0.08, Math.abs(lh - h) < 2, Math.abs(dh - h) < 2]).toEqual([true, true, true, true]);
+    expect([ll! < l! - 0.05, dl! > l! + 0.08, Math.abs(lh! - h!) < 2, Math.abs(dh! - h!) < 2]).toEqual([true, true, true, true]);
     expect(await hovered('both')).toBe(color('var(--emerald-800)'));
     expect(await hovered('plainh')).toBe(color('var(--primary-hover)'));
     await userEvent.unhover(el('plainh'));
@@ -553,7 +553,7 @@ describe('Button micro-interactions', () => {
     setBusy(true);
     await expect.poll(() => [...new Set(ran)].sort(), { message: 'the label fades and blurs on transitions' }).toEqual(['filter', 'opacity']);
     const { transitionProperty, transitionDuration } = getComputedStyle(label), lasts = transitionDuration.split(', ').map(parseFloat);
-    expect(transitionProperty.split(', ').map((p, i) => [p, lasts[i % lasts.length] > 0]), 'each over a time, not at once').toEqual([['opacity', true], ['filter', true]]);
+    expect(transitionProperty.split(', ').map((p, i) => [p, lasts[i % lasts.length]! > 0]), 'each over a time, not at once').toEqual([['opacity', true], ['filter', true]]);
     expect(getComputedStyle(q('#busy .dk-btn__loader')).animationName).toBe('dk-btn-loader-in');
     // They cross as one change: the label blurs on its way out, the spinner starts blurred (blur-xs) and sharpens.
     const ld = q('#busy .dk-btn__loader'), grow = ld.getAnimations().find((a) => (a as CSSAnimation).animationName === 'dk-btn-loader-in')!;
@@ -657,8 +657,8 @@ describe('Button in a flex row at 288px (GR5)', () => {
     for (const id of ['gr5', 'gr5r']) {
       const r = document.getElementById(id)!, [dl, cancel, close] = [...r.children] as HTMLElement[], box = r.getBoundingClientRect();
       expect(r.scrollWidth).toBe(288);
-      for (const b of [dl, cancel, close]) { const x = b.getBoundingClientRect(); expect(x.left >= box.left - 0.5 && x.right <= box.right + 0.5).toBe(true); }
-      expect([dl.getAttribute('title'), close.getBoundingClientRect().width === close.getBoundingClientRect().height]).toEqual([long, true]);
+      for (const b of [dl, cancel, close]) { const x = b!.getBoundingClientRect(); expect(x.left >= box.left - 0.5 && x.right <= box.right + 0.5).toBe(true); }
+      expect([dl!.getAttribute('title'), close!.getBoundingClientRect().width === close!.getBoundingClientRect().height]).toEqual([long, true]);
     }
   });
 });

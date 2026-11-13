@@ -78,7 +78,7 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour',
   const open = steps.length > 0 && (props.open !== undefined ? !!props.open : ownOpen);
   const [ownStep, setOwnStep] = React.useState(props.defaultStep || 0);
   const at = Math.max(0, Math.min(steps.length - 1, props.step !== undefined ? props.step : ownStep));
-  const step = steps[at] as TourStep | undefined;
+  const step = steps[at];
   // Opened again, an uncontrolled tour starts over at defaultStep rather than carrying on where it was closed.
   const [wasOpen, setWasOpen] = React.useState(open);
   if (open !== wasOpen) {

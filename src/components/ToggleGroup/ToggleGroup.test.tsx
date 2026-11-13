@@ -27,7 +27,7 @@ describe('ToggleGroup', () => {
     expect([e.getAttribute('role'), e.getAttribute('aria-label'), ref.current === e, e.dataset.x, e.dataset.component, e.dataset.type, e.dataset.orientation]).toEqual(['group', 'Text alignment', true, 'y', 'toggle-group', 'single', 'horizontal']);
     expect(e.className).toBe('dk-button-group dk-toggle-group dk-button-group--attached extra');
     const [a, b] = [...e.querySelectorAll('button')].map((x) => x.getBoundingClientRect());
-    expect(Math.round(b.left - a.right)).toBe(-1);   // attached: the borders overlap into one line
+    expect(Math.round(b!.left - a!.right)).toBe(-1);   // attached: the borders overlap into one line
   });
 
   test('single: pressing one turns the others off, pressing it again turns it off; onValueChange hears each', async () => {
@@ -85,8 +85,8 @@ describe('ToggleGroup', () => {
       </ToggleGroup>,
     );
     const [day, week] = [...el('g').querySelectorAll('button')];
-    expect([day.dataset.size, day.dataset.variant, week.dataset.size, week.dataset.variant, el('note').textContent]).toEqual(['sm', 'ghost', 'lg', 'outline', 'plain']);
-    await userEvent.click(day);
+    expect([day!.dataset.size, day!.dataset.variant, week!.dataset.size, week!.dataset.variant, el('note').textContent]).toEqual(['sm', 'ghost', 'lg', 'outline', 'plain']);
+    await userEvent.click(day!);
     expect([own.mock.calls.at(-1)![0], pressed()]).toEqual([true, 'day']);
     await render(<Align id="g2" disabled />);
     expect([...el('g2').querySelectorAll('button')].every((b) => b.disabled)).toBe(true);
@@ -97,7 +97,7 @@ describe('ToggleGroup', () => {
     const e = el('g');
     expect([e.dataset.orientation, e.className]).toEqual(['vertical', 'dk-button-group dk-toggle-group dk-button-group--vertical']);
     const [a, b] = [...e.querySelectorAll('button')].map((x) => x.getBoundingClientRect());
-    expect(b.top - a.bottom).toBeGreaterThan(0);
+    expect(b!.top - a!.bottom).toBeGreaterThan(0);
   });
 });
 

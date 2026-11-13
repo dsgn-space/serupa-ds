@@ -98,8 +98,8 @@ describe('AvatarGroup', () => {
     const want: Record<string, [number, number]> = { xs: [24, 8], sm: [32, 8], md: [40, 12], lg: [48, 12], xl: [64, 16] };
     for (const s of SIZES) {
       const g = document.querySelector(`[data-s="${s}"]`)!, a = kids(g);
-      expect([s, Math.round(a[0].getBoundingClientRect().width), lap(a[0], a[1]), lap(a[1], a[2]), [...g.querySelectorAll<HTMLElement>(AV)].map((e) => e.dataset.size).join('')])
-        .toEqual([s, want[s][0], want[s][1], want[s][1], s.repeat(3)]);
+      expect([s, Math.round(a[0]!.getBoundingClientRect().width), lap(a[0]!, a[1]!), lap(a[1]!, a[2]!), [...g.querySelectorAll<HTMLElement>(AV)].map((e) => e.dataset.size).join('')])
+        .toEqual([s, want[s]![0], want[s]![1], want[s]![1], s.repeat(3)]);
     }
   });
 
@@ -115,8 +115,8 @@ describe('AvatarGroup', () => {
       expect(r).toContain(surface);
       expect(r).toMatch(/0px 0px 0px 2px/);
     }
-    const a = kids(el('all')), r = a[0].getBoundingClientRect();
-    expect(a[0].contains(document.elementFromPoint(r.right - 3, r.top + r.height / 2))).toBe(true);
+    const a = kids(el('all')), r = a[0]!.getBoundingClientRect();
+    expect(a[0]!.contains(document.elementFromPoint(r.right - 3, r.top + r.height / 2))).toBe(true);
     expect([...el('st').querySelectorAll(STATUS)].map((d) => { const b = d.getBoundingClientRect(); return d === document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2); })).toEqual([true, true, true]);
   });
 
@@ -127,22 +127,22 @@ describe('AvatarGroup', () => {
       <Avatar name="Alan Turing" />
     </AvatarGroup>);
     const a = [...el('wrap').querySelectorAll<HTMLElement>(AV)];
-    expect([a.length, a.map((e) => e.dataset.size).join(), lap(a[0], a[1]), lap(a[1], a[2]), css(a[0].querySelector(FRAME)).boxShadow !== 'none', Math.round(a[0].getBoundingClientRect().width)])
+    expect([a.length, a.map((e) => e.dataset.size).join(), lap(a[0]!, a[1]!), lap(a[1]!, a[2]!), css(a[0]!.querySelector(FRAME)).boxShadow !== 'none', Math.round(a[0]!.getBoundingClientRect().width)])
       .toEqual([3, 'sm,sm,sm', 8, 8, true, 32]);
-    await userEvent.hover(a[0]);
+    await userEvent.hover(a[0]!);
     await expect.poll(() => (el('wrap').querySelector<HTMLElement>('[role="tooltip"]'))?.hidden).toBe(false);
   });
 
   test('RTL: the row runs right to left with the same overlap', async () => {
     await render(<div dir="rtl"><AvatarGroup id="rtl">{av(2)}</AvatarGroup></div>);
     const a = kids(el('rtl')).map((e) => e.getBoundingClientRect());
-    expect([Math.round(a[1].right - a[0].left), a[1].left < a[0].left]).toEqual([12, true]);
+    expect([Math.round(a[1]!.right - a[0]!.left), a[1]!.left < a[0]!.left]).toEqual([12, true]);
   });
 
   test('component tokens (--avatar-group-overlap-md, --avatar-group-ring) override one group', async () => {
     await render(<AvatarGroup id="tok" style={{ '--avatar-group-overlap-md': '20px', '--avatar-group-ring': 'rgb(1, 2, 3)' } as React.CSSProperties}>{av(2)}</AvatarGroup>);
     const a = kids(el('tok'));
-    expect([lap(a[0], a[1]), css(a[0].querySelector(`${AV} > span:first-child`)).boxShadow.includes('rgb(1, 2, 3)')]).toEqual([20, true]);
+    expect([lap(a[0]!, a[1]!), css(a[0]!.querySelector(`${AV} > span:first-child`)).boxShadow.includes('rgb(1, 2, 3)')]).toEqual([20, true]);
   });
 
   test('contrast: the "+N" text keeps 4.5:1 on its background in all six themes', async () => {
@@ -167,7 +167,7 @@ describe('AvatarGroup', () => {
       await userEvent.click(b);
       await expect.poll(() => b.getAttribute('aria-expanded')).toBe('true');
       const items = document.getElementById(b.getAttribute('aria-controls')!)!.querySelectorAll('li');
-      const text = items[items.length - 1].textContent;
+      const text = items[items.length - 1]!.textContent;
       await userEvent.keyboard('{Escape}');
       return text;
     };
@@ -251,7 +251,7 @@ describe('AvatarGroup at 320px (GR4)', () => {
       expect(lines.length).toBeGreaterThan(1);
       // Each line's first avatar sits at the group's start edge.
       const starts = lines.map((t) => items.filter((r) => Math.round(r.top) === t)).map((row) => id === 'gr4-r' ? Math.max(...row.map((r) => r.right)) : Math.min(...row.map((r) => r.left)));
-      expect(starts.every((s) => Math.abs(s - starts[0]) < 0.5)).toBe(true);
+      expect(starts.every((s) => Math.abs(s - starts[0]!) < 0.5)).toBe(true);
     }
     expect([el('gr4').scrollWidth, el('gr4-sib').getBoundingClientRect().width <= 320]).toEqual([320, true]);
   });

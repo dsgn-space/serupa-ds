@@ -22,3 +22,18 @@ jobs:
         env:
           # BOT_TOKEN, so the merge starts CI on main and the Release workflow after it.
           GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+
+  # The betas that can leave beta (CONTRIBUTING.md, "It starts as beta"), in this run's summary: each release promotes
+  # them or names the open bug that holds one back. No token: it only reads the history.
+  betas:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+      - run: node tools/beta.mjs >> "$GITHUB_STEP_SUMMARY"

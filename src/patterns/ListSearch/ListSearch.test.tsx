@@ -26,6 +26,10 @@ describe('Patterns/List with search and filters', () => {
   test('one main and one h1, the skip link first, a search landmark, and ten rows of 24 with pages', async () => {
     const screen = await render(<ListSearch />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    // The app pages' frame: the header on the surface, over a page a step darker, as on the other app pages.
+    const bg = (e: Element | null) => getComputedStyle(e!).backgroundColor;
+    expect(bg(document.querySelector('header'))).not.toBe('rgba(0, 0, 0, 0)');
+    expect(bg(document.querySelector('header'))).not.toBe(bg(document.querySelector('header')!.parentElement));
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
     await expect.element(screen.getByRole('search', { name: 'Search and filter projects' })).toBeVisible();
@@ -102,7 +106,7 @@ describe('Patterns/List with search and filters', () => {
     await screen.getByRole('checkbox', { name: `Select ${a}` }).click();
     await screen.getByRole('checkbox', { name: `Select ${b}` }).click();
     await expect.element(screen.getByRole('group', { name: '2 selected' })).toBeVisible();
-    await userEvent.fill(screen.getByRole('searchbox'), a);
+    await userEvent.fill(screen.getByRole('searchbox'), a!);
     await expect.element(screen.getByRole('group', { name: '1 selected' })).toBeVisible();
     await userEvent.fill(screen.getByRole('searchbox'), '');
     await vi.waitFor(() => expect(status()).toBe('24 projects'));

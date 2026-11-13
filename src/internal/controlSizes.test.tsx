@@ -65,7 +65,7 @@ describe.each((['comfortable', 'compact'] as const).flatMap((density) => (['sm',
       return { name: cell.dataset.name, height: Math.round(b.getBoundingClientRect().height * 10) / 10, radius: c.borderTopLeftRadius, text: getComputedStyle(textOf(b)).fontSize };
     });
     expect(rows.map((r) => [r.name, r.height]), 'heights').toEqual(rows.map((r) => [r.name, height]));
-    expect(rows.map((r) => [r.name, r.radius]), 'radii').toEqual(rows.map((r) => [r.name, rows[0].radius]));
-    expect(rows.map((r) => [r.name, r.text]), 'text sizes').toEqual(rows.map((r) => [r.name, rows[0].text]));
+    expect(rows.map((r) => [r.name, r.radius]), 'radii').toEqual(rows.map((r) => [r.name, rows[0]!.radius]));
+    expect(rows.map((r) => [r.name, r.text]), 'text sizes').toEqual(rows.map((r) => [r.name, rows[0]!.text]));
   });
 });
