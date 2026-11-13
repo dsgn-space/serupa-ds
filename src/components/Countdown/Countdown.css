@@ -1,0 +1,7 @@
+/* ---------------------------------------------------------------
+   Countdown: inline text in the surrounding font and color ("4:59"), kept on one line, with tabular digits so the
+   ticking seconds don't shift the text after it.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-countdown { white-space: nowrap; font-variant-numeric: tabular-nums; }
+}
