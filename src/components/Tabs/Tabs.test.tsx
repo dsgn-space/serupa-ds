@@ -542,6 +542,30 @@ describe('Tabs indicator after a keyboard pick, moved from elsewhere (GR61)', ()
   });
 });
 
+describe('Tabs indicator when picking a tab moves the tabs', () => {
+  // A tab whose label is longer when it isn't selected (a count it shows only then): picking another widens it, and
+  // the tabs after it move. The fill starts where it was drawn, on the tab as it stood, not as far off as they moved.
+  function Counted() {
+    const [v, set] = React.useState('one');
+    return <Tabs id="cnt" value={v} onValueChange={set} variant="pill"><TabList aria-label="Inbox">
+      <Tab value="one">{v === 'one' ? 'One' : 'One, 12 new'}</Tab><Tab value="two">Two</Tab>
+    </TabList><TabPanel value="one">1</TabPanel><TabPanel value="two">2</TabPanel></Tabs>;
+  }
+  test('the pill fill slides from where it stood, though the tabs moved as the pick widened the tab before', async () => {
+    await withMotion(async () => {
+      await render(<Counted />);
+      const [one, two] = [...el('cnt').querySelectorAll<HTMLElement>('[role="tab"]')] as [HTMLElement, HTMLElement];
+      const was = one.offsetLeft, twoWas = two.offsetLeft;
+      await userEvent.click(two);
+      expect(two.offsetLeft - twoWas).toBeGreaterThan(20);   // the tabs moved
+      const slide = slidesOn(two, '::before')[0]!;
+      const inset = (String((slide.effect as KeyframeEffect).getKeyframes()[0]!.clipPath).match(/-?[\d.]+/g) || []).map(Number);
+      const span = parseFloat(two.style.getPropertyValue('--dk-tabs-span-l')) || 0;
+      expect(Math.abs(two.offsetLeft - span + inset[3]! - was)).toBeLessThan(1);
+    });
+  });
+});
+
 describe('Tabs indicator turned back mid-slide (GQ8)', () => {
   // The selected tab's transitions on one pseudo-element, held halfway.
   const slides = slidesOn;
