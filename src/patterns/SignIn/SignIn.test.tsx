@@ -3,6 +3,8 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { SignIn } from './SignIn';
+import { SignUp } from '../SignUp/SignUp';
+import { PasswordReset } from '../PasswordReset/PasswordReset';
 
 const active = () => document.activeElement as HTMLElement;
 const input = (id: string) => document.getElementById(id) as HTMLInputElement;
@@ -11,6 +13,20 @@ const describedBy = (id: string) => (input(id).getAttribute('aria-describedby') 
 // Sign in (PT1): the pattern works from the keyboard alone, says each change, and leaves nothing to remember or work out
 // beyond the password (WCAG 3.3.8), so a password manager and a phone can fill it in.
 describe('Patterns/Sign in', () => {
+  test('the page has the frame of the other sign-in pages: the same width, the card a Card, the title the same size', async () => {
+    await render(<SignIn />);
+    await render(<SignUp />);
+    await render(<PasswordReset />);
+    const mains = [...document.querySelectorAll('main')];
+    const frame = (m: HTMLElement) => {
+      const h1 = m.querySelector('h1')!;
+      return [getComputedStyle(m).maxWidth, getComputedStyle(h1).fontSize, h1.closest('[data-component="card"]') !== null, getComputedStyle(m.firstElementChild!).marginTop];
+    };
+    expect(mains).toHaveLength(3);
+    expect(frame(mains[0]!)).toEqual(frame(mains[1]!));
+    expect(frame(mains[0]!)).toEqual(frame(mains[2]!));
+  });
+
   test('the fields say what they hold, so a password manager and a phone fill them in, and paste is never blocked', async () => {
     await render(<SignIn />);
     // The attributes, which password managers and phones read: Firefox's .autocomplete property was '' for them.
