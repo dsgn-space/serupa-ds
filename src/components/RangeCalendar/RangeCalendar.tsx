@@ -121,10 +121,19 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
     : '');
   const status = anchor ? L.chooseEndDate : value.start && value.end ? L.rangeSelected(range(value)) : L.chooseStartDate;
 
+  // With two months, a key that crosses into the month the other grid shows moves focus there, and the months stay put.
+  const leave = (first: boolean) => (d: Date) => {
+    if (!two || !sameMonth(d, first ? addMonths(base, 1) : base)) return false;
+    const grid = root.current && root.current.querySelectorAll('[role="grid"]')[first ? 1 : 0];
+    const b = grid && grid.querySelector<HTMLElement>(`[data-date="${isoDate(d)}"]`);
+    if (!b) return false;
+    b.focus();
+    return b.matches(':focus');
+  };
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => showMonth(first ? n : addMonths(n, -1))} value={first ? value.start : value.end}
       min={min} max={max} isDateDisabled={props.isDateDisabled} locale={locale} weekStartsOn={props.weekStartsOn} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
-      isDateSelected={isEnd} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} />
+      isDateSelected={isEnd} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   return (
     <div {...rest} ref={merged} role="group" aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : rest['aria-label'] || L.chooseDates}

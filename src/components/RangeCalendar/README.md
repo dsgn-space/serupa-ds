@@ -47,7 +47,7 @@ Drawn from the `Playground` story.
 | Key | Does |
 | --- | --- |
 | Tab | To the month buttons, then the day that holds the Tab stop in each month |
-| Arrow keys | The day before or after, or the same day a week away; the range previews as focus moves once one end is picked |
+| Arrow keys | The day before or after, or the same day a week away; the range previews as focus moves once one end is picked. With two months, crossing into the month the other grid shows moves focus there, and the months stay put |
 | PageUp, PageDown | The same day a month before or after; with Shift, a year |
 | Home / End | The first or last day of the week |
 | Enter / Space | Picks the focused day: the first pick is one end, the second the other |
