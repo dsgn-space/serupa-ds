@@ -236,4 +236,35 @@ describe('Select', () => {
     (document.getElementById('away') as HTMLElement).focus();
     expect(shadows()).toBe(1);
   }));
+  test('required with a placeholder: the form won\'t send until an option is picked, and the browser says the field is missing', async () => {
+    await render(<form id="rq"><Select id="rq-s" name="size" aria-label="Size" placeholder="Choose a size" required options={['S', 'M']} /></form>);
+    const form = document.getElementById('rq') as HTMLFormElement;
+    expect([form.checkValidity(), field('rq-s').validity.valueMissing]).toEqual([false, true]);
+    await userEvent.selectOptions(field('rq-s'), 'M');
+    expect([form.checkValidity(), new FormData(form).get('size')]).toEqual([true, 'M']);
+  });
+
+  test('in a disabled fieldset: the select is disabled, looks it (50%, not-allowed), skipped by Tab and left out of the form', async () => {
+    await render(<form id="fs"><button id="fs-before" type="button">before</button><fieldset disabled><Select id="fs-s" name="role" aria-label="Role" defaultValue="b" options={['a', 'b']} /></fieldset><button id="fs-after" type="button">after</button></form>);
+    expect([field('fs-s').matches(':disabled'), css(box('fs-s')).opacity, css(field('fs-s')).cursor]).toEqual([true, '0.5', 'not-allowed']);
+    document.getElementById('fs-before')!.focus();
+    await userEvent.tab();
+    expect([document.activeElement!.id, new FormData(document.getElementById('fs') as HTMLFormElement).get('role')]).toEqual(['fs-after', null]);
+  });
+
+  test('a disabled group\'s options can\'t be picked: the arrow keys pass over them; number values come back as text', async () => {
+    const changes: string[] = [];
+    await render(<Select id="dg" aria-label="Seats" defaultValue="1" onChange={(e) => changes.push(e.target.value)}
+      options={[1, { label: 'Sold out', disabled: true, options: [2, 3] }, 4]} />);
+    field('dg').focus();
+    await userEvent.keyboard('{ArrowDown}');
+    expect([changes, field('dg').querySelector('optgroup')!.disabled]).toEqual([['4'], true]);
+  });
+
+  test('right to left: the chevron sits at the start side\'s opposite (the left), and the text keeps clear of it', async () => {
+    await render(<div dir="rtl" style={{ width: '240px' }}><Select id="rtl-s" aria-label="Role" options={['Admin']} /></div>);
+    const chevron = box('rtl-s').querySelector('.dk-select__icon--chevron')!.getBoundingClientRect(), b = box('rtl-s').getBoundingClientRect();
+    expect(chevron.left - b.left).toBeLessThan(b.right - chevron.right);
+    expect(parseFloat(css(field('rtl-s')).paddingLeft)).toBeGreaterThan(parseFloat(css(field('rtl-s')).paddingRight));
+  });
 });
