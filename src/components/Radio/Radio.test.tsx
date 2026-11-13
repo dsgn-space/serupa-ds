@@ -258,12 +258,12 @@ describe('Radio', () => {
     expect([input('o1').matches(':disabled'), css(wrap('o1')).opacity]).toEqual([true, '0.5']);
   });
 
-  test('contrast in all six themes: label and description 4.5:1; border, checked fill, dot, focus ring and invalid border 3:1', () => {
+  test('contrast in all six themes: label and description 4.5:1; checked fill, dot, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
-      ['border', 'var(--field-border)', 'var(--field)', 3],
-      ['border on page', 'var(--field-border)', 'var(--surface)', 3],
+      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
+      ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['checked fill', 'var(--primary)', 'var(--surface)', 3],
       ['dot on fill', 'var(--on-primary)', 'var(--primary)', 3],
       ['dot on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 3],

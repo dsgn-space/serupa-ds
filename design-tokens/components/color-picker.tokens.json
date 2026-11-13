@@ -14,7 +14,7 @@
       },
       "swatch-border": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The thin inset border on every swatch and round the native color well (3:1 on the page).",
         "$extensions": {
           "com.serupa": {

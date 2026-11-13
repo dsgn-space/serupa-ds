@@ -64,7 +64,7 @@
       },
       "status-offline": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The status dot for status=\"offline\".",
         "$extensions": {
           "com.serupa": {

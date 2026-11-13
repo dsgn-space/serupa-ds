@@ -85,7 +85,7 @@ Each is an optional override: set it on the page, a container or one avatar. The
 | `--avatar-status-online` | `success` | The status dot for status="online". |
 | `--avatar-status-busy` | `danger` | The status dot for status="busy". |
 | `--avatar-status-away` | `warning` | The status dot for status="away". |
-| `--avatar-status-offline` | `field-border` | The status dot for status="offline". |
+| `--avatar-status-offline` | `border-control` | The status dot for status="offline". |
 | `--avatar-edge` | `picture-edge` | The hairline just inside the photo's edge, so a face on white keeps its shape on a white page. |
 | `--avatar-size-xs` | `spacing-6` | size="xs" (24px). |
 | `--avatar-size-sm` | `spacing-8` | size="sm" (32px). |

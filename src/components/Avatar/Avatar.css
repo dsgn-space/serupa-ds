@@ -62,7 +62,7 @@
 .dk-avatar__status--away, .dk-avatar__status--offline { background: var(--avatar-ring, var(--surface)); border: var(--avatar-ring-width, var(--border-width-2)) solid var(--dk-avatar-st); }
 .dk-avatar__status--away { --dk-avatar-st: var(--avatar-status-away, var(--warning)); }
 .dk-avatar__status--away::after { width: var(--dk-avatar-inner); height: var(--dk-avatar-inner); background: var(--dk-avatar-st); }
-.dk-avatar__status--offline { --dk-avatar-st: var(--avatar-status-offline, var(--field-border)); }
+.dk-avatar__status--offline { --dk-avatar-st: var(--avatar-status-offline, var(--border-control)); }
 @media (forced-colors: active) {
   .dk-avatar__frame { border: var(--border-width-1) solid CanvasText; }
   .dk-avatar__img { outline: none; }

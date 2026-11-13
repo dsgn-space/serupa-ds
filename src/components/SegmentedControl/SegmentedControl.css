@@ -13,7 +13,7 @@
      evenly, so when they don't all fit the short labels stay whole and the long ones give way (EU1). */
   position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(var(--spacing-0), max-content); align-items: stretch; box-sizing: border-box; height: var(--dk-seg-h); max-width: var(--sizing-full);
   padding: var(--segmented-control-padding, var(--spacing-0\.5));
-  border: var(--border-width-1) solid var(--segmented-control-border, var(--field-border));
+  border: var(--border-width-1) solid var(--segmented-control-border, var(--border-control));
   border-radius: var(--segmented-control-radius, var(--radius-control)); background: var(--segmented-control-bg, var(--surface-muted));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); vertical-align: middle;
 }
@@ -25,7 +25,7 @@
 .dk-segmented--full.dk-segmented--fit { grid-auto-columns: minmax(var(--spacing-0), auto); }
 .dk-segmented__indicator {
   position: absolute; inset-block: var(--segmented-control-padding, var(--spacing-0\.5)); box-sizing: border-box;
-  border: var(--border-width-1) solid var(--segmented-control-indicator-border, var(--field-border));
+  border: var(--border-width-1) solid var(--segmented-control-indicator-border, var(--border-control));
   border-radius: var(--segmented-control-indicator-radius, var(--dk-seg-nest, var(--radius-inner))); background: var(--segmented-control-indicator, var(--surface));
   box-shadow: var(--segmented-control-indicator-depth, var(--depth-part)), var(--segmented-control-indicator-shadow, var(--elevation-part));
 }
@@ -41,14 +41,14 @@
   content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1));
   transition: clip-path var(--segmented-control-duration, var(--motion-change-md)) var(--ease-settle);
 }
-.dk-segmented__indicator[data-slide]::before { background: var(--segmented-control-indicator-border, var(--field-border)); clip-path: inset(var(--spacing-0) var(--dk-seg-r) var(--spacing-0) var(--dk-seg-l) round var(--dk-seg-r1)); }
+.dk-segmented__indicator[data-slide]::before { background: var(--segmented-control-indicator-border, var(--border-control)); clip-path: inset(var(--spacing-0) var(--dk-seg-r) var(--spacing-0) var(--dk-seg-l) round var(--dk-seg-r1)); }
 .dk-segmented__indicator[data-slide]::after { background: var(--segmented-control-indicator, var(--surface)); clip-path: inset(var(--border-width-1) calc(var(--dk-seg-r) + var(--border-width-1)) var(--border-width-1) calc(var(--dk-seg-l) + var(--border-width-1)) round max(var(--spacing-0), calc(var(--dk-seg-r1) - var(--border-width-1)))); }
 .dk-segmented__indicator[data-flip]::before, .dk-segmented__indicator[data-flip]::after { transition: none; }
 /* Before the script runs, the selected segment carries the indicator's surface itself, so the first paint already
    shows the choice; the indicator takes over in the same place (FC1). */
 .dk-segmented:not(:has(> .dk-segmented__indicator)) .dk-segmented__item--selected {
   background: var(--segmented-control-indicator, var(--surface));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--segmented-control-indicator-border, var(--field-border)), var(--segmented-control-indicator-depth, var(--depth-part)), var(--segmented-control-indicator-shadow, var(--elevation-part));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--segmented-control-indicator-border, var(--border-control)), var(--segmented-control-indicator-depth, var(--depth-part)), var(--segmented-control-indicator-shadow, var(--elevation-part));
 }
 .dk-segmented__item {
   position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--segmented-control-gap, var(--spacing-1\.5));

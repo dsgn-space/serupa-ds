@@ -23,7 +23,7 @@ const PAIRS_FOR_BRAND = [
   ['text', 'primary-subtle', 4.5], ['on-primary', 'primary', 4.5], ['on-primary', 'primary-hover', 4.5],
   ['primary', 'surface', 4.5], ['primary', 'surface-muted', 4.5], ['primary-hover', 'surface-muted', 4.5], ['primary', 'surface-overlay', 3], ['primary-hover', 'primary-subtle', 4.5],
   ['link-visited', 'surface', 4.5], ['link-visited', 'surface-muted', 4.5],
-  ['focus-ring', 'surface', 3], ['focus-ring', 'surface-overlay', 3], ['focus-ring', 'primary-subtle', 3],
+  ['focus-ring', 'surface', 3], ['focus-ring', 'surface-overlay', 3], ['focus-ring', 'primary-subtle', 3], ['focus-ring', 'field', 3],
   ['more:primary', 'surface', 7], ['more:primary', 'primary-subtle', 7], ['more:primary-hover', 'surface', 7],
   ['on-primary', 'more:primary', 4.5], ['on-primary', 'more:primary-hover', 4.5], ['more:focus-ring', 'surface', 3],
 ];
@@ -32,7 +32,7 @@ const STEPS = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '90
 // Chroma at each step, as a share of the color's own (peaks at 600, like the shipped hues).
 const CHROMA = [0.06, 0.13, 0.24, 0.43, 0.67, 0.87, 1, 0.99, 0.81, 0.6, 0.37];
 // The aliases the brand sets; every other one is copied.
-export const BRAND_ALIASES = ['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited'];
+export const BRAND_ALIASES = ['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'field-border-hover'];
 const CORNERS = {
   sharp: { 'radius-inner': 'rounded-none', 'radius-control': 'rounded-xs', 'radius-surface': 'rounded-sm', 'radius-container': 'rounded-md' },
   round: { 'radius-inner': 'rounded-md', 'radius-control': 'rounded-lg', 'radius-surface': 'rounded-xl', 'radius-container': 'rounded-2xl' },
@@ -139,13 +139,15 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
 
   for (const mode of ['light', 'dark']) {
     const b = base(mode);
-    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), muted = hexAt(b['surface-muted'], b);
+    const surface = hexAt(b.surface, b), overlay = hexAt(b['surface-overlay'], b), muted = hexAt(b['surface-muted'], b), field = hexAt(b.field, b);
     const light = mode === 'light';
     const on = light ? palette.get('white') : S('950');
     const subtle = light ? S('50') : S('950');
     // Light themes look from light to dark, dark themes from dark to light; hover is the next shade on.
     const order = (from, to) => { const a = STEPS.slice(STEPS.indexOf(from), STEPS.indexOf(to) + 1); return light ? a : a.reverse(); };
     const next = (s) => STEPS[STEPS.indexOf(s) + (light ? 1 : -1)];
+    // A field's hover border is the brand one shade softer than primary, a step toward the page.
+    const softer = (s) => STEPS[STEPS.indexOf(s) + (light ? -1 : 1)];
     // A link is primary text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
     const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 3;
     const passes = (s) => okFill(s) && okFill(next(s)) && contrast(S(next(s)), subtle) >= 4.5;
@@ -153,7 +155,8 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
     const cands = order(light ? '500' : '200', light ? '800' : '500');
     const primary = cands.includes(seedStep) && passes(seedStep) ? seedStep : cands.find(passes);
     if (!primary) fail(mode, `${light ? 'white' : 'dark'} text at 4.5:1 and 4.5:1 on the ${light ? 'white' : 'dark'} page, with a hover that passes too`);
-    const ring = (need) => (s) => contrast(S(s), surface) >= need && contrast(S(s), overlay) >= need && contrast(S(s), subtle) >= need;
+    // The ring goes round a field and round an action inside one, so it needs 3:1 on the field's fill too (zinc-700 in dark).
+    const ring = (need) => (s) => contrast(S(s), surface) >= need && contrast(S(s), overlay) >= need && contrast(S(s), subtle) >= need && contrast(S(s), field) >= need;
     const focus = order(light ? '400' : '200', light ? '800' : '600').find(ring(3));
     if (!focus) fail(mode, 'a focus ring at 3:1 on the surface');
     const strong = (s) => contrast(S(s), surface) >= 7 && contrast(S(s), subtle) >= 7 && contrast(on, S(s)) >= 4.5;
@@ -167,7 +170,7 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
     picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus };
     Object.assign(b, {
       primary: `{${name}-${primary}}`, 'primary-hover': `{${name}-${next(primary)}}`, 'primary-subtle': `{${name}-${light ? '50' : '950'}}`,
-      'on-primary': light ? '{white}' : `{${name}-950}`, 'focus-ring': `{${name}-${focus}}`, 'link-visited': visited,
+      'on-primary': light ? '{white}' : `{${name}-950}`, 'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-border-hover': `{${name}-${softer(primary)}}`,
       'dk-more-primary': `{${name}-${more}}`, 'dk-more-primary-hover': `{${name}-${next(more)}}`, 'dk-more-focus-ring': `{${name}-${moreFocus}}`,
     });
     picks[mode].values = b;
@@ -190,7 +193,7 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
   const v = (x) => { const r = ref(x); return r ? `var(--${r})` : x; };
   const block = (sel, own) => `${sel} {\n${Object.entries(own).map(([k, x]) => `  --${k}: ${v(x)};\n`).join('')}}\n`;
   const L = picks.light.values, D = picks.dark.values;
-  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-focus-ring']
+  const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'field-border-hover', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
   // The look's own roles outside color, the same in light and dark; a corners preset then sets the radius roles.
   const roles = {};

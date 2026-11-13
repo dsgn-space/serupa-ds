@@ -22,7 +22,7 @@
 .dk-switch__control { position: relative; display: inline-flex; flex-shrink: 0; align-items: center; height: var(--dk-switch-lh); }
 .dk-switch--bare .dk-switch__control { height: var(--dk-switch-h); }
 .dk-switch__input {
-  --dk-switch-track: var(--switch-track, var(--field-border));
+  --dk-switch-track: var(--switch-track, var(--border-control));
   --dk-switch-on: var(--switch-track-checked, var(--primary));
   --dk-switch-ring: var(--switch-focus-ring, var(--focus-ring));
   appearance: none; -webkit-appearance: none;
@@ -32,7 +32,7 @@
   cursor: inherit;
   transition: background-color var(--motion-press) var(--ease-move);
 }
-@media (hover: hover) { .dk-switch:not(.dk-switch--pending):hover .dk-switch__input:not(:disabled, [readonly]) { --dk-switch-track: var(--switch-track-hover, var(--field-border-hover)); --dk-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); } }
+@media (hover: hover) { .dk-switch:not(.dk-switch--pending):hover .dk-switch__input:not(:disabled, [readonly]) { --dk-switch-track: var(--switch-track-hover, var(--border-control-hover)); --dk-switch-on: var(--switch-track-checked-hover, var(--primary-hover)); } }
 .dk-switch__input:checked { background: var(--dk-switch-on); }
 .dk-switch__thumb {
   position: absolute; inset-block: var(--spacing-0); inset-inline-start: var(--dk-switch-pad);

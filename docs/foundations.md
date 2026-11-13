@@ -63,7 +63,7 @@ Modern is the `emerald` brand: a calm, neutral interface with one teal accent, i
 - **More room.** `space-surface` is 32px and `space-section` 48px (24px and 32px elsewhere).
 - **Type does the work.** Modern uses the same single typeface (Inter) and type scale as the other themes, whose headings are already semibold.
 
-Contrast is checked like every theme: body text, links and buttons meet 4.5:1, borders that mark a control (`field-border`) and the focus ring meet 3:1, and `data-contrast="more"` steps the teal up to 800 / 300.
+Contrast is checked like every theme: body text, links and buttons meet 4.5:1, borders that mark a control (`border-control`) and the focus ring meet 3:1 (a form field's resting border is soft by design, as in every theme), and `data-contrast="more"` steps the teal up to 800 / 300.
 
 **Brand and mode without JavaScript**: `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
 
@@ -165,11 +165,13 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `on-info` | `white` | `sky-950` | Text and icons on `info` fills (4.5:1+). |
 | `info-subtle-hover` | `sky-100` | `sky-900` | Hover fill of an interactive `info-subtle` surface. |
 | `info-border` | `sky-300` | `sky-800` | Border of an info outline control or callout. |
-| `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. |
-| `field-readonly` | `zinc-50` | `zinc-900` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
-| `field-border` | `zinc-500` | `zinc-400` | Border of form fields: 3:1+ on `field` and `surface` (WCAG 1.4.11, a control's boundary). |
-| `field-border-hover` | `zinc-600` | `zinc-300` | Field border on hover. |
-| `placeholder` | `zinc-500` | `zinc-400` | Placeholder text (4.5:1+ on `field`). A hint, never a label. |
+| `field` | `white` | `zinc-700` | Background of text inputs, selects and other form fields. In dark, a fill that sets a field apart from the page and cards. |
+| `field-readonly` | `zinc-50` | `zinc-800` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
+| `field-border` | `zinc-300` | `zinc-600` | Border of form fields, soft by design: under the 3:1 WCAG 1.4.11 asks of a control's edge (see [Contrast, checked in every theme](#contrast-checked-in-every-theme)). |
+| `field-border-hover` | `‹brand›-500` | `‹brand›-500` | Field border on hover: the accent one step softer than `primary` (teal 600 and 500 in Modern). |
+| `border-control` | `zinc-500` | `zinc-400` | The edge of a control that isn't a field: Slider and Switch tracks, Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches, FileUpload's drop area, SignaturePad's box. 3:1+ on `surface` (WCAG 1.4.11). |
+| `border-control-hover` | `zinc-600` | `zinc-300` | `border-control` on hover (Switch's track). |
+| `placeholder` | `zinc-500` | `zinc-300` | Placeholder text, and other muted text inside a field (a prefix, a suffix, a count): 4.5:1+ on `field`. A hint, never a label. |
 | `overlay` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
 | `picture-edge` | black at 10% | white at 10% | A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color. |
 
@@ -177,6 +179,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 
 - `on-primary` on `primary`: 5.2–7.9:1. `text-muted` on `surface`: 4.8:1 light, 7.9:1 dark.
 - `focus-ring` on `surface`: 3.7:1 or more.
+- **A deliberate exception: the form field border.** A field's resting border (`field-border`, zinc-300 in light and zinc-600 in dark) is about 1.5:1 in light and 1.3:1 to 2.3:1 in dark, under the 3:1 WCAG 1.4.11 asks of a control's edge. It's a design choice for calmer forms. What still marks a field: its label, its zinc-700 fill in dark, the accent border on hover, the focus ring at 3:1, and the danger border when invalid at 3:1. More contrast (`data-contrast="more"`, or the system's own setting) brings back a 3:1+ border (zinc-700 in light, zinc-300 in dark). If your product must conform to 1.4.11 without that setting, set `--field-border` to `var(--border-control)`. The checks hold the border to 1.3:1 so it never fades out entirely. Every other control's edge, `border-control`, keeps 3:1.
 - Dark themes use a light `primary` (brand 400) with dark text (brand 950), because white text on a mid-tone fill fails in dark mode.
 
 ### Naming

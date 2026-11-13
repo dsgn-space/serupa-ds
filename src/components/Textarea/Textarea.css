@@ -42,7 +42,7 @@
 /* The count sits under the text, at the end, in text-xs with tabular digits; it turns text-colored at maxLength. */
 .dk-textarea__count {
   align-self: flex-end; padding: var(--spacing-0) var(--dk-ta-px) var(--dk-ta-py);
-  color: var(--textarea-count, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
+  color: var(--textarea-count, var(--placeholder)); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
   font-variant-numeric: tabular-nums; pointer-events: none; -webkit-user-select: none; user-select: none;
 }
 .dk-textarea__count--full { color: var(--textarea-count-full, var(--text)); }

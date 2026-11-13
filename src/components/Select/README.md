@@ -75,7 +75,7 @@ Drawn from the `WithIcon` story.
 - `readOnly` is for a value people should see but not change (a review step, a locked setting). The browser has no read-only select, so Select cancels the keys and press that would open or change it, and puts back a value a phone's picker sets. Unlike `disabled`, it stays in the Tab order and keeps its full contrast.
 - Every select needs a name: Field, a `<label htmlFor>` or `aria-label`. The placeholder isn't a label.
 - The chevron and left icon are decorative and don't take clicks: a click anywhere in the box opens the select.
-- Text and placeholder keep 4.5:1 on `field`; the chevron, border, focus ring and invalid border 3:1, in all six themes (`Select.test.tsx`).
+- Text and placeholder keep 4.5:1 on `field`; the chevron, focus ring and invalid border 3:1, in all six themes (`Select.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.3:1 to 2.3:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the accent border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - Native constraints (`required` with an empty first option) show too: a field that fails them takes the `invalid` border once people have edited it or tried to send the form (`:user-invalid`), never on first paint. It's only the color: `aria-invalid` and the message stay yours (set `invalid` and Field's `error` when you check it yourself). To keep the browser out of it, leave out the attribute and check the value in your own code.
 
 ### Keyboard

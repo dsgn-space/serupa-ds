@@ -183,13 +183,13 @@ describe('PinInput', () => {
     expect(b[0]!.getBoundingClientRect().left).toBeLessThan(b[1]!.getBoundingClientRect().left);
   });
 
-  test('contrast in all six themes: characters 4.5:1 on the box; border, focus ring and danger border 3:1 on the surface', async () => {
+  test('contrast in all six themes: characters 4.5:1 on the box; focus ring and danger border 3:1 on the surface, the soft border 1.3:1 (under 3:1 on purpose)', async () => {
     await render(<div style={{ background: 'var(--surface)' }} id="bg"><PinInput id="p" aria-label="Code" defaultValue="1" /><PinInput id="v" aria-label="Bad" invalid /></div>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const b = css(boxes('p')[0]!), surface = css(root('p').parentElement).backgroundColor;
       expect(contrast(b.color, b.backgroundColor), th + ' text').toBeGreaterThanOrEqual(4.5);
-      expect(contrast(b.borderTopColor, surface), th + ' border').toBeGreaterThanOrEqual(3);
+      expect(contrast(b.borderTopColor, surface), th + ' border').toBeGreaterThanOrEqual(1.3);
       expect(contrast(css(boxes('v')[0]!).borderTopColor, surface), th + ' invalid').toBeGreaterThanOrEqual(3);
       expect(contrast(resolve('--focus-ring'), surface), th + ' ring').toBeGreaterThanOrEqual(3);
     }

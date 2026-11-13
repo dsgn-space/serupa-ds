@@ -42,7 +42,7 @@ const any = Object.values(made)[0];
 if (any) {
   const missing = Object.entries(any.themes).flatMap(([th, v]) => shippedAliases.filter((a) => !(a in v)).map((a) => `${th}: ${a}`));
   t('the themes set every alias the shipped themes set', !missing.length, missing.join(', '));
-  t('only the brand aliases name the brand shades', !/--(?!acme-|dk-more-|primary|on-primary|focus-ring|link-visited)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
+  t('only the brand aliases name the brand shades', !/--(?!acme-|dk-more-|primary|on-primary|focus-ring|link-visited|field-border-hover)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
   t('the CSS names no shipped brand hue (blue, violet, emerald) for a brand alias', !/--(primary|primary-hover|primary-subtle|on-primary|focus-ring|dk-more-[a-z-]+): [^;]*--(blue|violet|emerald)-/.test(any.css));
 }
 // --look modern: the same contrast on Modern's neutrals, which are emerald's, and Modern's corners and motion.

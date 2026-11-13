@@ -213,13 +213,13 @@ describe('Select', () => {
     expect(box('fld').className).toMatch(/dk-select--invalid/);
   });
 
-  test('contrast in all six themes: text and placeholder 4.5:1 on the field; chevron, border, focus ring and invalid border 3:1', () => {
+  test('contrast in all six themes: text and placeholder 4.5:1 on the field; chevron, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
       ['chevron', 'var(--text-muted)', 'var(--field)', 3],
-      ['border', 'var(--field-border)', 'var(--field)', 3],
-      ['border on page', 'var(--field-border)', 'var(--surface)', 3],
+      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
+      ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
       ['invalid', 'var(--danger)', 'var(--field)', 3],
     ])).toEqual([]);

@@ -157,7 +157,7 @@ describe('Stepper', () => {
     expect(geo).toEqual([[0, 2, 8, 8, 32], [0, 2, 8, 8, 32], [0, 2, 8, 8, 32]]);
   });
 
-  test('lines after completed steps are primary, others field-border; only the current circle has a ring', async () => {
+  test('lines after completed steps are primary, others border-control; only the current circle has a ring', async () => {
     await setup();
     const li = lis('st'), c = (l: Element, s: string) => css(l.querySelector(s));
     expect(c(li[0]!, CONN).backgroundColor).not.toBe(c(li[2]!, CONN).backgroundColor);

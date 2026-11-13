@@ -55,9 +55,9 @@ Drawn from the `LongLabel` story.
 
 | State | Look |
 | --- | --- |
-| Off | A `field-border` track, the thumb in `field` at the start |
+| Off | A `border-control` track, the thumb in `field` at the start |
 | On | A `primary` track, the thumb in `on-primary` at the end |
-| Hover | `field-border-hover` off, `primary-hover` on |
+| Hover | `border-control-hover` off, `primary-hover` on |
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | A `danger` track while off, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover change |
@@ -110,8 +110,8 @@ Each is an optional override: set it on the page, a container or one switch. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--switch-track` | `field-border` | The track while off |
-| `--switch-track-hover` | `field-border-hover` | The track while off, on hover |
+| `--switch-track` | `border-control` | The track while off |
+| `--switch-track-hover` | `border-control-hover` | The track while off, on hover |
 | `--switch-track-checked` | `primary` | The track while on |
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
 | `--switch-thumb` | `field` | The thumb while off |

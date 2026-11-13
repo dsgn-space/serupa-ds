@@ -133,8 +133,8 @@
       "id": "1.4.11",
       "name": "Non-text Contrast",
       "level": "AA",
-      "conformance": "Supports",
-      "remarks": "Control borders, focus rings, selected states and icons that carry meaning meet 3:1 in all six themes, checked with the text pairs."
+      "conformance": "Partially Supports",
+      "remarks": "Focus rings, selected states, icons that carry meaning and the edges of controls such as Slider, Switch, Meter and Progress meet 3:1 in all six themes, checked with the text pairs. A form field's resting border is soft by design, about 1.5:1 in light: the label, the hover border and the 3:1 focus ring mark the field, and more contrast (data-contrast=\"more\" or the system setting) brings back a 3:1 border. An app that must conform without that setting sets --field-border to var(--border-control)."
     },
     {
       "id": "1.4.12",

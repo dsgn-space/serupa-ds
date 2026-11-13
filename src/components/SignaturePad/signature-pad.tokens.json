@@ -14,7 +14,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The drawing box's outline (3:1 on the page).",
         "$extensions": {
           "com.serupa": {

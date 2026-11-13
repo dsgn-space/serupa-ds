@@ -853,15 +853,15 @@
     "field": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Background of text inputs, selects and other form fields.",
+      "$description": "Alias. Background of text inputs, selects and other form fields: white in light, zinc-700 in dark, a fill that sets a field apart from the page and cards around it.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{zinc-800}",
+            "blue-dark": "{zinc-700}",
             "violet-light": "{white}",
-            "violet-dark": "{zinc-800}",
+            "violet-dark": "{zinc-700}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{zinc-700}"
           }
         }
       }
@@ -869,23 +869,63 @@
     "field-readonly": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. Background of a read-only or disabled form field: a step flatter than `field` (zinc-50 in light, the page's zinc-900 in dark), so it reads as not editable while its `field-border` still outlines it.",
+      "$description": "Alias. Background of a read-only or disabled form field: a step flatter than `field` (zinc-50 in light, zinc-800 in dark), so it reads as not editable while its `field-border` still outlines it.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{zinc-900}",
+            "blue-dark": "{zinc-800}",
             "violet-light": "{zinc-50}",
-            "violet-dark": "{zinc-900}",
+            "violet-dark": "{zinc-800}",
             "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-950}"
+            "emerald-dark": "{zinc-800}"
           }
         }
       }
     },
     "field-border": {
       "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput, SignaturePad, FileUpload's drop area): a soft line, zinc-300 in light and zinc-600 in dark. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-700 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{zinc-600}",
+            "violet-light": "{zinc-300}",
+            "violet-dark": "{zinc-600}",
+            "emerald-light": "{zinc-300}",
+            "emerald-dark": "{zinc-600}"
+          },
+          "contrastMore": {
+            "light": "{zinc-700}",
+            "dark": "{zinc-300}"
+          }
+        }
+      }
+    },
+    "field-border-hover": {
+      "$type": "color",
+      "$value": "{color.blue-500}",
+      "$description": "Alias. Field border on hover: the theme's accent one step softer than `primary`, a step toward the page (brand 500 in light, where primary is 600, and teal 600 in emerald; brand 500 in dark, where primary is 400, and teal 500 in emerald).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{blue-500}",
+            "violet-light": "{violet-500}",
+            "violet-dark": "{violet-500}",
+            "emerald-light": "{teal-600}",
+            "emerald-dark": "{teal-500}"
+          },
+          "contrastMore": {
+            "light": "{zinc-900}",
+            "dark": "{zinc-100}"
+          }
+        }
+      }
+    },
+    "border-control": {
+      "$type": "color",
       "$value": "{color.zinc-500}",
-      "$description": "Alias. Border of form fields. 3:1+ against `field` and `surface` in every theme, as WCAG 1.4.11 requires for a control's boundary.",
+      "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, SegmentedControl, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -902,10 +942,10 @@
         }
       }
     },
-    "field-border-hover": {
+    "border-control-hover": {
       "$type": "color",
       "$value": "{color.zinc-600}",
-      "$description": "Alias. Field border on hover.",
+      "$description": "Alias. `border-control` on hover, one step stronger (Switch's track).",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -925,15 +965,15 @@
     "placeholder": {
       "$type": "color",
       "$value": "{color.zinc-500}",
-      "$description": "Alias. Placeholder text in form fields (4.5:1+ on `field`). Placeholders are hints, never labels.",
+      "$description": "Alias. Placeholder text in form fields, and the other muted text inside a field: a prefix or suffix, a character count, the Caps Lock hint (4.5:1+ on `field` and `field-readonly`). zinc-300 in dark, where the field is zinc-700. Placeholders are hints, never labels.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{zinc-400}",
+            "blue-dark": "{zinc-300}",
             "violet-light": "{zinc-500}",
-            "violet-dark": "{zinc-400}",
+            "violet-dark": "{zinc-300}",
             "emerald-light": "{zinc-500}",
-            "emerald-dark": "{zinc-400}"
+            "emerald-dark": "{zinc-300}"
           },
           "contrastMore": {
             "light": "{zinc-600}",
