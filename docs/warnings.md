@@ -38,6 +38,10 @@ Two or more of a Combobox's options have the same value. Picking the second one 
 
 A CommandPalette command's `href` isn't a web page (http or https), a `mailto:` or a `tel:` link, for example `javascript:…`. Choosing it does nothing, so a link built from user data can't run script. Use `onSelect` to run code.
 
+## countdown-to
+
+A Countdown whose `to` isn't a date (a typo, an empty string, a format `Date` can't read), or whose `seconds` isn't a number, shows nothing, with no other sign. Pass `to` as a `Date`, a timestamp in milliseconds or an ISO string such as `"2026-11-14T18:00:00Z"`, or the time left as `seconds`.
+
 ## data-grid-busy
 
 DataGrid's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.

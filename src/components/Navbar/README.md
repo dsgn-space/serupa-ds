@@ -84,6 +84,7 @@ Drawn from the `Playground` story.
 | `children` | NavbarLinks | none | The main pages |
 | `actions` | node | none | Controls on the right; they stay in the bar on small screens |
 | `sticky` | boolean | `false` | Stays at the top while the page scrolls (z-40). What Tab focuses, or a #link jumps to, scrolls into view below the bar instead of under it (WCAG 2.4.11): the page's `scroll-padding-top` follows the bar's height. Once the page scrolls under it, the bar lifts: a shadow fades in over the first bar height of scroll, tied to the scroll rather than a clock (where scroll-driven animations are supported; elsewhere the line alone). |
+| `condense` | boolean | `false` | With `sticky`: as the page scrolls under it, the bar goes up with the page to 48px (`--navbar-height-condensed`), then stays, with what's in it kept centered. It moves rather than resizing, so the page doesn't reflow as you scroll, and the strip it leaves is the page's to press. Where scroll-driven animations aren't supported (Firefox), the bar keeps its height. For pages read a long way down, where the bar's 16px are worth getting back. |
 | `size` | `'prose'` \| `'md'` \| `'lg'` \| `'xl'` \| `'2xl'` \| `'full'` | `'xl'` | The content's maximum width, the same as Container, so it lines up with the page |
 | `aria-label` | string | `"Main"` | The links' nav name |
 | `menuLabel` | string | `"Menu"` | The small-screen menu button's name |
@@ -168,6 +169,7 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--navbar-height` | `spacing-16` | The bar's height (64px). |
+| `--navbar-height-condensed` | `spacing-12` | A condensed sticky bar's height once the page has scrolled under it (48px). |
 
 **Spacing**
 
