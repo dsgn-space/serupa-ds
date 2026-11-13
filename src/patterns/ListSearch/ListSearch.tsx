@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Tabl
 import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { Toaster, toast } from '../../components/Toast/Toast';
+import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
@@ -23,6 +24,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
      gets the new query string.
    - 4.1.3: while the rows load, the results count says "Loading projects" (once, as a status), the table is busy and
      keeps its header, and its placeholder rows are decorative, so nothing jumps when the rows arrive.
+   - With no projects at all, it says there are none yet and offers New project, not "Clear filters", since nothing
+     is filtered out.
    - 4.1.3, 3.3.3: a failed load says so once, in the table's place, with Try again (EmptyLoadFailed).
    - Changing the search or a filter goes back to page 1, so nobody lands on an empty page 3, and lets go of the
      selected rows it hides, so "2 selected" never counts rows nobody can see, and a bulk action never reaches them.
@@ -198,6 +201,11 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
                 </TableRow>
               ))}</TableBody>
             </Table>
+          ) : !projects.length ? (
+            // No projects at all is a first visit, not a search that missed: there's no filter to clear.
+            <EmptyState icon="add_circle" title="No projects yet" headingLevel={2}
+              description="A project holds the tasks, files and people for one piece of work. Start one, and it shows up here."
+              actions={<Button href="#new-project">New project</Button>} />
           ) : (
             <EmptyNoResults query={view.q} title={(text) => (text ? `No projects match “${text}”` : 'No projects match these filters')}
               description="Check the spelling, or clear the filters to see every project." headingLevel={2} onClearFilters={() => {
