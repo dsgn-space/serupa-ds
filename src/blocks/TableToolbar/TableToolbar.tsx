@@ -16,6 +16,10 @@ import { TableActionBar } from '../../components/Table/Table';
    - Bulk actions use TableActionBar ("3 selected", the actions, Clear selection), which says the count and moves focus
      to the table's "Select all" when the selection is cleared. It has to come just before the table, so the table is
      this block's child.
+   - Filters as chips: pass a FilterBar as filterBar. It sits in the same search landmark, each chip says its filter in
+     words ("Status is Active") and its × removes it; its own Clear all clears them, and Clear filters the search.
+   - A column picker: pass Table's TableColumnsMenu as columns. It sits beside the count, outside the search landmark,
+     since it changes what the table shows, not which rows.
    - 1.4.10 reflow: the controls stack on a phone; the table scrolls in its own frame. */
 
 export interface TableFilter {
@@ -36,6 +40,10 @@ export interface TableToolbarProps {
   onQueryChange: (query: string) => void;
   /** The filters beside the search field. */
   filters?: TableFilter[] | undefined;
+  /** Filters as chips, under the search field: a FilterBar. Leave its resultsCount out, since results says the count. */
+  filterBar?: React.ReactNode;
+  /** A column picker beside the count: Table's TableColumnsMenu, drawn from the same list as the table. */
+  columns?: React.ReactNode;
   /** The results count, formatted and in words: "8 of 24 projects". Read out when it changes. */
   results: string;
   /** Called by "Clear filters": empty the search and set every filter back to ''. It's shown while any is set. */
@@ -67,7 +75,7 @@ const EN: TableToolbarLabels = {
   clearFilters: 'Clear filters',
 };
 
-export function TableToolbar({ noun, query, onQueryChange, filters = [], results, onClearFilters, selectedCount = 0, onClearSelection, bulkActions, labels, children }: TableToolbarProps) {
+export function TableToolbar({ noun, query, onQueryChange, filters = [], filterBar, columns, results, onClearFilters, selectedCount = 0, onClearSelection, bulkActions, labels, children }: TableToolbarProps) {
   const w = { ...EN, ...labels };
   const search = React.useRef<HTMLInputElement | null>(null);
   const filtered = query !== '' || filters.some((f) => f.value !== '');
@@ -87,8 +95,14 @@ export function TableToolbar({ noun, query, onQueryChange, filters = [], results
           </Field>
         ))}
         {filtered ? <Button type="button" variant="ghost" onClick={clear}>{w.clearFilters}</Button> : null}
+        {filterBar ? <div className="w-full">{filterBar}</div> : null}
       </form>
-      <p role="status" className="m-0 text-sm text-text-muted">{results}</p>
+      {columns ? (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p role="status" className="m-0 text-sm text-text-muted">{results}</p>
+          {columns}
+        </div>
+      ) : <p role="status" className="m-0 text-sm text-text-muted">{results}</p>}
       <TableActionBar count={selectedCount} onClear={onClearSelection}>{bulkActions}</TableActionBar>
       {children}
     </div>
