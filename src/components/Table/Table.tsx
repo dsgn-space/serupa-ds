@@ -328,6 +328,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
   const style = width != null ? { ...props.style, width: typeof width === 'number' ? width + 'px' : width } : props.style;
   const align = oneOf(ALIGN, props.align, 'start');
   const sort = props.sort !== undefined ? oneOf(['ascending', 'descending', 'none'] as const, props.sort, 'none') : null;
+  if (process.env.NODE_ENV !== 'production' && sort && !props.onSort) warnOnce('table-sort', 'TableHeaderCell: sort without onSort draws a sort button that does nothing. Pass onSort to change the order, or leave sort out of a column that can\'t be sorted.');
   // A new order is read out ("Sorted by Amount, ascending"): aria-sort alone is only heard when focus reaches the
   // header again, and the button keeps focus. Not on the first render.
   const labels = useSettings(words).labels;
@@ -360,6 +361,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
     };
     const rtl = () => getComputedStyle(cell).direction === 'rtl';
     const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;   // left to the system and the browser (L8E35)
       const grow = rtl() ? 'ArrowLeft' : 'ArrowRight', shrink = rtl() ? 'ArrowRight' : 'ArrowLeft';
       if (e.key === grow) set(now() + STEP);
       else if (e.key === shrink) set(now() - STEP);

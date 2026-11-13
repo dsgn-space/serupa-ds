@@ -170,6 +170,10 @@ Table's `busy` is deprecated, and removed in 15.0.0. It still works as `loading`
 
 A TableRow got `onClick` without `href`. A click on a row reaches mouse users only: the keyboard and screen readers can't press a table row. To open something, give the row an `href` (the whole row becomes one link, from its first cell); for an action, put a button in a cell.
 
+## table-sort
+
+A TableHeaderCell got `sort` without `onSort`. `sort` turns the header into a button, and without `onSort` pressing it does nothing, though it looks and is announced as a sort button. Pass `onSort` and set the next order there, or leave `sort` out of a column that can't be sorted.
+
 ## tabs-removed
 
 The selected Tab was removed, so no tab is selected. When you remove the selected tab, set `value` to another one.
