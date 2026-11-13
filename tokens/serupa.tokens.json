@@ -904,16 +904,16 @@
     },
     "field-border-hover": {
       "$type": "color",
-      "$value": "{color.blue-700}",
-      "$description": "Alias. Field border on hover: the theme's accent one step stronger than `primary`, away from the page (brand 700 in light, where primary is 600, and teal 800 in emerald; brand 300 in dark, where primary is 400, and teal 300 in emerald).",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Field border on hover: the resting `field-border` one gray step stronger (zinc-400 in light, zinc-600 in dark), so the field answers the pointer without taking the accent, which stays for focus.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{blue-300}",
-            "violet-light": "{violet-700}",
-            "violet-dark": "{violet-300}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-300}"
+            "blue-dark": "{zinc-600}",
+            "violet-light": "{zinc-400}",
+            "violet-dark": "{zinc-600}",
+            "emerald-light": "{zinc-400}",
+            "emerald-dark": "{zinc-600}"
           },
           "contrastMore": {
             "light": "{zinc-900}",
