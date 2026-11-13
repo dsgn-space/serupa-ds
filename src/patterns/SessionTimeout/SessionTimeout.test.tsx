@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { Heading } from '../../components/Heading/Heading';
 import { userEvent } from 'vitest/browser';
 import { SessionTimeout, timeLeft } from './SessionTimeout';
 
@@ -14,6 +15,16 @@ afterEach(() => { window.sessionStorage.removeItem(KEY); });
 // Session time-out (PT14): a warning well before the end, one action to stay, the time said at sensible steps, and
 // nothing typed lost.
 describe('Patterns/Session time-out', () => {
+  test('each section heading is the size every pattern gives one (an h2 at lg), set by Heading, not a text class', async () => {
+    await render(<SessionTimeout />);
+    await render(<div id="probe-lg"><Heading level={2} size="lg">Probe</Heading></div>);
+    const look = (h: Element) => { const c = getComputedStyle(h); return [c.fontSize, c.lineHeight, c.letterSpacing].join(' '); };
+    const want = look(document.querySelector('#probe-lg h2')!);
+    const h2s = [...document.querySelectorAll('h2')].filter((h) => !h.closest('#probe, #probe-lg, dialog'));
+    expect(h2s.length).toBeGreaterThan(0);
+    expect(h2s.map(look)).toEqual(h2s.map(() => want));
+  });
+
   test('the time left in words', () => {
     expect([timeLeft(120), timeLeft(90), timeLeft(61), timeLeft(45), timeLeft(1), timeLeft(0)])
       .toEqual(['2 minutes', '1 minute 30 seconds', '1 minute 1 second', '45 seconds', '1 second', '0 seconds']);

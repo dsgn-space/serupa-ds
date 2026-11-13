@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { Heading } from '../../components/Heading/Heading';
 import { page, userEvent } from 'vitest/browser';
 import { Checkout, type CheckoutDetails } from './Checkout';
 
@@ -14,6 +15,16 @@ const filled: Partial<CheckoutDetails> = {
 // Checkout (PT12): fields the browser can fill, every problem listed at once, a review before paying, and nothing
 // typed lost on the way back.
 describe('Patterns/Checkout', () => {
+  test('each section heading is the size every pattern gives one (an h2 at lg), set by Heading, not a text class', async () => {
+    await render(<Checkout />);
+    await render(<div id="probe-lg"><Heading level={2} size="lg">Probe</Heading></div>);
+    const look = (h: Element) => { const c = getComputedStyle(h); return [c.fontSize, c.lineHeight, c.letterSpacing].join(' '); };
+    const want = look(document.querySelector('#probe-lg h2')!);
+    const h2s = [...document.querySelectorAll('h2')].filter((h) => !h.closest('#probe, #probe-lg, dialog'));
+    expect(h2s.length).toBeGreaterThan(0);
+    expect(h2s.map(look)).toEqual(h2s.map(() => want));
+  });
+
   test('one main and one h1, headings without a skipped level, and the skip link first', async () => {
     await render(<Checkout />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
