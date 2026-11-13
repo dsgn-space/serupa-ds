@@ -136,6 +136,21 @@ describe('DateRangePicker', () => {
     expect([vals('trip'), isOpen('trip'), focused()]).toEqual(['03/18/2025 – 04/02/2025', false, 'Start date']);
   });
 
+  test('two months: an arrow across the edge between them moves focus to the other grid, and the months stay put; past the last, they turn (GR398)', async () => {
+    await render(<Trip value={{ start: new Date(2025, 2, 31), end: new Date(2025, 3, 2) }} />);
+    await userEvent.click(btn('trip'));
+    const shown = () => [...pop('trip').querySelectorAll('[role=grid]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent).join();
+    expect([shown(), focused()]).toEqual(['March 2025,April 2025', '2025-03-31']);
+    await userEvent.keyboard('{ArrowRight}');
+    expect([shown(), focused()]).toEqual(['March 2025,April 2025', '2025-04-01']);
+    await userEvent.keyboard('{ArrowLeft}');
+    expect([shown(), focused()]).toEqual(['March 2025,April 2025', '2025-03-31']);
+    await userEvent.keyboard('{PageDown}');
+    expect([shown(), focused()]).toEqual(['March 2025,April 2025', '2025-04-30']);
+    await userEvent.keyboard('{ArrowRight}');
+    expect([shown(), focused()]).toEqual(['April 2025,May 2025', '2025-05-01']);
+  });
+
   test('keyboard table: Space on the calendar button opens the calendar, and Space in it picks the start, then the end (FH1)', async () => {
     await render(<Trip value={{ start: new Date(2025, 2, 18), end: new Date(2025, 3, 2) }} />);
     btn('trip').focus();
