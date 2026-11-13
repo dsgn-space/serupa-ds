@@ -30,6 +30,7 @@
   border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: pointer; touch-action: manipulation;
 }
 @media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
+.dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); }
 .dk-tag-group__more {
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm);
   text-decoration: underline; cursor: pointer;

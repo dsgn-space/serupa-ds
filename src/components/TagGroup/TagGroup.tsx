@@ -10,7 +10,7 @@ import { en as words } from './labels';
 import { en as comboWords } from '../Combobox/labels';
 import { en as moreWords } from '../ShowMore/labels';
 
-const allWords = { ...words, ...comboWords, ...moreWords };
+const allWords = /* @__PURE__ */ Object.assign({}, words, comboWords, moreWords);
 
 /** One tag: its id, the words it shows, and whether it can be acted on. */
 export interface TagItem {
@@ -68,6 +68,7 @@ export const TagGroup = /* @__PURE__ */ component<HTMLDivElement, TagGroupProps>
   const after = React.useRef<string | null | false>(false);
   const rowOf = (tid: string) => grid.current && grid.current.querySelector<HTMLElement>(`[data-tag-id="${CSS.escape(tid)}"]`);
 
+  // every render: a removal is seen only once the list has re-rendered without the tag, whatever changed it.
   React.useLayoutEffect(() => {
     if (after.current === false) return;
     const to = after.current;

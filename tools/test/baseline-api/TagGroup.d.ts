@@ -1,4 +1,4 @@
-// exports: TagGroup, type TagGroupProps
+// exports: TagGroup, type TagGroupProps, type TagItem
 interface TagGroupLabels {
     tagRemove: (name: string) => string;
 }

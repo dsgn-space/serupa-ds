@@ -98,7 +98,7 @@ describe('TagGroup', () => {
     await render(<SerupaProvider locale="en-US"><TagGroup aria-label="Skills" items={tags} selectionMode="multiple" defaultSelected={['bug']} onSelectedChange={(x) => log.push(x)} /></SerupaProvider>);
     await expect.element(page.getByRole('grid', { name: 'Skills' })).toHaveAttribute('aria-multiselectable', 'true');
     expect(row('bug').getAttribute('aria-selected')).toBe('true');
-    expect(row('bug').querySelector('.dk-tag-group__check')).not.toBeNull();
+    expect([row('bug').querySelector('[data-icon="check"]') != null, row('design').querySelector('[data-icon="check"]') != null]).toEqual([true, false]);
     await userEvent.click(row('design'));
     row('checkout').focus();
     await userEvent.keyboard(' ');

@@ -72,6 +72,16 @@
           }
         }
       },
+      "remove-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "The × while it's held down, one step past remove-hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-remove-pressed"
+          }
+        }
+      },
       "label": {
         "$type": "color",
         "$value": "{color.text}",
