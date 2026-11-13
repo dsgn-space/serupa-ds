@@ -61,7 +61,7 @@ describe('Blocks/Activity feed', () => {
     await expect.poll(() => feed.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading: Activity']);
     expect(page.getByRole('button').elements()).toHaveLength(0);
     expect(page.getByText('No activity yet').elements()).toHaveLength(0);   // not empty: still loading
-    await screen.rerender(<ActivityFeed events={[]} hasMore onLoadMore={() => {}} title="Aktivitas" loading loadingLabel="Memuat aktivitas" />);
+    await screen.rerender(<ActivityFeed events={[]} hasMore onLoadMore={() => {}} title="Aktivitas" loading loadingText="Memuat aktivitas" />);
     await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat aktivitas']);
     await screen.rerender(<ActivityFeed events={all.slice(0, 2)} hasMore onLoadMore={() => {}} title="Aktivitas" />);
     const loaded = page.getByRole('region', { name: 'Aktivitas' });
