@@ -24,6 +24,10 @@ const { version } = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 
 buildUtilities(ROOT);
 buildRegistry(ROOT);
 
+// A value as JavaScript source for a module this file writes: JSON, with the characters that could end a script or a
+// line written as escapes, so text from a page or a doc comment stays text whatever it holds.
+const js = (value) => JSON.stringify(value).replace(/[<>\u2028\u2029]/g, (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
+
 const PAGES = 'virtual:site-pages', PROPS = 'virtual:site-props';
 
 /** The site's own data: its page list, each component's props, and the stories' names for the doc blocks. */
@@ -34,12 +38,12 @@ function site() {
     name: 'serupa-site',
     resolveId: (id) => (id === PAGES || id === PROPS || id.startsWith(PROPS + '/') ? '\0' + id : null),
     async load(id) {
-      if (id === '\0' + PAGES) return `export default ${JSON.stringify(sitePages(ROOT))};`;
+      if (id === '\0' + PAGES) return `export default ${js(sitePages(ROOT))};`;
       // One chunk per component, fetched with its page.
-      if (id === '\0' + PROPS) return `export default {${components(ROOT).map((n) => `${JSON.stringify(n)}: () => import(${JSON.stringify(`${PROPS}/${n}`)})`).join(', ')}};`;
+      if (id === '\0' + PROPS) return `export default {${components(ROOT).map((n) => `${js(n)}: () => import(${js(`${PROPS}/${n}`)})`).join(', ')}};`;
       if (id.startsWith('\0' + PROPS + '/')) {
         props ||= componentProps(components(ROOT), ROOT);
-        return `export default ${JSON.stringify((await props)[id.slice(PROPS.length + 2)] ?? [])};`;
+        return `export default ${js((await props)[id.slice(PROPS.length + 2)] ?? [])};`;
       }
       return null;
     },
@@ -55,11 +59,11 @@ function site() {
         const doc = before.endsWith('*/') ? before.slice(before.lastIndexOf('/**')) : '';
         const description = doc.replace(/^\/\*\*\s?|\s*\*\/$/g, '').replace(/^\s*\* ?/gm, '').replace(/\s*\n\s*/g, ' ').trim();
         // typeof: a line of sample code inside a story's string can look like an export.
-        return `[${JSON.stringify(m[1])}, typeof ${m[1]} === 'undefined' ? undefined : ${m[1]}, ${JSON.stringify(description)}]`;
+        return `[${js(m[1])}, typeof ${m[1]} === 'undefined' ? undefined : ${m[1]}, ${js(description)}]`;
       });
       return {
-        code: `${code}\nimport { registerStories as __siteRegister } from ${JSON.stringify(path.join(SITE, 'src', 'stories.tsx').split(path.sep).join('/'))};\n`
-          + `__siteRegister(${JSON.stringify(rel)}, meta, [${list.join(', ')}]);\n`,
+        code: `${code}\nimport { registerStories as __siteRegister } from ${js(path.join(SITE, 'src', 'stories.tsx').split(path.sep).join('/'))};\n`
+          + `__siteRegister(${js(rel)}, meta, [${list.join(', ')}]);\n`,
         map: null,
       };
     },
@@ -85,7 +89,7 @@ export default defineConfig({
       { find: /^.*\/\.storybook\/icon-arg$/, replacement: path.join(SITE, 'src', 'icon-arg.ts') },
     ],
   },
-  define: { __VERSION__: JSON.stringify(version) },
+  define: { __VERSION__: js(version) },
   // Keep :dir(rtl) as the package ships it (see .storybook/main.ts).
   css: { lightningcss: { exclude: Features.DirSelector } },
   build: {
