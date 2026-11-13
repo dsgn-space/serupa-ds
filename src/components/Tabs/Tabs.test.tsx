@@ -567,12 +567,15 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
       const span = (t: HTMLElement) => parseFloat(t.style.getPropertyValue('--dk-tabs-span-l')) || 0;
       const edge = pills[0]!.offsetLeft - span(pills[0]!) + nums(getComputedStyle(pills[0]!, '::before').clipPath.split(' round')[0]!)[3]!;
       expect(Math.abs(edge - pills[0]!.offsetLeft)).toBeGreaterThan(8);
+      const seen: unknown[] = [];
+      const look = (e: Event) => seen.push([e.type, getComputedStyle(pills[0]!, '::before').clipPath, pills[0]!.offsetLeft, pills[0]!.style.getPropertyValue('--dk-tabs-span-l'), pills[0]!.getAttribute('aria-selected'), pills[1]!.style.getPropertyValue('--dk-tabs-from-l'), held.map((a) => [a.playState, a.currentTime])]);
+      for (const k of ['pointerdown', 'mousedown', 'focus', 'pointerup', 'click']) pills[1]!.addEventListener(k, look, true);
       await userEvent.click(pills[1]!);
       const all = slides(pills[1]!, '::before');
       const cut = all[0]!;
       const first = nums(String((cut.effect as KeyframeEffect).getKeyframes()[0]!.clipPath).split(' round')[0]!);
       // WebKit started this one 8px off: the message says which slide it read and from what, for the next run.
-      const why = JSON.stringify({ edge, left: pills[1]!.offsetLeft, span: span(pills[1]!), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1]!.style.getPropertyValue('--dk-tabs-from-' + k)) });
+      const why = JSON.stringify({ seen, lefts: pills.map((p) => p.offsetLeft), edge, left: pills[1]!.offsetLeft, span: span(pills[1]!), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1]!.style.getPropertyValue('--dk-tabs-from-' + k)) });
       expect(Math.abs(pills[1]!.offsetLeft - span(pills[1]!) + first[3]! - edge), why).toBeLessThan(1);
     });
   });
