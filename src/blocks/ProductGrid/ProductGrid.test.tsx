@@ -70,7 +70,7 @@ describe('Blocks/Product grid', () => {
   test('when adding fails, a toast says it wasn\'t added and to try again, and the button is ready again', async () => {
     await render(grid({ onAddToCart: () => Promise.reject(new Error('Out of stock')) }));
     await userEvent.click(page.getByRole('button', { name: 'Add to cart, Linen shirt' }));
-    await expect.element(page.getByText('Couldn\'t add Linen shirt to your cart. Try again.')).toBeVisible();
+    await expect.element(page.getByText('Couldn’t add Linen shirt to your cart. Try again.')).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Add to cart, Linen shirt' })).not.toHaveAttribute('aria-busy', 'true');
   });
 

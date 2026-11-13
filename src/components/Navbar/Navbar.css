@@ -28,6 +28,10 @@
     animation-range: var(--spacing-0) var(--navbar-height, var(--spacing-16)), var(--spacing-0) var(--dk-navbar-cut);
   }
   .dk-navbar--condense > .dk-navbar__inner { animation: dk-navbar-recenter var(--ease-linear) both; animation-timeline: scroll(); animation-range: var(--spacing-0) var(--dk-navbar-cut); }
+  /* Moved down, the content's box reaches half the cut past the bar, over the page: that empty part lets presses
+     through to the page, and what's in it takes them as before. */
+  .dk-navbar--condense > .dk-navbar__inner { pointer-events: none; }
+  .dk-navbar--condense > .dk-navbar__inner > * { pointer-events: auto; }
 }
 @keyframes dk-navbar-condense { to { translate: var(--spacing-0) calc(var(--spacing-0) - var(--dk-navbar-cut)); } }
 @keyframes dk-navbar-recenter { to { translate: var(--spacing-0) var(--dk-navbar-half); } }
