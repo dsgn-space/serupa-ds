@@ -68,7 +68,7 @@ const english: ProductGridLabels = {
   reviews: (count, formatted) => `${formatted} ${count === 1 ? 'review' : 'reviews'}`,
   addToCart: 'Add to cart',
   added: (name) => `Added ${name} to your cart`,
-  notAdded: (name) => `Couldn't add ${name} to your cart. Try again.`,
+  notAdded: (name) => `Couldn’t add ${name} to your cart. Try again.`,
   soldOut: 'Sold out',
 };
 
