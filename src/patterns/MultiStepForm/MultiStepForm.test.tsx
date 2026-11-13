@@ -29,6 +29,9 @@ describe('Patterns/Multi-step form', () => {
   test('one main and one h1, the skip link first; Continue on an empty step lists every problem and focuses the list', async () => {
     await render(<MultiStepForm />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    // The app's header, as on the other app pages, a banner landmark before main.
+    expect(document.querySelector('header')?.textContent).toBe('Acme');
+    expect(document.querySelector('header')?.compareDocumentPosition(document.querySelector('main')!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
     await userEvent.click(page.getByRole('button', { name: 'Continue' }));

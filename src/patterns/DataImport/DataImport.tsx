@@ -192,7 +192,10 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
   return (
     <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-12 outline-none">
+      <header className="border-b border-border bg-surface px-4 py-3">
+        <p className="m-0 text-base font-semibold">Acme</p>
+      </header>
+      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
         <Heading level={1} size="xl">Import customers</Heading>
         <Stepper current={ORDER.indexOf(step) + (step === 'done' ? 1 : 0)} steps={STEPS} size="sm" />
         <Card className="flex flex-col gap-5" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>

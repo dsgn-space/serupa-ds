@@ -39,6 +39,9 @@ describe('Patterns/Data import', () => {
   test('one main and one h1, the skip link first; Continue with no file lists the problem and focuses it', async () => {
     await render(<DataImport />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    // The app's header, as on the other app pages, a banner landmark before main.
+    expect(document.querySelector('header')?.textContent).toBe('Acme');
+    expect(document.querySelector('header')?.compareDocumentPosition(document.querySelector('main')!)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
     await userEvent.click(page.getByRole('button', { name: 'Continue' }));
