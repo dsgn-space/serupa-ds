@@ -168,7 +168,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
     const next = chosen ? { name: chosen.name, text: await chosen.text() } : file!;
     const rows = parseCsv(next.text);
     if (rows.length < 2) { fail([{ field: 'import-file', message: `${next.name} has no rows under its headings. Choose a CSV file with a heading row and a row for each customer` }]); return; }
-    if (next !== file) { setFile(next); setMapping(guessMapping(rows[0])); }
+    if (next !== file) { setFile(next); setMapping(guessMapping(rows[0] ?? [])); }
     go('match');
   };
   const match = (e: React.FormEvent) => {

@@ -111,8 +111,9 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
     const before = order.current;
     order.current = all;
     const matched = value != null && all.includes(value);
-    setStop(matched || !enabled.length ? null : enabled[0]);
-    if (!enabled.length || matched) return;
+    setStop(matched ? null : enabled[0] ?? null);
+    const first = enabled[0];
+    if (first === undefined || matched) return;
     if (controlled) {
       if (process.env.NODE_ENV !== 'production' && value != null && before.includes(value)) warnOnce('tabs-removed', `Tabs: the selected tab "${value}" was removed, so no tab is selected. Set value to another tab when you remove it.`);
       else if (process.env.NODE_ENV !== 'production' && value != null) warnOnce('tabs-value', `Tabs: value "${value}" matches no Tab, so no tab is selected. Set it to one of the Tabs' values.`);
@@ -120,9 +121,9 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
     }
     const at = value != null ? before.indexOf(value) : -1;
     if (process.env.NODE_ENV !== 'production' && at < 0 && value != null && !before.length) warnOnce('tabs-value', `Tabs: defaultValue "${value}" matches no Tab, so the first tab is selected. Set it to one of the Tabs' values.`);
-    if (at < 0) { setInner(enabled[0]); return; }   // nothing chosen yet (or a defaultValue with no tab): no onValueChange
+    if (at < 0) { setInner(first); return; }   // nothing chosen yet (or a defaultValue with no tab): no onValueChange
     const after = before.slice(at + 1).find((v) => enabled.includes(v)), prev = before.slice(0, at).reverse().find((v) => enabled.includes(v));
-    const next = after ?? prev ?? enabled[0];
+    const next = after ?? prev ?? first;
     select(next);
     // Focus was on the closed tab (its own close button, or a Delete key the app handles): it goes to the tab now
     // selected, not to the page. A removed element can still read as the active one until the browser next looks.
@@ -181,10 +182,11 @@ export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>('
     else if (e.key === back) next = (i - 1 + tabs.length) % tabs.length;
     else if (e.key === 'Home') next = 0;
     else if (e.key === 'End') next = tabs.length - 1;
-    if (next < 0) return;
+    const tab = tabs[next];
+    if (!tab) return;
     e.preventDefault();
-    tabs[next].focus();
-    if (!ctx.manual && tabs[next].dataset.value != null) ctx.select(tabs[next].dataset.value as string);
+    tab.focus();
+    if (!ctx.manual && tab.dataset.value != null) ctx.select(tab.dataset.value);
   };
   const mergedRef2 = useMergedRef(ref, (n) => { list.current = n; });
   return <div {...props} ref={mergedRef2} role="tablist" aria-orientation={ctx.vertical ? 'vertical' : 'horizontal'}

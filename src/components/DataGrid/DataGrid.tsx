@@ -127,7 +127,10 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     setAt(next);
     focusCell.current = true;
   };
-  const editable = (p: Pos) => canEdit && p.r > 0 && !!columns[p.c] && !!columns[p.c].editable;
+  const editable = (p: Pos) => canEdit && p.r > 0 && !!columns[p.c]?.editable;
+  // A body cell's row and column, when both are in the grid (r counts the header row as 0).
+  const cellAt = (r: number, c: number) => { const row = rows[r - 1], col = columns[c]; return row && col ? { row, col } : null; };
+  const cellText = (r: number, c: number) => { const at = cellAt(r, c); return at ? textOf(at.col, at.row) : ''; };
   const change = (changes: DataGridCellChange[]) => {
     if (!changes.length || !props.onRowsChange) return;
     const next = rows.map((row) => {
@@ -165,11 +168,11 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     }
     if (ctrl && e.key.toLowerCase() === 'a') { e.preventDefault(); setAnchor({ r: 1, c: 0 }); setAt({ r: lastRow, c: lastCol }); return; }
     if (ctrl || e.altKey) return;
-    if ((e.key === 'Enter' || e.key === 'F2') && editable(cur)) { e.preventDefault(); setEdit({ text: textOf(columns[cur.c], rows[cur.r - 1]) }); return; }
+    if ((e.key === 'Enter' || e.key === 'F2') && editable(cur)) { e.preventDefault(); setEdit({ text: cellText(cur.r, cur.c) }); return; }
     if ((e.key === 'Delete' || e.key === 'Backspace') && range) {
       e.preventDefault();
       const list: DataGridCellChange[] = [];
-      for (let r = range.r1; r <= range.r2; r++) for (let c = range.c1; c <= range.c2; c++) if (editable({ r, c }) && textOf(columns[c], rows[r - 1])) list.push({ rowId: String(rows[r - 1][key]), column: columns[c].key, value: '' });
+      for (let r = range.r1; r <= range.r2; r++) for (let c = range.c1; c <= range.c2; c++) { const at = cellAt(r, c); if (at && editable({ r, c }) && textOf(at.col, at.row)) list.push({ rowId: String(at.row[key]), column: at.col.key, value: '' }); }
       change(list);
       return;
     }
@@ -181,7 +184,7 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     props.onCopy?.(e);
     if (edit || !range || e.defaultPrevented) return;
     const lines: string[] = [];
-    for (let r = range.r1; r <= range.r2; r++) lines.push(columns.slice(range.c1, range.c2 + 1).map((col) => textOf(col, rows[r - 1])).join('\t'));
+    for (let r = range.r1; r <= range.r2; r++) { const row = rows[r - 1]; if (row) lines.push(columns.slice(range.c1, range.c2 + 1).map((col) => textOf(col, row)).join('\t')); }
     e.preventDefault();
     e.clipboardData.setData('text/plain', lines.join('\n'));
     const cells = (range.r2 - range.r1 + 1) * (range.c2 - range.c1 + 1);
@@ -193,10 +196,10 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     e.preventDefault();
     const block = parseTsv(e.clipboardData.getData('text/plain'));
     // One value pasted over a range fills the range; a block fills from the active cell, as far as the grid goes.
-    const one = block.length === 1 && block[0].length === 1 && range;
+    const lone = block.length === 1 && block[0]?.length === 1 ? block[0][0] : undefined, one = lone !== undefined && range;
     const list: DataGridCellChange[] = [];
-    const put = (r: number, c: number, v: string) => { if (r <= lastRow && c <= lastCol && editable({ r, c })) list.push({ rowId: String(rows[r - 1][key]), column: columns[c].key, value: v }); };
-    if (one) { for (let r = range.r1; r <= range.r2; r++) for (let c = range.c1; c <= range.c2; c++) put(r, c, block[0][0]); }
+    const put = (r: number, c: number, v: string) => { const at = cellAt(r, c); if (at && editable({ r, c })) list.push({ rowId: String(at.row[key]), column: at.col.key, value: v }); };
+    if (one) { for (let r = range.r1; r <= range.r2; r++) for (let c = range.c1; c <= range.c2; c++) put(r, c, lone); }
     else { const r0 = range ? range.r1 : cur.r, c0 = range ? range.c1 : cur.c; block.forEach((line, i) => line.forEach((v, j) => put(r0 + i, c0 + j, v))); }
     change(list);
     if (list.length) announce(L.dataGridPasted(list.length, displayNumber(list.length, locale)));

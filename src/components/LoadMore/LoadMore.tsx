@@ -100,7 +100,7 @@ export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>
   const [near, setNear] = React.useState(false);
   React.useEffect(() => {
     if (!infinite || !box.current || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver((es) => setNear(es[es.length - 1].isIntersecting), { rootMargin: '0px 0px 200px 0px' });
+    const io = new IntersectionObserver((es) => setNear(!!es[es.length - 1]?.isIntersecting), { rootMargin: '0px 0px 200px 0px' });
     io.observe(box.current);
     return () => io.disconnect();
   }, [infinite]);

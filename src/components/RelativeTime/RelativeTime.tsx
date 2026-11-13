@@ -60,6 +60,7 @@ const UNITS: Array<[Intl.RelativeTimeFormatUnit, number, number]> = [
   // [unit, its length in seconds, use it while the gap is under this many seconds]
   ['second', 1, 45], ['minute', 60, 45 * 60], ['hour', 3600, 22 * 3600], ['day', 86400, 26 * 86400], ['month', 2629800, 320 * 86400], ['year', 31557600, Infinity],
 ];
+const unit = (i: number): [Intl.RelativeTimeFormatUnit, number, number] => UNITS[i] ?? ['year', 31557600, Infinity];
 
 /* A day on its own ("2026-10-24", as a date column or <input type="date"> gives it) is that local day. Date reads it
    as UTC midnight, the day before west of Greenwich, so "yesterday" came out as "2 days ago" there, and a day from
@@ -88,10 +89,10 @@ export function relativeTime(date: Date | number | string, now: number, locale?:
     for (; i >= 3; i--) {
       const n = i === 3 ? Math.round((Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) - Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())) / 86400000)
         : i === 4 ? (a.getFullYear() - b.getFullYear()) * 12 + a.getMonth() - b.getMonth() : a.getFullYear() - b.getFullYear();
-      if (n !== 0 || (day && i === 3)) return rtf.format(n, UNITS[i][0]);
+      if (n !== 0 || (day && i === 3)) return rtf.format(n, unit(i)[0]);
     }
   }
-  return rtf.format(Math.round(secs / UNITS[i][1]), UNITS[i][0]);
+  return rtf.format(Math.round(secs / unit(i)[1]), unit(i)[0]);
 }
 
 /* RelativeTime: a <time datetime> that says how long ago (or how far ahead) a moment is, in the locale's words:

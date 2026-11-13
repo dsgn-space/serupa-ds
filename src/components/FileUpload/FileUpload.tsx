@@ -100,7 +100,7 @@ const SUBTYPES: Record<string, string> = { jpeg: 'JPG', 'svg+xml': 'SVG', plain:
 function acceptedTypes(accept: string): string[] | null {
   const names: string[] = [];
   for (const a of accept.split(',').map((x) => x.trim().toLowerCase()).filter(Boolean)) {
-    const [main, sub] = a.split('/');
+    const [main = '', sub = ''] = a.split('/');
     const name = a.startsWith('.') ? (a === '.jpeg' ? 'JPG' : a.slice(1).toUpperCase())
       : sub === '*' ? KINDS[main] : SUBTYPES[sub] || (/^[a-z0-9]{2,5}$/.test(sub || '') ? sub.toUpperCase() : undefined);
     if (!name) return null;
@@ -197,7 +197,7 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
       else ok.push(f);
     }
     let next: File[];
-    if (!multiple) next = ok.length ? [ok[0]] : files;
+    if (!multiple) next = ok[0] ? [ok[0]] : files;
     else {
       next = files.slice();
       for (const f of ok) {

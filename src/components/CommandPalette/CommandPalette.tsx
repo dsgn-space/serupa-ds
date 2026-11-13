@@ -73,7 +73,7 @@ function score(c: Command, q: string): number {
   const label = fold(c.label);
   if (label.startsWith(q)) return 4;
   const at = label.indexOf(q);
-  if (at > 0 && /[\s\-_/.:]/.test(label[at - 1])) return 3;
+  if (at > 0 && /[\s\-_/.:]/.test(label.charAt(at - 1))) return 3;
   if (at > 0) return 2;
   return (c.keywords || []).some((k) => fold(k).includes(q)) ? 1 : 0;
 }
@@ -120,7 +120,7 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
     return [...m];
   }, [rows, labels.otherCommands]);
   const usable = groups.flatMap(([, rs]) => rs).filter((r) => !r.c.disabled);   // in the order listed, which is the arrows' order
-  const current = usable.length ? usable[Math.min(active, usable.length - 1)] : null;
+  const current = usable[Math.min(active, usable.length - 1)] ?? null;
 
   const base = domId('dk-cmdk', React.useId());
   const optId = (r: Row) => base + '-opt-' + r.i;
