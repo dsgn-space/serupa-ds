@@ -61,13 +61,22 @@ describe('Blocks/Activity feed', () => {
     await expect.poll(() => feed.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading: Activity']);
     expect(page.getByRole('button').elements()).toHaveLength(0);
     expect(page.getByText('No activity yet').elements()).toHaveLength(0);   // not empty: still loading
-    await screen.rerender(<ActivityFeed events={[]} hasMore onLoadMore={() => {}} title="Aktivitas" loading loadingText="Memuat aktivitas" />);
+    await screen.rerender(<ActivityFeed events={[]} hasMore onLoadMore={() => {}} title="Aktivitas" loading loadingLabel="Memuat aktivitas" />);
     await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat aktivitas']);
     await screen.rerender(<ActivityFeed events={all.slice(0, 2)} hasMore onLoadMore={() => {}} title="Aktivitas" />);
     const loaded = page.getByRole('region', { name: 'Aktivitas' });
     expect(loaded.getByRole('list').element().hasAttribute('aria-busy')).toBe(false);
     expect(loaded.getByRole('listitem').elements()).toHaveLength(2);
     await expect.element(page.getByRole('button', { name: 'Load more' })).toBeVisible();
+  });
+
+  test('loadingText, the old name of loadingLabel, still names the skeletons, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<ActivityFeed events={[]} loading {...{ loadingText: 'Memuat aktivitas' }} />);
+      await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat aktivitas']);
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('activity-feed-loading-text'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 
   test('every word can be given in the page language', async () => {
