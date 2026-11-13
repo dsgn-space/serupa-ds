@@ -42,16 +42,6 @@
           }
         }
       },
-      "more-bg-pressed": {
-        "$type": "color",
-        "$value": "{color.pressed}",
-        "$description": "Its background while held down, one step past hover.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--avatar-group-more-bg-pressed"
-          }
-        }
-      },
       "more-hover-bg": {
         "$type": "color",
         "$value": "{color.secondary-hover}",
