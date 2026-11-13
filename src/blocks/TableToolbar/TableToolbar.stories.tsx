@@ -3,7 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
-import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell } from '../../components/Table/Table';
+import { Table, TableBody, TableCell, TableColumnsMenu, TableHead, TableHeaderCell, TableRow, TableSelectCell, type TableColumnOption } from '../../components/Table/Table';
+import { FilterBar, type FilterValues } from '../../components/FilterBar/FilterBar';
 import { TableToolbar } from './TableToolbar';
 
 /* Table toolbar (BL3): search, filters, a results count and bulk actions above a table, as a block an app copies.
@@ -77,3 +78,40 @@ export const Filtered: Story = { args: { initialQuery: 'a', initialStatus: 'Acti
 
 /** With rows selected: "2 selected", the bulk actions, and Clear selection, between the count and the table. */
 export const Selected: Story = { args: { initialPicked: ['Mobile app', 'Help center'] } };
+
+/** A data table's toolbar: the filters as chips (a FilterBar) under the search, and a column picker beside the count. */
+export const ChipsAndColumns: Story = {
+  name: 'Chips and columns',
+  render: () => <DataTable />,
+};
+
+function DataTable() {
+  const [query, setQuery] = React.useState('');
+  const [filters, setFilters] = React.useState<FilterValues>({ status: ['Active', 'Paused'] });
+  const [cols, setCols] = React.useState<TableColumnOption[]>([
+    { id: 'name', label: 'Name', visible: true, required: true }, { id: 'status', label: 'Status', visible: true }, { id: 'owner', label: 'Owner', visible: true },
+  ]);
+  const q = query.trim().toLowerCase(), pick = (id: string) => { const v = filters[id]; return Array.isArray(v) ? v : []; };
+  const rows = PROJECTS.filter((p) => (!q || p.name.toLowerCase().includes(q)) && (!pick('status').length || pick('status').includes(p.status)) && (!pick('owner').length || pick('owner').includes(p.owner)));
+  const show = (id: string) => cols.some((c) => c.id === id && c.visible);
+  return (
+    <TableToolbar noun="projects" query={query} onQueryChange={setQuery} onClearFilters={() => setQuery('')}
+      results={rows.length === PROJECTS.length ? `${rows.length} projects` : `${rows.length} of ${PROJECTS.length} projects`}
+      filterBar={<FilterBar value={filters} onValueChange={setFilters} fields={[
+        { id: 'status', label: 'Status', type: 'select', multiple: true, options: ['Active', 'Paused', 'Done'] },
+        { id: 'owner', label: 'Owner', type: 'select', multiple: true, options: ['Ana', 'Budi', 'Chen', 'Dewi'] },
+      ]} />}
+      columns={<TableColumnsMenu columns={cols} onColumnsChange={setCols} />}>
+      <Table caption="Projects" hideCaption>
+        <TableHead><TableRow>
+          <TableHeaderCell>Name</TableHeaderCell>{show('status') ? <TableHeaderCell>Status</TableHeaderCell> : null}{show('owner') ? <TableHeaderCell>Owner</TableHeaderCell> : null}
+        </TableRow></TableHead>
+        <TableBody>{rows.map((p) => (
+          <TableRow key={p.name}>
+            <TableCell>{p.name}</TableCell>{show('status') ? <TableCell>{p.status}</TableCell> : null}{show('owner') ? <TableCell>{p.owner}</TableCell> : null}
+          </TableRow>
+        ))}</TableBody>
+      </Table>
+    </TableToolbar>
+  );
+}

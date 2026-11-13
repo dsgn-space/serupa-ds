@@ -143,6 +143,12 @@ jobs:
         run: |
           set -euo pipefail
           base=$(git rev-parse "origin/$BASE_REF")
+          # Someone merged the base in themselves after the push to main found the conflict: nothing to push, and no
+          # label, which would hold the branch's CI for a redraw nobody asked for (#1796, 13 Nov).
+          if git merge-base --is-ancestor "$base" HEAD; then
+            echo "::notice::#$NUMBER already has $BASE_REF: nothing to heal."
+            echo "skip=1" >> "$GITHUB_OUTPUT"; exit 0
+          fi
           id=(-c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com")
           if git "${id[@]}" merge --quiet --no-edit -m "Merge $BASE_REF into the branch (Update baselines)" "$base"; then exit 0; fi
           baseline='^tools/test/(baseline-visual(-firefox|-webkit)?/.*\.png|baseline-utilities\.json)$'
