@@ -4,14 +4,18 @@
 // The queue then fails on Visual after 15 minutes, and every group behind it is built again; this fails in seconds.
 //   node tools/fresh.mjs --base <main's commit> --head <the branch's commit>
 // It reads both sides' changed files from GitHub (gh api; GH_TOKEN and GH_REPO on a runner) and checks out nothing more.
-// A change outside component, block and pattern folders (tokens, shared code) is left to the after-main redraw in
-// visual-baselines.yml, which draws every picture again on main.
+// A change to the theme on main (tokens.css, the base styles, the fonts) makes every picture the branch drew stale: the
+// after-main redraw in visual-baselines.yml draws main's own pictures again, but not a branch's (13 Nov: two new
+// patterns drawn before a theme change failed Visual in the queue three times). Other shared code is left to that redraw.
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { affectedComponents, withDependents } from './test/lib.mjs';
 
 const VISUAL = /^tools\/test\/baseline-visual\/([A-Z]\w*)\//;
 const SCOPED = /^(?:src\/(?:components|blocks|patterns)\/[A-Z]|tools\/test\/baseline-visual\/[A-Z])/;
+// What every picture is drawn with: the built tokens (tokens.css, made from tokens/ and tokens.json), the base styles
+// and the fonts.
+const THEME = /^(?:tokens\.css$|src\/styles\/[^/]+\.css$|fonts\/)/;
 
 // The pictures the branch drew that can't match after the merge: the branch changed a component's pictures, and main
 // changed that component (its code or its pictures) or the pictures of one it shows (a pattern showing a Button).
@@ -27,6 +31,7 @@ export function staleComponents(branchFiles, mainFiles, dependents = withDepende
     return { pictures, touched: affectedComponents(scoped) ?? new Set(), reach: dependents(pictures) };
   };
   const b = side(branchFiles), m = side(mainFiles);
+  if (mainFiles.some((f) => THEME.test(f))) return [...b.pictures].sort();
   const stale = new Set();
   for (const n of b.pictures) if (m.touched.has(n) || m.reach.has(n)) stale.add(n);
   return [...stale].sort();
