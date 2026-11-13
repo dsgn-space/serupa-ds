@@ -13,8 +13,8 @@ const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'meta
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const items = (id: string) => [...el(id).querySelectorAll<HTMLElement>(':scope > [data-state]')];
 const state = (id: string) => items(id).map((i) => (i.dataset.state === 'open' ? 1 : 0)).join('');
-const trigger = (id: string, n: number) => items(id)[n - 1].querySelector('button[aria-expanded]') as HTMLButtonElement;
-const panel = (id: string, n = 1) => items(id)[n - 1].querySelector('[aria-labelledby]') as HTMLElement;
+const trigger = (id: string, n: number) => items(id)[n - 1]!.querySelector('button[aria-expanded]') as HTMLButtonElement;
+const panel = (id: string, n = 1) => items(id)[n - 1]!.querySelector('[aria-labelledby]') as HTMLElement;
 const contentOf = (id: string, n = 1) => panel(id, n).firstElementChild!.firstElementChild as HTMLElement;
 const focused = () => (document.activeElement!.matches('button[aria-expanded]') ? document.activeElement!.textContent : undefined);
 // The open and close animation finished (the panel and the chevron).

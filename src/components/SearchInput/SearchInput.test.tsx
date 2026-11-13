@@ -9,7 +9,7 @@ import { SearchInput } from './SearchInput';
 // and 0.25px after the end both land 1px out): the 24px box behind it (WCAG 2.5.8) takes presses there.
 const reach = (b: HTMLElement) => {
   const r = b.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  return [[r.left - 0.75, cy], [r.right + 0.25, cy], [cx, r.top - 0.75], [cx, r.bottom + 0.25]].map(([x, y]) => document.elementFromPoint(x, y)?.closest('button') === b);
+  return [[r.left - 0.75, cy], [r.right + 0.25, cy], [cx, r.top - 0.75], [cx, r.bottom + 0.25]].map(([x, y]) => document.elementFromPoint(x!, y!)?.closest('button') === b);
 };
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
@@ -50,7 +50,7 @@ describe('SearchInput', () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<Wrap><Main calls={[]} sref={ref} /></Wrap>);
     const i = field('q'), b = box('q'), ic = b.querySelector(':scope > span:first-child')!;
-    expect([i.type, i.getAttribute('enterkeyhint'), ref.current === i, b.className, b.dataset.component, b.getBoundingClientRect().height, i.labels![0].textContent])
+    expect([i.type, i.getAttribute('enterkeyhint'), ref.current === i, b.className, b.dataset.component, b.getBoundingClientRect().height, i.labels![0]!.textContent])
       .toEqual(['search', 'search', true, 'dk-input dk-search-input dk-input--size-md extra', 'search-input', 32, 'Search projects']);
     expect([(ic.querySelector('[data-icon]') as HTMLElement).dataset.icon, ic.getAttribute('aria-hidden'), clearBtn('q')]).toEqual(['search', 'true', null]);
   });

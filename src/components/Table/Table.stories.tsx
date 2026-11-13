@@ -119,7 +119,7 @@ export const SelectableRows: Story = {
 export const ActionBar: Story = {
   render: function Render(args) {
     const people = usePeople();
-    const [picked, setPicked] = React.useState<string[]>([people[0], people[2]].filter(Boolean).map((p) => p.name));
+    const [picked, setPicked] = React.useState<string[]>([people[0], people[2]].filter(Boolean).map((p) => p!.name));
     const all = people.length > 0 && picked.length === people.length;
     const toggle = (n: string) => setPicked(picked.includes(n) ? picked.filter((x) => x !== n) : [...picked, n]);
     return <>
@@ -215,7 +215,7 @@ function ColumnTools(args: React.ComponentProps<typeof Table>) {
   const cols = COLS.filter((c) => shown[c.id]);
   return (
     <div className="flex flex-col items-end gap-2" style={{ maxWidth: 560 }}>
-      <TableColumnsMenu columns={[{ id: 'customer', label: 'Customer', visible: true, required: true }, ...COLS.map((c) => ({ ...c, visible: shown[c.id] }))]}
+      <TableColumnsMenu columns={[{ id: 'customer', label: 'Customer', visible: true, required: true }, ...COLS.map((c) => ({ ...c, visible: !!shown[c.id] }))]}
         onColumnsChange={(_cols, d) => setShown({ ...shown, [d.id]: d.visible })} />
       <Table {...args} caption="Orders" hideCaption layout="fixed" pinEnd containerProps={{ style: { width: '100%' } }}>
         <TableHead>

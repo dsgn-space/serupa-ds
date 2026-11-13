@@ -52,12 +52,12 @@ describe('hover fills in fields and popups show in all six themes', () => {
     await expect.poll(() => document.querySelector('[role="grid"]')).not.toBeNull();
     const days = [...document.querySelectorAll<HTMLElement>('[role="grid"] button')];
     // October 2026 starts on a Thursday, so the first day shown belongs to September in every week layout.
-    await check('day', days[15], true);
-    await check('day of another month', days[0], true);
+    await check('day', days[15]!, true);
+    await check('day of another month', days[0]!, true);
     await userEvent.keyboard('{Escape}');
     await userEvent.click(place());
     await expect.poll(() => document.querySelectorAll('[role="option"]').length).toBeGreaterThan(1);
-    await check('cascade option', document.querySelectorAll<HTMLElement>('[role="option"]')[1], true);
+    await check('cascade option', document.querySelectorAll<HTMLElement>('[role="option"]')[1]!, true);
     still.remove();
     expect(flat).toEqual([]);
   });

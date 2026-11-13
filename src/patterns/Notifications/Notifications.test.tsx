@@ -99,10 +99,10 @@ describe('Patterns/Notifications', () => {
     const seen = rows.map((li) => getComputedStyle(dot(li)).visibility);
     expect(seen).toEqual(['visible', 'visible', 'visible', 'hidden', 'hidden']);
     const probe = document.createElement('span'); probe.style.color = 'var(--primary)'; document.body.append(probe);
-    expect(getComputedStyle(dot(rows[0])).backgroundColor).toBe(getComputedStyle(probe).color);
+    expect(getComputedStyle(dot(rows[0]!)).backgroundColor).toBe(getComputedStyle(probe).color);
     probe.remove();
-    expect([dot(rows[0]).getAttribute('aria-hidden'), dot(rows[0]).getBoundingClientRect().width, dot(rows[0]).getBoundingClientRect().left]).toEqual(['true', 8, dot(rows[3]).getBoundingClientRect().left]);
-    expect(getComputedStyle(dot(rows[0]).nextElementSibling!).fontWeight).toBe('600');
+    expect([dot(rows[0]!).getAttribute('aria-hidden'), dot(rows[0]!).getBoundingClientRect().width, dot(rows[0]!).getBoundingClientRect().left]).toEqual(['true', 8, dot(rows[3]!).getBoundingClientRect().left]);
+    expect(getComputedStyle(dot(rows[0]!).nextElementSibling!).fontWeight).toBe('600');
   });
 
   test('"Notification settings" by the heading leads to settingsHref, so turning notifications off is one step away', async () => {

@@ -73,7 +73,7 @@ describe('TimeZonePicker: current names (GR174)', () => {
     const onValueChange = vi.fn();
     await render(<><TimeZonePicker aria-label="Kyiv" at={AT} defaultValue="Europe/Kyiv" onValueChange={onValueChange} /><TimeZonePicker aria-label="Old" at={AT} defaultValue="Asia/Calcutta" /></>);
     const [kyiv, old] = [...document.querySelectorAll<HTMLInputElement>('input[role="combobox"]')];
-    expect([kyiv.value, old.value]).toEqual(['Kyiv', 'Kolkata']);
+    expect([kyiv!.value, old!.value]).toEqual(['Kyiv', 'Kolkata']);
   });
 
   test('typing finds a city by its current name, its old name, or a common abbreviation or big city', async () => {

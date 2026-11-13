@@ -20,7 +20,7 @@ const clearOf = (id: string) => el(id).parentElement!.querySelector<HTMLButtonEl
 const activeOf = (id: string) => document.getElementById(el(id).getAttribute('aria-activedescendant')!)!;
 // The popup's message rows: Loading (role=status), "No results" and "Couldn't load" (plain text: the announcer says them, GR53).
 const messagesOf = (pop: Element) => [...pop.children].filter((c) => c.getAttribute('role') !== 'listbox');
-const statusOf = (id: string) => messagesOf(popOf(id))[0];
+const statusOf = (id: string) => messagesOf(popOf(id))[0]!;
 const label = (o: Element) => o.firstElementChild!.firstElementChild!.textContent;
 const st = (id: string) => {
   const i = el(id), list = i.closest('[data-component=combobox]')!.querySelector('[role=listbox]')!, pop = list.parentElement!, ad = i.getAttribute('aria-activedescendant');
@@ -97,7 +97,7 @@ describe('Combobox', () => {
     expect([i.getAttribute('role'), i.getAttribute('aria-expanded'), i.getAttribute('aria-autocomplete'), i.getAttribute('aria-haspopup'), i.autocomplete]).toEqual(['combobox', 'false', 'list', 'listbox', 'off']);
     // aria-controls only while the list is open, on the field and the chevron.
     expect([i.getAttribute('aria-controls'), toggle.getAttribute('aria-controls')]).toEqual([null, null]);
-    expect([list.getAttribute('role'), list.parentElement!.hidden, i.labels![0].textContent, ref.current === i]).toEqual(['listbox', true, 'Country', true]);
+    expect([list.getAttribute('role'), list.parentElement!.hidden, i.labels![0]!.textContent, ref.current === i]).toEqual(['listbox', true, 'Country', true]);
     expect(box.className).toMatch(/dk-input dk-combobox.*extra/);
     expect([box.dataset.component, box.offsetHeight, toggle.getAttribute('aria-label'), toggle.tabIndex]).toEqual(['combobox', 32, 'Show options', -1]);
   });
@@ -144,7 +144,7 @@ describe('Combobox', () => {
     await expect.poll(() => rows().length).toBeGreaterThan(5);
     const drawn = rows().length;
     expect(drawn).toBeLessThan(30);
-    expect([st('cb').active, rows()[0].getAttribute('aria-posinset'), rows()[0].getAttribute('aria-setsize')]).toEqual(['Option 0', '1', '2000']);
+    expect([st('cb').active, rows()[0]!.getAttribute('aria-posinset'), rows()[0]!.getAttribute('aria-setsize')]).toEqual(['Option 0', '1', '2000']);
     // No "keep typing" line: every match is in reach.
     expect(popOf('cb').textContent).not.toMatch(/Keep typing/);
     await userEvent.keyboard('{ArrowDown}');
@@ -158,7 +158,7 @@ describe('Combobox', () => {
     expect(rows().length).toBeLessThan(30);
     await userEvent.keyboard('1999');
     await expect.poll(() => st('cb').opts).toEqual(['Option 1999']);
-    expect(rows()[0].getAttribute('aria-setsize')).toBe('1');
+    expect(rows()[0]!.getAttribute('aria-setsize')).toBe('1');
     await userEvent.keyboard('{Escape}');
     expect(list().querySelectorAll('[role=option]').length).toBe(0);
   });
@@ -368,7 +368,7 @@ describe('Combobox', () => {
     await render(<div><button id="before">Before</button><Combobox id="cb" aria-label="City" options={['Łódź', 'Straße', 'Ørsted', 'Tokyo', 'Paris']} /></div>);
     await open();
     for (const [typed, found] of [['lodz', 'Łódź'], ['strasse', 'Straße'], ['orsted', 'Ørsted'], ['ｔｏｋｙｏ', 'Tokyo']]) {
-      await selectAll(); await userEvent.keyboard(typed);
+      await selectAll(); await userEvent.keyboard(typed!);
       expect(st('cb').opts, typed).toEqual([found]);
     }
   });
@@ -408,7 +408,7 @@ describe('Combobox', () => {
     await render(<Countries />);
     await userEvent.click(el('cb'));
     await expect.poll(() => [st('cb').open, st('cb').opts.length]).toEqual(['true', 7]);
-    await userEvent.click(popOf('cb').querySelectorAll('[role=option]')[1]);
+    await userEvent.click(popOf('cb').querySelectorAll('[role=option]')[1]!);
     const s = st('cb');
     expect([s.text, s.open, s.focus]).toEqual(['Brazil', 'false', true]);
   });
@@ -418,7 +418,7 @@ describe('Combobox', () => {
     const toggle = toggleOf('cb');
     await userEvent.click(toggle);
     expect([st('cb').open, st('cb').focus]).toEqual(['true', true]);
-    await userEvent.click(popOf('cb').querySelectorAll('[role=option]')[4], { force: true });
+    await userEvent.click(popOf('cb').querySelectorAll('[role=option]')[4]!, { force: true });
     expect([st('cb').text, st('cb').open]).toEqual(['', 'true']);
     await userEvent.click(toggle);
     expect(st('cb').open).toBe('false');
@@ -561,7 +561,7 @@ describe('Combobox', () => {
     const pop = popOf('cwide');
     await expect.poll(() => pop.matches(':popover-open')).toBe(true);
     const w = pop.getBoundingClientRect().width, opt = pop.querySelectorAll<HTMLElement>('[role=option]');
-    expect([w <= 448.5, w >= 200, opt[1].offsetHeight > 32, opt[2].scrollWidth <= opt[2].clientWidth]).toEqual([true, true, true, true]);
+    expect([w <= 448.5, w >= 200, opt[1]!.offsetHeight > 32, opt[2]!.scrollWidth <= opt[2]!.clientWidth]).toEqual([true, true, true, true]);
   });
 
   test('an option is named by its label; a text description is its aria-description (N8)', async () => {
@@ -828,9 +828,9 @@ describe('Combobox loadOptions (DG1)', () => {
     await userEvent.keyboard('n');
     expect(s.calls.map((c) => [c.text, c.signal.aborted])).toEqual([['c', true], ['ca', true], ['can', false]]);
     expect(status('l')).toBe('Loading…');
-    s.calls[2].ok(['Canada']);
+    s.calls[2]!.ok(['Canada']);
     await expect.poll(() => st('l').opts).toEqual(['Canada']);
-    s.calls[1].ok(['Cameroon', 'Canada']);   // too late: aborted, so dropped
+    s.calls[1]!.ok(['Cameroon', 'Canada']);   // too late: aborted, so dropped
     await new Promise((r) => setTimeout(r, 30));
     expect([st('l').opts, st('l').active, status('l')]).toEqual([['Canada'], 'Canada', '']);
   });
@@ -841,7 +841,7 @@ describe('Combobox loadOptions (DG1)', () => {
     el('d').focus();
     await userEvent.keyboard('{ArrowDown}');
     expect(s.calls.map((c) => c.text)).toEqual(['']);
-    s.calls[0].ok(['Argentina', 'Brazil']);
+    s.calls[0]!.ok(['Argentina', 'Brazil']);
     await expect.poll(() => st('d').opts).toEqual(['Argentina', 'Brazil']);
     // The pause runs on a fake clock, so slow keystrokes (a busy runner) can't outlast it and load early.
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
@@ -852,12 +852,12 @@ describe('Combobox loadOptions (DG1)', () => {
       await React.act(async () => { vi.advanceTimersByTime(1); });
     } finally { vi.useRealTimers(); }
     expect(s.calls.length).toBe(2);
-    expect(s.calls[1].text).toBe('per');
-    s.calls[1].fail();
+    expect(s.calls[1]!.text).toBe('per');
+    s.calls[1]!.fail();
     await expect.poll(() => status('d')).toBe('Couldn’t load options. Type to try again.');
     await userEvent.keyboard('u');
     await expect.poll(() => s.calls.length).toBe(3);
-    s.calls[2].ok(['Peru']);
+    s.calls[2]!.ok(['Peru']);
     await expect.poll(() => [st('d').opts, status('d')]).toEqual([['Peru'], '']);
     expect(idLabels.loadFailed).toBe('Gagal memuat pilihan. Ketik untuk mencoba lagi.');
   });
@@ -869,8 +869,8 @@ describe('Combobox loadOptions (DG1)', () => {
     await userEvent.keyboard('p');
     await userEvent.keyboard('e');
     expect(s.calls.map((c) => [c.text, c.signal.aborted])).toEqual([['p', true], ['pe', false]]);
-    s.calls[0].fail();
-    s.calls[1].ok(['Peru']);
+    s.calls[0]!.fail();
+    s.calls[1]!.ok(['Peru']);
     await expect.poll(() => st('x').opts).toEqual(['Peru']);
     expect(status('x')).not.toMatch(/load/i);
     const thrown = () => { throw new Error('no network'); };
@@ -956,7 +956,7 @@ describe('Combobox loadOptions (DG1)', () => {
     el('w').focus();
     await userEvent.keyboard('bandung{Enter}');
     expect([s.calls.map((c) => c.text), st('w').text]).toEqual([['bandung'], 'bandung']);   // sent at once, text kept
-    s.calls[0].ok(['Bandung']);
+    s.calls[0]!.ok(['Bandung']);
     await expect.poll(() => [st('w').text, got]).toEqual(['Bandung', ['Bandung']]);
     el('w2').focus();
     await userEvent.keyboard('band');

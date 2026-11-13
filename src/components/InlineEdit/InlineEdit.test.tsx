@@ -56,7 +56,7 @@ describe('InlineEdit', () => {
       await new Promise((r) => setTimeout(r, 30));
       expect([!!field(), pending.length]).toEqual([true, 0]);
       await userEvent.keyboard('{Enter}');
-      pending[0](null);
+      pending[0]!(null);
       await expect.poll(() => field()).toBeNull();
       await expect.poll(() => sr.activeElement?.tagName).toBe('BUTTON');
       expect(saved).toEqual(['Atlas 2']);
@@ -164,18 +164,18 @@ describe('InlineEdit', () => {
     await userEvent.fill(input('vp')!, 'taken');
     await userEvent.keyboard('{Enter}');
     await expect.poll(() => input('vp')!.getAttribute('aria-busy')).toBe('true');
-    pending[0]('That slug is taken.');
+    pending[0]!('That slug is taken.');
     await expect.poll(() => input('vp')!.getAttribute('aria-invalid')).toBe('true');
     expect([input('vp')!.hasAttribute('aria-busy'), document.getElementById(input('vp')!.getAttribute('aria-describedby')!)!.textContent, calls]).toEqual([false, 'That slug is taken.', []]);
     await expect.poll(() => announcerIdle() && said()).toBe('That slug is taken.');
     // A check whose text was edited since doesn't count.
     await userEvent.keyboard('{Enter}');
     await userEvent.keyboard('-2');
-    pending[1](null);
+    pending[1]!(null);
     await new Promise((r) => setTimeout(r, 50));
     expect([input('vp')!.value, input('vp')!.hasAttribute('aria-busy'), calls]).toEqual(['taken-2', false, []]);
     await userEvent.keyboard('{Enter}');
-    pending[2](null);
+    pending[2]!(null);
     await expect.poll(() => input('vp')).toBe(null);
     expect([calls, document.activeElement === view('vp'), view('vp').textContent]).toEqual([['taken-2'], true, 'Slug: taken-2, Edit']);
     // Escape while a check runs puts the text back, and its answer is ignored.
@@ -183,7 +183,7 @@ describe('InlineEdit', () => {
     await userEvent.fill(input('vp')!, 'later');
     await userEvent.keyboard('{Enter}');
     await userEvent.keyboard('{Escape}');
-    pending[3](null);
+    pending[3]!(null);
     await new Promise((r) => setTimeout(r, 50));
     expect([input('vp'), calls, view('vp').textContent]).toEqual([null, ['taken-2'], 'Slug: taken-2, Edit']);
   });
@@ -288,7 +288,7 @@ describe('InlineEdit', () => {
       const page = css(root('c').parentElement).backgroundColor, hover = css(document.getElementById('hover-bg')).backgroundColor;
       for (const [id, need] of [['c', 4.5], ['cp', 4.5]] as const) {
         const fg = css(view(id).querySelector(TEXT)).color;
-        for (const [where, bg] of [['page', page], ['hover', hover]]) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${id} on ${where} ${r.toFixed(2)}`); }
+        for (const [where, bg] of [['page', page], ['hover', hover]]) { const r = contrast(fg, bg!); if (r < need) low.push(`${th} ${id} on ${where} ${r.toFixed(2)}`); }
       }
     }
     document.documentElement.removeAttribute('data-theme');

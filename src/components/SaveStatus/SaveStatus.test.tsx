@@ -134,8 +134,8 @@ describe('SaveStatus motion (KW19)', () => {
     e.addEventListener('transitionrun', (ev) => { if (ev.target instanceof HTMLElement && ev.target.parentElement === e) ran.push(ev.target.textContent + ' ' + ev.propertyName); });
     await screen.rerender(<SaveStatus id="m" status="saved" />);
     const [out, inn] = [...e.children] as HTMLElement[];
-    expect([e.children.length, out.textContent, out.inert, out.getAttribute('aria-hidden'), inn.textContent, inn.inert]).toEqual([2, 'Saving…', true, 'true', 'Saved', false]);
-    expect([out.offsetTop, out.offsetLeft]).toEqual([inn.offsetTop, inn.offsetLeft]);   // one cell (the layout box: both are mid-scale)
+    expect([e.children.length, out!.textContent, out!.inert, out!.getAttribute('aria-hidden'), inn!.textContent, inn!.inert]).toEqual([2, 'Saving…', true, 'true', 'Saved', false]);
+    expect([out!.offsetTop, out!.offsetLeft]).toEqual([inn!.offsetTop, inn!.offsetLeft]);   // one cell (the layout box: both are mid-scale)
     await expect.poll(() => e.children.length, { timeout: 2000 }).toBe(1);
     expect([...new Set(ran)].sort()).toEqual(['Saved filter', 'Saved opacity', 'Saved scale', 'Saving… filter', 'Saving… opacity', 'Saving… scale']);
     expect(e.textContent).toBe('Saved');

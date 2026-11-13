@@ -47,7 +47,7 @@ export const Links: Story = {
 // Rows of different heights: each is measured once drawn.
 export const MixedHeights: Story = {
   args: {
-    renderItem: (i: number) => { const p = person(i); return <ListItem title={p.name} description={i % 4 === 0 ? `${p.email}, on the ${p.role.toLowerCase()} team since ${2000 + (i % 25)}, working across design, engineering and support` : p.email} />; },
+    renderItem: (i: number) => { const p = person(i); return <ListItem title={p.name} description={i % 4 === 0 ? `${p.email}, on the ${p.role!.toLowerCase()} team since ${2000 + (i % 25)}, working across design, engineering and support` : p.email} />; },
   },
 };
 // The stress story (G14): long words and long labels that wrap.

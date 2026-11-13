@@ -65,7 +65,7 @@ describe('MentionInput', () => {
     await userEvent.keyboard('{ArrowUp}');
     expect(active()).toBe('André Wijaya');
     await userEvent.keyboard('{Enter}');
-    expect([box().value, box().selectionStart, isOpen(), onMention.mock.calls[0][0].id]).toEqual(['Ask @André Wijaya ', 18, false, 'andre']);
+    expect([box().value, box().selectionStart, isOpen(), onMention.mock.calls[0]![0].id]).toEqual(['Ask @André Wijaya ', 18, false, 'andre']);
     await userEvent.keyboard('please');
     expect(box().value).toBe('Ask @André Wijaya please');
   });
@@ -196,7 +196,7 @@ describe('MentionInput', () => {
     await userEvent.keyboard('@');
     await expect.poll(isOpen).toBe(true);
     const pop = list().closest('[popover]') as HTMLElement;
-    const opt = document.querySelectorAll<HTMLElement>('[role="option"]')[1], act = activeOption()!;
+    const opt = document.querySelectorAll<HTMLElement>('[role="option"]')[1]!, act = activeOption()!;
     const desc = act.lastElementChild!.lastElementChild as HTMLElement;   // Ayu's description
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

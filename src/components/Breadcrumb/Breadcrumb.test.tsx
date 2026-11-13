@@ -46,9 +46,9 @@ describe('Breadcrumb', () => {
   test('separators: a 16px chevron_right at the start of each item after the first, hidden from screen readers, 6px from the links on both sides; an item can have a 16px icon', async () => {
     await render(<Home />);
     const s = q('#bdef .dk-breadcrumb__separator'), vis = shownIcons(s);
-    expect([s.getAttribute('aria-hidden'), vis.map((i) => i.dataset.icon).join(), css(vis[0]).fontSize, s.parentElement!.tagName]).toEqual(['true', 'chevron_right', '16px', 'LI']);
+    expect([s.getAttribute('aria-hidden'), vis.map((i) => i.dataset.icon).join(), css(vis[0]!).fontSize, s.parentElement!.tagName]).toEqual(['true', 'chevron_right', '16px', 'LI']);
     expect([...el('bdef').querySelectorAll('li')].map((li) => li.querySelectorAll(':scope > span[aria-hidden="true"]').length)).toEqual([0, 1, 1]);
-    const a = q('#bdef a').getBoundingClientRect(), sr = s.getBoundingClientRect(), b = el('bdef').querySelectorAll('a')[1].getBoundingClientRect();
+    const a = q('#bdef a').getBoundingClientRect(), sr = s.getBoundingClientRect(), b = el('bdef').querySelectorAll('a')[1]!.getBoundingClientRect();
     expect([Math.round(sr.left - a.right), Math.round(b.left - sr.right)]).toEqual([6, 6]);
     const i = q('#bdef .dk-breadcrumb__icon .dk-icon');
     expect([i.dataset.icon, css(i).fontSize]).toEqual(['home', '16px']);
@@ -106,7 +106,7 @@ describe('Breadcrumb', () => {
     await userEvent.click(b);
     const menu = await expect.poll(() => document.querySelector('[role="menu"]')).toBeTruthy().then(() => q('[role="menu"]'));
     const links = [...menu.querySelectorAll('[role="menuitem"]')];
-    expect([menu.getAttribute('aria-label'), links.map((l) => [l.tagName, l.getAttribute('href'), l.textContent].join(' ')), !!links[0].querySelector('[data-icon]')])
+    expect([menu.getAttribute('aria-label'), links.map((l) => [l.tagName, l.getAttribute('href'), l.textContent].join(' ')), !!links[0]!.querySelector('[data-icon]')])
       .toEqual(['More pages', ['A #Org Org', 'A #Team Team', 'A #Projects Projects'], true]);
     await expect.poll(() => document.activeElement).toBe(links[0]);
     expect(trail('bmenu')).toBe('Home > … > Website > Settings');
@@ -195,7 +195,7 @@ describe('Breadcrumb', () => {
     const far = Math.max(...[...el('narrow').querySelectorAll('li')].map((li) => Math.round(li.getBoundingClientRect().right)));
     expect(far).toBeLessThanOrEqual(Math.round(box.right));
     const more = el('narrow').querySelector('button')!, r = more.getBoundingClientRect();
-    const reach = [[r.left - 3, (r.top + r.bottom) / 2], [(r.left + r.right) / 2, r.top - 1.5]].map(([x, y]) => document.elementFromPoint(x, y) === more);
+    const reach = [[r.left - 3, (r.top + r.bottom) / 2], [(r.left + r.right) / 2, r.top - 1.5]].map(([x, y]) => document.elementFromPoint(x!, y!) === more);
     expect(reach).toEqual([true, true]);
     expect(warn.mock.calls.filter((c) => String(c[0]).includes('BreadcrumbItem has no accessible name')).length).toBe(1);
     expect(document.getElementById('empty')).toBeNull();

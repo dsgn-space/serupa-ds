@@ -17,14 +17,14 @@ const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'meta
 // and 0.25px after the end both land 1px out): the 24px box behind it (WCAG 2.5.8) takes presses there.
 const reach = (b: HTMLElement) => {
   const r = b.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  return [[r.left - 0.75, cy], [r.right + 0.25, cy], [cx, r.top - 0.75], [cx, r.bottom + 0.25]].map(([x, y]) => document.elementFromPoint(x, y)?.closest('button') === b);
+  return [[r.left - 0.75, cy], [r.right + 0.25, cy], [cx, r.top - 0.75], [cx, r.bottom + 0.25]].map(([x, y]) => document.elementFromPoint(x!, y!)?.closest('button') === b);
 };
 
 const field = (id: string) => document.getElementById(id) as HTMLInputElement;
 // The two step buttons say which field they change (aria-controls).
 const steps = (id: string) => [...field(id).parentElement!.querySelectorAll<HTMLButtonElement>(`button[aria-controls="${field(id).id}"]`)];
-const minus = (id: string) => steps(id)[0];
-const plus = (id: string) => steps(id)[1];
+const minus = (id: string) => steps(id)[0]!;
+const plus = (id: string) => steps(id)[1]!;
 // Replaces the field's text, as a person selecting it all and typing would, then (optionally) leaves it.
 const fill = async (id: string, text: string) => { await userEvent.fill(field(id), text); };
 const blur = async (id: string) => { field(id).blur(); await expect.poll(() => document.activeElement !== field(id)).toBe(true); };
@@ -60,7 +60,7 @@ describe('NumberInput', () => {
       .toEqual(['text', 'spinbutton', '5', '0', '100', 'numeric', true]);
     expect(box.className).toMatch(/dk-input dk-number-input dk-input--size-md/);
     expect(box.className).toMatch(/extra/);
-    expect([box.dataset.component, box.getBoundingClientRect().height, i.labels![0].textContent, i.value]).toEqual(['number-input', 32, 'Quantity', '5']);
+    expect([box.dataset.component, box.getBoundingClientRect().height, i.labels![0]!.textContent, i.value]).toEqual(['number-input', 32, 'Quantity', '5']);
     expect(steps('qty').map((b) => `${b.getAttribute('aria-label')}:${b.tabIndex}:${b.querySelector<HTMLElement>('[data-icon]')?.dataset.icon}`)).toEqual(['Decrease:-1:remove', 'Increase:-1:add']);
   });
 
@@ -237,8 +237,8 @@ describe('NumberInput', () => {
     await render(<SerupaProvider locale="en-US"><NumberInput id="snap" aria-label="Amount" step={0.25} largeStep={10} /></SerupaProvider>);
     const seen: string[] = [];
     for (const [typed, key] of [['0.1', '{ArrowUp}'], ['0.1', '{ArrowDown}'], ['0.6', '{PageUp}'], ['0.5', '{ArrowUp}'], ['-0.1', '{ArrowUp}']]) {
-      await fill('snap', typed);
-      await userEvent.keyboard(key);
+      await fill('snap', typed!);
+      await userEvent.keyboard(key!);
       seen.push(field('snap').value);
     }
     expect(seen).toEqual(['0.25', '0', '3', '0.75', '0']);
@@ -524,11 +524,11 @@ describe('NumberInput', () => {
   test('size sm: each stepper is 22px but takes presses over 24px (WCAG 2.5.8), past each outer edge, without moving anything', async () => {
     await render(<div style={{ width: '320px', padding: '8px' }}><NumberInput id="hb" aria-label="Seats" size="sm" defaultValue={5} /></div>);
     const [dec, inc] = [...document.querySelector<HTMLElement>('#hb')!.closest('[data-component="number-input"]')!.querySelectorAll<HTMLElement>('button[aria-controls]')];
-    expect([Math.round(dec.getBoundingClientRect().height), Math.round(inc.getBoundingClientRect().width)]).toEqual([22, 22]);
+    expect([Math.round(dec!.getBoundingClientRect().height), Math.round(inc!.getBoundingClientRect().width)]).toEqual([22, 22]);
     // Start, top and bottom of Decrease; end, top and bottom of Increase. The 2px between them goes to one or the other.
-    const [ds, , dt, db] = reach(dec), [, ie, it, ib] = reach(inc);
+    const [ds, , dt, db] = reach(dec!), [, ie, it, ib] = reach(inc!);
     expect([ds, dt, db, ie, it, ib]).toEqual([true, true, true, true, true, true]);
-    const gap = (dec.getBoundingClientRect().right + inc.getBoundingClientRect().left) / 2, mid = dec.getBoundingClientRect().top + 11;
+    const gap = (dec!.getBoundingClientRect().right + inc!.getBoundingClientRect().left) / 2, mid = dec!.getBoundingClientRect().top + 11;
     expect([dec, inc]).toContain(document.elementFromPoint(gap, mid)?.closest('button'));
   });
 

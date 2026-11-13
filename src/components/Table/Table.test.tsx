@@ -137,13 +137,13 @@ describe('Table', () => {
     }
     await render(<><Pick /><Table id="tun"><TableBody><TableRow data-i="u"><TableSelectCell label="Select Ada" /><TableCell>Ada</TableCell></TableRow></TableBody></Table></>);
     const boxes = [...el('tsel').querySelectorAll<HTMLInputElement>('input[type=checkbox]')], head = q('#tsel thead .dk-table__select');
-    expect([head.tagName, head.getAttribute('scope'), boxes.map((b) => b.getAttribute('aria-label')).join('|'), boxes.map((b) => b.checked).join(), boxes[0].indeterminate, r.current === boxes[1], boxes[1].name, boxes[1].value, (boxes[1].closest('td') as HTMLElement).dataset.c])
+    expect([head.tagName, head.getAttribute('scope'), boxes.map((b) => b.getAttribute('aria-label')).join('|'), boxes.map((b) => b.checked).join(), boxes[0]!.indeterminate, r.current === boxes[1], boxes[1]!.name, boxes[1]!.value, (boxes[1]!.closest('td') as HTMLElement).dataset.c])
       .toEqual(['TH', 'col', 'Select all rows|Select Ada|Select Grace|Select Linus', 'false,false,true,false', true, true, 'who', 'Ada', 'c']);
     expect(Math.round(head.getBoundingClientRect().width) < 48).toBe(true);
-    await userEvent.click(boxes[1]);
+    await userEvent.click(boxes[1]!);
     expect([picks, boxes.map((b) => b.checked).join(), q('#tsel [data-i="0"]').classList.contains('dk-table__row--selected')]).toEqual([['Ada'], 'false,true,true,false', true]);
-    await userEvent.click(boxes[0]);
-    expect([boxes.map((b) => b.checked).join(), boxes[0].indeterminate]).toEqual(['true,true,true,true', false]);
+    await userEvent.click(boxes[0]!);
+    expect([boxes.map((b) => b.checked).join(), boxes[0]!.indeterminate]).toEqual(['true,true,true,true', false]);
     const u = q('#tun [data-i="u"]');
     await userEvent.click(u.querySelector('input')!);
     await expect.poll(() => css(u).backgroundColor).toBe(bg('var(--surface-muted)'));
@@ -170,11 +170,11 @@ describe('Table', () => {
     const rows = [...el('tsm').querySelectorAll('tbody tr')];
     expect(css(q('#tsm td')).paddingTop).toBe('8px');
     await expect.poll(() => rows.map((x) => css(x).backgroundColor)).toEqual([NONE, bg('var(--surface-muted)'), NONE]);
-    expect(rows[0].hasAttribute('aria-selected')).toBe(false);
-    await userEvent.hover(rows[0].querySelector('td')!);
+    expect(rows[0]!.hasAttribute('aria-selected')).toBe(false);
+    await userEvent.hover(rows[0]!.querySelector('td')!);
     await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
     await settled(rows[0]);
-    expect(css(rows[0]).backgroundColor).toBe(NONE);
+    expect(css(rows[0]!).backgroundColor).toBe(NONE);
     await away();
   });
 
@@ -279,7 +279,7 @@ describe('Table', () => {
     // What is on top at a checkbox's middle, named by the checkbox of the cell it's in: WebKit hits the Checkbox's
     // drawn box over the input, Chromium the input itself, and either is the header's own checkbox.
     const at = (name: string) => { const b = f.querySelector<HTMLElement>(`[aria-label="${name}"]`)!.getBoundingClientRect(); const x = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2) as HTMLElement; return x.closest('th, td')?.querySelector('[aria-label]')?.getAttribute('aria-label') ?? x.textContent; };
-    const edit = [...f.querySelectorAll('thead th')][2].getBoundingClientRect(), hit = document.elementFromPoint(edit.left + 12, edit.top + edit.height / 2) as HTMLElement;
+    const edit = [...f.querySelectorAll('thead th')][2]!.getBoundingClientRect(), hit = document.elementFromPoint(edit.left + 12, edit.top + edit.height / 2) as HTMLElement;
     expect([at('Select all'), hit.closest('thead') !== null]).toEqual(['Select all', true]);
   });
 
@@ -495,8 +495,8 @@ describe('TableRow href (TF3)', () => {
     const s = await render(<Linked />);
     const links = s.container.getElementsByTagName('a');
     expect(links).toHaveLength(1);
-    expect(links[0].getAttribute('href')).toBe('#ada');
-    expect(links[0].parentElement!.id).toBe('c1');
+    expect(links[0]!.getAttribute('href')).toBe('#ada');
+    expect(links[0]!.parentElement!.id).toBe('c1');
     await expect.element(s.getByRole('link', { name: 'Ada' })).toBeInTheDocument();
     expect(el('r2').getElementsByTagName('a')).toHaveLength(0);
   });
@@ -551,7 +551,7 @@ describe('TableRow href (TF3)', () => {
     const calls = () => warn.mock.calls.filter(([m]) => /TableRow: onClick/.test(String(m)));
     await render(<><Linked onClick={() => {}} /><Table caption="T"><TableBody><TableRow onClick={() => {}}><TableCell>x</TableCell></TableRow><TableRow onClick={() => {}}><TableCell>y</TableCell></TableRow></TableBody></Table></>);
     expect(calls()).toHaveLength(1);
-    expect(String(calls()[0][0])).toMatch(/give the row an href/);
+    expect(String(calls()[0]![0])).toMatch(/give the row an href/);
     warn.mockRestore();
   });
 });
@@ -597,7 +597,7 @@ describe('TableVirtualBody (51)', () => {
     await render(<Big />);
     await frames();
     const f = el('vt-frame');
-    expect([drawn().length < 40, drawn()[0].getAttribute('aria-rowindex'), el('vt').getAttribute('aria-rowcount'), f.scrollTop]).toEqual([true, '2', '10001', 0]);
+    expect([drawn().length < 40, drawn()[0]!.getAttribute('aria-rowindex'), el('vt').getAttribute('aria-rowcount'), f.scrollTop]).toEqual([true, '2', '10001', 0]);
     expect(f.scrollHeight).toBeGreaterThan(10000 * 30);   // the spacer rows stand in for the rows not drawn
     f.scrollTop = f.scrollHeight;
     await expect.poll(() => drawn().at(-1)!.getAttribute('data-index')).toBe('9999');
@@ -610,7 +610,7 @@ describe('TableVirtualBody (51)', () => {
     const shown = drawn().filter((r) => { const b = r.getBoundingClientRect(); return b.bottom > head.bottom && b.top < box.bottom; });
     expect(shown.length).toBeGreaterThan(4);
     const idx = shown.map((r) => Number(r.dataset.index));
-    expect([idx[0] > 4000 && idx[0] < 6000, idx.every((n, k) => k === 0 || n === idx[k - 1] + 1)]).toEqual([true, true]);
+    expect([idx[0]! > 4000 && idx[0]! < 6000, idx.every((n, k) => k === 0 || n === idx[k - 1]! + 1)]).toEqual([true, true]);
   });
   test('at the top, measuring the rows never scrolls the header away; striped shades the same rows as a TableBody while scrolling', async () => {
     await render(<Big striped />);
@@ -633,15 +633,15 @@ describe('TableVirtualBody (51)', () => {
     const f = el('vt-frame');
     f.scrollTop = 120000;
     await frames(); await frames();
-    const at = f.scrollTop, first = drawn()[0].getAttribute('aria-rowindex');
+    const at = f.scrollTop, first = drawn()[0]!.getAttribute('aria-rowindex');
     const body = el('vt').querySelector('tbody')!;
     window.dispatchEvent(new Event('beforeprint'));
     // Drawn at once, before the browser lays the page out for print.
     const rows = [...body.querySelectorAll<HTMLElement>(':scope > tr')];
-    expect([rows.length, rows[0].getAttribute('aria-rowindex'), rows.at(-1)!.getAttribute('aria-rowindex'), body.querySelectorAll(':scope > tr[aria-hidden]').length]).toEqual([5000, '2', '5001', 0]);
+    expect([rows.length, rows[0]!.getAttribute('aria-rowindex'), rows.at(-1)!.getAttribute('aria-rowindex'), body.querySelectorAll(':scope > tr[aria-hidden]').length]).toEqual([5000, '2', '5001', 0]);
     window.dispatchEvent(new Event('afterprint'));
     await frames(); await frames();
-    expect([drawn().length < 40, drawn()[0].getAttribute('aria-rowindex'), Math.abs(f.scrollTop - at) < 1]).toEqual([true, first, true]);
+    expect([drawn().length < 40, drawn()[0]!.getAttribute('aria-rowindex'), Math.abs(f.scrollTop - at) < 1]).toEqual([true, first, true]);
   });
   test('a row with focus stays in the page when it scrolls away, so focus is never lost', async () => {
     await render(<Big />);
@@ -660,7 +660,7 @@ describe('Table layout="fixed" (PT4)', () => {
   function Paged(p: { page: number; layout?: 'auto' | 'fixed'; widths?: boolean }) {
     return <div style={{ width: 480 }}><Table caption="Users" layout={p.layout}>
       <TableHead><TableRow><TableHeaderCell id="h1" width={p.widths ? '30%' : undefined}>Name</TableHeaderCell><TableHeaderCell id="h2">Role</TableHeaderCell></TableRow></TableHead>
-      <TableBody>{PAGES[p.page].map(([a, b]) => <TableRow key={a}><TableCell>{a}</TableCell><TableCell>{b}</TableCell></TableRow>)}</TableBody>
+      <TableBody>{PAGES[p.page]!.map(([a, b]) => <TableRow key={a}><TableCell>{a}</TableCell><TableCell>{b}</TableCell></TableRow>)}</TableBody>
     </Table></div>;
   }
   const widths = () => [el('h1').getBoundingClientRect().width, el('h2').getBoundingClientRect().width];
@@ -672,7 +672,7 @@ describe('Table layout="fixed" (PT4)', () => {
     expect(widths()).not.toEqual(auto0);
     await s.rerender(<Paged page={0} layout="fixed" />);
     const fixed0 = widths();
-    expect(Math.abs(fixed0[0] - fixed0[1])).toBeLessThanOrEqual(1);   // no widths: they share the table
+    expect(Math.abs(fixed0[0]! - fixed0[1]!)).toBeLessThanOrEqual(1);   // no widths: they share the table
     await s.rerender(<Paged page={1} layout="fixed" />);
     expect(widths()).toEqual(fixed0);
     expect(s.getByText('Owner of the whole billing and invoicing workspace').element().getBoundingClientRect().height).toBeGreaterThan(30);
@@ -799,7 +799,7 @@ describe('Table column tools (RU10)', () => {
     const before = at();
     frame.scrollLeft = 120;
     await settle();
-    expect(at()[0]).toBeLessThan(before[0] - 100);   // unpinned: it scrolls away
+    expect(at()[0]).toBeLessThan(before[0]! - 100);   // unpinned: it scrolls away
     await s.rerender(<Wide pin />);
     frame.scrollLeft = 0;
     await settle();
@@ -807,8 +807,8 @@ describe('Table column tools (RU10)', () => {
     expect(start[1]).toBeLessThanOrEqual(box.right);   // the last column sits at the frame's end
     frame.scrollLeft = 120;
     await settle();
-    expect(at()[0]).toBeCloseTo(start[0], 0);
-    expect(at()[1]).toBeCloseTo(start[1], 0);
+    expect(at()[0]).toBeCloseTo(start[0]!, 0);
+    expect(at()[1]).toBeCloseTo(start[1]!, 0);
   });
 
   test('TableColumnsMenu: a checkbox per column; a required column and the last one shown can\'t be cleared', async () => {

@@ -36,8 +36,8 @@ describe('withViewTransition', () => {
       await expect.poll(() => go.seen).toEqual(['c', 'b', 'a']);
       const groups = await go.groups!;
       expect(groups.length).toBeGreaterThan(0);
-      const e = groups[0].effect as KeyframeEffect;
-      expect([e.getComputedTiming().duration, e.getKeyframes()[0].easing]).toEqual([200, 'cubic-bezier(0.65, 0, 0.35, 1)']);
+      const e = groups[0]!.effect as KeyframeEffect;
+      expect([e.getComputedTiming().duration, e.getKeyframes()[0]!.easing]).toEqual([200, 'cubic-bezier(0.65, 0, 0.35, 1)']);
     }
     await done;
     expect([...document.querySelectorAll('#vt li')].map((li) => li.id)).toEqual(['c', 'b', 'a']);

@@ -41,7 +41,7 @@ describe('TableOfContents', () => {
   test('an h3 steps in from the h2s', async () => {
     await render(<Page />);
     await expect.poll(() => links().length).toBe(3);
-    const x = (i: number) => getComputedStyle(links()[i]).paddingLeft;
+    const x = (i: number) => getComputedStyle(links()[i]!).paddingLeft;
     expect(parseFloat(x(1))).toBeGreaterThan(parseFloat(x(0)));
     expect(x(2)).toBe(x(0));
   });
@@ -85,7 +85,7 @@ describe('TableOfContents', () => {
     await expect.poll(() => links().map((a) => a.textContent)).toEqual(['Alpha', 'Beta part', 'Gamma', 'Delta, loaded later']);
     expect(late.id).toBe('delta-loaded-later');
     document.getElementById('a')!.textContent = 'Alpha, renamed';
-    await expect.poll(() => links()[0].textContent).toBe('Alpha, renamed');
+    await expect.poll(() => links()[0]!.textContent).toBe('Alpha, renamed');
     late.remove();
     await expect.poll(() => links().length).toBe(3);
   });
@@ -133,8 +133,8 @@ describe('TableOfContents', () => {
     await render(<Page />);
     await expect.poll(current).toBe('Alpha');
     const [a, b] = links();
-    expect(getComputedStyle(a).fontWeight).toBe(getComputedStyle(b).fontWeight);
-    expect(getComputedStyle(a).borderInlineStartColor).not.toBe(getComputedStyle(b).borderInlineStartColor);
-    expect([/inset/.test(getComputedStyle(a).boxShadow), getComputedStyle(b).boxShadow]).toEqual([true, 'none']);
+    expect(getComputedStyle(a!).fontWeight).toBe(getComputedStyle(b!).fontWeight);
+    expect(getComputedStyle(a!).borderInlineStartColor).not.toBe(getComputedStyle(b!).borderInlineStartColor);
+    expect([/inset/.test(getComputedStyle(a!).boxShadow), getComputedStyle(b!).boxShadow]).toEqual([true, 'none']);
   });
 });

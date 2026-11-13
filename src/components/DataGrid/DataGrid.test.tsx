@@ -195,12 +195,12 @@ describe('DataGrid', () => {
     expect(grid.getAttribute('aria-rowcount')).toBe('-1');
     const rows = grid.querySelectorAll('tbody tr');
     expect(rows).toHaveLength(4);
-    expect(rows[0].querySelectorAll('[role="gridcell"]')).toHaveLength(3);
+    expect(rows[0]!.querySelectorAll('[role="gridcell"]')).toHaveLength(3);
     // Every placeholder is decorative; the label is said once, after the loader's delay.
     expect([...grid.querySelectorAll('[data-variant="skeleton"]')].every((n) => n.getAttribute('aria-hidden') === 'true')).toBe(true);
     expect(grid.querySelectorAll('[data-variant="skeleton"]')).toHaveLength(12);
     await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading stock');
-    const tall = rows[0].getBoundingClientRect().height;
+    const tall = rows[0]!.getBoundingClientRect().height;
     await rerender(<DataGrid aria-label="Stock" columns={COLS} rows={ROWS} busy={false} />);
     expect(grid.hasAttribute('aria-busy')).toBe(false);
     expect(grid.getAttribute('aria-rowcount')).toBe('4');

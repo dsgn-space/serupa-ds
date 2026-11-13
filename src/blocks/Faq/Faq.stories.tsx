@@ -65,4 +65,4 @@ export const SearchingWords: Story = { args: { defaultQuery: 'account delete' } 
 export const NoMatch: Story = { args: { defaultQuery: 'shipping' } };
 
 /** A short FAQ in one group: no group heading, and no search field (six questions or fewer). */
-export const Short: Story = { args: { groups: [{ id: 'all', questions: groups[1].questions }] } };
+export const Short: Story = { args: { groups: [{ id: 'all', questions: groups[1]!.questions }] } };

@@ -108,7 +108,7 @@ describe('SortableList', () => {
     const moves: Array<{ from: number; to: number }> = [];
     await render(<List moves={moves} />);
     const rows = [...document.querySelectorAll('#sl > li')] as HTMLElement[];
-    const step = rows[1].getBoundingClientRect().top - rows[0].getBoundingClientRect().top;
+    const step = rows[1]!.getBoundingClientRect().top - rows[0]!.getBoundingClientRect().top;
     const h = handle('Apollo'), c = { x: h.offsetWidth / 2, y: h.offsetHeight / 2 };
     await drag(h, c, { x: c.x, y: c.y + step * 2 + 4 }, 8);
     expect([names(), moves]).toEqual([['Gemini', 'Mercury', 'Apollo', 'Artemis'], [{ from: 0, to: 2 }]]);
@@ -145,7 +145,7 @@ describe('SortableList', () => {
     await expect.poll(() => box.scrollTop).toBeLessThan(down);
     at('pointermove', b.bottom - 60);
     at('pointerup', b.bottom - 60);
-    expect(moves.length === 1 && moves[0].from === 0 && moves[0].to > 0).toBe(true);
+    expect(moves.length === 1 && moves[0]!.from === 0 && moves[0]!.to > 0).toBe(true);
   });
 
   test('a press without moving picks the row up (2.5.7, FG1); a press on another row\'s handle drops it in that row\'s place, on its own handle where it is; each is announced', async () => {
@@ -186,14 +186,14 @@ describe('SortableList', () => {
     await render(<SortableList id="sl" aria-label="Missions" orientation="horizontal" items={ITEMS} getKey={(i) => i.id} getLabel={(i) => i.name}
       renderItem={(i) => i.name} onReorder={(_n, m) => { moves.push(m); }} />);
     const rows = [...document.querySelectorAll('#sl > li')] as HTMLElement[], [a, b] = rows.map((r) => r.getBoundingClientRect());
-    expect([document.getElementById('sl')!.dataset.orientation, a.top === b.top, b.left > a.right]).toEqual(['horizontal', true, true]);
-    const h = handle('Apollo'), r = h.getBoundingClientRect(), third = rows[2].getBoundingClientRect();
+    expect([document.getElementById('sl')!.dataset.orientation, a!.top === b!.top, b!.left > a!.right]).toEqual(['horizontal', true, true]);
+    const h = handle('Apollo'), r = h.getBoundingClientRect(), third = rows[2]!.getBoundingClientRect();
     const at = (type: string, x: number, target: EventTarget = window) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 9, button: 0, isPrimary: true, clientX: x, clientY: r.top + 4 }));
     at('pointerdown', r.left + 4, h);
     at('pointermove', r.left + 20);
     at('pointermove', third.right - 4);
     await expect.poll(() => names()).toEqual(['Gemini', 'Mercury', 'Apollo', 'Artemis']);
-    expect(rows[0].style.transform).toMatch(/^translateX\(/);
+    expect(rows[0]!.style.transform).toMatch(/^translateX\(/);
     at('pointerup', third.right - 4);
     await expect.poll(() => moves).toEqual([{ from: 0, to: 2 }]);
   });
@@ -208,7 +208,7 @@ describe('SortableList', () => {
     await userEvent.keyboard('{ArrowRight}{ArrowRight} ');
     expect(moves).toEqual([{ from: 1, to: 0 }]);
     const rows = [...document.querySelectorAll('#sl > li')] as HTMLElement[];
-    const h = handle('Apollo'), r = h.getBoundingClientRect(), third = rows[2].getBoundingClientRect();
+    const h = handle('Apollo'), r = h.getBoundingClientRect(), third = rows[2]!.getBoundingClientRect();
     expect(third.right < r.left).toBe(true);
     const at = (type: string, x: number, target: EventTarget = window) => target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 10, button: 0, isPrimary: true, clientX: x, clientY: r.top + 4 }));
     at('pointerdown', r.right - 4, h);
@@ -286,14 +286,14 @@ describe('SortableList', () => {
       let geminiAtStart: number | null = null;
       const onRun = (e: TransitionEvent) => {
         if (e.propertyName !== 'translate') return;
-        for (const n of Object.keys(ran)) if (e.target === row(n)) ran[n].push(e.propertyName);
+        for (const n of Object.keys(ran)) if (e.target === row(n)) ran[n]!.push(e.propertyName);
         if (e.target === row('Gemini') && geminiAtStart == null) geminiAtStart = top('Gemini');
       };
       document.addEventListener('transitionrun', onRun, true);
       try {
         handle('Gemini').focus();
         await userEvent.keyboard(' {ArrowDown}');
-        await expect.poll(() => ran.Gemini.length > 0 && ran.Mercury.length > 0).toBe(true);
+        await expect.poll(() => ran.Gemini!.length > 0 && ran.Mercury!.length > 0).toBe(true);
       } finally { document.removeEventListener('transitionrun', onRun, true); }
       // As it starts, each is still at its old place: Gemini above its new slot, Mercury below its new one.
       expect([ran.Gemini, ran.Mercury, Math.abs(geminiAtStart! - before.gemini) < Math.abs(geminiAtStart! - before.mercury), ran.Apollo])

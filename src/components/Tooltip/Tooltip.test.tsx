@@ -371,7 +371,7 @@ describe('Tooltip content is plain text (PT5)', () => {
       <Tooltip content={<button type="button">Undo</button>}><button type="button">D</button></Tooltip>
     </>);
     expect(calls()).toHaveLength(1);
-    expect(String(calls()[0][0])).toMatch(/use a Popover/);
+    expect(String(calls()[0]![0])).toMatch(/use a Popover/);
     warn.mockRestore();
   });
   test('a Button label cut with an ellipsis shows in full over the hint, hidden from screen readers, and the Button gets no title', async () => {

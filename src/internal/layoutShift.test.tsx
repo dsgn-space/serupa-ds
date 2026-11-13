@@ -84,7 +84,7 @@ describe.skipIf(!supported)('layout shift', () => {
       for (const [exportName, ui] of list) {
         const key = `${name}/${exportName}`;
         test(`${exportName}`, async () => {
-          const serverHtml = html[key];
+          const serverHtml = html[key]!;
           if (/^Error: /.test(serverHtml)) return; // hydrateStories.test.tsx reports it
           const { total, what } = await shiftOf(ui, serverHtml);
           if (!KNOWN.has(key) && sameLocale) expect(total, `moved: ${what}`).toBe(0);

@@ -18,7 +18,7 @@ meta.content = "style-src-attr 'none'";
 document.head.appendChild(meta);
 
 // How much of each Rating star its fill shows, in whole percent.
-const stars = () => [...document.querySelectorAll('#r > *')].map((st) => Math.round(st.children[1].getBoundingClientRect().width / st.getBoundingClientRect().width * 100));
+const stars = () => [...document.querySelectorAll('#r > *')].map((st) => Math.round(st.children[1]!.getBoundingClientRect().width / st.getBoundingClientRect().width * 100));
 
 const ui = <div>
   <Progress id="p" value={40} aria-label="Upload" />

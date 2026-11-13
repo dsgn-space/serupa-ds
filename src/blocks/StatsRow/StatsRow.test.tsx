@@ -27,7 +27,7 @@ describe('Blocks/Stats row', () => {
     ];
     // Any card whose words don't read in that order (an icon's own text may sit before "Up").
     const texts = cards().map((li) => (li.textContent || '').replace(/arrow_upward|arrow_downward|remove/g, ''));
-    expect(want.filter((w, i) => !texts[i].includes(w))).toEqual([]);
+    expect(want.filter((w, i) => !texts[i]!.includes(w))).toEqual([]);
   });
 
   test('the tone follows whether the change is good: up is good unless the app says otherwise, flat is neutral', async () => {
@@ -38,7 +38,7 @@ describe('Blocks/Stats row', () => {
 
   test('a trend line is an image named by what it measures', async () => {
     await render(<StatsRow title="This month" stats={STATS} />);
-    const img = cards()[0].querySelector('svg[role="img"]')!;
+    const img = cards()[0]!.querySelector('svg[role="img"]')!;
     expect(img.getAttribute('aria-label') ?? '').toContain('Revenue, last 3 periods');
   });
 

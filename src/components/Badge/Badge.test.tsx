@@ -35,10 +35,10 @@ beforeAll(() => { vi.spyOn(console, 'warn').mockImplementation((m) => { warns.pu
 
 // Colors with alpha, composited over what's behind them, for WCAG contrast.
 type RGBA = [number, number, number, number];
-const rgb = (c: string): RGBA => { const m = (c.match(/[\d.]+/g) || []).map(Number); const k = /^color\(srgb/.test(c) ? 255 : 1; return [m[0] * k, m[1] * k, m[2] * k, m.length > 3 ? m[3] : 1]; };
-const lum = (c: RGBA) => { const v = c.slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
-const over = (fg: RGBA, bg: RGBA): RGBA => (fg[3] >= 1 ? fg : fg.map((x, i) => (i < 3 ? x * fg[3] + bg[i] * (1 - fg[3]) : 1)) as RGBA);
-const ratio = (a: RGBA, b: RGBA) => { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x + 0.05) / (y + 0.05); };
+const rgb = (c: string): RGBA => { const m = (c.match(/[\d.]+/g) || []).map(Number); const k = /^color\(srgb/.test(c) ? 255 : 1; return [m[0]! * k, m[1]! * k, m[2]! * k, m[3] ?? 1]; };
+const lum = (c: RGBA) => { const v = c.slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0]! + 0.7152 * v[1]! + 0.0722 * v[2]!; };
+const over = (fg: RGBA, bg: RGBA): RGBA => (fg[3] >= 1 ? fg : fg.map((x, i) => (i < 3 ? x * fg[3] + bg[i]! * (1 - fg[3]) : 1)) as RGBA);
+const ratio = (a: RGBA, b: RGBA) => { const [x, y] = [lum(a), lum(b)].sort((m, n) => n - m); return (x! + 0.05) / (y! + 0.05); };
 const surface = () => rgb(color('var(--surface)'));
 
 // Waits until nothing (finite) is still animating or transitioning.
@@ -300,7 +300,7 @@ describe('Badge', () => {
     expect(Math.round((r.right - b.right) * 10) / 10).toBe(5);
     expect([parseFloat(cs.paddingLeft), parseFloat(cs.paddingRight)]).toEqual([8, 6]);
     for (const [x, y] of [[b.left - 4, b.top + b.height / 2], [b.right + 4, b.top + b.height / 2], [b.left + b.width / 2, b.top - 1], [b.left + b.width / 2, b.bottom + 1]]) {
-      expect(document.elementFromPoint(x, y)).toBe(btn);
+      expect(document.elementFromPoint(x!, y!)).toBe(btn);
     }
     expect([parseFloat(ring.left), parseFloat(ring.top), parseFloat(ring.width), parseFloat(ring.height)]).toEqual([-6, -2, 24, 24]);
   });
@@ -342,7 +342,7 @@ describe('Badge', () => {
   test('subtle: a 1px outline in the text color at 20% (every tone), --badge-subtle-border: 0% removes it; solid stays borderless', async () => {
     await show();
     const alpha = (c: string) => rgb(c)[3];
-    const one = (t: string, v: string) => { const s = css(tv(t, v)); const b = rgb(s.borderTopColor), c = rgb(s.color); return { w: s.borderTopWidth, a: alpha(s.borderTopColor), same: [0, 1, 2].every((i) => Math.abs(b[i] - c[i]) <= 1) }; };
+    const one = (t: string, v: string) => { const s = css(tv(t, v)); const b = rgb(s.borderTopColor), c = rgb(s.color); return { w: s.borderTopWidth, a: alpha(s.borderTopColor), same: [0, 1, 2].every((i) => Math.abs(b[i]! - c[i]!) <= 1) }; };
     for (const t of ['neutral', 'primary', 'success', 'danger', 'violet', 'teal']) {
       const x = one(t, 'subtle');
       expect([t, x.w, x.same]).toEqual([t, '1px', true]);

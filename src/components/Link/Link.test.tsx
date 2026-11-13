@@ -77,7 +77,7 @@ describe('Link', () => {
     await render(<><Link href="#a" tone="neutral">Terms</Link><Link href="#b" underline="hover">Pricing</Link></>);
     expect(warn).not.toHaveBeenCalled();
     await render(<><Link href="#c" tone="neutral" underline="hover">Help</Link><Link href="#d" tone="neutral" underline="hover">Docs</Link></>);
-    expect([warn.mock.calls.length, String(warn.mock.calls[0][0])]).toEqual([1, expect.stringContaining('looks like plain text')]);
+    expect([warn.mock.calls.length, String(warn.mock.calls[0]![0])]).toEqual([1, expect.stringContaining('looks like plain text')]);
     warn.mockRestore();
   });
 

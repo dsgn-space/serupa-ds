@@ -118,7 +118,7 @@ describe('Blocks/Comment thread', () => {
   test('deleting the last comment moves focus to the heading, and the delete is done once the toast goes without Undo', async () => {
     const onDelete = vi.fn();
     await render(<>
-      <CommentThread comments={[start[1]]} onReply={() => {}} onDelete={onDelete} />
+      <CommentThread comments={[start[1]!]} onReply={() => {}} onDelete={onDelete} />
       <Toaster duration={300} />
     </>);
     await userEvent.click(page.getByRole('button', { name: 'Delete' }));
@@ -230,8 +230,8 @@ describe('Blocks/Comment thread', () => {
     await userEvent.keyboard('{Enter}');
     await expect.element(box).toHaveValue('Thanks @Budi Santoso ');
     await userEvent.click(page.getByRole('button', { name: 'Post reply' }));
-    expect(onReply.mock.calls[0][0]).toBe('Thanks @Budi Santoso');
-    expect(onReply.mock.calls[0][1].mentions.map((m) => m.id)).toEqual(['budi']);
+    expect(onReply.mock.calls[0]![0]).toBe('Thanks @Budi Santoso');
+    expect(onReply.mock.calls[0]![1].mentions.map((m) => m.id)).toEqual(['budi']);
   });
 
   test('editing with people: Escape closes the mention list first, and only the next Escape cancels the edit', async () => {
@@ -247,7 +247,7 @@ describe('Blocks/Comment thread', () => {
     await expect.element(box).toBeInTheDocument();   // still editing
     await userEvent.keyboard('{Backspace}{Backspace}{Backspace}@Ana{Enter}');
     await userEvent.click(page.getByRole('button', { name: 'Save' }));
-    expect([onEdit.mock.calls[0][1], onEdit.mock.calls[0][2].mentions.map((m) => m.id)]).toEqual(['Hi @Ana Putri', ['ana']]);
+    expect([onEdit.mock.calls[0]![1], onEdit.mock.calls[0]![2].mentions.map((m) => m.id)]).toEqual(['Hi @Ana Putri', ['ana']]);
   });
 
   test('Ctrl+Enter or ⌘+Enter posts the reply and saves an edit; Enter alone is a new line', async () => {

@@ -19,7 +19,7 @@ describe('SignaturePad', () => {
     await render(<SignaturePad id="x" ref={ref} aria-label="Signature" className="extra" data-x="y" />);
     const e = el('x');
     await expect.element(page.getByRole('group', { name: 'Signature' })).toBeInTheDocument();
-    const how = document.getElementById(e.getAttribute('aria-describedby')!.split(' ')[0])!;
+    const how = document.getElementById(e.getAttribute('aria-describedby')!.split(' ')[0]!)!;
     expect([ref.current === e, e.className, e.dataset.x, e.dataset.component, how.textContent]).toEqual([true, 'dk-signature-pad extra', 'y', 'signature-pad', 'Draw your signature with a mouse, pen or finger, or choose Type to type your name.']);
     await expect.element(page.getByRole('radiogroup', { name: 'Signature method' })).toBeInTheDocument();
     await expect.element(page.getByRole('radio', { name: 'Draw' })).toBeChecked();
@@ -38,10 +38,10 @@ describe('SignaturePad', () => {
     await drag(area(root), { x: 160, y: 100 }, { x: 260, y: 90 });
     expect(paths(root)).toBe(2);
     await expect.element(page.getByRole('img', { name: 'Signature drawn' })).toBeInTheDocument();
-    const [v, d] = calls[calls.length - 1];
+    const [v, d] = calls[calls.length - 1]!;
     expect([v!.method, v!.name, d.reason, (v!.svg.match(/<path /g) || []).length, v!.svg.startsWith('<svg xmlns="http://www.w3.org/2000/svg"')]).toEqual(['draw', '', 'draw', 2, true]);
     await page.getByRole('button', { name: 'Undo' }).click();
-    expect([paths(root), calls[calls.length - 1][1].reason, (calls[calls.length - 1][0]!.svg.match(/<path /g) || []).length]).toEqual([1, 'undo', 1]);
+    expect([paths(root), calls[calls.length - 1]![1].reason, (calls[calls.length - 1]![0]!.svg.match(/<path /g) || []).length]).toEqual([1, 'undo', 1]);
     await page.getByRole('button', { name: 'Clear' }).click();
     expect([paths(root), calls[calls.length - 1]]).toEqual([0, [null, { reason: 'clear' }]]);
     await expect.poll(() => document.activeElement?.getAttribute('role')).toBe('radio');
@@ -56,7 +56,7 @@ describe('SignaturePad', () => {
     expect(calls[calls.length - 1]).toEqual([null, { reason: 'method' }]);
     await expect.element(page.getByRole('radio', { name: 'Type' })).toBeChecked();
     await userEvent.type(page.getByRole('textbox', { name: 'Full name' }), '  Dewi & Sari ');
-    const [v, d] = calls[calls.length - 1];
+    const [v, d] = calls[calls.length - 1]!;
     expect([v!.method, v!.name, d.reason, />Dewi &amp; Sari<\/text><\/svg>$/.test(v!.svg)]).toEqual(['type', 'Dewi & Sari', 'type', true]);
     expect(el('t').querySelector('text')!.textContent).toBe('Dewi & Sari');
   });
@@ -68,7 +68,7 @@ describe('SignaturePad', () => {
     await page.getByRole('radio', { name: 'Type' }).click();
     await userEvent.type(page.getByRole('textbox', { name: 'Full name' }), 'Dewi');
     await page.getByRole('radio', { name: 'Draw' }).click();
-    expect([paths(el('k')), calls[calls.length - 1][0]!.method]).toEqual([1, 'draw']);
+    expect([paths(el('k')), calls[calls.length - 1]![0]!.method]).toEqual([1, 'draw']);
   });
 
   test('form: the hidden input sends the SVG under its name ("" while empty) and form.reset() empties it', async () => {
@@ -121,7 +121,7 @@ describe('SignaturePad', () => {
     await page.getByRole('radio', { name: 'Type' }).click();
     await page.getByRole('textbox', { name: 'Full name' }).click();
     await userEvent.keyboard('Dewi');
-    expect([calls[calls.length - 1][0]!.method, calls[calls.length - 1][0]!.name]).toEqual(['type', 'Dewi']);
+    expect([calls[calls.length - 1]![0]!.method, calls[calls.length - 1]![0]!.name]).toEqual(['type', 'Dewi']);
   });
 
   test('a typed name shows inside the box on a right-to-left page too, starting where the saved signature starts', async () => {
