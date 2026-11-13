@@ -142,16 +142,20 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const drawn = React.useRef<number | null>(null);
   const [ownMonth, setOwnMonth] = React.useState(() => {
     const given = props.defaultMonth || value;
-    const server = given ? null : serverMonth(titleId);
+    const server = given || controlledMonth ? null : serverMonth(titleId);
     if (server) drawn.current = server.getTime();
     return startOfMonth(given || server || home);
   });
   const homeMonth = startOfMonth(home).getTime();
+  const onMonthChange = props.onMonthChange;
   React.useEffect(() => {
     const was = drawn.current;
     drawn.current = null;
-    if (was != null && was !== homeMonth) setOwnMonth((m) => (m.getTime() === was ? new Date(homeMonth) : m));
-  }, [homeMonth]);
+    if (was == null || was === homeMonth || ownMonth.getTime() !== was) return;
+    // The app hears of it as of any other change of month, so what it loads for the month follows (EventCalendar does the same).
+    setOwnMonth(new Date(homeMonth));
+    if (onMonthChange) onMonthChange(new Date(homeMonth));
+  }, [homeMonth, ownMonth, onMonthChange]);   // it acts once: drawn is set only by the first render and cleared here
   const month = controlledMonth && isValid(props.month) ? startOfMonth(props.month) : ownMonth;
   const [focus, setFocus] = React.useState<Date>(() => (value && sameMonth(value, month) ? value : sameMonth(home, month) ? home : month));
   // A value set from outside (a typed date, a "Today" button) brings its month into view, unless the app controls
