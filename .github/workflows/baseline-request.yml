@@ -1,0 +1,54 @@
+name: Baseline request
+
+# A pull request asks Update baselines for its pictures in its own commit, so no person has to add the label by hand:
+# a trailer on the branch's newest commit adds the label.
+#   Redraw-baselines: visual           adds update-visual-baselines
+#   Redraw-baselines: cross-browser    adds update-cross-browser-baselines
+#   Redraw-baselines: visual, cross-browser   adds both
+# Only a pull request from this repository: one from a fork gets no secrets and is turned away before it asks for one,
+# so its pictures still wait for a maintainer's label. Anyone who can push a branch here can already add the label.
+# It checks out nothing and runs no code from any branch; the commit message is only matched, never run or pasted.
+# The label is added with BOT_TOKEN, since a label the workflow's own token adds starts no workflow, and Update
+# baselines must start. CI's run for the same push may start before the label lands and so isn't held: the bot's
+# picture commit cancels it, and when nothing changed it simply finishes.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: baseline-request-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  label:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Add the labels the newest commit asks for
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail -f
+          asks=$(gh api "repos/$GITHUB_REPOSITORY/commits/$HEAD" --jq .commit.message |
+            sed -nE 's/^Redraw-baselines:[[:space:]]*(.*[^[:space:]])[[:space:]]*$/\1/p' | tr ',' '\n' | tr -d ' \t' | sort -u)
+          [ -n "$asks" ] || { echo "The newest commit asks for no redraw."; exit 0; }
+          have=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" --jq '.[].name')
+          for ask in $asks; do
+            case "$ask" in
+              visual) label=update-visual-baselines ;;
+              cross-browser) label=update-cross-browser-baselines ;;
+              *) echo "::warning::Redraw-baselines takes visual or cross-browser, not \"$ask\"."; continue ;;
+            esac
+            if grep -qx "$label" <<< "$have"; then echo "$label is on already."; continue; fi
+            GH_TOKEN=$BOT_TOKEN gh pr edit "$PR" --repo "$GITHUB_REPOSITORY" --add-label "$label"
+            echo "Added $label, as the newest commit asks." | tee -a "$GITHUB_STEP_SUMMARY"
+          done

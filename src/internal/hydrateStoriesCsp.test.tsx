@@ -4,7 +4,7 @@ import { flushSync } from 'react-dom';
 import { afterEach, beforeEach, describe, expect, inject, test, vi } from 'vitest';
 import { storiesToRun } from '../../tools/test/vitest/stories';
 import { fiberOf, fromRenderProp, fromStory } from '../../tools/test/vitest/storyOwner';
-import { getIcon } from '../icons';
+import { getIcon, loadIcon } from '../icons';
 
 // Every story's server HTML, hydrated on a page with a strict Content Security Policy, has to lay out as the same
 // HTML hydrated on a page without one (GR16). Under style-src-attr 'none' the browser ignores the style attributes in
@@ -36,6 +36,10 @@ const frames = (n: number) => new Promise<void>((r) => { const f = () => (n-- > 
 async function boxes(host: HTMLElement) {
   await frames(2);
   await document.fonts.ready;
+  // An icon drawn by name is loaded on demand, and the load the first hydration starts can outlast it on a slow
+  // runner (WebKit): the second then measured the icon still empty (one element where the third had three). So its
+  // load is waited for here, and the wait below sees it drawn.
+  await Promise.all([...host.querySelectorAll<HTMLElement>('span[data-icon]')].filter((s) => !s.firstElementChild).map((s) => loadIcon(s.dataset.icon!).catch(() => undefined)));
   // A loop (a spinner, a ping) has no end to finish at, and finish() throws on one: those are left running.
   const settle = () => {
     let ran = false;

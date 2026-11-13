@@ -46,6 +46,7 @@ const SAMPLES = {
   chatNewMessages: [[1], [3]], chatThoughtFor: [[1], [12]], chatResponseOf: [[2, 3]], notificationsUnread: [[1], [2]], eventCount: [[0], [1], [3]], moreEvents: [[1], [2]], eventTime: [['9:30 AM', '10:00 AM']],
   kanbanMoveTo: [['Fix login']], kanbanCount: [['6', '5']], kanbanGrabbed: [['Fix login', 'To do', 1, 3]], kanbanMoved: [['Fix login', 'Done', 2, 5]], kanbanDropped: [['Fix login', 'Done', 2, 5]], kanbanCancelled: [['Fix login', 'To do', 1, 3]],
   cascadePath: [[['Jawa Barat', 'Kota Bandung']]], cascadeLevel: [[1], [3]], cascadeHasMore: [[false], [true]],
+  statusSummary: [['99.8%', 90, 2], ['100%', 1, 0], ['97%', 30, 1]], statusDay: [['Nov 3, 2026', 'Degraded']],
   periodPlaceholder: [['month'], ['quarter'], ['year']], periodPrevious: [['month'], ['year']], periodNext: [['month'], ['year']], periodQuarter: [[4], [4, '2026']],
   filterIs: [['Status', 'Open or Closed']], filterFrom: [['Due', 'Nov 2, 2026']], filterUntil: [['Due', 'Nov 8, 2026']], filterContains: [['Title', 'bug']], filterAny: [['Status']], filterRemove: [['Status']], filterResults: [[1, '1'], [24, '24']],
   toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
@@ -53,7 +54,7 @@ const SAMPLES = {
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.
 const SILENT_IN_ENGLISH = new Set(['invalidValue']);
 // Words that are often the same in another language (a brand, an abbreviation, a loanword).
-const SAME_OK = new Set(['menu', 'agendaView', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf', 'cascadePath', 'chartShare']);
+const SAME_OK = new Set(['menu', 'agendaView', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf', 'cascadePath', 'chartShare', 'statusDay']);
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {

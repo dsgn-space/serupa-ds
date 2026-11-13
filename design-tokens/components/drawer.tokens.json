@@ -81,6 +81,16 @@
             "cssVar": "--drawer-focus-ring"
           }
         }
+      },
+      "grip": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A sheet's grip, at the top of a drawer with snapPoints (3:1 on bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--drawer-grip"
+          }
+        }
       }
     },
     "shadow": {
