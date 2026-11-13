@@ -85,40 +85,40 @@
   - group "Available (12)":
     - checkbox "All"
     - text: All
-    - checkbox "Delete 0"
-    - text: Delete 0 Only owners can grant this
-    - checkbox "Delete 3"
-    - text: Delete 3
-    - checkbox "Read and write the billing settings of every workspace 4"
-    - text: Read and write the billing settings of every workspace 4 Only owners can grant this
-    - checkbox "Read and write the billing settings of every workspace 5"
-    - text: Read and write the billing settings of every workspace 5
-    - checkbox "Delete 6"
-    - text: Delete 6
-    - checkbox "Read and write the billing settings of every workspace 7"
-    - text: Read and write the billing settings of every workspace 7
-    - checkbox "Read and write the billing settings of every workspace 8"
-    - text: Read and write the billing settings of every workspace 8 Only owners can grant this
-    - checkbox "Delete 9"
-    - text: Delete 9
-    - checkbox "Read and write the billing settings of every workspace 10"
-    - text: Read and write the billing settings of every workspace 10
-    - checkbox "Read and write the billing settings of every workspace 11"
-    - text: Read and write the billing settings of every workspace 11
-    - checkbox "Delete 12"
-    - text: Delete 12 Only owners can grant this
-    - checkbox "Read and write the billing settings of every workspace 13"
-    - text: Read and write the billing settings of every workspace 13
+    - checkbox "Delete invoices"
+    - text: Delete invoices Only owners can grant this
+    - checkbox "Delete webhooks"
+    - text: Delete webhooks
+    - checkbox "Read and change the domains of every workspace in the organization"
+    - text: Read and change the domains of every workspace in the organization Only owners can grant this
+    - checkbox "Read and change the tokens of every workspace in the organization"
+    - text: Read and change the tokens of every workspace in the organization
+    - checkbox "Delete audit log"
+    - text: Delete audit log
+    - checkbox "Read and change the exports of every workspace in the organization"
+    - text: Read and change the exports of every workspace in the organization
+    - checkbox "Read and change the branding of every workspace in the organization"
+    - text: Read and change the branding of every workspace in the organization Only owners can grant this
+    - checkbox "Delete billing"
+    - text: Delete billing
+    - checkbox "Read and change the roles of every workspace in the organization"
+    - text: Read and change the roles of every workspace in the organization
+    - checkbox "Read and change the storage of every workspace in the organization"
+    - text: Read and change the storage of every workspace in the organization
+    - checkbox "Delete reports"
+    - text: Delete reports Only owners can grant this
+    - checkbox "Read and change the teams of every workspace in the organization"
+    - text: Read and change the teams of every workspace in the organization
   - button "Add" [disabled]
   - button "Remove" [disabled]
   - paragraph: Chosen (2)
   - group "Chosen (2)":
     - checkbox "All"
     - text: All
-    - checkbox "Read and write the billing settings of every workspace 1"
-    - text: Read and write the billing settings of every workspace 1
-    - checkbox "Read and write the billing settings of every workspace 2"
-    - text: Read and write the billing settings of every workspace 2
+    - checkbox "Read and change the members of every workspace in the organization"
+    - text: Read and change the members of every workspace in the organization
+    - checkbox "Read and change the projects of every workspace in the organization"
+    - text: Read and change the projects of every workspace in the organization
 
 # NothingChosen
 - group "Columns":

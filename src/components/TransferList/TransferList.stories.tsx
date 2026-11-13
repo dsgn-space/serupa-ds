@@ -40,7 +40,9 @@ export const Disabled: Story = { args: { disabled: true } };
 export const LongText: Story = {
   args: {
     'aria-label': 'Permissions',
-    options: Array.from({ length: 14 }, (_, i) => ({ value: 'p' + i, label: i % 3 ? 'Read and write the billing settings of every workspace ' + i : 'Delete ' + i, description: i % 4 ? undefined : 'Only owners can grant this' })),
+    // Words, not numbered names, so the story reads the same in every locale's digits.
+    options: ['invoices', 'members', 'projects', 'webhooks', 'domains', 'tokens', 'audit log', 'exports', 'branding', 'billing', 'roles', 'storage', 'reports', 'teams']
+      .map((thing, i) => ({ value: 'p' + i, label: i % 3 ? 'Read and change the ' + thing + ' of every workspace in the organization' : 'Delete ' + thing, description: i % 4 ? undefined : 'Only owners can grant this' })),
     defaultValue: ['p1', 'p2'],
   },
 };
