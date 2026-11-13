@@ -10,6 +10,7 @@ import { Select } from '../../components/Select/Select';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Alert } from '../../components/Alert/Alert';
 import { Faq, type FaqGroup } from '../../blocks/Faq/Faq';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Help center: the topics people come for, the common questions with a search, and a way to write to a person that
    says when they'll answer. For an app to copy. What it carries (WCAG 2.2):
@@ -94,10 +95,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-10 px-4 py-8 outline-none">
-        <div className="flex flex-col gap-2">
-          <Heading level={1}>Help</Heading>
-          <p className="m-0 text-text-muted">Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</p>
-        </div>
+        <PageHeader title="Help" description={<>Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</>} />
 
         <section aria-labelledby="help-topics" className="flex flex-col gap-4">
           <Heading level={2} size="lg" id="help-topics">Topics</Heading>
