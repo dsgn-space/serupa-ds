@@ -23,6 +23,16 @@ export const Range: Story = {
     </Field>;
   },
 };
+// A price filter: drag for a rough range, or type the exact numbers.
+export const WithInputs: Story = {
+  render: function Render() {
+    const [price, setPrice] = React.useState<[number, number]>([40, 120]);
+    return <Field label="Price, in dollars" group>
+      <Slider value={price} onValueChange={setPrice} max={200} step={5} formatValue={(v) => `$${v}`} inputs />
+    </Field>;
+  },
+};
+export const SingleWithInput: Story = { args: { 'aria-label': 'Volume', defaultValue: 35, inputs: true } };
 export const Small: Story = { args: { size: 'sm', defaultValue: 30 } };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 70 } };
 export const ReadOnly: Story = { args: { readOnly: true, defaultValue: 40 } };

@@ -34,6 +34,19 @@
 # ReadOnly
 - slider "Volume"
 
+# SingleWithInput
+- slider "Volume"
+- spinbutton "Volume": "35"
+
 # Small
 - slider "Volume"
+
+# WithInputs
+- group "Price, in dollars":
+  - text: Price, in dollars
+  - group:
+    - spinbutton "Minimum": "40"
+    - slider "Minimum"
+    - slider "Maximum"
+    - spinbutton "Maximum": "120"
 

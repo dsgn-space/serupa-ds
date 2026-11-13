@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
@@ -494,4 +494,58 @@ test('a max off the step grid is never reached, as with a native range input: mi
   expect(now('og')).toBe(9);
   await userEvent.keyboard('{ArrowRight}');
   expect(now('og')).toBe(9);
+});
+
+describe('Slider inputs', () => {
+  // The number fields: the slider's inputs other than the hidden ones a form submits.
+  const fields = () => [...document.querySelectorAll<HTMLInputElement>('[data-component="slider"] input:not([type="hidden"])')] as [HTMLInputElement, HTMLInputElement];
+  // The fields write numbers in the locale's digits and the thumb names in its words: these read English ones.
+  const En = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
+  const thumbs = () => [...document.querySelectorAll<HTMLElement>('[role="slider"]')] as [HTMLElement, HTMLElement];
+
+  test('a range gets a field at each end, named as its thumb, in step with it both ways', async () => {
+    const commit = vi.fn();
+    function Price() {
+      const [v, setV] = React.useState<[number, number]>([40, 120]);
+      return <Slider aria-label="Price" value={v} onValueChange={setV} onValueCommit={commit} max={200} step={5} inputs />;
+    }
+    await render(<En><Price /></En>);
+    const [lo, hi] = fields();
+    expect([fields().map((f) => f.value), fields().map((f) => f.getAttribute('aria-label'))]).toEqual([['40', '120'], ['Minimum', 'Maximum']]);
+    // The low field comes first in the box, before the thumbs, and the high one after them.
+    const box = document.querySelector('[data-component="slider"]')!, [t0, t1] = thumbs();
+    expect([box.firstElementChild!.contains(lo), !!(lo.compareDocumentPosition(t0) & Node.DOCUMENT_POSITION_FOLLOWING), !!(hi.compareDocumentPosition(t1) & Node.DOCUMENT_POSITION_PRECEDING)]).toEqual([true, true, true]);
+    await userEvent.tripleClick(lo);
+    await userEvent.keyboard('60');
+    expect(thumbs()[0].getAttribute('aria-valuenow')).toBe('60');
+    expect(commit).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Enter}');
+    expect(commit).toHaveBeenLastCalledWith([60, 120]);
+    thumbs()[1].focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(hi.value).toBe('125');
+  });
+
+  test('a number past the other thumb waits for leaving the field, then comes back inside', async () => {
+    await render(<En><Slider aria-label="Price" defaultValue={[40, 120]} max={200} inputs /></En>);
+    const [lo] = fields();
+    await userEvent.tripleClick(lo);
+    await userEvent.keyboard('150');
+    expect(thumbs()[0].getAttribute('aria-valuenow')).toBe('15');   // 1 and 15 are under 120 and taken; 150 waits
+    await userEvent.tab();
+    expect([lo.value, thumbs()[0].getAttribute('aria-valuenow')]).toEqual(['120', '120']);
+  });
+
+  test('one thumb gets one field after the track, named by the slider; a press in it moves no thumb', async () => {
+    await render(<En><Slider aria-label="Volume" defaultValue={35} inputs /></En>);
+    const [f] = fields();
+    expect([fields().length, f.getAttribute('aria-label'), f.value]).toEqual([1, 'Volume', '35']);
+    await userEvent.click(f);
+    expect([document.activeElement, thumbs()[0].getAttribute('aria-valuenow')]).toEqual([f, '35']);
+  });
+
+  test('disabled and read-only reach the fields', async () => {
+    await render(<><Slider aria-label="A" disabled inputs /><Slider aria-label="B" readOnly inputs /></>);
+    expect([fields()[0].disabled, fields()[1].readOnly]).toEqual([true, true]);
+  });
 });
