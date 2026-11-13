@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, withMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, withMotion, settled, color, css, press } from '../../../tools/test/vitest/helpers';
 import { Calendar } from '../Calendar/Calendar';
 import { Field } from '../Field/Field';
 import { DatePicker } from './DatePicker';
@@ -353,5 +353,25 @@ describe('DatePicker presets (RU11)', () => {
     expect(el('dpp').value).toBe(new Intl.DateTimeFormat('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).format(tomorrow));
     await expect.poll(() => popup('dpp').hidden).toBe(true);
     expect(document.activeElement).toBe(el('dpp'));
+  });
+});
+
+describe('DatePicker held state', () => {
+  test('held down: the calendar button fills one step past its hover (--date-picker-button-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<DatePicker aria-label="Start date" buttonLabel="Pick the start date" />);
+    const b = page.getByRole('button', { name: 'Pick the start date' }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

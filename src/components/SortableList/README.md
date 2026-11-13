@@ -102,6 +102,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--sortable-list-handle` | `text-muted` | The handle (3:1 on the row). |
 | `--sortable-list-handle-active` | `text` | The handle on hover and while its row moves. |
 | `--sortable-list-handle-bg-hover` | `secondary` | The handle's background on hover. |
+| `--sortable-list-handle-bg-pressed` | `secondary-hover` | The drag handle's background while it's held down, one step past hover. |
 | `--sortable-list-focus-ring` | `focus-ring` | The handle's keyboard focus ring. |
 | `--sortable-list-item-shadow-active` | `elevation-raised` | The raised look of the row being moved. |
 | `--sortable-list-item-depth` | `depth-card` | An item's tactile layers at rest: a short, soft shadow. None in the flat brands. |

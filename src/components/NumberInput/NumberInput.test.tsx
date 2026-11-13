@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render as mount } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { userEvent, page } from 'vitest/browser';
+import { THEMES, contrast, css, color, press } from '../../../tools/test/vitest/helpers';
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
 import { NumberInput } from './NumberInput';
@@ -548,5 +548,25 @@ describe('NumberInput', () => {
       await mount(<NumberInput aria-label="Backwards" min={10} max={1} />);
       expect(said()).toEqual([expect.stringMatching(/min \(10\) is above max \(1\)/)]);
     } finally { warn.mockRestore(); }
+  });
+});
+
+describe('NumberInput held state', () => {
+  test('held down: a step button fills one step past its hover (--number-input-stepper-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<NumberInput aria-label="Guests" defaultValue={2} incrementLabel="One more guest" />);
+    const b = page.getByRole('button', { name: 'One more guest' }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

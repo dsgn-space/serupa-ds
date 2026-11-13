@@ -32,6 +32,16 @@
           }
         }
       },
+      "button-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "The clock button's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--time-picker-button-bg-pressed"
+          }
+        }
+      },
       "list-bg": {
         "$type": "color",
         "$value": "{color.surface-overlay}",

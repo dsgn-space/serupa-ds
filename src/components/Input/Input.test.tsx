@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, settle, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, settle, withMotion, press, THEMES, contrast } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { labels as deLabels } from '../../labels/de';
@@ -532,5 +532,25 @@ describe('Input actions (RU15)', () => {
       ['icon action on hover', 'var(--text)', 'var(--secondary)', 3],
       ['focus ring', 'var(--focus-ring)', 'var(--field)', 3],
     ])).toEqual([]);
+  });
+});
+
+describe('Input held state', () => {
+  test('held down: an icon action fills one step past its hover (--input-action-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />);
+    const b = page.getByRole('button', { name: 'Copy invite link' }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

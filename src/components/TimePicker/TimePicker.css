@@ -12,6 +12,7 @@
 }
 .dk-time-picker__button .dk-icon { font-size: var(--dk-input-icon); }
 @media (hover: hover) { .dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--secondary)); color: var(--time-picker-button-hover, var(--text)); } }
+.dk-time-picker__button:active:not(:disabled) { background: var(--time-picker-button-bg-pressed, var(--secondary-hover)); color: var(--time-picker-button-hover, var(--text)); }
 .dk-time-picker__button:disabled { cursor: not-allowed; }
 .dk-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-popover));

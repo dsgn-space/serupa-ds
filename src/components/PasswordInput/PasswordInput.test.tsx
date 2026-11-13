@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, tabTo } from '../../../tools/test/vitest/helpers';
+import { userEvent, page } from 'vitest/browser';
+import { THEMES, contrast, css, tabTo, color, press } from '../../../tools/test/vitest/helpers';
 import { PasswordInput } from './PasswordInput';
 
 // The button at a point just outside each edge of b (hit testing rounds to whole pixels, so 0.75px before the start
@@ -228,5 +228,25 @@ describe('PasswordInput', () => {
       expect(Math.round(b.getBoundingClientRect().height)).toBeLessThan(24);
       expect(reach(b)).toEqual([true, true, true, true]);
     }
+  });
+});
+
+describe('PasswordInput held state', () => {
+  test('held down: the show/hide button fills one step past its hover (--password-input-toggle-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<PasswordInput aria-label="Password" toggleLabel="Reveal" />);
+    const b = page.getByRole('button', { name: 'Reveal' }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

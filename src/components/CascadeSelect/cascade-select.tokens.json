@@ -152,6 +152,16 @@
           }
         }
       },
+      "option-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "An option's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--cascade-select-option-bg-pressed"
+          }
+        }
+      },
       "option-on": {
         "$type": "color",
         "$value": "{color.primary-subtle}",

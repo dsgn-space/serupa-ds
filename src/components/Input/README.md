@@ -153,6 +153,7 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-action` | `text-muted` | An icon action's icon (3:1 on the field). |
 | `--input-action-hover` | `text` | An icon action's icon on hover. |
 | `--input-action-bg-hover` | `secondary` | An icon action's background on hover. |
+| `--input-action-bg-pressed` | `secondary-hover` | An icon action's background while it's held down, one step past hover. |
 | `--input-action-text` | `primary` | A text action's words, such as Apply (4.5:1 on the field). |
 | `--input-action-text-bg-hover` | `primary-subtle` | A text action's background on hover. |
 | `--input-action-focus-ring` | `focus-ring` | The ring around a focused action. |

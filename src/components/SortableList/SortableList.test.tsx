@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { contrast, css, drag, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
+import { userEvent, page } from 'vitest/browser';
+import { contrast, css, drag, settled, THEMES, withMotion, color, press } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { SortableList } from './SortableList';
@@ -331,4 +331,24 @@ describe('SortableList', () => {
       await userEvent.keyboard(' ');
     });
   }
+});
+
+describe('SortableList held state', () => {
+  test('held down: a drag handle fills one step past its hover (--sortable-list-handle-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<List />);
+    const b = page.getByRole('button', { name: /Apollo/ }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
+  });
 });

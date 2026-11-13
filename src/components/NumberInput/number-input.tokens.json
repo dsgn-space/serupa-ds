@@ -31,6 +31,16 @@
             "cssVar": "--number-input-stepper-bg-hover"
           }
         }
+      },
+      "stepper-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "A step button's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--number-input-stepper-bg-pressed"
+          }
+        }
       }
     },
     "radius": {

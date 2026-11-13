@@ -152,6 +152,16 @@
           }
         }
       },
+      "action-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "An icon action's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--input-action-bg-pressed"
+          }
+        }
+      },
       "action-text": {
         "$type": "color",
         "$value": "{color.primary}",
