@@ -44,4 +44,12 @@
 .dk-data-grid--sm .dk-data-grid__input { padding-block: var(--data-grid-padding-y-sm, var(--spacing-1)); }
 .dk-data-grid__message { white-space: normal; text-align: center; padding: var(--data-grid-message-padding, var(--spacing-6)); }
 @media (forced-colors: active) { .dk-data-grid__cell--selected { forced-color-adjust: none; background: Highlight; color: HighlightText; } }
+/* Print: the frame shows every row instead of its scrolled window (its height is the app's own, set inline, hence
+   !important, as ScrollArea), the header row repeats on each page instead of sticking, and a row isn't split, as Table. */
+@media print {
+  .dk-data-grid { overflow: visible; block-size: auto !important; max-block-size: none !important; }
+  .dk-data-grid--sticky .dk-data-grid__header { position: static; }
+  .dk-data-grid__table thead { display: table-header-group; }
+  .dk-data-grid__table tr { break-inside: avoid; }
+}
 }
