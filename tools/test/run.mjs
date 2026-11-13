@@ -80,6 +80,9 @@ const only = onlyComponents();
 // They go through the covered components' stories, so with none to go through (ErrorBoundary alone: its stories are
 // left out there, SKIP in vitest/stories.tsx) most would find no test at all and fail for it.
 const storied = !!only && [...only].some((n) => n !== 'ErrorBoundary' && fs.existsSync(path.join(PROJECT, 'src', 'components', n, `${n}.stories.tsx`)));
+// A block or pattern with stories brings the hydration checks, which render those too (tools/test/vitest/stories.tsx).
+const HYDRATION = ['hydrateStories', 'hydrateStoriesCsp', 'strictCsp'].map((f) => `src/internal/${f}.test.tsx`);
+const partStoried = !!only && [...only].some((n) => /^src\/(blocks|patterns)\//.test(folderOf(n) || '') && fs.existsSync(path.join(PROJECT, folderOf(n), `${n}.stories.tsx`)));
 // The components' own folders and the shared tests in src/internal/ that render one of them; with SERUPA_ONLY the
 // component tests (in English and in the second language) cover these.
 // A block or pattern brings its own folder (src/patterns/<Name>/); an Introduction page has none.
@@ -99,7 +102,7 @@ const steps = [
   // coverage also writes Vitest's blob report (.vitest/blob/ in Vitest 5), which CI's coverage job merges into one coverage
   // report and checks against the floors. A narrowed run may have fewer files than shards: a shard left with none passes
   // (without --passWithNoTests, Vitest stops on --shard=3/3 over one file).
-  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests', ...(process.env.SERUPA_COVERAGE ? ['--reporter=default', '--reporter=blob'] : [])] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : [])])] : [])),
+  vitest('Component tests (Vitest)', 'components', 'components', ...(process.env.SERUPA_COVERAGE ? ['--coverage'] : []), ...(process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests', ...(process.env.SERUPA_COVERAGE ? ['--reporter=default', '--reporter=blob'] : [])] : []), ...(only ? [...new Set([...covered, ...(storied ? STORY_WIDE : []), ...(partStoried ? HYDRATION : [])])] : [])),
   // The language the commit picks, over the same tests. On a narrowed pull request, also the other three over just the
   // changed components' own tests: main picks its language by its merge commit, which the pull request can't know.
   ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {
