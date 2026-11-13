@@ -141,6 +141,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': ' + date + ' 까지',
   filterAny: (field) => field + ': 전체',
   filterRemove: (field) => '필터 삭제: ' + field,
+  tagRemove: (name) => '삭제: ' + name,
   filterDone: '완료',
   filterResults: (count) => (count === 1 ? '결과 1개' : '결과 ' + n(count) + '개'),
   tocTitle: '이 페이지의 내용',

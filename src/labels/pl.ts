@@ -142,6 +142,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': do ' + date,
   filterAny: (field) => field + ': wszystkie',
   filterRemove: (field) => 'Usuń filtr: ' + field,
+  tagRemove: (name) => 'Usuń: ' + name,
   filterDone: 'Gotowe',
   filterResults: (count) => (count === 1 ? '1 wynik' : 'Wyniki: ' + n(count)),
   tocTitle: 'Na tej stronie',
