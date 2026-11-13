@@ -96,7 +96,7 @@ export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>('L
   const maskId = domId('dk-px', React.useId());   // one per loader, for the pixel grid's dividers
   const cells: React.ReactNode[] = [];
   if (variant === 'pixel') for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++)   // square, edge to edge; the wave runs along the diagonals (row + column)
-    cells.push(<rect key={r * 3 + c} className={'dk-loader__px ' + (pattern === 'wave' ? 'dk-loader__px--d' + (r + c) : pattern === 'random' ? 'dk-loader__px--r' + (r * 3 + c) : 'dk-loader__px--s' + PIXEL_STEPS[pattern][r * 3 + c])} x={c * 8} y={r * 8} width={8} height={8} />);
+    cells.push(<rect key={r * 3 + c} className={'dk-loader__px ' + (pattern === 'wave' ? 'dk-loader__px--d' + (r + c) : pattern === 'random' ? 'dk-loader__px--r' + (r * 3 + c) : 'dk-loader__px--s' + PIXEL_STEPS[pattern]?.[r * 3 + c])} x={c * 8} y={r * 8} width={8} height={8} />);
   const drawing = !shown || isText ? null : variant === 'pixel'
     ? <svg width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
         {/* cut the lines out of the squares… */}

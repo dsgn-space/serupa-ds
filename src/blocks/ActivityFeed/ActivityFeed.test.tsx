@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { ActivityFeed, type ActivityEvent } from './ActivityFeed';
@@ -84,5 +84,16 @@ describe('Blocks/Activity feed', () => {
     await expect.element(page.getByRole('link', { name: 'Bericht 3' })).toBeVisible();
     expect(page.getByRole('list').element().textContent).toContain('Ana Putri hat Bericht 3 kommentiert');
     await expect.element(page.getByRole('link', { name: 'Bericht 3' })).toHaveAttribute('href', '#b3');
+  });
+
+  test('a failed load: "Couldn’t load the activity" in its place, said once, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<ActivityFeed events={[]} hasMore onLoadMore={() => {}} loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load the activity' })).toBeVisible();
+    expect(screen.getByRole('listitem').elements()).toHaveLength(0);
+    expect(screen.getByRole('button', { name: 'Load more' }).elements()).toHaveLength(0);
+    await expect.element(screen.getByRole('region', { name: 'Activity' })).toBeVisible();
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });

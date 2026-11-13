@@ -95,7 +95,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const nearest = (n: number | null) => {
     if (n == null || !times.length) return 0;
     let best = 0;
-    times.forEach((x, i) => { if (Math.abs(x - n) < Math.abs(times[best] - n)) best = i; });
+    times.forEach((x, i) => { if (Math.abs(x - n) < Math.abs((times[best] ?? x) - n)) best = i; });
     return best;
   };
   const commit = (n: number | null) => {
@@ -152,7 +152,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
       case 'PageUp': move(Math.max(0, active - page)); break;
       case 'Home': if (e.altKey || e.ctrlKey) move(0); break;
       case 'End': if (e.altKey || e.ctrlKey) move(last); break;
-      case 'Enter': e.preventDefault(); if (typed.current) { read(); setOpen(false); } else pick(times[active]); break;   // what was typed wins over the highlight
+      case 'Enter': e.preventDefault(); if (typed.current) { read(); setOpen(false); } else { const t = times[active]; if (t !== undefined) pick(t); } break;   // what was typed wins over the highlight
       case 'Escape': e.preventDefault(); e.stopPropagation(); setOpen(false); break;
       case 'Tab': setOpen(false); break;
     }

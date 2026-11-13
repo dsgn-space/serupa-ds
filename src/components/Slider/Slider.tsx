@@ -97,7 +97,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const [own, setOwn] = React.useState<SliderValue>(props.defaultValue ?? min);
   const raw = controlled ? (props.value as SliderValue) : own;
   const isRange = Array.isArray(raw);
-  const vals: number[] = isRange ? [snap((raw as number[])[0]), snap((raw as number[])[1])].sort((a, b) => a - b) : [snap(raw)];
+  const vals: number[] = isRange ? [snap(raw[0]), snap(raw[1])].sort((a, b) => a - b) : [snap(raw)];
   const latest = React.useRef(vals); latest.current = vals;
   const root = React.useRef<HTMLDivElement | null>(null);
   useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? min); }, props.form);
@@ -110,7 +110,9 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const readOnly = !!props.readOnly || props['aria-readonly'] === true || props['aria-readonly'] === 'true';
   const still = disabled || readOnly;   // nothing moves the value
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
-  const out = (vs: number[]): SliderValue => (isRange ? [vs[0], vs[1]] : vs[0]);
+  // A thumb's value: vs holds one value, or a range's two, so the fallback is never reached.
+  const at = (vs: number[], i: number) => vs[i] ?? min;
+  const out = (vs: number[]): SliderValue => (isRange ? [at(vs, 0), at(vs, 1)] : at(vs, 0));
   // Without formatValue, showValue writes the number in the locale's digits and marks, as Badge and Pagination do: "٤٠" in ar-EG (GR24).
   const text = (v: number) => (props.formatValue ? props.formatValue(v) : displayNumber(v, locale));
   // ref.current.focus() and autoFocus land on the first thumb, as they would on an <input type="range">.
@@ -121,7 +123,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const set = (i: number, v: number) => {
     const vs = latest.current.slice();
     let n = snap(v);
-    if (isRange) n = i === 0 ? Math.min(n, vs[1]) : Math.max(n, vs[0]);
+    if (isRange) n = i === 0 ? Math.min(n, at(vs, 1)) : Math.max(n, at(vs, 0));
     if (n === vs[i]) return vs;
     vs[i] = n;
     latest.current = vs;
@@ -145,7 +147,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
     e.preventDefault();
     const v = fromPoint(e.clientX), vs = latest.current;
     let i = 0;
-    if (isRange) { const d0 = Math.abs(v - vs[0]), d1 = Math.abs(v - vs[1]); i = d1 < d0 || (d1 === d0 && v > vs[1]) ? 1 : 0; }
+    if (isRange) { const d0 = Math.abs(v - at(vs, 0)), d1 = Math.abs(v - at(vs, 1)); i = d1 < d0 || (d1 === d0 && v > at(vs, 1)) ? 1 : 0; }
     // Read-only: a press focuses the nearest thumb, as it would a read-only input, and moves nothing.
     if (readOnly) { thumbs.current[i]?.focus({ preventScroll: true }); return; }
     drag.current = i; from.current = vs.slice();
@@ -163,7 +165,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (still || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
-    const by = (e.shiftKey ? large : 1) * step, v = latest.current[i];
+    const by = (e.shiftKey ? large : 1) * step, v = at(latest.current, i);
     let n: number;
     switch (e.key) {
       case 'ArrowUp': n = v + by; break;
@@ -172,8 +174,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
       case 'ArrowLeft': n = rtl ? v + by : v - by; break;
       case 'PageUp': n = v + large * step; break;
       case 'PageDown': n = v - large * step; break;
-      case 'Home': n = isRange && i === 1 ? latest.current[0] : min; break;
-      case 'End': n = isRange && i === 0 ? latest.current[1] : max; break;
+      case 'Home': n = isRange && i === 1 ? at(latest.current, 0) : min; break;
+      case 'End': n = isRange && i === 0 ? at(latest.current, 1) : max; break;
       default: return;
     }
     e.preventDefault();
@@ -190,7 +192,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   // In a Field, its label names the slider (or a range's group) and its hint and error describe the thumb (or the group).
   const fieldLabel = useFieldLabel(props.id);
   const labelledBy = props['aria-labelledby'] ?? (props['aria-label'] ? undefined : fieldLabel);
-  const lo = isRange ? pct(vals[0]) : 0, hi = pct(vals[vals.length - 1]);
+  const lo = isRange ? pct(at(vals, 0)) : 0, hi = pct(at(vals, vals.length - 1));
   const marks = markList(props.marks, min, max, step, large);
   const labelled = marks.some((m) => m.label != null && m.label !== false && m.label !== '');
   // The value chip and the mark labels center on their points, but one near an end would hang past the slider and

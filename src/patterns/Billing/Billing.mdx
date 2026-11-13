@@ -1,0 +1,43 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Billing.stories';
+
+<Meta of={Stories} />
+
+# Billing
+
+The plan with what it costs and the day it renews, how much of it is used, the card it's paid with, past invoices, and a cancel that takes no more steps than signing up did.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A settings page for a paid plan: a workspace, an account or a team.
+- Not for choosing a plan for the first time: that's the Pricing block, and Checkout to pay.
+- Not for a shop's order history: orders have items and delivery, not renewals.
+
+## What each part is for
+
+- **The plan says its price and the day it renews**, "Renews on 1 December 2026 for US$24.00", in the reader's locale, before anyone has to look for it (the Ethical design rule: say when a plan renews and what it costs).
+- **Cancelling takes one dialog.** Cancel plan sits next to Change plan, not behind a support form. The dialog says what changes and when: the plan stays active until the renewal day, there's no further charge, and nothing is deleted. Keep my plan and Cancel plan are side by side and the same size, with no guilt in the words.
+- **A cancelled plan says when it stops**, and Resume plan brings it back in one step. Both are confirmed in a toast (4.1.3).
+- **A cancel that fails says so.** The dialog stays open with an alert, "Couldn’t cancel Team. Try again.", so nobody leaves thinking they've cancelled when they haven't (3.3.1).
+- **Usage is in words**, "4 of 10 seats" and "8.6 GB of 10 GB, almost full", not only a bar that changes color (1.4.1).
+- **A failed payment says so at the top**, with Update card next to it, and its invoice says "Payment failed" in words (3.3.1).
+- **Invoices are a table** with a caption, and each Download link names its invoice, "Download the invoice of 1 October 2026", so a list of links isn't "Download, Download, Download" (2.4.4).
+- **While billing loads**, set `loading`: each part's heading stays, with one placeholder name, "Loading billing", and main is busy (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry` for "Couldn’t load billing" with Try again.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.PaymentFailed} />
+
+<Canvas of={Stories.Cancelled} />
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
+
+## What stays your app's job
+
+- **Taking payments and storing the plan.** `onCancel` gets a confirmed cancel: return its promise, and the button shows it's busy until it settles; if it rejects, the dialog says the cancel failed. `onResume` gets a resume.
+- **Changing the plan and the card**, on the pages `changePlanHref` and `updateCardHref` lead to.
+- **What Free keeps.** Change the dialog's words to say exactly what the plan drops to, and never delete anything on the day a plan stops.
+- Rendering a `Toaster` once in the app.

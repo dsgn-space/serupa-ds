@@ -33,3 +33,6 @@ export const Plain: Story = { args: { period: undefined, stats: meta.args.stats.
 
 /** While the numbers load: skeleton cards, the list marked busy, and one "Loading" for screen readers. */
 export const Loading: Story = { args: { loading: true } };
+
+/** The numbers failed to load: under the heading, what happened and Try again, said once. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };

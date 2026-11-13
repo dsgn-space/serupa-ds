@@ -20,8 +20,8 @@ const MARK = 'data-prose-scroll';
    One the content gave a tabindex of its own is left alone. */
 function syncScrollers(root: HTMLElement) {
   const boxes = root.querySelectorAll<HTMLElement>('pre, table');
-  for (let i = 0; i < boxes.length; i++) {
-    const el = boxes[i], ours = el.hasAttribute(MARK);
+  for (const el of boxes) {
+    const ours = el.hasAttribute(MARK);
     if (!ours && el.hasAttribute('tabindex')) continue;
     const wide = el.scrollWidth > el.clientWidth + 1;
     if (wide && !ours) { el.setAttribute('tabindex', '0'); el.setAttribute(MARK, ''); }
@@ -44,7 +44,7 @@ export const Prose = /* @__PURE__ */ component<HTMLElement, ProseProps>('Prose',
     sync();
     // Wider or narrower column, or new content (an editor preview re-rendering its HTML): check again.
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(sync);
-    const watch = () => { if (!ro) return; ro.disconnect(); ro.observe(el); const b = el.querySelectorAll('pre, table'); for (let i = 0; i < b.length; i++) ro.observe(b[i]); };
+    const watch = () => { if (!ro) return; ro.disconnect(); ro.observe(el); for (const b of el.querySelectorAll('pre, table')) ro.observe(b); };
     watch();
     const mo = typeof MutationObserver === 'undefined' ? null : new MutationObserver(() => { watch(); sync(); });
     if (mo) mo.observe(el, { childList: true, subtree: true, characterData: true });

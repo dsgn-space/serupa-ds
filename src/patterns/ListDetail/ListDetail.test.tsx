@@ -127,4 +127,13 @@ describe('Patterns/List and detail', () => {
       await screen.unmount();
     }
   });
+
+  test('a failed load: "Couldn’t load your messages" in its place, said once, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<ListDetail loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load your messages' })).toBeVisible();
+    expect(screen.getByRole('region', { name: /^Messages/ }).elements()).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

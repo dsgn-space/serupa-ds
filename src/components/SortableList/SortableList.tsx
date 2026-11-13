@@ -234,7 +234,7 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
       if (was === undefined || was === top || key === held) continue;
       const cs = getComputedStyle(r);
       const t = cs.transform === 'none' ? null : new DOMMatrix(cs.transform);
-      const shift = (t ? (row ? t.m41 : t.m42) : 0) + (parseFloat(cs.translate.split(' ')[row ? 0 : 1]) || 0);
+      const shift = (t ? (row ? t.m41 : t.m42) : 0) + (parseFloat(cs.translate.split(' ')[row ? 0 : 1] ?? '') || 0);
       const dy = Math.round(was + shift - top);
       if (dy) moved.push([r, dy]);
     }
@@ -287,6 +287,6 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
 function move<T>(items: readonly T[], from: number, to: number): T[] {
   const out = items.slice();
   const [it] = out.splice(from, 1);
-  out.splice(to, 0, it);
+  if (it !== undefined) out.splice(to, 0, it);
   return out;
 }

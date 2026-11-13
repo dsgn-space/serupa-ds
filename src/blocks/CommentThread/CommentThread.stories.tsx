@@ -64,6 +64,9 @@ const team: MentionOption[] = [
 /** While the comments load: skeleton comments, named once for screen readers, with the reply box already there. */
 export const Loading: Story = { render: () => <Page><CommentThread comments={[]} onReply={() => {}} loading /></Page> };
 
+/** The comments didn't load: the thread says so with Try again, and the reply box waits for them. */
+export const LoadFailed: Story = { render: () => <Page><CommentThread comments={[]} onReply={() => {}} loadFailed onRetry={() => new Promise((r) => setTimeout(r, 1000))} /></Page> };
+
 /** With people: type "@" in the reply box to mention someone; mentions in comments are bold, and onReply gets who to notify. */
 export const WithMentions: Story = {
   name: 'With mentions',

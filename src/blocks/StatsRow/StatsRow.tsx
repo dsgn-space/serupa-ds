@@ -1,9 +1,11 @@
+'use client';
 import * as React from 'react';
 import { Card } from '../../components/Card/Card';
 import { Badge } from '../../components/Badge/Badge';
 import { Heading } from '../../components/Heading/Heading';
 import { Sparkline } from '../../components/Sparkline/Sparkline';
 import { Loader } from '../../components/Loader/Loader';
+import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 
 /* Stats row (BL2): a row of key numbers for the top of a dashboard, built from the components only, for an app to copy.
    What it carries (WCAG 2.2):
@@ -14,6 +16,7 @@ import { Loader } from '../../components/Loader/Loader';
    - 1.3.1: the row is a list under its own heading, so a screen reader says how many numbers there are, and each
      card reads label, value, change in that order.
    - 4.1.3: while loading, the list says it's busy (aria-busy) and the skeletons are named once, not once per card.
+   - 4.1.3, 3.3.3: a failed load says so once, under the heading, with Try again (EmptyLoadFailed).
    - 1.4.10 reflow: the cards wrap to one column on a phone. */
 
 export interface Stat {
@@ -45,6 +48,10 @@ export interface StatsRowProps {
   loading?: boolean;
   /** How many skeleton cards to show while loading. Default: 4. */
   loadingCount?: number;
+  /** The numbers failed to load: a "Couldn’t load" message with Try again, which calls onRetry, in the cards' place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
   /** Its words, in the page's language. Each one left out stays English. */
   labels?: Partial<StatsRowLabels> | undefined;
 }
@@ -59,6 +66,8 @@ export interface StatsRowLabels {
   flat: string;
   /** The one name while loading, from the title as given: "Loading: This month". */
   loading: (title: string) => string;
+  /** The failed load's title, from the title as given: "Couldn’t load This month". */
+  loadFailed: (title: string) => string;
   /** A trend line's name: "Revenue, last 8 periods". */
   trend: (label: string, count: number) => string;
 }
@@ -67,18 +76,19 @@ const EN: StatsRowLabels = {
   down: (amount) => `Down ${amount}`,
   flat: 'No change',
   loading: (title) => `Loading: ${title}`,
+  loadFailed: (title) => `Couldn’t load ${title}`,
   trend: (label, count) => `${label}, last ${count} periods`,
 };
 const ARROW = { up: 'arrow_upward', down: 'arrow_downward', flat: 'remove' } as const;
 
 /** A row of key numbers, each with its change said in words and an optional trend line. */
-export function StatsRow({ title, headingLevel = 2, stats, period, loading = false, loadingCount = 4, labels }: StatsRowProps) {
+export function StatsRow({ title, headingLevel = 2, stats, period, loading = false, loadingCount = 4, loadFailed = false, onRetry, labels }: StatsRowProps) {
   const id = React.useId();
   const w = { ...EN, ...labels };
   return (
     <section aria-labelledby={id} className="flex flex-col gap-3">
       <Heading level={headingLevel} size="lg" id={id}>{title}</Heading>
-      <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+      {loadFailed ? <EmptyLoadFailed title={w.loadFailed(title)} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
         {loading
           ? Array.from({ length: loadingCount }, (_, i) => (
             <Card as="li" key={i} padding="md">
@@ -104,7 +114,7 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
               </Card>
             );
           })}
-      </ul>
+      </ul>}
     </section>
   );
 }

@@ -10,6 +10,7 @@ import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { MentionInput, mentionsIn, type MentionOption } from '../../components/MentionInput/MentionInput';
 import { toast } from '../../components/Toast/Toast';
+import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 import { announce } from '../../internal/announce';
 
 /* Comment thread (BL8): comments with who and when, a reply box with a character count, and edit and delete for
@@ -45,6 +46,8 @@ export interface CommentThreadLabels {
   noComments: string;
   /** The skeletons' one name while the comments load. */
   loading: string;
+  /** In place of the list and the reply box when the comments failed to load. */
+  loadFailed: string;
   reply: string;
   /** Under the reply box: the limit in words. */
   replyHint: (max: number) => string;
@@ -73,6 +76,7 @@ const english: CommentThreadLabels = {
   title: 'Comments',
   noComments: 'No comments yet. Start the conversation.',
   loading: 'Loading comments',
+  loadFailed: 'Couldn’t load the comments',
   reply: 'Reply',
   replyHint: (max) => `Up to ${max} characters.`,
   mentionHint: 'Type @ to mention someone.',
@@ -111,6 +115,11 @@ export interface CommentThreadProps {
   loading?: boolean | undefined;
   /** How many skeleton comments to show while loading. Default: 2. */
   loadingCount?: number | undefined;
+  /** The comments failed to load: a "Couldn’t load the comments" message with Try again, which calls onRetry, in place
+      of the list and the reply box. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
   labels?: Partial<CommentThreadLabels> | undefined;
 }
 
@@ -145,7 +154,7 @@ const thenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof 
 const settle = (out: void | PromiseLike<unknown>, done: () => void, failed: () => void) => { if (thenable(out)) out.then(done, failed); else done(); };
 
 /** Comments with who and when, a reply box with a character count, and edit and delete with undo for your own. */
-export function CommentThread({ comments, onReply, onEdit, onDelete, people, maxLength = 1000, headingLevel = 2, loading = false, loadingCount = 2, labels }: CommentThreadProps) {
+export function CommentThread({ comments, onReply, onEdit, onDelete, people, maxLength = 1000, headingLevel = 2, loading = false, loadingCount = 2, loadFailed = false, onRetry, labels }: CommentThreadProps) {
   const l = { ...english, ...labels };
   const id = React.useId();
   const [hidden, setHidden] = React.useState<ReadonlySet<string>>(new Set());
@@ -202,7 +211,10 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} id={id} ref={heading} tabIndex={-1} className="outline-none">{l.title}</Heading>
-      {loading ? (
+      {loadFailed ? (
+        // A reply to comments no one can see would be a guess, so the reply box waits for them too.
+        <EmptyLoadFailed title={l.loadFailed} onRetry={() => onRetry?.()} headingLevel={Math.min(headingLevel + 1, 4) as 3 | 4} />
+      ) : loading ? (
         <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
           {Array.from({ length: loadingCount }, (_, i) => (
             <li key={i} className="flex items-start gap-3">
@@ -249,13 +261,13 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
           ))}
         </ol>
       )}
-      <form onSubmit={post} noValidate className="flex flex-col gap-2">
+      {!loadFailed && <form onSubmit={post} noValidate className="flex flex-col gap-2">
         <Field label={l.reply} id={`${id}-reply`} hint={people ? l.replyHint(maxLength) + ' ' + l.mentionHint : l.replyHint(maxLength)} error={error ? l.empty : undefined}>
           <Box people={people} value={reply} onValue={(v) => { setReply(v); if (error && v.trim()) setError(false); }} maxLength={maxLength} rows={3} />
         </Field>
         <Button type="submit" className="self-start" loading={busy}>{l.post}</Button>
         {failed === 'post' && <p className="text-sm text-danger-text">{l.postFailed}</p>}
-      </form>
+      </form>}
     </section>
   );
 }

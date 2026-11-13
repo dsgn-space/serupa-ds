@@ -80,14 +80,14 @@ const SEPARATOR = /^[/.\-\s]$/;
 
 const partsOf = (iso: string | undefined): Parts => {
   const m = ISO.exec(iso || '');
-  return m ? { day: String(Number(m[3])), month: String(Number(m[2])), year: m[1] } : NONE;
+  return m ? { day: String(Number(m[3])), month: String(Number(m[2])), year: m[1] ?? '' } : NONE;
 };
 // The date the boxes make, as YYYY-MM-DD, with what's wrong and where.
 function read(p: Parts, min?: string, max?: string): { value: string; problem: DateFieldProblem | null; parts: DatePart[] } {
   const t = { day: latinDigits(p.day).trim(), month: latinDigits(p.month).trim(), year: latinDigits(p.year).trim() };
   if (!t.day && !t.month && !t.year) return { value: '', problem: 'empty', parts: ['day', 'month', 'year'] };
   const missing = (['day', 'month', 'year'] as const).filter((k) => !t[k] || (k === 'year' && /^\d{1,3}$/.test(t.year)));
-  if (missing.length) return { value: '', problem: missing.length === 3 ? 'empty' : `missing-${missing[0]}`, parts: missing };
+  if (missing.length) return { value: '', problem: missing.length === 3 ? 'empty' : `missing-${missing[0] ?? 'day'}`, parts: missing };
   const bad = (['day', 'month', 'year'] as const).filter((k) => !/^\d+$/.test(t[k]) || (k === 'month' && (+t.month < 1 || +t.month > 12)) || (k === 'day' && (+t.day < 1 || +t.day > 31)));
   if (bad.length) return { value: '', problem: 'not-a-date', parts: bad };
   const d = new Date(2000, 0, 1);
@@ -147,7 +147,7 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
   }, props.form);
 
   const box = (k: DatePart) => root.current && root.current.querySelector<HTMLInputElement>(`#${base}-${k}`);
-  const firstBox = () => box(order[0]);
+  const firstBox = () => box(order[0] ?? 'day');
   useAutoFocus(props.autoFocus, firstBox);
 
   const onKeyDown = (k: DatePart) => (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -165,7 +165,7 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
     if (!d) return;
     e.preventDefault();
     change(partsOf(isoDate(d)), 'paste');
-    box(order[order.length - 1])?.focus();
+    box(order[order.length - 1] ?? 'year')?.focus();
   };
 
   const marked = invalid ? (now.parts.length ? now.parts : order) : [];

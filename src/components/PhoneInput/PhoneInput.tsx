@@ -60,7 +60,7 @@ const regionOf = (locale: string): string | undefined => {
 // Where the caret goes after formatting: just after the n-th digit (or at the start for none).
 const caretAfter = (text: string, n: number): number => {
   if (n <= 0) return 0;
-  for (let i = 0, seen = 0; i < text.length; i++) if (/\d/.test(text[i]) && ++seen === n) return i + 1;
+  for (let i = 0, seen = 0; i < text.length; i++) if (/\d/.test(text.charAt(i)) && ++seen === n) return i + 1;
   return text.length;
 };
 
@@ -213,8 +213,8 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
     if (e.defaultPrevented || el.readOnly || isComposing(e) || e.altKey || e.ctrlKey || e.metaKey || s == null || s !== end || (e.key !== 'Backspace' && e.key !== 'Delete')) return;
     const back = e.key === 'Backspace';
     let i = back ? s - 1 : s;
-    if (i < 0 || i >= text.length || /\d/.test(text[i])) return;
-    while (i >= 0 && i < text.length && !/\d/.test(text[i])) i += back ? -1 : 1;
+    if (i < 0 || i >= text.length || /\d/.test(text.charAt(i))) return;
+    while (i >= 0 && i < text.length && !/\d/.test(text.charAt(i))) i += back ? -1 : 1;
     if (i < 0 || i >= text.length) return;
     e.preventDefault();
     const n = text.slice(0, i).replace(/\D/g, '').length;   // digits before the one removed

@@ -61,7 +61,7 @@ export const labels: SerupaLabels = {
   noCommands: 'Відповідних команд немає',
   commandsCount: (count) => p3(count, 'команда', 'команди', 'команд', 'команди'),
   otherCommands: 'Команди',
-  colorName: (hue, tone) => (tone === 'light' ? 'Світло-' + HUES[hue][0] : tone === 'dark' ? 'Темно-' + HUES[hue][0] : HUES[hue][1]),
+  colorName: (hue, tone) => { const [stem, word] = HUES[hue] ?? [hue, hue]; return tone === 'light' ? 'Світло-' + stem : tone === 'dark' ? 'Темно-' + stem : word; },
   customColor: 'Власний колір',
   hexCode: 'HEX-код',
   contrast: (ratio) => 'Контраст ' + ratio.replace('.', ',') + ':1',

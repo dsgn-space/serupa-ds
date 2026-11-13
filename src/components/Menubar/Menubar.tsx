@@ -70,8 +70,8 @@ export const Menubar = /* @__PURE__ */ component<HTMLDivElement, MenubarProps>('
       const n = (j + tops.length) % tops.length;
       setAt(n);
       // An open menu moves along, open; a disabled name takes the focus instead, closed.
-      if (open !== null && tops[n].getAttribute('aria-disabled') !== 'true') setOpen(n);
-      else { setOpen(null); tops[n].focus(); }
+      if (open !== null && tops[n]?.getAttribute('aria-disabled') !== 'true') setOpen(n);
+      else { setOpen(null); tops[n]?.focus(); }
     };
     if (step) go(i + step);
     else if (top < 0) return;
@@ -79,7 +79,7 @@ export const Menubar = /* @__PURE__ */ component<HTMLDivElement, MenubarProps>('
     else if (e.key === 'End') go(tops.length - 1);
     else if (e.key.length === 1 && /\S/.test(e.key)) {
       const n = typeahead(typed.current, e.key, tops.map((t) => t.textContent || ''), top);
-      if (n >= 0) { e.preventDefault(); setAt(n); tops[n].focus(); }
+      if (n >= 0) { e.preventDefault(); setAt(n); tops[n]?.focus(); }
     }
   };
 
