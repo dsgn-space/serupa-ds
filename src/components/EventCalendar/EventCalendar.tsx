@@ -6,6 +6,7 @@ import { component } from '../../internal/component';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from '../../internal/dates';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
+import { minuteTick } from '../../internal/timing';
 import * as icons from '../../material/builtin';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
@@ -267,7 +268,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const [now, setNow] = React.useState(() => new Date());
   React.useEffect(() => {
     if (!hours) return;
-    const t = window.setInterval(() => setNow(new Date()), 60000);
+    const t = window.setInterval(() => setNow(new Date()), minuteTick);
     return () => window.clearInterval(t);
   }, [hours]);
   // The time zone the times are in, by the reader's clock, so only once the page runs in their browser.

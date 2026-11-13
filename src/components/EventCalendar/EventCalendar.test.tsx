@@ -297,7 +297,7 @@ describe('EventCalendar', () => {
       await expect.poll(() => Math.round(line().getBoundingClientRect().top - hours())).toBe(504);
       expect(cell('2025-03-05').querySelector('[aria-hidden]:not(span)')).toBeNull();
       const zone = page.getByRole('grid').element().querySelector('thead td')!;
-      expect([zone.getAttribute('aria-hidden'), zone.textContent!.length > 0]).toEqual(['true', true]);
+      expect([zone.getAttribute('aria-hidden'), zone.textContent.length > 0]).toEqual(['true', true]);
     } finally { vi.useRealTimers(); }
   });
 

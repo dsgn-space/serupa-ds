@@ -39,3 +39,5 @@ export const clickAfterDrag = 500;
 export const repeatQuiet = 1000;
 /** RelativeTime refreshes "3 minutes ago" this often. */
 export const relativeTick = 15000;
+/** How often a clock shown by the minute moves on: EventCalendar's line at the time now. */
+export const minuteTick = 60000;
