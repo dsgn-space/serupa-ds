@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { Heading } from '../../components/Heading/Heading';
 import { userEvent } from 'vitest/browser';
 import { ConsentBanner } from './ConsentBanner';
 
@@ -13,6 +14,16 @@ afterEach(() => { window.localStorage.removeItem(KEY); });
 
 // Consent banner (PT13): in the flow, not over the page; accept and reject alike; no trap; changeable later.
 describe('Patterns/Consent banner', () => {
+  test('each section heading is the size every pattern gives one (an h2 at lg), set by Heading, not a text class', async () => {
+    await render(<ConsentBanner />);
+    await render(<div id="probe-lg"><Heading level={2} size="lg">Probe</Heading></div>);
+    const look = (h: Element) => { const c = getComputedStyle(h); return [c.fontSize, c.lineHeight, c.letterSpacing].join(' '); };
+    const want = look(document.querySelector('#probe-lg h2')!);
+    const h2s = [...document.querySelectorAll('h2')].filter((h) => !h.closest('#probe, #probe-lg, dialog'));
+    expect(h2s.length).toBeGreaterThan(0);
+    expect(h2s.map(look)).toEqual(h2s.map(() => want));
+  });
+
   test('one main and one h1, and the banner is a named region in the flow, before the page, never over it', async () => {
     await render(<ConsentBanner />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);

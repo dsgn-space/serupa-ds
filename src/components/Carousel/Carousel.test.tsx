@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { renderToString } from 'react-dom/server';
 import { page, userEvent } from 'vitest/browser';
-import { color, contrast, keepMotion, settled, THEMES } from '../../../tools/test/vitest/helpers';
+import { color, contrast, keepMotion, press, settled, THEMES } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { resetWarnings } from '../../internal/warn';
 import { SerupaProvider } from '../../internal/provider';
@@ -311,6 +311,13 @@ describe('Carousel', () => {
     // Each dot is drawn 24px wide and clipped 8px in from both sides to an 8px circle; the current one isn't clipped.
     const cr = q('#car button[aria-current="true"]').getBoundingClientRect();
     expect([Math.round(r.width), Math.round(r.height), Math.round(cr.width), a.width, a.height, a.clipPath, cur.width, cur.clipPath]).toEqual([24, 24, 24, '24px', '8px', 'inset(0px 8px round 9999px)', '24px', 'inset(0px round 9999px)']);
+  });
+
+  test('a dot held down fills a step past hover (text), on touch too, so a press shows where hover can\'t', async () => {
+    await render(<App />);
+    const d = dot('car', 2);
+    const held = await press(d, () => getComputedStyle(d, '::before').backgroundColor);
+    expect(held).toBe(color('var(--text)'));
   });
 
   test('the dot that becomes current widens by letting its clip go, on the compositor, and its neighbours stay where they are (FB1)', async () => {

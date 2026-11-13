@@ -78,7 +78,7 @@ export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps
           <div className="mx-auto flex max-w-3xl flex-col gap-3">
             {banner === 'ask' ? (
               <>
-                <Heading level={2} id="consent-title" className="text-lg">Cookies on Acme</Heading>
+                <Heading level={2} size="lg" id="consent-title">Cookies on Acme</Heading>
                 <p className="m-0 text-sm">We use essential cookies to make the site work. We’d also like to set analytics cookies to learn how the site is used, so we can make it better. We won’t set them unless you accept.</p>
                 <div className="flex flex-wrap items-center gap-3">
                   <Button onClick={() => answer('accepted')}>Accept analytics cookies</Button>
@@ -88,7 +88,7 @@ export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps
               </>
             ) : (
               <div ref={message} tabIndex={-1} className="flex flex-col gap-3 outline-none">
-                <Heading level={2} id="consent-title" className="text-lg">Cookies on Acme</Heading>
+                <Heading level={2} size="lg" id="consent-title">Cookies on Acme</Heading>
                 <p className="m-0 text-sm">{said(choice ?? draft)} You can <Link href={`#${SETTINGS}`}>change your cookie settings</Link> at any time.</p>
                 <div><Button variant="secondary" onClick={hide}>Hide this message</Button></div>
               </div>
@@ -105,7 +105,7 @@ export function ConsentBanner({ initial, saveKey, onChange }: ConsentBannerProps
           <p className="m-0 text-text-muted">Spades, forks and shears made to be mended, not thrown away. <Link href="#shop">Shop the range</Link> or <Link href="#repairs">book a repair</Link>.</p>
         </div>
         <Card as="section" aria-labelledby={`${SETTINGS}-title`} id={SETTINGS} className="flex flex-col gap-4">
-          <Heading level={2} id={`${SETTINGS}-title`}>Cookie settings</Heading>
+          <Heading level={2} size="lg" id={`${SETTINGS}-title`}>Cookie settings</Heading>
           <p className="m-0 text-sm">Essential cookies keep you signed in and remember what’s in your basket. They’re always on, because the site doesn’t work without them.</p>
           <form onSubmit={saveSettings} className="flex flex-col gap-4">
             <Field label="Use analytics cookies?" hint="They tell us which pages are visited and for how long. Nothing that names you." group>

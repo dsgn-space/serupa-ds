@@ -79,7 +79,7 @@ export function Footer({ groups, languages = [], language, onLanguageChange, the
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
           {groups.map((g, i) => (
             <nav key={g.title} aria-labelledby={`${id}-${i}`} className="flex flex-col gap-3">
-              <Heading level={headingLevel} id={`${id}-${i}`} className="text-sm font-semibold">{g.title}</Heading>
+              <Heading level={headingLevel} id={`${id}-${i}`} size="sm" className="font-semibold">{g.title}</Heading>
               <ul className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
                 {g.links.map((link) => <li key={link.href + link.label}><Link href={link.href}>{link.label}</Link></li>)}
               </ul>

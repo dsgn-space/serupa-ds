@@ -42,6 +42,16 @@
           }
         }
       },
+      "more-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "The \"+N\" button's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--avatar-group-more-bg-pressed"
+          }
+        }
+      },
       "more-hover-bg": {
         "$type": "color",
         "$value": "{color.secondary-hover}",

@@ -78,7 +78,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     if (fmt(value) !== text) setText(fmt(value));
   }
   const [open, setOpen] = React.useState(false);
-  const [active, setActive] = React.useState(0);
+  const [held, setActive] = React.useState(0);
   const id = domId('dk-tp', React.useId());
   const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
   const box = React.useRef<HTMLSpanElement | null>(null);
@@ -92,6 +92,8 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const typed = React.useRef(false);   // text typed since the list opened or the active time last moved
 
   const times = React.useMemo(() => { const out: number[] = []; for (let n = lo; n <= hi; n += step) out.push(n); return out; }, [lo, hi, step]);
+  // The highlighted time, kept on the list when a new min, max or step shortens it while it's open.
+  const active = Math.max(0, Math.min(held, times.length - 1));
   const nearest = (n: number | null) => {
     if (n == null || !times.length) return 0;
     let best = 0;

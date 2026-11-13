@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import { render as draw } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, color, press } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { EventCalendar, type CalendarEvent } from './EventCalendar';
@@ -220,5 +220,25 @@ describe('EventCalendar and the screen width', () => {
 describe('EventCalendar labels', () => {
   test('eventCount and moreEvents say the count as given, in the locale\'s digits ("٢ acara", "+٣ lagi")', () => {
     expect([idLabels.eventCount(2, '٢'), idLabels.moreEvents(3, '٣'), idLabels.eventCount(0, '٠')]).toEqual(['٢ acara', '+٣ lagi', 'Tidak ada acara']);
+  });
+});
+
+describe('EventCalendar held state', () => {
+  test('held down: "+N more" fills one step past its hover (--event-calendar-more-bg-pressed), and its text or icon keeps 4.5:1 on it in all six themes', async () => {
+    await render(<EventCalendar events={Array.from({ length: 5 }, (_, i) => ({ id: 'e' + i, title: 'Call ' + (i + 1), start: `2025-03-06T1${i}:00` }))} defaultMonth={MARCH} maxPerDay={3} />);
+    const b = page.getByRole('button', { name: '+3 more' }).element() as HTMLElement;
+    const f = () => b;
+    const low = await press(b, async () => {
+      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--pressed)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(f()).color, css(f()).backgroundColor);
+        if (r < 4.5) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

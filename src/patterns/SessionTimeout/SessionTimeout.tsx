@@ -10,6 +10,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { Card } from '../../components/Card/Card';
 import { Alert } from '../../components/Alert/Alert';
 import { announce } from '../../internal/announce';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Session time-out warning: warns well before a session ends, lets one action keep it, and loses nothing
    typed if it ends anyway. For an app to copy. What it carries (WCAG 2.2):
@@ -201,13 +202,11 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
           </div>
         ) : (
           <>
-            <div className="flex flex-col gap-2">
-              <Heading level={1}>Contact support</Heading>
-              <p className="m-0 text-text-muted">For your security, you’re signed out after {timeLeft(duration)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</p>
-            </div>
+            <PageHeader title="Contact support"
+              description={<>For your security, you’re signed out after {timeLeft(duration)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</>} />
             <Card as="section" aria-labelledby="message-title">
               <form className="flex flex-col gap-4" noValidate onSubmit={(e) => void send(e)}>
-                <Heading level={2} id="message-title">Your message</Heading>
+                <Heading level={2} size="lg" id="message-title">Your message</Heading>
                 {outcome === 'sent' ? <Alert ref={sentRef} tabIndex={-1} tone="success" className="outline-none">Message sent. We’ll reply by email.</Alert> : null}
                 <Field label="Subject" error={missing.subject}>
                   <Input name="subject" value={draft.subject} onChange={type('subject')} />

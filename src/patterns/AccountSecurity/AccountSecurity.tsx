@@ -18,6 +18,8 @@ import type { ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummar
 import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { Loader } from '../../components/Loader/Loader';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Account security: changing the password, turning two-step verification on and off, and the devices signed in, each
    with Sign out. For an app to copy. What it carries (WCAG 2.2):
@@ -31,6 +33,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
      "This device" in words and has no Sign out.
    - 2.4.3, 4.1.3: after a sign-out, focus goes to the next device's Sign out (or the list's heading), and a toast says
      it's done.
+   - 4.1.3, 3.3.3: while the devices load, their list is busy with placeholder rows, named once; a failed load says so
+     in their place, with Try again (EmptyLoadFailed). The rest of the page works meanwhile.
    - 3.3.4: deleting the account sits apart at the end, offers the data first, says what will be lost, and asks for the
      account's email before its button works; a delete that fails says so in the dialog, which stays open. After it,
      focus goes to the h1 of the page that says it's done.
@@ -72,6 +76,12 @@ export interface AccountSecurityProps {
   dataHref?: string | undefined;
   /** The email was typed and Delete pressed. Return its promise: a rejection keeps the dialog open and says so. */
   onDeleteAccount?: (() => unknown) | undefined;
+  /** The devices are on their way: placeholder rows, named once ("Loading where you’re signed in"). Default: false. */
+  loading?: boolean | undefined;
+  /** The devices failed to load: a "Couldn’t load where you’re signed in" message with Try again, which calls onRetry, in their place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads the devices again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const MIN = 12;
@@ -94,7 +104,7 @@ export function passwordProblems(current: string, next: string): ErrorSummaryIte
 
 /** The security page: a skip link, a header with the way back, then main with the h1 and a section per part. */
 export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EHPK 3PXP', recoveryCodes = demoCodes, devices = demoDevices,
-  onChangePassword, onEnableTwoStep, onDisableTwoStep, onSignOut, onSignOutOthers, email = 'ana@example.com', dataHref = '#export', onDeleteAccount }: AccountSecurityProps) {
+  onChangePassword, onEnableTwoStep, onDisableTwoStep, onSignOut, onSignOutOthers, email = 'ana@example.com', dataHref = '#export', onDeleteAccount, loading = false, loadFailed = false, onRetry }: AccountSecurityProps) {
   // Password
   const [current, setCurrent] = React.useState('');
   const [next, setNext] = React.useState('');
@@ -219,6 +229,12 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
             <p className="m-0 text-sm text-text-muted">If you don’t know a device, sign it out and change your password.</p>
           </div>
           <div className="flex min-w-0 flex-col gap-3 md:col-span-2">
+            {loadFailed ? <EmptyLoadFailed title="Couldn’t load where you’re signed in" onRetry={() => onRetry?.()} headingLevel={3} /> : loading ? (
+              // One name for all of them: the first row is named, the others are only pictures.
+              <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col divide-y divide-border p-0">
+                {[0, 1, 2].map((i) => <li key={i} className="py-3"><Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? 'Loading where you’re signed in' : ''} /></li>)}
+              </ul>
+            ) : <>
             <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
               {shown.map((d) => (
                 <li key={d.id} className="flex flex-wrap items-center gap-3 py-3">
@@ -231,6 +247,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
               ))}
             </ul>
             {others.length > 1 ? <Button variant="outline" className="self-start" onClick={signOutOthers}>Sign out everywhere else</Button> : null}
+            </>}
           </div>
         </section>
 

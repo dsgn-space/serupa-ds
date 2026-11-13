@@ -117,13 +117,13 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
         <section aria-labelledby="setup-title" className="flex flex-col gap-4">
           {state.hidden ? (
             <Card padding="sm" className="flex flex-wrap items-center justify-between gap-3">
-              <Heading level={2} id="setup-title" className="text-base">Set up your workspace: {count(state.done.length)}</Heading>
+              <Heading level={2} size="base" id="setup-title">Set up your workspace: {count(state.done.length)}</Heading>
               <Button ref={showButton} variant="secondary" size="sm" onClick={() => setHidden(false)}>Show the checklist</Button>
             </Card>
           ) : (
             <>
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <Heading level={2} id="setup-title" ref={heading} tabIndex={-1} className="outline-none">Set up your workspace</Heading>
+                <Heading level={2} size="lg" id="setup-title" ref={heading} tabIndex={-1} className="outline-none">Set up your workspace</Heading>
                 <Button variant="ghost" size="sm" onClick={() => setHidden(true)}>Hide the checklist</Button>
               </div>
               <Progress label="Setup progress" value={state.done.length} max={steps.length} showValue tone={finished ? 'success' : 'primary'}
@@ -141,7 +141,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
                   return (
                     <Card as="li" key={s.id} padding="md" className="flex min-w-0 flex-col gap-3 wrap-anywhere" aria-labelledby={`step-${s.id}`}>
                       <div className="flex flex-col gap-1">
-                        <Heading level={3} id={`step-${s.id}`} className="text-base">
+                        <Heading level={3} size="base" id={`step-${s.id}`}>
                           <span className="text-text-muted">{i + 1}. </span>{s.title}
                         </Heading>
                         <p className="m-0 text-sm text-text-muted">{s.description}</p>
@@ -161,7 +161,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
         </section>
 
         <section aria-labelledby="projects-title" className="flex flex-col gap-4">
-          <Heading level={2} id="projects-title">Your projects</Heading>
+          <Heading level={2} size="lg" id="projects-title">Your projects</Heading>
           <Card variant="filled">
             <EmptyState icon="folder_open" headingLevel={3} title="No projects yet"
               description="A project holds a piece of work: its tasks, its files and the talk about them. Start with one you’re doing now."

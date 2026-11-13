@@ -26,3 +26,6 @@ export const Loading: Story = { args: { loading: true } };
 
 /** The rows failed to load: what happened and Try again in the table's place, said once. */
 export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };
+
+/** No projects at all: a first visit, with New project, not a search that missed. */
+export const NoProjects: Story = { args: { projects: [] } };

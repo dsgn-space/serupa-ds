@@ -38,6 +38,11 @@
 .dk-bottom-nav__icon { display: inline-flex; align-items: center; justify-content: center; inline-size: var(--spacing-14); block-size: var(--spacing-8); border-radius: var(--rounded-full); font-size: var(--spacing-6); transition: background-color var(--motion-hover) var(--ease-move); }
 .dk-bottom-nav__label { max-inline-size: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (hover: hover) { .dk-bottom-nav__link:hover { color: var(--bottom-nav-text-hover, var(--text)); } .dk-bottom-nav__link:hover .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-hover, var(--secondary)); } }
+/* The label and the pill fade to their hover colors as the controls beside them do, and the pill fills at once while held. */
+.dk-bottom-nav__link { transition: color var(--motion-hover) var(--ease-move); }
+.dk-bottom-nav__icon { transition: background-color var(--motion-hover) var(--ease-move); }
+.dk-bottom-nav__link:not(.dk-bottom-nav__link--active):active .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-pressed, var(--secondary-hover)); transition-duration: var(--duration-0); }
+@media (prefers-reduced-motion: reduce) { .dk-bottom-nav__link, .dk-bottom-nav__icon { transition: none; } }
 .dk-bottom-nav__link--active { color: var(--bottom-nav-text-active, var(--primary)); }
 .dk-bottom-nav__link--active .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-active, var(--primary-subtle)); }
 .dk-bottom-nav__link:focus-visible { outline: var(--focus-ring-width) solid var(--bottom-nav-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }

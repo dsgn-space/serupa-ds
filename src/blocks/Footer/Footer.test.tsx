@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { Footer, type FooterLinkGroup } from './Footer';
+import { Heading } from '../../components/Heading/Heading';
 
 const groups: FooterLinkGroup[] = [
   { title: 'Product', links: [{ label: 'Pricing', href: '/pricing' }, { label: 'Changelog', href: '/changelog' }] },
@@ -13,6 +14,15 @@ const languages = [{ value: 'en', label: 'English' }, { value: 'id', label: 'Bah
 // Footer (BL10): the contentinfo landmark, each link group a navigation landmark named by its heading, a language
 // picker that waits for Change, a theme picker that applies at once, and the legal line.
 describe('Blocks/Footer', () => {
+  test('a group heading is Heading at size sm, with its spacing, not a text class over an h2\'s', async () => {
+    await render(<Footer groups={groups} legal="© 2026 Acme, Inc." />);
+    await render(<div id="probe"><Heading level={2} size="sm">Probe</Heading></div>);
+    const look = (h: Element) => { const c = getComputedStyle(h); return [c.fontSize, c.lineHeight, c.letterSpacing].join(' '); };
+    const heads = [...document.querySelectorAll('footer h2')];
+    expect(heads.length).toBeGreaterThan(0);
+    expect(heads.map(look)).toEqual(heads.map(() => look(document.querySelector('#probe h2')!)));
+  });
+
   test('a contentinfo landmark with each link group as navigation named by its heading', async () => {
     await render(<Footer groups={groups} legal="© 2026 Acme, Inc." />);
     await expect.element(page.getByRole('contentinfo')).toBeVisible();

@@ -25,6 +25,7 @@ Changing the password, turning two-step verification on and off, the devices sig
 - **Turning two-step off asks first**, in a dialog that says what's left protecting the account, with Keep it on beside Turn off.
 - **Each device says where and when**, "Bandung, Indonesia, last active 6 days ago", and each Sign out is named with its device, "Sign out of Firefox on a Windows PC" (2.4.6). The device in use says "This device" in words and can't be signed out here.
 - **Signing out is immediate**: a session someone may not recognize shouldn't wait for an Undo. Focus goes to the next device's Sign out, or the list's heading, and a toast says it's done (2.4.3, 4.1.3). Sign out everywhere else shows when two or more other devices are signed in.
+- **The devices can load late or fail on their own.** While they load, their list is busy with placeholder rows, named once ("Loading where you’re signed in"); a failed load says so in their place, with Try again (4.1.3, 3.3.3). The password, two-step and delete parts work meanwhile.
 - **Deleting the account sits apart, at the end**, and says what goes. Download your data comes first, beside it, so nobody has to choose between leaving and keeping their work. The dialog asks for the account's email before Delete my account works (Type to confirm), and pasting it is fine (3.3.4, 3.3.8). Leaving takes no more steps than signing up did: no survey, no hidden link.
 - **A delete that fails says so.** The dialog stays open with an alert, "Couldn’t delete your account. Try again." (3.3.1, 4.1.3). After the delete, the page says the account is gone, with its h1 focused (2.4.3).
 - **A skip link** first, into main, as on every page.
@@ -34,6 +35,7 @@ Changing the password, turning two-step verification on and off, the devices sig
 ## What stays your app's job
 
 - **Checking and storing.** `onChangePassword` gets the current and new password: return its promise, and reject it if the current one is wrong or saving fails. `onEnableTwoStep` gets the code: reject it if the code is wrong. `onDisableTwoStep`, `onSignOut` and `onSignOutOthers` get those choices. `onDeleteAccount` gets the delete: return its promise, and the button shows it's busy until it settles.
+- **Loading the devices.** Pass `loading` while they're on their way, `loadFailed` if they didn't come, and `onRetry` to load them again: return its promise, and Try again shows it's working until it settles.
 - **The setup key and recovery codes**, as `setupKey` and `recoveryCodes`. Generate them on the server, and add a QR code of the key next to the text if you like.
 - **Telling people by email** when the password changes or two-step is turned off, so someone else's change doesn't go unseen.
 - **The data export** that `dataHref` leads to, and what happens to shared work when someone leaves.

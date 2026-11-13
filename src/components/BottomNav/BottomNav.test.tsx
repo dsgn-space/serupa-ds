@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, color, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { BottomNav, BottomNavLink } from './BottomNav';
 import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
 
@@ -78,5 +78,39 @@ describe('BottomNav', () => {
       const bg = css(nav()).backgroundColor;
       for (const l of links()) expect(contrast(css(l).color, bg), th).toBeGreaterThanOrEqual(4.5);
     }
+  });
+});
+
+describe('BottomNav held state', () => {
+  test('held down: an item\'s icon pill fills one step past its hover (--bottom-nav-icon-bg-pressed), and its text or icon keeps 3:1 on it in all six themes', async () => {
+    await page.viewport(414, 800);
+    await render(<Bar />);
+    const b = links()[0]!;
+    const f = () => b.firstElementChild;
+    const low = await press(b, async () => {
+      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(f()).color, css(f()).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
+  });
+});
+
+describe('BottomNav motion', () => {
+  test('an item\'s label and icon pill fade to their hover colors over motion-hover (150ms) as the controls beside them do, and the pill fills at once while held', async () => {
+    await page.viewport(414, 800);
+    await render(<Bar />);
+    const a = links()[0]!, pill = a.firstElementChild!;
+    await withMotion(async () => {
+      expect([css(a).transitionProperty, css(a).transitionDuration, css(pill).transitionProperty, css(pill).transitionDuration]).toEqual(['color', '0.15s', 'background-color', '0.15s']);
+      const held = await press(a, () => css(pill).transitionDuration);
+      expect(held).toBe('0s');
+    });
   });
 });
