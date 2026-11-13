@@ -22,6 +22,10 @@ Badge's `loadingText` is deprecated, and removed in 15.0.0. It still works as `l
 
 A Badge with `onClick` or `href` is a button or a link, which can't hold another button, so its `onRemove` is ignored. Use one or the other.
 
+## button-icon
+
+Button's `icon` (a button with only an icon) is deprecated, and removed in 15.0.0. It still works. Use IconButton: it draws the same square button, its `label` is required by the types, so an icon-only button can't ship without a name, and it shows that label in a tooltip.
+
 ## button-icon-label
 
 A Button with only an icon has no text for a screen reader to say. Give it an `aria-label` (or `aria-labelledby`, or a `title`), or use IconButton, whose `label` is required.

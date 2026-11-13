@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf } from '../../internal/cn';
-import { Button, type ButtonAsButtonProps } from '../Button/Button';
+import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
 import { component } from '../../internal/component';
 
 export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' | 'destructive' | 'loading' | 'loadingLabel' | 'loadingText'> {
@@ -26,7 +26,7 @@ export const ToggleButton = /* @__PURE__ */ component<HTMLButtonElement, ToggleB
   const on = controlled ? !!pressed : own;
   const v = oneOf(['outline', 'ghost'] as const, variant, 'outline');
   return (
-    <Button {...rest} ref={ref} variant={v} aria-pressed={on}
+    <ButtonBase {...rest} ref={ref} variant={v} aria-pressed={on}
       className={cn('dk-toggle-button', on && 'dk-toggle-button--pressed', className)}
       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
         if (onClick) onClick(e);
