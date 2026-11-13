@@ -64,8 +64,8 @@
       },
       "text-active": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The current page's icon and label (4.5:1 on bg).",
+        "$value": "{color.text}",
+        "$description": "The current page's icon and label (4.5:1 on bg). Neutral: the accent is kept for focus.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--bottom-nav-text-active"
@@ -74,7 +74,7 @@
       },
       "icon-bg-active": {
         "$type": "color",
-        "$value": "{color.primary-subtle}",
+        "$value": "{color.highlight}",
         "$description": "The pill behind the current page's icon.",
         "$extensions": {
           "com.serupa": {

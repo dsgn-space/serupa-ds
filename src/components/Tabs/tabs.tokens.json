@@ -34,8 +34,8 @@
       },
       "indicator": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The line under the selected tab (3:1 on surface).",
+        "$value": "{color.text}",
+        "$description": "The line under the selected tab (3:1 on surface). Neutral: the accent is kept for focus.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tabs-indicator"

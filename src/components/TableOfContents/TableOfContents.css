@@ -16,6 +16,6 @@
 .dk-toc__link:focus-visible { outline: var(--focus-ring-width) solid var(--table-of-contents-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
 .dk-toc__link { --dk-bar: var(--border-width-2); }
 .dk-toc__link:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--dk-bar) 0 0 var(--table-of-contents-line-current, var(--primary)); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
+.dk-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--dk-bar) 0 0 var(--table-of-contents-line-current, var(--text)); border-inline-start-color: var(--table-of-contents-line-current, var(--text)); }
 @media (forced-colors: active) { .dk-toc__link[aria-current="location"] { border-inline-start-color: CanvasText; outline: var(--outline-width-2) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 }

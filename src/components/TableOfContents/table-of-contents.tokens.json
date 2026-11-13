@@ -44,8 +44,8 @@
       },
       "line-current": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The line beside the current section's link (3:1).",
+        "$value": "{color.text}",
+        "$description": "The line beside the current section's link (3:1). Neutral: the accent is kept for focus.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-of-contents-line-current"

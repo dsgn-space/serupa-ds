@@ -22,6 +22,9 @@ export default {
         'serupa/no-physical-shorthand': true,
         'serupa/radius-through-role': true,
         'serupa/outline-width-token': true,
+        // The accent stays off the selected, current or active item (GR407). known: the filled picks, a chosen value
+        // drawn as a primary fill like a checked Checkbox, by the component token each reads the accent through.
+        'serupa/no-accent-on-current': [true, { known: ['calendar-bg-selected', 'data-grid-bg-selected', 'pagination-bg-current', 'period-picker-current', 'period-picker-bg-selected', 'tabs-pill-bg-selected', 'tag-group-border-selected', 'tag-group-bg-selected', 'tag-group-text-selected'] }],
         // Colors come from tokens too (GR276): no hex, no named color (transparent and currentColor are fine), no
         // color function with literal channels. A relative color, oklch(from var(--token) …), says why in a comment.
         'color-no-hex': [true, { message: (c) => `${c} is a raw color: read a token, var(--<component>-<part>, var(--<color>))` }],

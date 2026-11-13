@@ -104,8 +104,8 @@
       },
       "item-indicator": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The 2px bar at the start of the current page's item, which hover never draws.",
+        "$value": "{color.highlight-indicator}",
+        "$description": "The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--sidebar-item-indicator"
