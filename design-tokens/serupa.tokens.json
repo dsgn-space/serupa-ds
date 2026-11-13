@@ -4872,7 +4872,7 @@
     "space-content": {
       "$type": "dimension",
       "$value": "{spacing.spacing-4}",
-      "$description": "The default padding and gap: inside a popover, between fields of a form. Popover reads it for its padding. 16px.",
+      "$description": "The default padding and gap: inside a popover, between fields of a form. Popover, HoverCard and Tour read it for their padding. 16px.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--space-content"

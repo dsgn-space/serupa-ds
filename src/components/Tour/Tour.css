@@ -9,7 +9,7 @@
   --dk-tour-offset: var(--tour-offset, var(--spacing-3));
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--tour-z-index, var(--z-popover));
   width: var(--tour-width, var(--container-2xs)); max-width: calc(var(--sizing-full) - var(--spacing-4)); max-height: calc(var(--sizing-dvh) - var(--spacing-4));
-  margin: var(--spacing-0); padding: var(--tour-padding, var(--spacing-4)); overflow-y: auto; overscroll-behavior: contain;
+  margin: var(--spacing-0); padding: var(--tour-padding, var(--space-content)); overflow-y: auto; overscroll-behavior: contain;
   display: flex; flex-direction: column; gap: var(--tour-gap, var(--spacing-3));
   border: var(--tour-border-width, var(--border-width-1)) solid var(--tour-border, var(--border-overlay)); border-radius: var(--tour-radius, var(--radius-surface));
   background: var(--tour-bg, var(--surface-overlay)); color: var(--tour-text, var(--text));
