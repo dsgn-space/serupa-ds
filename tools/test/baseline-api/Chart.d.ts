@@ -31,7 +31,7 @@ interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, "children" 
     view?: ChartView | undefined;
     defaultView?: ChartView | undefined;
     onViewChange?: ((view: ChartView) => void) | undefined;
-    busy?: boolean | undefined;
+    loading?: boolean | undefined;
     loadingLabel?: string | undefined;
 }
 declare const Chart: React.ForwardRefExoticComponent<ChartProps & React.RefAttributes<HTMLElement>>;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { afterEach, describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
@@ -254,7 +254,7 @@ describe('List', () => {
 });
 
 describe('List loading (GR316)', () => {
-  test('busy sets aria-busy; ListLoadingItems rows are as tall as the rows that replace them, with or without a description, icon or Avatar, and the wait is said once', async () => {
+  test('loading sets aria-busy; ListLoadingItems rows are as tall as the rows that replace them, with or without a description, icon or Avatar, and the wait is said once', async () => {
     type Lead = 'icon' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
     const CASES: Array<{ id: string; description: boolean; leading: Lead }> = [
       { id: 'plain', description: false, leading: undefined },
@@ -265,24 +265,35 @@ describe('List loading (GR316)', () => {
       { id: 'lg', description: true, leading: 'lg' },
       { id: 'xl', description: true, leading: 'xl' },
     ];
-    function Lists(props: { busy: boolean }) {
+    function Lists(props: { loading: boolean }) {
       return <div style={{ width: '400px' }}>{CASES.map((c) => (
-        <List key={c.id} id={c.id} busy={props.busy} aria-label={c.id}>
-          {props.busy ? <ListLoadingItems rows={2} description={c.description} leading={c.leading} label={'Loading ' + c.id} />
+        <List key={c.id} id={c.id} loading={props.loading} aria-label={c.id}>
+          {props.loading ? <ListLoadingItems rows={2} description={c.description} leading={c.leading} label={'Loading ' + c.id} />
             : <ListItem title="Ada Lovelace" description={c.description ? 'Admin' : undefined}
               leading={c.leading === 'icon' ? 'person' : c.leading ? <Avatar name="Ada Lovelace" size={c.leading} /> : undefined} />}
         </List>
       ))}</div>;
     }
-    const { rerender } = await render(<Lists busy />);
+    const { rerender } = await render(<Lists loading />);
     expect(CASES.map((c) => [el(c.id).getAttribute('aria-busy'), el(c.id).children.length])).toEqual(CASES.map(() => ['true', 2]));
     // The placeholders are hidden from screen readers; each list's label is said once, after the loader's delay.
     expect(page.getByRole('progressbar').all().length).toBe(0);
     expect(CASES.every((c) => [...el(c.id).querySelectorAll('li > div > *')].every((x) => x.querySelector('[aria-hidden="true"]') || x.getAttribute('aria-hidden') === 'true'))).toBe(true);
     await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '', { timeout: 3000 }).toContain('Loading desc-md');
     const loading = CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height);
-    await rerender(<Lists busy={false} />);
+    await rerender(<Lists loading={false} />);
     expect(CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height)).toEqual(loading);
     expect(el('plain').hasAttribute('aria-busy')).toBe(false);
+  });
+});
+
+describe('List: busy, the old name of loading', () => {
+  test('still sets aria-busy as loading does, and warns once that it is deprecated', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<List id="old-busy" aria-label="Members" {...{ busy: true }}><ListItem title="Ayu" /></List>);
+      expect(document.getElementById('old-busy')!.getAttribute('aria-busy')).toBe('true');
+      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('list-busy'))).toHaveLength(1);
+    } finally { warn.mockRestore(); }
   });
 });

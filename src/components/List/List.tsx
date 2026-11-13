@@ -7,6 +7,7 @@ import { asIcon } from '../Icon/asIcon';
 import { component } from '../../internal/component';
 import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { useSettings } from '../../internal/provider';
+import { warnOnce } from '../../internal/warn';
 
 export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** ListItems. */
@@ -18,6 +19,8 @@ export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   /** 'ul' (default) or 'ol' when the order matters. */
   as?: 'ul' | 'ol' | undefined;
   /** Its rows are loading (or reloading): sets aria-busy on the list. Pair it with ListLoadingItems. Default: false. */
+  loading?: boolean | undefined;
+  /** @deprecated Use loading (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
   busy?: boolean | undefined;
 }
 
@@ -55,11 +58,12 @@ export type ListItemProps<C extends React.ElementType = 'a'> = ListItemOwnProps 
    it so controls are never nested. className and every other prop go to the <ul>. */
 /** Rows of related things: title, description, leading avatar or icon, trailing meta or actions; rows can be links. */
 export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List', function List(props, ref) {
-  const rest = omit(props, { variant: 1, divided: 1, as: 1, busy: 1, className: 1 });
+  if (process.env.NODE_ENV !== 'production' && props.busy != null) warnOnce('list-busy', 'List: busy is deprecated and removed in 15.0.0. Use loading, which does the same.');
+  const rest = omit(props, { variant: 1, divided: 1, as: 1, loading: 1, busy: 1, className: 1 });
   const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
   // role="list": Safari drops list semantics from a <ul>/<ol> styled list-style: none, so VoiceOver stops saying "list, 6 items" (FU1).
   return React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
-    ref: ref, 'data-component': 'list', role: rest.role ?? 'list', 'aria-busy': rest['aria-busy'] ?? (props.busy || undefined),
+    ref: ref, 'data-component': 'list', role: rest.role ?? 'list', 'aria-busy': rest['aria-busy'] ?? ((props.loading ?? props.busy) || undefined),
     className: cn('dk-list', variant === 'card' && 'dk-list--card', props.divided !== false && 'dk-list--divided', props.className),
   }));
 });
@@ -123,8 +127,8 @@ const LEADS = ['icon', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 
 /* ListLoadingItems: placeholder rows inside a List, built from the rows' own parts (padding, gap, text lines, a
    circle the size of the leading icon or Avatar), so each is as tall as the row that replaces it and nothing moves.
-   They're decorative: the label is said once, after the loader's delay, and the List's busy marks it as loading. */
-/** Placeholder rows (skeletons) the height of real ListItems, while a List's rows load. Put it inside the List and set its busy. */
+   They're decorative: the label is said once, after the loader's delay, and the List's loading marks it as loading. */
+/** Placeholder rows (skeletons) the height of real ListItems, while a List's rows load. Put it inside the List and set its loading. */
 export function ListLoadingItems(props: ListLoadingItemsProps): React.ReactElement {
   const rows = Math.min(50, Math.max(1, Math.floor(Number(props.rows)) || 3));
   const lead = props.leading == null ? null : oneOf(LEADS, props.leading, 'md');
