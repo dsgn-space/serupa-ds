@@ -122,6 +122,18 @@ describe('RangeCalendar', () => {
     expect(day('2026-11-12').getAttribute('aria-label')).toBe('Thursday, November 12, 2026, in the range');
   });
 
+  test('with no value or month it opens on today’s month, or on min’s or max’s when today is outside them', async () => {
+    const today = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date());
+    const { unmount } = await render(<Stay defaultMonth={undefined} />);
+    await expect.element(page.getByRole('grid', { name: today })).toBeVisible();
+    await unmount();
+    const before = await render(<Stay defaultMonth={undefined} max="2020-03-10" />);
+    await expect.element(page.getByRole('grid', { name: 'March 2020' })).toBeVisible();
+    await before.unmount();
+    await render(<Stay defaultMonth={undefined} min="2099-05-02" />);
+    await expect.element(page.getByRole('grid', { name: 'May 2099' })).toBeVisible();
+  });
+
   test('autoFocus focuses the start day', async () => {
     await render(<Stay autoFocus defaultValue={{ start: '2026-11-09', end: '2026-11-11' }} />);
     await expect.poll(() => document.activeElement).toBe(day('2026-11-09'));
