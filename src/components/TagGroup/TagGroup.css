@@ -11,7 +11,7 @@
 .dk-tag-group__tags { display: flex; flex-wrap: wrap; gap: var(--tag-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); outline: none; }
 .dk-tag-group__tag {
   display: inline-flex; align-items: center; gap: var(--spacing-0\.5); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full);
-  min-block-size: var(--control-height-sm); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--field-border));
+  min-block-size: var(--control-height-sm); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--border-control));
   border-radius: var(--tag-group-radius, var(--radius-control)); background: var(--tag-group-bg, var(--surface)); color: var(--tag-group-text, var(--text));
   font-size: var(--text-sm); cursor: default; touch-action: manipulation;
 }

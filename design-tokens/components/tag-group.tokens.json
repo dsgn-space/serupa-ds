@@ -24,7 +24,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "A tag's border (3:1 on the page, so the tag's edge is seen).",
         "$extensions": {
           "com.serupa": {
