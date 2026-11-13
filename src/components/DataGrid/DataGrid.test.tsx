@@ -123,7 +123,7 @@ describe('DataGrid', () => {
       return held['text/plain'] ?? '';
     };
     const onChange = vi.fn();
-    const grid = (rows: DataGridRow[]) => <DataGrid aria-label="Stock" columns={COLS} rows={rows} onRowsChange={(_, { changes }) => onChange(changes)} />;
+    const grid = (rows: DataGridRow[]) => <DataGrid aria-label="Stock" columns={COLS} rows={rows} onRowsChange={(_, { changes }) => { onChange(changes); }} />;
     const { rerender } = await render(grid(ROWS));
     await userEvent.click(cell('Gula'));
     await userEvent.keyboard('{Shift>}{ArrowUp}{/Shift}');
