@@ -102,7 +102,7 @@ describe('Patterns/List with search and filters', () => {
     await screen.getByRole('checkbox', { name: `Select ${a}` }).click();
     await screen.getByRole('checkbox', { name: `Select ${b}` }).click();
     await expect.element(screen.getByRole('group', { name: '2 selected' })).toBeVisible();
-    await userEvent.fill(screen.getByRole('searchbox'), a);
+    await userEvent.fill(screen.getByRole('searchbox'), a!);
     await expect.element(screen.getByRole('group', { name: '1 selected' })).toBeVisible();
     await userEvent.fill(screen.getByRole('searchbox'), '');
     await vi.waitFor(() => expect(status()).toBe('24 projects'));

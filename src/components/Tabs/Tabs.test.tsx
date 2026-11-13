@@ -44,7 +44,7 @@ const setup = async (tref?: React.Ref<HTMLDivElement>) => { changes = []; await 
 /** A tab's slides on one pseudo-element: its CSS transitions, or the ones the script runs where the browser starts none
  *  (Safari, tabRow.ts). propsOf names what each moves. */
 const slidesOn = (t: HTMLElement, pseudo: string) => document.getAnimations().filter((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === t && e.pseudoElement === pseudo; });
-const propsOf = (a: Animation) => (a instanceof CSSTransition ? [a.transitionProperty] : Object.keys((a.effect as KeyframeEffect).getKeyframes()[0]).filter((k) => !/^(offset|computedOffset|easing|composite)$/.test(k)).map((k) => (k === 'clipPath' ? 'clip-path' : k)));
+const propsOf = (a: Animation) => (a instanceof CSSTransition ? [a.transitionProperty] : Object.keys((a.effect as KeyframeEffect).getKeyframes()[0]!).filter((k) => !/^(offset|computedOffset|easing|composite)$/.test(k)).map((k) => (k === 'clipPath' ? 'clip-path' : k)));
 const runsOn = (t: HTMLElement) => [...slidesOn(t, '::after'), ...slidesOn(t, '::before')].flatMap(propsOf).filter((k) => /^(translate|scale|clip-path)$/.test(k)).length;
 
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
@@ -325,10 +325,10 @@ describe('Tabs on the server', () => {
     await setup();
     const panels = [...el('un').querySelectorAll<HTMLElement>('[role="tabpanel"]')];
     expect(panels.map((p) => p.getAttribute('hidden'))).toEqual([null, 'until-found', '']);   // three isn't kept: plainly hidden
-    expect(Math.round(panels[1].getBoundingClientRect().height)).toBe(0);
-    panels[1].dispatchEvent(new Event('beforematch'));
+    expect(Math.round(panels[1]!.getBoundingClientRect().height)).toBe(0);
+    panels[1]!.dispatchEvent(new Event('beforematch'));
     await expect.poll(() => selected('un').textContent).toBe('Two');
-    expect([changes, panels[1].hidden, panels[0].getAttribute('hidden')]).toEqual([['two'], false, 'until-found']);
+    expect([changes, panels[1]!.hidden, panels[0]!.getAttribute('hidden')]).toEqual([['two'], false, 'until-found']);
     // A disabled tab's panel stays plainly hidden, so a match can't pick it.
     const dis = [...el('dis').querySelectorAll<HTMLElement>('[role="tabpanel"]')];
     expect(dis.map((p) => p.getAttribute('hidden'))).toEqual([null, '', '']);
@@ -343,7 +343,7 @@ describe('Tabs on the server', () => {
     expect(document.activeElement).toBe(panels[0]);
     await userEvent.tab();
     expect(panels).not.toContain(document.activeElement);
-    panels[1].dispatchEvent(new Event('beforematch'));
+    panels[1]!.dispatchEvent(new Event('beforematch'));
     await expect.poll(() => panels.map((p) => p.tabIndex)).toEqual([-1, 0, -1]);
   });
 
@@ -424,13 +424,13 @@ describe('Tabs on the server', () => {
   test('orientation="vertical": aria-orientation vertical, the tabs in a column at the start with the line on their end side; ↓ and ↑ move and select (wrapping), ← → do nothing', async () => {
     await render(<Tabs id="ver" orientation="vertical"><Set3 /></Tabs>);
     const list = el('ver').querySelector<HTMLElement>('[role="tablist"]')!, tabs = [...list.querySelectorAll<HTMLElement>('[role="tab"]')];
-    expect([list.getAttribute('aria-orientation'), el('ver').dataset.orientation, Math.round(tabs[1].getBoundingClientRect().left - tabs[0].getBoundingClientRect().left), tabs[1].getBoundingClientRect().top > tabs[0].getBoundingClientRect().top]).toEqual(['vertical', 'vertical', 0, true]);
+    expect([list.getAttribute('aria-orientation'), el('ver').dataset.orientation, Math.round(tabs[1]!.getBoundingClientRect().left - tabs[0]!.getBoundingClientRect().left), tabs[1]!.getBoundingClientRect().top > tabs[0]!.getBoundingClientRect().top]).toEqual(['vertical', 'vertical', 0, true]);
     const panel = el('ver').querySelector<HTMLElement>('[role="tabpanel"]:not([hidden])')!;
     expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(list.getBoundingClientRect().right);
     expect([css(list).borderInlineEndWidth, css(list).borderBottomWidth]).toEqual(['1px', '0px']);
-    const line = getComputedStyle(tabs[0], '::after');
+    const line = getComputedStyle(tabs[0]!, '::after');
     expect([line.width, line.height === '2px']).toEqual(['2px', false]);
-    tabs[0].focus();
+    tabs[0]!.focus();
     await userEvent.keyboard('{ArrowDown}');
     expect(focused()).toBe('Two');
     await userEvent.keyboard('{ArrowRight}');
@@ -443,27 +443,27 @@ describe('Tabs on the server', () => {
     await withMotion(async () => {
       await setup();
       const tabs = [...el('un').querySelectorAll<HTMLElement>('[role="tab"]')];
-      await userEvent.click(tabs[2]);
-      const moves = slidesOn(tabs[2], '::after');
-      const start = moves.find((a) => propsOf(a).includes('translate')), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0].translate)) : NaN;
+      await userEvent.click(tabs[2]!);
+      const moves = slidesOn(tabs[2]!, '::after');
+      const start = moves.find((a) => propsOf(a).includes('translate')), shift = start ? parseFloat(String((start.effect as KeyframeEffect).getKeyframes()[0]!.translate)) : NaN;
       // When no slide is found, the message says why: what the page runs on the tab, where the line starts from, and
       // whether the click was taken for a key.
-      const why = () => JSON.stringify({ page: document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.target === tabs[2]).map((a) => `${(a as CSSTransition).transitionProperty} ${(a.effect as KeyframeEffect).pseudoElement}`), from: tabs[2].style.getPropertyValue('--dk-tabs-from-shift') || getComputedStyle(tabs[2]).getPropertyValue('--dk-tabs-from-shift'), now: getComputedStyle(tabs[2], '::after').translate, instant: tabs[2].hasAttribute('data-instant') });
-      expect([moves.flatMap(propsOf).sort(), Math.round(shift)], why()).toEqual([['scale', 'translate'], Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft)]);
+      const why = () => JSON.stringify({ page: document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.target === tabs[2]).map((a) => `${(a as CSSTransition).transitionProperty} ${(a.effect as KeyframeEffect).pseudoElement}`), from: tabs[2]!.style.getPropertyValue('--dk-tabs-from-shift') || getComputedStyle(tabs[2]!).getPropertyValue('--dk-tabs-from-shift'), now: getComputedStyle(tabs[2]!, '::after').translate, instant: tabs[2]!.hasAttribute('data-instant') });
+      expect([moves.flatMap(propsOf).sort(), Math.round(shift)], why()).toEqual([['scale', 'translate'], Math.round(tabs[0]!.offsetLeft - tabs[2]!.offsetLeft)]);
       await Promise.all(moves.map((a) => a.finished.catch(() => {})));
-      expect([getComputedStyle(tabs[2], '::after').translate, getComputedStyle(tabs[2], '::after').scale]).toEqual(['none', 'none']);
+      expect([getComputedStyle(tabs[2]!, '::after').translate, getComputedStyle(tabs[2]!, '::after').scale]).toEqual(['none', 'none']);
 
       const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
       const [from, to] = [pills[2], pills[0]];
-      await userEvent.click(to);
-      const cuts = slidesOn(to, '::before');
-      const first = String((cuts[0]?.effect as KeyframeEffect | undefined)?.getKeyframes()[0].clipPath ?? '');
+      await userEvent.click(to!);
+      const cuts = slidesOn(to!, '::before');
+      const first = String((cuts[0]?.effect as KeyframeEffect | undefined)?.getKeyframes()[0]!.clipPath ?? '');
       const px = (c: string) => (c.match(/-?[\d.]+px/g) || []).slice(0, 4).map((n) => Math.round(parseFloat(n)));
       // Cut to the last tab: its start edge is where that tab starts, from this one's (the fill spans both).
-      expect([cuts.flatMap(propsOf), px(first)[3], /round/.test(first), cuts.some((a) => propsOf(a).includes('scale'))]).toEqual([['clip-path'], Math.round(from.offsetLeft - to.offsetLeft), true, false]);
+      expect([cuts.flatMap(propsOf), px(first)[3], /round/.test(first), cuts.some((a) => propsOf(a).includes('scale'))]).toEqual([['clip-path'], Math.round(from!.offsetLeft - to!.offsetLeft), true, false]);
       await Promise.all(cuts.map((a) => a.finished.catch(() => {})));
-      const rest = getComputedStyle(to, '::before'), r = to.getBoundingClientRect(), box = { w: parseFloat(rest.width), cut: px(rest.clipPath) };
-      expect([Math.round(box.w - box.cut[1] - box.cut[3]), box.cut[0], box.cut[2], /round/.test(rest.clipPath)]).toEqual([Math.round(r.width), 0, 0, true]);
+      const rest = getComputedStyle(to!, '::before'), r = to!.getBoundingClientRect(), box = { w: parseFloat(rest.width), cut: px(rest.clipPath) };
+      expect([Math.round(box.w - box.cut[1]! - box.cut[3]!), box.cut[0], box.cut[2], /round/.test(rest.clipPath)]).toEqual([Math.round(r.width), 0, 0, true]);
     });
   });
 
@@ -477,16 +477,16 @@ describe('Tabs on the server', () => {
       try {
         const scripted = (t: HTMLElement, pseudo: string) => document.getAnimations().filter((a) => !(a instanceof CSSTransition) && (a.effect as KeyframeEffect | null)?.target === t && (a.effect as KeyframeEffect).pseudoElement === pseudo);
         const tabs = [...el('un').querySelectorAll<HTMLElement>('[role="tab"]')];
-        await userEvent.click(tabs[2]);
-        const [line] = scripted(tabs[2], '::after'), start = (line?.effect as KeyframeEffect | undefined)?.getKeyframes()[0];
-        expect([Math.round(parseFloat(String(start?.translate))), typeof start?.scale]).toEqual([Math.round(tabs[0].offsetLeft - tabs[2].offsetLeft), 'string']);
-        await line.finished;
-        expect(getComputedStyle(tabs[2], '::after').translate).toBe('none');
+        await userEvent.click(tabs[2]!);
+        const [line] = scripted(tabs[2]!, '::after'), start = (line?.effect as KeyframeEffect | undefined)?.getKeyframes()[0];
+        expect([Math.round(parseFloat(String(start?.translate))), typeof start?.scale]).toEqual([Math.round(tabs[0]!.offsetLeft - tabs[2]!.offsetLeft), 'string']);
+        await line!.finished;
+        expect(getComputedStyle(tabs[2]!, '::after').translate).toBe('none');
         const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];
-        await userEvent.click(pills[0]);
-        const [cut] = scripted(pills[0], '::before'), first = String((cut?.effect as KeyframeEffect | undefined)?.getKeyframes()[0].clipPath ?? '');
-        expect([Math.round(parseFloat((first.match(/-?[\d.]+px/g) || [])[3] ?? 'NaN')), /round/.test(first)]).toEqual([Math.round(pills[2].offsetLeft - pills[0].offsetLeft), true]);
-        await cut.finished;
+        await userEvent.click(pills[0]!);
+        const [cut] = scripted(pills[0]!, '::before'), first = String((cut?.effect as KeyframeEffect | undefined)?.getKeyframes()[0]!.clipPath ?? '');
+        expect([Math.round(parseFloat((first.match(/-?[\d.]+px/g) || [])[3] ?? 'NaN')), /round/.test(first)]).toEqual([Math.round(pills[2]!.offsetLeft - pills[0]!.offsetLeft), true]);
+        await cut!.finished;
       } finally { off.remove(); }
     });
   });
@@ -526,18 +526,18 @@ describe('Tabs indicator after a keyboard pick, moved from elsewhere (GR61)', ()
         const [v, set] = React.useState('a');
         return <>
           <Tabs id="gr61" value={v} onValueChange={set}><TabList aria-label="Steps">{order.map((k) => <Tab key={k} value={k}>Step {k}</Tab>)}</TabList></Tabs>
-          <button id="gr61-next" onClick={() => set(order[(order.indexOf(v) + 1) % order.length])}>Next</button>
+          <button id="gr61-next" onClick={() => set(order[(order.indexOf(v) + 1) % order.length]!)}>Next</button>
         </>;
       }
       await render(<App />);
       const tabs = [...document.querySelectorAll<HTMLElement>('#gr61 [role="tab"]')];
       const on = () => tabs.find((t) => t.getAttribute('aria-selected') === 'true')!;
       const runs = runsOn;
-      tabs[0].focus();
+      tabs[0]!.focus();
       await userEvent.keyboard('{ArrowRight}');
-      expect([on() === tabs[1], tabs[1].hasAttribute('data-instant'), runs(tabs[1])]).toEqual([true, true, 0]);
+      expect([on() === tabs[1], tabs[1]!.hasAttribute('data-instant'), runs(tabs[1]!)]).toEqual([true, true, 0]);
       await userEvent.click(document.getElementById('gr61-next')!);
-      expect([on() === tabs[2], tabs[2].hasAttribute('data-instant'), runs(tabs[2]) > 0]).toEqual([true, false, true]);
+      expect([on() === tabs[2], tabs[2]!.hasAttribute('data-instant'), runs(tabs[2]!) > 0]).toEqual([true, false, true]);
     });
   });
 });
@@ -551,29 +551,29 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
     await withMotion(async () => {
       await setup();
       const tabs = [...el('un').querySelectorAll<HTMLElement>('[role="tab"]')];
-      await userEvent.click(tabs[2]);
-      halfway(slides(tabs[2], '::after'));
-      const at = tabs[2].offsetLeft + nums(getComputedStyle(tabs[2], '::after').translate)[0];
-      expect(Math.abs(at - tabs[2].offsetLeft)).toBeGreaterThan(8);
-      await userEvent.click(tabs[1]);
-      const move = slides(tabs[1], '::after').find((a) => propsOf(a).includes('translate'))!;
-      const from = tabs[1].offsetLeft + parseFloat(String((move.effect as KeyframeEffect).getKeyframes()[0].translate));
+      await userEvent.click(tabs[2]!);
+      halfway(slides(tabs[2]!, '::after'));
+      const at = tabs[2]!.offsetLeft + nums(getComputedStyle(tabs[2]!, '::after').translate)[0]!;
+      expect(Math.abs(at - tabs[2]!.offsetLeft)).toBeGreaterThan(8);
+      await userEvent.click(tabs[1]!);
+      const move = slides(tabs[1]!, '::after').find((a) => propsOf(a).includes('translate'))!;
+      const from = tabs[1]!.offsetLeft + parseFloat(String((move.effect as KeyframeEffect).getKeyframes()[0]!.translate));
       expect(Math.abs(from - at)).toBeLessThan(1);
 
       const pills = [...el('dv').querySelectorAll<HTMLElement>('[role="tab"]')];   // Three is selected: slide to One
-      await userEvent.click(pills[0]);
-      const held = slides(pills[0], '::before');
+      await userEvent.click(pills[0]!);
+      const held = slides(pills[0]!, '::before');
       halfway(held);
       const span = (t: HTMLElement) => parseFloat(t.style.getPropertyValue('--dk-tabs-span-l')) || 0;
-      const edge = pills[0].offsetLeft - span(pills[0]) + nums(getComputedStyle(pills[0], '::before').clipPath.split(' round')[0])[3];
-      expect(Math.abs(edge - pills[0].offsetLeft)).toBeGreaterThan(8);
-      await userEvent.click(pills[1]);
-      const all = slides(pills[1], '::before');
-      const cut = all[0];
-      const first = nums(String((cut.effect as KeyframeEffect).getKeyframes()[0].clipPath).split(' round')[0]);
+      const edge = pills[0]!.offsetLeft - span(pills[0]!) + nums(getComputedStyle(pills[0]!, '::before').clipPath.split(' round')[0]!)[3]!;
+      expect(Math.abs(edge - pills[0]!.offsetLeft)).toBeGreaterThan(8);
+      await userEvent.click(pills[1]!);
+      const all = slides(pills[1]!, '::before');
+      const cut = all[0]!;
+      const first = nums(String((cut.effect as KeyframeEffect).getKeyframes()[0]!.clipPath).split(' round')[0]!);
       // WebKit started this one 8px off: the message says which slide it read and from what, for the next run.
-      const why = JSON.stringify({ edge, left: pills[1].offsetLeft, span: span(pills[1]), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1].style.getPropertyValue('--dk-tabs-from-' + k)) });
-      expect(Math.abs(pills[1].offsetLeft - span(pills[1]) + first[3] - edge), why).toBeLessThan(1);
+      const why = JSON.stringify({ edge, left: pills[1]!.offsetLeft, span: span(pills[1]!), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1]!.style.getPropertyValue('--dk-tabs-from-' + k)) });
+      expect(Math.abs(pills[1]!.offsetLeft - span(pills[1]!) + first[3]! - edge), why).toBeLessThan(1);
     });
   });
 });
@@ -588,7 +588,7 @@ describe('Tabs in a grid or flex row (GO2)', () => {
     </div>);
     for (const [box, tabs] of [['go2-grid', 'go2-g'], ['go2-flex', 'go2-f']]) {
       const list = document.querySelector<HTMLElement>(`#${tabs} [role="tablist"]`)!;
-      expect([document.getElementById(box)!.scrollWidth, document.getElementById(tabs)!.getBoundingClientRect().width <= 320, list.scrollWidth > list.clientWidth]).toEqual([320, true, true]);
+      expect([document.getElementById(box!)!.scrollWidth, document.getElementById(tabs!)!.getBoundingClientRect().width <= 320, list.scrollWidth > list.clientWidth]).toEqual([320, true, true]);
     }
   });
 });
@@ -603,7 +603,7 @@ describe('Tabs inside a shadow root (GR60)', () => {
       await render(<Tabs defaultValue="a"><TabList aria-label="Shadow"><Tab value="a">A</Tab><Tab value="b">B</Tab><Tab value="c">C</Tab></TabList></Tabs>, { container: inner });
       const root = host.shadowRoot!, tabs = [...root.querySelectorAll<HTMLElement>('[role="tab"]')];
       const at = () => [tabs.indexOf(root.activeElement as HTMLElement), tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true')];
-      tabs[0].focus();
+      tabs[0]!.focus();
       await userEvent.keyboard('{ArrowRight}');
       expect(at()).toEqual([1, 1]);
       await userEvent.keyboard('{End}');
@@ -625,6 +625,6 @@ describe('Tabs and form validation (L8E100)', () => {
     await expect.poll(() => document.getElementById('l8e100-city')!.closest('[hidden]')?.getAttribute('hidden')).toBe('until-found');
     await userEvent.click(document.getElementById('l8e100-go')!);
     await expect.poll(() => document.activeElement?.id).toBe('l8e100-city');
-    expect([sent, document.querySelectorAll('[role="tab"]')[1].getAttribute('aria-selected')]).toEqual([0, 'true']);
+    expect([sent, document.querySelectorAll('[role="tab"]')[1]!.getAttribute('aria-selected')]).toEqual([0, 'true']);
   });
 });

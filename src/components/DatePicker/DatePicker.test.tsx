@@ -288,7 +288,7 @@ describe('DatePicker: autocomplete', () => {
     const p = popup('dpo'), f = (el('dpo').parentElement as HTMLElement).getBoundingClientRect(), r = p.getBoundingClientRect();
     const [x, y] = getComputedStyle(p).transformOrigin.split(' ').map(parseFloat);
     const want = Math.min(Math.max(f.left + f.width / 2 - r.left, 0), r.width);
-    expect([p.dataset.side, Math.round(y), Math.abs(x - want) <= 1]).toEqual(['bottom', 0, true]);
+    expect([p.dataset.side, Math.round(y!), Math.abs(x! - want) <= 1]).toEqual(['bottom', 0, true]);
   });
 });
 

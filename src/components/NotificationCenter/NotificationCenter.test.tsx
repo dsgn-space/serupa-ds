@@ -34,9 +34,9 @@ describe('NotificationCenter', () => {
     await render(<SerupaProvider locale="en-US"><NotificationCenter defaultOpen items={list} onMarkRead={() => {}} /></SerupaProvider>);
     await expect.poll(() => drawer()?.querySelector('h2')?.textContent).toBe('Notifications');
     expect(read()).toEqual([['Unread: Payment failed / Card declined.', ['Mark as read']], ['Invoice sent', []]]);
-    expect(rows()[0].querySelector('time')?.textContent).toMatch(/2 min/);
-    expect(rows()[0].dataset.tone).toBe('danger');
-    expect(rows()[1].hasAttribute('data-read')).toBe(true);
+    expect(rows()[0]!.querySelector('time')?.textContent).toMatch(/2 min/);
+    expect(rows()[0]!.dataset.tone).toBe('danger');
+    expect(rows()[1]!.hasAttribute('data-read')).toBe(true);
   });
 
   test('"Mark as read" calls onMarkRead with the id and focus stays on its row; the footer buttons call theirs', async () => {
@@ -101,11 +101,11 @@ describe('NotificationCenter', () => {
     await expect.poll(() => drawer() !== null).toBe(true);
     const mark = async (row: Element) => { row.querySelector('button')!.focus(); await userEvent.keyboard('{Enter}'); };
     const focusIs = () => [rows().map((li) => li.querySelector('p span[id]')!.textContent), document.activeElement!.tagName, (document.activeElement!.querySelector('p span[id]') || document.activeElement!).textContent];
-    await mark(rows()[0]);
+    await mark(rows()[0]!);
     await expect.poll(focusIs).toEqual([['Two', 'Three'], 'LI', 'Two']);
-    await mark(rows()[1]);   // the last: the one before
+    await mark(rows()[1]!);   // the last: the one before
     await expect.poll(focusIs).toEqual([['Two'], 'LI', 'Two']);
-    await mark(rows()[0]);   // none left: the empty line
+    await mark(rows()[0]!);   // none left: the empty line
     await expect.poll(focusIs).toEqual([[], 'P', 'No notifications yet']);
   });
 
@@ -168,8 +168,8 @@ describe('NotificationCenter', () => {
   test('descriptions read 4.5:1 and the unread dot 3:1 on the drawer in all six themes', async () => {
     await render(<NotificationCenter defaultOpen items={list} />);
     await expect.poll(() => drawer() !== null).toBe(true);
-    const description = rows()[0].querySelectorAll('p')[1] as HTMLElement;
-    const dot = [...rows()[0].querySelectorAll<HTMLElement>('span[aria-hidden="true"]')].find((s) => !s.childElementCount)!;
+    const description = rows()[0]!.querySelectorAll('p')[1] as HTMLElement;
+    const dot = [...rows()[0]!.querySelectorAll<HTMLElement>('span[aria-hidden="true"]')].find((s) => !s.childElementCount)!;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       expect(contrast(css(description).color, backdropOf(description)), th).toBeGreaterThanOrEqual(4.5);
@@ -180,7 +180,7 @@ describe('NotificationCenter', () => {
   test('forced colors: the unread dot stays drawn, in CanvasText on the Canvas drawer (GR27)', async () => {
     await render(<NotificationCenter defaultOpen items={list} />);
     await expect.poll(() => drawer() !== null).toBe(true);
-    const dot = [...rows()[0].querySelectorAll<HTMLElement>('span[aria-hidden="true"]')].find((s) => !s.childElementCount)!;
+    const dot = [...rows()[0]!.querySelectorAll<HTMLElement>('span[aria-hidden="true"]')].find((s) => !s.childElementCount)!;
     await forcedColors(async (active) => {
       if (!active) return;
       // Compared as computed values: contrast() resolves colors through `color`, which forced colors also override.
@@ -205,7 +205,7 @@ describe('useToastHistory', () => {
     toast({ title: 'Saved', tone: 'success', id: saving });
     vi.mocked(Date.now).mockRestore();
     await expect.poll(() => history.items.map((n) => [n.title, n.tone, n.read])).toEqual([['Saved', 'success', false], ['Network error', 'danger', false]]);
-    expect(history.items[0].time).toBe(1000);
+    expect(history.items[0]!.time).toBe(1000);
     expect(history.unread).toBe(2);
     toast({ title: 'Network error', tone: 'danger' });   // a repeat: "×2" in the Toaster
     await expect.poll(() => history.items.map((n) => n.title)).toEqual(['Network error', 'Saved']);
@@ -215,7 +215,7 @@ describe('useToastHistory', () => {
     await render(<Recorder limit={2} />);
     toast('One'); toast('Two'); toast('Three');
     await expect.poll(() => history.items.map((n) => n.title)).toEqual(['Three', 'Two']);
-    history.markRead(history.items[1].id);
+    history.markRead(history.items[1]!.id);
     await expect.poll(() => history.items.map((n) => !!n.read)).toEqual([false, true]);
     expect(history.unread).toBe(1);
     history.markRead();

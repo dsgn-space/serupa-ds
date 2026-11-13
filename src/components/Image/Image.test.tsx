@@ -55,10 +55,10 @@ describe('Image', () => {
     const ids = ['auto', 'square', 'four', 'video', 'num'];
     await expect.poll(() => ids.map((id) => frame(id).dataset.state)).toEqual(ids.map(() => 'loaded'));
     const s = Object.fromEntries(ids.map((id) => [id, box(id)]));
-    expect(ids.map((id) => s[id].h)).toEqual([100, 200, 150, 113, 100]);
-    expect(ids.every((id) => s[id].w === 200)).toBe(true);
-    expect([s.square.fit, s.four.fit]).toEqual(['cover', 'contain']);
-    expect([s.square.radius, s.video.radius]).toEqual(['8px', '0px']);
+    expect(ids.map((id) => s[id]!.h)).toEqual([100, 200, 150, 113, 100]);
+    expect(ids.every((id) => s[id]!.w === 200)).toBe(true);
+    expect([s.square!.fit, s.four!.fit]).toEqual(['cover', 'contain']);
+    expect([s.square!.radius, s.video!.radius]).toEqual(['8px', '0px']);
   });
 
   test('ratio auto with width and height: the frame has their shape while the picture loads, so the text under it doesn\'t move; it shrinks to a narrower container', async () => {
@@ -126,7 +126,7 @@ describe('Image', () => {
     await expect.poll(() => document.getElementById('gnone')?.closest('[data-component="image"]')?.getAttribute('data-state')).toBe('error');
     await expect.poll(() => document.getElementById('gcls')?.closest('[data-component="image"]')?.getAttribute('data-state')).toBe('error');
     const i = document.getElementById('gcls') as HTMLImageElement;
-    expect([ref.current === i, i.dataset.x, i.classList.contains('w-48'), size('gcls'), size('gsty'), size('gnone')[0] >= 48])
+    expect([ref.current === i, i.dataset.x, i.classList.contains('w-48'), size('gcls'), size('gsty'), size('gnone')[0]! >= 48])
       .toEqual([true, 'y', true, [192, 108], [240, 135], true]);
   });
 

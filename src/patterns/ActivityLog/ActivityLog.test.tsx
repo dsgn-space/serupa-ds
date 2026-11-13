@@ -26,7 +26,7 @@ describe('Patterns/Activity log', () => {
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Activity log']);
     expect(screen.getByRole('columnheader').elements().map((e) => e.textContent)).toEqual(['When', 'Who', 'What']);
     expect(rows()).toHaveLength(8);
-    const first = rows()[0];
+    const first = rows()[0]!;
     expect(first.querySelector('time')?.getAttribute('dateTime')).toBe('2026-11-12T08:00:00.000Z');
     expect(first.textContent).toContain('Ana Lima');
     expect(first.textContent).toContain('changed Chen Wei’s role to AdminMembers');

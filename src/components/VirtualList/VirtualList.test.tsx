@@ -41,17 +41,17 @@ describe('VirtualList', () => {
     await render(<VirtualList id="v" aria-label="Rows" count={10000} renderItem={item} />);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
     expect(rows('v').length).toBeGreaterThan(5);
-    const first = rows('v')[0];
+    const first = rows('v')[0]!;
     expect([first.tagName, first.getAttribute('aria-posinset'), first.getAttribute('aria-setsize')]).toEqual(['LI', '1', '10000']);
     // The padding stands in for the rest: the scroll range is about all the rows'.
-    const h = rows('v')[1].getBoundingClientRect().height;   // the first row has no line above it
+    const h = rows('v')[1]!.getBoundingClientRect().height;   // the first row has no line above it
     expect(Math.abs(el('v').scrollHeight - 10000 * h)).toBeLessThan(10000 * h * 0.02);
   });
 
   test('scrolling draws the rows now in view; the last row can be reached', async () => {
     await render(<VirtualList id="v" aria-label="Rows" count={10000} renderItem={item} />);
     await expect.poll(() => rows('v').length).toBeLessThan(30);
-    const h = rows('v')[1].getBoundingClientRect().height;   // the first row has no line above it
+    const h = rows('v')[1]!.getBoundingClientRect().height;   // the first row has no line above it
     await scrollTo('v', h * 5000);
     // Rows not drawn yet count as the average height so far, so about row 5,000 is at the top (to within a few rows).
     const top = () => rows('v').find((x) => x.getBoundingClientRect().bottom > el('v').getBoundingClientRect().top + 1)!;
@@ -143,11 +143,11 @@ describe('VirtualList', () => {
 
   test('fewer rows, or none, after a change; itemKey keeps a row\'s element when rows before it go', async () => {
     const ids = Array.from({ length: 50 }, (_, i) => 'id' + i);
-    const page = (list: string[]) => <VirtualList id="v" aria-label="Rows" count={list.length} itemKey={(i) => list[i]} renderItem={(i) => <ListItem title={list[i]} />} />;
+    const page = (list: string[]) => <VirtualList id="v" aria-label="Rows" count={list.length} itemKey={(i) => list[i]!} renderItem={(i) => <ListItem title={list[i]} />} />;
     const screen = await render(page(ids));
     const third = rows('v')[2];
     await screen.rerender(page(ids.slice(1)));
-    expect([rows('v')[1] === third, rows('v')[1].getAttribute('aria-setsize')]).toEqual([true, '49']);
+    expect([rows('v')[1] === third, rows('v')[1]!.getAttribute('aria-setsize')]).toEqual([true, '49']);
     await screen.rerender(page([]));
     expect([rows('v').length, el('v').style.getPropertyValue('--dk-vl-after'), el('v').scrollHeight <= el('v').clientHeight]).toEqual([0, '0px', true]);
   });
@@ -158,7 +158,7 @@ describe('VirtualList', () => {
     for (const count of [10000, 100000]) {
       await screen.rerender(<VirtualList key={count} id="v" aria-label="Rows" count={count} renderItem={item} />);
       await expect.poll(() => rows('v').length).toBeLessThan(30);
-      const h = rows('v')[1].getBoundingClientRect().height;
+      const h = rows('v')[1]!.getBoundingClientRect().height;
       await scrollTo('v', el('v').scrollHeight / 2);
       await new Promise((r) => setTimeout(r, 300));
       for (let k = 0; k < 5; k++) {
@@ -197,7 +197,7 @@ describe('VirtualList', () => {
 
   test('GR94: past the height limit (10,000,000 rows), the arrow and Page keys and the wheel move through the rows as in a short list', async () => {
     await huge();
-    const h = rows('v')[1].getBoundingClientRect().height, page = Math.floor(el('v').clientHeight * 0.875 / h);
+    const h = rows('v')[1]!.getBoundingClientRect().height, page = Math.floor(el('v').clientHeight * 0.875 / h);
     await scrollTo('v', (el('v').scrollHeight - el('v').clientHeight) / 2);
     el('v').focus();
     const step = async (move: () => unknown, by: number, what: string) => {
@@ -258,7 +258,7 @@ describe('VirtualList', () => {
         expect(Math.abs(last.bottom - box.bottom)).toBeLessThan(2);   // the last row sits at the bottom, all of it shown
         // Half way down the scrollbar is about half way down the rows.
         await scrollTo('big', (el('big').scrollHeight - el('big').clientHeight) / 2);
-        const mid = Number(rows('big')[0].getAttribute('aria-posinset'));
+        const mid = Number(rows('big')[0]!.getAttribute('aria-posinset'));
         expect(Math.abs(mid - count / 2)).toBeLessThan(count * 0.02);
       }
     } finally { window.removeEventListener('error', onError); }
@@ -272,7 +272,7 @@ describe('VirtualList', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(el('v')).backgroundColor;
-      const r = rows('v')[0];
+      const r = rows('v')[0]!;
       for (const text of ['Row 0', 'Muted']) { const c = contrast(css(leaf(r, (t) => t === text)).color, bg); if (c < 4.5) low.push(`${th} ${text} ${c.toFixed(2)}`); }
       const ring = contrast(css(el('v')).outlineColor, css(document.body).backgroundColor);
       if (ring < 3) low.push(`${th} ring ${ring.toFixed(2)}`);

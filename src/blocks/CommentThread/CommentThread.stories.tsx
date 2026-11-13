@@ -70,5 +70,5 @@ export const LoadFailed: Story = { render: () => <Page><CommentThread comments={
 /** With people: type "@" in the reply box to mention someone; mentions in comments are bold, and onReply gets who to notify. */
 export const WithMentions: Story = {
   name: 'With mentions',
-  render: () => <Page><Live people={team} initial={[comments[0], { ...comments[1], body: 'Good catch, @Ana Putri. I’ll try 20px and bold.' }, comments[2]]} /></Page>,
+  render: () => <Page><Live people={team} initial={[comments[0]!, { ...comments[1]!, body: 'Good catch, @Ana Putri. I’ll try 20px and bold.' }, comments[2]!]} /></Page>,
 };

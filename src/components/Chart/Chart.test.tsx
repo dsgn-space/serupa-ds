@@ -39,8 +39,8 @@ describe('Chart', () => {
     await render(<Chart title="Visitors" categories={CATS} series={TWO} />);
     const names = [...document.querySelectorAll('g[role="group"] > [role="img"]')].map((p) => [p.getAttribute('role'), p.getAttribute('aria-label')].join(' '));
     expect(names).toEqual(['img Visitors, Jan: 10', 'img Visitors, Feb: 20', 'img Visitors, Apr: 40', 'img Sign-ups, Jan: 1', 'img Sign-ups, Feb: 2', 'img Sign-ups, Mar: 3', 'img Sign-ups, Apr: 4']);
-    await render(<Chart title="One" categories={CATS} series={[TWO[1]]} />);
-    expect(document.querySelectorAll('figure[data-component="chart"]')[1].querySelector('g[role="group"] > [role="img"]')!.getAttribute('aria-label')).toBe('Jan: 1');
+    await render(<Chart title="One" categories={CATS} series={[TWO[1]!]} />);
+    expect(document.querySelectorAll('figure[data-component="chart"]')[1]!.querySelector('g[role="group"] > [role="img"]')!.getAttribute('aria-label')).toBe('Jan: 1');
   });
 
   test('one tab stop; arrows move along a series and across series, skipping gaps; Home and End', async () => {
@@ -71,8 +71,8 @@ describe('Chart', () => {
 
   test('right to left: the first category is on the right, and ArrowLeft moves on', async () => {
     await render(<div dir="rtl"><Chart title="Visitors" categories={CATS} series={TWO} /></div>);
-    const pts = [...document.querySelectorAll('svg[aria-describedby] g[role="group"]')[0].querySelectorAll('g[role="group"] > [role="img"]')].map((p) => p.getBoundingClientRect().x);
-    expect(pts[0]).toBeGreaterThan(pts[1]);
+    const pts = [...document.querySelectorAll('svg[aria-describedby] g[role="group"]')[0]!.querySelectorAll('g[role="group"] > [role="img"]')].map((p) => p.getBoundingClientRect().x);
+    expect(pts[0]).toBeGreaterThan(pts[1]!);
     await tabIn();
     await userEvent.keyboard('{ArrowLeft}');
     expect(focused()).toBe('Visitors, Feb: 20');
@@ -171,10 +171,10 @@ describe('Chart', () => {
     const bars = [...document.querySelectorAll('g[role="group"] > rect')] as SVGRectElement[];
     expect(bars.length).toBe(4);
     const base = document.querySelector('svg[aria-describedby] > g[aria-hidden] > line')!.getBoundingClientRect().y;
-    const [up, down] = [bars[0].getBoundingClientRect(), bars[1].getBoundingClientRect()];
+    const [up, down] = [bars[0]!.getBoundingClientRect(), bars[1]!.getBoundingClientRect()];
     expect(Math.abs(up.bottom - base)).toBeLessThan(1.5);
     expect(Math.abs(down.top - base)).toBeLessThan(1.5);
-    expect([bars[0].getAttribute('fill'), bars[2].getAttribute('fill')?.startsWith('url(#')]).toEqual([null, true]);
+    expect([bars[0]!.getAttribute('fill'), bars[2]!.getAttribute('fill')?.startsWith('url(#')]).toEqual([null, true]);
   });
 
   test('area: a line with the space under it filled down to zero, a filled shape per series, named "Area chart"', async () => {
@@ -185,12 +185,12 @@ describe('Chart', () => {
     expect(marks).toContain('Visitors, Feb: 20');
     // The filled shapes come before the series, so the lines and markers are drawn over them.
     const groups = [...document.querySelectorAll('svg[aria-describedby] > g[aria-hidden]')];
-    const fills = [...groups[groups.length - 1].querySelectorAll('path')];
+    const fills = [...groups[groups.length - 1]!.querySelectorAll('path')];
     expect(fills).toHaveLength(2);
     // A missing value breaks the first series' shape in two.
-    expect(fills[0].getAttribute('d')!.match(/M/g)).toHaveLength(2);
-    const base = groups[1].querySelector('line')!.getBoundingClientRect().y;
-    expect(Math.abs(fills[1].getBoundingClientRect().bottom - base)).toBeLessThan(1.5);
+    expect(fills[0]!.getAttribute('d')!.match(/M/g)).toHaveLength(2);
+    const base = groups[1]!.querySelector('line')!.getBoundingClientRect().y;
+    expect(Math.abs(fills[1]!.getBoundingClientRect().bottom - base)).toBeLessThan(1.5);
   });
 
   test('area, stacked: each series stands on the one before it, and its points still say their own value', async () => {
@@ -201,7 +201,7 @@ describe('Chart', () => {
     await rerender(<EnUS><Chart type="area" stacked title="Orders" categories={['Jan', 'Feb']} series={two} /></EnUS>);
     expect(y('App, Jan: 5')).toBeLessThan(y('Shop, Jan: 10'));   // stacked, App's line is at 15, above Shop's
     const groups = [...document.querySelectorAll('svg[aria-describedby] > g[aria-hidden]')];
-    expect([...groups[0].querySelectorAll('text')].map((t) => t.textContent)).toContain('15');
+    expect([...groups[0]!.querySelectorAll('text')].map((t) => t.textContent)).toContain('15');
   });
 
   const SOURCES = ['Search', 'Direct', 'Social', 'Email', 'Referral'];

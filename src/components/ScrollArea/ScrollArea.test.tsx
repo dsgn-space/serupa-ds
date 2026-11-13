@@ -84,7 +84,7 @@ describe('ScrollArea', () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><ScrollArea id="s" aria-label="List" style={{ maxHeight: 100 }}>{rows(10)}</ScrollArea></div>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const thumb = css(el('s')).scrollbarColor.split(/\s(?![^(]*\))/)[0];
+      const thumb = css(el('s')).scrollbarColor.split(/\s(?![^(]*\))/)[0]!;
       expect(contrast(thumb, css(el('bg')).backgroundColor), th + ' thumb').toBeGreaterThanOrEqual(3);
       el('s').focus();
       expect(contrast(css(el('s')).outlineColor, css(el('bg')).backgroundColor), th + ' ring').toBeGreaterThanOrEqual(3);

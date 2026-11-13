@@ -74,7 +74,7 @@ describe('labels', () => {
     expect([straight(en), straight(id)]).toEqual([[], []]);
   });
   test('no Indonesian label is still in English', () => {
-    expect(Object.keys(en).filter((k) => !SAME.has(k) && en[k] === id[k] && /[a-z]{3}/i.test(en[k])).map((k) => k + ': ' + en[k])).toEqual([]);
+    expect(Object.keys(en).filter((k) => !SAME.has(k) && en[k] === id[k] && /[a-z]{3}/i.test(en[k]!)).map((k) => k + ': ' + en[k])).toEqual([]);
   });
 });
 

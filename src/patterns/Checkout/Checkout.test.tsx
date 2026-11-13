@@ -108,7 +108,7 @@ describe('Patterns/Checkout', () => {
     const back = screen.getByRole('button', { name: 'Back' }).element() as HTMLButtonElement;
     const changes = [...document.querySelectorAll<HTMLButtonElement>('button[aria-label^="Change "]')];
     expect([back.getAttribute('aria-disabled'), changes.length > 0, changes.every((b) => b.getAttribute('aria-disabled') === 'true')]).toEqual(['true', true, true]);
-    back.click(); changes[0].click();
+    back.click(); changes[0]!.click();
     expect(document.querySelector('main')!.textContent).toContain('Check your order');
     finish();
     await vi.waitFor(() => expect(active().textContent).toBe('Thank you, your order is placed'));

@@ -17,9 +17,9 @@ const msgs = (from: number, to: number) => Array.from({ length: to - from }, (_,
 
 function Live({ api }: { api: { add?: (n: number) => void; older?: (n: number) => void } }) {
   const [range, setRange] = React.useState([10, 30]);
-  api.add = (n) => setRange(([a, b]) => [a, b + n]);
-  api.older = (n) => setRange(([a, b]) => [a - n, b]);
-  return <div style={{ height: '300px', display: 'flex', flexDirection: 'column' }}><Chat aria-label="Support" style={{ flex: 'auto' }}>{msgs(range[0], range[1])}</Chat></div>;
+  api.add = (n) => setRange(([a = 0, b = 0]) => [a, b + n]);
+  api.older = (n) => setRange(([a = 0, b = 0]) => [a - n, b]);
+  return <div style={{ height: '300px', display: 'flex', flexDirection: 'column' }}><Chat aria-label="Support" style={{ flex: 'auto' }}>{msgs(range[0]!, range[1]!)}</Chat></div>;
 }
 
 // The innermost element whose text is (or matches) this: parts found by what they say, not by class.

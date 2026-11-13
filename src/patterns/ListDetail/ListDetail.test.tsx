@@ -84,9 +84,9 @@ describe('Patterns/List and detail', () => {
       expect(seen.map((s) => s.types)).toEqual([['forward'], ['back']]);
       // The pane slides as a step, and the open message's subject is one named element on both sides of each change.
       const subject = 'list-detail-subject:New photos for the h';
-      expect(seen[0].before).toContain(subject);
-      expect(seen[0].after).toContain(subject);
-      expect(seen[1].after).toContain(subject);
+      expect(seen[0]!.before).toContain(subject);
+      expect(seen[0]!.after).toContain(subject);
+      expect(seen[1]!.after).toContain(subject);
       expect(seen.flatMap((s) => [...s.before, ...s.after]).filter((n) => n.startsWith('list-detail-pane:')).length).toBe(4);
     } finally {
       document.startViewTransition = start;

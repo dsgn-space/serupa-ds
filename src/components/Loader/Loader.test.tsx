@@ -118,7 +118,7 @@ describe('Loader', () => {
     expect(rs.map((r) => `${r.getAttribute('x')},${r.getAttribute('y')}`).join(' ')).toBe('0,0 8,0 16,0 0,8 8,8 16,8 0,16 8,16 16,16');
     expect(rs.every((r) => r.getAttribute('width') === '8' && r.getAttribute('height') === '8' && !r.getAttribute('rx'))).toBe(true);
     expect([box('px'), box('pxlg')]).toEqual([[24, 24], [40, 40]]);
-    expect(css(rs[0]).fill).toBe(css(el('px')).color);
+    expect(css(rs[0]!).fill).toBe(css(el('px')).color);
     expect(css(q('#pxlg svg > g > rect')).fill).toBe(color('var(--primary)'));
   });
 
@@ -139,7 +139,7 @@ describe('Loader', () => {
     const rs = [...el('px').querySelectorAll('svg > g > rect')], s = rs.map((r) => getComputedStyle(r));
     expect(rs.map((r) => r.getAttribute('class')!.match(/d(\d)/)![1]).join('')).toBe('012123234');
     expect(s.map((x) => x.animationDelay).join()).toBe('0s,0.075s,0.15s,0.075s,0.15s,0.225s,0.15s,0.225s,0.3s');
-    expect(`${s[0].animationName} ${s[0].animationDuration} ${s[0].animationTimingFunction} ${s[0].animationIterationCount}`).toBe('dk-loader-pixel 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite');
+    expect(`${s[0]!.animationName} ${s[0]!.animationDuration} ${s[0]!.animationTimingFunction} ${s[0]!.animationIterationCount}`).toBe('dk-loader-pixel 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite');
   });
 
   test('pixel, right to left: the grid is mirrored, so the wave starts from the top right, the inline start (GI2); the drawing is never narrowed by base.css', async () => {
@@ -174,8 +174,8 @@ describe('Loader', () => {
       const outer = el('pxsbox').getBoundingClientRect(), svg = q('#pxs svg').getBoundingClientRect(), k = img.width / outer.width, u = svg.width / 24;
       const px = (x: number, y: number) => [...g.getImageData(Math.round((svg.left - outer.left + x * u) * k), Math.round((svg.top - outer.top + y * u) * k), 1, 1).data.slice(0, 3)];
       const [litDivider, dimDivider, lit, dim] = [px(8.05, 4), px(16.05, 20), px(4, 4), px(20, 20)];
-      expect(litDivider.every((v, i) => Math.abs(v - dimDivider[i]) <= 3), JSON.stringify({ litDivider, dimDivider })).toBe(true);
-      expect(lit.some((v, i) => Math.abs(v - dim[i]) > 60), JSON.stringify({ lit, dim })).toBe(true);
+      expect(litDivider.every((v, i) => Math.abs(v - dimDivider[i]!) <= 3), JSON.stringify({ litDivider, dimDivider })).toBe(true);
+      expect(lit.some((v, i) => Math.abs(v - dim[i]!) > 60), JSON.stringify({ lit, dim })).toBe(true);
     } finally { still.remove(); }
   });
 
@@ -188,7 +188,7 @@ describe('Loader', () => {
     expect(new Set(durs).size).toBe(9);
     expect([Math.min(...durs), Math.max(...durs)]).toEqual([1.5, 2.2]);
     expect(new Set(rs.map((s) => s.animationDelay)).size).toBeGreaterThanOrEqual(8);
-    expect(rs[0].animationTimingFunction).toBe('cubic-bezier(0.65, 0, 0.35, 1)');
+    expect(rs[0]!.animationTimingFunction).toBe('cubic-bezier(0.65, 0, 0.35, 1)');
   });
 
   test('pixel pattern: "wave" by default and for unknown values; other variants ignore it', async () => {
@@ -219,7 +219,7 @@ describe('Loader', () => {
     expect([...new Set(rs.map((s) => s.animationName))].join()).toBe('dk-loader-pixel');
     expect(rs.map((s) => Math.round(parseFloat(s.animationDelay) / 0.075)).join('')).toBe(steps);
     expect([...new Set(rs.map((s) => s.animationDuration))].join()).toBe(dur);
-    expect(rs[0].animationTimingFunction).toBe('cubic-bezier(0.65, 0, 0.35, 1)');
+    expect(rs[0]!.animationTimingFunction).toBe('cubic-bezier(0.65, 0, 0.35, 1)');
   });
 
   test('pixel step patterns: a square rises gradually (still part-way at 15% of its cycle), holds, then fades back gradually', async () => {
@@ -234,7 +234,7 @@ describe('Loader', () => {
     await render(<>{pats.map((p) => <Loader key={p} id={'s-' + p} variant="pixel" pattern={p} delay={0} label="" />)}</>);
     const smooth: Record<string, number> = {};
     for (const p of pats) {
-      const r = q(`#s-${p} svg > g > rect`), a = r.getAnimations()[0];
+      const r = q(`#s-${p} svg > g > rect`), a = r.getAnimations()[0]!;
       const { duration, delay } = a.effect!.getComputedTiming();
       let max = 0, prev: number | null = null;
       a.pause();
@@ -247,7 +247,7 @@ describe('Loader', () => {
       a.play();
       smooth[p] = +max.toFixed(3);
     }
-    expect(Object.values(smooth).every((m) => m <= smooth.wave + 0.001), JSON.stringify(smooth)).toBe(true);
+    expect(Object.values(smooth).every((m) => m <= smooth.wave! + 0.001), JSON.stringify(smooth)).toBe(true);
   });
 
   test('glow (pixel only): a 2px halo of the loader color (glow-size), off without it, ignored by other variants; --loader-pixel-glow sets another halo', async () => {
@@ -269,10 +269,10 @@ describe('Loader', () => {
 
   test('spokes: eight rounded spokes round a circle, 24px (md) and 40px (lg), in the text color (or the tone)', async () => {
     await render(<><Loader id="spk" variant="spokes" delay={0} /><Loader id="spklg" variant="spokes" size="lg" tone="primary" delay={0} /></>);
-    const ls = [...el('spk').querySelectorAll('svg line')], s = css(ls[0]);
+    const ls = [...el('spk').querySelectorAll('svg line')], s = css(ls[0]!);
     expect([ls.length, el('spk').dataset.variant, s.strokeLinecap, s.strokeWidth]).toEqual([8, 'spokes', 'round', '4px']);
-    expect((ls[0].parentNode as Element).getAttribute('transform')).toBe('scale(0.625)');
-    expect(['x1', 'y1', 'x2', 'y2'].map((k) => ls[0].getAttribute(k)).join()).toBe('19.2,4,19.2,9.6');
+    expect((ls[0]!.parentNode as Element).getAttribute('transform')).toBe('scale(0.625)');
+    expect(['x1', 'y1', 'x2', 'y2'].map((k) => ls[0]!.getAttribute(k)).join()).toBe('19.2,4,19.2,9.6');
     expect(s.stroke).toBe(css(el('spk')).color);
     expect(css(q('#spklg line')).stroke).toBe(color('var(--primary)'));
     expect([box('spk'), box('spklg')]).toEqual([[24, 24], [40, 40]]);
@@ -430,7 +430,7 @@ describe('Loader', () => {
 
   test('shine: the resting words (text at 65%) keep 4.5:1 on surface in all six themes', () => {
     const rgb = (c: string) => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
-    const lum = (c: number[]) => { const v = c.map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+    const lum = (c: number[]) => { const v = c.map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0]! + 0.7152 * v[1]! + 0.0722 * v[2]!; };
     const out: Record<string, number> = {};
     for (const th of ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark']) {
       const d = document.createElement('div');
@@ -439,8 +439,8 @@ describe('Loader', () => {
       document.body.appendChild(d);
       const s = getComputedStyle(d), a = parseFloat(s.opacity), fg = rgb(s.color), bg = rgb(s.backgroundColor);
       d.remove();
-      const L = [lum(fg.map((x, i) => x * a + bg[i] * (1 - a))), lum(bg)].sort((x, y) => y - x);
-      out[th] = Math.round(((L[0] + 0.05) / (L[1] + 0.05)) * 100) / 100;
+      const L = [lum(fg.map((x, i) => x * a + bg[i]! * (1 - a))), lum(bg)].sort((x, y) => y - x);
+      out[th] = Math.round(((L[0]! + 0.05) / (L[1]! + 0.05)) * 100) / 100;
     }
     expect(Object.entries(out).filter(([, r]) => r < 4.5)).toEqual([]);
   });
@@ -513,7 +513,7 @@ describe('Loader', () => {
 
   test('skeleton text sizes: sm 16px lines with 12px bars, lg 24px lines with 16px bars', async () => {
     await render(<Skeletons />);
-    expect([box('sksm')[1], bones('sksm')[0][1], box('sklg')[1], bones('sklg')[0][1]]).toEqual([32, 12, 24, 16]);
+    expect([box('sksm')[1], bones('sksm')[0]![1], box('sklg')[1], bones('sklg')[0]![1]]).toEqual([32, 12, 24, 16]);
   });
 
   test('skeleton circle: the loader size (24px md, 40px lg), fully round; className (size-12) sets another size', async () => {
@@ -555,11 +555,11 @@ describe('Loader', () => {
     const moves = b.getAnimations({ subtree: true }).filter((a): a is CSSAnimation => a instanceof CSSAnimation && a.animationName === 'dk-loader-sweep');
     // read the band where the sweep ends (Firefox hands back the keyframe's var() unresolved): two bones on,
     // a percentage of the band or a length
-    moves[0].pause();
-    moves[0].currentTime = 1999;
+    moves[0]!.pause();
+    moves[0]!.currentTime = 1999;
     const t = getComputedStyle(b, '::after').translate;
     const moved = t.endsWith('%') ? parseFloat(t) / 100 * parseFloat(s.width) / w : parseFloat(t) / w;
-    moves[0].play();
+    moves[0]!.play();
     expect(Math.round(moved)).toBe(2);
   });
 
@@ -634,7 +634,7 @@ describe('Loader', () => {
       expect([w.animationName, w.animationDuration]).toEqual(['dk-loader-pixel', '2.4s']);
       expect(pats.map((p) => css(q(`#r-${p} svg > g > rect`)).animationDuration).join()).toBe('2.4s,4s,2.4s,3s,3s,2s,2s');
       const rs = [...document.querySelectorAll('#r-random svg > g > rect')].map((r) => getComputedStyle(r));
-      expect([new Set(rs.map((s) => s.animationDuration)).size, rs[0].animationDuration]).toEqual([1, '4s']);
+      expect([new Set(rs.map((s) => s.animationDuration)).size, rs[0]!.animationDuration]).toEqual([1, '4s']);
       expect(new Set(rs.map((s) => s.animationDelay)).size).toBeGreaterThanOrEqual(8);
     } finally { restore(); }
   });

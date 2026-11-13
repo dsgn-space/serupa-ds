@@ -13,7 +13,7 @@ async function typing(id: string, countries?: string[]): Promise<number> {
   await userEvent.click(document.getElementById(id)!);
   await userEvent.keyboard('8123456789');
   await r.unmount();
-  return times.sort((a, b) => a - b)[Math.floor(times.length / 2)];
+  return times.sort((a, b) => a - b)[Math.floor(times.length / 2)]!;
 }
 
 describe('PhoneInput re-render cost (AY2)', () => {

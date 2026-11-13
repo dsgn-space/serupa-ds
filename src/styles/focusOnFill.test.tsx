@@ -49,10 +49,10 @@ describe('the focus ring adapts to a strong fill (74)', () => {
       </div>);
       const ratios: Record<string, number> = {};
       for (const [id, on] of [['b-card', 'card'], ['l-box', 'box']]) {
-        document.getElementById(id)!.focus();
+        document.getElementById(id!)!.focus();
         await userEvent.keyboard('{Shift>}{/Shift}');
-        expect(document.getElementById(id)!.matches(':focus-visible'), id).toBe(true);
-        ratios[id] = Math.round(contrast(getComputedStyle(document.getElementById(id)!).outlineColor, getComputedStyle(document.getElementById(on)!).backgroundColor) * 10) / 10;
+        expect(document.getElementById(id!)!.matches(':focus-visible'), id).toBe(true);
+        ratios[id!] = Math.round(contrast(getComputedStyle(document.getElementById(id!)!).outlineColor, getComputedStyle(document.getElementById(on!)!).backgroundColor) * 10) / 10;
       }
       expect(Object.values(ratios).every((r) => r >= 3), JSON.stringify(ratios)).toBe(true);
     });
