@@ -360,6 +360,44 @@ describe('server-rendered on another day than the visitor\'s', () => {
     });
   }
 
+  // The clock also picks the month when nothing else does: the last evening of October on the server is November
+  // (or next year) for the visitor, with other weeks in the grid (GR396).
+  for (const [name, server, visitor, shown] of [
+    ['the month turns', new Date(2026, 9, 31, 22, 0), new Date(2026, 10, 1, 5, 0), 'November 2026'],
+    ['the year turns', new Date(2026, 11, 31, 22, 0), new Date(2027, 0, 1, 5, 0), 'January 2027'],
+  ] as const) {
+    test(`${name} between the server and the visitor: no mismatch, and the visitor's month and today show`, async () => {
+      const months: string[] = [];
+      const r = await hydrateFrom(server, visitor, <Calendar aria-label="Day" locale="en-US" onMonthChange={(m) => months.push(m.getFullYear() + '-' + (m.getMonth() + 1))} />);
+      try {
+        expect(r.errors).toEqual([]);
+        expect(months).toEqual([shown.endsWith('2027') ? '2027-1' : '2026-11']);
+        expect([r.host.querySelector('h2')!.textContent, today(r.host)]).toEqual([shown, [shown.endsWith('2027') ? '2027-01-01' : '2026-11-01']]);
+      } finally { r.done(); }
+    });
+  }
+  test('the year turns with month and year menus: no mismatch (the years listed follow the shown month until hydration)', async () => {
+    const r = await hydrateFrom(new Date(2026, 11, 31, 22, 0), new Date(2027, 0, 1, 5, 0), <Calendar aria-label="Day" locale="en-US" monthYearPicker />);
+    try {
+      expect(r.errors).toEqual([]);
+      expect(r.host.querySelector('h2')!.textContent).toBe('January 2027');
+    } finally { r.done(); }
+  });
+  test('a controlled month stays the app\'s: no mismatch, and no onMonthChange after hydration', async () => {
+    const onMonthChange = vi.fn();
+    const r = await hydrateFrom(new Date(2026, 9, 31, 22, 0), new Date(2026, 10, 1, 5, 0), <Calendar aria-label="Day" locale="en-US" month={new Date(2026, 9, 1)} onMonthChange={onMonthChange} />);
+    try {
+      expect([r.errors, r.host.querySelector('h2')!.textContent, onMonthChange.mock.calls.length]).toEqual([[], 'October 2026', 0]);
+    } finally { r.done(); }
+  });
+  test('a given defaultMonth is never replaced by the visitor\'s month', async () => {
+    const r = await hydrateFrom(new Date(2026, 9, 31, 22, 0), new Date(2026, 10, 1, 5, 0), <Calendar aria-label="Day" locale="en-US" defaultMonth={new Date(2026, 9, 15)} />);
+    try {
+      expect(r.errors).toEqual([]);
+      expect(r.host.querySelector('h2')!.textContent).toBe('October 2026');
+    } finally { r.done(); }
+  });
+
   test('presets: no mismatch, and the pressed preset follows the visitor\'s today, not the server\'s (GR286)', async () => {
     const r = await hydrateFrom(new Date(2026, 10, 7, 22, 0), new Date(2026, 10, 8, 5, 0), <Calendar aria-label="Day" locale="en-US" presets defaultValue={new Date(2026, 10, 8)} />);
     try {
