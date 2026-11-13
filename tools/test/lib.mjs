@@ -323,9 +323,17 @@ export function withDependents(names) {
 // so a pull request that changes LoadMore runs announceContract's LoadMore case too, not only LoadMore's own folder.
 // The folder of a component, block or pattern ("src/patterns/Checkout/"), or null for a name with none.
 export const folderOf = (n) => FOLDERS.map((d) => `src/${d}/${n}/`).find((f) => fs.existsSync(path.join(PROJECT, f))) ?? null;
+// A shared test that reads every folder of a kind through a glob ('../blocks/*/*.tsx' in labels.test.tsx) checks each
+// of them, so it comes with any name in that kind: #1792's ProductGrid merged with a straight apostrophe that the
+// labels test's glob catches, because a narrowed run went only by imports (13 Nov 2026).
 export function internalTestsFor(names) {
   const DIR = path.join(PROJECT, 'src', 'internal');
+  const kinds = new Set([...names].map((n) => folderOf(n)?.split('/')[1]).filter(Boolean));
   return fs.readdirSync(DIR).filter((f) => /\.test\.tsx?$/.test(f)).sort()
-    .filter((f) => [...fs.readFileSync(path.join(DIR, f), 'utf8').matchAll(/from ["']\.\.\/components\/([A-Z]\w*)\//g)].some((m) => names.has(m[1])))
+    .filter((f) => {
+      const src = fs.readFileSync(path.join(DIR, f), 'utf8');
+      return [...src.matchAll(/from ["']\.\.\/components\/([A-Z]\w*)\//g)].some((m) => names.has(m[1])) ||
+        [...src.matchAll(/["']\.\.\/(\w+)\/\*\//g)].some((m) => kinds.has(m[1]));
+    })
     .map((f) => `src/internal/${f}`);
 }

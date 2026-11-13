@@ -35,6 +35,8 @@ t('a pattern brings no component', list(withDependents(new Set(['Checkout']))) =
 t('a block brings the patterns that show it (AuthCard: SignIn)', withDependents(new Set(['AuthCard'])).has('SignIn'), list(withDependents(new Set(['AuthCard']))));
 t('a component brings the blocks and patterns that use it (Heading: Checkout, StatsRow)', ['Checkout', 'StatsRow'].every((n) => withDependents(new Set(['Heading'])).has(n)), list(withDependents(new Set(['Heading']))));
 t('each name runs its own folder\'s tests, and an Introduction page none', folderOf('Checkout') === 'src/patterns/Checkout/' && folderOf('StatsRow') === 'src/blocks/StatsRow/' && folderOf('Meter') === 'src/components/Meter/' && folderOf('Introduction.mdx') === null);
+const globbed = internalTestsFor(new Set(['ProductGrid']));
+t('a block brings the shared tests that read every block through a glob (ProductGrid: labels)', globbed.includes('src/internal/labels.test.tsx'), globbed.join(', '));
 const shared = internalTestsFor(new Set(['LoadMore']));
 t('a component brings the shared src/internal tests that render it (LoadMore: announceContract), not the others', shared.includes('src/internal/announceContract.test.tsx') && !shared.includes('src/internal/typeahead.test.tsx'), shared.join(', '));
 
