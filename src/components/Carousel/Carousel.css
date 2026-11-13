@@ -75,6 +75,7 @@
 }
 .dk-carousel__dot[aria-current="true"]::before { clip-path: inset(var(--spacing-0) round var(--rounded-full)); background: var(--carousel-dot-active, var(--primary)); }
 @media (hover: hover) { .dk-carousel__dot:hover:not([aria-current="true"])::before { background: var(--carousel-dot-hover, var(--text-muted)); } }
+.dk-carousel__dot:active:not([aria-current="true"])::before { background: var(--carousel-dot-pressed, var(--text)); }   /* held: a step past hover, on touch too */
 .dk-carousel__dot:focus { outline: none; }
 .dk-carousel__dot:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-full); }
 @media (prefers-reduced-motion: reduce) { .dk-carousel__track, .dk-carousel__dot::before { transition: none; } }
