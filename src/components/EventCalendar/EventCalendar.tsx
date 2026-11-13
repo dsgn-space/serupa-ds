@@ -7,6 +7,7 @@ import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sam
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { minuteTick } from '../../internal/timing';
+import { useServerStyles } from '../../internal/serverStyles';
 import * as icons from '../../material/builtin';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
@@ -142,6 +143,8 @@ const iso = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padSta
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCalendarProps>('EventCalendar', function EventCalendar(props, ref) {
   const sds = useSettings(words);
+  // The hours place their events with style attributes, which a strict CSP blocks in server HTML: applied again on hydration.
+  const rootRef = useServerStyles(ref);
   const rest = omit(props, { events: 1, onEventClick: 1, month: 1, defaultMonth: 1, onMonthChange: 1, view: 1, defaultView: 1, onViewChange: 1, maxPerDay: 1, locale: 1, weekStartsOn: 1, headingLevel: 1, className: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
@@ -263,7 +266,8 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const days = Array.from({ length: new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate() }, (_, i) => new Date(month.getFullYear(), month.getMonth(), i + 1));
   // The week or the day shown: the focused day's.
   const span = view === 'week' ? Array.from({ length: 7 }, (_, i) => addDays(startOfWeek(focus, ws), i)) : view === 'day' ? [focus] : [];
-  const title = view === 'week' && span[0] && span[6] ? fmt.range.formatRange(span[0], span[6]) : view === 'day' ? fmt.full.format(focus) : fmt.title.format(month);
+  // Spaces as plain spaces: engines put thin or ordinary ones around the dash, and the server's HTML has to match.
+  const title = view === 'week' && span[0] && span[6] ? fmt.range.formatRange(span[0], span[6]).replace(/\s/g, ' ') : view === 'day' ? fmt.full.format(focus) : fmt.title.format(month);
   // The now line moves with the clock, a minute at a time, while the hours show.
   const [now, setNow] = React.useState(() => new Date());
   React.useEffect(() => {
@@ -287,7 +291,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const busy = view === 'agenda' ? days.map((d) => [d, onDay(list, d)] as const).filter(([, l]) => l.length) : [];
 
   return (
-    <div {...rest} ref={ref} className={cn('dk-event-calendar', props.className)} data-component="event-calendar" data-view={view}>
+    <div {...rest} ref={rootRef} className={cn('dk-event-calendar', props.className)} data-component="event-calendar" data-view={view}>
       <div className="dk-event-calendar__toolbar">
         <div className="dk-event-calendar__nav">
           <Button variant="outline" size="sm" onClick={() => { showMonth(today); setFocus(today); }}>{sds.labels.goToToday}</Button>
