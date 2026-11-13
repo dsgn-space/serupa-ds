@@ -98,6 +98,28 @@ describe('Combobox', () => {
     expect([f().checkValidity(), field().getAttribute('aria-required')]).toEqual([false, 'true']);
   });
 
+  test('in a Field: labelled (the listbox too), described by the hint and the error, aria-required and invalid; two on a page share no id; in a disabled fieldset it doesn\'t open and the form leaves it out', async () => {
+    await render(<React.StrictMode><form id="ff">
+      <Field label="Country" hint="Where you live" error="Pick one" required><Combobox options={COUNTRIES} name="country" defaultValue="Brazil" /></Field>
+      <Field label="Again"><Combobox options={COUNTRIES} /></Field>
+      <fieldset disabled><Combobox aria-label="Off" options={COUNTRIES} name="off" defaultValue="Canada" /></fieldset>
+    </form></React.StrictMode>);
+    const [a, , off] = [...document.querySelectorAll<HTMLInputElement>('input[role=combobox]')];
+    const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent);
+    expect([a!.labels![0]!.textContent, text(a!.getAttribute('aria-describedby')), a!.getAttribute('aria-required'), a!.getAttribute('aria-invalid')])
+      .toEqual(['Country*', ['Where you live', 'Pick one'], 'true', 'true']);
+    a!.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const lb = document.getElementById(a!.getAttribute('aria-controls')!)!;
+    expect(text(lb.getAttribute('aria-labelledby'))).toEqual(['Country*']);
+    await userEvent.keyboard('{Escape}');
+    const ids = [...document.querySelectorAll('[id]')].map((n) => n.id);
+    expect(ids.filter((x, i) => ids.indexOf(x) !== i)).toEqual([]);
+    await userEvent.click(off!, { force: true });
+    expect([off!.getAttribute('aria-expanded'), off!.parentElement!.querySelector('button[aria-expanded]')!.matches(':disabled'), [...new FormData(document.getElementById('ff') as HTMLFormElement).keys()]])
+      .toEqual(['false', true, ['country']]);
+  });
+
   test('a role="combobox" field (aria-autocomplete list, collapsed) controlling a hidden role="listbox"; Input\'s 32px box; a chevron button out of the Tab order; ref and className', async () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<Countries cref={ref} />);

@@ -100,6 +100,25 @@ Run once on a new component before the release that first ships it, with the pul
 5. **A screen reader pass** (VoiceOver or NVDA): its name, role, state and every change it announces, once with the keyboard and once by touch.
 6. **Touch:** on a real phone, every target is at least 24px, a tap does what a click does, and a swipe or drag has a button alternative (`node tools/test/drag-alternatives.mjs`).
 
+## The reference component
+
+Combobox is what "done" looks like: when you build or deepen a component, hold it to each line below, and open Combobox's files to see the line met. Its README, `Combobox.test.tsx` and stories are the examples to copy. Each test is named for the behaviour it holds, so a search for the line's words finds it.
+
+- [ ] **The API follows the conventions** above: `value`, `defaultValue` and `onValueChange`; `open`, `defaultOpen` and `onOpenChange(open, { reason })`; any other state as `x`, `defaultX` and `onXChange` (`inputValue`). Values are typed from the options (`Combobox<'red' | 'green'>`).
+- [ ] **It behaves like a native field in a form:** it submits under `name` (with `form` too), resets, goes quiet in a disabled fieldset, and in a Field it takes the label, hint, error, required and invalid. Its entry in `src/internal/formContract.test.tsx` holds most of this, and its own test covers the rest ("in a Field: labelled…").
+- [ ] **The ARIA pattern, all of it:** roles, states and the keyboard table in the README match the APG pattern, and each row of that table has its test. Keys with Ctrl or ⌘ are left to the system, and keys during an input method's composition are left alone.
+- [ ] **Changes are said:** counts, results, additions and errors go through the shared announcer, once typing pauses, in the locale's digits ("٢ results" in `ar-EG`).
+- [ ] **Its words come from its labels,** in English and Indonesian, including the names of its buttons ("Clear Country").
+- [ ] **Every state shows everywhere:** contrast in all six themes (a test), right to left, and forced colors, both as a test of the state shown only by colour and as pictures (`FORCED` in `tools/test/visual.mjs`).
+- [ ] **Motion passes the motion review:** it enters and leaves with a transition that reverses, only fades under reduced motion, and doesn't move at all when the keyboard opened it.
+- [ ] **It scales:** thousands of options open and narrow quickly (only the rows in view are drawn), and the tests use those sizes.
+- [ ] **Async work is safe:** requests wait for a pause, newer ones abort older ones, late answers are dropped, a failure is said, and Enter or leaving before an answer doesn't lose what was typed.
+- [ ] **Worst cases hold:** long words wrap, accents, width and letters like Ł are matched the way people type them, and nothing scrolls sideways at 320px or with text at 200%.
+- [ ] **Mistakes warn in development** through `warnOnce` with a section in [docs/warnings.md](docs/warnings.md) (`combobox-duplicate-value`).
+- [ ] **The README has every section,** with a Do and don't pair drawn from stories.
+- [ ] **Every bug fixed has a test** written first, named for what people met.
+- [ ] **The bug bash is done** and its results are in the pull request. Combobox's ran in November 2026: Field, disabled fieldset, two on a page, strict mode, controlled values changed mid-typing, a Dialog around it, emoji and accented text. It found no defects, and the cases no test covered became one.
+
 ## Writing the docs
 
 These rules are for the words contributors write: READMEs, usage guides, doc comments, changesets and migration notes. [Content and voice](docs/foundations.md) is for the words in the product. Agents write much of this prose, so most rules name an agent's habit. `node tools/test/voice.mjs` checks the ones a script can.
