@@ -46,6 +46,20 @@ const slideIfStill = (sel: HTMLElement) => {
   }
 };
 
+/* Sets on tab t where the selected tab's line or fill is (b, a box in the list), from where t sits: its line starts
+   there, and its pill fill, which spans t and b, starts cut to b. With no b, or t not laid out, it clears them. */
+const aim = (t: HTMLElement, b: { x: number; y: number; w: number; h: number } | null) => {
+  if (!b || !t.offsetWidth || !t.offsetHeight) { for (const k of FROM) t.style.removeProperty(k); return; }
+  const dx = b.x - t.offsetLeft, dy = b.y - t.offsetTop, w = t.offsetWidth, h = t.offsetHeight;
+  t.style.setProperty('--dk-tabs-from-shift', dx + 'px ' + dy + 'px');
+  t.style.setProperty('--dk-tabs-from-scale', b.w / w + ' ' + b.h / h);
+  // The pill's fill (GO1) spans this tab and the selected one, cut to this tab; it starts cut to the selected one.
+  const l = Math.max(0, -dx), r = Math.max(0, dx + b.w - w), u = Math.max(0, -dy), d = Math.max(0, dy + b.h - h);
+  const set = (k: string, n: number) => t.style.setProperty(k, n + 'px');
+  set('--dk-tabs-span-l', l); set('--dk-tabs-span-r', r); set('--dk-tabs-span-t', u); set('--dk-tabs-span-b', d);
+  set('--dk-tabs-from-l', l + dx); set('--dk-tabs-from-r', w + r - dx - b.w); set('--dk-tabs-from-t', u + dy); set('--dk-tabs-from-b', h + d - dy - b.h);
+};
+
 /** Runs the row. tab and on are selectors for the tabs and the selected one; value is what's selected, so the row
  *  scrolls it into view when it changes. Returns the ref for the list, which of its edges fade, and place: called
  *  with true just before the selection changes, a slide still running turns back from where it has got to (EH1). */
@@ -54,6 +68,8 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
   const [fade, setFade] = React.useState<{ before: boolean; after: boolean }>({ before: false, after: false });
   // Where the row itself scrolled the list to show the selected tab as it mounted, before anything else scrolled it.
   const own = React.useRef<number | null>(null);
+  // Where the line or fill was just before the selection changed (place with now), until the change has rendered.
+  const was = React.useRef<{ x: number; y: number; w: number; h: number } | null>(null);
   // Each tab carries where the selected tab's line (or fill) is, from where it sits: when it's selected next, its own
   // line starts there and slides into place (Tabs.css, EG1). It's set ahead of time, on every tab, because a line
   // starts from the style its tab had just before it was selected. Refreshed on each change (reveal measures) and as the tabs resize.
@@ -68,16 +84,9 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
     for (const t of tabs) {
       // The selected tab keeps the pill's span it was selected with (below), so its slide runs to the end.
       if (t === sel) continue;
-      if (!b || !t.offsetWidth || !t.offsetHeight) { for (const k of FROM) t.style.removeProperty(k); continue; }
-      const dx = b.x - t.offsetLeft, dy = b.y - t.offsetTop, w = t.offsetWidth, h = t.offsetHeight;
-      t.style.setProperty('--dk-tabs-from-shift', dx + 'px ' + dy + 'px');
-      t.style.setProperty('--dk-tabs-from-scale', b.w / w + ' ' + b.h / h);
-      // The pill's fill (GO1) spans this tab and the selected one, cut to this tab; it starts cut to the selected one.
-      const l = Math.max(0, -dx), r = Math.max(0, dx + b.w - w), u = Math.max(0, -dy), d = Math.max(0, dy + b.h - h);
-      const set = (k: string, n: number) => t.style.setProperty(k, n + 'px');
-      set('--dk-tabs-span-l', l); set('--dk-tabs-span-r', r); set('--dk-tabs-span-t', u); set('--dk-tabs-span-b', d);
-      set('--dk-tabs-from-l', l + dx); set('--dk-tabs-from-r', w + r - dx - b.w); set('--dk-tabs-from-t', u + dy); set('--dk-tabs-from-b', h + d - dy - b.h);
+      aim(t, b);
     }
+    if (now) was.current = b;
   }, [tab, on]);
   // Which ends have tabs past them: before is the left (or top) edge, after the right (or bottom). In RTL,
   // scrollLeft runs from 0 down to minus the overflow.
@@ -123,6 +132,18 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
   useIsoLayoutEffect(() => {
     // A changed selection's slide, where the browser didn't start it (slideIfStill), before reveal re-measures the tabs.
     const sel = !mounting.current && list.current && value != null ? list.current.querySelector<HTMLElement>(on) : null;
+    // The pick can move the tabs (a label that changes with the selection): the start was measured from where the
+    // newly selected tab sat before. Measured again from where it sits now; where that changes it, the slide the
+    // browser started from the old start is dropped and run again from the new one (slideIfStill).
+    const b = was.current;
+    was.current = null;
+    if (sel && b) {
+      const before = FROM.map((k) => sel.style.getPropertyValue(k)).join();
+      aim(sel, b);
+      if (FROM.map((k) => sel.style.getPropertyValue(k)).join() !== before) {
+        for (const a of document.getAnimations()) { const e = a.effect as KeyframeEffect | null; if (e && e.target === sel && e.pseudoElement) a.cancel(); }
+      }
+    }
     if (sel && typeof sel.animate === 'function') slideIfStill(sel);
     reveal(mounting.current); mounting.current = false;
   }, [reveal]);
