@@ -237,28 +237,56 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     p.style.height = (h > high ? high - rubber(high - h, INWARD) : Math.max(h, low)) + 'px';
     p.style.translate = g.at ? shift(g.at, g.away) : '';
   };
+  // Settling never animates height (that lays the page out each frame): the panel takes the taller of where it is
+  // and where it's going, at once, and slides by translate so its top moves from one to the other. Then the stop's
+  // own height takes over. at: how far below its height it shows now (a drag below the shortest stop).
+  const glide = (p: HTMLElement, from: number, at: number, to: number, v: number, done: () => void) => {
+    const tall = Math.max(from, to), dist = Math.abs(to - from) + at;
+    p.style.height = tall + 'px';
+    p.style.translate = shift(tall - from + at, 1);
+    p.style.setProperty('--dk-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
+    void p.offsetHeight;   // the start, laid out before the transition's end is set
+    p.dataset.settling = '';
+    const finish = () => { delete p.dataset.settling; p.style.height = ''; p.style.translate = ''; done(); };
+    if (!dist || !parseFloat(getComputedStyle(p).transitionDuration)) { finish(); return; }
+    const end = (ev: TransitionEvent) => { if (ev.target === p && ev.propertyName === 'translate') { stop(); finish(); } };
+    const stop = () => { p.removeEventListener('transitionend', end); delete p.dataset.settling; settling.current = null; };
+    p.addEventListener('transitionend', end);
+    settling.current = stop;
+    p.style.translate = tall - to ? shift(tall - to, 1) : '';
+  };
   const sheetEnd = (p: HTMLElement, g: NonNullable<typeof drag.current>, v: number, released: boolean) => {
     const low = sheetPx(0), h = sheetPx(snapAt) - g.d, rest = h - (released ? project(v) : 0);
     // Only a drag that took it below its shortest stop can close it: a fast one down from a taller stop stops there.
     const out = released && h < low && (v > FLICK || rest < low * 2 / 3);
-    let to = snapAt;
-    if (!out) snaps.forEach((_, i) => { if (Math.abs(sheetPx(i) - rest) < Math.abs(sheetPx(to) - rest)) to = i; });
+    if (!out) {
+      let to = snapAt;
+      snaps.forEach((_, i) => { if (Math.abs(sheetPx(i) - rest) < Math.abs(sheetPx(to) - rest)) to = i; });
+      glide(p, p.offsetHeight, g.at, sheetPx(to), v, () => {});
+      toSnap(to);
+      return;
+    }
     const done = () => {
       delete p.dataset.settling;
-      if (out) { if (unsaved.current) { p.style.height = ''; p.style.translate = ''; request('swipe'); return; } close('swipe'); requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) { p.style.height = ''; p.style.translate = ''; } })); return; }
-      p.style.height = ''; p.style.translate = '';
+      if (unsaved.current) { p.style.height = ''; p.style.translate = ''; request('swipe'); return; }
+      close('swipe'); requestAnimationFrame(() => requestAnimationFrame(() => { if (!drag.current) { p.style.height = ''; p.style.translate = ''; } }));
     };
-    const dist = out ? p.offsetHeight - g.at : Math.abs(sheetPx(to) - Math.max(h, low)) + g.at;
+    const dist = p.offsetHeight - g.at;
     p.style.setProperty('--dk-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
     p.dataset.settling = '';
-    if (!out) toSnap(to);
     if (!dist || !parseFloat(getComputedStyle(p).transitionDuration)) { done(); return; }
-    const end = (ev: TransitionEvent) => { if (ev.target === p && (ev.propertyName === 'translate' || ev.propertyName === 'height')) { stop(); done(); } };
+    const end = (ev: TransitionEvent) => { if (ev.target === p && ev.propertyName === 'translate') { stop(); done(); } };
     const stop = () => { p.removeEventListener('transitionend', end); delete p.dataset.settling; settling.current = null; };
     p.addEventListener('transitionend', end);
     settling.current = stop;
-    if (out) p.style.translate = shift(p.offsetHeight, g.away);
-    else { p.style.height = sheetPx(to) + 'px'; p.style.translate = ''; }
+    p.style.translate = shift(p.offsetHeight, g.away);
+  };
+  // The handle: the next stop, gliding there as a let-go drag does.
+  const panel = React.useRef<HTMLDivElement | null>(null);
+  const onHandle = () => {
+    const i = snapAt < snaps.length - 1 ? snapAt + 1 : 0, p = panel.current;
+    if (p && props.snap === undefined) { if (settling.current) settling.current(); glide(p, p.offsetHeight, 0, sheetPx(i), 0, () => {}); }
+    toSnap(i);
   };
   const onSwipeMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const g = drag.current;
@@ -331,10 +359,10 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
       aria-describedby={rest['aria-describedby'] || (has(props.description) ? base + '-desc' : undefined)}
       className={cn('dk-drawer', 'dk-drawer--' + side, 'dk-drawer--' + size, !modal && 'dk-drawer--nonmodal', snaps.length > 0 && 'dk-drawer--snaps', props.className)} data-component="drawer" data-state={open ? 'open' : 'closed'} data-side={side} data-size={size} data-instant={arrived.current ? '' : undefined}
       onKeyDown={onKeyDown} onCancel={onCancel} onClose={onClose} onPointerDown={onPointerDown} onClick={onClick}>
-      <div className="dk-drawer__panel" data-snap={snaps.length ? snapAt : undefined} style={snaps.length ? { '--dk-drawer-snap': snaps[snapAt] } as React.CSSProperties : undefined} onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}>
+      <div ref={panel} className="dk-drawer__panel" data-snap={snaps.length ? snapAt : undefined} style={snaps.length ? { '--dk-drawer-snap': snaps[snapAt] } as React.CSSProperties : undefined} onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}>
         {snaps.length > 1 ? (
           <button type="button" className="dk-drawer__handle" aria-label={snapAt < snaps.length - 1 ? sds.labels.drawerExpand : sds.labels.drawerCollapse}
-            onClick={() => toSnap(snapAt < snaps.length - 1 ? snapAt + 1 : 0)}><span className="dk-drawer__grip" aria-hidden="true" /></button>
+            onClick={onHandle}><span className="dk-drawer__grip" aria-hidden="true" /></button>
         ) : null}
         {has(props.title) || has(props.description) || showClose ? (
           <div className="dk-drawer__header">
