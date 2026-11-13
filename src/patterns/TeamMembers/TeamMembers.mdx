@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './TeamMembers.stories';
+
+<Meta of={Stories} />
+
+# Team members
+
+Who is on a team and what each person may do: change a role in place, invite people by email, resend or revoke an invite, and remove someone with Undo.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A workspace, organization or project that people share, with roles that decide what each can do.
+- Not for a public profile or a contact list: there's nothing to grant or take away there.
+- Not for permissions on a single file: that's a Share dialog on the file.
+
+## What each part is for
+
+- **Each role picker is named with the member**, "Role for Budi Santoso", so a screen reader moving through the list doesn't hear "Role" four times (2.4.6). A changed role is said: "Budi Santoso is now a Viewer" (4.1.3).
+- **The owner can't be removed or demoted here**, and the row says so in words, "Owner, can’t be removed", rather than only leaving the buttons out. Handing over ownership is a separate, deliberate flow.
+- **Removing someone happens at once, with Undo** in a toast. It's done for good only when the toast goes, so nothing needs "Are you sure?" first (3.3.4). Focus moves to the next person's Remove, or the list's heading when none are left, never to the top of the page (2.4.3). Revoking an invite works the same way.
+- **Invite people** opens a dialog that takes several addresses at once, separated by commas or new lines, and one role for them all. The role's hint says what it allows.
+- **The invite form names each problem** (3.3.1, 3.3.3). It says which addresses aren't email addresses, or which are on the team or invited already. Focus goes back to the box, and what was typed stays.
+- **An invite that fails says so.** The dialog stays open with an alert, "Couldn’t send the invites. Try again.", and the addresses stay typed (3.3.1, 4.1.3).
+- **Invites waiting** are listed apart from the members, with the role they'll get, so nobody mistakes an invited person for one who can already see the work. Resend says it's sent in a toast.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.JustYou} />
+
+## What stays your app's job
+
+- **Storing the changes.** `onInvite` gets the addresses and the role (return its promise: the button shows it's busy, and a rejection keeps the dialog open), `onRoleChange` a new role, `onRemove` and `onRevoke` a removal once its Undo has passed, and `onResend` a resend.
+- **Who may do what.** Show the role pickers, Remove and Invite people only to those allowed, with a line that says who can.
+- **The email itself**, and what happens when an invite runs out.
+- Rendering a `Toaster` once in the app, for Undo.
