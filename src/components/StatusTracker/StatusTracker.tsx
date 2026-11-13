@@ -45,7 +45,9 @@ export const StatusTracker = /* @__PURE__ */ component<HTMLDivElement, StatusTra
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { days: 1, label: 1, summary: 1, legend: 1, className: 1 } as const);
   const days = props.days || [];
-  const [at, setAt] = React.useState(days.length - 1);
+  // The day with the tab stop; null is the latest, so days loaded after it mounts, or a new day, keep it there.
+  const [at, setAtIndex] = React.useState<number | null>(null);
+  const setAt = (i: number) => setAtIndex(i === days.length - 1 ? null : i);
   const [shown, setShown] = React.useState<number | null>(null);
   const list = React.useRef<HTMLOListElement | null>(null);
   const word = (s: StatusState) => (s === 'up' ? L.statusUp : s === 'degraded' ? L.statusDegraded : s === 'down' ? L.statusDown : L.statusNone);
@@ -58,7 +60,7 @@ export const StatusTracker = /* @__PURE__ */ component<HTMLDivElement, StatusTra
   const percent = new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(upShare);
   const summary = props.summary === undefined ? L.statusSummary(percent, days.length, incidents) : props.summary;
 
-  const current = Math.min(Math.max(at, 0), days.length - 1);
+  const current = Math.min(Math.max(at ?? days.length - 1, 0), days.length - 1);
   const move = (i: number) => {
     const n = Math.min(Math.max(i, 0), days.length - 1);
     setAt(n); setShown(n);

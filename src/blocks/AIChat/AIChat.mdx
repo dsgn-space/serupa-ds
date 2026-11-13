@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './AIChat.stories';
+
+<Meta of={Stories} />
+
+# AI chat
+
+A conversation with an assistant whose replies stream in: suggested prompts to start, Stop while a reply arrives, and Copy and Regenerate once it's whole. It's built from Chat, ChatMessage, ChatComposer, CopyButton and Button.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- An assistant that answers in words, such as help for a product or a writing helper.
+- Not for people talking to each other: use Chat on its own, with authors and times.
+- When the assistant shows its reasoning, the steps it took or asks to approve an action, add Chat's `reasoning`, `steps` and ChatApproval to the messages here.
+
+## What each part is for
+
+- **A region named by its heading** (1.3.1), holding the conversation and the message box. Pick `headingLevel` to fit the page.
+- **A streaming reply is read once, when it's whole** (4.1.3). While a message has `streaming`, it's busy in Chat's log, so a screen reader waits for the whole reply rather than reading each word. Until its first words arrive, it shows "Thinking…".
+- **Stop** takes the place of Send while a reply streams. Mark what arrived `stopped` in `onStop`: it stays, with "Stopped" under it, and "Reply stopped" is said.
+- **A reply that fails says why** in words under it (`error`), with Try again, which calls `onRegenerate`.
+- **Copy and Regenerate are named for what they do** ("Copy reply"). They're there from the start of each reply, turned off until it's whole, so finishing doesn't add buttons the log would read out. Regenerate is on the newest reply only.
+- **Focus is never dropped** (2.4.3). A suggested prompt sends itself and the suggestions go; Stop turns back into Send; Regenerate's reply is replaced. Each time, focus moves to the message box.
+- **Suggested prompts are buttons in a named list**, shown while there are no messages, with a line above them saying what they're for.
+- **Another language**: every word is in `labels`, with English defaults.
+
+## The app's part
+
+- Add the question and an empty reply with `streaming: true` in `onSend`, then fill the reply's `text` as it arrives and set `streaming: false` when it's done.
+- Write the reply as plain text, or render it from Markdown yourself: the block shows `text` as it is, keeping its line breaks.

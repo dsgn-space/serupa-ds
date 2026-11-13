@@ -69,6 +69,16 @@ describe('StatusTracker', () => {
     expect(bars().includes(document.activeElement as HTMLElement)).toBe(false);
   });
 
+  test('days that arrive after it mounts (loaded, or a new day added) keep the tab stop on the last day', async () => {
+    const r = await render(<Days days={[]} />);
+    await r.rerender(<Days />);
+    expect(bars().map((b) => b.tabIndex).lastIndexOf(0)).toBe(bars().length - 1);
+    expect(bars().filter((b) => b.tabIndex === 0)).toHaveLength(1);
+    const more = sampleDays(91);
+    await r.rerender(<Days days={more} />);
+    expect(bars().findIndex((b) => b.tabIndex === 0)).toBe(90);
+  });
+
   test('right to left: Left moves to the next day', async () => {
     await render(<div dir="rtl"><Days /></div>);
     bar(10).focus();
