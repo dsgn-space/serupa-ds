@@ -1,9 +1,8 @@
 // module state: whether the last input was a key rather than a pointer, which a layer reads as it opens or closes and
 // an indicator as it moves (KW1). Only a browser sets it, from listeners on its own document added when the first
-// component that asks mounts, so a server render always reads false and no request sees another's keys.
-let keyed = false, listening = false;
-// What a pointer clicked last, until the task it was clicked in ends: a label passes its click on to its control within it.
-let pressed: Node | null = null;
+// component that asks mounts, so a server render always reads false and no request sees another's keys. pressed: what a
+// pointer clicked last, until that task ends, as a label passes its click on to its control within it.
+let keyed = false, listening = false, pressed: EventTarget | null = null;
 
 /** Starts noting the last input, once for the page. Call it from a layout effect when the component mounts. */
 export function listenForInput(): void {
@@ -14,10 +13,9 @@ export function listenForInput(): void {
   // A click with no presses (detail 0) came from a key or a screen reader, as Enter on a button does. Except where a
   // label passes a pointer's click on to its control: Safari sends that click with detail 0 too.
   document.addEventListener('click', (e) => {
-    const t = e.target, from = pressed;
-    const passed = e.detail === 0 && from !== null && t instanceof HTMLInputElement && Array.from(t.labels ?? []).some((l) => l.contains(from));
-    keyed = e.detail === 0 && !passed;
-    if (e.detail > 0 && t instanceof Node) { pressed = t; setTimeout(() => { pressed = null; }); }
+    const p = pressed as Node | null;
+    keyed = !e.detail && !(p && Array.from((e.target as HTMLInputElement).labels || []).some((l) => l.contains(p)));
+    if (e.detail) { pressed = e.target; setTimeout(() => { pressed = null; }); }
   }, true);
 }
 
