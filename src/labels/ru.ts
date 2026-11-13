@@ -220,6 +220,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Сочетания из одной клавиши, например ?, вне текстовых полей. Отключите их, если они срабатывают случайно.',
   opensInNewTab: '(откроется в новой вкладке)',
   loadMore: 'Загрузить ещё',
+  drawerExpand: 'Развернуть',
+  drawerCollapse: 'Свернуть',
   showingOf: (shown, total) => `Показано ${shown} из ${total}`,
   loadedMore: (added) => `Загружено ещё: ${added}`,
   moreLoaded: 'Загружено ещё',

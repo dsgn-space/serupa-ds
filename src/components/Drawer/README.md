@@ -44,6 +44,7 @@ Drawn from the `Bottom` story.
 - Give it a `title` that names what's inside ("Filters", "Order #1042").
 - Put the actions in `footer` so they stay in view, with the main action last.
 - Set `closeOnBackdrop={false}` when closing would lose work, such as unsaved edits.
+- For a sheet people pull up for more, as on a map or a music player, give a bottom drawer `snapPoints`: the heights it stops at, as shares of the screen from the shortest (`[0.4, 0.9]`). It opens at the shortest (or `defaultSnap`); `snap` and `onSnapChange` control it.
 - Set `modal={false}` for a panel people use alongside the page, such as an item's details next to a list they keep clicking through.
 - Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 
@@ -51,6 +52,7 @@ Drawn from the `Bottom` story.
 
 - It's a native `<dialog>` opened with `showModal()`, like Dialog. Focus moves inside and stays there, the page behind can't be reached and doesn't scroll (or shift sideways when a classic scrollbar goes away), and closing moves focus back to where it was. Focus goes to the first thing that takes it; pass another's ref as `initialFocus`, or put `data-autofocus` on it, to choose. When closing takes away what opened it (a panel that deletes its row), pass `finalFocus`, such as the next row, so focus doesn't fall to the top of the page. A backdrop press while a popup is open inside closes only the popup.
 - On a touch screen, dragging it toward its edge closes it (`reason: 'swipe'`): past a third of its size, or where it's heading with the speed it's let go at (it carries on as a scroll would, so a slow drag still moving toward the edge counts), or with a flick (as little as 0.2px per ms over the last 100ms, so a gentle one counts); a shorter drag that has stopped springs back. Dragged the other way, away from its edge, it gives a little (24px at most) against growing resistance and springs back, with its background filling the edge behind it. Left and right drawers can be dragged anywhere outside a field, and top and bottom ones by the header or footer, so the body still scrolls. `swipeToClose={false}` turns it off.
+- With `snapPoints`, a handle sits at the top of the sheet. A press on it goes to the next stop, and from the tallest back to the shortest; its name says which ("Expand", "Collapse"), so it works from the keyboard and for people who can't drag. A touch drag on the handle or the header follows the finger by the sheet's height, past the tallest stop with growing resistance, and let go it carries on to the stop nearest where its speed would take it. Dragged below the shortest stop, it slides down instead, and a flick or a third of its height closes it; a fast drag down from a taller stop stops at the shortest. The sheet's height is its stop's share of the screen, so it follows the screen as it turns. Reduced motion: it changes height at once.
 - With `modal={false}` it's opened with `show()` instead: no backdrop, the page stays usable and scrolls, focus moves inside but can leave it, and it isn't on the modal stack. Escape with focus inside it and the × close it; closing, or taking it off the page, moves focus back only if focus was still inside.
 - Left and right drawers are full height. Top and bottom drawers are full width, as tall as their content up to the screen less 64px, and rounded on the open side.
 - The body scrolls on its own, so the header and footer stay in view. While it scrolls it takes Tab focus (with a focus ring), so the arrow keys and Page Down scroll it in every browser, even with nothing focusable inside. It's a region named by the title.
@@ -80,7 +82,7 @@ Drawn from the `Bottom` story.
 | --- | --- |
 | Tab / Shift+Tab | Between the controls in the drawer; the page behind is inert, so focus stays inside |
 | Escape | Asks to close it (`onOpenChange(false)`); with a Dialog open from it, the Dialog first. With `unsaved`, it asks "Discard changes?" first, and Escape there keeps editing |
-| Enter / Space | On the ×, the same as Escape |
+| Enter / Space | On the ×, the same as Escape. On a sheet's handle, the next stop |
 
 ## Props
 
@@ -100,6 +102,10 @@ Drawn from the `Bottom` story.
 | `closeLabel` | `string` | `'Close'` | The ×'s name. |
 | `closeOnBackdrop` | `boolean` | `true` | Whether a click on the backdrop closes it. Turn it off when closing would lose work. |
 | `swipeToClose` | `boolean` | `true` | A touch drag toward its edge closes it, with `reason: 'swipe'`. |
+| `snapPoints` | `number[]` | | Bottom only: the heights a sheet stops at, as shares of the screen from the shortest (`[0.4, 0.9]`). With two or more, it has a handle. |
+| `snap` | `number` | | Which stop it's at, from 0 (controlled). |
+| `defaultSnap` | `number` | `0` | Which stop it opens at (uncontrolled). |
+| `onSnapChange` | `(snap: number) => void` | | Called with the stop a drag or the handle moves it to. |
 | `initialFocus` | `RefObject<HTMLElement>` | | The element that takes focus when it opens, instead of the first that can. A ref to something outside the drawer is ignored. |
 | `finalFocus` | `RefObject<HTMLElement>` | | Where focus goes when it closes, instead of back to the opener. Used when it's on the page then; otherwise focus goes back to the opener. |
 | `modal` | `boolean` | `true` | `false`: a side panel beside a usable page, with no backdrop, opened with `show()`. |
@@ -122,6 +128,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
+| `--drawer-grip` | `text-muted` | A sheet's grip, at the top of a drawer with snapPoints (3:1 on bg). |
 | `--drawer-shadow` | `elevation-modal` | The panel's shadow. |
 | `--drawer-depth` | `depth-surface` | The drawer's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |

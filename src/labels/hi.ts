@@ -213,6 +213,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: '? जैसे एक कुंजी वाले शॉर्टकट, टेक्स्ट फ़ील्ड के बाहर। अगर ये गलती से चल जाते हैं तो इन्हें बंद करें।',
   opensInNewTab: '(नए टैब में खुलता है)',
   loadMore: 'और लोड करें',
+  drawerExpand: 'बड़ा करें',
+  drawerCollapse: 'छोटा करें',
   showingOf: (shown, total) => `${total} में से ${shown} दिख रहे हैं`,
   loadedMore: (added) => `${added} और लोड हुए`,
   moreLoaded: 'और लोड हुए',

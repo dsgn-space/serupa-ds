@@ -214,6 +214,8 @@ export const labels: SerupaLabels = {
   singleKeyHint: 'Kortkommandon med en tangent, som ?, utanför textfält. Stäng av dem om de utlöses av misstag.',
   opensInNewTab: '(öppnas i en ny flik)',
   loadMore: 'Läs in fler',
+  drawerExpand: 'Fäll ut',
+  drawerCollapse: 'Fäll ihop',
   showingOf: (shown, total) => `Visar ${shown} av ${total}`,
   loadedMore: (added) => `${added} till har lästs in`,
   moreLoaded: 'Fler har lästs in',

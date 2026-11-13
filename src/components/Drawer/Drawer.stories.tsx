@@ -32,6 +32,8 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 export const Left: Story = { args: { placement: 'left', size: 'sm', title: 'Menu', description: undefined } };
 export const Bottom: Story = { args: { placement: 'bottom', title: 'Share', description: 'Anyone with the link can view.' } };
+// A sheet that stops at 40% and 90% of the screen: pull it up by its handle or header, or press the handle.
+export const BottomSheet: Story = { args: { placement: 'bottom', title: 'Nearby', description: 'Cafés within a 10-minute walk.', snapPoints: [0.4, 0.9] } };
 export const Top: Story = { args: { placement: 'top', size: 'sm', title: 'Announcements', description: 'What changed this week.' } };
 export const Small: Story = { args: { size: 'sm', title: 'Filters' } };
 export const Large: Story = { args: { size: 'lg', title: 'Project details', description: 'Everything about Atlas in one place.' } };

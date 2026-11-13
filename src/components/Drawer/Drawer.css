@@ -92,6 +92,27 @@
   .dk-drawer:not([open]) .dk-drawer__panel { opacity: var(--opacity-0); }
   @starting-style { .dk-drawer[open]:not([data-instant]) .dk-drawer__panel { opacity: var(--opacity-0); } }
 }
+/* snapPoints: a bottom sheet as tall as its stop's share of the screen (--dk-drawer-snap, set by Drawer.tsx), up to
+   the whole screen. A drag follows the finger (the height inline); let go, or a press on the handle, and it glides to
+   its stop by translate alone (Drawer.tsx), at the finger's speed like a swipe. Reduced motion: it jumps. */
+.dk-drawer--snaps .dk-drawer__panel { height: calc(var(--sizing-full) * var(--dk-drawer-snap)); max-height: var(--sizing-full); }
+.dk-drawer[open].dk-drawer--snaps .dk-drawer__panel {
+  transition: opacity var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter), translate var(--drawer-duration, var(--motion-enter-lg)) var(--ease-enter);
+}
+.dk-drawer[open]:where(:not(.dk-drawer--nonmodal)).dk-drawer--snaps .dk-drawer__panel:where(:not([data-settling])) { transition-delay: var(--motion-sequence); }
+.dk-drawer[open].dk-drawer--snaps .dk-drawer__panel[data-settling] { transition: translate var(--dk-drawer-settle) var(--ease-fling); }
+.dk-drawer[open].dk-drawer--snaps .dk-drawer__panel[data-dragging] { transition: none; }
+/* The handle: a grip centered at the sheet's top, in the padding, 48 by 24px to press; it's dragged as the header is. */
+.dk-drawer__handle {
+  flex-shrink: 0; align-self: center; display: grid; place-items: center;
+  inline-size: var(--spacing-12); block-size: var(--spacing-6);
+  margin-block: calc(var(--spacing-0) - var(--spacing-4)) calc(var(--spacing-0) - var(--spacing-2));
+  padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--radius-control); background: none;
+  cursor: grab; touch-action: none;
+}
+.dk-drawer__grip { inline-size: var(--spacing-9); block-size: var(--spacing-1); border-radius: var(--radius-pill); background: var(--drawer-grip, var(--text-muted)); }
+.dk-drawer__handle:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+@media (forced-colors: active) { .dk-drawer__grip { background: CanvasText; } }
 /* Let go after a swipe: it carries on from under the finger, over a time Drawer.tsx sets from the distance and speed. */
 .dk-drawer[open] .dk-drawer__panel[data-settling] { transition: translate var(--dk-drawer-settle) var(--ease-fling); }
 .dk-drawer__header { display: flex; align-items: flex-start; gap: var(--spacing-3); flex-shrink: 0; }
@@ -144,6 +165,6 @@
   .dk-drawer__panel { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
   .dk-drawer__body { flex: none; overflow: visible; }
 }
-@media (prefers-reduced-motion: reduce) { .dk-drawer[open] .dk-drawer__panel[data-settling] { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .dk-drawer[open] .dk-drawer__panel[data-settling], .dk-drawer[open].dk-drawer--snaps .dk-drawer__panel { transition: none; } }
 @media (forced-colors: active) { .dk-drawer__panel { border: var(--border-width-1) solid CanvasText; } }
 }
