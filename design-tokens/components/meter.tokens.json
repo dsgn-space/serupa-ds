@@ -162,6 +162,18 @@
           }
         }
       }
+    },
+    "shadow": {
+      "track-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-well}",
+        "$description": "The track's tactile layers, over its border: a groove the bar fills. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--meter-track-depth"
+          }
+        }
+      }
     }
   }
 }

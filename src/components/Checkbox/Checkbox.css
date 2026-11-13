@@ -35,6 +35,7 @@
   background: var(--checkbox-bg, var(--field));
   border: var(--checkbox-border-width, var(--border-width-1)) solid var(--dk-checkbox-bd);
   border-radius: var(--checkbox-radius, var(--radius-inner));
+  box-shadow: var(--checkbox-depth, var(--depth-well));   /* sunk into the page in a tactile brand; nothing in the flat ones */
   cursor: inherit;
 }
 /* The fill and border ease only under the pointer or keyboard focus: the box being clicked or pressed. A box that
@@ -43,7 +44,7 @@
 .dk-checkbox__input:is(:focus-visible, [data-key-focus]) { transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move); }
 @media (hover: hover) { .dk-checkbox:hover .dk-checkbox__input { transition: background-color var(--motion-press) var(--ease-move), border-color var(--motion-press) var(--ease-move); } }
 @media (hover: hover) { .dk-checkbox:hover .dk-checkbox__input:not(:disabled, [readonly]) { --dk-checkbox-bd: var(--checkbox-border-hover, var(--field-border-hover)); --dk-checkbox-fill: var(--checkbox-bg-checked-hover, var(--primary-hover)); } }
-.dk-checkbox__input:checked, .dk-checkbox__input:indeterminate, .dk-checkbox__input[data-indeterminate] { background: var(--dk-checkbox-fill); border-color: var(--dk-checkbox-fill); }
+.dk-checkbox__input:checked, .dk-checkbox__input:indeterminate, .dk-checkbox__input[data-indeterminate] { background: var(--depth-sheen), var(--dk-checkbox-fill); border-color: var(--dk-checkbox-fill); box-shadow: var(--checkbox-depth-checked, var(--depth-part)); }
 .dk-checkbox__icon { position: absolute; inset: var(--spacing-0); display: flex; align-items: center; justify-content: center; color: var(--checkbox-icon-color, var(--on-primary)); pointer-events: none; visibility: hidden; }
 .dk-checkbox__icon .dk-icon { font-size: var(--dk-checkbox-icon); }
 .dk-checkbox__input:checked + .dk-checkbox__icon, .dk-checkbox__input:indeterminate + .dk-checkbox__icon, .dk-checkbox__input[data-indeterminate] + .dk-checkbox__icon { visibility: visible; }

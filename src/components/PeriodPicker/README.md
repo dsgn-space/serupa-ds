@@ -137,6 +137,9 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | Token | Default | Use |
 | --- | --- | --- |
 | `--period-picker-panel-shadow` | `elevation-overlay` | The popup's shadow. |
+| `--period-picker-depth` | `depth-field` | The button's tactile inner shade, as Select's. None in the flat brands. |
+| `--period-picker-panel-depth` | `depth-surface` | The panel's tactile hairline and, in dark mode, a faint top light, as DatePicker's popup. None in the flat brands. |
+| `--period-picker-selected-depth` | `depth-part` | The chosen period in a tactile brand: raised like a part under the top light, as Calendar's selected day. None in the flat brands. |
 
 **Spacing**
 

@@ -102,7 +102,7 @@
 /* The fill spans this tab and the one selected before it (Tabs.tsx sets the span), cut to this tab by clip-path with
    the tab's round corners (GO1). */
 .dk-tabs--pill .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::before {
-  content: ""; position: absolute; z-index: calc(var(--z-0) - var(--z-10)); background: var(--tabs-pill-bg-selected, var(--primary));
+  content: ""; position: absolute; z-index: calc(var(--z-0) - var(--z-10)); background: var(--depth-sheen), var(--tabs-pill-bg-selected, var(--primary));
   inset-block: calc(var(--spacing-0) - var(--dk-tabs-span-t, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-b, var(--spacing-0)));
   inset-inline: calc(var(--spacing-0) - var(--dk-tabs-span-l, var(--spacing-0))) calc(var(--spacing-0) - var(--dk-tabs-span-r, var(--spacing-0)));
   clip-path: inset(var(--dk-tabs-span-t, var(--spacing-0)) var(--dk-tabs-span-r, var(--spacing-0)) var(--dk-tabs-span-b, var(--spacing-0)) var(--dk-tabs-span-l, var(--spacing-0)) round var(--tabs-radius, var(--radius-control)));

@@ -200,4 +200,11 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--radio-press-scale` | `scale-90` | Size of the circle while it's held down (90%). 1 turns it off |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--radio-depth` | `depth-well` | The circle's tactile layers while unselected: sunk into the page. None in the flat brands. |
+| `--radio-depth-checked` | `depth-part` | The circle's tactile layers once selected: raised, with a highlight along the top. None in the flat brands. |
 <!-- token-table:end -->
