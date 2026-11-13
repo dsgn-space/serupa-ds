@@ -120,6 +120,22 @@ describe('RangeCalendar', () => {
     await expect.element(page.getByRole('grid', { name: 'January 2027' })).toBeVisible();
   });
 
+  test('two months: an arrow across the edge between them moves focus to the other grid, and the months stay put; past the last, they turn', async () => {
+    const months: Date[] = [];
+    await render(<Stay months={2} onMonthChange={(m) => months.push(m)} />);
+    const shown = () => page.getByRole('grid').elements().map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent);
+    const at = () => (document.activeElement as HTMLElement).dataset.date;
+    day('2026-11-30').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([shown(), at()]).toEqual([['November 2026', 'December 2026'], '2026-12-01']);
+    await userEvent.keyboard('{ArrowLeft}');
+    expect([shown(), at()]).toEqual([['November 2026', 'December 2026'], '2026-11-30']);
+    await userEvent.keyboard('{PageDown}');
+    expect([shown(), at(), months]).toEqual([['November 2026', 'December 2026'], '2026-12-30', []]);
+    await userEvent.keyboard('{ArrowRight}{ArrowRight}');
+    expect([shown(), at(), months]).toEqual([['December 2026', 'January 2027'], '2027-01-01', [new Date(2026, 11, 1)]]);
+  });
+
   test('a disabled day can’t be an end but can sit inside; min and max hold too', async () => {
     const log: [Got, { start: string; end: string }][] = [];
     await render(<Stay log={log} min="2026-11-02" isDateDisabled={(d) => d.getDate() === 12} />);
