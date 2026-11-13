@@ -146,8 +146,8 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
     // Light themes look from light to dark, dark themes from dark to light; hover is the next shade on.
     const order = (from, to) => { const a = STEPS.slice(STEPS.indexOf(from), STEPS.indexOf(to) + 1); return light ? a : a.reverse(); };
     const next = (s) => STEPS[STEPS.indexOf(s) + (light ? 1 : -1)];
-    // A field's hover border is the brand one shade softer than primary, a step toward the page.
-    const softer = (s) => STEPS[STEPS.indexOf(s) + (light ? -1 : 1)];
+    // A field's hover border is the brand one shade stronger than primary, a step away from the page.
+    const stronger = (s) => STEPS[STEPS.indexOf(s) + (light ? 1 : -1)];
     // A link is primary text, on the page and on a muted panel (GR327: #16a34a passed on white, not on zinc-50).
     const okFill = (s) => contrast(on, S(s)) >= 4.5 && contrast(S(s), surface) >= 4.5 && contrast(S(s), muted) >= 4.5 && contrast(S(s), overlay) >= 3;
     const passes = (s) => okFill(s) && okFill(next(s)) && contrast(S(next(s)), subtle) >= 4.5;
@@ -173,7 +173,7 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
     picks[mode] = { primary, hover: next(primary), focus, more, moreHover: next(more), moreFocus };
     Object.assign(b, {
       primary: `{${name}-${primary}}`, 'primary-hover': `{${name}-${next(primary)}}`, 'primary-subtle': `{${name}-${light ? '50' : '950'}}`,
-      'on-primary': light ? '{white}' : `{${name}-950}`, 'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-border-hover': `{${name}-${softer(primary)}}`, 'field-action': `{${name}-${action}}`,
+      'on-primary': light ? '{white}' : `{${name}-950}`, 'focus-ring': `{${name}-${focus}}`, 'link-visited': visited, 'field-border-hover': `{${name}-${stronger(primary)}}`, 'field-action': `{${name}-${action}}`,
       'dk-more-primary': `{${name}-${more}}`, 'dk-more-primary-hover': `{${name}-${next(more)}}`, 'dk-more-focus-ring': `{${name}-${moreFocus}}`,
     });
     picks[mode].values = b;

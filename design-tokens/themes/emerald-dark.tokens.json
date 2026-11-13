@@ -180,8 +180,8 @@
     },
     "field-border-hover": {
       "$type": "color",
-      "$value": "{color.teal-500}",
-      "$description": "Alias. Field border on hover: the theme's accent one step softer than `primary`, a step toward the page (brand 500 in light, where primary is 600, and teal 600 in emerald; brand 500 in dark, where primary is 400, and teal 500 in emerald).",
+      "$value": "{color.teal-300}",
+      "$description": "Alias. Field border on hover: the theme's accent one step stronger than `primary`, away from the page (brand 700 in light, where primary is 600, and teal 800 in emerald; brand 300 in dark, where primary is 400, and teal 300 in emerald).",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-border-hover"

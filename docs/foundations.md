@@ -168,7 +168,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. In dark, a fill that sets a field apart from the page. |
 | `field-readonly` | `zinc-50` | `zinc-900` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
 | `field-border` | `zinc-300` | `zinc-700` | Border of form fields, soft by design: under the 3:1 WCAG 1.4.11 asks of a control's edge (see [Contrast, checked in every theme](#contrast-checked-in-every-theme)). |
-| `field-border-hover` | `‹brand›-500` | `‹brand›-500` | Field border on hover: the accent one step softer than `primary` (teal 600 and 500 in Modern). |
+| `field-border-hover` | `‹brand›-700` | `‹brand›-300` | Field border on hover: the accent one step stronger than `primary`, darker in light and lighter in dark (teal 800 and 300 in Modern). |
 | `border-control` | `zinc-500` | `zinc-400` | The edge of a control that isn't a field: Slider and Switch tracks, Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches, FileUpload's drop area, SignaturePad's box. 3:1+ on `surface` (WCAG 1.4.11). |
 | `border-control-hover` | `zinc-600` | `zinc-300` | `border-control` on hover (Switch's track). |
 | `field-hover` | `zinc-100` | `zinc-700` | A button inside a field under the pointer: the calendar, clock and country buttons, Input's icon actions, NumberInput's steppers. |
