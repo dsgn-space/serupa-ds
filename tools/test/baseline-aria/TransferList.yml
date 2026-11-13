@@ -1,0 +1,174 @@
+# Default
+- group "Columns":
+  - paragraph: Available (4)
+  - group "Available (4)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Phone"
+    - text: Phone
+    - checkbox "Company"
+    - text: Company
+    - checkbox "Role"
+    - text: Role
+    - checkbox "Created"
+    - text: Created
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (3)
+  - group "Chosen (3)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Name"
+    - text: Name
+    - checkbox "Email"
+    - text: Email
+    - checkbox "ID" [disabled]
+    - text: ID Always shown
+
+# Disabled
+- group "Columns" [disabled]:
+  - paragraph: Available (4)
+  - group "Available (4)" [disabled]:
+    - checkbox "All" [disabled]
+    - text: All
+    - checkbox "Phone" [disabled]
+    - text: Phone
+    - checkbox "Company" [disabled]
+    - text: Company
+    - checkbox "Role" [disabled]
+    - text: Role
+    - checkbox "Created" [disabled]
+    - text: Created
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (3)
+  - group "Chosen (3)" [disabled]:
+    - checkbox "All" [disabled]
+    - text: All
+    - checkbox "Name" [disabled]
+    - text: Name
+    - checkbox "Email" [disabled]
+    - text: Email
+    - checkbox "ID" [disabled]
+    - text: ID Always shown
+
+# InAField
+- text: Columns The table shows them in this order.
+- group "Columns":
+  - paragraph: Available (6)
+  - group "Available (6)":
+    - checkbox "All" [invalid]
+    - text: All
+    - checkbox "Name" [invalid]
+    - text: Name
+    - checkbox "Email" [invalid]
+    - text: Email
+    - checkbox "Phone" [invalid]
+    - text: Phone
+    - checkbox "Company" [invalid]
+    - text: Company
+    - checkbox "Role" [invalid]
+    - text: Role
+    - checkbox "Created" [invalid]
+    - text: Created
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (1)
+  - group "Chosen (1)":
+    - checkbox "ID" [disabled] [invalid]
+    - text: ID Always shown
+- text: Choose at least two columns.
+
+# LongText
+- group "Permissions":
+  - paragraph: Available (12)
+  - group "Available (12)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Delete 0"
+    - text: Delete 0 Only owners can grant this
+    - checkbox "Delete 3"
+    - text: Delete 3
+    - checkbox "Read and write the billing settings of every workspace 4"
+    - text: Read and write the billing settings of every workspace 4 Only owners can grant this
+    - checkbox "Read and write the billing settings of every workspace 5"
+    - text: Read and write the billing settings of every workspace 5
+    - checkbox "Delete 6"
+    - text: Delete 6
+    - checkbox "Read and write the billing settings of every workspace 7"
+    - text: Read and write the billing settings of every workspace 7
+    - checkbox "Read and write the billing settings of every workspace 8"
+    - text: Read and write the billing settings of every workspace 8 Only owners can grant this
+    - checkbox "Delete 9"
+    - text: Delete 9
+    - checkbox "Read and write the billing settings of every workspace 10"
+    - text: Read and write the billing settings of every workspace 10
+    - checkbox "Read and write the billing settings of every workspace 11"
+    - text: Read and write the billing settings of every workspace 11
+    - checkbox "Delete 12"
+    - text: Delete 12 Only owners can grant this
+    - checkbox "Read and write the billing settings of every workspace 13"
+    - text: Read and write the billing settings of every workspace 13
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (2)
+  - group "Chosen (2)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Read and write the billing settings of every workspace 1"
+    - text: Read and write the billing settings of every workspace 1
+    - checkbox "Read and write the billing settings of every workspace 2"
+    - text: Read and write the billing settings of every workspace 2
+
+# NothingChosen
+- group "Columns":
+  - paragraph: Available (7)
+  - group "Available (7)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Name"
+    - text: Name
+    - checkbox "Email"
+    - text: Email
+    - checkbox "Phone"
+    - text: Phone
+    - checkbox "Company"
+    - text: Company
+    - checkbox "Role"
+    - text: Role
+    - checkbox "Created"
+    - text: Created
+    - checkbox "ID" [disabled]
+    - text: ID Always shown
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (0)
+  - paragraph: None
+
+# Playground
+- group "Columns":
+  - paragraph: Available (4)
+  - group "Available (4)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Phone"
+    - text: Phone
+    - checkbox "Company"
+    - text: Company
+    - checkbox "Role"
+    - text: Role
+    - checkbox "Created"
+    - text: Created
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (3)
+  - group "Chosen (3)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Name"
+    - text: Name
+    - checkbox "Email"
+    - text: Email
+    - checkbox "ID" [disabled]
+    - text: ID Always shown
+

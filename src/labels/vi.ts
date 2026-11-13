@@ -334,4 +334,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'Nội dung cuộn',
   showMore: 'Xem thêm',
   showLess: 'Thu gọn',
+  transferAvailable: 'Có sẵn',
+  transferChosen: 'Đã chọn',
+  transferAdd: 'Thêm',
+  transferRemove: 'Bỏ',
+  transferAll: 'Tất cả',
+  transferAddReason: 'Hãy chọn mục cần thêm trước',
+  transferRemoveReason: 'Hãy chọn mục cần bỏ trước',
+  transferEmpty: 'Không có',
+  transferMoved: (items, list) => 'Đã chuyển ' + items + ' sang ' + list + '.',
 };

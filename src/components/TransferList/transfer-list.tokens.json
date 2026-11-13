@@ -1,0 +1,81 @@
+{
+  "transfer-list": {
+    "$description": "TransferList's component tokens. Each one is an optional override: set the CSS variable (--transfer-list-<name>) on the page, a container or one TransferList, and every TransferList inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "side-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "Each list's background.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--transfer-list-side-bg"
+          }
+        }
+      },
+      "side-border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "Each list's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--transfer-list-side-border"
+          }
+        }
+      },
+      "muted-text": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A list's count and its \"None\" (4.5:1 on side-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--transfer-list-muted-text"
+          }
+        }
+      }
+    },
+    "radius": {
+      "side-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "Each list's corners (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--transfer-list-side-radius"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "side-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space inside each list (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--transfer-list-side-padding"
+          }
+        }
+      },
+      "side-max-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-60}",
+        "$description": "How tall a list grows before it scrolls (240px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--transfer-list-side-max-height"
+          }
+        }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "Space between the lists and the move buttons (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--transfer-list-gap"
+          }
+        }
+      }
+    }
+  }
+}

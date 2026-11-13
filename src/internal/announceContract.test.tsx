@@ -33,6 +33,7 @@ import { SaveStatus } from '../components/SaveStatus/SaveStatus';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
 import { Kanban } from '../components/Kanban/Kanban';
 import { SortableList } from '../components/SortableList/SortableList';
+import { TransferList } from '../components/TransferList/TransferList';
 import { Splitter } from '../components/Splitter/Splitter';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../components/Table/Table';
 import { toast, Toaster } from '../components/Toast/Toast';
@@ -106,6 +107,9 @@ const SITES: Record<string, Site> = {
   'SortableList: picking an item up with Space': {
     ui: () => <SortableList items={ITEMS} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => t.name} onReorder={() => {}} />,
     act: async () => { $('button[aria-label$=" Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*2.*3/ },
+  'TransferList: what Add moved, and where': {
+    ui: () => <SerupaProvider locale="en-US"><TransferList aria-label="Columns" options={[{ value: 'a', label: 'Name' }, { value: 'b', label: 'Email' }]} /></SerupaProvider>,
+    act: async () => { await userEvent.click($('input[value="a"]')); await userEvent.click([...document.querySelectorAll<HTMLElement>('dialog button')].find((b) => b.textContent === 'Add')!); }, says: /Name moved to Chosen/ },
   'DataGrid: how many cells were copied': {
     ui: () => <SerupaProvider locale="en-US"><DataGrid aria-label="Stock" columns={[{ key: 'name', header: 'Name' }, { key: 'qty', header: 'Qty' }]} rows={[{ id: 'a', name: 'Kopi', qty: 4 }]} /></SerupaProvider>,   // pinned: the count follows the locale's digits
     act: async () => { await userEvent.click(document.querySelector('[role="gridcell"]') as HTMLElement); await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}'); await userEvent.copy(); }, says: /2 cells copied/ },

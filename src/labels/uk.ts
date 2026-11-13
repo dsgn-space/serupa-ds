@@ -339,4 +339,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'Прокручуваний вміст',
   showMore: 'Показати більше',
   showLess: 'Показати менше',
+  transferAvailable: 'Доступні',
+  transferChosen: 'Вибрані',
+  transferAdd: 'Додати',
+  transferRemove: 'Прибрати',
+  transferAll: 'Усі',
+  transferAddReason: 'Спершу позначте, що додати',
+  transferRemoveReason: 'Спершу позначте, що прибрати',
+  transferEmpty: 'Немає',
+  transferMoved: (items, list) => items + ': переміщено до «' + list + '».',
 };

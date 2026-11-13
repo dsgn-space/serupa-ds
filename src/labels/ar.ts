@@ -338,4 +338,13 @@ export const labels: SerupaLabels = {
   scrollArea: 'محتوى قابل للتمرير',
   showMore: 'عرض المزيد',
   showLess: 'عرض أقل',
+  transferAvailable: 'المتاح',
+  transferChosen: 'المختار',
+  transferAdd: 'إضافة',
+  transferRemove: 'إزالة',
+  transferAll: 'الكل',
+  transferAddReason: 'حدّد ما تريد إضافته أولًا',
+  transferRemoveReason: 'حدّد ما تريد إزالته أولًا',
+  transferEmpty: 'لا شيء',
+  transferMoved: (items, list) => items + ' نُقلت إلى ' + list + '.',
 };
