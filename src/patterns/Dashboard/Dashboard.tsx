@@ -98,7 +98,8 @@ function shortDay(iso: string, locale: string): string {
 }
 
 const PAGE = 4;
-const gb = (n: number) => `${n.toLocaleString(undefined, { maximumFractionDigits: 1 })} GB`;
+// In the provider's locale, as the days are, so the server's render and the browser's agree.
+const gb = (n: number, locale: string) => `${n.toLocaleString(locale, { maximumFractionDigits: 1 })} GB`;
 
 /** The dashboard page: a skip link, a header, then main with the h1 and its parts. */
 export function Dashboard({ data = demo, loading = false, loadFailed = false, onRetry, name = 'Ana', onCreateProject, onLoadMoreActivity, hasMoreActivity = false }: DashboardProps) {
@@ -164,7 +165,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
                   {loading ? <Loader variant="skeleton" shape="text" lines={4} label="Loading: Usage" /> : (
                     <>
                       <Meter label="Storage" showValue value={used} max={limit} high={limit * 0.8} optimum={0}
-                        formatValue={(v, _, max) => `${gb(v)} of ${gb(max)}${v >= max * 0.8 ? ', almost full' : ''}`} />
+                        formatValue={(v, _, max) => `${gb(v, locale)} of ${gb(max, locale)}${v >= max * 0.8 ? ', almost full' : ''}`} />
                       <Progress label={data.goal.label} showValue value={data.goal.done} max={data.goal.total}
                         formatValue={(v, max) => `${v} of ${max} done`} />
                       <Link href="#billing">Change plan</Link>
