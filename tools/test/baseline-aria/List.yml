@@ -57,6 +57,55 @@
   - listitem: Linus Torvalds linus@example.com Viewer
   - listitem: Margaret Hamilton margaret@example.com Editor
 
+# Selectable
+- checkbox "Select all" [checked=mixed]
+- text: Select all
+- paragraph: 2 selected
+- grid "Files":
+  - row "Budget 2027.xlsx":
+    - gridcell "Budget 2027.xlsx":
+      - checkbox "Budget 2027.xlsx"
+    - gridcell "Budget 2027.xlsx 48 KB"
+    - gridcell "More for Budget 2027.xlsx":
+      - button "More for Budget 2027.xlsx"
+  - row "Meeting notes.md" [selected]:
+    - gridcell "Meeting notes.md":
+      - checkbox "Meeting notes.md" [checked]
+    - gridcell "Meeting notes.md 6 KB"
+    - gridcell "More for Meeting notes.md":
+      - button "More for Meeting notes.md"
+  - row "Team photo.jpg" [selected]:
+    - gridcell "Team photo.jpg":
+      - checkbox "Team photo.jpg" [checked]
+    - gridcell "Team photo.jpg 2.4 MB"
+    - gridcell "More for Team photo.jpg":
+      - button "More for Team photo.jpg"
+  - row "Launch plan.pdf":
+    - gridcell "Launch plan.pdf":
+      - checkbox "Launch plan.pdf"
+    - gridcell "Launch plan.pdf 310 KB"
+    - gridcell "More for Launch plan.pdf":
+      - button "More for Launch plan.pdf"
+
+# SelectableSingle
+- grid "Files":
+  - row "Budget 2027.xlsx":
+    - gridcell "Budget 2027.xlsx 48 KB"
+    - gridcell "More for Budget 2027.xlsx":
+      - button "More for Budget 2027.xlsx"
+  - row "Meeting notes.md":
+    - gridcell "Meeting notes.md 6 KB"
+    - gridcell "More for Meeting notes.md":
+      - button "More for Meeting notes.md"
+  - row "Team photo.jpg" [selected]:
+    - gridcell "Team photo.jpg 2.4 MB"
+    - gridcell "More for Team photo.jpg":
+      - button "More for Team photo.jpg"
+  - row "Launch plan.pdf":
+    - gridcell "Launch plan.pdf 310 KB"
+    - gridcell "More for Launch plan.pdf":
+      - button "More for Launch plan.pdf"
+
 # Settings
 - list "Settings":
   - listitem:

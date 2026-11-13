@@ -98,6 +98,10 @@ A Link with `tone="neutral"` and `underline="hover"` looks like plain text until
 
 List's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
+## list-value
+
+A ListItem in a List with `selectionMode` has no `value`, so `onSelectedChange` would report an id made up for it. Give each ListItem a `value` that names its row, unique within the list, such as the file's or the person's id.
+
 ## no-name
 
 A control (a slider, a dialog, a group…) has no accessible name, so a screen reader announces only its role. The warning says how to name that kind of control: a Field label, a `<label htmlFor>`, `aria-label` or `aria-labelledby`.

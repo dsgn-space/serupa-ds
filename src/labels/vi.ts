@@ -139,6 +139,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ': đến ' + date,
   filterAny: (field) => field + ': tất cả',
   filterRemove: (field) => 'Xóa bộ lọc: ' + field,
+  listSelectAll: 'Chọn tất cả',
   tagRemove: (name) => 'Xóa: ' + name,
   filterDone: 'Xong',
   filterResults: (count) => (count === 1 ? '1 kết quả' : n(count) + ' kết quả'),

@@ -143,6 +143,7 @@ export const labels: SerupaLabels = {
   filterUntil: (field, date) => field + ' حتى ' + date,
   filterAny: (field) => field + ': الكل',
   filterRemove: (field) => 'إزالة عامل التصفية: ' + field,
+  listSelectAll: 'تحديد الكل',
   tagRemove: (name) => 'إزالة: ' + name,
   filterDone: 'تم',
   filterResults: (count) => (count === 1 ? 'نتيجة واحدة' : 'عدد النتائج: ' + n(count)),
