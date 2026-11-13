@@ -69,6 +69,14 @@ describe('Patterns/Team members', () => {
     await expect.poll(() => onRevoke.mock.calls).toEqual([['eko@example.com']]);
   });
 
+  test('revoking an invite moves focus to the next one\'s Revoke, and Undo brings it back', async () => {
+    const screen = await render(<TeamMembers invites={[{ email: 'eko@example.com', role: 'member' }, { email: 'fay@example.com', role: 'viewer' }]} />);
+    await screen.getByRole('button', { name: 'Revoke the invite to eko@example.com' }).click();
+    await expect.poll(() => active().getAttribute('aria-label')).toBe('Revoke the invite to fay@example.com');
+    await page.elementLocator(toastOf('Revoked the invite to eko@example.com')).getByRole('button', { name: 'Undo' }).click();
+    await expect.poll(() => active().getAttribute('aria-label')).toBe('Revoke the invite to eko@example.com');
+  });
+
   test('the invite form names bad and taken addresses and keeps them typed; good ones are invited with the role and listed', async () => {
     const onInvite = vi.fn();
     const screen = await render(<TeamMembers onInvite={onInvite} />);
