@@ -29,7 +29,7 @@ npm run test:unit
 node tools/test/run.mjs --since main
 ```
 
-Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`; the pre-push hook that `npm install` sets up runs a five-minute part of it on every push: types, lint and the component tests of what the push adds) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
+Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`; the pre-push hook that `npm install` sets up runs a five-minute part of it on every push: the effect and class-query checks, types, lint and the component tests of what the push adds; let it run rather than skipping it) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
 
 ## Pull requests and CI
 
