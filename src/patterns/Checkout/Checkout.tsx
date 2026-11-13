@@ -302,7 +302,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
               up the summary sits beside the review and this row under it. */}
           {step === 'review' ? (
             <div className="flex flex-wrap gap-3 lg:col-span-2">
-              <Button wrap loading={busy} loadingText="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
+              <Button wrap loading={busy} loadingLabel="Placing your order" onClick={() => void place()}>Place order: pay {money(total)}</Button>
               <Button variant="ghost" onClick={() => go('details')} disabled={busy} disabledReason={placing}>Back</Button>
             </div>
           ) : null}

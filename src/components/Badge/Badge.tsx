@@ -55,7 +55,9 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
   type?: 'button' | 'submit' | 'reset' | undefined;
   /** A ring replaces the content (the width stays); aria-busy, and an interactive badge ignores clicks but keeps focus. */
   loading?: boolean | undefined;
-  /** Announced to screen readers when loading starts. Default "Loading"; "" announces nothing. */
+  /** Said to screen readers when loading starts, not shown. Default: "Loading…" (labels.loading); "" says nothing. */
+  loadingLabel?: string | undefined;
+  /** @deprecated Use loadingLabel: a prop named …Text is shown, and these words are only said; removed in 15.0.0. Read as loadingLabel is, when loadingLabel isn't given. */
   loadingText?: string | undefined;
 }
 
@@ -67,11 +69,11 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
    name is removeLabel + the label, "Remove Design"). Interactive: with onClick it renders a <button type="button">,
    with href a link (the configured link component, like Button), and only then has hover, focus and active
    states and Button's micro-interactions (the press). loading cross-fades the content to a centered ring (the width stays), sets aria-busy, announces
-   loadingText ("Loading") and, on an interactive badge, blocks clicks while keeping focus. */
+   loadingLabel ("Loading…") and, on an interactive badge, blocks clicks while keeping focus. */
 const VARIANTS: readonly BadgeVariant[] = ['subtle', 'solid', 'outline'];
 const TONES: readonly BadgeTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 const PLAIN = { useGrouping: false } as const;
-const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingText: 1, className: 1, children: 1 } as const;
+const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, loadingText: 1, className: 1, children: 1 } as const;
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
 export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge', function Badge(props, ref) {
@@ -82,10 +84,11 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge',
   const tone = oneOf(TONES, props.tone, 'neutral');
   // Once it shows, the ring stays at least spinnerMinShown, so loading that ends a moment later doesn't flash it (EB1).
   const loading = useShowAfter(!!props.loading, 0);
-  const loadingText = props.loadingText == null ? sds.labels.loading : props.loadingText;
+  if (process.env.NODE_ENV !== 'production' && props.loadingText != null) warnOnce('badge-loading-text', 'Badge: loadingText is deprecated and removed in 15.0.0. Use loadingLabel, which does the same.');
+  const loadingText = props.loadingLabel ?? props.loadingText ?? sds.labels.loading;
   // Hooks first: a count of 0 renders nothing below, and hooks must run on every render.
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
-  // Announces only when loading starts: a new loadingText while it loads re-runs this but announces nothing.
+  // Announces only when loading starts: a new loadingLabel while it loads re-runs this but announces nothing.
   const wasLoading = React.useRef(false);
   React.useEffect(function () {
     if (loading && !wasLoading.current && loadingText) announce(loadingText);
@@ -153,7 +156,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge',
     ? <button type="button" className="dk-badge__remove" key="remove" onClick={(e) => removeAndRefocus(e, props.onRemove!, '.dk-badge', '.dk-badge__remove')} disabled={loading || undefined}
         aria-label={(props.removeLabel || sds.labels.remove) + named}><Icon icon={icons.Close} /></button>
     : null;
-  // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingText)
+  // Loading: a ring centered over the hidden content, so the badge keeps its width (decorative: the badge announces loadingLabel)
   const spin = loading ? <span className="dk-badge__loader" aria-hidden key="loader"><LoaderRing /></span> : null;
   const classes = cn('dk-badge', 'dk-badge--' + variant, 'dk-badge--tone-' + tone, isCount && 'dk-badge--count', (icon || dot) && 'dk-badge--lead', dot && props.ping && 'dk-badge--ping', removable && 'dk-badge--removable', interactive && 'dk-badge--interactive', loading && 'dk-badge--loading', props.className);
   const content: React.ReactNode[] = [dot, icon, <span className="dk-badge__label" key="label">{label}</span>, remove, spin];

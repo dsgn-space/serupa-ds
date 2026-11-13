@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './HelpCenter.stories';
+
+<Meta of={Stories} />
+
+# Help center
+
+The topics people come for, the common questions with a search, and a way to write to a person that says when they'll answer.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The help page of a product: the place "Help" in the menu leads to.
+- Not for help on one field or step: that's Contextual help, next to it.
+- Not for a whole documentation site with many articles: link its topics from here instead.
+
+## What each part is for
+
+- **The first line says both ways in**: find an answer, or write to us, and how soon a person answers.
+- **Topics** are cards whose heading is a link named by the topic, with what it covers under it, so a list of links reads as "Billing", "Your data", not "Read more" (2.4.4). The whole card takes the click.
+- **The questions** are the FAQ block: grouped, searchable with a count that's said, and each one linkable. Its "Still stuck?" leads to the form, so no answer is a dead end (3.3.5).
+- **Writing to a person is always last, in the same place** (3.2.6), and the form says who reads it, how soon, and where the answer goes before anyone writes.
+- **The form says what to write** in its hint. A missing topic or message is named next to its field, and focus goes to the first (3.3.1, 3.3.2). A problem goes as soon as it's fixed.
+- **A send that fails says so**, and every word stays (3.3.1). A sent message replaces the form with what happens next, with its heading focused (4.1.3, 2.4.3).
+- **A skip link** first, into main, as on every page.
+
+## What stays your app's job
+
+- **Sending the message.** `onSend` gets the topic and the message: return its promise, and the button shows it's busy until it settles; if it rejects, the form says it wasn't sent.
+- **The articles** the topics lead to, and the questions, as `topics` and `questions`. Write questions the way people ask them.
+- **The promise.** Set `replyTime` to what your team really does, and keep it.

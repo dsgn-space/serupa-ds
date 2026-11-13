@@ -6,6 +6,10 @@ import { AccountSecurity, passwordProblems } from './AccountSecurity';
 
 const active = () => document.activeElement as HTMLElement;
 const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
+// Text shown in the open dialog itself, not in the page's live region, which can sit inside the dialog and still hold
+// what it last said.
+const inDialog = (text: string | RegExp) => [...document.querySelectorAll('dialog[open] *')]
+  .some((e) => !e.closest('[data-dk-announcer]') && (typeof text === 'string' ? e.textContent?.trim() === text : text.test(e.textContent?.trim() || '')));
 const current = () => page.getByLabelText(/^Current password/);
 const next = () => page.getByLabelText(/^New password/);
 
@@ -58,11 +62,11 @@ describe('Patterns/Account security', () => {
     await expect.element(dialog.getByText('ABCD EFGH')).toBeVisible();
     await expect.element(dialog.getByRole('button', { name: /^Copy the key/ })).toBeVisible();
     await dialog.getByRole('button', { name: 'Turn on' }).click();
-    await expect.element(dialog.getByText('Enter the 6-digit code from your authenticator app.').first()).toBeVisible();
+    await expect.poll(() => inDialog('Enter the 6-digit code from your authenticator app.')).toBe(true);
     await dialog.getByRole('textbox').first().click();
     await userEvent.keyboard('654321');
     await dialog.getByRole('button', { name: 'Turn on' }).click();
-    await expect.element(dialog.getByText(/That code didn’t work/).first()).toBeVisible();
+    await expect.poll(() => inDialog(/^That code didn’t work/)).toBe(true);
     await expect.poll(() => active().id).toBe('two-step-code');
     await userEvent.keyboard('123456');
     await dialog.getByRole('button', { name: 'Turn on' }).click();
@@ -120,5 +124,36 @@ describe('Patterns/Account security', () => {
     expect(screen.getByRole('button', { name: /^Sign out of/ }).elements()).toHaveLength(0);
     await expect.poll(() => toasted('Signed out of 2 other devices')).toBe(true);
     await expect.poll(() => active().textContent).toBe('Where you’re signed in');
+  });
+
+  test('deleting the account offers the data first, asks for the email, and a failure keeps the dialog open and says so', async () => {
+    let fail = true;
+    const onDeleteAccount = vi.fn(() => (fail ? Promise.reject(new Error('offline')) : Promise.resolve()));
+    const screen = await render(<AccountSecurity email="ana@example.com" dataHref="#data" onDeleteAccount={onDeleteAccount} />);
+    await expect.element(screen.getByRole('link', { name: 'Download your data' })).toHaveAttribute('href', '#data');
+    await screen.getByRole('button', { name: 'Delete account' }).click();
+    const dialog = screen.getByRole('alertdialog', { name: 'Delete your account?' });
+    await dialog.getByRole('textbox').fill('ana@example.co');
+    await expect.element(dialog.getByRole('button', { name: 'Delete my account' })).toHaveAttribute('aria-disabled', 'true');
+    await dialog.getByRole('textbox').fill('ana@example.com');
+    await dialog.getByRole('button', { name: 'Delete my account' }).click();
+    await expect.element(dialog.getByRole('alert')).toHaveTextContent('Couldn’t delete your account. Try again.');
+    fail = false;
+    await dialog.getByRole('button', { name: 'Delete my account' }).click();
+    await expect.poll(() => active().textContent).toBe('Your account is deleted');
+    expect([document.querySelectorAll('h1').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Your account is deleted']);
+    expect(onDeleteAccount).toHaveBeenCalledTimes(2);
+    expect(screen.getByRole('button', { name: 'Change password' }).elements()).toHaveLength(0);
+  });
+
+  test('Escape closes the delete dialog and forgets a failure', async () => {
+    const screen = await render(<AccountSecurity onDeleteAccount={() => Promise.reject(new Error('no'))} />);
+    await screen.getByRole('button', { name: 'Delete account' }).click();
+    await screen.getByRole('alertdialog').getByRole('textbox').fill('ana@example.com');
+    await screen.getByRole('alertdialog').getByRole('button', { name: 'Delete my account' }).click();
+    await expect.element(screen.getByRole('alertdialog').getByRole('alert')).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await screen.getByRole('button', { name: 'Delete account' }).click();
+    expect(screen.getByRole('alertdialog').getByRole('alert').elements()).toHaveLength(0);
   });
 });

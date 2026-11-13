@@ -30,6 +30,7 @@ interface DataGridProps<R extends object = DataGridRow> extends Omit<React.Table
     size?: "lg" | "md" | "sm" | undefined;
     stickyHeader?: boolean | undefined;
     containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
+    loading?: boolean | undefined;
     busy?: boolean | undefined;
     loadingRows?: number | undefined;
     loadingLabel?: string | undefined;

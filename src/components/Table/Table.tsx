@@ -44,6 +44,8 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
   /** Keeps the last column in view while the table scrolls sideways, such as a column of row actions. Default: false. */
   pinEnd?: boolean | undefined;
   /** Its rows are loading (or reloading): sets aria-busy on the table. Pair it with TableLoadingRows. Default: false. */
+  loading?: boolean | undefined;
+  /** @deprecated Use loading (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
   busy?: boolean | undefined;
 }
 
@@ -123,8 +125,10 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   // hydration, for the frame and everything in it.
   const restyle = useServerStyles<HTMLDivElement>();
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, busy: 1, className: 1, children: 1 });
+  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, loading: 1, busy: 1, className: 1, children: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
+  if (process.env.NODE_ENV !== 'production' && props.busy != null) warnOnce('table-busy', 'Table: busy is deprecated and removed in 15.0.0. Use loading, which does the same.');
+  const loading = !!(props.loading ?? props.busy);
   const frame = React.useRef<HTMLDivElement>(null);
   const scrolls = useScrolls(frame);
   const cid = domId('dk-tc', React.useId());
@@ -137,7 +141,7 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
     : { tabIndex: 0, role: 'region', 'aria-labelledby': frameLabelledBy, 'aria-label': frameLabelledBy ? undefined : frameLabel || sds.labels.table };
   return (
     <div {...cp} {...region} ref={(n) => { frame.current = n; restyle(n); }} data-component="table" className={cn('dk-table', size === 'sm' && 'dk-table--sm', oneOf(['auto', 'fixed'] as const, props.layout, 'auto') === 'fixed' && 'dk-table--fixed', props.striped && 'dk-table--striped', props.stickyHeader && 'dk-table--sticky', props.pinStart && 'dk-table--pin-start', props.pinEnd && 'dk-table--pin-end', cp.className)}>
-      <table aria-busy={props.busy || undefined} {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
+      <table aria-busy={loading || undefined} {...rest} ref={ref} className={cn('dk-table__table', props.className)}>
         {hasCaption ? <caption id={cid} className={cn('dk-table__caption', props.hideCaption && 'dk-visually-hidden')}>{props.caption}</caption> : null}
         {props.children}
       </table>
@@ -635,8 +639,8 @@ export interface TableLoadingRowsProps extends React.HTMLAttributes<HTMLTableSec
 
 /* TableLoadingRows: a <tbody> of placeholder rows, each cell a one-line skeleton in the table's own text size and
    padding, so the rows are as tall as the ones that replace them and nothing moves when they arrive. They're
-   decorative: the label is said once, after the loader's delay, and the Table's busy marks it as loading. */
-/** Placeholder rows (a <tbody> of skeletons) the height of real rows, while the table's rows load. Set the Table's busy too. */
+   decorative: the label is said once, after the loader's delay, and the Table's loading marks it as loading. */
+/** Placeholder rows (a <tbody> of skeletons) the height of real rows, while the table's rows load. Set the Table's loading too. */
 export const TableLoadingRows = /* @__PURE__ */ component<HTMLTableSectionElement, TableLoadingRowsProps>('TableLoadingRows', function TableLoadingRows(props, ref) {
   const rest = omit(props, { columns: 1, rows: 1, label: 1, className: 1, children: 1 });
   const rows = Math.min(50, Math.max(1, Math.floor(Number(props.rows)) || 3));

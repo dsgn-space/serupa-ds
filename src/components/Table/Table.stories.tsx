@@ -279,7 +279,7 @@ function States(args: React.ComponentProps<typeof Table>) {
       <div style={{ display: 'flex', gap: '8px' }}>
         <SegmentedControl aria-label="State" size="sm" value={state} onValueChange={setState} options={(['loading', 'loaded', 'empty', 'failed'] as const).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))} />
       </div>
-      <Table {...args} caption="Team members" busy={state === 'loading'}>
+      <Table {...args} caption="Team members" loading={state === 'loading'}>
         {state === 'loaded' ? <Rows /> : <>
           <TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell><TableHeaderCell align="end">Calls</TableHeaderCell></TableRow></TableHead>
           {state === 'loading' ? <TableLoadingRows columns={4} rows={4} label="Loading team members" /> : (

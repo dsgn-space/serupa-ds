@@ -52,13 +52,13 @@ Drawn from the `Playground` story.
 
 The grid keeps its header row in every state, so the page doesn't move and people know what's coming.
 
-- **Loading:** set `busy` with no `rows` yet. The grid draws `loadingRows` placeholder rows (3 by default; about as many as will come), each as tall as a real one at every `size`, so nothing jumps when the data arrives. Name the wait in `loadingLabel` ("Loading stock"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `busy` sets `aria-busy` on the grid while it lasts. To reload rows already shown, keep them and set `busy`.
+- **Loading:** set `loading` with no `rows` yet. The grid draws `loadingRows` placeholder rows (3 by default; about as many as will come), each as tall as a real one at every `size`, so nothing jumps when the data arrives. Name the wait in `loadingLabel` ("Loading stock"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `loading` sets `aria-busy` on the grid while it lasts. To reload rows already shown, keep them and set `loading`.
 - **Empty:** no `rows` and a `message` holding an `EmptyState size="sm"`: what's missing, and the action that adds the first one. It's one cell across every column.
 - **Failed:** the same `message` with a danger `Alert`, which says what didn't load and offers Retry in `actions`. A danger Alert is `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
 <DataGrid aria-label="Stock" columns={columns} rows={state === 'loaded' ? rows : []}
-  busy={state === 'loading'} loadingRows={5} loadingLabel="Loading stock"
+  loading={state === 'loading'} loadingRows={5} loadingLabel="Loading stock"
   message={state === 'failed'
     ? <Alert tone="danger" actions={<Button size="sm" onClick={load}>Retry</Button>}>Stock didn't load.</Alert>
     : <EmptyState size="sm" title="No products yet" />} />
@@ -102,10 +102,11 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` | The cells' padding; `lg` also sets 16px text, for rows at least 44px tall. |
 | `stickyHeader` | `boolean` | `false` | Keeps the header row in view while the grid scrolls in a frame with a height. |
 | `containerProps` | `HTMLAttributes<HTMLDivElement>` | | Props for the scrolling frame, such as a `maxHeight` for `stickyHeader`. |
-| `busy` | `boolean` | `false` | Rows are loading: sets `aria-busy`, and with no rows shows placeholders. |
+| `loading` | `boolean` | `false` | Rows are loading: sets `aria-busy`, and with no rows shows placeholders. |
+| `busy` | `boolean` | | Deprecated, removed in 15.0.0: use `loading`, the API naming table's name. |
 | `loadingRows` | `number` | `3` | How many placeholder rows. |
 | `loadingLabel` | `string` | `"Loading"` | Said once as the placeholders appear. |
-| `message` | `ReactNode` | | Shown across every column when there are no rows and it isn't busy: an EmptyState or an Alert. |
+| `message` | `ReactNode` | | Shown across every column when there are no rows and it isn't loading: an EmptyState or an Alert. |
 
 `className` and `containerProps` go to the frame; `ref`, `aria-*` and other props go to the `<table>`.
 

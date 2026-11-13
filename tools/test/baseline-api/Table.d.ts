@@ -23,6 +23,7 @@ interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
     containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
     pinStart?: boolean | undefined;
     pinEnd?: boolean | undefined;
+    loading?: boolean | undefined;
     busy?: boolean | undefined;
 }
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {

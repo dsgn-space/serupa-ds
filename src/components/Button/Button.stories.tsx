@@ -84,7 +84,7 @@ export const Loading: Story = {
   name: 'Loading on click',
   render: function LoadingDemo() {
     const [busy, setBusy] = React.useState(false);
-    return <Button loading={busy} loadingText="Saving" onClick={() => { setBusy(true); setTimeout(() => setBusy(false), 2000); }}>Save</Button>;
+    return <Button loading={busy} loadingLabel="Saving" onClick={() => { setBusy(true); setTimeout(() => setBusy(false), 2000); }}>Save</Button>;
   },
 };
 
