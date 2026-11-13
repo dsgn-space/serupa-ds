@@ -311,3 +311,26 @@ describe('DataGrid token names', () => {
     await expect.poll(() => css(cell('Kopi')).backgroundColor).toBe('rgb(4, 5, 6)');
   });
 });
+
+// An arrow key used to redraw every cell (GR397): 300 rows of 8 columns took 80 to 140 ms a key in a development
+// build, so holding an arrow lagged behind. Now only the row left and the row entered draw again. format is called
+// once per cell drawn, so its count says how many were.
+describe('DataGrid with many rows', () => {
+  test('moving the active cell, or growing the selection by a row, redraws only the rows that change', async () => {
+    let drawn = 0;
+    const cols: DataGridColumn[] = [{ key: 'name', header: 'Name', format: (r) => { drawn++; return String(r.name); } }, { key: 'hours', header: 'Hours' }];
+    const rows: DataGridRow[] = Array.from({ length: 200 }, (_, i) => ({ id: 'r' + i, name: 'Row ' + i, hours: i }));
+    await render(<DataGrid aria-label="Hours" columns={cols} rows={rows} />);
+    cell('Row 0').focus();
+    drawn = 0;
+    await userEvent.keyboard('{ArrowDown}');
+    expect([focused(), drawn]).toEqual(['Row 1', 2]);
+    drawn = 0;
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    expect([cell('Row 1').getAttribute('aria-selected'), cell('Row 2').getAttribute('aria-selected'), cell('Row 3').getAttribute('aria-selected')]).toEqual(['true', 'true', 'false']);
+    expect(drawn).toBeLessThanOrEqual(2);
+    drawn = 0;
+    await userEvent.keyboard('{ArrowRight}');
+    expect(drawn).toBeLessThanOrEqual(2);
+  });
+});
