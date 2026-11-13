@@ -2,7 +2,7 @@ import * as React from 'react';
 import { hydrateRoot, type Root } from 'react-dom/client';
 import { flushSync } from 'react-dom';
 import { afterEach, beforeEach, describe, expect, inject, test, vi } from 'vitest';
-import { storiesToRun } from '../../tools/test/vitest/stories';
+import { hydrationToRun } from '../../tools/test/vitest/stories';
 import { fiberOf, fromRenderProp, fromStory } from '../../tools/test/vitest/storyOwner';
 import { getIcon, loadIcon } from '../icons';
 
@@ -91,7 +91,7 @@ function setStyle(el: Element, text: string) {
 // - Grid's and Stack's: they're Server Components, which don't hydrate, so their columns and gaps need
 //   'unsafe-inline' in server HTML (docs/GettingStarted.mdx).
 // Where the element was made is tools/test/vitest/storyOwner.ts, shared with the digits check.
-const sources = import.meta.glob<string>('../components/*/*.stories.tsx', { eager: true, query: '?raw', import: 'default' });
+const sources = import.meta.glob<string>(['../components/*/*.stories.tsx', '../blocks/*/*.stories.tsx', '../patterns/*/*.stories.tsx'], { eager: true, query: '?raw', import: 'default' });
 const storySource = (name: string) => Object.entries(sources).find(([f]) => f.split('/').at(-2) === name)?.[1] || '';
 const SERVER_ONLY = '[data-component="grid"], [data-component="stack"]';
 function appStyled(el: Element, source: string) {
@@ -171,7 +171,7 @@ test('a mismatch in style alone is left out of the log, any other is kept', () =
   ]).toEqual([true, true, true, false, false, false]);
 });
 
-for (const [name, list] of storiesToRun()) {
+for (const [name, list] of hydrationToRun()) {
   describe(`${name} stories hydrate under a strict CSP`, () => {
     for (const [exportName, ui] of list) {
       test(`${exportName} lays out as it does without the policy`, async () => {
