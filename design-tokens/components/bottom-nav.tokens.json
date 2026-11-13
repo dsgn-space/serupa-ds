@@ -52,6 +52,16 @@
           }
         }
       },
+      "icon-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "The pill behind an item's icon while the item is held down, one step past hover (not on the current item, which keeps its own fill).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-icon-bg-pressed"
+          }
+        }
+      },
       "text-active": {
         "$type": "color",
         "$value": "{color.primary}",

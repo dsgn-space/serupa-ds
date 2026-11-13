@@ -181,6 +181,16 @@
             "cssVar": "--event-calendar-more-bg-hover"
           }
         }
+      },
+      "more-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "The \"+N more\" button's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-more-bg-pressed"
+          }
+        }
       }
     },
     "radius": {

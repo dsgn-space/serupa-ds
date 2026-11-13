@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { Avatar, type AvatarSize } from '../Avatar/Avatar';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { AvatarGroup } from './AvatarGroup';
@@ -268,5 +268,25 @@ describe('AvatarGroup token names', () => {
     await expect.poll(() => css(more('tk-new')!.firstElementChild).backgroundColor).toBe('rgb(1, 2, 3)');
     await userEvent.hover(more('tk-old')!);
     await expect.poll(() => css(more('tk-old')!.firstElementChild).backgroundColor).toBe('rgb(4, 5, 6)');
+  });
+});
+
+describe('AvatarGroup held state', () => {
+  test('held down: the "+N" button fills one step past its hover (--avatar-group-more-bg-pressed), and its text or icon keeps 4.5:1 on it in all six themes', async () => {
+    await render(<AvatarGroup id="held" max={3} onMore={() => {}}>{av(5)}</AvatarGroup>);
+    const b = more('held')!;
+    const f = () => b.firstElementChild;
+    const low = await press(b, async () => {
+      await expect.poll(() => css(f()).backgroundColor).toBe(color('var(--pressed)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(f()).color, css(f()).backgroundColor);
+        if (r < 4.5) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });
