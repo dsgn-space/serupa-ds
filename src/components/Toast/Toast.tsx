@@ -400,7 +400,9 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
       for (const a of e.getAnimations()) if (a.id === 'dk-toast-move') a.cancel();
       const dy = from - e.getBoundingClientRect().top;
       if (Math.abs(dy) < 0.5) continue;
-      e.animate([{ translate: '0 ' + dy + 'px' }, { translate: '0 0' }], { duration: ms, easing: cs.getPropertyValue('--dk-toast-move-ease').trim() || 'ease', id: 'dk-toast-move' });
+      // One flicked away is on its way out sideways (its own translate, set by the swipe): the glide adds to that.
+      // Replacing it put the toast back at its place for the length of the glide before it carried on.
+      e.animate([{ translate: '0 ' + dy + 'px' }, { translate: '0 0' }], { duration: ms, easing: cs.getPropertyValue('--dk-toast-move-ease').trim() || 'ease', id: 'dk-toast-move', composite: e.style.translate ? 'add' : 'replace' });
     }
   });
   // The stack can't run past the far edge of the screen out of reach (GQ1b): when the toasts shown and the waiting

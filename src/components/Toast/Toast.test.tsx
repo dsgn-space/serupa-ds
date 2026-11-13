@@ -78,6 +78,27 @@ describe('Toast', () => {
     expect(['10 4 4', '10 4']).toContain(css(title).getPropertyValue('hyphenate-limit-chars'));
   });
 
+  test('a toast flicked away carries on from where the finger let go: it never shows back at its place on the way out', async () => {
+    await withMotion(async () => {
+      await render(<App />);
+      React.act(() => { toast({ title: 'Flick me', duration: 0 }); });
+      await landed();
+      const t = toasts()[0]!, r = t.getBoundingClientRect(), x = r.left + 40, y = r.top + 10, t0 = performance.now();
+      const ev = (name: string, cx: number, at: number) => {
+        const e = new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: 'touch', clientX: cx, clientY: y });
+        Object.defineProperty(e, 'timeStamp', { value: t0 + at });
+        t.dispatchEvent(e);
+      };
+      ev('pointerdown', x, 0);
+      for (let i = 1; i <= 5; i++) ev('pointermove', x + 20 * i, 16 * i);
+      const lefts: number[] = [];
+      React.act(() => { ev('pointerup', x + 100, 80); });
+      // Every frame from the moment it is let go until it has gone.
+      lefts.push(t.getBoundingClientRect().left - r.left);
+      while (t.isConnected && lefts.length < 120) { await new Promise(requestAnimationFrame); if (t.isConnected) lefts.push(t.getBoundingClientRect().left - r.left); }
+      expect(lefts.filter((l) => l < 99).map(Math.round)).toEqual([]);
+    });
+  });
   test('swipe to dismiss: a touch drag sideways past a third, or a flick (even a gentle one), carries on at the finger\'s speed on ease-fling and closes it; a short slow drag, a vertical one or a mouse drag leave it', async () => {
     await withMotion(async () => {
       await render(<App />);
