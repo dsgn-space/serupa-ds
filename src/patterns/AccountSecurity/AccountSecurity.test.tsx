@@ -149,6 +149,24 @@ describe('Patterns/Account security', () => {
     expect(screen.getByRole('button', { name: 'Change password' }).elements()).toHaveLength(0);
   });
 
+  test('while the devices load, their list is busy and named once, with no Sign out yet, and the rest of the page works', async () => {
+    const screen = await render(<AccountSecurity loading />);
+    const busy = document.querySelector('section[aria-labelledby="devices"] ul[aria-busy="true"]');
+    expect(busy).not.toBeNull();
+    await expect.element(screen.getByText('Loading where you’re signed in')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Sign out/ }).elements()).toHaveLength(0);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Two-step verification' })).toBeVisible();
+  });
+
+  test('a failed load of the devices says so in their place, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<AccountSecurity loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 3, name: 'Couldn’t load where you’re signed in' })).toBeVisible();
+    expect(screen.getByRole('button', { name: /^Sign out/ }).elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalled();
+  });
+
   test('Escape closes the delete dialog and forgets a failure', async () => {
     const screen = await render(<AccountSecurity onDeleteAccount={() => Promise.reject(new Error('no'))} />);
     await screen.getByRole('button', { name: 'Delete account' }).click();
