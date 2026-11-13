@@ -163,11 +163,11 @@ describe('HoverCard', () => {
       await expect.poll(() => isOpen('hp'), { message: placement }).toBe(true);
       const [side, align] = placement.split('-'), c = el('hp');
       await expect.poll(() => c.dataset.side, { message: placement }).toBe(side);
-      const a = rect(el('tp')), b = rect(c);
-      expect(side === 'bottom' ? b.top >= a.bottom : side === 'top' ? b.bottom <= a.top : side === 'right' ? b.left >= a.right : b.right <= a.left, placement).toBe(true);
+      // Polled: the side is set a frame before the card is moved to it, and a slow runner can read between the two.
       const across = side === 'top' || side === 'bottom';
-      if (align === 'start') expect(near(across ? b.left : b.top, across ? a.left : a.top), placement).toBe(true);
-      if (align === 'end') expect(near(across ? b.right : b.bottom, across ? a.right : a.bottom), placement).toBe(true);
+      await expect.poll(() => { const a = rect(el('tp')), b = rect(c); return side === 'bottom' ? b.top >= a.bottom : side === 'top' ? b.bottom <= a.top : side === 'right' ? b.left >= a.right : b.right <= a.left; }, { message: placement }).toBe(true);
+      if (align === 'start') await expect.poll(() => { const a = rect(el('tp')), b = rect(c); return near(across ? b.left : b.top, across ? a.left : a.top); }, { message: placement }).toBe(true);
+      if (align === 'end') await expect.poll(() => { const a = rect(el('tp')), b = rect(c); return near(across ? b.right : b.bottom, across ? a.right : a.bottom); }, { message: placement }).toBe(true);
     }
   });
 

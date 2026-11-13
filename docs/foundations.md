@@ -377,7 +377,7 @@ The spacing scale, named `spacing-<step>`: 1 step = 4px (`spacing-4` = 16px = `p
 
 **Roles.** Five steps have names for what they space, for layouts and your own components: `space-inline` (4px, an icon and its label), `space-related` (8px, the parts of one control, or items that belong together such as a label and its input), `space-content` (16px, the default padding and gap), `space-surface` (24px, the padding of a dialog, a drawer or a large card) and `space-section` (32px, between groups or sections of a page).
 
-Dialog, Drawer and Card `padding="lg"` read `space-surface` for their padding, and Popover reads `space-content`, so setting a role on `:root` (or on a part of the page) makes them denser or roomier with it. A component's own token still wins: `--dialog-padding` changes only dialogs. The other roles are names for your own layouts; no component reads them.
+Dialog, Drawer and Card `padding="lg"` read `space-surface` for their padding, and Popover, HoverCard and Tour read `space-content`, so setting a role on `:root` (or on a part of the page) makes them denser or roomier with it. A component's own token still wins: `--dialog-padding` changes only dialogs. The other roles are names for your own layouts; no component reads them.
 
 ### Padding and margin
 

@@ -108,6 +108,7 @@ Each is an optional override: set it on the page, a container or one Menubar. Th
 | `--menubar-border` | `border` | The line under the bar. |
 | `--menubar-item-text` | `text` | A menu's name (4.5:1 on bg, on the hover and on the open background). |
 | `--menubar-item-bg-hover` | `highlight` | A menu name's background under the pointer. |
+| `--menubar-item-bg-pressed` | `pressed` | Its background while held down, one step past hover. |
 | `--menubar-item-bg-open` | `pressed` | The background of the name whose menu is open. |
 | `--menubar-focus-ring` | `focus-ring` | The focus ring around a menu's name (3:1 on bg). |
 | `--menubar-item-radius` | `radius-control` | A menu name's corners (6px). |

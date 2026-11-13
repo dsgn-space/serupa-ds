@@ -143,6 +143,16 @@
             "cssVar": "--slider-thumb-size-md"
           }
         }
+      },
+      "input-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-20}",
+        "$description": "With inputs, each number field's width (80px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-input-width"
+          }
+        }
       }
     },
     "borders": {
@@ -195,6 +205,18 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--slider-track-depth"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "input-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3}",
+        "$description": "With inputs, between the track and each number field (12px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-input-gap"
           }
         }
       }

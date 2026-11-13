@@ -10,6 +10,8 @@ import * as ALL_ICONS from '../src/material/icons';
 import { registerIcons } from '../src/icons';
 import { CONTENT, ContentContext, type Content } from './content';
 import { proofCss } from './proof-brand';
+import { SerupaProvider } from '../src/internal/provider';
+import type { SerupaLabels } from '../src/internal/labels';
 
 // Every icon name draws at once in Storybook (apps load the full set the first time they need it).
 registerIcons(ALL_ICONS);
@@ -79,6 +81,30 @@ const channel = addons.getChannel();
 channel.on('setGlobals', (e: { globals?: Record<string, unknown> }) => apply(e.globals));   // already merged, with a story's own globals on top
 channel.on('globalsUpdated', (e: { globals?: Record<string, unknown> }) => apply(e.globals));
 
+// The Language toolbar (GR355): the components' own words in any of the language packs, so a long translation or a
+// script with taller letters is seen in every story, not only in the tests. A pack is loaded when it is first picked.
+// Story text stays as written; only the built-in words, dates and numbers change. "ar" also turns the page right to left.
+const PACKS = import.meta.glob<{ labels: SerupaLabels; locale: string }>('../src/labels/*.ts');
+const LANGUAGES = Object.keys(PACKS).map((f) => f.replace(/^.*\/|\.ts$/g, '')).filter((l) => l !== 'en').sort();
+const languageName = (l: string) => { try { return `${new Intl.DisplayNames(['en'], { type: 'language' }).of(l)} (${l})`; } catch { return l; } };
+const WithLanguage: Decorator = (Story, context) => {
+  const language = LANGUAGES.includes(context.globals.language) ? context.globals.language as string : 'en';
+  const [pack, setPack] = React.useState<{ labels: SerupaLabels; locale: string } | null>(null);
+  React.useEffect(() => {
+    let live = true;
+    if (language === 'en') { setPack(null); return; }
+    void PACKS[`../src/labels/${language}.ts`]?.().then((m) => { if (live) setPack(m); });
+    return () => { live = false; };
+  }, [language]);
+  React.useEffect(() => {
+    document.documentElement.lang = pack?.locale ?? 'en';
+    if (pack?.locale === 'ar') document.documentElement.setAttribute('dir', 'rtl');
+  }, [pack, context.globals.dir]);
+  if (language === 'en') return <Story />;
+  if (!pack || pack.locale !== language) return <></>;   // the pack is on its way: nothing in English flashes first
+  return <SerupaProvider locale={pack.locale} labels={pack.labels}><Story /></SerupaProvider>;
+};
+
 const WithTheme: Decorator = (Story, context) => {
   const theme = `${context.globals.brand || DEFAULT_BRAND}-${context.globals.mode || 'light'}`;
   const dir = context.globals.dir === 'rtl' ? 'rtl' : 'ltr';
@@ -131,17 +157,23 @@ const preview: Preview = {
       toolbar: { title: 'Motion', icon: 'time', dynamicTitle: true, items: [
         { value: '1', title: 'Motion ×1' }, { value: '4', title: 'Slow motion ×4' }, { value: '10', title: 'Slow motion ×10' }] },
     },
+    // The components' own words in a language pack (src/labels): English is the default, with no provider.
+    language: {
+      description: 'Language of the built-in words',
+      toolbar: { title: 'Language', icon: 'globe', dynamicTitle: true, items: [
+        { value: 'en', title: 'English (en)' }, ...LANGUAGES.map((l) => ({ value: l, title: languageName(l) }))] },
+    },
     // The sample data a story shows (.storybook/content.ts): demo, the worst case, none or one.
     content: {
       description: 'Sample content',
       toolbar: { title: 'Content', icon: 'document', dynamicTitle: true, items: CONTENT.map((c) => ({ ...c })) },
     },
   },
-  initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr', contrast: 'default', density: 'default', radius: 'default', motion: '1', content: 'demo' },
+  initialGlobals: { brand: DEFAULT_BRAND, mode: 'light', dir: 'ltr', contrast: 'default', density: 'default', radius: 'default', motion: '1', language: 'en', content: 'demo' },
   // Every story is shot by tools/test/visual.mjs unless its file says tags: ['!visual'], which takes this tag away.
   // A "!" tag only removes a tag, so this one has to be here for it to remove (GR285).
   tags: ['visual'],
-  decorators: [WithTheme],
+  decorators: [WithTheme, WithLanguage],
   parameters: {
     layout: 'padded',
     controls: { expanded: true, sort: 'requiredFirst' },

@@ -12,6 +12,7 @@ import { delegateFocus, useAutoFocus } from '../../internal/focus';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { NumberInput } from '../NumberInput/NumberInput';
 import { en as words } from './labels';
 
 export type SliderValue = number | [number, number];
@@ -57,9 +58,13 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   marks?: boolean | SliderMark[] | undefined;
   /** Shows the value (formatValue's text) over a thumb while it's focused, dragged or hovered. Visual only, as aria-valuetext already says it. */
   showValue?: boolean | undefined;
+  /** A number field beside each thumb, kept in step with it, for typing an exact value: after the track for one
+      thumb, at either end for a range (the low one first). A typed number past the other thumb, min or max waits
+      for Enter or leaving the field, which brings it back inside. */
+  inputs?: boolean | undefined;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, 'aria-required': 1, 'aria-invalid': 1, 'aria-readonly': 1, autoFocus: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1, 'aria-describedby': 1, 'aria-errormessage': 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, inputs: 1, 'aria-required': 1, 'aria-invalid': 1, 'aria-readonly': 1, autoFocus: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1, 'aria-describedby': 1, 'aria-errormessage': 1 } as const;
 
 // The marks to draw: every step for true (every largeStep steps when that's over 100 ticks), or the listed values on the track.
 function markList(marks: SliderProps['marks'], min: number, max: number, step: number, large: number): SliderMark[] {
@@ -143,7 +148,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   };
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (rest.onPointerDown) rest.onPointerDown(e);
-    if (disabled || e.button !== 0 || e.defaultPrevented) return;
+    if (disabled || e.button !== 0 || e.defaultPrevented || inField(e.target)) return;
     e.preventDefault();
     const v = fromPoint(e.clientX), vs = latest.current;
     let i = 0;
@@ -155,6 +160,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
     set(i, v);
     const t = thumbs.current[i]; if (t) t.focus({ preventScroll: true });
   };
+  // A press in a number field (inputs) is the field's: it places the caret, it doesn't move a thumb.
+  const inField = (t: EventTarget) => t instanceof Element && !!t.closest('.dk-slider__input');
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX)); };
   const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); if (latest.current.some((v, k) => v !== from.current[k])) commit(); };
   // Your onKeyDown runs first, on the root as the key goes down to the focused part (the capture phase), so its
@@ -223,14 +230,30 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
     watch();
     return () => o.disconnect();
   }, [fit]);
+  // inputs: a number field per thumb, named as its thumb is, between the other thumb (a range) or min and max. A
+  // number typed inside them moves the thumb at once; onValueCommit runs when the field is left or Enter is pressed
+  // after a change, as it does at the end of a drag.
+  const typedFrom = React.useRef<number[] | null>(null);
+  const fieldDone = () => { const f = typedFrom.current; if (f && latest.current.some((v, k) => v !== f[k])) { commit(); typedFrom.current = latest.current.slice(); } };
+  const field = (i: number) => (
+    <NumberInput key={'field' + i} className="dk-slider__input" size={props.size === 'sm' ? 'sm' : 'md'} steppers={false}
+      value={vals[i]} min={isRange && i === 1 ? vals[0] : min} max={isRange && i === 0 ? vals[1] : max} step={step} largeStep={large}
+      disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
+      aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
+      onFocus={() => { typedFrom.current = latest.current.slice(); }}
+      onValueChange={(v) => { if (v != null) set(i, v); }}
+      onKeyUp={(e) => { if (e.key === 'Enter') fieldDone(); }}
+      onBlur={() => { fieldDone(); typedFrom.current = null; }} />
+  );
   return (
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); restyle(n); }}
       role={isRange ? 'group' : rest.role} aria-label={isRange ? props['aria-label'] : undefined} aria-labelledby={isRange ? labelledBy : undefined}
       aria-describedby={isRange ? props['aria-describedby'] : undefined}
-      className={cn('dk-slider', props.size === 'sm' ? 'dk-slider--size-sm' : 'dk-slider--size-md', disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.className)}
+      className={cn('dk-slider', props.size === 'sm' ? 'dk-slider--size-sm' : 'dk-slider--size-md', disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.inputs && 'dk-slider--inputs', props.className)}
       data-component="slider" data-size={props.size === 'sm' ? 'sm' : 'md'} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
       onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
+      {props.inputs && isRange ? field(0) : null}
       <div className="dk-slider__track">
         <div className="dk-slider__fill" style={{ insetInlineStart: lo + '%', inlineSize: hi - lo + '%' }} />
         {marks.map((m, i) => (
@@ -250,6 +273,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
             onKeyDown={onKeyDown(i)}>{props.showValue ? <span className="dk-slider__value" aria-hidden="true"><span>{text(v)}</span></span> : null}</span>
         ))}
       </div>
+      {props.inputs ? field(vals.length - 1) : null}
       {props.name ? vals.map((v, i) => <input key={'in' + i} type="hidden" name={props.name} form={props.form} value={v} disabled={disabled} />) : null}
     </div>
   );

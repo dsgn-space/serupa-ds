@@ -163,7 +163,9 @@ async function checkDocs(e, w) {
   // still wider names the outermost box that sticks out.
   await w.page.setViewportSize({ width: 320, height: 640 });
   const wide = await w.page.waitForFunction(() => document.documentElement.scrollWidth <= 321, null, { timeout: 2000, polling: 100 }).then(() => null, () => w.page.evaluate(() => {
-    const out = [...document.querySelectorAll('#storybook-docs *')].find((el) => el.getBoundingClientRect().right > 322 && el.parentElement.getBoundingClientRect().right <= 322);
+    // Not what sits in a box that scrolls or clips (a wide code block's lines): that box keeps it in.
+    const kept = (el) => { for (let a = el.parentElement; a && a.id !== 'storybook-docs'; a = a.parentElement) if (/auto|scroll|hidden|clip/.test(getComputedStyle(a).overflowX)) return true; return false; };
+    const out = [...document.querySelectorAll('#storybook-docs *')].find((el) => el.getBoundingClientRect().right > 322 && el.parentElement.getBoundingClientRect().right <= 322 && !kept(el));
     const name = out ? `${out.tagName.toLowerCase()}${out.id ? '#' + out.id : ''}${typeof out.className === 'string' && out.className ? '.' + out.className.split(' ')[0] : ''} "${out.textContent.trim().slice(0, 40)}"` : 'nothing in the docs';
     return `it scrolls sideways to ${document.documentElement.scrollWidth}px; first to stick out: ${name}`;
   }));

@@ -41,6 +41,7 @@ Drawn from the `Marks` story.
 - Set `step` to the precision people need, so values snap to sensible numbers.
 - Use `marks` when a few values matter, such as `[{ value: 0, label: "Off" }, { value: 100, label: "Max" }]`, or `marks` alone for a tick per step on a short scale. Keep the labels short; they sit on one line under the track.
 - Use `showValue` when people need to see the number while they drag, and there is no label nearby that shows it.
+- Use `inputs` when an exact number matters as much as the rough one, such as a price filter: a number field (`.dk-slider__input`, a [NumberInput](../NumberInput/README.md)) sits beside each thumb, after the track for one and at either end for a range. It brings NumberInput's code with it, so a page that imports Slider and not NumberInput grows by about 6.5 KiB.
 
 ## Behavior
 
@@ -48,6 +49,7 @@ Drawn from the `Marks` story.
 - Range thumbs can't cross.
 - The thumb grows a little while pressed; it doesn't with `prefers-reduced-motion`.
 - `marks` draws a tick for each mark between the ends, and its label centered under it. With labels, the slider is taller by one line of small text, so nothing overlaps what follows. `true` draws a mark per step, or one per `largeStep` steps past 100 marks. Marks off the track are left out. A press on a label moves the nearest thumb there.
+- With `inputs`, a number typed in a field moves its thumb at once, and a thumb that moves rewrites its field. A field takes numbers between `min` and `max` (for a range, up to the other thumb); one past them waits for Enter or for the field to be left, then comes back inside. `onValueCommit` runs when the field is left or Enter pressed after a change, as at the end of a drag. The fields show the number itself in the locale's digits, not `formatValue`'s words.
 - `showValue` shows the value, as `formatValue` writes it (without one, the number in the locale's digits: "٤٠" in `ar-EG`), in a small chip over a thumb while it's focused, hovered or dragged. The chip floats and takes no room, so leave space above the slider. Near an end, the chip and the end mark labels move inward, so they stay inside the slider's box.
 
 ### Do and don't
@@ -65,6 +67,7 @@ Drawn from the `Marks` story.
 - `readOnly` keeps the thumbs in the Tab order with `aria-readonly`, so people can still hear the value, but keys and presses don't change it. With `name`, the value is still sent with the form, which `disabled` doesn't do.
 - A slider always has a value, so `required` has nothing to check. It's accepted, so Field's `required` doesn't reach the DOM, and has no effect.
 - Marks and the value chip are `aria-hidden`. The thumb's `aria-valuetext` already says the value, and mark labels would be read as stray text. Mark labels keep 4.5:1 on the page, and the chip's text 4.5:1 on the chip, in all six themes (`Slider.test.tsx`).
+- With `inputs`, each number field is named as its thumb is (the label, or "Minimum" and "Maximum" in a range), so a screen reader hears which value it changes. It's one more Tab stop per thumb.
 - `disabled`, or a disabled `<fieldset>` around it, takes the thumbs out of the Tab order, sets `aria-disabled` and ignores keys and presses, as native inputs do.
 
 ### Keyboard
@@ -98,6 +101,7 @@ Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in i
 | `thumbLabels` | `[string, string]` | `['Minimum', 'Maximum']` | A range's thumb names. By default the `sliderMinimum` and `sliderMaximum` labels ("Minimum", "Maksimum" in `idLabels`). |
 | `marks` | `boolean \| { value: number; label?: ReactNode }[]` | | Ticks on the track: `true` for every step, or the listed values with text under them. Visual only. |
 | `showValue` | `boolean` | `false` | The value over the thumb while it's focused, hovered or dragged. Visual only. |
+| `inputs` | `boolean` | `false` | A number field beside each thumb, kept in step with it, for typing an exact value. |
 | `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
 | `form` | `string` | | The id of a form it sits outside of: its hidden inputs submit, and reset, with that form. |
 | `required` | `boolean` | | Accepted so Field's `required` doesn't reach the page. A slider always has a value, so it has no effect. |
@@ -109,6 +113,8 @@ Name a single slider with `aria-label` or `aria-labelledby`; on a range they nam
 Each is an optional override: set it on the page, a container or one slider. The list lives in `src/components/Slider/slider.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from slider.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--slider-track` | `field-border` | The track (3:1 on the surface, so the control can be seen). |
@@ -121,13 +127,35 @@ Each is an optional override: set it on the page, a container or one slider. The
 | `--slider-mark-label` | `text-muted` | The marks' text under the track (4.5:1 on the surface). |
 | `--slider-value-bg` | `surface-inverse` | showValue's chip over the thumb. |
 | `--slider-value-text` | `text-inverse` | showValue's text (4.5:1 on value-bg). |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--slider-track-height-sm` | `spacing-1` | The track's thickness, size="sm" (4px). |
 | `--slider-track-height-md` | `spacing-1.5` | The track's thickness, size="md", the default (6px). |
 | `--slider-thumb-size-sm` | `spacing-4` | The thumb, size="sm" (16px). |
 | `--slider-thumb-size-md` | `spacing-5` | The thumb, size="md" (20px). |
+| `--slider-input-width` | `spacing-20` | With inputs, each number field's width (80px). |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--slider-thumb-border-width` | `border-width-2` | The thumb's ring (2px). |
 | `--slider-radius` | `radius-pill` | The track's ends and the thumb. |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--slider-thumb-shadow` | `elevation-part` | The thumb's shadow. |
 | `--slider-thumb-depth` | `depth-part` | The tactile layers over each thumb's shadow. None in the flat brands. |
 | `--slider-track-depth` | `depth-well` | The track's tactile layers: a groove the thumb slides in. None in the flat brands. |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--slider-input-gap` | `spacing-3` | With inputs, between the track and each number field (12px). |
 <!-- token-table:end -->
