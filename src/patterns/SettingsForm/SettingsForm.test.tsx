@@ -86,4 +86,16 @@ describe('Patterns/Settings form', () => {
     await screen.getByRole('button', { name: 'Discard' }).click();
     await vi.waitFor(() => expect(onLeave).toHaveBeenCalledTimes(2));
   });
+
+  test('loading: the page and its sections are there, busy, named once; the form then starts from the settings that came in', async () => {
+    const screen = await render(<SettingsForm loading />);
+    expect(document.querySelector('main')!.getAttribute('aria-busy')).toBe('true');
+    expect(screen.getByRole('heading', { level: 2 }).elements().map((h) => h.textContent)).toEqual(['Profile', 'Notifications']);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading settings']);
+    expect(screen.getByRole('textbox').elements()).toHaveLength(0);
+    const initial = { profile: { name: 'Budi Santoso', email: 'budi@example.com', bio: '', timeZone: 'Asia/Jakarta' }, notifications: { comments: true, summary: false, news: false } };
+    await screen.rerender(<SettingsForm initial={initial} />);
+    await expect.element(screen.getByRole('textbox', { name: /^Name/ })).toHaveValue('Budi Santoso');
+    expect(document.querySelector('main')!.hasAttribute('aria-busy')).toBe(false);
+  });
 });

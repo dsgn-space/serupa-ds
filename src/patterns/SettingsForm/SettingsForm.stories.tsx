@@ -16,3 +16,6 @@ export const Default: Story = {};
 
 /** A save that fails: "Couldn't save" with Try again, and the changes kept. */
 export const SaveFails: Story = { args: { onSave: () => Promise.reject(new Error('offline')) } };
+
+/** While the saved settings load: the page and its sections, with placeholder fields, named once for screen readers. */
+export const Loading: Story = { args: { loading: true } };

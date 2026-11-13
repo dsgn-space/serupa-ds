@@ -6,6 +6,7 @@ import * as stories from './PageShell.stories';
 
 // The story's render is the page; its args and context aren't used.
 const Default = () => <>{stories.Default.render!({} as never, {} as never)}</>;
+const Collapsed = () => <>{stories.CollapsedSidebar.render!({} as never, {} as never)}</>;
 
 // The page shell: the skip link is the first Tab stop and leads into main, and the landmarks are told apart.
 describe('Patterns/Page shell', () => {
@@ -43,5 +44,11 @@ describe('Patterns/Page shell', () => {
     } finally {
       await page.viewport(900, 700);
     }
+  });
+
+  test('with the Sidebar collapsed to a rail, each Workspace link keeps its name', async () => {
+    await render(<Collapsed />);
+    const side = page.getByRole('navigation', { name: 'Workspace' }).first();
+    for (const name of ['Home', 'Projects', 'Team']) await expect.element(side.getByRole('link', { name })).toBeInTheDocument();
   });
 });
