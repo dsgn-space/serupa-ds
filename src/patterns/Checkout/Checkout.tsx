@@ -14,6 +14,7 @@ import { DescriptionList, DescriptionItem } from '../../components/DescriptionLi
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { announce } from '../../internal/announce';
 import { minorDigits } from '../../internal/currency';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Checkout / payment details: delivery address, delivery speed, an optional tip and card details, the order
    summary beside them, a review step and a confirmation. For an app to copy. What it carries (WCAG 2.2):
@@ -195,7 +196,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
-        <Heading level={1}>Checkout</Heading>
+        <PageHeader title="Checkout" />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-6 lg:col-span-2">
             <div className="flex flex-col gap-1">

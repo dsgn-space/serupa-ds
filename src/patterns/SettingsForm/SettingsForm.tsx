@@ -14,6 +14,7 @@ import type { ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummar
 import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Settings form: a settings page of sections, each with its own Save, errors and status, and a question before
    unsaved changes are lost. For an app to copy. What it carries (WCAG 2.2):
@@ -112,8 +113,8 @@ function Loading({ failed, onRetry }: { failed: boolean; onRetry: SettingsFormPr
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link href="#dashboard">Back to the dashboard</Link>
       </header>
-      <main id="main" aria-busy={failed ? undefined : true} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-6 outline-none">
-        <Heading level={1}>Settings</Heading>
+      <main id="main" aria-busy={failed ? undefined : true} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+        <PageHeader title="Settings" />
         {failed ? <EmptyLoadFailed title="Couldn’t load your settings" onRetry={() => onRetry?.()} headingLevel={2} /> : ['Profile', 'Notifications'].map((t, i) => (
           <section key={t} aria-labelledby={'settings-loading-' + i} className="flex flex-col gap-3">
             <Heading level={2} size="lg" id={'settings-loading-' + i}>{t}</Heading>
@@ -145,8 +146,8 @@ function Loaded({ initial = demo, onSave, onLeave }: Omit<SettingsFormProps, 'lo
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link href="#dashboard" onClick={(e) => void leave(e)}>Back to the dashboard</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-6 outline-none">
-        <Heading level={1}>Settings</Heading>
+      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+        <PageHeader title="Settings" />
         <SettingsSection title="Profile" description="How you appear to your team." onSave={profile.save}
           errors={profile.errors} status={profile.status} savedAt={profile.savedAt} onRetry={profile.save} saveLabel="Save profile">
           <Field label="Name" error={err('name')} required>

@@ -19,6 +19,9 @@ describe('Patterns/Settings form', () => {
   test('one main and one h1, the skip link first, and a named region per section', async () => {
     const screen = await render(<SettingsForm />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    // The page's title is set off from what's under it by the page header's line, as on the other app pages.
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('h1'))).toBe(true);
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
     await expect.element(screen.getByRole('region', { name: 'Profile' })).toBeVisible();
