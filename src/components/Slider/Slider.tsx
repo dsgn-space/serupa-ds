@@ -36,8 +36,8 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   step?: number | undefined;
   /** How many steps PageUp, PageDown and Shift with an arrow move. Default: 10. */
   largeStep?: number | undefined;
-  /** 'sm' (4px track, 16px thumb) or 'md' (6px, 20px, default). */
-  size?: 'sm' | 'md' | undefined;
+  /** 'sm' (4px track, 16px thumb), 'md' (6px, 20px, default) or 'lg' (8px, 24px), to sit in a form of lg fields. */
+  size?: 'sm' | 'md' | 'lg' | undefined;
   /** Turns the thumbs off, as a disabled native control. */
   disabled?: boolean | undefined;
   /** Turns a value into the words read out (aria-valuetext), such as "$40". Default: the number (shown by showValue in the locale's digits). */
@@ -110,6 +110,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const drag = React.useRef<number | null>(null);
   // A disabled <fieldset> around it disables it too, as it does native inputs.
   const inDisabledFieldset = useFieldsetDisabled(root);
+  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
   const disabled = !!props.disabled || inDisabledFieldset;
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const readOnly = !!props.readOnly || props['aria-readonly'] === true || props['aria-readonly'] === 'true';
@@ -238,7 +239,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   // Out of a Field's reach (FieldContext null): the Field's id is the slider's, so a field taking it would repeat it,
   // and a range's two fields would share it. What the Field gives a thumb is passed as the thumb gets it.
   const field = (i: number) => (
-    <FieldContext.Provider key={'field' + i} value={null}><NumberInput className="dk-slider__input" size={props.size === 'sm' ? 'sm' : 'md'} steppers={false}
+    <FieldContext.Provider key={'field' + i} value={null}><NumberInput className="dk-slider__input" size={size} steppers={false}
       value={vals[i]} min={isRange && i === 1 ? vals[0] : min} max={isRange && i === 0 ? vals[1] : max} step={step} largeStep={large}
       disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
       aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
@@ -252,8 +253,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); restyle(n); }}
       role={isRange ? 'group' : rest.role} aria-label={isRange ? props['aria-label'] : undefined} aria-labelledby={isRange ? labelledBy : undefined}
       aria-describedby={isRange ? props['aria-describedby'] : undefined}
-      className={cn('dk-slider', props.size === 'sm' ? 'dk-slider--size-sm' : 'dk-slider--size-md', disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.inputs && 'dk-slider--inputs', props.className)}
-      data-component="slider" data-size={props.size === 'sm' ? 'sm' : 'md'} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
+      className={cn('dk-slider', 'dk-slider--size-' + size, disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.inputs && 'dk-slider--inputs', props.className)}
+      data-component="slider" data-size={size} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
       onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
       {props.inputs && isRange ? field(0) : null}
