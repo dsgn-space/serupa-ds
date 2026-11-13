@@ -369,7 +369,7 @@ describe('List with selectionMode', () => {
     expect(log.length).toBe(3);
     await userEvent.keyboard('{ArrowUp} ');
     expect(log.at(-1)).toEqual(['Budget.xlsx', 'Notes.md']);
-    await userEvent.keyboard('{Control>}a{/Control}');
+    await userEvent.keyboard('{Control>}{A}{/Control}');
     expect(log.at(-1)).toEqual(['Budget.xlsx', 'Notes.md', 'Photo.jpg']);
     expect(page.getByRole('checkbox', { name: 'Select all' }).element()).toHaveProperty('checked', true);
   });
