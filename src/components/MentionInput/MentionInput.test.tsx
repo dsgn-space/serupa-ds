@@ -190,6 +190,13 @@ describe('MentionInput', () => {
     expect(mentionsIn('nobody', PEOPLE)).toEqual([]);
   });
 
+  test('mentionsIn finds a name after a longer word that starts with it, and a name that starts a longer one isn\'t mentioned by it', () => {
+    const team: MentionOption[] = [{ id: 'ayu', label: 'Ayu' }, { id: 'ayul', label: 'Ayu Lestari' }, { id: 'budi', label: 'Budi' }];
+    expect(mentionsIn('@Ayub asked @Budi and @Ayu', team).map((p) => p.id)).toEqual(['budi', 'ayu']);
+    expect(mentionsIn('Thanks @Ayu Lestari', team).map((p) => p.id)).toEqual(['ayul']);
+    expect(mentionsIn('@Ayu Lestari and @Ayu', team).map((p) => p.id)).toEqual(['ayul', 'ayu']);
+  });
+
   test('options, their second line and the active option read 4.5:1 on the list in all six themes', async () => {
     await render(<Box />);
     await userEvent.click(box());

@@ -72,13 +72,15 @@ export function mentionQuery(text: string, caret: number, trigger = '@'): Query 
 /** The options mentioned in a text: each one whose trigger and label ("@Ayu Lestari") appear in it, in the order
     they first appear. For the app to notify them when the text is sent. */
 export function mentionsIn(text: string, options: readonly MentionOption[], trigger = '@'): MentionOption[] {
-  const found: Array<[number, MentionOption]> = [];
-  for (const o of options) {
-    const at = text.indexOf(trigger + o.label);
-    const after = text[at + trigger.length + o.label.length];
-    if (at >= 0 && (after === undefined || !/[\p{L}\p{N}]/u.test(after))) found.push([at, o]);
+  // At each trigger, the longest name written there whole: "@Ayu Lestari" is Ayu Lestari, not Ayu as well, and
+  // "@Ayub" is nobody, while an "@Ayu" further on still counts.
+  const longest = options.slice().sort((a, b) => b.label.length - a.label.length);
+  const found: MentionOption[] = [];
+  for (let at = text.indexOf(trigger); at >= 0; at = text.indexOf(trigger, at + trigger.length)) {
+    const o = longest.find((x) => x.label && text.startsWith(x.label, at + trigger.length) && !/[\p{L}\p{N}]/u.test(text.charAt(at + trigger.length + x.label.length)));
+    if (o && !found.includes(o)) found.push(o);
   }
-  return found.sort((a, b) => a[0] - b[0]).map((f) => f[1]);
+  return found;
 }
 
 // The textarea's caret, in pixels from its padding box's corner: a copy of the field with the text up to the caret

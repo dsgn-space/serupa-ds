@@ -47,7 +47,7 @@ Drawn from the `Default` story.
 - Write each picture's `alt` as you would for an [Image](../Image/README.md): it's the dialog's title while that picture shows, and what a screen reader says on each move. A file name ("IMG_2041.jpg") tells nobody anything.
 - Pass `width` and `height` when you know them: the stage takes the picture's shape before it arrives, so nothing jumps.
 - Pass the large version as `src`, and a small one to the thumbnails. The pictures on either side load ahead, so moving on is quick.
-- `loop` suits a slideshow people go round; without it, the arrows stop at the ends, which says when the set is done.
+- `loop` suits a slideshow people go round; without it, the arrows stop at the ends, which says when the set is done. The arrow that reaches an end turns off, and focus moves to the other one.
 
 ## Behavior
 
