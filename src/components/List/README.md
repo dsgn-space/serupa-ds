@@ -96,6 +96,18 @@ const [picked, setPicked] = React.useState<string[]>([]);
 - **Keyboard:** an item with `href` or `onClick` has one Tab stop, its main area, where Enter (Space too for a button) acts. A disabled one is skipped. Controls in `trailing` are Tab stops of their own. Plain items add none.
 - **With `selectionMode`:** the list is a grid (`role="grid"`, `aria-multiselectable` when multiple) of rows named by their titles, with `aria-selected`. It's one Tab stop: Up and Down move between rows, Home and End go to the ends, Right and Left reach the row's checkbox, link and actions. Space picks the focused row, Shift with Up or Down picks as it moves, Ctrl or Cmd+A picks every row, and Enter follows the row's link or presses its button. A picked row has a checked box and the primary bar, not only a background.
 
+### Keyboard
+
+| Key | Does |
+| --- | --- |
+| Tab | A link or button row's main area, then its trailing controls. With `selectionMode`, the list is one Tab stop, on the last row focused |
+| Enter | Follows the row's link or presses its button; with `selectionMode`, picks a row that has neither |
+| Space | Presses a button row; with `selectionMode`, picks or clears the focused row (with Shift, the run from the last one picked) |
+| Down / Up | With `selectionMode`: the next or previous row (with Shift, picking as it moves) |
+| Home / End | With `selectionMode`: the first or last row |
+| Right / Left | With `selectionMode`: into the row, through its checkbox, link and actions, and back to the row |
+| Ctrl+A / Cmd+A | With `selectionMode="multiple"`: picks every row that isn't disabled |
+
 ## Props
 
 ### List

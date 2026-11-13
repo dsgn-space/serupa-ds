@@ -41,6 +41,7 @@
 .dk-list--selectable > .dk-list__item:focus-visible { outline: var(--focus-ring-width) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-list__item--pickable { cursor: pointer; touch-action: manipulation; }
 @media (hover: hover) { .dk-list__item--pickable:hover:not(.dk-list__item--disabled) { background: var(--list-bg-hover, var(--dk-row-hover, var(--surface-hover))); } }
+.dk-list__item--pickable:not(.dk-list__item--disabled):active { background: var(--list-bg-pressed, var(--pressed)); }
 .dk-list__item--pickable.dk-list__item--disabled { cursor: not-allowed; }
 /* Placeholder rows: the text lines fill the row, and the circle is the size of what will lead it. */
 .dk-list__loading .dk-list__text { flex: auto; }

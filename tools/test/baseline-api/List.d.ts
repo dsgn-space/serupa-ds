@@ -44,7 +44,7 @@ interface ListLoadingItemsProps {
     leading?: "icon" | "lg" | "md" | "sm" | "xl" | "xs" | undefined;
     label?: string | undefined;
 }
-interface ListSelectAllProps extends Omit<CheckboxProps, "checked" | "defaultChecked" | "indeterminate" | "name" | "onChange" | "onCheckedChange" | "selectAll" | "value"> {
+interface ListSelectAllProps extends Omit<CheckboxProps, "checked" | "defaultChecked" | "description" | "indeterminate" | "invalid" | "name" | "onChange" | "onCheckedChange" | "selectAll" | "value" | "variant"> {
     values: readonly string[];
     selected: readonly string[];
     onSelectedChange: (values: string[]) => void;

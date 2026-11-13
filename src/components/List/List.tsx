@@ -232,7 +232,7 @@ export interface ListLoadingItemsProps {
 
 const noop = () => {};   // the List picks on the click, so the box's own change does nothing
 
-export interface ListSelectAllProps extends Omit<CheckboxProps, 'checked' | 'defaultChecked' | 'indeterminate' | 'onChange' | 'onCheckedChange' | 'selectAll' | 'name' | 'value'> {
+export interface ListSelectAllProps extends Omit<CheckboxProps, 'checked' | 'defaultChecked' | 'indeterminate' | 'onChange' | 'onCheckedChange' | 'selectAll' | 'name' | 'value' | 'variant' | 'description' | 'invalid'> {
   /** The values of every row it picks: the List's enabled rows. */
   values: readonly string[];
   /** The values picked now: the List's selected. */

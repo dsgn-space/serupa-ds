@@ -429,7 +429,7 @@ describe('List with selectionMode', () => {
     await userEvent.keyboard('{ArrowDown}{ArrowUp}');
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const r = row('Budget.xlsx'), title = r.querySelector('.dk-list__title') as HTMLElement;
+      const r = row('Budget.xlsx'), title = document.getElementById(r.getAttribute('aria-labelledby')!)!;
       expect(contrast(css(title).color, css(r).backgroundColor), th).toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(r).outlineColor, css(document.body).backgroundColor), th + ' ring').toBeGreaterThanOrEqual(3);
     }
