@@ -200,7 +200,8 @@ describe('Navbar', () => {
     const b = brand();
     expect(Math.round(b.top + b.height / 2)).toBe(24);
     // The 16px strip under the condensed bar is the page's: a press there lands on it, not on the bar.
-    expect(document.elementFromPoint(200, 56)?.id).toBe('under');
+    // All of it, to its top: the content, moved down to the middle of what shows, doesn't take the strip's top 8px.
+    expect([50, 53, 56, 63].map((y) => document.elementFromPoint(200, y)?.id)).toEqual(['under', 'under', 'under', 'under']);
     expect(n.contains(document.elementFromPoint(200, 40))).toBe(true);
   }));
 

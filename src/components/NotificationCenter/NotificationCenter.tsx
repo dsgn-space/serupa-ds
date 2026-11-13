@@ -101,7 +101,7 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
   const base = domId('dk-nc', React.useId());
   // The Drawer's own props are named below, so its other attributes (id, aria-*) pass through in rest.
   const rest = omit(props, { title: 1, description: 1, footer: 1, children: 1, items: 1, onMarkRead: 1, onMarkAllRead: 1, onClear: 1, empty: 1, settingsHref: 1, className: 1, open: 1, defaultOpen: 1, onOpenChange: 1,
-    placement: 1, side: 1, size: 1, modal: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1 } as const);
+    placement: 1, side: 1, size: 1, modal: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, snapPoints: 1, snap: 1, defaultSnap: 1, onSnapChange: 1 } as const);
   const { items, onMarkRead, onMarkAllRead, onClear } = props;
   // Each footer button only while it has something to do: "Mark all as read" while one is unread, "Clear all" while
   // the list has any (GR176). The one chosen may go away with it, so focus moves on (see below) instead of dropping.
