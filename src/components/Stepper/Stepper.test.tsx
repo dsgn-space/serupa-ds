@@ -37,7 +37,9 @@ function App(props: { sref?: React.Ref<HTMLElement> }) {
     <Stepper id="ver" orientation="vertical" steps={STEPS} current={1} />
     <Stepper id="sm" size="sm" steps={STEPS} current={4} />
     <div dir="rtl"><Stepper id="rtl" steps={STEPS.slice(0, 3)} current={1} /></div>
-    <Stepper id="tok" steps={STEPS.slice(0, 2)} current={0} style={{ '--stepper-active-bg': 'rgb(1, 2, 3)' } as React.CSSProperties} />
+    <Stepper id="tok" steps={STEPS.slice(0, 2)} current={0} style={{ '--stepper-bg-active': 'rgb(1, 2, 3)', '--stepper-text-active': 'rgb(4, 5, 6)' } as React.CSSProperties} />
+    <Stepper id="tok-old" steps={STEPS.slice(0, 2)} current={0} style={{ '--stepper-active-bg': 'rgb(1, 2, 3)', '--stepper-active-text': 'rgb(4, 5, 6)' } as React.CSSProperties} />
+    <Stepper id="tok-err" steps={[{ title: 'Upload', status: 'error' }, { title: 'Done' }]} current={1} style={{ '--stepper-bg-error': 'rgb(7, 8, 9)', '--stepper-text-error': 'rgb(4, 5, 6)' } as React.CSSProperties} />
   </div>;
 }
 const setup = async (sref?: React.Ref<HTMLElement>) => { clicks = []; await render(<App sref={sref} />, { wrapper: EnUS }); };
@@ -224,9 +226,10 @@ describe('Stepper', () => {
     expect([low, n]).toEqual([[], 54]);
   });
 
-  test('--stepper-active-bg overrides one stepper', async () => {
+  test('--stepper-bg-active, --stepper-text-active, --stepper-bg-error and --stepper-text-error override one stepper; the old names, state first (--stepper-active-bg), still work until 15.0.0', async () => {
     await setup();
-    expect(css(el('tok').querySelector(inStep(IND))).backgroundColor).toBe('rgb(1, 2, 3)');
+    const look = (id: string) => { const c = css(el(id).querySelector(inStep(IND))); return `${c.backgroundColor} / ${c.color}`; };
+    expect([look('tok'), look('tok-old'), look('tok-err')]).toEqual(['rgb(1, 2, 3) / rgb(4, 5, 6)', 'rgb(1, 2, 3) / rgb(4, 5, 6)', 'rgb(7, 8, 9) / rgb(4, 5, 6)']);
   });
   test('a long single word in a title wraps, in the line under the circles and in a vertical stepper, so 320px never scrolls sideways (RF1, WCAG 1.4.10)', async () => {
     const long = [{ title: 'Account' }, { title: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte', optional: true }, { title: 'Review' }];

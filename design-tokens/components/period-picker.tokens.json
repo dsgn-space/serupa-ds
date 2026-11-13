@@ -142,25 +142,47 @@
           }
         }
       },
-      "selected-bg": {
+      "bg-selected": {
         "$type": "color",
         "$value": "{color.primary}",
         "$description": "The chosen period's fill.",
         "$extensions": {
           "com.serupa": {
+            "cssVar": "--period-picker-bg-selected"
+          }
+        }
+      },
+      "selected-bg": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The old name of `--period-picker-bg-selected`, read when that isn't set. Removed in 15.0.0.",
+        "$extensions": {
+          "com.serupa": {
             "cssVar": "--period-picker-selected-bg"
+          }
+        },
+        "$deprecated": "Use --period-picker-bg-selected; removed in 15.0.0."
+      },
+      "text-selected": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "The chosen period's text (4.5:1 on selected-bg).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-text-selected"
           }
         }
       },
       "selected-text": {
         "$type": "color",
         "$value": "{color.on-primary}",
-        "$description": "The chosen period's text (4.5:1 on selected-bg).",
+        "$description": "The old name of `--period-picker-text-selected`, read when that isn't set. Removed in 15.0.0.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--period-picker-selected-text"
           }
-        }
+        },
+        "$deprecated": "Use --period-picker-text-selected; removed in 15.0.0."
       }
     },
     "radius": {
@@ -226,15 +248,26 @@
           }
         }
       },
-      "selected-depth": {
+      "depth-selected": {
         "$type": "shadow",
         "$value": "{shadow.depth-part}",
         "$description": "The chosen period in a tactile brand: raised like a part under the top light, as Calendar's selected day. None in the flat brands.",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--period-picker-selected-depth"
+            "cssVar": "--period-picker-depth-selected"
           }
         }
+      },
+      "selected-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The old name of `--period-picker-depth-selected`, read when that isn't set. Removed in 15.0.0.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-selected-depth"
+          }
+        },
+        "$deprecated": "Use --period-picker-depth-selected; removed in 15.0.0."
       }
     },
     "spacing": {
