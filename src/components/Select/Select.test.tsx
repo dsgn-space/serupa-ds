@@ -5,6 +5,8 @@ import { userEvent } from 'vitest/browser';
 import { color, css, lowContrast, withMotion } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Select } from './Select';
+import { Combobox } from '../Combobox/Combobox';
+import { DatePicker } from '../DatePicker/DatePicker';
 
 const field = (id: string) => document.getElementById(id) as HTMLSelectElement;
 const box = (id: string) => field(id).parentElement as HTMLElement;
@@ -24,12 +26,29 @@ function Role({ changes, sref }: { changes: string[]; sref?: React.Ref<HTMLSelec
 }
 
 describe('Select', () => {
+  test('the chevron ends where Combobox\'s and DatePicker\'s icons end, at every size, so the icons of a column of fields line up (GR391)', async () => {
+    await render(<div style={{ width: '240px' }}>
+      {(['sm', 'md', 'lg'] as const).map((size) => <div key={size} data-row={size}>
+        <Select aria-label="A" size={size}><option>One</option></Select>
+        <Combobox aria-label="B" size={size} options={['One']} />
+        <DatePicker aria-label="C" size={size} />
+      </div>)}
+    </div>);
+    for (const size of ['sm', 'md', 'lg']) {
+      const ends = [...document.querySelectorAll(`[data-row=${size}] svg`)].filter((i) => i.getClientRects().length).map((i) => Math.round(i.getBoundingClientRect().right * 2) / 2);
+      expect(ends.length).toBe(3);
+      expect(new Set(ends).size, `${size}: ${ends.join(', ')}`).toBe(1);
+      const sizes = [...document.querySelectorAll(`[data-row=${size}] svg`)].filter((i) => i.getClientRects().length).map((i) => Math.round(i.getBoundingClientRect().width));
+      expect(new Set(sizes).size, `${size}: ${sizes.join(', ')}`).toBe(1);
+    }
+  });
+
   test('a native <select> (no system arrow) in a .dk-select box (data-component="select"); md 32px text-sm, 12px start padding and room for the chevron at the end, 1px border, 6px corners', async () => {
     await render(<Grid><Role changes={[]} /></Grid>);
     const b = css(box('md')), f = css(field('md'));
     expect([field('md').tagName, box('md').dataset.component, f.appearance]).toEqual(['SELECT', 'select', 'none']);
     expect(box('md').className).toMatch(/dk-select dk-select--size-md/);
-    expect([b.height, f.fontSize, f.paddingLeft, f.paddingRight, b.borderTopWidth, b.borderRadius]).toEqual(['32px', '14px', '12px', '36px', '1px', '6px']);
+    expect([b.height, f.fontSize, f.paddingLeft, f.paddingRight, b.borderTopWidth, b.borderRadius]).toEqual(['32px', '14px', '12px', '32px', '1px', '6px']);
   });
 
   test('keyboard table: Tab reaches the select; ArrowDown and ArrowUp pick the next and previous option, skipping a disabled one; Space goes to the browser, which opens its list (FH1)', async () => {
