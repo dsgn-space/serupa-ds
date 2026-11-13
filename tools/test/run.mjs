@@ -123,7 +123,8 @@ const steps = [
   ...(update.length ? [['Public API', 'api.mjs', ...update], ['Utility classes', 'utilities.mjs', ...update]].map(node('checks')) : []),
   // Every other script in tools/test/ is a check (package, tokens, icons, guides, …), run by Vitest's checks project
   // (vitest.config.ts): a new one needs no entry here.
-  // SERUPA_SHARD=2/3 with --group checks: every third file (CI runs the shards in parallel).
+  // SERUPA_SHARD=2/3 with --group checks: a third of the checks by time (tools/test/vitest/checks-shard.ts; CI runs the
+  // shards in parallel).
   vitest('Checks (Vitest)', 'checks', 'checks', ...(process.env.SERUPA_SHARD && arg('--group') === 'checks' ? [`--shard=${process.env.SERUPA_SHARD}`] : [])),
   ...Object.entries(GROUPS).flatMap(([g, list]) => list.map(node(g))),
 ];
