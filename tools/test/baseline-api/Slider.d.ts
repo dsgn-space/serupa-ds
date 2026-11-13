@@ -34,6 +34,7 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
     required?: boolean | undefined;
     marks?: boolean | SliderMark[] | undefined;
     showValue?: boolean | undefined;
+    inputs?: boolean | undefined;
 }
 declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
