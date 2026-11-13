@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn, domId, oneOf, omit } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
+import { toMs } from '../../internal/cssTime';
 import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
 import { flattenChildren } from '../../internal/children';
@@ -46,7 +47,6 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
   keepMounted?: boolean | undefined;
 }
 
-const toMs = (t: string) => (parseFloat(t) || 0) * (t.trim().endsWith('ms') ? 1 : 1000);
 
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; many: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);

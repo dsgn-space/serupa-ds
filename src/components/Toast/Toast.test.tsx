@@ -509,6 +509,20 @@ describe('Toast: motion (DZ1)', () => {
   const ms = (a: Animation) => Number(a.effect!.getComputedTiming().duration);
   const runs = (e: Element) => e.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => [(a).transitionProperty, ms(a)]).sort();
   const byTitle = (t: string) => toasts().find((x) => x.textContent.includes(t))!;
+  test('the glide keeps its time when the tokens are written in seconds, as a minified stylesheet writes them (.2s for 200ms)', async () => {
+    document.documentElement.style.setProperty('--motion-enter-md', '.2s');
+    try {
+      await withMotion(async () => {
+        await render(<App />);
+        React.act(() => { toast({ title: 'First', duration: 0 }); });
+        React.act(() => { toast({ title: 'Second', duration: 0 }); });
+        await landed();
+        React.act(() => { toast.dismiss(byTitle('Second').dataset.toast); });
+        const glide = byTitle('First').getAnimations().find((x) => x.id === 'dk-toast-move');
+        expect(glide && ms(glide)).toBe(200);
+      });
+    } finally { document.documentElement.style.removeProperty('--motion-enter-md'); }
+  });
   test('slides in with a transition; closed, it fades and slides back toward its edge (kept, inert, until it ends) and the one left glides into its place at once, over 200ms; one there as the Toaster arrives is not slid in', async () => {
     await withMotion(async () => {
       await render(<App />);

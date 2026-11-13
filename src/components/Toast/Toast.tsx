@@ -3,6 +3,7 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn, oneOf, useIsoLayoutEffect } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
+import { toMs } from '../../internal/cssTime';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
@@ -390,7 +391,8 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
     const was = before.current, region = self.current;
     before.current = null;
     if (!was || !region || reducedMotion(region)) return;
-    const cs = getComputedStyle(region), ms = parseFloat(cs.getPropertyValue('--dk-toast-move')) || 0;
+    // toMs: a custom property keeps the text it was given, and a minified stylesheet says .2s where the tokens say 200ms.
+    const cs = getComputedStyle(region), ms = toMs(cs.getPropertyValue('--dk-toast-move'));
     if (!ms) return;
     for (const e of region.querySelectorAll<HTMLElement>(MOVES)) {
       const from = was.get(e.dataset.toast || 'more');
