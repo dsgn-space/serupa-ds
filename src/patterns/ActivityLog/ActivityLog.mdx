@@ -1,0 +1,41 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './ActivityLog.stories';
+
+<Meta of={Stories} />
+
+# Activity log
+
+What people did in a workspace, newest first: who, what and when, with a search, a type filter, more on request and an export. It's the record an admin checks after something changes.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A shared workspace where people change members, billing, security or content, and someone needs to know who did what.
+- Not for a person's own notifications: that's the Notifications pattern.
+- Not for a feed of updates people follow: that's the Activity feed block.
+
+## What each part is for
+
+- **A table with a caption**, so a screen reader reads each cell with its column: When, Who, What (1.3.1).
+- **Each event is a sentence**, "Ana Lima changed Chen Wei’s role to Admin", with its type beside it in words, not only in color (1.4.1). Write `action` as the rest of the sentence after the person's name.
+- **Times in the reader's locale**, "12 Nov 2026, 08:00" in en-GB, from `Intl.DateTimeFormat` with the provider's locale, and the exact moment in `<time dateTime>`.
+- **The count is a status.** "3 events" is said politely when a search or filter changes it, so nobody has to look for what changed (4.1.3). A new search starts from the first page again.
+- **Search** matches every word typed against the person and the action, so "ana role" finds Ana Lima's role changes.
+- **Load more** adds the next page under the last row, says what it added, and keeps focus on its button, so the place in the table isn't lost (2.4.3).
+- **No matches says so**, with Clear filters back to everything (3.3.3). A new workspace with nothing recorded says what will show up here.
+- **While the log loads**, set `loading`: the table is busy with placeholder rows and the count says "Loading activity". **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **Export** sends the events that match the search and filter, so what's exported is what's on the screen.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
+
+## What stays your app's job
+
+- **Fetching the events.** `events` is what the app has loaded. For a long log, load the next page from the server in your own Load more and pass the longer list.
+- **The file.** `onExport` gets the matching events: write the CSV and start the download.
+- **What gets recorded, and for how long.** Change "Kept for a year" to your own rule, and never record passwords or codes in an action.
