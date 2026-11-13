@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
-import { Button } from '../../components/Button/Button';
 import { Card } from '../../components/Card/Card';
 import { Link } from '../../components/Link/Link';
 import { Loader } from '../../components/Loader/Loader';
@@ -13,6 +12,7 @@ import { StatsRow, type Stat } from '../../blocks/StatsRow/StatsRow';
 import { ActivityFeed, type ActivityEvent } from '../../blocks/ActivityFeed/ActivityFeed';
 import { EmptyFirstRun, EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Dashboard: the page an account lands on. Key numbers, how much of the plan is used, the latest projects and what
    the team did, with skeletons while it loads and a first-run state before there's anything to show. For an app to
@@ -116,10 +116,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" aria-busy={loading || undefined} className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 outline-none">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Heading level={1}>Good morning, {name}</Heading>
-          {firstRun ? null : <Button leftIcon="add" onClick={onCreateProject}>New project</Button>}
-        </div>
+        <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
 
         {loadFailed ? (
           <Card>
