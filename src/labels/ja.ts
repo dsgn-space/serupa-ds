@@ -155,6 +155,8 @@ export const labels: SerupaLabels = {
   endDate: '終了日',
   chooseStartDate: '開始日を選択',
   chooseEndDate: '終了日を選択',
+  inRange: '範囲内',
+  rangeSelected: (range) => '選択した期間：' + range,
   presets: 'ショートカット',
   today: '今日',
   tomorrow: '明日',

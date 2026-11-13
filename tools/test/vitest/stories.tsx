@@ -58,10 +58,8 @@ const covered = (list: typeof stories): typeof stories => {
 export function storiesToRun(): typeof stories {
   return covered(stories);
 }
-// Stories whose server HTML is known not to hydrate yet, each with its reason, until their lane fixes them. Dashboard
-// formats its storage with the browser's own locale (toLocaleString(undefined), Dashboard.tsx), so a server in English
-// and a browser in another language disagree (found 13 Nov 2026 when the patterns joined these checks).
-export const HYDRATION_KNOWN = new Set(['Dashboard/Default']);
+// Stories whose server HTML is known not to hydrate yet, each with its reason, until their lane fixes them.
+export const HYDRATION_KNOWN = new Set<string>([]);
 
 // The same with the blocks and patterns, for the hydration checks.
 export function hydrationToRun(): typeof stories {
