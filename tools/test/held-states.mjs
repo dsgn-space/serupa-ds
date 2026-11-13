@@ -23,10 +23,7 @@ const EXEMPT = {
   'Navbar .dk-navbar__menu-link--active': 'the current page keeps its fill; the plain menu link has the held fill',
   'Table .dk-table__row': 'rows are not buttons: the hover only follows the pointer along a long table',
 };
-const GAPS = {
-  'Input .dk-input-action--text': 'Taken by Audit (GR390): needs a step past primary-subtle',
-  'Menubar .dk-menubar__item': 'Taken by Audit (GR390)',
-};
+const GAPS = {};
 
 const DIR = path.join(PROJECT, 'src', 'components');
 const HOVER = /(?:^|[\s,{(>])((?:[a-z]+)?(?:\.dk-[a-z0-9_-]+)+):hover[^{]*\{([^{}]*)\}/gm;
