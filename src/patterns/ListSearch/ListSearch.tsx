@@ -174,7 +174,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             <EmptyLoadFailed title="Couldn’t load projects" onRetry={() => onRetry?.()} headingLevel={2} />
           ) : loading ? (
             // The header stays, so the columns don't move when the rows arrive; the placeholder rows are decorative.
-            <Table caption="Projects" hideCaption busy>
+            <Table caption="Projects" hideCaption loading>
               <TableHead><TableRow>
                 <TableHeaderCell><span className="sr-only">Select</span></TableHeaderCell>
                 <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Status</TableHeaderCell>

@@ -122,7 +122,7 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 - An indicator dot is hidden from screen readers. Say what it means on the control it sits on ("Notifications, new"), or give the dot an `aria-label` (it then becomes `role="img"`).
 - A number alone means little to a screen reader. Name the control the count sits on ("Notifications, 5 unread") and hide the badge with `aria-hidden`, or give the badge an `aria-label`.
 - A clickable badge is a real `<button>` or link, so Tab, Enter and Space work and screen readers announce it as one. Its label is its name; make it say what happens ("Filter: Open"), not just the status.
-- While loading, the label stays in the accessibility tree (the badge keeps its name), `aria-busy` is set and `loadingText` is announced once.
+- While loading, the label stays in the accessibility tree (the badge keeps its name), `aria-busy` is set and `loadingLabel` is announced once.
 - The remove button is reachable with Tab and pressed with Enter or Space. When `onRemove` takes the badge away and its × had focus, focus moves to the next tag's × in the same list, or the one before it after the last tag, so it isn't lost on the page. After the last tag, or to put focus somewhere else (such as the input that adds tags), move it in `onRemove`: the badge leaves focus alone then.
 - In forced-colors (high-contrast) mode every badge gets a visible border.
 
@@ -152,7 +152,8 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 | `href` | string | | Renders a link (the component set with `Serupa.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
 | `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
 | `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile. Once the ring shows, it stays at least 500ms, so loading that ends a moment later doesn't flash it |
-| `loadingText` | string | `'Loading…'` | Announced to screen readers when loading starts ("" announces nothing) |
+| `loadingLabel` | string | `'Loading…'` | Said to screen readers when loading starts, not shown ("" says nothing) |
+| `loadingText` | string | | Deprecated, removed in 15.0.0: use `loadingLabel` (a `…Text` prop is shown; these words are only said) |
 
 Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `data-*`, `ref`) goes to the outer element: a `<span>`, or the `<button>` or link when clickable. Every badge has `data-component="badge"`, `data-variant`, `data-tone` and `data-size` for tests, plus `data-interactive` when clickable and `data-loading` while loading.
 

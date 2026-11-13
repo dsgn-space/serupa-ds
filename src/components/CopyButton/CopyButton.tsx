@@ -11,7 +11,7 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { feedbackHold } from '../../internal/timing';
 
-export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'leftIcon' | 'rightIcon' | 'loading' | 'loadingText'> {
+export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'onCopy' | 'icon' | 'leftIcon' | 'rightIcon' | 'loading' | 'loadingLabel' | 'loadingText'> {
   /** What to copy: the text, or a function that returns it (or a promise of it) when the button is pressed. */
   value: string | (() => string | Promise<string>);
   /** The button's text. Default: "Copy" (labels.copy). */

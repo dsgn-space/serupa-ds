@@ -67,8 +67,8 @@ export interface ActivityFeedProps {
   loading?: boolean | undefined;
   /** How many skeleton rows to show while loading. Default: 3. */
   loadingCount?: number | undefined;
-  /** The skeletons' one name. Default: "Loading: " and the title. */
-  loadingText?: string | undefined;
+  /** The skeletons' one name, said to screen readers. Default: "Loading: " and the title. */
+  loadingLabel?: string | undefined;
   /** The load failed: a "Couldn’t load" message with Try again, which calls onRetry, in the list's place. Default: false. */
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
@@ -78,7 +78,7 @@ export interface ActivityFeedProps {
 }
 
 /** Who did what and when, newest first, with "Load more" that keeps focus in place and says how many were added. */
-export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, emptyText = 'No activity yet', loadMoreLabel, endText, loading = false, loadingCount = 3, loadingText, loadFailed = false, onRetry, loadFailedText = 'Couldn’t load the activity' }: ActivityFeedProps) {
+export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, emptyText = 'No activity yet', loadMoreLabel, endText, loading = false, loadingCount = 3, loadingLabel, loadFailed = false, onRetry, loadFailedText = 'Couldn’t load the activity' }: ActivityFeedProps) {
   const id = React.useId();
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
@@ -89,7 +89,7 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
             <li key={i} className="flex items-start gap-2">
               <Loader variant="skeleton" shape="circle" label="" className="shrink-0" />
               {/* One name for all of them: the first row is named, the others are only pictures. */}
-              <Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? (loadingText ?? 'Loading: ' + title) : ''} className="min-w-0 flex-1" />
+              <Loader variant="skeleton" shape="text" size="sm" lines={2} label={i === 0 ? (loadingLabel ?? 'Loading: ' + title) : ''} className="min-w-0 flex-1" />
             </li>
           ))}
         </ul>

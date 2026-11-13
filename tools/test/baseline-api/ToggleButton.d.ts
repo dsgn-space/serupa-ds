@@ -1,5 +1,5 @@
 // exports: ToggleButton, type ToggleButtonProps
-interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "destructive" | "loading" | "loadingText" | "variant"> {
+interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "destructive" | "loading" | "loadingLabel" | "loadingText" | "variant"> {
     pressed?: boolean | undefined;
     defaultPressed?: boolean | undefined;
     onPressedChange?: ((pressed: boolean) => void) | undefined;
