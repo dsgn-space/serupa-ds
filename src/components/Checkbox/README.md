@@ -166,7 +166,7 @@ Each is an optional override: set it on the page, a container or one checkbox. T
 | `--checkbox-label-color` | `text` | The label |
 | `--checkbox-description-color` | `text-muted` | The description |
 | `--checkbox-focus-ring` | `focus-ring` | The focus ring |
-| `--checkbox-invalid` | `danger` | Border and focus ring when invalid |
+| `--checkbox-invalid` | `field-border-invalid` | Border and focus ring when invalid |
 | `--checkbox-card-bg` | `surface` | A card checkbox's background. |
 | `--checkbox-card-border` | `border` | A card's border. |
 | `--checkbox-card-border-hover` | `field-border-hover` | A card's border under the pointer. |

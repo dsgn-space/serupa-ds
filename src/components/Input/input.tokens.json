@@ -114,7 +114,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.field-border-invalid}",
         "$description": "Border and ring when invalid",
         "$extensions": {
           "com.serupa": {
@@ -144,7 +144,7 @@
       },
       "action-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.field-hover}",
         "$description": "An icon action's background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -154,7 +154,7 @@
       },
       "action-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.field-pressed}",
         "$description": "An icon action's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {
@@ -164,7 +164,7 @@
       },
       "action-text": {
         "$type": "color",
-        "$value": "{color.primary}",
+        "$value": "{color.field-action}",
         "$description": "A text action's words, such as Apply (4.5:1 on the field).",
         "$extensions": {
           "com.serupa": {

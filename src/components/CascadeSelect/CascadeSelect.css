@@ -31,7 +31,7 @@
   --dk-cs-bd: var(--dk-cs-ring); transition-duration: var(--duration-0);
   box-shadow: 0 0 0 var(--border-width-1) var(--dk-cs-bd); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0);
 }
-.dk-cascade-select--invalid { --dk-cs-bd: var(--cascade-select-invalid, var(--danger)); --dk-cs-ring: var(--cascade-select-invalid, var(--danger)); }
+.dk-cascade-select--invalid { --dk-cs-bd: var(--cascade-select-invalid, var(--field-border-invalid)); --dk-cs-ring: var(--cascade-select-invalid, var(--field-border-invalid)); }
 .dk-cascade-select--readonly .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); cursor: default; }
 .dk-cascade-select--disabled .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-cascade-select__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

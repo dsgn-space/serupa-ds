@@ -118,7 +118,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-placeholder` | `placeholder` | The placeholder |
 | `--select-icon-color` | `text-muted` | Chevron and left icon |
 | `--select-focus-ring` | `focus-ring` | Border and ring while focused |
-| `--select-invalid` | `danger` | Border and ring when invalid |
+| `--select-invalid` | `field-border-invalid` | Border and ring when invalid |
 
 **Sizing**
 

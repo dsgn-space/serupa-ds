@@ -118,7 +118,7 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-border-hover` | `field-border-hover` | Border on hover |
 | `--textarea-placeholder` | `placeholder` | Placeholder text |
 | `--textarea-focus-ring` | `focus-ring` | Border and ring while focused |
-| `--textarea-invalid` | `danger` | Border and ring when invalid |
+| `--textarea-invalid` | `field-border-invalid` | Border and ring when invalid |
 | `--textarea-count` | `placeholder` | The character count |
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
 

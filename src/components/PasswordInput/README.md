@@ -85,8 +85,8 @@ The field uses Input's tokens. These style the show/hide button; each is an opti
 | --- | --- | --- |
 | `--password-input-toggle` | `text-muted` | The show/hide button's icon (3:1 on the field). |
 | `--password-input-toggle-hover` | `text` | The icon on hover. |
-| `--password-input-toggle-bg-hover` | `secondary` | The button's background on hover. |
-| `--password-input-toggle-bg-pressed` | `secondary-hover` | The show/hide button's background while it's held down, one step past hover. |
+| `--password-input-toggle-bg-hover` | `field-hover` | The button's background on hover. |
+| `--password-input-toggle-bg-pressed` | `field-pressed` | The show/hide button's background while it's held down, one step past hover. |
 | `--password-input-focus-ring` | `focus-ring` | The button's keyboard focus ring. |
 | `--password-input-caps` | `placeholder` | The Caps Lock hint (4.5:1 on the field). |
 | `--password-input-toggle-radius` | `radius-inner` | The button's corners (4px). |

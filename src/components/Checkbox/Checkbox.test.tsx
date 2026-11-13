@@ -162,7 +162,7 @@ describe('Checkbox', () => {
   test('invalid: aria-invalid and a danger border', async () => {
     await render(<Checkbox id="i" invalid>Terms</Checkbox>);
     expect(input('i').getAttribute('aria-invalid')).toBe('true');
-    expect(css(input('i')).borderTopColor).toBe(color('var(--danger)'));
+    expect(css(input('i')).borderTopColor).toBe(color('var(--field-border-invalid)'));
     expect(label('i').className).toMatch(/dk-checkbox--invalid/);
   });
 
@@ -221,7 +221,7 @@ describe('Checkbox', () => {
       ['check on fill', 'var(--on-primary)', 'var(--primary)', 4.5],
       ['check on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 4.5],
       ['focus ring', 'var(--focus-ring)', 'var(--surface)', 3],
-      ['invalid border', 'var(--danger)', 'var(--surface)', 3],
+      ['invalid border', 'var(--field-border-invalid)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
 });

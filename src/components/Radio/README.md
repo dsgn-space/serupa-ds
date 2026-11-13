@@ -148,7 +148,7 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-label-color` | `text` | The label |
 | `--radio-description-color` | `text-muted` | The description |
 | `--radio-focus-ring` | `focus-ring` | The focus ring |
-| `--radio-invalid` | `danger` | Border and focus ring when invalid |
+| `--radio-invalid` | `field-border-invalid` | Border and focus ring when invalid |
 | `--radio-card-bg` | `surface` | A card radio's background. |
 | `--radio-card-border` | `border` | A card's border. |
 | `--radio-card-border-hover` | `field-border-hover` | A card's border under the pointer. |

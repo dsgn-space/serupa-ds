@@ -124,7 +124,7 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-placeholder` | `placeholder` | The placeholder (4.5:1 on bg). |
 | `--cascade-select-border` | `field-border` | The button's outline (3:1). |
 | `--cascade-select-border-hover` | `field-border-hover` | Its outline under the pointer. |
-| `--cascade-select-invalid` | `danger` | The outline when invalid. |
+| `--cascade-select-invalid` | `field-border-invalid` | The outline when invalid. |
 | `--cascade-select-bg-disabled` | `field-readonly` | The button's background when read-only or disabled. |
 | `--cascade-select-icon` | `text-muted` | The chevron (3:1). |
 | `--cascade-select-muted` | `text-muted` | Level names, notes and the children chevrons (4.5:1 on the panel). |

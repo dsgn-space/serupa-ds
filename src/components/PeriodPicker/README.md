@@ -112,7 +112,7 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | `--period-picker-placeholder` | `placeholder` | The placeholder on the button. |
 | `--period-picker-border` | `field-border` | The button's outline (3:1 on the page). |
 | `--period-picker-border-hover` | `field-border-hover` | The button's outline on hover. |
-| `--period-picker-invalid` | `danger` | The outline and focus ring when invalid. |
+| `--period-picker-invalid` | `field-border-invalid` | The outline and focus ring when invalid. |
 | `--period-picker-bg-disabled` | `field-readonly` | The button's background when read-only or disabled. |
 | `--period-picker-icon` | `text-muted` | The calendar icon on the button. |
 | `--period-picker-focus-ring` | `focus-ring` | The focus ring, on the button and on a period. |

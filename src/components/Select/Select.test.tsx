@@ -186,12 +186,14 @@ describe('Select', () => {
     for (const id of ['ro', 'ro-c']) { field(id).value = 'c'; field(id).dispatchEvent(new Event('change', { bubbles: true })); }
     await expect.poll(() => [field('ro').value, field('ro-c').value]).toEqual(['b', 'b']);
     const sent = new FormData(document.getElementById('ro-form') as HTMLFormElement).get('role');
+    // No hover change: the read-only box keeps the border it had before the pointer came (in light themes the hover
+    // border and the focus ring share a color, so it's held to its own resting border, not compared with one).
     await userEvent.hover(field('rw'));
-    const hoverEditable = css(box('rw')).borderTopColor;
+    const roBefore = css(box('ro')).borderTopColor;
     await userEvent.hover(field('ro'));
     expect([at, keyed, space, press, changes, sent, field('ro').getAttribute('aria-readonly'), field('ro').disabled]).toEqual(['ro', 'b', true, true, [], 'b', 'true', false]);
     expect([css(box('ro')).backgroundColor, css(field('ro')).cursor, box('ro').className]).toEqual([color('var(--field-readonly)'), 'default', expect.stringMatching(/dk-select--readonly/)]);
-    expect(css(box('ro')).borderTopColor).not.toBe(hoverEditable);
+    expect(css(box('ro')).borderTopColor).toBe(roBefore);
   });
 
   test('GR161: a controlled value that matches no option warns once (the <select> shows the first option and a form sends it); one that matches, a placeholder\'s "" or a child <option> doesn\'t', async () => {
@@ -221,7 +223,7 @@ describe('Select', () => {
       ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
       ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
-      ['invalid', 'var(--danger)', 'var(--field)', 3],
+      ['invalid', 'var(--field-border-invalid)', 'var(--field)', 3],
     ])).toEqual([]);
   });
 

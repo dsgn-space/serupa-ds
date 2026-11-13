@@ -171,6 +171,10 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `field-border-hover` | `‹brand›-500` | `‹brand›-500` | Field border on hover: the accent one step softer than `primary` (teal 600 and 500 in Modern). |
 | `border-control` | `zinc-500` | `zinc-400` | The edge of a control that isn't a field: Slider and Switch tracks, Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches, FileUpload's drop area, SignaturePad's box. 3:1+ on `surface` (WCAG 1.4.11). |
 | `border-control-hover` | `zinc-600` | `zinc-300` | `border-control` on hover (Switch's track). |
+| `field-hover` | `zinc-100` | `zinc-600` | A button inside a field under the pointer: the calendar, clock and country buttons, Input's icon actions, NumberInput's steppers. |
+| `field-pressed` | `zinc-200` | `zinc-500` | The same button held down. |
+| `field-border-invalid` | `red-600` | `red-400` | An invalid field's border: `danger` in light; in dark a lighter red, since `danger` is under 3:1 on the zinc-700 field. |
+| `field-action` | `‹brand›-600` | `‹brand›-300` | A text action inside a field (Input's "Apply"): `primary` in light, a shade lighter in dark for 4.5:1 on the field. |
 | `placeholder` | `zinc-500` | `zinc-300` | Placeholder text, and other muted text inside a field (a prefix, a suffix, a count): 4.5:1+ on `field`. A hint, never a label. |
 | `overlay` | zinc-900 at 50% | zinc-950 at 70% | The dimmed backdrop behind dialogs and drawers. |
 | `picture-edge` | black at 10% | white at 10% | A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color. |

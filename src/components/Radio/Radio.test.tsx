@@ -185,7 +185,7 @@ describe('Radio', () => {
     expect([g.getAttribute('aria-invalid'), g.getAttribute('aria-required'), input('x1').required]).toEqual(['true', 'true', true]);
     expect(g.className).toMatch(/dk-radio-group--invalid/);
     expect(wrap('x1').className).toMatch(/dk-radio--invalid/);
-    await expect.poll(() => css(input('x1')).borderTopColor).toBe(color('var(--danger)'));
+    await expect.poll(() => css(input('x1')).borderTopColor).toBe(color('var(--field-border-invalid)'));
   });
 
   test('disabled group: every radio disabled, 50%, not-allowed; the unchecked one on surface-muted; clicks do nothing', async () => {
@@ -238,7 +238,7 @@ describe('Radio', () => {
   test('hover: field-border-hover; invalid keeps the danger border', async () => {
     await render(<Grid><Numbers /><Invalid /></Grid>);
     await userEvent.hover(input('x2'));
-    await expect.poll(() => css(input('x2')).borderTopColor).toBe(color('var(--danger)'));
+    await expect.poll(() => css(input('x2')).borderTopColor).toBe(color('var(--field-border-invalid)'));
     await userEvent.hover(input('n1'));
     await expect.poll(() => css(input('n1')).borderTopColor).toBe(color('var(--field-border-hover)'));
   });
@@ -268,7 +268,7 @@ describe('Radio', () => {
       ['dot on fill', 'var(--on-primary)', 'var(--primary)', 3],
       ['dot on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 3],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
-      ['invalid', 'var(--danger)', 'var(--surface)', 3],
+      ['invalid', 'var(--field-border-invalid)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
 

@@ -90,8 +90,8 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--search-input-icon-color` | `text-muted` | The search icon (3:1 on the field). |
 | `--search-input-clear` | `text-muted` | The clear button's icon. |
 | `--search-input-clear-hover` | `text` | The clear button's icon on hover. |
-| `--search-input-clear-bg-hover` | `secondary` | The clear button's background on hover. |
-| `--search-input-clear-bg-pressed` | `secondary-hover` | The clear button's background while it's held down, one step past hover. |
+| `--search-input-clear-bg-hover` | `field-hover` | The clear button's background on hover. |
+| `--search-input-clear-bg-pressed` | `field-pressed` | The clear button's background while it's held down, one step past hover. |
 | `--search-input-focus-ring` | `focus-ring` | The clear button's keyboard focus ring. |
 | `--search-input-clear-radius` | `radius-inner` | The clear button's corners (4px). |
 | `--search-input-clear-padding` | `spacing-1` | Space around the clear button's icon (4px). |

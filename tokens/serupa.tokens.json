@@ -962,6 +962,78 @@
         }
       }
     },
+    "field-hover": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. The fill of a button inside a field under the pointer (a calendar or clock button, Input's icon action, NumberInput's steppers, the country button): `secondary` in light, zinc-600 in dark, a step past the zinc-700 field.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{zinc-600}",
+            "violet-light": "{zinc-100}",
+            "violet-dark": "{zinc-600}",
+            "emerald-light": "{zinc-100}",
+            "emerald-dark": "{zinc-600}"
+          }
+        }
+      }
+    },
+    "field-pressed": {
+      "$type": "color",
+      "$value": "{color.zinc-200}",
+      "$description": "Alias. The fill of a button inside a field while it's held down, one step past `field-hover` (zinc-200 in light, zinc-500 in dark; text keeps 4.5:1 on it).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{zinc-500}",
+            "violet-light": "{zinc-200}",
+            "violet-dark": "{zinc-500}",
+            "emerald-light": "{zinc-200}",
+            "emerald-dark": "{zinc-500}"
+          }
+        }
+      }
+    },
+    "field-border-invalid": {
+      "$type": "color",
+      "$value": "{color.red-600}",
+      "$description": "Alias. The border of an invalid field: `danger` in light, red-400 in dark, where `danger` (red-600) is under 3:1 on the zinc-700 field. 3:1+ on `field` and `surface` in every theme (WCAG 1.4.11).",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{red-400}",
+            "violet-light": "{red-600}",
+            "violet-dark": "{red-400}",
+            "emerald-light": "{red-600}",
+            "emerald-dark": "{red-400}"
+          }
+        }
+      }
+    },
+    "field-action": {
+      "$type": "color",
+      "$value": "{color.blue-600}",
+      "$description": "Alias. A text action inside a field (Input's \"Apply\"): `primary` in light, and in dark the brand one step lighter than `primary` (brand 300), which keeps 4.5:1 on the zinc-700 field.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{blue-300}",
+            "violet-light": "{violet-600}",
+            "violet-dark": "{violet-300}",
+            "emerald-light": "{teal-700}",
+            "emerald-dark": "{teal-300}"
+          },
+          "contrastMore": {
+            "blue-light": "{blue-800}",
+            "blue-dark": "{blue-300}",
+            "violet-light": "{violet-800}",
+            "violet-dark": "{violet-300}",
+            "emerald-light": "{teal-800}",
+            "emerald-dark": "{teal-300}"
+          }
+        }
+      }
+    },
     "placeholder": {
       "$type": "color",
       "$value": "{color.zinc-500}",

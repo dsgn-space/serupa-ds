@@ -15,8 +15,8 @@
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
 .dk-search-input__clear .dk-icon { font-size: var(--dk-input-icon); }
-@media (hover: hover) { .dk-search-input__clear:hover { background: var(--search-input-clear-bg-hover, var(--secondary)); color: var(--search-input-clear-hover, var(--text)); } }
-.dk-search-input__clear:active { background: var(--search-input-clear-bg-pressed, var(--secondary-hover)); color: var(--search-input-clear-hover, var(--text)); }
+@media (hover: hover) { .dk-search-input__clear:hover { background: var(--search-input-clear-bg-hover, var(--field-hover)); color: var(--search-input-clear-hover, var(--text)); } }
+.dk-search-input__clear:active { background: var(--search-input-clear-bg-pressed, var(--field-pressed)); color: var(--search-input-clear-hover, var(--text)); }
 .dk-search-input__clear:focus-visible { outline: var(--focus-ring-width) solid var(--search-input-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 @media (prefers-reduced-motion: reduce) { .dk-search-input__clear { transition: none; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: at size sm the button is 22px, so a box behind it reaches

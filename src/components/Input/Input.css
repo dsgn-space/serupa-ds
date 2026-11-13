@@ -51,12 +51,12 @@
    forced-colors mode draws, since box-shadow rings disappear there. The ring shows at once (it fades only on the
    way out), so focus is never late, and a field a popup focuses as it opens doesn't animate on its first frame. */
 .dk-input:focus-within { transition-duration: var(--duration-0); --dk-input-bd: var(--dk-input-ring); box-shadow: 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-ring), var(--input-depth, var(--depth-field)); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-.dk-input--invalid { --dk-input-bd: var(--input-invalid, var(--danger)); --dk-input-ring: var(--input-invalid, var(--danger)); }
-@media (hover: hover) { .dk-input--invalid:hover:not(.dk-input--disabled, :has(.dk-input__field:disabled), .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-invalid, var(--danger)); } }
+.dk-input--invalid { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); --dk-input-ring: var(--input-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-input--invalid:hover:not(.dk-input--disabled, :has(.dk-input__field:disabled), .dk-input--readonly, :focus-within) { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
 /* A native constraint (required, type="email", pattern, min…) that fails after people edit the field or try to send the
    form takes the invalid look too (:user-invalid, never on first paint). Separate rules, so a browser without it skips only these. */
-.dk-input:has(.dk-input__field:user-invalid) { --dk-input-bd: var(--input-invalid, var(--danger)); --dk-input-ring: var(--input-invalid, var(--danger)); }
-@media (hover: hover) { .dk-input:has(.dk-input__field:user-invalid):hover:not(:focus-within) { --dk-input-bd: var(--input-invalid, var(--danger)); } }
+.dk-input:has(.dk-input__field:user-invalid) { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); --dk-input-ring: var(--input-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-input:has(.dk-input__field:user-invalid):hover:not(:focus-within) { --dk-input-bd: var(--input-invalid, var(--field-border-invalid)); } }
 .dk-input--readonly { background: var(--input-bg-readonly, var(--field-readonly)); }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
 .dk-input--disabled, .dk-input:where(:has(.dk-input__field:disabled)) { background: var(--input-bg-readonly, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
@@ -75,7 +75,7 @@
   box-sizing: border-box;
   margin: var(--spacing-0); padding: var(--spacing-0) var(--input-action-padding-x, var(--spacing-2));
   border: var(--spacing-0); border-radius: var(--input-action-radius, var(--radius-inner)); background: transparent;
-  color: var(--input-action-text, var(--primary)); font: inherit; font-weight: var(--font-medium); white-space: nowrap;
+  color: var(--input-action-text, var(--field-action)); font: inherit; font-weight: var(--font-medium); white-space: nowrap;
   cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
@@ -84,12 +84,12 @@
 .dk-input-action__icon .dk-icon { font-size: var(--dk-input-icon); }
 @media (hover: hover) {
   .dk-input-action--text:hover:not(:disabled) { background: var(--input-action-text-bg-hover, var(--primary-subtle)); }
-  .dk-input-action--icon:hover:not(:disabled) { background: var(--input-action-bg-hover, var(--secondary)); color: var(--input-action-hover, var(--text)); }
+  .dk-input-action--icon:hover:not(:disabled) { background: var(--input-action-bg-hover, var(--field-hover)); color: var(--input-action-hover, var(--text)); }
 }
 /* Held down: the text action's tint deepens toward its own text color, so it follows a brand. */
 .dk-input-action--text:active:not(:disabled) { background: color-mix(in oklab, var(--input-action-text-bg-hover, var(--primary-subtle)), currentColor var(--opacity-10)); }
 /* Held down: one step past hover, with or without a pointer that hovers. */
-.dk-input-action--icon:active:not(:disabled) { background: var(--input-action-bg-pressed, var(--secondary-hover)); color: var(--input-action-hover, var(--text)); }
+.dk-input-action--icon:active:not(:disabled) { background: var(--input-action-bg-pressed, var(--field-pressed)); color: var(--input-action-hover, var(--text)); }
 .dk-input-action:focus-visible { outline: var(--focus-ring-width) solid var(--input-action-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 /* Disabled on its own (an Apply waiting for a code), it dims as Button does, with no hover shade. In a disabled
    field the whole box is dimmed already, so the action isn't dimmed twice. */

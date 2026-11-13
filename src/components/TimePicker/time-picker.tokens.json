@@ -24,7 +24,7 @@
       },
       "button-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.field-hover}",
         "$description": "The clock button's background on hover, as the other buttons inside fields.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "button-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.field-pressed}",
         "$description": "The clock button's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {

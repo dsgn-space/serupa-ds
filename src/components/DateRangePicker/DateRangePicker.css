@@ -13,7 +13,7 @@
 /* sm: the 24px calendar button is taller than the box inside its border, as it always was; it overlaps the border
    rather than growing the box past the control height. */
 .dk-date-range-picker.dk-input--size-sm .dk-date-range-picker__button { margin-block: calc(var(--spacing-0) - var(--input-border-width, var(--border-width-1))); }
-.dk-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--text-muted)); }
+.dk-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--placeholder)); }
 /* With presets, the shortcuts sit after the months, and under them on a narrow screen (RU11). */
 .dk-date-range-picker__body { display: flex; align-items: flex-start; gap: var(--spacing-4); }
 @media (max-width: 639.98px) { .dk-date-range-picker__body { flex-direction: column; } }

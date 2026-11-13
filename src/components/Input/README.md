@@ -149,12 +149,12 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-count` | `placeholder` | The character count |
 | `--input-count-full` | `text` | The count once `maxLength` is reached |
 | `--input-focus-ring` | `focus-ring` | Border and ring while focused |
-| `--input-invalid` | `danger` | Border and ring when invalid |
+| `--input-invalid` | `field-border-invalid` | Border and ring when invalid |
 | `--input-action` | `text-muted` | An icon action's icon (3:1 on the field). |
 | `--input-action-hover` | `text` | An icon action's icon on hover. |
-| `--input-action-bg-hover` | `secondary` | An icon action's background on hover. |
-| `--input-action-bg-pressed` | `secondary-hover` | An icon action's background while it's held down, one step past hover. |
-| `--input-action-text` | `primary` | A text action's words, such as Apply (4.5:1 on the field). |
+| `--input-action-bg-hover` | `field-hover` | An icon action's background on hover. |
+| `--input-action-bg-pressed` | `field-pressed` | An icon action's background while it's held down, one step past hover. |
+| `--input-action-text` | `field-action` | A text action's words, such as Apply (4.5:1 on the field). |
 | `--input-action-text-bg-hover` | `primary-subtle` | A text action's background on hover. |
 | `--input-action-focus-ring` | `focus-ring` | The ring around a focused action. |
 | `--input-rejected-color` | `text-muted` | The line under a DatePicker, DateRangePicker, TimePicker or NumberInput saying why typed text was put back. |

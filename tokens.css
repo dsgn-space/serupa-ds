@@ -22,6 +22,10 @@
   --field-border-hover: var(--blue-500);
   --border-control: var(--zinc-500);
   --border-control-hover: var(--zinc-600);
+  --field-hover: var(--zinc-100);
+  --field-pressed: var(--zinc-200);
+  --field-border-invalid: var(--red-600);
+  --field-action: var(--blue-600);
   --placeholder: var(--zinc-500);
   --overlay: #18181b80;
   --picture-edge: #0000001a;
@@ -371,6 +375,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: var(--blue-800);
   --dk-more-primary-hover: var(--blue-900);
+  --dk-more-field-action: var(--blue-800);
   --dk-more-focus-ring: var(--blue-700);
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -396,6 +401,10 @@
   --field-border-hover: var(--blue-500);
   --border-control: var(--zinc-400);
   --border-control-hover: var(--zinc-300);
+  --field-hover: var(--zinc-600);
+  --field-pressed: var(--zinc-500);
+  --field-border-invalid: var(--red-400);
+  --field-action: var(--blue-300);
   --placeholder: var(--zinc-300);
   --overlay: #09090bb3;
   --picture-edge: #ffffff1a;
@@ -483,6 +492,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: var(--blue-300);
   --dk-more-primary-hover: var(--blue-200);
+  --dk-more-field-action: var(--blue-300);
   --dk-more-focus-ring: var(--blue-300);
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -508,6 +518,10 @@
   --field-border-hover: var(--violet-500);
   --border-control: var(--zinc-500);
   --border-control-hover: var(--zinc-600);
+  --field-hover: var(--zinc-100);
+  --field-pressed: var(--zinc-200);
+  --field-border-invalid: var(--red-600);
+  --field-action: var(--violet-600);
   --placeholder: var(--zinc-500);
   --overlay: #18181b80;
   --picture-edge: #0000001a;
@@ -595,6 +609,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: var(--violet-800);
   --dk-more-primary-hover: var(--violet-900);
+  --dk-more-field-action: var(--violet-800);
   --dk-more-focus-ring: var(--violet-700);
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -620,6 +635,10 @@
   --field-border-hover: var(--violet-500);
   --border-control: var(--zinc-400);
   --border-control-hover: var(--zinc-300);
+  --field-hover: var(--zinc-600);
+  --field-pressed: var(--zinc-500);
+  --field-border-invalid: var(--red-400);
+  --field-action: var(--violet-300);
   --placeholder: var(--zinc-300);
   --overlay: #09090bb3;
   --picture-edge: #ffffff1a;
@@ -707,6 +726,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: var(--violet-300);
   --dk-more-primary-hover: var(--violet-200);
+  --dk-more-field-action: var(--violet-300);
   --dk-more-focus-ring: var(--violet-300);
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -732,6 +752,10 @@
   --field-border-hover: var(--teal-600);
   --border-control: var(--zinc-500);
   --border-control-hover: var(--zinc-600);
+  --field-hover: var(--zinc-100);
+  --field-pressed: var(--zinc-200);
+  --field-border-invalid: var(--red-600);
+  --field-action: var(--teal-700);
   --placeholder: var(--zinc-500);
   --overlay: #18181b80;
   --picture-edge: #0000001a;
@@ -819,6 +843,7 @@
   --ease-celebrate: var(--ease-out-expo);
   --dk-more-primary: var(--teal-800);
   --dk-more-primary-hover: var(--teal-900);
+  --dk-more-field-action: var(--teal-800);
   --dk-more-focus-ring: var(--teal-700);
   --dk-own-radius-control: var(--rounded-lg);
   --dk-own-radius-surface: var(--rounded-xl);
@@ -844,6 +869,10 @@
   --field-border-hover: var(--teal-500);
   --border-control: var(--zinc-400);
   --border-control-hover: var(--zinc-300);
+  --field-hover: var(--zinc-600);
+  --field-pressed: var(--zinc-500);
+  --field-border-invalid: var(--red-400);
+  --field-action: var(--teal-300);
   --placeholder: var(--zinc-300);
   --overlay: #09090bb3;
   --picture-edge: #ffffff1a;
@@ -931,6 +960,7 @@
   --ease-celebrate: var(--ease-out-expo);
   --dk-more-primary: var(--teal-300);
   --dk-more-primary-hover: var(--teal-200);
+  --dk-more-field-action: var(--teal-300);
   --dk-more-focus-ring: var(--teal-300);
   --dk-own-radius-control: var(--rounded-lg);
   --dk-own-radius-surface: var(--rounded-xl);
@@ -957,6 +987,10 @@
   --field-border-hover: var(--blue-500);
   --border-control: light-dark(var(--zinc-500), var(--zinc-400));
   --border-control-hover: light-dark(var(--zinc-600), var(--zinc-300));
+  --field-hover: light-dark(var(--zinc-100), var(--zinc-600));
+  --field-pressed: light-dark(var(--zinc-200), var(--zinc-500));
+  --field-border-invalid: light-dark(var(--red-600), var(--red-400));
+  --field-action: light-dark(var(--blue-600), var(--blue-300));
   --placeholder: light-dark(var(--zinc-500), var(--zinc-300));
   --overlay: light-dark(#18181b80, #09090bb3);
   --picture-edge: light-dark(#0000001a, #ffffff1a);
@@ -1037,6 +1071,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
+  --dk-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -1055,6 +1090,7 @@
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field-border-hover: var(--blue-500);
+  --field-action: light-dark(var(--blue-600), var(--blue-300));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
@@ -1099,6 +1135,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
+  --dk-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -1117,6 +1154,7 @@
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field-border-hover: var(--violet-500);
+  --field-action: light-dark(var(--violet-600), var(--violet-300));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
@@ -1161,6 +1199,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: light-dark(var(--violet-800), var(--violet-300));
   --dk-more-primary-hover: light-dark(var(--violet-900), var(--violet-200));
+  --dk-more-field-action: light-dark(var(--violet-800), var(--violet-300));
   --dk-more-focus-ring: light-dark(var(--violet-700), var(--violet-300));
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -1179,6 +1218,7 @@
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
   --field-border-hover: light-dark(var(--teal-600), var(--teal-500));
+  --field-action: light-dark(var(--teal-700), var(--teal-300));
   --text-inverse: light-dark(var(--white), var(--zinc-950));
   --border: light-dark(#09090b1a, #ffffff1f);
   --border-strong: light-dark(#09090b2e, #ffffff38);
@@ -1223,6 +1263,7 @@
   --ease-celebrate: var(--ease-out-expo);
   --dk-more-primary: light-dark(var(--teal-800), var(--teal-300));
   --dk-more-primary-hover: light-dark(var(--teal-900), var(--teal-200));
+  --dk-more-field-action: light-dark(var(--teal-800), var(--teal-300));
   --dk-more-focus-ring: light-dark(var(--teal-700), var(--teal-300));
   --dk-own-radius-control: var(--rounded-lg);
   --dk-own-radius-surface: var(--rounded-xl);
@@ -1241,6 +1282,7 @@
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field-border-hover: var(--blue-500);
+  --field-action: light-dark(var(--blue-600), var(--blue-300));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
@@ -1285,6 +1327,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-primary-hover: light-dark(var(--blue-900), var(--blue-200));
+  --dk-more-field-action: light-dark(var(--blue-800), var(--blue-300));
   --dk-more-focus-ring: light-dark(var(--blue-700), var(--blue-300));
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -1303,6 +1346,7 @@
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field-border-hover: var(--violet-500);
+  --field-action: light-dark(var(--violet-600), var(--violet-300));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
@@ -1347,6 +1391,7 @@
   --ease-celebrate: var(--ease-elastic);
   --dk-more-primary: light-dark(var(--violet-800), var(--violet-300));
   --dk-more-primary-hover: light-dark(var(--violet-900), var(--violet-200));
+  --dk-more-field-action: light-dark(var(--violet-800), var(--violet-300));
   --dk-more-focus-ring: light-dark(var(--violet-700), var(--violet-300));
   --dk-own-radius-control: var(--rounded-md);
   --dk-own-radius-surface: var(--rounded-lg);
@@ -1365,6 +1410,7 @@
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
   --field-border-hover: light-dark(var(--teal-600), var(--teal-500));
+  --field-action: light-dark(var(--teal-700), var(--teal-300));
   --text-inverse: light-dark(var(--white), var(--zinc-950));
   --border: light-dark(#09090b1a, #ffffff1f);
   --border-strong: light-dark(#09090b2e, #ffffff38);
@@ -1409,6 +1455,7 @@
   --ease-celebrate: var(--ease-out-expo);
   --dk-more-primary: light-dark(var(--teal-800), var(--teal-300));
   --dk-more-primary-hover: light-dark(var(--teal-900), var(--teal-200));
+  --dk-more-field-action: light-dark(var(--teal-800), var(--teal-300));
   --dk-more-focus-ring: light-dark(var(--teal-700), var(--teal-300));
   --dk-own-radius-control: var(--rounded-lg);
   --dk-own-radius-surface: var(--rounded-xl);
@@ -1936,6 +1983,7 @@
 [data-contrast="more"]:not(#dk-more), [data-contrast="more"] :is([data-mode], [data-brand], [data-theme]):not(#dk-more) {
   --primary: var(--dk-more-primary);
   --primary-hover: var(--dk-more-primary-hover);
+  --field-action: var(--dk-more-field-action);
   --focus-ring: var(--dk-more-focus-ring);
 }
 @media (prefers-contrast: more) {
@@ -1963,6 +2011,7 @@
 :root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) :is([data-mode], [data-brand], [data-theme]):not([data-contrast="normal"], [data-contrast="normal"] *, #dk-more) {
   --primary: var(--dk-more-primary);
   --primary-hover: var(--dk-more-primary-hover);
+  --field-action: var(--dk-more-field-action);
   --focus-ring: var(--dk-more-focus-ring);
 }
 }

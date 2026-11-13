@@ -47,11 +47,11 @@
   outline: var(--focus-ring-width) solid var(--dk-radio-ring); outline-offset: var(--focus-ring-offset);
 }
 /* Invalid (the radio's own prop or its group's): a danger border while unchecked, and a danger focus ring. */
-.dk-radio--invalid .dk-radio__input { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); }
-@media (hover: hover) { .dk-radio--invalid:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); } }
+.dk-radio--invalid .dk-radio__input { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-radio--invalid:hover .dk-radio__input:not(:disabled, [readonly]) { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
 /* A required group with nothing picked once people try to send the form: as Input (:user-invalid). */
-.dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); }
-@media (hover: hover) { .dk-radio:hover .dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--danger)); --dk-radio-ring: var(--radio-invalid, var(--danger)); } }
+.dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); }
+@media (hover: hover) { .dk-radio:hover .dk-radio__input:user-invalid { --dk-radio-bd: var(--radio-invalid, var(--field-border-invalid)); --dk-radio-ring: var(--radio-invalid, var(--field-border-invalid)); } }
 .dk-radio__text { display: flex; flex-direction: column; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-radio__description { color: var(--radio-description-color, var(--text-muted)); }
 /* Read-only: a default cursor and no hover or press change, since a click does nothing. */
@@ -75,8 +75,8 @@
 .dk-radio--card:has(.dk-radio__input:checked) { --dk-radio-card-on: var(--radio-card-border-checked, var(--primary)); border-color: var(--dk-radio-card-on); box-shadow: inset 0 0 0 var(--radio-border-width, var(--border-width-1)) var(--dk-radio-card-on); }
 .dk-radio--card:has(.dk-radio__input:is(:focus-visible, [data-key-focus])) { outline: var(--focus-ring-width) solid var(--radio-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-radio--card .dk-radio__input:is(:focus-visible, [data-key-focus]) { outline: none; }
-.dk-radio--card.dk-radio--invalid:not(:has(.dk-radio__input:checked)) { border-color: var(--radio-invalid, var(--danger)); }
-.dk-radio--card.dk-radio--invalid:has(.dk-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--danger)); }
+.dk-radio--card.dk-radio--invalid:not(:has(.dk-radio__input:checked)) { border-color: var(--radio-invalid, var(--field-border-invalid)); }
+.dk-radio--card.dk-radio--invalid:has(.dk-radio__input:is(:focus-visible, [data-key-focus])) { outline-color: var(--radio-invalid, var(--field-border-invalid)); }
 @media (forced-colors: active) { .dk-radio--card:has(.dk-radio__input:checked) { --dk-radio-card-on: Highlight; } }
 @media (forced-colors: active) { .dk-radio__dot { background: CanvasText; } }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind
