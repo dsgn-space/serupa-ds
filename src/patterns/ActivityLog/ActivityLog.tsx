@@ -118,7 +118,7 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
           <p role="status" className="m-0 text-sm text-text-muted">{count}</p>
 
           {loading ? (
-            <Table caption="Events" hideCaption busy>
+            <Table caption="Events" hideCaption loading>
               <TableHead><TableRow><TableHeaderCell>When</TableHeaderCell><TableHeaderCell>Who</TableHeaderCell><TableHeaderCell>What</TableHeaderCell></TableRow></TableHead>
               <TableLoadingRows columns={3} rows={5} label="" />
             </Table>

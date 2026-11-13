@@ -410,7 +410,7 @@ describe('CheckboxGroup', () => {
   test("variant 'default' is the deprecated name for 'plain': it still draws the plain look, and warns once", async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<CheckboxGroup aria-label="Old" variant="default"><Checkbox value="a">A</Checkbox><Checkbox value="b" variant="default">B</Checkbox></CheckboxGroup>);
+      await render(<CheckboxGroup aria-label="Old" {...{ variant: 'default' as const }}><Checkbox value="a">A</Checkbox><Checkbox value="b" {...{ variant: 'default' as const }}>B</Checkbox></CheckboxGroup>);
       const items = page.getByRole('checkbox').elements() as HTMLInputElement[];
       expect(items.map((i) => (i.closest('label') as HTMLElement).className.includes('--card'))).toEqual([false, false]);
       const said = warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('variant-default'));
