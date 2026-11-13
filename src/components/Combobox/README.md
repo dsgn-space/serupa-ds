@@ -136,6 +136,8 @@ Every Input prop works (`size`, `invalid`, `leftIcon`, `placeholder`, `disabled`
 Each is an optional override: set it on the page, a container or one combobox. The field uses Input's tokens. The list lives in `src/components/Combobox/combobox.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from combobox.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--combobox-chevron` | `text-muted` | The chevron button's icon (3:1 on the field). |
@@ -148,14 +150,40 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
 | `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
 | `--combobox-check` | `primary` | The check next to the selected option. |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--combobox-listbox-shadow` | `elevation-overlay` | The list's shadow. |
+| `--combobox-listbox-depth` | `depth-surface` | The list box's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--combobox-listbox-radius` | `radius-surface` | The list's corners (8px). |
 | `--combobox-option-radius` | `radius-control` | An option's corners. Unset, they nest in the list's: its radius less its padding and border (3px), following the brand and data-radius. |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--combobox-listbox-max-height` | `spacing-60` | The list's height before it scrolls (240px). |
 | `--combobox-listbox-max-width` | `container-md` | The list's widest, unless the field is wider (448px). Longer labels wrap. |
 | `--combobox-option-height` | `control-height-md` | An option's least height (32px). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--combobox-listbox-padding` | `spacing-1` | Space inside the list (4px). |
 | `--combobox-option-padding-x` | `spacing-2` | Space on each side of an option (8px). |
 | `--combobox-offset` | `spacing-1` | The gap between the field and the list (4px). |
+
+**Layout**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--combobox-z-index` | `z-popover` | The list's stacking order, where the top layer isn't available. |
 <!-- token-table:end -->

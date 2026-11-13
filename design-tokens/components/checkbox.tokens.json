@@ -354,6 +354,28 @@
           }
         }
       }
+    },
+    "shadow": {
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-well}",
+        "$description": "The box's tactile layers while unticked: sunk into the page. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-depth"
+          }
+        }
+      },
+      "depth-checked": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The box's tactile layers once ticked: raised, with a highlight along the top. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--checkbox-depth-checked"
+          }
+        }
+      }
     }
   }
 }

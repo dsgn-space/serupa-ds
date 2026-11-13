@@ -21,7 +21,7 @@
 /* The track is the page's surface inside a field-border edge (WCAG 1.4.11): the edge marks the whole scale at 3:1, and every
    fill color is 3:1 against the page. A secondary track was 1.1:1 against the page, and some fills under 3:1 on it. */
 .dk-meter__track { position: relative; overflow: hidden; height: var(--dk-meter-h); border-radius: var(--meter-radius, var(--radius-pill)); background: var(--meter-track, var(--surface));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--meter-track-border, var(--field-border)); }
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--meter-track-border, var(--field-border)), var(--meter-track-depth, var(--depth-well)); }
 .dk-meter__fill { height: var(--sizing-full); border-radius: inherit; background: var(--dk-meter-fill); transition: translate var(--meter-duration, var(--motion-change-lg)) var(--ease-settle); }
 /* The fill is the track's full length, slid back by the part not filled (the track clips it): a new value moves it on
    the compositor, and its rounded end keeps its shape at any value (FB1). Right to left, it slides the other way. */

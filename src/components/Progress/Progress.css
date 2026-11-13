@@ -28,7 +28,7 @@
 .dk-progress--bar .dk-progress__track {
   position: relative; overflow: hidden; height: var(--dk-progress-h);
   border-radius: var(--progress-radius, var(--radius-pill)); background: var(--progress-track, var(--surface));
-  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--field-border));
+  box-shadow: inset var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--border-width-1) var(--progress-track-border, var(--field-border)), var(--progress-track-depth, var(--depth-well));
 }
 .dk-progress__fill {
   height: var(--sizing-full); border-radius: inherit; background: var(--dk-progress-fill);

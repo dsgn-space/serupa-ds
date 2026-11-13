@@ -12,7 +12,7 @@
   border: var(--popover-border-width, var(--border-width-1)) solid var(--popover-border, var(--border-overlay)); border-radius: var(--popover-radius, var(--radius-surface));
   background: var(--popover-bg, var(--surface-overlay)); color: var(--popover-text, var(--text));
   --dk-row-hover: var(--popover-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
-  box-shadow: var(--popover-shadow, var(--elevation-overlay));
+  box-shadow: var(--popover-depth, var(--depth-surface)), var(--popover-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
   transform-origin: var(--dk-layer-origin, top);
 }

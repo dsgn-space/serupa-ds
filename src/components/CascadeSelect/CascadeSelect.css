@@ -42,7 +42,7 @@
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--cascade-select-z-index, var(--z-popover));
   display: flex; max-inline-size: calc(var(--sizing-screen-w) - var(--spacing-4) - var(--spacing-4)); margin: var(--spacing-0); padding: var(--spacing-1); overflow-x: auto; overscroll-behavior-inline: contain;
   border: var(--border-width-1) solid var(--cascade-select-panel-border, var(--border-overlay)); border-radius: var(--cascade-select-panel-radius, var(--radius-surface));
-  background: var(--cascade-select-panel-bg, var(--surface-overlay)); color: var(--cascade-select-text, var(--text)); box-shadow: var(--cascade-select-panel-shadow, var(--elevation-overlay));
+  background: var(--cascade-select-panel-bg, var(--surface-overlay)); color: var(--cascade-select-text, var(--text)); box-shadow: var(--cascade-select-panel-depth, var(--depth-surface)), var(--cascade-select-panel-shadow, var(--elevation-overlay));
   cursor: default; transform-origin: var(--dk-layer-origin, top);
 }
 /* Motion, as DatePicker's popup: in from @starting-style, out with a fade kept in the top layer; gone at once when

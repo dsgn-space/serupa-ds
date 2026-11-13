@@ -12,6 +12,8 @@ import { CopyButton } from '../../components/CopyButton/CopyButton';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { Toaster, toast } from '../../components/Toast/Toast';
+import { TypeToConfirm } from '../../components/TypeToConfirm/TypeToConfirm';
+import { Alert } from '../../components/Alert/Alert';
 import type { ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
@@ -28,7 +30,10 @@ import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
      "This device" in words and has no Sign out.
    - 2.4.3, 4.1.3: after a sign-out, focus goes to the next device's Sign out (or the list's heading), and a toast says
      it's done.
-   Checking passwords and codes, and ending sessions, are the app's job: the on* props get them. */
+   - 3.3.4: deleting the account sits apart at the end, offers the data first, says what will be lost, and asks for the
+     account's email before its button works; a delete that fails says so in the dialog, which stays open. After it,
+     focus goes to the h1 of the page that says it's done.
+   Checking passwords and codes, ending sessions and deleting the account are the app's job: the on* props get them. */
 
 export interface SignedInDevice {
   id: string;
@@ -60,6 +65,12 @@ export interface AccountSecurityProps {
   onSignOut?: ((id: string) => void) | undefined;
   /** Sign out everywhere else was pressed. */
   onSignOutOthers?: (() => void) | undefined;
+  /** The account's email, typed to confirm deleting it. Default: "ana@example.com". */
+  email?: string | undefined;
+  /** Where "Download your data" leads. Default: "#export". */
+  dataHref?: string | undefined;
+  /** The email was typed and Delete pressed. Return its promise: a rejection keeps the dialog open and says so. */
+  onDeleteAccount?: (() => unknown) | undefined;
 }
 
 const MIN = 12;
@@ -82,7 +93,7 @@ export function passwordProblems(current: string, next: string): ErrorSummaryIte
 
 /** The security page: a skip link, a header with the way back, then main with the h1 and a section per part. */
 export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EHPK 3PXP', recoveryCodes = demoCodes, devices = demoDevices,
-  onChangePassword, onEnableTwoStep, onDisableTwoStep, onSignOut, onSignOutOthers }: AccountSecurityProps) {
+  onChangePassword, onEnableTwoStep, onDisableTwoStep, onSignOut, onSignOutOthers, email = 'ana@example.com', dataHref = '#export', onDeleteAccount }: AccountSecurityProps) {
   // Password
   const [current, setCurrent] = React.useState('');
   const [next, setNext] = React.useState('');
@@ -148,6 +159,19 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
     requestAnimationFrame(() => devicesHeading.current?.focus());
   };
 
+  // Deleting the account: a dialog that asks for the email, then a page that says it's done.
+  const [deleting, setDeleting] = React.useState(false);
+  const [deleteFailed, setDeleteFailed] = React.useState(false);
+  const [deleted, setDeleted] = React.useState(false);
+  const goneHeading = React.useRef<HTMLHeadingElement>(null);
+  React.useEffect(() => { if (deleted) goneHeading.current?.focus(); }, [deleted]);
+  const askDelete = (o: boolean) => { setDeleting(o); if (!o) setDeleteFailed(false); };
+  // The promise goes back to the button, which shows it's busy while a slow delete runs.
+  const deleteAccount = () => {
+    setDeleteFailed(false);
+    return Promise.resolve().then(() => onDeleteAccount?.()).then(() => { setDeleting(false); setDeleted(true); }, () => setDeleteFailed(true));
+  };
+
   const part = 'grid grid-cols-1 gap-4 border-b border-border py-6 md:grid-cols-3 md:gap-8';
   return (
     <div className="min-h-screen bg-surface text-text">
@@ -157,6 +181,13 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
         <Link href="#settings">Back to settings</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-6 outline-none">
+        {deleted ? (
+          <div className="flex flex-col gap-3">
+            <Heading level={1} ref={goneHeading} tabIndex={-1} className="outline-none">Your account is deleted</Heading>
+            <p className="m-0 text-text-muted">Your projects, files and settings are gone, and you’re signed out everywhere.</p>
+            <Link href="#home">Go to the home page</Link>
+          </div>
+        ) : <>
         <Heading level={1}>Security</Heading>
 
         <SettingsSection title="Password" description={`At least ${MIN} characters. A long phrase is easier to remember than symbols.`}
@@ -202,6 +233,20 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
           </div>
         </section>
 
+        <section aria-labelledby="delete-account" className={part}>
+          <div className="flex flex-col gap-1">
+            <Heading level={2} size="lg" id="delete-account">Delete your account</Heading>
+            <p className="m-0 text-sm text-text-muted">This can’t be undone.</p>
+          </div>
+          <div className="flex flex-col items-start gap-3 md:col-span-2">
+            <p className="m-0 max-w-prose">Deleting removes your projects, files and settings for good, and signs you out everywhere. Download your data first if you want to keep a copy.</p>
+            <div className="flex flex-wrap gap-2">
+              <Button href={dataHref} variant="outline">Download your data</Button>
+              <Button variant="outline" destructive onClick={() => askDelete(true)}>Delete account</Button>
+            </div>
+          </div>
+        </section>
+
         <Dialog open={setup !== 'closed'} onOpenChange={openSetup} finalFocus={twoStepButton}
           title={setup === 'codes' ? 'Save your recovery codes' : 'Turn on two-step verification'}
           description={setup === 'codes'
@@ -238,6 +283,15 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
             <Button variant="outline" destructive onClick={turnOff}>Turn off</Button>
           </div>
         </Dialog>
+
+        <Dialog alert open={deleting} onOpenChange={askDelete} title="Delete your account?"
+          description="This deletes your projects, files and settings for good. It can’t be undone.">
+          <div className="flex flex-col gap-4">
+            {deleteFailed ? <Alert tone="danger">Couldn’t delete your account. Try again.</Alert> : null}
+            <TypeToConfirm phrase={email} confirmLabel="Delete my account" onConfirm={deleteAccount} />
+          </div>
+        </Dialog>
+        </>}
       </main>
       <Toaster />
     </div>
