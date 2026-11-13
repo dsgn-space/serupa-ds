@@ -93,14 +93,34 @@ describe('AvatarGroup', () => {
     expect([g.children.length, more('neg'), g.dataset.size, g.hasAttribute('aria-label')]).toEqual([2, null, 'md', false]);
   });
 
-  test('size wins over each avatar\'s own (lg) and sets the "+N" too; overlap is 8px at xs/sm, 12px at md/lg and 16px at xl', async () => {
+  test('size wins over each avatar\'s own (lg) and sets the "+N" too; overlap is 0 at xs, 2px at sm, 4px at md, 8px at lg and 12px at xl', async () => {
     await render(<Col>{SIZES.map((s) => <AvatarGroup key={s} data-s={s} size={s} max={2}>{av(3)}</AvatarGroup>)}</Col>);
-    const want: Record<string, [number, number]> = { xs: [24, 8], sm: [32, 8], md: [40, 12], lg: [48, 12], xl: [64, 16] };
+    const want: Record<string, [number, number]> = { xs: [24, 0], sm: [32, 2], md: [40, 4], lg: [48, 8], xl: [64, 12] };
     for (const s of SIZES) {
       const g = document.querySelector(`[data-s="${s}"]`)!, a = kids(g);
       expect([s, Math.round(a[0]!.getBoundingClientRect().width), lap(a[0]!, a[1]!), lap(a[1]!, a[2]!), [...g.querySelectorAll<HTMLElement>(AV)].map((e) => e.dataset.size).join('')])
         .toEqual([s, want[s]![0], want[s]![1], want[s]![1], s.repeat(3)]);
     }
+  });
+
+  test('at every size the avatar before, with its ring, stops short of the next one\'s initials, so "GH" never reads as "H"', async () => {
+    const names = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Katherine Johnson', 'Budi Santoso'];
+    await render(<>{SIZES.map((s) => <AvatarGroup key={s} id={'read-' + s} size={s}>{names.map((x) => <Avatar key={x} name={x} />)}</AvatarGroup>)}</>);
+    const covered = SIZES.flatMap((s) => {
+      const frames = [...el('read-' + s).querySelectorAll(FACE)].map((a) => a.querySelector(FRAME) as HTMLElement);
+      return frames.slice(1).flatMap((f, i) => {
+        const text = document.createRange();
+        text.selectNodeContents(f);
+        const ring = parseFloat(getComputedStyle(frames[i]!).boxShadow.split(' ').at(-1)!) || 0;
+        // Where the ink of the first letter starts: the text's box, less the space the font leaves before it.
+        const ctx = document.createElement('canvas').getContext('2d')!;
+        ctx.font = getComputedStyle(f).font;
+        const ink = text.getBoundingClientRect().left - ctx.measureText(f.textContent).actualBoundingBoxLeft;
+        const over = frames[i]!.getBoundingClientRect().right + ring - ink;
+        return over > 0 ? [`${s} ${f.textContent}: ${over.toFixed(1)}px`] : [];
+      });
+    });
+    expect(covered).toEqual([]);
   });
 
   test('every avatar, "+N" included, has a 2px surface ring; earlier avatars sit on top of the next one; every status dot shows, not only the last one', async () => {
@@ -128,7 +148,7 @@ describe('AvatarGroup', () => {
     </AvatarGroup>);
     const a = [...el('wrap').querySelectorAll<HTMLElement>(AV)];
     expect([a.length, a.map((e) => e.dataset.size).join(), lap(a[0]!, a[1]!), lap(a[1]!, a[2]!), css(a[0]!.querySelector(FRAME)).boxShadow !== 'none', Math.round(a[0]!.getBoundingClientRect().width)])
-      .toEqual([3, 'sm,sm,sm', 8, 8, true, 32]);
+      .toEqual([3, 'sm,sm,sm', 2, 2, true, 32]);
     await userEvent.hover(a[0]!);
     await expect.poll(() => (el('wrap').querySelector<HTMLElement>('[role="tooltip"]'))?.hidden).toBe(false);
   });
@@ -136,7 +156,7 @@ describe('AvatarGroup', () => {
   test('RTL: the row runs right to left with the same overlap', async () => {
     await render(<div dir="rtl"><AvatarGroup id="rtl">{av(2)}</AvatarGroup></div>);
     const a = kids(el('rtl')).map((e) => e.getBoundingClientRect());
-    expect([Math.round(a[1]!.right - a[0]!.left), a[1]!.left < a[0]!.left]).toEqual([12, true]);
+    expect([Math.round(a[1]!.right - a[0]!.left), a[1]!.left < a[0]!.left]).toEqual([4, true]);
   });
 
   test('component tokens (--avatar-group-overlap-md, --avatar-group-ring) override one group', async () => {
