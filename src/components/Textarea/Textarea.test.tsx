@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { commands, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Textarea } from './Textarea';
@@ -315,5 +315,26 @@ describe('Textarea actions', () => {
     await render(<Comment showCount />);
     const c = document.getElementById(el('ac').getAttribute('aria-describedby')!.split(' ').pop()!)!;   // the count, found as what describes the field
     expect([row().firstElementChild === c, c.textContent, el('ac').getAttribute('aria-describedby') === c.id, Math.round(c.getBoundingClientRect().left + parseFloat(css(c).paddingLeft) - el('ac').getBoundingClientRect().left)]).toEqual([true, '10 / 200', true, 12]);   // its text lines up with the field's text
+  });
+});
+
+describe('Textarea in print', () => {
+  test('printed, a field with more text than fits shows all of it, and a blank one keeps its rows; on screen it still scrolls (GR395)', async () => {
+    const long = Array.from({ length: 30 }, (_, i) => 'Line ' + (i + 1)).join('\n');
+    await render(<div style={{ width: '320px' }}>
+      <Textarea aria-label="Notes" defaultValue={long} />
+      <Textarea aria-label="Sized" defaultValue={long} autoResize maxRows={4} />
+      <Textarea aria-label="Blank" rows={4} />
+    </div>);
+    const field = (n: string) => document.querySelector<HTMLTextAreaElement>(`textarea[aria-label="${n}"]`)!;
+    const notes = field('Notes'), sized = field('Sized'), blank = field('Blank');
+    const clipped = (t: HTMLTextAreaElement) => t.scrollHeight > t.clientHeight + 1;
+    const blankHeight = blank.getBoundingClientRect().height;
+    expect([clipped(notes), clipped(sized)]).toEqual([true, true]);
+    await commands.printMedia(true);
+    try {
+      expect([clipped(notes), clipped(sized), Math.round(blank.getBoundingClientRect().height)]).toEqual([false, false, Math.round(blankHeight)]);
+    } finally { await commands.printMedia(false); }
+    expect([clipped(notes), clipped(sized)]).toEqual([true, true]);
   });
 });

@@ -39,6 +39,17 @@
     field-sizing: content; min-height: var(--dk-ta-min); max-height: var(--dk-ta-max); overflow-y: auto; overscroll-behavior: contain;
   }
 }
+/* Print: the field grows to all of its text (its height may be the app's or a drag's, set inline, hence !important),
+   rows lines at least so a blank one keeps room to write in, instead of printing only the lines scrolled into view. */
+@media print {
+  @supports (field-sizing: content) {
+    .dk-textarea__field {
+      --dk-ta-min: calc(var(--dk-ta-rows) * 1lh + 2 * var(--dk-ta-py));
+      field-sizing: content; min-block-size: var(--dk-ta-min);
+      block-size: auto !important; max-block-size: none !important; overflow: visible; resize: none;
+    }
+  }
+}
 /* The count sits under the text, at the end, in text-xs with tabular digits; it turns text-colored at maxLength. */
 .dk-textarea__count {
   align-self: flex-end; padding: var(--spacing-0) var(--dk-ta-px) var(--dk-ta-py);
