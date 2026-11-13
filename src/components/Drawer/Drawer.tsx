@@ -222,7 +222,8 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   const drag = React.useRef<{ id: number; x: number; y: number; d: number; at: number; on: boolean; s: Samples; away: number } | null>(null);
   const onSwipeDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const t = e.target as Element;
-    if (!swipe || e.pointerType !== 'touch' || !e.isPrimary || t.closest('input, textarea, select, [contenteditable]')) return;
+    // swipeToClose={false} turns off closing by a drag, not a sheet's drag between its stops.
+    if ((!swipe && !snaps.length) || e.pointerType !== 'touch' || !e.isPrimary || t.closest('input, textarea, select, [contenteditable]')) return;
     if (!horiz && t.closest('.dk-drawer__body')) return;
     const away = side === 'start' || side === 'end' ? ((side === 'end') !== isRtl(e.currentTarget) ? 1 : -1) : side === 'right' || side === 'bottom' ? 1 : -1;
     drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, d: 0, at: 0, on: false, s: [{ t: e.timeStamp, p: 0 }], away };
@@ -233,7 +234,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   const sheetPx = (i: number) => snaps[i]! * (el.current ? el.current.clientHeight : window.innerHeight);
   const sheetMove = (p: HTMLElement, g: NonNullable<typeof drag.current>) => {
     const low = sheetPx(0), high = sheetPx(snaps.length - 1), h = sheetPx(snapAt) - g.d;
-    g.at = h >= low ? 0 : low - h;
+    g.at = h >= low ? 0 : swipe ? low - h : rubber(low - h, INWARD);   // without swipeToClose, it resists going down
     p.style.height = (h > high ? high - rubber(high - h, INWARD) : Math.max(h, low)) + 'px';
     p.style.translate = g.at ? shift(g.at, g.away) : '';
   };
@@ -260,7 +261,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   const sheetEnd = (p: HTMLElement, g: NonNullable<typeof drag.current>, v: number, released: boolean) => {
     const low = sheetPx(0), h = sheetPx(snapAt) - g.d, rest = h - (released ? project(v) : 0);
     // Only a drag that took it below its shortest stop can close it: a fast one down from a taller stop stops there.
-    const out = released && h < low && (v > FLICK || rest < low * 2 / 3);
+    const out = swipe && released && h < low && (v > FLICK || rest < low * 2 / 3);
     if (!out) {
       let to = snapAt;
       snaps.forEach((_, i) => { if (Math.abs(sheetPx(i) - rest) < Math.abs(sheetPx(to) - rest)) to = i; });
