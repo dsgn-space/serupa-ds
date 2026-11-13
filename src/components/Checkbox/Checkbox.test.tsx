@@ -397,6 +397,22 @@ describe('CheckboxGroup', () => {
     expect(lowContrast([['checked card border', 'var(--primary)', 'var(--surface)', 3]])).toEqual([]);
   });
 
+  test('a card clicked in Safari, where the label passes the click on to its box with detail 0 as a key would, shows no keyboard ring', async () => {
+    await render(<CheckboxGroup aria-label="Add-ons" variant="card">
+      <Checkbox value="a" description="Rp 15.000">Gift wrap</Checkbox>
+    </CheckboxGroup>);
+    const box = page.getByRole('checkbox').element() as HTMLInputElement;
+    const label = box.closest('label')!;
+    // What WebKit does: the label's own click (detail 1) is passed to the box as a simulated click, with detail 0.
+    const safari = (e: MouseEvent) => { if (e.detail === 0) return; e.preventDefault(); box.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 0 })); };
+    label.addEventListener('click', safari);
+    try { await userEvent.click(page.getByText('Rp 15.000', { exact: true })); } finally { label.removeEventListener('click', safari); }
+    expect([box.checked, box.hasAttribute('data-key-focus')]).toEqual([true, false]);
+    // A click with no pointer at all (a screen reader's, or Space) still counts as the keyboard's.
+    box.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 0 }));
+    expect([box.checked, box.hasAttribute('data-key-focus')]).toEqual([false, true]);
+  });
+
   test('L8E91 ref.current.focus() on a CheckboxGroup (a form library focusing the first invalid field) focuses its first box that isn\'t disabled', async () => {
     const g = React.createRef<HTMLDivElement>();
     await render(<CheckboxGroup ref={g} aria-label="Toppings"><Checkbox value="ham" disabled>Ham</Checkbox><Checkbox value="egg">Egg</Checkbox></CheckboxGroup>);
