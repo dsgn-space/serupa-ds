@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------
    Stepper: numbered circles (24 or 32px) with a title and an optional muted line, joined by 2px lines.
-   Upcoming: a surface circle with a field-border ring and a muted number. Current: primary, with a primary
+   Upcoming: a surface circle with a border-control ring and a muted number. Current: primary, with a primary
    ring 2px out. Complete: primary with a check, and the line after it primary. Error: danger. Warning: a
    warning-subtle circle, ringed and marked in warning text. Horizontal: the lines stretch between steps, level
    with the circles' middle. Vertical: the lines run down from each circle.
@@ -36,7 +36,7 @@ button.dk-stepper__head:active .dk-stepper__indicator { scale: var(--stepper-pre
 .dk-stepper__head:focus-visible { outline: var(--focus-ring-width) solid var(--stepper-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-stepper__indicator {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; width: var(--dk-step-size); height: var(--dk-step-size);
-  border: var(--border-width-2) solid var(--stepper-indicator-border, var(--field-border)); border-radius: var(--stepper-radius, var(--radius-pill));
+  border: var(--border-width-2) solid var(--stepper-indicator-border, var(--border-control)); border-radius: var(--stepper-radius, var(--radius-pill));
   background: var(--stepper-indicator-bg, var(--surface)); color: var(--stepper-indicator-text, var(--text-muted));
   font-weight: var(--font-semibold); font-variant-numeric: tabular-nums;
 }
@@ -54,7 +54,7 @@ button.dk-stepper__head:active .dk-stepper__indicator { scale: var(--stepper-pre
 .dk-stepper--size-sm { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-xs--line-height)) / 2); }
 .dk-stepper__title { text-wrap: balance; font-weight: var(--stepper-title-weight, var(--font-medium)); }
 .dk-stepper__description { color: var(--stepper-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-stepper__connector { flex: auto; background: var(--stepper-connector, var(--field-border)); }
+.dk-stepper__connector { flex: auto; background: var(--stepper-connector, var(--border-control)); }
 .dk-stepper__step--done .dk-stepper__connector { background: var(--stepper-connector-complete, var(--primary)); }
 .dk-stepper--horizontal .dk-stepper__connector {
   align-self: flex-start; min-width: var(--spacing-4); height: var(--dk-step-line);

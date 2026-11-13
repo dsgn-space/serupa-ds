@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Carousel: one slide at a time across the full width, with 12px corners. Round secondary previous and next
    buttons sit over the sides, 8px in, with shadow-sm; the dots sit centered 12px below: 8px circles in
-   field-border, the current one primary and 24px wide, each in a 24px target. Slides move in 300ms (at once
+   border-control, the current one primary and 24px wide, each in a 24px target. Slides move in 300ms (at once
    with reduced motion) and follow a swipe. With perView, the slides share the width, 16px apart. Every value
    goes through --carousel-* tokens.
    --------------------------------------------------------------- */
@@ -69,7 +69,7 @@
   width: var(--dk-dot-w);
   height: var(--dk-dot-h);
   border-radius: var(--rounded-full);
-  background: var(--carousel-dot, var(--field-border));
+  background: var(--carousel-dot, var(--border-control));
   clip-path: inset(var(--spacing-0) var(--dk-dot-clip) round var(--rounded-full));
   transition: clip-path var(--motion-change-sm) var(--ease-settle);
 }

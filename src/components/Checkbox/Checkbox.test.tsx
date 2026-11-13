@@ -162,7 +162,7 @@ describe('Checkbox', () => {
   test('invalid: aria-invalid and a danger border', async () => {
     await render(<Checkbox id="i" invalid>Terms</Checkbox>);
     expect(input('i').getAttribute('aria-invalid')).toBe('true');
-    expect(css(input('i')).borderTopColor).toBe(color('var(--danger)'));
+    expect(css(input('i')).borderTopColor).toBe(color('var(--field-border-invalid)'));
     expect(label('i').className).toMatch(/dk-checkbox--invalid/);
   });
 
@@ -211,17 +211,17 @@ describe('Checkbox', () => {
     expect(input('g2').matches(':disabled')).toBe(true);
   });
 
-  test('contrast in all six themes: label and description 4.5:1; border, checked fill, focus ring and invalid border 3:1; the check 4.5:1 on its fill', () => {
+  test('contrast in all six themes: label and description 4.5:1; checked fill, focus ring and invalid border 3:1, the soft border 1.3:1; the check 4.5:1 on its fill', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
-      ['border', 'var(--field-border)', 'var(--field)', 3],
-      ['border on page', 'var(--field-border)', 'var(--surface)', 3],
+      ['border, soft by design: under 3:1 on purpose, held to 1.3:1 (README, Accessibility)', 'var(--field-border)', 'var(--field)', 1.3],
+      ['border on page, soft by design: under 3:1 on purpose, held to 1.3:1', 'var(--field-border)', 'var(--surface)', 1.3],
       ['checked fill', 'var(--primary)', 'var(--surface)', 3],
       ['check on fill', 'var(--on-primary)', 'var(--primary)', 4.5],
       ['check on hover fill', 'var(--on-primary)', 'var(--primary-hover)', 4.5],
       ['focus ring', 'var(--focus-ring)', 'var(--surface)', 3],
-      ['invalid border', 'var(--danger)', 'var(--surface)', 3],
+      ['invalid border', 'var(--field-border-invalid)', 'var(--surface)', 3],
     ])).toEqual([]);
   });
 });

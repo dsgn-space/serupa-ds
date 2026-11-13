@@ -13,8 +13,8 @@
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
 .dk-combobox__button .dk-icon { font-size: var(--dk-input-icon); transition: rotate var(--motion-change-sm) var(--ease-move); }
-@media (hover: hover) { .dk-combobox__button:hover:not(:disabled) { background: var(--combobox-chevron-bg-hover, var(--secondary)); color: var(--combobox-chevron-hover, var(--text)); } }
-.dk-combobox__button:active:not(:disabled) { background: var(--combobox-chevron-bg-pressed, var(--secondary-hover)); color: var(--combobox-chevron-hover, var(--text)); }
+@media (hover: hover) { .dk-combobox__button:hover:not(:disabled) { background: var(--combobox-chevron-bg-hover, var(--field-hover)); color: var(--combobox-chevron-hover, var(--text)); } }
+.dk-combobox__button:active:not(:disabled) { background: var(--combobox-chevron-bg-pressed, var(--field-pressed)); color: var(--combobox-chevron-hover, var(--text)); }
 .dk-combobox__button:disabled { cursor: not-allowed; }
 .dk-combobox[data-state="open"] .dk-combobox__toggle .dk-icon { --dk-combobox-turn: 180deg; rotate: var(--dk-combobox-turn); }
 /* An option's corners nest in the list's: its radius less the padding and border between them (8 - 4 - 1 = 3px). */

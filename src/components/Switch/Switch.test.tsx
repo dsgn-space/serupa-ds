@@ -57,10 +57,10 @@ describe('Switch', () => {
     expect(calls).toEqual(['change', 'true change', 'change', 'false change']);
   });
 
-  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="dk-switch">; md: a 36 by 20px round track in field-border, a 16px thumb in field 2px from the start, centered on the label\'s first line', async () => {
+  test('a native checkbox with role="switch" (type and role can\'t be changed; no system look) in a <label class="dk-switch">; md: a 36 by 20px round track in border-control, a 16px thumb in field 2px from the start, centered on the label\'s first line', async () => {
     await setup();
     const s = still(), md = box('md');
-    expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--field-border)'), 16, color('var(--field)'), 2, '14px']);
+    expect([md.tag, md.root, md.comp, md.app, md.w, md.h, md.bg, md.thumb, md.thumbBg, md.startGap, md.fs]).toEqual(['INPUT:checkbox:switch', 'LABEL', 'switch', 'none', 36, 20, color('var(--border-control)'), 16, color('var(--field)'), 2, '14px']);
     expect(parseFloat(md.r)).toBeGreaterThanOrEqual(10);
     expect(md.vGap).toBeLessThan(0.5);
     expect(md.mid).toBeLessThan(1);
@@ -129,10 +129,10 @@ describe('Switch', () => {
     expect(i.checked).toBe(true);
   });
 
-  test('hover: field-border-hover while off, primary-hover while on', async () => {
+  test('hover: border-control-hover while off, primary-hover while on', async () => {
     await setup();
     await userEvent.hover(el('bad'));
-    await expect.poll(() => box('bad').bg).toBe(color('var(--field-border-hover)'));
+    await expect.poll(() => box('bad').bg).toBe(color('var(--border-control-hover)'));
     await away();
     await userEvent.hover(el('lg'));
     await expect.poll(() => box('lg').bg).toBe(color('var(--primary-hover)'));
@@ -152,7 +152,7 @@ describe('Switch', () => {
 
   test('invalid: aria-invalid, and a 2px danger edge on the grey off track, so it still reads as off', async () => {
     await setup();
-    await expect.poll(() => box('inv').bg).toBe(color('var(--field-border)'));
+    await expect.poll(() => box('inv').bg).toBe(color('var(--border-control)'));
     expect(css(el('inv')).boxShadow.replace(/, rgba\(0, 0, 0, 0\) 0px 0px 0px 0px$/, '')).toBe(`${color('var(--danger)')} 0px 0px 0px 2px inset`);
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
@@ -263,7 +263,7 @@ describe('Switch', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--field-border)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--field-border)', 3], ['off thumb, hover', 'var(--field)', 'var(--field-border-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
+      const pairs: Array<[string, string, string, number]> = [['label', 'var(--text)', 'var(--surface)', 4.5], ['description', 'var(--text-muted)', 'var(--surface)', 4.5], ['off track', 'var(--border-control)', 'var(--surface)', 3], ['on track', 'var(--primary)', 'var(--surface)', 3], ['off thumb', 'var(--field)', 'var(--border-control)', 3], ['off thumb, hover', 'var(--field)', 'var(--border-control-hover)', 3], ['on thumb', 'var(--on-primary)', 'var(--primary)', 3], ['on thumb, hover', 'var(--on-primary)', 'var(--primary-hover)', 3], ['invalid edge', 'var(--danger)', 'var(--surface)', 3], ['focus', 'var(--focus-ring)', 'var(--surface)', 3]];
       for (const [n, fg, bg, need] of pairs) { const r = contrast(fg, bg); if (r < need) low.push(`${th} ${n} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);

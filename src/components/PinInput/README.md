@@ -63,7 +63,7 @@ Drawn from the `Alphanumeric` story.
 | Arrows, Home, End | Nothing: the caret stays after the last character |
 | Ctrl+V / Cmd+V | Pastes a code into every box at once |
 
-- **Contrast:** the characters read 4.5:1 on the boxes, and the borders, focus ring and danger border 3:1 on the surface, in all six themes (`PinInput.test.tsx`).
+- **Contrast:** the characters read 4.5:1 on the boxes, and the focus ring and danger border 3:1 on the surface, in all six themes (`PinInput.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the accent border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - **Target size:** the boxes are at least 24px, and the field under them takes a press anywhere on the row (WCAG 2.5.8).
 - **What's still yours:** say how many characters the code has, and where it was sent, in the label or hint. Don't put a time limit on it that people can't extend (WCAG 2.2.1).
 
@@ -96,7 +96,7 @@ Each is an optional override: set it on the page, a container or one PinInput. T
 | `--pin-input-border` | `field-border` | A box's border (3:1 on the surface). |
 | `--pin-input-border-hover` | `field-border-hover` | The boxes' border on hover. |
 | `--pin-input-focus-ring` | `focus-ring` | The border and ring of the box the caret is in. |
-| `--pin-input-invalid` | `danger` | Every box's border when invalid (3:1 on the surface). |
+| `--pin-input-invalid` | `field-border-invalid` | Every box's border when invalid (3:1 on the surface). |
 | `--pin-input-bg-readonly` | `field-readonly` | The boxes' background when read-only or disabled. |
 | `--pin-input-radius` | `radius-control` | A box's corners (6px). |
 | `--pin-input-box-sm` | `control-height-sm` | A box's width and height, size="sm" (24px). |

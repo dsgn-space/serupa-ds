@@ -4,7 +4,7 @@
     "color": {
       "line": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The handle's line (3:1 on the page).",
         "$extensions": {
           "com.serupa": {

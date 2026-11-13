@@ -4,7 +4,7 @@
     "color": {
       "dot": {
         "$type": "color",
-        "$value": "{color.field-border}",
+        "$value": "{color.border-control}",
         "$description": "The dots for the slides not shown (3:1 on surface).",
         "$extensions": {
           "com.serupa": {

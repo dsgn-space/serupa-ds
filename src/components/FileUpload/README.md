@@ -118,7 +118,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--file-upload-zone-bg` | `surface-muted` | The drop area's background. |
-| `--file-upload-zone-border` | `field-border` | The drop area's dashed outline (3:1 on the surface). |
+| `--file-upload-zone-border` | `border-control` | The drop area's dashed outline (3:1 on the surface). |
 | `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |
 | `--file-upload-zone-border-active` | `primary` | Its outline then. |
 | `--file-upload-zone-border-invalid` | `danger` | The drop area's outline when invalid (solid, 3:1 on the surface). |

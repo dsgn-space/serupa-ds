@@ -74,7 +74,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.field-border-invalid}",
         "$description": "Border and ring when invalid",
         "$extensions": {
           "com.serupa": {
@@ -84,7 +84,7 @@
       },
       "count": {
         "$type": "color",
-        "$value": "{color.text-muted}",
+        "$value": "{color.placeholder}",
         "$description": "The character count",
         "$extensions": {
           "com.serupa": {

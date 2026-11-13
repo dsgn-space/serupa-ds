@@ -91,7 +91,7 @@ Each is an optional override: set it on the page, a container or one key. The li
 | Token | Default | Use |
 | --- | --- | --- |
 | `--kbd-bg` | `surface-muted` | A key's background. |
-| `--kbd-border` | `field-border` | A key's outline, thicker at the bottom like a keycap. |
+| `--kbd-border` | `border-control` | A key's outline, thicker at the bottom like a keycap. |
 | `--kbd-text` | `text` | The key's label (4.5:1 on bg). |
 | `--kbd-separator` | `text-muted` | The + between keys in a combination. |
 | `--kbd-radius` | `radius-inner` | A key's corners (4px). |
