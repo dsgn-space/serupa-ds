@@ -191,6 +191,16 @@
             "cssVar": "--event-calendar-more-bg-pressed"
           }
         }
+      },
+      "now": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The line across today at the time now, in the week and day views.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-now"
+          }
+        }
       }
     },
     "radius": {
@@ -213,6 +223,26 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--event-calendar-day-height"
+          }
+        }
+      },
+      "hour-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-12}",
+        "$description": "An hour's height in the week and day views (48px): half an hour holds an event's time and title.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-hour-height"
+          }
+        }
+      },
+      "hours-max-height": {
+        "$type": "dimension",
+        "$value": "{sizing.container-xl}",
+        "$description": "How tall the week and day views' hours get before they scroll (576px, twelve hours).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--event-calendar-hours-max-height"
           }
         }
       }

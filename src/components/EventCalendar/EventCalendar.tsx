@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit } from '../../internal/cn';
+import { cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
 import { useBreakpoint } from '../../internal/media';
 import { component } from '../../internal/component';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from '../../internal/dates';
@@ -40,23 +40,26 @@ export interface CalendarEvent {
   tone?: 'primary' | 'info' | 'success' | 'warning' | 'danger' | undefined;
 }
 
-/** EventCalendar's two views. */
-export type EventCalendarView = 'month' | 'agenda';
+/** EventCalendar's views. */
+export type EventCalendarView = 'month' | 'week' | 'day' | 'agenda';
+const VIEWS: readonly string[] = ['month', 'week', 'day', 'agenda'];
+const isView = (v: unknown): v is EventCalendarView => typeof v === 'string' && VIEWS.includes(v);
 
 export interface EventCalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onChange' | 'defaultValue'> {
-  /** The events to show. Those in the shown month are drawn. */
+  /** The events to show. Those in the shown month (or week, or day) are drawn. */
   events: readonly CalendarEvent[];
   /** Called when an event is clicked, or pressed with Enter or Space, with the event: open its details from here. */
   onEventClick?: ((event: CalendarEvent) => void) | undefined;
   /** The month shown (controlled): any day in it. Use with onMonthChange. */
   month?: Date | undefined;
-  /** The month shown at first. Default: today's. */
+  /** The month shown at first: any day in it. The week and day views open on that day's week, or that day. Default: today's. */
   defaultMonth?: Date | undefined;
   /** Called with the month's first day when Previous, Next, Today or the keyboard changes it. */
   onMonthChange?: ((month: Date) => void) | undefined;
-  /** 'month' (a grid of weeks) or 'agenda' (a list of the days with events), controlled. Use with onViewChange. */
+  /** 'month' (a grid of weeks), 'week' or 'day' (the days' hours, with the events placed at their times) or 'agenda'
+   *  (a list of the days with events), controlled. Use with onViewChange. */
   view?: EventCalendarView | undefined;
-  /** The view at first. Default: 'month'. Below 640px wide the month shows as the agenda, which fits a phone. */
+  /** The view at first. Default: 'month'. Below 640px wide the month and the week show as the agenda, which fits a phone; the day stays. */
   defaultView?: EventCalendarView | undefined;
   /** Called when the view switch changes the view. */
   onViewChange?: ((view: EventCalendarView) => void) | undefined;
@@ -100,6 +103,32 @@ function toShown(events: readonly CalendarEvent[]): Shown[] {
 // doesn't reach the day it ends on.
 const onDay = (list: Shown[], d: Date) => list.filter((s) => compare(s.from, d) <= 0 && (compare(s.to, d) > 0
   || (compare(s.to, d) === 0 && (s.allDay || sameDay(s.from, s.to) || s.to.getHours() + s.to.getMinutes() > 0))));
+// The hour of the day a time falls at (9.5 for 9:30), by the clock, so a day of a daylight saving change still runs
+// 0 to 24: before the day, 0; after it, 24.
+const hourOf = (t: Date, d: Date) => (sameDay(t, d) ? t.getHours() + t.getMinutes() / 60 : t < d ? 0 : 24);
+/** An event placed in a day's hours: from at, for so many hours (half an hour at least, so a short one is still
+ *  a target and its title shows), in lane of lanes, the side by side places a run of events that overlap share. */
+interface Placed { s: Shown; at: number; len: number; lane: number; lanes: number }
+function place(timed: Shown[], d: Date): Placed[] {
+  const out: Placed[] = [];
+  let run: Placed[] = [], ends: number[] = [], runEnd = -1;
+  const close = () => { for (const p of run) p.lanes = ends.length; run = []; ends = []; };
+  for (const s of timed) {
+    const at = Math.min(hourOf(s.from, d), 23.5), end = Math.max(hourOf(s.to, d), at + 0.5);
+    // A run ends where nothing in it reaches: each event takes the first lane free by its start.
+    if (at >= runEnd) close();
+    let lane = ends.findIndex((e) => e <= at);
+    if (lane < 0) { lane = ends.length; ends.push(end); } else ends[lane] = end;
+    const p: Placed = { s, at, len: end - at, lane, lanes: 1 };
+    run.push(p); out.push(p);
+    runEnd = Math.max(runEnd, end);
+  }
+  close();
+  return out;
+}
+const HOURS = Array.from({ length: 24 }, (_, h) => h);
+// The hour the time grid opens at: 8 AM, or the first timed event's if earlier.
+const OPEN_AT = 8;
 const iso = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 
 /* EventCalendar: a month of events, or the same month as an agenda. The month is an ARIA grid like Calendar's:
@@ -120,11 +149,13 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const [ownMonth, setOwnMonth] = React.useState(() => startOfMonth(props.defaultMonth && isValid(props.defaultMonth) ? props.defaultMonth : new Date()));
   const month = controlledMonth && isValid(props.month) ? startOfMonth(props.month) : ownMonth;
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
-  const [ownView, setOwnView] = React.useState<EventCalendarView>(props.defaultView === 'agenda' ? 'agenda' : 'month');
-  const chosen: EventCalendarView = props.view === 'agenda' || props.view === 'month' ? props.view : ownView;
-  // Under the sm breakpoint, the agenda; the server draws the chosen view, as wide.
+  const [ownView, setOwnView] = React.useState<EventCalendarView>(isView(props.defaultView) ? props.defaultView : 'month');
+  const chosen: EventCalendarView = isView(props.view) ? props.view : ownView;
+  // Under the sm breakpoint, the agenda for the month and the week, whose seven columns don't fit; a day does. The
+  // server draws the chosen view, as wide.
   const narrow = !useBreakpoint('sm', { serverValue: true });
-  const view = narrow ? 'agenda' : chosen;
+  const view: EventCalendarView = narrow && chosen !== 'day' ? 'agenda' : chosen;
+  const hours = view === 'week' || view === 'day';
   const setView = (v: EventCalendarView) => { if (props.view === undefined) setOwnView(v); if (props.onViewChange) props.onViewChange(v); };
   const list = React.useMemo(() => toShown(props.events), [props.events]);
   const max = Math.max(1, Math.floor(props.maxPerDay ?? 3));
@@ -135,7 +166,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const marked = hydrated ? today : null;
   // The day with the grid's Tab stop: the one the keys or a click chose, kept inside the shown month (adjusted during
   // render, so a new month never draws without its Tab stop), else today in today's month, else the 1st.
-  const [chosenDay, setFocus] = React.useState<Date | null>(null);
+  const [chosenDay, setFocus] = React.useState<Date | null>(() => (props.defaultMonth && isValid(props.defaultMonth) ? day(props.defaultMonth) : null));
   const focus = chosenDay ?? (marked && sameMonth(marked, month) ? marked : month);
   const monthTime = month.getTime();
   const [focusMonth, setFocusMonth] = React.useState(monthTime);
@@ -153,6 +184,9 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     wantFocus.current = false;
     cell.focus();
   });
+  const step = view === 'week' ? 7 : 1;
+  // Previous and Next in the week and day views: the next week or day, and its month when it's another.
+  const go = (n: Date) => { setFocus(n); if (!sameMonth(n, month)) showMonth(n); };
   const move = (d: Date) => { setFocus(d); if (!sameMonth(d, month)) showMonth(d); wantFocus.current = true; };
   const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's: leave them.
@@ -170,8 +204,9 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
       case 'ArrowDown': n = addDays(focus, 7); break;
       case 'Home': n = startOfWeek(focus, ws); break;
       case 'End': n = addDays(startOfWeek(focus, ws), 6); break;
-      case 'PageUp': n = addMonths(focus, -1); break;
-      case 'PageDown': n = addMonths(focus, 1); break;
+      // A page is the view's: a month, or in the week and day views a week or a day.
+      case 'PageUp': n = hours ? addDays(focus, -step) : addMonths(focus, -1); break;
+      case 'PageDown': n = hours ? addDays(focus, step) : addMonths(focus, 1); break;
       default: return;
     }
     e.preventDefault();
@@ -186,6 +221,9 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
     long: new Intl.DateTimeFormat(locale, { weekday: 'long' }),
     day: new Intl.DateTimeFormat(locale, { calendar: 'gregory', numberingSystem: 'latn', weekday: 'long', month: 'long', day: 'numeric' }),
     time: numericHour(new Intl.DateTimeFormat(locale, { numberingSystem: 'latn', hour: 'numeric', minute: '2-digit' })),
+    hour: numericHour(new Intl.DateTimeFormat(locale, { numberingSystem: 'latn', hour: 'numeric' })),
+    range: new Intl.DateTimeFormat(locale, { calendar: 'gregory', numberingSystem: 'latn', month: 'long', day: 'numeric', year: 'numeric' }),
+    zone: new Intl.DateTimeFormat(locale, { timeZoneName: 'short' }),
   }), [locale]);
   const titleId = domId('dk-evc', React.useId()) + '-title';
   const level = props.headingLevel && props.headingLevel >= 2 && props.headingLevel <= 6 ? props.headingLevel : 2;
@@ -222,6 +260,29 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   // The Tab stop: the focused day, or while a month the keys asked for isn't shown yet, today or the 1st.
   const stop = weeks.some((r) => r.some((d) => sameDay(d, focus))) ? focus : marked && sameMonth(marked, month) ? marked : month;
   const days = Array.from({ length: new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate() }, (_, i) => new Date(month.getFullYear(), month.getMonth(), i + 1));
+  // The week or the day shown: the focused day's.
+  const span = view === 'week' ? Array.from({ length: 7 }, (_, i) => addDays(startOfWeek(focus, ws), i)) : view === 'day' ? [focus] : [];
+  const title = view === 'week' && span[0] && span[6] ? fmt.range.formatRange(span[0], span[6]) : view === 'day' ? fmt.full.format(focus) : fmt.title.format(month);
+  // The now line moves with the clock, a minute at a time, while the hours show.
+  const [now, setNow] = React.useState(() => new Date());
+  React.useEffect(() => {
+    if (!hours) return;
+    const t = window.setInterval(() => setNow(new Date()), 60000);
+    return () => window.clearInterval(t);
+  }, [hours]);
+  // The time zone the times are in, by the reader's clock, so only once the page runs in their browser.
+  const zone = hydrated ? fmt.zone.formatToParts(now).find((x) => x.type === 'timeZoneName')?.value ?? '' : '';
+  const timedIn = (d: Date) => onDay(list, d).filter((s) => !s.allDay);
+  const allDayRows = Math.max(0, ...span.map((d) => onDay(list, d).filter((s) => s.allDay).length));
+  const scroller = React.useRef<HTMLDivElement | null>(null);
+  const spanStart = span[0] ? span[0].getTime() : 0;
+  const firstHour = Math.floor(Math.min(OPEN_AT, ...span.flatMap((d) => timedIn(d).map((s) => hourOf(s.from, d)))));
+  // Opened on a week or a day, the hours scroll to the first event, or 8 AM, under the pinned days and all-day row.
+  useIsoLayoutEffect(() => {
+    const n = scroller.current, mark = n && n.querySelector<HTMLElement>('[data-hour="' + firstHour + '"]'), pinned = n && n.querySelector<HTMLElement>('.dk-event-calendar__pinned');
+    if (!n || !mark || !pinned) return;
+    n.scrollTop += mark.getBoundingClientRect().top - pinned.getBoundingClientRect().bottom;
+  }, [view, spanStart]);
   const busy = view === 'agenda' ? days.map((d) => [d, onDay(list, d)] as const).filter(([, l]) => l.length) : [];
 
   return (
@@ -229,12 +290,14 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
       <div className="dk-event-calendar__toolbar">
         <div className="dk-event-calendar__nav">
           <Button variant="outline" size="sm" onClick={() => { showMonth(today); setFocus(today); }}>{sds.labels.goToToday}</Button>
-          <IconButton icon={icons.ChevronLeft} label={sds.labels.previousMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__prev" onClick={() => showMonth(addMonths(month, -1))} />
-          <IconButton icon={icons.ChevronRight} label={sds.labels.nextMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__next" onClick={() => showMonth(addMonths(month, 1))} />
+          <IconButton icon={icons.ChevronLeft} label={view === 'week' ? sds.labels.previousWeek : view === 'day' ? sds.labels.previousDay : sds.labels.previousMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__prev"
+            onClick={() => (hours ? go(addDays(focus, -step)) : showMonth(addMonths(month, -1)))} />
+          <IconButton icon={icons.ChevronRight} label={view === 'week' ? sds.labels.nextWeek : view === 'day' ? sds.labels.nextDay : sds.labels.nextMonth} size="sm" variant="ghost" hideTitle className="dk-event-calendar__next"
+            onClick={() => (hours ? go(addDays(focus, step)) : showMonth(addMonths(month, 1)))} />
         </div>
-        <H className="dk-event-calendar__heading" id={titleId} lang={lang} aria-live="polite">{fmt.title.format(month)}</H>
-        {narrow ? null : <SegmentedControl size="sm" aria-label={sds.labels.calendarView} value={chosen} onValueChange={(v) => setView(v === 'agenda' ? 'agenda' : 'month')}
-          options={[{ value: 'month', label: sds.labels.monthView }, { value: 'agenda', label: sds.labels.agendaView }]} />}
+        <H className="dk-event-calendar__heading" id={titleId} lang={lang} aria-live="polite">{title}</H>
+        {narrow ? null : <SegmentedControl size="sm" aria-label={sds.labels.calendarView} value={chosen} onValueChange={(v) => setView(isView(v) ? v : 'month')}
+          options={[{ value: 'month', label: sds.labels.monthView }, { value: 'week', label: sds.labels.weekView }, { value: 'day', label: sds.labels.dayView }, { value: 'agenda', label: sds.labels.agendaView }]} />}
       </div>
       {view === 'month' ? (
         <table ref={grid} role="grid" lang={lang} className="dk-event-calendar__grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>
@@ -269,6 +332,54 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
             ))}
           </tbody>
         </table>
+      ) : hours ? (
+        /* The days' hours: a grid of one row, a cell a day, so the keys, the names and the Tab stop are the month's.
+           The weekday names and the all-day events stay pinned at the top while the hours scroll under them. The
+           hour scale and the time zone are drawn beside, hidden from screen readers: each event says its time. */
+        <div ref={scroller} className="dk-event-calendar__scroll" style={{ '--dk-evc-all-day': allDayRows } as React.CSSProperties}>
+          <table ref={grid} role="grid" lang={lang} className="dk-event-calendar__grid dk-event-calendar__hours-grid" aria-labelledby={titleId} onKeyDown={onKeyDown} data-days={span.length}>
+            <thead>
+              <tr>
+                <td aria-hidden className="dk-event-calendar__zone">{zone}</td>
+                {span.map((d) => (
+                  <th key={d.getTime()} scope="col" className={cn(marked && sameDay(d, marked) && 'dk-event-calendar__head--today')}>
+                    <span aria-hidden>{fmt.short.format(d)} <span className="dk-event-calendar__head-date">{d.getDate()}</span></span>
+                    <span className="dk-visually-hidden">{fmt.full.format(d)}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td aria-hidden className="dk-event-calendar__scale">
+                  <div className="dk-event-calendar__pinned" />
+                  <div className="dk-event-calendar__hours">{HOURS.map((h) => <span key={h} data-hour={h} style={{ '--dk-evc-at': h } as React.CSSProperties}>{h ? fmt.hour.format(new Date(2000, 0, 1, h)) : ''}</span>)}</div>
+                </td>
+                {span.map((d) => {
+                  const mine = onDay(list, d), whole = mine.filter((s) => s.allDay), here = sameDay(d, focus), isToday = marked !== null && sameDay(d, marked);
+                  return (
+                    <td key={d.getTime()} role="gridcell" tabIndex={here ? 0 : -1} aria-current={isToday ? 'date' : undefined} data-date={iso(d)}
+                      className={cn('dk-event-calendar__day dk-event-calendar__column', isToday && 'dk-event-calendar__day--today')}
+                      onFocus={(e) => { if (e.target === e.currentTarget && !here) setFocus(d); }}>
+                      <span className="dk-visually-hidden">{fmt.full.format(d) + ', ' + sds.labels.eventCount(mine.length, displayNumber(mine.length, locale))}</span>
+                      <div className="dk-event-calendar__pinned">
+                        {whole.length ? <ul className="dk-event-calendar__events" role="list">{whole.map((s) => <li key={s.e.id}>{eventButton(s, d, here ? 0 : -1, false)}</li>)}</ul> : null}
+                      </div>
+                      <div className="dk-event-calendar__hours">
+                        {isToday ? <div className="dk-event-calendar__now" aria-hidden style={{ '--dk-evc-at': hourOf(now, d) } as React.CSSProperties} /> : null}
+                        <ul className="dk-event-calendar__timed" role="list">
+                          {place(mine.filter((s) => !s.allDay), d).map((p) => (
+                            <li key={p.s.e.id} data-short={p.len < 0.75 || undefined} style={{ '--dk-evc-at': p.at, '--dk-evc-for': p.len, '--dk-evc-lane': p.lane, '--dk-evc-lanes': p.lanes } as React.CSSProperties}>{eventButton(p.s, d, here ? 0 : -1, false)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+            </tbody>
+          </table>
+        </div>
       ) : busy.length ? (
         <ol className="dk-event-calendar__agenda" role="list" aria-labelledby={titleId} lang={lang}>
           {busy.map(([d, l]) => (
