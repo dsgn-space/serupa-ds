@@ -162,6 +162,13 @@ describe('Patterns/List with search and filters', () => {
     expect(document.querySelector('nav[aria-label="Projects pages"]')).toBeNull();
   });
 
+  test('with no projects at all, it says there are none yet and offers New project, not "Clear filters"', async () => {
+    const screen = await render(<ListSearch projects={[]} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'No projects yet' })).toBeVisible();
+    expect(screen.getByRole('link', { name: 'New project' }).elements().map((a) => a.getAttribute('href'))).toEqual(['#new-project', '#new-project']);
+    expect(document.querySelector('main')!.textContent).not.toMatch(/match|Clear filters/);
+  });
+
   test('a failed load: "Couldn’t load projects" in its place, said once, and Try again calls onRetry', async () => {
     const onRetry = vi.fn();
     const screen = await render(<ListSearch loadFailed onRetry={onRetry} />);
