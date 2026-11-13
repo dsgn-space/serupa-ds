@@ -74,6 +74,17 @@ describe('Countdown', () => {
     warn.mockRestore();
   });
 
+  test('a clock that moves between two reads of one render warns nothing (a slow browser reads it a millisecond apart)', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    let t = Date.now();
+    const now = vi.spyOn(Date, 'now').mockImplementation(() => ++t);
+    await render(<><Countdown id="s" seconds={0} label="Time left" /><Countdown id="o" to={t + 60_000} label="Time left" /></>);
+    now.mockRestore();
+    expect(error.mock.calls.flat().join(' ')).not.toContain('getSnapshot');
+    expect(el('s').getAttribute('datetime')).toBe('PT0S');
+    error.mockRestore();
+  });
+
   test('a seconds that isn\'t a number shows nothing and warns', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     await render(<Countdown id="n" seconds={Number.NaN} label="Time left" />);

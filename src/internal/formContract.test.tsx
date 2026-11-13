@@ -30,6 +30,7 @@ import { PhoneInput } from '../components/PhoneInput/PhoneInput';
 import { PinInput } from '../components/PinInput/PinInput';
 import { Radio, RadioGroup } from '../components/Radio/Radio';
 import { Rating } from '../components/Rating/Rating';
+import { TransferList } from '../components/TransferList/TransferList';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { SegmentedControl } from '../components/SegmentedControl/SegmentedControl';
 import { DateField } from '../components/DateField/DateField';
@@ -105,6 +106,9 @@ const CONTROLS: { [K in Named]: Control | string } = {
     change: async (r) => { await userEvent.click($(r, 'input')); }, changed: {} },
   Rating: { el: (form) => <Rating aria-label="Stars" name="stars" form={form} defaultValue={2} />, initial: { stars: '2' },
     change: async (r) => { await userEvent.click($(r, 'input[value="4"]')); }, changed: { stars: '4' } },
+  // One hidden input per chosen value under one name; this table keeps the last, the one added last.
+  TransferList: { el: (form) => <TransferList aria-label="Columns" name="cols" form={form} options={[{ value: 'name', label: 'Name' }, { value: 'email', label: 'Email' }]} defaultValue={['email']} />, initial: { cols: 'email' },
+    change: async (r) => { await userEvent.click($(r, 'input[value="name"]')); await userEvent.click($(r, 'button')); }, changed: { cols: 'name' } },
   Slider: { el: (form) => <Slider aria-label="Volume" name="volume" form={form} defaultValue={30} />, initial: { volume: '30' },
     change: async (r) => { $(r, '[role="slider"]').focus(); await userEvent.keyboard('{End}'); }, changed: { volume: '100' } },
   SegmentedControl: { el: (form) => <SegmentedControl aria-label="View" name="view" form={form} options={[{ value: 'list', label: 'List' }, { value: 'grid', label: 'Grid' }]} defaultValue="list" />, initial: { view: 'list' },

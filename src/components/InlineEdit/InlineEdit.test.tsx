@@ -295,6 +295,15 @@ describe('InlineEdit', () => {
     expect(low).toEqual([]);
   });
 
+  test('an error with one long word stays inside the field (GR392)', async () => {
+    await render(<div style={{ width: 160 }}><InlineEdit id="lw" label="Slug" defaultValue="apollo" validate={() => 'Zeichenbeschraenkungsueberschreitungsfehlermeldung'} /></div>);
+    await userEvent.click(root('lw').querySelector('button')!);
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => root('lw').querySelector('[data-icon="error"]')).not.toBeNull();
+    const e = root('lw').querySelector('[data-icon="error"]')!.parentElement!;
+    expect(e.scrollWidth).toBeLessThanOrEqual(e.clientWidth);
+  });
+
   test('no errors or warnings while rendering', async () => {
     const error = vi.spyOn(console, 'error'), warn = vi.spyOn(console, 'warn');
     await render(<InlineEdit label="Name" defaultValue="Apollo" />);

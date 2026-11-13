@@ -35,8 +35,9 @@ const DEFAULT_STEPS = [3600, 1800, 600, 300, 120, 60, 30, 10];
 
 /* One clock for every Countdown on the page: it ticks twice a second while any is mounted, so the seconds change
    on time and the countdowns on a page change together. */
-// module state: the browser's one clock (subscribe starts it); a server render reads getServerNow instead.
-let now = Date.now();
+// module state: the browser's one clock (subscribe starts it); a server render reads getServerNow instead. read: the
+// clock was read in this task while it wasn't ticking, so the reads of one render agree.
+let now = Date.now(), read = false;
 const listeners = new Set<() => void>();
 let timer: ReturnType<typeof setInterval> | null = null;
 const tick = () => { now = Date.now(); listeners.forEach((l) => l()); };
@@ -48,7 +49,10 @@ function subscribe(cb: () => void) {
     if (!listeners.size && timer) { clearInterval(timer); timer = null; }
   };
 }
-const getNow = () => (timer ? now : (now = Date.now()));
+const getNow = () => {
+  if (!timer && !read) { now = Date.now(); read = true; queueMicrotask(() => { read = false; }); }
+  return now;
+};
 const still = () => () => {};
 // module state: the server's moment, renewed each second, so requests a second apart never share it.
 let serverNow = -Infinity;

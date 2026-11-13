@@ -7,7 +7,7 @@
 .dk-date-picker { --dk-dp-offset: var(--date-picker-offset, var(--spacing-1)); padding-inline-end: var(--spacing-1); }
 .dk-date-picker__button {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box;
-  width: var(--control-height-sm); height: var(--control-height-sm); margin: var(--spacing-0); padding: var(--spacing-0);
+  margin: var(--spacing-0); padding: var(--spacing-1);   /* the icon plus 4px all round: 22, 24 or 28px by size, as Combobox's button */
   border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--date-picker-button, var(--text-muted)); cursor: pointer; touch-action: manipulation;
 }
 .dk-date-picker__button .dk-icon { font-size: var(--dk-input-icon); }

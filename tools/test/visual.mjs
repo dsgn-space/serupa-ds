@@ -24,6 +24,7 @@
 // touches only components (SERUPA_ONLY), since a component can't change them.
 import fs from 'node:fs';
 import path from 'node:path';
+import { measure, print as printConsistency } from './consistency.mjs';
 import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
@@ -158,6 +159,8 @@ async function tabTo(page, el) {
   return false;
 }
 
+const measured = new Set(), consistency = [];
+let measuring = 0;
 // Opens a story in a theme, with motion off, once it has drawn and its fonts have loaded. '' when ready.
 async function open(page, e, theme, more = '') {
   const [brand, mode] = theme.split('-');
@@ -166,6 +169,14 @@ async function open(page, e, theme, more = '') {
   const drawn = await page.waitForFunction(() => document.body.classList.contains('sb-show-errordisplay') || document.querySelector('#storybook-root')?.children.length > 0, null, { timeout: 15000 }).then(() => true, () => false);
   if (!drawn) return 'did not render in 15 s';
   if (await page.evaluate(() => document.body.classList.contains('sb-show-errordisplay'))) return 'Storybook shows an error';
+  // The cross-component consistency measurements (consistency.mjs), once a story, on the page already open and
+  // before its transitions are turned off: warnings at the end of the run, never a failure.
+  if (!LIGHT && !update && !more && theme === THEMES[0] && !measured.has(e.id)) {
+    measured.add(e.id);
+    const t = performance.now();
+    consistency.push(...await measure(page));
+    measuring += performance.now() - t;
+  }
   await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}' });
   // Every font face loaded, so no glyph draws late. A face the engine can't load (WebKit rejected one with a
   // NetworkError) draws in its fallback, which the picture shows; it doesn't stop the run.
@@ -350,4 +361,5 @@ if (update) {
 }
 if (shard === 1) R.push({ name: 'every baseline belongs to a story', ok: !orphans.length, detail: `no story for: ${orphans.slice(0, 10).join(', ')}; add the "update-visual-baselines" label to remove them` });
 console.log(`(${stories.length} stories, ${sheetPages.length} Foundations pages)`);
+if (measured.size) printConsistency(consistency, measuring);
 process.exitCode = report('Visual', R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe
