@@ -24,7 +24,7 @@
       },
       "stepper-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
+        "$value": "{color.field-hover}",
         "$description": "The buttons' background on hover.",
         "$extensions": {
           "com.serupa": {
@@ -34,7 +34,7 @@
       },
       "stepper-bg-pressed": {
         "$type": "color",
-        "$value": "{color.secondary-hover}",
+        "$value": "{color.field-pressed}",
         "$description": "A step button's background while it's held down, one step past hover.",
         "$extensions": {
           "com.serupa": {

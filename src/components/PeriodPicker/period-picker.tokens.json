@@ -54,7 +54,7 @@
       },
       "invalid": {
         "$type": "color",
-        "$value": "{color.danger}",
+        "$value": "{color.field-border-invalid}",
         "$description": "The outline and focus ring when invalid.",
         "$extensions": {
           "com.serupa": {

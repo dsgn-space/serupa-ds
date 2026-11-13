@@ -166,7 +166,7 @@ describe('FilterBar', () => {
     expect(lowContrast([
       ['chip text', 'var(--text)', 'var(--surface)', 4.5],
       ['open chip', 'var(--link)', 'var(--surface)', 4.5],
-      ['outline', 'var(--field-border)', 'var(--surface)', 3],
+      ['outline', 'var(--border-control)', 'var(--surface)', 3],
       ['count', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
     ])).toEqual([]);

@@ -26,8 +26,9 @@ name: Update baselines
 # pushes the merge and adds the label, whose run then draws the pictures again on the merged tree. A conflict in
 # anything else stops it, since only a person can resolve that. Heal runs none of the branch's code: a run by hand
 # belongs to the default branch, so the branch's code there could write to main's caches.
-# Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone. One with a
-# conflict anywhere else is left for its author, with a notice in the run.
+# Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone, and the ones
+# whose pictures it made stale (tools/fresh.mjs). One with a conflict anywhere else is left for its author, with a
+# notice in the run.
 # Every push to main also draws again the components it changed, on main as it now is, and opens a pull request
 # (branch baselines/after-main, queued to merge; one at a time, replaced while it is open) with any picture that
 # came out different: one redrawn before
@@ -67,32 +68,49 @@ permissions: {}
 jobs:
   # After a push to main: the open pull requests from this repository that now conflict with it. GitHub works out
   # whether one merges in the background, so a pull request it hasn't decided yet is asked again for up to a minute.
+  # Also the ones that merge cleanly but whose pictures main made stale (tools/fresh.mjs, the check CI's fresh job runs):
+  # the queue drops those in seconds, and nothing drew them again until someone merged main and added the label by hand
+  # (#1818, after a Calendar change, 13 Nov). A pull request whose pictures are being drawn already is left alone.
+  # fresh.mjs is main's own, and reads the branch only through GitHub's API: none of the branch's code runs here.
   dirty:
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
+      contents: read
       pull-requests: read
     outputs:
       prs: ${{ steps.find.outputs.prs }}
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
       - id: find
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           prs=()
           for n in $(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&base=main&per_page=100" \
               --jq ".[] | select(.head.repo.full_name == \"$GITHUB_REPOSITORY\" and .draft == false) | .number"); do
             for _ in 1 2 3 4 5 6; do
-              state=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$n" --jq .mergeable_state)
+              pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$n")
+              state=$(jq -r .mergeable_state <<< "$pull")
               [ "$state" = unknown ] || break
               sleep 10
             done
-            if [ "$state" = dirty ]; then prs+=("$n"); fi
+            if [ "$state" = dirty ]; then prs+=("$n"); continue; fi
+            jq -e '[.labels[].name] | index("update-visual-baselines")' <<< "$pull" > /dev/null && continue
+            # 1 is stale; anything else (GitHub didn't answer) heals nothing.
+            code=0; node tools/fresh.mjs --base "$GITHUB_SHA" --head "$(jq -r .head.sha <<< "$pull")" || code=$?
+            if [ "$code" = 1 ]; then prs+=("$n"); fi
           done
           json=$(printf '%s\n' "${prs[@]}" | jq -R 'select(length > 0) | tonumber' | jq -cs '.[:5]')
-          echo "Conflicting: $json"
+          echo "Conflicting or stale: $json"
           echo "prs=$json" >> "$GITHUB_OUTPUT"
 
   heal:

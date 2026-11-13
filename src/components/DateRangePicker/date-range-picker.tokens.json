@@ -4,7 +4,7 @@
     "color": {
       "dash": {
         "$type": "color",
-        "$value": "{color.text-muted}",
+        "$value": "{color.placeholder}",
         "$description": "The dash between the two fields.",
         "$extensions": {
           "com.serupa": {

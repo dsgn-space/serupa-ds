@@ -9,7 +9,7 @@
 .dk-filter-bar__chips { display: contents; margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-filter-bar__chip, .dk-filter-bar__add { display: inline-flex; align-items: center; min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full); }
 .dk-filter-bar__chip {
-  gap: var(--spacing-0\.5); padding-inline-end: var(--spacing-0\.5); border: var(--border-width-1) solid var(--filter-bar-chip-border, var(--field-border));
+  gap: var(--spacing-0\.5); padding-inline-end: var(--spacing-0\.5); border: var(--border-width-1) solid var(--filter-bar-chip-border, var(--border-control));
   border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: var(--filter-bar-chip-bg, var(--surface));
 }
 .dk-filter-bar__chip--empty { border-style: dashed; }
