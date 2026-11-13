@@ -177,8 +177,8 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   // Today is the reader's, so it's marked only once the page runs in their browser: the server's today may be
   // another day, and the server's HTML would mark it, and put the Tab stop on it, until hydration (GR210).
   const hydrated = React.useSyncExternalStore(noSubscribe, yes, no);
-  // every render: no list, as it reads the month and onMonthChange of that render; it acts once, on the first after
-  // hydrating from a server whose month isn't the visitor's.
+  // It acts once, on the first render after hydrating from a server whose month isn't the visitor's.
+  // every render: no list, as it reads the month and onMonthChange of that render.
   React.useEffect(() => {
     if (!fromServer.current) return;
     fromServer.current = false;
