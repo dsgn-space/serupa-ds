@@ -9,7 +9,7 @@ export function paginationRange(page: number, count: number, siblings = 1, bound
   const start = r(1, Math.min(boundaries, count));
   const end = r(Math.max(count - boundaries + 1, boundaries + 1), count);
   const sibStart = Math.max(Math.min(page - siblings, count - boundaries - siblings * 2 - 1), boundaries + 2);
-  const sibEnd = Math.min(Math.max(page + siblings, boundaries + siblings * 2 + 2), end.length > 0 ? end[0] - 2 : count - 1);
+  const sibEnd = Math.min(Math.max(page + siblings, boundaries + siblings * 2 + 2), end[0] !== undefined ? end[0] - 2 : count - 1);
   const out: Entry[] = start.slice();
   if (sibStart > boundaries + 2) out.push('start-ellipsis'); else if (boundaries + 1 < count - boundaries) out.push(boundaries + 1);
   out.push(...r(sibStart, sibEnd));

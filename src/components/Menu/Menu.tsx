@@ -63,7 +63,7 @@ function menuKeys(menuRef: React.RefObject<HTMLDivElement | null>, typed: React.
     if (isComposing(e) || (e.altKey || e.ctrlKey || e.metaKey) && /^(Arr|Home|End)/.test(e.key)) return;
     const panel = e.target instanceof HTMLElement ? e.target.closest<HTMLElement>('[role="menu"]') : null;
     const list = itemsOf(panel || menuRef.current), i = list.indexOf(activeIn(e.currentTarget) as HTMLElement);   // its own root's focus, in a shadow root too (GR60)
-    const go = (n: number) => { e.preventDefault(); if (list.length) list[(n + list.length) % list.length].focus(); };
+    const go = (n: number) => { e.preventDefault(); list[(n + list.length) % list.length]?.focus(); };
     if (e.key === 'ArrowDown') go(i + 1);
     else if (e.key === 'ArrowUp') go(i < 0 ? list.length - 1 : i - 1);
     else if (e.key === 'Home') go(0);
@@ -75,7 +75,7 @@ function menuKeys(menuRef: React.RefObject<HTMLDivElement | null>, typed: React.
       // Taken, so a page shortcut on the same letter (useShortcut("g")) doesn't also run: a menu is no text field (L8E42).
       e.preventDefault();
       const n = typeahead(typed.current, e.key, list.map((it) => (it.querySelector('.dk-menu__label') || it).textContent || ''), i);
-      if (n >= 0) list[n].focus();
+      list[n]?.focus();
     }
   };
 }
@@ -321,13 +321,13 @@ function chord(text: string): string {
   // A last + or - after a separator (or alone) is the key itself, not a separator.
   let last = '';
   const end = /(^|[+\-\s⌘⌥⇧⌃])([+-])$/.exec(text);
-  if (end) { last = end[2]; text = text.slice(0, text.length - 1); }
+  if (end?.[2]) { last = end[2]; text = text.slice(0, text.length - 1); }
   const tokens = text.split(/\s*[+-]\s*|\s+/).filter(Boolean);
   if (last) tokens.push(last);
   for (const token of tokens) {
     // Mac symbols are written together ("⌘⇧K"): split off each modifier symbol.
     let rest = token;
-    while (rest.length > 1 && KEY_NAMES[rest[0]] && /[⌘⌥⇧⌃]/.test(rest[0])) { parts.push(KEY_NAMES[rest[0]]); rest = rest.slice(1); }
+    for (let mod = KEY_NAMES[rest.charAt(0)]; rest.length > 1 && mod && /[⌘⌥⇧⌃]/.test(rest.charAt(0)); mod = KEY_NAMES[rest.charAt(0)]) { parts.push(mod); rest = rest.slice(1); }
     const named = KEY_NAMES[rest] || KEY_NAMES[rest.toLowerCase()];
     parts.push(named || (rest.length === 1 ? rest.toUpperCase() : rest));
   }

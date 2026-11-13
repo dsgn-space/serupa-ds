@@ -98,4 +98,15 @@ describe('Patterns/Settings form', () => {
     await expect.element(screen.getByRole('textbox', { name: /^Name/ })).toHaveValue('Budi Santoso');
     expect(document.querySelector('main')!.hasAttribute('aria-busy')).toBe(false);
   });
+
+  test('a failed load keeps the page and its h1, says so in the sections\' place, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<SettingsForm loading loadFailed onRetry={onRetry} />);
+    expect(screen.getByRole('heading', { level: 1 }).elements().map((h) => h.textContent)).toEqual(['Settings']);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your settings' })).toBeVisible();
+    expect(document.querySelector('main')!.hasAttribute('aria-busy')).toBe(false);
+    expect(screen.getByRole('textbox').elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
 });

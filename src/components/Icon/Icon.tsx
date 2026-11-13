@@ -54,16 +54,17 @@ function spellings(name: string): string[] {
    (require-trusted-types-for 'script') needs no policy for it. tools/icons/build.mjs writes the markup: <g> and shape
    tags whose attributes are numbers, path data and keywords, in double quotes, with nothing to unescape. */
 function shapes(markup: string): React.ReactNode[] {
-  const kids: React.ReactNode[][] = [[]], open: Array<[string, object]> = [];
-  for (const [, close, tag, attrs, alone] of markup.matchAll(/<(\/?)(\w+)([^>]*?)(\/?)>/g)) {
-    const here = kids[kids.length - 1];
-    if (close) { const [t, p] = open.pop()!, inner = kids.pop()!; kids[kids.length - 1].push(React.createElement(t, p, ...inner)); continue; }
+  // Each open tag keeps its own children and the list it goes into when it closes.
+  const all: React.ReactNode[] = [], open: Array<[string, object, React.ReactNode[], React.ReactNode[]]> = [];
+  let here = all;
+  for (const [, close, tag = '', attrs = '', alone] of markup.matchAll(/<(\/?)(\w+)([^>]*?)(\/?)>/g)) {
+    if (close) { const o = open.pop(); if (o) { const [t, p, inner, parent] = o; parent.push(React.createElement(t, p, ...inner)); here = parent; } continue; }
     const p: Record<string, string> = { key: String(here.length) };
-    for (const [, k, v] of attrs.matchAll(/([\w-]+)="([^"]*)"/g)) p[k.replace(/-(\w)/g, (_, c: string) => c.toUpperCase())] = v;
+    for (const [, k = '', v = ''] of attrs.matchAll(/([\w-]+)="([^"]*)"/g)) p[k.replace(/-(\w)/g, (_, c: string) => c.toUpperCase())] = v;
     if (alone) here.push(React.createElement(tag, p));
-    else { open.push([tag, p]); kids.push([]); }
+    else { const inner: React.ReactNode[] = []; open.push([tag, p, inner, here]); here = inner; }
   }
-  return kids[0];
+  return all;
 }
 
 /* Icon: an inline SVG in a 1em box, drawn in the text color. Material Symbols Rounded, filled (src/material), or
@@ -123,7 +124,7 @@ export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>('Icon'
   if (custom) {
     return (
       <span {...rest} ref={restyle} className={cn('dk-icon dk-icon--custom', mirror, props.className)} style={style}>
-        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false">{shapes(ICONS[props.name as string])}</svg>
+        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false">{shapes(ICONS[props.name as string] ?? '')}</svg>
       </span>
     );
   }

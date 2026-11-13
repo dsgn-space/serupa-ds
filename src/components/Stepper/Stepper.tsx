@@ -148,7 +148,7 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>('Ste
           );
         })}
       </ol>
-      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, new Intl.NumberFormat(locale).format(shown + 1), new Intl.NumberFormat(locale).format(steps.length)) + ': '}<span className="dk-stepper__title">{steps[shown].title}</span></p> : null}
+      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, new Intl.NumberFormat(locale).format(shown + 1), new Intl.NumberFormat(locale).format(steps.length)) + ': '}<span className="dk-stepper__title">{steps[shown]?.title}</span></p> : null}
     </nav>
   );
 });

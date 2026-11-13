@@ -19,3 +19,6 @@ export const SaveFails: Story = { args: { onSave: () => Promise.reject(new Error
 
 /** While the saved settings load: the page and its sections, with placeholder fields, named once for screen readers. */
 export const Loading: Story = { args: { loading: true } };
+
+/** The settings didn't load: the page says so in the sections' place, and Try again loads them again. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => new Promise((r) => setTimeout(r, 1000)) } };
