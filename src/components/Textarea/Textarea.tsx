@@ -116,7 +116,7 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
   return (
     <span className={cn('dk-textarea', 'dk-textarea--size-' + size, invalid && 'dk-textarea--invalid', rest.disabled && 'dk-textarea--disabled', rest.readOnly && 'dk-textarea--readonly', resize === 'none' && 'dk-textarea--resize-none', auto && 'dk-textarea--auto', acts && 'dk-textarea--actions', props.className)} ref={restyle} style={props.style} data-component="textarea" data-size={size} onMouseDown={pressFocuses(own)}>
       <textarea {...rest} ref={setRefs} rows={rows} className="dk-textarea__field" key="field"
-        style={auto ? ({ '--dk-ta-rows': rows, '--dk-ta-max-rows': maxRows || undefined } as React.CSSProperties) : undefined} />
+        style={{ '--dk-ta-rows': rows, '--dk-ta-max-rows': auto ? maxRows || undefined : undefined } as React.CSSProperties} />
       {props.showCount && !acts ? count : null}
       {/* A fieldset, so a disabled Textarea disables every button in the row as well; role none, since it groups nothing for a screen reader. */}
       {acts ? <fieldset className="dk-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}
