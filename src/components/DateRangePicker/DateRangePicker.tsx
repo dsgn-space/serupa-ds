@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useMergedRef, cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
-import { addMonths, compare, datePattern, formatDate, isoDate, parseDate, sameDay, startOfMonth, toDay } from '../../internal/dates';
+import { addMonths, compare, datePattern, formatDate, isoDate, parseDate, sameDay, sameMonth, startOfMonth, toDay } from '../../internal/dates';
 import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
@@ -200,10 +200,19 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
         else if (e.key === 'ArrowDown' && e.altKey && !off) { e.preventDefault(); read(which); show(); }
       }} />
   );
+  // With two months, a key that crosses into the month the other grid shows moves focus there, and the months stay put.
+  const leave = (first: boolean) => (d: Date) => {
+    if (!two || !sameMonth(d, first ? addMonths(base, 1) : base)) return false;
+    const grid = panel.current && panel.current.querySelectorAll('[role="grid"]')[first ? 1 : 0];
+    const b = grid && grid.querySelector<HTMLElement>(`[data-date="${isoDate(d)}"]`);
+    if (!b) return false;
+    b.focus();
+    return b.matches(':focus');
+  };
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => setBase(first ? n : addMonths(n, -1))} value={first ? value.start : value.end}
       min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus={first} hideOutside={two}
-      isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} />
+      isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
   return (
