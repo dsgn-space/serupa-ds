@@ -16,11 +16,11 @@
   position: relative; display: inline-flex; inline-size: var(--sizing-full); min-inline-size: var(--spacing-0); vertical-align: middle;
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
-.dk-period-picker--size-sm { --dk-pp-h: var(--period-picker-height-sm, var(--control-height-sm)); --dk-pp-px: var(--spacing-2); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
-.dk-period-picker--size-lg { --dk-pp-h: var(--period-picker-height-lg, var(--control-height-lg)); --dk-pp-px: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+.dk-period-picker--size-sm { --dk-pp-h: var(--period-picker-height-sm, var(--control-height-sm)); --dk-pp-px: var(--spacing-2); --dk-pp-icon: var(--spacing-3\.5); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
+.dk-period-picker--size-lg { --dk-pp-h: var(--period-picker-height-lg, var(--control-height-lg)); --dk-pp-px: var(--spacing-4); --dk-pp-icon: var(--spacing-5); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-period-picker__button {
   display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; inline-size: var(--sizing-full); min-block-size: var(--dk-pp-h); margin: var(--spacing-0);
-  padding-block: var(--spacing-0); padding-inline: var(--dk-pp-px); border: var(--border-width-1) solid var(--dk-pp-bd); border-radius: var(--period-picker-radius, var(--radius-control));
+  padding-block: var(--spacing-0); padding-inline: var(--dk-pp-px) var(--spacing-2); border: var(--border-width-1) solid var(--dk-pp-bd); border-radius: var(--period-picker-radius, var(--radius-control));
   background: var(--period-picker-bg, var(--field)); color: var(--period-picker-text, var(--text)); font: inherit; text-align: start; cursor: pointer; touch-action: manipulation;
   box-shadow: var(--period-picker-depth, var(--depth-field));   /* a tactile brand's inner shade, as Select (none in the flat ones) */
   transition: border-color var(--motion-hover) var(--ease-move);
@@ -37,7 +37,7 @@
 .dk-period-picker--disabled .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-period-picker__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dk-period-picker__value--empty { color: var(--period-picker-placeholder, var(--placeholder)); }
-.dk-period-picker__icon { flex: none; color: var(--period-picker-icon, var(--text-muted)); font-size: var(--spacing-4); }
+.dk-period-picker__icon { flex: none; color: var(--period-picker-icon, var(--text-muted)); font-size: var(--dk-pp-icon, var(--spacing-4)); }   /* 14, 16 or 20px by size, 8px inside the end edge, as Select's chevron */
 
 .dk-period-picker__panel {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--period-picker-z-index, var(--z-popover));
