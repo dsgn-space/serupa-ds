@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Logo/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { Logo } from './Logo';\nexport type { LogoProps, LogoSize } from './Logo';\n"],
+  "mappings": ";AACA,SAAS,YAAY;",
+  "names": []
+}

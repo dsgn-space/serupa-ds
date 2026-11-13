@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/ColorPicker/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { ColorPicker } from './ColorPicker';\nexport type { ColorPickerProps, ColorSwatch } from './ColorPicker';\n// The hue and tone a color's name is built from (the colorName label).\nexport type { ColorHue, ColorTone } from '../../internal/color';\n"],
+  "mappings": ";AACA,SAAS,mBAAmB;",
+  "names": []
+}

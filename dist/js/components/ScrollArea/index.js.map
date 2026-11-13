@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/ScrollArea/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { ScrollArea } from './ScrollArea';\nexport type { ScrollAreaProps } from './ScrollArea';\n"],
+  "mappings": ";AACA,SAAS,kBAAkB;",
+  "names": []
+}
