@@ -15,6 +15,7 @@ import { Badge } from '../../components/Badge/Badge';
 import { Alert } from '../../components/Alert/Alert';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../components/Table/Table';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Data import: a CSV file of customers, its columns matched to the app's fields, every row checked and shown before
    anything is saved, then what happened in words. For an app to copy. What it carries (WCAG 2.2):
@@ -196,7 +197,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
-        <Heading level={1} size="xl">Import customers</Heading>
+        <PageHeader title="Import customers" />
         <Stepper current={ORDER.indexOf(step) + (step === 'done' ? 1 : 0)} steps={STEPS} size="sm" />
         <Card className="flex flex-col gap-5" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>
           {step === 'upload' ? (
