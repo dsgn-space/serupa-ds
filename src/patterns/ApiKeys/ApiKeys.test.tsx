@@ -66,13 +66,16 @@ describe('Patterns/API keys', () => {
     await userEvent.keyboard('{Escape}');
   });
 
-  test('revoking asks first; Keep it keeps the key; a failure says it still works; a revoke moves focus to the next key\'s Revoke', async () => {
+  test('revoking asks first; Keep it or Escape keeps the key; a failure says it still works; a revoke moves focus to the next key\'s Revoke', async () => {
     let fail = true;
     const onRevoke = vi.fn(() => (fail ? Promise.reject(new Error('down')) : Promise.resolve()));
     const screen = await render(<ApiKeys onRevoke={onRevoke} />);
     await screen.getByRole('button', { name: 'Revoke Deploy bot' }).click();
     await expect.element(screen.getByRole('alertdialog', { name: 'Revoke Deploy bot?' })).toBeVisible();
     await screen.getByRole('button', { name: 'Keep it' }).click();
+    await screen.getByRole('button', { name: 'Revoke Deploy bot' }).click();
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => document.querySelector('dialog[open]')).toBeNull();
     expect(onRevoke).not.toHaveBeenCalled();
     await screen.getByRole('button', { name: 'Revoke Deploy bot' }).click();
     await screen.getByRole('button', { name: 'Revoke key' }).click();
