@@ -118,6 +118,20 @@ describe('Blocks/Cart summary', () => {
     await expect.element(button).not.toHaveAttribute('aria-busy', 'true');
   });
 
+  test('Check out right after a Remove, while its Undo is still up, removes the item for good first, so the order leaves it out', async () => {
+    const ordered: string[][] = [];
+    function Shop() {
+      const [list, setList] = React.useState(items);
+      return <SerupaProvider locale="en-US"><CartSummary items={list} currency="USD" onQuantityChange={() => {}}
+        onRemove={(id) => setList((all) => all.filter((i) => i.id !== id))} onCheckout={() => { ordered.push(list.map((i) => i.id)); }} /><Toaster /></SerupaProvider>;
+    }
+    await render(<Shop />);
+    await userEvent.click(page.getByRole('button', { name: 'Remove Linen shirt' }));
+    await userEvent.click(page.getByRole('button', { name: 'Check out' }));
+    await expect.poll(() => ordered).toEqual([['oxford']]);
+    expect(page.getByRole('button', { name: 'Undo' }).elements()).toHaveLength(0);
+  });
+
   test('money is written the locale\'s way, with the words in its language', async () => {
     await render(<SerupaProvider locale="id-ID"><CartSummary items={[{ id: 'b', name: 'Kemeja batik', price: 520000, quantity: 2 }]} currency="IDR" taxRate={0.11}
       onQuantityChange={() => {}} onRemove={() => {}} onCheckout={() => {}} labels={{ title: 'Keranjang Anda', tax: (r) => `PPN (${r})` }} /></SerupaProvider>);

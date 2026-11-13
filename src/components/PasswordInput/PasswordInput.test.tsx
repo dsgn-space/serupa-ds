@@ -192,6 +192,25 @@ describe('PasswordInput', () => {
     await expect.poll(() => [f.type, f.selectionStart, f.selectionEnd, f.selectionDirection, document.activeElement === f]).toEqual(['password', 1, 4, 'backward', true]);
   });
 
+  test('inside a shadow root, showing and hiding keeps a selection the browser collapsed on the way to the click too (GR95, BW1)', async () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const inner = document.createElement('div');
+    host.attachShadow({ mode: 'open' }).append(inner);
+    try {
+      await render(<PasswordInput id="psd" aria-label="Password" defaultValue="secret" />, { container: inner });
+      const f = host.shadowRoot!.getElementById('psd') as HTMLInputElement, b = f.nextElementSibling as HTMLButtonElement;
+      f.focus();
+      f.setSelectionRange(1, 4, 'backward');
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      // As WebKit does: the selection collapses to the end between the person's selecting and the button's mousedown
+      f.setSelectionRange(f.value.length, f.value.length);
+      b.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, composed: true }));
+      b.click();
+      await expect.poll(() => [f.type, f.selectionStart, f.selectionEnd, f.selectionDirection, host.shadowRoot!.activeElement === f]).toEqual(['text', 1, 4, 'backward', true]);
+    } finally { host.remove(); }
+  });
+
   test('showing and hiding a long password keeps the caret in view: at the end it stays scrolled to the end, at the start to the start (GI4)', async () => {
     await render(<div style={{ width: '220px' }}><PasswordInput id="plong" aria-label="Password" defaultValue={'correct-horse-battery-staple-'.repeat(4)} /></div>);
     const f = field('plong'), end = () => f.scrollWidth - f.clientWidth;

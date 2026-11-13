@@ -39,7 +39,7 @@
 /* A group's nested list (GM4), as Accordion's panel: its height comes and goes at once, in one layout, and the
    items unfold over it on the compositor. Open: shown at once, then it fades in and its clip opens from the top
    over motion-change-md with ease-move, with the chevron. Closed: it keeps its height, inert, while it fades and
-   folds back over motion-exit-md with ease-exit, then goes (hidden, Sidebar.tsx). One open on arrival is there from the first frame (data-instant). Transitions, so a quick second
+   folds back over motion-exit-md with ease-exit, then goes (hidden, Sidebar.tsx). One open on arrival is there from the first frame, and one opened from the keyboard at once, as one closed from it is gone at once (data-instant, KW1). Transitions, so a quick second
    press turns back from where it is. Reduced motion: the fade alone. */
 .dk-sidebar__list--nested { transition: opacity var(--motion-exit-md) var(--ease-exit); }
 .dk-sidebar__li[data-state="closed"] > .dk-sidebar__list--nested { opacity: var(--opacity-0); }

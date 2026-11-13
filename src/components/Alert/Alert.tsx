@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { Button } from '../Button/Button';
+import { ButtonBase } from '../Button/Button';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
@@ -69,7 +69,7 @@ export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>('Aler
         {has(props.children) ? <div className="dk-alert__message">{props.children}</div> : null}
         {has(props.actions) ? <div className="dk-alert__actions">{props.actions}</div> : null}
       </div>
-      {props.onDismiss ? <Button className="dk-alert__dismiss" variant="ghost" size="sm" icon={icons.Close} aria-label={props.dismissLabel || sds.labels.dismiss} onClick={(e) => dismissAndRefocus(e, props.onDismiss!)} /> : null}
+      {props.onDismiss ? <ButtonBase className="dk-alert__dismiss" variant="ghost" size="sm" icon={icons.Close} aria-label={props.dismissLabel || sds.labels.dismiss} onClick={(e) => dismissAndRefocus(e, props.onDismiss!)} /> : null}
     </div>
   );
 });

@@ -1,11 +1,15 @@
 /* ---------------------------------------------------------------
-   AvatarGroup: avatars in a row, each overlapping the one before by 8px (xs, sm), 12px (md, lg) or 16px (xl)
+   AvatarGroup: avatars in a row, each overlapping the one before by 2px (sm), 4px (md), 8px (lg) or 12px (xl), and edge to edge at xs,
+   so the initials under the overlap stay whole,
    and set in a 2px surface ring so the edges stay clear. The "+N" avatar at the end is secondary with text,
    like initials ("99+" past 99, "9+" at xs). Earlier avatars sit on top, so each status dot shows. Every value goes through --avatar-group-* tokens.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-avatar-group {
-  --dk-avatar-group-overlap: var(--avatar-group-overlap-md, var(--spacing-3));
+  /* Each size's overlap stops short of the next avatar's initials. md and lg share a token, as xs and sm do; lg and
+     xs set their own step in front of its default. */
+  --dk-avatar-group-step: initial;
+  --dk-avatar-group-overlap: var(--avatar-group-overlap-md, var(--dk-avatar-group-step, var(--spacing-1)));
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
@@ -15,8 +19,10 @@
   padding-inline-start: var(--dk-avatar-group-overlap);
   vertical-align: middle;
 }
-.dk-avatar-group--xs, .dk-avatar-group--sm { --dk-avatar-group-overlap: var(--avatar-group-overlap-sm, var(--spacing-2)); }
-.dk-avatar-group--xl { --dk-avatar-group-overlap: var(--avatar-group-overlap-lg, var(--spacing-4)); }
+.dk-avatar-group--xs, .dk-avatar-group--sm { --dk-avatar-group-overlap: var(--avatar-group-overlap-sm, var(--dk-avatar-group-step, var(--spacing-0\.5))); }
+.dk-avatar-group--xs { --dk-avatar-group-step: var(--spacing-0); }
+.dk-avatar-group--lg { --dk-avatar-group-step: var(--spacing-2); }
+.dk-avatar-group--xl { --dk-avatar-group-overlap: var(--avatar-group-overlap-lg, var(--spacing-3)); }
 .dk-avatar-group__item { position: relative; display: inline-flex; margin-inline-start: calc(var(--spacing-0) - var(--dk-avatar-group-overlap)); }
 .dk-avatar-group .dk-avatar__frame { box-shadow: 0 0 0 var(--avatar-group-ring-width, var(--border-width-2)) var(--avatar-group-ring, var(--surface)); }
 .dk-avatar-group__more > .dk-avatar__frame { background: var(--avatar-group-more-bg, var(--secondary)); color: var(--avatar-group-more-color, var(--text)); letter-spacing: var(--tracking-tight); }

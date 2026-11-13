@@ -42,7 +42,7 @@ const SKIP = ['VisuallyHidden'];  // nothing to see
 // story is also shot with forced-colors: active, as <Story>-forced-colors.png.
 // The other axes, all at once in blue-light at rest: one picture per story catches a change on any of them.
 const AXES = 'dir:rtl;contrast:more;density:compact';
-const FORCED = LIGHT ? [] : ['Checkbox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
+const FORCED = LIGHT ? [] : ['Checkbox', 'Combobox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
 
 const SB = path.join(PROJECT, 'storybook-static');
 if (!fs.existsSync(path.join(SB, 'index.json'))) {

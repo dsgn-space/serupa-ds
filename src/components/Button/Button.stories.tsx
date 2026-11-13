@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, type ButtonAsButtonProps } from './Button';
 import { iconArg } from '../../../.storybook/icon-arg';
 import { Tooltip } from '../Tooltip/Tooltip';
+import { IconButton } from '../IconButton/IconButton';
 
 const meta = {
   title: 'Components/Actions/Button',
@@ -56,8 +57,8 @@ export const Content: Story = {
     <Button>Label only</Button>
     <Button leftIcon="add">New project</Button>
     <Button variant="outline" rightIcon="arrow_forward">Next</Button>
-    <Button variant="ghost" icon="more_horiz" aria-label="More actions" />
-    <Button icon="add" aria-label="Add" size="lg" />
+    <IconButton icon="more_horiz" label="More actions" />
+    <IconButton variant="primary" icon="add" label="Add" size="lg" />
   </Row>,
 };
 
@@ -67,7 +68,7 @@ export const States: Story = {
     <Button disabled>Disabled</Button>
     <Button loading>Saving</Button>
     <Button variant="outline" leftIcon="download" loading>Export</Button>
-    <Button variant="ghost" icon="refresh" aria-label="Refresh" loading />
+    <IconButton icon="refresh" label="Refresh" loading />
   </Row>,
 };
 
