@@ -18,7 +18,7 @@
 /* Half the strip's height, whatever --status-tracker-height is: the shape that says "down". */
 .dk-status-tracker__day[data-state="down"] { block-size: var(--sizing-1-2); }
 .dk-status-tracker [data-state="none"] { --dk-st-fill: transparent; }
-.dk-status-tracker__day[data-state="none"], .dk-status-tracker__key[data-state="none"] .dk-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-none, var(--field-border)); }
+.dk-status-tracker__day[data-state="none"], .dk-status-tracker__key[data-state="none"] .dk-status-tracker__swatch { border: var(--border-width-1) solid var(--status-tracker-none, var(--border-control)); }
 .dk-status-tracker__caption { min-block-size: var(--text-sm--line-height); overflow-wrap: anywhere; color: var(--status-tracker-text, var(--text)); }
 .dk-status-tracker__summary { margin: var(--spacing-0); overflow-wrap: anywhere; color: var(--status-tracker-muted, var(--text-muted)); }
 .dk-status-tracker__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; color: var(--status-tracker-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }

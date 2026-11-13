@@ -107,7 +107,7 @@ describe('StatusTracker', () => {
       ['up', 'var(--success)', 'var(--surface)', 3],
       ['degraded', 'var(--warning)', 'var(--surface)', 3],
       ['down', 'var(--danger)', 'var(--surface)', 3],
-      ['no data', 'var(--field-border)', 'var(--surface)', 3],
+      ['no data', 'var(--border-control)', 'var(--surface)', 3],
       ['caption', 'var(--text)', 'var(--surface)', 4.5],
       ['summary', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
