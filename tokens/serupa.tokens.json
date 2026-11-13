@@ -802,6 +802,22 @@
         }
       }
     },
+    "surface-hover-raised": {
+      "$type": "color",
+      "$value": "{color.zinc-50}",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-50 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "#333338",
+            "violet-light": "{zinc-50}",
+            "violet-dark": "#333338",
+            "emerald-light": "{zinc-50}",
+            "emerald-dark": "#333338"
+          }
+        }
+      }
+    },
     "surface-raised": {
       "$type": "color",
       "$value": "{color.white}",

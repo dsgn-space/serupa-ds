@@ -204,16 +204,18 @@ describe('List', () => {
     expect([css(q('#ltok > li > :first-child')).paddingTop, css(q('#ltok > li > :first-child > span:last-child > span:first-child')).color]).toEqual(['5px', 'rgb(1, 2, 3)']);
   });
 
-  test('a selected row shows on a filled Card and on a muted panel, as on the page, with its text at 4.5:1, in all six themes', async () => {
+  test('a selected row shows on a filled, elevated or outline Card, on a muted panel and on a floating surface, as on the page, with its text at 4.5:1, in all six themes', async () => {
     await render(<div style={{ width: '420px' }}>
       <SurfaceCard id="filled" variant="filled"><List aria-label="On a filled card"><ListItem id="sfill" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard>
       <div id="muted" className="bg-surface-muted"><List aria-label="On a muted panel"><ListItem id="smuted" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
       <div id="raised" className="bg-surface-muted"><SurfaceCard id="inner"><List aria-label="On a card on a muted panel"><ListItem id="sinner" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard></div>
+      <SurfaceCard id="elev" variant="elevated"><List aria-label="On an elevated card"><ListItem id="selev" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard>
+      <div id="float" className="bg-surface-overlay"><List aria-label="On a floating surface"><ListItem id="sfloat" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
     </div>);
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      for (const [row, under] of [['sfill', 'filled'], ['smuted', 'muted'], ['sinner', 'inner']] as const) {
+      for (const [row, under] of [['sfill', 'filled'], ['smuted', 'muted'], ['sinner', 'inner'], ['selev', 'elev'], ['sfloat', 'float']] as const) {
         const fill = css(el(row)).backgroundColor, back = css(el(under)).backgroundColor;
         if (contrast(fill, back) < 1.03) low.push(`${th} ${row}: fill ${fill} on ${back}`);
         const desc = css(titleOf(row).nextElementSibling).color;
