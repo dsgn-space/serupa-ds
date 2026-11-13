@@ -13,7 +13,7 @@ import { BaseSequencer, type TestSpecification } from 'vitest/node';
 
 export const SECONDS: Record<string, number> = {
   // The checks (one file at a time).
-  'tools/test/tree-shake.mjs': 111, 'tools/test/purge-components.mjs': 86, 'tools/test/size.mjs': 44,
+  'tools/test/tree-shake.mjs': 111, 'tools/test/site.mjs': 95, 'tools/test/purge-components.mjs': 86, 'tools/test/size.mjs': 44,
   'tools/test/reproducible.mjs': 27, 'tools/test/utilities.mjs': 15, 'tools/test/no-css.mjs': 14,
   'tools/test/browser-baseline.mjs': 10, 'tools/test/package-lint.mjs': 9, 'tools/test/package.mjs': 9,
   'tools/test/props.mjs': 9, 'tools/test/page.mjs': 8, 'tools/test/unused.mjs': 8, 'tools/test/create-app.mjs': 5,

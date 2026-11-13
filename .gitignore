@@ -25,3 +25,4 @@ docs/generated/
 .bench/
 .bench-history/
 .npm/
+site-static/

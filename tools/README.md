@@ -198,6 +198,7 @@ mode, and a new script is picked up with no entry anywhere. Run with `node`, a s
 | `checkers.mjs` | Checkers that must fail: the Workflows, Browser baseline and Package lint checks each run on a small project that breaks their rules and must fail there, naming what broke, so a check that stops matching goes red instead of passing silently |
 | `compat.mjs` | Cross-browser, through WebDriver: every utility class in Safari (`safaridriver`), Firefox (`geckodriver`) or WebKitGTK compared with Chromium (colors as RGBA, lengths within 1px), browser-support gaps listed with reasons in `KNOWN`; plus responsive classes, `base.css`, `theme.js`, Button behaviour, the Loader's ring, dots, text and skeleton, and `serupa-purge` output in that engine. Safari: run `safaridriver --enable` once |
 | `state-stories.mjs` | Every state a component's Props take as a boolean (`disabled`, `invalid`, `error`, `loading`, `checked`, `selected`, `readOnly`) has a story that sets it, so the visual baselines and the Storybook axe pass cover it. `KNOWN` lists the states still without one and only shrinks |
+| `site.mjs` | The docs site stays in step with Storybook. Without a browser: the site has each Storybook block the pages import, every component, block and pattern folder has a page, and every component's props can be read from its types. Then it builds the site and opens every page: it draws its title, its stories and its props table with no error, and every link to another page leads to one. The site's own frame passes axe's WCAG 2.2 AA checks in all six themes and doesn't scroll sideways at 320px (the stories themselves are `storybook.mjs`'s) |
 | `storybook.mjs` | Opens every Storybook docs page and story (from `storybook-static/`): no errors, no missing README sections, each heading id once on a docs page and no heading level skipped, each docs page's own content (its stories and Storybook's object editor aside) passes axe's WCAG 2.2 AA checks in blue-light and blue-dark, and every story passes axe's WCAG 2.2 AA checks in all six themes (text inside a disabled control is exempt from contrast, as WCAG allows). A Patterns/ story is a whole page, so it also gets axe's page rules (one main, everything in a landmark, landmarks told apart by name, an h1, no skipped heading level), no id twice, and a skip link as the first Tab stop that puts focus in main, below the sticky Navbar (not in a story that opens on a modal dialog, where Tab stays in the dialog). Skipped locally until `npm run build-storybook`; a failure in CI |
 
 When a test fails, it names what changed. If the change is intended, run with `--update` and commit the new baselines with the change.
@@ -344,6 +345,25 @@ npm run build-storybook   # a static copy in storybook-static/ (CI builds it and
 ```
 
 Storybook is the system's documentation. `.storybook/` holds its setup (the brand and mode toolbar sets `data-theme`, with the brands taken from `tokens.json`; the Motion menu slows every duration and delay token ×4 or ×10, to watch an animation frame by frame; the Content menu swaps a story's sample data for the worst case, none or one, from `.storybook/content.ts`, for stories that read it with `usePeople()`; the Accessibility addon checks each story). The pages are in `docs/` (introduction, getting started, foundations, versioning, changelog) and `src/components/<Name>/<Name>.mdx`; they read `tokens.json`, the README and each component's `README.md`, so they can't drift. Stories are `src/components/<Name>/<Name>.stories.tsx`, one per state and variant.
+
+## The docs site
+
+```sh
+npm run site         # the site at http://localhost:6007, updating as you edit
+npm run build-site   # a static copy in site-static/ (the Docs site check builds it and opens every page)
+```
+
+The site (`site/`) is a second home for the pages Storybook shows, built with Serupa's own components: a top bar, a list of the section's pages, the page, its sections and a search (Ctrl or ⌘ K). It isn't published anywhere; run it on your computer.
+
+Nothing is written twice. Every page is the `.mdx` file Storybook reads (`docs/`, `src/components/<Name>/<Name>.mdx`, the blocks' and the patterns'), every example is a story, and every props table is read from the types:
+
+- **Pages.** `tools/site/pages.mjs` lists the `.mdx` files with the title their `<Meta />` gives them; the title is also the address (`Components/Actions/Button` is `/components/button`). A new component's page appears with its folder, with nothing to add.
+- **Blocks.** The pages import Storybook's blocks (`Meta`, `Title`, `Primary`, `Controls`, `Stories`, `Canvas`, `Source`, `Markdown`); on the site that import leads to `site/src/blocks.tsx`, which draws each with Serupa's components. A page that starts using another Storybook block needs it there too, and the check says so.
+- **Stories.** A story draws as Storybook draws it (its args, its render, its decorators), in a frame with its code on request.
+- **Props.** `tools/site/props.mjs` reads them with react-docgen-typescript, with the options Storybook's own tables use (`.storybook/main.ts` imports them from there).
+- **Links.** A Storybook link in a page (`?path=/docs/…--docs`) leads to the site's page for it.
+
+`tools/site/vite.config.mjs` is the build. `site/src/` holds the frame (`Shell.tsx`), the page (`Doc.tsx`), the indexes, the front page and the styles (`site.css`, tokens only).
 
 ## Rules the tests enforce
 

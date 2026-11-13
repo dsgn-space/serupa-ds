@@ -1,0 +1,7 @@
+{
+  // The docs site (npm run site): its own code, and through it the .mdx pages' helpers in docs/ and .storybook/.
+  "extends": "../tsconfig.json",
+  // node: the components read process.env.NODE_ENV, which the bundler fills in.
+  "compilerOptions": { "resolveJsonModule": true, "types": ["node"] },
+  "include": ["src", "../src/env.d.ts"]
+}
