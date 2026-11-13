@@ -242,10 +242,12 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   // own height takes over. at: how far below its height it shows now (a drag below the shortest stop).
   const glide = (p: HTMLElement, from: number, at: number, to: number, v: number, done: () => void) => {
     const tall = Math.max(from, to), dist = Math.abs(to - from) + at;
+    p.style.transition = 'none';   // the start is placed at once: from the handle, no drag has turned transitions off
     p.style.height = tall + 'px';
     p.style.translate = shift(tall - from + at, 1);
     p.style.setProperty('--dk-drawer-settle', settleTime(dist, Math.abs(v)) + 'ms');
     void p.offsetHeight;   // the start, laid out before the transition's end is set
+    p.style.transition = '';
     p.dataset.settling = '';
     const finish = () => { delete p.dataset.settling; p.style.height = ''; p.style.translate = ''; done(); };
     if (!dist || !parseFloat(getComputedStyle(p).transitionDuration)) { finish(); return; }

@@ -961,6 +961,28 @@ describe('Drawer: unsaved (13)', () => {
       expect(why).toEqual(['swipe']);
     });
 
+    test('with motion, the handle and a let-go drag glide on translate, never height, then hand back to the stop; one well down slides out', async () => {
+      await withMotion(async () => {
+        await render(sheet());
+        await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(true);
+        await settled();
+        const p = panel('bs');
+        const moving = () => p.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => a.transitionProperty);
+        await userEvent.click(handle());
+        expect([moving(), p.hasAttribute('data-settling')]).toEqual([['translate'], true]);
+        await expect.poll(() => p.hasAttribute('data-settling')).toBe(false);
+        expect([p.style.height, p.style.translate, Math.abs(height() - Math.round(vh() * 0.9)) < 2]).toEqual(['', '', true]);
+        await pull(vh() * 0.5, 4, 150);
+        await expect.poll(() => panel('bs').dataset.snap).toBe('0');
+        expect(moving()).toEqual(['translate']);
+        await expect.poll(() => p.hasAttribute('data-settling')).toBe(false);
+        expect([p.style.height, p.style.translate]).toEqual(['', '']);
+        await pull(vh() * 0.35, 4, 150);
+        expect(moving()).toEqual(['translate']);
+        await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(false);
+      });
+    });
+
     test('controlled: snap says where it is, and a drag only reports where to', async () => {
       const snaps: number[] = [];
       await render(sheet({ snap: 1, onSnapChange: (i) => snaps.push(i) }));
