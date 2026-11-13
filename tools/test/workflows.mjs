@@ -96,7 +96,7 @@ if (fs.existsSync(path.join(GH, 'workflows/visual-baselines.yml'))) {
 
 // CI's required check, on a run plan held for Update baselines: it cancels the run (grey, not a red X) and still never
 // passes, whether the cancel lands or not.
-{
+if (fs.existsSync(path.join(GH, 'workflows/ci.yml'))) {
   const lines = fs.readFileSync(path.join(GH, 'workflows/ci.yml'), 'utf8').split('\n');
   const job = lines.findIndex((l) => /^ {2}test:\s*$/.test(l));
   const run = lines.findIndex((l, i) => i > job && /^\s*run:\s*\|\s*$/.test(l));
