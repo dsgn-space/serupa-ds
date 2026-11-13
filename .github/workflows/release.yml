@@ -1,6 +1,6 @@
 name: Release
 
-# On main: while changesets are waiting (.changeset/*.md), keeps a "Release" pull request open that turns
+# On main (and a maintenance branch such as 14.x, see the version job): while changesets are waiting (.changeset/*.md), keeps a "Release" pull request open that turns
 # them into the next version (npm run version-packages). Once that pull request is merged, tags the version
 # and makes a GitHub release with the package attached (npm run release).
 # It runs only after CI has passed on a push to main, and works on the commit CI tested, so a red main
@@ -15,7 +15,7 @@ on:
   workflow_run:
     workflows: [CI]
     types: [completed]
-    branches: [main]
+    branches: [main, '[0-9]*.x']
 
 concurrency: release
 
@@ -39,11 +39,12 @@ jobs:
           fetch-depth: 0
       - id: head
         run: |
-          main=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
-          if [ "$main" = "$HEAD_SHA" ]; then echo "current=true" >> "$GITHUB_OUTPUT"
-          else echo "main is at $main now, not $HEAD_SHA: its own run makes the Release pull request."; fi
+          tip=$(gh api "repos/$GITHUB_REPOSITORY/commits/$BRANCH" --jq .sha)
+          if [ "$tip" = "$HEAD_SHA" ]; then echo "current=true" >> "$GITHUB_OUTPUT"
+          else echo "$BRANCH is at $tip now, not $HEAD_SHA: its own run makes the Release pull request."; fi
         env:
           GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -66,9 +67,12 @@ jobs:
           path: ${{ steps.release.outputs.tarball }}
           retention-days: 1
 
+  # Main only. On a maintenance branch (14.x) a fix's pull request runs `node tools/version.mjs` itself, so the
+  # release job above tags it when it merges: the action names its branch after the workflow's ref, which is
+  # always main here, so a second Release pull request would fight main's.
   version:
     needs: release
-    if: needs.release.outputs.current == 'true'
+    if: needs.release.outputs.current == 'true' && github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:

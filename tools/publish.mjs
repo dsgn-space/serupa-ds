@@ -1,7 +1,7 @@
 // npm run release: after a Release pull request is merged, tags the version and makes a GitHub release
 // with its CHANGELOG.md notes and the package (npm pack) attached. Does nothing once the tag and its release
 // both exist; when the tag was pushed but making the release failed, a re-run makes the release from the tag.
-// The Release workflow runs it on main; GH_TOKEN (or GITHUB_TOKEN) must allow writing to the repository.
+// The Release workflow runs it on main and on a maintenance branch (14.x); GH_TOKEN (or GITHUB_TOKEN) must allow writing to the repository.
 //
 // The tag is prebuilt: it points at a release commit made off main (never on it) that adds dist/ and drops the
 // scripts and devDependencies from package.json. Installing the tag from GitHub then copies files; nothing
@@ -14,7 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { previousTag, screenshotNotes } from './release-screenshots.mjs';
+import { isLatest, previousTag, screenshotNotes } from './release-screenshots.mjs';
 
 const P = path.resolve(import.meta.dirname, '..');
 const run = (cmd, args, opts = {}) => (execFileSync(cmd, args, { cwd: P, encoding: 'utf8', ...opts }) ?? '').trim();   // null when stdio is inherited
@@ -92,8 +92,9 @@ if (!tagged) {
   run('git', ['push', 'origin', tag], { stdio: 'inherit', ...remote });
 }
 home();
-run('gh', ['release', 'create', tag, tarball, '--title', `${pkg.version}`, '--notes-file', notes, '--verify-tag'], { stdio: 'inherit' });
+// A patch on the previous major's branch (14.x after 15.0.0) leaves "Latest" on the new major.
+const latest = isLatest(run('git', ['tag', '--list', 'v*']).split('\n'), pkg.version);
+run('gh', ['release', 'create', tag, tarball, '--title', `${pkg.version}`, '--notes-file', notes, '--verify-tag', `--latest=${latest}`], { stdio: 'inherit' });
 fs.rmSync(notes);
-// Publishing to a registry comes later: GitHub Packages needs the package named after the account
-// (@diki-stwn/...), so it waits on that decision. Until then projects install from the release.
+// The Release workflow's publish job sends the same tarball to the private registry once the name is scoped (15.0.0).
 console.log(`Released ${tag}.`);
