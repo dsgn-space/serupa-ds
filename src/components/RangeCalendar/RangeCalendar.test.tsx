@@ -130,7 +130,7 @@ describe('RangeCalendar', () => {
   test('Indonesian: the words and the range as Indonesian writes it', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><RangeCalendar defaultMonth={nov} defaultValue={{ start: '2026-11-03', end: '2026-11-05' }} /></SerupaProvider>);
     await expect.element(page.getByRole('group', { name: 'Pilih rentang tanggal' })).toBeVisible();
-    expect(status()).toBe('Rentang terpilih: ' + new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).formatRange(new Date(2026, 10, 3), new Date(2026, 10, 5)));
+    expect(status()).toBe('Rentang terpilih: ' + new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium' }).formatRange(new Date(2026, 10, 3), new Date(2026, 10, 5)).replace(/[\u2009\u202f]/g, ' '));
     expect(day('2026-11-04').getAttribute('aria-label')).toMatch(/, dalam rentang$/);
   });
 

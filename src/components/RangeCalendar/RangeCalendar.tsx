@@ -91,7 +91,11 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
     if (sameDay(d, shown.end)) return name + ', ' + L.endDate;
     return inside(d) ? name + ', ' + L.inRange : name;
   };
-  const range = (r: DateRange) => (r.start && r.end ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).formatRange(r.start, r.end) : '');
+  // Gregorian with Latin digits, as the grid's days are (Calendar's formats()); thin and narrow spaces as plain ones,
+  // since Node's ICU and the browser's put different spaces around the dash, so a server render would not match.
+  const range = (r: DateRange) => (r.start && r.end
+    ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', calendar: 'gregory', numberingSystem: 'latn' }).formatRange(r.start, r.end).replace(/[\u2009\u202f]/g, ' ')
+    : '');
   const status = anchor ? L.chooseEndDate : value.start && value.end ? L.rangeSelected(range(value)) : L.chooseStartDate;
 
   const cal = (m: Date, first: boolean) => (
