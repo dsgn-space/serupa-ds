@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, settle } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, settle, press, THEMES, contrast } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
@@ -335,5 +335,26 @@ describe('CascadeSelect', () => {
     expect(on.map((o) => css(o).fontWeight)).toEqual(on.map(() => css(off).fontWeight));
     expect(on.map((o) => /inset/.test(css(o).boxShadow))).toEqual([true, true, true]);
     expect(css(off).boxShadow).toBe('none');
+  });
+});
+
+describe('CascadeSelect held state', () => {
+  test('held down: an option fills one step past its hover (--cascade-select-option-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<CascadeSelect aria-label="Wilayah" options={regions} />);
+    await userEvent.click(button());
+    const b = page.getByRole('option', { name: 'Bali' }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--pressed)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 4.5) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

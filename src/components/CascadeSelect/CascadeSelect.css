@@ -70,6 +70,7 @@
   cursor: pointer; overflow-wrap: anywhere; touch-action: manipulation;
 }
 @media (hover: hover) { .dk-cascade-select__option:hover:not([aria-disabled="true"]) { background: var(--cascade-select-option-hover, var(--highlight)); } }
+.dk-cascade-select__option:active:not([aria-disabled="true"]) { background: var(--cascade-select-option-bg-pressed, var(--pressed)); }
 /* The chosen path: a tint and a 2px primary bar at the start (right in rtl), at the weight of the others so a long
    name wraps the same once picked. */
 .dk-cascade-select__option { --dk-bar: var(--border-width-2); }

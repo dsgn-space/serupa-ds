@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, withMotion, settled } from '../../../tools/test/vitest/helpers';
+import { userEvent, page } from 'vitest/browser';
+import { THEMES, contrast, css, withMotion, settled, color, press } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 const described = (e: Element) => (e.getAttribute('aria-describedby') || '').split(' ').filter(Boolean).map((i) => document.getElementById(i)!.textContent).join(' | ');
 import { TimePicker } from './TimePicker';
@@ -326,5 +326,25 @@ describe('TimePicker: autocomplete', () => {
     const l = listOf('ctl'), chosen = l.querySelector<HTMLElement>('[aria-selected=true]')!, other = l.querySelector<HTMLElement>('[role=option]:not([aria-selected=true])')!;
     expect([time(chosen), !!chosen.querySelector('[data-icon]')]).toEqual(['9:00 AM', true]);
     expect(getComputedStyle(chosen).fontWeight).toBe(getComputedStyle(other).fontWeight);
+  });
+});
+
+describe('TimePicker held state', () => {
+  test('held down: the clock button fills one step past its hover (--time-picker-button-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<TimePicker aria-label="Start time" listLabel="Start times" />);
+    const b = page.getByRole('button', { name: 'Start times' }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { userEvent, page } from 'vitest/browser';
+import { THEMES, contrast, css, color, press } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Field } from '../Field/Field';
@@ -375,5 +375,25 @@ describe('PhoneInput', () => {
     }
     expect(out).toEqual(['+4930123456', '+49301234567', '+49301234567', '+49301234567', '+49301234567', '+49301234567']);
     expect(parsePhone('tel:+4930123456;phone-context=example.com')).toEqual({ country: phoneCountry('DE'), national: '30123456' });
+  });
+});
+
+describe('PhoneInput held state', () => {
+  test('held down: the country picker fills one step past its hover (--phone-input-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<PhoneInput aria-label="Phone" countryLabel="Dialling code" />);
+    const b = (page.getByRole('combobox', { name: 'Dialling code' }).element() as HTMLElement).parentElement as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

@@ -32,6 +32,16 @@
           }
         }
       },
+      "button-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "The calendar button's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--date-picker-button-bg-pressed"
+          }
+        }
+      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",

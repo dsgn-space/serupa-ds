@@ -32,6 +32,16 @@
           }
         }
       },
+      "chevron-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "The chevron button's background while it's held down, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--combobox-chevron-bg-pressed"
+          }
+        }
+      },
       "listbox-bg": {
         "$type": "color",
         "$value": "{color.surface-overlay}",

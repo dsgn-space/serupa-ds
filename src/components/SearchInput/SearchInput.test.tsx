@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { userEvent, page } from 'vitest/browser';
+import { THEMES, contrast, css, color, press } from '../../../tools/test/vitest/helpers';
 import { SearchInput } from './SearchInput';
 
 // The button at a point just outside each edge of b (hit testing rounds to whole pixels, so 0.75px before the start
@@ -167,5 +167,25 @@ describe('SearchInput', () => {
       expect(Math.round(b.getBoundingClientRect().height)).toBeLessThan(24);
       expect(reach(b)).toEqual([true, true, true, true]);
     }
+  });
+});
+
+describe('SearchInput held state', () => {
+  test('held down: the clear button fills one step past its hover (--search-input-clear-bg-pressed), with or without a pointer that hovers', async () => {
+    await render(<SearchInput aria-label="Find" defaultValue="tea" clearLabel="Wipe the search" />);
+    const b = page.getByRole('button', { name: 'Wipe the search' }).element() as HTMLElement;
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    const low = await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      const out: string[] = [];
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        const r = contrast(css(b).color, css(b).backgroundColor);
+        if (r < 3) out.push(`${th}: ${r.toFixed(2)}`);
+      }
+      document.documentElement.removeAttribute('data-theme');
+      return out;
+    });
+    expect(low).toEqual([]);
   });
 });

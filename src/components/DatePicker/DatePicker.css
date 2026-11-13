@@ -12,6 +12,7 @@
 }
 .dk-date-picker__button .dk-icon { font-size: var(--dk-input-icon); }
 @media (hover: hover) { .dk-date-picker__button:hover:not(:disabled) { background: var(--date-picker-button-bg-hover, var(--secondary)); color: var(--date-picker-button-hover, var(--text)); } }
+.dk-date-picker__button:active:not(:disabled) { background: var(--date-picker-button-bg-pressed, var(--secondary-hover)); color: var(--date-picker-button-hover, var(--text)); }
 .dk-date-picker__button:focus { outline: none; }
 .dk-date-picker__button:focus-visible { outline: var(--focus-ring-width) solid var(--date-picker-focus-ring, var(--focus-ring)); }
 .dk-date-picker__button:disabled { cursor: not-allowed; }

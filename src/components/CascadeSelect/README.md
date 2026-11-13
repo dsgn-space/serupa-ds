@@ -134,6 +134,7 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-panel-border` | `border-overlay` | The panel's outline. |
 | `--cascade-select-divider` | `border` | The line between columns. |
 | `--cascade-select-option-hover` | `highlight` | An option under the pointer, as Combobox's and Menu's. |
+| `--cascade-select-option-bg-pressed` | `pressed` | An option's background while it's held down, one step past hover. |
 | `--cascade-select-option-on` | `primary-subtle` | The highlighted option in each column. |
 | `--cascade-select-option-indicator` | `primary` | The 2px bar at the start of each option on the chosen path (3:1 on option-on). |
 
