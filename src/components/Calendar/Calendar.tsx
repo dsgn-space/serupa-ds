@@ -234,7 +234,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
       <div className="dk-calendar__header">
         <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />
-        <h2 className={cn('dk-calendar__title', props.monthYearPicker && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month).slice(0, 7)} lang={lang} aria-live="polite">{title}</h2>
+        <h2 className={cn('dk-calendar__title', props.monthYearPicker && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month)} lang={lang} aria-live="polite">{title}</h2>
         {props.monthYearPicker ? <MonthYear month={month} min={min} max={max} today={hydrated ? today : month} names={monthName} lang={lang} monthLabel={sds.labels.month} yearLabel={sds.labels.year} onPick={showMonth} /> : null}
         <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" hideTitle
           disabled={!!max && compare(addMonths(month, 1), max) > 0} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); showMonth(addMonths(month, 1)); }} ref={nextNav} />
@@ -278,8 +278,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
 // no server markup: the title isn't in the page yet.
 function serverMonth(titleId: string): Date | null {
   const at = typeof document === 'undefined' ? null : document.getElementById(titleId);
-  const m = at ? /^(\d{4})-(\d{2})$/.exec(at.getAttribute('data-month') || '') : null;
-  return m ? new Date(Number(m[1]), Number(m[2]) - 1, 1) : null;
+  return at ? toDay(at.getAttribute('data-month')) : null;
 }
 
 function MonthYear(p: { month: Date; min: Date | null; max: Date | null; today: Date; names: Intl.DateTimeFormat; lang: string | undefined; monthLabel: string; yearLabel: string; onPick: (m: Date) => void }) {
