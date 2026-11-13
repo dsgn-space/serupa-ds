@@ -111,7 +111,7 @@ export default defineConfig({
         // scroll-lock.mjs needs Chromium's switch that shows classic scrollbars, and utilities.mjs compares each
         // class's computed styles with Chromium's baseline, which other engines write differently (538px for 539px);
         // tools/test/compat.mjs is the comparison between engines.
-        exclude: ['tools/test/{lib,run,webdriver,compat,visual,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
+        exclude: ['tools/test/{lib,run,webdriver,compat,visual,consistency,storybook,consumer,frameworks,pack,screen-reader,mutation,proof-brand}.mjs', ...(BROWSER === 'chromium' ? [] : ['tools/test/{scroll-lock,utilities}.mjs'])],
         environment: 'node',
         // Several write their pages to the one .test-tmp/ folder and remove it when done: one file at a time.
         fileParallelism: false,
