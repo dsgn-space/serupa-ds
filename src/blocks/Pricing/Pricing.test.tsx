@@ -10,11 +10,22 @@ const plans: PricingPlan[] = [
   { id: 'pro', name: 'Pro', description: 'For small teams.', monthly: 10, yearly: 96, features: ['Unlimited projects', '100 GB of files'], recommended: true },
   { id: 'team', name: 'Team', monthly: 20, yearly: 216, features: ['Everything in Pro', 'Single sign-on'] },
 ];
-const text = (id: string) => document.querySelector(`[aria-labelledby="${id}-name"]`)?.textContent || '';
+const text = (id: string) => document.querySelector(`li[aria-labelledby$="-${id}-name"]`)?.textContent || '';
 
 // Pricing (BL6): plans as a list, monthly or yearly as one choice with the saving in words, the current and the
 // recommended plan in words, and one action per plan named after it.
 describe('Blocks/Pricing', () => {
+  test('two Pricing blocks with the same plans (the page and a dialog) each name their own cards: no id is used twice', async () => {
+    await render(<SerupaProvider locale="en-US">
+      <Pricing plans={plans} currency="USD" onChoose={() => {}} />
+      <Pricing plans={plans} currency="USD" onChoose={() => {}} />
+    </SerupaProvider>);
+    const ids = [...document.querySelectorAll('[id]')].map((n) => n.id);
+    expect(ids.filter((x, i) => ids.indexOf(x) !== i)).toEqual([]);
+    const cards = [...document.querySelectorAll<HTMLElement>('li[aria-labelledby]')];
+    expect(cards.map((c) => c.contains(document.getElementById(c.getAttribute('aria-labelledby')!)))).toEqual([true, true, true, true, true, true]);
+  });
+
   test('plans are a list of named items, each with a heading and a named list of what it includes', async () => {
     await render(<SerupaProvider locale="en-US"><Pricing plans={plans} currency="USD" onChoose={() => {}} /></SerupaProvider>);
     await expect.element(page.getByRole('heading', { level: 3, name: 'Pro' })).toBeVisible();
@@ -56,7 +67,7 @@ describe('Blocks/Pricing', () => {
     await page.viewport(768, 900);
     const long: PricingPlan[] = plans.map((p, i) => (i === 0 ? { ...p, features: ['Datenschutzgrundverordnungskonformitätsprüfung'] } : p));
     await render(<SerupaProvider locale="de-DE"><Pricing plans={long} currency="EUR" onChoose={() => {}} /></SerupaProvider>);
-    const card = document.querySelector<HTMLElement>('[aria-labelledby="free-name"]')!;
+    const card = document.querySelector<HTMLElement>('li[aria-labelledby$="-free-name"]')!;
     expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
     const item = card.querySelector('ul li')!.getBoundingClientRect(), box = card.getBoundingClientRect();
     expect(item.right).toBeLessThanOrEqual(box.right);
