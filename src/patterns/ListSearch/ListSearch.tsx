@@ -6,7 +6,7 @@ import { Button } from '../../components/Button/Button';
 import { Pagination } from '../../components/Pagination/Pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableLoadingRows, type SortDirection } from '../../components/Table/Table';
 import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
-import { EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
+import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { useLocale } from '../../internal/provider';
 
@@ -23,6 +23,7 @@ import { useLocale } from '../../internal/provider';
      gets the new query string.
    - 4.1.3: while the rows load, the results count says "Loading projects" (once, as a status), the table is busy and
      keeps its header, and its placeholder rows are decorative, so nothing jumps when the rows arrive.
+   - 4.1.3, 3.3.3: a failed load says so once, in the table's place, with Try again (EmptyLoadFailed).
    - Changing the search or a filter goes back to page 1, so nobody lands on an empty page 3, and lets go of the
      selected rows it hides, so "2 selected" never counts rows nobody can see, and a bulk action never reaches them.
    - 4.1.3: Archive and Export say what they did in a toast. Archive takes the rows away at once, with Undo; it's done
@@ -43,6 +44,10 @@ export interface ListSearchProps {
   pageSize?: number | undefined;
   /** Archives the rows for good, by name: called once the "Archived" toast closes without Undo. */
   onArchive?: ((names: string[]) => void) | undefined;
+  /** The rows failed to load: a "Couldn’t load" message with Try again, which calls onRetry, in their place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
   /** The rows are on their way: the table keeps its header, with placeholder rows, and says it's busy. Default: false. */
   loading?: boolean | undefined;
   /** Exports the selected rows, by name. */
@@ -93,7 +98,7 @@ export function writeView(v: View): string {
 }
 
 /** The list page: a skip link, a header, then main with the h1, the search and filters, the table and the pages. */
-export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport, loading = false }: ListSearchProps) {
+export function ListSearch({ projects = demo, search = '', onSearchChange, pageSize = 10, onArchive, onExport, loading = false, loadFailed = false, onRetry }: ListSearchProps) {
   const locale = useLocale();
   const [view, setView] = React.useState<View>(() => readView(search));
   const [picked, setPicked] = React.useState<string[]>([]);
@@ -159,13 +164,15 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             { label: 'Status', value: view.status, onChange: (value) => change({ status: value }), options: [{ value: '', label: 'All' }, ...STATUSES] },
             { label: 'Owner', value: view.owner, onChange: (value) => change({ owner: value }), options: [{ value: '', label: 'Anyone' }, ...OWNERS] },
           ]}
-          results={loading ? 'Loading projects' : found.length === live ? `${found.length} projects` : `${found.length} of ${live} projects`}
+          results={loadFailed ? '' : loading ? 'Loading projects' : found.length === live ? `${found.length} projects` : `${found.length} of ${live} projects`}
           onClearFilters={clear}
           selectedCount={picked.length}
           onClearSelection={() => setPicked([])}
           bulkActions={<><Button size="sm" variant="outline" onClick={exportRows}>Export</Button><Button size="sm" variant="outline" onClick={archive}>Archive</Button></>}
         >
-          {loading ? (
+          {loadFailed ? (
+            <EmptyLoadFailed title="Couldn’t load projects" onRetry={() => onRetry?.()} headingLevel={2} />
+          ) : loading ? (
             // The header stays, so the columns don't move when the rows arrive; the placeholder rows are decorative.
             <Table caption="Projects" hideCaption loading>
               <TableHead><TableRow>
@@ -202,7 +209,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             }} />
           )}
         </TableToolbar>
-        {!loading && pages > 1 ? (
+        {!loading && !loadFailed && pages > 1 ? (
           <Pagination count={pages} page={page} onPageChange={(n) => change({ page: n }, true)} total={found.length} pageSize={pageSize}
             aria-label="Projects pages" />
         ) : null}

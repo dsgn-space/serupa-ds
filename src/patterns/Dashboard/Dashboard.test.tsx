@@ -92,4 +92,14 @@ describe('Patterns/Dashboard', () => {
     const main = document.querySelector('main') as HTMLElement;
     expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
   });
+
+  test('a failed load: "Couldn’t load your dashboard" in its place, said once, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Dashboard loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load your dashboard' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'This month' }).elements()).toHaveLength(0);
+    expect(screen.getByRole('heading', { name: 'No projects yet' }).elements()).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

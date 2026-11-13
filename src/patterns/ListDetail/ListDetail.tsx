@@ -7,6 +7,7 @@ import { Button } from '../../components/Button/Button';
 import { List, ListItem } from '../../components/List/List';
 import { Splitter } from '../../components/Splitter/Splitter';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { useLocale } from '../../internal/provider';
 import { withViewTransition } from '../../internal/viewTransition';
@@ -22,6 +23,7 @@ import { withViewTransition } from '../../internal/viewTransition';
      still marked as open, so the place in the list is never lost. On a wide screen focus stays in the list.
    - 2.1.1: the panes' divider is a Splitter, moved with the arrow keys as well as by dragging.
    - 4.1.3: while the messages load, the list's pane shows placeholder rows, busy and named once ("Loading messages").
+   - 4.1.3, 3.3.3: a failed load says so once, in the panes' place, with Try again (EmptyLoadFailed).
    - With no messages, an empty state says what will show up here, instead of two empty panes and "Messages (0)".
    Motion (the Motion foundation's "Layout changes"): on a phone, an opened message slides in from the end while its
    subject glides from its row up into the heading, and "Back to messages" plays it the other way, so the message
@@ -38,6 +40,10 @@ export interface ListDetailProps {
   defaultSelected?: string | undefined;
   /** A message was opened. */
   onSelect?: ((id: string) => void) | undefined;
+  /** The messages failed to load: a "Couldn’t load" message with Try again, which calls onRetry, in their place. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
   /** The messages are on their way: the list's pane with placeholder rows, named once ("Loading messages"). Default: false. */
   loading?: boolean | undefined;
 }
@@ -63,7 +69,7 @@ const subscribe = (f: () => void) => { const m = matchMedia(WIDE); m.addEventLis
 function useWide() { return React.useSyncExternalStore(subscribe, () => matchMedia(WIDE).matches, () => true); }
 
 /** The list-and-detail page: a skip link, a header, then main with the list and the open message. */
-export function ListDetail({ messages = demo, defaultSelected, onSelect, loading = false }: ListDetailProps) {
+export function ListDetail({ messages = demo, defaultSelected, onSelect, loading = false, loadFailed = false, onRetry }: ListDetailProps) {
   const locale = useLocale();
   const wide = useWide();
   const [picked, setPicked] = React.useState<string | undefined>(defaultSelected);
@@ -139,7 +145,9 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 outline-none">
         <Heading level={1}>Inbox</Heading>
-        {loading ? (
+        {loadFailed ? (
+          <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />
+        ) : loading ? (
           <section aria-labelledby="messages-title" className="flex min-w-0 flex-col gap-3 rounded-lg border border-border bg-surface p-4">
             <Heading level={2} size="lg" id="messages-title">Messages</Heading>
             <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">

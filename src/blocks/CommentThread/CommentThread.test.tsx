@@ -201,6 +201,22 @@ describe('Blocks/Comment thread', () => {
     expect(thread.getByRole('article').elements()).toHaveLength(start.length);
   });
 
+  test('a failed load says so in place of the list and the reply box, in the thread\'s words, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<CommentThread comments={[]} onReply={() => {}} loading loadFailed onRetry={onRetry} />);
+    const thread = page.getByRole('region', { name: 'Comments' });
+    await expect.element(thread.getByRole('heading', { level: 3, name: 'Couldn’t load the comments' })).toBeVisible();
+    expect(page.getByRole('textbox').elements()).toHaveLength(0);
+    expect(page.getByRole('progressbar').elements()).toHaveLength(0);
+    await thread.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledOnce();
+    await screen.rerender(<CommentThread comments={[]} onReply={() => {}} headingLevel={4} loadFailed labels={{ loadFailed: 'Komentar gagal dimuat' }} />);
+    await expect.element(page.getByRole('heading', { level: 4, name: 'Komentar gagal dimuat' })).toBeVisible();
+    await screen.rerender(<CommentThread comments={start} onReply={() => {}} />);
+    expect(thread.getByRole('article').elements()).toHaveLength(start.length);
+    await expect.element(page.getByRole('textbox')).toBeVisible();
+  });
+
   test('with people, "@" in the reply lists them, the hint says so, mentions are bold, and onReply gets who to notify', async () => {
     const people = [{ id: 'ana', label: 'Ana Putri' }, { id: 'budi', label: 'Budi Santoso' }];
     const onReply = vi.fn<(body: string, d: { mentions: { id: string }[] }) => void>();

@@ -25,3 +25,6 @@ export const Empty: Story = { args: { items: [] } };
 
 /** While they load: the count says "Loading notifications" over placeholder rows, and Mark all as read waits. */
 export const Loading: Story = { args: { items: [], loading: true } };
+
+/** The notifications failed to load: what happened and Try again in the list's place, and Mark all as read waits. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };

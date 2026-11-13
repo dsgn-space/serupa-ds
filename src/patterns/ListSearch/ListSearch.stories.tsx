@@ -23,3 +23,6 @@ export const NoResults: Story = { args: { search: '?q=rocket' } };
 
 /** While the rows load: the count says "Loading projects", and the table keeps its header over placeholder rows. */
 export const Loading: Story = { args: { loading: true } };
+
+/** The rows failed to load: what happened and Try again in the table's place, said once. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => {} } };

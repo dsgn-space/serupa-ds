@@ -27,6 +27,7 @@ A bell in the Navbar that opens the latest notifications in a drawer, and a full
 - **Mark all as read** is off when there's nothing to mark.
 - **While they load** (`loading`), the count says "Loading notifications" over placeholder rows, and Mark all as read waits. Notifications that arrive later keep which ones are already read.
 - **A skip link** first, into main, as on every page.
+- **A failed load says so, with a way out** (4.1.3, 3.3.3). With `loadFailed`, "Couldn’t load" and Try again stand in for the list, said once, and Try again calls `onRetry`.
 
 <Canvas of={Stories.AllRead} />
 
@@ -35,6 +36,8 @@ A bell in the Navbar that opens the latest notifications in a drawer, and a full
 <Canvas of={Stories.Empty} />
 
 <Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
 
 ## What stays your app's job
 

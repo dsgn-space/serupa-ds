@@ -154,4 +154,15 @@ describe('Patterns/List with search and filters', () => {
     await expect.element(screen.getByRole('heading', { name: 'No projects match these filters' })).toBeVisible();
     expect(document.querySelector('nav[aria-label="Projects pages"]')).toBeNull();
   });
+
+  test('a failed load: "Couldn’t load projects" in its place, said once, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<ListSearch loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load projects' })).toBeVisible();
+    expect(document.querySelector('table')).toBeNull();
+    expect(document.querySelector('nav[aria-label="Projects pages"]')).toBeNull();
+    expect(status()).toBe('');
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });
