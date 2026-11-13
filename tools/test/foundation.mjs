@@ -121,7 +121,8 @@ for (const [n, [, tok]] of COMP) {
   if (!uses.length && !tok.$deprecated) unused.push(n);   // a deprecated token may have no effect until it's removed
   // An internal --dk- variable may stand in front of the default (var(--dk-x, default)): one the component works out
   // from another token, such as a hover color from a background that was set (Button, 176).
-  const unwrap = (v) => /^var\(--dk-[\w-]+,\s*([\s\S]*)\)$/.exec(v.trim())?.[1] ?? v;
+  // A renamed token's old name, deprecated, stands there too until it's removed (var(--new, var(--old, default))).
+  const unwrap = (v) => { const m = /^var\(--([\w-]+),\s*([\s\S]*)\)$/.exec(v.trim()); return m && (m[1].startsWith('dk-') || COMP.get(m[1])?.[1].$deprecated) ? m[2] : v; };
   for (const fb of uses) if (fb == null || norm(unwrap(fb)) !== norm(d)) wrong.push(`${n}: CSS default ${String(fb).trim().slice(0, 50)} ≠ ${d}`);
 }
 if (COMP.size) {

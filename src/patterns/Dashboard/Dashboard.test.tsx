@@ -16,6 +16,9 @@ describe('Patterns/Dashboard', () => {
   test('one main and one h1, the skip link first, and each part a region named by its h2', async () => {
     await render(<Dashboard />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    // The page's title is set off from what's under it by the page header's line, as on the other app pages.
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('h1'))).toBe(true);
     expect(regions()).toEqual(['This month', 'Recent projects', 'Usage', 'Activity']);
     const levels = [...document.querySelectorAll('main h1, main h2, main h3')].map((h) => Number(h.tagName[1]));
     levels.forEach((l, i) => { if (i > 0) expect(l - (levels[i - 1] ?? 1)).toBeLessThanOrEqual(1); });
@@ -67,6 +70,13 @@ describe('Patterns/Dashboard', () => {
     await expect.element(screen.getByRole('heading', { level: 2, name: 'No projects yet' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'New project' }).elements()).toHaveLength(1);
     expect(screen.getByRole('meter').elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'New project' }).click();
+    expect(onCreateProject).toHaveBeenCalledTimes(1);
+  });
+
+  test('the header\'s New project starts one', async () => {
+    const onCreateProject = vi.fn();
+    const screen = await render(<Dashboard onCreateProject={onCreateProject} />);
     await screen.getByRole('button', { name: 'New project' }).click();
     expect(onCreateProject).toHaveBeenCalledTimes(1);
   });

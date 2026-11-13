@@ -44,14 +44,35 @@ export function openTags(src, name) {
 
 const attrAt = (prop) => new RegExp(`(?<=\\s)${prop}(?=\\s*=|\\s|/|$)`, 'g');
 
-/** Rename a prop written on the component's tags. Gives back the new text and how many it renamed. */
+/** Rename a prop written on the component's tags. Gives back the new text and how many it renamed. A tag that already
+ * has the new name keeps both (a wrapper passing each through), rather than end with the new one twice. */
 export function renameProp(src, component, from, to) {
   let n = 0;
   const tags = openTags(src, component);
   for (const [s, e] of tags.reverse()) {
     const attrs = src.slice(s, e), mask = topLevel(attrs);
+    if (attrAt(to).test(mask)) continue;
     let next = attrs;
     for (const m of [...mask.matchAll(attrAt(from))].reverse()) { next = next.slice(0, m.index) + to + next.slice(m.index + from.length); n++; }
+    src = src.slice(0, s) + next + src.slice(e);
+  }
+  return { text: src, count: n };
+}
+
+/** Change a prop's string value written on the component's tags (variant="default" to variant="plain"), in quotes or
+ * in braces around quotes. Gives back the new text and how many it changed. */
+export function renameValue(src, component, prop, from, to) {
+  let n = 0;
+  const value = new RegExp(`^(\\s*=\\s*\\{?\\s*)(["'])${from}\\2`);
+  for (const [s, e] of openTags(src, component).reverse()) {
+    const attrs = src.slice(s, e), mask = topLevel(attrs);
+    let next = attrs;
+    for (const m of [...mask.matchAll(attrAt(prop))].reverse()) {
+      const at = m.index + prop.length, v = value.exec(next.slice(at));
+      if (!v) continue;
+      next = next.slice(0, at) + v[1] + v[2] + to + v[2] + next.slice(at + v[0].length);
+      n++;
+    }
     src = src.slice(0, s) + next + src.slice(e);
   }
   return { text: src, count: n };
@@ -197,6 +218,18 @@ export const TRANSFORMS = [
   propRename('15.0.0', 'fab-placement', 'Fab', 'position', 'placement', { leftovers: false }),
   propRename('15.0.0', 'toaster-placement', 'Toaster', 'position', 'placement', { leftovers: false }),
   propRename('15.0.0', 'offline-banner-on-online-change', 'OfflineBanner', 'onChange', 'onOnlineChange', { leftovers: false }),
+  propRename('15.0.0', 'drawer-placement', 'Drawer', 'side', 'placement', { leftovers: false }),
+  propRename('15.0.0', 'notification-center-placement', 'NotificationCenter', 'side', 'placement', { leftovers: false }),
+  propRename('15.0.0', 'table-loading', 'Table', 'busy', 'loading', { leftovers: false }),
+  propRename('15.0.0', 'data-grid-loading', 'DataGrid', 'busy', 'loading', { leftovers: false }),
+  propRename('15.0.0', 'list-loading', 'List', 'busy', 'loading', { leftovers: false }),
+  propRename('15.0.0', 'button-loading-label', 'Button', 'loadingText', 'loadingLabel', { leftovers: false }),
+  propRename('15.0.0', 'badge-loading-label', 'Badge', 'loadingText', 'loadingLabel', { leftovers: false }),
+  ...['Checkbox', 'CheckboxGroup', 'Radio', 'RadioGroup'].map((component) => ({
+    version: '15.0.0', id: `${component.replace(/(?<=.)([A-Z])/g, '-$1').toLowerCase()}-variant-plain`, exts: CODE,
+    title: `${component}: \`variant="default"\` is \`variant="plain"\``,
+    run: (src) => (new RegExp(`\\b${component}\\b`).test(src) ? { ...renameValue(src, component, 'variant', 'default', 'plain'), notes: [] } : { text: src, count: 0, notes: [] }),
+  })),
 ];
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);

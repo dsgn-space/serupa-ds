@@ -152,7 +152,7 @@ describe('NotificationCenter', () => {
   test('the deprecated side still reaches the Drawer', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
-      await render(<NotificationCenter defaultOpen items={list} side="right" />);
+      await render(<NotificationCenter defaultOpen items={list} {...{ side: 'right' as const }} />);
       await expect.poll(() => drawer()?.dataset.side).toBe('right');
     } finally { warn.mockRestore(); }
   });

@@ -17,6 +17,7 @@ import { Alert } from '../../components/Alert/Alert';
 import type { ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import type { SaveState } from '../../components/SaveStatus/SaveStatus';
 import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Account security: changing the password, turning two-step verification on and off, and the devices signed in, each
    with Sign out. For an app to copy. What it carries (WCAG 2.2):
@@ -180,7 +181,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link href="#settings">Back to settings</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-6 outline-none">
+      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         {deleted ? (
           <div className="flex flex-col gap-3">
             <Heading level={1} ref={goneHeading} tabIndex={-1} className="outline-none">Your account is deleted</Heading>
@@ -188,7 +189,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
             <Link href="#home">Go to the home page</Link>
           </div>
         ) : <>
-        <Heading level={1}>Security</Heading>
+        <PageHeader title="Security" />
 
         <SettingsSection title="Password" description={`At least ${MIN} characters. A long phrase is easier to remember than symbols.`}
           onSave={save} errors={errors} status={status} savedAt={savedAt} onRetry={save} saveLabel="Change password">

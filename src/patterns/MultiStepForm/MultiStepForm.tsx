@@ -16,6 +16,7 @@ import { Stepper } from '../../components/Stepper/Stepper';
 import { useSteps } from '../../components/Stepper/useSteps';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Multi-step form: an application for a business account in three steps of questions and a step that shows every
    answer before it's sent, then what happens next. For an app to copy. What it carries (WCAG 2.2):
@@ -172,8 +173,11 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
   return (
     <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 outline-none">
-        <Heading level={1} size="2xl">Open a business account</Heading>
+      <header className="border-b border-border bg-surface px-4 py-3">
+        <p className="m-0 text-base font-semibold">Acme</p>
+      </header>
+      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
+        <PageHeader title="Open a business account" />
         <Stepper {...s.stepperProps} current={sent ? STEPS.length : s.current} onStepClick={sent || busy ? undefined : s.stepperProps.onStepClick} size="sm" aria-label="Application steps" />
         {sent ? (
           <Card className="flex flex-col gap-4">

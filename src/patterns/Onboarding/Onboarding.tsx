@@ -8,6 +8,7 @@ import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { Progress } from '../../components/Progress/Progress';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { announce } from '../../internal/announce';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Onboarding / first run: the first page a new account sees. A checklist of setup steps with how far along it
    is, an empty state that says what to do first, and progress that's kept between visits. For an app to copy.
@@ -111,10 +112,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8 outline-none">
-        <div className="flex flex-col gap-2">
-          <Heading level={1}>Welcome to Acme, {name}</Heading>
-          <p className="m-0 text-text-muted">A few steps get your workspace ready. Do them in any order, now or later: we keep your place.</p>
-        </div>
+        <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place." />
 
         <section aria-labelledby="setup-title" className="flex flex-col gap-4">
           {state.hidden ? (

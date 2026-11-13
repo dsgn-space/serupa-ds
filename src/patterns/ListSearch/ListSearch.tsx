@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
-import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Pagination } from '../../components/Pagination/Pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, TableSelectCell, TableLoadingRows, type SortDirection } from '../../components/Table/Table';
@@ -9,6 +8,7 @@ import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { useLocale } from '../../internal/provider';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* List with search and filters: a page of rows to search, filter, sort, select and page through. For an app to
    copy. What it carries (WCAG 2.2):
@@ -146,16 +146,13 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
   const clear = () => change({ q: '', status: '', owner: '' });
 
   return (
-    <div className="min-h-screen bg-surface text-text">
+    <div className="min-h-screen bg-surface-muted text-text">
       <SkipLink />
-      <header className="border-b border-border px-4 py-3">
+      <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 outline-none">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Heading level={1}>Projects</Heading>
-          <Button href="#new-project">New project</Button>
-        </div>
+      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+        <PageHeader title="Projects" primary={{ label: 'New project', href: '#new-project' }} />
         <TableToolbar
           noun="projects"
           query={view.q}

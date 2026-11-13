@@ -300,9 +300,12 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-destructive-link-text` | `danger-text` | Destructive link text. |
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
 | `--button-destructive-focus-ring` | `danger` | Keyboard focus ring on a destructive button. |
-| `--button-disabled-bg` | `surface-muted` | A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1. |
-| `--button-disabled-text` | `text-muted` | A disabled button's label and icon, in every variant (at least 3:1 on disabled-bg, more with more contrast). |
-| `--button-disabled-border` | `border` | A disabled outline or secondary button's border. |
+| `--button-bg-disabled` | `surface-muted` | A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1. |
+| `--button-disabled-bg` | `surface-muted` | The old name of `--button-bg-disabled`, read when that isn't set. Removed in 15.0.0. |
+| `--button-text-disabled` | `text-muted` | A disabled button's label and icon, in every variant (at least 3:1 on bg-disabled, more with more contrast). |
+| `--button-disabled-text` | `text-muted` | The old name of `--button-text-disabled`, read when that isn't set. Removed in 15.0.0. |
+| `--button-border-disabled` | `border` | A disabled outline or secondary button's border. |
+| `--button-disabled-border` | `border` | The old name of `--button-border-disabled`, read when that isn't set. Removed in 15.0.0. |
 
 **Spacing**
 

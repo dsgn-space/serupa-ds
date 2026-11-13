@@ -62,7 +62,7 @@
    ends round all the way, which a scaleX would stretch. */
 .dk-carousel__dot::before {
   --dk-dot-h: var(--carousel-dot-size, var(--spacing-2));
-  --dk-dot-w: var(--carousel-dot-active-width, var(--spacing-6));
+  --dk-dot-w: var(--carousel-dot-width-active, var(--carousel-dot-active-width, var(--spacing-6)));
   --dk-dot-clip: calc((var(--dk-dot-w) - var(--dk-dot-h)) / 2);
   content: "";
   position: absolute; inset: var(--spacing-0); margin: auto;

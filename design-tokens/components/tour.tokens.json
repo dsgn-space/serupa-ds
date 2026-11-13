@@ -108,7 +108,7 @@
       },
       "ring-width": {
         "$type": "dimension",
-        "$value": "{borders.border-width-2}",
+        "$value": "{borders.outline-width-2}",
         "$description": "The ring round the element (2px).",
         "$extensions": {
           "com.serupa": {

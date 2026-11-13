@@ -11,6 +11,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
 import { useLocale } from '../../internal/provider';
 import { withViewTransition } from '../../internal/viewTransition';
+import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* List and detail: a list of messages beside the one that's open, in two panes on a wide screen and one at a time on
    a phone. For an app to copy. What it carries (WCAG 2.2):
@@ -144,7 +145,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 outline-none">
-        <Heading level={1}>Inbox</Heading>
+        <PageHeader title="Inbox" />
         {loadFailed ? (
           <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />
         ) : loading ? (

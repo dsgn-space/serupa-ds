@@ -17,6 +17,13 @@ describe('Patterns/Help center', () => {
   test('one main and h1, topics linked by their titles, the questions, and the form last, saying who answers and when', async () => {
     const screen = await render(<HelpCenter email="budi@example.com" replyTime="within two hours" />);
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Help']);
+    // The page's title is set off from what's under it by the page header's line, as on the other app pages.
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('h1'))).toBe(true);
+    // The app pages' frame: the header on the surface, over a page a step darker, as on the other app pages.
+    const bg = (e: Element | null) => getComputedStyle(e!).backgroundColor;
+    expect(bg(document.querySelector('header'))).not.toBe('rgba(0, 0, 0, 0)');
+    expect(bg(document.querySelector('header'))).not.toBe(bg(document.querySelector('header')!.parentElement));
     await expect.element(screen.getByRole('link', { name: 'Billing' })).toHaveAttribute('href', '#help-billing');
     expect(screen.getByRole('heading', { level: 3 }).elements().map((h) => h.textContent).slice(0, 4))
       .toEqual(['Getting started', 'Your account', 'Billing', 'Your data']);

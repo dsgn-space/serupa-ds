@@ -1,6 +1,6 @@
 name: Release
 
-# On main: while changesets are waiting (.changeset/*.md), keeps a "Release" pull request open that turns
+# On main (and a maintenance branch such as 14.x, see the version job): while changesets are waiting (.changeset/*.md), keeps a "Release" pull request open that turns
 # them into the next version (npm run version-packages). Once that pull request is merged, tags the version
 # and makes a GitHub release with the package attached (npm run release).
 # It runs only after CI has passed on a push to main, and works on the commit CI tested, so a red main
@@ -15,7 +15,7 @@ on:
   workflow_run:
     workflows: [CI]
     types: [completed]
-    branches: [main]
+    branches: [main, '[0-9]*.x']
 
 concurrency: release
 
@@ -39,11 +39,12 @@ jobs:
           fetch-depth: 0
       - id: head
         run: |
-          main=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
-          if [ "$main" = "$HEAD_SHA" ]; then echo "current=true" >> "$GITHUB_OUTPUT"
-          else echo "main is at $main now, not $HEAD_SHA: its own run makes the Release pull request."; fi
+          tip=$(gh api "repos/$GITHUB_REPOSITORY/commits/$BRANCH" --jq .sha)
+          if [ "$tip" = "$HEAD_SHA" ]; then echo "current=true" >> "$GITHUB_OUTPUT"
+          else echo "$BRANCH is at $tip now, not $HEAD_SHA: its own run makes the Release pull request."; fi
         env:
           GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -66,9 +67,12 @@ jobs:
           path: ${{ steps.release.outputs.tarball }}
           retention-days: 1
 
+  # Main only. On a maintenance branch (14.x) a fix's pull request runs `node tools/version.mjs` itself, so the
+  # release job above tags it when it merges: the action names its branch after the workflow's ref, which is
+  # always main here, so a second Release pull request would fight main's.
   version:
     needs: release
-    if: needs.release.outputs.current == 'true'
+    if: needs.release.outputs.current == 'true' && github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -130,6 +134,36 @@ jobs:
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: ${{ needs.release.outputs.tarball }}
+
+  # The private registry (docs/rfcs/15.0.0.md): the released tarball goes to GitHub Packages, never to the public npm
+  # registry. It waits for 15.0.0, which scopes the package's name (`@diki-stwn/serupa-ds`): until then the name isn't
+  # scoped and the job says so and stops. It holds REGISTRY_TOKEN, Diki's `write:packages` token, so it runs no
+  # dependency code: no checkout, no npm ci, and `--ignore-scripts` on the publish of the already-built tarball.
+  publish:
+    needs: release
+    if: needs.release.outputs.tarball != ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-tarball
+      - env:
+          NODE_AUTH_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          TARBALL: ${{ needs.release.outputs.tarball }}
+        run: |
+          set -euo pipefail
+          name=$(tar -xOzf "$TARBALL" package/package.json | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).name')
+          case "$name" in
+            @*/*) ;;
+            *) echo "::notice::$name isn't scoped, so it stays off the registry until 15.0.0 scopes it."; exit 0 ;;
+          esac
+          if [ -z "$NODE_AUTH_TOKEN" ]; then echo "::error::REGISTRY_TOKEN isn't set: see Registry in docs/rfcs/15.0.0.md."; exit 1; fi
+          registry=https://npm.pkg.github.com
+          printf '%s:registry=%s\n//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}\n' "${name%%/*}" "$registry" > "$RUNNER_TEMP/.npmrc"
+          NPM_CONFIG_USERCONFIG="$RUNNER_TEMP/.npmrc" npm publish "$TARBALL" --registry "$registry" --ignore-scripts
 
   # The release as a project installs it (D5): the tarball from the GitHub release, by the URL the README's install
   # line gives, on every Node package.json allows. No npm ci: tools/test/consumer.mjs needs only Node.

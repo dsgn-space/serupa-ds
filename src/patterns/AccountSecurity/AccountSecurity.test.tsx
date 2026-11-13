@@ -25,6 +25,9 @@ describe('Patterns/Account security', () => {
   test('one main and h1, the skip link first, and the password fields marked for password managers', async () => {
     await render(<AccountSecurity />);
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Security']);
+    // The page's title is set off from what's under it by the page header's line, as on the other app pages.
+    const ruled = (e: Element | null): boolean => !!e && e.tagName !== 'MAIN' && (getComputedStyle(e).borderBottomWidth !== '0px' || ruled(e.parentElement));
+    expect(ruled(document.querySelector('h1'))).toBe(true);
     await expect.element(current()).toHaveAttribute('autocomplete', 'current-password');
     await expect.element(next()).toHaveAttribute('autocomplete', 'new-password');
     expect(document.body.textContent).toContain('At least 12 characters.');
