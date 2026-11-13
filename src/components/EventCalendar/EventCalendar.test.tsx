@@ -179,7 +179,7 @@ describe('EventCalendar', () => {
     expect(days).toEqual(['Tuesday, March 4, 2025', 'Wednesday, March 12, 2025', 'Tuesday, March 18, 2025', 'Wednesday, March 19, 2025', 'Thursday, March 20, 2025']);
     await expect.element(page.getByRole('button', { name: '2:00 PM to 3:00 PM Design review, Tuesday, March 4' })).toBeInTheDocument();
     await rerender(<EnUS><EventCalendar events={[]} defaultMonth={MARCH} view="agenda" /></EnUS>);
-    await expect.element(page.getByText('No events this month.')).toBeInTheDocument();
+    await expect.element(page.getByText('No events this month')).toBeInTheDocument();
     await rerender(<EnUS><EventCalendar events={EVENTS} defaultMonth={MARCH} view="month" /></EnUS>);
     await expect.element(page.getByRole('grid', { name: 'March 2025' })).toBeInTheDocument();
   });

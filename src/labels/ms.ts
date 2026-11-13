@@ -323,7 +323,7 @@ export const labels: SerupaLabels = {
   allDay: 'Sepanjang hari',
   eventTime: (from, to) => from + ' hingga ' + to,
   repeats: 'Berulang',
-  noEvents: 'Tiada acara bulan ini.',
+  noEvents: 'Tiada acara bulan ini',
   dateFieldDay: 'Hari',
   dateFieldMonth: 'Bulan',
   dateFieldYear: 'Tahun',
