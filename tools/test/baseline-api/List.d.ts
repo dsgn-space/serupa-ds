@@ -4,6 +4,7 @@ interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     variant?: "card" | "plain" | undefined;
     divided?: boolean | undefined;
     as?: "ol" | "ul" | undefined;
+    loading?: boolean | undefined;
     busy?: boolean | undefined;
 }
 interface ListItemOwnProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "onClick" | "title"> {

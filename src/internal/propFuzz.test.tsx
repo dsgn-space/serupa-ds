@@ -34,7 +34,7 @@ function random(seed: number) {
   let a = seed >>> 0;
   return () => { a = (a + 0x6d2b79f5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 }
-const pick = <T,>(r: () => number, list: readonly T[]): T => list[Math.floor(r() * list.length)];
+const pick = <T,>(r: () => number, list: readonly T[]): T => list[Math.floor(r() * list.length)]!;
 
 // A component's own props from its public types: the option props with their values, and the booleans.
 const api = import.meta.glob<string>('../../tools/test/baseline-api/*.d.ts', { eager: true, query: '?raw', import: 'default' });
@@ -43,7 +43,7 @@ function shape(name: string): Shape {
   const text = Object.entries(api).find(([f]) => f.endsWith(`/${name}.d.ts`))?.[1] || '';
   // type ButtonSize = "lg" | "md" | "sm";
   const aliases = new Map<string, string[]>();
-  for (const m of text.matchAll(/^type (\w+) = ((?:"[^"]*"(?: \| )?)+);$/gm)) aliases.set(m[1], [...m[2].matchAll(/"([^"]*)"/g)].map((v) => v[1]));
+  for (const m of text.matchAll(/^type (\w+) = ((?:"[^"]*"(?: \| )?)+);$/gm)) aliases.set(m[1]!, [...m[2]!.matchAll(/"([^"]*)"/g)].map((v) => v[1]!));
   const literals = (t: string) => {
     const parts = t.split(' | ').filter((p) => p !== 'undefined');
     const out: string[] = [];
@@ -58,7 +58,7 @@ function shape(name: string): Shape {
   // The component's own Props interfaces (ButtonProps, ButtonOwnProps, ButtonAsLinkProps), not its parts' (MenuItemProps
   // on Menu), each to its closing brace at the start of a line.
   for (const block of text.matchAll(new RegExp(`^interface ${name}(?:Own|Base|As\\w+)?Props\\b[^{]*\\{\\n([\\s\\S]*?)^\\}`, 'gm'))) {
-    for (const m of block[1].matchAll(/^ {4}"?([\w-]+)"?\??: (.+);$/gm)) {
+    for (const m of block[1]!.matchAll(/^ {4}"?([\w-]+)"?\??: (.+);$/gm)) {
       const [, prop, type] = m as unknown as [string, string, string];
       all.add(prop);
       if (NATIVE.has(prop)) continue;
@@ -66,7 +66,7 @@ function shape(name: string): Shape {
       else { const v = literals(type); if (v) options.set(prop, v); }
     }
   }
-  const cap = (p: string) => p[0].toUpperCase() + p.slice(1);
+  const cap = (p: string) => p[0]!.toUpperCase() + p.slice(1);
   for (const b of booleans) if (all.has(`on${cap(b)}Change`) || all.has(`default${cap(b)}`)) booleans.delete(b);
   return { options, booleans };
 }

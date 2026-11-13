@@ -101,11 +101,7 @@ const isBoolean = (p) => {
 const NAME_FOR = { direction: 'orientation', layout: 'orientation', position: 'placement', side: 'placement', pending: 'loading', busy: 'loading', delay: 'openDelay (and closeDelay)', loadingText: 'loadingLabel, when the words are only said' };
 // Props that still use one of those names, each with why. A deprecated alias of the table's name is fine: it goes in
 // the next scheduled major (docs/rfcs/15.0.0.md). Like the lists above, this one only shrinks.
-const NAME_GAPS = {
-  'ChartProps.busy': 'loading: waits on open PRs that change Chart (GR383)',
-  'KanbanProps.busy': 'loading: waits on open PRs that change Kanban (GR383)',
-  'ListProps.busy': 'loading: waits on open PRs that change List (GR383)',
-};
+const NAME_GAPS = {};
 // Names that look like the ones above but mean something else, each with why. They stay.
 const NAME_KEPT = {
   'StackProps.direction': "'row' or 'column', the flex-direction it sets, by the CSS name",

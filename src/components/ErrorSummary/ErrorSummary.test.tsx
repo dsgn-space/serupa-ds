@@ -58,7 +58,7 @@ describe('ErrorSummary', () => {
   });
 
   test('heading: one problem, a title, a level and a description; Indonesian from the provider; nothing with no errors', async () => {
-    const screen = await render(<ErrorSummary id="s" autoFocus={false} errors={[ERRORS[0]]} />);
+    const screen = await render(<ErrorSummary id="s" autoFocus={false} errors={[ERRORS[0]!]} />);
     expect(el('s').querySelector('h2')!.textContent).toBe('There is a problem');
     await screen.rerender(<ErrorSummary id="s" autoFocus={false} errors={ERRORS} title="Check your booking" headingLevel={3} description="Fix these first." />);
     expect([el('s').querySelector('h3')!.textContent, el('s').querySelector('h3 + div')!.textContent]).toEqual(['Check your booking', 'Fix these first.']);
@@ -76,7 +76,7 @@ describe('ErrorSummary', () => {
     (el('f-name') as HTMLInputElement).focus();
     await screen.rerender(<Form description="Same errors, another render" />);
     expect(document.activeElement).toBe(el('f-name'));
-    await screen.rerender(<Form errors={[ERRORS[1]]} />);
+    await screen.rerender(<Form errors={[ERRORS[1]!]} />);
     await expect.poll(() => document.activeElement).toBe(el('sum'));
     await screen.rerender(<Form errors={[]} />);
     (el('f-name') as HTMLInputElement).focus();
@@ -85,15 +85,15 @@ describe('ErrorSummary', () => {
   });
 
   test('GR120: takes focus again when a field\'s message changes (another failed submit), not when the same message renders again', async () => {
-    const screen = await render(<Form errors={[ERRORS[0]]} />);
+    const screen = await render(<Form errors={[ERRORS[0]!]} />);
     await expect.poll(() => document.activeElement).toBe(el('sum'));
     (el('f-name') as HTMLInputElement).focus();
-    await screen.rerender(<Form errors={[{ field: ERRORS[0].field, message: 'A new message about the same field' }]} />);
+    await screen.rerender(<Form errors={[{ field: ERRORS[0]!.field, message: 'A new message about the same field' }]} />);
     await expect.poll(() => document.activeElement).toBe(el('sum'));
     (el('f-name') as HTMLInputElement).focus();
-    await screen.rerender(<Form errors={[{ field: ERRORS[0].field, message: 'A new message about the same field' }]} />);
+    await screen.rerender(<Form errors={[{ field: ERRORS[0]!.field, message: 'A new message about the same field' }]} />);
     expect(document.activeElement).toBe(el('f-name'));
-    await screen.rerender(<Form errors={[{ field: ERRORS[0].field, message: <span>An element message</span> }]} />);
+    await screen.rerender(<Form errors={[{ field: ERRORS[0]!.field, message: <span>An element message</span> }]} />);
     await expect.poll(() => document.activeElement).toBe(el('sum'));
   });
 
@@ -110,15 +110,15 @@ describe('ErrorSummary', () => {
   test("a link focuses its field and scrolls its label (a radio's legend) to the top; a field that isn't there is a plain link", async () => {
     await render(<Form autoFocus={false} errors={[...ERRORS, { field: 'nowhere', message: 'Missing' }]} />);
     const links = [...el('sum').querySelectorAll('a')];
-    await userEvent.click(links[0]);
+    await userEvent.click(links[0]!);
     expect(document.activeElement).toBe(el('f-name'));
     await expect.poll(() => atTop(el('name-label'), el('f-name'))).toBe(true);
     window.scrollTo(0, 0);
-    await userEvent.click(links[1]);
+    await userEvent.click(links[1]!);
     expect(document.activeElement).toBe(el('f-plan-basic'));
     await expect.poll(() => atTop(el('plan-legend'))).toBe(true);
     window.scrollTo(0, 0);
-    await userEvent.click(links[2]);
+    await userEvent.click(links[2]!);
     expect(location.hash).toBe('#nowhere');
     history.replaceState(null, '', location.pathname + location.search);
   });
@@ -164,7 +164,7 @@ describe('ErrorSummary links to a group root (GR15)', () => {
       <RadioGroup id="gr15-size" aria-label="Size"><Radio value="s" disabled>Small</Radio><Radio value="m">Medium</Radio></RadioGroup>
       <Rating id="gr15-stars" aria-label="Your stay" />
     </div>);
-    const link = (n: number) => document.querySelectorAll<HTMLAnchorElement>('a[href^="#gr15"]')[n];
+    const link = (n: number) => document.querySelectorAll<HTMLAnchorElement>('a[href^="#gr15"]')[n]!;
     await userEvent.click(link(0));
     expect((document.activeElement as HTMLInputElement).value).toBe('pro');
     await userEvent.click(link(1));
@@ -200,12 +200,12 @@ describe('ErrorSummary links to a field that is hidden until found (L8E98)', () 
         <TabPanel value="one">First</TabPanel><TabPanel value="two"><label htmlFor="l8e98-city">City</label><input id="l8e98-city" /></TabPanel></Tabs>
     </>);
     const links = document.querySelectorAll<HTMLAnchorElement>('a[href^="#l8e98"]');
-    await userEvent.click(links[0]);
+    await userEvent.click(links[0]!);
     await expect.poll(() => document.activeElement?.id).toBe('l8e98-email');
     expect(document.querySelector('[aria-expanded]')!.getAttribute('aria-expanded')).toBe('true');
-    await userEvent.click(links[1]);
+    await userEvent.click(links[1]!);
     await expect.poll(() => document.activeElement?.id).toBe('l8e98-city');
-    expect(document.querySelectorAll('[role="tab"]')[1].getAttribute('aria-selected')).toBe('true');
+    expect(document.querySelectorAll('[role="tab"]')[1]!.getAttribute('aria-selected')).toBe('true');
   });
 });
 

@@ -31,7 +31,7 @@
   margin: var(--spacing-0); padding: var(--combobox-listbox-padding, var(--spacing-1));
   border: var(--border-width-1) solid var(--combobox-listbox-border, var(--border-overlay));
   border-radius: var(--combobox-listbox-radius, var(--radius-surface)); background: var(--combobox-listbox-bg, var(--surface-overlay));
-  box-shadow: var(--combobox-listbox-shadow, var(--elevation-overlay));
+  box-shadow: var(--combobox-listbox-depth, var(--depth-surface)), var(--combobox-listbox-shadow, var(--elevation-overlay));
   color: var(--combobox-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
 }
 .dk-combobox__popup[hidden] { display: none; }

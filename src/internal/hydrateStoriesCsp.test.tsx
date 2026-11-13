@@ -171,7 +171,7 @@ for (const [name, list] of storiesToRun()) {
   describe(`${name} stories hydrate under a strict CSP`, () => {
     for (const [exportName, ui] of list) {
       test(`${exportName} lays out as it does without the policy`, async () => {
-        const serverHtml = html[`${name}/${exportName}`], source = storySource(name);
+        const serverHtml = html[`${name}/${exportName}`]!, source = storySource(name);
         expect(serverHtml, 'the server render in Node').not.toMatch(/^Error: /);
         // The first hydration loads what the story loads on demand (icons drawn by name) and finds the app's styles;
         // the two compared come after it, so both find the same things ready.
@@ -180,7 +180,7 @@ for (const [name, list] of storiesToRun()) {
         const { out: want } = await hydrate(ui, serverHtml, source, () => true);
         expect(errors, 'recoverable errors').toEqual([]);
         // Only the elements that differ, so a failure names them.
-        const off = got.map((g, i) => ({ ...g, want: want[i]?.box })).filter((g, i) => !want[i] || want[i].el !== g.el || g.box.some((v, k) => Math.abs(v - want[i].box[k]) > 1));
+        const off = got.map((g, i) => ({ ...g, want: want[i]?.box })).filter((g, i) => !want[i] || want[i].el !== g.el || g.box.some((v, k) => Math.abs(v - want[i]!.box[k]!) > 1));
         if (KNOWN.has(name) || KNOWN.has(`${name}/${exportName}`)) return;
         expect(off.slice(0, 5), `${off.length} elements differ (x, y, width, height from the story's corner)`).toEqual([]);
         expect(got.length, 'elements').toBe(want.length);

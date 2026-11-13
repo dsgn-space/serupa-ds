@@ -151,12 +151,12 @@ describe('FileUpload', () => {
     await render(<><form id="gr75-1"><FileUpload id="gr75a" name="report" accept=".pdf" maxSize={50} /></form><form id="gr75-2"><FileUpload id="gr75b" name="report" multiple accept=".pdf" maxSize={50} /></form></>);
     const sent = (id: string) => new FormData(document.getElementById(id) as HTMLFormElement).getAll('report').map((f) => (f as File).name).join();
     for (const [id, form] of [['gr75a', 'gr75-1'], ['gr75b', 'gr75-2']]) {
-      const el = rootOf(id);
+      const el = rootOf(id!);
       await userEvent.upload(input(el), [file('ok.pdf', 'application/pdf', 10)]);
       await userEvent.upload(input(el), [file('big.pdf', 'application/pdf', 100)]);
-      await expect.poll(() => sent(form)).toBe('ok.pdf');
+      await expect.poll(() => sent(form!)).toBe('ok.pdf');
       await userEvent.upload(input(el), [file('photo.png', 'image/png', 10)]);
-      await expect.poll(() => sent(form)).toBe('ok.pdf');
+      await expect.poll(() => sent(form!)).toBe('ok.pdf');
       expect([id, names(el), errs(el) !== null]).toEqual([id, 'ok.pdf', true]);
     }
   });
@@ -166,9 +166,9 @@ describe('FileUpload', () => {
     const el = q(many);
     await userEvent.upload(input(el), [file('photo.png', 'image/png', 2048), file('report.pdf', 'application/pdf', 10), file('a.jpg', 'image/jpeg', 100), file('b.jpg', 'image/jpeg', 100)]);
     expect(errs(el)).not.toBeNull();
-    await userEvent.click(items(el)[0].querySelector('button')!);
+    await userEvent.click(items(el)[0]!.querySelector('button')!);
     await expect.poll(() => document.activeElement!.getAttribute('aria-label')).toBe('Remove report.pdf');
-    expect([names(el), items(el)[0].querySelector('button')!.getAttribute('aria-label'), !!el.querySelector('[role=alert]')]).toEqual(['report.pdf,a.jpg', 'Remove report.pdf', false]);
+    expect([names(el), items(el)[0]!.querySelector('button')!.getAttribute('aria-label'), !!el.querySelector('[role=alert]')]).toEqual(['report.pdf,a.jpg', 'Remove report.pdf', false]);
   });
 
   test('dragging files over the area highlights it; dropping adds them and ends the highlight', async () => {
@@ -426,7 +426,7 @@ describe('FileUpload: drops, folders and what is said (FQ1)', () => {
     await expect.poll(said).toBe('report.pdf added.');
     await userEvent.upload(input(el), [file('a.png', 'image/png', 10), file('b.png', 'image/png', 10)]);
     await expect.poll(said).toBe('2 files added.');
-    await userEvent.click(items(el)[0].querySelector('button')!);
+    await userEvent.click(items(el)[0]!.querySelector('button')!);
     await expect.poll(said).toBe('report.pdf removed.');
   });
 
@@ -437,7 +437,7 @@ describe('FileUpload: drops, folders and what is said (FQ1)', () => {
     await expect.poll(said).toBe('laporan.pdf ditambahkan.');
     await userEvent.upload(input(el), [file('laporan.pdf', 'application/pdf', 10)]);
     expect(errs(el)).toBe('alert: laporan.pdf sudah ditambahkan.');
-    await userEvent.click(items(el)[0].querySelector('button')!);
+    await userEvent.click(items(el)[0]!.querySelector('button')!);
     await expect.poll(said).toBe('laporan.pdf dihapus.');
   });
 
@@ -464,11 +464,11 @@ describe('FileUpload: long file names (GR17)', () => {
     // fits is one run of text, then the whole name.
     const rows = items(rootOf('gr17-' + dir)).map((li) => li.querySelector('[title]')!);
     await expect.poll(() => rows.map((n) => n.children.length)).toEqual([3, 3, 2]);
-    const shown = rows.slice(0, 2).map((n) => { const [start, end] = n.children; return [end.textContent, fits(end), fits(start), css(n).direction]; });
+    const shown = rows.slice(0, 2).map((n) => { const [start, end] = n.children; return [end!.textContent, fits(end!), fits(start!), css(n).direction]; });
     expect(shown).toEqual([['t-2025.pdf', true, false, 'ltr'], ['t-2026.pdf', true, false, 'ltr']]);
-    expect([rows[2].children[0].textContent, fits(rows[2].children[0] as HTMLElement)]).toEqual(['a b.pdf', true]);
+    expect([rows[2]!.children[0]!.textContent, fits(rows[2]!.children[0] as HTMLElement)]).toEqual(['a b.pdf', true]);
     // The start ends where the end begins, with nothing lost or doubled.
-    expect(rows.slice(0, 2).map((n) => { const [start, end, whole] = n.children; return [n.getAttribute('title'), start.textContent + end.textContent, whole.textContent, start.getAttribute('aria-hidden'), end.getAttribute('aria-hidden')]; })).toEqual(
+    expect(rows.slice(0, 2).map((n) => { const [start, end, whole] = n.children; return [n.getAttribute('title'), start!.textContent + end!.textContent, whole!.textContent, start!.getAttribute('aria-hidden'), end!.getAttribute('aria-hidden')]; })).toEqual(
       [LONG + '2025.pdf', LONG + '2026.pdf'].map((n) => [n, n, n, 'true', 'true']));
   });
 
@@ -483,8 +483,8 @@ describe('FileUpload: long file names (GR17)', () => {
     await expect.poll(() => parts('gc').map((p) => p.length)).toEqual([2, 2, 2]);
     const seg = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
     for (const [i, [a, b]] of parts('gc').entries()) {
-      expect(a + b).toBe(long[i]);
-      expect(Array.from(seg.segment(long[i]), (x) => x.index)).toContain(a.length);
+      expect(a! + b!).toBe(long[i]);
+      expect(Array.from(seg.segment(long[i]!), (x) => x.index)).toContain(a!.length);
     }
   });
 });
@@ -497,7 +497,7 @@ describe('FileUpload as a grid or flex item (GR30)', () => {
       <div style={{ display: 'flex' }}><FileUpload id={'f-' + dir} readOnly files={[file(name, 'application/pdf', 10)]} /></div>
     </div>);
     const out = ['g-', 'f-'].map((k) => { const r = rootOf(k + dir).getBoundingClientRect(), p = rootOf(k + dir).parentElement!.getBoundingClientRect(); return [Math.round(r.left - p.left), Math.round(p.right - r.right)]; });
-    const cut = ['g-', 'f-'].map((k) => { const n = items(rootOf(k + dir))[0].querySelector('[title]')!; return n.children[0].scrollWidth > n.children[0].clientWidth; });
+    const cut = ['g-', 'f-'].map((k) => { const n = items(rootOf(k + dir))[0]!.querySelector('[title]')!; return n.children[0]!.scrollWidth > n.children[0]!.clientWidth; });
     expect([out, cut]).toEqual([[[0, 0], [0, 0]], [true, true]]);
   });
 });
@@ -520,7 +520,7 @@ describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
 
   test('ar-EG writes Arabic digits, and the size is isolated with dir="auto" so an English size in an RTL page isn\'t turned round', async () => {
     await render(<SerupaProvider locale="ar-EG"><div dir="rtl"><FileUpload id="sz-ar" readOnly files={[file('b.png', 'image/png', 2048)]} /></div></SerupaProvider>);
-    const [[text, dir]] = sizes(rootOf('sz-ar'));
+    const [text, dir] = sizes(rootOf('sz-ar'))[0]!;
     expect([/[\u0660-\u0669]/.test(text ?? ''), dir]).toEqual([true, 'auto']);
   });
 
@@ -561,7 +561,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     const el = rootOf('up');
     await expect.element(screen.getByRole('progressbar', { name: 'a.png' })).toHaveAttribute('aria-valuenow', '40');
     await expect.element(screen.getByRole('progressbar', { name: 'b.pdf' })).not.toHaveAttribute('aria-valuenow');
-    expect([items(el)[2].querySelector(`${SIZE} > span`)!.textContent, items(el)[0].querySelector(`${SIZE} > span`)]).toEqual(['Complete', null]);
+    expect([items(el)[2]!.querySelector(`${SIZE} > span`)!.textContent, items(el)[0]!.querySelector(`${SIZE} > span`)]).toEqual(['Complete', null]);
     await screen.rerender(<Uploads retried={retried} status={new Map<File, S>([[a, { state: 'error' }], [b, { state: 'error', message: 'The server is busy.' }]])} />);
     expect(screen.container.querySelectorAll('[role=progressbar]').length).toBe(0);
     const retry = screen.getByRole('button', { name: 'Try again b.pdf' });
@@ -614,11 +614,11 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     const screen = await render(<FileUpload id="th" multiple thumbnails files={[photo, b, heic]} />);
     const el = rootOf('th');
     await expect.poll(() => items(el).map((li) => (li.firstElementChild as HTMLElement).tagName + ' ' + (li.firstElementChild as HTMLElement).hasAttribute('data-icon'))).toEqual(['CANVAS false', 'SPAN true', 'SPAN true']);
-    const pic = items(el)[0].querySelector('canvas')!;
+    const pic = items(el)[0]!.querySelector('canvas')!;
     expect([pic.getAttribute('aria-hidden'), Math.round(pic.getBoundingClientRect().width), Math.round(pic.getBoundingClientRect().height)]).toEqual(['true', 40, 40]);
     await expect.poll(() => pic.width).toBeGreaterThanOrEqual(40);   // drawn, at the screen's pixel ratio
     await screen.rerender(<FileUpload id="th" multiple files={[photo]} />);
-    expect(items(el)[0].querySelector('canvas')).toBeNull();
+    expect(items(el)[0]!.querySelector('canvas')).toBeNull();
   });
 
   test('"Uploaded", the failed message and the failed outline have contrast in all six themes', async () => {
@@ -628,8 +628,8 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const [ok, bad] = items(el), bg = css(ok).backgroundColor;
-      const pairs: Array<[string, string, number]> = [['done', css(ok.querySelector(`${SIZE} > span`)).color, 4.5], ['failed', css(bad.querySelector(`${NAME} ~ span:last-child`)).color, 4.5], ['failed outline', css(bad).borderTopColor, 3]];
+      const [ok, bad] = items(el), bg = css(ok!).backgroundColor;
+      const pairs: Array<[string, string, number]> = [['done', css(ok!.querySelector(`${SIZE} > span`)).color, 4.5], ['failed', css(bad!.querySelector(`${NAME} ~ span:last-child`)).color, 4.5], ['failed outline', css(bad!).borderTopColor, 3]];
       for (const [k, fg, min] of pairs) { const r = contrast(fg, bg); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();

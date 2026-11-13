@@ -111,7 +111,7 @@ describe('touch-sized buttons inside fields', () => {
     await coarsePointer(async (active) => {
       if (!active) return;
       expect(reach()).toEqual(FIELDS.map((s) => [s, true, true]));
-      const [minus, plus] = [...$('.hit-number').querySelectorAll('button')], a = minus.getBoundingClientRect(), b = plus.getBoundingClientRect(), y = a.top + a.height / 2;
+      const [minus, plus] = [...$('.hit-number').querySelectorAll('button')], a = minus!.getBoundingClientRect(), b = plus!.getBoundingClientRect(), y = a.top + a.height / 2;
       expect([document.elementFromPoint(a.right - 1, y)?.closest('button'), document.elementFromPoint(b.left + 1, y)?.closest('button')]).toEqual([minus, plus]);
     });
   });

@@ -1,0 +1,38 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Integrations.stories';
+
+<Meta of={Stories} />
+
+# Integrations
+
+The other apps a workspace can connect: which are connected, connecting one, and disconnecting one after asking. It's the page an admin opens to make your app work with the tools their team already uses.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A workspace app that works with other services, such as chat, code hosting, calendars, files or payments.
+- Not for keys that people's own scripts use: that's the API keys pattern.
+- Not for signing in with another service: that's Sign in.
+
+## What each part is for
+
+- **Two lists under their own headings**, Connected and Available, each with its count, and each app a heading of its own, so a screen reader can list the apps and jump between them (1.3.1, 2.4.6).
+- **Each button is named with its app**, "Connect Slack" or "Disconnect GitHub", so a list of them isn't "Connect, Connect, Connect" (2.4.6, 4.1.2).
+- **Connected is said in words** on a badge, not only by the tile's color (1.4.1).
+- **Search** matches every word typed against the app's name and what it does, so "files" finds Google Drive. How many apps match is a status, said politely as people type (4.1.3). No matches says so, with a way back to every app.
+- **Disconnect asks first**, and says what stops working, from each app's `stops`, with Keep it beside Disconnect (3.3.4).
+- **A connect that fails says so on that app's card**, with what to check. A failed disconnect says so in its dialog, and the app stays connected (3.3.1).
+- **After a connect or a disconnect**, the app moves to the other list and focus goes to its new button there, and a toast says what changed (2.4.3, 4.1.3).
+- **While the apps load**, set `loading`: placeholder cards, named once. **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
+
+## What stays your app's job
+
+- **Connecting.** `onConnect` gets the app's id. Most apps connect through a sign-in on their own page (OAuth): open it, and resolve once the person comes back with access, or reject when they didn't allow it.
+- **Disconnecting.** `onDisconnect` gets the app's id. Revoke the access on your server, and return its promise so a failure keeps the app connected and says so.
+- **Who may change them.** The page says only admins can. Show it read-only, without the buttons, to everyone else.

@@ -33,7 +33,7 @@ describe('PinInput', () => {
     const ref = React.createRef<HTMLInputElement>();
     await render(<PinInput id="p" ref={ref} aria-label="Code" name="code" className="extra" style={{ margin: '3px' }} data-x="y" />);
     const i = el('p'), r = root('p');
-    expect([page.getByRole('textbox', { name: 'Code' }).element() === i, ref.current === i, i.type, i.name, i.dataset.x, i.inputMode, i.getAttribute('autocomplete'), i.pattern, r.className, r.style.margin, r.dataset.component, boxes('p').length, boxes('p')[0].parentElement!.getAttribute('aria-hidden'), boxes('p')[0].parentElement!.parentElement === r])
+    expect([page.getByRole('textbox', { name: 'Code' }).element() === i, ref.current === i, i.type, i.name, i.dataset.x, i.inputMode, i.getAttribute('autocomplete'), i.pattern, r.className, r.style.margin, r.dataset.component, boxes('p').length, boxes('p')[0]!.parentElement!.getAttribute('aria-hidden'), boxes('p')[0]!.parentElement!.parentElement === r])
       .toEqual([true, true, 'text', 'code', 'y', 'numeric', 'one-time-code', '[0-9]{6}', 'dk-pin-input dk-pin-input--size-md extra', '3px', 'pin-input', 6, 'true', true]);
   });
 
@@ -108,7 +108,7 @@ describe('PinInput', () => {
     expect(boxes('p').some((b) => b.classList.contains('dk-pin-input__box--active'))).toBe(false);
     await userEvent.click(el('p'), { position: { x: 4, y: 4 } });
     expect([el('p').selectionStart, boxes('p').findIndex((b) => b.classList.contains('dk-pin-input__box--active'))]).toEqual([1, 1]);
-    const b = css(boxes('p')[1]);
+    const b = css(boxes('p')[1]!);
     expect(b.boxShadow).not.toBe('none');
     await userEvent.keyboard('{Home}');
     await expect.poll(() => el('p').selectionStart).toBe(1);
@@ -154,7 +154,7 @@ describe('PinInput', () => {
       <PinInput id="s" aria-label="S" size="sm" length={2} /><PinInput id="m" aria-label="M" length={2} /><PinInput id="l" aria-label="L" size="lg" length={2} />
       <PinInput id="d" aria-label="D" disabled length={2} />
     </div>);
-    const dim = (id: string) => { const r = boxes(id)[0].getBoundingClientRect(), r2 = boxes(id)[1].getBoundingClientRect(); return [r.width, r.height, r2.left - r.right]; };
+    const dim = (id: string) => { const r = boxes(id)[0]!.getBoundingClientRect(), r2 = boxes(id)[1]!.getBoundingClientRect(); return [r.width, r.height, r2.left - r.right]; };
     expect([dim('s'), dim('m'), dim('l')]).toEqual([[24, 24, 8], [32, 32, 8], [44, 44, 8]]);
     expect([el('d').disabled, css(root('d')).opacity]).toEqual([true, '0.5']);
   });
@@ -163,9 +163,9 @@ describe('PinInput', () => {
     await render(<div style={{ width: '288px' }}><PinInput id="n6" aria-label="Code" size="lg" /><PinInput id="n8" aria-label="Code" length={8} /><PinInput id="w4" aria-label="Code" length={4} /><div style={{ width: '100px' }}><PinInput id="t8" aria-label="Code" length={8} /></div></div>);
     const sizes = (id: string) => boxes(id).map((b) => { const r = b.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; });
     const right = (id: string) => Math.round(Math.max(...boxes(id).map((b) => b.getBoundingClientRect().right)) - root(id).parentElement!.getBoundingClientRect().left);
-    for (const id of ['n6', 'n8']) expect([right(id) <= 288, sizes(id).every(([w, h]) => w === h && w >= 24 && w === sizes(id)[0][0])]).toEqual([true, true]);
+    for (const id of ['n6', 'n8']) expect([right(id) <= 288, sizes(id).every(([w, h]) => w === h && w! >= 24 && w === sizes(id)[0]![0])]).toEqual([true, true]);
     // Room to spare: full size. Less room than 24px boxes need: they stay 24px or more and wrap inside the column (RF1).
-    expect([sizes('w4')[0], sizes('t8').every(([w, h]) => w === h && w >= 24), right('t8') <= 100]).toEqual([[32, 32], true, true]);
+    expect([sizes('w4')[0], sizes('t8').every(([w, h]) => w === h && w! >= 24), right('t8') <= 100]).toEqual([[32, 32], true, true]);
   });
 
   test('a code too long for one row even at 24px wraps onto a second row, so at 320px the page doesn\'t scroll sideways (RF1, WCAG 1.4.10)', async () => {
@@ -173,24 +173,24 @@ describe('PinInput', () => {
     await render(<div id="box" style={{ width: '200px' }}><PinInput id="w12" aria-label="Code" length={12} defaultValue="492817" /></div>);
     const b = boxes('w12'), r = b.map((x) => x.getBoundingClientRect()), box = el('box').getBoundingClientRect();
     expect([el('box').scrollWidth <= 201, r.every((x) => x.right <= box.right + 1 && Math.round(x.width) === Math.round(x.height) && x.width >= 24)]).toEqual([true, true]);
-    expect(r[11].top).toBeGreaterThan(r[0].top);
+    expect(r[11]!.top).toBeGreaterThan(r[0]!.top);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
   });
 
   test('right to left: the code still reads left to right', async () => {
     await render(<div dir="rtl"><PinInput id="p" aria-label="Code" length={3} defaultValue="12" /></div>);
     const b = boxes('p');
-    expect(b[0].getBoundingClientRect().left).toBeLessThan(b[1].getBoundingClientRect().left);
+    expect(b[0]!.getBoundingClientRect().left).toBeLessThan(b[1]!.getBoundingClientRect().left);
   });
 
   test('contrast in all six themes: characters 4.5:1 on the box; border, focus ring and danger border 3:1 on the surface', async () => {
     await render(<div style={{ background: 'var(--surface)' }} id="bg"><PinInput id="p" aria-label="Code" defaultValue="1" /><PinInput id="v" aria-label="Bad" invalid /></div>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const b = css(boxes('p')[0]), surface = css(root('p').parentElement).backgroundColor;
+      const b = css(boxes('p')[0]!), surface = css(root('p').parentElement).backgroundColor;
       expect(contrast(b.color, b.backgroundColor), th + ' text').toBeGreaterThanOrEqual(4.5);
       expect(contrast(b.borderTopColor, surface), th + ' border').toBeGreaterThanOrEqual(3);
-      expect(contrast(css(boxes('v')[0]).borderTopColor, surface), th + ' invalid').toBeGreaterThanOrEqual(3);
+      expect(contrast(css(boxes('v')[0]!).borderTopColor, surface), th + ' invalid').toBeGreaterThanOrEqual(3);
       expect(contrast(resolve('--focus-ring'), surface), th + ' ring').toBeGreaterThanOrEqual(3);
     }
   });
@@ -199,23 +199,23 @@ describe('PinInput', () => {
     await render(<PinInput id="pm" aria-label="Code" length={3} />);
     const shadows = (b: HTMLElement) => b.getAnimations().filter((a) => (a as CSSTransition).transitionProperty === 'box-shadow').length;
     el('pm').focus();
-    await expect.poll(() => boxes('pm')[0].classList.contains('dk-pin-input__box--active')).toBe(true);
-    expect([shadows(boxes('pm')[0]), css(boxes('pm')[0]).boxShadow]).toEqual([0, expect.stringMatching(/0px 0px 0px 1px/)]);
+    await expect.poll(() => boxes('pm')[0]!.classList.contains('dk-pin-input__box--active')).toBe(true);
+    expect([shadows(boxes('pm')[0]!), css(boxes('pm')[0]!).boxShadow]).toEqual([0, expect.stringMatching(/0px 0px 0px 1px/)]);
     // Counted as each transition starts, not after the key returns: a key is a round trip through the driver, and on a
     // busy runner the fade out can be over by then ([0, 0]).
     const started = [0, 0];
-    const count = (i: number) => (e: TransitionEvent) => { if (e.target === boxes('pm')[i] && e.propertyName === 'box-shadow') started[i]++; };
+    const count = (i: number) => (e: TransitionEvent) => { if (e.target === boxes('pm')[i] && e.propertyName === 'box-shadow') started[i]!++; };
     const [c0, c1] = [count(0), count(1)];
-    boxes('pm')[0].addEventListener('transitionrun', c0);
-    boxes('pm')[1].addEventListener('transitionrun', c1);
+    boxes('pm')[0]!.addEventListener('transitionrun', c0);
+    boxes('pm')[1]!.addEventListener('transitionrun', c1);
     try {
       await userEvent.keyboard('7');
-      await expect.poll(() => boxes('pm')[1].classList.contains('dk-pin-input__box--active')).toBe(true);
+      await expect.poll(() => boxes('pm')[1]!.classList.contains('dk-pin-input__box--active')).toBe(true);
       await expect.poll(() => started[0]).toBe(1);
-      expect([started[1], shadows(boxes('pm')[1])]).toEqual([0, 0]);
+      expect([started[1], shadows(boxes('pm')[1]!)]).toEqual([0, 0]);
     } finally {
-      boxes('pm')[0].removeEventListener('transitionrun', c0);
-      boxes('pm')[1].removeEventListener('transitionrun', c1);
+      boxes('pm')[0]!.removeEventListener('transitionrun', c0);
+      boxes('pm')[1]!.removeEventListener('transitionrun', c1);
     }
   }));
 

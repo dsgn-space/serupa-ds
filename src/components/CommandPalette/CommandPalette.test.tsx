@@ -39,7 +39,7 @@ describe('CommandPalette', () => {
     expect(headings()).toEqual(['Pages', 'Actions']);
     expect(labels()).toEqual(['Home', 'Settings', 'New project', 'Archive project', 'Switch theme']);
     expect(activeLabel()).toBe('Home');
-    expect(options()[3].getAttribute('aria-disabled')).toBe('true');
+    expect(options()[3]!.getAttribute('aria-disabled')).toBe('true');
   });
 
   test('typing filters, ignoring case and accents, best matches first, by keyword too; nothing matched shows the empty text', async () => {
@@ -84,11 +84,11 @@ describe('CommandPalette', () => {
     const onSelect = vi.fn();
     await render(<CommandPalette id="p" defaultOpen commands={COMMANDS} onSelect={onSelect} />);
     await expect.poll(() => document.activeElement).toBe(field());
-    options()[1].dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    options()[1]!.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
     expect(document.activeElement).toBe(field());
-    options()[2].focus();
+    options()[2]!.focus();
     await userEvent.keyboard('{Enter}');
-    expect((onSelect.mock.calls[0][0] as Command).id).toBe('new');
+    expect((onSelect.mock.calls[0]![0] as Command).id).toBe('new');
   });
 
   test('a click chooses; a disabled row does nothing; a row with only href goes there', async () => {
@@ -96,11 +96,11 @@ describe('CommandPalette', () => {
     const before = location.hash;
     try {
       await render(<CommandPalette id="p" defaultOpen commands={[...COMMANDS, { id: 'docs', label: 'Docs', href: '#cmdk-docs' }]} onSelect={onSelect} />);
-      options()[3].click();
+      options()[3]!.click();
       expect([onSelect.mock.calls.length, isOpen('p')]).toEqual([0, true]);
-      options()[5].click();
+      options()[5]!.click();
       await expect.poll(() => onSelect.mock.calls.length).toBe(1);
-      expect([location.hash, (onSelect.mock.calls[0][0] as Command).id, isOpen('p')]).toEqual(['#cmdk-docs', 'docs', false]);
+      expect([location.hash, (onSelect.mock.calls[0]![0] as Command).id, isOpen('p')]).toEqual(['#cmdk-docs', 'docs', false]);
     } finally { history.replaceState(null, '', before || location.pathname + location.search); }
   });
 
@@ -110,7 +110,7 @@ describe('CommandPalette', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
       await render(<CommandPalette id="x" defaultOpen commands={[{ id: 'js', label: 'Run', href: 'javascript:window.__cmdkRan=1' }, { id: 'jsu', label: 'Run upper', href: ' JavaScript:window.__cmdkRan=2' }]} />);
-      options()[0].click();
+      options()[0]!.click();
       await expect.poll(() => isOpen('x')).toBe(false);
       await new Promise((r) => setTimeout(r, 50));
       expect([w.__cmdkRan, warn.mock.calls.filter((c) => String(c[0]).includes('command-palette-href') || String(c[0]).includes("isn't a web page")).length]).toEqual([0, 1]);
@@ -237,7 +237,7 @@ describe('CommandPalette', () => {
   });
 
   test('its field, headings, rows and active row, every word in it with the shortcut\'s "+", read 4.5:1 in all six themes', async () => {
-    await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[0], shortcut: ['mod', 'shift', 'H'] }, ...COMMANDS.slice(1)]} />);
+    await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[0]!, shortcut: ['mod', 'shift', 'H'] }, ...COMMANDS.slice(1)]} />);
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -245,7 +245,7 @@ describe('CommandPalette', () => {
       const check = (name: string, e: Element, on = bg) => { const r = contrast(css(e).color, on); if (r < 4.5) low.push(`${th} ${name} ${r.toFixed(2)}`); };
       check('field', field());
       check('heading', document.getElementById(document.querySelector('[role="group"]')!.getAttribute('aria-labelledby')!)!);
-      check('row', options()[1]);
+      check('row', options()[1]!);
       const act = document.querySelector('[role="option"][aria-selected="true"]')!;
       const actBg = css(act).backgroundColor;
       check('active', act, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);

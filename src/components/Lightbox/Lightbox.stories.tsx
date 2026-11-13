@@ -54,14 +54,14 @@ export const FromAGallery: Story = { name: 'From a gallery', args: { defaultOpen
 /** loop: after the last picture comes the first, so neither arrow is ever off. */
 export const Loop: Story = { args: { loop: true, defaultIndex: 3 } };
 /** One picture: no arrows and no count, only the picture and its caption. */
-export const Single: Story = { args: { items: [photos[0]] } };
+export const Single: Story = { args: { items: [photos[0]!] } };
 /** A tall picture: the stage keeps its shape within the screen's height. */
 export const Tall: Story = { args: { defaultIndex: 2 } };
 /** A picture that fails to load: a broken-image icon on the stage, and the arrows still move on. */
 export const Failed: Story = { args: { items: [{ src: 'data:image/png;base64,broken', alt: 'A receipt from March', caption: 'Couldn’t load this picture.' }, ...photos] } };
 // The stress story (G14): long words, long labels, more items than fit; the visual baselines show how it copes.
 export const LongText: Story = {
-  args: { items: [{ ...photos[0], alt: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice', caption: 'A caption long enough to wrap onto a second and a third line in a narrow dialog, with Donaudampfschifffahrtsgesellschaftskapitän in it' }, ...photos] },
+  args: { items: [{ ...photos[0]!, alt: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a title long enough to wrap twice', caption: 'A caption long enough to wrap onto a second and a third line in a narrow dialog, with Donaudampfschifffahrtsgesellschaftskapitän in it' }, ...photos] },
 };
 /** Do: open it from the picture people pressed, and name each picture in its alt text: it's the dialog's title. */
 export const DoName: Story = { name: 'Do: name each picture', args: { defaultIndex: 0 } };

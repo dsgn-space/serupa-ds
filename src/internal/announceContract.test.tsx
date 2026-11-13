@@ -185,7 +185,7 @@ describe('every announcement is heard inside an open Dialog', () => {
     for (const dir of DIRS) {
       let src = '';
       try { src = await commands.readFile(`src/components/${dir}/${dir}.tsx`); } catch { continue; }
-      if (/\bannounce\(/.test(src)) callers.push(dir);
+      if (/\bannounce\(/.test(src)) callers.push(dir!);
     }
     expect(callers.length).toBeGreaterThan(5);
     expect(callers.filter((c) => !covered.has(c))).toEqual([]);

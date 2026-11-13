@@ -34,7 +34,7 @@ describe('Icon: a name outside the components\' own icons', () => {
     let count = 0;
     for (const [file, text] of Object.entries(parts)) {
       const i = Number(/(\d+)\.ts$/.exec(file)![1]);
-      for (const m of text.matchAll(/name: "([a-z0-9_]+)"/g)) { count++; if (partOf(m[1]) !== i) wrong.push(`${m[1]} in part ${i}, partOf says ${partOf(m[1])}`); }
+      for (const m of text.matchAll(/name: "([a-z0-9_]+)"/g)) { count++; if (partOf(m[1]!) !== i) wrong.push(`${m[1]} in part ${i}, partOf says ${partOf(m[1]!)}`); }
     }
     expect([Object.keys(parts).length, count > 3000, wrong]).toEqual([32, true, []]);
   });

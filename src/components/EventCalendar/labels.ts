@@ -30,7 +30,7 @@ export const en: EventCalendarLabels = {
   allDay: 'All day',
   eventTime: (from, to) => from + ' to ' + to,
   repeats: 'Repeats',
-  noEvents: 'No events this month.',
+  noEvents: 'No events this month',
 };
 export const id: EventCalendarLabels = {
   goToToday: 'Hari ini',
@@ -42,5 +42,5 @@ export const id: EventCalendarLabels = {
   allDay: 'Sepanjang hari',
   eventTime: (from, to) => from + ' sampai ' + to,
   repeats: 'Berulang',
-  noEvents: 'Tidak ada acara bulan ini.',
+  noEvents: 'Tidak ada acara bulan ini',
 };

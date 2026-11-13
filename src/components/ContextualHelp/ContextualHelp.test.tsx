@@ -64,7 +64,7 @@ describe('ContextualHelp', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const bg = css(document.body).backgroundColor;
-      for (const e of [h, i]) expect(contrast(css(e).color, bg), th).toBeGreaterThanOrEqual(3);
+      for (const e of [h, i]) expect(contrast(css(e!).color, bg), th).toBeGreaterThanOrEqual(3);
     }
   });
 

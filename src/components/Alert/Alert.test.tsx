@@ -33,9 +33,9 @@ describe('Alert', () => {
     await render(<div lang="de" style={{ width: '240px' }}><Alert id="hy" title="Donaudampfschifffahrtsgesellschaftskapitän">Rechtsschutzversicherungsgesellschaften</Alert></div>);
     const a = el('hy');
     const parts = [...a.querySelectorAll<HTMLElement>('*')].filter((e) => e.children.length === 0 && /Donau|Rechts/.test(e.textContent ?? ''));
-    expect([parts.length, ...parts.map((e) => css(e).hyphens), parts[0].closest('[lang]')!.getAttribute('lang'), parts.every((e) => e.scrollWidth <= e.clientWidth), a.scrollWidth <= a.clientWidth]).toEqual([2, 'auto', 'auto', 'de', true, true]);
+    expect([parts.length, ...parts.map((e) => css(e).hyphens), parts[0]!.closest('[lang]')!.getAttribute('lang'), parts.every((e) => e.scrollWidth <= e.clientWidth), a.scrollWidth <= a.clientWidth]).toEqual([2, 'auto', 'auto', 'de', true, true]);
     // WebKit writes it shortest, "10 4": a missing third value is the second (CSS Text 4).
-    expect(['10 4 4', '10 4']).toContain(css(parts[0]).getPropertyValue('hyphenate-limit-chars'));
+    expect(['10 4 4', '10 4']).toContain(css(parts[0]!).getPropertyValue('hyphenate-limit-chars'));
   });
 
   test('defaults: an info alert (role status) with the info icon, hidden from screen readers; no title or close button; ref, className and props reach it', async () => {
@@ -76,7 +76,7 @@ describe('Alert', () => {
     const ti = css(tone('info').querySelector(':scope > div > p'));
     expect([ti.fontWeight, ti.marginTop, css(tone('info').querySelector('button')!.parentElement).display]).toEqual(['600', '0px', 'flex']);
     for (const [t, bg] of [['info', 'info-subtle'], ['success', 'success-subtle'], ['warning', 'warning-subtle'], ['danger', 'danger-subtle'], ['neutral', 'surface-muted']]) {
-      expect([t, css(tone(t)).backgroundColor]).toEqual([t, color(`var(--${bg})`)]);
+      expect([t, css(tone(t!)).backgroundColor]).toEqual([t, color(`var(--${bg})`)]);
     }
   });
 
@@ -202,7 +202,7 @@ describe('focus after dismissing (DQ1)', () => {
     expect(document.activeElement?.id).toBe('before');
     await render(<Page keep />);
     const x = document.querySelectorAll<HTMLElement>('[aria-label="Dismiss"]');
-    x[x.length - 1].focus();
+    x[x.length - 1]!.focus();
     await userEvent.keyboard('{Enter}');
     await new Promise((r) => setTimeout(r, 30));
     expect(document.activeElement).toBe(x[x.length - 1]);

@@ -298,8 +298,8 @@ describe('Sidebar', () => {
       <I icon="folder" id="gfiles" label={<span>Files</span>}><I href="#a" label="A" /></I>
     </Sidebar>);
     for (const [id, name] of [['idraft', 'Drafts (new)'], ['gfiles', 'Files']]) {
-      await tabTo(el(id));
-      const tip = () => document.getElementById(el(id).getAttribute('aria-labelledby') || '');
+      await tabTo(el(id!));
+      const tip = () => document.getElementById(el(id!).getAttribute('aria-labelledby') || '');
       await expect.poll(() => tip()?.matches(':popover-open')).toBe(true);
       expect(tip()!.textContent).toBe(name);
     }
@@ -433,12 +433,12 @@ describe('Sidebar', () => {
     await userEvent.click(el('grailn'));
     const menus = () => [...document.querySelectorAll('[role="menu"]')].filter((x) => x.matches(':popover-open'));
     await expect.poll(() => menus().length).toBe(1);
-    const guides = [...menus()[0].querySelectorAll('[role="menuitem"]')].find((i) => i.textContent === 'Guides') as HTMLElement;
+    const guides = [...menus()[0]!.querySelectorAll('[role="menuitem"]')].find((i) => i.textContent === 'Guides') as HTMLElement;
     expect([guides.getAttribute('aria-haspopup'), guides.getAttribute('aria-current')]).toEqual(['menu', 'page']);
     guides.focus();
     await userEvent.keyboard('{ArrowRight}');
     await expect.poll(() => menus().length).toBe(2);
-    const sub = [...menus()[1].querySelectorAll('[role="menuitem"]')];
+    const sub = [...menus()[1]!.querySelectorAll('[role="menuitem"]')];
     expect(sub.map((i) => [i.tagName, i.getAttribute('href'), i.getAttribute('aria-current'), i.textContent].join(':'))).toEqual(['A:#g1:page:Getting started']);
     await userEvent.keyboard('{Escape}{Escape}');
   });
@@ -466,7 +466,7 @@ describe('Sidebar', () => {
       document.documentElement.setAttribute('data-theme', th);
       const dot = css(el('iinbox').querySelector(DOT)).backgroundColor;
       for (const [name, on] of [['sidebar', css(el('sb')).backgroundColor], ['highlight', color('var(--sidebar-item-bg-active, var(--highlight))')]]) {
-        const r = contrast(dot, on); n++; if (r < 3) low.push(`${th} on ${name}: ${r.toFixed(2)}`);
+        const r = contrast(dot, on!); n++; if (r < 3) low.push(`${th} on ${name}: ${r.toFixed(2)}`);
       }
     }
     expect([low, n]).toEqual([[], 12]);
@@ -480,7 +480,7 @@ describe('Sidebar', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const s = css(el('ihome')), gap = /rgba?\([^)]*\)/.exec(s.boxShadow)?.[0] ?? s.backgroundColor;
-      for (const [name, on] of [['outside', css(el('sb')).backgroundColor], ['inside', gap]]) { const r = contrast(s.outlineColor, on); n++; if (r < 3) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
+      for (const [name, on] of [['outside', css(el('sb')).backgroundColor], ['inside', gap]]) { const r = contrast(s.outlineColor, on!); n++; if (r < 3) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
     }
     document.documentElement.removeAttribute('data-theme');
     still.remove();

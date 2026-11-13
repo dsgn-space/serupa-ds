@@ -36,7 +36,7 @@ describe('Patterns/Sign in', () => {
     expect([...summary.querySelectorAll('a')].map((a) => a.textContent)).toEqual(['Enter an email address in the right format, like name@example.com', 'Enter your password']);
     expect(describedBy('sign-in-email')).toContain('Enter an email address in the right format');
     expect(input('sign-in-password').getAttribute('aria-invalid')).toBe('true');
-    await userEvent.click(summary.querySelectorAll('a')[1]);
+    await userEvent.click(summary.querySelectorAll('a')[1]!);
     expect(active().id).toBe('sign-in-password');
   });
 

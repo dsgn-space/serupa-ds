@@ -1,15 +1,17 @@
 # CodeQL: GitHub's code scanning, for the TypeScript and tool scripts and for the workflows themselves.
-# Findings show under Security → Code scanning and on pull requests. Runs on each pull request, on main and weekly
-# (new queries arrive between commits).
+# Findings show under Security → Code scanning and on pull requests. Every pull request is scanned in both languages:
+# the ruleset's code scanning rule blocks a pull request that has no result for a configuration main has. Main is
+# scanned whole every day (new queries arrive between commits, and it holds every merged change) rather than on every
+# merge, and the merge queue's groups, already scanned as pull requests, aren't scanned again: their job passes with
+# nothing to scan, so the required `analyze` checks are met. On 12 and 13 Nov a tenth of all runner time was CodeQL.
 name: CodeQL
 
 on:
-  push:
-    branches: [main]
   pull_request:
   merge_group:
   schedule:
-    - cron: '17 4 * * 1'
+    - cron: '17 4 * * *'
+  workflow_dispatch:
 
 concurrency:
   group: codeql-${{ github.event.pull_request.number || github.ref }}
@@ -34,7 +36,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+      - if: github.event_name != 'merge_group'
+        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         with:
           languages: ${{ matrix.language }}
           # Build output, generated files and the vendored React bundles aren't ours to scan.
@@ -46,6 +49,7 @@ jobs:
               # The apps coding agents wrote in the skill evaluations: kept as results, never run or shipped. About a
               # fifth of the repository's JavaScript and TypeScript (380 files, 30,000 lines), analysed on every run.
               - tools/skill-eval/results
-      - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+      - if: github.event_name != 'merge_group'
+        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         with:
           category: /language:${{ matrix.language }}

@@ -90,7 +90,7 @@ describe('ColorPicker', () => {
 
   test('invalid shows on the swatches: their border takes the danger color, 3:1 on the page in all six themes', async () => {
     await render(<><div id="ok"><ColorPicker aria-label="Fine" swatches={SW} /></div><div id="bad"><ColorPicker aria-label="Wrong" swatches={SW} invalid /></div></>);
-    const ring = (id: string) => css(document.querySelector(`#${id} [role="radio"]`)).boxShadow.match(/^(\w+\([^)]*\)|#\w+|\w+)/)![1];
+    const ring = (id: string) => css(document.querySelector(`#${id} [role="radio"]`)).boxShadow.match(/^(\w+\([^)]*\)|#\w+|\w+)/)![1]!;
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -325,7 +325,7 @@ describe('ColorPicker', () => {
 
   test('disabled, custom={false}, size sm and name: no field, disabled swatches, a hidden input with the value', async () => {
     await render(<form id="f"><ColorPicker aria-label="C" swatches={SW} defaultValue="#18181b" custom={false} size="sm" name="color" disabled /></form>);
-    expect([hex(), radios().every((r) => r.disabled), Math.round(radios()[0].getBoundingClientRect().width), (document.querySelector('input[type="hidden"]') as HTMLInputElement).value])
+    expect([hex(), radios().every((r) => r.disabled), Math.round(radios()[0]!.getBoundingClientRect().width), (document.querySelector('input[type="hidden"]') as HTMLInputElement).value])
       .toEqual([null, true, 24, '#18181b']);
   });
 
@@ -333,7 +333,7 @@ describe('ColorPicker', () => {
     await render(<div style={{ background: 'var(--surface)', padding: '8px' }}><ColorPicker aria-label="C" swatches={SW} defaultValue="#fde047" contrastWith="#ffffff" /></div>);
     const low: string[] = [];
     for (const v of ['#1D4ED8', '#fde047', '#fff', '#18181b']) {
-      await userEvent.click(radios()[SW.findIndex((s) => (typeof s === 'string' ? s : s.value) === v)]);
+      await userEvent.click(radios()[SW.findIndex((s) => (typeof s === 'string' ? s : s.value) === v)]!);
       const b = radios().find((r) => r.getAttribute('aria-checked') === 'true')!;
       const r = contrast(css(b.querySelector('[data-icon]')).color, css(b).backgroundColor);
       if (r < 3) low.push(`${v} check ${r.toFixed(2)}`);
@@ -354,7 +354,7 @@ describe('ColorPicker', () => {
   // DT1: the edge was --border, 1.27:1 on the page, so a white swatch on a white page (a black one on a dark page) had no edge.
   test('every swatch and the native well have an edge that keeps 3:1 on the page in all six themes, so white and black swatches show', async () => {
     await render(<div style={{ background: 'var(--surface)', padding: '8px' }}><ColorPicker aria-label="C" swatches={['#ffffff', '#000000']} /></div>);
-    const page = () => css(radios()[0].closest('div[style]')).backgroundColor;
+    const page = () => css(radios()[0]!.closest('div[style]')).backgroundColor;
     const native = document.querySelector('input[type="color"]') as HTMLElement;
     const low: string[] = [];
     for (const th of THEMES) {

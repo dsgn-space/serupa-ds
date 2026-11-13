@@ -27,7 +27,7 @@ describe('IconTile (RU16)', () => {
       expect(Math.round(glyph(id).width)).toBe(icon);
       const mid = (r: DOMRect) => [r.left + r.width / 2, r.top + r.height / 2];
       const [a, b] = [mid(box(id)), mid(glyph(id))];
-      expect(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1])).toBeLessThan(1);
+      expect(Math.abs(a[0]! - b[0]!) + Math.abs(a[1]! - b[1]!)).toBeLessThan(1);
     }
     expect(box('x').width).toBe(40);   // an unknown size falls back to md
     expect(parseFloat(css(el('c')).borderTopLeftRadius)).toBeGreaterThanOrEqual(20);

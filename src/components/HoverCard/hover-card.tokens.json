@@ -43,6 +43,16 @@
             "cssVar": "--hover-card-shadow"
           }
         }
+      },
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "The card's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--hover-card-depth"
+          }
+        }
       }
     },
     "border": {

@@ -707,7 +707,7 @@ describe('Dialog: motion (DZ1)', () => {
       const seen: number[][] = [];
       while (pn.getAnimations().length) { seen.push(centre(pn.getBoundingClientRect())); await new Promise(requestAnimationFrame); }
       expect(seen.length).toBeGreaterThan(1);
-      expect(seen.filter(([x, y]) => Math.abs(x - at[0]) > 1 || Math.abs(y - at[1]) > 1)).toEqual([]);
+      expect(seen.filter(([x, y]) => Math.abs(x! - at[0]!) > 1 || Math.abs(y! - at[1]!) > 1)).toEqual([]);
     });
   });
 
@@ -720,7 +720,7 @@ describe('Dialog: motion (DZ1)', () => {
       await rerender(<></>);
       await render(<form><Dialog open title="Rename" onOpenChange={() => {}}><input aria-label="Name" /></Dialog></form>);
       expect(calls()).toHaveLength(1);
-      expect(String(calls()[0][0])).toMatch(/^Dialog: it's inside a <form>/);
+      expect(String(calls()[0]![0])).toMatch(/^Dialog: it's inside a <form>/);
     } finally { warn.mockRestore(); }
   });
 });
@@ -735,7 +735,7 @@ describe('Dialog and Drawer on a phone', () => {
     const screen = await render(<><Dialog open title="Rename" onOpenChange={() => {}}><Input aria-label="Name" /></Dialog><Drawer open title="Filters" onOpenChange={() => {}}>Body</Drawer></>);
     await expect.poll(pads).toEqual(['16px', '16px']);
     // 320 less the 16px margin and the 16px padding on each side: 256px for the content (it was 240).
-    const panel = panels()[0], cs = getComputedStyle(panel);
+    const panel = panels()[0]!, cs = getComputedStyle(panel);
     expect(Math.round(panel.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight))).toBe(256);
     await page.viewport(1000, 700);
     await expect.poll(pads).toEqual(['24px', '24px']);

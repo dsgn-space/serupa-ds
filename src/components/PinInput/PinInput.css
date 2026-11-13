@@ -27,6 +27,7 @@
   flex: auto; flex-basis: var(--spacing-6); width: var(--dk-pin-box); min-width: var(--spacing-6); max-width: var(--dk-pin-box); aspect-ratio: var(--aspect-square);
   border: var(--pin-input-border-width, var(--border-width-1)) solid var(--dk-pin-bd); border-radius: var(--pin-input-radius, var(--radius-control));
   background: var(--pin-input-bg, var(--field)); color: var(--pin-input-text, var(--text)); font-weight: var(--font-medium);
+  box-shadow: var(--pin-input-depth, var(--depth-field));   /* a well to type into in a tactile brand, like Input */
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);
 }
 .dk-pin-input__field {

@@ -55,8 +55,8 @@ describe('CascadeSelect', () => {
       <CascadeSelect aria-label="C" size="lg" options={regions} />
     </>);
     const bs = [...document.querySelectorAll<HTMLButtonElement>('[role=combobox]')];
-    expect(bs[0].textContent).toBe('Jawa Barat › Kota Bandung › Coblong');
-    expect([css(bs[1]).height, css(bs[2]).height]).toEqual(['24px', '44px']);
+    expect(bs[0]!.textContent).toBe('Jawa Barat › Kota Bandung › Coblong');
+    expect([css(bs[1]!).height, css(bs[2]!).height]).toEqual(['24px', '44px']);
   });
 
   test('with no levels, the columns are named "Level 1", "Level 2"… in the locale\'s digits ("Level ١" in ar-EG)', async () => {
@@ -71,7 +71,7 @@ describe('CascadeSelect', () => {
     expect(button().getAttribute('aria-expanded')).toBe('true');
     expect([panel().getAttribute('role'), panel().getAttribute('aria-label'), button().getAttribute('aria-controls')]).toEqual(['dialog', 'Wilayah', panel().id]);
     expect(lists().map((l) => document.getElementById(l.getAttribute('aria-labelledby')!)!.textContent)).toEqual(levels);
-    expect(texts(lists()[0])).toEqual(['Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Bali', 'Papua']);
+    expect(texts(lists()[0]!)).toEqual(['Jawa Barat', 'Jawa Tengah', 'Jawa Timur', 'Bali', 'Papua']);
     expect([...panel().querySelectorAll('[aria-selected=true]')].map((o) => o.textContent)).toEqual(['Jawa Barat', 'Kota Bandung', 'Coblong']);
     await until(() => focused() === 'Coblong');
     expect([...panel().querySelectorAll('[role=option]:has([data-icon=check])')].map((o) => o.textContent)).toEqual(['Coblong']);
@@ -146,7 +146,7 @@ describe('CascadeSelect', () => {
     await userEvent.click(option('Papua'), { force: true });
     expect(lists().length).toBe(1);
     await userEvent.click(option('Jawa Timur'));
-    expect(texts(lists()[1])).toEqual(['Kota Surabaya']);
+    expect(texts(lists()[1]!)).toEqual(['Kota Surabaya']);
     await userEvent.click(option('Kota Surabaya'));
     await userEvent.click(option('Gubeng'));
     expect(changes).toEqual([['jatim', 'surabaya', 'gubeng']]);
@@ -168,7 +168,7 @@ describe('CascadeSelect', () => {
     // Each load ends when the test says so (settle), not on a timer: a click is a round trip through the driver, and on
     // a slow CI machine a 50ms load had already failed before "Loading…" was read.
     let fail = true, settle = () => {};
-    const load = vi.fn((path: CascadeOption[]) => new Promise<CascadeOption[]>((ok, no) => { settle = () => (fail ? no(new Error('x')) : ok([{ value: path[0].value + '1', label: path[0].label + ' 1' }])); }));
+    const load = vi.fn((path: CascadeOption[]) => new Promise<CascadeOption[]>((ok, no) => { settle = () => (fail ? no(new Error('x')) : ok([{ value: path[0]!.value + '1', label: path[0]!.label + ' 1' }])); }));
     await render(<CascadeSelect aria-label="Area" options={[{ value: 'a', label: 'A' }, { value: 'b', label: 'B', isLeaf: true }]} loadOptions={load} />);
     await userEvent.click(button());
     const option = (label: string) => [...panel().querySelectorAll<HTMLElement>('[role=option]')].find((o) => o.textContent === label)!;
@@ -185,7 +185,7 @@ describe('CascadeSelect', () => {
     settle();
     await until(() => !!option('A 1'));
     expect(load).toHaveBeenCalledTimes(2);
-    expect(load.mock.calls[0][0].map((o) => o.value)).toEqual(['a']);
+    expect(load.mock.calls[0]![0].map((o) => o.value)).toEqual(['a']);
   });
 
   test('loadOptions: a saved value three levels deep reads in words without opening, its levels loaded one at a time', async () => {
@@ -193,7 +193,7 @@ describe('CascadeSelect', () => {
       '32': [{ value: '3273', label: 'Kota Bandung' }],
       '3273': [{ value: '327301', label: 'Coblong', isLeaf: true }],
     };
-    const load = vi.fn((path: CascadeOption[]) => new Promise<CascadeOption[]>((ok) => setTimeout(() => ok(tree[path[path.length - 1].value] || []), 30)));
+    const load = vi.fn((path: CascadeOption[]) => new Promise<CascadeOption[]>((ok) => setTimeout(() => ok(tree[path[path.length - 1]!.value] || []), 30)));
     await render(<CascadeSelect aria-label="Alamat" options={[{ value: '32', label: 'Jawa Barat' }]} loadOptions={load} defaultValue={['32', '3273', '327301']} />);
     await until(() => button().textContent === 'Jawa Barat › Kota Bandung › Coblong');
     expect(button().getAttribute('aria-expanded')).toBe('false');
@@ -223,7 +223,7 @@ describe('CascadeSelect', () => {
     await render(<Field label="Alamat" error="Pilih kecamatan." required><CascadeSelect options={regions} /></Field>);
     const b = button();
     expect([b.labels?.[0]?.textContent?.includes('Alamat'), b.getAttribute('aria-invalid'), b.getAttribute('aria-required')]).toEqual([true, 'true', 'true']);
-    expect(document.getElementById(b.getAttribute('aria-describedby')!.split(' ')[0])!.textContent).toContain('Pilih kecamatan.');
+    expect(document.getElementById(b.getAttribute('aria-describedby')!.split(' ')[0]!)!.textContent).toContain('Pilih kecamatan.');
     expect(b.parentElement!.className).toContain('dk-cascade-select--invalid');
     await userEvent.click(b);
     expect(panel().getAttribute('aria-label')).toContain('Alamat');
@@ -252,7 +252,7 @@ describe('CascadeSelect', () => {
     expect(panel().hidden).toBe(false);
     await userEvent.click(document.querySelector('button')!);
     expect(panel().hidden).toBe(true);
-    const off = document.querySelectorAll<HTMLButtonElement>('[role=combobox]')[1];
+    const off = document.querySelectorAll<HTMLButtonElement>('[role=combobox]')[1]!;
     expect(off.disabled).toBe(true);
   });
 
@@ -283,7 +283,7 @@ describe('CascadeSelect', () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><CascadeSelect aria-label="Wilayah" options={regions} /></SerupaProvider>);
     expect(button().textContent).toBe('Pilih…');
     await userEvent.click(button());
-    expect(document.getElementById(lists()[0].getAttribute('aria-labelledby')!)!.textContent).toBe('Tingkat 1');
+    expect(document.getElementById(lists()[0]!.getAttribute('aria-labelledby')!)!.textContent).toBe('Tingkat 1');
   });
 
   test('narrow: one column at a time, with a Back button to the one before', async () => {
@@ -292,11 +292,11 @@ describe('CascadeSelect', () => {
     await page.viewport(375, 700);
     const shown = () => lists().map((l) => l.parentElement!).filter((c) => css(c).display !== 'none');
     await until(() => shown().length === 1);
-    expect(shown()[0].textContent).toContain('Kota Bandung');
-    const back = shown()[0].querySelector<HTMLButtonElement>('button')!;
+    expect(shown()[0]!.textContent).toContain('Kota Bandung');
+    const back = shown()[0]!.querySelector<HTMLButtonElement>('button')!;
     expect([css(back).display, back.getAttribute('aria-label')]).toEqual(['flex', 'Back']);
     await userEvent.click(back);
-    await until(() => shown()[0].textContent.includes('Jawa Tengah'));
+    await until(() => shown()[0]!.textContent.includes('Jawa Tengah'));
   });
 
   test('contrast in all six themes: text and placeholder 4.5:1 on the field, chevron and border 3:1; option text, level names and notes 4.5:1 on the panel and on the highlight; the check 3:1', () => {

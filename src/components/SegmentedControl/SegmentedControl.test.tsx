@@ -69,7 +69,7 @@ describe('SegmentedControl', () => {
     const e = el('per'), it = items('per');
     expect([e.getAttribute('role'), e.getAttribute('aria-label'), ref.current === e, e.dataset.component, e.getBoundingClientRect().height]).toEqual(['radiogroup', 'Period', true, 'segmented-control', 32]);
     expect(e.className).toMatch(/extra/);
-    expect([it.map((x) => x.getAttribute('role')).join(), it.map((x) => x.getAttribute('aria-checked')).join(), it.map((x) => x.tabIndex).join(), it[3].disabled])
+    expect([it.map((x) => x.getAttribute('role')).join(), it.map((x) => x.getAttribute('aria-checked')).join(), it.map((x) => x.tabIndex).join(), it[3]!.disabled])
       .toEqual(['radio,radio,radio,radio', 'true,false,false,false', '0,-1,-1,-1', true]);
     await expect.poll(() => off('per')).toEqual([0, 0]);
   });
@@ -184,12 +184,12 @@ describe('SegmentedControl', () => {
       { value: 'l', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'c', icon: 'format_align_center', 'aria-label': 'Center' }, { value: 'r', icon: 'format_align_right', 'aria-label': 'Right' },
     ]} /></Col>);
     const it = items('ico');
-    expect([el('ico').getBoundingClientRect().height, it.map((x) => x.getAttribute('aria-label')).join(), it.map((x) => Math.round(x.getBoundingClientRect().width)).join(), Math.round(it[0].getBoundingClientRect().height), checked('ico')])
+    expect([el('ico').getBoundingClientRect().height, it.map((x) => x.getAttribute('aria-label')).join(), it.map((x) => Math.round(x.getBoundingClientRect().width)).join(), Math.round(it[0]!.getBoundingClientRect().height), checked('ico')])
       .toEqual([24, 'Left,Center,Right', '24,24,24', 18, 'c']);
     const centers = it.map((x) => { const r = x.getBoundingClientRect(); return r.left + r.width / 2; });
-    expect(Math.round(centers[1] - centers[0])).toBeGreaterThanOrEqual(24);
+    expect(Math.round(centers[1]! - centers[0]!)).toBeGreaterThanOrEqual(24);
     // The selection sits exactly on the checked segment.
-    const ind = el('ico').querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = it[1].getBoundingClientRect();
+    const ind = el('ico').querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect(), c = it[1]!.getBoundingClientRect();
     expect([Math.round(ind.left), Math.round(ind.width)]).toEqual([Math.round(c.left), Math.round(c.width)]);
     await render(<SegmentedControl id="icomd" aria-label="Align" options={[{ value: 'l', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'r', icon: 'format_align_right', 'aria-label': 'Right' }]} />);
     expect(items('icomd').map((x) => Math.round(x.getBoundingClientRect().width)).join()).toBe('26,26');
@@ -200,7 +200,7 @@ describe('SegmentedControl', () => {
       <SegmentedControl id="lg" aria-label="Period" size="lg" options={PERIODS.slice(0, 2)} />
       <SegmentedControl id="lgi" aria-label="Align" size="lg" options={[{ value: 'l', icon: 'format_align_left', 'aria-label': 'Left' }, { value: 'r', icon: 'format_align_right', 'aria-label': 'Right' }]} />
     </Col>);
-    const it = items('lg')[0];
+    const it = items('lg')[0]!;
     expect([el('lg').getBoundingClientRect().height, el('lg').dataset.size, css(it).paddingLeft, css(el('lg')).fontSize, items('lgi').map((x) => Math.round(x.getBoundingClientRect().width)).join()])
       .toEqual([44, 'lg', '16px', '16px', '38,38']);
   });
@@ -214,7 +214,7 @@ describe('SegmentedControl', () => {
     const whole = (v: string) => { const l = seg('fit', v).firstElementChild as HTMLElement; return l.scrollWidth <= l.clientWidth; };
     await expect.poll(() => whole('cal')).toBe(true);
     const w = widths();
-    expect([whole('grid'), w[1] < w[0], Math.abs(w.reduce((a, b) => a + b, 0) - el('fit').clientWidth) <= 6]).toEqual([true, true, true]);
+    expect([whole('grid'), w[1]! < w[0]!, Math.abs(w.reduce((a, b) => a + b, 0) - el('fit').clientWidth) <= 6]).toEqual([true, true, true]);
     setW(900);
     await expect.poll(() => new Set(widths()).size).toBe(1);
   });
@@ -321,7 +321,7 @@ describe('SegmentedControl', () => {
     await withMotion(async () => {
       await render(<><SegmentedControl id="sp" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" />
         <SegmentedControl id="sr" aria-label="Locked" readOnly options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" /></>);
-      const seg = (id: string) => el(id).querySelectorAll('button')[1];
+      const seg = (id: string) => el(id).querySelectorAll('button')[1]!;
       expect(css(seg('sp')).transitionProperty).toContain('scale');
       await press(seg('sp'), () => expect.poll(() => css(seg('sp')).scale).toBe('0.95'));
       await expect.poll(() => css(seg('sp')).scale).toBe('none');
@@ -343,7 +343,7 @@ describe('SegmentedControl', () => {
       // trip, and even a frame's wait outlasted the 200ms slide on a busy runner in WebKit, leaving nothing to read.
       // One press (detail 1), as a mouse's: a click with none is a key's, which puts it there at once (KW1).
       const slides = () => document.getAnimations().filter((x): x is CSSTransition => x instanceof CSSTransition && (x.effect as KeyframeEffect).target === ind);
-      b.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
+      b!.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
       for (let i = 0; i < 20 && !slides().length; i++) await Promise.resolve();
       const moves = slides();
       expect(moves.map((x) => [(x.effect as KeyframeEffect).pseudoElement, x.transitionProperty]).sort()).toEqual([['::after', 'clip-path'], ['::before', 'clip-path']]);
@@ -351,7 +351,7 @@ describe('SegmentedControl', () => {
       // from its end) and ends cut to the second.
       const insets = (k: Keyframe) => String(k.clipPath).match(/-?[\d.]+px/g)!.slice(0, 4).map((n) => Math.round(parseFloat(n)));
       const border = moves.find((x) => (x.effect as KeyframeEffect).pseudoElement === '::before')!, [from, to] = (border.effect as KeyframeEffect).getKeyframes();
-      expect([insets(from), insets(to)]).toEqual([[0, Math.round(b.offsetLeft + b.offsetWidth - a.offsetLeft - a.offsetWidth), 0, 0], [0, 0, 0, Math.round(b.offsetLeft - a.offsetLeft)]]);
+      expect([insets(from!), insets(to!)]).toEqual([[0, Math.round(b!.offsetLeft + b!.offsetWidth - a!.offsetLeft - a!.offsetWidth), 0, 0], [0, 0, 0, Math.round(b!.offsetLeft - a!.offsetLeft)]]);
       // Half way nothing is scaled, so the border is 1px and the corners round.
       moves.forEach((x) => { x.pause(); x.currentTime = Number(x.effect!.getComputedTiming().duration) / 2; });
       expect([css(ind).scale, css(ind).transform]).toEqual(['none', 'none']);
@@ -398,7 +398,7 @@ describe('SegmentedControl', () => {
       await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
       await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
       const ind = el('sk').firstElementChild as HTMLElement;
-      items('sk')[0].focus();
+      items('sk')[0]!.focus();
       await userEvent.keyboard('{ArrowRight}');
       const moves = document.getAnimations().filter((x) => (x.effect as KeyframeEffect).target === ind);
       expect([checked('sk'), moves.length, ind.hasAttribute('data-slide'), off('sk')]).toEqual(['b', 0, false, [0, 0]]);
@@ -424,7 +424,7 @@ describe('SegmentedControl', () => {
   test('the selection\'s corners nest in the track\'s: its radius less the gap around it, with the default corners and with data-radius="round" (GR269)', async () => {
     const nest = (outer: Element, inner: Element) => { const o = getComputedStyle(outer), i = getComputedStyle(inner); return [parseFloat(i.borderStartStartRadius), Math.max(0, parseFloat(o.borderStartStartRadius) - (inner.getBoundingClientRect().left - outer.getBoundingClientRect().left))]; };
     await render(<div id="sn-host"><Col><Period /></Col></div>);
-    const e = el('per'), first = items('per')[0];
+    const e = el('per'), first = items('per')[0]!;
     expect(nest(e, first)).toEqual([3, 3]);
     el('sn-host').setAttribute('data-radius', 'round');
     const [r, want] = nest(e, first);

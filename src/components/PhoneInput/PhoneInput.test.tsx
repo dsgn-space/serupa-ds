@@ -260,7 +260,7 @@ describe('PhoneInput', () => {
       <SerupaProvider labels={idLabels}><PhoneInput id="id" aria-label="HP" defaultCountry="ID" size="sm" /></SerupaProvider>
       <PhoneInput id="dis" aria-label="Off" disabled size="lg" />
     </Wrap>);
-    expect([field('fp').labels![0].textContent, [...menu('fp').options].map((o) => o.value).join(), menu('fp').value]).toEqual(['Nomor HP', 'ID,MY,SG', 'SG']);
+    expect([field('fp').labels![0]!.textContent, [...menu('fp').options].map((o) => o.value).join(), menu('fp').value]).toEqual(['Nomor HP', 'ID,MY,SG', 'SG']);
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('phone')).toBe('+6591234567');
     expect([menu('id').getAttribute('aria-label'), Math.round(box('id').getBoundingClientRect().height)]).toEqual(['Negara', 24]);
     expect([field('dis').disabled, menu('dis').disabled, box('dis').className.includes('dk-input--disabled'), Math.round(box('dis').getBoundingClientRect().height)]).toEqual([true, true, true, 44]);

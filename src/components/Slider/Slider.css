@@ -17,7 +17,7 @@
   touch-action: none; -webkit-user-select: none; user-select: none; cursor: pointer;
 }
 .dk-slider--size-sm { --dk-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --dk-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
-.dk-slider__track { position: relative; flex: auto; height: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--field-border)); }
+.dk-slider__track { position: relative; flex: auto; height: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--field-border)); box-shadow: var(--slider-track-depth, var(--depth-well)); }
 .dk-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
 .dk-slider__thumb {
   position: absolute; inset-block-start: var(--dk-slider-thumb-top); box-sizing: border-box; width: var(--dk-slider-thumb); height: var(--dk-slider-thumb);

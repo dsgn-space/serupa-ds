@@ -189,4 +189,10 @@ Each is an optional override: set it on the page, a container or one stepper. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--stepper-press-scale` | `scale-95` | Size of a step's indicator while its head is held down (95%). 1 turns it off. |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
+| `--stepper-active-depth` | `depth-part` | The current and finished circles in a tactile brand: raised like a part, under the top light. Nothing in a flat brand. |
 <!-- token-table:end -->

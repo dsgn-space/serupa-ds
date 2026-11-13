@@ -20,7 +20,7 @@ describe('Patterns/Onboarding', () => {
     await render(<Onboarding />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
     const levels = [...document.querySelectorAll('main h1, main h2, main h3')].map((h) => Number(h.tagName[1]));
-    levels.forEach((l, i) => { if (i > 0) expect(l - levels[i - 1]).toBeLessThanOrEqual(1); });
+    levels.forEach((l, i) => { if (i > 0) expect(l - levels[i - 1]!).toBeLessThanOrEqual(1); });
     expect(document.querySelectorAll('main ol > li').length).toBe(4);
     expect(document.querySelectorAll('main ol > li h3').length).toBe(4);
     expect(document.querySelector('[role="progressbar"]')?.getAttribute('aria-valuetext')).toBe('0 of 4 steps done');

@@ -205,6 +205,36 @@
             "cssVar": "--period-picker-panel-shadow"
           }
         }
+      },
+      "depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-field}",
+        "$description": "The button's tactile inner shade, as Select's. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-depth"
+          }
+        }
+      },
+      "panel-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "The panel's tactile hairline and, in dark mode, a faint top light, as DatePicker's popup. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-panel-depth"
+          }
+        }
+      },
+      "selected-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-part}",
+        "$description": "The chosen period in a tactile brand: raised like a part under the top light, as Calendar's selected day. None in the flat brands.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--period-picker-selected-depth"
+          }
+        }
       }
     },
     "spacing": {
