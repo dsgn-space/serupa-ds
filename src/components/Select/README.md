@@ -2,6 +2,8 @@
 
 A native `<select>` styled like Input: the same three heights (24, 32 and 44px), colors, focus ring and states, with a chevron and an optional left icon. It keeps everything the browser gives a select for free: the system picker on phones, type-to-find, and full keyboard and screen-reader support.
 
+Where the browser lets a page style the list (`appearance: base-select`, in Chromium-based browsers today), the open list is drawn like Combobox's: an overlay surface with the shared shadow and corners, rows at control height, the highlight fill and a primary bar on the option under the pointer or keyboard, and a tick on the chosen one. Everywhere else the browser draws its own list. Your code and the way it reads out are the same either way.
+
 **Also called:** dropdown, select input, picker.
 
 ```jsx
@@ -25,14 +27,14 @@ const { Select, Field } = window.Serupa;
 
 ## When to use
 
-- One choice from about 5 to 15 options, such as a role, a country or a time zone.
+- One choice from a short, fixed list of about 5 to 15 plain-text options, such as a role, a country or a time zone.
 - Forms used on phones, where the system picker is easier than a custom list.
 
 ## When not to use
 
 - 2 to 4 options: use [radios](../Radio/README.md), which show every choice at once.
-- A long list people search through: a [Combobox](../Combobox/README.md) fits better.
-- Picking more than one option: use [checkboxes](../Checkbox/README.md); Select doesn't support `multiple`.
+- A long list people search through, options loaded as people type, options with more than a line of text (an avatar, a description), or several choices: use a [Combobox](../Combobox/README.md).
+- Picking more than one option from a short list: use [checkboxes](../Checkbox/README.md); Select doesn't support `multiple`.
 - A few options that change a view right away, such as Day, Week, Month: use [SegmentedControl](../SegmentedControl/README.md).
 
 ## Anatomy
@@ -67,6 +69,11 @@ Drawn from the `WithIcon` story.
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, default cursor, no hover change; the value at full contrast |
 | Disabled | `field-readonly` background at 50%, `not-allowed` cursor |
+| Open, where the list is styled | `picker-bg` surface with a `picker-border` border, `picker-radius` corners and `picker-shadow`, at least as wide as the box and at most `picker-max-height` tall, then scrolling. Rows are `option-height` tall (`option-height-touch` on a touch screen) |
+| Option under the pointer or keyboard | `option-bg-active` fill and a 2px `option-indicator` bar at the start edge; in forced-colors mode a `Highlight` outline |
+| Chosen option | A tick in `check` at the start |
+| Disabled option | At 50% |
+| Group label | `group-label`, `text-xs` medium |
 
 ## Accessibility
 
@@ -75,7 +82,7 @@ Drawn from the `WithIcon` story.
 - `readOnly` is for a value people should see but not change (a review step, a locked setting). The browser has no read-only select, so Select cancels the keys and press that would open or change it, and puts back a value a phone's picker sets. Unlike `disabled`, it stays in the Tab order and keeps its full contrast.
 - Every select needs a name: Field, a `<label htmlFor>` or `aria-label`. The placeholder isn't a label.
 - The chevron and left icon are decorative and don't take clicks: a click anywhere in the box opens the select.
-- Text and placeholder keep 4.5:1 on `field`; the chevron, border, focus ring and invalid border 3:1, in all six themes (`Select.test.tsx`).
+- Text and placeholder keep 4.5:1 on `field`; the chevron, border, focus ring and invalid border 3:1, in all six themes. In a styled list, options and group labels keep 4.5:1 on the list and on the highlight fill, and the tick and the bar 3:1 (`Select.test.tsx`).
 - Native constraints (`required` with an empty first option) show too: a field that fails them takes the `invalid` border once people have edited it or tried to send the form (`:user-invalid`), never on first paint. It's only the color: `aria-invalid` and the message stay yours (set `invalid` and Field's `error` when you check it yourself). To keep the browser out of it, leave out the attribute and check the value in your own code.
 
 ### Keyboard
@@ -83,8 +90,10 @@ Drawn from the `WithIcon` story.
 | Key | Does |
 | --- | --- |
 | Tab | To the select |
-| ↑ ↓ | The previous or next option (on macOS, opens the list) |
-| Alt+↓, Space | Opens the browser's list |
+| ↑ ↓ | The previous or next option (on macOS, and where the list is styled, opens the list; then moves through it) |
+| Alt+↓, Space | Opens the list |
+| Enter | In an open list, picks the option and closes it |
+| Esc | Closes the open list without changing the value |
 | A letter | The next option that starts with it |
 
 ## Props
@@ -119,6 +128,12 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-icon-color` | `text-muted` | Chevron and left icon |
 | `--select-focus-ring` | `focus-ring` | Border and ring while focused |
 | `--select-invalid` | `danger` | Border and ring when invalid |
+| `--select-picker-bg` | `surface-overlay` | The list of options, where the browser draws it with the page's styles (appearance: base-select). |
+| `--select-picker-border` | `border-overlay` | The list's border. |
+| `--select-option-bg-active` | `highlight` | The option under the pointer or the keyboard, as Combobox's. |
+| `--select-option-indicator` | `primary` | The 2px bar at the start of that option, so it is marked by more than a fill. |
+| `--select-check` | `primary` | The tick by the chosen option. |
+| `--select-group-label` | `text-muted` | A group's name over its options. |
 
 **Sizing**
 
@@ -130,6 +145,9 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-icon-size-sm` | `spacing-3.5` | Icon size, sm (14px). |
 | `--select-icon-size-md` | `spacing-4` | Icon size, md (16px). |
 | `--select-icon-size-lg` | `spacing-5` | Icon size, lg (20px). |
+| `--select-picker-max-height` | `spacing-60` | The list's greatest height before it scrolls (240px). |
+| `--select-option-height` | `control-height-md` | An option's least height (32px), where the list is styled. |
+| `--select-option-height-touch` | `control-height-lg` | An option's least height on a touch screen (44px), where the list is styled. |
 
 **Spacing**
 
@@ -139,6 +157,8 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-padding-x-md` | `spacing-3` | Side padding, md (12px). |
 | `--select-padding-x-lg` | `spacing-4` | Side padding, lg (16px). |
 | `--select-gap` | `spacing-2` | Gap between an icon and the text (8px) |
+| `--select-picker-padding` | `spacing-1` | Space inside the list, around the options (4px). |
+| `--select-option-padding-x` | `spacing-2` | An option's side padding (8px). |
 
 **Border**
 
@@ -146,10 +166,13 @@ Each is an optional override: set it on the page, a container or one select. The
 | --- | --- | --- |
 | `--select-border-width` | `border-width-1` | Border width (1px) |
 | `--select-radius` | `radius-control` | Corner radius (6px) |
+| `--select-picker-radius` | `radius-surface` | The list's corners. |
 
 **Shadow**
 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--select-depth` | `depth-field` | The tactile inner shade along the top of the box. None in the flat brands. |
+| `--select-picker-shadow` | `elevation-overlay` | The list's shadow, as other popups. |
+| `--select-picker-depth` | `depth-surface` | The list's tactile layer (none in the flat brands). |
 <!-- token-table:end -->

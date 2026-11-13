@@ -56,6 +56,45 @@
 .dk-select--readonly { background: var(--select-bg-disabled, var(--field-readonly)); }
 .dk-select--readonly .dk-select__field { cursor: default; }
 @media (forced-colors: active) { .dk-select__icon { color: CanvasText; } }
+/* Where the browser lets the page style a select's list (appearance: base-select), the list is drawn as Combobox's:
+   an overlay surface with its border, radius and shadow, options with the highlight fill and a primary bar at the
+   start under the pointer or the keyboard, and the tick in primary. It stays a native <select>: the same keys, the
+   same form value, the phone's own picker where the browser keeps one. Elsewhere the browser draws its own list. */
+@supports (appearance: base-select) {
+  .dk-select__field, .dk-select__field::picker(select) { appearance: base-select; }
+  .dk-select__field { display: flex; align-items: center; white-space: nowrap; overflow: hidden; }
+  .dk-select__field::picker-icon { display: none; }   /* the box draws its own chevron */
+  .dk-select__field::picker(select) {
+    --dk-select-nest: max(var(--spacing-0), calc(var(--select-picker-radius, var(--radius-surface)) - var(--select-picker-padding, var(--spacing-1)) - var(--border-width-1)));
+    box-sizing: border-box; min-inline-size: anchor-size(inline); max-block-size: var(--select-picker-max-height, var(--spacing-60));
+    margin-block: var(--spacing-1); padding: var(--select-picker-padding, var(--spacing-1)); overflow-y: auto; overscroll-behavior: contain;
+    border: var(--border-width-1) solid var(--select-picker-border, var(--border-overlay)); border-radius: var(--select-picker-radius, var(--radius-surface));
+    background: var(--select-picker-bg, var(--surface-overlay)); color: var(--select-text, var(--text));
+    box-shadow: var(--select-picker-depth, var(--depth-surface)), var(--select-picker-shadow, var(--elevation-overlay));
+    font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
+  }
+  .dk-select__field option {
+    --dk-bar: var(--border-width-2);
+    display: flex; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-block-size: var(--select-option-height, var(--control-height-md));
+    padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)); border-radius: var(--dk-select-nest, var(--radius-control));
+    background: transparent; color: var(--select-text, var(--text)); cursor: pointer; outline: none;
+  }
+  .dk-select__field option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
+  .dk-select__field option:focus-visible:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--primary)); }
+  @media (hover: hover) {
+    .dk-select__field option:hover:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--primary)); }
+  }
+  .dk-select__field option::checkmark { color: var(--select-check, var(--primary)); }
+  .dk-select__field option:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+  .dk-select__field optgroup { display: block; }
+  .dk-select__field optgroup legend { padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--select-group-label, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
+  @media (pointer: coarse) { .dk-select__field option { min-block-size: var(--select-option-height-touch, var(--control-height-lg)); } }
+  @media (forced-colors: active) {
+    .dk-select__field option:focus-visible:not(:disabled) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+    @media (hover: hover) { .dk-select__field option:hover:not(:disabled) { outline: var(--focus-ring-width) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); } }
+    .dk-select__field option::checkmark { color: CanvasText; }
+  }
+}
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
 @supports (-webkit-touch-callout: none) { .dk-select:not(.dk-select--size-lg) .dk-select__field { font-size: var(--text-base); } }
