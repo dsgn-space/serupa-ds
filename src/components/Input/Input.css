@@ -86,6 +86,8 @@
   .dk-input-action--text:hover:not(:disabled) { background: var(--input-action-text-bg-hover, var(--primary-subtle)); }
   .dk-input-action--icon:hover:not(:disabled) { background: var(--input-action-bg-hover, var(--secondary)); color: var(--input-action-hover, var(--text)); }
 }
+/* Held down: the text action's tint deepens toward its own text color, so it follows a brand. */
+.dk-input-action--text:active:not(:disabled) { background: color-mix(in oklab, var(--input-action-text-bg-hover, var(--primary-subtle)), currentColor var(--opacity-10)); }
 /* Held down: one step past hover, with or without a pointer that hovers. */
 .dk-input-action--icon:active:not(:disabled) { background: var(--input-action-bg-pressed, var(--secondary-hover)); color: var(--input-action-hover, var(--text)); }
 .dk-input-action:focus-visible { outline: var(--focus-ring-width) solid var(--input-action-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
