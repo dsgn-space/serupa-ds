@@ -5,6 +5,7 @@ import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { announce } from '../../internal/announce';
+import { warnOnce } from '../../internal/warn';
 import { isComposing } from '../../internal/ime';
 import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { en as words } from './labels';
@@ -63,18 +64,20 @@ export interface DataGridProps<R extends object = DataGridRow> extends Omit<Reac
   containerProps?: React.HTMLAttributes<HTMLDivElement> | undefined;
   /** Its rows are loading (or reloading): sets aria-busy, and while there are no rows yet, shows placeholder rows
    *  the height of real ones. Default: false. */
+  loading?: boolean | undefined;
+  /** @deprecated Use loading (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
   busy?: boolean | undefined;
-  /** How many placeholder rows show while busy with no rows: about as many as will load. Default: 3. */
+  /** How many placeholder rows show while loading with no rows: about as many as will load. Default: 3. */
   loadingRows?: number | undefined;
   /** Said once as the placeholders appear ("Loading timesheet"), after the loader's delay. Default: "Loading" (labels.loading). */
   loadingLabel?: string | undefined;
-  /** Shown in one row across every column when there are no rows and it isn't busy: an EmptyState when there are
+  /** Shown in one row across every column when there are no rows and it isn't loading: an EmptyState when there are
    *  none, or an Alert with Retry when they didn't load. */
   message?: React.ReactNode;
 }
 
 type Pos = { r: number; c: number };
-const OWN = { columns: 1, rows: 1, rowKey: 1, onRowsChange: 1, size: 1, stickyHeader: 1, containerProps: 1, busy: 1, loadingRows: 1, loadingLabel: 1, message: 1, className: 1, onKeyDown: 1, onCopy: 1, onPaste: 1 } as const;
+const OWN = { columns: 1, rows: 1, rowKey: 1, onRowsChange: 1, size: 1, stickyHeader: 1, containerProps: 1, loading: 1, busy: 1, loadingRows: 1, loadingLabel: 1, message: 1, className: 1, onKeyDown: 1, onCopy: 1, onPaste: 1 } as const;
 const textOf = (col: DataGridColumn, row: DataGridRow) => (col.format ? col.format(row) : row[col.key] == null ? '' : String(row[col.key]));
 // Clipboard text as rows of cells: tab between cells, a line break between rows (what spreadsheets copy).
 const parseTsv = (text: string) => text.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').map((l) => l.split('\t'));
@@ -202,18 +205,20 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
 
   const pick = (p: Pos, e: React.MouseEvent) => { if (edit) return; move(p, e.shiftKey && p.r > 0); };
   const tabStop = (r: number, c: number) => (r === cur.r && c === cur.c ? 0 : -1);
-  // With no rows: placeholders the height of real rows while busy (only the first says "Loading", once), otherwise
+  // With no rows: placeholders the height of real rows while loading (only the first says "Loading", once), otherwise
   // the app's message in one cell across every column. Neither is a cell the arrow keys reach.
   const frame = React.useRef<HTMLDivElement>(null);
   // A sticky header covers the top of the frame: measured, so the active cell scrolls in below it (the CSS reads --dk-data-grid-head).
   useStickyHead(frame, !!props.stickyHeader, 'thead', '--dk-data-grid-head');
-  const placeholders = !rows.length && props.busy ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
+  if (process.env.NODE_ENV !== 'production' && props.busy != null) warnOnce('data-grid-busy', 'DataGrid: busy is deprecated and removed in 15.0.0. Use loading, which does the same.');
+  const loading = !!(props.loading ?? props.busy);
+  const placeholders = !rows.length && loading ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
   const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
   const cp = props.containerProps || {};
   return (
     <div {...cp} ref={frame} className={cn('dk-data-grid', size !== 'md' && 'dk-data-grid--' + size, props.stickyHeader && 'dk-data-grid--sticky', props.className, cp.className)} data-component="data-grid">
       <table {...rest} ref={(n) => { table.current = n; setRef(ref, n); }}
-        role="grid" aria-busy={props.busy || undefined} aria-rowcount={placeholders ? -1 : rows.length + 1} aria-colcount={columns.length} aria-multiselectable="true" aria-describedby={cn(base + '-hint', props['aria-describedby']) || undefined}
+        role="grid" aria-busy={loading || undefined} aria-rowcount={placeholders ? -1 : rows.length + 1} aria-colcount={columns.length} aria-multiselectable="true" aria-describedby={cn(base + '-hint', props['aria-describedby']) || undefined}
         className="dk-data-grid__table" onKeyDown={onKeyDown} onCopy={onCopy} onPaste={onPaste}>
         <thead>
           <tr role="row" aria-rowindex={1}>

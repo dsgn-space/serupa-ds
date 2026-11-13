@@ -80,12 +80,12 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 
 The table keeps its header and caption in every state, so the page doesn't move and people know what's coming.
 
-- **Loading:** set `busy` on the Table and draw a `TableLoadingRows` in place of the `TableBody`, with `columns` set to every column and `rows` to about as many rows as will come (up to a screenful). Each placeholder row is as tall as a real one, at either `size`, so nothing jumps when the data arrives. Name the wait in `label` ("Loading projects"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `busy` sets `aria-busy` on the table while it lasts. To reload rows already shown, keep them and set `busy`, or swap them for placeholders if the old ones would mislead.
+- **Loading:** set `loading` on the Table and draw a `TableLoadingRows` in place of the `TableBody`, with `columns` set to every column and `rows` to about as many rows as will come (up to a screenful). Each placeholder row is as tall as a real one, at either `size`, so nothing jumps when the data arrives. Name the wait in `label` ("Loading projects"): a screen reader hears it once, after the loader's delay, so a quick load says nothing. `loading` sets `aria-busy` on the table while it lasts. To reload rows already shown, keep them and set `loading`, or swap them for placeholders if the old ones would mislead.
 - **Empty:** a `TableBody` with one `TableMessageRow` (`colSpan` of every column) holding an `EmptyState size="sm"`: what's missing, and the action that adds the first one.
 - **Failed:** the same row with a danger `Alert`, which says what didn't load and offers Retry in `actions`. A danger Alert is `role="alert"`, so the failure is heard as it appears. On Retry, go back to loading.
 
 ```tsx
-<Table caption="Projects" busy={state === 'loading'}>
+<Table caption="Projects" loading={state === 'loading'}>
   <TableHead>…</TableHead>
   {state === 'loading' ? <TableLoadingRows columns={4} rows={5} label="Loading projects" />
     : <TableBody>
@@ -133,7 +133,8 @@ The table keeps its header and caption in every state, so the page doesn't move 
 | `hideCaption` | boolean | `false` | Hides the caption on screen; screen readers still announce it. |
 | `pinStart` | boolean | `false` | Keeps the first column in view while the table scrolls sideways |
 | `pinEnd` | boolean | `false` | Keeps the last column in view while the table scrolls sideways |
-| `busy` | boolean | `false` | Its rows are loading: sets `aria-busy` on the table. Pair it with `TableLoadingRows` |
+| `loading` | boolean | `false` | Its rows are loading: sets `aria-busy` on the table. Pair it with `TableLoadingRows` |
+| `busy` | boolean | | Deprecated, removed in 15.0.0: use `loading`, the API naming table's name |
 | `containerProps` | div props | none | Go to the scrolling frame, which has `data-component="table"`. An `aria-label` or `aria-labelledby` here names the frame only while it scrolls (when it's a region); a caption takes precedence |
 
 `className`, `ref` and everything else go to the `<table>`.

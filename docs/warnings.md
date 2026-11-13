@@ -30,6 +30,10 @@ Two or more of a Combobox's options have the same value. Picking the second one 
 
 A CommandPalette command's `href` isn't a web page (http or https), a `mailto:` or a `tel:` link, for example `javascript:…`. Choosing it does nothing, so a link built from user data can't run script. Use `onSelect` to run code.
 
+## data-grid-busy
+
+DataGrid's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
+
 ## date-string
 
 A date component (Calendar, DatePicker, DateRangePicker) got a string it can't read as a day, such as "tomorrow", "2026-13-01" or "2026-02-31", so it shows no date and the app holds a value nobody sees. Pass the day as "yyyy-mm-dd" or as a Date. An empty string is read as no date and doesn't warn. What people type is reported through `onInvalidInput` instead.
@@ -133,6 +137,10 @@ Splitter needs exactly two children, its two panes.
 ## switch-pending
 
 Switch's `pending` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
+
+## table-busy
+
+Table's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
 ## table-row-click
 
