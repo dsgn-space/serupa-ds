@@ -11,8 +11,8 @@ const alone = (s) => s;
 
 t('both sides changed a component and the branch drew its pictures: stale',
   same(staleComponents(['src/components/Meter/Meter.css', png('Meter')], ['src/components/Meter/Meter.tsx'], alone), ['Meter']));
-t('main drew a component\'s pictures again that the branch changes: stale',
-  same(staleComponents(['src/components/Meter/Meter.css'], [png('Meter')], alone), ['Meter']));
+t('main drew a component\'s pictures again that the branch changes with no picture: fresh (its own Visual moved none)',
+  same(staleComponents(['src/components/Meter/Meter.css'], [png('Meter')], alone), []));
 t('both sides changed one component without any picture: fresh (the queue tests the code)',
   same(staleComponents(['src/components/Meter/Meter.css'], ['src/components/Meter/Meter.tsx'], alone), []));
 t('different components: fresh', same(staleComponents([png('Meter'), 'src/components/Meter/Meter.css'], [png('Tabs'), 'src/components/Tabs/Tabs.tsx'], alone), []));
@@ -21,8 +21,10 @@ t('shared code or tokens on main leave it to the after-main redraw: fresh',
 const deps = (s) => new Set([...s, ...(s.has('Button') ? ['ToggleButton'] : [])]);
 t('main redrew a component, and the branch redrew one that uses it: stale',
   same(staleComponents([png('ToggleButton')], [png('Button'), 'src/components/Button/Button.css'], deps), ['ToggleButton']));
-t('the branch redrew a component, and main redrew one that uses it: stale',
-  same(staleComponents([png('Button'), 'src/components/Button/Button.css'], [png('ToggleButton')], deps), ['ToggleButton']));
+t('the branch redrew a component, and main redrew one that uses it: fresh (the branch\'s Visual left that one as it was)',
+  same(staleComponents([png('Button'), 'src/components/Button/Button.css'], [png('ToggleButton')], deps), []));
+t('both sides drew one component\'s pictures: stale',
+  same(staleComponents([png('Meter')], [png('Meter')], alone), ['Meter']));
 t('main changed a component\'s code with no picture (labels), and the branch redrew one that uses it: fresh',
   same(staleComponents([png('ToggleButton')], ['src/components/Button/Button.tsx'], deps), []));
 t('the real dependency walk: Button\'s pictures on main reach ToggleButton\'s on the branch',

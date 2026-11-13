@@ -151,9 +151,9 @@ jobs:
           fi
 
   # Builds the package and Storybook once; every test job downloads them instead of building its own.
-  # Fails in seconds when the branch's pictures can't match the tree it merges into: one side changed a component's
-  # pictures and the other changed that component, or the pictures of one that uses it (tools/fresh.mjs). Without it the queue finds out on
-  # Visual after 15 minutes and builds every group behind it again. In the queue it compares the newest pull request
+  # Fails in seconds when the branch's pictures can't match the tree it merges into: the branch changed a component's
+  # pictures and main changed that component, or the pictures of one it shows (tools/fresh.mjs). Without it the queue
+  # finds out on Visual after 15 minutes and builds every group behind it again. In the queue it compares the newest pull request
   # with the group before it.
   fresh:
     if: (github.event_name == 'pull_request' || github.event_name == 'merge_group') && github.head_ref != 'changeset-release/main'
@@ -312,7 +312,19 @@ jobs:
       max-parallel: ${{ github.event_name == 'pull_request' && 8 || 16 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
+      # A fetch that stalls has no timeout of its own, and one held a queue group for the job's whole 30 minutes
+      # (12 Nov): give it five, then fetch once more.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        id: checkout
+        timeout-minutes: 5
+        continue-on-error: true
+        with:
+          persist-credentials: false
+          ref: ${{ needs.build.outputs.sha }}
+          fetch-depth: ${{ needs.plan.outputs.since && '0' || '1' }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.checkout.outcome == 'failure'
+        timeout-minutes: 10
         with:
           persist-credentials: false
           ref: ${{ needs.build.outputs.sha }}

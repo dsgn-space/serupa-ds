@@ -10,12 +10,14 @@ import { NotificationCenter, type NotificationItem } from '../../components/Noti
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { Loader } from '../../components/Loader/Loader';
 
 /* Notifications: a bell in the Navbar that opens the recent ones in a drawer, and a full inbox page with a filter,
    mark as read and mark all as read. Both read the same list. For an app to copy. What it carries (WCAG 2.2):
    - 4.1.2, 1.3.1: the bell is named with its count ("Notifications, 3 unread"), so the number is heard, not only seen.
    - 1.4.1: an unread notification says "Unread" in words, besides the dot before it and its bolder title, which
      are what make it stand out at a glance (the same dot and weight as the drawer's).
+   - 4.1.3: while they load, the count says "Loading notifications" and the list is busy, with placeholder rows.
    - 4.1.3: the count above the list is a status, so marking one read or changing the filter is said politely.
    - 2.4.3: marking one read on the page takes its button away (and, under "Unread", the notification too), so focus
      goes to the next unread one's button, or the heading when none are left; after Mark all as read it goes to the
@@ -31,6 +33,8 @@ export interface NotificationsProps {
   onMarkRead?: ((id: string) => void) | undefined;
   /** All were marked read. */
   onMarkAllRead?: (() => void) | undefined;
+  /** The notifications are on their way: placeholder rows, and the count says "Loading notifications". Default: false. */
+  loading?: boolean | undefined;
   /** Where "Notification settings" leads: the page where people choose which notifications they get. Default: "#settings-notifications". */
   settingsHref?: string | undefined;
 }
@@ -49,13 +53,14 @@ const demo: NotificationItem[] = [
 type Filter = 'all' | 'unread';
 
 /** The notifications page: a skip link, a Navbar with the bell, then main with the inbox. */
-export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications' }: NotificationsProps) {
-  const [read, setRead] = React.useState<ReadonlySet<string>>(() => new Set(items.filter((n) => n.read).map((n) => n.id)));
+export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications', loading = false }: NotificationsProps) {
+  // Marked read here, on top of what the items say, so items that arrive later (after loading) keep their own.
+  const [read, setRead] = React.useState<ReadonlySet<string>>(() => new Set());
   const [filter, setFilter] = React.useState<Filter>('all');
   const [open, setOpen] = React.useState(false);
   const heading = React.useRef<HTMLHeadingElement>(null);
   const focusTo = React.useRef<string | null>(null);
-  const all = items.map((n) => ({ ...n, read: read.has(n.id) }));
+  const all = items.map((n) => ({ ...n, read: !!n.read || read.has(n.id) }));
   const unread = all.filter((n) => !n.read).length;
   const shown = filter === 'unread' ? all.filter((n) => !n.read) : all;
 
@@ -103,15 +108,20 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
           <Heading level={1} ref={heading} tabIndex={-1} className="outline-none">Notifications</Heading>
           <div className="flex flex-wrap gap-2">
             <Button variant="ghost" leftIcon="settings" href={settingsHref}>Notification settings</Button>
-            <Button variant="outline" disabled={!unread} onClick={() => markAll(true)}>Mark all as read</Button>
+            <Button variant="outline" disabled={loading || !unread} onClick={() => markAll(true)}>Mark all as read</Button>
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
             options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread' }]} />
-          <p role="status" className="m-0 text-sm text-text-muted">{unread ? `${unread} unread` : 'All caught up'}</p>
+          <p role="status" className="m-0 text-sm text-text-muted">{loading ? 'Loading notifications' : unread ? `${unread} unread` : 'All caught up'}</p>
         </div>
-        {!items.length ? (
+        {loading ? (
+          // Placeholder rows the shape of a notification; the status above says it's loading, so they're pictures only.
+          <ul role="list" aria-busy="true" aria-label="All notifications" className="m-0 flex list-none flex-col gap-4 rounded-lg border border-border bg-surface p-4">
+            {[0, 1, 2].map((i) => <li key={i}><Loader variant="skeleton" shape="text" size="sm" lines={2} label="" /></li>)}
+          </ul>
+        ) : !items.length ? (
           <EmptyState icon="notifications" title="No notifications yet" headingLevel={2} variant="dashed"
             description="When someone mentions you, an export finishes or a payment needs you, it shows up here."
             actions={<Button variant="outline" leftIcon="settings" href={settingsHref}>Choose what you hear about</Button>} />

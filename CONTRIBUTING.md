@@ -172,4 +172,4 @@ Breaking changes come together, on a schedule, so a project upgrades once rather
 
 ## Pull requests
 
-Keep one change per pull request; several small fixes to the same component can share one. CI on a pull request tests only what the change can affect, and the first failing job stops the run. If two pull requests change the same file, the second merges `main` before it can merge, so pick work that doesn't overlap.
+Keep one kind of change per pull request, and batch work of that kind into it, across components too: every pull request costs a full CI run and a queue slot. CI on a pull request tests only what the change can affect, and the first failing job stops the run. If two pull requests change the same file, the second merges `main` before it can merge, so pick work that doesn't overlap.

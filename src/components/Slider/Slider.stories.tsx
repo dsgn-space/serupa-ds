@@ -47,7 +47,7 @@ export const DoFormatValue: Story = {
     const money = new Intl.NumberFormat(useLocale(), { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
     return <Slider {...args} aria-label="Highest price" min={0} max={200} step={5} defaultValue={40} formatValue={(v) => money.format(v)} marks={[0, 100, 200].map((v) => ({ value: v, label: money.format(v) }))} />;
   },
-  decorators: [(Story) => <div style={{ width: 280, paddingBlockEnd: 32 }}><Story /></div>],
+  decorators: [(Story) => <div style={{ width: '100%', maxWidth: 280, paddingBlockEnd: 32 }}><Story /></div>],
 };
 /** Don't: a bare number for a price, so nobody can tell its unit. */
 export const DontBareNumber: Story = {
@@ -56,5 +56,5 @@ export const DontBareNumber: Story = {
     const number = new Intl.NumberFormat(useLocale());
     return <Slider {...args} aria-label="Highest price" min={0} max={200} step={5} defaultValue={40} marks={[0, 100, 200].map((v) => ({ value: v, label: number.format(v) }))} />;
   },
-  decorators: [(Story) => <div style={{ width: 280, paddingBlockEnd: 32 }}><Story /></div>],
+  decorators: [(Story) => <div style={{ width: '100%', maxWidth: 280, paddingBlockEnd: 32 }}><Story /></div>],
 };

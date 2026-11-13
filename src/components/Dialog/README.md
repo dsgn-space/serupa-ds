@@ -154,6 +154,7 @@ Each is an optional override: set it on the page, a container or one dialog. The
 <!-- token-table:start (made from dialog.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
+| `--dialog-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the dialog, hovered or selected: a step up from its surface in dark |
 | `--dialog-bg` | `surface-overlay` | The panel's background. |
 | `--dialog-text` | `text` | The panel's text: the body and the footer. |
 | `--dialog-overlay` | `overlay` | The dimmed backdrop over the page. |

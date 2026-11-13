@@ -16,7 +16,7 @@
   --dk-chart-path: 1; --dk-chart-dash: 2 3; --dk-chart-ring: calc(var(--stroke-width-3) / 2);
   --dk-chart-marker-delay: calc(var(--motion-enter-lg) * 0.6);
 }
-.dk-chart__title { grid-column: var(--dk-chart-start); font-size: var(--text-sm); line-height: var(--leading-5); font-weight: var(--font-semibold); overflow-wrap: anywhere; }
+.dk-chart__title { text-wrap: balance; grid-column: var(--dk-chart-start); font-size: var(--text-sm); line-height: var(--leading-5); font-weight: var(--font-semibold); overflow-wrap: anywhere; }
 .dk-chart__toggle { grid-column: var(--dk-chart-end); justify-self: end; }
 .dk-chart__frame, .dk-chart__table, .dk-chart__legend, .dk-chart > .dk-table-wrap { grid-column: var(--dk-chart-all); }
 .dk-chart__frame { position: relative; min-inline-size: 0; }

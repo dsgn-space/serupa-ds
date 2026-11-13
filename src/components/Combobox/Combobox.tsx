@@ -361,7 +361,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (loader.current.q !== '') load('', 0);   // opening lists what "" finds, unless that's what's loaded
     const list = opts.filter((o) => !o.disabled);
     const sel = selected && !selected.disabled ? selected.i : -1;
-    setActive(to === 'last' ? (sel >= 0 ? sel : list.length ? list[list.length - 1].i : -1) : to === 'first' ? (sel >= 0 ? sel : list.length ? list[0].i : -1) : sel);
+    setActive(to === 'last' ? (sel >= 0 ? sel : list.at(-1)?.i ?? -1) : to === 'first' ? (sel >= 0 ? sel : list[0]?.i ?? -1) : sel);
   };
   const hide = (reason: OpenChangeReason, revert = true) => {
     later.current = null;
@@ -401,7 +401,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     if (!usable.length) return;
     const i = usable.findIndex((o) => o.i === active);
     const n = i < 0 ? (by > 0 ? 0 : usable.length - 1) : (i + by + usable.length) % usable.length;
-    setActive(usable[n].i);
+    setActive(usable[n]?.i ?? -1);
   };
 
   // PageDown and PageUp move by what the list shows at once (about seven options at 240px), stopping at the ends.
@@ -412,7 +412,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     const by = h && lb ? Math.max(1, Math.floor(lb.clientHeight / h)) : 10;
     const i = usable.findIndex((o) => o.i === active);
     const n = i < 0 ? (dir > 0 ? 0 : usable.length - 1) : Math.min(usable.length - 1, Math.max(0, i + dir * by));
-    setActive(usable[n].i);
+    setActive(usable[n]?.i ?? -1);
   };
 
   // Typed text whose options are still loading: Enter and leaving wait for the answer, sending the request at once
@@ -486,7 +486,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     else if (e.key === 'Enter' && open) { e.preventDefault(); const o = byIndex(active); if (o && shown.includes(o)) pick(o); else { const x = exact() || adding; if (x) pick(x); else hide('select'); } }
     else if (e.key === 'Escape' && open) { e.preventDefault(); e.stopPropagation(); hide('escape', !free); }
     else if ((e.key === 'PageDown' || e.key === 'PageUp') && open) { e.preventDefault(); page(e.key === 'PageDown' ? 1 : -1); }
-    else if (e.key === 'Backspace' && multi && text === '' && values.length) remove(values[values.length - 1]);
+    else if (e.key === 'Backspace' && multi && text === '') { const last = values.at(-1); if (last !== undefined) remove(last); }
   };
   const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (rest.onBlur) rest.onBlur(e);
@@ -548,7 +548,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const setListbox = React.useCallback((n: HTMLDivElement | null) => { listbox.current = n; attach(n); }, [attach]);
   const at = active >= 0 ? shown.findIndex((o) => o.i === active) : -1;
   const toActive = React.useRef<() => void>(undefined);
-  toActive.current = () => { if (open && at >= 0) win.scrollToIndex(lay.slot[at]); };
+  toActive.current = () => { const s = lay.slot[at]; if (open && s !== undefined) win.scrollToIndex(s); };
   React.useEffect(() => toActive.current?.(), [active, open]);
 
   // Inline completion's added part, selected once the field shows it.
@@ -575,22 +575,24 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const mark = typed && filter === undefined ? text.trim() : '';
   const row = (n: number, top?: number) => {
     let o = shown[n];
+    if (!o) return null;
     if (o.add != null) o = { ...o, label: sds.labels.createOption(o.add) };
-    return <Row key={o.add != null ? '\u0000add' : o.value} o={o} id={base + '-opt-' + o.i} index={n} slot={lay.slot[n]} top={top} active={o.i === active} selected={o.add == null && (multi ? chosen.has(o.value) : o.value === value)} size={shown.length} query={o.add != null ? '' : mark} onMove={onMove} onPick={onPick} />;
+    return <Row key={o.add != null ? '\u0000add' : o.value} o={o} id={base + '-opt-' + o.i} index={n} slot={lay.slot[n] ?? n} top={top} active={o.i === active} selected={o.add == null && (multi ? chosen.has(o.value) : o.value === value)} size={shown.length} query={o.add != null ? '' : mark} onMove={onMove} onPick={onPick} />;
   };
   // The drawn rows, those of a group inside a role="group" named after it (the heading is drawn for the eye only,
   // and may be scrolled out of the drawn window while its options aren't).
-  const rows: React.ReactElement[] = [];
-  const inGroup = (key: string, g: number | undefined, gl: string | undefined, kids: React.ReactElement[]) =>
+  const rows: React.ReactNode[] = [];
+  const inGroup = (key: string, g: number | undefined, gl: string | undefined, kids: React.ReactNode[]) =>
     g === undefined ? kids : [<div key={key} role="group" aria-label={gl} className="dk-combobox__group">{kids}</div>];
   if (shownList) {
-    const a = at >= 0 ? lay.slot[at] : -1, out = a >= 0 && (a < win.start || a >= win.end);
-    const lone = () => inGroup('ga', shown[at].g, shown[at].gl, [row(at, win.offsetOf(a))]);
+    const a = lay.slot[at] ?? -1, out = a >= 0 && (a < win.start || a >= win.end);
+    const lone = () => inGroup('ga', shown[at]?.g, shown[at]?.gl, [row(at, win.offsetOf(a))]);
     if (out && a < win.start) rows.push(...lone());
-    let seg: React.ReactElement[] = [], g: number | undefined, gl: string | undefined;
+    let seg: React.ReactNode[] = [], g: number | undefined, gl: string | undefined;
     const flush = () => { if (seg.length) rows.push(...inGroup('g' + g, g, gl, seg)); seg = []; };
     for (let k = win.start; k < win.end; k++) {
       const it = lay.items[k];
+      if (!it) continue;
       if (it.g !== g) { flush(); g = it.g; gl = it.gl; }
       seg.push(it.n >= 0 ? row(it.n) : <div key={'h' + it.g} data-index={k} role="presentation" aria-hidden className="dk-combobox__group-label">{it.gl}</div>);
     }

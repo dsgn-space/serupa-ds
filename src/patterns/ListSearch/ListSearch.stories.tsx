@@ -20,3 +20,6 @@ export const FromALink: Story = { args: { search: '?status=Active&sort=updated&d
 
 /** A search that finds nothing: it says so, with the search in words, and offers Clear filters. */
 export const NoResults: Story = { args: { search: '?q=rocket' } };
+
+/** While the rows load: the count says "Loading projects", and the table keeps its header over placeholder rows. */
+export const Loading: Story = { args: { loading: true } };

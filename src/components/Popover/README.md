@@ -97,6 +97,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 <!-- token-table:start (made from popover.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
+| `--popover-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the popover, hovered or selected: a step up from its surface in dark |
 | `--popover-bg` | `surface-overlay` | The panel's background. |
 | `--popover-text` | `text` | The panel's text. |
 | `--popover-border` | `border-overlay` | The panel's border. |

@@ -108,7 +108,7 @@ Drawn from the `Disabled` story.
 | `name` | string | generated | The radios' name, for forms |
 | `orientation` | `'vertical'` \| `'horizontal'` | `'vertical'` | A stack 8px apart, or a wrapping row 16px apart |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | Every radio's size, unless one sets its own |
-| `variant` | `'default'` \| `'card'` | `'default'` | Every radio's look, unless one sets its own. Cards fill the column, or share a wrapping row (each at least 192px) with `orientation="horizontal"`, 12px apart |
+| `variant` | `'plain'` \| `'card'` | `'plain'` | Every radio's look, unless one sets its own. Cards fill the column, or share a wrapping row (each at least 192px) with `orientation="horizontal"`, 12px apart |
 | `invalid` | boolean | `false` | `aria-invalid` on the group, and a danger border on each unchecked radio. Field sets it from its error |
 | `disabled` | boolean | `false` | Disables every radio (and sets `aria-disabled` on the group) |
 | `required` | boolean | `false` | `aria-required` on the group, `required` on each radio |
@@ -125,7 +125,7 @@ Other props (`id`, `aria-label`, `aria-labelledby`, `className`…) and `ref` go
 | `description` | node | | A muted second line under the label, linked with `aria-describedby` (and kept out of the name) |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | the group's, or `'md'` | A 14px circle with `text-xs`, 16px with `text-sm`, 20px with `text-base` |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid`. In a group, set `invalid` on the RadioGroup instead |
-| `variant` | `'default'` \| `'card'` | the group's, or `'default'` | `'card'`: the radio, label and description in a bordered card pressed as a whole |
+| `variant` | `'plain'` \| `'card'` | the group's, or `'plain'` | `'card'`: the radio, label and description in a bordered card pressed as a whole |
 
 Other props (`id`, `disabled`, `aria-*`, `onChange`…) and `ref` go to the `<input type="radio">`. `className` and `style` go to the `<label>`, which has `data-component="radio"` and `data-size`. In a group, the group sets `name` and `checked` (a radio's own are ignored). Outside one, a Radio is a plain radio: pass `name` and `checked` or `defaultChecked` yourself.
 

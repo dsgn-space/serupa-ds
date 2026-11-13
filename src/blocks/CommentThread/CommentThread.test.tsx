@@ -186,6 +186,67 @@ describe('Blocks/Comment thread', () => {
     expect(onEdit).toHaveBeenCalledTimes(1);
   });
 
+  test('loading: the list is busy, only the first skeleton is named, the reply box is there, and no empty text', async () => {
+    const screen = await render(<CommentThread comments={[]} onReply={() => {}} loading loadingCount={3} />);
+    const thread = page.getByRole('region', { name: 'Comments' });
+    expect(thread.getByRole('list').element().getAttribute('aria-busy')).toBe('true');
+    expect(thread.getByRole('listitem').elements()).toHaveLength(3);
+    await expect.poll(() => thread.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading comments']);
+    expect(page.getByText('No comments yet').elements()).toHaveLength(0);
+    await expect.element(page.getByRole('textbox')).toBeVisible();
+    await screen.rerender(<CommentThread comments={start} onReply={() => {}} labels={{ loading: 'Memuat komentar' }} loading />);
+    await expect.poll(() => page.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Memuat komentar']);
+    await screen.rerender(<CommentThread comments={start} onReply={() => {}} />);
+    expect(thread.getByRole('list').element().hasAttribute('aria-busy')).toBe(false);
+    expect(thread.getByRole('article').elements()).toHaveLength(start.length);
+  });
+
+  test('with people, "@" in the reply lists them, the hint says so, mentions are bold, and onReply gets who to notify', async () => {
+    const people = [{ id: 'ana', label: 'Ana Putri' }, { id: 'budi', label: 'Budi Santoso' }];
+    const onReply = vi.fn<(body: string, d: { mentions: { id: string }[] }) => void>();
+    await render(<CommentThread people={people} onReply={onReply} comments={[{ id: 'x', author: { name: 'Budi Santoso' }, body: 'Ask @Ana Putri first.', date: ago(5) }]} />);
+    const box = page.getByRole('textbox', { name: 'Reply' });
+    await expect.element(box).toHaveAccessibleDescription(/Type @ to mention someone/);
+    expect(page.getByText('@Ana Putri').element().tagName).toBe('STRONG');
+    await userEvent.click(box);
+    await userEvent.keyboard('Thanks @bu');
+    await expect.element(page.getByRole('option', { name: /Budi Santoso/ })).toBeVisible();
+    await userEvent.keyboard('{Enter}');
+    await expect.element(box).toHaveValue('Thanks @Budi Santoso ');
+    await userEvent.click(page.getByRole('button', { name: 'Post reply' }));
+    expect(onReply.mock.calls[0][0]).toBe('Thanks @Budi Santoso');
+    expect(onReply.mock.calls[0][1].mentions.map((m) => m.id)).toEqual(['budi']);
+  });
+
+  test('editing with people: Escape closes the mention list first, and only the next Escape cancels the edit', async () => {
+    const people = [{ id: 'ana', label: 'Ana Putri' }];
+    const onEdit = vi.fn<(id: string, body: string, d: { mentions: { id: string }[] }) => void>();
+    await render(<CommentThread people={people} onReply={() => {}} onEdit={onEdit} comments={[{ id: 'm', author: { name: 'You' }, body: 'Hi', date: ago(5), mine: true }]} />);
+    await userEvent.click(page.getByRole('button', { name: 'Edit' }));
+    const box = page.getByRole('textbox', { name: 'Edit comment' });
+    await expect.element(box).toHaveFocus();
+    await userEvent.keyboard('{End} @an');
+    await expect.element(page.getByRole('listbox')).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect.element(box).toBeInTheDocument();   // still editing
+    await userEvent.keyboard('{Backspace}{Backspace}{Backspace}@Ana{Enter}');
+    await userEvent.click(page.getByRole('button', { name: 'Save' }));
+    expect([onEdit.mock.calls[0][1], onEdit.mock.calls[0][2].mentions.map((m) => m.id)]).toEqual(['Hi @Ana Putri', ['ana']]);
+  });
+
+  test('Ctrl+Enter or ⌘+Enter posts the reply and saves an edit; Enter alone is a new line', async () => {
+    await render(<Harness />);
+    const box = page.getByRole('textbox', { name: 'Reply' });
+    await userEvent.click(box);
+    await userEvent.keyboard('One{Enter}two');
+    expect(page.getByRole('article').elements().length).toBe(3);
+    await userEvent.keyboard('{Control>}{Enter}{/Control}');
+    await expect.poll(() => page.getByRole('article').elements().length).toBe(4);
+    await userEvent.click(mine().getByRole('button', { name: 'Edit' }));
+    await userEvent.keyboard('{End}!{Meta>}{Enter}{/Meta}');
+    await expect.poll(said).toContain('Comment saved');
+  });
+
   test('every word can be given in the page language', async () => {
     await render(<CommentThread comments={[]} onReply={() => {}} labels={{ title: 'Komentar', noComments: 'Belum ada komentar.', reply: 'Balas', replyHint: (n) => `Paling banyak ${n} karakter.`, post: 'Kirim balasan' }} />);
     await expect.element(page.getByRole('region', { name: 'Komentar' })).toBeVisible();

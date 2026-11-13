@@ -277,7 +277,7 @@ describe('Radio', () => {
     await render(<RadioGroup aria-label="Delivery" variant="card" defaultValue="a" onValueChange={onValueChange}>
       <Radio value="a" description="3 to 5 days">Standard</Radio>
       <Radio value="b" description="Next day">Express</Radio>
-      <Radio value="c" variant="default">Plain</Radio>
+      <Radio value="c" variant="plain">Plain</Radio>
     </RadioGroup>);
     const [a, b, c] = page.getByRole('radio').elements() as HTMLInputElement[];
     const card = (i: HTMLInputElement) => i.closest('label') as HTMLElement;
@@ -349,5 +349,15 @@ describe('Radio', () => {
   test('L8E93 autoFocus on a RadioGroup focuses the checked radio, else the first, as it does on SegmentedControl and Slider', async () => {
     await render(<><button>Before</button><RadioGroup aria-label="Size" defaultValue="m" autoFocus><Radio value="s">S</Radio><Radio value="m">M</Radio></RadioGroup></>);
     await expect.poll(() => (document.activeElement as HTMLInputElement).value).toBe('m');
+  });
+  test("variant 'default' is the deprecated name for 'plain': it still draws the plain look, and warns once", async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await render(<RadioGroup aria-label="Old" variant="default"><Radio value="a">A</Radio><Radio value="b" variant="default">B</Radio></RadioGroup>);
+      const items = page.getByRole('radio').elements() as HTMLInputElement[];
+      expect(items.map((i) => (i.closest('label') as HTMLElement).className.includes('--card'))).toEqual([false, false]);
+      const said = warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('variant-default'));
+      expect(said).toHaveLength(2);   // once for the group, once for the Radio
+    } finally { warn.mockRestore(); }
   });
 });
