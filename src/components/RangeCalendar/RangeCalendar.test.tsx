@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { Field } from '../Field/Field';
 import { RangeCalendar } from './RangeCalendar';
 
 const nov = new Date(2026, 10, 1);
@@ -31,6 +32,15 @@ describe('RangeCalendar', () => {
       'Tuesday, November 3, 2026, Start date', 'Wednesday, November 4, 2026, in the range', 'Thursday, November 5, 2026, End date', 'Friday, November 6, 2026']);
     expect([day('2026-11-03').parentElement!.getAttribute('aria-selected'), day('2026-11-04').classList.contains('dk-calendar__day--in-range')]).toEqual(['true', true]);
     expect(status()).toBe('Selected range: Nov 3 – 5, 2026');
+  });
+
+  test('in a Field, the Field\'s label names the group, as it names a RadioGroup, and its hint describes it; its own aria-label still wins', async () => {
+    await render(<SerupaProvider locale="en-US">
+      <Field label="Stay" hint="Up to 14 nights"><RangeCalendar defaultMonth={nov} /></Field>
+      <Field label="Leave"><RangeCalendar defaultMonth={nov} aria-label="Annual leave" /></Field>
+    </SerupaProvider>);
+    await expect.element(page.getByRole('group', { name: 'Stay' })).toHaveAccessibleDescription('Up to 14 nights');
+    await expect.element(page.getByRole('group', { name: 'Annual leave' })).toBeVisible();
   });
 
   test('two presses pick a range in either order; the days between preview under the pointer; the value changes only when both are picked', async () => {
