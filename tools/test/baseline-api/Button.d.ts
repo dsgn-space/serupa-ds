@@ -18,6 +18,7 @@ interface ButtonOwnProps {
     rightIcon?: IconSource | undefined;
     icon?: IconSource | undefined;
     loading?: boolean | undefined;
+    loadingLabel?: string | undefined;
     loadingText?: string | undefined;
     disabledReason?: string | undefined;
     successText?: string | undefined;
