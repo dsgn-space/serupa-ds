@@ -84,9 +84,10 @@ The checks catch a raw duration, an animation that won't reverse or a page that 
 
 1. **Our content, not the tidy demo.** In Storybook, switch the Content menu to Worst case, Empty and One item. Stories with people read them from `.storybook/content.ts` (`usePeople()` or `useNames()`), and a new one with people does too. The worst case has long Indonesian names, a single name, a one-letter name, an emoji first, stacked diacritics, Arabic, Chinese, a long address and missing fields.
 2. **At 320px wide and with text at 200%.** `node tools/test/storybook.mjs` checks every story for sideways scrolling and cut-off text (WCAG 1.4.10 and 1.4.4). Look at the story at both sizes too.
-3. **Right to left, and dark.** Switch the toolbar to `rtl` and to dark. Chevrons, bars and paddings turn with the text, and nothing loses contrast.
-4. **Choose for each text that can grow:** wrap it (the default, for names, messages and labels), truncate it with the full text still reachable (one-line cells and tabs), or clamp it to a few lines with a way to read the rest. Say which in the pull request. A word with no place to break still wraps inside its box (`src/internal/longWords.test.tsx` and `overflowWrap.test.tsx`).
-5. **Empty and one.** An empty state says what is missing and what to do next. One item looks finished, with no "1 items" and no gap left for a second.
+3. **In a long language and a right-to-left one.** In Storybook, switch the Language menu to German and to Arabic: the component's own words, dates and numbers come from that language pack (`src/labels`), and Arabic also turns the page right to left. Nothing may be cut off, overlap or stay in English.
+4. **Right to left, and dark.** Switch the toolbar to `rtl` and to dark. Chevrons, bars and paddings turn with the text, and nothing loses contrast.
+5. **Choose for each text that can grow:** wrap it (the default, for names, messages and labels), truncate it with the full text still reachable (one-line cells and tabs), or clamp it to a few lines with a way to read the rest. Say which in the pull request. A word with no place to break still wraps inside its box (`src/internal/longWords.test.tsx` and `overflowWrap.test.tsx`).
+6. **Empty and one.** An empty state says what is missing and what to do next. One item looks finished, with no "1 items" and no gap left for a second.
 
 ### First-release bug bash
 
