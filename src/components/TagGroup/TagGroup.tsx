@@ -81,15 +81,17 @@ export const TagGroup = /* @__PURE__ */ component<HTMLDivElement, TagGroupProps>
 
   const select = (t: TagItem) => {
     if (mode === 'none' || t.disabled) return;
-    const on = picked.includes(t.id);
-    const next = mode === 'single' ? (on ? [] : [t.id]) : on ? picked.filter((x) => x !== t.id) : [...picked, t.id];
+    // Only tags still in items count: a removed tag's id would otherwise ride along in every later change.
+    const live = picked.filter((x) => props.items.some((o) => o.id === x)), on = live.includes(t.id);
+    const next = mode === 'single' ? (on ? [] : [t.id]) : on ? live.filter((x) => x !== t.id) : [...live, t.id];
     if (props.selected === undefined) setOwn(next);
     if (props.onSelectedChange) props.onSelectedChange(next);
   };
   const remove = (t: TagItem) => {
     if (!props.onRemove || t.disabled) return;
-    const i = shown.findIndex((x) => x.id === t.id);
-    const next = shown[i + 1] || shown[i - 1];
+    // The next tag in items, not only among those shown: past max, the first hidden one takes the removed one's place.
+    const i = props.items.findIndex((x) => x.id === t.id);
+    const next = props.items[i + 1] || props.items[i - 1];
     after.current = next ? next.id : null;
     if (next) setActive(next.id);
     props.onRemove(t.id);
