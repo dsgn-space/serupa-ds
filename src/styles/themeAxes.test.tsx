@@ -2,10 +2,10 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import tokens from '../../tokens.json';
 import { render } from 'vitest-browser-react';
-import { cdp, commands, page, server } from 'vitest/browser';
+import { commands, page } from 'vitest/browser';
 import { Button } from '../components/Button/Button';
+import { Card } from '../components/Card/Card';
 import { Input } from '../components/Input/Input';
-import { Checkbox } from '../components/Checkbox/Checkbox';
 import { Switch } from '../components/Switch/Switch';
 import { contrast, lowContrast, THEMES, withMotion } from '../../tools/test/vitest/helpers';
 
@@ -40,7 +40,7 @@ const axes = (brand?: string, mode?: string) => {
   if (mode) root.setAttribute('data-mode', mode); else root.removeAttribute('data-mode');
 };
 
-afterEach(() => { for (const a of ['data-brand', 'data-mode', 'data-contrast', 'data-density', 'data-shadow', 'data-depth', 'data-type-scale', 'data-radius']) root.removeAttribute(a); root.setAttribute('data-theme', 'blue-light'); });
+afterEach(() => { for (const a of ['data-brand', 'data-mode', 'data-contrast', 'data-density', 'data-shadow', 'data-type-scale', 'data-radius']) root.removeAttribute(a); root.setAttribute('data-theme', 'blue-light'); });
 
 describe('Theme axes', () => {
   test('data-brand + data-mode give exactly the colors of each data-theme', () => {
@@ -194,18 +194,6 @@ describe('Contrast axis', () => {
     }
   });
 
-  test('more contrast outranks a brand\'s own neutrals: Modern\'s softer borders still step up', () => {
-    const border = () => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = 'var(--border)'; const c = getComputedStyle(p).color; p.remove(); return c; };
-    for (const [mode, strong] of [['light', 'rgb(113, 113, 122)'], ['dark', 'rgb(161, 161, 170)']]) {
-      axes('emerald', mode);
-      const soft = border();
-      root.setAttribute('data-contrast', 'more');
-      expect(border(), mode).toBe(strong);   // zinc-500 / zinc-400, as in every brand
-      expect(border()).not.toBe(soft);
-      root.removeAttribute('data-contrast');
-    }
-  });
-
   test('the brand keeps its hue: each brand gets its own stronger shade, from the axes and in a nested section', () => {
     const hue = (host: HTMLElement) => { const p = document.createElement('span'); host.appendChild(p); p.style.color = 'var(--primary)'; const c = getComputedStyle(p).color; p.remove(); return c; };
     const swatch = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
@@ -272,20 +260,6 @@ describe('Density axis', () => {
     expect([r('r-page'), r('r-surface'), r('r-default'), r('r-blue')]).toEqual(['12px', '16px', '6px', '12px']);
     expect(r('r-pill')).toBe('9999px');
   });
-  test('data-radius beats Modern\'s own corners, and default puts them back in a section', async () => {
-    root.setAttribute('data-theme', 'emerald-light');
-    await render(<div>
-      <Button id="m-page">Save</Button>
-      <div id="m-surface" style={{ borderRadius: 'var(--radius-surface)' }}>Card</div>
-      <section data-radius="default"><Button id="m-default">Save</Button></section>
-    </div>);
-    const r = (id: string) => getComputedStyle(document.getElementById(id)!).borderTopLeftRadius;
-    expect([r('m-page'), r('m-surface'), r('m-default')]).toEqual(['8px', '12px', '8px']);
-    root.setAttribute('data-radius', 'sharp');
-    expect([r('m-page'), r('m-surface'), r('m-default')]).toEqual(['2px', '4px', '8px']);
-    root.setAttribute('data-radius', 'round');
-    expect([r('m-page'), r('m-surface'), r('m-default')]).toEqual(['12px', '16px', '8px']);
-  });
   test('data-shadow="brand" (73): the box shadows take a deep shade of the brand color at the same opacity; a section with its own brand and data-shadow takes its own; neutral puts the black back', async () => {
     root.setAttribute('data-shadow', 'brand');
     const card = (id: string) => <div id={id} style={{ boxShadow: 'var(--shadow-md)' }}>Card</div>;
@@ -317,60 +291,53 @@ describe('Density axis', () => {
     expect(shadow('el-brand')).not.toBe(shadow('el-root'));
   });
 
-  test('depth: violet is tactile (data-theme or data-brand), the other brands are flat; a blue section inside violet is flat again; data-depth turns it on or off whatever the brand', async () => {
+  test('a theme is its colors: violet and emerald draw every corner, shadow, border, surface, space and motion as blue does, in light and dark', async () => {
     await render(<div>
-      <Button id="dp-page">Save</Button>
-      <section data-brand="blue"><Button id="dp-blue">Save</Button></section>
-      <section data-depth="flat"><Button id="dp-flat">Save</Button></section>
-      <section data-brand="emerald" data-depth="tactile"><Button id="dp-em">Save</Button></section>
+      <Button id="co-btn">Save</Button>
+      <Button id="co-out" variant="outline">Later</Button>
+      <Card id="co-card" padding="lg">Card</Card>
+      <Card id="co-el" variant="elevated">Card</Card>
+      <Switch id="co-sw">Wi-Fi</Switch>
+      <Input id="co-in" aria-label="Name" />
+      <div id="co-roles" style={{ borderRadius: 'var(--radius-surface)', padding: 'var(--space-section)', boxShadow: 'var(--elevation-modal)', background: 'var(--surface-muted)', borderBlockStart: '1px solid var(--border-strong)', outline: '1px solid var(--border-overlay)', transition: 'opacity var(--motion-enter-lg) var(--ease-pop), scale var(--motion-release) var(--ease-spring)' }}>Roles</div>
     </div>);
-    const look = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return { image: s.backgroundImage, layers: s.boxShadow.split(/,(?![^(]*\))/).length }; };
-    const tactile = (id: string) => look(id).image.startsWith('linear-gradient') && look(id).layers > 1 && /inset/.test(getComputedStyle(document.getElementById(id)!).boxShadow);
-    const states = () => ['dp-page', 'dp-blue', 'dp-flat', 'dp-em'].map(tactile);
-    for (const th of ['violet-light', 'violet-dark']) { root.setAttribute('data-theme', th); expect(states(), th).toEqual([true, false, false, true]); }
-    axes('violet', 'dark');
-    expect(states(), 'data-brand="violet"').toEqual([true, false, false, true]);
-    for (const th of ['blue-light', 'emerald-dark']) { root.removeAttribute('data-brand'); root.removeAttribute('data-mode'); root.setAttribute('data-theme', th); expect(states(), th).toEqual([false, false, false, true]); }
-    // Flat, the button keeps exactly its own shadow under an empty layer, and no image.
-    root.setAttribute('data-theme', 'blue-light');
-    expect(look('dp-page').image).toBe('none');
-  });
-  test('depth: the sheen never lowers the label below 4.5:1, the forced-colors rule drops it, and the tactile layers are only shadows and an image (no motion)', () => {
-    const css = [...document.styleSheets].flatMap((s) => { try { return [...s.cssRules].map((r) => r.cssText); } catch { return []; } }).join('\n');
-    expect(css).toMatch(/@media \(forced-colors: active\)[^@]*--depth-sheen: none/);
-    const sheen = (tokens.shadow.tokens as (Tok & { tactile?: string })[]).find((t) => t.name === 'depth-sheen')!.tactile!;
-    // The light fades out by 40% of the height, at most 10% white: where a label's text starts (about a fifth of the
-    // way down) it is under 5% white, so white on red-600 (4.83:1 flat) stays above 4.5:1.
-    expect(sheen).toMatch(/^linear-gradient\(to bottom, rgb\(255 255 255 \/ 0\.1\), rgb\(255 255 255 \/ 0\) 40%\)$/);
-    const deep = (tokens.shadow.tokens as (Tok & { tactile?: string })[]).filter((t) => t.tactile != null);
-    expect(deep.map((t) => t.name).sort()).toEqual(['depth-card', 'depth-card-lift', 'depth-control', 'depth-control-hover', 'depth-control-pressed', 'depth-field', 'depth-part', 'depth-press', 'depth-sheen', 'depth-sheen-pressed', 'depth-surface', 'depth-well']);
-    for (const t of deep) expect(t.tactile, t.name).not.toMatch(/translate|scale|transition|animation/);
-  });
-  test('tactile motion: violet presses a Button 1px down, slides the Switch thumb on a spring and draws the Checkbox tick on; the flat brands keep their motion; reduced motion stops all three', async () => {
-    await render(<div>
-      <Button id="tm-btn" data-pressed="">Save</Button>
-      <Switch id="tm-sw">Wi-Fi</Switch>
-      <Checkbox id="tm-cb" defaultChecked>Remember me</Checkbox>
-    </div>);
-    const btn = () => getComputedStyle(document.getElementById('tm-btn')!).transform;
-    const thumb = () => withMotion(() => { const t = getComputedStyle(document.getElementById('tm-sw')!.nextElementSibling!); return [t.transitionTimingFunction.split(', ')[0]!.slice(0, 7), t.transitionDuration.split(', ')[0]]; });
-    const icon = () => withMotion(() => { const t = getComputedStyle(document.getElementById('tm-cb')!.nextElementSibling!); return [t.animationName, t.animationDuration]; });
-    root.setAttribute('data-theme', 'violet-light');
-    expect([btn(), thumb()]).toEqual(['matrix(1, 0, 0, 1, 0, 1)', ['linear(', '0.3s']]);
-    for (const th of ['blue-light', 'emerald-dark']) {
-      root.setAttribute('data-theme', th);
-      expect([btn(), thumb()], th).toEqual(['matrix(1, 0, 0, 1, 0, 0)', ['cubic-b', '0.1s']]);
+    const NOT_COLOR = ['borderTopLeftRadius', 'boxShadow', 'backgroundImage', 'paddingTop', 'paddingLeft', 'transitionDuration', 'transitionTimingFunction', 'transform', 'borderTopWidth'] as const;
+    const NEUTRAL = ['borderTopColor', 'outlineColor'] as const;
+    const read = (): Record<string, string[]> => withMotion(() => {
+      const out: Record<string, string[]> = {};
+      for (const id of ['co-btn', 'co-out', 'co-card', 'co-el', 'co-in', 'co-roles']) {
+        const el = document.getElementById(id)!, c = getComputedStyle(id === 'co-in' ? el.parentElement! : el);
+        // The cards, the field and the roles box are neutral all through; the buttons' fills are the brand's.
+        const neutral = id === 'co-btn' || id === 'co-out' ? [] : [...NEUTRAL, 'backgroundColor' as const];
+        out[id] = [...NOT_COLOR, ...neutral].map((p) => `${p}: ${c[p]}`);
+      }
+      const thumb = getComputedStyle(document.getElementById('co-sw')!.nextElementSibling!);
+      out['co-sw'] = [thumb.transitionDuration, thumb.transitionTimingFunction, thumb.boxShadow];
+      return out;
+    });
+    for (const mode of ['light', 'dark']) {
+      root.setAttribute('data-theme', `blue-${mode}`);
+      const blue = read();
+      for (const brand of ['violet', 'emerald']) {
+        root.setAttribute('data-theme', `${brand}-${mode}`);
+        expect(read(), `${brand}-${mode}`).toEqual(blue);
+      }
     }
-    // Under the pointer a ticked box draws its tick on: over 150ms in violet, at once (0s) in the flat brands.
-    await page.elementLocator(document.getElementById('tm-cb')!.closest('label')!).hover();
-    expect(icon()).toEqual(['dk-checkbox-draw', '0s']);
-    root.setAttribute('data-theme', 'violet-light');
-    expect(icon()).toEqual(['dk-checkbox-draw', '0.15s']);
-    if (server.browser === 'chromium') {
-      const session = cdp() as unknown as { send: (method: string, params: object) => Promise<unknown> };
-      await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
-      try { expect([btn(), thumb()[1], icon()[0]]).toEqual(['matrix(1, 0, 0, 1, 0, 0)', '0s', 'none']); } finally { await session.send('Emulation.setEmulatedMedia', { features: [] }); }
+  });
+  test('a theme is its colors, in the tokens: only color aliases have a value per theme, and where the brands differ every value is a hue\'s shade, never a neutral', () => {
+    const groups = Object.entries(tokens as unknown as Record<string, { tokens?: Tok[] }>).filter(([, g]) => Array.isArray(g?.tokens));
+    const per = (t: Tok) => (t.value && typeof t.value === 'object' ? t.value as Record<string, string> : null);
+    const varied = groups.flatMap(([g, grp]) => grp.tokens!.filter((t) => new Set(Object.values(per(t) ?? {})).size > 1).map((t) => [g, t] as const));
+    expect(varied.filter(([g]) => g !== 'color').map(([, t]) => t.name)).toEqual([]);
+    const hue = (v: string) => /^\{(?!zinc|slate|gray|neutral|stone)[a-z]+-\d+\}$/.test(v);
+    const wrong: string[] = [];
+    for (const [, t] of varied) for (const mode of ['light', 'dark']) {
+      const v = Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x);
+      if (new Set(v).size > 1 && !v.every(hue)) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
     }
+    expect(wrong).toEqual([]);
+    expect(tokens.color.themes.map((t: { name: string }) => t.name)).toEqual(['Blue Light', 'Blue Dark', 'Violet Light', 'Violet Dark', 'Emerald Light', 'Emerald Dark']);
+    expect(groups.flatMap(([, g]) => g.tokens!).filter((t) => /^depth-/.test(t.name) || 'tactile' in t).map((t) => t.name)).toEqual([]);
   });
   test('GR333: the recessed surface sits on the other side of the page from the raised one in every theme, so dark keeps depth the right way round', () => {
     const lum = (c: string) => { const [r, g, b] = c.match(/[\d.]+/g)!.slice(0, 3).map((v) => { const x = Number(v) / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!; };

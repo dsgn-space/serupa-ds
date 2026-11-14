@@ -9,7 +9,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { PROJECT, read, report, done } from './lib.mjs';
 import { parseChangeset } from '../changesets.mjs';
-import { migrate, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
+import { COMPONENT_TOKENS_REMOVED_16, DEPTH_TOKENS_16, migrate, MOTION_TOKENS_16, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
 import { majorsIn, nextMajor, upcomingMajor } from '../../docs/upgrades.ts';
 
 const R = [];
@@ -99,6 +99,28 @@ one('15.0.0: a migration note naming `--border-raised` in its own code span keep
     const left = Object.keys(TOKENS_15).filter((a) => new RegExp(`${a}(?![\\w-])`).test(css));
     t(`the ${Object.keys(TOKENS_15).length} old token names serupa-migrate renames are gone from the component CSS (15.0.0)`, Object.keys(TOKENS_15).length === 20 && !left.length, left.join(', '));
   }
+}
+// 16.0.0: the tactile look is removed. A removed motion role read through var() takes what it always was in the flat
+// brands; what can't be rewritten (a depth token, a declaration of one, data-depth) is listed, one note a line.
+one('16.0.0: motion-toggle, ease-toggle and motion-draw read through var() take the tokens they were', '.x { transition: translate var(--motion-toggle) var( --ease-toggle); animation-duration: var(--motion-draw, 0s); --motion-toggle-mine: 1; }', '.x { transition: translate var(--motion-press) var( --ease-move); animation-duration: var(--duration-0, 0s); --motion-toggle-mine: 1; }', 'a.css');
+one('16.0.0: the ease-toggle class and token reference are ease-move; the name in its own code span is left', '<div className="hover:ease-toggle ease-toggles" /> {"$value": "{transitions.ease-toggle}"} `ease-toggle`', '<div className="hover:ease-move ease-toggles" /> {"$value": "{transitions.ease-move}"} `ease-toggle`');
+{
+  const r = fix('.a { --button-depth: none; }\n.b { box-shadow: var(--depth-card), var(--shadow-sm); }\n<div data-depth="tactile" style={{ "--toc-depth": 1 }} />\n.c { --motion-draw: 0s; --card-depth-hovered: 0; }', 'a.css');
+  t('16.0.0: a depth token, a declaration of a removed role and data-depth are each listed, and look-alikes are left', r.notes.filter((n) => n.id === 'theme-looks-removed').map((n) => n.line).join() === '1,2,4,3', JSON.stringify(r.notes));
+}
+{
+  // None of the removed names is a token any more, in tokens.json or in a component's tokens, and no component CSS reads one.
+  const tokens = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8'));
+  const global = new Set(Object.values(tokens).flatMap((g) => (g && Array.isArray(g.tokens) ? g.tokens.map((x) => `--${x.name}`) : [])));
+  const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components'));
+  const read = (c, f) => { const p = path.join(PROJECT, 'src', 'components', c, f); return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : ''; };
+  const own = comps.map((c) => fs.readdirSync(path.join(PROJECT, 'src', 'components', c)).filter((x) => x.endsWith('.tokens.json')).map((f) => read(c, f)).join('\n')).join('\n');
+  const css = comps.map((c) => read(c, `${c}.css`)).join('\n');
+  const all = [...DEPTH_TOKENS_16, ...COMPONENT_TOKENS_REMOVED_16, ...Object.keys(MOTION_TOKENS_16)];
+  const left = all.filter((n) => global.has(n) || own.includes(`"${n}"`) || new RegExp(`${n}(?![\\w-])`).test(css));
+  t(`the ${all.length} tokens removed with the tactile look are gone from the tokens and the component CSS (16.0.0)`, all.length === 62 && !left.length, left.join(', '));
+  t('each removed motion role\'s replacement is a token', Object.values(MOTION_TOKENS_16).every((n) => global.has(n)), '');
+  t('no theme says it is tactile, and tokens.css has no depth axis', !tokens.color.themes.some((x) => 'depth' in x) && !/data-depth|--depth-/.test(fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8')), '');
 }
 // The package's new name, made only by a serupa-migrate that ships under it.
 {

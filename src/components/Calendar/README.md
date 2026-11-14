@@ -148,10 +148,4 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | --- | --- | --- |
 | `--calendar-title-weight` | `font-semibold` | The month and year (600). |
 | `--calendar-today-weight` | `font-semibold` | Today's number (600). |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
-| `--calendar-depth-selected` | `depth-part` | The selected day's tactile layers: raised, with a soft, short shadow. None in the flat brands. |
 <!-- token-table:end -->

@@ -152,8 +152,6 @@ Each is an optional override: set it on the page, a container or one slider. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--slider-thumb-shadow` | `elevation-part` | The thumb's shadow. |
-| `--slider-thumb-depth` | `depth-part` | The tactile layers over each thumb's shadow. None in the flat brands. |
-| `--slider-track-depth` | `depth-well` | The track's tactile layers: a groove the thumb slides in. None in the flat brands. |
 
 **Spacing**
 

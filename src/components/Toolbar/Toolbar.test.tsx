@@ -57,9 +57,9 @@ describe('Toolbar', () => {
     expect(['tsm', 'tmd', 'tlg', 'tnone'].map(heights)).toEqual([[24, 24, 24, 24, 32], [32, 32, 32, 24, 32], [44, 44, 44, 24, 32], [32, 32, 32, 24, 32]]);
   });
 
-  test('its corners are concentric with the buttons inside: their radius plus the padding (6 + 4 = 10px; 8 + 4 in Modern); --toolbar-radius still sets them', async () => {
+  test('its corners are concentric with the buttons inside: their radius plus the padding (6 + 4 = 10px; 12 + 4 with round corners); --toolbar-radius still sets them', async () => {
     await render(<><Toolbar id="tb1" aria-label="A"><Button id="b1">One</Button></Toolbar>
-      <div data-brand="modern"><Toolbar id="tb2" aria-label="B"><Button id="b2">Two</Button></Toolbar></div>
+      <div data-radius="round"><Toolbar id="tb2" aria-label="B"><Button id="b2">Two</Button></Toolbar></div>
       <Toolbar id="tb3" aria-label="C" style={{ '--toolbar-radius': '3px' } as React.CSSProperties}><Button>Three</Button></Toolbar></>);
     const r = (id: string) => parseFloat(css(el(id)).borderTopLeftRadius);
     const pad = (id: string) => parseFloat(css(el(id)).paddingTop);

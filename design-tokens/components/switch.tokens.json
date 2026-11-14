@@ -238,28 +238,6 @@
           }
         }
       }
-    },
-    "shadow": {
-      "thumb-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The thumb's tactile layers: a highlight and a close shadow. None in the flat brands.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--switch-thumb-depth"
-          }
-        }
-      },
-      "track-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-well}",
-        "$description": "The track's tactile layers: a groove the thumb slides in. None in the flat brands.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--switch-track-depth"
-          }
-        }
-      }
     }
   }
 }

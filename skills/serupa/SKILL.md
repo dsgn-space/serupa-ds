@@ -35,7 +35,7 @@ Put the brand and mode on `<html>`, and load `theme.js` first in `<head>` (or pa
 <html lang="en" data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
 ```
 
-Pick the brand by the look the app wants: `blue` is plain and flat, `violet` is tactile (controls with a soft lift and sheen), and `emerald` is Modern (calm neutrals, one teal accent, rounder corners and softer motion). Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-depth="tactile"` or `"flat"`, `data-shadow="neutral"`, `data-contrast="more"`.
+Pick the brand by its color: `blue` (the default), `violet` or `emerald` (teal). A brand changes the accent color only; every corner, shadow, space and motion is the same in all three. Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
 
 One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`. For router links, call `configure({ link: Link })` once at startup.
 

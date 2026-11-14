@@ -172,7 +172,5 @@ Each is an optional override: set it on the page, a container or one select. The
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--select-depth` | `depth-field` | The tactile inner shade along the top of the box. None in the flat brands. |
 | `--select-picker-shadow` | `elevation-overlay` | The list's shadow, as other popups. |
-| `--select-picker-depth` | `depth-surface` | The list's tactile layer (none in the flat brands). |
 <!-- token-table:end -->

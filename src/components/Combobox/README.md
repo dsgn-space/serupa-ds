@@ -157,7 +157,6 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--combobox-listbox-shadow` | `elevation-overlay` | The list's shadow. |
-| `--combobox-listbox-depth` | `depth-surface` | The list box's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 
 **Radius**
 

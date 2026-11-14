@@ -343,38 +343,6 @@
             "cssVar": "--checkbox-press-scale"
           }
         }
-      },
-      "draw-duration": {
-        "$type": "duration",
-        "$value": "{transitions.motion-draw}",
-        "$description": "How long the tick takes to draw itself on when ticked under the pointer or keyboard: 150ms in a tactile brand, at once in the flat ones.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--checkbox-draw-duration"
-          }
-        }
-      }
-    },
-    "shadow": {
-      "depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-well}",
-        "$description": "The box's tactile layers while unticked: sunk into the page. None in the flat brands.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--checkbox-depth"
-          }
-        }
-      },
-      "depth-checked": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The box's tactile layers once ticked: raised, with a highlight along the top. None in the flat brands.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--checkbox-depth-checked"
-          }
-        }
       }
     }
   }

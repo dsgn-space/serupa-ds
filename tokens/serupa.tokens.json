@@ -15,21 +15,19 @@
         },
         {
           "id": "violet-light",
-          "name": "Violet Light",
-          "depth": "tactile"
+          "name": "Violet Light"
         },
         {
           "id": "violet-dark",
-          "name": "Violet Dark",
-          "depth": "tactile"
+          "name": "Violet Dark"
         },
         {
           "id": "emerald-light",
-          "name": "Modern Light"
+          "name": "Emerald Light"
         },
         {
           "id": "emerald-dark",
-          "name": "Modern Dark"
+          "name": "Emerald Dark"
         }
       ],
       "type": {
@@ -789,7 +787,7 @@
             "violet-light": "{zinc-100}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-700}"
           }
         }
       }
@@ -805,7 +803,7 @@
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-600}",
             "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-dark": "{zinc-600}"
           }
         }
       }
@@ -821,7 +819,7 @@
             "violet-light": "{zinc-100}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-700}"
           }
         }
       }
@@ -837,7 +835,7 @@
             "violet-light": "{zinc-300}",
             "violet-dark": "{zinc-600}",
             "emerald-light": "{zinc-300}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-dark": "{zinc-600}"
           }
         }
       }
@@ -853,7 +851,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-900}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-950}"
+            "emerald-dark": "{zinc-900}"
           }
         }
       }
@@ -885,7 +883,7 @@
             "violet-light": "{zinc-50}",
             "violet-dark": "{zinc-950}",
             "emerald-light": "{zinc-50}",
-            "emerald-dark": "{black}"
+            "emerald-dark": "{zinc-950}"
           }
         }
       }
@@ -949,7 +947,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-800}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{zinc-800}"
           }
         }
       }
@@ -965,7 +963,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-800}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
+            "emerald-dark": "{zinc-800}"
           }
         }
       }
@@ -1013,7 +1011,7 @@
             "violet-light": "{zinc-100}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-700}"
           },
           "contrastMore": {
             "light": "{zinc-950}",
@@ -1137,7 +1135,7 @@
     "field-raised": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. Emerald dark, whose overlays are zinc-900, keeps zinc-800. `field-hover` and `field-pressed` already sit a step past it.",
+      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. `field-hover` and `field-pressed` already sit a step past it.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -1145,7 +1143,7 @@
             "violet-light": "{white}",
             "violet-dark": "#333338",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "#333338"
           }
         }
       }
@@ -1327,7 +1325,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-900}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-950}"
+            "emerald-dark": "{zinc-900}"
           }
         }
       }
@@ -1335,15 +1333,15 @@
     "border": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines (emerald: 10% ink, 8% white). A quiet line, never a control's boundary: those use `field-border` or `border-control`.",
+      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines. A quiet line, never a control's boundary: those use `field-border` or `border-control`.",
       "$extensions": {
         "com.serupa": {
           "themes": {
             "blue-dark": "{zinc-800}",
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-800}",
-            "emerald-light": "#09090b1a",
-            "emerald-dark": "#ffffff14"
+            "emerald-light": "{zinc-200}",
+            "emerald-dark": "{zinc-800}"
           },
           "contrastMore": {
             "light": "{zinc-500}",
@@ -1362,8 +1360,8 @@
             "blue-dark": "{zinc-600}",
             "violet-light": "{zinc-300}",
             "violet-dark": "{zinc-600}",
-            "emerald-light": "#09090b2e",
-            "emerald-dark": "#ffffff38"
+            "emerald-light": "{zinc-300}",
+            "emerald-dark": "{zinc-600}"
           },
           "contrastMore": {
             "light": "{zinc-600}",
@@ -1372,8 +1370,6 @@
         }
       }
     },
-
-
     "border-overlay": {
       "$type": "color",
       "$value": "{color.zinc-200}",
@@ -1385,7 +1381,7 @@
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-600}",
             "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-700}"
+            "emerald-dark": "{zinc-600}"
           }
         }
       }
@@ -2197,7 +2193,7 @@
             "violet-light": "{zinc-100}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-700}"
           },
           "utilities": false
         }
@@ -2265,7 +2261,7 @@
             "violet-light": "{zinc-200}",
             "violet-dark": "{zinc-700}",
             "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-800}"
+            "emerald-dark": "{zinc-700}"
           },
           "utilities": false
         }
@@ -2316,7 +2312,7 @@
             "violet-light": "{white}",
             "violet-dark": "{zinc-900}",
             "emerald-light": "{white}",
-            "emerald-dark": "{zinc-950}"
+            "emerald-dark": "{zinc-900}"
           },
           "utilities": false
         }
@@ -7035,34 +7031,12 @@
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px; 32px in Modern.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{spacing-6}",
-            "violet-light": "{spacing-6}",
-            "violet-dark": "{spacing-6}",
-            "emerald-light": "{spacing-8}",
-            "emerald-dark": "{spacing-8}"
-          }
-        }
-      }
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px."
     },
     "space-section": {
       "$type": "dimension",
       "$value": "{spacing.spacing-8}",
-      "$description": "Between groups or sections of a page. 32px.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{spacing-8}",
-            "violet-light": "{spacing-8}",
-            "violet-dark": "{spacing-8}",
-            "emerald-light": "{spacing-12}",
-            "emerald-dark": "{spacing-12}"
-          }
-        }
-      }
+      "$description": "Between groups or sections of a page. 32px."
     }
   },
   "radius": {
@@ -7174,13 +7148,6 @@
       "$description": "A control or an item people press or type in: buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree. 6px.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{rounded-md}",
-            "violet-light": "{rounded-md}",
-            "violet-dark": "{rounded-md}",
-            "emerald-light": "{rounded-lg}",
-            "emerald-dark": "{rounded-lg}"
-          },
           "roundness": {
             "sharp": "{rounded-xs}",
             "round": "{rounded-xl}"
@@ -7194,13 +7161,6 @@
       "$description": "A surface that holds content or floats over the page: alerts, tables, lists, accordions, drop zones, and menus, popovers, list boxes and toasts. 8px.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{rounded-lg}",
-            "violet-light": "{rounded-lg}",
-            "violet-dark": "{rounded-lg}",
-            "emerald-light": "{rounded-xl}",
-            "emerald-dark": "{rounded-xl}"
-          },
           "roundness": {
             "sharp": "{rounded-sm}",
             "round": "{rounded-2xl}"
@@ -7214,13 +7174,6 @@
       "$description": "A large container: cards, dialogs, drawers and carousels. 12px.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{rounded-xl}",
-            "violet-light": "{rounded-xl}",
-            "violet-dark": "{rounded-xl}",
-            "emerald-light": "{rounded-xl}",
-            "emerald-dark": "{rounded-xl}"
-          },
           "roundness": {
             "sharp": "{rounded-sm}",
             "round": "{rounded-3xl}"
@@ -7873,200 +7826,27 @@
     "elevation-rest": {
       "$type": "shadow",
       "$value": "{shadow.shadow-xs}",
-      "$description": "Level 1, resting: something sitting on the page with a hairline lift, such as an outline card.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-xs}",
-            "violet-light": "{shadow-xs}",
-            "violet-dark": "{shadow-xs}",
-            "emerald-light": "{shadow-2xs}",
-            "emerald-dark": "{shadow-2xs}"
-          }
-        }
-      }
+      "$description": "Level 1, resting: something sitting on the page with a hairline lift, such as an outline card."
     },
     "elevation-part": {
       "$type": "shadow",
       "$value": "{shadow.shadow-sm}",
-      "$description": "A part raised over the control or content it sits on: a slider thumb, the indicator of a segmented control, carousel arrows, a table head once the rows scroll under it.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-sm}",
-            "violet-light": "{shadow-sm}",
-            "violet-dark": "{shadow-sm}",
-            "emerald-light": "{shadow-xs}",
-            "emerald-dark": "{shadow-xs}"
-          }
-        }
-      }
+      "$description": "A part raised over the control or content it sits on: a slider thumb, the indicator of a segmented control, carousel arrows, a table head once the rows scroll under it."
     },
     "elevation-raised": {
       "$type": "shadow",
       "$value": "{shadow.shadow-md}",
-      "$description": "Level 2, raised: a card raised by hover or on purpose, an item being dragged, a navbar once the page scrolls under it, a tooltip.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-md}",
-            "violet-light": "{shadow-md}",
-            "violet-dark": "{shadow-md}",
-            "emerald-light": "{shadow-sm}",
-            "emerald-dark": "{shadow-sm}"
-          }
-        }
-      }
+      "$description": "Level 2, raised: a card raised by hover or on purpose, an item being dragged, a navbar once the page scrolls under it, a tooltip."
     },
     "elevation-overlay": {
       "$type": "shadow",
       "$value": "{shadow.shadow-lg}",
-      "$description": "Level 3, floating: menus, popovers, list boxes, date and time pickers, hover cards, toasts, a floating action button.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-lg}",
-            "violet-light": "{shadow-lg}",
-            "violet-dark": "{shadow-lg}",
-            "emerald-light": "{shadow-md}",
-            "emerald-dark": "{shadow-md}"
-          }
-        }
-      }
+      "$description": "Level 3, floating: menus, popovers, list boxes, date and time pickers, hover cards, toasts, a floating action button."
     },
     "elevation-modal": {
       "$type": "shadow",
       "$value": "{shadow.shadow-xl}",
-      "$description": "Level 4, modal: dialogs and drawers, over the overlay backdrop.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-xl}",
-            "violet-light": "{shadow-xl}",
-            "violet-dark": "{shadow-xl}",
-            "emerald-light": "{shadow-lg}",
-            "emerald-dark": "{shadow-lg}"
-          }
-        }
-      }
-    },
-    "depth-control": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added over the shadow of a raised control at rest (the filled, outline and secondary Button, IconButton, ToggleButton, FAB): a short, soft two-layer shadow that lifts it off the page, and in dark mode a faint light along the top edge. Nothing in the flat brands.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.08)"
-        }
-      }
-    },
-    "depth-control-hover": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): the layers of `depth-control` when the pointer is over the control: the same edges, lifted a little higher.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 3px 8px -1px rgb(0 0 0 / 0.12)"
-        }
-      }
-    },
-    "depth-control-pressed": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): the layers while a control is held down, or a toggle is on: an inner shade along the top, so it sinks into the page.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.35))"
-        }
-      }
-    },
-    "depth-sheen": {
-      "$value": "none",
-      "$description": "Depth (tactile): a background image over a filled control (the primary and destructive Button, a FAB): a soft light from the top edge that fades out before the middle, clear of the label, so the label keeps its contrast (4.5:1 and up, white on red-600 the lowest). `none` in the flat brands.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "linear-gradient(to bottom, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 40%)"
-        }
-      }
-    },
-    "depth-sheen-pressed": {
-      "$value": "none",
-      "$description": "Depth (tactile): `depth-sheen` while the control is held down: the light at the top goes out and a faint shade comes in, so it looks pushed in.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "linear-gradient(to bottom, rgb(0 0 0 / 0.06), rgb(0 0 0 / 0) 40%)"
-        }
-      }
-    },
-    "depth-part": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added to a part that sits on a control and moves: the Switch thumb, the Slider thumb, the SegmentedControl indicator. A hairline edge and a soft, short shadow, like a physical knob.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 1px 0 rgb(0 0 0 / 0.06), 0 2px 6px 0 rgb(0 0 0 / 0.14)"
-        }
-      }
-    },
-    "depth-field": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): an inner shade along the top of a field (Input, Textarea, Select), so it reads as a well to type into.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35))"
-        }
-      }
-    },
-    "depth-well": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): a track or groove sunk into the page, deeper than `depth-field`: the Switch track, the Slider, Progress and Meter tracks, an unticked Checkbox or Radio. A soft shade along the top.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4))"
-        }
-      }
-    },
-    "depth-surface": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added inside a surface that floats over the page (menus, popovers, list boxes, date and time pickers, hover cards, tooltips, toasts, dialogs, drawers): a crisp hairline around it and, in dark mode, a faint light along the top edge, so it reads as a raised pane rather than a flat sheet. Over its elevation shadow.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07))"
-        }
-      }
-    },
-    "depth-card": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added under a surface that rests on the page and can be picked up or opened: a Card at rest, a Kanban card, a SortableList item. A short, soft two-layer shadow, and in dark mode a faint light along the top edge.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.05)), 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 2px 8px -2px rgb(0 0 0 / 0.06)"
-        }
-      }
-    },
-    "depth-card-lift": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added to a Card with a link while the pointer is over it: a soft, wider shadow, so the card lifts toward the pointer.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14)"
-        }
-      }
-    },
-    "depth-press": {
-      "$type": "dimension",
-      "$value": "{spacing.spacing-0}",
-      "$description": "Depth (tactile): how far a pressed Button or link Card moves down while it is held, on top of its press scale, so it reads as pushed into the page. 0 in the flat brands, 1px in a tactile one; 0 under reduced motion.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{spacing-px}"
-        }
-      }
+      "$description": "Level 4, modal: dialogs and drawers, over the overlay backdrop."
     }
   },
   "borders": {
@@ -10654,48 +10434,7 @@
     "motion-release": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-300}",
-            "violet-light": "{duration-300}",
-            "violet-dark": "{duration-300}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
-    },
-    "motion-draw": {
-      "$type": "duration",
-      "$value": "{transitions.duration-0}",
-      "$description": "A mark drawing itself on: the Checkbox tick revealed from its start to its end when it is ticked under the pointer or keyboard. 0 (it appears at once) in the flat brands; `duration-150` in a tactile one. None under reduced motion.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{duration-150}"
-        }
-      }
-    },
-    "motion-toggle": {
-      "$type": "duration",
-      "$value": "{transitions.motion-press}",
-      "$description": "How long a thumb takes to slide to its other end (Switch), with `ease-toggle`. `motion-press` in the flat brands; `motion-release` in a tactile one, the time the spring needs to settle. The snappy spring reaches the end in under a third of it (about 95ms), so the toggle still answers within 100ms.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{motion-release}"
-        }
-      }
-    },
-    "ease-toggle": {
-      "$type": "cubicBezier",
-      "$value": "{transitions.ease-move}",
-      "$description": "A thumb sliding to its other end (Switch). `ease-move` in the flat brands; `ease-spring-snappy` in a tactile one, so the thumb lands with a small overshoot and settles.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{ease-spring-snappy}"
-        }
-      }
+      "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this."
     },
     "motion-hover": {
       "$type": "duration",
@@ -10710,34 +10449,12 @@
     "motion-enter-md": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A medium surface appearing: dialogs and toasts.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-200}",
-            "violet-light": "{duration-200}",
-            "violet-dark": "{duration-200}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
+      "$description": "A medium surface appearing: dialogs and toasts."
     },
     "motion-enter-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "A large surface appearing: drawers and sheets.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-300}",
-            "violet-light": "{duration-300}",
-            "violet-dark": "{duration-300}",
-            "emerald-light": "{duration-200}",
-            "emerald-dark": "{duration-200}"
-          }
-        }
-      }
+      "$description": "A large surface appearing: drawers and sheets."
     },
     "motion-exit-sm": {
       "$type": "duration",
@@ -10747,34 +10464,12 @@
     "motion-exit-md": {
       "$type": "duration",
       "$value": "{transitions.duration-150}",
-      "$description": "A medium surface leaving: dialogs and toasts.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-150}",
-            "violet-light": "{duration-150}",
-            "violet-dark": "{duration-150}",
-            "emerald-light": "{duration-100}",
-            "emerald-dark": "{duration-100}"
-          }
-        }
-      }
+      "$description": "A medium surface leaving: dialogs and toasts."
     },
     "motion-exit-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A large surface leaving: drawers and sheets.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-200}",
-            "violet-light": "{duration-200}",
-            "violet-dark": "{duration-200}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
+      "$description": "A large surface leaving: drawers and sheets."
     },
     "motion-change-sm": {
       "$type": "duration",
@@ -10784,34 +10479,12 @@
     "motion-change-md": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A panel opening or collapsing in place, or an indicator sliding to the selected option: Accordion, Sidebar, SegmentedControl, Tabs.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-200}",
-            "violet-light": "{duration-200}",
-            "violet-dark": "{duration-200}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
+      "$description": "A panel opening or collapsing in place, or an indicator sliding to the selected option: Accordion, Sidebar, SegmentedControl, Tabs."
     },
     "motion-change-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "Something travelling far on screen: a progress or meter fill moving to its value, a carousel slide.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-300}",
-            "violet-light": "{duration-300}",
-            "violet-dark": "{duration-300}",
-            "emerald-light": "{duration-200}",
-            "emerald-dark": "{duration-200}"
-          }
-        }
-      }
+      "$description": "Something travelling far on screen: a progress or meter fill moving to its value, a carousel slide."
     },
     "motion-loop-spinner": {
       "$type": "duration",
@@ -10881,34 +10554,11 @@
     "ease-pop": {
       "$type": "cubicBezier",
       "$value": "{transitions.ease-out-back}",
-      "$description": "Something small popping into place: a check mark, a count, a dot. Overshoots a touch, then settles.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{ease-out-back}",
-            "violet-light": "{ease-out-back}",
-            "violet-dark": "{ease-out-back}",
-            "emerald-light": "{ease-out-quart}",
-            "emerald-dark": "{ease-out-quart}"
-          }
-        }
-      }
+      "$description": "Something small popping into place: a check mark, a count, a dot. Overshoots a touch, then settles."
     },
     "ease-spring": {
       "$value": "{transitions.ease-spring-snappy}",
-      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`). Tactile brands (violet) and Modern use `ease-spring-soft`: a slower, softer settle.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{ease-spring-soft}",
-          "themes": {
-            "blue-dark": "{ease-spring-snappy}",
-            "violet-light": "{ease-spring-snappy}",
-            "violet-dark": "{ease-spring-snappy}",
-            "emerald-light": "{ease-spring-soft}",
-            "emerald-dark": "{ease-spring-soft}"
-          }
-        }
-      }
+      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`)."
     },
     "ease-fling": {
       "$type": "cubicBezier",
@@ -10917,18 +10567,7 @@
     },
     "ease-celebrate": {
       "$value": "{transitions.ease-elastic}",
-      "$description": "A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. Give it about three times the motion it answers (`motion-change-lg` or longer) so the wobble reads, and never use it for menus, dialogs, page moves or repeated actions. Off under reduced motion.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{ease-elastic}",
-            "violet-light": "{ease-elastic}",
-            "violet-dark": "{ease-elastic}",
-            "emerald-light": "{ease-out-expo}",
-            "emerald-dark": "{ease-out-expo}"
-          }
-        }
-      }
+      "$description": "A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. Give it about three times the motion it answers (`motion-change-lg` or longer) so the wobble reads, and never use it for menus, dialogs, page moves or repeated actions. Off under reduced motion."
     },
     "transition": {
       "$value": "opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events",
