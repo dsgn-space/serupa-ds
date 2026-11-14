@@ -37,10 +37,10 @@ Drawn from the `Playground` story.
 1. **Title** (`.dk-toc__title`): "On this page"; it names the landmark.
 2. **Link** (`.dk-toc__link`): one section; deeper ones step in, and the current one is marked by a line in primary, twice as wide as the others.
 
-With `variant="rail"` (the `Rail` story):
+With `variant="rail"` (the `Rail` story), two more parts:
 
-3. **Rail** (`.dk-toc__rail`): a dash (`.dk-toc__dash`) per section, 12px long and 4px shorter a level, the current one in primary.
-4. **Panel** (`.dk-toc__panel`): the title and the links, over the page from the rail's top end corner, 256px wide at most.
+- **Rail** (`.dk-toc__rail`): a dash (`.dk-toc__dash`) per section, 12px long and 4px shorter a level, the current one in primary.
+- **Panel** (`.dk-toc__panel`): the title and the links, over the page from the rail's top end corner, 256px wide at most.
 
 ## Usage
 
