@@ -3,7 +3,7 @@
 A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value. Screen readers hear what it measures and its first, last, low and high numbers, since the shape alone doesn't say them.
 
 ```tsx
-import { Sparkline } from "serupa-ds";
+import { Sparkline } from "@diki-stwn/serupa-ds";
 
 <Sparkline data={[12, 14, 11, 15, 18, 16, 21]} label="Sign-ups, last 7 weeks" />
 ```

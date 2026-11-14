@@ -5,7 +5,7 @@ A preview of what a link points to: a person, a page, a repository. It opens whe
 **Also called:** preview card, link preview.
 
 ```tsx
-import { HoverCard, Link, Avatar } from "serupa-ds";
+import { HoverCard, Link, Avatar } from "@diki-stwn/serupa-ds";
 
 <HoverCard trigger={<Link href="/people/dewi">@dewi</Link>}>
   <Avatar name="Dewi Lestari" /> <strong>Dewi Lestari</strong>

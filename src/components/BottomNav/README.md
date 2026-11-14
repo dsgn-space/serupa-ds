@@ -5,7 +5,7 @@ A bar of three to five main destinations fixed along the bottom of a phone scree
 **Also called:** tab bar, bottom navigation bar.
 
 ```tsx
-import { BottomNav, BottomNavLink } from "serupa-ds";
+import { BottomNav, BottomNavLink } from "@diki-stwn/serupa-ds";
 
 <BottomNav label="Main">
   <BottomNavLink href="/" icon="home">Home</BottomNavLink>

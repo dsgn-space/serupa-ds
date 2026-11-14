@@ -5,7 +5,7 @@ Picks a color from a set of swatches, or any color by its hex code or with the b
 **Also called:** color input, swatch picker.
 
 ```tsx
-import { ColorPicker } from "serupa-ds";
+import { ColorPicker } from "@diki-stwn/serupa-ds";
 
 const SWATCHES = [{ value: "#1d4ed8", label: "Blue" }, { value: "#047857", label: "Emerald" }, { value: "#b91c1c", label: "Red" }];
 

@@ -5,7 +5,7 @@ A one-time code or PIN, shown as one box per character, such as the 6-digit code
 **Also called:** OTP input, one-time code input, verification code input.
 
 ```tsx
-import { PinInput, Field } from "serupa-ds";
+import { PinInput, Field } from "@diki-stwn/serupa-ds";
 
 <Field label="Verification code" hint="We sent a 6-digit code to your phone." error={error}>
   <PinInput value={code} onValueChange={setCode} onComplete={verify} name="code" />

@@ -5,7 +5,7 @@ Text people can change where it is: a project name, a card title, a slug. It sho
 **Also called:** click to edit, editable text.
 
 ```tsx
-import { InlineEdit } from "serupa-ds";
+import { InlineEdit } from "@diki-stwn/serupa-ds";
 
 <InlineEdit label="Project name" defaultValue="Apollo launch plan" onValueChange={rename} />
 

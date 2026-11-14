@@ -5,7 +5,7 @@ A grid of cells people work on in place, like a spreadsheet: move with the arrow
 **Also called:** spreadsheet, editable data table.
 
 ```tsx
-import { DataGrid } from "serupa-ds";
+import { DataGrid } from "@diki-stwn/serupa-ds";
 
 <DataGrid
   aria-label="Stock"

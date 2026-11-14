@@ -23,7 +23,7 @@
   - list:
     - listitem: Run the installer.
     - listitem: Restart the dev server.
-  - code: npm install serupa-ds import "serupa-ds/styles.css";
+  - code: npm install @diki-stwn/serupa-ds import "@diki-stwn/serupa-ds/styles.css";
   - blockquote:
     - paragraph: Good defaults make the right thing the easy thing.
   - table:
@@ -72,7 +72,7 @@
   - list:
     - listitem: Run the installer.
     - listitem: Restart the dev server.
-  - code: npm install serupa-ds import "serupa-ds/styles.css";
+  - code: npm install @diki-stwn/serupa-ds import "@diki-stwn/serupa-ds/styles.css";
   - blockquote:
     - paragraph: Good defaults make the right thing the easy thing.
   - table:
@@ -144,7 +144,7 @@
   - list:
     - listitem: Run the installer.
     - listitem: Restart the dev server.
-  - code: npm install serupa-ds import "serupa-ds/styles.css";
+  - code: npm install @diki-stwn/serupa-ds import "@diki-stwn/serupa-ds/styles.css";
   - blockquote:
     - paragraph: Good defaults make the right thing the easy thing.
   - table:

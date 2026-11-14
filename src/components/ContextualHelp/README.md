@@ -5,7 +5,7 @@ A small "?" or "i" button beside a label, heading or value that opens a sentence
 **Also called:** toggletip, info tip, help popover.
 
 ```tsx
-import { ContextualHelp } from "serupa-ds";
+import { ContextualHelp } from "@diki-stwn/serupa-ds";
 
 <Field label={<>Tax ID <ContextualHelp label="Help: tax ID" title="Where to find it">It's the 15-digit NPWP on your tax card.</ContextualHelp></>}>
   <Input />

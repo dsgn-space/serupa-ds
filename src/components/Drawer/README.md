@@ -5,7 +5,7 @@ A modal panel that slides in from an edge of the screen: navigation on small scr
 **Also called:** sheet, tray, flyout, side panel.
 
 ```tsx
-import { Drawer, Button } from "serupa-ds";
+import { Drawer, Button } from "@diki-stwn/serupa-ds";
 
 const [open, setOpen] = React.useState(false);
 <Button onClick={() => setOpen(true)}>Filters</Button>

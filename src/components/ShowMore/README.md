@@ -5,7 +5,7 @@ Long text cut after a few lines, with a "Show more" button under it that shows t
 **Also called:** read more, expandable text.
 
 ```tsx
-import { ShowMore } from "serupa-ds";
+import { ShowMore } from "@diki-stwn/serupa-ds";
 
 <ShowMore lines={3}>{review.text}</ShowMore>
 ```

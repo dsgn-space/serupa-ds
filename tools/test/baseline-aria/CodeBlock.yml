@@ -2,14 +2,14 @@
 - text: SignIn.tsx
 - button "Copy code"
 - region "SignIn.tsx":
-  - code: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
+  - code: "import { Button, Field, Input } from \"@diki-stwn/serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
 
 # DoTitleAndHighlight
 - text: SignIn.tsx
 - button "Copy code"
 - region "SignIn.tsx":
   - code:
-    - text: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form>"
+    - text: "import { Button, Field, Input } from \"@diki-stwn/serupa-ds\"; export function SignIn() { return ( <form>"
     - mark: <Field label="Email"><Input type="email" autoComplete="email" /></Field>
     - mark: <Button type="submit">Sign in</Button>
     - text: "</form> ); }"
@@ -17,7 +17,7 @@
 # DontBareCode
 - button "Copy code"
 - region "Code":
-  - code: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
+  - code: "import { Button, Field, Input } from \"@diki-stwn/serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
 
 # LanguageOnly
 - text: sh
@@ -30,7 +30,7 @@
 - button "Copy code"
 - region "SignIn.tsx":
   - code:
-    - mark: "import { Button, Field, Input } from \"serupa-ds\";"
+    - mark: "import { Button, Field, Input } from \"@diki-stwn/serupa-ds\";"
     - text: "export function SignIn() { return ( <form>"
     - mark: <Field label="Email"><Input type="email" autoComplete="email" /></Field>
     - mark: <Button type="submit">Sign in</Button>
@@ -50,7 +50,7 @@
 - text: SignIn.tsx
 - button "Copy code"
 - region "SignIn.tsx":
-  - code: "import { Button, Field, Input } from \"serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
+  - code: "import { Button, Field, Input } from \"@diki-stwn/serupa-ds\"; export function SignIn() { return ( <form> <Field label=\"Email\"><Input type=\"email\" autoComplete=\"email\" /></Field> <Button type=\"submit\">Sign in</Button> </form> ); }"
 
 # StartLine
 - text: SignIn.tsx, lines 41 to 47
