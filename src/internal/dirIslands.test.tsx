@@ -46,6 +46,9 @@ describe('direction islands (EX1)', () => {
   test('a dir="ltr" block on a right-to-left page (an English widget, a code sample) points left to right, and a dir="rtl" block on a left-to-right page right to left', async () => {
     const html = document.documentElement;
     try {
+      // The bar on a selected List item or Table row has a width only where more contrast is asked
+      // for (GR413), and its side is what this reads.
+      html.setAttribute('data-contrast', 'more');
       html.dir = 'rtl';
       const { unmount } = await render(<><div id="page"><Six /></div><div id="island" dir="ltr"><Six /></div></>);
       expect(sides(document.getElementById('page')!)).toEqual(RTL);
@@ -57,6 +60,7 @@ describe('direction islands (EX1)', () => {
       expect(sides(document.getElementById('island2')!)).toEqual(RTL);
     } finally {
       html.removeAttribute('dir');
+      html.removeAttribute('data-contrast');
     }
   });
 

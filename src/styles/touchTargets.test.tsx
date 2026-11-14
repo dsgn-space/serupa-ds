@@ -14,6 +14,11 @@ import { NumberInput } from '../components/NumberInput/NumberInput';
 import { Combobox } from '../components/Combobox/Combobox';
 import { DatePicker } from '../components/DatePicker/DatePicker';
 import { TimePicker } from '../components/TimePicker/TimePicker';
+import { Button } from '../components/Button/Button';
+import { ButtonGroup } from '../components/ButtonGroup/ButtonGroup';
+import { IconButton } from '../components/IconButton/IconButton';
+import { Pagination } from '../components/Pagination/Pagination';
+import { Toolbar } from '../components/Toolbar/Toolbar';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { Calendar } from '../components/Calendar/Calendar';
 import { Carousel } from '../components/Carousel/Carousel';
@@ -117,6 +122,56 @@ describe('touch-sized buttons inside fields', () => {
       expect(reach()).toEqual(FIELDS.map((s) => [s, true, true]));
       const [minus, plus] = [...$('.hit-number').querySelectorAll('button')], a = minus!.getBoundingClientRect(), b = plus!.getBoundingClientRect(), y = a.top + a.height / 2;
       expect([document.elementFromPoint(a.right - 1, y)?.closest('button'), document.elementFromPoint(b.left + 1, y)?.closest('button')]).toEqual([minus, plus]);
+    });
+  });
+});
+
+// Buttons on a touch screen: an IconButton or a small Button takes a press up to 44px across, as the Design principles
+// promise, with nothing moving. Beside another button it stops halfway into the gap, so a press always goes to the
+// nearer one and never to a neighbour's own face; in an attached group, each keeps exactly its own face.
+function Buttons() {
+  return <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '64px', padding: '64px', width: '480px' }}>
+    <div><IconButton icon="close" label="Close" className="hit-close" /></div>
+    <div><Button size="sm" className="hit-small">Edit</Button></div>
+    <Toolbar aria-label="Format"><IconButton icon="format_bold" label="Bold" className="hit-bold" /><IconButton icon="format_italic" label="Italic" className="hit-italic" /></Toolbar>
+    <ButtonGroup attached aria-label="View"><Button className="hit-day">Day</Button><Button className="hit-week">Week</Button></ButtonGroup>
+    <Pagination count={5} className="hit-pages" />
+  </div>;
+}
+/** Which button (by hit-… class) or page takes a press at (x, y): '' for none. */
+const btn = (x: number, y: number) => { const b = document.elementFromPoint(x, y)?.closest('button, a'); return b ? (/\bhit-(\w+)/.exec(b.className) || ['', b.textContent || '?'])[1] : ''; };
+/** What a press `d` px outside each edge of `sel` takes: above, below, before, after. */
+const outside = (sel: string, d: number) => { $(sel).scrollIntoView({ block: 'center' }); const r = box(sel), cx = r.left + r.width / 2, cy = r.top + r.height / 2; return [btn(cx, r.top - d), btn(cx, r.bottom + d), btn(r.left - d, cy), btn(r.right + d, cy)]; };
+
+describe('touch-sized buttons', () => {
+  test('with a mouse: a press just outside a button misses it', async () => {
+    await render(<Buttons />);
+    expect(outside('.hit-close', 4)).toEqual(['', '', '', '']);
+    expect(outside('.hit-small', 4).slice(0, 2)).toEqual(['', '']);
+  });
+
+  test('on a touch screen: 44px across, split at the middle of the gap between neighbours, and an attached group keeps its own faces', async () => {
+    await render(<Buttons />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      // A 32px IconButton reaches 6px out on every side; a 24px small Button 10px up and down.
+      expect(outside('.hit-close', 5)).toEqual(['close', 'close', 'close', 'close']);
+      expect(outside('.hit-close', 7)).toEqual(['', '', '', '']);
+      expect(outside('.hit-small', 9).slice(0, 2)).toEqual(['small', 'small']);
+      // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap all round (rows of a wrapped toolbar are
+      // 4px apart too), and its own face to the edge.
+      $('.hit-bold').scrollIntoView({ block: 'center' });
+      const b = box('.hit-bold'), i = box('.hit-italic'), y = b.top + b.height / 2, mid = (b.right + i.left) / 2;
+      expect([btn(mid - 1, y), btn(mid + 1, y), btn(b.right - 1, y), btn(i.left + 1, y), btn(b.left + b.width / 2, b.top - 1.5)]).toEqual(['bold', 'italic', 'bold', 'italic', 'bold']);
+      // Attached (one shared border line): no reach into the neighbour's face, from either side.
+      $('.hit-day').scrollIntoView({ block: 'center' });
+      const d = box('.hit-day'), w = box('.hit-week'), dy = d.top + d.height / 2;
+      expect([btn(d.right - 2, dy), btn(w.left + 2, dy)]).toEqual(['day', 'week']);
+      // Pagination: a page takes a press 5px above and below it, and the gap between two pages splits at its middle.
+      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('button, a')].filter((e) => /^[0-9]+$/.test(e.textContent || ''));
+      pages[1]!.scrollIntoView({ block: 'center' });
+      const p1 = pages[0]!.getBoundingClientRect(), p2 = pages[1]!.getBoundingClientRect(), py = p1.top + p1.height / 2, pm = (p1.right + p2.left) / 2;
+      expect([btn(p2.left + p2.width / 2, p2.top - 5), btn(p2.left + p2.width / 2, p2.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)]).toEqual(['2', '2', '1', '2']);
     });
   });
 });
