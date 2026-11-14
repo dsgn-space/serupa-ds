@@ -30,8 +30,9 @@
   .site-body[data-side][data-aside] { grid-template-columns: 17rem minmax(0, 1fr) var(--spacing-12); }
   .site-aside { display: block; position: sticky; z-index: var(--z-10); inset-block-start: var(--dk-navbar-offset, 0px); align-self: start; padding: var(--spacing-12) var(--spacing-6) var(--spacing-8) 0; }
   .site-body[data-aside] .site-main { padding-inline-end: var(--spacing-6); }
-  /* A long page's list stays inside the window and scrolls there. */
-  .site-aside .dk-toc__panel { max-block-size: calc(100dvh - var(--dk-navbar-offset, 0px) - var(--spacing-16)); overflow-y: auto; }
+  /* A long page's list stays inside the window and scrolls there: the rail keeps this much of the window clear, here
+     the bar above the strip, the strip's own padding and a margin below. */
+  .site-aside { --table-of-contents-panel-gap: calc(var(--dk-navbar-offset, 0px) + var(--spacing-16)); }
 }
 .site-sidebar { inline-size: 100%; border: 0; background: transparent; }
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--spacing-3) var(--spacing-6); padding: var(--spacing-6) var(--spacing-4); border-block-start: var(--border-width-1) solid var(--border); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
