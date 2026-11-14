@@ -20,6 +20,11 @@
 //                                   rounded-none, rounded-xs (a hairline curve on a text mark) and rounded-full pass
 //   serupa/outline-width-token     an outline is sized by an outline-width token (or focus-ring-width for a ring), not a
 //                                   border-width one, so the outline scale (and its contrast-more step) reaches it
+//   serupa/no-accent-on-current    where a selector marks an item as the selected, current or active one (aria-selected,
+//                                   aria-current, --selected, --current, --active, --highlighted), no declaration reads
+//                                   the accent (primary and its steps): the fill (--highlight) marks a row, a neutral
+//                                   line a tab, and the accent is kept for focus and for a chosen value. Option known:
+//                                   ['calendar-bg-selected', …], the component tokens of filled picks that stay accent
 //   serupa/own-block                a component's CSS styles its own blocks' elements (dk-block__element) only. Another
 //                                   block it may position or size, or feed through that block's custom properties,
 //                                   but not reach into, so a change inside one component can't break another. A block
@@ -220,4 +225,28 @@ const outlineWidth = rule('serupa/outline-width-token', {
   });
 });
 
-export default [layer, raw, color, focus, physical, radiusRole, outlineWidth, ownBlock];
+// The accent stays off "where you are" (GR407): a blue bar beside the current row, or a blue line under the current
+// tab, competes with the focus ring, which is the one thing the accent is for there. The rule reads each selector's
+// subject, so a selected parent's child (a tick inside a selected option) is the child's own business.
+const CURRENT = /\[aria-(?:selected|current)|--(?:selected|current|active|highlighted)(?![a-z0-9-])/;
+const noAccent = rule('serupa/no-accent-on-current', {
+  rejected: (n, token) => `var(--${n}) is the accent on a selected or current item${token ? ` (the default of --${token})` : ''}: mark it with the fill (--highlight), --highlight-indicator for a bar, or --text for a line; the accent is for focus`,
+}, (root, flag, m, opts) => {
+  const known = new Set(opts.known || []);
+  const name = (n) => (n.nodes[0]?.value || '').replace(/^--/, '');
+  // top: the component token a nested default is read through, var(--tabs-indicator, var(--old-name, var(--primary))).
+  const read = (decl, nodes, top) => {
+    for (const n of nodes) {
+      if (n.type !== 'function') continue;
+      if (n.value !== 'var') { read(decl, n.nodes, top); continue; }
+      const v = name(n);
+      if (/^primary(?:-|$)/.test(v)) { if (!known.has(top)) flag(decl, m.rejected(v, top), `--${v}`); } else read(decl, n.nodes.slice(1), top || v);
+    }
+  };
+  root.walkRules((r) => {
+    if (!r.selectors.some((sel) => CURRENT.test(subject(sel).replace(/:not\((?:[^()]|\([^()]*\))*\)/g, '')))) return;
+    r.walkDecls((decl) => { if (!/^outline/.test(decl.prop)) read(decl, valueParser(decl.value).nodes, ''); });
+  });
+});
+
+export default [layer, raw, color, focus, physical, radiusRole, outlineWidth, ownBlock, noAccent];

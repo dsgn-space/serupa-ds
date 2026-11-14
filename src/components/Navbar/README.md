@@ -148,7 +148,7 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | `--navbar-link-bg-hover` | `secondary` | A link's background on hover. |
 | `--navbar-link-bg-active` | `secondary` | The current page's link background. |
 | `--navbar-link-bg-active-hover` | `pressed` | The current page's link background under the pointer: one step past its rest. |
-| `--navbar-link-indicator` | `primary` | The 2px bar under the current page's link (at the start of a menu link), which hover never draws. |
+| `--navbar-link-indicator` | `highlight-indicator` | The 2px bar under the current page's link (at the start of a menu link), which hover never draws. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
 | `--navbar-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--navbar-link-bg-pressed` | `pressed` | A link's fill while it's held down. |
 | `--navbar-menu-bg` | `surface-overlay` | A dropdown panel's background (NavbarMenu). |
