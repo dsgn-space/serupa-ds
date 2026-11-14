@@ -63,7 +63,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 ```
 
 - Each row gets a checkbox named by its title. A press on the row picks it, and Shift with a press picks the run from the last one picked. A row with `href` or `onClick` keeps its link or button: only its checkbox picks it.
-- `selectionMode="single"` picks one row at a time, with no checkboxes: a picked row is shaded with the primary bar.
+- `selectionMode="single"` picks one row at a time, with no checkboxes: a picked row is shaded (with a bar at its start when more contrast is asked for).
 - A `disabled` row can't be picked. Leave it out of `ListSelectAll`'s `values`.
 
 ### Loading, empty and failed
@@ -137,7 +137,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 | `onClick` | function | none | Makes the main area a button (without `href`) |
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component; its props (such as `to`) go in `linkProps`. Set it once for the app with `configure({ link })`; `as` wins for one link. |
 | `linkProps` | object | none | Extra props for the link or button |
-| `selected` | boolean | `false` | Shaded with a primary bar; `aria-current="true"` on a link (an `aria-current` in `linkProps`, such as `"page"` for the current page of a nav list, wins), `aria-pressed` on a button |
+| `selected` | boolean | `false` | Shaded (with a bar at its start when more contrast is asked for); `aria-current="true"` on a link (an `aria-current` in `linkProps`, such as `"page"` for the current page of a nav list, wins), `aria-pressed` on a button |
 | `disabled` | boolean | `false` | Dims a link or button row and stops it; with `selectionMode`, it can't be picked |
 | `value` | string | | With `selectionMode`: what `onSelectedChange` reports for this row |
 
@@ -180,7 +180,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-description-color` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
 | `--list-bg-hover` | `surface-hover` | A link or button item on hover, and a selected item. |
 | `--list-bg-pressed` | `pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |
-| `--list-indicator-selected` | `highlight-indicator` | The bar at the start of a selected item. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
+| `--list-indicator-selected` | `highlight-indicator` | The bar at the start of a selected item. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--list-title-size` | `text-sm` | Titles (14px). |
 | `--list-title-weight` | `font-medium` | Title weight (500). |
@@ -190,6 +190,6 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-padding-y` | `spacing-3` | An item's top and bottom padding (12px). |
 | `--list-gap` | `spacing-3` | Space between the leading element, the text and the trailing element (12px). |
 | `--list-border-width` | `border-width-1` | Lines and frame (1px). |
-| `--list-indicator-width` | `border-width-2` | The selected item's bar (2px). |
+| `--list-indicator-width` | `highlight-indicator-width` | The width of the selected item's bar: none by default, 2px with more contrast. |
 | `--list-radius` | `radius-surface` | The corners of variant="card" (8px). |
 <!-- token-table:end -->
