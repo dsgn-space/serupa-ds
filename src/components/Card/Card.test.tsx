@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { THEMES, color, css, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
+import { Checkbox } from '../Checkbox/Checkbox';
 import { Card, CardBody, CardFooter, CardHeader } from './Card';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -328,5 +329,14 @@ describe('CardHeader with an action in a narrow card (GR7)', () => {
     expect(words(n.title)).toBeLessThanOrEqual(3);
     expect(n.action.getBoundingClientRect().top).toBeGreaterThanOrEqual(n.title.getBoundingClientRect().bottom - 0.5);
     expect(Math.abs(w.action.getBoundingClientRect().top - w.title.getBoundingClientRect().top)).toBeLessThan(8);
+  });
+});
+
+describe('Card href: a ticked checkbox inside (GR408)', () => {
+  test('a checkbox in a linked card keeps its tick over the box: the label is lifted above the link, not the input', async () => {
+    const s = await render(<Card id="ck" href="#ck"><CardBody><Checkbox label="Compare" defaultChecked /></CardBody></Card>);
+    const input = s.container.querySelector('input')!;
+    expect(getComputedStyle(input).zIndex).toBe('auto');
+    expect(getComputedStyle(input.closest('label')!).zIndex).toBe('10');
   });
 });
