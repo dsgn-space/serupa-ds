@@ -23,7 +23,7 @@ import {
   type PaymentAnswers, type PaymentInstructions, type PaymentMethod,
 } from './payment';
 
-export type { PaymentMethod, PaymentInstructions, PaymentProvider, SavedCard } from './payment';
+export type { PaymentMethod, PaymentInstructions } from './payment';
 
 /* Checkout / payment details: delivery address, delivery speed, an optional tip and card details, the order
    summary beside them, a review step and a confirmation. For an app to copy. What it carries (WCAG 2.2):
