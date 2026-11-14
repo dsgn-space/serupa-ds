@@ -37,6 +37,31 @@ describe('TimeZonePicker', () => {
     expect(input().value).toBe('New York');
   });
 
+  test('the whole list is made only once the field is focused, pointed at or opened: a page of pickers nobody has opened formats a few zones, not 400 each', async () => {
+    // The whole list starts from Intl.supportedValuesOf: not asked for until someone reaches for a picker.
+    const asked = vi.spyOn(Intl, 'supportedValuesOf');
+    await render(<><TimeZonePicker aria-label="Meeting" at={AT} defaultValue="Asia/Jakarta" /><TimeZonePicker aria-label="Office" at={AT} /></>);
+    const [meeting, office] = [...document.querySelectorAll<HTMLInputElement>('input[role="combobox"]')];
+    expect([meeting!.value, asked.mock.calls.length]).toEqual(['Jakarta', 0]);
+    await userEvent.hover(office!);
+    await expect.poll(() => asked.mock.calls.length).toBe(1);
+    meeting!.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.poll(() => Number(document.querySelector('[role="option"]')?.getAttribute('aria-setsize'))).toBeGreaterThan(100);
+    expect(asked.mock.calls.length).toBe(2);
+    asked.mockRestore();
+  });
+
+  test('open from the start (defaultOpen, or open from code), the list is whole at once', async () => {
+    const opened: boolean[] = [];
+    await render(<><TimeZonePicker aria-label="Time zone" at={AT} defaultOpen onOpenChange={(o) => opened.push(o)} /><TimeZonePicker aria-label="Shown" at={AT} open onOpenChange={() => {}} /></>);
+    expect([...document.querySelectorAll('[role="listbox"]')].map((l) => Number(l.querySelector('[role="option"]')?.getAttribute('aria-setsize')) > 100)).toEqual([true, true]);
+    await expect.poll(() => Number(document.querySelector('[role="option"]')?.getAttribute('aria-setsize'))).toBeGreaterThan(100);
+    input().focus();
+    await userEvent.keyboard('{Escape}');
+    expect(opened.at(-1)).toBe(false);
+  });
+
   test('readOnly, from Combobox: focusable and aria-readonly, shows its zone, and neither typing nor a press opens the list or changes it', async () => {
     const changes: unknown[] = [];
     await render(<form id="tz-form" onSubmit={(e) => e.preventDefault()}><TimeZonePicker aria-label="Time zone" name="tz" readOnly defaultValue="Asia/Jakarta" at={AT} onValueChange={(v) => changes.push(v)} /></form>);
