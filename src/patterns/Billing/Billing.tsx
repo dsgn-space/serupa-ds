@@ -168,7 +168,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
 
           <section aria-labelledby="billing-plan" className="flex flex-col gap-3">
             <Heading level={2} size="lg" id="billing-plan">Plan</Heading>
-            <Card className="flex flex-wrap items-start justify-between gap-4">
+            <Card className="flex flex-row flex-wrap items-start justify-between gap-4">
               <div className="flex flex-col gap-1">
                 <p className="m-0 text-lg font-semibold">{plan.name}{cancelled ? <Badge tone="warning" className="ms-2">Cancelled</Badge> : null}</p>
                 <p className="m-0">{price} a {plan.interval}</p>
@@ -197,7 +197,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
 
           <section aria-labelledby="billing-card" className="flex flex-col gap-3">
             <Heading level={2} size="lg" id="billing-card">Payment method</Heading>
-            <Card className="flex flex-wrap items-center justify-between gap-3">
+            <Card className="flex flex-row flex-wrap items-center justify-between gap-3">
               <div className="flex flex-col gap-1">
                 {method ? <p className="m-0">
                   {methodText(method)}{method.kind === 'card' ? `, expires ${date(method.expires)}` : ''}

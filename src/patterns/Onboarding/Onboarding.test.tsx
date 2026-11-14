@@ -121,4 +121,13 @@ describe('Patterns/Onboarding', () => {
     expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
     expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
   });
+
+  test('hidden, the checklist is one row: its heading at the start, Show the checklist beside it', async () => {
+    const sideBySide = (a: Element, b: Element) => { const r = a.getBoundingClientRect(), q = b.getBoundingClientRect(); return r.top < q.bottom && q.top < r.bottom && (r.right <= q.left || q.right <= r.left); };
+    const screen = await render(<Onboarding steps={steps} initial={{ done: [], hidden: true }} />);
+    const h = screen.getByRole('heading', { name: /^Set up your workspace/ }).element();
+    const card = h.parentElement!   // the card the heading sits in;
+    expect(sideBySide(h, screen.getByRole('button', { name: 'Show the checklist' }).element())).toBe(true);
+    expect(Math.abs(h.getBoundingClientRect().left - card.getBoundingClientRect().left)).toBeLessThan(24);
+  });
 });
