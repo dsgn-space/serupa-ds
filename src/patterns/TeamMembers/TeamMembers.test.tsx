@@ -4,6 +4,10 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { TeamMembers, emailsIn, inviteProblem } from './TeamMembers';
 
+// A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
+// match getByText, and a locator that finds two fails.
+const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]'));
+const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).length;
 const active = () => document.activeElement as HTMLElement;
 const said = () => [...document.querySelectorAll('[aria-live]')].map((e) => e.textContent || '').join(' ');
 // The toast that says text: its Undo has no aria-label (its words name it), its close button is "Dismiss".
@@ -83,7 +87,7 @@ describe('Patterns/Team members', () => {
     await screen.getByRole('button', { name: 'Invite people' }).click();
     const box = screen.getByRole('textbox', { name: /^Email addresses/ });
     await screen.getByRole('button', { name: 'Send invites' }).click();
-    await expect.element(screen.getByText('Enter at least one email address.')).toBeVisible();
+    await expect.poll(() => shown('Enter at least one email address.')).toBe(1);
     await box.fill('fay@example.com, chen@example.com');
     await screen.getByRole('button', { name: 'Send invites' }).click();
     await expect.element(screen.getByText('Already on the team or invited: chen@example.com.')).toBeVisible();
@@ -118,7 +122,7 @@ describe('Patterns/Team members', () => {
     const screen = await render(<TeamMembers />);
     await screen.getByRole('button', { name: 'Invite people' }).click();
     await screen.getByRole('button', { name: 'Send invites' }).click();
-    await expect.element(screen.getByText('Enter at least one email address.')).toBeVisible();
+    await expect.poll(() => shown('Enter at least one email address.')).toBe(1);
     await userEvent.keyboard('{Escape}');
     await screen.getByRole('button', { name: 'Invite people' }).click();
     // In the dialog: the page's polite live region moves into it and may still be saying the old problem for its
