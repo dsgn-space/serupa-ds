@@ -23,25 +23,16 @@ import { componentTests } from './generated/tested';
 import { changesFor } from './changes';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 import { DoDont, doDontAt } from './doDont';
-// Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
-const componentLabelSources = Object.values(import.meta.glob('../src/components/*/labels.ts', { query: '?raw', import: 'default', eager: true }) as Record<string, string>);
+// What the blocks need from every component folder at once (each one's docs page id, other names, label uses, tokens)
+// is read once by tools/build/registry.mjs, not here: a glob of every README, story file and stylesheet made each
+// page ask a development server for some 650 files.
+import { componentDocs as docsId, componentLabelUse, componentTokens, otherNames, pendingChangesets, tokenUsers } from './generated/facts';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
 type TypeStyle = { name: string; fontSize: string; lineHeight: string; fontWeight: string };
 type TypeGroup = { name: string; note?: string; styles: TypeStyle[] };
 const T = tokens as unknown as Record<string, Group> & { type: { groups: TypeGroup[] }; color: Group & { themes: { id: string; name: string }[] } };
-
-// Each component's sidebar path (Components/Forms/Input), read from its stories' meta title, so links follow the
-// grouping. Keyed by the component's folder, which README links name. Only a title with a group counts: the first
-// title: in a file can be a story's data (Stepper's steps, Kanban's cards), which once sent their links to no page.
-// storybook.mjs checks that every docs link resolves in Storybook's index.
-const storyFiles = import.meta.glob('../src/components/*/*.stories.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
-const docsId: Record<string, string> = {};
-for (const [file, src] of Object.entries(storyFiles)) {
-  const title = /\btitle:\s*(['"])((?:Components|Foundations|Blocks|Patterns)\/[^'"]+)\1/.exec(src)?.[2];
-  if (title) docsId[file.split('/').at(-2)!] = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-}
 
 /* Heading ids (GR361). markdown-to-jsx gives each heading an id from its text, without looking at the rest of the
    page, so a guide's "States" section and the "States" story under it shared one, as did the Changelog's "Fixed" in
@@ -322,13 +313,6 @@ export function IconGallery() {
   </div>;
 }
 
-// The other names each component is known by: the "**Also called:**" line under its README's first paragraph.
-const readmes = import.meta.glob('../src/components/*/README.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
-const otherNames = Object.entries(readmes).flatMap(([file, md]) => {
-  const name = /components\/(\w+)\//.exec(file)![1], line = /^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(md)?.[1];
-  return line ? line.split(/,\s*/).map((other) => ({ other, name })) : [];
-}).sort((a, b) => a.other.localeCompare(b.other, 'en', { sensitivity: 'base' }));
-
 /** "Know it by another name?": every other name a component is known by (snackbar, dropzone, modal), filtered as you
  * type, each linked to the Serupa component that does the job. */
 export function OtherNames() {
@@ -362,10 +346,12 @@ export function IconSizes() {
 const labelUse: Record<string, string> = {};
 {
   let use = '';
-  for (const source of [labelsSource, ...componentLabelSources]) for (const line of source.slice(source.indexOf('export interface '), source.indexOf('\n}\n')).split('\n').slice(1)) {
+  for (const line of labelsSource.slice(labelsSource.indexOf('export interface '), labelsSource.indexOf('\n}\n')).split('\n').slice(1)) {
     const doc = /^\s*\/\*\*\s*(.*?)\s*\*\/$/.exec(line), key = /^\s*(\w+):/.exec(line);
     if (doc) use = doc[1]; else if (key) labelUse[key[1]] = use;
   }
+  // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
+  Object.assign(labelUse, componentLabelUse);
 }
 // A function label is shown with "n" for its first argument; one that takes a list (cascadePath) can't, so it says so.
 const word = (v: SerupaLabels[keyof SerupaLabels]) => {
@@ -399,8 +385,6 @@ export function ElevationLevels() {
 // The token explorer's index: every shared token in tokens.json and every component token (<name>.tokens.json),
 // with the components whose CSS reads it. Built once, when the page first draws.
 type Found = { css: string; group: string; values: { theme?: string; ref?: string; value: string }[]; usage: string; usedBy: string[] };
-const componentTokenFiles = import.meta.glob('../src/components/*/*.tokens.json', { import: 'default', eager: true }) as Record<string, Record<string, Record<string, unknown>>>;
-const componentCss = import.meta.glob('../src/components/*/*.css', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const COLOR = new Map(T.color.tokens.map((t) => [t.name, t.value]));
 // A color token's value in one theme, following references ({blue-600}) to the literal color.
 function resolve(value: Token['value'], theme: string, depth = 0): string {
@@ -411,16 +395,7 @@ function resolve(value: Token['value'], theme: string, depth = 0): string {
 let INDEX: Found[] | undefined;
 function tokenIndex(): Found[] {
   if (INDEX) return INDEX;
-  const usedBy = new Map<string, Set<string>>();
-  for (const [file, css] of Object.entries(componentCss)) {
-    const name = file.split('/').at(-2)!;
-    for (const m of css.matchAll(/var\(\s*(--[\w\\.-]+)/g)) {
-      const v = m[1].replace(/\\/g, '');
-      if (!usedBy.has(v)) usedBy.set(v, new Set());
-      usedBy.get(v)!.add(name);
-    }
-  }
-  const users = (css: string, own?: string) => [...new Set([...(usedBy.get(css) ?? []), ...(own ? [own] : [])])].sort();
+  const users = (css: string, own?: string) => [...new Set([...(tokenUsers[css] ?? []), ...(own ? [own] : [])])].sort();
   const out: Found[] = [];
   for (const [group, g] of Object.entries(T)) {
     if (!g || typeof g !== 'object' || !Array.isArray((g as Group).tokens)) continue;
@@ -432,20 +407,7 @@ function tokenIndex(): Found[] {
       out.push({ css, group, values, usage: t.usage ?? '', usedBy: users(css) });
     }
   }
-  for (const [file, json] of Object.entries(componentTokenFiles)) {
-    const name = file.split('/').at(-2)!;
-    for (const [group, entries] of Object.entries(Object.values(json)[0] as Record<string, Record<string, { $value: unknown; $description?: string; $extensions: { 'com.serupa': { cssVar: string } } }>>)) {
-      if (group.startsWith('$')) continue;
-      for (const [key, t] of Object.entries(entries)) {
-        if (key.startsWith('$')) continue;
-        const css = t.$extensions['com.serupa'].cssVar;
-        const v = t.$value;
-        const ref = typeof v === 'string' ? /^\{[^.}]+\.([^}]+)\}$/.exec(v)?.[1]?.replace(/_/g, '.') : undefined;
-        const value = ref ? `--${ref}` : (v && typeof v === 'object' && (v as { alpha?: number }).alpha === 0 ? 'transparent' : typeof v === 'string' ? v : (v as { hex?: string })?.hex ?? JSON.stringify(v));
-        out.push({ css, group: name, values: [{ value }], usage: t.$description ?? '', usedBy: users(css, name) });
-      }
-    }
-  }
+  for (const t of componentTokens) out.push({ css: t.css, group: t.component, values: [{ value: t.value }], usage: t.usage, usedBy: users(t.css, t.component) });
   return (INDEX = out);
 }
 // The text to paste into CSS: a dot (or a backslash) in a token name is escaped there (--spacing-1\.5), every one.
@@ -484,7 +446,6 @@ export function TokenExplorer() {
   </div>;
 }
 
-const pendingChangesets = import.meta.glob('../.changeset/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 type Transform = { version: string; id: string; title: string };
 
 /** The upgrade guide (40): each major's breaking changes, the next one first while its changesets wait for a release,
