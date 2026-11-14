@@ -1,4 +1,7 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { DoDontExample } from '../doDont';
+import { Button } from '../../src/components/Button/Button';
+
 import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../blocks';
 import { MotionGallery } from '../motionGallery';
 
@@ -15,3 +18,18 @@ Each of these is the real component. Use it, then turn on reduced motion in your
 <MotionGallery />
 
 <TokenTable group="transitions" preview="duration" />
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| Time a transition with a role: `motion-enter-sm`, `motion-change-md`, `ease-exit`. | Write `0.3s ease` or a `cubic-bezier()` in a component. |
+| Make a press answer at once and let go smoothly, as Button does. | Make someone wait for an animation before they can act again. |
+| Name the properties that move: `opacity`, `translate`, `scale`. | Write `transition: all`, which animates a theme switch too. |
+
+<DoDontExample
+  doText="Press it: the motion comes from roles, and goes under reduced motion."
+  doExample={<Button>Press me</Button>}
+  dontText="A duration and curve of its own, on every property."
+  dontExample={<Source language="css" dark={false} code={'.card {\n  transition: all 0.6s cubic-bezier(0.7, 0, 0.3, 1);\n}'} />}
+/>
