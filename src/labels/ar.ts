@@ -300,6 +300,8 @@ export const labels: SerupaLabels = {
   tableSorted: (column, direction) => 'مرتب حسب ' + column + '، ' + (direction === 'ascending' ? 'تصاعديًا' : 'تنازليًا') + '.',
   tableSelected: (count) => 'المحدد: ' + n(count),
   clearSelection: 'مسح التحديد',
+  tableSelectAll: (count) => 'تحديد الكل: ' + n(count),
+  tableAllSelected: (count) => 'تم تحديد الكل: ' + n(count),
   tableResizeColumn: (column) => 'تغيير عرض العمود ' + column,
   tableNarrower: 'أضيق',
   tableWider: 'أعرض',

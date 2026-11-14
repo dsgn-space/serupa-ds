@@ -296,6 +296,8 @@ export const labels: SerupaLabels = {
   tableSorted: (column, direction) => 'Sorterat efter ' + column + ', ' + (direction === 'ascending' ? 'stigande' : 'fallande') + '.',
   tableSelected: (count) => n(count) + ' valda',
   clearSelection: 'Rensa markering',
+  tableSelectAll: (count) => 'Välj alla ' + n(count),
+  tableAllSelected: (count) => 'Alla ' + n(count) + ' valda',
   tableResizeColumn: (column) => 'Ändra bredd på kolumnen ' + column,
   tableNarrower: 'Smalare',
   tableWider: 'Bredare',

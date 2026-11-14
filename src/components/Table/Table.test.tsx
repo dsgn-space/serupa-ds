@@ -517,6 +517,54 @@ describe('TableActionBar (62)', () => {
       expect(contrast(css(count).color, css(el('bar')).backgroundColor), th).toBeGreaterThanOrEqual(4.5);
     }
   });
+
+  test('with total and onSelectAll: "Select all 1,240" past the page, then "All 1,240 selected", and focus goes on to the next button', async () => {
+    function Pages() {
+      const [count, setCount] = React.useState(3);
+      return <TableActionBar id="bar-pages" count={count} total={1240} onSelectAll={() => setCount(1240)} onClear={() => setCount(0)}>
+        <Button size="sm" variant="outline">Export</Button>
+      </TableActionBar>;
+    }
+    await render(<SerupaProvider locale="en-US"><Pages /></SerupaProvider>);
+    const bar = el('bar-pages'), names = () => [...bar.querySelectorAll('button')].map((b) => b.textContent);
+    const count = () => document.getElementById(bar.getAttribute('aria-labelledby')!)?.textContent;
+    expect(count()).toBe('3 selected');
+    expect(names()).toEqual(['Select all 1,240', 'Export', 'Clear selection']);
+    (bar.querySelector('button') as HTMLButtonElement).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(count).toBe('All 1,240 selected');
+    expect(names()).toEqual(['Export', 'Clear selection']);
+    expect(document.activeElement?.textContent).toBe('Export');   // the next button: not lost to the page with the button it was on
+  });
+
+  test('total alone, or onSelectAll with every row on the page: no "Select all" button, and the count in the locale\'s grouping', async () => {
+    await render(<>
+      <SerupaProvider locale="en-US"><TableActionBar id="bar-total" count={2} total={1240} /></SerupaProvider>
+      <SerupaProvider locale="de-DE"><TableActionBar id="bar-de" count={1240} total={1240} onSelectAll={() => {}} /></SerupaProvider>
+    </>);
+    expect(el('bar-total').querySelector('button')).toBe(null);
+    expect(el('bar-de').querySelector('button')).toBe(null);
+    expect(['bar-total', 'bar-de'].map((b) => document.getElementById(el(b).getAttribute('aria-labelledby')!)?.textContent)).toEqual(['2 selected', 'All 1.240 selected']);
+    expect(idLabels.tableSelectAll(1240, '1.240')).toBe('Pilih semua 1.240');
+    expect(idLabels.tableAllSelected(1240, '1.240')).toBe('Semua 1.240 dipilih');
+  });
+
+  test('sticky: held at the top of the page\'s scroll, at the table.action-bar-top offset, above the table\'s own sticky cells', async () => {
+    await render(<div id="page" style={{ height: '200px', overflow: 'auto' }}>
+      <TableActionBar id="bar-sticky" sticky count={2} />
+      <TableActionBar id="bar-flat" count={2} />
+      <div style={{ height: '1000px' }} />
+    </div>);
+    const s = css(el('bar-sticky'));
+    expect(s.position).toBe('sticky');
+    expect(s.top).toBe('0px');
+    expect(Number(s.zIndex)).toBeGreaterThan(Number(css(document.documentElement).getPropertyValue('--z-30')));
+    expect(css(el('bar-flat')).position).toBe('static');
+    el('page').scrollTop = 400;
+    await expect.poll(() => el('bar-sticky').getBoundingClientRect().top - el('page').getBoundingClientRect().top).toBe(0);
+    el('page').style.setProperty('--table-action-bar-top', '48px');
+    await expect.poll(() => el('bar-sticky').getBoundingClientRect().top - el('page').getBoundingClientRect().top).toBe(48);
+  });
 });
 
 describe('TableRow href (TF3)', () => {

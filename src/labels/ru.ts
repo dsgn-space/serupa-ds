@@ -302,6 +302,8 @@ export const labels: SerupaLabels = {
   tableSorted: (column, direction) => 'Сортировка: ' + column + ', ' + (direction === 'ascending' ? 'по возрастанию' : 'по убыванию') + '.',
   tableSelected: (count) => 'Выбрано: ' + n(count),
   clearSelection: 'Снять выделение',
+  tableSelectAll: (count) => 'Выбрать все (' + n(count) + ')',
+  tableAllSelected: (count) => 'Выбраны все: ' + n(count),
   tableResizeColumn: (column) => 'Изменить ширину столбца ' + column,
   tableNarrower: 'Уже',
   tableWider: 'Шире',

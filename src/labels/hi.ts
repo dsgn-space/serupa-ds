@@ -295,6 +295,8 @@ export const labels: SerupaLabels = {
   tableSorted: (column, direction) => column + ' के हिसाब से ' + (direction === 'ascending' ? 'बढ़ते क्रम में' : 'घटते क्रम में') + ' लगाया गया।',
   tableSelected: (count) => n(count) + ' चुने गए',
   clearSelection: 'चुनाव हटाएँ',
+  tableSelectAll: (count) => 'सभी ' + n(count) + ' चुनें',
+  tableAllSelected: (count) => 'सभी ' + n(count) + ' चुने गए',
   tableResizeColumn: (column) => column + ' कॉलम का आकार बदलें',
   tableNarrower: 'संकरा',
   tableWider: 'चौड़ा',

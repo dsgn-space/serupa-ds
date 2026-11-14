@@ -296,6 +296,8 @@ export const labels: SerupaLabels = {
   tableSorted: (column, direction) => column + ' sütununa göre ' + (direction === 'ascending' ? 'artan' : 'azalan') + ' sıralandı.',
   tableSelected: (count) => n(count) + ' seçili',
   clearSelection: 'Seçimi temizle',
+  tableSelectAll: (count) => 'Tümünü seç (' + n(count) + ')',
+  tableAllSelected: (count) => 'Tümü seçili (' + n(count) + ')',
   tableResizeColumn: (column) => column + ' sütununu yeniden boyutlandır',
   tableNarrower: 'Daralt',
   tableWider: 'Genişlet',

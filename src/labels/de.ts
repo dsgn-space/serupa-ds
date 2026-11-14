@@ -299,6 +299,8 @@ export const labels: SerupaLabels = {
   tableSorted: (column, direction) => 'Sortiert nach ' + column + ', ' + (direction === 'ascending' ? 'aufsteigend' : 'absteigend') + '.',
   tableSelected: (count) => n(count) + ' ausgewählt',
   clearSelection: 'Auswahl aufheben',
+  tableSelectAll: (count) => 'Alle ' + n(count) + ' auswählen',
+  tableAllSelected: (count) => 'Alle ' + n(count) + ' ausgewählt',
   tableResizeColumn: (column) => 'Breite der Spalte ' + column + ' ändern',
   tableNarrower: 'Schmaler',
   tableWider: 'Breiter',

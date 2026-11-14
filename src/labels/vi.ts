@@ -296,6 +296,8 @@ export const labels: SerupaLabels = {
   tableSorted: (column, direction) => 'Đã sắp xếp theo ' + column + ', ' + (direction === 'ascending' ? 'tăng dần' : 'giảm dần') + '.',
   tableSelected: (count) => 'Đã chọn ' + n(count),
   clearSelection: 'Bỏ chọn',
+  tableSelectAll: (count) => 'Chọn tất cả ' + n(count),
+  tableAllSelected: (count) => 'Đã chọn tất cả ' + n(count),
   tableResizeColumn: (column) => 'Đổi độ rộng cột ' + column,
   tableNarrower: 'Hẹp hơn',
   tableWider: 'Rộng hơn',
