@@ -368,7 +368,7 @@ export function LabelTable() {
 }
 
 const LEVELS: [string, string, string, string][] = [
-  ['Page', 'surface', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border-raised', 'shadow-md'],
+  ['Page', 'surface', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
   ['Floating', 'surface-overlay', 'border-overlay', 'shadow-lg'], ['Modal', 'surface-overlay', 'border-overlay', 'shadow-xl'],
 ];
 /** The elevation levels drawn with their tokens, on a light and a dark page side by side. */
