@@ -247,7 +247,8 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps & {
 
 /** A <button> for actions; pass href for navigation and it renders a link. Built-in micro-interactions: press and a loading cross-fade, plus an opt-in right-icon nudge (--button-icon-nudge); off under reduced motion. Colors, spacing, sizes, borders and motion can be overridden with the --button-* component tokens (button.tokens.json) on the page, a container or one button. */
 export const Button = /* @__PURE__ */ component<HTMLElement, ButtonProps>('Button', function Button(props, ref) {
-  return React.createElement(ButtonBase, Object.assign({}, omit(props as ButtonProps & { icon?: unknown }, { icon: 1 }) as ButtonProps, { ref: ref }));
+  const { icon: _icon, ...forwarded } = props as ButtonProps & { icon?: unknown };   // icon is IconButton's since 15.0.0: one passed anyway draws nothing
+  return React.createElement(ButtonBase, Object.assign({}, forwarded, { ref: ref }));
 }) as unknown as {
   (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): React.ReactElement | null;
   (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): React.ReactElement | null;
