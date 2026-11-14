@@ -14,8 +14,8 @@
   display: inline-flex; flex-direction: column; gap: var(--calendar-gap, var(--spacing-2));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--calendar-day-color, var(--text));
 }
-/* Touch (EQ1): 44px days, as Apple and Material ask, still shrinking to a seventh of a narrow screen. */
-@media (pointer: coarse) { .dk-calendar { --dk-cal-day: min(var(--calendar-day-size, var(--spacing-11)), round(down, calc((100vw - var(--spacing-12)) / 7), var(--border-width-1))); } }   /* stylelint-disable-line serupa/no-raw-value -- as above */
+/* Touch (EQ1): at least 44px days, as Apple and Material ask, still shrinking to a seventh of a narrow screen. */
+@media (pointer: coarse) { .dk-calendar { --dk-cal-day: min(max(var(--calendar-day-size, var(--control-height-md)), var(--spacing-11)), round(down, calc((100vw - var(--spacing-12)) / 7), var(--border-width-1))); } }   /* stylelint-disable-line serupa/no-raw-value -- as above */
 .dk-calendar__header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
 .dk-calendar__title { flex: auto; margin: var(--spacing-0); text-align: center; color: var(--calendar-title-color, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--calendar-title-weight, var(--font-semibold)); }
 /* monthYearPicker: the month and year menus where the title was, native selects with the field's look. */
