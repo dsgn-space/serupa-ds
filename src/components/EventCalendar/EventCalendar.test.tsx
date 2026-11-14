@@ -388,6 +388,10 @@ describe('EventCalendar labels', () => {
   test('eventCount and moreEvents say the count as given, in the locale\'s digits ("٢ acara", "+٣ lagi")', () => {
     expect([idLabels.eventCount(2, '٢'), idLabels.moreEvents(3, '٣'), idLabels.eventCount(0, '٠')]).toEqual(['٢ acara', '+٣ lagi', 'Tidak ada acara']);
   });
+
+  test('eventChanged says the moved event\'s title, then its new day and time ("Rapat desain, sekarang …")', () => {
+    expect(idLabels.eventChanged('Rapat desain', 'Kamis, 6 Maret, 14.00 sampai 15.00')).toBe('Rapat desain, sekarang Kamis, 6 Maret, 14.00 sampai 15.00');
+  });
 });
 
 describe('EventCalendar held state', () => {
