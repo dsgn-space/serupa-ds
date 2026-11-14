@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Billing } from './Billing';
 
-/* Billing: the plan with its price and renewal date, usage in words, the card, invoices, and a cancel that takes one
+/* Billing: the plan with its price and renewal date, usage in words, how it's paid, invoices, and a cancel that takes one
    dialog. Billing.mdx says why each part is there and what stays the app's job. The links go nowhere here. */
 const meta = {
   title: 'Patterns/Billing',
@@ -21,6 +21,18 @@ export const PaymentFailed: Story = {
     { id: 'in3', date: '2026-10-01', amount: 24, status: 'paid', href: '#invoice-in3' },
   ] },
 };
+
+/** Paid by direct debit from a bank account: Change payment method in place of Update card. */
+export const DirectDebit: Story = { args: { paymentMethod: { kind: 'bank', bank: 'BCA', last4: '7781' } } };
+
+/** Paid from an e-wallet, named with the last digits of its phone number. */
+export const EWallet: Story = { args: { paymentMethod: { kind: 'ewallet', provider: 'GoPay', phoneLast4: '4410' } } };
+
+/** The card runs out before the next payment: a badge, and the words say when and what to do. */
+export const CardExpiring: Story = { args: { paymentMethod: { kind: 'card', brand: 'Mastercard', last4: '5100', expires: '2026-11' } } };
+
+/** Nothing on file yet: the page says so, by when to add one, and Add payment method. */
+export const NoPaymentMethod: Story = { args: { paymentMethod: null } };
 
 /** A cancelled plan: it says when it stops and that nothing is deleted, with Resume plan. */
 export const Cancelled: Story = { args: { plan: { name: 'Team', price: 24, currency: 'USD', interval: 'month', renews: '2026-12-01', cancelled: true } } };
