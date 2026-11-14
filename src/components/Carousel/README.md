@@ -5,7 +5,7 @@ One slide at a time, with previous and next buttons, a dot per slide and swipe. 
 **Also called:** content slider, slideshow.
 
 ```tsx
-import { Carousel, Image } from "serupa-ds";
+import { Carousel, Image } from "@diki-stwn/serupa-ds";
 
 <Carousel label="Product photos">
   {photos.map((p) => <Image key={p.id} src={p.url} alt={p.alt} ratio="4:3" rounded={false} />)}

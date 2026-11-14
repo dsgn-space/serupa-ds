@@ -22,14 +22,14 @@ const names = fs.readdirSync(COMP).filter((n) => /^[A-Z]/.test(n) && fs.existsSy
 // The keys of P that are optional and whose type, once the optional marker is gone, doesn't include undefined. As a
 // template literal type, so the error message spells the union out. ComponentProps of an overloaded component
 // (Button) reads its last signature.
-const probe = ['import * as React from "react";', 'import * as S from "serupa-ds";',
+const probe = ['import * as React from "react";', 'import * as S from "@diki-stwn/serupa-ds";',
   'type Bad<P> = { [K in keyof P]-?: {} extends Pick<P, K> ? (undefined extends Required<P>[K] ? never : K) : never }[keyof P];',
   ...names.map((n) => `export const p_${n}: \`\${Bad<React.ComponentProps<typeof S.${n}>> & string}\` = "\\u0000";`)].join('\n') + '\n';
 const found = {};
 let ran = false;
 let tscSaid = '';
 if (built) {
-  // Inside the project, so "serupa-ds" resolves to this package's own exports and React's types are found.
+  // Inside the project, so "@diki-stwn/serupa-ds" resolves to this package's own exports and React's types are found.
   const dir = fs.mkdtempSync(path.join(PROJECT, '.test-tmp-optional-'));
   try {
     fs.writeFileSync(path.join(dir, 'probe.tsx'), probe);

@@ -1,4 +1,4 @@
-import { Button, Container, Heading, Stack, Text } from 'serupa-ds';
+import { Button, Container, Heading, Stack, Text } from '@diki-stwn/serupa-ds';
 
 export const meta = () => [{ title: 'Serupa in React Router' }];
 

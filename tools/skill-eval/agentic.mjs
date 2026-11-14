@@ -2,7 +2,7 @@
 // behind rather than on its text. Each run makes a fresh app with serupa-create, with the package installed as a
 // release ships it (npm pack of this build) and the rest of node_modules linked to the repository's, so nothing is
 // downloaded. Claude Code (`claude -p`) then gets the task in that folder with its file tools and `npm run`, and either
-// the app's AGENTS.md and CLAUDE.md (with: they send it to node_modules/serupa-ds/skills/serupa/SKILL.md) or neither
+// the app's AGENTS.md and CLAUDE.md (with: they send it to node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md) or neither
 // (without). The checks it doesn't see:
 //   typecheck  the app's `npm run typecheck`
 //   lint       the app's `npm run lint`: jsx-a11y, serupa-ds/eslint and serupa-ds/stylelint
@@ -47,9 +47,9 @@ export function makeApp(dir, unpacked, withSkill) {
   const modules = path.join(dir, 'node_modules');
   fs.mkdirSync(modules);
   for (const name of fs.readdirSync(path.join(ROOT, 'node_modules'))) {
-    if (!name.startsWith('.') && name !== 'serupa-ds') fs.symlinkSync(path.join(ROOT, 'node_modules', name), path.join(modules, name), 'junction');
+    if (!name.startsWith('.') && name !== '@diki-stwn/serupa-ds') fs.symlinkSync(path.join(ROOT, 'node_modules', name), path.join(modules, name), 'junction');
   }
-  fs.cpSync(unpacked, path.join(modules, 'serupa-ds'), { recursive: true });
+  fs.cpSync(unpacked, path.join(modules, '@diki-stwn/serupa-ds'), { recursive: true });
   fs.mkdirSync(path.join(modules, '.bin'));
   // The repository's tools (tsc, eslint, stylelint, vite), as npm run finds them.
   const bins = path.join(ROOT, 'node_modules', '.bin');
@@ -63,7 +63,7 @@ export function didTask(dir, task) {
   const starter = files({ name: 'eval-app', serupa: 'file:serupa-ds.tgz', brand: 'blue' })['src/App.tsx'];
   const app = fs.existsSync(path.join(src, 'App.tsx')) ? fs.readFileSync(path.join(src, 'App.tsx'), 'utf8') : '';
   if (app.trim() === String(starter).trim()) return { ok: false, why: 'src/App.tsx is still the starter' };
-  const used = new Set(code.flatMap((c) => [...c.matchAll(/import\s*\{([^}]*)\}\s*from\s*["']serupa-ds["']/g)].flatMap((m) => m[1].split(',').map((n) => n.trim().split(/\s+as\s+/)[0]).filter(Boolean))));
+  const used = new Set(code.flatMap((c) => [...c.matchAll(/import\s*\{([^}]*)\}\s*from\s*["'](?:@diki-stwn\/)?serupa-ds["']/g)].flatMap((m) => m[1].split(',').map((n) => n.trim().split(/\s+as\s+/)[0]).filter(Boolean))));
   const expect = task?.expect ?? [];
   const missing = expect.filter((n) => !n.split('|').some((alt) => used.has(alt)));   // "Dialog|AlertDialog": either one
   return { ok: expect.length - missing.length >= Math.ceil(expect.length / 2), why: missing.length ? `doesn't use ${missing.join(', ')}` : '' };

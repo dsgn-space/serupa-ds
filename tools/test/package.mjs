@@ -14,8 +14,9 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const pkg = JSON.parse(read('package.json'));
 
-// 0. Nothing publishes to a registry until Diki says so (the name, serupa-ds, is final since 2 November 2026): projects install releases from GitHub.
-t('package.json is private and has no publishConfig, so npm publish refuses', pkg.private === true && !('publishConfig' in pkg), `private: ${pkg.private}, publishConfig: ${JSON.stringify(pkg.publishConfig)}`);
+// 0. From 15.0.0 the package is @diki-stwn/serupa-ds on GitHub Packages, and never on the public npm registry (docs/rfcs/15.0.0.md):
+// publishConfig pins the registry, so an npm publish without one still goes there.
+t('package.json is @diki-stwn/serupa-ds, and publishConfig sends it to GitHub Packages, never to the public npm registry', pkg.name === '@diki-stwn/serupa-ds' && pkg.publishConfig?.registry === 'https://npm.pkg.github.com' && !/registry\.npmjs\.org/.test(JSON.stringify(pkg)), `name: ${pkg.name}, publishConfig: ${JSON.stringify(pkg.publishConfig)}`);
 // Every component is built by tools in devDependencies, so a project installs nothing else (J7).
 t('package.json has no dependencies (React is a peer dependency; everything else is bundled)', !Object.keys(pkg.dependencies || {}).length && !Object.keys(pkg.optionalDependencies || {}).length, JSON.stringify({ ...pkg.dependencies, ...pkg.optionalDependencies }));
 // npm runs the build as "prepare", so it reports on stderr: npm pack --json then prints only its JSON.
@@ -38,7 +39,7 @@ const untyped = exported.filter((n) => !typed.has(n));
 t('every export is on window.Serupa (src/browser.ts) and in its type (src/index.ts)', !untyped.length && bundlesAll, `not typed: ${untyped.join(', ')}; ${bundlesAll ? '' : 'browser.ts must assign everything from ./index to window.Serupa'}`);
 t('react and react-dom are peer dependencies (one React in the app)', pkg.peerDependencies && pkg.peerDependencies.react && pkg.peerDependencies['react-dom'] && !(pkg.dependencies || {}).react);
 // dist/index.d.ts imports React's types: a TypeScript project needs @types/react, a JavaScript one doesn't.
-// Import and export lines only: a doc comment can quote one (`import { Add } from "serupa-ds/icons"`).
+// Import and export lines only: a doc comment can quote one (`import { Add } from "@diki-stwn/serupa-ds/icons"`).
 const typeImports = [...new Set([...read('dist/index.d.ts').matchAll(/^(?:import|export)\b[^\n]*\bfrom ['"]([^'"./][^'"]*)['"]/gm)].map((m) => m[1]))];
 const untypedPeers = typeImports.filter((m) => !pkg.peerDependencies?.[`@types/${m}`] || !pkg.peerDependenciesMeta?.[`@types/${m}`]?.optional);
 t('every package dist/index.d.ts imports types from has its @types package as an optional peer', typeImports.length && !untypedPeers.length, `${untypedPeers.map((m) => `@types/${m}`).join(', ')} (imports: ${typeImports.join(', ')})`);

@@ -1,5 +1,5 @@
 ---
-"serupa-ds": patch
+"@diki-stwn/serupa-ds": patch
 ---
 
 Fixes found by the nightly runs in Safari's engine and the oldest supported Chrome:

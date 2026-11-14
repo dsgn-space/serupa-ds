@@ -5,7 +5,7 @@ A file shown as one compact row: an icon for its kind, the name, the kind and si
 **Also called:** file, download link.
 
 ```tsx
-import { Attachment } from "serupa-ds";
+import { Attachment } from "@diki-stwn/serupa-ds";
 
 <Attachment name="Invoice March 2026.pdf" bytes={1_482_000} href="/files/invoice-march.pdf" />
 

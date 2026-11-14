@@ -3,11 +3,11 @@
 // <html> before React hydrates, hence suppressHydrationWarning there.
 import fs from 'node:fs';
 import path from 'node:path';
-import 'serupa-ds/tokens.css';
-import 'serupa-ds/base.css';
-import 'serupa-ds/bundle.css';
+import '@diki-stwn/serupa-ds/tokens.css';
+import '@diki-stwn/serupa-ds/base.css';
+import '@diki-stwn/serupa-ds/bundle.css';
 
-const theme = fs.readFileSync(path.join(process.cwd(), 'node_modules', 'serupa-ds', 'dist', 'theme.js'), 'utf8');
+const theme = fs.readFileSync(path.join(process.cwd(), 'node_modules', '@diki-stwn/serupa-ds', 'dist', 'theme.js'), 'utf8');
 
 export const metadata = { title: 'Serupa in Next.js' };
 
