@@ -990,3 +990,20 @@ describe('Table: busy, the old name of loading', () => {
     } finally { warn.mockRestore(); }
   });
 });
+
+describe('TableRow href: a ticked checkbox (GR408)', () => {
+  // The row lifts its controls above the link that covers it. Lifting the checkbox's input too put it in a layer
+  // of its own, over the tick drawn after it: a ticked box in a linked row was a blank blue square.
+  test('the tick of a ticked box in a linked row is drawn over the box, and the box still ticks without following the link', async () => {
+    const s = await render(<Table caption="Users"><TableBody>
+      <TableRow id="k1" href="#ada"><TableSelectCell label="Select Ada" defaultChecked /><TableCell>Ada</TableCell></TableRow>
+    </TableBody></Table>);
+    const input = s.container.querySelector('input')!;
+    expect(getComputedStyle(input).zIndex).toBe('auto');   // no layer of its own: the tick, after it, paints over it
+    expect(getComputedStyle(input.closest('label')!).zIndex).toBe('10');   // the whole checkbox is above the row's link
+    const before = location.hash;
+    await userEvent.click(input);
+    expect(input.checked).toBe(false);
+    expect(location.hash).toBe(before);
+  });
+});
