@@ -88,6 +88,9 @@ jobs:
       options: --cpus 4
     env:
       HOME: /root
+      # Chrome 123's headless shell takes its language from the container's C locale ("en-US@posix", which Intl
+      # refuses), where Playwright's own Chromium says en-US.
+      SERUPA_LOCALE: en-US
     timeout-minutes: 75
     steps:
       - name: Clear stale git locks
