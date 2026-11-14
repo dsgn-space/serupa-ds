@@ -179,7 +179,8 @@ describe('table()', () => {
     expect(names(t)).toEqual(['Grace', 'Ada', 'Linus']);
     await t.sort('Calls');
     expect(names(t)).toEqual(['Linus', 'Ada', 'Grace']);
-    expect(t.cell('Grace', 'Calls')?.textContent).toBe('30');
+    // The cell where Grace's row meets the Calls column (its digits follow the page's locale, so compare cells).
+    expect(t.cell('Grace', 'Calls')).toBe(t.row('Grace').cells[2]);
     await expect(t.sort('Name')).rejects.toThrow(/can't be sorted/);
   });
 
