@@ -8,8 +8,11 @@
 // that takes a line away changed the API; one that only adds lines, or lets a prop take undefined, added to it.
 // The other two rules, the bug bash done with nothing it found still open and a Do and don't pair, need a person:
 // the table says so rather than guess.
+// A beta export of a stable component (TableVirtualBody in Table) has a row of its own. Its component's baseline dates
+// its API, so a change anywhere in that component's API restarts its four weeks too: the baseline holds no comments to
+// tell which lines are the export's.
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -49,6 +52,23 @@ export function verdict({ shipped, since }, now) {
   return { ready: true, days, why: 'ready, once its bug bash is done with nothing open' };
 }
 
+/**
+ * The exports tagged @beta in their own doc comment whose component isn't beta as a whole (those leave with it).
+ * @param {{ folder: string, text: string }[]} files each component source file, with its folder's name
+ * @param {Set<string>} betas the components that are beta as a whole
+ * @returns {{ name: string, folder: string }[]}
+ */
+export function betaExports(files, betas) {
+  const found = [];
+  for (const { folder, text } of files) {
+    if (betas.has(folder)) continue;
+    for (const m of text.matchAll(/\/\*\*((?:(?!\*\/)[\s\S])*?)\*\/\s*export (?:const|function) (\w+)/g)) {
+      if (/@beta\b/.test(m[1]) && m[2] !== folder) found.push({ name: m[2], folder });
+    }
+  }
+  return found.sort((a, b) => a.name.localeCompare(b.name));
+}
+
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 
 function main() {
@@ -59,13 +79,22 @@ function main() {
   // Releases oldest first, so the first that holds a component is the one that shipped it.
   const tags = git('tag', '--list', 'v*', '--sort=v:refname').split('\n').filter((t) => /^v\d+\.\d+\.\d+$/.test(t));
   const has = (tag, dir) => { try { git('cat-file', '-e', `${tag}:${dir}`); return true; } catch { return false; } };
+  const files = readdirSync('src/components').flatMap((folder) => readdirSync(`src/components/${folder}`)
+    .filter((f) => /^[^.]+\.tsx?$/.test(f))
+    .map((f) => ({ folder, file: `src/components/${folder}/${f}`, text: readFileSync(`src/components/${folder}/${f}`, 'utf8') })));
+  const parts = betaExports(files, new Set(betas));
+  // A release holds an export when its file there exports that name.
+  const exports = (tag, name, folder) => { try { git('grep', '-qE', `export (const|function) ${name}\\b`, tag, '--', `src/components/${folder}/`); return true; } catch { return false; } };
   const now = new Date();
-  const rows = betas.map((name) => {
-    const dir = `src/components/${name}`;
-    const shipped = has(tags.at(-1) ?? 'HEAD', dir) ? tags.find((t) => has(t, dir)) : undefined;
-    const since = apiSince(git('log', '--format=%x00%cI', '-p', '--unified=0', '--', `tools/test/baseline-api/${name}.d.ts`));
+  const row = (name, folder, inRelease) => {
+    const shipped = inRelease(tags.at(-1) ?? 'HEAD') ? tags.find(inRelease) : undefined;
+    const since = apiSince(git('log', '--format=%x00%cI', '-p', '--unified=0', '--', `tools/test/baseline-api/${folder}.d.ts`));
     return { name, shipped, since, ...verdict({ shipped, since }, now) };
-  });
+  };
+  const rows = [
+    ...betas.map((name) => row(name, name, (t) => has(t, `src/components/${name}`))),
+    ...parts.map(({ name, folder }) => row(`${name} (in ${folder})`, folder, (t) => exports(t, name, folder))),
+  ];
   if (process.argv.includes('--ready')) {
     for (const r of rows.filter((r) => r.ready)) console.log(r.name);
     return;

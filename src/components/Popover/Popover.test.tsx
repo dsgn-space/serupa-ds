@@ -262,9 +262,19 @@ describe('Popover: motion (DZ1)', () => {
   test('opens with a transition and fades and shrinks out faster, its content kept (inert) until the fade ends; focus is back at once; reopened mid-way it turns back from where it is', async () => {
     await withMotion(async () => {
       await render(<Share />);
-      await userEvent.click(el('tshare'));
       const p = panel('tshare');
-      expect([runs(p), p.getAnimations().some((a) => a instanceof CSSAnimation)]).toEqual([[['opacity', 150], ['scale', 150]], false]);
+      // What the panel is like as each fade starts, taken then: on a busy runner a 100ms or 150ms fade can end before
+      // the click returns, with no transition left to read.
+      let opening: unknown[] | undefined, closing: unknown[] | undefined;
+      const look = (e: TransitionEvent) => {
+        if (e.target !== p) return;
+        if (!p.inert) opening ??= [runs(p), p.getAnimations().some((a) => a instanceof CSSAnimation)];
+        else closing ??= [getComputedStyle(p).display, p.inert, !!p.querySelector('#email'), runs(p)];
+      };
+      p.addEventListener('transitionrun', look);
+      await userEvent.click(el('tshare'));
+      await expect.poll(() => opening).toBeDefined();
+      expect(opening).toEqual([[['opacity', 150], ['scale', 150]], false]);
       await settled(p);
       expect([getComputedStyle(p).opacity, getComputedStyle(p).scale]).toEqual(['1', 'none']);
 
@@ -272,7 +282,9 @@ describe('Popover: motion (DZ1)', () => {
       expect([isOpen('tshare'), active()]).toEqual([false, 'tshare']);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       if (!CSS.supports('overlay', 'auto')) { expect(getComputedStyle(p).display).toBe('none'); return; }
-      expect([getComputedStyle(p).display, p.inert, !!p.querySelector('#email'), runs(p)]).toEqual(['block', true, true, [['display', 100], ['opacity', 100], ['overlay', 100], ['scale', 100]]]);
+      await expect.poll(() => closing).toBeDefined();
+      expect(closing).toEqual(['block', true, true, [['display', 100], ['opacity', 100], ['overlay', 100], ['scale', 100]]]);
+      p.removeEventListener('transitionrun', look);
       await settled(p);
       await expect.poll(() => p.querySelector('#email')).toBe(null);
       expect(getComputedStyle(p).display).toBe('none');

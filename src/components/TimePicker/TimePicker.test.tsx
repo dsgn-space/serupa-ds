@@ -316,13 +316,20 @@ describe('TimePicker: autocomplete', () => {
       await userEvent.click(button('tp'));
       const list = listOf('tp'), n = list.querySelectorAll('[role=option]').length;
       await settled(list);
+      // What the list is like as its fade starts, taken then: on a busy runner the 100ms fade can end before the
+      // click returns, and the list is already gone (as Combobox's test does).
+      let fading: unknown[] | undefined;
+      const look = (e: TransitionEvent) => { if (e.target === list && !fading) fading = [css(list).display, list.inert, list.querySelectorAll('[role=option]').length, runs(list)]; };
+      list.addEventListener('transitionrun', look);
       await userEvent.click(button('tp'));
       expect([list.hidden, el('tp').getAttribute('aria-expanded'), n > 0]).toEqual([true, 'false', true]);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it closes at once.
       if (CSS.supports('overlay', 'auto')) {
-        expect([css(list).display, list.inert, list.querySelectorAll('[role=option]').length, runs(list)]).toEqual(['block', true, n, [['opacity', 100], ['scale', 100]]]);
+        await expect.poll(() => fading).toBeDefined();
+        expect(fading).toEqual(['block', true, n, [['opacity', 100], ['scale', 100]]]);
         await settled(list);
       }
+      list.removeEventListener('transitionrun', look);
       await expect.poll(() => list.querySelectorAll('[role=option]').length).toBe(0);
       expect(css(list).display).toBe('none');
       await openTp();

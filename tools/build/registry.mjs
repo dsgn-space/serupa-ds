@@ -45,7 +45,10 @@ export const STATUSES = ['alpha', 'beta', 'stable', 'deprecated'];
 export function status(n, root = ROOT) {
   const file = path.join(root, 'src', 'components', n, `${n}.tsx`);
   if (!fs.existsSync(file)) return 'stable';
-  const text = fs.readFileSync(file, 'utf8');
+  return statusIn(fs.readFileSync(file, 'utf8'), n, `src/components/${n}/${n}.tsx`);
+}
+/** The same, from the text of <Name>.tsx (at any commit: tools/api-diff.mjs reads it from git). */
+export function statusIn(text, n, where = n) {
   const at = new RegExp(`^export (?:const|function) ${n}\\b`, 'm').exec(text);
   if (!at) return 'stable';
   // The doc comment that ends on the line just before the export.
@@ -53,7 +56,7 @@ export function status(n, root = ROOT) {
   if (!before.endsWith('*/')) return 'stable';
   const doc = before.slice(before.lastIndexOf('/**'));
   const tags = [...doc.matchAll(/@(alpha|beta|deprecated)\b/g)].map((m) => m[1]);
-  if (tags.length > 1) throw new Error(`src/components/${n}/${n}.tsx: its export says @${tags.join(' and @')}; give it one status`);
+  if (tags.length > 1) throw new Error(`${where}: its export says @${tags.join(' and @')}; give it one status`);
   return tags[0] ?? 'stable';
 }
 
