@@ -19,7 +19,7 @@ npm install github:dsgn-space/serupa-ds#v14.7.0
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
-**Or from GitHub Packages.** From 15.0.0 the package is `@diki-stwn/serupa-ds` on GitHub's npm registry too (never on the public npm registry). Add two lines to your project's `.npmrc`, with a GitHub token that can read packages (`read:packages`) in `GITHUB_TOKEN`, then install it by version:
+**Or from GitHub Packages.** From 15.0.0 the package is `@diki-stwn/serupa-ds` on GitHub's npm registry too (never on the public npm registry). Add two lines to your project's `.npmrc`, with a GitHub token with the read:packages scope in `GITHUB_TOKEN`, then install it by version:
 
 ```ini
 @diki-stwn:registry=https://npm.pkg.github.com
