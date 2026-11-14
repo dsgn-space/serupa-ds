@@ -14,7 +14,6 @@ const meta = {
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
     leftIcon: iconArg,
     rightIcon: iconArg,
-    icon: iconArg,
   },
 } satisfies Meta<ButtonAsButtonProps>;
 export default meta;

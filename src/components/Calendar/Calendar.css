@@ -7,18 +7,14 @@
 @layer dk.components {
 .dk-calendar {
   /* Seven days fit a narrow screen with large text (320px at 125%, GR71): a day shrinks to a seventh of the screen
-     less a gutter for the page and a popover's padding, never past the day size. */
-  --dk-cal-day: min(var(--calendar-day-size, var(--control-height-md)), calc((100vw - var(--spacing-12)) / 7));   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
+     less a gutter for the page and a popover's padding, never past the day size. It snaps down to a whole pixel (178): a
+     seventh of the screen is a fraction (37.14px at 320px), which blurs the day circles' and the range band's edges
+     and leaves the columns a hair apart. */
+  --dk-cal-day: min(var(--calendar-day-size, var(--control-height-md)), round(down, calc((100vw - var(--spacing-12)) / 7), var(--border-width-1)));   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
   /* Space between the weeks, so the rows read apart and a range is a band per week. */
   --dk-cal-row-gap: var(--calendar-row-gap, var(--spacing-1));
   display: inline-flex; flex-direction: column; gap: var(--calendar-gap, var(--spacing-2));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--calendar-day-color, var(--text));
-}
-/* A shrunk day snaps down to a whole pixel (178): a seventh of the screen is a fraction (37.14px at 320px), which
-   blurs the day circles' and the range band's edges and leaves the columns a hair apart. Asked first: where round()
-   is missing (Chrome 123 and 124) the variable would be invalid and the days would lose their size. */
-@supports (width: round(down, 1px, 1px)) {
-  .dk-calendar { --dk-cal-day: min(var(--calendar-day-size, var(--control-height-md)), round(down, calc((100vw - var(--spacing-12)) / 7), var(--border-width-1))); }   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
 }
 .dk-calendar__header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
 .dk-calendar__title { flex: auto; margin: var(--spacing-0); text-align: center; color: var(--calendar-title-color, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--calendar-title-weight, var(--font-semibold)); }
@@ -84,8 +80,8 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 @media (hover: hover) { .dk-calendar__day--outside:hover:not([aria-disabled="true"]) { color: var(--calendar-outside-color-hover, var(--text)); } }   /* muted text would drop under 4.5:1 on the hover fill */
 .dk-calendar__day--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
 @media (hover: hover) { .dk-calendar__day--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; still semibold */
-.dk-calendar__day--selected { box-shadow: var(--calendar-depth-selected, var(--calendar-selected-depth, var(--depth-part))); background: var(--depth-sheen), var(--calendar-bg-selected, var(--calendar-selected-bg, var(--primary))); color: var(--calendar-color-selected, var(--calendar-selected-color, var(--on-primary))); }
-@media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--depth-sheen), var(--calendar-bg-selected, var(--calendar-selected-bg, var(--primary))); color: var(--calendar-color-selected, var(--calendar-selected-color, var(--on-primary))); } }
+.dk-calendar__day--selected { box-shadow: var(--calendar-depth-selected, var(--depth-part)); background: var(--depth-sheen), var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
+@media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--depth-sheen), var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
 .dk-calendar__day--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: not-allowed; }
 /* Two months side by side (RangeCalendar): the first hides its Next button and the second its Previous, so one pair
    turns both; stacked on a narrow screen, each keeps both. */

@@ -98,7 +98,6 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 | `disabled` | boolean | `false` | Disables the control (with `group`, every control in the fieldset) and dims the label and hint |
 | `group` | boolean | `false` | A `<fieldset>` and `<legend>` around a set of controls; the hint and error describe the fieldset |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | `'horizontal'`: the label in a column beside the control, the hint and error under the control. It stacks again when narrow. Not with `group` |
-| `layout` | | | Deprecated, removed in 15.0.0: use `orientation` |
 | `id` | string | | The control's id; by default the control's own `id`, or a generated one |
 | `name` | string | | The name that picks this field's message from a surrounding `FormErrors`; by default the control's own `name` |
 
