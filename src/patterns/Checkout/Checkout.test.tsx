@@ -436,4 +436,15 @@ describe('Patterns/Checkout: promo code', () => {
     expect([...document.querySelectorAll('aside button')].length).toBe(0);
     expect([...document.querySelectorAll('aside dt')].map((t) => t.textContent)).toContain('Discount (WELCOME10)');
   });
+
+  test('on the review each part sits beside its Change button, not above it', async () => {
+    const sideBySide = (a: Element, b: Element) => { const r = a.getBoundingClientRect(), q = b.getBoundingClientRect(); return r.top < q.bottom && q.top < r.bottom && (r.right <= q.left || q.right <= r.left); };
+    const screen = await render(<Checkout initial={filled} startAtReview />);
+    await expect.element(screen.getByRole('heading', { name: 'Check your order' })).toBeVisible();
+    for (const part of ['Delivery address', 'Delivery', 'Payment']) {
+      const h = screen.getByRole('heading', { name: part, exact: true }).element();
+      const button = h.closest('.dk-card')!.querySelector('button, a')!;
+      expect(sideBySide(h, button), part).toBe(true);
+    }
+  });
 });
