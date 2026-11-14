@@ -22,7 +22,8 @@ export const SECTION = `${START}
 ## UI: the Serupa design system
 
 This project's UI is built with Serupa (\`@diki-stwn/serupa-ds\`). Before any UI work, read \`node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md\`
-and follow it. It comes with the installed release, so every component, prop and token it names exists here. Before
+and follow it. It comes with the installed release, so every component, prop and token it names exists here. Look up
+a component's guide with \`npx serupa-docs <Name>\` (\`npx serupa-docs search <words>\` finds one), from the same release. Before
 you call a UI change done, run the project's check (\`npm run check\` in an app \`serupa-create\` made) and fix what it
 finds. To review a UI change, follow \`node_modules/@diki-stwn/serupa-ds/skills/serupa-review/SKILL.md\`.
 ${END}

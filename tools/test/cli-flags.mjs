@@ -1,4 +1,4 @@
-// Every command line answers --help the same way and stops on an option it doesn't know (GR275): the six bins a
+// Every command line answers --help the same way and stops on an option it doesn't know (GR275): the seven bins a
 // product runs and the icon builder. --help prints the usage line and exits 0; an unknown option says which one and
 // exits 2 with the usage, before reading or writing anything. The icon builder also stops on a folder that isn't
 // there, which it used to read as no icons and so emptied src/icons.ts. Needs no build.
@@ -15,7 +15,7 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-cli-flags-'));
 const run = (file, ...args) => spawnSync(process.execPath, [path.join(PROJECT, file), ...args], { cwd: dir, encoding: 'utf8', timeout: 20000 });
 const said = (r) => `exit ${r.status}, stdout ${JSON.stringify(r.stdout.slice(0, 200))}, stderr ${JSON.stringify(r.stderr.slice(0, 300))}`;
 const CLIS = [
-  ...['agents', 'brand', 'create', 'migrate', 'purge', 'usage'].map((n) => [`serupa-${n}`, `bin/serupa-${n}.mjs`]),
+  ...['agents', 'brand', 'create', 'docs', 'migrate', 'purge', 'usage'].map((n) => [`serupa-${n}`, `bin/serupa-${n}.mjs`]),
   ['the icon builder', 'tools/icons/build.mjs'],
 ];
 const icons = path.join(PROJECT, 'src', 'icons.ts');
