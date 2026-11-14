@@ -21,7 +21,9 @@ function componentRules(): CSSStyleRule[] {
 test('every component title balances its lines itself, heading element or not, with or without base.css', () => {
   const rules = componentRules();
   expect(rules.length).toBeGreaterThan(500);   // the components' CSS is on the page
-  const unbalanced = TITLES.filter((sel) => !rules.some((r) => r.selectorText === sel && r.style.getPropertyValue('text-wrap-style') === 'balance'));
+  // text-wrap-style is its own property from Chrome 130; before that (the floor is 129) text-wrap holds the balance.
+  const balanced = (r: CSSStyleRule) => (r.style.getPropertyValue('text-wrap-style') || r.style.getPropertyValue('text-wrap')) === 'balance';
+  const unbalanced = TITLES.filter((sel) => !rules.some((r) => r.selectorText === sel && balanced(r)));
   expect(unbalanced).toEqual([]);
 });
 
@@ -29,6 +31,7 @@ test('an Alert title, which is not a heading element, balances its lines', () =>
   const host = document.body.appendChild(document.createElement('div'));
   host.innerHTML = '<div class="dk-alert__title" id="tb-a" style="width: 220px; font-size: 16px">Your changes were saved but two of the files could not be uploaded</div>';
   try {
-    expect(getComputedStyle(document.getElementById('tb-a')!).textWrapStyle).toBe('balance');
+    const cs = getComputedStyle(document.getElementById('tb-a')!);
+    expect(cs.textWrapStyle ?? cs.getPropertyValue('text-wrap')).toBe('balance');
   } finally { host.remove(); }
 });
