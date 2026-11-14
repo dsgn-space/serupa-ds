@@ -656,6 +656,20 @@ Design for a phone first, then add what changes on wider screens. The five break
 - Test at 320px wide. WCAG 1.4.10 asks that content reflows without scrolling sideways at that width (400% zoom on a 1280px screen); only data tables, maps and diagrams may scroll.
 - For a component that sits in places of different widths (a card in a sidebar and in the main column), let its width decide, not the screen's: Grid's `columns="auto"` and `minColumnWidth`, or a container query (`@container`).
 
+**Navigation by width**
+
+Give an app's main places the navigation that fits the window, and keep the same places in the same order at every width:
+
+| Width | Navigation | Why |
+| --- | --- | --- |
+| Below `md` (under 768px) | BottomNav for three to five places, or Navbar's menu button for more | A thumb reaches the bottom of a phone, and the page keeps its whole width |
+| `md` to `lg` (768 to 1023px) | Sidebar with `collapsed`: a 64px icon rail | A tablet or a narrow window has room for icons, not for a column of names |
+| From `lg` (1024px) | The full Sidebar | The names fit, so people read where to go instead of recognising icons |
+
+- Switch on the window's width, not the device: a narrow desktop window gets the rail too. BottomNav hides from `md` by itself (`hideFrom`); collapse the Sidebar below `lg` and hide it below `md`.
+- Let people still collapse the full Sidebar by hand, and keep their choice.
+- The Page shell pattern's AdaptiveNavigation story does all three: resize the window to see it switch.
+
 **Containers**
 
 Wrap each band of the page (header, main content, footer) in a Container of the same `size`, so their edges line up.
