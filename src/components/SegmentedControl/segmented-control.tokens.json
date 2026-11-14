@@ -14,8 +14,8 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The control's outline (3:1 on the surface, so it can be seen).",
+        "$value": "{color.field-border}",
+        "$description": "The control's outline: the same soft hairline as a form field's (under 3:1 by design, as field-border is; more contrast brings back 3:1).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--segmented-control-border"
@@ -34,8 +34,8 @@
       },
       "indicator-border": {
         "$type": "color",
-        "$value": "{color.border-control}",
-        "$description": "The selected segment's outline.",
+        "$value": "{color.field-border}",
+        "$description": "The selected segment's outline: the field's hairline, the selection standing out by its raised surface and shadow.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--segmented-control-indicator-border"

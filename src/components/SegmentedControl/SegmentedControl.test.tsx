@@ -253,7 +253,7 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('rtl')[0]).toBe(0);
   });
 
-  test('contrast: the outline keeps 3:1 on the page, labels 4.5:1 (the selection\'s outline 2:1), in all six themes', async () => {
+  test('contrast: the outline is the field\'s soft hairline (1.3:1 on the page by design, 3:1 with more contrast), labels 4.5:1, in all six themes', async () => {
     await render(<Col><Period /></Col>);
     const e = el('per'), indi = e.querySelector(':scope > span[aria-hidden]')!;
     const low: string[] = [];
@@ -265,15 +265,27 @@ describe('SegmentedControl', () => {
       await settled();
       const bg = css(e).backgroundColor;
       const pairs: Array<[string, string, string, number]> = [
-        ['outline on page', css(e).borderTopColor, 'var(--surface)', 3],
+        ['outline on page, soft by design like a field\'s', css(e).borderTopColor, 'var(--surface)', 1.3],
         ['label on bg', css(seg('per', 'day')).color, bg, 4.5],
         ['selected label', css(e.querySelector('[aria-checked=true]')).color, css(indi).backgroundColor, 4.5],
-        ['selection outline on bg', css(indi).borderTopColor, bg, 2],
+        ['selection outline on bg, soft by design', css(indi).borderTopColor, bg, 1.2],
       ];
       for (const [k, fg, on, min] of pairs) { const r = contrast(fg, on); n++; if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
     }
     expect(low).toEqual([]);
     expect(n).toBe(24);
+    // The outline is a form field's, and more contrast brings back 3:1, as for fields.
+    expect(css(e).borderTopColor).toBe(color('var(--field-border)'));
+    document.documentElement.setAttribute('data-contrast', 'more');
+    try {
+      for (const th of THEMES) {
+        document.documentElement.setAttribute('data-theme', th);
+        void css(e).color; await settled();
+        const r = contrast(css(e).borderTopColor, 'var(--surface)');
+        if (r < 3) low.push(`more contrast, ${th} ${r.toFixed(2)}`);
+      }
+    } finally { document.documentElement.removeAttribute('data-contrast'); }
+    expect(low).toEqual([]);
   });
 
   test('--segmented-control-bg overrides one control', async () => {
@@ -378,6 +390,35 @@ describe('SegmentedControl', () => {
       await Promise.all(moves.map((x) => x.finished.catch(() => {})));
       await expect.poll(() => ind.hasAttribute('data-slide')).toBe(false);
       expect(off('sl')).toEqual([0, 0]);
+    });
+  });
+  test('a new choice mid-slide (clicks in quick succession) slides on from where the indicator is, rather than jumping to where the last slide was going first', async () => {
+    await withMotion(async () => {
+      await render(<SegmentedControl id="qs" aria-label="View" options={[{ value: 'a', label: 'Day' }, { value: 'b', label: 'Week' }, { value: 'c', label: 'Month' }]} defaultValue="a" />);
+      await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+      await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
+      const ind = el('qs').firstElementChild as HTMLElement, [, b, c] = items('qs');
+      const slides = () => document.getAnimations().filter((x): x is CSSTransition => x instanceof CSSTransition && (x.effect as KeyframeEffect).target === ind && (x.effect as KeyframeEffect).pseudoElement === '::before');
+      // Where the indicator's border layer is drawn now, as [left, right] in the control: its box less the cut.
+      const drawn = () => {
+        const [, r, , l] = getComputedStyle(ind, '::before').clipPath.match(/-?[\d.]+(?:e-?\d+)?px/g)!.map(parseFloat);
+        return [ind.offsetLeft + l!, ind.offsetLeft + ind.offsetWidth - r!];
+      };
+      const click = (t: HTMLElement) => t.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 }));
+      click(c!);
+      for (let i = 0; i < 20 && !slides().length; i++) await Promise.resolve();
+      // Half way from Day to Month, held there, Week is clicked.
+      slides().forEach((x) => { x.pause(); x.currentTime = Number(x.effect!.getComputedTiming().duration) / 2; });
+      const mid = drawn();
+      click(b!);
+      for (let i = 0; i < 20 && !slides().some((x) => x.playState === 'running'); i++) await Promise.resolve();
+      const next = slides().filter((x) => x.playState === 'running');
+      next.forEach((x) => { x.pause(); x.currentTime = 0; });
+      // It starts where it was (main jumped to Month first, about 40px on), within a pixel.
+      expect(drawn().map((n, i) => Math.abs(n - mid[i]!) < 1)).toEqual([true, true]);
+      next.forEach((x) => x.play());
+      await expect.poll(() => ind.hasAttribute('data-slide')).toBe(false);
+      expect(off('qs')).toEqual([0, 0]);
     });
   });
   test('the indicator sits exactly on its segment, to the fraction of a pixel, at any text width', async () => {
