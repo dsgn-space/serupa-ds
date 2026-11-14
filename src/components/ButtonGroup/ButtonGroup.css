@@ -1,7 +1,8 @@
 /* ---------------------------------------------------------------
    ButtonGroup: buttons in a row (or column), 8px apart; attached, they touch with one shared border line and
-   only the group's outer corners rounded. A hovered or focused button comes to the front. The first and last
-   buttons are found among the buttons, not the children: a Menu or Tooltip puts its popup right after its trigger.
+   only the group's outer corners rounded. A focused, on or hovered button comes to the front, in that order. The
+   first and last buttons are found among the buttons, not the children: a Menu or Tooltip puts its popup right after
+   its trigger.
    --------------------------------------------------------------- */
 @layer dk.components {
 /* Never wider than its container, so a button's own max-inline-size (100%) is the container's too: a label too long
@@ -13,8 +14,11 @@
 /* Attached, a row that doesn't fit its container wraps as separate buttons instead (ButtonGroup.tsx sets data-wrapped
    and drops the attached class): the buttons keep their size so it can tell, rather than shrinking to ellipses. */
 .dk-button-group--attached > .dk-btn { position: relative; flex-shrink: 0; }
-.dk-button-group--attached > .dk-btn:focus-visible, .dk-button-group--attached > .dk-btn[aria-pressed="true"] { z-index: var(--z-10); }
+/* Front to back: focused, then on (pressed), then hovered, so a hovered neighbour never paints over the border line
+   an on toggle shares with it, nor an on one over a focus ring. */
 @media (hover: hover) { .dk-button-group--attached > .dk-btn:hover { z-index: var(--z-10); } }
+.dk-button-group--attached > .dk-btn[aria-pressed="true"] { z-index: var(--z-20); }
+.dk-button-group--attached > .dk-btn:focus-visible { z-index: var(--z-30); }
 .dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn ~ .dk-btn { margin-inline-start: calc(var(--spacing-0) - var(--button-group-overlap, var(--border-width-1))); border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
 .dk-button-group--attached:not(.dk-button-group--vertical) > .dk-btn:has(~ .dk-btn) { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 /* Two solid buttons side by side get an edge between them, in their text color, as a split button has. */
