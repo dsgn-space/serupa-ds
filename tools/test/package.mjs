@@ -141,8 +141,10 @@ if (D) {
   // line in size.mjs met; this stays a backstop.
   // 13 Nov 2026: 200 KB. TagGroup and List's row selection took main to about 194.5 KB, and RangeCalendar to 195.4,
   // with every line in size.mjs met; this stays a backstop.
+  // 14 Nov 2026: 201 KB. Main stood 200 B under 200 KB, and Avatar's late picture (initials under a slow one, GR410)
+  // crossed it by 15 B with every line in size.mjs met; this stays a backstop.
   const indexJs = esbuild.buildSync({ entryPoints: [path.join(PROJECT, 'dist', 'index.js')], bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].text;
-  t('index.js leaves the full icon set out (loaded on demand) and stays under 200 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 200 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
+  t('index.js leaves the full icon set out (loaded on demand) and stays under 201 KB gzipped, minified', !indexJs.includes('"sports_cricket"') && zlib.gzipSync(indexJs).length < 201 * 1024, `${Math.round(zlib.gzipSync(indexJs).length / 1024)} KB`);
   // Tree-shaking: a bundler keeps only what a project imports. Every component is made by component() or named()
   // with a /* @__PURE__ */ mark and nothing else runs at the top of a module, so Divider alone is a few hundred bytes.
   const alone = (name) => zlib.gzipSync(esbuild.buildSync({ stdin: { contents: `import { ${name} } from './dist/index.js'; console.log(${name});`, resolveDir: PROJECT }, bundle: true, minify: true, write: false, format: 'esm', external: ['react', 'react-dom', './material/icons.js', './material/named.js', './material/parts.js'], logLevel: 'silent' }).outputFiles[0].contents).length;

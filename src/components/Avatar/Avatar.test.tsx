@@ -227,7 +227,7 @@ describe('Avatar', () => {
 
 describe('Avatar: a picture that is slow to arrive (GR410)', () => {
   const slow = () => `/__slow-picture__.svg?${crypto.randomUUID()}`;
-  const under = (id: string) => el(id).querySelector('.dk-avatar__initials, .dk-avatar__icon');
+  const under = (id: string) => el(id).querySelector('[aria-hidden="true"], [data-icon]');
 
   test('the initials (or the icon) show under a late picture, which fades in over them; then they go', () => withMotion(async () => {
     await render(<Row><Avatar id="late" src={slow()} name="Ada Lovelace" imgProps={{ loading: 'eager' }} /><Avatar id="anon" src={slow()} imgProps={{ loading: 'eager' }} /></Row>);
