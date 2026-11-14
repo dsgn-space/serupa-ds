@@ -1,10 +1,13 @@
 // "Inter Fallback" (144, tools/fonts/fallback.mjs): until Inter arrives, text draws in Arial (or Liberation Sans,
 // which has Arial's metrics) sized like Inter, so it doesn't move when Inter swaps in. Checks, for each face in
-// tokens.json's type.fallbacks (upright and italic, 400 and 700):
+// tokens.json's type.fallbacks (upright 400, 500, 600 and 700; italic 400 and 700):
 //   - tokens.css writes it, and --font-sans lists it right after Inter;
 //   - it finds a font on this machine (Liberation Sans on Linux: playwright install-deps installs it);
 //   - a line of English is within 2% of its width in Inter, and its ascent and descent (at 100px, where a pixel's
 //     rounding doesn't hide them) are within a pixel of Inter's;
+//   - at every size of the type scale, a line's baseline and its line box are on the same pixel as Inter's (Inter's
+//     ascent is 15.5px at 16px: a fallback a hair under it rounds down, and all body text sits 1px higher until Inter
+//     arrives);
 //   - a paragraph in a 320px column (a phone) wraps within a line of Inter's (lines within 2% of each other's width
 //     can still break at another word, so the same count can't be promised), and, where plain Arial is more than 3%
 //     off, the line is at least 3 times closer to Inter's width than plain Arial's, which is what a Mac or Windows page
@@ -20,8 +23,8 @@ const tokens = JSON.parse(read('tokens.json'));
 const fallbacks = tokens.type.fallbacks || [];
 const css = read('tokens.css');
 
-t('tokens.json has an Inter Fallback face for upright and italic, 400 and 700', fallbacks.length === 4
-  && ['normal 400', 'normal 700', 'italic 400', 'italic 700'].every((k) => fallbacks.some((f) => `${f.style} ${f.weight}` === k)),
+t('tokens.json has an Inter Fallback face for upright 400, 500, 600 and 700, and italic 400 and 700', fallbacks.length === 6
+  && ['normal 400', 'normal 500', 'normal 600', 'normal 700', 'italic 400', 'italic 700'].every((k) => fallbacks.some((f) => `${f.style} ${f.weight}` === k)),
 fallbacks.map((f) => `${f.style} ${f.weight}`).join(', '));
 t('tokens.css writes each one with its size-adjust and overrides', fallbacks.every((f) => css.includes(`size-adjust: ${f.sizeAdjust};\n  ascent-override: ${f.ascentOverride};`)), '');
 t('--font-sans lists Inter Fallback right after Inter', /--font-sans: Inter, "Inter Fallback",/.test(css), (/--font-sans:[^;]*/.exec(css) || [''])[0]);
@@ -52,7 +55,17 @@ const got = await p.evaluate(async () => {
     const ws = d.querySelector('span.s').getBoundingClientRect().width;
     const g = document.createElement('canvas').getContext('2d');
     const metric = (family) => { g.font = `${d.style.fontStyle} ${d.style.fontWeight} 100px ${family}`; const m = g.measureText('Hxg'); return [m.fontBoundingBoxAscent, m.fontBoundingBoxDescent]; };
-    return { k: d.dataset.k, wi: i.width, wf: f.width, ws, ci, cf, mi: metric('I'), mf: metric('F') };
+    const line = (family, px) => {
+      const e = document.createElement('div');
+      e.style.cssText = `position:absolute;top:0;left:0;font:${d.style.fontStyle} ${d.style.fontWeight} ${px}px/normal ${family};white-space:nowrap`;
+      e.innerHTML = 'Hg<span style="display:inline-block;width:1px;height:0"></span>';
+      document.body.appendChild(e);
+      const r = `${e.firstElementChild.getBoundingClientRect().bottom}/${e.getBoundingClientRect().height}`;
+      e.remove();
+      return r;
+    };
+    const lines = [12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72, 96, 128].map((px) => [px, line('I', px), line('F', px)]).filter((r) => r[1] !== r[2]);
+    return { k: d.dataset.k, wi: i.width, wf: f.width, ws, ci, cf, mi: metric('I'), mf: metric('F'), lines };
   });
   return { faces, interMissing, rows };
 });
@@ -61,7 +74,7 @@ pages.close();
 
 t('Inter itself loads, upright and italic (else nothing here is measured against it)', !got.interMissing.length, got.interMissing.join(', '));
 const missing = got.faces.filter((s) => !s.endsWith('loaded'));
-t('each Inter Fallback face finds a font on this machine (Arial, Helvetica, Liberation Sans or Arimo)', got.faces.length === 4 && !missing.length,
+t('each Inter Fallback face finds a font on this machine (Arial, Helvetica, Liberation Sans or Arimo)', got.faces.length === 6 && !missing.length,
   `${missing.join(', ')}: none of its local() names is installed; on Linux, apt install fonts-liberation`);
 for (const r of got.rows) {
   const off = r.wf / r.wi - 1;
@@ -69,6 +82,7 @@ for (const r of got.rows) {
   t(`${r.k}: a line of English in Inter Fallback is within 2% of its width in Inter, and 3 times closer than plain Arial where that is more than 3% off`, Math.abs(off) <= 0.02 && (Math.abs(plain) <= 0.03 || Math.abs(off) * 3 <= Math.abs(plain)),
     `${(off * 100).toFixed(1)}% (${r.wf.toFixed(1)} vs ${r.wi.toFixed(1)} px); plain Arial ${(plain * 100).toFixed(1)}%`);
   t(`${r.k}: its ascent and descent at 100px are within a pixel of Inter's`, Math.abs(r.mf[0] - r.mi[0]) <= 1 && Math.abs(r.mf[1] - r.mi[1]) <= 1, `${r.mf.join('/')} vs ${r.mi.join('/')} px`);
+  t(`${r.k}: at every size of the type scale, a line's baseline and line box are on Inter's pixel`, !r.lines.length, r.lines.map((l) => `${l[0]}px: baseline/box ${l[2]} against Inter's ${l[1]}`).join('; '));
   t(`${r.k}: a paragraph in a 320px column wraps within a line of Inter's`, Math.abs(r.cf - r.ci) <= 1, `${r.cf} lines against Inter's ${r.ci}`);
 }
 
