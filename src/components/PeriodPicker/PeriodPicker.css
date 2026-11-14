@@ -35,7 +35,7 @@
 .dk-period-picker--invalid { --dk-pp-bd: var(--period-picker-invalid, var(--field-border-invalid)); --dk-pp-ring: var(--period-picker-invalid, var(--field-border-invalid)); }
 .dk-period-picker--readonly .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); cursor: default; }
 .dk-period-picker--disabled .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
-.dk-period-picker__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-period-picker__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .dk-period-picker__value--empty { color: var(--period-picker-placeholder, var(--placeholder)); }
 .dk-period-picker__icon { flex: none; color: var(--period-picker-icon, var(--text-muted)); font-size: var(--dk-pp-icon, var(--spacing-4)); }   /* 14, 16 or 20px by size, 8px inside the end edge, as Select's chevron */
 

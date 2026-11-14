@@ -1,7 +1,8 @@
 // tools/beta.mjs: which betas can leave beta. No git: the log text is written out here.
 //   node tools/test/beta.mjs
 import { apiSince, betaExports, verdict } from '../beta.mjs';
-import { done, report } from './lib.mjs';
+import fs from 'node:fs';
+import { done, report, PROJECT } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -33,5 +34,9 @@ const parts = betaExports([
 t('a beta export of a stable component gets its own row', parts.some((p) => p.name === 'TableVirtualBody' && p.folder === 'Table'), JSON.stringify(parts));
 t('functions count, and an untagged export doesn\'t', parts.some((p) => p.name === 'InputAction') && !parts.some((p) => p.name === 'TableRow'), JSON.stringify(parts));
 t('the component itself and the parts of a beta component are left to its own row', !parts.some((p) => p.name === 'Input' || p.name === 'ChatMessage'), JSON.stringify(parts));
+
+// The Daily release's job checks out the source alone, with no build: docs/generated/ isn't there (14 Nov).
+const source = fs.readFileSync(`${PROJECT}/tools/beta.mjs`, 'utf8');
+t('it reads the source, not build output (docs/generated, src/generated)', !/(docs|src)\/generated/.test(source.replace(/^\s*\/\/.*$/gm, '')));
 
 done(report('Leaving beta', R));

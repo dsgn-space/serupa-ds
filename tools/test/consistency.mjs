@@ -4,7 +4,7 @@
 //   node tools/test/consistency.mjs            the same measurements on storybook-static/, alone (a few minutes)
 //   node tools/test/consistency.mjs --strict   exit 1 on a finding
 // It warns; it does not fail a run. It becomes a failing check once it has gone a few days without a false finding.
-// Two rules so far (GR390, GR391):
+// The rules (GR390, GR391, and the optical three):
 //   fade      A control whose fill changes on hover fades at motion-hover, as Button does. Read from the page's own
 //             CSS: every rule with :hover that sets a background names the class it changes, and each element with
 //             that class the rule reaches must have a transition on background-color. Rows and options (ROWS) are passed over
@@ -58,8 +58,64 @@ function hoverClasses() {
   for (const sheet of document.styleSheets) { try { walk(sheet.cssRules); } catch { /* another origin's sheet */ } }
   return [...hover].map(([cls, sels]) => [cls, [...new Set(sels)].join(', ')]);
 }
-/** Runs in the page. One row per class with a hover fill that is on the page, and one per end-of-field icon. */
+/** Runs in the page (Playwright sends this function alone, so everything it calls is inside it). One row per class
+    with a hover fill that is on the page, one per end-of-field icon, and the optical rows. */
 function inPage({ FIELD, END, hover }) {
+  /** Runs in the page: the optical rules (concentric corners, tabular figures, icons centred on their text). */
+  function optical() {
+    const out = [];
+    const px = (v) => parseFloat(v) || 0;
+    const name = (el) => [...el.classList].find((c) => c.startsWith('dk-')) || '';
+    const shown = (s) => {
+      const bg = s.backgroundColor.match(/[\d.]+/g);
+      return (bg && (bg.length < 4 || +bg[3] > 0)) || s.backgroundImage !== 'none' || px(s.borderTopWidth) > 0 || s.boxShadow !== 'none';
+    };
+    const radius = (s, r, corner) => Math.min(px(s[`border${corner}Radius`]), r.width / 2, r.height / 2);
+    // Concentric: a filled box tucked into a rounded corner has the parent's inner radius less the gap between them.
+    for (const el of document.querySelectorAll('body [class*="dk-"]')) {
+      const r = el.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8) continue;
+      const s = getComputedStyle(el);
+      if (!shown(s) || s.position === 'fixed') continue;
+      let p = el.parentElement, depth = 0;
+      while (p && depth < 4 && !px(getComputedStyle(p).borderTopLeftRadius) && !px(getComputedStyle(p).borderTopRightRadius)) { p = p.parentElement; depth++; }
+      if (!p || depth >= 4 || !p.matches('[class*="dk-"]')) continue;
+      const ps = getComputedStyle(p), pr = p.getBoundingClientRect();
+      const inner = { left: pr.left + px(ps.borderLeftWidth), right: pr.right - px(ps.borderRightWidth), top: pr.top + px(ps.borderTopWidth), bottom: pr.bottom - px(ps.borderBottomWidth) };
+      const gaps = { left: r.left - inner.left, right: inner.right - r.right, top: r.top - inner.top, bottom: inner.bottom - r.bottom };
+      for (const [corner, v, h] of [['TopLeft', 'top', 'left'], ['TopRight', 'top', 'right'], ['BottomLeft', 'bottom', 'left'], ['BottomRight', 'bottom', 'right']]) {
+        const gv = gaps[v], gh = gaps[h];
+        if (gv < -0.5 || gh < -0.5 || gv > 12 || gh > 12 || Math.abs(gv - gh) > 1) continue;
+        const outer = radius(ps, pr, corner);
+        if (outer < 4 || Math.max(gv, gh) >= outer || !shown(ps)) continue;   // further in than the corner is round, or on an unpainted parent, it is a box of its own
+        if (gv < 0.5 && ps.overflow !== 'visible') continue;   // flush and clipped: the parent's corner shows
+        const want = Math.max(0, outer - px(ps[`border${h[0].toUpperCase() + h.slice(1)}Width`]) - Math.max(gv, gh));
+        const have = radius(s, r, corner);
+        const pill = have >= Math.min(r.width, r.height) / 2 - 0.5 && outer >= Math.min(pr.width, pr.height) / 2 - 0.5;
+        if (!pill && Math.abs(have - want) > 2) out.push({ rule: 'concentric', cls: name(el), parent: name(p), corner, gap: Math.round(Math.max(gv, gh) * 2) / 2, have: Math.round(have * 2) / 2, want: Math.round(want * 2) / 2 });
+      }
+    }
+    // Tabular figures: a number that a component draws (a count, a time, a page, a cell) keeps its width as it changes.
+    for (const el of document.querySelectorAll('body [class*="dk-"]')) {
+      const text = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join('').trim();
+      if (!/^[+\-\u2212]?[\d][\d.,:%\s/\u00a0\u202f]*$/.test(text) || !el.getClientRects().length) continue;
+      const s = getComputedStyle(el);
+      if (!s.fontVariantNumeric.includes('tabular-nums')) out.push({ rule: 'tabular', cls: name(el), text });
+    }
+    // Icons beside text: the icon's middle is on the text's middle (an inline icon on the baseline sits high or low).
+    for (const icon of document.querySelectorAll('body .dk-icon')) {
+      const parent = icon.parentElement;
+      const texts = [...parent.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim());
+      if (!texts.length || !icon.getClientRects().length) continue;
+      const range = document.createRange();
+      range.selectNodeContents(texts[0]);
+      const t = range.getClientRects()[0], i = icon.getBoundingClientRect();
+      if (!t || t.bottom < i.top || t.top > i.bottom || i.height > t.height * 1.6) continue;
+      const off = Math.round(((i.top + i.bottom) / 2 - (t.top + t.bottom) / 2) * 2) / 2;
+      if (Math.abs(off) > 1) out.push({ rule: 'icon', cls: name(parent), off });
+    }
+    return out;
+  }
   const out = [];
   for (const [cls, sel] of hover) {
     let el;
@@ -81,6 +137,19 @@ function inPage({ FIELD, END, hover }) {
         const gap = Math.round((f.right - i.right) * 2) / 2;
         if (gap <= 40) out.push({ rule: 'end', cls: sel.slice(1), height: Math.round(f.height), gap, size: Math.round(i.width * 2) / 2 });   // further in, it isn't the end icon
       }
+    }
+  }
+  out.push(...optical());
+  // Motion: what moves on the page as it loads (an overlay opening, a toast arriving, a bar filling) changes only what
+  // the compositor can draw without layout: transform, translate, scale, rotate, opacity, filter, clip-path, colours.
+  const LAYOUT = /^(width|height|(min|max)-(width|height)|(min-|max-)?(inline|block)-size|top|right|bottom|left|inset.*|margin.*|padding.*|gap|(row|column)-gap|grid-template.*|flex(-basis|-grow|-shrink)?|font-size|line-height|border(-[a-z]+)*-width|letter-spacing)$/;
+  const nameOf = (el) => [...el.classList].find((c) => c.startsWith('dk-')) || '';
+  for (const a of /** @type {any[]} */ (document.getAnimations())) {
+    const target = a.effect?.target;
+    if (!target || !target.closest?.('[class*="dk-"]')) continue;
+    const props = a instanceof CSSTransition ? [a.transitionProperty] : (a.effect.getKeyframes?.() || []).flatMap((k) => Object.keys(k).filter((p) => !['offset', 'computedOffset', 'easing', 'composite'].includes(p)));
+    for (const prop of new Set(props.map((p) => p.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())))) {
+      if (LAYOUT.test(prop)) out.push({ rule: 'motion', cls: nameOf(target.closest('[class*="dk-"]')), prop, anim: a.animationName || a.id || a.transitionProperty || '' });
     }
   }
   return out;
@@ -116,6 +185,11 @@ export function judge(rows) {
       if (Math.abs(r.size - size) > 0.5) out.push(`.${r.cls}: in a ${height}px field its icon is ${r.size}px, where the other fields' are ${size}px`);
     }
   }
+  const seen = (rule) => [...new Map(rows.filter((r) => r.rule === rule).map((r) => [JSON.stringify(r), r])).values()];
+  for (const r of seen('concentric')) out.push(`.${r.cls} in .${r.parent} (${r.corner}, ${r.gap}px in): its corner is ${r.have}px, concentric is ${r.want}px (the parent's inner radius less the gap)`);
+  for (const cls of new Set(seen('tabular').map((r) => r.cls))) out.push(`.${cls || '(no dk- class)'} shows a number in proportional figures: add font-variant-numeric: tabular-nums so it keeps its width as it changes`);
+  for (const r of seen('motion')) out.push(`.${r.cls} animates ${r.prop}${r.anim ? ` (${r.anim})` : ''}, which lays the page out again on every frame: move it with transform, scale or clip-path instead`);
+  for (const r of seen('icon')) out.push(`.${r.cls}: its icon's middle is ${r.off}px ${r.off > 0 ? 'below' : 'above'} its text's middle`);
   for (const k of Object.keys(EXEMPT)) if (isRow(k)) out.push(`.${k} is in both ROWS and EXEMPT: keep one`);
   return [...new Set(out)].sort();
 }

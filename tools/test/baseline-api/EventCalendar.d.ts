@@ -1,4 +1,4 @@
-// exports: type CalendarEvent, EventCalendar, type EventCalendarProps, type EventCalendarView
+// exports: type CalendarEvent, type CalendarSlot, EventCalendar, type EventCalendarProps, type EventCalendarView
 interface EventCalendarLabels {
     goToToday: string;
     calendarView: string;
@@ -16,6 +16,7 @@ interface EventCalendarLabels {
     eventTime: (from: string, to: string) => string;
     repeats: string;
     noEvents: string;
+    eventChanged: (title: string, when: string) => string;
 }
 interface CalendarEvent {
     id: string;
@@ -40,5 +41,12 @@ interface EventCalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     locale?: string | undefined;
     weekStartsOn?: number | undefined;
     headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
+    onSlotSelect?: ((slot: CalendarSlot) => void) | undefined;
+    onEventMove?: ((event: CalendarEvent, change: CalendarSlot) => void) | undefined;
+}
+interface CalendarSlot {
+    start: Date;
+    end: Date;
+    allDay: boolean;
 }
 declare const EventCalendar: React.ForwardRefExoticComponent<EventCalendarProps & React.RefAttributes<HTMLDivElement>>;

@@ -106,14 +106,22 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
   };
   // What's shown: the preview while one end is picked, else the value.
   const shown: DateRange = anchor ? order(anchor, hover || anchor) : value;
-  const isEnd = (d: Date) => sameDay(d, shown.start) || sameDay(d, shown.end);
-  const inside = (d: Date) => !!shown.start && !!shown.end && between(d, shown.start, shown.end);
-  const dayClass = (d: Date) => (inside(d) ? 'dk-calendar__day--in-range' : undefined);
-  const dayLabel = (d: Date, name: string) => {
-    if (sameDay(d, shown.start)) return name + ', ' + (sameDay(d, shown.end) ? L.startDate + ', ' + L.endDate : L.startDate);
-    if (sameDay(d, shown.end)) return name + ', ' + L.endDate;
-    return inside(d) ? name + ', ' + L.inRange : name;
-  };
+  // The days' marks, made again only when the shown ends move, so each month's days (Calendar's Weeks) aren't drawn
+  // again when a parent renders with the same props, or a key or the pointer moves without changing the preview.
+  const from = shown.start ? shown.start.getTime() : null, to = shown.end ? shown.end.getTime() : null;
+  const marks = React.useMemo(() => {
+    const s = from === null ? null : new Date(from), e = to === null ? null : new Date(to);
+    const inside = (d: Date) => !!s && !!e && between(d, s, e);
+    return {
+      isEnd: (d: Date) => sameDay(d, s) || sameDay(d, e),
+      dayClass: (d: Date) => (inside(d) ? 'dk-calendar__day--in-range' : undefined),
+      dayLabel: (d: Date, name: string) => {
+        if (sameDay(d, s)) return name + ', ' + (sameDay(d, e) ? L.startDate + ', ' + L.endDate : L.startDate);
+        if (sameDay(d, e)) return name + ', ' + L.endDate;
+        return inside(d) ? name + ', ' + L.inRange : name;
+      },
+    };
+  }, [from, to, L]);
   // Gregorian with Latin digits, as the grid's days are (Calendar's formats()); thin and narrow spaces as plain ones,
   // since Node's ICU and the browser's put different spaces around the dash, so a server render would not match.
   const range = (r: DateRange) => (r.start && r.end
@@ -133,7 +141,7 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => showMonth(first ? n : addMonths(n, -1))} value={first ? value.start : value.end}
       min={min} max={max} isDateDisabled={props.isDateDisabled} locale={locale} weekStartsOn={props.weekStartsOn} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
-      isDateSelected={isEnd} dayClassName={dayClass} dayLabel={dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
+      isDateSelected={marks.isEnd} dayClassName={marks.dayClass} dayLabel={marks.dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   return (
     <div {...rest} ref={merged} role="group" aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : rest['aria-label'] || L.chooseDates}

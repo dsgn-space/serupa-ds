@@ -16,3 +16,8 @@ declare module 'virtual:site-props' {
   const props: Record<string, () => Promise<{ default: import('./pages').ComponentDoc[] }>>;
   export default props;
 }
+
+declare module 'virtual:site-facts' {
+  const facts: { principles: Array<{ name: string; line: string }>; decisions: Array<{ id: string; title: string }>; stories: number; tokens: number };
+  export default facts;
+}

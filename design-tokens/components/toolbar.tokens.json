@@ -27,7 +27,7 @@
       "radius": {
         "$type": "dimension",
         "$value": "{radius.radius-control}",
-        "$description": "The corners (6px).",
+        "$description": "The corners. Unset, they are concentric with the controls inside: radius-control plus the padding (10px).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--toolbar-radius"

@@ -166,6 +166,10 @@
       "css": "0.035em",
       "description": "Thickens a Material Symbol to go with `font-bold` text and headings, close to weight 700 (0.84px at 24px). `<Icon weight=\"bold\">`."
     },
+    "icon-cap-align": {
+      "css": "-0.125em",
+      "description": "The vertical-align that centres a 1em icon in running text on the capitals beside it rather than on the x-height (`middle`) or the text's bottom: Link's new-tab icon."
+    },
     "sizing-1-2": {
       "css": "50%",
       "description": "Fraction 1/2: `w-1/2`, `h-1/2`, `inline-1/2`… = 50% of the parent."

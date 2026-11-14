@@ -2,7 +2,7 @@
 // when a project's code would stop compiling, and only then. Each case is two versions of one baseline file.
 //   node tools/test/api-diff.mjs
 import { report, done } from './lib.mjs';
-import { bumpFor, diffApi, reportOf } from '../api-diff.mjs';
+import { bumpFor, diffApi, releaseNotes, reportOf } from '../api-diff.mjs';
 
 const R = [];
 const t = (name, ok, detail = '') => R.push({ name, ok: !!ok, detail });
@@ -40,5 +40,8 @@ t('a removed label is a major', bumpFor(diffApi(labels('remove: string;', 'remov
 const poly = (u) => file('type LinkProps', `type LinkProps<C extends React.ElementType = "a"> = ${u};`);
 t('a generic alias reads its right-hand side, not the default', bumpFor(diffApi(poly('Own & { as?: C; }'), poly('Own & { as?: C; }'))) === 'patch' && bumpFor(diffApi(poly('"a" | "b"'), poly('"a"'))) === 'major');
 t('the report names the bump and escapes the types', /needs a major/.test(reportOf(diffApi(base, cases[1][2]))) && !/<React/.test(reportOf(diffApi(base, cases[14][2]))));
+const notes = releaseNotes(diffApi(base, cases[1][2]), 'v14.6.0');
+t('a release\'s notes fold the report under one line that names the breaking changes', notes.startsWith('<details><summary>Public API since v14.6.0: 1 change, 1 breaking</summary>') && notes.includes('ChipProps.size: removed') && notes.trim().endsWith('</details>'), notes);
+t('…and say nothing when the API didn\'t change', releaseNotes(diffApi(base, base), 'v14.6.0') === '');
 
 done(report('API report', R));

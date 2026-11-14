@@ -118,9 +118,12 @@ Every other prop, `className` and `ref` go to the native `<dialog>`.
 Each is an optional override: set it on the page, a container or one drawer. The list lives in `src/components/Drawer/drawer.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from drawer.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--drawer-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the drawer, hovered or selected: a step up from its surface in dark |
+| `--drawer-field-bg` | `field-raised` | The fill of a form field in the drawer: a step up from its surface in dark, so the field stands out from it |
 | `--drawer-bg` | `surface-overlay` | The panel's background. |
 | `--drawer-text` | `text` | The panel's text: the body and the footer. |
 | `--drawer-overlay` | `overlay` | The dimmed backdrop over the page. |
@@ -129,15 +132,45 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--drawer-grip` | `text-muted` | A sheet's grip, at the top of a drawer with snapPoints (3:1 on bg). |
+
+**Shadow**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--drawer-shadow` | `elevation-modal` | The panel's shadow. |
 | `--drawer-depth` | `depth-surface` | The drawer's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |
 | `--drawer-width-md` | `container-sm` | size="md", the default (384px). |
 | `--drawer-width-lg` | `container-lg` | size="lg" (512px). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--drawer-padding` | `space-surface` | Padding inside the panel (24px; 16px on screens under 640px wide). |
 | `--drawer-gap` | `spacing-4` | Space between the header and the body (16px). |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--drawer-border-width` | `border-width-1` | The line above the footer (1px). |
 | `--drawer-radius` | `radius-container` | The corners on the open side of a top or bottom drawer (12px). |
+
+**Type**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--drawer-title-weight` | `font-semibold` | The title's weight (600). |
+
+**Motion**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--drawer-duration` | `motion-enter-lg` | Sliding in (300ms). Sliding out takes `motion-exit-lg` (200ms). |
 <!-- token-table:end -->

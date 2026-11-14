@@ -12,7 +12,7 @@ import * as icons from '../../material/builtin';
 export interface LinkOwnProps {
   /** 'primary' (default): the primary color. 'neutral': the surrounding text's color, still underlined. */
   tone?: 'primary' | 'neutral' | undefined;
-  /** 'always' (default): underlined, so it's a link without relying on color. 'hover': only on hover and focus, for links whose place already says they're links (a nav bar, a footer). */
+  /** 'always' (default): underlined, so it's a link without relying on color. 'hover': only on hover and focus, for links whose place already says they're links (a nav bar, a footer); inside a paragraph it stays underlined. */
   underline?: 'always' | 'hover' | undefined;
   /** Opens in a new tab (target="_blank", rel="noopener noreferrer"), with a new-tab icon and "(opens in a new tab)" for screen readers (the opensInNewTab label). Default: false. */
   external?: boolean | undefined;

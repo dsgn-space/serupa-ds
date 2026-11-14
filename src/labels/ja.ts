@@ -341,6 +341,7 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + '～' + to,
   repeats: '繰り返し',
   noEvents: '今月の予定はありません',
+  eventChanged: (title, when) => title + '：' + when + 'に変更',
   dateFieldDay: '日',
   dateFieldMonth: '月',
   dateFieldYear: '年',

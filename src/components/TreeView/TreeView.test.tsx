@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { TreeView, type TreeViewItem } from './TreeView';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -409,4 +409,23 @@ describe('TreeView target size (GQ6)', () => {
     expect(css(row('c')).fontWeight).toBe(css(row('a')).fontWeight);
     expect(css(row('c')).boxShadow).toMatch(/inset/);
   });
+});
+
+describe('TreeView: motion', () => {
+  const turn = () => getComputedStyle(row('a').querySelector('svg')!.parentElement!).transitionDuration;
+  test('a key opens and closes an item with the chevron turned at once; a click keeps the turn', () => withMotion(async () => {
+    await render(<Tree />);
+    expect(turn()).not.toBe('0s');
+    await userEvent.tab();
+    await userEvent.tab();
+    expect(focused()).toBe('a');
+    await userEvent.keyboard('{ArrowRight}');
+    expect(item('a').getAttribute('aria-expanded')).toBe('true');
+    expect(turn()).toBe('0s');
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(turn()).toBe('0s');
+    await userEvent.click(row('a').querySelector('svg')!.parentElement!.parentElement!);
+    expect(item('a').getAttribute('aria-expanded')).toBe('true');
+    expect(turn()).not.toBe('0s');
+  }));
 });

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn, oneOf, useIsoLayoutEffect } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
+import { toMs } from '../../internal/cssTime';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
@@ -390,7 +391,8 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
     const was = before.current, region = self.current;
     before.current = null;
     if (!was || !region || reducedMotion(region)) return;
-    const cs = getComputedStyle(region), ms = parseFloat(cs.getPropertyValue('--dk-toast-move')) || 0;
+    // toMs: a custom property keeps the text it was given, and a minified stylesheet says .2s where the tokens say 200ms.
+    const cs = getComputedStyle(region), ms = toMs(cs.getPropertyValue('--dk-toast-move'));
     if (!ms) return;
     for (const e of region.querySelectorAll<HTMLElement>(MOVES)) {
       const from = was.get(e.dataset.toast || 'more');
@@ -398,7 +400,9 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
       for (const a of e.getAnimations()) if (a.id === 'dk-toast-move') a.cancel();
       const dy = from - e.getBoundingClientRect().top;
       if (Math.abs(dy) < 0.5) continue;
-      e.animate([{ translate: '0 ' + dy + 'px' }, { translate: '0 0' }], { duration: ms, easing: cs.getPropertyValue('--dk-toast-move-ease').trim() || 'ease', id: 'dk-toast-move' });
+      // One flicked away is on its way out sideways (its own translate, set by the swipe): the glide adds to that.
+      // Replacing it put the toast back at its place for the length of the glide before it carried on.
+      e.animate([{ translate: '0 ' + dy + 'px' }, { translate: '0 0' }], { duration: ms, easing: cs.getPropertyValue('--dk-toast-move-ease').trim() || 'ease', id: 'dk-toast-move', composite: e.style.translate ? 'add' : 'replace' });
     }
   });
   // The stack can't run past the far edge of the screen out of reach (GQ1b): when the toasts shown and the waiting

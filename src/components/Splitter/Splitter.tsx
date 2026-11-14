@@ -131,21 +131,23 @@ export const Splitter = /* @__PURE__ */ component<HTMLDivElement, SplitterProps>
     change(to);
   };
   // A drag sets the size from where the pointer is in the Splitter, kept between min and max.
-  const drag = React.useRef<{ id: number; x: number; y: number; moved: boolean } | null>(null);
+  const drag = React.useRef<{ id: number; x: number; y: number; moved: boolean; off: number } | null>(null);
   // A press on the handle that doesn't drag it, then a press anywhere else in the Splitter, puts the handle there
   // (WCAG 2.5.7: a single pointer resizes without dragging). Pressing the handle again, Escape or leaving it cancels.
   const [placing, setPlacing] = React.useState(false);
   const handle = React.useRef<HTMLDivElement | null>(null);
-  const at = (e: React.PointerEvent<HTMLDivElement>) => {
+  // reach: how far a pointer is along the axis from the start edge of a box. off: where in the handle a drag took
+  // hold, so the handle stays under the pointer as it was grabbed, instead of jumping its start edge to it.
+  const reach = (e: React.PointerEvent<HTMLDivElement>, r: DOMRect) => (direction === 'horizontal' ? (rtl(root.current!) ? r.right - e.clientX : e.clientX - r.left) : e.clientY - r.top);
+  const at = (e: React.PointerEvent<HTMLDivElement>, off = 0) => {
     const r = root.current!.getBoundingClientRect();
-    const share = direction === 'horizontal' ? (rtl(root.current!) ? r.right - e.clientX : e.clientX - r.left) / (r.width || 1) : (e.clientY - r.top) / (r.height || 1);
-    return fit(share * 100);
+    return fit((reach(e, r) - off) / ((direction === 'horizontal' ? r.width : r.height) || 1) * 100);
   };
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
     e.preventDefault();   // no text selection while dragging; focus moves to the handle below
     e.currentTarget.focus();
-    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false };
+    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, moved: false, off: reach(e, e.currentTarget.getBoundingClientRect()) };
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* a pointer that already ended */ }
   };
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -154,7 +156,7 @@ export const Splitter = /* @__PURE__ */ component<HTMLDivElement, SplitterProps>
     if (!d.moved && Math.abs(e.clientX - d.x) + Math.abs(e.clientY - d.y) < 4) return;
     d.moved = true;
     setPlacing(false);
-    change(at(e));
+    change(at(e, d.off));
   };
   const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     const d = drag.current;

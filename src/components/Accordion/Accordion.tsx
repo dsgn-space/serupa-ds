@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn, domId, oneOf, omit } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
+import { toMs } from '../../internal/cssTime';
 import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
 import { flattenChildren } from '../../internal/children';
@@ -46,7 +47,6 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
   keepMounted?: boolean | undefined;
 }
 
-const toMs = (t: string) => (parseFloat(t) || 0) * (t.trim().endsWith('ms') ? 1 : 1000);
 
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; many: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
@@ -150,17 +150,30 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
   const keep = props.keepMounted !== false;
   const [mounted, setMounted] = React.useState(open || keep);
   if ((open || keep) && !mounted) setMounted(true);
+  // One item closing as another opens (type="single"): both heights move over the opening one's time and curve, so
+  // their sum goes straight from the old height to the new. On their own curves (the closing one slow to start, the
+  // opening one fast) the two were briefly taller together than either, and what's below dipped and came back.
+  const swapping = React.useRef(false);
+  swapping.current = !!ctx && ctx.single && !open && ctx.open.length > 0;
+  const swapTime = (panel: HTMLElement) => {
+    if (!swapping.current) return 0;
+    const cs = getComputedStyle(panel);
+    return toMs(cs.getPropertyValue('--accordion-duration') || cs.getPropertyValue('--motion-change-md'));
+  };
   React.useLayoutEffect(function () {
     const el = content.current, panel = el && el.closest<HTMLElement>('.dk-accordion__panel');
     if (!el || !panel) return;
     if (open || (!findable && keep)) { el.removeAttribute('hidden'); return; }
     const style = getComputedStyle(panel);
     const delays = style.transitionDelay.split(',');
-    const ms = Math.max(0, ...style.transitionDuration.split(',').map((d, i) => toMs(d) + toMs(delays[i] || '0')));
+    const fold = Math.max(0, ...style.transitionDuration.split(',').map((d, i) => toMs(d) + toMs(delays[i] || '0')));
+    // Closing as another item opens, its height takes the opening one's time (below), so the content stays that long.
+    const ms = fold ? Math.max(fold, swapTime(panel)) : 0;
     // The panel keeps its content shown until the fold ends. CSS alone (a discrete content-visibility transition)
     // isn't enough: WebKit sometimes drops it, and the panel lost its height at the start of the fold.
     const hold = (on: boolean) => { panel.style.contentVisibility = on ? 'visible' : ''; };
-    const hide = () => { hold(false); if (grow.current) grow.current.cancel(); if (findable) el.setAttribute('hidden', 'until-found'); if (!keep) setMounted(false); };
+    // The height animation goes with it: one left behind made the next opening start from the open height, a snap.
+    const hide = () => { hold(false); if (grow.current) { grow.current.cancel(); grow.current = null; } if (findable) el.setAttribute('hidden', 'until-found'); if (!keep) setMounted(false); };
     if (ms) hold(true);
     if (!ms || !el.isConnected || panel.getBoundingClientRect().height === 0) { hide(); return; }
     const t = setTimeout(hide, ms);
@@ -184,8 +197,9 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
     const to = open ? panel.offsetHeight : 0;
     if (from === to) return;
     // Closing, it slows to a stop on ease-move rather than the fade's ease-exit, which would end what's below at full speed.
-    const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue('--ease-move').trim() || timing.easing;
-    grow.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: timing.duration, easing, fill: open ? 'none' : 'forwards' });
+    const swap = swapTime(panel);
+    const easing = open ? timing.easing : getComputedStyle(panel).getPropertyValue(swap ? '--ease-enter' : '--ease-move').trim() || timing.easing;
+    grow.current = panel.animate({ height: [from + 'px', to + 'px'] }, { duration: swap || timing.duration, easing, fill: open ? 'none' : 'forwards' });
     grow.current.id = 'dk-accordion-height';
     if (open) grow.current.onfinish = () => { grow.current = null; };
   }, [open]);

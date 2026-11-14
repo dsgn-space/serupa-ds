@@ -114,6 +114,25 @@ describe('DataGrid', () => {
     expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: 'Madu' }, { rowId: 'b', column: 'qty', value: '2' }, { rowId: 'c', column: 'name', value: 'Aren' }, { rowId: 'c', column: 'qty', value: '5' }]);
   });
 
+  test('with no text selected, Ctrl+C and Ctrl+V reach the body (Chrome before 125, Firefox): copy and paste still work on the focused cells', async () => {
+    const clip = (type: 'copy' | 'paste', text = '') => {
+      const held: Record<string, string> = text ? { 'text/plain': text } : {};
+      const ev = new ClipboardEvent(type, { bubbles: true, cancelable: true });
+      Object.defineProperty(ev, 'clipboardData', { value: { setData: (f: string, v: string) => { held[f] = v; }, getData: (f: string) => held[f] ?? '' } });
+      document.body.dispatchEvent(ev);
+      return [held['text/plain'] ?? '', ev.defaultPrevented] as const;
+    };
+    const onChange = vi.fn();
+    await render(<Live onChange={onChange} />);
+    expect(clip('copy')).toEqual(['', false]);   // focus outside the grid: the page's own copy
+    await userEvent.click(cell('Kopi'));
+    await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+    expect(clip('copy')).toEqual(['Kopi\t4', true]);
+    await userEvent.click(cell('Teh'));
+    clip('paste', 'Madu');
+    expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: 'Madu' }]);
+  });
+
   test('rows taken away while a range reaches past them (a filter, another user): copy and Delete use the rows that are left', async () => {
     const clip = () => {
       const held: Record<string, string> = {};

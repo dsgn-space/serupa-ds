@@ -12,7 +12,7 @@ import { buildUtilities } from './tools/utilities/build.mjs';
 import { buildRegistry } from './tools/build/registry.mjs';
 import { TOUCH } from './tools/test/vitest/touch.ts';
 import { TimedSequencer } from './tools/test/vitest/shard.ts';
-import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, writeAriaBaseline } from './tools/test/vitest/commands.ts';
+import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, safeArea, writeAriaBaseline } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
@@ -80,6 +80,9 @@ export default defineConfig({
           // @media (hover: hover)) would never apply. Give it a desktop's fine, hovering pointer, as lib.mjs does.
           provider: playwright({
             ...(process.env.SERUPA_BROWSER === 'firefox' ? { launchOptions: { firefoxUserPrefs: { 'ui.primaryPointerCapabilities': 6, 'ui.allPointerCapabilities': 6 } } } : {}),
+            // SERUPA_CHROMIUM=<path> runs them in that Chromium instead of Playwright's: the nightly Floor run passes the
+            // oldest Chrome the package supports (tools/browser-floor.mjs, from package.json's browserslist).
+            ...(BROWSER === 'chromium' && process.env.SERUPA_CHROMIUM ? { launchOptions: { executablePath: process.env.SERUPA_CHROMIUM } } : {}),
             // SERUPA_LOCALE=ar runs them with the browser in that language (navigator.language and Intl's default
             // locale), so nothing reads the default and quietly expects English (run.mjs --locale).
             ...(process.env.SERUPA_LOCALE ? { contextOptions: { locale: process.env.SERUPA_LOCALE } } : {}),
@@ -95,7 +98,7 @@ export default defineConfig({
             { browser: BROWSER, name: `components (${BROWSER}, touch)`, include: TOUCH },
           ],
           viewport: { width: 900, height: 700 },
-          commands: { pointerDrag, pointerDown, pointerUp, forcedColors, coarsePointer, printMedia, ariaSnapshot, ariaMode, writeAriaBaseline, recordBench },
+          commands: { pointerDrag, pointerDown, pointerUp, forcedColors, coarsePointer, printMedia, safeArea, ariaSnapshot, ariaMode, writeAriaBaseline, recordBench },
         },
       },
     }, {

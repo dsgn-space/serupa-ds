@@ -36,4 +36,17 @@ describe('Elevation', () => {
     }
     expect(low).toEqual([]);
   });
+
+  test('a field on a raised or floating surface (field-raised) is never below it and steps up from it in dark, with text at 4.5:1, in all six themes', () => {
+    const wrong: string[] = [];
+    for (const th of THEMES) {
+      root.setAttribute('data-theme', th);
+      for (const under of ['surface-raised', 'surface-overlay']) {
+        if (light('var(--field-raised)') < light(`var(--${under})`)) wrong.push(`${th}: field-raised is below ${under}`);
+        if (th.endsWith('-dark') && contrast('var(--field-raised)', `var(--${under})`) < 1.1) wrong.push(`${th}: field-raised matches ${under}`);
+      }
+      for (const t of ['text', 'text-muted']) if (contrast(`var(--${t})`, 'var(--field-raised)') < 4.5) wrong.push(`${th}: ${t} on field-raised`);
+    }
+    expect(wrong).toEqual([]);
+  });
 });

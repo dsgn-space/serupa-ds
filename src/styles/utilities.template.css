@@ -1350,11 +1350,12 @@
 /* A row's hover and selected fill (List, InlineEdit: surface-hover, a step off the page) on a recessed surface: a
    bg-surface-muted panel is already that colour in light, so rows there step up to surface-raised instead (white in
    light, zinc-800 in dark). On a raised or floating surface (zinc-800 in dark) they step up to surface-hover-raised.
-   A surface painted inside gives its rows its own fill; Card, Popover, Dialog and Drawer do the same. */
+   A surface painted inside gives its rows its own fill; Card, Popover, Dialog and Drawer do the same. Form fields on a
+   raised or floating surface step up to field-raised the same way, so in dark they don't match the surface. */
 .bg-surface-muted { --dk-row-hover: var(--surface-raised); }
 .bg-surface { --dk-row-hover: var(--surface-hover); }
-.bg-surface-raised { --dk-row-hover: var(--surface-hover-raised); }
-.bg-surface-overlay { --dk-row-hover: var(--surface-hover-raised); }
+.bg-surface-raised { --dk-row-hover: var(--surface-hover-raised); --field: var(--field-raised); }
+.bg-surface-overlay { --dk-row-hover: var(--surface-hover-raised); --field: var(--field-raised); }
 /* background-image: none and gradients */
 .bg-none { background-image: none; }
 .bg-linear-to-t { --dk-gradient-position: to top in oklab; background-image: linear-gradient(var(--dk-gradient-stops)); }

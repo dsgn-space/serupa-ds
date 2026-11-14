@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.6.0
+npm install github:dsgn-space/serupa-ds#v14.7.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -122,13 +122,16 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **ShowMore** (beta): Long text cut after a few lines, with a "Show more" button under it that shows the rest. Also called: read more, expandable text.
 - **SortableList**: A list people put in their own order: tasks by priority, steps in a flow, columns in a table.
 - **Table**: A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide.
+- **TagGroup** (beta): Short labels people remove or pick: the labels on a ticket, the recipients of a message, the skills on a profile.
 - **VirtualList** (beta): A List of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten.
 
 ### Data display
 
 - **Chart** (beta): A line, bar or area chart of a few series over the same categories, such as visitors per month or orders per region, or a donut of one series' shares, such as traffic by source.
+- **Countdown**: Shows the time left until a moment, as a clock ("4:59") or in words ("4 minutes, 59 seconds"), and keeps itself up to date.
 - **EventCalendar** (beta): A month of events: meetings, deadlines, bookings. Also called: scheduler, agenda.
 - **Sparkline** (beta): A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value.
+- **StatusTracker** (beta): A strip of bars, one a day, for uptime or a job's history: up, degraded, down or no data, told apart by shape as well as color.
 - **Timeline**: An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content. Also called: activity feed, history.
 
 ### Feedback
@@ -168,6 +171,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **PhoneInput**: A phone number field with a country menu at the start.
 - **PinInput**: A one-time code or PIN, shown as one box per character, such as the 6-digit code texted at sign-in. Also called: OTP input, one-time code input, verification code input.
 - **Radio**: Native radios for one choice from a short list. Also called: radio button, radio group.
+- **RangeCalendar** (beta): A calendar on the page that picks a range of days: the check-in and check-out of a booking, a report's period, the first and last day of a leave request.
 - **Rating**: Stars to pick a score (how was your stay, how useful was this article) or to show one (a product's average). Also called: star rating.
 - **SearchInput**: A search field: a search icon at the start, and a × at the end once something is typed. Also called: search, search field, search box.
 - **SegmentedControl**: Picks one of a few options shown side by side, such as a view (List, Board) or a period (Day, Week, Month). Also called: segmented button, button toggle group.
@@ -178,6 +182,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Textarea**: A multi-line text field, Input's sibling: a native `<textarea>` in a box. Also called: text box, multiline text field.
 - **TimePicker**: A time-of-day field: people type a time, or pick one from a list.
 - **TimeZonePicker** (beta): A searchable list of time zones, by city, with each one's offset now and its name in the reader's language.
+- **TransferList**: Two lists, Available and Chosen, with Add and Remove between them, for picking a set out of many: the columns a table shows, the permissions a role has, the people on a team.
 - **TypeToConfirm**: A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted.
 
 ### Layout and type

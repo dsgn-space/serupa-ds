@@ -347,6 +347,24 @@ describe('Tabs on the server', () => {
     await expect.poll(() => panels.map((p) => p.tabIndex)).toEqual([-1, 0, -1]);
   });
 
+  test('a tab picked near the edge of a scrolling list stops clear of the fade (32px), not under it', async () => {
+    const many = Array.from({ length: 20 }, (_, i) => 'Tab ' + (i + 1));
+    await render(<div style={{ width: '400px' }}><Tabs id="edge" defaultValue="Tab 1"><TabList aria-label="Many">{many.map((t) => <Tab key={t} value={t}>{t}</Tab>)}</TabList></Tabs></div>);
+    const list = el('edge').querySelector<HTMLElement>('[role="tablist"]')!;
+    const tabs = [...list.querySelectorAll<HTMLElement>('[role="tab"]')];
+    const box = list.getBoundingClientRect();
+    // The first tab that reaches past the end of the list: half hidden before it is picked.
+    const cut = tabs.find((t) => t.getBoundingClientRect().right > box.right - 32)!;
+    await userEvent.click(cut);
+    await expect.poll(() => cut.getAttribute('aria-selected')).toBe('true');
+    await expect.poll(() => Math.round(box.right - cut.getBoundingClientRect().right)).toBeGreaterThanOrEqual(32);
+    expect(list.hasAttribute('data-fade-after')).toBe(true);
+    // And back toward the start: the tab before the first one still in view lands clear of the start fade.
+    const before = tabs[tabs.findIndex((t) => t.getBoundingClientRect().left >= box.left + 32) - 1]!;
+    await userEvent.click(before, { force: true });
+    await expect.poll(() => before.getAttribute('aria-selected')).toBe('true');
+    await expect.poll(() => Math.round(before.getBoundingClientRect().left - box.left)).toBeGreaterThanOrEqual(tabs.indexOf(before) ? 32 : 0);
+  });
   test('overflow (O4): 20 tabs in 400px with the last selected: it is scrolled into view; the start edge fades while tabs are past it, the end only while tabs are past it; nothing fades when it fits', async () => {
     const many = Array.from({ length: 20 }, (_, i) => 'Tab ' + (i + 1));
     function Wide() {

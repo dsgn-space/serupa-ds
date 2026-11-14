@@ -26,6 +26,8 @@ export interface EventCalendarLabels {
   repeats: string;
   /** EventCalendar's agenda view when the month has no events. */
   noEvents: string;
+  /** EventCalendar: said when an event is moved or resized ("Design review, now Wednesday, March 5, 2:00 PM to 3:00 PM"). */
+  eventChanged: (title: string, when: string) => string;
 }
 export const en: EventCalendarLabels = {
   goToToday: 'Today',
@@ -44,6 +46,7 @@ export const en: EventCalendarLabels = {
   eventTime: (from, to) => from + ' to ' + to,
   repeats: 'Repeats',
   noEvents: 'No events this month',
+  eventChanged: (title, when) => title + ', now ' + when,
 };
 export const id: EventCalendarLabels = {
   goToToday: 'Hari ini',
@@ -62,4 +65,5 @@ export const id: EventCalendarLabels = {
   eventTime: (from, to) => from + ' sampai ' + to,
   repeats: 'Berulang',
   noEvents: 'Tidak ada acara bulan ini',
+  eventChanged: (title, when) => title + ', sekarang ' + when,
 };

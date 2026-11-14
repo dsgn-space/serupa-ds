@@ -341,6 +341,7 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => from + '至' + to,
   repeats: '重复',
   noEvents: '本月没有日程',
+  eventChanged: (title, when) => title + '，已改为' + when,
   dateFieldDay: '日',
   dateFieldMonth: '月',
   dateFieldYear: '年',

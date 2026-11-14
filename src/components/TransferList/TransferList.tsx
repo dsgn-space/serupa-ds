@@ -101,6 +101,14 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
   const ref2 = useMergedRef(ref, (n: HTMLDivElement | null) => { root.current = n; delegateFocus(n, () => n && n.querySelector<HTMLElement>('input:enabled')); nameRef(n); });
   useAutoFocus(autoFocus, () => root.current);
 
+  // Each option's box is made once per option and kept, so a check or a move draws again only the boxes whose state
+  // changed (each reads it from its CheckboxGroup), not all of them: the same element is skipped.
+  const boxes = React.useRef(new WeakMap<TransferListOption, React.ReactElement>()).current;
+  const boxOf = (o: TransferListOption) => {
+    let box = boxes.get(o);
+    if (!box) { box = <Checkbox key={o.value} value={o.value} disabled={o.disabled} description={o.description}>{o.label}</Checkbox>; boxes.set(o, box); }
+    return box;
+  };
   const side = (which: 'left' | 'right', list: TransferListOption[], checked: string[], setChecked: (v: string[]) => void) => {
     const titleId = id + '-' + which;
     return (
@@ -110,7 +118,7 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
           <CheckboxGroup className="dk-transfer-list__options" aria-labelledby={titleId} size="sm" value={checked.filter((v) => list.some((o) => o.value === v))}
             onValueChange={(v) => setChecked(v.map(String))} invalid={invalid} disabled={off}>
             {list.length > 1 ? <Checkbox selectAll>{sds.labels.transferAll}</Checkbox> : null}
-            {list.map((o) => <Checkbox key={o.value} value={o.value} disabled={o.disabled} description={o.description}>{o.label}</Checkbox>)}
+            {list.map(boxOf)}
           </CheckboxGroup>
         ) : <p className="dk-transfer-list__empty">{sds.labels.transferEmpty}</p>}
       </div>

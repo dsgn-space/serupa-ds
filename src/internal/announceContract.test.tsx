@@ -18,6 +18,7 @@ import { ChatApproval, ChatMessage } from '../components/Chat/Chat';
 import { DataGrid } from '../components/DataGrid/DataGrid';
 import { Dialog } from '../components/Dialog/Dialog';
 import { EmptyState } from '../components/EmptyState/EmptyState';
+import { EventCalendar } from '../components/EventCalendar/EventCalendar';
 import { Field } from '../components/Field/Field';
 import { FileUpload } from '../components/FileUpload/FileUpload';
 import { InlineEdit } from '../components/InlineEdit/InlineEdit';
@@ -121,6 +122,9 @@ const SITES: Record<string, Site> = {
   'Kanban: picking a card up with Space': {
     ui: () => <Kanban aria-label="Board" columns={[{ id: 'a', title: 'To do', items: ITEMS }, { id: 'b', title: 'Done', items: [] }]} getKey={(t) => t.id} getLabel={(t) => t.name} renderCard={(t) => t.name} onMove={() => {}} />,
     act: async () => { $('button[aria-label="Move Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*To do.*2.*3/ },
+  'EventCalendar: an event moved a day with Shift and an arrow key': {
+    ui: () => <SerupaProvider locale="en-US"><EventCalendar events={[{ id: 'r', title: 'Design review', start: new Date(2025, 2, 4, 14), end: new Date(2025, 2, 4, 15) }]} defaultMonth={new Date(2025, 2, 1)} onEventMove={() => {}} /></SerupaProvider>,   // pinned: the dates follow the browser's locale
+    act: async () => { $('[data-event-id="r"]').focus(); await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}'); }, says: /Design review.*March 5/ },
   'TagGroup: a tag removed with Delete': {
     ui: () => <TagGroup aria-label="Labels" items={[{ id: 'a', label: 'Design' }, { id: 'b', label: 'Bug' }]} onRemove={() => {}} />,
     act: async () => { $('[data-tag-id="a"]').focus(); await userEvent.keyboard('{Delete}'); }, says: /Design/ },

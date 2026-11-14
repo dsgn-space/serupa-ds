@@ -3,6 +3,7 @@
 // for a year. With SERUPA_BENCH=<folder> those tests also write every time they measure; this gathers them into one
 // file and compares it with the previous night's, so a slow drift shows up as a change on one night.
 //   SERUPA_BENCH=.bench npx vitest run --project components --no-file-parallelism src/internal/{mountTime,inp}.test.tsx
+// (mountTime.test.tsx writes two suites: each story's mount, and its update, rendered again with nothing changed.)
 // Run that twice into the one folder: each time counts as the faster of the two, and the test files run one at a
 // time so they don't share the processor.
 //   node tools/test/bench.mjs .bench --json bench.json                         gather them
@@ -18,13 +19,15 @@ import path from 'node:path';
 import { PROJECT, report, done } from './lib.mjs';
 
 const RATIO = 1.5, TOTAL_RATIO = 1.2;
-const FLOOR = { mount: 3, inp: 32 };
+// An update (a story rendered again with nothing changed, mountTime.test.tsx) is compared as a mount is, by component,
+// with a smaller floor: most take well under a millisecond.
+const FLOOR = { mount: 3, update: 2, inp: 32 };
 // Event Timing reports nothing under 16 ms, which inp.test.tsx writes as 0: count it as 16.
-const LEAST = { mount: 0, inp: 16 };
+const LEAST = { mount: 0, update: 0, inp: 16 };
 
-/** The times a SERUPA_BENCH folder holds: { mount: { "Button/Playground": ms }, inp: { … } }. */
+/** The times a SERUPA_BENCH folder holds: { mount: { "Button/Playground": ms }, update: { … }, inp: { … } }. */
 export function gather(dir) {
-  const out = { mount: {}, inp: {} };
+  const out = { mount: {}, update: {}, inp: {} };
   for (const suite of Object.keys(out)) {
     const file = path.join(dir, `${suite}.jsonl`);
     if (!fs.existsSync(file)) continue;
@@ -45,17 +48,21 @@ const change = (suite, name, was, now) => {
  *  each story's and answer's change, largest first. Only what both runs measured is compared. */
 export function compare(before, now) {
   const changes = [], slower = [];
-  const components = new Map();
-  for (const [name, ms] of Object.entries(now.mount || {})) {
-    const was = before.mount?.[name];
-    if (was === undefined) continue;
-    changes.push(change('mount', name, was, ms));
-    const c = name.split('/')[0], sum = components.get(c) || { was: 0, now: 0 };
-    components.set(c, { was: sum.was + was, now: sum.now + ms });
+  let all = { was: 0, now: 0 };
+  for (const suite of ['mount', 'update']) {
+    const components = new Map();
+    for (const [name, ms] of Object.entries(now[suite] || {})) {
+      const was = before[suite]?.[name];
+      if (was === undefined) continue;
+      changes.push(change(suite, name, was, ms));
+      const c = name.split('/')[0], sum = components.get(c) || { was: 0, now: 0 };
+      components.set(c, { was: sum.was + was, now: sum.now + ms });
+    }
+    for (const [c, { was, now: ms }] of components) { const x = change(suite, `${c} (its stories together)`, was, ms); if (x.past) slower.push(x); }
+    const total = [...components.values()].reduce((s, v) => ({ was: s.was + v.was, now: s.now + v.now }), { was: 0, now: 0 });
+    if (total.was && total.now > total.was * TOTAL_RATIO) slower.push({ ...change(suite, 'every story together', total.was, total.now), past: true });
+    if (suite === 'mount') all = total;
   }
-  for (const [c, { was, now: ms }] of components) { const x = change('mount', `${c} (its stories together)`, was, ms); if (x.past) slower.push(x); }
-  const all = [...components.values()].reduce((s, v) => ({ was: s.was + v.was, now: s.now + v.now }), { was: 0, now: 0 });
-  if (all.was && all.now > all.was * TOTAL_RATIO) slower.push({ ...change('mount', 'every story together', all.was, all.now), past: true });
   for (const [name, ms] of Object.entries(now.inp || {})) {
     const was = before.inp?.[name];
     if (was === undefined) continue;
@@ -67,7 +74,7 @@ export function compare(before, now) {
   return { slower, changes, all };
 }
 
-const line = (c) => `${c.suite === 'mount' ? 'mount' : 'INP  '}  ${c.name}: ${c.was.toFixed(1)} → ${c.now.toFixed(1)} ms (×${c.ratio.toFixed(2)})`;
+const line = (c) => `${{ mount: 'mount ', update: 'update', inp: 'INP   ' }[c.suite]}  ${c.name}: ${c.was.toFixed(1)} → ${c.now.toFixed(1)} ms (×${c.ratio.toFixed(2)})`;
 
 const args = process.argv.slice(2);
 const value = (flag) => (args.includes(flag) ? args[args.indexOf(flag) + 1] : null);
@@ -75,10 +82,10 @@ const dir = !process.env.VITEST && args[0] && !args[0].startsWith('--') ? args[0
 
 if (dir) {
   const now = gather(dir);
-  const count = Object.keys(now.mount).length + Object.keys(now.inp).length;
+  const count = Object.keys(now.mount).length + Object.keys(now.update).length + Object.keys(now.inp).length;
   if (!count) { console.log(`FAIL  ${dir} holds no times: run the tests with SERUPA_BENCH=${dir}`); process.exit(1); }
   if (value('--json')) fs.writeFileSync(value('--json'), JSON.stringify(now, null, 2) + '\n');
-  console.log(`${Object.keys(now.mount).length} mount times, ${Object.keys(now.inp).length} INP times`);
+  console.log(`${Object.keys(now.mount).length} mount times, ${Object.keys(now.update).length} update times, ${Object.keys(now.inp).length} INP times`);
   const prevFile = value('--previous');
   if (!prevFile || !fs.existsSync(prevFile)) { console.log('No earlier run to compare with: this one is the first.'); process.exit(0); }
   const result = compare(JSON.parse(fs.readFileSync(prevFile, 'utf8')), now), { slower, changes } = result;
@@ -104,11 +111,13 @@ t('every story together a fifth slower is (22 → 29.5 ms)', names.includes('eve
 t('an answer under 16 ms counts as 16, so 0 → 40 ms is inside two frames', !names.includes('Menu: open'), JSON.stringify(names));
 t('an answer that goes from 24 to 80 ms is slower', names.includes('Dialog: open'), JSON.stringify(names));
 t('the same times are never slower', !compare(before, before).slower.length);
+const updates = compare({ update: { 'A/x': 0.4, 'A/y': 0.3, 'B/x': 2, 'B/y': 2 } }, { update: { 'A/x': 1.2, 'A/y': 0.9, 'B/x': 6, 'B/y': 2 } }).slower.map((c) => `${c.suite} ${c.name}`);
+t('updates are compared by component too: 4 → 8 ms is slower, 0.7 → 2.1 ms is inside the 2 ms floor', updates.includes('update B (its stories together)') && !updates.includes('update A (its stories together)'), JSON.stringify(updates));
 const twice = fs.mkdtempSync(path.join(PROJECT, '.bench-test-'));
 try {
   fs.writeFileSync(path.join(twice, 'mount.jsonl'), '{"A/x":9,"B/x":1}\n{"A/x":4}\n');
   const g = gather(twice);
-  t('of two runs in one folder, the faster time counts', g.mount['A/x'] === 4 && g.mount['B/x'] === 1 && !Object.keys(g.inp).length, JSON.stringify(g));
+  t('of two runs in one folder, the faster time counts', g.mount['A/x'] === 4 && g.mount['B/x'] === 1 && !Object.keys(g.inp).length && !Object.keys(g.update).length, JSON.stringify(g));
 } finally { fs.rmSync(twice, { recursive: true, force: true }); }
 
 done(report('Benchmarks over time', R));

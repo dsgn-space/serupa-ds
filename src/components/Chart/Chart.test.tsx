@@ -21,6 +21,11 @@ async function tabIn(chart: Element = document.querySelector('figure[data-compon
 }
 
 describe('Chart', () => {
+  test('the key sets a numeric series name (a year) in tabular figures, so keys of years line up', async () => {
+    await render(<Chart title="Visitors" categories={CATS} series={[{ name: '2025', values: [1, 2, 3, 4] }, { name: '2026', values: [2, 3, 4, 5] }]} />);
+    expect([...document.querySelectorAll('li')].filter((li) => /^202[56]/.test(li.textContent)).map((k) => css(k).fontVariantNumeric)).toEqual(['tabular-nums', 'tabular-nums']);
+  });
+
   test('a <figure> named by its title; ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLElement>();
     await render(<Chart id="c" ref={ref} className="extra" data-x="y" title="Visitors" categories={CATS} series={TWO} />);

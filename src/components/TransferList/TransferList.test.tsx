@@ -141,3 +141,23 @@ describe('TransferList', () => {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(360);
   });
 });
+
+// A box checked in a long list used to redraw every box in both lists (Audit run 276): 300 took 60 to 90 ms a click in
+// a development build. Each box sets its input's indeterminate as it draws, so a setter on each input counts them.
+describe('TransferList with many options', () => {
+  const many = Array.from({ length: 300 }, (_, i) => ({ value: 'o' + i, label: 'Option ' + i }));
+  test('checking a box redraws only that box and its list\'s "All", not every box in both lists', async () => {
+    const drawn = new Set<string>();
+    await render(en(<TransferList aria-label="Columns" options={many} defaultValue={['o298', 'o299']} />));
+    const box = (label: string) => page.getByRole('checkbox', { name: label, exact: true }).element() as HTMLInputElement;
+    const own = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'indeterminate')!;
+    for (const i of document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')) {
+      const label = i.closest('label')!.textContent.trim();
+      Object.defineProperty(i, 'indeterminate', { configurable: true, get: () => own.get!.call(i) as boolean, set: (v: boolean) => { drawn.add(label); own.set!.call(i, v); } });
+    }
+    box('Option 5').click();
+    await expect.poll(() => box('Option 5').checked).toBe(true);
+    await new Promise((r) => requestAnimationFrame(() => r(null)));
+    expect([...drawn].sort()).toEqual(['All', 'Option 5']);
+  });
+});

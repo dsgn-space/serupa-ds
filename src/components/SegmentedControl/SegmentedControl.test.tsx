@@ -328,6 +328,22 @@ describe('SegmentedControl', () => {
       await press(seg('sr'), () => expect(css(seg('sr')).scale).toBe('none'));
     });
   });
+  test('a segment picked by a press held as long as a finger holds it: the indicator comes to rest on the whole segment, not on its pressed (95%) size', async () => {
+    await withMotion(async () => {
+      await render(<SegmentedControl id="hp" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board view' }, { value: 'c', label: 'Calendar' }]} defaultValue="a" />);
+      await expect.poll(async () => { await document.fonts.ready; return document.fonts.status; }).toBe('loaded');
+      await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
+      const ind = el('hp').firstElementChild as HTMLElement;
+      for (const i of [2, 0, 1]) {
+        const b = items('hp')[i]!;
+        // Held until it has shrunk all the way, so it is let go at its smallest.
+        await press(b, () => expect.poll(() => css(b).scale).toBe('0.95'));
+        await expect.poll(() => [b.getAttribute('aria-checked') ?? b.getAttribute('aria-pressed'), css(b).scale, ind.hasAttribute('data-slide')]).toEqual(['true', 'none', false]);
+        const r = b.getBoundingClientRect(), at = ind.getBoundingClientRect();
+        expect([Math.abs(at.left - r.left) < 0.6, Math.abs(at.width - r.width) < 0.6]).toEqual([true, true]);
+      }
+    });
+  });
   test('a new choice slides the indicator from the last one by clip-path (compositor), never scale or width, so its border and corners keep their shape between segments of different widths; it comes to rest on the segment (EG1, GL1)', async () => {
     await withMotion(async () => {
       await render(<SegmentedControl id="sl" aria-label="View" options={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board view' }]} defaultValue="a" />);

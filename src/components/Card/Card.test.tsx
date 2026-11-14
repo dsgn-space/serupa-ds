@@ -5,6 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { THEMES, color, css, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
+import { Checkbox } from '../Checkbox/Checkbox';
 import { Card, CardBody, CardFooter, CardHeader } from './Card';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -103,6 +104,19 @@ describe('Card', () => {
       const [bg, edge] = th === 'emerald-dark' ? ['var(--zinc-900)', '#ffffff1f'] : ['var(--zinc-800)', 'var(--zinc-700)'];
       expect([th, e.backgroundColor, e.borderTopColor]).toEqual([th, color(bg), color(edge)]);
       expect(e.backgroundColor).not.toBe(color('var(--surface)'));
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
+  test('a form field on an elevated card stands out from the card in every dark theme (field-raised), and on an outline card keeps the page\'s field', async () => {
+    await render(<Col><Card id="fel" variant="elevated"><input id="fe" /></Card><Card id="fdf"><input id="fd" /></Card></Col>);
+    // An <input> reads the shared field fill through --field, as every field does.
+    for (const id of ['fe', 'fd']) el(id).style.background = 'var(--field)';
+    for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect([th, css(el('fe')).backgroundColor]).toEqual([th, color('var(--field-raised)')]);
+      expect(css(el('fe')).backgroundColor).not.toBe(css(el('fel')).backgroundColor);
+      expect([th, css(el('fd')).backgroundColor]).toEqual([th, color('var(--field)')]);
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
   });
@@ -328,5 +342,14 @@ describe('CardHeader with an action in a narrow card (GR7)', () => {
     expect(words(n.title)).toBeLessThanOrEqual(3);
     expect(n.action.getBoundingClientRect().top).toBeGreaterThanOrEqual(n.title.getBoundingClientRect().bottom - 0.5);
     expect(Math.abs(w.action.getBoundingClientRect().top - w.title.getBoundingClientRect().top)).toBeLessThan(8);
+  });
+});
+
+describe('Card href: a ticked checkbox inside (GR408)', () => {
+  test('a checkbox in a linked card keeps its tick over the box: the label is lifted above the link, not the input', async () => {
+    const s = await render(<Card id="ck" href="#ck"><CardBody><Checkbox defaultChecked>Compare</Checkbox></CardBody></Card>);
+    const input = s.container.querySelector('input')!;
+    expect(getComputedStyle(input).zIndex).toBe('auto');
+    expect(getComputedStyle(input.closest('label')!).zIndex).toBe('10');
   });
 });

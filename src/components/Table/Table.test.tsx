@@ -52,6 +52,12 @@ const setup = async (tref?: React.Ref<HTMLTableElement>) => {
 };
 
 describe('Table', () => {
+  test('every cell sets its numbers in tabular figures, so a column of numbers lines up digit under digit', async () => {
+    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Total</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="tn">Ada</TableCell><TableCell id="tt">1,111</TableCell></TableRow></TableBody></Table>);
+    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['tabular-nums', 'tabular-nums']);
+  });
+
   test('a native <table> in a frame; caption, scope="col" headers; ref and className on the table, containerProps on the frame; a table that fits adds no tab stop or region', async () => {
     const ref = React.createRef<HTMLTableElement>();
     await setup(ref);
@@ -982,5 +988,22 @@ describe('Table: busy, the old name of loading', () => {
       expect(document.getElementById('old-busy')!.getAttribute('aria-busy')).toBe('true');
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('table-busy'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
+  });
+});
+
+describe('TableRow href: a ticked checkbox (GR408)', () => {
+  // The row lifts its controls above the link that covers it. Lifting the checkbox's input too put it in a layer
+  // of its own, over the tick drawn after it: a ticked box in a linked row was a blank blue square.
+  test('the tick of a ticked box in a linked row is drawn over the box, and the box still ticks without following the link', async () => {
+    const s = await render(<Table caption="Users"><TableBody>
+      <TableRow id="k1" href="#ada"><TableSelectCell label="Select Ada" defaultChecked /><TableCell>Ada</TableCell></TableRow>
+    </TableBody></Table>);
+    const input = s.container.querySelector('input')!;
+    expect(getComputedStyle(input).zIndex).toBe('auto');   // no layer of its own: the tick, after it, paints over it
+    expect(getComputedStyle(input.closest('label')!).zIndex).toBe('10');   // the whole checkbox is above the row's link
+    const before = location.hash;
+    await userEvent.click(input);
+    expect(input.checked).toBe(false);
+    expect(location.hash).toBe(before);
   });
 });

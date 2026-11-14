@@ -14,6 +14,7 @@ import { buildUtilities } from '../utilities/build.mjs';
 import { buildRegistry, components } from '../build/registry.mjs';
 import { sitePages } from './pages.mjs';
 import { componentProps } from './props.mjs';
+import { siteFacts } from './facts.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..');
 const SITE = path.join(ROOT, 'site');
@@ -28,7 +29,7 @@ buildRegistry(ROOT);
 // line written as escapes, so text from a page or a doc comment stays text whatever it holds.
 const js = (value) => JSON.stringify(value).replace(/[<>\u2028\u2029]/g, (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
 
-const PAGES = 'virtual:site-pages', PROPS = 'virtual:site-props';
+const PAGES = 'virtual:site-pages', PROPS = 'virtual:site-props', FACTS = 'virtual:site-facts';
 
 /** The site's own data: its page list, each component's props, and the stories' names for the doc blocks. */
 function site() {
@@ -36,9 +37,10 @@ function site() {
   let props = null;
   return {
     name: 'serupa-site',
-    resolveId: (id) => (id === PAGES || id === PROPS || id.startsWith(PROPS + '/') ? '\0' + id : null),
+    resolveId: (id) => (id === PAGES || id === FACTS || id === PROPS || id.startsWith(PROPS + '/') ? '\0' + id : null),
     async load(id) {
       if (id === '\0' + PAGES) return `export default ${js(sitePages(ROOT))};`;
+      if (id === '\0' + FACTS) return `export default ${js(siteFacts(ROOT))};`;
       // One chunk per component, fetched with its page.
       if (id === '\0' + PROPS) return `export default {${components(ROOT).map((n) => `${js(n)}: () => import(${js(`${PROPS}/${n}`)})`).join(', ')}};`;
       if (id.startsWith('\0' + PROPS + '/')) {

@@ -9,7 +9,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { PROJECT, read, report, done } from './lib.mjs';
 import { parseChangeset } from '../changesets.mjs';
-import { migrate, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
+import { migrate, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
 import { majorsIn, nextMajor, upcomingMajor } from '../../docs/upgrades.ts';
 
 const R = [];
@@ -69,6 +69,38 @@ one('15.0.0 renames: Tooltip delay, Switch pending, Field layout, Splitter direc
 one('15.0.0 renames: Drawer and NotificationCenter side, Table, DataGrid and List busy, Button and Badge loadingText', '<Drawer side="end" /><NotificationCenter side="start" /><Table busy /><DataGrid busy={x} /><List busy /><Button loadingText="Saving" /><Badge loadingText="Syncing" />', '<Drawer placement="end" /><NotificationCenter placement="start" /><Table loading /><DataGrid loading={x} /><List loading /><Button loadingLabel="Saving" /><Badge loadingLabel="Syncing" />');
 one('15.0.0: variant="default" is "plain" on Checkbox, CheckboxGroup, Radio and RadioGroup, in quotes or braces', '<Checkbox variant="default" /><CheckboxGroup variant={\'default\'} /><Radio variant = "default" /><RadioGroup variant="card" />', '<Checkbox variant="plain" /><CheckboxGroup variant={\'plain\'} /><Radio variant = "plain" /><RadioGroup variant="card" />');
 one('a rename leaves a tag that already has the new name (a wrapper passing both through)', '<Drawer placement={p.placement} side={p.side} />', '<Drawer placement={p.placement} side={p.side} />');
+one('15.0.0: component tokens put the state last, in CSS and in a style object', '.x { --button-disabled-bg: red; color: var(--stepper-active-text); --button-disabled-bg-extra: 1; }', '.x { --button-bg-disabled: red; color: var(--stepper-text-active); --button-disabled-bg-extra: 1; }', 'a.css');
+one('15.0.0: a file that already names the new token keeps the old one beside it (a fallback chain)', 'a { background: var(--button-bg-disabled, var(--button-disabled-bg, gray)); }', 'a { background: var(--button-bg-disabled, var(--button-disabled-bg, gray)); }', 'a.css');
+{
+  const r = fix('<Button icon="settings" aria-label="Settings" />\n<Button leftIcon="add">Add</Button>\n<IconButton icon="x" label="Close" />');
+  t('15.0.0: an icon-only Button is listed to make an IconButton, and nothing else is', r.text.includes('<Button icon=') && r.notes.filter((n) => n.id === 'button-icon').map((n) => n.line).join() === '1', JSON.stringify(r.notes));
+}
+// Every token deprecated for 15.0.0 has its rename, to the name its $deprecated note gives, and 14.x reads the old
+// name as the new one's fallback, so the rename changes nothing on 14.x.
+{
+  const due = [];
+  const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components'));
+  for (const c of comps) {
+    for (const f of fs.readdirSync(path.join(PROJECT, 'src', 'components', c)).filter((x) => x.endsWith('.tokens.json'))) {
+      const walk = (o) => { for (const v of Object.values(o)) if (v && typeof v === 'object') { if (typeof v.$deprecated === 'string' && /removed in 15\.0\.0/.test(v.$deprecated)) due.push(/Use (--[\w-]+)/.exec(v.$deprecated)?.[1]); else walk(v); } };
+      walk(JSON.parse(fs.readFileSync(path.join(PROJECT, 'src', 'components', c, f), 'utf8')));
+    }
+  }
+  const to = new Set(Object.values(TOKENS_15));
+  t(`serupa-migrate renames each of the ${due.length} tokens deprecated for 15.0.0`, due.length === Object.keys(TOKENS_15).length && due.every((n) => to.has(n)), `missing: ${due.filter((n) => !to.has(n)).join(', ')}`);
+  const css = comps.map((c) => path.join(PROJECT, 'src', 'components', c, `${c}.css`)).filter((f) => fs.existsSync(f)).map((f) => fs.readFileSync(f, 'utf8')).join('\n');
+  const unread = Object.entries(TOKENS_15).filter(([a, b]) => !css.includes(`var(${b}, var(${a},`));
+  t('each old token name is its new one\'s fallback in the component CSS', !unread.length, unread.map(([a, b]) => `${a} to ${b}`).join(', '));
+}
+// The package's new name, made only by a serupa-migrate that ships under it.
+{
+  const [r] = packageNameChange('@diki-stwn/serupa-ds');
+  const src = "import { Button } from 'serupa-ds';\nimport 'serupa-ds/tokens.css';\nconst x = await import(\"serupa-ds/icons\");\n@import 'serupa-ds/bundle.css';\n<script src=\"https://cdn.jsdelivr.net/npm/serupa-ds@15/dist/serupa.iife.js\"></script>\nimport y from 'serupa-ds-extra';\nimport z from '@other/serupa-ds';\n// serupa-ds is great";
+  const want = "import { Button } from '@diki-stwn/serupa-ds';\nimport '@diki-stwn/serupa-ds/tokens.css';\nconst x = await import(\"@diki-stwn/serupa-ds/icons\");\n@import '@diki-stwn/serupa-ds/bundle.css';\n<script src=\"https://cdn.jsdelivr.net/npm/@diki-stwn/serupa-ds@15/dist/serupa.iife.js\"></script>\nimport y from 'serupa-ds-extra';\nimport z from '@other/serupa-ds';\n// serupa-ds is great";
+  const got = r?.run(src).text;
+  t('15.0.0: the package name changes in imports, CSS imports and CDN paths, and nowhere else', got === want, got);
+  t('…and not while the package is still called serupa-ds', packageNameChange('serupa-ds').length === 0 && packageNameChange().length === (JSON.parse(read('package.json')).name === 'serupa-ds' ? 0 : 1));
+}
 one('15.0.0 renames leave look-alikes: ButtonGroup, ListItem, Combobox loadingText, a Button variant="default"', '<ButtonGroup loadingText="x" /><ListItem busy /><Combobox loadingText="Searching" /><Button variant="default" />', '<ButtonGroup loadingText="x" /><ListItem busy /><Combobox loadingText="Searching" /><Button variant="default" />');
 one('15.0.0 renames leave the same words elsewhere: a style\'s position, an Input\'s onChange, a spread', '<div style={{ position: "relative" }} /><Input onChange={f} /><Toaster {...{ position: "top-center" }} />', '<div style={{ position: "relative" }} /><Input onChange={f} /><Toaster {...{ position: "top-center" }} />');
 one('RadioGroup onChange → onValueChange; a Radio\'s own onChange stays', '<RadioGroup onChange={set}><Radio onChange={f} /></RadioGroup>', '<RadioGroup onValueChange={set}><Radio onChange={f} /></RadioGroup>');

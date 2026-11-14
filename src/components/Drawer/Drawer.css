@@ -49,6 +49,7 @@
   padding: var(--drawer-padding, var(--space-surface));
   background: var(--drawer-bg, var(--surface-overlay));
   --dk-row-hover: var(--drawer-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
+  --field: var(--drawer-field-bg, var(--field-raised));   /* its form fields, a step up from it in dark */
   box-shadow: var(--drawer-depth, var(--depth-surface)), var(--drawer-shadow, var(--elevation-modal));
   position: relative;
 }

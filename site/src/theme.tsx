@@ -11,7 +11,8 @@ const api = (): ThemeApi | undefined => (window as unknown as { Serupa?: { theme
 
 // The brands come from tokens.json's themes ("<brand>-<mode>"), so a brand added there shows up here.
 export const BRANDS = [...new Set(tokens.color.themes.map((t) => t.id.replace(/-(light|dark)$/, '')))];
-const title = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+/** A brand's name as tokens.json's themes give it: "Modern" for emerald. */
+export const brandName = (brand: string) => tokens.color.themes.find((t) => t.id === `${brand}-light`)?.name.replace(/ Light$/, '') ?? brand.charAt(0).toUpperCase() + brand.slice(1);
 
 const fallback: ThemeState = { brand: BRANDS[0] ?? 'blue', mode: 'auto', theme: `${BRANDS[0] ?? 'blue'}-light` };
 let snapshot = fallback;
@@ -29,9 +30,9 @@ export function ThemeControls() {
   const { brand, theme, set } = useTheme();
   const dark = theme.endsWith('-dark');
   return <>
-    <Menu placement="bottom-end" trigger={<IconButton icon="palette" label={`Brand: ${title(brand)}`} variant="ghost" />}>
+    <Menu placement="bottom-end" trigger={<IconButton icon="palette" label={`Brand: ${brandName(brand)}`} variant="ghost" />}>
       <MenuRadioGroup label="Brand" value={brand} onValueChange={(b: string) => set({ brand: b })}>
-        {BRANDS.map((b) => <MenuRadioItem key={b} value={b}>{title(b)}</MenuRadioItem>)}
+        {BRANDS.map((b) => <MenuRadioItem key={b} value={b}>{brandName(b)}</MenuRadioItem>)}
       </MenuRadioGroup>
     </Menu>
     <IconButton icon={dark ? 'light_mode' : 'dark_mode'} label={dark ? 'Switch to the light theme' : 'Switch to the dark theme'} variant="ghost" onClick={() => set({ mode: dark ? 'light' : 'dark' })} />

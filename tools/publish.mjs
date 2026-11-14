@@ -15,6 +15,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { isLatest, previousTag, screenshotNotes } from './release-screenshots.mjs';
+import { diffRefs, releaseNotes } from './api-diff.mjs';
 
 const P = path.resolve(import.meta.dirname, '..');
 const run = (cmd, args, opts = {}) => (execFileSync(cmd, args, { cwd: P, encoding: 'utf8', ...opts }) ?? '').trim();   // null when stdio is inherited
@@ -84,7 +85,14 @@ try {
   const repo = process.env.GITHUB_REPOSITORY || /github\.com[:/](.+?)(?:\.git)?$/.exec(run('git', ['remote', 'get-url', 'origin']))?.[1];
   if (prev && repo) shots = screenshotNotes({ status: run('git', ['diff', '--name-status', '--no-renames', prev, own || back, '--', 'tools/test/baseline-visual']), prev, tag, repo });
 } catch (e) { console.log(`No screenshots in the notes: ${e.message.split('\n')[0]}`); }
-fs.writeFileSync(notes, `${m[1].trim()}\n\n${shots ? shots + '\n' : ''}**${path.basename(tarball)}** SHA-256: \`${sha}\`\n`);
+// What changed in the exported types since the last release, folded under one line (tools/api-diff.mjs). Never in the
+// way of a release either.
+let api = '';
+try {
+  const prev = previousTag(run('git', ['tag', '--list', 'v*']).split('\n'), pkg.version);
+  if (prev) api = releaseNotes(diffRefs(prev, own || back, P), prev);
+} catch (e) { console.log(`No API report in the notes: ${e.message.split('\n')[0]}`); }
+fs.writeFileSync(notes, `${m[1].trim()}\n\n${api ? api + '\n' : ''}${shots ? shots + '\n' : ''}**${path.basename(tarball)}** SHA-256: \`${sha}\`\n`);
 // Tell the workflow which file was released, for its attest job (nothing to attest when this run released nothing).
 if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `tarball=${path.basename(tarball)}\n`);
 if (!tagged) {

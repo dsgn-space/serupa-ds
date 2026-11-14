@@ -123,7 +123,10 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
     // pixel apart is no scale (k is exactly 1), and a real one is read from the unrounded computed width.
     const rb = r.getBoundingClientRect(), bb = b.getBoundingClientRect();
     const k = !rb.width || Math.abs(r.offsetWidth - rb.width) < 1 ? 1 : (parseFloat(getComputedStyle(r).width) || r.offsetWidth) / rb.width;
-    const x = (bb.left - rb.left) * k - r.clientLeft, w = bb.width * k;
+    // A segment just let go is still springing back from its pressed size (scale, about its center), and its box is
+    // that much smaller: the indicator took the pressed size and kept it. Its own scale is taken back out.
+    const own = parseFloat(getComputedStyle(b).scale) || 1;
+    const w = bb.width * k / own, x = (bb.left + bb.width / 2 - rb.left) * k - w / 2 - r.clientLeft;
     setBox((p) => (p && p.x === x && p.w === w ? p : { x, w }));   // the same box when nothing moved, so a slide under way runs on
   }, [value, props.fullWidth]);
   useIsoLayoutEffect(measure, [measure, options.length, size, tight]);

@@ -345,6 +345,7 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'das ' + from + ' às ' + to,
   repeats: 'Repete',
   noEvents: 'Nenhum evento neste mês',
+  eventChanged: (title, when) => title + ', agora ' + when,
   dateFieldDay: 'Dia',
   dateFieldMonth: 'Mês',
   dateFieldYear: 'Ano',

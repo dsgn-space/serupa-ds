@@ -113,7 +113,7 @@ Each is an optional override: set it on the page, a container or one CommandPale
 | `--command-palette-divider` | `border` | The line under the search field. |
 | `--command-palette-option-bg-active` | `highlight` | The active row's background (its text stays 4.5:1 on it). |
 | `--command-palette-muted` | `text-muted` | The placeholder, icons and the empty message (4.5:1 on the dialog). |
-| `--command-palette-indicator-active` | `primary` | The bar at the start of the active row. |
+| `--command-palette-indicator-active` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--command-palette-list-height` | `spacing-80` | The most the list grows to before it scrolls (320px). |
 | `--command-palette-option-height` | `control-height-lg` | A row's least height (44px). |
 <!-- token-table:end -->

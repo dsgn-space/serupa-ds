@@ -98,6 +98,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--popover-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the popover, hovered or selected: a step up from its surface in dark |
+| `--popover-field-bg` | `field-raised` | The fill of a form field in the popover: a step up from its surface in dark, so the field stands out from it |
 | `--popover-bg` | `surface-overlay` | The panel's background. |
 | `--popover-text` | `text` | The panel's text. |
 | `--popover-border` | `border-overlay` | The panel's border. |

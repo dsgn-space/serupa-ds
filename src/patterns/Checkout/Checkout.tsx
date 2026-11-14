@@ -244,7 +244,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
                   {text('cardName', 'Name on card', 'cc-name')}
                   <div className="grid gap-4 sm:grid-cols-2">
                     {text('cardExpiry', 'Expiry date', 'cc-exp', { inputMode: 'numeric', className: 'max-w-48' }, 'MM/YY, like 08/27')}
-                    {text('cardCode', 'Security code', 'cc-csc', { inputMode: 'numeric', className: 'max-w-48' }, 'The last 3 digits on the back, or 4 on the front for Amex.')}
+                    {text('cardCode', 'Security code', 'cc-csc', { inputMode: 'numeric', className: 'max-w-48' }, '3 digits on the back, 4 on the front for Amex')}
                   </div>
                 </Card>
                 <div><Button type="submit">Review your order</Button></div>
@@ -281,7 +281,8 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
             )}
           </section>
 
-          <aside aria-labelledby="checkout-summary" className="min-w-0 lg:col-span-1">
+          {/* From lg up the summary stays in view beside the long form, so the total is always on screen. */}
+          <aside aria-labelledby="checkout-summary" className="top-6 min-w-0 lg:sticky lg:col-span-1 lg:self-start">
             <Card className="flex flex-col gap-3">
               <Heading level={2} size="lg" id="checkout-summary">Order summary</Heading>
               <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">

@@ -91,6 +91,66 @@
             "cssVar": "--select-invalid"
           }
         }
+      },
+      "picker-bg": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The list of options, where the browser draws it with the page's styles (appearance: base-select).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-picker-bg"
+          }
+        }
+      },
+      "picker-border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The list's border.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-picker-border"
+          }
+        }
+      },
+      "option-bg-active": {
+        "$type": "color",
+        "$value": "{color.highlight}",
+        "$description": "The option under the pointer or the keyboard, as Combobox's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-option-bg-active"
+          }
+        }
+      },
+      "option-indicator": {
+        "$type": "color",
+        "$value": "{color.highlight-indicator}",
+        "$description": "The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-option-indicator"
+          }
+        }
+      },
+      "check": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The tick by the chosen option.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-check"
+          }
+        }
+      },
+      "group-label": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A group's name over its options.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-group-label"
+          }
+        }
       }
     },
     "sizing": {
@@ -153,6 +213,36 @@
             "cssVar": "--select-icon-size-lg"
           }
         }
+      },
+      "picker-max-height": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-60}",
+        "$description": "The list's greatest height before it scrolls (240px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-picker-max-height"
+          }
+        }
+      },
+      "option-height": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-md}",
+        "$description": "An option's least height (32px), where the list is styled.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-option-height"
+          }
+        }
+      },
+      "option-height-touch": {
+        "$type": "dimension",
+        "$value": "{sizing.control-height-lg}",
+        "$description": "An option's least height on a touch screen (44px), where the list is styled.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-option-height-touch"
+          }
+        }
       }
     },
     "spacing": {
@@ -195,6 +285,26 @@
             "cssVar": "--select-gap"
           }
         }
+      },
+      "picker-padding": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space inside the list, around the options (4px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-picker-padding"
+          }
+        }
+      },
+      "option-padding-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "An option's side padding (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-option-padding-x"
+          }
+        }
       }
     },
     "border": {
@@ -217,6 +327,16 @@
             "cssVar": "--select-radius"
           }
         }
+      },
+      "picker-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-surface}",
+        "$description": "The list's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-picker-radius"
+          }
+        }
       }
     },
     "shadow": {
@@ -227,6 +347,26 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--select-depth"
+          }
+        }
+      },
+      "picker-shadow": {
+        "$type": "shadow",
+        "$value": "{shadow.elevation-overlay}",
+        "$description": "The list's shadow, as other popups.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-picker-shadow"
+          }
+        }
+      },
+      "picker-depth": {
+        "$type": "shadow",
+        "$value": "{shadow.depth-surface}",
+        "$description": "The list's tactile layer (none in the flat brands).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-picker-depth"
           }
         }
       }

@@ -59,6 +59,21 @@ describe('Patterns/Dashboard', () => {
     await expect.element(screen.getByRole('link', { name: 'All projects' })).toBeInTheDocument();
   });
 
+  test('Activity\'s heading looks like the other parts\' and stays where it is when the events arrive', async () => {
+    const screen = await render(<Dashboard loading />);
+    const at = () => { const h = screen.getByRole('heading', { name: 'Activity' }).element(); return [getComputedStyle(h).fontSize, Math.round(h.getBoundingClientRect().left)]; };
+    const usage = getComputedStyle(screen.getByRole('heading', { name: 'Usage' }).element()).fontSize;
+    const before = at();
+    await screen.rerender(<Dashboard />);
+    expect([before, at()]).toEqual([[usage, before[1]], [usage, before[1]]]);
+  });
+
+  test('Recent projects shows each status as a badge with a dot, the words still there', async () => {
+    const screen = await render(<Dashboard />);
+    const cell = screen.getByRole('table', { name: 'Recent projects' }).getByRole('cell', { name: 'Paused' }).element();
+    expect([cell.textContent, cell.querySelector('[data-component="badge"]')?.getAttribute('data-tone')]).toEqual(['Paused', 'warning']);
+  });
+
   test('loading: main is busy, and each part has one named skeleton', async () => {
     const screen = await render(<Dashboard loading />);
     expect(document.querySelector('main')?.getAttribute('aria-busy')).toBe('true');

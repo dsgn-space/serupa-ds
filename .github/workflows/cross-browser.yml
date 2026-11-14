@@ -1,6 +1,7 @@
 name: Cross-browser
 
-# Every night, the component tests, the checks and the Storybook checks run in Firefox and WebKit (Safari's engine) as well as Chromium.
+# Every night, the component tests, the checks and the Storybook checks run in Firefox and WebKit (Safari's engine) as well as Chromium,
+# and the component tests in the oldest Chrome the package supports.
 # It doesn't block pull requests: a red run here is a browser difference to look at, not a broken main.
 # It also runs on demand from the Actions tab.
 on:
@@ -72,10 +73,57 @@ jobs:
           name: test-output-${{ matrix.group }}-${{ matrix.browser }}
           path: test-output.txt
           if-no-files-found: ignore
+  # The component tests in the oldest Chrome the package supports (package.json's browserslist, through
+  # tools/browser-floor.mjs). Nightly on main; on next (whose floor is higher) run this workflow from the Actions tab
+  # with next as the branch. It never checks out another ref than the run's own: the setup action's cache is shared
+  # with the default branch, and a checkout of another ref there is cache poisoning (CodeQL).
+  # Firefox and WebKit at their floor can't be driven by this Playwright; browser-baseline.mjs holds the CSS and
+  # script to it instead.
+  floor:
+    name: components (Chrome floor)
+    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      options: --cpus 4
+    env:
+      HOME: /root
+      # Chrome 123's headless shell takes its language from the container's C locale ("en-US@posix", which Intl
+      # refuses), where Playwright's own Chromium says en-US.
+      SERUPA_LOCALE: en-US
+    timeout-minutes: 75
+    steps:
+      - name: Clear stale git locks
+        shell: bash
+        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null)
+      - name: Build the package
+        run: npm run build
+      - name: Components in Chrome at the floor
+        shell: bash
+        run: |
+          set -o pipefail
+          node tools/browser-floor.mjs
+          SERUPA_CHROMIUM="$(node tools/browser-floor.mjs --chromium)" node tools/test/run.mjs --group components 2>&1 | tee test-output.txt
+      - name: List the failures
+        if: failure()
+        shell: bash
+        run: |
+          { echo "## Failing: components in Chrome at the floor"; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload the output
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-output-floor-chromium
+          path: test-output.txt
+          if-no-files-found: ignore
   # A scheduled run opens one issue when it fails (or updates the open one) and closes it when it's green again.
   report:
     name: nightly issue
-    needs: components
+    needs: [components, floor]
     if: always() && github.event_name == 'schedule' && needs.components.result != 'cancelled'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -94,6 +142,6 @@ jobs:
       - name: Open, update or close the issue
         env:
           GH_TOKEN: ${{ github.token }}
-          RESULT: ${{ needs.components.result }}
-          JOBS: components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
+          RESULT: ${{ needs.floor.result == 'failure' && 'failure' || needs.components.result }}
+          JOBS: floor-chromium,components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
         run: node tools/nightly-issue.mjs artifacts "$RESULT"

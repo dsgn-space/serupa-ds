@@ -50,6 +50,8 @@
 .dk-tree-view__icon { display: inline-flex; flex-shrink: 0; color: var(--tree-view-icon-color, var(--text-muted)); }
 .dk-tree-view__icon .dk-icon { font-size: var(--spacing-4); }
 .dk-tree-view__label { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
+/* Opened or closed from the keyboard (data-instant, KW1): turned at once, no spin to wait for under a held key. */
+.dk-tree-view[data-instant] .dk-tree-view__toggle .dk-icon { transition: none; }
 @media (prefers-reduced-motion: reduce) { .dk-tree-view__toggle .dk-icon { transition: none; } }
 @media (forced-colors: active) { .dk-tree-view__item--selected > .dk-tree-view__row { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
 }

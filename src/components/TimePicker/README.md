@@ -104,7 +104,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-list-border` | `border-overlay` | The list's outline. |
 | `--time-picker-option-color` | `text` | A time in the list. |
 | `--time-picker-option-bg-active` | `highlight` | The highlighted time (pointer or keyboard). |
-| `--time-picker-option-indicator` | `primary` | The 2px bar at the highlighted time's start. |
+| `--time-picker-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
 | `--time-picker-list-shadow` | `elevation-overlay` | The list's shadow. |
 | `--time-picker-list-depth` | `depth-surface` | The list's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |

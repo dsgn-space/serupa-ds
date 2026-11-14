@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Avatar } from '../../components/Avatar/Avatar';
-import { Heading } from '../../components/Heading/Heading';
+import { Heading, type HeadingSize } from '../../components/Heading/Heading';
 import { Link } from '../../components/Link/Link';
 import { Loader } from '../../components/Loader/Loader';
 import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
@@ -57,6 +57,8 @@ export interface ActivityFeedProps {
   /** The feed's heading. Default: "Activity". */
   title?: string | undefined;
   headingLevel?: 2 | 3 | 4 | undefined;
+  /** The heading's look, to match the page's other section headings ("lg" on Dashboard). Default: the level's own. */
+  headingSize?: HeadingSize | undefined;
   /** Shown when there are no events. Default: "No activity yet". */
   emptyText?: string | undefined;
   /** The button's words. Default: LoadMore's "Load more". */
@@ -78,11 +80,11 @@ export interface ActivityFeedProps {
 }
 
 /** Who did what and when, newest first, with "Load more" that keeps focus in place and says how many were added. */
-export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, emptyText = 'No activity yet', loadMoreLabel, endText, loading = false, loadingCount = 3, loadingLabel, loadFailed = false, onRetry, loadFailedText = 'Couldn’t load the activity' }: ActivityFeedProps) {
+export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Activity', headingLevel = 2, headingSize, emptyText = 'No activity yet', loadMoreLabel, endText, loading = false, loadingCount = 3, loadingLabel, loadFailed = false, onRetry, loadFailedText = 'Couldn’t load the activity' }: ActivityFeedProps) {
   const id = React.useId();
   return (
     <section aria-labelledby={id} className="flex flex-col gap-4">
-      <Heading level={headingLevel} id={id}>{title}</Heading>
+      <Heading level={headingLevel} size={headingSize} id={id}>{title}</Heading>
       {loadFailed ? <EmptyLoadFailed title={loadFailedText} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : loading ? (
         <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
           {Array.from({ length: loadingCount }, (_, i) => (
@@ -96,14 +98,17 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
       ) : events.length === 0 ? <p className="text-sm text-text-muted">{emptyText}</p> : (
         <Timeline>
           {events.map((e) => (
+            // The time and the detail sit in the avatar's text column, so a sentence that wraps, its time and its
+            // detail all start at one edge rather than the time and detail falling back under the avatar.
             <TimelineItem key={e.id} status={e.status}
               title={<span className="flex items-start gap-2 font-normal">
                 <Avatar size="xs" name={e.actor.name} src={e.actor.avatar} alt="" />
-                <span><strong className="font-semibold">{e.actor.name}</strong> {line(e)}</span>
-              </span>}
-              time={<RelativeTime date={e.date} />}>
-              {e.detail}
-            </TimelineItem>
+                <span className="flex min-w-0 flex-col">
+                  <span><strong className="font-semibold">{e.actor.name}</strong> {line(e)}</span>
+                  <RelativeTime date={e.date} className="text-sm text-text-muted" />
+                  {e.detail != null && e.detail !== '' ? <span className="mt-1 text-sm">{e.detail}</span> : null}
+                </span>
+              </span>} />
           ))}
         </Timeline>
       )}

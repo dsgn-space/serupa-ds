@@ -434,3 +434,39 @@ describe('CheckboxGroup', () => {
     } finally { warn.mockRestore(); }
   });
 });
+
+// A toggle in a long group used to redraw every Checkbox in it (Audit run 276): 300 boxes took 60 to 90 ms a click in
+// a development build. Each box sets its input's indeterminate as it draws (the dash), so a setter on each input
+// counts the boxes that drew again.
+describe('CheckboxGroup with many boxes', () => {
+  const N = 300;
+  const boxes = () => [<Checkbox key="all" selectAll id="mall">All</Checkbox>].concat(Array.from({ length: N }, (_, i) => <Checkbox key={i} value={'v' + i} id={'m' + i}>{'Option ' + i}</Checkbox>));
+  const watch = (drawn: Set<string>) => {
+    const own = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'indeterminate')!;
+    for (const i of document.querySelectorAll<HTMLInputElement>('[id^="m"][type="checkbox"]')) {
+      Object.defineProperty(i, 'indeterminate', { configurable: true, get: () => own.get!.call(i) as boolean, set: (v: boolean) => { drawn.add(i.id); own.set!.call(i, v); } });
+    }
+  };
+
+  test('checking a box redraws only that box and select-all, uncontrolled or with the app\'s boxes memoised', async () => {
+    const drawn = new Set<string>();
+    function Controlled() {
+      const [value, setValue] = React.useState<readonly (string | number)[]>([]);
+      const kids = React.useMemo(boxes, []);
+      return <CheckboxGroup aria-label="Controlled" value={value} onValueChange={setValue}>{kids}</CheckboxGroup>;
+    }
+    const first = await render(<CheckboxGroup aria-label="Options">{boxes()}</CheckboxGroup>);
+    await settle();
+    watch(drawn);
+    await userEvent.click(input('m5'));
+    expect([input('m5').checked, input('mall').indeterminate, [...drawn].sort()]).toEqual([true, true, ['m5', 'mall']]);
+    await first.unmount();
+    await render(<Controlled />);
+    await settle();
+    drawn.clear();
+    watch(drawn);
+    await userEvent.click(input('m7'));
+    await userEvent.click(input('m8'));
+    expect([input('m7').checked, input('m8').checked, [...drawn].sort()]).toEqual([true, true, ['m7', 'm8', 'mall']]);
+  });
+});

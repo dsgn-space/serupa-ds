@@ -140,6 +140,29 @@ const propRename = (version, id, component, from, to, { leftovers = true } = {})
   },
 });
 
+// Component tokens that put the state before the property, renamed with the state last in 14.x (the old names read as
+// fallbacks until 15.0.0). tools/test/upgrades.mjs checks this list against each $deprecated token.
+export const TOKENS_15 = {
+  '--avatar-group-more-hover-bg': '--avatar-group-more-bg-hover',
+  '--button-disabled-bg': '--button-bg-disabled', '--button-disabled-text': '--button-text-disabled', '--button-disabled-border': '--button-border-disabled',
+  '--calendar-selected-bg': '--calendar-bg-selected', '--calendar-selected-color': '--calendar-color-selected', '--calendar-selected-depth': '--calendar-depth-selected',
+  '--carousel-dot-active-width': '--carousel-dot-width-active',
+  '--data-grid-selected-bg': '--data-grid-bg-selected',
+  '--pagination-current-bg': '--pagination-bg-current', '--pagination-current-text': '--pagination-text-current', '--pagination-current-depth': '--pagination-depth-current',
+  '--period-picker-selected-bg': '--period-picker-bg-selected', '--period-picker-selected-text': '--period-picker-text-selected', '--period-picker-selected-depth': '--period-picker-depth-selected',
+  '--stepper-active-bg': '--stepper-bg-active', '--stepper-active-text': '--stepper-text-active', '--stepper-active-depth': '--stepper-depth-active',
+  '--stepper-error-bg': '--stepper-bg-error', '--stepper-error-text': '--stepper-text-error',
+};
+
+/** The package name as written in an import or a path (`serupa-ds`, `serupa-ds/tokens.css`), renamed to `to`. A word
+ * that only starts the same (`serupa-ds-extra`) or ends a longer name (`@x/serupa-ds`) is left. */
+export function renamePackage(src, to) {
+  let count = 0;
+  // In quotes: an import, a require, an import() or a CSS @import; after node_modules/ or a CDN path: a file link.
+  const text = src.replace(/(['"`]|node_modules\/|\/npm\/)serupa-ds(?=['"`/@])(?<!@[\w.-]+\/serupa-ds)/g, (_, a) => { count++; return a + to; });
+  return { text, count };
+}
+
 /** Every change, oldest major first. `version` is the major that made the change. */
 export const TRANSFORMS = [
   {
@@ -225,6 +248,33 @@ export const TRANSFORMS = [
   propRename('15.0.0', 'list-loading', 'List', 'busy', 'loading', { leftovers: false }),
   propRename('15.0.0', 'button-loading-label', 'Button', 'loadingText', 'loadingLabel', { leftovers: false }),
   propRename('15.0.0', 'badge-loading-label', 'Badge', 'loadingText', 'loadingLabel', { leftovers: false }),
+  {
+    version: '15.0.0', id: 'token-names-state-last', exts: ALL,
+    title: 'Component tokens put the state last (`--button-disabled-bg` is `--button-bg-disabled`, and 19 more)',
+    run(src) {
+      let count = 0;
+      let text = src;
+      for (const [from, to] of Object.entries(TOKENS_15)) {
+        // A file that already names the new token handles both on purpose (a fallback chain, a test of the old name).
+        if (text.includes(to)) continue;
+        text = text.replace(new RegExp(`${from}(?![\\w-])`, 'g'), () => { count++; return to; });
+      }
+      return { text, count, notes: [] };
+    },
+  },
+  {
+    version: '15.0.0', id: 'button-icon', exts: CODE,
+    title: 'Button: `icon` is removed; an icon-only button is an IconButton, with a required `label`',
+    run(src) {
+      if (!/\bButton\b/.test(src)) return { text: src, count: 0, notes: [] };
+      const notes = [];
+      for (const [s, e] of openTags(src, 'Button')) {
+        const m = attrAt('icon').exec(topLevel(src.slice(s, e)));
+        if (m) notes.push({ line: lineOf(src, s + m.index), message: 'Button `icon` is gone: make this an <IconButton icon=… label="…"> (its label is the button\'s name, shown as a tooltip; take it from aria-label)' });
+      }
+      return { text: src, count: 0, notes };
+    },
+  },
   ...['Checkbox', 'CheckboxGroup', 'Radio', 'RadioGroup'].map((component) => ({
     version: '15.0.0', id: `${component.replace(/(?<=.)([A-Z])/g, '-$1').toLowerCase()}-variant-plain`, exts: CODE,
     title: `${component}: \`variant="default"\` is \`variant="plain"\``,
