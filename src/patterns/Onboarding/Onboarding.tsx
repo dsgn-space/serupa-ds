@@ -116,7 +116,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
 
         <section aria-labelledby="setup-title" className="flex flex-col gap-4">
           {state.hidden ? (
-            <Card padding="sm" className="flex flex-wrap items-center justify-between gap-3">
+            <Card padding="sm" className="flex flex-row flex-wrap items-center justify-between gap-3">
               <Heading level={2} size="base" id="setup-title">Set up your workspace: {count(state.done.length)}</Heading>
               <Button ref={showButton} variant="secondary" size="sm" onClick={() => setHidden(false)}>Show the checklist</Button>
             </Card>
