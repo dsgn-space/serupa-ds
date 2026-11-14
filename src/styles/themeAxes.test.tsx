@@ -438,8 +438,13 @@ describe('Density axis', () => {
       expect(getComputedStyle(root).colorScheme).toBe('light');
       expect(read(root).text).not.toBe(screen.text);
       axes();
+      // Chrome before 136 has only the prefixed property, which the CSS sets too.
+      const exact = (e: Element) => { const c = getComputedStyle(e) as CSSStyleDeclaration & { webkitPrintColorAdjust?: string }; return c.printColorAdjust ?? c.webkitPrintColorAdjust; };
+      // A button on a light page keeps its fill on paper in every supported browser.
+      await render(<Button>Print me</Button>);
+      expect(exact(page.getByRole('button', { name: 'Print me' }).element())).toBe('exact');
       root.setAttribute('data-theme', 'blue-dark');
-      expect([getComputedStyle(root).colorScheme, getComputedStyle(document.body).printColorAdjust]).toEqual(['dark', 'exact']);
+      expect([getComputedStyle(root).colorScheme, exact(document.body)]).toEqual(['dark', 'exact']);
     } finally { await commands.printMedia(false); }
   });
 

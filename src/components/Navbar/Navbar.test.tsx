@@ -143,6 +143,29 @@ describe('Navbar', () => {
     expect([r.top >= Math.round(bar.bottom) - 1, r.bottom <= window.innerHeight]).toEqual([true, true]);
   });
 
+  test('sticky: focus that asks for no scroll (preventScroll) leaves the page where it is, so a smooth scroll to it glides', async () => {
+    await render(<div>
+      <Navbar id="nquiet" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>
+      <div style={{ height: '2400px' }} />
+      <h2 id="nquiet-h" tabIndex={-1}>Far down</h2>
+      <div style={{ height: '2400px' }} />
+    </div>);
+    window.scrollTo(0, 0);
+    await expect.poll(() => window.scrollY).toBe(0);
+    const frames = async () => { await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); await new Promise((r) => setTimeout(r, 100)); };
+    // Below the window: the page stays at the top.
+    el('nquiet-h').focus({ preventScroll: true });
+    await frames();
+    expect([document.activeElement?.id, window.scrollY]).toEqual(['nquiet-h', 0]);
+    // Above it too.
+    (document.activeElement as HTMLElement).blur();
+    window.scrollTo(0, 3400);
+    await expect.poll(() => window.scrollY).toBe(3400);
+    el('nquiet-h').focus({ preventScroll: true });
+    await frames();
+    expect([document.activeElement?.id, window.scrollY]).toEqual(['nquiet-h', 3400]);
+  });
+
   test('sticky: no shadow at the top of the page; scrolled under, the bar lifts with the shadow-scrolled token, tied to the scroll (149)', async () => withMotion(async () => {
     await render(<div>
       <Navbar id="nlift" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>

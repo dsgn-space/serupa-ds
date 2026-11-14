@@ -328,6 +328,18 @@ describe('TableOfContents rail', () => {
     expect(last.bottom <= box.bottom && last.top >= box.top).toBe(true);
   });
 
+  test('a link that takes focus is brought into the panel\'s view even when the browser doesn\'t scroll to it (WebKit, while the panel is still hidden)', async () => {
+    const items = Array.from({ length: 60 }, (_, i) => ({ id: 'h' + i, label: 'Heading ' + (i + 1) }));
+    await render(<div style={{ position: 'fixed', insetBlockStart: 16, insetInlineEnd: 16 }}><TableOfContents id="toc" variant="rail" items={items} /></div>);
+    const all = [...panel().querySelectorAll('a')];
+    all.at(-1)!.focus({ preventScroll: true });
+    await expect.poll(shown).toBe(true);
+    const box = panel().getBoundingClientRect(), last = all.at(-1)!.getBoundingClientRect();
+    expect([panel().scrollTop > 0, last.bottom <= box.bottom + 0.5 && last.top >= box.top - 0.5]).toEqual([true, true]);
+    all[0]!.focus({ preventScroll: true });
+    await expect.poll(() => all[0]!.getBoundingClientRect().top >= panel().getBoundingClientRect().top - 0.5).toBe(true);
+  });
+
   test('right to left: the panel opens over the page from the rail\'s top left corner', async () => {
     await render(<Rail dir="rtl" />);
     await expect.poll(() => dashes().length).toBe(3);
