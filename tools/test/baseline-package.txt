@@ -6,6 +6,7 @@ bin/migrate/transforms.mjs
 bin/serupa-agents.mjs
 bin/serupa-brand.mjs
 bin/serupa-create.mjs
+bin/serupa-docs.mjs
 bin/serupa-migrate.mjs
 bin/serupa-purge.mjs
 bin/serupa-usage.mjs
@@ -51,6 +52,7 @@ dist/bundle.css
 dist/components.css
 dist/components.json
 dist/debug.js
+dist/docs.json
 dist/email/blue.css
 dist/email/blue.html
 dist/email/emerald.css
@@ -116,6 +118,7 @@ dist/labels/vi.d.ts
 dist/labels/zh.d.ts
 dist/lib/react-dom.production.min.js
 dist/lib/react.production.min.js
+dist/llms.txt
 dist/native/android/SerupaTokens.kt
 dist/native/android/res-blue/values-night/serupa_colors.xml
 dist/native/android/res-blue/values/serupa_colors.xml

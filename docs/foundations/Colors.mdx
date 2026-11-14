@@ -1,4 +1,7 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { DoDontExample } from '../doDont';
+import { Button } from '../../src/components/Button/Button';
+
 import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale, ChartColors } from '../blocks';
 
 <Meta title="Foundations/Colors" />
@@ -23,3 +26,18 @@ Charts draw with their own tokens, so a chart looks the same next to the compone
 - **Forced colors** map the series to the user's own colors (five of them differ), the grid to `GrayText` and the gap to `Canvas`. **Print** keeps the theme on the page, as the rest of the page does: a light theme prints its light colors, and a dark theme (`data-theme="*-dark"`, which `data-mode="dark"` sets) prints as it shows, with its dark background kept, so every series is still 3:1 on it.
 
 <ChartColors />
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| Color with the alias for the job: `primary`, `danger`, `surface-raised`, `text-muted`. | Take a shade from the palette (`blue-600`, `zinc-500`) for a component. It stays the same in every theme. |
+| Put text on a fill in its partner: `on-primary` on `primary`, `on-warning` on `warning`. | Put white text on any fill. Warning is light, so white text on it fails 4.5:1. |
+| Name a status in words as well as color. | Let color alone carry the meaning. |
+
+<DoDontExample
+  doText="Use the alias, so the button follows the brand and the mode."
+  doExample={<Button>Save changes</Button>}
+  dontText="Use a palette shade, which stays blue in every brand and in dark mode."
+  dontExample={<Source language="css" dark={false} code={'.save {\n  background: var(--blue-600);\n  color: var(--white);\n}'} />}
+/>

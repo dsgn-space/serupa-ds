@@ -4,6 +4,8 @@
 //      sections (Added, Changed, Deprecated, Removed, Fixed, Security), with what's already there.
 //   2. The changesets are deleted, and tools/release.mjs makes the release: the biggest bump among them
 //      (major, minor or patch), the notes under the new version, and the version in every file.
+//   3. When the new version has an RFC (docs/rfcs/<version>.md), its status line says it is released, as the upgrades
+//      check asks of a shipped version: without it, the Release pull request for 15.0.0 failed in the queue.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -58,4 +60,10 @@ fs.writeFileSync(logPath, log.slice(0, u.index) + `## [Unreleased]\n\n${merged}\
 for (const f of files) fs.rmSync(path.join(DIR, f));
 
 execFileSync(process.execPath, [path.join(P, 'tools', 'release.mjs'), bump], { stdio: 'inherit' });
+const { version } = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
+const rfc = path.join(P, 'docs', 'rfcs', `${version}.md`);
+if (fs.existsSync(rfc)) {
+  const day = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  fs.writeFileSync(rfc, fs.readFileSync(rfc, 'utf8').replace(/^\*\*Status:\*\*.*$/m, `**Status:** Released in ${version} (${day}).`));
+}
 execFileSync('npm', ['install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: P, stdio: 'inherit' });

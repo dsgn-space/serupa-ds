@@ -7,6 +7,7 @@ import * as stories from './PageShell.stories';
 // The story's render is the page; its args and context aren't used.
 const Default = () => <>{stories.Default.render!({} as never, {} as never)}</>;
 const Collapsed = () => <>{stories.CollapsedSidebar.render!({} as never, {} as never)}</>;
+const Adaptive = () => <>{stories.AdaptiveNavigation.render!({} as never, {} as never)}</>;
 
 // The page shell: the skip link is the first Tab stop and leads into main, and the landmarks are told apart.
 describe('Patterns/Page shell', () => {
@@ -50,5 +51,27 @@ describe('Patterns/Page shell', () => {
     await render(<Collapsed />);
     const side = page.getByRole('navigation', { name: 'Workspace' }).first();
     for (const name of ['Home', 'Projects', 'Team']) await expect.element(side.getByRole('link', { name })).toBeInTheDocument();
+  });
+
+  // Material's window-size rule: a bottom bar on a phone, a rail on a tablet, the full column on a wide screen.
+  test('adaptive: the full Sidebar from 1024px, its rail from 768px, a BottomNav below; one Workspace navigation shows at a time, with all three places', async () => {
+    const shown = (e: Element) => e.getClientRects().length > 0 && getComputedStyle(e).visibility !== 'hidden';
+    const workspace = () => [...document.querySelectorAll('nav[aria-label="Workspace"]')].filter(shown);
+    try {
+      for (const [width, kind] of [[1200, 'full'], [900, 'rail'], [390, 'bar']] as const) {
+        await page.viewport(width, 800);
+        const { unmount } = await render(<Adaptive />);
+        await expect.poll(() => workspace().length, { message: width + 'px' }).toBe(1);
+        const nav = workspace()[0]!;
+        const box = nav.getBoundingClientRect();
+        // The bar runs along the bottom; the rail is 64px wide; the full Sidebar is wider than that.
+        const got = box.bottom >= window.innerHeight - 1 && box.width > width / 2 ? 'bar' : box.width <= 72 ? 'rail' : 'full';
+        expect(got, width + 'px').toBe(kind);
+        for (const name of ['Home', 'Projects', 'Team']) await expect.element(page.elementLocator(nav).getByRole('link', { name })).toBeInTheDocument();
+        await unmount();
+      }
+    } finally {
+      await page.viewport(900, 700);
+    }
   });
 });

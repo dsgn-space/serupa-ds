@@ -13,7 +13,7 @@ const root = document.documentElement;
 afterEach(() => root.removeAttribute('data-theme'));
 
 describe('the dark page', () => {
-  test('the page is below its cards in blue and violet dark, and a SegmentedControl track and a FileUpload drop zone are never below the page in dark, with muted text at 4.5:1 in every theme', async () => {
+  test('the page is below its cards in every dark theme, and a SegmentedControl track and a FileUpload drop zone are never below the page in dark, with muted text at 4.5:1 in every theme', async () => {
     const { container } = await render(<div>
       <SegmentedControl aria-label="View" options={[{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }]} defaultValue="list" />
       <FileUpload aria-label="Files" />
@@ -24,8 +24,7 @@ describe('the dark page', () => {
     for (const th of THEMES) {
       root.setAttribute('data-theme', th);
       const page = getComputedStyle(document.body).backgroundColor;
-      // Emerald dark's cards are its page colour, zinc-950, by design.
-      if (th === 'blue-dark' || th === 'violet-dark') if (!(light(page) < light('var(--surface)'))) wrong.push(`${th}: the page is not below surface`);
+      if (th.endsWith('-dark')) if (!(light(page) < light('var(--surface)'))) wrong.push(`${th}: the page is not below surface`);
       for (const [name, el] of [['SegmentedControl track', track], ['FileUpload zone', zone]] as const) {
         const bg = getComputedStyle(el).backgroundColor;
         if (th.endsWith('-dark') && light(bg) < light(page)) wrong.push(`${th}: ${name} is below the page`);

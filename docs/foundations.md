@@ -125,8 +125,8 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `surface` | `white` | `zinc-900` | Card, panel and bar background. |
 | `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. Never the fill of a control. |
 | `surface-control` | `zinc-50` | `zinc-900` | The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. The same as `surface-muted` in light; in dark a step above the page, so a control never looks sunk into it. |
-| `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
-| `surface-hover-raised` | `zinc-50` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1. |
+| `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer: one quiet step off `surface`, and a step under `highlight`, so an item pointed at never looks like the current one. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
+| `surface-hover-raised` | `zinc-50` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer, a Navbar menu panel): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1; in emerald dark halfway from `zinc-900` to `zinc-800`. |
 | `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
 | `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
@@ -654,6 +654,20 @@ Design for a phone first, then add what changes on wider screens. The five break
 - Test at 320px wide. WCAG 1.4.10 asks that content reflows without scrolling sideways at that width (400% zoom on a 1280px screen); only data tables, maps and diagrams may scroll.
 - For a component that sits in places of different widths (a card in a sidebar and in the main column), let its width decide, not the screen's: Grid's `columns="auto"` and `minColumnWidth`, or a container query (`@container`).
 
+**Navigation by width**
+
+Give an app's main places the navigation that fits the window, and keep the same places in the same order at every width:
+
+| Width | Navigation | Why |
+| --- | --- | --- |
+| Below `md` (under 768px) | BottomNav for three to five places, or Navbar's menu button for more | A thumb reaches the bottom of a phone, and the page keeps its whole width |
+| `md` to `lg` (768 to 1023px) | Sidebar with `collapsed`: a 64px icon rail | A tablet or a narrow window has room for icons, not for a column of names |
+| From `lg` (1024px) | The full Sidebar | The names fit, so people read where to go instead of recognising icons |
+
+- Switch on the window's width, not the device: a narrow desktop window gets the rail too. BottomNav hides from `md` by itself (`hideFrom`); collapse the Sidebar below `lg` and hide it below `md`.
+- Let people still collapse the full Sidebar by hand, and keep their choice.
+- The Page shell pattern's AdaptiveNavigation story does all three: resize the window to see it switch.
+
 **Containers**
 
 Wrap each band of the page (header, main content, footer) in a Container of the same `size`, so their edges line up.
@@ -882,6 +896,8 @@ If none fits, it doesn't move. How often someone sees it decides how much it may
 | Rarely | A first-run hint, a task finished, an upload done | The one place for `ease-celebrate`. |
 
 **Budget.** At most two or three things move at once on a screen, and only one of them is the one the eye should follow. A screen where a chart draws in, numbers change, a toast rises and a list staggers in all at the same moment says nothing, because nothing stands out. When a change sets off several, keep the one that explains what happened (the row that moved, the total that changed) and let the rest change at once. A loop (a spinner, a placeholder's pulse) counts toward the budget for as long as it runs, so a page of skeletons pulses as one group, never each card on its own beat. Check a full screen, not one component: open the Dashboard and Notifications patterns, do the most common action, and count what moves.
+
+**Direction.** Where something moves tells people where it came from, so pick the direction to match. A surface tied to a control grows from that control: a menu from its button, a popover from its trigger, a tooltip from what it describes. A surface that belongs to the whole app has a fixed place and arrives the same way each time, wherever it was opened from: toasts from their corner, a command palette from the top, a drawer from its edge. Moving forward (the next step, a page deeper) slides one way and going back slides the other, mirrored in right-to-left pages. An exit runs the entrance backwards, shorter and fading as it goes. It may also vanish at once: a tooltip, a hover card or a menu closed by a choice can go in the same frame, since no one watches them leave.
 
 **Keyboard.** An action someone repeats from the keyboard (arrow keys through a list, a calendar or a tab list; Tab through a form; a shortcut) should answer at once: focus and selection move in the same frame, with no slide or fade to wait for. What a key opens or closes answers at once too: a menu, popover, combobox list or date or time picker opened by Enter, Space or an arrow is there in the first frame, and one closed by Escape is gone in the same frame. A pointer or a tap keeps the enter and the exit, because there the motion shows where the surface came from. The same goes for the Tabs line or fill and the SegmentedControl selection: picked by an arrow they jump, and clicked they slide. Each reads the last input through `src/internal/lastInput.ts` (the layers through `useExit`) and puts `data-instant` on itself, and its CSS leaves out the starting style and the exit transition under it.
 
@@ -1240,7 +1256,7 @@ The target is **WCAG 2.2 level AA**, in every theme, at any zoom up to 400%, wit
 - **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Inside a strong fill (`bg-primary`, `bg-danger`, `bg-surface-inverse`) the ring takes the fill's text color, so it still stands out at 3:1; a light surface nested inside such a fill should set `--focus-ring` back itself. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
 - **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
 - **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.
-- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
+- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. On a touch screen, buttons, pages in Pagination, and checkbox, radio, switch and slider rows take a press 44px across whatever their size, without moving anything; between two neighbours the press goes to the nearer one. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
 - **Reflow and zoom.** Components fit a 320px-wide screen and wrap instead of clipping, and sizes are in `rem`, so text zoom works.
 - **Fields on iOS.** Safari on iPhone and iPad zooms into a focused field whose text is under 16px. There, Input, Textarea and Select (and the components built on them) draw their own text at 16px at every size, keeping the box height. Don't stop the zoom with `maximum-scale=1` in the viewport tag: it also stops pinch zoom, which WCAG 1.4.4 needs.
 - **Motion.** Under `prefers-reduced-motion`, components stop their animations and keep at most a short fade, and `base.css` makes every other transition on the page near-instant. Nothing flashes.
