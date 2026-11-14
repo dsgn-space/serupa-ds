@@ -7,6 +7,7 @@ import { useSettings } from '../../internal/provider';
 import { initials } from './initials';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { quickArrival } from '../../internal/timing';
 
 export { initials };
 
@@ -63,17 +64,27 @@ export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>('A
   // A server-rendered picture can fail before the page hydrates, and React never hears that error: the broken picture
   // stayed in place of the initials. A picture that has finished but won't decode has failed (L8E44).
   const pic = React.useRef<HTMLImageElement | null>(null);
+  // A picture still on its way after quickArrival is late: the initials (or the icon) show under it rather than an
+  // empty disc, and when it arrives it fades in over them, as Image's does. One that arrives sooner just appears.
+  const [late, setLate] = React.useState<[src: string, here: boolean] | null>(null);
   React.useEffect(() => {
     const i = pic.current, src = props.src;
-    if (i && src && i.complete) i.decode().catch(() => { if (pic.current === i && i.complete && !i.naturalWidth) setFailedSrc(src); });
+    if (!i || !src) return;
+    if (i.complete) { i.decode().catch(() => { if (pic.current === i && i.complete && !i.naturalWidth) setFailedSrc(src); }); return; }
+    const t = setTimeout(() => { if (!i.complete) setLate([src, false]); }, quickArrival);
+    return () => clearTimeout(t);
   }, [props.src]);
   const text = initials(props.name);
+  const under = late && late[0] === props.src ? late : null;
+  const img = props.imgProps;
+  const fallback = text ? <span className="dk-avatar__initials" aria-hidden="true">{text}</span> : <Icon className="dk-avatar__icon" icon={icons.Person} />;
   const body = showImg
     // Lazy and async by default, so a long list of people doesn't fetch every picture at once.
-    ? <img loading="lazy" decoding="async" {...props.imgProps} className={cn('dk-avatar__img', props.imgProps && props.imgProps.className)} src={props.src} alt="" ref={pic}
-        onError={(e) => { if (props.imgProps && props.imgProps.onError) props.imgProps.onError(e); setFailedSrc(props.src as string); }} />
-    : text ? <span className="dk-avatar__initials" aria-hidden="true">{text}</span>
-    : <Icon className="dk-avatar__icon" icon={icons.Person} />;
+    ? <><img loading="lazy" decoding="async" {...img} className={cn('dk-avatar__img', under && 'dk-avatar__img--late', under && under[1] && 'dk-avatar__img--in', img && img.className)} src={props.src} alt="" ref={pic}
+        onLoad={(e) => { if (img && img.onLoad) img.onLoad(e); if (under) setLate([under[0], true]); }}
+        onAnimationEnd={(e) => { if (img && img.onAnimationEnd) img.onAnimationEnd(e); setLate(null); }}
+        onError={(e) => { if (img && img.onError) img.onError(e); setFailedSrc(props.src as string); }} />{under ? fallback : null}</>
+    : fallback;
   // With alt="" the name is written next to it, but the status isn't: then only the dot is read ("online").
   if (full) { rest.role = 'img'; rest['aria-label'] = full; } else if (!status) rest['aria-hidden'] = true;
   return (

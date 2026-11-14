@@ -6,6 +6,10 @@ import { THEMES, color, css, press, withMotion } from '../../../tools/test/vites
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
 import { Checkbox } from '../Checkbox/Checkbox';
+import { Accordion, AccordionItem } from '../Accordion/Accordion';
+import { CodeBlock } from '../CodeBlock/CodeBlock';
+import { DataGrid } from '../DataGrid/DataGrid';
+import { List, ListItem } from '../List/List';
 import { Card, CardBody, CardFooter, CardHeader } from './Card';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -49,6 +53,23 @@ const Variants = () => <Col>
 </Col>;
 
 describe('Card', () => {
+  test('a framed part that fills a card with no padding (DataGrid, a card List or Accordion, CodeBlock) takes the card\'s frame: no second border inside it, corners on its curve', async () => {
+    await render(<>
+      <Card id="fg" padding="none"><DataGrid aria-label="Stock" columns={[{ key: 'name', header: 'Name' }]} rows={[{ id: 'a', name: 'Kopi' }]} /></Card>
+      <Card id="fl" padding="none"><List variant="card"><ListItem title="Files" /></List></Card>
+      <Card id="fa" padding="none"><Accordion variant="card"><AccordionItem value="a" title="One">A</AccordionItem></Accordion></Card>
+      <Card id="fc" padding="none"><CodeBlock code="let a = 1;" language="js" /></Card>
+    </>);
+    const off: string[] = [];
+    for (const id of ['fg', 'fl', 'fa', 'fc']) {
+      const card = document.getElementById(id)!, c = css(card), f = css(card.firstElementChild);
+      const inner = `${parseFloat(c.borderTopLeftRadius) - parseFloat(c.borderTopWidth)}px`;
+      const got = [f.borderTopWidth, f.borderRightWidth, f.borderBottomWidth, f.borderLeftWidth, f.borderTopLeftRadius, f.borderBottomRightRadius].join(' ');
+      if (got !== `0px 0px 0px 0px ${inner} ${inner}`) off.push(`${id}: ${got}`);
+    }
+    expect(off).toEqual([]);
+  });
+
   // 191: a long word in the title or description breaks where its language hyphenates it, before overflow-wrap cuts it.
   test('the title and description hyphenate in the language around them, a long word never overflows, and the body is left as it is (191)', async () => {
     await render(<div lang="de" style={{ width: '200px' }}><Card id="hy"><CardHeader title="Donaudampfschifffahrtsgesellschaftskapitän" description="Rechtsschutzversicherungsgesellschaften" /><CardBody><p id="hyb">Text</p></CardBody></Card></div>);
