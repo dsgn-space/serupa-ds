@@ -1,13 +1,13 @@
 /* ---------------------------------------------------------------
    TreeView: rows of text-sm labels, 32px tall, each level 16px further in, with a chevron that turns to point
-   down when its item is open. The picked row has a highlight and a 2px primary bar at its start, a hovered row
+   down when its item is open. The picked row has a highlight (and a 2px bar at its start with more contrast), a hovered row
    the secondary background, and the focused row a focus ring inside it. Disabled rows are faded. Every value
    reads one of its own tokens (tree-view.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-tree-view {
   --dk-tree-closed: 0deg; --dk-tree-open: 90deg;   /* the chevron points along the row (left right to left), then down once open */
-  --dk-bar: var(--border-width-2);
+  --dk-bar: var(--highlight-indicator-width);
   margin: var(--spacing-0); list-style: none;
   padding: var(--tree-view-padding, var(--spacing-1));
   border-radius: var(--tree-view-radius, var(--radius-control));
@@ -15,7 +15,7 @@
   color: var(--tree-view-text, var(--text));
   font-family: var(--font-sans); font-size: var(--text-sm);
 }
-.dk-tree-view:dir(rtl) { --dk-tree-closed: 180deg; --dk-bar: calc(var(--border-width-2) * -1); }
+.dk-tree-view:dir(rtl) { --dk-tree-closed: 180deg; --dk-bar: calc(var(--highlight-indicator-width) * -1); }
 .dk-tree-view__group { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-tree-view__item { outline: none; }
 .dk-tree-view__row {
