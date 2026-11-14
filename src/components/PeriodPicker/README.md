@@ -122,9 +122,7 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | `--period-picker-period-bg-pressed` | `pressed` | A period while pressed. |
 | `--period-picker-current` | `primary` | This month, quarter or year (4.5:1 on panel-bg). |
 | `--period-picker-bg-selected` | `primary` | The chosen period's fill. |
-| `--period-picker-selected-bg` | `primary` | The old name of `--period-picker-bg-selected`, read when that isn't set. Removed in 15.0.0. |
 | `--period-picker-text-selected` | `on-primary` | The chosen period's text (4.5:1 on selected-bg). |
-| `--period-picker-selected-text` | `on-primary` | The old name of `--period-picker-text-selected`, read when that isn't set. Removed in 15.0.0. |
 
 **Radius**
 
@@ -142,7 +140,6 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | `--period-picker-depth` | `depth-field` | The button's tactile inner shade, as Select's. None in the flat brands. |
 | `--period-picker-panel-depth` | `depth-surface` | The panel's tactile hairline and, in dark mode, a faint top light, as DatePicker's popup. None in the flat brands. |
 | `--period-picker-depth-selected` | `depth-part` | The chosen period in a tactile brand: raised like a part under the top light, as Calendar's selected day. None in the flat brands. |
-| `--period-picker-selected-depth` | `depth-part` | The old name of `--period-picker-depth-selected`, read when that isn't set. Removed in 15.0.0. |
 
 **Spacing**
 

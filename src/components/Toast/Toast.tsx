@@ -212,8 +212,6 @@ export const toast = /* @__PURE__ */ Object.assign(show, { dismiss, promise, und
 export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
   /** Where toasts appear: 'bottom-end' (default), 'bottom-start', 'bottom-center', 'top-start', 'top-center' or 'top-end'. Start and end follow the text direction. */
   placement?: ToasterPosition | undefined;
-  /** @deprecated Use placement (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as placement is, when placement isn't given. */
-  position?: ToasterPosition | undefined;
   /** The region's name for screen readers. Default: 'Notifications'. */
   label?: string | undefined;
   /** The close button's name. Default: 'Dismiss'. */
@@ -236,7 +234,7 @@ const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.I
 /** The place toast() messages appear: render one, once, near the root of the app. */
 export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: ToasterProps): React.ReactElement {
   const sds = useSettings(ownWords);
-  const { placement, position, label, dismissLabel, limit, duration, autoDismiss, className, ...rest } = props;
+  const { placement, label, dismissLabel, limit, duration, autoDismiss, className, ...rest } = props;
   // Empty at first, as on a server, where a toast() from another request could be in the queue; the effect reads it.
   const [list, setList] = React.useState<Item[]>([]);
   const self = React.useRef<HTMLElement | null>(null);
@@ -258,8 +256,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
     void Promise.resolve().then(() => { arriving.current = false; });
     return () => { page.listeners.delete(take); emit(); unseen(); };
   }, []);
-  if (process.env.NODE_ENV !== 'production' && position != null) warnOnce('toaster-position', 'Toaster: position is deprecated and removed in 15.0.0. Use placement, which does the same.');
-  const pos = oneOf(POSITIONS, placement ?? position, 'bottom-end');
+  const pos = oneOf(POSITIONS, placement, 'bottom-end');
   // The F8 hint is set once the Toaster is in the page, not while rendering, and goes with it: with no Toaster, F8
   // does nothing, so a toast doesn't mention it.
   const shortcut = sds.labels.toastShortcut(HOTKEY);

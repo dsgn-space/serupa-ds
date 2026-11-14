@@ -289,13 +289,3 @@ describe('Splitter inside a shadow root (GR60)', () => {
   });
 });
 
-describe('Splitter: direction, the old name of orientation', () => {
-  test('still stacks the panes as orientation does, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<Splitter id="old-dir" {...{ direction: 'vertical' } as const} style={{ height: '200px' }}><p>Top</p><p>Bottom</p></Splitter>);
-      expect(el('old-dir').getAttribute('data-direction')).toBe('vertical');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('splitter-direction'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
-  });
-});

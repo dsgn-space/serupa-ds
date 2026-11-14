@@ -45,8 +45,6 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
   pinEnd?: boolean | undefined;
   /** Its rows are loading (or reloading): sets aria-busy on the table. Pair it with TableLoadingRows. Default: false. */
   loading?: boolean | undefined;
-  /** @deprecated Use loading (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
-  busy?: boolean | undefined;
 }
 
 export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -125,10 +123,9 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
   // hydration, for the frame and everything in it.
   const restyle = useServerStyles<HTMLDivElement>();
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, loading: 1, busy: 1, className: 1, children: 1 });
+  const rest = omit(props, { size: 1, layout: 1, striped: 1, stickyHeader: 1, caption: 1, hideCaption: 1, containerProps: 1, pinStart: 1, pinEnd: 1, loading: 1, className: 1, children: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
-  if (process.env.NODE_ENV !== 'production' && props.busy != null) warnOnce('table-busy', 'Table: busy is deprecated and removed in 15.0.0. Use loading, which does the same.');
-  const loading = !!(props.loading ?? props.busy);
+  const loading = !!props.loading;
   const frame = React.useRef<HTMLDivElement>(null);
   const scrolls = useScrolls(frame);
   const cid = domId('dk-tc', React.useId());

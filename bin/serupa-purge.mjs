@@ -91,7 +91,10 @@ export function purge(css, used, drop = new Set()) {
     for (const { kind, pre, body } of blocks(s)) {
       if (kind === 'stmt') { out.push(pre); continue; }
       if (kind === 'at') {
-        if (/^@(media|supports|layer|container|starting-style)\b/.test(pre)) {   // rules inside: trimmed like the rest
+        // @scope (root) to (limit): goes with its root, a component's class; the rules inside are trimmed like the rest.
+        const scope = /^@scope\s*\(([^)]*)\)/.exec(pre);
+        if (scope && !keepSelector(scope[1])) continue;
+        if (scope || /^@(media|supports|layer|container|starting-style)\b/.test(pre)) {   // rules inside: trimmed like the rest
           const inner = walk(body);
           if (inner.trim()) out.push(`${pre} { ${inner} }`);
         } else out.push(`${pre} {${body}}`);   // @keyframes, @property, @font-face…

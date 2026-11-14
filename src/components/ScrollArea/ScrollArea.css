@@ -7,9 +7,8 @@
 @layer dk.components {
 .dk-scroll-area {
   min-width: var(--spacing-0); min-height: var(--spacing-0);
+  scrollbar-width: thin; scrollbar-color: var(--scroll-area-thumb, var(--border-control)) transparent;
 }
-/* Safari before 26.2 keeps its own overlay scrollbars. */
-@supports (scrollbar-color: auto) { .dk-scroll-area { scrollbar-width: thin; scrollbar-color: var(--scroll-area-thumb, var(--border-control)) transparent; } }
 /* Each way it scrolls stops scroll chaining in the same rule, so reaching its end doesn't scroll the page. */
 .dk-scroll-area--vertical { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
 .dk-scroll-area--horizontal { overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; }
@@ -27,7 +26,7 @@
 .dk-scroll-area--horizontal:dir(rtl):is(.dk-scroll-area--more-start, .dk-scroll-area--more-end) {
   mask-image: linear-gradient(to left, transparent, black var(--dk-sa-a), black calc(var(--sizing-full) - var(--dk-sa-b)), transparent);
 }
-@media (forced-colors: active) { @supports (scrollbar-color: auto) { .dk-scroll-area { scrollbar-color: auto; } } }
+@media (forced-colors: active) { .dk-scroll-area { scrollbar-color: auto; } }
 /* Printed, paper has no scrollbar: a vertical box (or one that scrolls both ways) grows to its whole content, whatever height the app gave it (style
    or class, hence !important), and the edge fade goes, so nothing past the part in view is dropped. */
 @media print {
