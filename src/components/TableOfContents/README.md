@@ -53,7 +53,7 @@ With `variant="rail"` (the `Rail` story), two more parts:
 ## Behavior
 
 - The list marks the section being read as the page scrolls. A click scrolls to the heading (smoothly unless motion is reduced), puts its id in the address and moves focus to it.
-- The rail shows its panel while the pointer is over it or the panel, while focus is on one of its links, or after a tap (touch or pen) until a tap elsewhere or a link. The panel fades and grows in and out; from the keyboard it's there at once; under reduced motion it only fades. Escape hides it until the pointer and focus leave.
+- The rail shows its panel while the pointer is over it or the panel, while focus is on one of its links, or after a tap (touch or pen) until a tap elsewhere or a link. The panel fades and grows in and out; from the keyboard it's there at once; under reduced motion it only fades. Escape hides it until the pointer and focus leave. The panel is at most the window's height less `--table-of-contents-panel-gap` (64px), and a longer list scrolls inside it, so every link stays in reach on a page of many headings.
 
 ### Do and don't
 
@@ -106,4 +106,5 @@ Each is an optional override: set it on the page, a container or one TableOfCont
 | `--table-of-contents-dash` | `border-strong` | The rail's dashes (decorative: the links are in its panel). |
 | `--table-of-contents-panel` | `surface-overlay` | The rail's panel, over the page. |
 | `--table-of-contents-panel-border` | `border-overlay` | The rail's panel's edge. |
+| `--table-of-contents-panel-gap` | `spacing-16` | How much shorter than the window the rail's panel is at most (64px): room for a sticky column's offset above and a margin below. A longer list scrolls inside it. |
 <!-- token-table:end -->

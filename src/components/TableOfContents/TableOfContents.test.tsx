@@ -315,6 +315,19 @@ describe('TableOfContents rail', () => {
     expect(location.hash).toBe('#beta-part');
   });
 
+  test('with more headings than the window holds, the panel stops short of the window\'s bottom and scrolls, so the last links can be reached', async () => {
+    const items = Array.from({ length: 60 }, (_, i) => ({ id: 'h' + i, label: 'Heading ' + (i + 1) }));
+    // Pinned near the top of the window, as a sticky side column is.
+    await render(<div style={{ position: 'fixed', insetBlockStart: 16, insetInlineEnd: 16 }}><TableOfContents id="toc" variant="rail" items={items} /></div>);
+    const all = [...panel().querySelectorAll('a')];
+    all.at(-1)!.focus();
+    await expect.poll(shown).toBe(true);
+    const box = panel().getBoundingClientRect();
+    expect([box.bottom <= window.innerHeight, panel().scrollHeight > panel().clientHeight, css(panel()).overflowY]).toEqual([true, true, 'auto']);
+    const last = all.at(-1)!.getBoundingClientRect();
+    expect(last.bottom <= box.bottom && last.top >= box.top).toBe(true);
+  });
+
   test('right to left: the panel opens over the page from the rail\'s top left corner', async () => {
     await render(<Rail dir="rtl" />);
     await expect.poll(() => dashes().length).toBe(3);

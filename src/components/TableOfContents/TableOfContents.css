@@ -32,6 +32,9 @@
 .dk-toc--rail .dk-toc__panel {
   box-sizing: border-box; position: absolute; inset-block-start: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-popover);
   inline-size: max-content; max-inline-size: var(--container-3xs); padding: var(--spacing-3);
+  /* As tall as the window less panel-gap at most (room for a sticky column's offset above and a margin below); a
+     longer list scrolls inside it, so the last links stay in reach on a page of many headings. */
+  max-block-size: calc(var(--sizing-dvh) - var(--table-of-contents-panel-gap, var(--spacing-16))); overflow-y: auto; overscroll-behavior: contain;
   border: var(--border-width-1) solid var(--table-of-contents-panel-border, var(--border-overlay)); border-radius: var(--radius-surface);
   background: var(--table-of-contents-panel, var(--surface-overlay)); box-shadow: var(--depth-surface), var(--elevation-overlay);
   transform-origin: top right; opacity: var(--opacity-0); scale: var(--scale-95); pointer-events: none;

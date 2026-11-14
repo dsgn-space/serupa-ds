@@ -92,6 +92,18 @@
           }
         }
       }
+    },
+    "spacing": {
+      "panel-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "How much shorter than the window the rail's panel is at most (64px): room for a sticky column's offset above and a margin below. A longer list scrolls inside it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-panel-gap"
+          }
+        }
+      }
     }
   }
 }
