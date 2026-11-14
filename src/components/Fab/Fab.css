@@ -16,9 +16,9 @@
 .dk-btn.dk-fab--sm { height: var(--fab-size-sm, var(--spacing-10)); width: var(--fab-size-sm, var(--spacing-10)); }
 .dk-btn.dk-fab--extended { width: auto; padding: var(--spacing-0) var(--fab-padding-x, var(--spacing-5)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 /* extended="auto": the label folds away while the page scrolls down, leaving the round icon button, and opens again
-   on the way back up. The label's width and the gap close together, so the icon stays put at the button's start. */
-.dk-btn.dk-fab--auto { transition-property: background-color, color, border-color, text-decoration-color, box-shadow, scale, transform, padding, gap; }
-.dk-fab__label { display: inline-block; vertical-align: top; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-inline-size: var(--fab-label-max, var(--container-xs)); transition: max-inline-size var(--motion-change-md) var(--ease-move), opacity var(--motion-change-md) var(--ease-move); }
+   on the way back up. The width changes at once (animating it would lay the page out on every frame) and the label
+   fades in as it opens; the icon stays put at the button's start. */
+.dk-fab__label { display: inline-block; vertical-align: top; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-inline-size: var(--fab-label-max, var(--container-xs)); transition: opacity var(--motion-change-md) var(--ease-move); }
 /* Shrunk, it's --fab-size round: the padding is what's left beside the icon, inside the button's border. */
 .dk-btn.dk-fab--shrunk { --dk-fab-pad: calc((var(--fab-size, var(--spacing-14)) - var(--fab-icon-size, var(--spacing-6))) / 2 - var(--button-border-width, var(--border-width-1))); padding-inline: var(--dk-fab-pad); gap: var(--spacing-0); }
 .dk-fab--shrunk .dk-fab__label { max-inline-size: var(--spacing-0); opacity: var(--opacity-0); }

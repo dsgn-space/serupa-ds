@@ -34,7 +34,7 @@ Drawn from the `ExtendedAuto` story. It's a primary [Button](../Button/README.md
 
 - One per screen, for the action people come to the screen for. Other actions go in the page.
 - Leave room at the end of the content so the FAB never covers the last item.
-- On a phone, an extended FAB covers a lot of a long list. `extended="auto"` folds it to its icon while the page scrolls down and opens it again on the way back up or at the top, so the label is there when people look for the action and out of the way while they read. It's named by its label either way, and with reduced motion it changes at once.
+- On a phone, an extended FAB covers a lot of a long list. `extended="auto"` folds it to its icon while the page scrolls down and opens it again on the way back up or at the top, so the label is there when people look for the action and out of the way while they read. It's named by its label either way. The width changes at once and the label fades in, or appears at once with reduced motion.
 
 ## Placement
 
