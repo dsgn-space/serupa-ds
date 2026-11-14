@@ -14,7 +14,8 @@ Node 26 (`.nvmrc`), then `npm install` and `npx playwright install chromium`.
 - `src/internal/` is shared code. A change there reaches every component that uses it, so `node tools/test/run.mjs --since main` tests them all.
 - `tokens/serupa.tokens.json` is the source of the design tokens, in the W3C Design Tokens format (ADR-0014). `npm run tokens` makes `tokens.json` from it, then `tokens.css` and `design-tokens/` from `tokens.json`. Never edit `tokens.json` by hand.
 - A component's `<name>.tokens.json` is the source of the token table in its README, which `npm run tokens` writes between the `token-table` markers. Change a token's description in the JSON, not the README.
-- `dist/` and `src/generated/` are build output: never edit or commit them.
+- `site/` is the docs site (`npm run site`): it draws the same .mdx pages, stories and types Storybook does, so a page is never written twice. Its blocks are in `site/src/blocks.tsx`; `node tools/test/site.mjs` opens every page.
+- `dist/` and `src/generated/` are build output, and so are Storybook's and the site's own folders: never edit or commit them.
 - `docs/adr/` holds the architecture decision records: why tokens, theming, icons, the build and the release work as they do. Read the one behind a part before you change how it works.
 - `tools/` never ships. `tools/test/` holds the checks, and their baselines live next to them.
 
@@ -29,7 +30,7 @@ npm run test:unit
 node tools/test/run.mjs --since main
 ```
 
-Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`; the pre-push hook that `npm install` sets up runs a five-minute part of it on every push: types, lint and the component tests of what the push adds) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
+Before you push, `node tools/ci.mjs --since main` (or `npm run check -- --since main`; the pre-push hook that `npm install` sets up runs a five-minute part of it on every push: the effect and class-query checks, types, lint and the component tests of what the push adds; let it run rather than skipping it) runs every job CI requires, the component tests in English and the commit's second language included (`--all-locales` for all four) (`--skip changeset` when the pull request takes `no-changeset`).
 
 ## Pull requests and CI
 

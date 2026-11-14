@@ -150,15 +150,39 @@ describe('Sidebar', () => {
       const runs = (e: Element) => e.getAnimations().filter((x) => x instanceof CSSTransition).map((x) => (x).transitionProperty).sort();
       await render(<App />);
       const b = el('gproj'), list = el(b.getAttribute('aria-controls')!);
+      // What the list is like as each fold starts, taken then: on a busy runner the fold can end before the click returns.
+      let opening: unknown[] | undefined, closing: unknown[] | undefined;
+      const look = (e: TransitionEvent) => {
+        if (e.target !== list) return;
+        if (!list.inert) opening ??= [list.hidden, list.inert, runs(list), list.getAnimations().some((x) => x instanceof CSSAnimation)];
+        else closing ??= [b.getAttribute('aria-expanded'), list.hidden, list.inert, runs(list), rect(list).height > 0];
+      };
+      list.addEventListener('transitionrun', look);
       await userEvent.click(b);
-      expect([list.hidden, list.inert, runs(list), list.getAnimations().some((x) => x instanceof CSSAnimation)]).toEqual([false, false, ['clip-path', 'opacity'], false]);
+      await expect.poll(() => opening).toBeDefined();
+      expect(opening).toEqual([false, false, ['clip-path', 'opacity'], false]);
       await settled(list);
       expect([css(list).opacity, css(list).clipPath]).toEqual(['1', 'inset(0px)']);
       await userEvent.click(b);
-      expect([b.getAttribute('aria-expanded'), list.hidden, list.inert, runs(list), rect(list).height > 0]).toEqual(['false', false, true, ['clip-path', 'opacity'], true]);
+      await expect.poll(() => closing).toBeDefined();
+      expect(closing).toEqual(['false', false, true, ['clip-path', 'opacity'], true]);
+      list.removeEventListener('transitionrun', look);
       await settled(list);
       await expect.poll(() => list.hidden).toBe(true);
       expect(rect(list).height).toBe(0);
+    });
+  });
+
+  test('from the keyboard a group opens at once as it closes at once: Enter shows its items with no fold, and Enter again hides them (KW1)', async () => {
+    await withMotion(async () => {
+      const runs = (e: Element) => e.getAnimations().filter((x) => x instanceof CSSTransition).map((x) => (x).transitionProperty).sort();
+      await render(<App />);
+      const b = el('gproj'), list = el(b.getAttribute('aria-controls')!);
+      b.focus();
+      await userEvent.keyboard('{Enter}');
+      expect([b.getAttribute('aria-expanded'), list.hidden, runs(list), css(list).opacity, css(list).clipPath]).toEqual(['true', false, [], '1', 'inset(0px)']);
+      await userEvent.keyboard('{Enter}');
+      expect([b.getAttribute('aria-expanded'), list.hidden]).toEqual(['false', true]);
     });
   });
 

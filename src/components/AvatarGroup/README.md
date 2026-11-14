@@ -48,7 +48,7 @@ Drawn from the `Overflow` story.
 
 ## Behavior
 
-- Each avatar overlaps the one before by 8px (xs, sm), 12px (md, lg) or 16px (xl); earlier ones sit on top, so every status dot shows. The overlap uses logical margins, so the row runs right to left in RTL.
+- Each avatar overlaps the one before by 2px (sm), 4px (md), 8px (lg) or 12px (xl), and at xs they sit edge to edge, so the initials under the overlap stay whole; earlier ones sit on top, so every status dot shows. The overlap uses logical margins, so the row runs right to left in RTL.
 - Each avatar has a 2px ring in `surface`. On another background, set `--avatar-group-ring` to that color.
 - Past 99, "+N" reads "99+" (past 9 at `xs`, "9+") so it fits; its name keeps the exact count ("116 more").
 - "+N" is written in the locale's digits, as Badge's count is: "+٣" in `ar-EG`.
@@ -98,7 +98,7 @@ Each is an optional override: set it on the page, a container or one group. The 
 | `--avatar-group-more-hover-bg` | `secondary-hover` | The old name of `--avatar-group-more-bg-hover`, read when that isn't set. Removed in 15.0.0. |
 | `--avatar-group-focus-ring` | `focus-ring` | The focus ring round the "+N" button. |
 | `--avatar-group-ring-width` | `border-width-2` | The ring's width (2px). |
-| `--avatar-group-overlap-sm` | `spacing-2` | How far each avatar overlaps the one before at size xs and sm (8px). |
-| `--avatar-group-overlap-md` | `spacing-3` | The overlap at size md, the default, and lg (12px). |
-| `--avatar-group-overlap-lg` | `spacing-4` | The overlap at size xl (16px). |
+| `--avatar-group-overlap-sm` | `spacing-0.5` | How far each avatar overlaps the one before at size sm (2px). At xs the avatars sit edge to edge, unless this is set. |
+| `--avatar-group-overlap-md` | `spacing-1` | The overlap at size md, the default (4px), and lg (8px unless this is set). |
+| `--avatar-group-overlap-lg` | `spacing-3` | The overlap at size xl (12px). |
 <!-- token-table:end -->

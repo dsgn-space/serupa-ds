@@ -1,5 +1,5 @@
 #!/bin/sh
-# A quick check before a push leaves this machine: tokens, build, types, lint and the component tests of what changed
+# A quick check before a push leaves this machine: two source checks, then tokens, build, types, lint and the component tests of what changed
 # since the branch's last push (or since origin/main for a new branch), stopped after five minutes, so a push doesn't
 # take a CI round to find a type error or a broken test. CI runs everything else. npm install sets it up
 # (tools/git-hooks/install.mjs). A push that deletes a branch or carries no change skips it.
@@ -35,6 +35,12 @@ fi
 # make throwaway repositories of their own, and with these set their commits landed in this branch instead (six
 # commits and the tree replaced by four files, on a worktree, 12 Nov). Clear every variable that points git here.
 unset $(git rev-parse --local-env-vars)
+# First the source checks that fail pull requests most often in CI and take a second or two here: an effect with no
+# dependency list says why it runs after every render, and a test stays within its class-query budget (13 Nov: each
+# cost a pull request a CI run of 30 to 65 runner-minutes).
+for check in effects class-queries; do
+  node "tools/test/$check.mjs" </dev/null || { echo "pre-push: tools/test/$check.mjs failed (above)." >&2; exit 1; }
+done
 steps=tokens,build,typecheck,lint,components
 echo "pre-push: node tools/ci.mjs --only $steps --since $since, five minutes at most (SERUPA_SKIP_PREPUSH=1 skips it)" >&2
 if command -v timeout >/dev/null 2>&1; then

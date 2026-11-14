@@ -89,8 +89,8 @@
     "spacing": {
       "overlap-sm": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-2}",
-        "$description": "How far each avatar overlaps the one before at size xs and sm (8px).",
+        "$value": "{spacing.spacing-0_5}",
+        "$description": "How far each avatar overlaps the one before at size sm (2px). At xs the avatars sit edge to edge, unless this is set.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--avatar-group-overlap-sm"
@@ -99,8 +99,8 @@
       },
       "overlap-md": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-3}",
-        "$description": "The overlap at size md, the default, and lg (12px).",
+        "$value": "{spacing.spacing-1}",
+        "$description": "The overlap at size md, the default (4px), and lg (8px unless this is set).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--avatar-group-overlap-md"
@@ -109,8 +109,8 @@
       },
       "overlap-lg": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-4}",
-        "$description": "The overlap at size xl (16px).",
+        "$value": "{spacing.spacing-3}",
+        "$description": "The overlap at size xl (12px).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--avatar-group-overlap-lg"
