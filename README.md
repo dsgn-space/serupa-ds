@@ -522,7 +522,7 @@ Current Chrome, Edge, Safari and Firefox. The tests run in Chromium, and the cro
 
 Popover and command buttons (`popoverTarget`, `command`), `text-wrap: balance` and `pretty`, phrase breaks in Japanese headings (`word-break: auto-phrase`), entry and exit animations (`@starting-style`, `transition-behavior`), view transitions and scrollbar styling are progressive: older browsers ignore them and the page still works.
 
-Three features set the oldest versions that get the whole system, so the baseline is Chrome and Edge 123, Safari 17.5 and Firefox 128. A check (`tools/test/browser-baseline.mjs`) holds every property, value and at-rule in `bundle.css` to it, with MDN's compatibility data, and lists what is newer on purpose:
+Three features set the oldest versions that get the whole system, so the baseline is Chrome and Edge 123, Safari 17.5 and Firefox 128. The numbers live in `package.json`'s `browserslist`, so a project's own tools can read them. A check (`tools/test/browser-baseline.mjs`) holds every property, value and at-rule in `bundle.css` to them, with MDN's compatibility data, and lists what is newer on purpose. Every night the component tests also run in Chrome at that version:
 
 | Feature | Needs | Without it |
 | --- | --- | --- |
