@@ -263,6 +263,18 @@ export const TRANSFORMS = [
     },
   },
   {
+    // 15.0.0 removes `border-raised`: a raised card's edge is `border`, as every card's is. 14.x has both names, so this is safe to run before upgrading.
+    version: '15.0.0', id: 'token-border-raised', exts: ALL,
+    title: '`border-raised` is `border` (`--border-raised`, `color.border-raised`, `bg-border-raised` and the other utility classes)',
+    run(src) {
+      let count = 0;
+      // The CSS variable, a token reference, or a utility class (`bg-`, `border-x-`, `hover:ring-`); a longer name that
+      // only ends the same (`--my-border-raised`) is left.
+      const text = src.replace(/(?<![\w-])(--|color\.|[a-z][a-z-]*-)?border-raised(?![\w-])/g, (_, pre = '') => { count++; return `${pre}border`; });
+      return { text, count, notes: [] };
+    },
+  },
+  {
     version: '15.0.0', id: 'button-icon', exts: CODE,
     title: 'Button: `icon` is removed; an icon-only button is an IconButton, with a required `label`',
     run(src) {
