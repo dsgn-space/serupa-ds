@@ -16,7 +16,6 @@ import { DatePicker } from '../components/DatePicker/DatePicker';
 import { TimePicker } from '../components/TimePicker/TimePicker';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { Calendar } from '../components/Calendar/Calendar';
-import { Pagination } from '../components/Pagination/Pagination';
 import { Carousel } from '../components/Carousel/Carousel';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
@@ -122,34 +121,32 @@ describe('touch-sized buttons inside fields', () => {
   });
 });
 
-// Rows of small targets a phone user taps (EQ1): a month's days, the pages and the slide dots. On a touch screen a
-// day is 44px square, and a page or a dot takes a press 20px above or below its middle, 44px high, its width kept so
-// neighbours never overlap; with a mouse a day is 32px and a press 20px off a page or dot misses.
+// Rows of small targets a phone user taps (EQ1): a month's days and the slide dots. On a touch screen a day is 44px
+// square, and a dot takes a press 20px above or below its middle, 44px high, its width kept so neighbours never
+// overlap; with a mouse a day is 32px and a press 20px off a dot misses.
 function Rows() {
   return <div style={{ display: 'flex', flexDirection: 'column', gap: '64px', padding: '64px', width: '480px' }}>
     <Calendar locale="en-US" defaultMonth={new Date(2025, 2, 10)} />
-    <Pagination count={5} page={2} />
     <Carousel label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
   </div>;
 }
 const rows = () => {
   const day = box('.dk-calendar__day');
-  const page = '.dk-pagination__item:not(.dk-pagination__arrow):not(.dk-pagination__item--current)';
-  $(page).classList.add('hit-page'); $('.dk-carousel__dot:not([aria-current="true"])').classList.add('hit-dot');
-  return { day: [Math.round(day.width), Math.round(day.height)], page: around('.hit-page', page), dot: around('.hit-dot', '.hit-dot') };
+  $('.dk-carousel__dot:not([aria-current="true"])').classList.add('hit-dot');
+  return { day: [Math.round(day.width), Math.round(day.height)], dot: around('.hit-dot', '.hit-dot') };
 };
 
-describe('touch-sized days, pages and dots', () => {
-  test('with a mouse: 32px days, and a press 20px off a page or a dot misses', async () => {
+describe('touch-sized days and dots', () => {
+  test('with a mouse: 32px days, and a press 20px off a dot misses', async () => {
     await render(<Rows />);
-    expect(rows()).toEqual({ day: [32, 32], page: ['', ''], dot: ['', ''] });
+    expect(rows()).toEqual({ day: [32, 32], dot: ['', ''] });
   });
 
-  test('on a touch screen: 44px days, and a page or a dot takes a press 20px above or below its middle', async () => {
+  test('on a touch screen: 44px days, and a dot takes a press 20px above or below its middle', async () => {
     await render(<Rows />);
     await coarsePointer(async (active) => {
       if (!active) return;
-      expect(rows()).toEqual({ day: [44, 44], page: ['page', 'page'], dot: ['dot', 'dot'] });
+      expect(rows()).toEqual({ day: [44, 44], dot: ['dot', 'dot'] });
     });
   });
 });

@@ -41,11 +41,6 @@
    past the start edge, where scrollWidth doesn't see them, so they were never cut down (GR56). An auto margin is
    0 when there's no room, so the overflow goes to the end, is measured, and the pages are cut to fit. */
 .dk-pagination--summary .dk-pagination__list > :first-child { margin-inline-start: auto; }
-/* Touch (EQ1): 44px high to press, as Apple and Material ask; the width stays, so pages in a row never overlap. */
-@media (pointer: coarse) {
-  .dk-pagination__item { position: relative; isolation: isolate; }
-  .dk-pagination__item::after { --dk-under: calc(var(--z-10) * -1); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset-block: var(--dk-reach-block); inset-inline: var(--spacing-0); }
-}
 @media (forced-colors: active) { .dk-pagination__item--current { outline: var(--outline-width-2) solid CanvasText; } }
 @media (prefers-reduced-motion: reduce) { .dk-pagination__item { transition: none; } }
 }
