@@ -67,7 +67,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | `string` | | Goes to the outer `<div>` |
-| `items` | `TagItem[]` | | `{ id, label, disabled?, icon?, avatar? }`, in order. `icon` (an icon name or element) and `avatar` (a picture such as `<Avatar size="xs" />`, drawn at 20px so the tag keeps its height) sit before the words and are decorative: the words name the tag. A selected tag shows its check where its icon was |
+| `items` | `TagItem[]` | | `{ id, label, disabled?, icon?, avatar? }`, in order. `icon` (an icon name or element) and `avatar` (a picture such as `<Avatar size="xs" />`, drawn at 24px, as tall as the tag) sit before the words and are decorative: the words name the tag. A selected tag shows its check where its icon was |
 | `label` | `ReactNode` | | The group's visible label |
 | `onRemove` | `(id) => void` | | Shows a × on each tag; Delete and Backspace remove too |
 | `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'none'` | Picking tags |
@@ -100,5 +100,5 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-icon` | `text-muted` | A tag's leading icon (decorative; the words name the tag). |
 | `--tag-group-radius` | `radius-control` | A tag's corners, as other controls'. |
 | `--tag-group-gap` | `spacing-2` | The space between tags, and between the label and the tags (8px). |
-| `--tag-group-avatar-size` | `spacing-5` | The picture before a tag's words (20px), so a tag with an avatar keeps its 24px height. |
+| `--tag-group-avatar-size` | `spacing-6` | The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag. |
 <!-- token-table:end -->

@@ -158,8 +158,8 @@
       },
       "avatar-size": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-5}",
-        "$description": "The picture before a tag's words (20px), so a tag with an avatar keeps its 24px height.",
+        "$value": "{spacing.spacing-6}",
+        "$description": "The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tag-group-avatar-size"
