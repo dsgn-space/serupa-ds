@@ -92,6 +92,7 @@ const workers = await Promise.all(Array.from({ length: PAGES }, async () => {
 // A page is ready once its article is there and no longer loading (or, for the front page and the indexes, its h1).
 const ready = (page, doc) => page.waitForFunction((d) => (d ? !!document.querySelector('#article:not([aria-busy]) h1') : !!document.querySelector('main h1')), doc, { timeout: 30000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
 
+let held = '';
 await inParallel(pages, workers, async (p, w) => {
   w.errors.length = 0;
   const failed = await openUrl(w.page, base + p.path) || await ready(w.page, true);
@@ -104,7 +105,14 @@ await inParallel(pages, workers, async (p, w) => {
     links: [...new Set([...document.querySelectorAll('#article a[href]')].filter((a) => !a.closest('[data-site-demo]')).map((a) => a.getAttribute('href')))],
     demos: document.querySelectorAll('.site-demo').length,
     api: !!document.getElementById('api'),
+    // What sits on top of the page: an open modal dialog, or an open menu or panel. A tooltip shown beside its button
+    // is left: it is a line of text that takes no focus.
+    over: [...document.querySelectorAll('dialog, [popover]')].filter((e) => e.matches(':modal, :popover-open') && e.getAttribute('role') !== 'tooltip').map((e) => String(e.className || e.localName).split(' ')[0]),
+    heldInFrame: document.querySelectorAll('.site-demo .site-held').length,
   }));
+  // A story that opens something as it arrives waits behind a button (site/src/blocks.tsx): the page itself comes first.
+  t(`${p.path} opens nothing over the page on arrival`, !seen.over.length, `open on top of the page: ${[...new Set(seen.over)].join(', ')}`);
+  if (seen.heldInFrame && !held) held = p.path;
   t(`${p.path} draws with no error`, !w.errors.length && !seen.broken, [...w.errors.slice(0, 3), seen.broken ? `${seen.broken} part(s) of the page show an error instead of their content` : ''].filter(Boolean).join(' | '));
   t(`${p.path} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
   // Storybook's own links have been pointed at the site's pages by now; one that is left has no page here.
@@ -113,6 +121,18 @@ await inParallel(pages, workers, async (p, w) => {
   if (p.stories && /<(Primary|Stories|Canvas)\b/.test(read(p.file))) t(`${p.path} shows its stories`, seen.demos > 0, 'the page has no example in a frame');
   if (p.component && read(p.file).includes('<Controls')) t(`${p.path} shows its props`, seen.api, 'the page has no API table');
 });
+
+// A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
+if (t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
+  const w = workers[0];
+  await openUrl(w.page, base + held); await ready(w.page, true);
+  const button = w.page.locator('.site-demo .site-held button').first();
+  await button.scrollIntoViewIfNeeded();
+  await w.page.waitForTimeout(500);
+  const pressed = await button.click({ timeout: 10000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  const opened = pressed || await w.page.waitForFunction(() => [...document.querySelectorAll('dialog, [popover]')].some((e) => e.matches(':modal, :popover-open')), null, { timeout: 5000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  t(`${held}: "Open the example" runs the story, which opens`, !opened, opened);
+}
 
 // The front page and the site's own pages: each draws, has one title, and links only to pages the site has.
 {

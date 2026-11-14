@@ -92,6 +92,9 @@ ol.site-list { list-style: decimal; }
 .site-demo__stage:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: calc(-1 * var(--focus-ring-width)); }
 .site-demo__bar { display: flex; justify-content: flex-end; padding: var(--spacing-1) var(--spacing-2); border-block-start: var(--border-width-1) solid var(--border); background: var(--surface-muted); }
 .site-demo__code:not([hidden]) { padding: var(--spacing-3); border-block-start: var(--border-width-1) solid var(--border); background: var(--surface-muted); }
+[data-site-away] [role="tooltip"] { visibility: hidden; }
+.site-held { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--spacing-3) var(--spacing-4); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.site-demo[data-layout="fullscreen"] .site-held { padding: var(--spacing-8) var(--spacing-6); }
 .site-story > .site-p { margin-block-start: var(--spacing-2); color: var(--text-muted); }
 
 .site-prevnext { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); margin-block-start: var(--spacing-16); }

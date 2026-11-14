@@ -24,7 +24,18 @@ const commands: Command[] = [
 const EXTRA: Array<[string, string]> = [['/showcase', 'Showcase'], ['/themes', 'Themes'], ['/about', 'About']];
 
 function SectionNav({ section, path }: { section: NavSection; path: string }) {
-  return <Sidebar aria-label={section.label} className="site-sidebar">
+  const nav = React.useRef<HTMLElement>(null);
+  // A page opened by its address, or from the search, may be far down a long list: bring its entry into view inside the
+  // list, without moving the page. An entry already in view stays where it is, so a click in the list moves nothing.
+  React.useEffect(() => {
+    const at = nav.current?.querySelector<HTMLElement>('[aria-current="page"]');
+    let box = at?.parentElement;
+    while (box && !(box.scrollHeight > box.clientHeight + 1 && /auto|scroll/.test(getComputedStyle(box).overflowY))) box = box === nav.current ? null : box.parentElement;
+    if (!at || !box) return;
+    const a = at.getBoundingClientRect(), b = box.getBoundingClientRect();
+    if (a.top < b.top || a.bottom > b.bottom) box.scrollTop += a.top - b.top - (b.height - a.height) / 2;
+  }, [path]);
+  return <Sidebar ref={nav} aria-label={section.label} className="site-sidebar">
     {section.groups.map((g) => <SidebarSection key={g.title} title={g.title || undefined}>
       {g.pages.map((p) => <SidebarItem key={p.path} href={p.path} label={p.name} active={p.path === path} />)}
     </SidebarSection>)}
