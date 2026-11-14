@@ -51,6 +51,8 @@ const STORY_WIDE = ['hydrateStories', 'hydrateStoriesCsp', 'serverHtml', 'ariaSt
 let direct = null;
 // The shared tests the change edits: they run on a narrowed run whatever components it covers.
 let sharedTests = [];
+// Every test file under src/ the change edits that still exists: each runs in all four languages (own, below).
+let changedTests = [];
 if (arg('--since')) {
   // Lines only added to shared files (a new component's labels, icons and export) don't widen it (ADDITIVE in lib.mjs).
   const diff = spawnSync('git', ['diff', '--numstat', '--no-renames', arg('--since'), 'HEAD'], { cwd: PROJECT, encoding: 'utf8' });
@@ -60,6 +62,7 @@ if (arg('--since')) {
   const wide = storyWide && !['visual', 'storybook'].includes(arg('--group'));
   const changed = diff.status === 0 && !wide ? affectedComponents(scopeFiles(diff.stdout)) : null;
   sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
+  changedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && /^src\/.+\.test\.tsx?$/.test(f) && !/^src\/(components|blocks|patterns)\//.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
   // The docs' Upgrading page renders the pending changesets (docs/upgrades.ts, the next major's breaking entries), so
   // a changed changeset re-checks that page in Storybook (GR284). It is a page, not a component: no tests or pictures.
@@ -108,12 +111,15 @@ const steps = [
   ...(process.env.CI && (!arg('--since') || !only || only.size) && !arg('--locale') ? (() => {
     const sha = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).stdout.trim();
     const locale = LOCALES[parseInt(sha.slice(0, 8) || '0', 16) % LOCALES.length];
-    const own = direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : [];
+    // A test file the change edits outside the component folders (src/styles/touchTargets.test.tsx, say) runs in every
+    // language too: on 14 Nov one new test read Pagination's page numbers as 0 to 9, passed its pull request in English,
+    // and failed in ar-EG in the queue, dropping three pull requests behind it.
+    const own = [...new Set([...(direct?.size ? [...[...direct].map(folderOf).filter(Boolean), ...internalTestsFor(direct)] : []), ...changedTests])];
     // SERUPA_SHARD with SERUPA_PART=locale (CI): every third file of each, like the base shards (GR322: the whole run
     // in one language took 12 minutes in one job). A narrowed run may have fewer files than shards: a shard left
     // with none passes.
     const shard = process.env.SERUPA_SHARD && arg('--group') === 'components' ? [`--shard=${process.env.SERUPA_SHARD}`, '--passWithNoTests'] : [];
-    const ownIn = (l, more) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shard, ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...direct].sort().join(','), ...more }];
+    const ownIn = (l, more) => [...vitest(`Changed components' tests in ${l} (Vitest)`, 'components', 'components', ...shard, ...own), { SERUPA_LOCALE: l, SERUPA_ONLY: [...(direct || [])].sort().join(','), ...more }];
     // A narrowed pull request runs no locale jobs, so its base jobs take the changed components' own tests in all four
     // languages: a test that failed only in one of them was found in the queue, where it drops every group behind it.
     // The queue does the same in seconds, so it costs about a minute (SERUPA_OWN keeps the steps in the base part).
