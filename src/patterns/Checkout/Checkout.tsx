@@ -401,8 +401,8 @@ export function Checkout({
                 {d.tip ? <DescriptionItem term="Tip">{money(d.tip)}</DescriptionItem> : null}
                 <DescriptionItem term="Total" emphasis>{money(total)}</DescriptionItem>
               </DescriptionList>
-              <PromoCode applied={promo} locked={step !== 'details' && step !== 'review' || busy}
-                onApply={(code) => onApplyPromo(code, subtotal).then((p) => { setPromo(p); return p; })} onRemove={() => setPromo(null)} />
+              {step === 'placed' ? null : <PromoCode applied={promo} locked={busy}
+                onApply={(code) => onApplyPromo(code, subtotal).then((p) => { setPromo(p); return p; })} onRemove={() => setPromo(null)} />}
             </Card>
           </aside>
           {/* After the summary, so on a phone every line of the total is read before the button that pays; from lg
