@@ -844,6 +844,24 @@ describe('Table column tools (RU10)', () => {
     expect([(document.querySelector('dialog') as HTMLDialogElement).open, document.activeElement]).toEqual([true, inDialog]);
   });
 
+  test('the width buttons stay under their handle as the page scrolls, not where the handle was when they opened', async () => {
+    const s = await render(<div style={{ width: 600, paddingBlock: '40vh 150vh' }}><Table caption="Users" layout="fixed">
+      <TableHead><TableRow><TableHeaderCell id="h1" resizable width={200}>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell>Ada</TableCell><TableCell>Admin</TableCell></TableRow></TableBody>
+    </Table></div>);
+    const h = s.getByRole('separator').element() as HTMLElement;
+    h.focus();
+    await userEvent.keyboard('{Enter}');
+    const panel = document.querySelector('[role=dialog][popover]') as HTMLElement;
+    await expect.poll(() => panel.matches(':popover-open')).toBe(true);
+    const gap = () => Math.round(panel.getBoundingClientRect().top - h.getBoundingClientRect().bottom);
+    const before = gap();
+    try {
+      window.scrollBy(0, 120);
+      await expect.poll(gap).toBe(before);
+    } finally { window.scrollTo(0, 0); }
+  });
+
   test('the click that ends a drag doesn\'t open the popover; with no width set, the value is the drawn width (GR296)', async () => {
     const s = await render(<div style={{ width: 600 }}><Table caption="Users" layout="fixed">
       <TableHead><TableRow><TableHeaderCell id="h1" resizable>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell></TableRow></TableHead>
