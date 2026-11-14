@@ -4,6 +4,10 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { PasswordReset, resetEmailProblem, resetPasswordRules } from './PasswordReset';
 
+// A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
+// match getByText, and a locator that finds two fails.
+const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]'));
+const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).length;
 const active = () => document.activeElement as HTMLElement;
 const h1 = () => document.querySelector('h1');
 const status = () => document.querySelector('[role="status"]:not([data-dk-announcer])')?.textContent || '';
@@ -27,7 +31,7 @@ describe('Patterns/Password reset', () => {
     const email = page.getByLabelText('Email');
     expect(email.element().getAttribute('autocomplete')).toBe('email');
     await screen.getByRole('button', { name: 'Send the link' }).click();
-    await expect.element(screen.getByText('Enter the email address you sign in with.')).toBeVisible();
+    await expect.poll(() => shown('Enter the email address you sign in with.')).toBe(1);
     expect(active()).toBe(email.element());
     await email.fill('ana@example.com');
     await screen.getByRole('button', { name: 'Send the link' }).click();
@@ -71,7 +75,7 @@ describe('Patterns/Password reset', () => {
     expect(screen.getByRole('list', { name: 'Your password needs' }).element().textContent).toContain('At least 12 characters, not yet');
     await pw.fill('short');
     await screen.getByRole('button', { name: 'Change password' }).click();
-    await expect.element(screen.getByText('Choose a password that meets the rules under it.')).toBeVisible();
+    await expect.poll(() => shown('Choose a password that meets the rules under it.')).toBe(1);
     expect(active()).toBe(pw.element());
     expect(onReset).not.toHaveBeenCalled();
     await pw.fill('correct horse battery');
