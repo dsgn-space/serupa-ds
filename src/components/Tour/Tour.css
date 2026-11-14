@@ -8,7 +8,7 @@
 .dk-tour {
   --dk-tour-offset: var(--tour-offset, var(--spacing-3));
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--tour-z-index, var(--z-popover));
-  width: var(--tour-width, var(--container-2xs)); max-width: calc(var(--sizing-full) - var(--spacing-4)); max-height: calc(var(--sizing-dvh) - var(--spacing-4));
+  width: var(--tour-width, var(--container-2xs)); max-width: calc(var(--sizing-full) - var(--spacing-4)); max-height: calc(var(--sizing-dvh) - var(--spacing-4) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   margin: var(--spacing-0); padding: var(--tour-padding, var(--space-content)); overflow-y: auto; overscroll-behavior: contain;
   display: flex; flex-direction: column; gap: var(--tour-gap, var(--spacing-3));
   border: var(--tour-border-width, var(--border-width-1)) solid var(--tour-border, var(--border-overlay)); border-radius: var(--tour-radius, var(--radius-surface));
@@ -17,8 +17,9 @@
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
   transform-origin: var(--dk-layer-origin, top);
 }
-/* No element to point at: the middle of the screen. */
-.dk-tour--center { inset: var(--spacing-0); margin: auto; height: fit-content; transform-origin: center; }
+/* No element to point at: the middle of the screen, clear of a phone's notch and home bar. */
+.dk-tour--center { inset-block: env(safe-area-inset-top) env(safe-area-inset-bottom); inset-inline: env(safe-area-inset-left) env(safe-area-inset-right); margin: auto; height: fit-content; transform-origin: center; }
+.dk-tour--center:dir(rtl) { inset-inline: env(safe-area-inset-right) env(safe-area-inset-left); }
 .dk-tour[hidden] { display: none; }
 /* Motion, as Popover's (DZ1): in from @starting-style, out kept in the top layer until it has faded; the fade alone
    under reduced motion. */

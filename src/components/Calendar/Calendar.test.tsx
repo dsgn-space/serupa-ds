@@ -21,6 +21,19 @@ function Cal(props: { picks?: string[]; months?: string[]; cref?: React.Ref<HTML
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Calendar', () => {
+  test('a parent that renders again with the same props doesn\'t draw the 42 days again; a new value draws them', async () => {
+    // isDateDisabled is asked once a day drawn: counting the calls counts the days drawn.
+    const isDateDisabled = vi.fn((d: Date) => d.getDay() === 0);
+    const month = new Date(2026, 10, 1);
+    const r = await render(<Calendar month={month} value="2026-11-10" isDateDisabled={isDateDisabled} locale="en-US" />);
+    isDateDisabled.mockClear();
+    await r.rerender(<Calendar month={month} value="2026-11-10" isDateDisabled={isDateDisabled} locale="en-US" />);
+    expect(isDateDisabled).not.toHaveBeenCalled();
+    await r.rerender(<Calendar month={month} value="2026-11-12" isDateDisabled={isDateDisabled} locale="en-US" />);
+    expect(isDateDisabled).toHaveBeenCalledTimes(42);
+    expect(document.querySelector('[aria-selected="true"] button')!.getAttribute('data-date')).toBe('2026-11-12');
+  });
+
   test('pairedNav (two months side by side) hides the month button the other month shows, on a wide screen only', async () => {
     await page.viewport(900, 700);
     await render(<div><Calendar id="a" defaultMonth={new Date(2026, 10, 1)} pairedNav="next" /><Calendar id="b" defaultMonth={new Date(2026, 11, 1)} pairedNav="previous" /></div>);
