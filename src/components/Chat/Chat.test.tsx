@@ -604,7 +604,7 @@ describe('ChatReplyActions', () => {
     await bad.click();
     await expect.element(bad).toHaveAttribute('aria-pressed', 'false');
     await expect.poll(() => announcerIdle() && said()).toMatch(/Rating removed$/);
-    expect(onFeedback.mock.calls.map((c) => c[0])).toEqual(['good', 'bad', null]);
+    expect(onFeedback.mock.calls).toEqual([['good'], ['bad'], [null]]);
   });
 
   test('Regenerate calls onRegenerate, from the keyboard too', async () => {

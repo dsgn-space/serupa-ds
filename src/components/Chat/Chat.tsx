@@ -356,7 +356,7 @@ export const ChatReplyActions = /* @__PURE__ */ component<HTMLDivElement, ChatRe
   };
   return (
     <div {...rest} ref={ref} role="group" aria-label={rest['aria-label'] || L.chatReplyActions} className={cn('dk-chat-reply-actions', props.className)} data-component="chat-reply-actions">
-      {props.copyText != null ? <CopyButton value={props.copyText} iconOnly variant="ghost" size="sm" /> : null}
+      {props.copyText != null ? <CopyButton value={props.copyText} iconOnly variant="ghost" size="sm">{L.copy}</CopyButton> : null}
       {props.onRegenerate ? <IconButton icon={icons.Refresh} label={L.chatRegenerate} size="sm" onClick={props.onRegenerate} /> : null}
       {props.onFeedback ? (
         <>
