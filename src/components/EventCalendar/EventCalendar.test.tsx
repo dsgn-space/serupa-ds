@@ -23,6 +23,19 @@ const EVENTS: CalendarEvent[] = [
 ];
 
 describe('EventCalendar', () => {
+  test('a parent that renders again with the same props doesn\'t draw the days and events again; new events draw them', async () => {
+    // Each event's button reads its title: counting the reads counts the events drawn.
+    let reads = 0;
+    const events = EVENTS.map((e) => ({ ...e, get title() { reads++; return e.title; } }));
+    const r = await render(<EventCalendar events={events} defaultMonth={MARCH} weekStartsOn={0} />);
+    reads = 0;
+    await r.rerender(<EventCalendar events={events} defaultMonth={MARCH} weekStartsOn={0} />);
+    expect(reads).toBe(0);
+    await r.rerender(<EventCalendar events={[...events]} defaultMonth={MARCH} weekStartsOn={0} />);
+    expect(reads).toBeGreaterThan(0);
+    expect(names('2025-03-04')).toEqual(['9:30 AM Team standup, Tuesday, March 4, 9:30 AM to 9:45 AM, Repeats', '2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM']);
+  });
+
   test('a <div> with a toolbar and a grid named by its month; ref, className and other props reach the div', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<EventCalendar id="x" ref={ref} className="extra" data-x="y" events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} />);

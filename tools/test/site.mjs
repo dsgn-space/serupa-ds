@@ -77,7 +77,9 @@ const server = http.createServer((req, res) => {
 const base = `http://127.0.0.1:${/** @type {import('node:net').AddressInfo} */ (server.address()).port}`;
 
 const b = await browser();
-const known = new Set(['/', ...pages.map((p) => p.path), ...['foundations', 'components', 'patterns', 'blocks', 'guides'].map((s) => '/' + s)]);
+// The site's own pages, which no .mdx gives it: the story, the six themes side by side and the patterns as screens.
+const OWN = ['/about', '/themes', '/showcase'];
+const known = new Set(['/', ...pages.map((p) => p.path), ...['foundations', 'components', 'patterns', 'blocks', 'guides'].map((s) => '/' + s), ...OWN]);
 const workers = await Promise.all(Array.from({ length: PAGES }, async () => {
   const context = await b.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
@@ -90,6 +92,7 @@ const workers = await Promise.all(Array.from({ length: PAGES }, async () => {
 // A page is ready once its article is there and no longer loading (or, for the front page and the indexes, its h1).
 const ready = (page, doc) => page.waitForFunction((d) => (d ? !!document.querySelector('#article:not([aria-busy]) h1') : !!document.querySelector('main h1')), doc, { timeout: 30000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
 
+let held = '';
 await inParallel(pages, workers, async (p, w) => {
   w.errors.length = 0;
   const failed = await openUrl(w.page, base + p.path) || await ready(w.page, true);
@@ -102,7 +105,14 @@ await inParallel(pages, workers, async (p, w) => {
     links: [...new Set([...document.querySelectorAll('#article a[href]')].filter((a) => !a.closest('[data-site-demo]')).map((a) => a.getAttribute('href')))],
     demos: document.querySelectorAll('.site-demo').length,
     api: !!document.getElementById('api'),
+    // What sits on top of the page: an open modal dialog, or an open menu or panel. A tooltip shown beside its button
+    // is left: it is a line of text that takes no focus.
+    over: [...document.querySelectorAll('dialog, [popover]')].filter((e) => e.matches(':modal, :popover-open') && e.getAttribute('role') !== 'tooltip').map((e) => String(e.className || e.localName).split(' ')[0]),
+    heldInFrame: document.querySelectorAll('.site-demo .site-held').length,
   }));
+  // A story that opens something as it arrives waits behind a button (site/src/blocks.tsx): the page itself comes first.
+  t(`${p.path} opens nothing over the page on arrival`, !seen.over.length, `open on top of the page: ${[...new Set(seen.over)].join(', ')}`);
+  if (seen.heldInFrame && !held) held = p.path;
   t(`${p.path} draws with no error`, !w.errors.length && !seen.broken, [...w.errors.slice(0, 3), seen.broken ? `${seen.broken} part(s) of the page show an error instead of their content` : ''].filter(Boolean).join(' | '));
   t(`${p.path} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
   // On a 320px phone the page doesn't scroll sideways (WCAG 1.4.10); a wide example scrolls in its own box.
@@ -118,9 +128,76 @@ await inParallel(pages, workers, async (p, w) => {
   if (p.component && read(p.file).includes('<Controls')) t(`${p.path} shows its props`, seen.api, 'the page has no API table');
 });
 
-// The site's own frame: the front page, an index and a page of each kind, in every theme and on a phone.
+// A press inside an example leaves the page where it is. The main region once took focus on any press that landed on
+// nothing focusable (closing a calendar with a press beside it, say), and the browser scrolled its top into view.
+{
+  const w = workers[0];
+  await openUrl(w.page, base + '/guides/localization'); await ready(w.page, true);
+  const stage = w.page.locator('#article .site-demo__stage').last();
+  await stage.scrollIntoViewIfNeeded();
+  await w.page.waitForTimeout(300);
+  const before = await w.page.evaluate(() => window.scrollY);
+  // The stage's own padding: no control sits there.
+  await stage.click({ position: { x: 4, y: 4 } });
+  await w.page.waitForTimeout(300);
+  const after = await w.page.evaluate(() => window.scrollY);
+  t('/guides/localization: a press inside an example keeps the page where it was', before > 0 && after === before, `the page was at ${before}px before the press and at ${after}px after it`);
+}
+
+// A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
+if (t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
+  const w = workers[0];
+  await openUrl(w.page, base + held); await ready(w.page, true);
+  const button = w.page.locator('.site-demo .site-held button').first();
+  await button.scrollIntoViewIfNeeded();
+  await w.page.waitForTimeout(500);
+  const pressed = await button.click({ timeout: 10000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  const opened = pressed || await w.page.waitForFunction(() => [...document.querySelectorAll('dialog, [popover]')].some((e) => e.matches(':modal, :popover-open')), null, { timeout: 5000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  t(`${held}: "Open the example" runs the story, which opens`, !opened, opened);
+}
+
+// The front page and the site's own pages: each draws, has one title, and links only to pages the site has.
+{
+  const w = workers[0];
+  for (const at of ['/', ...OWN]) {
+    w.errors.length = 0;
+    const failed = await openUrl(w.page, base + at) || await ready(w.page, false);
+    if (!t(`${at} opens`, !failed, failed)) continue;
+    // A screen (site/src/Screen.tsx) is a story on a page of its own, in a frame: it has drawn once that page has content.
+    const screens = w.page.locator('iframe.site-screen__page');
+    let drawn = '';
+    if (await screens.count()) {
+      await screens.first().scrollIntoViewIfNeeded();
+      drawn = await screens.first().contentFrame().locator('[data-site-frame] > *').first().waitFor({ timeout: 30000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+    }
+    if (at === '/showcase') t('/showcase shows a pattern as a screen', (await screens.count()) === 1 && !drawn, drawn || 'the page has no screen');
+    else if (await screens.count()) t(`${at} draws its screen`, !drawn, drawn);
+    await w.page.waitForTimeout(500);
+    const seen = await w.page.evaluate(() => ({
+      h1: [...document.querySelectorAll('main h1')].map((h) => h.textContent.trim()),
+      broken: document.querySelectorAll('.site-broken').length,
+      links: [...new Set([...document.querySelectorAll('main a[href]')].map((a) => a.getAttribute('href')))],
+    }));
+    const inScreen = await screens.count() ? await screens.first().contentFrame().locator('.site-broken').count() : 0;
+    t(`${at} draws with no error`, !w.errors.length && !seen.broken && !inScreen, [...w.errors.slice(0, 3), seen.broken || inScreen ? 'part of the page shows an error instead of its content' : ''].filter(Boolean).join(' | '));
+    t(`${at} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
+    const lost = seen.links.filter((h) => h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/'));
+    t(`${at}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
+  }
+  // The themes page is the six themes at once, whatever the site's own theme is.
+  await openUrl(w.page, base + '/themes'); await ready(w.page, false);
+  const shown = await w.page.evaluate(() => [...document.querySelectorAll('.site-theme')].map((x) => `${x.getAttribute('data-brand')}-${x.getAttribute('data-mode')}`));
+  const all = tokens().color.themes.map((x) => x.id);
+  t('/themes shows every theme in tokens.json', all.every((id) => shown.includes(id)) && shown.length === all.length, `it shows ${shown.join(', ') || 'none'}`);
+  // A story's own page that names no story says so, rather than staying blank.
+  const none = await openUrl(w.page, base + '/frame/patterns-nothing--default') || await ready(w.page, false);
+  t('/frame/… with no such story says there is none', !none, none);
+}
+
+// The site's own frame: the front page, the site's own pages, an index and a page of each kind, in every theme and on
+// a phone.
 const axe = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
-const FRAME = ['/', '/components', '/components/button', '/foundations/colors', '/getting-started'];
+const FRAME = ['/', ...OWN, '/components', '/components/button', '/foundations/colors', '/getting-started'];
 const themes = tokens().color.themes.map((x) => x.id);
 const w = workers[0];
 for (const at of FRAME) {
@@ -128,9 +205,15 @@ for (const at of FRAME) {
   if (!t(`${at} opens for the frame's checks`, !failed, failed)) continue;
   // An anatomy picture (docs/anatomy.tsx) turns inert, and so leaves the tab order, once its story has opened what it opens.
   await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x instanceof HTMLElement && x.inert), null, { timeout: 5000 }).catch(() => {});
+  // The showcase's screen arrives after the page (its State select is disabled until then).
+  if (at === '/showcase') await w.page.waitForSelector('.site-screen__page', { timeout: 10000 }).catch(() => {});
   await w.page.addScriptTag({ content: axe });
   for (const theme of themes) {
     await w.page.evaluate((th) => { const [brand, mode] = th.split('-'); window.Serupa.theme.set({ brand, mode }); }, theme);
+    // A color still fading (a control that just woke, the theme's own change) is read mid-way and fails by chance:
+    // wait for the transitions under way, two seconds at most.
+    await w.page.evaluate(() => Promise.race([new Promise((done) => setTimeout(done, 2000)),
+      Promise.all(document.getAnimations().filter((x) => x instanceof CSSTransition && x.playState === 'running').map((x) => x.finished.catch(() => {})))]));
     const v = await w.page.evaluate(async () => {
       // The stories are checked where they live (Storybook's check); here it's the frame and the page's own text.
       const r = await window.axe.run({ exclude: [['[data-site-demo]']] }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });

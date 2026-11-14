@@ -21,6 +21,19 @@ beforeEach(() => { errors = vi.spyOn(console, 'error'); });
 afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); document.documentElement.removeAttribute('data-theme'); });
 
 describe('RangeCalendar', () => {
+  test('a parent that renders again with the same props doesn\'t draw the days again; the preview still follows the pointer', async () => {
+    // isDateDisabled is asked once a day drawn: counting the calls counts the days drawn.
+    const isDateDisabled = vi.fn(() => false);
+    const r = await render(<RangeCalendar defaultMonth={nov} months={2} isDateDisabled={isDateDisabled} locale="en-US" />);
+    isDateDisabled.mockClear();
+    await r.rerender(<RangeCalendar defaultMonth={nov} months={2} isDateDisabled={isDateDisabled} locale="en-US" />);
+    expect(isDateDisabled).not.toHaveBeenCalled();
+    await userEvent.click(day('2026-11-03'));
+    await userEvent.hover(day('2026-12-02'));
+    await expect.poll(() => day('2026-11-30').getAttribute('aria-label')).toBe('Monday, November 30, 2026, in the range');
+    expect(day('2026-12-02').getAttribute('aria-label')).toBe('Wednesday, December 2, 2026, End date');
+  });
+
   test('a group named "Choose dates" with a month grid; the ends are selected days named "start date" and "end date", the days between "in the range"; props reach the root', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Stay ref={ref} id="rc" className="extra" data-x="y" defaultValue={{ start: '2026-11-03', end: '2026-11-05' }} />);
