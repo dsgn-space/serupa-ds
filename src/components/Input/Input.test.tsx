@@ -298,6 +298,17 @@ describe('Input', () => {
     expect(kb('own')).toEqual(['on', 'off', 'true']);
     expect(kb('nm')).toEqual([null, null, null]);
   });
+  test('a field the browser filled in keeps its look: its fill is clipped to the text, which keeps the field\'s color; PinInput\'s stays hidden (GR411)', () => {
+    const rules: string[] = [];
+    const walk = (list: CSSRuleList) => { for (const r of Array.from(list)) {
+      if (r instanceof CSSStyleRule && r.selectorText.includes(':autofill')) rules.push(r.cssText);
+      else if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules);
+    } };
+    for (const sheet of Array.from(document.styleSheets)) { try { walk(sheet.cssRules); } catch { /* another origin */ } }
+    const fill = (f: string) => { const r = rules.find((x) => x.includes('.' + f + ':autofill')) || ''; return [/background-clip: text/.test(r), (/-webkit-text-fill-color: ([^;]+);/.exec(r) || [])[1]]; };
+    expect([fill('dk-input__field'), fill('dk-textarea__field'), fill('dk-pin-input__field')])
+      .toEqual([[true, 'var(--input-text, var(--text))'], [true, 'var(--textarea-text, var(--text))'], [true, 'transparent']]);
+  });
   test('iOS: Input, Textarea, Select and PinInput fields get 16px text where Safari would zoom into a smaller one (the rule only applies there)', () => {
     const rules: string[] = [];
     const walk = (list: CSSRuleList) => { for (const r of Array.from(list)) {

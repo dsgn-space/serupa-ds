@@ -33,6 +33,10 @@
   color: inherit; font: inherit; letter-spacing: inherit;
 }
 .dk-input__field::placeholder { color: var(--input-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
+/* A field the browser filled in (a saved login, an address) keeps its look. The browser's own fill, pale blue or
+   yellow, covers only the native field: a rectangle inside the box, short of its padding, icons and corners. Clipped
+   to the text it shows nowhere, and the text keeps the field's color, which the browser replaces too (GR411). */
+.dk-input__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--input-text, var(--text)); }
 /* prefix and suffix: text in the box, muted; a press on it focuses the field (Input's handler). Whole while there's
    room; in a box too narrow for them and the count, they give way with an ellipsis rather than push the count out of
    the box (GR23: in a 156px grid column, or with a wider font before Inter loads). The field shrinks first: it grows
