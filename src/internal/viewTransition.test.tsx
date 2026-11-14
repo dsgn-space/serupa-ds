@@ -1,11 +1,23 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { cdp, server } from 'vitest/browser';
 import { keepMotion } from '../../tools/test/vitest/helpers';
 import { withViewTransition } from './viewTransition';
 
 type Go = { flip?: () => Promise<void>; seen?: string[]; groups?: Promise<Animation[]> };
+
+// The items name themselves with match-element (from Chrome 137). Before it (the floor is Chrome 129) the browser
+// reads it as one name that every item has, and skips the transition: the change still happens, at once, with no glide
+// to look for. CSS.supports can't tell (any word is a name), so this tries one.
+let matches = false;
+const named = () => matches;
+beforeAll(async () => {
+  if (!('startViewTransition' in document)) return;
+  const host = document.body.appendChild(document.createElement('div'));
+  host.innerHTML = '<i class="view-transition-match">a</i><i class="view-transition-match">b</i>';
+  try { matches = await document.startViewTransition(() => {}).ready.then(() => true, () => false); } finally { host.remove(); }
+});
 
 function List({ go }: { go: Go }) {
   const [order, setOrder] = React.useState(['a', 'b', 'c']);
@@ -27,12 +39,12 @@ describe('withViewTransition', () => {
     const groupsOf = () => document.getAnimations().filter((a) => (a.effect as KeyframeEffect | null)?.pseudoElement?.startsWith('::view-transition-group('));
     if (real) document.startViewTransition = ((arg: { update: () => void } | (() => void)) => {
       const vt = real(() => { (typeof arg === 'function' ? arg : arg.update)(); go.seen = [...document.querySelectorAll('#vt li')].map((li) => li.id); });
-      go.groups = vt.ready.then(groupsOf);
+      go.groups = vt.ready.then(groupsOf, () => []);
       return vt;
     }) as typeof real;
     let done: Promise<void>;
     try { done = go.flip!() ; } finally { if (real) delete (document as { startViewTransition?: unknown }).startViewTransition; }
-    if (real) {
+    if (real && named()) {
       await expect.poll(() => go.seen).toEqual(['c', 'b', 'a']);
       const groups = await go.groups!;
       expect(groups.length).toBeGreaterThan(0);
@@ -51,10 +63,11 @@ describe('withViewTransition', () => {
     await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
     try {
       const done = go.flip!() ;
-      await expect.poll(() => document.getAnimations().some((a) => (a.effect as KeyframeEffect | null)?.pseudoElement?.startsWith('::view-transition-'))).toBe(true);
+      if (named()) await expect.poll(() => document.getAnimations().some((a) => (a.effect as KeyframeEffect | null)?.pseudoElement?.startsWith('::view-transition-'))).toBe(true);
       const kinds = document.getAnimations().map((a) => (a.effect as KeyframeEffect | null)?.pseudoElement?.replace(/\(.*/, '')).filter(Boolean);
-      expect([kinds.includes('::view-transition-group'), kinds.includes('::view-transition-new')]).toEqual([false, true]);
+      expect([kinds.includes('::view-transition-group'), kinds.includes('::view-transition-new')]).toEqual([false, named()]);
       await done;
+      expect([...document.querySelectorAll('#vt li')].map((li) => li.id)).toEqual(['c', 'b', 'a']);
     } finally { await session.send('Emulation.setEmulatedMedia', { features: [] }); }
   });
 
