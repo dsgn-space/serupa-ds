@@ -122,8 +122,9 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     // Back left the page with a Menu open. A CloseWatcher (where the browser has one) takes the system's close
     // request, innermost layer first, and closes the layer as Escape inside it does (focus back to where it was):
     // the Escape goes to the focused element when it is in the layer, its anchor or `inside`, otherwise to the layer.
-    const W = closeRequest && typeof window !== 'undefined' ? (window as unknown as { CloseWatcher?: new () => { onclose: (() => void) | null; destroy(): void } }).CloseWatcher : undefined;
-    let watcher: { onclose: (() => void) | null; destroy(): void } | null = null;
+    type Watcher = { onclose: (() => void) | null; destroy(): void };
+    const W = closeRequest && typeof window !== 'undefined' ? Reflect.get(window, 'CloseWatcher') as (new () => Watcher) | undefined : undefined;
+    let watcher: Watcher | null = null;
     try { watcher = W ? new W() : null; } catch { watcher = null; }
     if (watcher) {
       watcher.onclose = () => {
