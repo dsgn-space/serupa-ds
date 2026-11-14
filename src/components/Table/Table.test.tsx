@@ -52,6 +52,12 @@ const setup = async (tref?: React.Ref<HTMLTableElement>) => {
 };
 
 describe('Table', () => {
+  test('every cell sets its numbers in tabular figures, so a column of numbers lines up digit under digit', async () => {
+    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Total</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="tn">Ada</TableCell><TableCell id="tt">1,111</TableCell></TableRow></TableBody></Table>);
+    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['tabular-nums', 'tabular-nums']);
+  });
+
   test('a native <table> in a frame; caption, scope="col" headers; ref and className on the table, containerProps on the frame; a table that fits adds no tab stop or region', async () => {
     const ref = React.createRef<HTMLTableElement>();
     await setup(ref);

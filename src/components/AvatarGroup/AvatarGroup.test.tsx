@@ -39,6 +39,11 @@ const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider lo
 const Col = ({ children }: { children: React.ReactNode }) => <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>{children}</div>;
 
 describe('AvatarGroup', () => {
+  test('"+N" is set in tabular figures, so it keeps its width as the count changes', async () => {
+    await render(<SerupaProvider locale="en-US"><AvatarGroup id="tab" max={2}>{av(5)}</AvatarGroup></SerupaProvider>);
+    expect(css([...el('tab').querySelectorAll('span')].filter((s) => s.textContent === '+3').pop()!).fontVariantNumeric).toBe('tabular-nums');
+  });
+
   test('"+N" is written in the locale\'s digits, as Badge\'s count is: "+٣" and "٩٩+" in ar-EG, "+3" in en-US (GR22)', async () => {
     await render(<Col>
       <SerupaProvider locale="ar-EG"><AvatarGroup id="ar" max={2}>{av(5)}</AvatarGroup><AvatarGroup id="arcap" max={0} total={150}>{av(1)}</AvatarGroup></SerupaProvider>
