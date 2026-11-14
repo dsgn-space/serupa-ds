@@ -273,8 +273,8 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const presets: PresetItem[] | null = props.presets === true ? dayPresets(sds.labels)
     : Array.isArray(props.presets) && props.presets.length ? props.presets.map((p) => ({ label: p.label, start: toDay(typeof p.value === 'function' ? p.value() : p.value, 'Calendar'), end: null })) : null;
   // The days read the latest handlers through this, so Weeks' props stay the same while nothing they draw changes.
-  const live = React.useRef({ pick, focus: (d: Date) => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }, hover: props.onDayHover });
-  live.current = { pick, focus: (d: Date) => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }, hover: props.onDayHover };
+  const handlers = { pick, focus: (d: Date) => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }, hover: props.onDayHover };
+  const live = React.useRef(handlers); live.current = handlers;
   const on = React.useMemo<DayHandlers>(() => ({ pick: (d) => live.current.pick(d), focus: (d) => live.current.focus(d), hover: (d) => { if (live.current.hover) live.current.hover(d); } }), []);
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
