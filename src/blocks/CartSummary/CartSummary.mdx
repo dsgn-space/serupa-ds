@@ -23,9 +23,14 @@ What's in the cart, with a quantity and Remove for each item, a coupon, and the 
 - **The new total is said** (4.1.3). After a quantity, a removal or a coupon changes it, the total is said once, politely, when it settles, so it's heard without moving focus and not for each step of a quantity held down.
 - **A coupon says why it doesn't apply** (3.3.1). Reject `onApplyCoupon` with an Error whose message says what's wrong and what to do, and it shows as the field's error. One that applies adds a discount line, with Remove coupon beside it. Enter applies too.
 - **Quantities stay within stock.** Give `max` and the field stops there; the smallest is 1, and Remove takes an item out.
+- **While the cart loads**, set `loading`: a placeholder sits under the heading, named once, "Loading your cart", and the region is busy (4.1.3). The total the cart arrives with isn't said as a change. **A load that fails says so**: set `loadFailed` and pass `onRetry` for "Couldn’t load your cart" with Try again.
 - **Money is the locale's.** Every amount is written the way the reader's locale writes it, and every word is in `labels`.
 
 <Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
 
 <Canvas of={Stories.Indonesian} />
 

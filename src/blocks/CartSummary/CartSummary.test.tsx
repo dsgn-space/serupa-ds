@@ -138,4 +138,27 @@ describe('Blocks/Cart summary', () => {
     await expect.element(page.getByRole('region', { name: 'Keranjang Anda' })).toBeVisible();
     expect(sums().join(' | ')).toMatch(/PPN \(11%\).*Rp 114\.400.*Total.*Rp 1\.154\.400/);
   });
+
+  test('loading: the cart is busy under its heading with one name, and the total it arrives with isn\'t said as a change', async () => {
+    const props = { currency: 'USD', onCheckout: () => {}, onQuantityChange: () => {}, onRemove: () => {} };
+    const screen = await render(<SerupaProvider locale="en-US"><CartSummary {...props} items={[]} loading /></SerupaProvider>);
+    const region = screen.getByRole('region', { name: 'Your cart' });
+    await expect.element(region).toHaveAttribute('aria-busy', 'true');
+    await expect.poll(() => [...region.element().querySelectorAll('[aria-label]')].map((e) => e.getAttribute('aria-label'))).toEqual(['Loading your cart']);
+    expect(region.element().textContent).not.toContain('Your cart is empty.');
+    await screen.rerender(<SerupaProvider locale="en-US"><CartSummary {...props} items={items} /></SerupaProvider>);
+    await expect.poll(() => sums().join(' | ')).toMatch(/Total.*\$110\.00/);
+    await new Promise((r) => setTimeout(r, 700));
+    expect(said()).not.toContain('Total $110.00');
+    expect(region.element().hasAttribute('aria-busy')).toBe(false);
+  });
+
+  test('a failed load says so under the heading, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Cart loadFailed onRetry={onRetry} headingLevel={3} labels={{ loadFailed: 'Couldn’t load the cart' }} />);
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load the cart', level: 4 })).toBeVisible();
+    expect(rows()).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });
