@@ -31,6 +31,12 @@
   display: inline-flex; flex: none; align-items: center; justify-content: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); padding: var(--spacing-0);
   border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--kanban-muted, var(--text-muted)); cursor: grab; touch-action: none; font-size: var(--spacing-5);
 }
+/* Touch (EQ1): the handle takes a press 44px high, as Apple and Material ask, without moving anything; the width
+   stays, so a press beside it still lands on the card's own content. */
+@media (pointer: coarse) {
+  .dk-kanban__handle { position: relative; isolation: isolate; }
+  .dk-kanban__handle::after { --dk-under: calc(var(--z-10) * -1); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset-block: var(--dk-reach-block); inset-inline: var(--spacing-0); }
+}
 .dk-kanban__handle:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-kanban:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-kanban__handle[aria-pressed="true"] { background: var(--kanban-handle-active, var(--primary-subtle)); color: var(--kanban-text, var(--text)); }
