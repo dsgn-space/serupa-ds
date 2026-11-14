@@ -36,6 +36,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'Kruimelpad',
   showHiddenPages: 'Alle pagina’s tonen',
   morePages: 'Meer pagina’s',
+  toolbarMore: 'Meer',
   previousMonth: 'Vorige maand',
   timeZoneYours: 'Je tijdzone',
   nextMonth: 'Volgende maand',

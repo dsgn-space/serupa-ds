@@ -9,6 +9,8 @@ import { Divider } from '../Divider/Divider';
 import { IconButton } from '../IconButton/IconButton';
 import { Input } from '../Input/Input';
 import { Menu, MenuItem } from '../Menu/Menu';
+import { SerupaProvider } from '../../internal/provider';
+import { idLabels } from '../../internal/labels';
 import { ToggleButton } from '../ToggleButton/ToggleButton';
 import { Toolbar } from './Toolbar';
 
@@ -222,5 +224,86 @@ describe('Toolbar', () => {
       await userEvent.keyboard('{ArrowLeft}');
       expect(focused()).toBe('gr66u');
     } finally { await page.viewport(900, 700); }
+  });
+});
+
+describe('Toolbar overflow', () => {
+  const hidden = (id: string) => [...el(id).children].filter((k) => getComputedStyle(k).display === 'none' && !k.classList.contains('dk-toolbar__more') && k.getAttribute('role') !== 'tooltip').map((k) => k.id || k.getAttribute('role'));
+  const more = () => document.querySelector<HTMLElement>('.dk-toolbar__more button');
+  function Wide({ width, onCopy = () => {} }: { width: number; onCopy?: () => void }) {
+    const [bold, setBold] = React.useState(false);
+    return (
+      <div style={{ width }}>
+        <Toolbar id="of" aria-label="Editing" overflow>
+          <ToggleButton id="bold" icon="format_bold" aria-label="Bold" data-priority={2} pressed={bold} onPressedChange={setBold} />
+          <IconButton id="undo" icon="undo" label="Undo" data-priority={3} />
+          <Divider orientation="vertical" />
+          <Button id="copy" variant="ghost" onClick={onCopy}>Copy</Button>
+          <Button id="paste" variant="ghost" disabled>Paste</Button>
+          <Divider orientation="vertical" />
+          <Input id="find" aria-label="Find" style={{ width: 80 }} />
+        </Toolbar>
+      </div>
+    );
+  }
+
+  test('with room for everything: one row, nothing hidden and no More button', async () => {
+    await render(<Wide width={800} />);
+    expect(hidden('of')).toEqual([]);
+    expect(getComputedStyle(document.querySelector('.dk-toolbar__more')!).display).toBe('none');
+    expect(getComputedStyle(el('of')).flexWrap).toBe('nowrap');
+  });
+
+  test('narrower: the lowest priority goes first, the last among equals first, a field stays, and a separator left alone goes too', async () => {
+    await render(<Wide width={220} />);
+    await expect.poll(() => hidden('of')).toContain('paste');
+    expect(hidden('of')).not.toContain('find');
+    expect(hidden('of')).not.toContain('undo');
+    expect(more()).not.toBeNull();
+    expect(more()!.getAttribute('aria-label')).toBe('More');
+    expect(el('of').scrollWidth).toBeLessThanOrEqual(el('of').clientWidth + 1);
+    const shown = [...el('of').children].filter((k) => getComputedStyle(k).display !== 'none');
+    expect(shown.filter((k, i) => k.getAttribute('role') === 'separator' && (i === 0 || shown[i - 1]!.getAttribute('role') === 'separator')).length).toBe(0);
+  });
+
+  test('More lists the hidden controls as they are; choosing one presses it, a toggle as a checked item, and focus comes back to More', async () => {
+    let copied = 0;
+    await render(<Wide width={120} onCopy={() => { copied++; }} />);
+    await expect.poll(() => hidden('of')).toContain('bold');
+    more()!.focus();
+    await userEvent.keyboard('{Enter}');
+    const items = () => [...document.querySelectorAll('[role=menu] [role^=menuitem]')];
+    await expect.poll(() => items().map((i) => i.textContent)).toEqual(expect.arrayContaining(['Bold', 'Copy', 'Paste']));
+    const paste = items().find((i) => i.textContent === 'Paste')!;
+    expect(paste.getAttribute('aria-disabled')).toBe('true');
+    const bold = items().find((i) => i.textContent === 'Bold')!;
+    expect([bold.getAttribute('role'), bold.getAttribute('aria-checked')]).toEqual(['menuitemcheckbox', 'false']);
+    (bold as HTMLElement).click();
+    await expect.poll(() => el('bold').getAttribute('aria-pressed')).toBe('true');
+    await expect.poll(() => document.activeElement).toBe(more());
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(() => items().find((i) => i.textContent === 'Bold')?.getAttribute('aria-checked')).toBe('true');
+    (items().find((i) => i.textContent === 'Copy') as HTMLElement).click();
+    expect(copied).toBe(1);
+  });
+
+  test('the arrows skip hidden controls and reach More; growing the toolbar brings them back and More goes', async () => {
+    const screen = await render(<Wide width={200} />);
+    await expect.poll(() => hidden('of').length).toBeGreaterThan(0);
+    el('undo').focus();
+    await userEvent.keyboard('{End}');
+    expect(document.activeElement).toBe(more());
+    await screen.rerender(<Wide width={900} />);
+    await expect.poll(() => hidden('of')).toEqual([]);
+    await expect.poll(() => getComputedStyle(document.querySelector('.dk-toolbar__more')!).display).toBe('none');
+  });
+
+  test('vertical ignores overflow, and moreLabel and the labels name the More button', async () => {
+    await render(<div style={{ height: 40 }}><Toolbar id="v" aria-label="Tools" orientation="vertical" overflow><IconButton icon="undo" label="Undo" /><IconButton icon="redo" label="Redo" /></Toolbar></div>);
+    expect(document.querySelector('#v .dk-toolbar__more')).toBeNull();
+    await render(<SerupaProvider labels={idLabels}><div style={{ width: 60 }}><Toolbar id="id1" aria-label="A" overflow><Button>One long label</Button><Button>Two long label</Button></Toolbar></div></SerupaProvider>);
+    await expect.poll(() => document.querySelector('#id1 .dk-toolbar__more button')?.getAttribute('aria-label')).toBe('Lainnya');
+    await render(<div style={{ width: 60 }}><Toolbar id="ml" aria-label="B" overflow moreLabel="More actions"><Button>One long label</Button><Button>Two long label</Button></Toolbar></div>);
+    await expect.poll(() => document.querySelector('#ml .dk-toolbar__more button')?.getAttribute('aria-label')).toBe('More actions');
   });
 });

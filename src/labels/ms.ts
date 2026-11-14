@@ -36,6 +36,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'Laluan halaman',
   showHiddenPages: 'Tunjukkan semua halaman',
   morePages: 'Halaman lain',
+  toolbarMore: 'Lagi',
   previousMonth: 'Bulan sebelumnya',
   timeZoneYours: 'Zon waktu anda',
   nextMonth: 'Bulan seterusnya',

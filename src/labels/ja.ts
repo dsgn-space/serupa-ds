@@ -35,6 +35,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'パンくずリスト',
   showHiddenPages: 'すべてのページを表示',
   morePages: '他のページ',
+  toolbarMore: 'その他',
   previousMonth: '前の月',
   timeZoneYours: 'お使いのタイムゾーン',
   nextMonth: '次の月',

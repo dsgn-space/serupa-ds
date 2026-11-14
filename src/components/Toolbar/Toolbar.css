@@ -17,3 +17,12 @@
 }
 .dk-toolbar--vertical { display: inline-flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
 }
+
+/* overflow: one row that doesn't wrap; controls with no room are hidden (data-dk-overflow) and listed in the More
+   menu at the end, which shows only while something is hidden. */
+@layer dk.components {
+.dk-toolbar--overflow { flex-wrap: nowrap; min-inline-size: 0; }
+.dk-toolbar--overflow > * { flex-shrink: 0; }   /* each at its own width, so what has no room moves, rather than being squeezed */
+.dk-toolbar--overflow > [data-dk-overflow] { display: none; }
+.dk-toolbar__more { display: inline-flex; flex: none; margin-inline-start: auto; }
+}

@@ -41,6 +41,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'Fil d’Ariane',
   showHiddenPages: 'Afficher toutes les pages',
   morePages: 'Autres pages',
+  toolbarMore: 'Plus',
   previousMonth: 'Mois précédent',
   timeZoneYours: 'Votre fuseau horaire',
   nextMonth: 'Mois suivant',

@@ -41,6 +41,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'Навігаційний ланцюжок',
   showHiddenPages: 'Показати всі сторінки',
   morePages: 'Інші сторінки',
+  toolbarMore: 'Ще',
   previousMonth: 'Попередній місяць',
   timeZoneYours: 'Ваш часовий пояс',
   nextMonth: 'Наступний місяць',

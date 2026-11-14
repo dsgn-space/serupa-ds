@@ -36,6 +36,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'Đường dẫn',
   showHiddenPages: 'Hiện tất cả các trang',
   morePages: 'Trang khác',
+  toolbarMore: 'Thêm',
   previousMonth: 'Tháng trước',
   timeZoneYours: 'Múi giờ của bạn',
   nextMonth: 'Tháng sau',

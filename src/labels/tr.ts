@@ -36,6 +36,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'İçerik haritası',
   showHiddenPages: 'Tüm sayfaları göster',
   morePages: 'Diğer sayfalar',
+  toolbarMore: 'Diğer',
   previousMonth: 'Önceki ay',
   timeZoneYours: 'Saat diliminiz',
   nextMonth: 'Sonraki ay',

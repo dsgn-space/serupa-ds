@@ -35,6 +35,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'ब्रेडक्रंब',
   showHiddenPages: 'सभी पेज दिखाएँ',
   morePages: 'और पेज',
+  toolbarMore: 'और',
   previousMonth: 'पिछला महीना',
   timeZoneYours: 'आपका समय क्षेत्र',
   nextMonth: 'अगला महीना',

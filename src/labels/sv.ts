@@ -36,6 +36,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'Brödsmulor',
   showHiddenPages: 'Visa alla sidor',
   morePages: 'Fler sidor',
+  toolbarMore: 'Mer',
   previousMonth: 'Föregående månad',
   timeZoneYours: 'Din tidszon',
   nextMonth: 'Nästa månad',

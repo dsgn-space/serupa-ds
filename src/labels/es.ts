@@ -39,6 +39,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'Ruta de navegación',
   showHiddenPages: 'Mostrar todas las páginas',
   morePages: 'Más páginas',
+  toolbarMore: 'Más',
   previousMonth: 'Mes anterior',
   timeZoneYours: 'Tu zona horaria',
   nextMonth: 'Mes siguiente',

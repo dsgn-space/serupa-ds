@@ -35,6 +35,7 @@ export const labels: SerupaLabels = {
   breadcrumb: '面包屑导航',
   showHiddenPages: '显示所有页面',
   morePages: '更多页面',
+  toolbarMore: '更多',
   previousMonth: '上个月',
   timeZoneYours: '您的时区',
   nextMonth: '下个月',

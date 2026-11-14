@@ -40,6 +40,7 @@ export const labels: SerupaLabels = {
   breadcrumb: 'مسار التنقل',
   showHiddenPages: 'عرض كل الصفحات',
   morePages: 'صفحات أخرى',
+  toolbarMore: 'المزيد',
   previousMonth: 'الشهر السابق',
   timeZoneYours: 'منطقتك الزمنية',
   nextMonth: 'الشهر التالي',

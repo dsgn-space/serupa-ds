@@ -38,6 +38,7 @@ export const labels: SerupaLabels = {
   breadcrumb: '탐색 경로',
   showHiddenPages: '모든 페이지 보기',
   morePages: '페이지 더 보기',
+  toolbarMore: '더보기',
   previousMonth: '이전 달',
   timeZoneYours: '내 시간대',
   nextMonth: '다음 달',
