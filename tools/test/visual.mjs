@@ -137,6 +137,10 @@ async function diff(page, a, bb) {   // share of differing pixels and the box th
 // Screenshot once the page has stopped changing: two captures 100 ms apart must match, so a late paint
 // (a popover still placing itself, a glyph still loading on a slow runner) can't land in the image.
 async function stableShot(page, el) {
+  // A full-page picture shows the whole page whatever the scroll, except what sticks to the viewport (a sticky
+  // Navbar): that lands wherever the page was scrolled to, which a hover or a focus can leave anywhere. From the
+  // top, it is where a reader first sees it.
+  if (!el) await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
   const shoot = () => (el ? el.screenshot() : page.screenshot({ fullPage: true }));
   let last = await shoot();
   for (let i = 0; i < 10; i++) {
