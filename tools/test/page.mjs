@@ -112,7 +112,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.waitForFunction(() => window.__seen.length > 0);
   const after = await p.evaluate(() => [window.__vt.join('|'), window.__seen.join('|'), getComputedStyle(document.body).backgroundColor]);
   t('theme.js: the first paint sets the theme without a transition', first.join() === 'blue-light,0', first.join());
-  t('theme.js: a switch crossfades the page in one View Transition (type serupa-theme), onChange after it', after.join(' ; ') === 'serupa-theme ; blue-dark,blue-dark ; rgb(24, 24, 27)', after.join(' ; '));
+  t('theme.js: a switch crossfades the page in one View Transition (type serupa-theme), onChange after it', after.join(' ; ') === 'serupa-theme ; blue-dark,blue-dark ; rgb(9, 9, 11)', after.join(' ; '));
   await ctx.close();
   const still = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const q = await still.newPage();
@@ -147,8 +147,8 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await row.close();
 }
 {
-  // <meta name="theme-color"> follows the page's surface in all six themes, so a phone's bars change with the mode.
-  // Before any stylesheet it is the token value (white, zinc-900); a page's own theme-color meta is left alone.
+  // <meta name="theme-color"> follows the page's fill (surface-page) in all six themes, so a phone's bars change with the mode.
+  // Before any stylesheet it is the token value (white, zinc-950); a page's own theme-color meta is left alone.
   const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
   await p.goto(writePage('theme-color.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-brand="blue" data-mode="auto"' }));
@@ -157,11 +157,11 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
     const m = document.querySelectorAll('meta[name="theme-color"]');
     return [m.length, m[0] && m[0].getAttribute('content'), getComputedStyle(document.body).backgroundColor].join(' ');
   })));
-  t('theme.js: theme-color is the page\'s surface in all six themes (Modern Dark\'s is zinc-950)', tints.every((x, k) => x === (k % 2 ? (k === 5 ? '1 rgb(9, 9, 11) rgb(9, 9, 11)' : '1 rgb(24, 24, 27) rgb(24, 24, 27)') : '1 rgb(255, 255, 255) rgb(255, 255, 255)')), tints.join(', '));
+  t('theme.js: theme-color is the page\'s fill (surface-page) in all six themes: white, and zinc-950 in dark', tints.every((x, k) => x === (k % 2 ? '1 rgb(9, 9, 11) rgb(9, 9, 11)' : '1 rgb(255, 255, 255) rgb(255, 255, 255)')), tints.join(', '));
   await p.evaluate(() => Serupa.theme.reset());
   await p.goto(writePage('theme-color-bare.html', '<p>x</p>', { theme: true, bundle: 'none.css', htmlAttrs: 'data-mode="dark"', extraHead: '<script>window.__early = document.querySelector(\'meta[name="theme-color"]\').content;</script>' }));
   const early = await p.evaluate(() => window.__early);
-  t('theme.js: before the stylesheets, theme-color is the token value (zinc-900 in dark)', early === '#18181b', early);
+  t('theme.js: before the stylesheets, theme-color is the token value (zinc-950 in dark)', early === '#09090b', early);
   const own = writePage('theme-color-own.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-mode="dark"' });
   fs.writeFileSync(fileURLToPath(own), fs.readFileSync(fileURLToPath(own), 'utf8').replace('<script src="../dist/theme.js">', '<meta name="theme-color" content="#123456"><script src="../dist/theme.js">'));
   await p.goto(own);

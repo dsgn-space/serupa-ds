@@ -11,7 +11,9 @@
   --highlight: var(--zinc-100);
   --pressed: var(--zinc-300);
   --surface: var(--white);
+  --surface-page: var(--white);
   --surface-muted: var(--zinc-50);
+  --surface-control: var(--zinc-50);
   --surface-hover: var(--zinc-50);
   --surface-hover-raised: var(--zinc-50);
   --surface-raised: var(--white);
@@ -392,7 +394,9 @@
   --highlight: var(--zinc-700);
   --pressed: var(--zinc-600);
   --surface: var(--zinc-900);
+  --surface-page: var(--zinc-950);
   --surface-muted: var(--zinc-950);
+  --surface-control: var(--zinc-900);
   --surface-hover: var(--zinc-800);
   --surface-hover-raised: #333338;
   --surface-raised: var(--zinc-800);
@@ -511,7 +515,9 @@
   --highlight: var(--zinc-100);
   --pressed: var(--zinc-300);
   --surface: var(--white);
+  --surface-page: var(--white);
   --surface-muted: var(--zinc-50);
+  --surface-control: var(--zinc-50);
   --surface-hover: var(--zinc-50);
   --surface-hover-raised: var(--zinc-50);
   --surface-raised: var(--white);
@@ -630,7 +636,9 @@
   --highlight: var(--zinc-700);
   --pressed: var(--zinc-600);
   --surface: var(--zinc-900);
+  --surface-page: var(--zinc-950);
   --surface-muted: var(--zinc-950);
+  --surface-control: var(--zinc-900);
   --surface-hover: var(--zinc-800);
   --surface-hover-raised: #333338;
   --surface-raised: var(--zinc-800);
@@ -749,7 +757,9 @@
   --highlight: var(--zinc-100);
   --pressed: var(--zinc-300);
   --surface: var(--white);
+  --surface-page: var(--white);
   --surface-muted: var(--zinc-50);
+  --surface-control: var(--zinc-50);
   --surface-hover: var(--zinc-50);
   --surface-hover-raised: var(--zinc-50);
   --surface-raised: var(--white);
@@ -868,7 +878,9 @@
   --highlight: var(--zinc-800);
   --pressed: var(--zinc-700);
   --surface: var(--zinc-950);
+  --surface-page: var(--zinc-950);
   --surface-muted: var(--black);
+  --surface-control: var(--zinc-900);
   --surface-hover: var(--zinc-800);
   --surface-hover-raised: #333338;
   --surface-raised: var(--zinc-900);
@@ -988,7 +1000,9 @@
   --highlight: light-dark(var(--zinc-100), var(--zinc-700));
   --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-900));
+  --surface-page: light-dark(var(--white), var(--zinc-950));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
+  --surface-control: light-dark(var(--zinc-50), var(--zinc-900));
   --surface-hover: light-dark(var(--zinc-50), var(--zinc-800));
   --surface-hover-raised: light-dark(var(--zinc-50), #333338);
   --surface-raised: light-dark(var(--white), var(--zinc-800));
