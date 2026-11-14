@@ -3,7 +3,7 @@
 A list people put in their own order: tasks by priority, steps in a flow, columns in a table. Each row has a handle; people drag it, tap it and then tap where the row goes, or pick the row up with the keyboard and move it with the arrow keys. Every step is announced to screen readers.
 
 ```tsx
-import { SortableList } from "serupa-ds";
+import { SortableList } from "@diki-stwn/serupa-ds";
 
 const [tasks, setTasks] = React.useState([{ id: "brief", title: "Write the brief" }, { id: "review", title: "Review the designs" }]);
 <SortableList

@@ -5,7 +5,7 @@ Quoted words with who said them, for a testimonial, a pull quote, or a quote in 
 **Also called:** Blockquote, Testimonial, Pull quote.
 
 ```tsx
-import { Quote, Avatar } from "serupa-ds";
+import { Quote, Avatar } from "@diki-stwn/serupa-ds";
 
 <Quote author="Ada Rahman" source="Head of Product, Lumen">
   We moved our settings onto it in a week.

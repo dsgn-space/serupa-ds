@@ -3,7 +3,7 @@
 After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. It takes focus when it appears, so everyone, including people using a screen reader, learns the submit failed and can go straight to each problem.
 
 ```tsx
-import { ErrorSummary } from "serupa-ds";
+import { ErrorSummary } from "@diki-stwn/serupa-ds";
 
 <ErrorSummary errors={[
   { field: "email", message: "Enter an email address in the right format, like name@example.com" },

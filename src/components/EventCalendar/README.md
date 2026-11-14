@@ -5,7 +5,7 @@ A month of events: meetings, deadlines, bookings. People see what's on each day,
 **Also called:** scheduler, agenda.
 
 ```tsx
-import { EventCalendar } from "serupa-ds";
+import { EventCalendar } from "@diki-stwn/serupa-ds";
 
 <EventCalendar
   events={[

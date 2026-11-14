@@ -1,5 +1,5 @@
 // serupa-ds/labels/fr: every built-in word in French.
-//   import { labels, locale } from "serupa-ds/labels/fr";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/fr";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

@@ -1,7 +1,7 @@
 // serupa-ds/stylelint: a Stylelint config for an app's own CSS, so it reads Serupa's tokens instead of writing raw
 // values that drift from the theme (a hex color that ignores dark mode, a 12px gap off the spacing scale).
 //   // stylelint.config.js
-//   export default { extends: ["serupa-ds/stylelint"] };
+//   export default { extends: ["@diki-stwn/serupa-ds/stylelint"] };
 // Four rules, each with the token family to use in its message:
 //   serupa/no-raw-color     a color written out (#hex, rgb(), hsl(), oklch(), a named color) instead of a color token.
 //                           A named color counts only in a property that takes a color, so grid-area: tan passes.

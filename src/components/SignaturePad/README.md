@@ -3,7 +3,7 @@
 A place to sign: people draw their signature with a mouse, pen or finger, or type their full name instead. The app gets the signature as SVG (and a PNG from `signatureToPng`), with the typed name.
 
 ```tsx
-import { Field, SignaturePad, signatureToPng } from "serupa-ds";
+import { Field, SignaturePad, signatureToPng } from "@diki-stwn/serupa-ds";
 
 <Field label="Sign to accept the terms" error={error}>
   <SignaturePad name="signature" onValueChange={(value) => setSignature(value)} />

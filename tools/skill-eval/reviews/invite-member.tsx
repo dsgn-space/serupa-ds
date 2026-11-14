@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Field, IconButton, Input, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, toast } from 'serupa-ds';
+import { Button, Field, IconButton, Input, Stack, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, toast } from '@diki-stwn/serupa-ds';
 
 type Member = { id: string; name: string; email: string; active: boolean };
 

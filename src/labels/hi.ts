@@ -1,5 +1,5 @@
 // serupa-ds/labels/hi: every built-in word in Hindi.
-//   import { labels, locale } from "serupa-ds/labels/hi";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/hi";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

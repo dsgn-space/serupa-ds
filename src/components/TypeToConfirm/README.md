@@ -3,7 +3,7 @@
 A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted. It makes them stop and read what's at stake.
 
 ```tsx
-import { TypeToConfirm } from "serupa-ds";
+import { TypeToConfirm } from "@diki-stwn/serupa-ds";
 
 <TypeToConfirm phrase="acme/web" confirmLabel="Delete this repository" onConfirm={deleteRepository} />
 ```

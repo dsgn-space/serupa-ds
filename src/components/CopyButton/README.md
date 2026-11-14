@@ -3,7 +3,7 @@
 A button that copies text to the clipboard: an API key, an invite link, a command. Once it has copied, it shows a check and "Copied" for two seconds and says "Copied" to screen readers.
 
 ```tsx
-import { CopyButton } from "serupa-ds";
+import { CopyButton } from "@diki-stwn/serupa-ds";
 
 <CopyButton value={apiKey} />
 <CopyButton value={inviteUrl} size="md">Copy link</CopyButton>

@@ -1,5 +1,5 @@
 ---
-"serupa-ds": patch
+"@diki-stwn/serupa-ds": patch
 ---
 
 Fixes found by running the tests in Chrome 123, the oldest supported Chrome:
