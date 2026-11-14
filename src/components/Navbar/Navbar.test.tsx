@@ -82,7 +82,9 @@ describe('Navbar', () => {
     expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px 0px 0px 0px inset$/)]);
     await withMoreContrast(() => expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px -2px 0px 0px inset$/)]));
     await userEvent.hover(el('lp'));
-    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color, css(el('lp')).boxShadow]).toEqual([active.bg, active.color, 'none']);
+    // Under the pointer a link takes the text color and a fill one step quieter than the current page's (GR415).
+    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color, css(el('lp')).boxShadow]).toEqual([color('var(--surface-hover)'), active.color, 'none']);
+    expect(color('var(--surface-hover)')).not.toBe(active.bg);
     await userEvent.hover(cur);
     await expect.poll(() => css(cur).backgroundColor).not.toBe(active.bg);
     await away();
@@ -559,7 +561,9 @@ describe('NavbarMenu (RU14)', () => {
     expect(css(alerts).boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/));
     await userEvent.hover(dash);
-    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([css(alerts).backgroundColor, 'none']);
+    // The panel floats, so the link pointed at takes the raised hover step: still not the current link's fill (GR415).
+    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([color('var(--surface-hover-raised)'), 'none']);
+    expect(css(dash).backgroundColor).not.toBe(css(alerts).backgroundColor);
     document.documentElement.dir = 'rtl';
     try { await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/)); } finally { document.documentElement.dir = ''; }
     await away();

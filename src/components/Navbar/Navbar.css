@@ -50,7 +50,7 @@
   font-size: var(--navbar-link-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--navbar-link-weight, var(--font-medium)); text-decoration: none; white-space: nowrap;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); color: var(--navbar-link-text-hover, var(--text)); } }
+@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--dk-navbar-hover, var(--surface-hover))); color: var(--navbar-link-text-hover, var(--text)); } }
 /* Pressed: one step past hover while held, at once (no fade in); letting go fades back. */
 .dk-navbar__link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); color: var(--navbar-link-text-hover, var(--text)); transition-duration: var(--duration-0); }
 /* The current page: shaded, and one step darker under the pointer. With more contrast, a bar along the bottom that hover never draws. */
@@ -65,6 +65,7 @@
 .dk-navbar__chevron.dk-icon { --dk-navbar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--motion-change-md) var(--ease-move); }
 .dk-navbar__menu[data-state="open"] .dk-navbar__chevron { rotate: var(--dk-navbar-turn); }
 .dk-navbar__menu-panel {
+  --dk-navbar-hover: var(--surface-hover-raised);   /* the panel floats: a link under the pointer takes the raised hover step, still under the current link's fill */
   position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-block: var(--spacing-6);
   background: var(--navbar-menu-bg, var(--surface-overlay)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-menu-border, var(--border));
   box-shadow: var(--navbar-menu-depth, var(--depth-surface)), var(--navbar-menu-shadow, var(--elevation-overlay));
@@ -80,7 +81,7 @@
   color: var(--navbar-menu-link-text, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-decoration: none; overflow-wrap: anywhere;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); } }
+@media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-link-bg-hover, var(--dk-navbar-hover, var(--surface-hover))); } }
 .dk-navbar__menu-link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 .dk-navbar__menu-link--active { background: var(--navbar-link-bg-active, var(--secondary)); box-shadow: inset var(--dk-bar) 0 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
 @media (hover: hover) { .dk-navbar__menu-link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }

@@ -74,8 +74,8 @@
       },
       "link-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
-        "$description": "A link's background on hover.",
+        "$value": "{color.surface-hover}",
+        "$description": "A link's background on hover: a step quieter than the current page's, so the link pointed at and the current one never look the same.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--navbar-link-bg-hover"

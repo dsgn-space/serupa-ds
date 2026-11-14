@@ -122,8 +122,8 @@
     },
     "surface-hover": {
       "$type": "color",
-      "$value": "{color.zinc-800}",
-      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page (zinc-50 light, zinc-800 dark).",
+      "$value": "{color.zinc-900}",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): one quiet step off `surface` in every theme (zinc-50 light, zinc-800 dark, zinc-900 in emerald dark, whose `surface` is zinc-950), and a step under `highlight`, so an item pointed at never looks like the current one.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover"
@@ -135,13 +135,13 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.2,
-          0.2,
-          0.2196
+          0.1255,
+          0.1255,
+          0.1373
         ],
-        "hex": "#333338"
+        "hex": "#202023"
       },
-      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-50 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1.",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-50 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1; in emerald dark, whose raised surfaces are zinc-900 and whose `highlight` is zinc-800, halfway between those two: always a step under the current item's fill.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover-raised"
