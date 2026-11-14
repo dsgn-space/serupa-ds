@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { renderToString } from 'react-dom/server';
 import { hydrateRoot } from 'react-dom/client';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { Avatar, initials, type AvatarSize, type AvatarStatus } from './Avatar';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -222,5 +222,33 @@ describe('Avatar', () => {
       expect(edge('blue-light')).toEqual(['solid', '1px', '-1px', 'rgba(0, 0, 0, 0.1)', '9999px']);
       expect(edge('emerald-dark')).toEqual(['solid', '1px', '-1px', 'rgba(255, 255, 255, 0.1)', '9999px']);
     } finally { document.documentElement.removeAttribute('data-theme'); }
+  });
+});
+
+describe('Avatar: a picture that is slow to arrive (GR410)', () => {
+  const slow = () => `/__slow-picture__.svg?${crypto.randomUUID()}`;
+  const under = (id: string) => el(id).querySelector('.dk-avatar__initials, .dk-avatar__icon');
+
+  test('the initials (or the icon) show under a late picture, which fades in over them; then they go', () => withMotion(async () => {
+    await render(<Row><Avatar id="late" src={slow()} name="Ada Lovelace" imgProps={{ loading: 'eager' }} /><Avatar id="anon" src={slow()} imgProps={{ loading: 'eager' }} /></Row>);
+    const i = el('late').querySelector('img')!;
+    // At first only the picture's place, as before: no initials flash under one that arrives quickly.
+    expect([under('late'), under('anon'), css(i).position]).toEqual([null, null, 'static']);
+    await expect.poll(() => under('late') && under('late')!.textContent).toBe('AL');
+    await expect.poll(() => !!under('anon')).toBe(true);
+    const f = el('late').firstElementChild!.getBoundingClientRect(), b = i.getBoundingClientRect();
+    expect([css(i).position, b.width, b.height, b.left - f.left, b.top - f.top, i.complete]).toEqual(['absolute', 40, 40, 0, 0, false]);
+    // It arrives: it fades in over the initials, and once it has they leave the page.
+    await expect.poll(() => i.complete && /--in/.test(i.className), { timeout: 5000 }).toBe(true);
+    expect([css(i).animationName, !!under('late')]).toEqual(['dk-avatar-in', true]);
+    await expect.poll(() => [under('late'), under('anon'), css(i).position, i.className], { timeout: 5000 }).toEqual([null, null, 'static', 'dk-avatar__img']);
+  }));
+
+  test('a quick picture never shows them, and imgProps.onLoad still runs', async () => {
+    const onLoad = vi.fn();
+    await render(<Avatar id="quick" src={IMG} name="Ada Lovelace" imgProps={{ onLoad }} />);
+    await expect.poll(() => onLoad.mock.calls.length).toBe(1);
+    await new Promise((r) => setTimeout(r, 400));
+    expect([under('quick'), el('quick').querySelector('img')!.className]).toEqual([null, 'dk-avatar__img']);
   });
 });

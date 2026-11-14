@@ -1,6 +1,6 @@
 # Avatar
 
-A small picture of a person (a circle) or of a team, project or organisation (a square). When there's no picture, or it fails to load (also one rendered on the server that failed before the page hydrated), it shows the initials, or a person icon when there's no name either.
+A small picture of a person (a circle) or of a team, project or organisation (a square). When there's no picture, or it fails to load (also one rendered on the server that failed before the page hydrated), it shows the initials, or a person icon when there's no name either. A picture that is slow to arrive (more than a quarter of a second) shows them too while it loads, then fades in over them, so a slow connection never shows an empty disc.
 
 **Also called:** profile picture, user image.
 
