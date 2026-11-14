@@ -12,6 +12,16 @@
           }
         }
       },
+      "field-bg-elevated": {
+        "$type": "color",
+        "$value": "{color.field-raised}",
+        "$description": "The fill of a form field on an elevated card: a step up from the card in dark, so the field stands out from it",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-field-bg-elevated"
+          }
+        }
+      },
       "bg": {
         "$type": "color",
         "$value": "{color.surface}",

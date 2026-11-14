@@ -51,6 +51,14 @@ export const coarsePointer: BrowserCommand<[on: boolean]> = async (ctx, on) => {
   if (!cdp) { cdp = await page.context().newCDPSession(page); touch.set(page, cdp); }
   await cdp.send('Emulation.setTouchEmulationEnabled', on ? { enabled: true, maxTouchPoints: 5 } : { enabled: false });
 };
+/** Gives the page a phone's safe-area insets (env(safe-area-inset-*): a notch, a home bar), or takes them away with
+ *  none. Chromium only (DevTools); elsewhere it throws. */
+export const safeArea: BrowserCommand<[insets: { top: number; right: number; bottom: number; left: number } | null]> = async (ctx, insets) => {
+  const { page } = playwright(ctx);
+  let cdp = touch.get(page);
+  if (!cdp) { cdp = await page.context().newCDPSession(page); touch.set(page, cdp); }
+  await cdp.send('Emulation.setSafeAreaInsetsOverride' as 'Emulation.setTouchEmulationEnabled', { insets: insets ?? { top: 0, right: 0, bottom: 0, left: 0 } } as never);
+};
 /** Lays the page out as for printing (@media print) or back for the screen. */
 export const printMedia: BrowserCommand<[on: boolean]> = async (ctx, on) => {
   await playwright(ctx).page.emulateMedia({ media: on ? 'print' : 'screen' });

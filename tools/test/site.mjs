@@ -147,6 +147,26 @@ await inParallel(pages, workers, async (p, w) => {
   t('/guides/localization: a press inside an example keeps the page where it was', before > 0 && after === before, `the page was at ${before}px before the press and at ${after}px after it`);
 }
 
+// "On this page" is the contents' rail (site/src/Doc.tsx): pointing at it opens the list, inside the window even on a
+// page with more headings than the window is tall.
+{
+  const w = workers[0];
+  await w.page.setViewportSize({ width: 1280, height: 720 });
+  await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
+  const rail = w.page.locator('.site-aside .dk-toc--rail');
+  const hovered = await rail.hover({ timeout: 10000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  await w.page.waitForTimeout(500);
+  const panel = hovered ? null : await w.page.evaluate(() => {
+    const el = document.querySelector('.site-aside .dk-toc__panel');
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return { shown: getComputedStyle(el).opacity === '1', top: r.top, bottom: r.bottom, left: r.left, right: r.right, links: el.querySelectorAll('a').length };
+  });
+  t('/components/button: pointing at the rail opens "On this page", inside the window', !!panel && panel.shown && panel.links > 0 && panel.top >= 0 && panel.left >= 0 && panel.bottom <= 720 && panel.right <= 1280, hovered || JSON.stringify(panel));
+  await w.page.mouse.move(0, 0);
+  await w.page.setViewportSize({ width: 1280, height: 800 });
+}
+
 // A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
 if (t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
   const w = workers[0];

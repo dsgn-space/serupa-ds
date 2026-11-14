@@ -155,6 +155,7 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--dialog-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the dialog, hovered or selected: a step up from its surface in dark |
+| `--dialog-field-bg` | `field-raised` | The fill of a form field in the dialog: a step up from its surface in dark, so the field stands out from it |
 | `--dialog-bg` | `surface-overlay` | The panel's background. |
 | `--dialog-text` | `text` | The panel's text: the body and the footer. |
 | `--dialog-overlay` | `overlay` | The dimmed backdrop over the page. |
