@@ -132,7 +132,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-row-bg-hover` | `surface-hover` | A List or InlineEdit row on the card, hovered or selected |
 | `--card-row-bg-hover-filled` | `surface-raised` | A List or InlineEdit row on a filled card, hovered or selected: a step up, since surface-hover matches the filled card in light |
 | `--card-bg-elevated` | `surface-raised` | The background of an elevated card (one step up from the page in dark). |
-| `--card-border-elevated` | `border-raised` | An elevated card's edge: invisible in light, a 1px lighter edge in dark |
+| `--card-border-elevated` | `border` | An elevated card's edge: the same `border` as an outline card's; the raised fill and shadow carry the lift |
 | `--card-border` | `border` | The border of an outline card |
 | `--card-title-color` | `text` | The title |
 | `--card-description-color` | `text-muted` | The description |

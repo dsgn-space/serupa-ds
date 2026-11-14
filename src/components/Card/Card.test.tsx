@@ -108,21 +108,31 @@ describe('Card', () => {
     expect(s.boxShadow).toMatch(/1px 2px/);
   });
 
-  test('elevated: a raised shadow on surface-raised, its 1px border-raised edge white on white in light; filled: surface-muted, no shadow, a transparent border', async () => {
+  test('elevated: a raised shadow on surface-raised, its 1px border edge zinc-200 in light, the same as an outline card; filled: surface-muted, no shadow, a transparent border', async () => {
     await render(<Variants />);
     const e = css(el('el')), f = css(el('fi'));
     expect(e.boxShadow).toMatch(/4px 6px -1px/);
-    expect([e.backgroundColor, e.borderTopColor, e.borderTopWidth]).toEqual(['rgb(255, 255, 255)', 'rgb(255, 255, 255)', '1px']);
+    expect([e.backgroundColor, e.borderTopColor, e.borderTopWidth]).toEqual(['rgb(255, 255, 255)', color('var(--zinc-200)'), '1px']);
     expect([f.backgroundColor, f.borderTopColor]).toEqual([color('var(--surface-muted)'), 'rgba(0, 0, 0, 0)']);
     expect(f.boxShadow === 'none' || /0px 0px 0px 0px/.test(f.boxShadow)).toBe(true);
   });
 
-  test('elevated in dark: one step up from the page (zinc-800 on zinc-900, Modern zinc-900 on zinc-950) with an edge one step lighter (Modern\'s is see-through white), in every dark theme', async () => {
+  test('outline: the edge is border, zinc-200 in light and zinc-800 in dark, a quiet step off the zinc-900 card (emerald 10% ink, 8% white), in all six themes', async () => {
+    await render(<Variants />);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const want = th === 'emerald-light' ? '#09090b1a' : th === 'emerald-dark' ? '#ffffff14' : th.endsWith('-dark') ? 'var(--zinc-800)' : 'var(--zinc-200)';
+      expect([th, css(el('def')).borderTopColor]).toEqual([th, color(want)]);
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
+  test('elevated in dark: one step up from the page (zinc-800 on zinc-900, Modern zinc-900 on zinc-950) with the same border edge as an outline card (Modern\'s is see-through white), in every dark theme', async () => {
     await render(<Variants />);
     for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
       document.documentElement.setAttribute('data-theme', th);
       const e = css(el('el'));
-      const [bg, edge] = th === 'emerald-dark' ? ['var(--zinc-900)', '#ffffff1f'] : ['var(--zinc-800)', 'var(--zinc-700)'];
+      const [bg, edge] = th === 'emerald-dark' ? ['var(--zinc-900)', '#ffffff14'] : ['var(--zinc-800)', 'var(--zinc-800)'];
       expect([th, e.backgroundColor, e.borderTopColor]).toEqual([th, color(bg), color(edge)]);
       expect(e.backgroundColor).not.toBe(color('var(--surface)'));
     }
