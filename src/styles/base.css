@@ -14,9 +14,9 @@
 :where([data-theme$="-dark"]) { color-scheme: dark; }
 
 /* A section with its own data-mode, data-brand or data-theme: color is inherited as the parent's resolved value, so
-   its plain text would keep the page's color on a transparent background. It takes its own text and surface (no
+   its plain text would keep the page's color on a transparent background. It takes its own text and page fill (no
    specificity: a class on the section still sets its background). <html> and <body> are left to the rule below. */
-:where([data-mode], [data-brand], [data-theme]):where(:not(html, body)) { color: var(--text); background-color: var(--surface); }
+:where([data-mode], [data-brand], [data-theme]):where(:not(html, body)) { color: var(--text); background-color: var(--surface-page); }
 
 :where(html) {
   -webkit-text-size-adjust: 100%;
@@ -26,7 +26,8 @@
 
 :where(body) {
   margin: var(--spacing-0);
-  background-color: var(--surface);
+  /* The page: in dark a step below the cards, bars and controls on it (surface-page). */
+  background-color: var(--surface-page);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: var(--text-base);

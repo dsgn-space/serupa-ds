@@ -4,8 +4,8 @@
     "color": {
       "bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The control's background.",
+        "$value": "{color.surface-control}",
+        "$description": "The track behind the segments: zinc-50 in light, a step above the page in dark (zinc-900), so the control never looks sunk into the page.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--segmented-control-bg"
@@ -24,8 +24,8 @@
       },
       "indicator": {
         "$type": "color",
-        "$value": "{color.surface}",
-        "$description": "The selected segment's background.",
+        "$value": "{color.field}",
+        "$description": "The selected segment's background: white in light, zinc-800 in dark, a step up from the track.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--segmented-control-indicator"

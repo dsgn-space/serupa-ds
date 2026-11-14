@@ -757,7 +757,7 @@
     "surface": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. Page and card background (white light, zinc-900 dark).",
+      "$description": "Alias. Card, panel and bar background (white light, zinc-900 dark). The page behind them is `surface-page`.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -770,10 +770,26 @@
         }
       }
     },
+    "surface-page": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. The page itself: the <html> and <body> background, and a data-mode or data-theme section's. White in light, as `surface`; in dark zinc-950, a step below the zinc-900 cards, panels and bars on it, so they and every control (fields, buttons, SegmentedControl's track) sit lighter than the page.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{zinc-950}",
+            "violet-light": "{white}",
+            "violet-dark": "{zinc-950}",
+            "emerald-light": "{white}",
+            "emerald-dark": "{zinc-950}"
+          }
+        }
+      }
+    },
     "surface-muted": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark).",
+      "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark). A recess, so never the fill of something you press: controls use `surface-control`.",
       "$extensions": {
         "com.serupa": {
           "themes": {
@@ -782,6 +798,22 @@
             "violet-dark": "{zinc-950}",
             "emerald-light": "{zinc-50}",
             "emerald-dark": "{black}"
+          }
+        }
+      }
+    },
+    "surface-control": {
+      "$type": "color",
+      "$value": "{color.zinc-50}",
+      "$description": "Alias. The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. zinc-50 in light, as `surface-muted`; in dark a step above the zinc-950 page (zinc-900), so a control is never darker than the surface it sits on.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "{zinc-900}",
+            "violet-light": "{zinc-50}",
+            "violet-dark": "{zinc-900}",
+            "emerald-light": "{zinc-50}",
+            "emerald-dark": "{zinc-900}"
           }
         }
       }

@@ -104,9 +104,9 @@ Each is an optional override: set it on the page, a container or one control. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--segmented-control-bg` | `surface-muted` | The control's background. |
+| `--segmented-control-bg` | `surface-control` | The track behind the segments: zinc-50 in light, a step above the page in dark (zinc-900), so the control never looks sunk into the page. |
 | `--segmented-control-border` | `border-control` | The control's outline (3:1 on the surface, so it can be seen). |
-| `--segmented-control-indicator` | `surface` | The selected segment's background. |
+| `--segmented-control-indicator` | `field` | The selected segment's background: white in light, zinc-800 in dark, a step up from the track. |
 | `--segmented-control-indicator-border` | `border-control` | The selected segment's outline. |
 | `--segmented-control-text` | `text-muted` | The other segments' labels (4.5:1 on bg). |
 | `--segmented-control-text-selected` | `text` | The selected segment's label. |
