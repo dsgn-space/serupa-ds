@@ -376,7 +376,7 @@
     "border": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. Default borders and dividers.",
+      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines (emerald: 10% ink, 8% white). A quiet line, never a control's boundary: those use `field-border` or `border-control`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border"
@@ -390,16 +390,6 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--border-strong"
-        }
-      }
-    },
-    "border-raised": {
-      "$type": "color",
-      "$value": "{color.white}",
-      "$description": "Alias. A raised card's edge: invisible in light (white on white), a 1px lighter edge in dark.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--border-raised"
         }
       }
     },

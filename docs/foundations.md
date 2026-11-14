@@ -55,8 +55,8 @@ Modern is the `emerald` brand: a calm, neutral interface with one teal accent, i
 
 - **One accent.** `primary`, `primary-hover`, `primary-subtle` and `focus-ring` use `teal` (700 / 800 / 50 / 600 in light, 400 / 300 / 950 / 400 in dark). Everything else is neutral `zinc`.
 - **A deeper dark canvas.** In dark, `surface` is `zinc-950`, and raised and overlay surfaces and muted panels are `zinc-900`, and fields `zinc-800` as in the other themes. Overlay borders are a step softer (`zinc-700`), so edges stay quiet.
-- **See-through hairlines.** `border`, `border-raised` and `border-strong` are ink at low opacity rather than a fixed grey: `zinc-950` at 10% (18% for `border-strong`) in light, white at 12% (22%) in dark. On white they look like `zinc-200` and `zinc-300`, and on a muted panel, a table stripe or a coloured card they stay the same step darker than what's behind them instead of disappearing. Borders that mark a control (`field-border`) and overlay borders stay solid, and `data-contrast="more"` makes them all solid and stronger.
-- **Hairlines, not heavy shadows.** A raised card keeps a 1px edge (`border-raised`), and each elevation role is one step softer: `elevation-rest` is `shadow-2xs`, `part` is `shadow-xs`, `raised` is `shadow-sm`, `overlay` is `shadow-md` and `modal` is `shadow-lg`. `data-shadow` keeps these roles.
+- **See-through hairlines.** `border` and `border-strong` are ink at low opacity rather than a fixed grey: `zinc-950` at 10% (18% for `border-strong`) in light, white at 8% (22%) in dark. On white they look like `zinc-200` and `zinc-300`, and on a muted panel, a table stripe or a coloured card they stay the same step darker than what's behind them instead of disappearing. Borders that mark a control (`field-border`) and overlay borders stay solid, and `data-contrast="more"` makes them all solid and stronger.
+- **Hairlines, not heavy shadows.** A raised card keeps a 1px `border` edge, and each elevation role is one step softer: `elevation-rest` is `shadow-2xs`, `part` is `shadow-xs`, `raised` is `shadow-sm`, `overlay` is `shadow-md` and `modal` is `shadow-lg`. `data-shadow` keeps these roles.
 - **8 to 12px corners.** `radius-control` is 8px and `radius-surface` 12px, the same as `radius-container`. `radius-inner` stays 4px for small parts such as checkboxes, and `radius-pill` stays round.
 - **Quick, quiet motion.** Nothing over 200ms: `motion-enter-md`, `motion-exit-lg`, `motion-change-md` and `motion-release` are 150ms, `motion-exit-md` 100ms, `motion-enter-lg` and `motion-change-lg` 200ms. `ease-pop` uses `ease-out-quart` and `ease-celebrate` `ease-out-expo`, so nothing overshoots, and `ease-spring` is the soft spring, which settles without a visible bounce. Reduced motion still turns motion off as in every theme.
 - **Charts lead with the accent.** `chart-1` is teal (`teal-800` light, `teal-600` dark), and the sequential and diverging ramps run in teal, so a sparkline or a first series matches the buttons and links. The other series are re-picked so neighbours still differ for every reader: orange, purple, blue, yellow, pink, violet, red. The first four (teal, orange, purple, blue) stay apart as every pair, including for colour-blind readers, so two lines that cross never look alike.
@@ -134,9 +134,9 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `text` | `zinc-900` | `zinc-50` | Body text and headings on `surface`. |
 | `text-muted` | `zinc-500` | `zinc-400` | Secondary text, captions, placeholders. |
 | `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
-| `border` | `zinc-200` | `zinc-700` | Default borders and dividers. |
+| `border` | `zinc-200` | `zinc-800` | Default borders and dividers, and every card's edge. In dark a quiet step off the `zinc-900` cards and bars it outlines. Never a control's boundary: fields use `field-border`, other controls `border-control`. |
 | `border-strong` | `zinc-300` | `zinc-600` | Emphasised dividers and outlines. Form fields use `field-border`. |
-| `border-raised` | `white` | `zinc-700` | A raised card's edge: invisible in light, a 1px lighter edge in dark. |
+| `border-raised` | `zinc-200` | `zinc-800` | Deprecated: the same as `border`, which a raised card uses now. Removed in 15.0.0; `serupa-migrate` renames it. |
 | `border-overlay` | `zinc-200` | `zinc-600` | The edge of a top-layer surface; one step stronger than `border` in dark. |
 | `focus-ring` | `‹brand›-500` | `‹brand›-400` | Keyboard focus outline, in the brand hue. |
 | `success` | `green-600` | `green-500` | Success icons and fills (3:1). Not for text: use `success-text`. |
@@ -508,7 +508,7 @@ Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are to
 Rules of thumb:
 
 - Elevation: inputs and buttons `shadow-xs`, cards `shadow-sm` (or `shadow-md` on hover), menus and popovers `shadow-lg`, dialogs `shadow-xl`/`shadow-2xl`. Higher elements get bigger shadows.
-- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border-raised` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
+- Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
 - `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary: use `text-muted`.
@@ -526,7 +526,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 | 0 · Page | The page, Navbar, Sidebar, tables | `surface` | `border` between regions | none |
 | 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or `inset-shadow-xs` for an input well |
 | 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
-| 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border-raised` | `shadow-md` |
+| 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border` | `shadow-md` |
 | 3 · Floating | Menu, Popover, Combobox, DatePicker and TimePicker lists, Toast | `surface-overlay` | `border-overlay` | `shadow-lg` |
 | 4 · Modal | Dialog and Drawer, over the `overlay` backdrop | `surface-overlay` | `border-overlay` | `shadow-xl` |
 | Inverse | Tooltip | `surface-inverse` | none | `shadow-md` |
@@ -539,7 +539,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 
 **Light and dark**
 
-In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, and `border-raised` is invisible. In dark themes (a `zinc-900` page), shadows hardly show, so the surface steps up to `zinc-800` and the edge to `zinc-700` or `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in all six themes.
+In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, with the same `zinc-200` edge. In dark themes (a `zinc-950` page under `zinc-900` cards), shadows hardly show, so a raised surface steps up to `zinc-800`, and an overlay's edge to `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in all six themes.
 
 In forced-colors mode, backgrounds and shadows are replaced, so only the edge survives. Every floating surface has a real border for that reason; keep it if you restyle one.
 

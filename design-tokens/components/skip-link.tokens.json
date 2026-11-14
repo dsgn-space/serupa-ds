@@ -24,7 +24,7 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border-raised}",
+        "$value": "{color.border}",
         "$description": "The shown link's border.",
         "$extensions": {
           "com.serupa": {
