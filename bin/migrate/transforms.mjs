@@ -270,7 +270,12 @@ export const TRANSFORMS = [
       let count = 0;
       // The CSS variable, a token reference, or a utility class (`bg-`, `border-x-`, `hover:ring-`); a longer name that
       // only ends the same (`--my-border-raised`) is left.
-      const text = src.replace(/(?<![\w-])(--|color\.|[a-z][a-z-]*-)?border-raised(?![\w-])/g, (_, pre = '') => { count++; return `${pre}border`; });
+      // A name that is a whole inline code span (`--border-raised` in a changelog or a migration note) is prose about
+      // the rename, and is left.
+      const text = src.replace(/(?<![\w-])(--|color\.|[a-z][a-z-]*-)?border-raised(?![\w-]|\.md\b)/g, (m, pre = '', at) => {
+        if (src[at - 1] === '`' && src[at + m.length] === '`') return m;
+        count++; return `${pre}border`;
+      });
       return { text, count, notes: [] };
     },
   },
