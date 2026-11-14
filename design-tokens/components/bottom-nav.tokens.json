@@ -35,7 +35,7 @@
       "text-hover": {
         "$type": "color",
         "$value": "{color.text}",
-        "$description": "A link under the pointer.",
+        "$description": "A link under the pointer (not the current one, which keeps its own color).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--bottom-nav-text-hover"
@@ -45,7 +45,7 @@
       "icon-bg-hover": {
         "$type": "color",
         "$value": "{color.secondary}",
-        "$description": "The pill behind the icon under the pointer.",
+        "$description": "The pill behind the icon under the pointer (not on the current item, which keeps its own fill).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--bottom-nav-icon-bg-hover"
