@@ -70,7 +70,7 @@ Drawn from the `Bottom` story, opened.
 | --- | --- |
 | Enter / Space | On the trigger, opens it and moves focus inside |
 | Tab | From the trigger into the panel, which sits right after it; out of the panel, closes it |
-| Escape | Closes it and returns focus to the trigger |
+| Escape | Closes it and returns focus to the trigger. The phone's Back gesture or button does the same |
 
 ## Props
 

@@ -27,6 +27,9 @@ export interface AnchoredLayerOptions {
   /** The layer's CSS places it (a popover shown as a sheet at the screen's foot): it is shown, not placed next to
       the anchor, and what placing set on it before is cleared. */
   docked?: boolean;
+  /** Whether the system's close request (Android's Back gesture or button, Escape anywhere on the page) closes the
+      layer, as Escape inside it does. Default true; a Tooltip, which closes by itself, says false. */
+  closeRequest?: boolean;
 }
 
 // module state: whether the browser has anchor positioning, asked once.
@@ -38,7 +41,7 @@ const canAnchor = (): boolean => (anchorable ??= typeof CSS !== 'undefined' && C
     moving outside them and the anchor calls onFocusOutside. Focus is the caller's: do it in a layout effect
     declared after this hook, which runs once the layer is shown and placed. */
 export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: AnchoredLayerOptions): void {
-  const { placement, fallback = 'bottom', offsetVar, inside, matchWidth, watch, docked } = opts;
+  const { placement, fallback = 'bottom', offsetVar, inside, matchWidth, watch, docked, closeRequest = true } = opts;
   const outside = React.useRef(opts.onOutside), focusOutside = React.useRef(opts.onFocusOutside);
   // every render: keeps the latest callbacks, so the listeners below needn't be added again when they change.
   useIsoLayoutEffect(() => { outside.current = opts.onOutside; focusOutside.current = opts.onFocusOutside; });
@@ -115,10 +118,28 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const box = layer.current && layer.current.parentElement && layer.current.parentElement.closest('dialog');
     const shut = () => { if (outside.current) outside.current(); };
     if (box) box.addEventListener('close', shut);
+    // The phone's Back gesture: a modal <dialog> gets it from the browser, but a popover the layer opens doesn't, so
+    // Back left the page with a Menu open. A CloseWatcher (where the browser has one) takes the system's close
+    // request, innermost layer first, and closes the layer as Escape inside it does (focus back to where it was):
+    // the Escape goes to the focused element when it is in the layer, its anchor or `inside`, otherwise to the layer.
+    const W = closeRequest && typeof window !== 'undefined' ? (window as unknown as { CloseWatcher?: new () => { onclose: (() => void) | null; destroy(): void } }).CloseWatcher : undefined;
+    let watcher: { onclose: (() => void) | null; destroy(): void } | null = null;
+    try { watcher = W ? new W() : null; } catch { watcher = null; }
+    if (watcher) {
+      watcher.onclose = () => {
+        // An Escape the layer let through closed it already (React commits it first): nothing more to close.
+        if (!layer.current || layer.current.hidden) return;
+        const f = document.activeElement, to = within(f, [layer, anchor, inside]) ? f as HTMLElement : layer.current;
+        const esc = new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true });
+        if (to) to.dispatchEvent(esc);
+        if (!esc.defaultPrevented && outside.current) outside.current();
+      };
+    }
     return () => {
+      if (watcher) { watcher.onclose = null; watcher.destroy(); }
       if (box) box.removeEventListener('close', shut);
       document.removeEventListener('pointerdown', down, true); document.removeEventListener('pointercancel', cancel, true);
       document.removeEventListener('click', click, true); document.removeEventListener('focusin', focus, true);
     };
-  }, [open, layer, anchor, inside]);
+  }, [open, layer, anchor, inside, closeRequest]);
 }
