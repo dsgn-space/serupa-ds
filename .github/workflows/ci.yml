@@ -421,6 +421,9 @@ jobs:
         if: failure()
         shell: bash
         run: |
+          # head stops reading once it has its lines, and under pipefail that broken pipe (141) failed this step too, before
+          # it wrote the list: the pull request showed no failures (14 Nov).
+          set +o pipefail
           msg=$( { sed -n '/━━ Summary ━━/,$p' test-output.txt | grep '^FAIL'; echo; grep -E '^(CHANGED|NEW|MISSING|NO EFFECT) ' test-output.txt | head -20; grep -E -A1 '^FAIL' test-output.txt | grep -v '^--$' | head -60; } | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
           echo "::error title=Failing tests (${{ matrix.group }})::${msg}"
           { echo '## Failing tests (${{ matrix.group }})'; echo '```'; grep -E -A1 '^FAIL|^(PASS|FAIL)  [A-Z]' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
@@ -588,7 +591,10 @@ jobs:
   # not land, the step fails as before. Update baselines starts a cancelled held run again just as a failed one.
   test:
     needs: [plan, fresh, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks]
-    if: always()
+    # Like always(), except on a held run: GitHub weighs a running job's condition again when the run is cancelled and
+    # stops it only when that comes out false. With always() the held job kept running past its own cancel and ended
+    # failed, the red X it was meant to replace (#1890, 14 Nov).
+    if: ${{ !cancelled() || needs.plan.outputs.hold != '1' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:

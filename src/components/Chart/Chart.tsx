@@ -104,6 +104,84 @@ export function markerPath(shape: number, cx: number, cy: number, r: number): st
   }
 }
 
+// module state: an empty list that is only read, never changed, so every request can share it. It keeps Marks' categories the same when none are given.
+const NONE: ReadonlyArray<string> = [];
+/** Series s's value at category i, or null when it has none. */
+const valueOf = (series: ReadonlyArray<ChartSeries>, s: number, i: number): number | null => { const v = series[s]?.values[i]; return typeof v === 'number' && isFinite(v) ? v : null; };
+
+/** Stacked, a series' line: the sum of its value and those of the series before it (a missing one counts as 0). */
+const topOfSeries = (series: ReadonlyArray<ChartSeries>, s: number, i: number) => { let t = 0; for (let k = 0; k <= s; k++) t += valueOf(series, k, i) ?? 0; return t; };
+
+/** Where things go in the plot: a category's x from the start edge (mirrored right to left, so the first is on the
+    right), a value's y, a point's height (its value, or stacked, its series' line there) and a bar's box (a category's
+    group takes most of its band, a bar per series, the chart-gap color between them). */
+function layout(series: ReadonlyArray<ChartSeries>, n: number, type: string, stacked: boolean, start: number, pw: number, ph: number, t0: number, tN: number, width: number, rtl: boolean) {
+  const band = pw / Math.max(1, n);
+  const flip = (x: number) => (rtl ? width - x : x);
+  const x = (i: number) => flip(type === 'bar' ? start + band * (i + 0.5) : n === 1 ? start + pw / 2 : start + INSET + (i * (pw - 2 * INSET)) / (n - 1));
+  const y = (v: number) => PAD_TOP + ph * (1 - (v - t0) / (tN - t0 || 1));
+  const py = (s: number, i: number) => y(stacked ? topOfSeries(series, s, i) : valueOf(series, s, i)!);
+  const group = band * (series.length > 1 ? 0.8 : 0.6), bw = group / Math.max(1, series.length);
+  const bar = (s: number, i: number) => {
+    const v = valueOf(series, s, i)!;
+    const x0 = start + band * (i + 0.5) - group / 2 + s * bw;
+    const y1 = y(Math.max(v, 0)), y2 = y(Math.min(v, 0));
+    return { x: rtl ? width - x0 - bw : x0, y: Math.min(y1, y2), w: bw, h: Math.max(1, Math.abs(y2 - y1)), neg: v < 0 };
+  };
+  return { band, flip, x, y, py, bar };
+}
+
+interface MarksApi {
+  focus: (s: number, i: number, ring: boolean) => void;
+  blur: () => void;
+  point: (key: string, el: SVGElement | null) => void;
+}
+
+/* The lines and their markers, or the bars: one focusable point per value. Memoised on the data and the layout, so the
+   pointer moving across the plot (the tip, the cursor line) doesn't draw a year of points in three series again. The
+   x and y follow the same layout as the rest of the plot (start, pw, ph and the ticks' ends t0 and tN). */
+const Marks = /* @__PURE__ */ React.memo(function Marks(p: {
+  series: ReadonlyArray<ChartSeries>; categories: ReadonlyArray<string>; type: (typeof TYPES)[number]; stacked: boolean;
+  start: number; pw: number; ph: number; t0: number; tN: number; width: number; rtl: boolean;
+  formatValue: ((value: number) => string) | undefined; locale: string; labels: typeof words; base: string; tabS: number; tabI: number; api: React.RefObject<MarksApi>;
+}) {
+  const { series, categories, type, stacked, start, pw, ph, width, rtl, labels, api } = p;
+  const n = categories.length, linear = type === 'line' || type === 'area';
+  const fmt = (v: number) => (p.formatValue ? p.formatValue(v) : displayNumber(v, p.locale));
+  const val = (s: number, i: number) => valueOf(series, s, i);
+  const { x, py, bar } = layout(series, n, type, stacked, start, pw, ph, p.t0, p.tN, width, rtl);
+  return <>{series.map((sr, s) => {
+    let d = '', open = false;
+    for (let i = 0; i < n; i++) {
+      if (val(s, i) == null) { open = false; continue; }
+      d += `${open ? 'L' : 'M'}${at(x(i))} ${at(py(s, i))}`;
+      open = true;
+    }
+    return (
+      <g key={s} className={'dk-chart__series dk-chart--s' + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
+        {linear && d ? <path className="dk-chart__line" d={d} pathLength={1} aria-hidden /> : null}
+        {Array.from({ length: n }, (_, i) => {
+          const v = val(s, i);
+          if (v == null) return null;
+          const key = s + ':' + i;
+          const common = {
+            ref: (el: SVGElement | null) => api.current.point(key, el),
+            role: 'img',
+            'aria-label': labels.chartPoint(series.length > 1 ? sr.name : null, categories[i] ?? '', fmt(v)),
+            tabIndex: p.tabS === s && p.tabI === i ? 0 : -1,
+            onFocus: (e: React.FocusEvent<SVGElement>) => api.current.focus(s, i, e.currentTarget.matches(':focus-visible')),
+            onBlur: () => api.current.blur(),
+          };
+          if (linear) return <path key={i} {...common} className="dk-chart__marker dk-chart__point" d={markerPath(s, x(i), py(s, i), MARKER)} />;
+          const b = bar(s, i);
+          return <rect key={i} {...common} className={cn('dk-chart__bar dk-chart__point', b.neg && 'dk-chart__bar--neg')} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)}
+            fill={s && series.length > 1 ? `url(#${p.base}-p${s})` : undefined} />;
+        })}
+      </g>
+    );
+  })}</>;
+});
+
 interface Point { s: number; i: number; v: number }
 type Spot = { s: number; i: number };
 type Focused = Spot & { ring: boolean };
@@ -118,8 +196,8 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
   const busy = !!props.loading;
   const base = domId('dk-chart', React.useId());
   const type = oneOf(TYPES, props.type, 'line');
-  const categories = props.categories || [];
-  const series = (props.series || []).slice(0, COLORS);
+  const categories = props.categories || NONE;
+  const series = React.useMemo(() => (props.series || []).slice(0, COLORS), [props.series]);
   const n = categories.length;
   const waiting = busy && !n;   // nothing to draw yet: the placeholder
   const height = Math.max(80, Math.round(Number(props.height) || 240));
@@ -155,14 +233,13 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
     return () => ro.disconnect();
   }, [view]);
 
-  const val = (s: number, i: number): number | null => { const v = series[s]?.values[i]; return typeof v === 'number' && isFinite(v) ? v : null; };
+  const val = (s: number, i: number) => valueOf(series, s, i);
   const all: Point[] = [];
   series.forEach((_, s) => { for (let i = 0; i < n; i++) { const v = val(s, i); if (v != null) all.push({ s, i, v }); } });
   // Lines and areas share their layout: a point per category, from edge to edge.
   const linear = type === 'line' || type === 'area';
   const stacked = type === 'area' && !!props.stacked && series.length > 1;
-  // Stacked, a series' line is the sum of its value and those of the series before it (a missing one counts as 0).
-  const topOf = (s: number, i: number) => { let t = 0; for (let k = 0; k <= s; k++) t += val(k, i) ?? 0; return t; };
+  const topOf = (s: number, i: number) => topOfSeries(series, s, i);
   const heights = all.map((p) => (stacked ? topOf(p.s, p.i) : p.v));
   let lo = heights.length ? Math.min(...heights) : 0, hi = heights.length ? Math.max(...heights) : 1;
   // Bars and areas stand on zero. A line starts at zero too, unless its values sit so far from it that zero would
@@ -175,13 +252,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
   const tickText = ticks.map(fmt);
   const start = Math.ceil(Math.max(...tickText.map((t) => t.length)) * CHAR) + 10;
   const pw = Math.max(1, width - start - PAD_END), ph = Math.max(1, height - PAD_TOP - AXIS);
-  const band = pw / Math.max(1, n);
-  // x from the start edge, mirrored on a right-to-left page so the first category is on the right.
-  const flip = (x: number) => (rtl ? width - x : x);
-  const xAt = (i: number) => flip(type === 'bar' ? start + band * (i + 0.5) : n === 1 ? start + pw / 2 : start + INSET + (i * (pw - 2 * INSET)) / (n - 1));
-  const yAt = (v: number) => PAD_TOP + ph * (1 - (v - t0) / (tN - t0 || 1));
-  // A point's height: its value, or stacked, its series' line there.
-  const py = (s: number, i: number) => yAt(stacked ? topOf(s, i) : val(s, i)!);
+  const { band, flip, x: xAt, y: yAt, py, bar } = layout(series, n, type, stacked, start, pw, ph, t0, tN, width, rtl);
   const step = type === 'bar' ? band : n > 1 ? (pw - 2 * INSET) / (n - 1) : pw;
   // Every category gets a label when they fit side by side; else every second, third…, from the first.
   const every = Math.max(1, Math.ceil((Math.max(1, ...categories.map((c) => c.length)) * CHAR + 8) / Math.max(1, step)));
@@ -249,6 +320,21 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
     if (to !== hover) { setHover(to); setHushed(false); }
   };
   const shown = hushed ? null : focus ? focus.i : hover;
+  // The points call back through a ref, so the memoised marks redraw when the data or the layout change, not on every
+  // pointer move; the shown category's markers are marked here instead.
+  const api = React.useRef<MarksApi>(null!);
+  api.current = {
+    focus: (s, i, ring) => { setLast({ s, i }); setHushed(false); setFocus({ s, i, ring }); },
+    blur: () => setFocus(null),
+    point: (key, el) => { if (el) points.current.set(key, el); else points.current.delete(key); },
+  };
+  // every render: any change of data or layout can draw the markers again, and the shown ones are found afresh.
+  useIsoLayoutEffect(() => {
+    if (shown == null || donut) return;
+    const on = series.map((_, s) => points.current.get(s + ':' + shown)).filter((el): el is SVGElement => !!el);
+    for (const el of on) el.setAttribute('data-active', '');
+    return () => { for (const el of on) el.removeAttribute('data-active'); };
+  });
   // Escape hides the tip from anywhere while it shows (the plot may only be hovered, not focused), and focus stays.
   // Caught first and stopped, as Tooltip does, so a Dialog around the chart stays open.
   React.useEffect(() => {
@@ -259,15 +345,7 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
   }, [shown]);
   const changeView = (v: ChartView) => { if (props.view === undefined) setOwnView(v); props.onViewChange?.(v); };
 
-  // Bars: a category's group takes most of its band, a bar per series, the chart-gap color between them.
-  const group = band * (series.length > 1 ? 0.8 : 0.6), bw = group / Math.max(1, series.length);
   const zero = yAt(Math.min(Math.max(0, t0), tN));
-  const bar = (s: number, i: number) => {
-    const v = val(s, i)!;
-    const x0 = start + band * (i + 0.5) - group / 2 + s * bw;
-    const y1 = yAt(Math.max(v, 0)), y2 = yAt(Math.min(v, 0));
-    return { x: rtl ? width - x0 - bw : x0, y: Math.min(y1, y2), w: bw, h: Math.max(1, Math.abs(y2 - y1)), neg: v < 0 };
-  };
   const fill = (s: number, count = series.length) => (s && count > 1 ? `url(#${base}-p${s})` : undefined);
   // An area: from its line down to zero, or stacked, down to the series under it; a missing value breaks it (unstacked).
   const areaPath = (s: number) => {
@@ -421,37 +499,8 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
                 </g>
               ) : null}
               {shown != null ? <line className="dk-chart__cursor" aria-hidden x1={at(xAt(shown))} x2={at(xAt(shown))} y1={PAD_TOP} y2={PAD_TOP + ph} /> : null}
-              {series.map((sr, s) => {
-                let d = '', open = false;
-                for (let i = 0; i < n; i++) {
-                  const v = val(s, i);
-                  if (v == null) { open = false; continue; }
-                  d += `${open ? 'L' : 'M'}${at(xAt(i))} ${at(py(s, i))}`;
-                  open = true;
-                }
-                return (
-                  <g key={s} className={'dk-chart__series dk-chart--s' + (s + 1)} role="group" aria-label={series.length > 1 ? sr.name : undefined}>
-                    {linear && d ? <path className="dk-chart__line" d={d} pathLength={1} aria-hidden /> : null}
-                    {Array.from({ length: n }, (_, i) => {
-                      const v = val(s, i);
-                      if (v == null) return null;
-                      const key = s + ':' + i;
-                      const common = {
-                        ref: (el: SVGElement | null) => { if (el) points.current.set(key, el); else points.current.delete(key); },
-                        role: 'img',
-                        'aria-label': labels.chartPoint(series.length > 1 ? sr.name : null, categories[i] ?? '', fmt(v)),
-                        tabIndex: current && current.s === s && current.i === i ? 0 : -1,
-                        'data-active': shown === i ? '' : undefined,
-                        onFocus: (e: React.FocusEvent<SVGElement>) => { setLast({ s, i }); setHushed(false); setFocus({ s, i, ring: e.currentTarget.matches(':focus-visible') }); },
-                        onBlur: () => setFocus(null),
-                      };
-                      if (linear) return <path key={i} {...common} className="dk-chart__marker dk-chart__point" d={markerPath(s, xAt(i), py(s, i), MARKER)} />;
-                      const b = bar(s, i);
-                      return <rect key={i} {...common} className={cn('dk-chart__bar dk-chart__point', b.neg && 'dk-chart__bar--neg')} x={at(b.x)} y={at(b.y)} width={at(b.w)} height={at(b.h)} fill={fill(s)} />;
-                    })}
-                  </g>
-                );
-              })}
+              <Marks series={series} categories={categories} type={type} stacked={stacked} start={start} pw={pw} ph={ph} t0={t0} tN={tN} width={width} rtl={rtl}
+                formatValue={props.formatValue} locale={locale} labels={labels} base={base} tabS={current ? current.s : -1} tabI={current ? current.i : -1} api={api} />
               {focus && focus.ring && val(focus.s, focus.i) != null ? (() => {
                 // The focus ring, a gap away from the point so it shows against the series' own color.
                 if (linear) return <circle className="dk-chart__focus" aria-hidden cx={at(xAt(focus.i))} cy={at(py(focus.s, focus.i))} r={MARKER + 5} />;

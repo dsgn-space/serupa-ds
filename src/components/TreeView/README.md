@@ -122,7 +122,7 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-text` | `text` | The labels (4.5:1 on bg). |
 | `--tree-view-item-bg-hover` | `secondary` | A row's background on hover. |
 | `--tree-view-item-bg-selected` | `highlight` | The picked row's background. |
-| `--tree-view-item-indicator` | `primary` | The 2px bar at the picked row's start. |
+| `--tree-view-item-indicator` | `highlight-indicator` | The 2px bar at the picked row's start. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
 | `--tree-view-icon-color` | `text-muted` | The chevrons and item icons. |
 | `--tree-view-focus-ring` | `focus-ring` | The ring inside the focused row. |
 | `--tree-view-item-bg-pressed` | `pressed` | A row's fill while it's held down. |

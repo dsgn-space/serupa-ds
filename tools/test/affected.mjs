@@ -1,7 +1,7 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, touchedComponents, folderForKebab, folderOf, inParallelRetry, internalTestsFor, kebab, scopeFiles, withDependents, report, done } from './lib.mjs';
+import { affectedComponents, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -62,6 +62,14 @@ t('Input brings DatePicker and DateRangePicker (they use .dk-input), and Navbar 
   const log = console.log; console.log = () => {};
   const out = await inParallelRetry(['steady', 'flaky', 'broken'], [0, 1], check, (x) => x).finally(() => { console.log = log; });
   t('a failed story is tried once more: a flake passes, a real failure stays', out.map((r) => r[0].ok).join() === 'true,true,false' && seen.get('steady') === 1 && seen.get('broken') === 2, JSON.stringify([...seen]));
+}
+// More failures than RETRY_UP_TO is a change: none of them is tried again.
+{
+  const items = Array.from({ length: RETRY_UP_TO + 1 }, (_, i) => `broken-${i}`);
+  let calls = 0;
+  const log = console.log; console.log = () => {};
+  const out = await inParallelRetry(items, [0, 1], async (id) => { calls++; return [{ name: id, ok: false }]; }, (x) => x).finally(() => { console.log = log; });
+  t(`more than ${RETRY_UP_TO} failures are not tried again, and stay failed`, calls === items.length && out.every((r) => !r[0].ok), `${calls} calls`);
 }
 
 done(report('Affected components', R));

@@ -102,8 +102,12 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
       const f = field.current;
       if (f && activeIn(f) === f && f.selectionStart !== null && f.selectionEnd !== null) seen.current = [f.selectionStart, f.selectionEnd, f.selectionDirection || 'none'];
     };
+    // Also on the field: WebKit sends a field's selectionchange to the field, and inside a shadow root it never
+    // reaches the document (the event isn't composed).
+    const f = field.current;
     document.addEventListener('selectionchange', keep, true);
-    return () => document.removeEventListener('selectionchange', keep, true);
+    if (f) f.addEventListener('selectionchange', keep);
+    return () => { document.removeEventListener('selectionchange', keep, true); if (f) f.removeEventListener('selectionchange', keep); };
   }, []);
   const capture = () => {
     const f = field.current;

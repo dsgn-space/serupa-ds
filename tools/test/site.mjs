@@ -167,6 +167,44 @@ await inParallel(pages, workers, async (p, w) => {
   await w.page.setViewportSize({ width: 1280, height: 800 });
 }
 
+// A theme change on a page with a screen: the screen follows it, with no View Transition of its own inside the one
+// the page runs (site/src/Frame.tsx), and the page is still there afterwards.
+{
+  const context = await workers[0].page.context().browser().newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  let crashed = false;
+  page.on('crash', () => { crashed = true; });
+  await page.goto(base + '/');
+  const frame = page.frameLocator('.site-screen__page');
+  await page.locator('.site-screen').scrollIntoViewIfNeeded();
+  const drawn = await frame.locator('[data-site-frame]').waitFor({ timeout: 15000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  const inner = page.frames().find((f) => f.url().includes('/frame/'));
+  const before = inner ? await inner.evaluate(() => document.documentElement.getAttribute('data-theme')) : null;
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.getByRole('button', { name: 'Switch to the dark theme' }).click();
+  await page.waitForTimeout(1500);
+  const after = crashed || !inner ? null : await inner.evaluate(() => ({ theme: document.documentElement.getAttribute('data-theme'), fades: typeof document.startViewTransition })).catch(() => null);
+  const outer = crashed ? null : await page.evaluate(() => document.documentElement.getAttribute('data-theme')).catch(() => null);
+  t('/: the light and dark switch changes the page and its screen together, the screen with no crossfade of its own',
+    !drawn && !crashed && !!after && !!outer && outer.endsWith('-dark') && after.theme === outer && after.theme !== before && after.fades === 'undefined',
+    drawn || JSON.stringify({ crashed, before, outer, after }));
+  // A link in "On this page" glides to its heading: the sticky bar's own focus scroll doesn't jump there first.
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto(base + '/components/button');
+  const link = page.locator('.site-aside .dk-toc__panel a').last();
+  const glide = await page.locator('.site-aside .dk-toc--rail').hover({ timeout: 15000 }).then(() => link.evaluate((a) => new Promise((done) => {
+    const ys = [], t0 = performance.now();
+    const tick = () => { ys.push(Math.round(window.scrollY)); if (performance.now() - t0 < 1500) requestAnimationFrame(tick); else done(ys); };
+    a.addEventListener('click', () => requestAnimationFrame(tick), { once: true });
+    /** @type {HTMLElement} */ (a).click();
+  }))).catch((e) => String(e.message).split('\n')[0]);
+  const end = Array.isArray(glide) ? glide[glide.length - 1] : 0;
+  t('/components/button: a link in "On this page" glides to its heading rather than jumping there',
+    Array.isArray(glide) && end > 720 && glide.filter((y) => y > 0 && y < end).length >= 3,
+    Array.isArray(glide) ? 'the page was at ' + glide.slice(0, 8).join(', ') + ' on the first frames, and ended at ' + end : glide);
+  await context.close();
+}
+
 // A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
 if (t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
   const w = workers[0];
@@ -188,6 +226,8 @@ if (t('some page has a story that waits behind its button', !!held, 'no page sho
     if (!t(`${at} opens`, !failed, failed)) continue;
     // A screen (site/src/Screen.tsx) is a story on a page of its own, in a frame: it has drawn once that page has content.
     const screens = w.page.locator('iframe.site-screen__page');
+    // The showcase draws its screen once the pattern's stories have loaded, after the page is ready (WebKit can take longer).
+    if (at === '/showcase') await screens.first().waitFor({ state: 'attached', timeout: 30000 }).catch(() => {});
     let drawn = '';
     if (await screens.count()) {
       await screens.first().scrollIntoViewIfNeeded();

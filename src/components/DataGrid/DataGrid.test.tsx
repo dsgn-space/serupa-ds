@@ -114,7 +114,7 @@ describe('DataGrid', () => {
     expect(onChange).toHaveBeenLastCalledWith([{ rowId: 'b', column: 'name', value: 'Madu' }, { rowId: 'b', column: 'qty', value: '2' }, { rowId: 'c', column: 'name', value: 'Aren' }, { rowId: 'c', column: 'qty', value: '5' }]);
   });
 
-  test('with no text selected, Ctrl+C and Ctrl+V reach the body (Chrome before 125, Firefox): copy and paste still work on the focused cells', async () => {
+  test('with no text selected, Ctrl+C and Ctrl+V reach the body (Chrome before 125): copy and paste still work on the focused cells', async () => {
     const clip = (type: 'copy' | 'paste', text = '') => {
       const held: Record<string, string> = text ? { 'text/plain': text } : {};
       const ev = new ClipboardEvent(type, { bubbles: true, cancelable: true });

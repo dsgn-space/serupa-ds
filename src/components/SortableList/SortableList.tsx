@@ -260,30 +260,58 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
   });
 
   const name = props.reorderLabel || sds.labels.reorder;
+  // Stable handlers for the memoised rows, reading the latest through a ref: moving an item redraws the rows whose
+  // place changes, not every row.
+  const api = React.useRef<RowApi>(null!);
+  api.current = {
+    click: (key, index) => onClick(key, index)(), keyDown: onKeyDown, blur: onBlur, pointerDown: (key, e) => onPointerDown(key)(e),
+    handle: (key, n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); },
+  };
   const mergedRef = useMergedRef(ref, (n) => { list.current = n; });
   return (<>
     <ul role="list" {...rest} ref={mergedRef}
       className={cn('dk-sortable-list', drag && 'dk-sortable-list--sorting', props.disabled && 'dk-sortable-list--disabled', props.className)} data-component="sortable-list" data-orientation={row ? 'horizontal' : undefined}>
       {shown.map((it, index) => {
         const key = getKey(it), dragging = !!drag && drag.key === key;
-        return (
-          <li key={key} data-key={String(key)} className={cn('dk-sortable-list__item', dragging && 'dk-sortable-list__item--dragging')} data-state={dragging ? 'dragging' : undefined}>
-            {props.disabled ? null : (
-              <button type="button" className="dk-sortable-list__handle" aria-label={name + ' ' + label(it)} aria-describedby={hintId} aria-pressed={dragging && !drag.pointer}
-                ref={(n) => { if (n) handles.current.set(key, n); else handles.current.delete(key); }}
-                onClick={onClick(key, index)} onKeyDown={onKeyDown} onBlur={onBlur}
-                onPointerDown={onPointerDown(key)}>
-                <Icon icon={icons.DragIndicator} />
-              </button>
-            )}
-            <div className="dk-sortable-list__content">{props.renderItem(it, { index, dragging })}</div>
-          </li>
-        );
+        return <SortableRow key={key} item={it} itemKey={key} name={name + ' ' + label(it)} index={index} dragging={dragging}
+          pressed={dragging && !drag.pointer} disabled={!!props.disabled} hint={hintId} renderItem={props.renderItem} api={api} />;
       })}
     </ul>
     {props.disabled ? null : <span hidden id={hintId}>{sds.labels.reorderInstructions}</span>}
   </>);
 }) as <T>(props: SortableListProps<T> & { ref?: React.Ref<HTMLUListElement> | undefined }) => React.ReactElement;
+
+/* What a row calls back into the list with. The list keeps these in a ref and swaps in fresh ones each render, so a
+   row's own props say only what it shows. */
+interface RowApi {
+  click: (key: string | number, index: number) => void;
+  keyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  blur: () => void;
+  pointerDown: (key: string | number, e: React.PointerEvent<HTMLButtonElement>) => void;
+  handle: (key: string | number, node: HTMLButtonElement | null) => void;
+}
+
+/* One row: memoised on what it shows, so moving an item by keyboard or pointer redraws the rows whose place changes
+   (each pointer move during a drag renders the list), not every row. */
+const SortableRow = /* @__PURE__ */ React.memo(function SortableRow(props: {
+  item: unknown; itemKey: string | number; name: string; index: number; dragging: boolean; pressed: boolean; disabled: boolean; hint: string;
+  renderItem: SortableListProps<unknown>['renderItem']; api: React.RefObject<RowApi>;
+}) {
+  const { itemKey: key, index, dragging, api } = props;
+  return (
+    <li data-key={String(key)} className={cn('dk-sortable-list__item', dragging && 'dk-sortable-list__item--dragging')} data-state={dragging ? 'dragging' : undefined}>
+      {props.disabled ? null : (
+        <button type="button" className="dk-sortable-list__handle" aria-label={props.name} aria-describedby={props.hint} aria-pressed={props.pressed}
+          ref={(n) => api.current.handle(key, n)}
+          onClick={() => api.current.click(key, index)} onKeyDown={(e) => api.current.keyDown(e)} onBlur={() => api.current.blur()}
+          onPointerDown={(e) => api.current.pointerDown(key, e)}>
+          <Icon icon={icons.DragIndicator} />
+        </button>
+      )}
+      <div className="dk-sortable-list__content">{props.renderItem(props.item, { index, dragging })}</div>
+    </li>
+  );
+});
 
 /** items with the one at `from` moved to `to`. */
 function move<T>(items: readonly T[], from: number, to: number): T[] {

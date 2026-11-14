@@ -123,12 +123,19 @@ export async function inParallel(items, workers, fn) {
 }
 // inParallel, then each item with a failed result once more, on its own: a story that fails once on a busy machine
 // (one picture of 1,372 on 7 Nov 2026) shouldn't cost a whole rerun. A failure that repeats stays a failure. Every
-// item that passed only the second time is named, so a story that keeps needing it shows up.
+// item that passed only the second time is named, so a story that keeps needing it shows up. More than RETRY_UP_TO
+// failures is a change, not flakes (200 dark pictures after a surface colour moved, 14 Nov), and trying them all again
+// only made the job ten minutes longer: those stay failed without a second try.
 //   results: arrays of { name, ok, detail }, one per item; id(item) names it in the note.
+export const RETRY_UP_TO = 10;
 export async function inParallelRetry(items, workers, fn, id) {
   const out = await inParallel(items, workers, fn);
   const again = out.map((r, i) => (r.some((x) => !x.ok) ? i : -1)).filter((i) => i >= 0);
   if (!again.length) return out;
+  if (again.length > RETRY_UP_TO) {
+    console.log(`${again.length} items failed: more than ${RETRY_UP_TO} is a change rather than flakes, so none was tried again.`);
+    return out;
+  }
   const second = await inParallel(again.map((i) => items[i]), workers, fn);
   const passed = [];
   again.forEach((i, k) => { out[i] = second[k]; if (second[k].every((x) => x.ok)) passed.push(id(items[i])); });

@@ -28,11 +28,15 @@ const UNTRUSTED = /\$\{\{\s*github\.(head_ref|event\.(?!(pull_request\.)?(number
 
 for (const f of files) {
   const lines = fs.readFileSync(path.join(GH, f), 'utf8').split('\n');
-  const unpinned = [], injected = [], checkouts = [];
-  let inRun = -1;
+  const unpinned = [], injected = [], checkouts = [], headPipes = [];
+  let inRun = -1, relaxed = false;
   lines.forEach((line, i) => {
     const indent = line.search(/\S/);
     if (inRun >= 0 && line.trim() && indent <= inRun) inRun = -1;
+    // head closes its end of the pipe once it has its lines; with shell: bash's pipefail the writer's broken pipe (141)
+    // then fails the step, so a script that cuts output short says set +o pipefail first.
+    if (inRun >= 0 && /^\s*set \+o pipefail\b/.test(line)) relaxed = true;
+    if (inRun >= 0 && !/^\s*#/.test(line) && /\|\s*head\b/.test(line) && !relaxed) headPipes.push(`${i + 1}`);
     const uses = line.match(/^\s*-?\s*uses:\s*(\S+)(.*)$/);
     if (uses && !uses[1].startsWith('./')) {
       if (!/@[0-9a-f]{40}$/.test(uses[1]) || !/#\s*v\d+\.\d+\.\d+/.test(uses[2])) unpinned.push(`${i + 1}: ${uses[1]}`);
@@ -42,11 +46,12 @@ for (const f of files) {
       }
     }
     const run = line.match(/^(\s*)-?\s*run:\s*(.*)$/);
-    if (run) { if (UNTRUSTED.test(run[2])) injected.push(`${i + 1}`); if (/^[|>]/.test(run[2].trim())) inRun = indent; }
+    if (run) { if (UNTRUSTED.test(run[2])) injected.push(`${i + 1}`); if (/^[|>]/.test(run[2].trim())) { inRun = indent; relaxed = false; } }
     else if (inRun >= 0 && UNTRUSTED.test(line)) injected.push(`${i + 1}`);
   });
   t(`${f}: every action is pinned to a commit SHA, with its version as a comment`, !unpinned.length, unpinned.join(', '));
   t(`${f}: no pull request text is pasted into a run: script (pass it through env:)`, !injected.length, `line ${injected.join(', ')}`);
+  if (headPipes.length || lines.some((l) => /\|\s*head\b/.test(l))) t(`${f}: a run: script that pipes into head says set +o pipefail first`, !headPipes.length, `line ${headPipes.join(', ')}`);
   if (checkouts.length) {
     const keeps = checkouts.filter((c) => c.keeps).map((c) => c.line);
     t(`${f}: its checkouts keep no token (persist-credentials: false)`, !keeps.length, `line ${keeps.join(', ')}`);
@@ -114,6 +119,10 @@ if (fs.existsSync(path.join(GH, 'workflows/ci.yml'))) {
   const cancelled = held(0), refused = held(1);
   t('ci.yml: a held run cancels itself, and its test check still fails', job >= 0 && cancelled.calls === 'run cancel 42' && cancelled.status === 1, JSON.stringify(cancelled));
   t('ci.yml: a held run whose cancel is refused fails its test check', refused.status === 1, JSON.stringify(refused));
+  // GitHub stops a running job on a cancel only when its condition then comes out false: always() kept the held job
+  // running past its own cancel, to a red X (#1890, 14 Nov).
+  const cond = lines.slice(job, run).find((l) => /^\s*if:/.test(l)) ?? '';
+  t('ci.yml: the test check is cancelled with a held run, and runs whatever else happens', /!cancelled\(\)/.test(cond) && /hold != '1'/.test(cond) && !/always\(\)/.test(cond), cond.trim());
   fs.rmSync(bin, { recursive: true, force: true });
 }
 

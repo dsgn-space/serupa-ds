@@ -7,6 +7,13 @@ import { Loader } from '../../src/components/Loader/Loader';
 import { pages } from './pages';
 import { loadStories, StoryView, type StoryEntry } from './stories';
 
+// Inside a screen (an iframe on the front page or the showcase) a theme change is applied at once, with no crossfade
+// of its own: the page around it already crossfades, the screen with it, and a View Transition in a frame while its
+// parent runs one has crashed the tab in Chrome. The theme script goes without one where the document has none.
+if (typeof window !== 'undefined' && window.parent !== window) {
+  try { Object.defineProperty(document, 'startViewTransition', { value: undefined, configurable: true }); } catch { /* the crossfade stays */ }
+}
+
 export function Frame({ id }: { id: string }) {
   const [pageId = '', slug = ''] = id.split('--');
   const file = pages.find((p) => p.id === pageId)?.stories ?? null;

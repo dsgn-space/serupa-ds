@@ -30,7 +30,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm install --no-save typescript@next
+      # --legacy-peer-deps, as for React's canary below: a nightly's version (7.1.0-dev.…) is a prerelease, which no
+      # peer range like react-docgen-typescript's ">= 4.3.x" takes, so npm refused it (ERESOLVE, 13 and 14 Nov).
+      - run: npm install --no-save --legacy-peer-deps typescript@next
       - run: echo "TypeScript $(npx tsc -v)" >> "$GITHUB_STEP_SUMMARY"
       - run: node tools/build/registry.mjs && npx tsc -p . && npx tsc -p tools
 

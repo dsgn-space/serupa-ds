@@ -74,8 +74,8 @@
       },
       "row-indicator-selected": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The bar at the start of a selected row.",
+        "$value": "{color.highlight-indicator}",
+        "$description": "The bar at the start of a selected row. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-row-indicator-selected"

@@ -20,6 +20,7 @@ import { useFormReset } from '../../internal/useFormReset';
 import { en as fileWords } from './labels';
 import { en as boundary } from '../ErrorBoundary/labels';
 import { en as progress } from '../Progress/labels';
+import { useClipboardHandOn } from '../../internal/clipboardHandOn';
 
 // Its own words, Progress's "Complete" for a finished upload and ErrorBoundary's "Try again" for a failed one.
 const words = /* @__PURE__ */ Object.assign({}, boundary, progress, fileWords);
@@ -315,7 +316,10 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const errorId = invalid ? props['aria-errormessage'] : undefined;
   const given = props['aria-describedby'];
   const described = cn(required && base + '-req', given, errorId && !(given || '').split(/\s+/).includes(errorId) && errorId, hasHint && base + '-hint', missing && base + '-missing') || undefined;
-  const mergedRef = useMergedRef(ref, (n) => { delegateFocus(n, choose); });
+  const root = React.useRef<HTMLDivElement | null>(null);
+  // Pasted with focus inside in Chrome before 125, which sends the paste to the body: handed on here.
+  useClipboardHandOn(root);
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, choose); });
   return (
     <div {...rest} onPaste={onPaste} ref={mergedRef} aria-disabled={disabled || undefined} className={cn('dk-file-upload', disabled && 'dk-file-upload--disabled', readOnly && 'dk-file-upload--readonly', (invalid || missing) && 'dk-file-upload--invalid', props.className)} data-component="file-upload">
       {/* A click on the area's padding opens the picker too, for the pointer only: the choose button is how the

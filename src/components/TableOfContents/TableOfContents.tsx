@@ -149,6 +149,13 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
     setCurrent(id);
   };
 
+  // A link that takes focus in the rail's panel is scrolled into the panel's view. WebKit doesn't, as the panel is still
+  // hidden when focus arrives. Measured on the layout, not on the panel's scale while it grows in.
+  const reveal = (e: React.FocusEvent<HTMLDivElement>) => {
+    const p = e.currentTarget, a = e.target.getBoundingClientRect(), r = p.getBoundingClientRect();
+    const k = r.height / p.offsetHeight || 1, top = (a.top - r.top) / k - p.clientTop + p.scrollTop, end = top + a.height / k;
+    if (top < p.scrollTop) p.scrollTop = top; else if (end > p.scrollTop + p.clientHeight) p.scrollTop = end - p.clientHeight;
+  };
   // The rail's panel: shown by the pointer over it or focus in it (CSS), and by a tap (open). Escape hides it until the
   // pointer or focus leaves (dismissed), as content shown on hover or focus must be dismissible (WCAG 1.4.13).
   const [open, setOpen] = React.useState(false);
@@ -191,7 +198,7 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
           {items.map((it) => <span key={it.id} className="dk-toc__dash" data-current={current === it.id ? '' : undefined}
             style={{ '--dk-toc-depth': Math.min(2, Math.max(0, (it.level ?? 2) - minLevel)) } as React.CSSProperties} />)}
         </div>
-        <div className="dk-toc__panel">{head}{list}</div>
+        <div className="dk-toc__panel" onFocus={rail ? reveal : undefined}>{head}{list}</div>
       </> : <>{head}{list}</>}
     </nav>
   );

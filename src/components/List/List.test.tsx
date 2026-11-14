@@ -145,12 +145,12 @@ describe('List', () => {
     expect([document.activeElement === b, css(b).outlineStyle, css(b).outlineWidth, css(b).outlineOffset]).toEqual([true, 'solid', '2px', '-2px']);
   });
 
-  test('selected: aria-current, shaded, a 2px primary bar at the start', async () => {
+  test('selected: aria-current, shaded; the 2px bar at the start is highlight-indicator, drawn only with more contrast (GR407)', async () => {
     await render(<Card clicks={[]} />);
     const li = el('isel'), s = css(li);
     expect([li.querySelector('a')!.getAttribute('aria-current'), s.backgroundColor]).toEqual(['true', bg('var(--surface-muted)')]);
     expect(s.boxShadow).toMatch(/2px 0px 0px 0px inset$/);
-    expect(s.boxShadow).toContain(color('var(--primary)'));
+    expect(s.boxShadow).toContain(color('var(--highlight-indicator)'));
   });
 
   test('linkProps\' aria-current wins over selected\'s "true", so a nav list can mark the current page (GF3)', async () => {
