@@ -26,7 +26,7 @@ import { BottomNav, BottomNavLink } from "@diki-stwn/serupa-ds";
 
 ## Anatomy
 
-Drawn from the `Playground` story.
+Drawn from the `WithBadges` story.
 
 1. **Bar** (`.dk-bottom-nav`): the navigation landmark, fixed along the bottom of a narrow screen, clear of a phone's home bar.
 2. **List** (`.dk-bottom-nav__list`): the destinations, side by side in equal widths.

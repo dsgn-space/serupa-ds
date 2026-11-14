@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import type { IconSource } from '../Icon/Icon';
 import { cn, oneOf } from '../../internal/cn';

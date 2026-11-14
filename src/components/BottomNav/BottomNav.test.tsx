@@ -71,7 +71,8 @@ describe('BottomNav', () => {
     const inbox = page.getByRole('link', { name: 'Inbox' });
     await expect.element(inbox).toHaveAccessibleDescription(/\p{Nd}/u);
     expect(inbox.element().getAttribute('aria-describedby')).toMatch(/^hint /);
-    const icon = inbox.element().querySelector('.dk-bottom-nav__icon')!.getBoundingClientRect(), badge = inbox.element().querySelector('.dk-bottom-nav__badge')!.getBoundingClientRect();
+    // The icon's pill is the link's first child, and the badge sits inside it, last.
+    const pill = inbox.element().firstElementChild!, icon = pill.getBoundingClientRect(), badge = pill.lastElementChild!.getBoundingClientRect();
     // Over the icon's top-end quarter: starts past the pill's middle (on the left in a right-to-left page), its top
     // at the pill's top.
     const rtl = getComputedStyle(inbox.element()).direction === 'rtl', mid = icon.left + icon.width / 2;

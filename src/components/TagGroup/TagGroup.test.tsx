@@ -43,10 +43,11 @@ describe('TagGroup', () => {
     const h = (name: string) => Math.round(page.getByRole('row', { name }).element().getBoundingClientRect().height);
     expect([Math.round(page.getByRole('row', { name: /^Ana Silva/ }).element().getBoundingClientRect().height), h('Bug')]).toEqual([h('Plain'), h('Plain')]);
     const docs = page.getByRole('row', { name: 'Docs' }).element(), bug = page.getByRole('row', { name: 'Bug' }).element();
-    expect([!!bug.querySelector('.dk-tag-group__icon'), !!docs.querySelector('.dk-tag-group__icon'), !!docs.querySelector('.dk-tag-group__check')]).toEqual([true, false, true]);
+    // A selected tag shows the check in its icon's place.
+    expect([!!bug.querySelector('[data-icon="bug_report"]'), !!docs.querySelector('[data-icon="description"]'), !!docs.querySelector('svg, [data-icon="check"]')]).toEqual([true, false, true]);
     // The picture comes before the words, at the tag's start.
-    const ana = page.getByRole('row', { name: /^Ana Silva/ }).element(), pic = ana.querySelector('.dk-tag-group__avatar')!.getBoundingClientRect();
-    expect(pic.left - ana.getBoundingClientRect().left).toBeLessThan(8);
+    const ana = page.getByRole('row', { name: /^Ana Silva/ }).element(), pic = ana.querySelector('[data-component="avatar"]')!.getBoundingClientRect(), box = ana.getBoundingClientRect();
+    expect(getComputedStyle(ana).direction === 'rtl' ? box.right - pic.right : pic.left - box.left).toBeLessThan(8);
   });
 
   test('the × fades its fill on hover, as every control does, and changes at once when pressed', async () => {

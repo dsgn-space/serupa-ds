@@ -136,14 +136,14 @@
 # WithIconsAndAvatars
 - text: To
 - grid "To":
-  - row "Ana Silva Remove Ana Silva":
-    - gridcell "Ana Silva"
-    - gridcell "Remove Ana Silva":
-      - button "Remove Ana Silva"
-  - row "Ken Ito Remove Ken Ito":
-    - gridcell "Ken Ito"
-    - gridcell "Remove Ken Ito":
-      - button "Remove Ken Ito"
+  - row "Ada Lovelace Remove Ada Lovelace":
+    - gridcell "Ada Lovelace"
+    - gridcell "Remove Ada Lovelace":
+      - button "Remove Ada Lovelace"
+  - row "Grace Hopper Remove Grace Hopper":
+    - gridcell "Grace Hopper"
+    - gridcell "Remove Grace Hopper":
+      - button "Remove Grace Hopper"
 - text: Labels
 - grid "Labels":
   - row "Bug":

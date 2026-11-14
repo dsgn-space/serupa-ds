@@ -23,6 +23,13 @@ const { Fab } = window.Serupa;
 - Any other action on the same screen: use a [Button](../Button/README.md) in the page, since there's only one FAB per screen.
 - An icon action in a toolbar or a row: use [IconButton](../IconButton/README.md).
 
+## Anatomy
+
+Drawn from the `ExtendedAuto` story. It's a primary [Button](../Button/README.md), so its icon and label are Button's.
+
+1. **Button** (`.dk-fab`): the round, raised primary button, fixed to a corner of the screen; extended, a pill with the label.
+2. **Label** (`.dk-fab__label`): with `extended="auto"`, the label's text in a box that folds to nothing while the page scrolls down and opens again on the way up.
+
 ## Usage
 
 - One per screen, for the action people come to the screen for. Other actions go in the page.
