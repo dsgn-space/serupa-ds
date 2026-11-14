@@ -38,6 +38,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 - Give it a `label`, shown above the tags, so the group has a name; or `aria-label` when the screen already says what they are.
 - With `onRemove`, take the tag out of `items` in it. Focus moves to the next tag (or the one before, or the group), and "Design removed" is said.
 - With `selectionMode`, a press, Space or Enter picks a tag. A picked tag has a tick as well as its color.
+- Give a recipient tag its `avatar`, or a label tag an `icon` for its kind, when the picture helps people find one at a glance. Both are decorative, so the words still have to say it all.
 - Use `max` for a list that can grow long: the rest wait behind "Show more", which becomes "Show less".
 - Pass `empty` ("No labels yet") so a list with nothing in it still says so.
 - Keep each tag to a word or two; long ones wrap inside the tag.
@@ -66,7 +67,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 | Prop | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `id` | `string` | | Goes to the outer `<div>` |
-| `items` | `TagItem[]` | | `{ id, label, disabled? }`, in order |
+| `items` | `TagItem[]` | | `{ id, label, disabled?, icon?, avatar? }`, in order. `icon` (an icon name or element) and `avatar` (a picture such as `<Avatar size="xs" />`, drawn at 20px so the tag keeps its height) sit before the words and are decorative: the words name the tag. A selected tag shows its check where its icon was |
 | `label` | `ReactNode` | | The group's visible label |
 | `onRemove` | `(id) => void` | | Shows a × on each tag; Delete and Backspace remove too |
 | `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'none'` | Picking tags |
@@ -96,6 +97,8 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-muted` | `text-muted` | The empty text. |
 | `--tag-group-focus-ring` | `focus-ring` | The focus ring around the focused tag. |
 | `--tag-group-more` | `primary` | The Show more and Show less button's words (4.5:1 on the page). |
+| `--tag-group-icon` | `text-muted` | A tag's leading icon (decorative; the words name the tag). |
 | `--tag-group-radius` | `radius-control` | A tag's corners, as other controls'. |
 | `--tag-group-gap` | `spacing-2` | The space between tags, and between the label and the tags (8px). |
+| `--tag-group-avatar-size` | `spacing-5` | The picture before a tag's words (20px), so a tag with an avatar keeps its 24px height. |
 <!-- token-table:end -->

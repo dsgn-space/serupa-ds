@@ -6,6 +6,7 @@ import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/he
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { TagGroup, type TagItem } from './TagGroup';
+import { Avatar } from '../Avatar/Avatar';
 
 const tags: TagItem[] = [{ id: 'design', label: 'Design' }, { id: 'bug', label: 'Bug' }, { id: 'checkout', label: 'Checkout' }, { id: 'mobile', label: 'Mobile' }];
 function Removable({ initial = tags, log = [] as string[], ...rest }: { initial?: TagItem[]; log?: string[] } & Partial<React.ComponentProps<typeof TagGroup>>) {
@@ -29,6 +30,23 @@ describe('TagGroup', () => {
     expect(page.getByRole('row').elements().map((r) => r.textContent)).toEqual(['Design', 'Bug', 'Checkout', 'Mobile']);
     await expect.element(page.getByRole('button', { name: 'Remove Design' })).toBeVisible();
     expect(page.getByRole('row').elements().map((r) => r.getAttribute('tabindex'))).toEqual(['0', '-1', '-1', '-1']);
+  });
+
+  test('icon and avatar: decorative, before the words; the tag keeps its name, its height, and a selected tag shows its check in the icon\'s place', async () => {
+    await render(<div>
+      <TagGroup label="Plain" items={[{ id: 'p', label: 'Plain' }]} />
+      <TagGroup label="To" items={[{ id: 'ana', label: 'Ana Silva', avatar: <Avatar name="Ana Silva" size="md" /> }]} onRemove={() => {}} />
+      <TagGroup label="Kinds" items={[{ id: 'bug', label: 'Bug', icon: 'bug_report' }, { id: 'docs', label: 'Docs', icon: 'description' }]} selectionMode="multiple" defaultSelected={['docs']} />
+    </div>);
+    await expect.element(page.getByRole('row', { name: /^Ana Silva/ })).toBeVisible();
+    await expect.element(page.getByRole('row', { name: 'Bug' })).toBeVisible();
+    const h = (name: string) => Math.round(page.getByRole('row', { name }).element().getBoundingClientRect().height);
+    expect([Math.round(page.getByRole('row', { name: /^Ana Silva/ }).element().getBoundingClientRect().height), h('Bug')]).toEqual([h('Plain'), h('Plain')]);
+    const docs = page.getByRole('row', { name: 'Docs' }).element(), bug = page.getByRole('row', { name: 'Bug' }).element();
+    expect([!!bug.querySelector('.dk-tag-group__icon'), !!docs.querySelector('.dk-tag-group__icon'), !!docs.querySelector('.dk-tag-group__check')]).toEqual([true, false, true]);
+    // The picture comes before the words, at the tag's start.
+    const ana = page.getByRole('row', { name: /^Ana Silva/ }).element(), pic = ana.querySelector('.dk-tag-group__avatar')!.getBoundingClientRect();
+    expect(pic.left - ana.getBoundingClientRect().left).toBeLessThan(8);
   });
 
   test('the × fades its fill on hover, as every control does, and changes at once when pressed', async () => {

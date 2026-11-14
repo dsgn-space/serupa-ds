@@ -133,3 +133,23 @@
     - gridcell "Remove Checkout":
       - button "Remove Checkout"
 
+# WithIconsAndAvatars
+- text: To
+- grid "To":
+  - row "Ana Silva Remove Ana Silva":
+    - gridcell "Ana Silva"
+    - gridcell "Remove Ana Silva":
+      - button "Remove Ana Silva"
+  - row "Ken Ito Remove Ken Ito":
+    - gridcell "Ken Ito"
+    - gridcell "Remove Ken Ito":
+      - button "Remove Ken Ito"
+- text: Labels
+- grid "Labels":
+  - row "Bug":
+    - gridcell "Bug"
+  - row "Docs" [selected]:
+    - gridcell "Docs"
+  - row "Urgent":
+    - gridcell "Urgent"
+

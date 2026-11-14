@@ -31,7 +31,7 @@ const POSITIONS: readonly FabPosition[] = ['bottom-end', 'bottom-start', 'top-en
 function useShrinkOnScroll(on: boolean): boolean {
   const [shrunk, setShrunk] = React.useState(false);
   React.useEffect(() => {
-    if (!on) { setShrunk(false); return; }
+    if (!on) return;
     let last = window.scrollY;
     const scrolled = () => {
       const y = window.scrollY;
@@ -44,7 +44,7 @@ function useShrinkOnScroll(on: boolean): boolean {
     window.addEventListener('scroll', scrolled, { passive: true });
     return () => window.removeEventListener('scroll', scrolled);
   }, [on]);
-  return shrunk;
+  return on && shrunk;
 }
 
 /** A floating action button: the screen's main action, round and raised, fixed to a corner. */

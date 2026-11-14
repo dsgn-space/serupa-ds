@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Avatar } from '../Avatar/Avatar';
 import { TagGroup, type TagItem } from './TagGroup';
 
 const labels: TagItem[] = [
@@ -30,6 +31,14 @@ export const Selectable: Story = { args: { label: 'Skills', items: skills, selec
 /** One choice: picking another clears the first. */
 export const SingleChoice: Story = { name: 'Single choice', args: { label: 'Topic', items: skills.slice(0, 4), selectionMode: 'single', defaultSelected: ['research'] } };
 /** A long list showing the first three, with Show more for the rest. */
+/** Recipients with their pictures, and labels with an icon for their kind. Both are decorative: the words name each tag. */
+export const WithIconsAndAvatars: Story = {
+  name: 'With icons and avatars',
+  render: () => <div style={{ display: 'grid', gap: 16 }}>
+    <Removable label="To" initial={[{ id: 'ana', label: 'Ana Silva', avatar: <Avatar name="Ana Silva" size="xs" /> }, { id: 'ken', label: 'Ken Ito', avatar: <Avatar name="Ken Ito" size="xs" /> }]} />
+    <TagGroup label="Labels" items={[{ id: 'bug', label: 'Bug', icon: 'bug_report' }, { id: 'docs', label: 'Docs', icon: 'description' }, { id: 'urgent', label: 'Urgent', icon: 'priority_high' }]} selectionMode="multiple" defaultSelected={['docs']} />
+  </div>,
+};
 export const Limited: Story = { args: { label: 'Skills', items: skills, max: 3 } };
 /** Nothing yet: the empty text. */
 export const Empty: Story = { args: { label: 'Labels', items: [], empty: 'No labels yet' } };

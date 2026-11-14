@@ -60,7 +60,7 @@ const BottomNavLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, BottomNav
   // The badge sits in the icon's pill, which is hidden from screen readers with the icon; aria-describedby reads it
   // after the name, as Sidebar's rail does.
   const badgeId = React.useId(), badge = props.badge != null && props.badge !== false;
-  if (badge) rest['aria-describedby'] = cn(rest['aria-describedby'] as string | undefined, badgeId);
+  if (badge) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
   return React.createElement(props.as || config.link, Object.assign(rest, {
     ref: ref, 'aria-current': props.active ? 'page' : undefined,
     className: cn('dk-bottom-nav__link', props.active && 'dk-bottom-nav__link--active', props.className),

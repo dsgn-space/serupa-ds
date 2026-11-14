@@ -121,6 +121,16 @@
             "cssVar": "--tag-group-more"
           }
         }
+      },
+      "icon": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "A tag's leading icon (decorative; the words name the tag).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-icon"
+          }
+        }
       }
     },
     "radius": {
@@ -143,6 +153,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tag-group-gap"
+          }
+        }
+      },
+      "avatar-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "The picture before a tag's words (20px), so a tag with an avatar keeps its 24px height.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-avatar-size"
           }
         }
       }
