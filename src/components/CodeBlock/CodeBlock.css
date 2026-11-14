@@ -13,6 +13,8 @@
   border-radius: var(--code-block-radius, var(--radius-control));
   background: var(--code-block-bg, var(--surface-muted)); color: var(--code-block-text, var(--text));
 }
+/* Set straight in a Card with no padding, the card is the frame: no second border inside its own. */
+.dk-card--padding-none > .dk-code-block { border: var(--spacing-0); border-radius: var(--dk-card-inner-radius); }
 .dk-code-block__header {
   display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2);
   min-block-size: var(--spacing-10); padding-block: var(--spacing-1); padding-inline: var(--code-block-padding, var(--spacing-4)) var(--spacing-1);
