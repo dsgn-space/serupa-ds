@@ -181,7 +181,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-description-color` | `text-muted` | An item's description (4.5:1 on bg and bg-hover). |
 | `--list-bg-hover` | `surface-hover` | A link or button item on hover, and a selected item. |
 | `--list-bg-pressed` | `pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |
-| `--list-indicator-selected` | `primary` | The bar at the start of a selected item. |
+| `--list-indicator-selected` | `highlight-indicator` | The bar at the start of a selected item. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
 | `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--list-title-size` | `text-sm` | Titles (14px). |
 | `--list-title-weight` | `font-medium` | Title weight (500). |
