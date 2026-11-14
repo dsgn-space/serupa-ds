@@ -71,7 +71,7 @@ export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>('A
     const i = pic.current, src = props.src;
     if (!i || !src) return;
     if (i.complete) { i.decode().catch(() => { if (pic.current === i && i.complete && !i.naturalWidth) setFailedSrc(src); }); return; }
-    const t = setTimeout(() => { if (pic.current === i && !i.complete) setLate([src, false]); }, quickArrival);
+    const t = setTimeout(() => { if (!i.complete) setLate([src, false]); }, quickArrival);
     return () => clearTimeout(t);
   }, [props.src]);
   const text = initials(props.name);
