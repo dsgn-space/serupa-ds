@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { lowContrast } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, settled, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { TableOfContents } from './TableOfContents';
@@ -241,5 +241,92 @@ describe('TableOfContents: rules no test covered', () => {
     </div>);
     expect([document.getElementById('toc')!.getAttribute('aria-labelledby'), document.getElementById('toc2')!.getAttribute('aria-labelledby')]).toEqual([null, 'mine']);
     await expect.element(page.getByRole('navigation', { name: 'Sections here' })).toBeVisible();
+  });
+});
+
+// The rail (variant="rail"): dashes in a narrow column, the full list in a panel shown by the pointer, focus or a tap.
+describe('TableOfContents rail', () => {
+  const Rail = (p: { dir?: 'rtl' }) => <Page toc={<div dir={p.dir} style={{ display: 'flex', justifyContent: 'flex-end' }}><TableOfContents id="toc" variant="rail" container="#art" offset={20} /></div>} />;
+  const nav = () => document.getElementById('toc')!;
+  const rail = () => nav().firstElementChild as HTMLElement;   // the dashes, then the panel
+  const panel = () => nav().lastElementChild as HTMLElement;
+  const dashes = () => [...rail().children] as HTMLElement[];
+  const shown = () => css(panel()).opacity === '1' && css(panel()).pointerEvents === 'auto';
+  const runs = () => panel().getAnimations().map((a) => (a as CSSTransition).transitionProperty).sort();
+
+  test('a navigation landmark of real links, named "On this page"; one dash per heading, hidden from screen readers, each level shorter, the current one in the accent; the panel hidden and taking no presses', async () => {
+    await render(<Rail />);
+    await expect.element(page.getByRole('navigation', { name: 'On this page' })).toBeInTheDocument();
+    await expect.poll(() => links().map((a) => a.textContent)).toEqual(['Alpha', 'Beta part', 'Gamma']);
+    await expect.poll(() => dashes().map((d) => 'current' in d.dataset)).toEqual([true, false, false]);
+    const w = dashes().map((d) => d.getBoundingClientRect().width);
+    expect([nav().dataset.variant, rail().getAttribute('aria-hidden'), w[0], w[1]! < w[0]!, w[2]]).toEqual(['rail', 'true', 12, true, 12]);
+    expect([css(dashes()[0]!).backgroundColor, css(dashes()[1]!).backgroundColor, nav().getBoundingClientRect().width]).toEqual([color('var(--primary)'), color('var(--border-strong)'), 24]);
+    expect(shown()).toBe(false);
+  });
+
+  test('the pointer over it shows the panel, fading and growing in, and it stays while the pointer moves onto it; leaving hides it', async () => {
+    await withMotion(async () => {
+      await render(<Rail />);
+      await expect.poll(() => dashes().length).toBe(3);
+      await userEvent.hover(nav());
+      await expect.poll(runs).toEqual(['opacity', 'scale']);
+      await settled(panel());
+      expect(shown()).toBe(true);
+      await userEvent.hover(links()[2]!);
+      expect(shown()).toBe(true);
+      await userEvent.unhover(nav());
+      await userEvent.hover(document.querySelector('h2')!);
+      await settled(panel());
+      expect(shown()).toBe(false);
+    });
+  });
+
+  test('Tab to its first link shows the panel at once, with no motion (KW1); Escape hides it with focus kept, until focus leaves (WCAG 1.4.13); a link goes to its heading', async () => {
+    await withMotion(async () => {
+      await render(<><button id="before">Before</button><Rail /></>);
+      await expect.poll(() => links().length).toBe(3);
+      document.getElementById('before')!.focus();
+      await userEvent.keyboard('{Tab}');
+      expect([document.activeElement, shown(), runs()]).toEqual([links()[0], true, []]);
+      await userEvent.keyboard('{Escape}');
+      expect([document.activeElement, shown(), 'dismissed' in nav().dataset]).toEqual([links()[0], false, true]);
+      await userEvent.keyboard('{Shift>}{Tab}{/Shift}{Tab}');
+      expect([document.activeElement, shown()]).toEqual([links()[0], true]);
+      await userEvent.keyboard('{Tab}{Tab}{Enter}');
+      await expect.poll(() => location.hash).toBe('#c');
+      expect(document.activeElement).toBe(document.getElementById('c'));
+    });
+  });
+
+  test('a tap shows the panel and a tap elsewhere hides it; a tapped link closes it', async () => {
+    await render(<Rail />);
+    await expect.poll(() => dashes().length).toBe(3);
+    const tap = (el: Element) => el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch', isPrimary: true }));
+    tap(rail());
+    await expect.poll(() => 'open' in nav().dataset).toBe(true);
+    expect(shown()).toBe(true);
+    tap(document.querySelector('h2')!);
+    await expect.poll(() => 'open' in nav().dataset).toBe(false);
+    tap(rail());
+    await expect.poll(() => 'open' in nav().dataset).toBe(true);
+    links()[1]!.click();
+    await expect.poll(() => 'open' in nav().dataset).toBe(false);
+    expect(location.hash).toBe('#beta-part');
+  });
+
+  test('right to left: the panel opens over the page from the rail\'s top left corner', async () => {
+    await render(<Rail dir="rtl" />);
+    await expect.poll(() => dashes().length).toBe(3);
+    const r = nav().getBoundingClientRect(), p = panel().getBoundingClientRect();
+    expect([Math.round(p.left - r.left), Math.round(p.top - r.top), p.width > r.width]).toEqual([0, 0, true]);
+  });
+
+  test('the panel\'s links 4.5:1 on it, its edge and the dashes 3:1 against the page where they stand for something (the current one), in all six themes', () => {
+    expect(lowContrast([
+      ['panel link', 'var(--text-muted)', 'var(--surface-overlay)', 4.5],
+      ['panel current', 'var(--text)', 'var(--surface-overlay)', 4.5],
+      ['current dash', 'var(--primary)', 'var(--surface)', 3],
+    ])).toEqual([]);
   });
 });

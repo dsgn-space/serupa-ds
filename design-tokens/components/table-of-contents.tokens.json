@@ -61,6 +61,36 @@
             "cssVar": "--table-of-contents-focus-ring"
           }
         }
+      },
+      "dash": {
+        "$type": "color",
+        "$value": "{color.border-strong}",
+        "$description": "The rail's dashes (decorative: the links are in its panel).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-dash"
+          }
+        }
+      },
+      "panel": {
+        "$type": "color",
+        "$value": "{color.surface-overlay}",
+        "$description": "The rail's panel, over the page.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-panel"
+          }
+        }
+      },
+      "panel-border": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "The rail's panel's edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-of-contents-panel-border"
+          }
+        }
       }
     }
   }
