@@ -4,7 +4,8 @@
 // needs a .changeset/*.md file; tests, stories, docs and the rest of tools/ don't. Fails listing the files, and
 // says how to add one, or to label the pull request "no-changeset" when the change really ships nothing new.
 // The public API decides the smallest bump (E11): a change to tools/test/baseline-api/ (the exported types, which
-// api.mjs keeps) is never a patch, and an export that goes away is a major. So a changeset that says patch for a
+// api.mjs keeps) is never a patch, and a breaking one (tools/api-diff.mjs: an export, a prop or an accepted value that
+// goes away, or a prop that becomes required) is a major. So a changeset that says patch for a
 // new prop, or minor for a removed component, fails here rather than in the release. Tokens and utility classes are
 // public API too (README, Versioning): a token in tokens.json or a class in tools/test/baseline-utilities.json that
 // goes away is a major, and a new one at least a minor.
@@ -12,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { parseChangeset } from './changesets.mjs';
+import { diffRefs, reportOf } from './api-diff.mjs';
 
 const P = path.resolve(import.meta.dirname, '..');
 const base = process.argv[2];
@@ -60,14 +62,11 @@ if (changesets.length) {
     const exists = execFileSync('git', ['ls-tree', '--name-only', ref, '--', f], { cwd: P, encoding: 'utf8' }).trim() !== '';
     return exists ? execFileSync('git', ['show', `${ref}:${f}`], { cwd: P, encoding: 'utf8', maxBuffer: 64 << 20 }) : null;
   };
-  const exportsOf = (ref, f) => (/^\/\/ exports: (.*)$/m.exec(show(ref, f) ?? '') || [])[1]?.split(', ') ?? [];
-  // An export that only gains its `type` mark (`IconData` to `type IconData`) is still there when the file declares it as
-  // an interface or a type alias: it was a type all along, imported from another file where the list couldn't tell.
-  const typeOnly = (f, e) => new RegExp(`^(?:interface|type) ${e}\\b`, 'm').test(show('HEAD', f) ?? '');
-  const gone = api.flatMap(([, f]) => {
-    const now = exportsOf('HEAD', f);
-    return exportsOf(base, f).filter((e) => !now.includes(e) && !(now.includes('type ' + e) && typeOnly(f, e))).map((e) => `${e} (${path.basename(f, '.d.ts')})`);
-  });
+  // What the change does to a project using the API (tools/api-diff.mjs): a removed export, prop or accepted value, or
+  // a prop that is now required, is breaking; the report goes on the run's summary page.
+  const apiDiff = api.length ? diffRefs(base, 'HEAD', P) : { breaking: [], additive: [], changed: [] };
+  if (api.length && process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, reportOf(apiDiff) + '\n');
+  const gone = apiDiff.breaking;
   // Token names (with the font-* and text-* families the type scale makes) and utility class names at a commit.
   const json = (ref, f) => { const text = show(ref, f); return text == null ? null : JSON.parse(text); };
   const tokensAt = (ref) => {
@@ -85,7 +84,7 @@ if (changesets.length) {
   const needs = gone.length || tokens.gone.length || classes.gone.length ? 'major' : api.length || tokens.added.length || classes.added.length ? 'minor' : 'patch';
   if (RANK[bump] < RANK[needs]) {
     console.log(`The changeset says ${bump}, but the public API changed, which needs at least ${needs}:`);
-    if (gone.length) console.log(`  exports removed: ${gone.join(', ')}`);
+    if (gone.length) console.log(`  breaking changes to the exported types:\n${gone.map((l) => `    ${l}`).join('\n')}`);
     else if (api.length) console.log(`  the exported types changed: ${api.map(([, f]) => path.basename(f, '.d.ts')).join(', ')} (tools/test/baseline-api/)`);
     if (tokens.gone.length) console.log(`  tokens removed or renamed: ${few(tokens.gone)}`);
     if (classes.gone.length) console.log(`  utility classes removed or renamed: ${few(classes.gone)}`);
