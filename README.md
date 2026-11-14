@@ -166,7 +166,7 @@ npx serupa-usage src
 | `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. Escape turns it off. `Serupa.debug.inspect(element)` and `Serupa.debug.contrast(element)` give the same as objects. Leave it out of production. |
 | `dist/eslint.js` (`@diki-stwn/serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
 | `dist/stylelint.js` (`@diki-stwn/serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length, a radius, or a duration or easing written out where a token belongs. See Getting started in Storybook. |
-| `dist/testing.js` (`@diki-stwn/serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
+| `dist/testing.js` (`@diki-stwn/serupa-ds/testing`) | For your app's own tests. Testers that drive a widget as people do: `combobox()`, `menu()`, `tabs()`, `table()`, `calendar()` and `datePicker()` (`await combobox(field, { user }).choose('Canada')`), finding parts by role and name so your tests don't depend on Serupa's markup. And `forEachTheme(page, fn)`, which draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. See Guides › Testing your app in Storybook. |
 | `dist/purge.js` (`@diki-stwn/serupa-ds/purge`) | `serupaPurge()` for Vite and `serupaPurgePostcss()` for PostCSS: they trim `bundle.css` in your build to the utility classes your code uses, as `serupa-purge` does. See Ship it above. |
 | `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. Both are made from `tokens/serupa.tokens.json` in the repository. |
 
@@ -519,6 +519,14 @@ npx serupa-agents
 ```
 
 It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Copilot and others), telling agents to read `node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md` before any UI work, and adds `@AGENTS.md` to `CLAUDE.md` for Claude Code. It makes either file when it's missing, and running it again changes nothing. Because the skill is read from the installed package, it always matches the release the project pinned. An app made with `serupa-create` already has both files.
+
+Agents (and people) look up a component's guide from the installed release with `serupa-docs`, offline and for the exact version the project pinned. `dist/llms.txt` is the short summary an agent reads first; it points to the same command:
+
+```sh
+npx serupa-docs                     # every component, by group
+npx serupa-docs Button props        # one part of a guide: props, keyboard, accessibility, "when not to use"
+npx serupa-docs search date range   # components, topics and tokens that match
+```
 
 A second skill, `skills/serupa-review/SKILL.md`, reviews a change to an app's UI. It checks what lint can't judge: a widget built by hand where a component exists, the app's part of accessibility, the right feedback for a message, and the words. Findings come grouped as Must fix, Should fix and Nice to have, each with its problem, fix and what happens if it's skipped, and end with a one-line verdict. The `serupa-agents` section points agents at it too.
 

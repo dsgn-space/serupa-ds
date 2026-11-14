@@ -87,6 +87,13 @@ export function settled(scope: Document | Element = document, { subtree = false 
   return Promise.all(runs.filter((a) => a.effect && a.effect.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {}))).then(() => {});
 }
 
+/** Runs fn with more contrast asked for on the page (data-contrast="more" on <html>, as the system setting would), then puts it back. */
+export async function withMoreContrast<T>(fn: () => T | Promise<T>): Promise<T> {
+  const html = document.documentElement;
+  html.setAttribute('data-contrast', 'more');
+  try { return await fn(); } finally { html.removeAttribute('data-contrast'); }
+}
+
 /**
  * Runs fn with the page's motion back on (setup.ts turns transitions and animations off), for a test that reads
  * which animation a part runs or watches it move. fn may be async; motion goes off again once it settles.
