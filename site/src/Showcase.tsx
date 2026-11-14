@@ -57,7 +57,7 @@ export function Showcase() {
             <Button variant="ghost" size="sm" href={page.path}>Read its guide</Button>
           </div>
         </div>
-        {slug && <Screen key={`${page.id}--${slug}`} story={`${page.id}--${slug}`} device={DEVICES.find((d) => d.value === device)} title={`${page.name}${state ? `, ${state.name}` : ''}: an example screen`}
+        {state && <Screen key={`${page.id}--${state.slug}`} story={`${page.id}--${state.slug}`} device={DEVICES.find((d) => d.value === device)} title={`${page.name}${state ? `, ${state.name}` : ''}: an example screen`}
           address={`northwind.example/${page.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} />}
       </section>
     </div>

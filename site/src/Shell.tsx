@@ -65,7 +65,7 @@ export function Shell({ children, aside }: { children: React.ReactNode; aside?: 
     <CommandPalette commands={commands} open={search} onOpenChange={setSearch} placeholder="Search the docs" emptyText="No page matches" />
     <div className="site-body" data-side={side ? '' : undefined} data-aside={aside ? '' : undefined}>
       {side && <div className="site-side">{<SectionNav section={side} path={path} />}</div>}
-      <main id="main" tabIndex={-1} className="site-main">
+      <main id="main" className="site-main">
         {side && <div className="site-browse">
           <Button variant="outline" size="sm" leftIcon="menu" onClick={() => setBrowse(true)}>{side.label}</Button>
           <Drawer open={browse} onOpenChange={setBrowse} title={side.label} placement="start">

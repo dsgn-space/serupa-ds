@@ -122,6 +122,22 @@ await inParallel(pages, workers, async (p, w) => {
   if (p.component && read(p.file).includes('<Controls')) t(`${p.path} shows its props`, seen.api, 'the page has no API table');
 });
 
+// A press inside an example leaves the page where it is. The main region once took focus on any press that landed on
+// nothing focusable (closing a calendar with a press beside it, say), and the browser scrolled its top into view.
+{
+  const w = workers[0];
+  await openUrl(w.page, base + '/guides/localization'); await ready(w.page, true);
+  const stage = w.page.locator('#article .site-demo__stage').last();
+  await stage.scrollIntoViewIfNeeded();
+  await w.page.waitForTimeout(300);
+  const before = await w.page.evaluate(() => window.scrollY);
+  // The stage's own padding: no control sits there.
+  await stage.click({ position: { x: 4, y: 4 } });
+  await w.page.waitForTimeout(300);
+  const after = await w.page.evaluate(() => window.scrollY);
+  t('/guides/localization: a press inside an example keeps the page where it was', before > 0 && after === before, `the page was at ${before}px before the press and at ${after}px after it`);
+}
+
 // A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
 if (t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
   const w = workers[0];
