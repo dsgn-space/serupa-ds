@@ -10,6 +10,7 @@ declare module 'vitest/browser' {
     forcedColors: (on: boolean) => Promise<void>;
     printMedia: (on: boolean) => Promise<void>;
     coarsePointer: (on: boolean) => Promise<void>;
+    safeArea: (insets: { top: number; right: number; bottom: number; left: number } | null) => Promise<void>;
     ariaSnapshot: (selector: string) => Promise<string>;
     ariaMode: () => Promise<'check' | 'update' | 'off'>;
     writeAriaBaseline: (name: string, text: string) => Promise<void>;
@@ -155,6 +156,19 @@ export async function coarsePointer<T>(during: (active: boolean) => Promise<T> |
     return await during(on && matchMedia('(pointer: coarse)').matches);
   } finally {
     if (on) await commands.coarsePointer(false);
+  }
+}
+
+/** Runs `during` on a screen with a phone's safe-area insets (a 47px notch on top, a 34px home bar below; on the
+ *  sides when `landscape`), then takes them away. `active` is false where the engine can't emulate them. */
+export async function safeArea<T>(during: (active: boolean) => Promise<T> | T, landscape = false): Promise<T> {
+  const insets = landscape ? { top: 0, right: 47, bottom: 21, left: 47 } : { top: 47, right: 0, bottom: 34, left: 0 };
+  let on = true;
+  try { await commands.safeArea(insets); } catch { on = false; }
+  try {
+    return await during(on);
+  } finally {
+    if (on) await commands.safeArea(null);
   }
 }
 

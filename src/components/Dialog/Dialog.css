@@ -20,7 +20,10 @@
   height: var(--sizing-full);
   max-height: none;
   margin: var(--spacing-0);
-  padding: var(--dialog-margin, var(--spacing-4));
+  /* The margin round the panel clears a phone's notch and home bar, and the sides in landscape (the insets are the
+     screen's left and right, so right-to-left swaps them below). */
+  padding-block: max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-top)) max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-bottom));
+  padding-inline: max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-left)) max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-right));
   border: var(--spacing-0);
   background: transparent;
   color: var(--dialog-text, var(--text));
@@ -31,6 +34,7 @@
   /* Centered whether open or closing (FM1): on [open] alone, the panel jumped to the top-left corner as it faded out. */
   align-items: center; justify-content: center;
 }
+.dk-dialog:where(:dir(rtl)) { padding-inline: max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-right)) max(var(--dialog-margin, var(--spacing-4)), env(safe-area-inset-left)); }
 .dk-dialog[open] { display: flex; }
 .dk-dialog--sm { --dk-dialog-width: var(--dialog-width-sm, var(--container-sm)); }
 .dk-dialog--lg { --dk-dialog-width: var(--dialog-width-lg, var(--container-2xl)); }
@@ -88,13 +92,15 @@
 .dk-dialog__footer > .dk-btn--size-sm:not(.dk-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
 .dk-dialog__footer > .dk-btn--size-lg:not(.dk-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
 /* fullScreen: the panel fills the screen with square corners, the body takes the room between header and footer,
-   and the padding clears a phone's notch and home bar. "mobile" does this only under 640px (the sm breakpoint). */
+   and the padding clears a phone's notch and home bar (and its sides in landscape). "mobile" does this only under 640px (the sm breakpoint). */
 .dk-dialog--full { padding: var(--spacing-0); }
 .dk-dialog--full .dk-dialog__panel {
   width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--spacing-0); box-shadow: none;
   padding-top: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-top));
   padding-bottom: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-bottom));
+  padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right));
 }
+.dk-dialog--full .dk-dialog__panel:dir(rtl) { padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)); }
 .dk-dialog--full .dk-dialog__body { flex: auto; }
 @media (max-width: 639.98px) {
   .dk-dialog--full-mobile { padding: var(--spacing-0); }
@@ -102,7 +108,9 @@
     width: var(--sizing-full); height: var(--sizing-full); border-radius: var(--spacing-0); box-shadow: none;
     padding-top: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-top));
     padding-bottom: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-bottom));
+    padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right));
   }
+  .dk-dialog--full-mobile .dk-dialog__panel:dir(rtl) { padding-inline: max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-right)) max(var(--dialog-padding, var(--space-surface)), env(safe-area-inset-left)); }
   .dk-dialog--full-mobile .dk-dialog__body { flex: auto; }
 }
 /* A short screen (GR52: 400% zoom makes 1024px tall 256px): the header and footer alone can fill the panel, which

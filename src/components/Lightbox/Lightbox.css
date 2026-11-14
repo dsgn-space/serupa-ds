@@ -8,9 +8,9 @@
 .dk-lightbox__body { display: grid; justify-items: center; gap: var(--lightbox-gap, var(--spacing-3)); touch-action: pan-y pinch-zoom; }
 .dk-lightbox__figure { display: grid; justify-items: center; gap: var(--lightbox-gap, var(--spacing-3)); margin: var(--spacing-0); min-inline-size: var(--spacing-0); inline-size: var(--sizing-full); }
 /* The stage has the picture's shape (--dk-lightbox-ratio) at its own width (--dk-lightbox-w) at most, within the
-   dialog and the screen's height less the title and the arrows. */
+   dialog and the screen's height less the title, the arrows and a phone's notch and home bar. */
 .dk-lightbox__stage {
-  --dk-lightbox-max: calc(var(--sizing-dvh) - var(--lightbox-stage-max-height, var(--spacing-40)) - var(--spacing-20));
+  --dk-lightbox-max: calc(var(--sizing-dvh) - var(--lightbox-stage-max-height, var(--spacing-40)) - var(--spacing-20) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   position: relative; display: block; overflow: hidden; aspect-ratio: var(--dk-lightbox-ratio);
   inline-size: min(var(--sizing-full), var(--dk-lightbox-w), calc(var(--dk-lightbox-max) * (var(--dk-lightbox-ratio))));
   border-radius: var(--lightbox-stage-radius, var(--radius-surface)); background: var(--lightbox-stage-bg, var(--surface-muted));

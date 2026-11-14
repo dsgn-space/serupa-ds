@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, safeArea } from '../../../tools/test/vitest/helpers';
 import { Lightbox, type LightboxItem } from './Lightbox';
 
 const pic = (color: string, w = 80, h = 50) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="${color}"/></svg>`);
@@ -155,5 +155,19 @@ describe('Lightbox', () => {
     }
     document.documentElement.removeAttribute('data-theme');
     still.remove();
+  });
+
+  test('on a phone with a notch and a home bar, a tall picture shrinks by them, so the arrows stay on the screen', async () => {
+    await page.viewport(390, 700);
+    const screen = await render(<Lightbox open onOpenChange={() => {}} index={0} items={[{ src: pic('tomato', 400, 1200), alt: 'Tall' }]} />);
+    const stage = () => (dialog().querySelector('img') as HTMLElement).parentElement!;
+    await expect.poll(() => stage().getAttribute('data-state')).toBe('loaded');
+    const before = Math.round(stage().getBoundingClientRect().height);
+    await safeArea(async (on) => {
+      if (!on) return;
+      await expect.poll(() => before - Math.round(stage().getBoundingClientRect().height)).toBeGreaterThanOrEqual(80);
+    });
+    await page.viewport(1000, 700);
+    await screen.unmount();
   });
 });
