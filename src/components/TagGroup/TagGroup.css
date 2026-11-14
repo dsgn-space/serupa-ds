@@ -28,9 +28,11 @@
 .dk-tag-group__remove {
   display: inline-grid; place-items: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); margin: var(--spacing-0); padding: var(--spacing-0);
   border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: pointer; touch-action: manipulation;
+  transition: background-color var(--motion-hover) var(--ease-move);
 }
 @media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
-.dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); }
+.dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
+@media (prefers-reduced-motion: reduce) { .dk-tag-group__remove { transition: none; } }
 .dk-tag-group__more {
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm);
   text-decoration: underline; cursor: pointer; touch-action: manipulation;

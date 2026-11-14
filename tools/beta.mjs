@@ -15,6 +15,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { components, status } from './build/registry.mjs';
 
 export const WEEKS = 4;
 const DAY = 86_400_000;
@@ -74,8 +75,9 @@ const git = (...args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['
 function main() {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   process.chdir(root);
-  const status = readFileSync('docs/generated/status.ts', 'utf8');
-  const betas = [...status.matchAll(/(\w+): 'beta'/g)].map((m) => m[1]).sort();
+  // From the doc comments themselves, as the build reads them: docs/generated/ is build output, and the Daily release's
+  // job checks out the source alone (14 Nov: "ENOENT … docs/generated/status.ts" on its first night).
+  const betas = components(root).filter((n) => status(n, root) === 'beta');
   // Releases oldest first, so the first that holds a component is the one that shipped it.
   const tags = git('tag', '--list', 'v*', '--sort=v:refname').split('\n').filter((t) => /^v\d+\.\d+\.\d+$/.test(t));
   const has = (tag, dir) => { try { git('cat-file', '-e', `${tag}:${dir}`); return true; } catch { return false; } };

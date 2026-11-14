@@ -184,6 +184,16 @@ describe('Patterns/Checkout', () => {
     expect(wide.aside.top).toBeLessThan(wide.button.top);
   });
 
+  test('on a wide screen the summary stays in view down the long form, and Expiry date and Security code line up side by side', async () => {
+    await page.viewport(1280, 900);
+    try {
+      await render(<Checkout />);
+      const aside = page.getByRole('complementary', { name: 'Order summary' }).element();
+      const top = (name: string) => Math.round(page.getByRole('textbox', { name }).element().getBoundingClientRect().top);
+      expect([getComputedStyle(aside).position, top('Expiry date') === top('Security code')]).toEqual(['sticky', true]);
+    } finally { await page.viewport(900, 700); }
+  });
+
   test('a long "Place order" (a big amount, or a longer language) wraps inside 320 px, never wider than the page (GR169)', async () => {
     const screen = await render(<div style={{ width: 320 }}><Checkout currency="IDR" initial={filled} startAtReview
       lines={[{ id: 'a', name: 'Kursi', quantity: 9, price: 222222222222222 }]} /></div>);

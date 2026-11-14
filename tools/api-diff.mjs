@@ -174,6 +174,14 @@ export function reportOf(r, title = 'Public API') {
   return `### ${title}: needs a ${bumpFor(r)}\n${list('Breaking: a project using these may stop compiling', r.breaking)}${list('Breaking, in an alpha or beta component (a minor: say so in the changeset)', r.unstable ?? [])}${list('Added', r.additive)}${list('Changed: check whether code that compiled still does', r.changed)}`;
 }
 
+/** The report for a release's notes, folded: one line that says what kind of change it was, the lists under it. */
+export function releaseNotes(r, prev) {
+  const n = r.breaking.length + (r.unstable?.length ?? 0) + r.additive.length + r.changed.length;
+  if (!n) return '';
+  const kind = r.breaking.length ? `${r.breaking.length} breaking` : r.unstable?.length ? `${r.unstable.length} breaking in alpha or beta components` : 'nothing breaking';
+  return `<details><summary>Public API since ${prev}: ${n} change${n === 1 ? '' : 's'}, ${kind}</summary>\n\n${reportOf(r, `Public API since ${prev}`).replace(/^### .*\n/, '')}\n</details>\n`;
+}
+
 /** Every baseline file that differs between two refs (null: this checkout), merged into one diff. */
 export function diffRefs(base, head = null, cwd = path.resolve(import.meta.dirname, '..')) {
   const DIR = 'tools/test/baseline-api';

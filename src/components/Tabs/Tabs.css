@@ -11,6 +11,8 @@
    as the row reaches it, where an untyped custom property would jump. Only once the list has scrolled (TabList sets
    data-scrolled): a fade there from the first frame is just there. */
 /* stylelint-disable serupa/no-raw-value -- an initial-value must be a literal: @property takes no var() */
+/* Typed too, so Tabs reads the fade's width in pixels whatever unit the token is in (2rem read as a number was 2). */
+@property --dk-tabs-fade { syntax: '<length>'; inherits: false; initial-value: 0px; }
 @property --dk-tabs-fade-a { syntax: '<length-percentage>'; inherits: false; initial-value: 0px; }
 @property --dk-tabs-fade-b { syntax: '<length-percentage>'; inherits: false; initial-value: 0px; }
 /* stylelint-enable serupa/no-raw-value */

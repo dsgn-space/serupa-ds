@@ -3,6 +3,7 @@ import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
+import { Badge, type BadgeTone } from '../../components/Badge/Badge';
 import { Link } from '../../components/Link/Link';
 import { Loader } from '../../components/Loader/Loader';
 import { Meter } from '../../components/Meter/Meter';
@@ -29,7 +30,11 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
      zeros and empty boxes.
    Fetching the numbers, and what each one counts, is the app's job: pass them as `data`, or `loading` until then. */
 
-export interface RecentProject { name: string; href: string; status: string; updated: string }
+export interface RecentProject {
+  name: string; href: string; status: string; updated: string;
+  /** The status badge's color: 'success' for running work, 'warning' for paused, 'neutral' (default) for the rest. Say the status in words too. */
+  statusTone?: BadgeTone | undefined;
+}
 export interface DashboardData {
   /** The key numbers, two to four (StatsRow). */
   stats: readonly Stat[];
@@ -74,10 +79,10 @@ const demo: DashboardData = {
   storage: { used: 8.6, limit: 10 },
   goal: { label: 'Launch checklist', done: 3, total: 5 },
   projects: [
-    { name: 'Website redesign', href: '#website-redesign', status: 'Active', updated: '2026-11-06' },
-    { name: 'Billing migration', href: '#billing-migration', status: 'Active', updated: '2026-11-05' },
-    { name: 'Help center', href: '#help-center', status: 'Paused', updated: '2026-11-03' },
-    { name: 'Mobile app', href: '#mobile-app', status: 'Active', updated: '2026-11-02' },
+    { name: 'Website redesign', href: '#website-redesign', status: 'Active', updated: '2026-11-06', statusTone: 'success' },
+    { name: 'Billing migration', href: '#billing-migration', status: 'Active', updated: '2026-11-05', statusTone: 'success' },
+    { name: 'Help center', href: '#help-center', status: 'Paused', updated: '2026-11-03', statusTone: 'warning' },
+    { name: 'Mobile app', href: '#mobile-app', status: 'Active', updated: '2026-11-02', statusTone: 'success' },
     { name: 'Data export', href: '#data-export', status: 'Done', updated: '2026-10-30' },
   ],
   activity: ([
@@ -150,7 +155,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
                       <TableBody>{data.projects.map((p) => (
                         <TableRow key={p.href}>
                           <TableCell><Link href={p.href}>{p.name}</Link></TableCell>
-                          <TableCell>{p.status}</TableCell>
+                          <TableCell><Badge dot tone={p.statusTone ?? 'neutral'}>{p.status}</Badge></TableCell>
                           <TableCell><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
                         </TableRow>
                       ))}</TableBody>
@@ -175,17 +180,12 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
               </section>
             </div>
 
-            {loading ? (
-              <section aria-labelledby="dash-activity" className="flex flex-col gap-3">
-                <Heading level={2} size="lg" id="dash-activity">Activity</Heading>
-                <Card><Loader variant="skeleton" shape="text" lines={4} label="Loading: Activity" /></Card>
-              </section>
-            ) : (
-              <Card>
-                <ActivityFeed events={events} onLoadMore={more} total={onLoadMoreActivity ? undefined : data.activity.length}
-                  hasMore={onLoadMoreActivity ? hasMoreActivity : shown < data.activity.length} />
-              </Card>
-            )}
+            {/* One shape loading and loaded, so the heading doesn't jump when the events arrive: the feed's own
+                skeleton rows (an avatar and two lines) stand in for the events. */}
+            <Card>
+              <ActivityFeed events={events} loading={loading} headingSize="lg" onLoadMore={more} total={onLoadMoreActivity ? undefined : data.activity.length}
+                hasMore={onLoadMoreActivity ? hasMoreActivity : shown < data.activity.length} />
+            </Card>
           </>
         )}
       </main>
