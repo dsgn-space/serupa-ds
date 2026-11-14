@@ -140,6 +140,18 @@ function inPage({ FIELD, END, hover }) {
     }
   }
   out.push(...optical());
+  // Motion: what moves on the page as it loads (an overlay opening, a toast arriving, a bar filling) changes only what
+  // the compositor can draw without layout: transform, translate, scale, rotate, opacity, filter, clip-path, colours.
+  const LAYOUT = /^(width|height|(min|max)-(width|height)|(min-|max-)?(inline|block)-size|top|right|bottom|left|inset.*|margin.*|padding.*|gap|(row|column)-gap|grid-template.*|flex(-basis|-grow|-shrink)?|font-size|line-height|border(-[a-z]+)*-width|letter-spacing)$/;
+  const nameOf = (el) => [...el.classList].find((c) => c.startsWith('dk-')) || '';
+  for (const a of /** @type {any[]} */ (document.getAnimations())) {
+    const target = a.effect?.target;
+    if (!target || !target.closest?.('[class*="dk-"]')) continue;
+    const props = a instanceof CSSTransition ? [a.transitionProperty] : (a.effect.getKeyframes?.() || []).flatMap((k) => Object.keys(k).filter((p) => !['offset', 'computedOffset', 'easing', 'composite'].includes(p)));
+    for (const prop of new Set(props.map((p) => p.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())))) {
+      if (LAYOUT.test(prop)) out.push({ rule: 'motion', cls: nameOf(target.closest('[class*="dk-"]')), prop, anim: a.animationName || a.id || a.transitionProperty || '' });
+    }
+  }
   return out;
 }
 /* c8 ignore stop */
@@ -176,6 +188,7 @@ export function judge(rows) {
   const seen = (rule) => [...new Map(rows.filter((r) => r.rule === rule).map((r) => [JSON.stringify(r), r])).values()];
   for (const r of seen('concentric')) out.push(`.${r.cls} in .${r.parent} (${r.corner}, ${r.gap}px in): its corner is ${r.have}px, concentric is ${r.want}px (the parent's inner radius less the gap)`);
   for (const cls of new Set(seen('tabular').map((r) => r.cls))) out.push(`.${cls || '(no dk- class)'} shows a number in proportional figures: add font-variant-numeric: tabular-nums so it keeps its width as it changes`);
+  for (const r of seen('motion')) out.push(`.${r.cls} animates ${r.prop}${r.anim ? ` (${r.anim})` : ''}, which lays the page out again on every frame: move it with transform, scale or clip-path instead`);
   for (const r of seen('icon')) out.push(`.${r.cls}: its icon's middle is ${r.off}px ${r.off > 0 ? 'below' : 'above'} its text's middle`);
   for (const k of Object.keys(EXEMPT)) if (isRow(k)) out.push(`.${k} is in both ROWS and EXEMPT: keep one`);
   return [...new Set(out)].sort();
