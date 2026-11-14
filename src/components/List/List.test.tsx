@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
@@ -286,17 +286,6 @@ describe('List loading (GR316)', () => {
     await rerender(<Lists loading={false} />);
     expect(CASES.map((c) => el(c.id).firstElementChild!.getBoundingClientRect().height)).toEqual(loading);
     expect(el('plain').hasAttribute('aria-busy')).toBe(false);
-  });
-});
-
-describe('List: busy, the old name of loading', () => {
-  test('still sets aria-busy as loading does, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<List id="old-busy" aria-label="Members" {...{ busy: true }}><ListItem title="Ayu" /></List>);
-      expect(document.getElementById('old-busy')!.getAttribute('aria-busy')).toBe('true');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('list-busy'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
   });
 });
 

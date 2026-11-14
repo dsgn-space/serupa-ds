@@ -119,7 +119,6 @@ const [picked, setPicked] = React.useState<string[]>([]);
 | `divided` | boolean | `true` | Lines between rows |
 | `as` | `'ul'` \| `'ol'` | `'ul'` | `ol` when the order matters |
 | `loading` | boolean | `false` | Its rows are loading: sets `aria-busy` on the list. Pair it with `ListLoadingItems` |
-| `busy` | boolean | | Deprecated, removed in 15.0.0: use `loading`, the API naming table's name |
 | `selectionMode` | `'none'` \| `'single'` \| `'multiple'` | `'none'` | Rows people pick: a grid with one Tab stop, and a checkbox per row when multiple |
 | `selected` / `defaultSelected` | string[] | | The picked rows' values |
 | `onSelectedChange` | `(values) => void` | | Called with the picked rows' values |

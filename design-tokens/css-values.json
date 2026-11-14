@@ -533,10 +533,6 @@
       "css": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       "description": "`animate-pulse`: skeleton placeholders while content loads."
     },
-    "animate-bounce": {
-      "css": "bounce 1s infinite",
-      "description": "`animate-bounce`: a scroll-down hint. Deprecated: it bounces without end, which the motion rules turn down (WCAG 2.2.2); point down with a still icon, or `animate-enter` once."
-    },
     "animate-enter": {
       "css": "enter {motion-enter-md} {ease-enter} backwards",
       "description": "`animate-enter`: content arriving, fading in as it rises a little into place. With `stagger` on the parent, the items arrive one after another. Under reduced motion it only fades."
