@@ -205,9 +205,15 @@ for (const at of FRAME) {
   if (!t(`${at} opens for the frame's checks`, !failed, failed)) continue;
   // An anatomy picture (docs/anatomy.tsx) turns inert, and so leaves the tab order, once its story has opened what it opens.
   await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x instanceof HTMLElement && x.inert), null, { timeout: 5000 }).catch(() => {});
+  // The showcase's screen arrives after the page (its State select is disabled until then).
+  if (at === '/showcase') await w.page.waitForSelector('.site-screen__page', { timeout: 10000 }).catch(() => {});
   await w.page.addScriptTag({ content: axe });
   for (const theme of themes) {
     await w.page.evaluate((th) => { const [brand, mode] = th.split('-'); window.Serupa.theme.set({ brand, mode }); }, theme);
+    // A color still fading (a control that just woke, the theme's own change) is read mid-way and fails by chance:
+    // wait for the transitions under way, two seconds at most.
+    await w.page.evaluate(() => Promise.race([new Promise((done) => setTimeout(done, 2000)),
+      Promise.all(document.getAnimations().filter((x) => x instanceof CSSTransition && x.playState === 'running').map((x) => x.finished.catch(() => {})))]));
     const v = await w.page.evaluate(async () => {
       // The stories are checked where they live (Storybook's check); here it's the frame and the page's own text.
       const r = await window.axe.run({ exclude: [['[data-site-demo]']] }, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'] } });
