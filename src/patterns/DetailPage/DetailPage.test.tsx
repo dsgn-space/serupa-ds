@@ -271,4 +271,25 @@ describe('Patterns/Detail page', () => {
     const main = document.querySelector('main') as HTMLElement;
     expect(main.scrollWidth).toBeLessThanOrEqual(main.clientWidth);
   });
+
+  test('a supporting pane is a landmark named by its heading: beside the tabs on a wide screen, below them on a narrow one', async () => {
+    const aside = { title: 'Activity', content: <p>Ana Lima renamed the project.</p> };
+    try {
+      for (const [width, beside] of [[1280, true], [600, false]] as const) {
+        await page.viewport(width, 900);
+        const { unmount } = await render(<DetailPage aside={aside} />);
+        const pane = page.getByRole('complementary', { name: 'Activity' });
+        await expect.element(pane).toBeVisible();
+        const tabs = page.getByRole('tablist', { name: 'Project' }).element().getBoundingClientRect();
+        const box = pane.element().getBoundingClientRect();
+        expect(beside ? (box.left >= tabs.right || box.right <= tabs.left) && box.top < tabs.bottom : box.top >= tabs.bottom, width + 'px').toBe(true);
+        expect(document.querySelector('main')!.contains(pane.element())).toBe(true);
+        await unmount();
+      }
+    } finally {
+      await page.viewport(900, 700);
+    }
+    await render(<DetailPage />);
+    expect(page.getByRole('complementary').elements()).toHaveLength(0);
+  });
 });
