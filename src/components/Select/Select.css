@@ -57,8 +57,8 @@
 .dk-select--readonly .dk-select__field { cursor: default; }
 @media (forced-colors: active) { .dk-select__icon { color: CanvasText; } }
 /* Where the browser lets the page style a select's list (appearance: base-select), the list is drawn as Combobox's:
-   an overlay surface with its border, radius and shadow, options with the highlight fill and a primary bar at the
-   start under the pointer or the keyboard, and the tick in primary. It stays a native <select>: the same keys, the
+   an overlay surface with its border, radius and shadow, options with the highlight fill under the pointer or the
+   keyboard (and a bar at the start with more contrast), and the tick in primary. It stays a native <select>: the same keys, the
    same form value, the phone's own picker where the browser keeps one. Elsewhere the browser draws its own list. */
 @supports (appearance: base-select) {
   .dk-select__field, .dk-select__field::picker(select) { appearance: base-select; }
@@ -67,6 +67,8 @@
   .dk-select__field::picker(select) {
     --dk-select-nest: max(var(--spacing-0), calc(var(--select-picker-radius, var(--radius-surface)) - var(--select-picker-padding, var(--spacing-1)) - var(--border-width-1)));
     box-sizing: border-box; min-inline-size: anchor-size(inline); max-block-size: var(--select-picker-max-height, var(--spacing-60));
+    /* As wide as Combobox's list at most, and inside the window: a long option wraps (the field itself stays on one line). */
+    max-inline-size: min(calc(var(--sizing-full) - var(--spacing-4)), var(--container-md)); white-space: normal; overflow-wrap: anywhere;
     margin-block: var(--spacing-1); padding: var(--select-picker-padding, var(--spacing-1)); overflow-y: auto; overscroll-behavior: contain;
     border: var(--border-width-1) solid var(--select-picker-border, var(--border-overlay)); border-radius: var(--select-picker-radius, var(--radius-surface));
     background: var(--select-picker-bg, var(--surface-overlay)); color: var(--select-text, var(--text));
@@ -86,7 +88,7 @@
   }
   .dk-select__field option::checkmark { color: var(--select-check, var(--primary)); }
   .dk-select__field option:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
-  .dk-select__field optgroup { display: block; }
+  .dk-select__field optgroup { display: block; background: transparent; }   /* on the list's surface: the field's color (lighter on a raised Card) showed as a band */
   .dk-select__field optgroup legend { padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--select-group-label, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
   @media (pointer: coarse) { .dk-select__field option { min-block-size: var(--select-option-height-touch, var(--control-height-lg)); } }
   @media (forced-colors: active) {
