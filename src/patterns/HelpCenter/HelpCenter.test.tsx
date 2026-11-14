@@ -67,4 +67,17 @@ describe('Patterns/Help center', () => {
     expect(onSend.mock.calls.at(-1)).toEqual([{ topic: 'Billing', message: 'I was charged twice.' }]);
     expect(screen.getByRole('textbox', { name: /^Your message/ }).elements()).toHaveLength(0);
   });
+
+  test('it can open on any step: what\'s missing named, a failed send with the words kept, or sent without taking focus', async () => {
+    const screen = await render(<HelpCenter failed="empty" initial={{ topic: 'Billing' }} />);
+    await expect.poll(() => shown('Write what happened, or what you’re trying to do.')).toBe(1);
+    expect(own('Choose what your message is about.')).toHaveLength(0);
+    await screen.rerender(<HelpCenter key="send" failed="send" initial={{ topic: 'Billing', message: 'I was charged twice.' }} />);
+    await expect.element(screen.getByText(/^Couldn’t send your message./)).toBeVisible();
+    await expect.element(screen.getByRole('textbox', { name: /^Your message/ })).toHaveValue('I was charged twice.');
+    await screen.rerender(<HelpCenter key="sent" start="sent" email="budi@example.com" />);
+    await expect.element(screen.getByRole('heading', { name: 'We got your message' })).toBeVisible();
+    expect(document.querySelector('main')!.textContent).toContain('by email to budi@example.com');
+    expect(active().textContent).not.toBe('We got your message');
+  });
 });
