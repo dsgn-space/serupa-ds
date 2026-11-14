@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Drawer/labels.ts"],
+  "sourcesContent": ["// Drawer's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface DrawerLabels {\n  /** Drawer with snapPoints: the handle at its top, when a press makes it taller. */\n  drawerExpand: string;\n  /** Drawer with snapPoints: the handle at its top, at its tallest, when a press takes it back to the shortest. */\n  drawerCollapse: string;\n}\nexport const en: DrawerLabels = { drawerExpand: 'Expand', drawerCollapse: 'Collapse' };\nexport const id: DrawerLabels = { drawerExpand: 'Perluas', drawerCollapse: 'Ciutkan' };\n"],
+  "mappings": ";AAQO,IAAM,KAAmB,EAAE,cAAc,UAAU,gBAAgB,WAAW;AAC9E,IAAM,KAAmB,EAAE,cAAc,WAAW,gBAAgB,UAAU;",
+  "names": []
+}

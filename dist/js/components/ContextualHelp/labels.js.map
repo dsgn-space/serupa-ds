@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/ContextualHelp/labels.ts"],
+  "sourcesContent": ["// ContextualHelp's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface ContextualHelpLabels {\n  /** ContextualHelp: its button's name when it has no label, for variant \"help\" and variant \"info\". */\n  contextualHelp: string;\n  contextualInfo: string;\n}\nexport const en: ContextualHelpLabels = {\n  contextualHelp: 'Help',\n  contextualInfo: 'Information',\n};\nexport const id: ContextualHelpLabels = {\n  contextualHelp: 'Bantuan',\n  contextualInfo: 'Informasi',\n};\n"],
+  "mappings": ";AAOO,IAAM,KAA2B;AAAA,EACtC,gBAAgB;AAAA,EAChB,gBAAgB;AAClB;AACO,IAAM,KAA2B;AAAA,EACtC,gBAAgB;AAAA,EAChB,gBAAgB;AAClB;",
+  "names": []
+}

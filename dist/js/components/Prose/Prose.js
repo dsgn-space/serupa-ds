@@ -1,0 +1,65 @@
+"use client";
+
+// src/components/Prose/Prose.tsx
+import * as React from "react";
+import { cn, oneOf, omit, useMergedRef } from "../../internal/cn.js";
+import { component } from "../../internal/component.js";
+import { onFontsLoaded } from "../../internal/fontsLoaded.js";
+var TAGS = ["div", "article", "section"];
+var MARK = "data-prose-scroll";
+function syncScrollers(root) {
+  const boxes = root.querySelectorAll("pre, table");
+  for (const el of boxes) {
+    const ours = el.hasAttribute(MARK);
+    if (!ours && el.hasAttribute("tabindex")) continue;
+    const wide = el.scrollWidth > el.clientWidth + 1;
+    if (wide && !ours) {
+      el.setAttribute("tabindex", "0");
+      el.setAttribute(MARK, "");
+    } else if (!wide && ours) {
+      el.removeAttribute("tabindex");
+      el.removeAttribute(MARK);
+    }
+  }
+}
+var Prose = /* @__PURE__ */ component("Prose", function Prose2(props, ref) {
+  const rest = omit(props, { as: 1, className: 1 });
+  const root = React.useRef(null);
+  const rootRefs = useMergedRef(ref, (n) => {
+    root.current = n;
+  });
+  React.useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const sync = () => syncScrollers(el);
+    sync();
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(sync);
+    const watch = () => {
+      if (!ro) return;
+      ro.disconnect();
+      ro.observe(el);
+      for (const b of el.querySelectorAll("pre, table")) ro.observe(b);
+    };
+    watch();
+    const mo = typeof MutationObserver === "undefined" ? null : new MutationObserver(() => {
+      watch();
+      sync();
+    });
+    if (mo) mo.observe(el, { childList: true, subtree: true, characterData: true });
+    const stop = onFontsLoaded(sync);
+    return () => {
+      if (ro) ro.disconnect();
+      if (mo) mo.disconnect();
+      stop();
+    };
+  }, []);
+  return React.createElement(oneOf(TAGS, props.as, "div"), Object.assign(rest, {
+    ref: rootRefs,
+    "data-component": "prose",
+    className: cn("dk-prose", props.className)
+  }));
+});
+export {
+  Prose
+};
+//# sourceMappingURL=Prose.js.map

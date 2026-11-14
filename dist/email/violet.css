@@ -1,0 +1,46 @@
+/* Serupa 14.7.0: the email-safe kit, generated from design-tokens/ (tools/build/email-kit.mjs). Don't edit.
+   Plain CSS for HTML email: hex colors and px only. Inline it before sending; the dark block stays in <style>. */
+:root { color-scheme: light dark; supported-color-schemes: light dark; }
+.serupa-body { margin: 0; padding: 0; width: 100%; background-color: #fafafa; color: #18181b; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+.serupa-container { width: 100%; max-width: 600px; background-color: #ffffff; border: 1px solid #e4e4e7; border-radius: 8px; }
+.serupa-content { padding: 32px 32px; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #18181b; }
+.serupa-h1 { margin: 0 0 16px; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 600; color: #18181b; font-size: 24px; line-height: 32px; }
+.serupa-h2 { margin: 0 0 12px; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 600; color: #18181b; font-size: 20px; line-height: 28px; }
+.serupa-text { margin: 0 0 16px; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #18181b; font-size: 16px; line-height: 24px; }
+.serupa-muted { margin: 0 0 16px; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #71717a; font-size: 14px; line-height: 20px; }
+.serupa-link { color: #7c3aed; text-decoration: underline; }
+.serupa-button-cell { background-color: #7c3aed; border-radius: 6px; mso-padding-alt: 12px 20px; }
+.serupa-button { display: inline-block; padding: 12px 20px; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight: 600; color: #ffffff; background-color: #7c3aed; border-radius: 6px; text-decoration: none; font-size: 16px; line-height: 24px; mso-padding-alt: 0; }
+.serupa-divider { border-top: 1px solid #e4e4e7; font-size: 0; line-height: 0; height: 1px; }
+.serupa-footer { padding: 0 32px 24px; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #71717a; font-size: 12px; line-height: 16px; }
+.serupa-callout-info { padding: 12px 16px; background-color: #f0f9ff; border-left: 4px solid #0369a1; color: #0369a1; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.serupa-callout-info-rtl { padding: 12px 16px; background-color: #f0f9ff; border-right: 4px solid #0369a1; color: #0369a1; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.serupa-callout-success { padding: 12px 16px; background-color: #f0fdf4; border-left: 4px solid #16a34a; color: #15803d; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.serupa-callout-success-rtl { padding: 12px 16px; background-color: #f0fdf4; border-right: 4px solid #16a34a; color: #15803d; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.serupa-callout-warning { padding: 12px 16px; background-color: #fffbeb; border-left: 4px solid #d97706; color: #b45309; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.serupa-callout-warning-rtl { padding: 12px 16px; background-color: #fffbeb; border-right: 4px solid #d97706; color: #b45309; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.serupa-callout-danger { padding: 12px 16px; background-color: #fef2f2; border-left: 4px solid #dc2626; color: #b91c1c; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+.serupa-callout-danger-rtl { padding: 12px 16px; background-color: #fef2f2; border-right: 4px solid #dc2626; color: #b91c1c; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; }
+
+@media (prefers-color-scheme: dark) {
+  .serupa-body { background-color: #09090b !important; color: #fafafa !important; }
+  .serupa-container { background-color: #18181b !important; border: 1px solid #3f3f46 !important; }
+  .serupa-content { color: #fafafa !important; }
+  .serupa-h1 { color: #fafafa !important; }
+  .serupa-h2 { color: #fafafa !important; }
+  .serupa-text { color: #fafafa !important; }
+  .serupa-muted { color: #a1a1aa !important; }
+  .serupa-link { color: #a78bfa !important; }
+  .serupa-button-cell { background-color: #a78bfa !important; }
+  .serupa-button { color: #2e1065 !important; background-color: #a78bfa !important; }
+  .serupa-divider { border-top: 1px solid #3f3f46 !important; }
+  .serupa-footer { color: #a1a1aa !important; }
+  .serupa-callout-info { background-color: #082f49 !important; border-left: 4px solid #38bdf8 !important; color: #7dd3fc !important; }
+  .serupa-callout-info-rtl { background-color: #082f49 !important; border-right: 4px solid #38bdf8 !important; color: #7dd3fc !important; }
+  .serupa-callout-success { background-color: #052e16 !important; border-left: 4px solid #22c55e !important; color: #86efac !important; }
+  .serupa-callout-success-rtl { background-color: #052e16 !important; border-right: 4px solid #22c55e !important; color: #86efac !important; }
+  .serupa-callout-warning { background-color: #451a03 !important; border-left: 4px solid #f59e0b !important; color: #fcd34d !important; }
+  .serupa-callout-warning-rtl { background-color: #451a03 !important; border-right: 4px solid #f59e0b !important; color: #fcd34d !important; }
+  .serupa-callout-danger { background-color: #450a0a !important; border-left: 4px solid #dc2626 !important; color: #fca5a5 !important; }
+  .serupa-callout-danger-rtl { background-color: #450a0a !important; border-right: 4px solid #dc2626 !important; color: #fca5a5 !important; }
+}
