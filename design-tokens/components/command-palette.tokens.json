@@ -44,8 +44,8 @@
       },
       "indicator-active": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The bar at the start of the active row.",
+        "$value": "{color.highlight-indicator}",
+        "$description": "The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--command-palette-indicator-active"

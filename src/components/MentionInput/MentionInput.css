@@ -29,7 +29,7 @@
   border-radius: var(--mention-input-option-radius, var(--dk-mention-input-nest, var(--radius-control))); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .dk-mention-input__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-mention-input__option--active { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--mention-input-option-indicator, var(--primary)); }
+.dk-mention-input__option--active { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--mention-input-option-indicator, var(--highlight-indicator)); }
 .dk-mention-input__option[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-mention-input__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-mention-input__description { color: var(--mention-input-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }

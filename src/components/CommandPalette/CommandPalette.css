@@ -21,7 +21,7 @@
   border-radius: var(--radius-control); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .dk-command-palette__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-command-palette__option--active { background: var(--command-palette-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--command-palette-indicator-active, var(--primary)); }
+.dk-command-palette__option--active { background: var(--command-palette-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--command-palette-indicator-active, var(--highlight-indicator)); }
 .dk-command-palette__option--disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 .dk-command-palette__icon { display: inline-flex; flex: none; color: var(--command-palette-muted, var(--text-muted)); }
 .dk-command-palette__option--active .dk-command-palette__icon { color: inherit; }

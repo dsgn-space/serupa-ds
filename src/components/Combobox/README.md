@@ -148,7 +148,7 @@ Each is an optional override: set it on the page, a container or one combobox. T
 | `--combobox-listbox-border` | `border-overlay` | The list's outline. |
 | `--combobox-option-color` | `text` | An option's label. |
 | `--combobox-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). Its second line turns to `text` on it. |
-| `--combobox-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
+| `--combobox-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--combobox-description-color` | `text-muted` | An option's second line, the group headings, and the empty and loading messages. |
 | `--combobox-check` | `primary` | The check next to the selected option. |
 
