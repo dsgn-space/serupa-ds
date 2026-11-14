@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { TagGroup, type TagItem } from './TagGroup';
@@ -29,6 +29,14 @@ describe('TagGroup', () => {
     expect(page.getByRole('row').elements().map((r) => r.textContent)).toEqual(['Design', 'Bug', 'Checkout', 'Mobile']);
     await expect.element(page.getByRole('button', { name: 'Remove Design' })).toBeVisible();
     expect(page.getByRole('row').elements().map((r) => r.getAttribute('tabindex'))).toEqual(['0', '-1', '-1', '-1']);
+  });
+
+  test('the × fades its fill on hover, as every control does, and changes at once when pressed', async () => {
+    await render(<SerupaProvider locale="en-US"><TagGroup label="Labels" items={tags} onRemove={() => {}} /></SerupaProvider>);
+    const x = page.getByRole('button', { name: 'Remove Design' }).element();
+    const s = withMotion(() => [css(x).transitionProperty, css(x).transitionDuration]);
+    expect(s[0]).toContain('background-color');
+    expect(parseFloat(s[1]!)).toBeGreaterThan(0);
   });
 
   test('one Tab stop: the arrow keys move between tags, Home and End to the ends, and Tab returns to the last tag focused', async () => {

@@ -73,7 +73,7 @@
 .dk-chart__legend { display: flex; flex-wrap: wrap; gap: var(--spacing-1) var(--spacing-4); margin: 0; padding: 0; list-style: none; font-size: var(--text-xs); line-height: var(--leading-4); color: var(--chart-label-text, var(--chart-label)); }
 /* The legend's line while the first numbers load, so the chart's height doesn't change when they arrive. */
 .dk-chart__legend--waiting { min-block-size: var(--leading-4); }
-.dk-chart__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); overflow-wrap: anywhere; }
+.dk-chart__key { display: inline-flex; align-items: center; gap: var(--spacing-1\.5); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* Once, on the first paint: the line draws from its start, its markers and the bars come in after. These are
