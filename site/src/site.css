@@ -22,10 +22,16 @@
   .site-browse { display: none; }
   .site-main { padding: var(--spacing-12) var(--spacing-12) var(--spacing-24); }
 }
-@media (min-width: 80rem) {
-  .site-body[data-aside] { grid-template-columns: minmax(0, 1fr) 15rem; }
-  .site-body[data-side][data-aside] { grid-template-columns: 17rem minmax(0, 1fr) 15rem; }
-  .site-aside { display: block; position: sticky; inset-block-start: var(--dk-navbar-offset, 0px); align-self: start; max-block-size: calc(100dvh - var(--dk-navbar-offset, 0px)); overflow-y: auto; padding: var(--spacing-12) var(--spacing-6) var(--spacing-8) 0; }
+/* "On this page" is the contents' rail: a column of dashes at the page's edge, whose list opens over the article on
+   hover, focus or a tap. It takes a strip, not a column, so the article gets the width. Not clipped (no overflow):
+   the list reaches out of the strip. */
+@media (min-width: 64rem) {
+  .site-body[data-aside] { grid-template-columns: minmax(0, 1fr) var(--spacing-12); }
+  .site-body[data-side][data-aside] { grid-template-columns: 17rem minmax(0, 1fr) var(--spacing-12); }
+  .site-aside { display: block; position: sticky; z-index: var(--z-10); inset-block-start: var(--dk-navbar-offset, 0px); align-self: start; padding: var(--spacing-12) var(--spacing-6) var(--spacing-8) 0; }
+  .site-body[data-aside] .site-main { padding-inline-end: var(--spacing-6); }
+  /* A long page's list stays inside the window and scrolls there. */
+  .site-aside .dk-toc__panel { max-block-size: calc(100dvh - var(--dk-navbar-offset, 0px) - var(--spacing-16)); overflow-y: auto; }
 }
 .site-sidebar { inline-size: 100%; border: 0; background: transparent; }
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--spacing-3) var(--spacing-6); padding: var(--spacing-6) var(--spacing-4); border-block-start: var(--border-width-1) solid var(--border); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
