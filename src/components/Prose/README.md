@@ -3,7 +3,7 @@
 Styles for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor, such as a help article, a changelog or a blog post. base.css takes the browser's spacing off headings and paragraphs so that app screens line up, which leaves such content as one wall of text; inside Prose it reads as a document again.
 
 ```tsx
-import { Prose } from "serupa-ds";
+import { Prose } from "@diki-stwn/serupa-ds";
 
 <Prose as="article" dangerouslySetInnerHTML={{ __html: html }} />
 ```

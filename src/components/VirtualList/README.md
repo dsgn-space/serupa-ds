@@ -3,7 +3,7 @@
 A [List](../List/README.md) of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. The rows are ListItems and look the same as in a List.
 
 ```tsx
-import { VirtualList, ListItem } from "serupa-ds";
+import { VirtualList, ListItem } from "@diki-stwn/serupa-ds";
 
 <VirtualList aria-label="Members" count={people.length} itemKey={(i) => people[i].id}
   renderItem={(i) => <ListItem title={people[i].name} description={people[i].email} />} />

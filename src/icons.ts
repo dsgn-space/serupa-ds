@@ -74,7 +74,7 @@ export function loadAllIcons(): Promise<void> {
 
 /** Adds icons that work by name. Every Material Symbol already does; use this for an icon of your own in the same shape
  * (`{ name, d }`, drawn on Material's 960-unit grid): `registerIcons(MyIcon)` or a whole module. To draw every icon on
- * the first render (server rendering, say), register the full set first: `registerIcons(await import("serupa-ds/icons"))`. */
+ * the first render (server rendering, say), register the full set first: `registerIcons(await import("@diki-stwn/serupa-ds/icons"))`. */
 export function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void {
   for (const x of icons) {
     for (const v of isIconData(x) ? [x] : Object.values(x)) if (isIconData(v)) { NAMED.set(v.name, v); LOADED.delete(v.name); }

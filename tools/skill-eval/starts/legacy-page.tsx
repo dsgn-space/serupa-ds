@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, Heading, Stack, Text } from 'serupa-ds';
+import { Card, Heading, Stack, Text } from '@diki-stwn/serupa-ds';
 
 type Item = { id: string; name: string; owner: string };
 

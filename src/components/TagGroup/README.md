@@ -3,7 +3,7 @@
 Short labels people remove or pick: the labels on a ticket, the recipients of a message, the skills on a profile. The tags are one Tab stop, the arrow keys move between them, and Delete or the × removes one without losing focus.
 
 ```tsx
-import { TagGroup } from "serupa-ds";
+import { TagGroup } from "@diki-stwn/serupa-ds";
 
 <TagGroup label="Labels" items={[{ id: "design", label: "Design" }, { id: "bug", label: "Bug" }]}
   onRemove={(id) => setItems((t) => t.filter((x) => x.id !== id))} />

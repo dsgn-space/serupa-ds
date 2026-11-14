@@ -37,7 +37,7 @@ R.push({ name: 'every type a component file exports is exported by the package (
 const docs = [path.join(PROJECT, 'README.md'), ...fs.readdirSync(path.join(PROJECT, 'docs')).filter((f) => /\.mdx?$/.test(f) && !f.includes('template')).map((f) => path.join(PROJECT, 'docs', f)),
   ...fs.readdirSync(COMP).map((d) => path.join(COMP, d, 'README.md')).filter((f) => fs.existsSync(f))];
 const unknown = [];
-for (const f of docs) for (const m of fs.readFileSync(f, 'utf8').matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*["']serupa-ds["']/g)) {
+for (const f of docs) for (const m of fs.readFileSync(f, 'utf8').matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*["'](?:@diki-stwn\/)?serupa-ds["']/g)) {
   for (const n of m[1].split(',')) { const x = n.trim().replace(/^type\s+/, '').split(/\s+as\s+/)[0]; if (x && !exported.has(x)) unknown.push(`${path.relative(PROJECT, f)}: ${x}`); }
 }
 R.push({ name: 'every name a README or guide imports from serupa-ds is exported', ok: built && !unknown.length, detail: unknown.join(', ') });

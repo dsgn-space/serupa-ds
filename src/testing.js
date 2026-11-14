@@ -1,8 +1,8 @@
-// serupa-ds/testing: for your app's own tests. Testers that drive Serupa's widgets as people do (further down), and
+// @diki-stwn/serupa-ds/testing: for your app's own tests. Testers that drive Serupa's widgets as people do (further down), and
 // screenshots of your pages in each of Serupa's six themes: Serupa checks its components in every theme, and this lets
 // your screens get the same check, with Playwright (or anything with a page.evaluate()).
 //   import { test, expect } from "@playwright/test";
-//   import { forEachTheme } from "serupa-ds/testing";
+//   import { forEachTheme } from "@diki-stwn/serupa-ds/testing";
 //   test("checkout", async ({ page }) => {
 //     await page.goto("/checkout");
 //     await forEachTheme(page, async (theme) => {
@@ -22,7 +22,7 @@ const STILL = '*,*::before,*::after{transition:none!important;animation:none!imp
 export async function forEachTheme(page, fn, options = {}) {
   const themes = options.themes || THEMES;
   const unknown = themes.filter((t) => !THEMES.includes(t));
-  if (unknown.length) throw new Error(`serupa-ds/testing: no theme called ${unknown.join(', ')}. The themes are ${THEMES.join(', ')}.`);
+  if (unknown.length) throw new Error(`@diki-stwn/@diki-stwn/serupa-ds/testing: no theme called ${unknown.join(', ')}. The themes are ${THEMES.join(', ')}.`);
   const still = options.still !== false;
   const emulate = typeof page.emulateMedia === 'function';
   // What to put back: the page's own data-theme (or none), and whether the style that stills it was added here.
@@ -63,7 +63,7 @@ export async function forEachTheme(page, fn, options = {}) {
 // re-learn a widget's keyboard model and markup. Each finds its parts by role, ARIA state and accessible name (never
 // by a dk- class, which may change), acts through the user object you pass, and waits for the widget to settle.
 //   import { userEvent } from '@testing-library/user-event';   // or: import { userEvent } from 'vitest/browser'
-//   import { combobox, table } from 'serupa-ds/testing';
+//   import { combobox, table } from '@diki-stwn/serupa-ds/testing';
 //   const user = userEvent.setup();
 //   await combobox(screen.getByRole('combobox', { name: 'Country' }), { user }).choose('Canada');
 //   await table(screen.getByRole('table'), { user }).sort('Amount', 'descending');
@@ -76,7 +76,7 @@ const OPTIONS = { timeout: 1000 };
 
 function need(user, what) {
   if (!user || typeof user.click !== 'function' || typeof user.keyboard !== 'function')
-    throw new Error(`serupa-ds/testing: ${what} needs { user }: pass userEvent.setup() from @testing-library/user-event, or userEvent from vitest/browser.`);
+    throw new Error(`@diki-stwn/serupa-ds/testing: ${what} needs { user }: pass userEvent.setup() from @testing-library/user-event, or userEvent from vitest/browser.`);
   return user;
 }
 
@@ -104,13 +104,13 @@ function textsOf(el) {
 function pick(list, match, what) {
   if (match instanceof Element) {
     if (list.includes(match)) return match;
-    throw new Error(`serupa-ds/testing: that element isn't one of the ${what}.`);
+    throw new Error(`@diki-stwn/serupa-ds/testing: that element isn't one of the ${what}.`);
   }
   let found;
   if (typeof match === 'number') found = list[match];
   else if (match instanceof RegExp) found = list.find((el) => textsOf(el).some((t) => match.test(t)));
   else found = list.find((el) => nameOf(el) === match) || list.find((el) => textsOf(el).includes(match));
-  if (!found) throw new Error(`serupa-ds/testing: no ${what.replace(/s$/, '')} ${typeof match === 'number' ? 'at ' + match : JSON.stringify(String(match))}. The ${what} are: ${list.map(nameOf).map((n) => JSON.stringify(n)).join(', ') || 'none'}.`);
+  if (!found) throw new Error(`@diki-stwn/serupa-ds/testing: no ${what.replace(/s$/, '')} ${typeof match === 'number' ? 'at ' + match : JSON.stringify(String(match))}. The ${what} are: ${list.map(nameOf).map((n) => JSON.stringify(n)).join(', ') || 'none'}.`);
   return found;
 }
 
@@ -120,7 +120,7 @@ async function until(check, what, options) {
   for (;;) {
     const got = check();
     if (got) return got;
-    if (Date.now() > end) throw new Error(`serupa-ds/testing: timed out waiting for ${what}.`);
+    if (Date.now() > end) throw new Error(`@diki-stwn/serupa-ds/testing: timed out waiting for ${what}.`);
     await new Promise((done) => setTimeout(done, 16));
   }
 }
@@ -138,7 +138,7 @@ const iso = (d) => (typeof d === 'string' ? d.slice(0, 10) : `${d.getFullYear()}
 export function combobox(target, { user, ...options } = {}) {
   need(user, 'combobox()');
   const input = target.matches('[role="combobox"]') ? target : target.querySelector('[role="combobox"]');
-  if (!input) throw new Error('serupa-ds/testing: combobox() needs a role="combobox" field, or an element holding one.');
+  if (!input) throw new Error('@diki-stwn/serupa-ds/testing: combobox() needs a role="combobox" field, or an element holding one.');
   const listbox = () => byId(input, 'aria-controls');
   const t = {
     input: () => input,
@@ -157,7 +157,7 @@ export function combobox(target, { user, ...options } = {}) {
       await until(t.isOpen, 'the combobox to open', options);
     },
     async type(text) {
-      if (typeof user.type !== 'function') throw new Error('serupa-ds/testing: typing needs a user with type(element, text).');
+      if (typeof user.type !== 'function') throw new Error('@diki-stwn/serupa-ds/testing: typing needs a user with type(element, text).');
       await user.type(input, text);
     },
     /** Opens the list and chooses an option: by pointer (default), or with the arrow keys and Enter. An option the
@@ -172,11 +172,11 @@ export function combobox(target, { user, ...options } = {}) {
         await t.type(match);
         option = await until(find, `an option ${JSON.stringify(match)}`, options);
       }
-      if (disabled(option)) throw new Error(`serupa-ds/testing: the option ${JSON.stringify(nameOf(option))} is disabled.`);
+      if (disabled(option)) throw new Error(`@diki-stwn/serupa-ds/testing: the option ${JSON.stringify(nameOf(option))} is disabled.`);
       if (by === 'keyboard') {
         input.focus();
         for (let i = 0; t.active() !== option; i++) {
-          if (i > t.options().length + 1) throw new Error(`serupa-ds/testing: the arrow keys never reached ${JSON.stringify(nameOf(option))}.`);
+          if (i > t.options().length + 1) throw new Error(`@diki-stwn/serupa-ds/testing: the arrow keys never reached ${JSON.stringify(nameOf(option))}.`);
           await user.keyboard('{ArrowDown}');
         }
         await user.keyboard('{Enter}');
@@ -195,7 +195,7 @@ export function combobox(target, { user, ...options } = {}) {
 /** A Menu: the button that opens it (aria-haspopup="menu"). */
 export function menu(trigger, { user, ...options } = {}) {
   need(user, 'menu()');
-  if (trigger.getAttribute('aria-haspopup') !== 'menu') throw new Error('serupa-ds/testing: menu() needs the button that opens the menu (aria-haspopup="menu").');
+  if (trigger.getAttribute('aria-haspopup') !== 'menu') throw new Error('@diki-stwn/serupa-ds/testing: menu() needs the button that opens the menu (aria-haspopup="menu").');
   const panel = () => (expanded(trigger) ? byId(trigger, 'aria-controls') : null);
   const itemsOf = (p) => own(p, '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]', '[role="menu"]');
   const t = {
@@ -216,9 +216,9 @@ export function menu(trigger, { user, ...options } = {}) {
       let p = panel();
       for (let i = 0; i < steps.length; i++) {
         const item = pick(itemsOf(p), steps[i], 'menu items');
-        if (disabled(item)) throw new Error(`serupa-ds/testing: the menu item ${JSON.stringify(nameOf(item))} is disabled.`);
+        if (disabled(item)) throw new Error(`@diki-stwn/serupa-ds/testing: the menu item ${JSON.stringify(nameOf(item))} is disabled.`);
         if (i === steps.length - 1) { await user.click(item); break; }
-        if (item.getAttribute('aria-haspopup') !== 'menu') throw new Error(`serupa-ds/testing: ${JSON.stringify(nameOf(item))} doesn't open a submenu.`);
+        if (item.getAttribute('aria-haspopup') !== 'menu') throw new Error(`@diki-stwn/serupa-ds/testing: ${JSON.stringify(nameOf(item))} doesn't open a submenu.`);
         item.focus();
         await user.keyboard('{ArrowRight}');
         p = await until(() => (expanded(item) ? byId(item, 'aria-controls') : null), `the submenu of ${JSON.stringify(nameOf(item))}`, options);
@@ -239,7 +239,7 @@ export function menu(trigger, { user, ...options } = {}) {
 export function tabs(target, { user, ...options } = {}) {
   need(user, 'tabs()');
   const list = target.matches('[role="tablist"]') ? target : target.querySelector('[role="tablist"]');
-  if (!list) throw new Error('serupa-ds/testing: tabs() needs a role="tablist", or an element holding one.');
+  if (!list) throw new Error('@diki-stwn/serupa-ds/testing: tabs() needs a role="tablist", or an element holding one.');
   const t = {
     tablist: () => list,
     tabs: () => own(list, '[role="tab"]', '[role="tablist"]'),
@@ -248,7 +248,7 @@ export function tabs(target, { user, ...options } = {}) {
     panel: () => { const s = t.selected(); return s ? byId(s, 'aria-controls') : null; },
     async select(match) {
       const tab = pick(t.tabs(), match, 'tabs');
-      if (disabled(tab)) throw new Error(`serupa-ds/testing: the tab ${JSON.stringify(nameOf(tab))} is disabled.`);
+      if (disabled(tab)) throw new Error(`@diki-stwn/serupa-ds/testing: the tab ${JSON.stringify(nameOf(tab))} is disabled.`);
       await user.click(tab);
       await until(() => tab.getAttribute('aria-selected') === 'true', `the tab ${JSON.stringify(nameOf(tab))} to be selected`, options);
     },
@@ -260,7 +260,7 @@ export function tabs(target, { user, ...options } = {}) {
 export function table(target, { user, ...options } = {}) {
   need(user, 'table()');
   const el = target.matches('table') ? target : target.querySelector('table');
-  if (!el) throw new Error('serupa-ds/testing: table() needs a <table>, or an element holding one.');
+  if (!el) throw new Error('@diki-stwn/serupa-ds/testing: table() needs a <table>, or an element holding one.');
   const box = (row) => row.querySelector('input[type="checkbox"]');
   const sortOf = (th) => th.getAttribute('aria-sort') || 'none';
   const t = {
@@ -272,7 +272,7 @@ export function table(target, { user, ...options } = {}) {
     row(match) {
       if (typeof match === 'number' || match instanceof Element) return pick(t.rows(), match, 'rows');
       const found = t.rows().find((r) => [...r.cells].some((c) => (match instanceof RegExp ? textsOf(c).some((x) => match.test(x)) : textsOf(c).includes(match))));
-      if (!found) throw new Error(`serupa-ds/testing: no row with a cell ${JSON.stringify(String(match))}.`);
+      if (!found) throw new Error(`@diki-stwn/serupa-ds/testing: no row with a cell ${JSON.stringify(String(match))}.`);
       return found;
     },
     /** The cell of a row (match as for row()) in a column (by its header's name, or index). */
@@ -288,26 +288,26 @@ export function table(target, { user, ...options } = {}) {
         const th = pick(t.columns(), column, 'columns');
         if (sortOf(th) === direction) return;
         const button = th.querySelector('button');
-        if (!button) throw new Error(`serupa-ds/testing: the column ${JSON.stringify(nameOf(th))} can't be sorted (no sort button).`);
+        if (!button) throw new Error(`@diki-stwn/serupa-ds/testing: the column ${JSON.stringify(nameOf(th))} can't be sorted (no sort button).`);
         const before = sortOf(th);
         await user.click(button);
         await until(() => sortOf(pick(t.columns(), column, 'columns')) !== before, `the column ${JSON.stringify(nameOf(th))} to change its order`, options);
       }
-      if (t.sortDirection(column) !== direction) throw new Error(`serupa-ds/testing: the column never sorted ${direction}.`);
+      if (t.sortDirection(column) !== direction) throw new Error(`@diki-stwn/serupa-ds/testing: the column never sorted ${direction}.`);
     },
     /** The rows whose select checkbox is checked. */
     selectedRows: () => t.rows().filter((r) => { const b = box(r); return !!b && b.checked; }),
     /** Checks or unchecks a row's select checkbox (default: checks it). */
     async selectRow(match, selected = true) {
       const b = box(t.row(match));
-      if (!b) throw new Error('serupa-ds/testing: that row has no select checkbox (TableSelectCell).');
+      if (!b) throw new Error('@diki-stwn/serupa-ds/testing: that row has no select checkbox (TableSelectCell).');
       if (b.checked !== selected) await user.click(b);
       await until(() => b.checked === selected, 'the row checkbox to change', options);
     },
     /** Checks or unchecks the header's select-all checkbox (default: checks it). */
     async selectAll(selected = true) {
       const b = el.tHead && el.tHead.querySelector('input[type="checkbox"]');
-      if (!b) throw new Error('serupa-ds/testing: the table has no select-all checkbox (TableSelectCell header).');
+      if (!b) throw new Error('@diki-stwn/serupa-ds/testing: the table has no select-all checkbox (TableSelectCell header).');
       // From "some selected" (indeterminate), one press may select all or clear all: press until it says what was asked.
       const done = () => b.checked === selected && !b.indeterminate;
       for (let i = 0; i < 2 && !done(); i++) {
@@ -315,7 +315,7 @@ export function table(target, { user, ...options } = {}) {
         await user.click(b);
         await until(() => `${b.checked} ${b.indeterminate}` !== before, 'the select-all checkbox to change', options);
       }
-      if (!done()) throw new Error('serupa-ds/testing: the select-all checkbox never reached that state.');
+      if (!done()) throw new Error('@diki-stwn/serupa-ds/testing: the select-all checkbox never reached that state.');
     },
   };
   return t;
@@ -334,12 +334,12 @@ export function calendar(target, { user, ...options } = {}) {
     /** Moves to the date's month with PageUp and PageDown (Shift for years) and presses its day. Takes a Date or YYYY-MM-DD. */
     async pick(date) {
       const want = iso(date);
-      if (!grid()) throw new Error('serupa-ds/testing: calendar() found no role="grid".');
+      if (!grid()) throw new Error('@diki-stwn/serupa-ds/testing: calendar() found no role="grid".');
       // The day with tabindex 0 is where the keyboard is; PageUp and PageDown move it a month (with Shift, a year).
       const focused = () => grid() && grid().querySelector('button[data-date][tabindex="0"]');
       for (let i = 0; !day(want); i++) {
         const focus = focused();
-        if (!focus || i > 40) throw new Error(`serupa-ds/testing: couldn't reach ${want} in the calendar.`);
+        if (!focus || i > 40) throw new Error(`@diki-stwn/serupa-ds/testing: couldn't reach ${want} in the calendar.`);
         const at = focus.getAttribute('data-date');
         const months = (+want.slice(0, 4) - +at.slice(0, 4)) * 12 + (+want.slice(5, 7) - +at.slice(5, 7));
         const key = Math.abs(months) >= 12 ? (months > 0 ? '{Shift>}{PageDown}{/Shift}' : '{Shift>}{PageUp}{/Shift}') : months > 0 ? '{PageDown}' : '{PageUp}';
@@ -348,7 +348,7 @@ export function calendar(target, { user, ...options } = {}) {
         await until(() => focused() && focused().getAttribute('data-date') !== at, 'the calendar to change month', options);
       }
       const button = day(want);
-      if (disabled(button)) throw new Error(`serupa-ds/testing: ${want} can't be picked (it's disabled).`);
+      if (disabled(button)) throw new Error(`@diki-stwn/serupa-ds/testing: ${want} can't be picked (it's disabled).`);
       await user.click(button);
     },
   };
@@ -361,7 +361,7 @@ export function datePicker(target, { user, ...options } = {}) {
   const root = target.closest('[data-component]') && target.matches('input') ? target.closest('[data-component]') : target;
   const button = root.querySelector('button[aria-haspopup="dialog"]');
   const input = root.matches('input') ? root : root.querySelector('input');
-  if (!button || !input) throw new Error('serupa-ds/testing: datePicker() needs a DatePicker: its field, or the element holding it.');
+  if (!button || !input) throw new Error('@diki-stwn/serupa-ds/testing: datePicker() needs a DatePicker: its field, or the element holding it.');
   const dialog = () => (expanded(button) ? byId(button, 'aria-controls') : null);
   const t = {
     input: () => input,

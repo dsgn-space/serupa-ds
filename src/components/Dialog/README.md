@@ -128,7 +128,7 @@ Drawn from the `FullScreen` story.
 The same "Discard changes?" question, for a form or a page that isn't in a Dialog: a settings page, an editor.
 
 ```tsx
-import { useUnsavedChanges } from "serupa-ds";
+import { useUnsavedChanges } from "@diki-stwn/serupa-ds";
 
 const guard = useUnsavedChanges(name !== saved.name);
 // before moving away inside the app (a Cancel button, your router's blocker):

@@ -7,7 +7,7 @@
 // usage:  npx serupa-usage <source files or folders...> [--json]
 //
 // It reads JavaScript and TypeScript sources (.js .jsx .ts .tsx .mjs .cjs .mts .cts, and .mdx), skipping node_modules,
-// dist and build output. A component counts where it is imported from "serupa-ds" (named, renamed, or as a namespace:
+// dist and build output. A component counts where it is imported from "@diki-stwn/serupa-ds" (named, renamed, or as a namespace:
 // <S.Button>) or taken from window.Serupa, and then written as a JSX tag. --json prints the same numbers as JSON.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -41,7 +41,7 @@ export function bindings(code) {
       if (m && !/^type\s/.test(part.trim())) named.set(m[2] ?? m[1], m[1]);
     }
   };
-  for (const m of code.matchAll(/import\s+(?!type\b)([^;]*?)\s+from\s*["']serupa-ds["']/g)) {
+  for (const m of code.matchAll(/import\s+(?!type\b)([^;]*?)\s+from\s*["'](?:@diki-stwn\/)?serupa-ds["']/g)) {
     const spec = m[1];
     const braces = spec.match(/\{([^}]*)\}/);
     if (braces) list(braces[1]);

@@ -1,9 +1,9 @@
 // Tree-shaking (117, J5): a project that imports one export ships only the modules that export needs, with each of
-// the bundlers projects use. For every export of the package, each bundler builds `export { X } from "serupa-ds"`
+// the bundlers projects use. For every export of the package, each bundler builds `export { X } from "@diki-stwn/serupa-ds"`
 // from dist/js (one module per source file) and lists the package modules that put code in the output. Each must be
 // one that X's own module reaches by its imports: a module only another export needs, or the package's index, means
 // that bundler kept code nobody asked for (a module the package's "sideEffects" lists, or one with an effect that a
-// barrel it passes through brings along). `import "serupa-ds"` alone must put nothing in the output.
+// barrel it passes through brings along). `import "@diki-stwn/serupa-ds"` alone must put nothing in the output.
 // Build first (npm run build).
 //   node tools/test/tree-shake.mjs
 // Bundlers: esbuild, Rollup (reading "sideEffects" the way @rollup/plugin-node-resolve does, and again without it),
@@ -109,7 +109,7 @@ const BUNDLERS = {
     const files = entries(groups);
     const r = await esbuild.build({ entryPoints: files, outdir: path.join(DIR, 'out'), bundle: true, minify: true, write: false, metafile: true, format: 'esm', platform: 'browser', external: ['react', 'react-dom'], plugins: [lazy], logLevel: 'silent' });
     const by = Object.fromEntries(Object.values(r.metafile.outputs).filter((o) => o.entryPoint).map((o) => [path.resolve(PROJECT, o.entryPoint), o.inputs]));
-    // Not the warning on `import "serupa-ds"` alone, which the test asks for on purpose.
+    // Not the warning on `import "@diki-stwn/serupa-ds"` alone, which the test asks for on purpose.
     warned.esbuild = r.warnings.filter((w) => !w.location || !path.resolve(PROJECT, w.location.file).startsWith(DIR));
     return files.map((f) => ours(Object.entries(by[f]).map(([k, v]) => [k, v.bytesInOutput])));
   },
@@ -159,7 +159,7 @@ const lost = exported.filter((x) => !where[x]);
 const results = [{ name: `found where each of the ${exported.length} exports is declared`, ok: exported.length > 100 && !lost.length, detail: lost.length ? `not found: ${lost.join(', ')}` : `only ${exported.length} exports` }];
 for (const [name, run] of Object.entries(BUNDLERS)) {
   const [none, ...each] = await run(groups);
-  results.push({ name: `${name}: import "serupa-ds" alone ships nothing`, ok: !none.length, detail: `ships ${none.map(([f]) => short(f)).join(', ')}` });
+  results.push({ name: `${name}: import "@diki-stwn/serupa-ds" alone ships nothing`, ok: !none.length, detail: `ships ${none.map(([f]) => short(f)).join(', ')}` });
   const extra = [];
   exported.forEach((x, i) => {
     const ok = reach(where[x]);

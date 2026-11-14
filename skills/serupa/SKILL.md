@@ -16,16 +16,16 @@ npm install github:dsgn-space/serupa-ds#v14.7.0
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
 
 ```js
-import 'serupa-ds/tokens.css';   // every token, the themes, the fonts: always first
-import 'serupa-ds/base.css';     // page defaults; leave out when adding Serupa to an existing app
-import 'serupa-ds/bundle.css';   // components and utility classes (or components.css, plus utilities.css)
-// import 'serupa-ds/utilities-extra.css';   // only for masks and gradients: mask-*, bg-linear-*, from-*, via-*, to-*
-import { Button, Field, Input } from 'serupa-ds';
+import '@diki-stwn/serupa-ds/tokens.css';   // every token, the themes, the fonts: always first
+import '@diki-stwn/serupa-ds/base.css';     // page defaults; leave out when adding Serupa to an existing app
+import '@diki-stwn/serupa-ds/bundle.css';   // components and utility classes (or components.css, plus utilities.css)
+// import '@diki-stwn/serupa-ds/utilities-extra.css';   // only for masks and gradients: mask-*, bg-linear-*, from-*, via-*, to-*
+import { Button, Field, Input } from '@diki-stwn/serupa-ds';
 ```
 
 The styles sit in cascade layers (`dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`). The app's own unlayered CSS always wins over them, so an override never needs `!important`.
 
-For production, trim the CSS in the build: `import { serupaPurge } from 'serupa-ds/purge'` and add `serupaPurge()` to Vite's `plugins` (or `serupaPurgePostcss()` to `postcss.config.mjs` for Next.js and webpack). Without a bundler: `npx serupa-purge src -o public/bundle.min.css --components`. List any class the code builds at runtime with `keep: [...]` (or `--keep`).
+For production, trim the CSS in the build: `import { serupaPurge } from '@diki-stwn/serupa-ds/purge'` and add `serupaPurge()` to Vite's `plugins` (or `serupaPurgePostcss()` to `postcss.config.mjs` for Next.js and webpack). Without a bundler: `npx serupa-purge src -o public/bundle.min.css --components`. List any class the code builds at runtime with `keep: [...]` (or `--keep`).
 
 ## Theme
 
@@ -73,7 +73,7 @@ The components meet their part of WCAG 2.2 AA. The page meets the rest only if y
 
 ## Before you finish
 
-1. **Run the check and fix until it passes.** In an app `serupa-create` made, that's `npm run check`: the types, ESLint with jsx-a11y and `serupa-ds/eslint` (an Image with no `alt`, an IconButton with no `label`), and Stylelint with `serupa-ds/stylelint` (a raw color, spacing or radius). In another app, add `serupa-ds/eslint` after jsx-a11y in `eslint.config.js` and `extends: ['serupa-ds/stylelint']` to its Stylelint config, then run its lint.
+1. **Run the check and fix until it passes.** In an app `serupa-create` made, that's `npm run check`: the types, ESLint with jsx-a11y and `@diki-stwn/serupa-ds/eslint` (an Image with no `alt`, an IconButton with no `label`), and Stylelint with `@diki-stwn/serupa-ds/stylelint` (a raw color, spacing or radius). In another app, add `@diki-stwn/serupa-ds/eslint` after jsx-a11y in `eslint.config.js` and `extends: ['@diki-stwn/serupa-ds/stylelint']` to its Stylelint config, then run its lint.
 2. **Tab through the page once.** Every control is reached in reading order, shows its focus ring, and works from the keyboard.
 3. **Look at it in dark mode** (`data-mode="dark"` on `<html>`). Nothing you wrote should stay light.
 

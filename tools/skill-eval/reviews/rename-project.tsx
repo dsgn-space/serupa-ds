@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Dialog, Field, Input, Stack, toast } from 'serupa-ds';
+import { Button, Dialog, Field, Input, Stack, toast } from '@diki-stwn/serupa-ds';
 
 export function RenameProject({ name, onRename }: { name: string; onRename: (name: string) => Promise<void> }) {
   const [open, setOpen] = React.useState(false);

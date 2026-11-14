@@ -57,4 +57,4 @@ t('the built file exports every tester, and testing.d.ts declares it', testers.e
 
 await b.close();
 cleanup();
-done(report('serupa-ds/testing', R));
+done(report('@diki-stwn/serupa-ds/testing', R));

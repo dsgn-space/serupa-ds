@@ -1,5 +1,5 @@
 // serupa-ds/labels/ja: every built-in word in Japanese.
-//   import { labels, locale } from "serupa-ds/labels/ja";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/ja";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 
