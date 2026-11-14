@@ -1,4 +1,4 @@
-// serupa-ds/stylelint, as a project uses it (npm run build first): `extends: ["serupa-ds/stylelint"]` turns on four
+// serupa-ds/stylelint, as a project uses it (npm run build first): `extends: ["@diki-stwn/serupa-ds/stylelint"]` turns on four
 // rules that flag a color, a spacing length, a radius or a duration or easing written out where a token belongs, and pass the same CSS
 // written with tokens, var() fallbacks and calc() over tokens included.
 //   node tools/test/stylelint-export.mjs
@@ -47,4 +47,4 @@ await t('no-raw-motion: durations, delays and easings written out, and all', `.a
 R.push({ name: 'no-raw-motion is a warning, so an app\'s lint still passes on upgrade', ok: (await stylelint.lint({ code: '.a { transition: all 0.3s ease; }', codeFilename: path.join(PROJECT, 'app.css'), config: { extends: [file] } })).results[0].warnings.every((w) => w.severity === 'warning'), detail: 'severity' });
 await t('a stylelint-disable comment with a reason turns a rule off for that line', '.a {\n  /* stylelint-disable-next-line serupa/no-raw-color -- the brand file asks for this exact ink */\n  color: #0a2540;\n}', []);
 
-done(report('serupa-ds/stylelint', R));
+done(report('@diki-stwn/serupa-ds/stylelint', R));

@@ -5,7 +5,7 @@ Picks a number, or a range with two thumbs, by dragging along a track or with th
 **Also called:** range input, range slider.
 
 ```tsx
-import { Slider } from "serupa-ds";
+import { Slider } from "@diki-stwn/serupa-ds";
 
 <Slider aria-label="Volume" defaultValue={50} />
 

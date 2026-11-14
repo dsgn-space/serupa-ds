@@ -5,7 +5,7 @@ A drop area with a button for choosing files, and the chosen files listed under 
 **Also called:** dropzone, file input, file uploader.
 
 ```tsx
-import { FileUpload } from "serupa-ds";
+import { FileUpload } from "@diki-stwn/serupa-ds";
 
 <FileUpload accept="image/*" maxSize={5_000_000} hint="PNG or JPG, up to 5 MB" onFilesChange={setAvatar} />
 

@@ -1,5 +1,5 @@
 // serupa-ds/labels/ms: every built-in word in Malay.
-//   import { labels, locale } from "serupa-ds/labels/ms";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/ms";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

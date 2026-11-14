@@ -12,8 +12,8 @@ import { PROJECT, done, report } from './lib.mjs';
 const { components } = JSON.parse(fs.readFileSync(path.join(PROJECT, 'dist', 'components.json'), 'utf8'));
 const files = [
   { file: 'src/App.tsx', code: `
-import { Button, Card as Box, Navbar, NavbarLink } from 'serupa-ds';
-import type { ButtonProps } from 'serupa-ds';
+import { Button, Card as Box, Navbar, NavbarLink } from '@diki-stwn/serupa-ds';
+import type { ButtonProps } from '@diki-stwn/serupa-ds';
 export const App = () => (
   <Box padding="none">
     <Navbar sticky brand={<a href="/">Acme</a>}><NavbarLink href="/" active>Home</NavbarLink></Navbar>
@@ -23,7 +23,7 @@ export const App = () => (
   </Box>
 );` },
   { file: 'src/Other.jsx', code: `
-import * as S from "serupa-ds";
+import * as S from "@diki-stwn/serupa-ds";
 export function Other() { return <><S.Button size="sm" /><S.Badge tone="success">New</S.Badge><img src="x.png" alt="" /></>; }` },
   { file: 'page.js', code: `
 const { Button, Tooltip: Tip } = window.Serupa;

@@ -5,7 +5,7 @@ A short guided walk through a page: one step at a time, a small panel points at 
 **Also called:** product tour, walkthrough, coach marks.
 
 ```tsx
-import { Tour } from "serupa-ds";
+import { Tour } from "@diki-stwn/serupa-ds";
 
 <Tour
   open={open}

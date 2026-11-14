@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Point a project's coding agents at the Serupa skill that came with its install (PN4). AGENTS.md is read by Codex,
 // Cursor, Copilot and others, and Claude Code reads it through a CLAUDE.md line, "@AGENTS.md". The section names
-// node_modules/serupa-ds/skills/serupa/SKILL.md, which always matches the release the project pinned, so an agent
+// node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md, which always matches the release the project pinned, so an agent
 // never uses a component or prop newer than the one installed (`npx skills add` takes the skill from main).
 //
 // usage:  npx serupa-agents [folder]
@@ -21,10 +21,10 @@ const END = '<!-- serupa-ds:end -->';
 export const SECTION = `${START}
 ## UI: the Serupa design system
 
-This project's UI is built with Serupa (\`serupa-ds\`). Before any UI work, read \`node_modules/serupa-ds/skills/serupa/SKILL.md\`
+This project's UI is built with Serupa (\`@diki-stwn/serupa-ds\`). Before any UI work, read \`node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md\`
 and follow it. It comes with the installed release, so every component, prop and token it names exists here. Before
 you call a UI change done, run the project's check (\`npm run check\` in an app \`serupa-create\` made) and fix what it
-finds. To review a UI change, follow \`node_modules/serupa-ds/skills/serupa-review/SKILL.md\`.
+finds. To review a UI change, follow \`node_modules/@diki-stwn/serupa-ds/skills/serupa-review/SKILL.md\`.
 ${END}
 `;
 

@@ -20,7 +20,7 @@ t('package.json exports serupa-ds/labels/* with its types', pkg.exports['./label
 const packs = Object.fromEntries(await Promise.all(built.map(async (l) => [l, await import(pathToFileURL(path.join(dir, l + '.js')).href)])));
 const en = packs.en.labels;
 const { enLabels, idLabels } = await import(pathToFileURL(path.join(PROJECT, 'dist', 'js', 'index.js')).href);
-t('serupa-ds/labels/en and /id are enLabels and idLabels', packs.en.labels === enLabels && packs.id.labels === idLabels);
+t('@diki-stwn/serupa-ds/labels/en and /id are enLabels and idLabels', packs.en.labels === enLabels && packs.id.labels === idLabels);
 
 // Arguments for each function label: every case it has to word (a count of 1 and of several; each value of a union).
 const reasons = ['valueMissing', 'typeMismatch', 'badInput', 'tooShort', 'tooLong', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'patternMismatch'];

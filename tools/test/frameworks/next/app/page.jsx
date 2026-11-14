@@ -1,6 +1,6 @@
 // A Server Component: Container, Stack, Heading and Text render on the server, and Button, a client component
 // ("use client" in the package), is imported straight into it, as the README says works.
-import { Button, Container, Heading, Stack, Text } from 'serupa-ds';
+import { Button, Container, Heading, Stack, Text } from '@diki-stwn/serupa-ds';
 
 export default function Page() {
   return (

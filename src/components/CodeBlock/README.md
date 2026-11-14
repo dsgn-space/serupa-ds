@@ -3,7 +3,7 @@
 Code for people to read and copy: an install command, a config file, an example. It shows the code in the mono font in a framed box, with an optional title, line numbers and marked lines, and a button that copies it all.
 
 ```tsx
-import { CodeBlock } from "serupa-ds";
+import { CodeBlock } from "@diki-stwn/serupa-ds";
 
 <CodeBlock title="SignIn.tsx" language="tsx" code={source} lineNumbers highlight={[3, [6, 7]]} />
 ```

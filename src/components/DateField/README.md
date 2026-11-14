@@ -3,7 +3,7 @@
 A date people know or copy from a document, such as a date of birth or a passport's expiry, typed as day, month and year in three labelled boxes, in the locale's order. The app gets `YYYY-MM-DD`, and is told what's wrong while it isn't a date, so it can word the error.
 
 ```tsx
-import { DateField, Field } from "serupa-ds";
+import { DateField, Field } from "@diki-stwn/serupa-ds";
 
 <Field label="Date of birth" hint="For example, 27 3 2007" error={error}>
   <DateField name="dob" autoComplete="bday" order="dmy" max={today} onValueChange={(value, { problem }) => setProblem(problem)} />

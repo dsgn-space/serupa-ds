@@ -1,5 +1,5 @@
 // serupa-ds/labels/pt: every built-in word in Portuguese (Brazilian usage).
-//   import { labels, locale } from "serupa-ds/labels/pt";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/pt";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

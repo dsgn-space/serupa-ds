@@ -1,5 +1,5 @@
 // serupa-ds/labels/uk: every built-in word in Ukrainian, with its three plural forms (plural()).
-//   import { labels, locale } from "serupa-ds/labels/uk";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/uk";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 import { plural } from '../internal/plural';

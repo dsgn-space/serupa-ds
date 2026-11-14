@@ -5,7 +5,7 @@ A field for a number, with − and + buttons at the end. People can type freely;
 **Also called:** nudger, quantity input, counter, spin button.
 
 ```tsx
-import { NumberInput } from "serupa-ds";
+import { NumberInput } from "@diki-stwn/serupa-ds";
 
 <NumberInput aria-label="Quantity" defaultValue={1} min={1} max={99} />
 

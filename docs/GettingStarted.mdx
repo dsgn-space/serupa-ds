@@ -14,6 +14,15 @@ Install a released version straight from GitHub, pinned to its tag:
 npm install github:dsgn-space/serupa-ds#v14.7.0
 ```
 
+From 15.0.0 it is also on GitHub Packages as `@diki-stwn/serupa-ds` (never on the public npm registry). Add these two lines to your project's `.npmrc`, with a GitHub token that can read packages in `GITHUB_TOKEN`, then run `npm install @diki-stwn/serupa-ds`:
+
+```ini
+@diki-stwn:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+Either way, you import it as `@diki-stwn/serupa-ds`.
+
 Pin a tag, never `#main`, so updates reach your project only when you choose. Each release tag is prebuilt, so nothing runs on install.
 
 **Updating:** change the tag and read the [Changelog](?path=/docs/changelog--docs) entries in between. Minor and patch releases never remove anything; major releases list what changed and how to migrate.
@@ -23,10 +32,10 @@ Pin a tag, never `#main`, so updates reach your project only when you choose. Ea
 Vite, Next.js, Remix or any bundler. React 19 is a peer dependency, so the components use your app's React. The package needs Node 22 or later (working on this repository needs Node 26).
 
 ```js
-import 'serupa-ds/tokens.css';
-import 'serupa-ds/base.css';     // page defaults; skip it when adding the system to an existing app
-import 'serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
-import { Button, Field, Input } from 'serupa-ds';
+import '@diki-stwn/serupa-ds/tokens.css';
+import '@diki-stwn/serupa-ds/base.css';     // page defaults; skip it when adding the system to an existing app
+import '@diki-stwn/serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
+import { Button, Field, Input } from '@diki-stwn/serupa-ds';
 
 export function SignUp() {
   return (
@@ -85,11 +94,11 @@ The stylesheet is `components.css` (about 450 KB), not `bundle.css`, because a p
 
 ## Lint your JSX for accessibility
 
-eslint-plugin-jsx-a11y checks a plain `<img>` for its `alt`, but it skips a component it doesn't know, so `<Image src="team.png" />` with no `alt` passes. `serupa-ds/eslint` tells it what each Serupa component renders (Image is an `img`, Link an `a`, IconButton a `button`), so the same rules check them. Add it after the plugin's config in `eslint.config.js`:
+eslint-plugin-jsx-a11y checks a plain `<img>` for its `alt`, but it skips a component it doesn't know, so `<Image src="team.png" />` with no `alt` passes. `@diki-stwn/serupa-ds/eslint` tells it what each Serupa component renders (Image is an `img`, Link an `a`, IconButton a `button`), so the same rules check them. Add it after the plugin's config in `eslint.config.js`:
 
 ```js
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-import serupa, { labelAttributes } from 'serupa-ds/eslint';
+import serupa, { labelAttributes } from '@diki-stwn/serupa-ds/eslint';
 
 export default [
   jsxA11y.flatConfigs.recommended,
@@ -99,15 +108,15 @@ export default [
 ];
 ```
 
-It sets the settings for eslint-plugin-jsx-a11y and for its maintained fork, eslint-plugin-jsx-a11y-x, so it works with either. Oxlint reads the same `jsx-a11y` settings from `.oxlintrc.json`. Print them once with `node -e "import('serupa-ds/eslint').then((m) => console.log(JSON.stringify({ settings: m.default.settings }, null, 2)))"` and paste them in, then print them again after you update the package.
+It sets the settings for eslint-plugin-jsx-a11y and for its maintained fork, eslint-plugin-jsx-a11y-x, so it works with either. Oxlint reads the same `jsx-a11y` settings from `.oxlintrc.json`. Print them once with `node -e "import('@diki-stwn/serupa-ds/eslint').then((m) => console.log(JSON.stringify({ settings: m.default.settings }, null, 2)))"` and paste them in, then print them again after you update the package.
 
 ## Lint your CSS for raw values
 
-A hex color in your own CSS doesn't change in dark mode, a `13px` gap sits off the spacing scale, and a hand-picked `0.3s ease` moves out of step with every component. `serupa-ds/stylelint` is a Stylelint config with four rules that flag those values and name the token to use instead. Install `stylelint`, then extend the config in `stylelint.config.js`:
+A hex color in your own CSS doesn't change in dark mode, a `13px` gap sits off the spacing scale, and a hand-picked `0.3s ease` moves out of step with every component. `@diki-stwn/serupa-ds/stylelint` is a Stylelint config with four rules that flag those values and name the token to use instead. Install `stylelint`, then extend the config in `stylelint.config.js`:
 
 ```js
 export default {
-  extends: ['serupa-ds/stylelint'],
+  extends: ['@diki-stwn/serupa-ds/stylelint'],
 };
 ```
 

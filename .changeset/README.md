@@ -6,7 +6,7 @@ or write the file yourself:
 
 ```md
 ---
-"serupa-ds": minor
+"@diki-stwn/serupa-ds": minor
 ---
 
 - Added: Tooltip component, with 12 component tokens.
