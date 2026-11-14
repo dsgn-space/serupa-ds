@@ -38,6 +38,22 @@ const CORNERS = {
   round: { 'radius-inner': 'rounded-md', 'radius-control': 'rounded-lg', 'radius-surface': 'rounded-xl', 'radius-container': 'rounded-2xl' },
 };
 export const CORNER_PRESETS = ['default', ...Object.keys(CORNERS)];
+// How quickly the brand moves: each surface and change role one step quicker or calmer on the duration scale. The
+// loops (spinner, placeholder), the press and the waits in src/internal/timing.ts keep their pace, and every exit
+// stays shorter than its enter.
+const MOTION = {
+  brisk: {
+    'motion-hover': 'duration-100', 'motion-enter-sm': 'duration-100', 'motion-enter-md': 'duration-150', 'motion-enter-lg': 'duration-200',
+    'motion-exit-sm': 'duration-75', 'motion-exit-md': 'duration-100', 'motion-exit-lg': 'duration-150',
+    'motion-change-sm': 'duration-100', 'motion-change-md': 'duration-150', 'motion-change-lg': 'duration-200',
+  },
+  calm: {
+    'motion-enter-sm': 'duration-200', 'motion-enter-md': 'duration-300', 'motion-enter-lg': 'duration-500',
+    'motion-exit-sm': 'duration-150', 'motion-exit-md': 'duration-200', 'motion-exit-lg': 'duration-300',
+    'motion-change-sm': 'duration-200', 'motion-change-md': 'duration-300', 'motion-change-lg': 'duration-500',
+  },
+};
+export const MOTION_PRESETS = ['default', ...Object.keys(MOTION)];
 // The look a brand takes from a shipped theme: its neutrals, borders and shadows, and (for modern) its corners,
 // spacing, elevation and motion. plain is blue's flat look; modern is emerald's calm one.
 const LOOK_BASE = { plain: 'blue', modern: 'emerald' };
@@ -116,13 +132,14 @@ const NAME = /^[a-z][a-z0-9]{0,23}$/;
 
 /**
  * A brand's light and dark themes as CSS, to load after tokens.css.
- * @param {{ name: string, color: string, corners?: string, look?: string, tokens: any }} o
+ * @param {{ name: string, color: string, corners?: string, motion?: string, look?: string, tokens: any }} o
  * @returns {{ css: string, shades: Record<string,string>, themes: Record<string, Record<string,string>>, picks: object }}
  */
-export function brandTheme({ name, color, corners = 'default', look = 'plain', tokens }) {
+export function brandTheme({ name, color, corners = 'default', motion = 'default', look = 'plain', tokens }) {
   if (!NAME.test(String(name))) throw new Error(`the name "${name}" can't be a theme name: use lowercase letters and digits, starting with a letter (such as acme)`);
   if (!parseHex(color)) throw new Error(`"${color}" isn't a color: give a hex value, such as #0f766e`);
   if (!CORNER_PRESETS.includes(corners)) throw new Error(`corners takes ${CORNER_PRESETS.join(', ')}, not ${corners}`);
+  if (!MOTION_PRESETS.includes(motion)) throw new Error(`motion takes ${MOTION_PRESETS.join(', ')}, not ${motion}`);
   if (!LOOKS.includes(look)) throw new Error(`look takes ${LOOKS.join(', ')}, not ${look}`);
   const from = LOOK_BASE[look];
   const { palette, aliases } = readTokens(tokens);
@@ -196,13 +213,15 @@ export function brandTheme({ name, color, corners = 'default', look = 'plain', t
   const L = picks.light.values, D = picks.dark.values;
   const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'field-action', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
-  // The look's own roles outside color, the same in light and dark; a corners preset then sets the radius roles.
+  // The look's own roles outside color, the same in light and dark; a corners preset then sets the radius roles, and a
+// motion preset the durations.
   const roles = {};
   if (from !== 'blue') for (const g of LOOK_GROUPS) for (const x of tokens[g]?.tokens ?? []) {
     const own = x.value && typeof x.value === 'object' ? x.value[`${from}-light`] : undefined;
     if (own !== undefined && own !== x.value['blue-light']) roles[x.name] = own;
   }
   for (const [k, x] of Object.entries(CORNERS[corners] ?? {})) roles[k] = `{${x}}`;
+  for (const [k, x] of Object.entries(MOTION[motion] ?? {})) roles[k] = `{${x}}`;
   // data-radius="default" puts a theme's own corners back from these.
   for (const k of ['radius-control', 'radius-surface']) if (roles[k]) roles[`dk-own-${k}`] = roles[k];
   const css = [
