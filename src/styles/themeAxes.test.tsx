@@ -417,7 +417,7 @@ describe('Density axis', () => {
     } finally { await page.viewport(900, 700); }
   });
 
-  test('a nested data-mode section has its own text color and surface, not the page\'s; a class background still wins', async () => {
+  test('a nested data-mode section has its own text color and page fill (surface-page), not the page\'s; a class background still wins', async () => {
     axes('blue', 'light');
     await render(<div><p id="np-out">Outside</p><section id="np" data-mode="dark"><p id="np-in">Inside</p></section>
       <section id="np2" data-mode="dark" style={{ backgroundColor: 'rgb(1, 2, 3)' }} /></div>);
@@ -425,7 +425,7 @@ describe('Density axis', () => {
     const dark = read(document.getElementById('np')!);
     expect(cs('np-in').color).toBe(dark.text);
     expect(cs('np-in').color).not.toBe(cs('np-out').color);
-    expect(cs('np').backgroundColor).toBe(dark.surface);
+    expect(cs('np').backgroundColor).toBe(dark['surface-page']);
     expect(cs('np2').backgroundColor).toBe('rgb(1, 2, 3)');
   });
 
