@@ -46,7 +46,7 @@ An assistant's reply (the `AgentReply` story) adds these parts:
 - **Thinking** (`.dk-chat-message__thinking`): "Thinking…" with a shine, until the first words arrive.
 - **Versions** (`.dk-chat-message__branches`): "2 / 3" between previous and next, under a regenerated reply.
 
-An assistant also asks before it acts with a `ChatApproval` card (`.dk-chat-approval`, the `Approval` story), and names its sources with `ChatCitation` chips (`.dk-chat-citation`, the `Citations` story).
+An assistant also asks before it acts with a `ChatApproval` card (`.dk-chat-approval`, the `Approval` story), offers Copy, Regenerate and a rating under a reply with `ChatReplyActions` (`.dk-chat-reply-actions`, the `ReplyActions` story), and names its sources with `ChatCitation` chips (`.dk-chat-citation`, the `Citations` story).
 
 While the reader is further up and new messages arrive, a "3 new messages" button (`.dk-chat__jump`) sits at the bottom of the log; it scrolls down and focuses the log.
 
@@ -69,6 +69,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 - Tools it calls go in `steps`, in order, each `{ id, label, status, detail? }` with `status` `"running"`, `"done"` or `"failed"`. Give each a stable `id` and update its status as it ends. `ChatSteps` draws the same list on its own, outside a message.
 - Before it acts (a refund, an email, a command), put a `ChatApproval` in the reply's `attachments`: what it will do in words as its children, more in `detail`, and `onApprove` and `onDeny`. Set `status` to `"approved"` or `"denied"` once the person answers: the card becomes a one-line record ("Approved: Reverse refund 2"), said to screen readers, with focus on it.
 - Sources go in the text as `<ChatCitation href index={1} />`: a real link that shows its number and host ("1 docs.example.com"), or your own words as children. Wrap one in a [HoverCard](../HoverCard/README.md) for a preview of the page.
+- Under a finished reply, a `ChatReplyActions` row in its `attachments`: `copyText` for Copy, `onRegenerate` for Regenerate, and `feedback` with `onFeedback` for Helpful and Not helpful. Each button shows only when given. A rating is optional, said back ("Thanks, noted") and taken back by pressing it again; act on it at once (a "Not helpful" can offer to regenerate) rather than asking why first. Leave the row off while the reply streams.
 - A reply the person regenerated keeps its versions: pass `branch` (from 1), `branches` and `onBranchChange`, and show that version's text. "2 / 3" sits under it between previous and next.
 - A model picker and how much context is used sit in the composer's `actions`: a small [Select](../Select/README.md) named "Model" and a small [Meter](../Meter/README.md) whose `formatValue` says it in words ("12,400 of 200,000 tokens used"). The `AgentReply` story shows both.
 
@@ -110,7 +111,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 - **Send:** an icon button named "Send" (and "Stop"); with nothing to send it's `aria-disabled` rather than removed from the Tab order.
 - **Contrast:** message text reads 4.5:1 on both bubbles, and times, dividers and "Not sent" 4.5:1 on the page, in all six themes (`Chat.test.tsx`).
 - **An assistant at work:** "Thinking…" is a progress bar with that name. Reasoning is a native disclosure (`details`), opened with Enter or Space. Each step says its state in words after its label ("Searched the help centre, Done"), not only by its icon. Steps are read with the reply when the log adds it; a step that changes later isn't announced, so say the outcome in the reply.
-- **Approval and versions:** a pending `ChatApproval` is a group named by what it will do. The answer is said ("Approved: …"), and focus moves from the pressed button to the record, so it isn't lost. The version buttons are named "Previous response" and "Next response" inside a group named "Response 2 of 3"; a press says where it landed, and at either end the button stays focusable (`aria-disabled`). Each citation's name is its number and source.
+- **Approval and versions:** a pending `ChatApproval` is a group named by what it will do. The answer is said ("Approved: …"), and focus moves from the pressed button to the record, so it isn't lost. The version buttons are named "Previous response" and "Next response" inside a group named "Response 2 of 3"; a press says where it landed, and at either end the button stays focusable (`aria-disabled`). Each citation's name is its number and source. `ChatReplyActions` is a group named "Response actions"; Helpful and Not helpful are toggles (`aria-pressed`), and a rating given or taken back is said.
 - **What's still yours:** announcing a failure out loud if it matters right then (the log reads only additions), and moving focus after a send fails.
 
 ### Keyboard
@@ -182,6 +183,17 @@ An assistant asks before it acts. The children say what it will do and name the 
 | `detail` | `ReactNode` | | More about it, such as the command or what changes. |
 | `status` | `'pending' \| 'approved' \| 'denied'` | `'pending'` | Answered, it becomes a one-line record. |
 | `onApprove` / `onDeny` | `() => void` | | Called by Approve and Deny. |
+
+### ChatReplyActions
+
+The row under an assistant's reply. Each button is there only when its prop is. Every other prop goes to the `div` (a group named "Response actions").
+
+| Prop | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `copyText` | `string \| () => string \| Promise<string>` | | The reply's text, for Copy. |
+| `onRegenerate` | `() => void` | | Called by Regenerate. |
+| `feedback` | `'good' \| 'bad' \| null` | | The rating given (controlled). |
+| `onFeedback` | `(feedback) => void` | | Called with `'good'`, `'bad'`, or `null` when the pressed one is pressed again. |
 
 ### ChatCitation
 

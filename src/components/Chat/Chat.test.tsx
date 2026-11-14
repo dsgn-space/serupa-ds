@@ -5,7 +5,8 @@ import { cdp, commands, page, server, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
-import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatSteps } from './Chat';
+import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatReplyActions, ChatSteps } from './Chat';
+import type { ChatFeedback } from './Chat';
 import type { ChatApprovalStatus } from './Chat';
 import { announcerIdle } from '../../internal/announce';
 // The tests that read digits say they mean en-US: with no locale, a number is in the browser's digits ("٣" in ar-EG).
@@ -573,6 +574,51 @@ describe('Chat in print', () => {
       expect(l.getBoundingClientRect().height).toBeGreaterThan(600);
     } finally { await commands.printMedia(false); }
     expect(l.scrollHeight).toBeGreaterThan(l.clientHeight + 100);
+  });
+});
+
+describe('ChatReplyActions', () => {
+  function Rated({ onFeedback }: { onFeedback: (f: ChatFeedback | null) => void }) {
+    const [f, setF] = React.useState<ChatFeedback | null>(null);
+    return <ChatReplyActions copyText="The answer" onRegenerate={() => {}} feedback={f} onFeedback={(n) => { setF(n); onFeedback(n); }} />;
+  }
+
+  test('a named group with only the buttons it is given', async () => {
+    const screen = await render(<ChatReplyActions copyText="Hi" />);
+    const group = screen.getByRole('group', { name: 'Response actions' }).element();
+    expect([...group.querySelectorAll('button')].map((b) => b.getAttribute('aria-label') || b.textContent)).toEqual(['Copy']);
+    await render(<ChatReplyActions onRegenerate={() => {}} aria-label="Reply 2 actions" />);
+    expect(screen.getByRole('group', { name: 'Reply 2 actions' }).element().querySelectorAll('button').length).toBe(1);
+  });
+
+  test('Helpful and Not helpful are toggles: a rating is said, the other one comes off, and pressing it again takes it back', async () => {
+    const onFeedback = vi.fn();
+    const screen = await render(<Rated onFeedback={onFeedback} />);
+    const good = screen.getByRole('button', { name: 'Helpful' }), bad = screen.getByRole('button', { name: 'Not helpful' });
+    await good.click();
+    await expect.element(good).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => announcerIdle() && said()).toBe('Thanks, noted');
+    await bad.click();
+    await expect.element(bad).toHaveAttribute('aria-pressed', 'true');
+    await expect.element(good).toHaveAttribute('aria-pressed', 'false');
+    await bad.click();
+    await expect.element(bad).toHaveAttribute('aria-pressed', 'false');
+    await expect.poll(() => announcerIdle() && said()).toMatch(/Rating removed$/);
+    expect(onFeedback.mock.calls.map((c) => c[0])).toEqual(['good', 'bad', null]);
+  });
+
+  test('Regenerate calls onRegenerate, from the keyboard too', async () => {
+    const onRegenerate = vi.fn();
+    const screen = await render(<ChatReplyActions onRegenerate={onRegenerate} />);
+    (screen.getByRole('button', { name: 'Regenerate' }).element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    expect(onRegenerate).toHaveBeenCalledTimes(1);
+  });
+
+  test('its words come from the labels (Indonesian)', async () => {
+    const screen = await render(<SerupaProvider labels={idLabels}><ChatReplyActions onRegenerate={() => {}} onFeedback={() => {}} /></SerupaProvider>);
+    expect(screen.getByRole('group', { name: 'Tindakan jawaban' }).element()).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Tidak membantu' }).element()).toBeTruthy();
   });
 });
 
