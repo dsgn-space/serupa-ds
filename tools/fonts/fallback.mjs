@@ -94,7 +94,7 @@ for (const [i, [style, weight, names]] of FACES.entries()) {
     let best = null;
     for (let step = 0; step <= 20; step++) {
       const a = `${(ascent + step * 0.01).toFixed(3)}%`;
-      const f = new FontFace(`T${weight}${style}${step}`, names.map((n) => `local("${n}")`).join(','), { weight: String(weight), style, sizeAdjust, ascentOverride: a, descentOverride: `${descent}%`, lineGapOverride: '0%' });
+      const f = new FontFace(`T${weight}${style}${step}`, names.map((n) => `local("${n}")`).join(','), /** @type {FontFaceDescriptors} */ ({ weight: String(weight), style, sizeAdjust, ascentOverride: a, descentOverride: `${descent}%`, lineGapOverride: '0%' }));
       await f.load(); document.fonts.add(f);
       const off = sizes.filter((px, k) => { const r = line(f.family, px); return r[0] !== want[k][0] || r[1] !== want[k][1]; });
       document.fonts.delete(f);
