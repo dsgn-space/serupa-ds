@@ -306,8 +306,8 @@ describe('Input', () => {
     } };
     for (const sheet of Array.from(document.styleSheets)) { try { walk(sheet.cssRules); } catch { /* another origin */ } }
     const fill = (f: string) => { const r = rules.find((x) => x.includes('.' + f + ':autofill')) || ''; return [/background-clip: text/.test(r), (/-webkit-text-fill-color: ([^;]+);/.exec(r) || [])[1]]; };
-    expect([fill('dk-input__field'), fill('dk-textarea__field'), fill('dk-pin-input__field')])
-      .toEqual([[true, 'var(--input-text, var(--text))'], [true, 'var(--textarea-text, var(--text))'], [true, 'transparent']]);
+    expect([fill('dk-input__field'), fill('dk-textarea__field'), fill('dk-select__field'), fill('dk-pin-input__field')])
+      .toEqual([[true, 'var(--input-text, var(--text))'], [true, 'var(--textarea-text, var(--text))'], [true, 'var(--select-text, var(--text))'], [true, 'transparent']]);
   });
   test('iOS: Input, Textarea, Select and PinInput fields get 16px text where Safari would zoom into a smaller one (the rule only applies there)', () => {
     const rules: string[] = [];

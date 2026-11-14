@@ -34,6 +34,8 @@
 .dk-select--has-icon .dk-select__field { padding-inline-start: calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2))); }
 .dk-select__field option, .dk-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--select-text, var(--text)); }
 .dk-select--empty .dk-select__field { color: var(--select-placeholder, var(--placeholder)); }
+/* Filled in by the browser (a country, a card's month): the box keeps its look, as Input's does (GR411). */
+.dk-select__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--select-text, var(--text)); }
 .dk-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
 .dk-select__icon--left { inset-inline-start: var(--dk-select-px); }
 /* The chevron sits 8px inside the end edge at every size, where Combobox, DatePicker and the other fields put
