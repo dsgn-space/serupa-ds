@@ -37,6 +37,9 @@
   forced-color-adjust: none;   /* forced colors would paint the selected code in HighlightText over the first box */
 }
 .dk-pin-input__field::selection { background: transparent; color: transparent; }
+/* A code the browser filled in (from a text message): its fill would cover the boxes, and the field text it turns
+   black would be drawn over their characters. Neither shows (GR411). */
+.dk-pin-input__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 /* iOS Safari zooms the page into a focused field whose text is under 16px. The field is transparent (the boxes show
    the digits), so sm's field takes 16px there and nothing changes on screen (PT2). */
 @supports (-webkit-touch-callout: none) { .dk-pin-input--size-sm .dk-pin-input__field { font-size: var(--text-base); } }
