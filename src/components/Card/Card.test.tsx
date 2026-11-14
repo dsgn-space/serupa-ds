@@ -334,7 +334,7 @@ describe('CardHeader with an action in a narrow card (GR7)', () => {
 
 describe('Card href: a ticked checkbox inside (GR408)', () => {
   test('a checkbox in a linked card keeps its tick over the box: the label is lifted above the link, not the input', async () => {
-    const s = await render(<Card id="ck" href="#ck"><CardBody><Checkbox label="Compare" defaultChecked /></CardBody></Card>);
+    const s = await render(<Card id="ck" href="#ck"><CardBody><Checkbox defaultChecked>Compare</Checkbox></CardBody></Card>);
     const input = s.container.querySelector('input')!;
     expect(getComputedStyle(input).zIndex).toBe('auto');
     expect(getComputedStyle(input.closest('label')!).zIndex).toBe('10');
