@@ -231,6 +231,8 @@ Unset, both are `ubuntu-24.04` (GitHub's runners, free for a public repository).
 - `serupa-arm`: Oracle Cloud Ampere A1, 4 OCPU, 24 GB, 2 jobs, 1.6 to 1.9 times slower. Labels `self-hosted, linux` only.
 - The IBM burst runner (`/mnt/project-files/design-system/ibm-burst-runner*`): x64, up to 28 jobs, deletes itself when idle. Labels `self-hosted, linux, x86`.
 
+When the x86 machines look gone (a job of this repository has waited over 10 minutes for a self-hosted runner), CI's `plan` job sends the run's x86 jobs to GitHub's runners instead (`tools/runner-watch.mjs --stuck`, the step's "x86 jobs run on" line), and the Runner watch workflow (`runner-watch.yml`, every 10 minutes) keeps the waiting jobs in one issue, "Jobs waiting for a runner" (label `runner-watch`), which it closes once none waits. The burst runner's runbook is `RUNBOOK.md` beside its scripts. A queue group splits its tests wider than a pull request (5 base, 5 locale and 7 Visual shards, up to 24 at once, against a pull request's 3 base and 5 Visual, up to 8), so the queue has most of the burst slots behind it.
+
 Each job slot is one GitHub runner (`actions-runner`, one folder and one service per slot), on a machine with Docker. Self-hosted runners take only this repository's own branches: fork pull requests need a maintainer's approval to run (Settings > Actions > General > "Require approval for all external contributors"). On a fresh server, as root, with a registration token from Settings > Actions > Runners > New self-hosted runner (it lasts an hour and is typed only on the server):
 
 ```sh
