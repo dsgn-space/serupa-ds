@@ -51,7 +51,9 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 .dk-calendar__heading:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 /* The months or years: three by four, the size of the weekday row and six weeks with their gaps. */
 .dk-calendar__periods {
-  width: calc(7 * var(--dk-cal-day)); height: calc(7 * var(--dk-cal-day) + 5 * var(--dk-cal-row-gap));   /* stylelint-disable-line serupa/no-raw-value -- a week's seven days, and the five gaps between six weeks: counts, not lengths */
+  --dk-cal-periods-w: calc(7 * var(--dk-cal-day));   /* stylelint-disable-line serupa/no-raw-value -- a week's seven days: a count, not a length */
+  --dk-cal-periods-h: calc(7 * var(--dk-cal-day) + 5 * var(--dk-cal-row-gap));   /* stylelint-disable-line serupa/no-raw-value -- the weekday row and six weeks, with the five gaps between them: counts */
+  width: var(--dk-cal-periods-w); height: var(--dk-cal-periods-h);
   border-collapse: separate; border-spacing: var(--spacing-1); table-layout: fixed;
 }
 .dk-calendar__periods td { padding: var(--spacing-0); }
@@ -66,7 +68,8 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 .dk-calendar__period:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-calendar__period--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
 @media (hover: hover) { .dk-calendar__period--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }
-.dk-calendar__period--selected, .dk-calendar__period--selected:hover { box-shadow: var(--calendar-depth-selected, var(--calendar-selected-depth, var(--depth-part))); background: var(--depth-sheen), var(--calendar-bg-selected, var(--calendar-selected-bg, var(--primary))); color: var(--calendar-color-selected, var(--calendar-selected-color, var(--on-primary))); }
+.dk-calendar__period--selected { box-shadow: var(--calendar-depth-selected, var(--calendar-selected-depth, var(--depth-part))); background: var(--depth-sheen), var(--calendar-bg-selected, var(--calendar-selected-bg, var(--primary))); color: var(--calendar-color-selected, var(--calendar-selected-color, var(--on-primary))); }
+@media (hover: hover) { .dk-calendar__period--selected:hover:not([aria-disabled="true"]) { box-shadow: var(--calendar-depth-selected, var(--calendar-selected-depth, var(--depth-part))); background: var(--depth-sheen), var(--calendar-bg-selected, var(--calendar-selected-bg, var(--primary))); color: var(--calendar-color-selected, var(--calendar-selected-color, var(--on-primary))); } }
 .dk-calendar__period--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: not-allowed; }
 .dk-calendar__day {
   display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--dk-cal-day); height: var(--dk-cal-day);

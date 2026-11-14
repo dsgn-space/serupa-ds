@@ -75,16 +75,9 @@ Drawn from the `MonthYearPicker` story.
 | Home, End | The start or end of the week. |
 | PageUp, PageDown | The same day a month before or after. With Shift, a year. |
 | Enter, Space | Picks the focused day. |
+| Escape | In the months or years: back a level (the years to the months, the months to the days, with focus on the heading). Inside DatePicker's popup it doesn't close the popup. |
 
-In the months and years:
-
-| Key | Does |
-| --- | --- |
-| ← → ↑ ↓ | The month or year before or after, or a row up or down (mirrored right to left). |
-| Home, End | The start or end of the row. |
-| PageUp, PageDown | A year back or forward, or twelve years. |
-| Enter, Space | Picks it: a year opens its months, a month its days. |
-| Escape | Back a level: the years to the months, the months to the days, with focus on the heading. Inside DatePicker's popup it doesn't close the popup. |
+In the months and years the same keys move by a month or a year: the arrows one, or a row of three up or down (mirrored right to left); Home and End to the row's ends; PageUp and PageDown a year, or twelve years; Enter or Space picks, a year opening its months and a month its days.
 
 Moving past the shown month shows the next one. No key moves focus past `min` or `max`: a move that would, stops on that day.
 

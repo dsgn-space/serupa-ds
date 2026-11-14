@@ -13,7 +13,7 @@ import { en as calendarWords } from './labels';
 import { en as periodWords } from '../PeriodPicker/labels';
 import { isComposing } from '../../internal/ime';
 // module state: Calendar's words and PeriodPicker's ("Previous year", "Choose a month"), for the month and year grids.
-const words = { ...calendarWords, ...periodWords };
+const words = /* @__PURE__ */ Object.assign({}, calendarWords, periodWords);
 
 /** A shortcut beside the days (Calendar and DatePicker presets): its name and the day it picks, as a Date, a
     "yyyy-mm-dd" string, or a function that gives one when the list draws (so "Next Monday" follows today). */
