@@ -123,7 +123,7 @@ const SITES: Record<string, Site> = {
     ui: () => <Kanban aria-label="Board" columns={[{ id: 'a', title: 'To do', items: ITEMS }, { id: 'b', title: 'Done', items: [] }]} getKey={(t) => t.id} getLabel={(t) => t.name} renderCard={(t) => t.name} onMove={() => {}} />,
     act: async () => { $('button[aria-label="Move Gemini"]').focus(); await userEvent.keyboard(' '); }, says: /Gemini.*To do.*2.*3/ },
   'EventCalendar: an event moved a day with Shift and an arrow key': {
-    ui: () => <EventCalendar events={[{ id: 'r', title: 'Design review', start: new Date(2025, 2, 4, 14), end: new Date(2025, 2, 4, 15) }]} defaultMonth={new Date(2025, 2, 1)} onEventMove={() => {}} />,
+    ui: () => <SerupaProvider locale="en-US"><EventCalendar events={[{ id: 'r', title: 'Design review', start: new Date(2025, 2, 4, 14), end: new Date(2025, 2, 4, 15) }]} defaultMonth={new Date(2025, 2, 1)} onEventMove={() => {}} /></SerupaProvider>,   // pinned: the dates follow the browser's locale
     act: async () => { $('[data-event-id="r"]').focus(); await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}'); }, says: /Design review.*March 5/ },
   'TagGroup: a tag removed with Delete': {
     ui: () => <TagGroup aria-label="Labels" items={[{ id: 'a', label: 'Design' }, { id: 'b', label: 'Bug' }]} onRemove={() => {}} />,
