@@ -7,11 +7,13 @@ import { Heading } from '../../components/Heading/Heading';
 import { Image } from '../../components/Image/Image';
 import { Input, InputAction } from '../../components/Input/Input';
 import { Link } from '../../components/Link/Link';
+import { Loader } from '../../components/Loader/Loader';
 import { NumberInput } from '../../components/NumberInput/NumberInput';
 import { toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { announce } from '../../internal/announce';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 
 /* Cart summary (RU19): what's in the cart, with quantities, a coupon and the total, for an app to copy. What it
    carries (WCAG 2.2):
@@ -23,6 +25,8 @@ import { useLocale } from '../../internal/provider';
      for good only when the toast goes. Focus moves to the next item's name, or to the heading when none is left.
    - 4.1.3: a new total is said politely once it settles ("Total $112.50"), so a change of quantity or coupon is heard
      without moving focus. A coupon that doesn't apply says why in the field's error.
+   - 4.1.3: while the cart loads, it says it's busy with one name ("Loading your cart"), and the total that arrives
+     isn't said as a change; a failed load says so under the heading, with Try again (EmptyLoadFailed).
    - Amounts are written the way the reader's locale writes money. Each word is a label, English by default. */
 
 export interface CartItem {
@@ -61,6 +65,10 @@ export interface CartSummaryLabels {
   checkout: string;
   empty: string;
   continueShopping: string;
+  /** The placeholder's one name while the cart loads. */
+  loading: string;
+  /** The failed load's title. */
+  loadFailed: string;
 }
 
 const english: CartSummaryLabels = {
@@ -80,6 +88,8 @@ const english: CartSummaryLabels = {
   checkout: 'Check out',
   empty: 'Your cart is empty.',
   continueShopping: 'Continue shopping',
+  loading: 'Loading your cart',
+  loadFailed: 'Couldn’t load your cart',
 };
 
 export interface CartSummaryProps {
@@ -100,10 +110,17 @@ export interface CartSummaryProps {
   /** The heading's level. Default: 2. */
   headingLevel?: 2 | 3 | undefined;
   labels?: Partial<CartSummaryLabels> | undefined;
+  /** The cart is on its way: a placeholder under the heading, named once ("Loading your cart"). Default: false. */
+  loading?: boolean | undefined;
+  /** The cart failed to load: a "Couldn’t load your cart" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 /** The cart: each item with its quantity and Remove (with Undo), a coupon, and the sums down to the total. */
-export function CartSummary({ items, currency, onQuantityChange, onRemove, onApplyCoupon, taxRate, onCheckout, continueHref = '/', headingLevel = 2, labels }: CartSummaryProps) {
+export function CartSummary({ items, currency, onQuantityChange, onRemove, onApplyCoupon, taxRate, onCheckout, continueHref = '/', headingLevel = 2, labels,
+  loading = false, loadFailed = false, onRetry }: CartSummaryProps) {
   const l = { ...english, ...labels };
   const locale = useLocale();
   const base = React.useId();
@@ -121,13 +138,17 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
   const tax = taxRate ? Math.round((subtotal - discount) * taxRate * 100) / 100 : 0;
   const total = subtotal - discount + tax;
 
-  // A new total is said once it settles, not at first and not for each step of a quantity held down.
-  const said = React.useRef(total), totalSaid = l.totalIs(money(total));
+  // A new total is said once it settles, not at first and not for each step of a quantity held down. The total a
+  // loaded cart arrives with is its first, not a change.
+  const ready = !loading && !loadFailed;
+  const said = React.useRef(total), wasReady = React.useRef(ready), totalSaid = l.totalIs(money(total));
   React.useEffect(() => {
+    if (!ready) { wasReady.current = false; return; }
+    if (!wasReady.current) { wasReady.current = true; said.current = total; return; }
     if (total === said.current) return;
     const t = window.setTimeout(() => { said.current = total; announce(totalSaid); }, 500);
     return () => window.clearTimeout(t);
-  }, [total, totalSaid]);
+  }, [total, totalSaid, ready]);
 
   const nameOf = (id: string) => document.getElementById(`${base}-${id}`);
   // The removals whose Undo is still up, by item: Check out removes them for good first, so the order leaves them out.
@@ -171,9 +192,11 @@ export function CartSummary({ items, currency, onQuantityChange, onRemove, onApp
   };
 
   return (
-    <section aria-labelledby={`${base}-title`} className="flex flex-col gap-4">
+    <section aria-labelledby={`${base}-title`} aria-busy={loading && !loadFailed ? true : undefined} className="flex flex-col gap-4">
       <Heading level={headingLevel} size="lg" id={`${base}-title`} ref={heading} tabIndex={-1} className="outline-none">{l.title}</Heading>
-      {shown.length ? <>
+      {loadFailed ? <EmptyLoadFailed title={l.loadFailed} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} />
+        : loading ? <Loader variant="skeleton" shape="text" lines={4} label={l.loading} />
+        : shown.length ? <>
         <ul role="list" className="m-0 flex list-none flex-col p-0">
           {shown.map((item) => (
             <li key={item.id} className="flex flex-wrap items-center gap-3 border-b border-border py-3">
