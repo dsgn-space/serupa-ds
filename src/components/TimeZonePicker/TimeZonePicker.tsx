@@ -109,13 +109,21 @@ export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZo
   React.useEffect(() => { try { const z = new Intl.DateTimeFormat().resolvedOptions().timeZone; setMine(z ? currentTimeZone(z) : null); } catch { /* none */ } }, []);
   const atTime = at == null ? null : new Date(at).getTime();
   const zonesKey = zones ? [...new Set(zones.map(currentTimeZone))].join(',') : '';
+  // Every zone the browser knows is about 420 names, each formatted twice: a page with a few pickers spent most of
+  // its first render on lists nobody had opened. Until the field is focused, pointed at or opened, the list is only
+  // the zones it shows (the value) and the reader's own; the whole list is made then, before it can open.
+  const chosen = canon(value !== undefined ? value : defaultValue);
+  const [woken, setWoken] = React.useState(!!props.defaultOpen);
+  const full = woken || !!props.open;
+  const wake = () => { if (!woken) setWoken(true); };
+  const zoneList = zonesKey || (full ? '' : [chosen, mine].filter((z): z is string => !!z).join(','));
   const infos = React.useMemo(() => {
     const moment = atTime == null ? new Date() : new Date(atTime);
     const collator = new Intl.Collator(locale);
-    const list = zonesKey ? zonesKey.split(',') : allTimeZones();
+    const list = zoneList ? zoneList.split(',') : full || zonesKey ? allTimeZones() : [];
     return list.map((z) => timeZoneInfo(z, locale, moment)).filter((x): x is TimeZoneInfo => !!x)
       .sort((a, b) => a.offset - b.offset || collator.compare(a.city, b.city));
-  }, [locale, atTime, zonesKey]);
+  }, [locale, atTime, zoneList, full, zonesKey]);
   const byZone = React.useMemo(() => new Map(infos.map((i) => [i.zone, i])), [infos]);
   const options = React.useMemo(() => {
     const own = mine ? byZone.get(mine) : undefined;
@@ -135,5 +143,7 @@ export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZo
     return [i.city, i.name, i.zone.replace(/_/g, ' '), oldName(i.zone).replace(/_/g, ' '), ALSO[i.zone] || '', i.offsetText].some((s) => s && fold(s).includes(t));
   }, [byZone]);
   return <Combobox {...rest} ref={ref} className={cn('dk-time-zone-picker', className)} options={options} filter={filter}
+    onFocus={(e) => { wake(); if (rest.onFocus) rest.onFocus(e); }} onPointerEnter={(e) => { wake(); if (rest.onPointerEnter) rest.onPointerEnter(e); }}
+    onOpenChange={(open, details) => { if (open) wake(); if (rest.onOpenChange) rest.onOpenChange(open, details); }}
     {...(value !== undefined ? { value: canon(value) } : null)} {...(defaultValue !== undefined ? { defaultValue: canon(defaultValue) } : null)} />;
 });
