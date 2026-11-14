@@ -49,6 +49,12 @@ const still = [];
 await forEachTheme(page, async () => { still.push(await page.evaluate(() => getComputedStyle(document.getElementById('card')).transitionDuration)); }, { themes: ['blue-light'], still: false });
 t('still: false leaves transitions on', still[0] === '2s', still.join());
 
+// The testers (tested against the real components in src/testing.test.tsx): the built file exports each, and its types declare it.
+const mod = await import(pathToFileURL(file).href);
+const testers = ['combobox', 'menu', 'tabs', 'table', 'calendar', 'datePicker'];
+const types = fs.readFileSync(path.join(PROJECT, 'dist', 'testing.d.ts'), 'utf8');
+t('the built file exports every tester, and testing.d.ts declares it', testers.every((n) => typeof mod[n] === 'function' && types.includes(`export declare function ${n}(`)), testers.filter((n) => typeof mod[n] !== 'function' || !types.includes(`export declare function ${n}(`)).join(', '));
+
 await b.close();
 cleanup();
 done(report('serupa-ds/testing', R));
