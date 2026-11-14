@@ -61,7 +61,7 @@ const { IconButton } = window.Serupa;
 | `hideTitle` | boolean | `false` | Leaves out the tooltip, when visible text beside it already shows the label (a Tooltip of your own replaces it by itself). |
 | `variant` | as Button | `'ghost'` | Ghost by default, the usual look for an icon on its own |
 
-Every other Button prop works the same: `size` (24, 32 or 44px square), `destructive`, `loading`, `disabled`, `href`, `onClick`, `ref`. A given `title` shows instead of the tooltip.
+Every other Button prop works the same: `size` (24, 32 or 44px square; on a touch screen each takes a press 44px across, as a Button does), `destructive`, `loading`, `disabled`, `href`, `onClick`, `ref`. A given `title` shows instead of the tooltip.
 
 ## Component tokens
 

@@ -25,6 +25,15 @@
 .dk-pagination--sm .dk-pagination__item:not(.dk-pagination__arrow) { padding: var(--spacing-0) var(--pagination-padding-x-sm, var(--spacing-0\.5)); }
 .dk-pagination--sm .dk-pagination__arrow .dk-icon { font-size: var(--spacing-4); }
 @media (hover: hover) { .dk-pagination__item:hover:not(:disabled, [aria-disabled="true"], .dk-pagination__item--current) { background: var(--pagination-bg-hover, var(--secondary)); } }
+/* Touch: 44px high to press on a touch screen, with nothing moving; across, each page stops halfway into the gap to the next. */
+@media (pointer: coarse) {
+  .dk-pagination__item { position: relative; }
+  .dk-pagination__item::after {
+    --dk-pagination-reach: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2));
+    --dk-pagination-half-gap: calc(var(--spacing-0) - var(--pagination-gap, var(--spacing-1)) / 2);
+    content: ""; position: absolute; inset-block: var(--dk-pagination-reach); inset-inline: max(var(--dk-pagination-reach), var(--dk-pagination-half-gap));
+  }
+}
 .dk-pagination__item:active:not(:disabled, [aria-disabled="true"], .dk-pagination__item--current) { background: var(--pagination-bg-pressed, var(--pressed)); }
 .dk-pagination__item:focus-visible { outline: var(--focus-ring-width) solid var(--pagination-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-pagination__item--current { background: var(--depth-sheen), var(--pagination-bg-current, var(--primary)); box-shadow: var(--pagination-depth-current, var(--depth-part)); color: var(--pagination-text-current, var(--on-primary)); font-weight: var(--pagination-weight-current, var(--font-semibold)); cursor: default; }
