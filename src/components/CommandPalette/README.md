@@ -5,7 +5,7 @@ A search over the app's commands and pages in a dialog, opened with ⌘K (Ctrl+K
 **Also called:** command menu, quick switcher, ⌘K menu.
 
 ```tsx
-import { CommandPalette, type Command } from "serupa-ds";
+import { CommandPalette, type Command } from "@diki-stwn/serupa-ds";
 
 const commands: Command[] = [
   { id: "home", label: "Home", group: "Pages", href: "/" },

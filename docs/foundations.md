@@ -340,7 +340,7 @@ Text rules of thumb:
 
 Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus custom icons drawn to the same rules. Use no other icon set or style. Each icon is an inline SVG, so there's nothing to load and nothing flashes.
 
-Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations/Icons page in Storybook, which searches all of them and copies the name. You can also pass an icon imported from `serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
+Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations/Icons page in Storybook, which searches all of them and copies the name. You can also pass an icon imported from `@diki-stwn/serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
 
 - **Sizes:** the `icon-size-*` tokens, `<Icon size="xs">` to `"xl"`: 14px (`sm` buttons, `text-xs`), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows, `text-base`), 24px (default, toolbars and navigation), 40px (empty states).
 - **Weight:** match the text beside the icon: weight 400 as drawn for regular and medium text, `weight="semibold"` or `weight="bold"` (the `icon-weight-*` tokens) next to semibold or bold text and headings.
@@ -362,7 +362,7 @@ Background utilities, as classes in `bundle.css`. Backgrounds have no scale of t
 | background-image | `bg-none`; linear gradients `bg-linear-to-t`, `-tr`, `-r`, `-br`, `-b`, `-bl`, `-l`, `-tl` and `bg-linear-45` (any of 0–315° in 45° steps, negatives too); `bg-radial`; `bg-conic`, `bg-conic-90`… |
 | gradient stops | `from-<color>`, `via-<color>`, `to-<color>`; positions `from-0%` … `to-100%` in 5% steps |
 
-The gradients (`bg-linear-*`, `bg-radial*`, `bg-conic*` and the stops) ship in `utilities-extra.css`, not in `bundle.css`: import `serupa-ds/utilities-extra.css` after it to use them.
+The gradients (`bg-linear-*`, `bg-radial*`, `bg-conic*` and the stops) ship in `utilities-extra.css`, not in `bundle.css`: import `@diki-stwn/serupa-ds/utilities-extra.css` after it to use them.
 | background-origin | `bg-origin-border`, `bg-origin-padding`, `bg-origin-content` |
 | background-position | `bg-top-left`, `bg-top`, `bg-top-right`, `bg-left`, `bg-center`, `bg-right`, `bg-bottom-left`, `bg-bottom`, `bg-bottom-right` |
 | background-repeat | `bg-repeat`, `bg-repeat-x`, `bg-repeat-y`, `bg-repeat-space`, `bg-repeat-round`, `bg-no-repeat` |
@@ -476,7 +476,7 @@ Rules of thumb:
 
 ## Effects
 
-Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are tokens in the `shadow` group; opacity uses the `opacity` group; blend modes and masks are keywords. The masks (`mask-*`) ship in `utilities-extra.css`: import `serupa-ds/utilities-extra.css` after `bundle.css` to use them.
+Effect utilities, as classes in `bundle.css`. Box, inner and text shadows are tokens in the `shadow` group; opacity uses the `opacity` group; blend modes and masks are keywords. The masks (`mask-*`) ship in `utilities-extra.css`: import `@diki-stwn/serupa-ds/utilities-extra.css` after `bundle.css` to use them.
 
 **Shadow names.** `shadow-2xs` → `shadow-xs` → `shadow-sm` → `shadow-md` → `shadow-lg` → `shadow-xl` → `shadow-2xl`, all black at 5–25% opacity. Earlier versions of this system used other names: the old `shadow-sm` is now `shadow-xs` (Button uses it, so buttons look the same), the old bare `shadow` is now `shadow-sm`, and `shadow-inner` is now `inset-shadow-sm`. `shadow` and `shadow-inner` still work.
 
@@ -931,7 +931,7 @@ Transition and animation scales are tokens in one `transitions` group (`var(--du
 | `ease-fling` | `ease-out-cubic` | Something the hand let go of mid-motion carrying on to rest at the hand's speed: a drawer or carousel slide flicked. |
 | `ease-celebrate` | `ease-elastic` | A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. |
 
-`tools/test/motion-tokens.mjs` fails component CSS that writes its own duration, delay or easing (a `250ms`, a `cubic-bezier()`) instead of a token, and component CSS that takes the scale itself (`var(--duration-150)`, `var(--ease-in-out)`) instead of a role; `duration-0` and `ease-linear` are allowed, and what hasn't moved to a role yet is listed in the check. It also checks that each role names a step of the scale and that every exit is shorter than its enter. In an app, `serupa-ds/stylelint`'s `serupa/no-raw-motion` does the same for your own CSS: it flags a `0.3s ease` or a `cubic-bezier()` in `transition` and `animation`, and `transition: all`, and names the role to use (see Getting started).
+`tools/test/motion-tokens.mjs` fails component CSS that writes its own duration, delay or easing (a `250ms`, a `cubic-bezier()`) instead of a token, and component CSS that takes the scale itself (`var(--duration-150)`, `var(--ease-in-out)`) instead of a role; `duration-0` and `ease-linear` are allowed, and what hasn't moved to a role yet is listed in the check. It also checks that each role names a step of the scale and that every exit is shorter than its enter. In an app, `@diki-stwn/serupa-ds/stylelint`'s `serupa/no-raw-motion` does the same for your own CSS: it flags a `0.3s ease` or a `cubic-bezier()` in `transition` and `animation`, and `transition: all`, and names the role to use (see Getting started).
 
 **What to animate.** Move things with `opacity`, `translate`, `scale` and `rotate`: the browser runs them on the compositor, off the main thread, so they stay smooth while the page is busy. A small `filter: blur()` (`blur-xs`) is fine for a short swap. Don't animate `width`, `height`, `inset`, `margin` or `padding`: each frame lays out the page again, and what's around it moves too. Grow a panel with `grid-template-rows` from `0fr` to `1fr`, or clip it, as Accordion does. Don't loop `background-position`, `mask-position` or `box-shadow` (a shimmer, a glow): they repaint every frame; paint the gradient once and slide it with `translate` instead. Name the properties that move (`transition: opacity …, translate …`), never `all`, which also animates whatever else happens to change, a theme switch included.
 

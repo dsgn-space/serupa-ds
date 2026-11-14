@@ -5,7 +5,7 @@ A multi-line text field where typing "@" opens a list of people to mention, at t
 **Also called:** mentions, @-mentions, user tagging.
 
 ```tsx
-import { MentionInput, mentionsIn } from "serupa-ds";
+import { MentionInput, mentionsIn } from "@diki-stwn/serupa-ds";
 
 const people = [{ id: "ayu", label: "Ayu Lestari", description: "Design lead" }, { id: "budi", label: "Budi Santoso" }];
 const [text, setText] = React.useState("");

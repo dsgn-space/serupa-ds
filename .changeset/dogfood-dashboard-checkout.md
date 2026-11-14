@@ -1,5 +1,5 @@
 ---
-"serupa-ds": minor
+"@diki-stwn/serupa-ds": minor
 ---
 
 Polish from using the patterns as a real app:

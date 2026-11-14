@@ -21,7 +21,7 @@ const base = git('rev-parse', process.argv[2]).trim();
 const changed = git('diff', '--name-status', '--no-renames', `${base}...HEAD`).trim().split('\n').filter(Boolean).map((l) => l.split('\t'));
 const src = changed.filter(([s, f]) => s !== 'D' && /^src\//.test(f) && !/\.(test|stories)\.tsx?$/.test(f) && !/\.mdx?$/.test(f)).map(([, f]) => f);
 const bumps = changed.filter(([s, f]) => s !== 'D' && /^\.changeset\/[^/]+\.md$/.test(f) && f !== '.changeset/README.md')
-  .map(([, f]) => parseChangeset(fs.readFileSync(path.join(P, f), 'utf8'), 'serupa-ds').bump);
+  .map(([, f]) => parseChangeset(fs.readFileSync(path.join(P, f), 'utf8'), JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8')).name).bump);
 const fix = src.length > 0 && bumps.includes('patch') && !bumps.some((b) => b === 'minor' || b === 'major');
 if (process.argv.includes('--needed')) {
   console.log(`needed=${fix}`);

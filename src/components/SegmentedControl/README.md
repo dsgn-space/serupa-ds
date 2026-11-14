@@ -5,7 +5,7 @@ Picks one of a few options shown side by side, such as a view (List, Board) or a
 **Also called:** segmented button, button toggle group.
 
 ```tsx
-import { SegmentedControl } from "serupa-ds";
+import { SegmentedControl } from "@diki-stwn/serupa-ds";
 
 <SegmentedControl aria-label="Period" defaultValue="week"
   options={[{ value: "day", label: "Day" }, { value: "week", label: "Week" }, { value: "month", label: "Month" }]} />

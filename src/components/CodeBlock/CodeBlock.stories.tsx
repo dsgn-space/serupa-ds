@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CodeBlock } from './CodeBlock';
 
-const APP = `import { Button, Field, Input } from "serupa-ds";
+const APP = `import { Button, Field, Input } from "@diki-stwn/serupa-ds";
 
 export function SignIn() {
   return (

@@ -3,7 +3,7 @@
 Two lists, Available and Chosen, with Add and Remove between them, for picking a set out of many: the columns a table shows, the permissions a role has, the people on a team.
 
 ```tsx
-import { TransferList } from "serupa-ds";
+import { TransferList } from "@diki-stwn/serupa-ds";
 
 <Field label="Columns" hint="The table shows them in this order.">
   <TransferList name="columns" options={columns} defaultValue={["name", "email"]} />

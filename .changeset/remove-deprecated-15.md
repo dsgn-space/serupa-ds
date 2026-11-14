@@ -1,5 +1,5 @@
 ---
-"serupa-ds": major
+"@diki-stwn/serupa-ds": major
 ---
 
 - **Breaking.** Removed the names 14.x deprecated, so one prop means one thing everywhere (the API naming table). `npx serupa-migrate src --from 14 --write` makes every rename below; run it before upgrading, since the new names already work on 14.x.

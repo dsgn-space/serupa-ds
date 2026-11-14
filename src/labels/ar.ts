@@ -1,5 +1,5 @@
 // serupa-ds/labels/ar: every built-in word in Arabic (Modern Standard), with its six plural forms (plural()).
-//   import { labels, locale } from "serupa-ds/labels/ar";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/ar";
 //   <SerupaProvider locale={locale} labels={labels}>   (and dir="rtl" on the page)
 import type { SerupaLabels } from '../internal/labels';
 import { plural } from '../internal/plural';

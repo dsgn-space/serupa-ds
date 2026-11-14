@@ -44,14 +44,14 @@ export function files({ name, serupa, brand }) {
         lint: 'eslint . && stylelint "src/**/*.css" --allow-empty-input',
         check: 'npm run typecheck && npm run lint',
       },
-      dependencies: { react: VERSIONS.react, 'react-dom': VERSIONS['react-dom'], 'serupa-ds': serupa },
+      dependencies: { react: VERSIONS.react, 'react-dom': VERSIONS['react-dom'], '@diki-stwn/serupa-ds': serupa },
       devDependencies: Object.fromEntries(Object.entries(VERSIONS).filter(([k]) => !k.startsWith('react')).sort(([a], [b]) => a.localeCompare(b))),
       // typescript-eslint asks for TypeScript 6 or older; eslint.config.js gives it TypeScript 6's API (see there).
       overrides: { 'typescript-eslint': { typescript: '$typescript' } },
     }),
     'eslint.config.js': `import { registerHooks } from 'node:module';
 import jsxA11y from 'eslint-plugin-jsx-a11y-x';
-import serupa from 'serupa-ds/eslint';
+import serupa from '@diki-stwn/serupa-ds/eslint';
 
 // TypeScript 7 (tsc, npm run typecheck) has no compiler API yet, so typescript-eslint reads TypeScript 6's, from
 // @typescript/typescript6. Remove these lines, and that package, once typescript-eslint supports TypeScript 7.
@@ -72,7 +72,7 @@ export default [
 `,
     'stylelint.config.js': `// npm run lint: the app's own CSS uses Serupa's tokens, not a raw color, spacing or radius that ignores the theme.
 // A line that needs a raw value takes /* stylelint-disable-next-line serupa/no-raw-color -- why */ above it.
-export default { extends: ['serupa-ds/stylelint'] };
+export default { extends: ['@diki-stwn/serupa-ds/stylelint'] };
 `,
     'index.html': `<!doctype html>
 <html lang="en" data-brand="${brand}" data-mode="auto">
@@ -90,11 +90,11 @@ export default { extends: ['serupa-ds/stylelint'] };
     'vite.config.ts': `import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
-import { serupaPurge } from 'serupa-ds/purge';
+import { serupaPurge } from '@diki-stwn/serupa-ds/purge';
 
 // theme.js has to run before the first paint, so it is a plain script first in <head>, not part of the bundle.
 // This serves it in development and copies it into the build, from the installed serupa-ds.
-const themeFile = fileURLToPath(import.meta.resolve('serupa-ds/theme.js'));
+const themeFile = fileURLToPath(import.meta.resolve('@diki-stwn/serupa-ds/theme.js'));
 function serupaTheme(): Plugin {
   let base = '/';
   return {
@@ -140,16 +140,16 @@ export default defineConfig({
     }),
     'src/main.tsx': `import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import 'serupa-ds/tokens.css';
-import 'serupa-ds/base.css';
-import 'serupa-ds/bundle.css';
+import '@diki-stwn/serupa-ds/tokens.css';
+import '@diki-stwn/serupa-ds/base.css';
+import '@diki-stwn/serupa-ds/bundle.css';
 import { App } from './App';
 
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);
 `,
     'src/App.tsx': `import { useEffect, useState } from 'react';
-import { Button, Card, Container, Field, Heading, Input, SegmentedControl, SkipLink, Stack, Text, announce } from 'serupa-ds';
-import type { ThemeMode } from 'serupa-ds';
+import { Button, Card, Container, Field, Heading, Input, SegmentedControl, SkipLink, Stack, Text, announce } from '@diki-stwn/serupa-ds';
+import type { ThemeMode } from '@diki-stwn/serupa-ds';
 
 // theme.js (first in <head>) follows the visitor's light or dark setting and remembers a choice made here.
 function ThemeSwitch() {
@@ -177,7 +177,7 @@ export function App() {
       <Container as="main" id="main" size="prose" className="py-8">
         <Stack gap={6}>
           <Heading level={1}>${title}</Heading>
-          <Text>Edit src/App.tsx to start. The components and what each is for are in node_modules/serupa-ds/README.md.</Text>
+          <Text>Edit src/App.tsx to start. The components and what each is for are in node_modules/@diki-stwn/serupa-ds/README.md.</Text>
           <Card>
             <form onSubmit={(e) => { e.preventDefault(); announce(\`Signed up \${email}\`); }}>
               <Stack gap={4}>

@@ -4,7 +4,7 @@
    already has the right theme:
 
      <html data-brand="blue" data-mode="auto">
-     <script src="node_modules/serupa-ds/dist/theme.js">   and the closing script tag
+     <script src="node_modules/@diki-stwn/serupa-ds/dist/theme.js">   and the closing script tag
 
    Or paste this file's text into an inline script in <head> (with a nonce under a strict Content Security
    Policy), which saves a request: a server-rendered page then never flashes the wrong theme. So this file

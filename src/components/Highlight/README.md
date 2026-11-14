@@ -3,7 +3,7 @@
 Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](../Combobox/README.md) options and a command palette.
 
 ```tsx
-import { Highlight, highlightRanges } from "serupa-ds";
+import { Highlight, highlightRanges } from "@diki-stwn/serupa-ds";
 
 <Highlight query="lodz">Łódź, Poland</Highlight>              // marks "Łódź"
 <Highlight query="strasse">Straße des 17. Juni</Highlight>     // marks "Straße"

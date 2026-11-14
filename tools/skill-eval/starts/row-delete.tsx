@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Menu, MenuItem, Table } from 'serupa-ds';
+import { Button, Menu, MenuItem, Table } from '@diki-stwn/serupa-ds';
 
 type Doc = { id: string; title: string; updated: string };
 

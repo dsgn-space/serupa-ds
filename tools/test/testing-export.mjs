@@ -51,4 +51,4 @@ t('still: false leaves transitions on', still[0] === '2s', still.join());
 
 await b.close();
 cleanup();
-done(report('serupa-ds/testing', R));
+done(report('@diki-stwn/serupa-ds/testing', R));
