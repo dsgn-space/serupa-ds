@@ -8,7 +8,6 @@ interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     divided?: boolean | undefined;
     as?: "ol" | "ul" | undefined;
     loading?: boolean | undefined;
-    busy?: boolean | undefined;
     selectionMode?: "multiple" | "none" | "single" | undefined;
     selected?: readonly string[] | undefined;
     defaultSelected?: readonly string[] | undefined;

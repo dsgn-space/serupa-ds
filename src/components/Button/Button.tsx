@@ -39,14 +39,10 @@ interface ButtonOwnProps {
   leftIcon?: IconSource | undefined;
   /** Icon after the label: an icon name (custom or Material Symbols, "arrow_forward") or any element. */
   rightIcon?: IconSource | undefined;
-  /** @deprecated Use IconButton, whose label is required; removed in 15.0.0. Icon-only button: an icon name (custom or Material Symbols) or element, in a square at the size's height. Ignores children, leftIcon and rightIcon; needs an aria-label. */
-  icon?: IconSource | undefined;
   /** Shows a centered Loader (ring) and blocks clicks, keys and Enter-key form submission while an action runs, so a request can't be sent twice. Keeps size, colors and keyboard focus; sets aria-busy, aria-disabled and data-loading. Default: false, except that a type="submit" button inside a `<form action={fn}>` is loading while that form is being sent. Set it to override. */
   loading?: boolean | undefined;
   /** Said to screen readers (polite status region) when loading starts, not shown. Default: "Loading…" (labels.loading). Pass '' to stay silent. */
   loadingLabel?: string | undefined;
-  /** @deprecated Use loadingLabel: a prop named …Text is shown, and these words are only said; removed in 15.0.0. Read as loadingLabel is, when loadingLabel isn't given. */
-  loadingText?: string | undefined;
   /** Why it's disabled ("Fill in your name first"). With disabled, the button stays focusable (aria-disabled, so
       keyboard and screen reader users can reach it and hear why) and this is its description; clicks still do
       nothing. Wrap it in a Tooltip with the same words to show them on hover and focus too. */
@@ -90,7 +86,7 @@ export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTML
 
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
-const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingLabel: 1, loadingText: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
+const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingLabel: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
 
@@ -100,8 +96,10 @@ function slot(source: IconSource, side: string): React.ReactNode {
 }
 
 /* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
-/** Button without the overloads, for components built on it (IconButton, Fab, CopyButton, Alert's dismiss) that pass either shape through, and an icon alone without Button's deprecation warning. */
-export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('Button', function Button(props, ref) {
+/** Button without the overloads, for components built on it (IconButton, Fab, CopyButton, Alert's dismiss) that pass
+    either shape through. Only they draw an icon alone (icon: an icon name or element, in a square at the size's height,
+    in place of children, leftIcon and rightIcon; it needs an aria-label): Button itself has no icon since 15.0.0. */
+export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps & { icon?: IconSource | undefined }>('Button', function Button(props, ref) {
   const sds = useSettings();
   // Both shapes (button and link) are HTML attributes; which ones apply depends on href below.
   const rest: React.AllHTMLAttributes<HTMLElement> & DataAttributes = omit(props as ButtonOwnProps & React.AllHTMLAttributes<HTMLElement>, OWN);
@@ -163,8 +161,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
   const disabled = !!rest.disabled;
   const reasonId = domId('dk-btn-why', React.useId());
   const reason = disabled && props.disabledReason ? props.disabledReason : '';
-  if (process.env.NODE_ENV !== 'production' && props.loadingText != null) warnOnce('button-loading-text', 'Button: loadingText is deprecated and removed in 15.0.0. Use loadingLabel, which does the same.');
-  const loadingText = props.loadingLabel ?? props.loadingText ?? sds.labels.loading;
+  const loadingText = props.loadingLabel ?? sds.labels.loading;
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
   const wasLoading = React.useRef(false);
   // Announced when loading starts, with the text it has then (a later loadingLabel change isn't announced again).
@@ -250,8 +247,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
 
 /** A <button> for actions; pass href for navigation and it renders a link. Built-in micro-interactions: press and a loading cross-fade, plus an opt-in right-icon nudge (--button-icon-nudge); off under reduced motion. Colors, spacing, sizes, borders and motion can be overridden with the --button-* component tokens (button.tokens.json) on the page, a container or one button. */
 export const Button = /* @__PURE__ */ component<HTMLElement, ButtonProps>('Button', function Button(props, ref) {
-  if (process.env.NODE_ENV !== 'production' && props.icon != null) warnOnce('button-icon', 'Button: icon is deprecated and removed in 15.0.0. Use IconButton, whose label is required.');
-  return React.createElement(ButtonBase, Object.assign({}, props, { ref: ref }));
+  return React.createElement(ButtonBase, Object.assign({}, omit(props as ButtonProps & { icon?: unknown }, { icon: 1 }) as ButtonProps, { ref: ref }));
 }) as unknown as {
   (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): React.ReactElement | null;
   (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): React.ReactElement | null;

@@ -7,7 +7,7 @@ const meta = {
   title: 'Components/Layout and type/Splitter',
   component: Splitter,
   args: { orientation: 'horizontal', defaultSize: 30, min: 15, max: 70, collapsible: true, separatorLabel: 'Folders', children: [<Pane key="a">Folders</Pane>, <Pane key="b">Messages</Pane>] },
-  argTypes: { direction: { control: 'inline-radio', options: ['horizontal', 'vertical'] } },
+  argTypes: { orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] } },
   decorators: [(Story) => <div style={{ height: 'var(--spacing-64)', border: 'var(--border-width-1) solid var(--border)', borderRadius: 'var(--rounded-md)', overflow: 'hidden' }}><Story /></div>],
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof Splitter>;

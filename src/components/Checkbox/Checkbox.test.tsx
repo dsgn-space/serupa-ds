@@ -423,16 +423,6 @@ describe('CheckboxGroup', () => {
     await render(<><button>Before</button><CheckboxGroup aria-label="Toppings" autoFocus><Checkbox value="ham">Ham</Checkbox><Checkbox value="egg">Egg</Checkbox></CheckboxGroup></>);
     await expect.poll(() => (document.activeElement as HTMLInputElement).value).toBe('ham');
   });
-  test("variant 'default' is the deprecated name for 'plain': it still draws the plain look, and warns once", async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<CheckboxGroup aria-label="Old" {...{ variant: 'default' as const }}><Checkbox value="a">A</Checkbox><Checkbox value="b" {...{ variant: 'default' as const }}>B</Checkbox></CheckboxGroup>);
-      const items = page.getByRole('checkbox').elements() as HTMLInputElement[];
-      expect(items.map((i) => (i.closest('label') as HTMLElement).className.includes('--card'))).toEqual([false, false]);
-      const said = warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('variant-default'));
-      expect(said).toHaveLength(2);   // once for the group, once for the Checkbox
-    } finally { warn.mockRestore(); }
-  });
 });
 
 // A toggle in a long group used to redraw every Checkbox in it (Audit run 276): 300 boxes took 60 to 90 ms a click in

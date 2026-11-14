@@ -21,9 +21,6 @@ export interface OfflineBannerProps extends Omit<React.HTMLAttributes<HTMLDivEle
   children?: React.ReactNode | undefined;
   /** Called when the connection drops (false) or comes back (true). */
   onOnlineChange?: ((online: boolean) => void) | undefined;
-  /** @deprecated Use onOnlineChange, named like every other callback (value and onValueChange, open and
-      onOpenChange); removed in 15.0.0. Called as onOnlineChange is, when onOnlineChange isn't given. */
-  onChange?: ((online: boolean) => void) | undefined;
 }
 
 const listen = (cb: () => void) => {
@@ -67,7 +64,7 @@ const serverOnline = () => true;
 /** Says when the connection drops and when it comes back, on screen and to screen readers.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBannerProps>('OfflineBanner', function OfflineBanner(props, ref) {
-  const rest = omit(props, { online: 1, placement: 1, children: 1, onOnlineChange: 1, onChange: 1, className: 1 });
+  const rest = omit(props, { online: 1, placement: 1, children: 1, onOnlineChange: 1, className: 1 });
   const labels = useSettings(words).labels;
   const browser = React.useSyncExternalStore(listen, browserOnline, serverOnline);
   const online = props.online ?? browser;
@@ -76,9 +73,9 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
   // Offline from the first render, it's simply there; it slides in only when the connection drops later.
   const [instant, setInstant] = React.useState(!online);
   const was = React.useRef<boolean | null>(null);
-  const onChange = React.useRef(props.onOnlineChange ?? props.onChange);
+  const onChange = React.useRef(props.onOnlineChange);
   // every render: the newest onOnlineChange is the one called when the connection changes.
-  React.useEffect(() => { onChange.current = props.onOnlineChange ?? props.onChange; });
+  React.useEffect(() => { onChange.current = props.onOnlineChange; });
   React.useEffect(() => {
     const before = was.current;
     was.current = online;

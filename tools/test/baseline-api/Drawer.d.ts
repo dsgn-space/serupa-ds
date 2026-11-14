@@ -9,7 +9,6 @@ interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>
     defaultOpen?: boolean | undefined;
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
     placement?: DrawerPlacement | undefined;
-    side?: "bottom" | "left" | "right" | "top" | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     title?: React.ReactNode | undefined;
     description?: React.ReactNode | undefined;

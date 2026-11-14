@@ -22,8 +22,6 @@ export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   as?: 'ul' | 'ol' | undefined;
   /** Its rows are loading (or reloading): sets aria-busy on the list. Pair it with ListLoadingItems. Default: false. */
   loading?: boolean | undefined;
-  /** @deprecated Use loading (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
-  busy?: boolean | undefined;
   /** 'multiple': each row gets a checkbox, and the list becomes a grid with one Tab stop: Space picks the focused row,
    *  Shift with an arrow or a click picks a run of rows, Ctrl or Cmd+A picks them all. 'single': a press or Space picks
    *  one row. Give each ListItem a value, and the list an aria-label. Default: 'none'. */
@@ -79,8 +77,7 @@ export type ListItemProps<C extends React.ElementType = 'a'> = ListItemOwnProps 
    it so controls are never nested. className and every other prop go to the <ul>. */
 /** Rows of related things: title, description, leading avatar or icon, trailing meta or actions; rows can be links. */
 export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List', function List(props, ref) {
-  if (process.env.NODE_ENV !== 'production' && props.busy != null) warnOnce('list-busy', 'List: busy is deprecated and removed in 15.0.0. Use loading, which does the same.');
-  const rest = omit(props, { variant: 1, divided: 1, as: 1, loading: 1, busy: 1, className: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1 });
+  const rest = omit(props, { variant: 1, divided: 1, as: 1, loading: 1, className: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1 });
   const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
   const mode = props.selectionMode === 'single' || props.selectionMode === 'multiple' ? props.selectionMode : null;
   const [own, setOwn] = React.useState<readonly string[]>(props.defaultSelected || []);
@@ -153,7 +150,7 @@ export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List
   const ctx = React.useMemo<Pick | null>(() => (mode ? { mode, has: (v) => picked.includes(v) } : null), [mode, picked]);
   // role="list": Safari drops list semantics from a <ul>/<ol> styled list-style: none, so VoiceOver stops saying "list, 6 items" (FU1).
   const el = React.createElement(oneOf(['ul', 'ol'] as const, props.as, 'ul'), Object.assign(rest, {
-    ref: merged, 'data-component': 'list', role: rest.role ?? (mode ? 'grid' : 'list'), 'aria-busy': rest['aria-busy'] ?? ((props.loading ?? props.busy) || undefined),
+    ref: merged, 'data-component': 'list', role: rest.role ?? (mode ? 'grid' : 'list'), 'aria-busy': rest['aria-busy'] ?? (props.loading || undefined),
     'aria-multiselectable': mode === 'multiple' || undefined,
     onKeyDown: mode ? (e: React.KeyboardEvent<HTMLUListElement>) => { if (theirs.key) theirs.key(e); if (!e.defaultPrevented) onKeyDown(e); } : theirs.key,
     onClick: mode ? (e: React.MouseEvent<HTMLUListElement>) => { if (theirs.click) theirs.click(e); onClick(e); } : theirs.click,

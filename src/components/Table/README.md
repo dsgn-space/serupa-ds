@@ -148,7 +148,6 @@ With Ctrl, ⌘ or Alt held, a resize handle leaves the arrows, Home and End to t
 | `pinStart` | boolean | `false` | Keeps the first column in view while the table scrolls sideways |
 | `pinEnd` | boolean | `false` | Keeps the last column in view while the table scrolls sideways |
 | `loading` | boolean | `false` | Its rows are loading: sets `aria-busy` on the table. Pair it with `TableLoadingRows` |
-| `busy` | boolean | | Deprecated, removed in 15.0.0: use `loading`, the API naming table's name |
 | `containerProps` | div props | none | Go to the scrolling frame, which has `data-component="table"`. An `aria-label` or `aria-labelledby` here names the frame only while it scrolls (when it's a region); a caption takes precedence |
 
 `className`, `ref` and everything else go to the `<table>`.

@@ -290,13 +290,3 @@ describe('Switch', () => {
   });
 });
 
-describe('Switch: pending, the old name of loading', () => {
-  test('still marks it busy as loading does, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<Switch id="old-pending" {...{ pending: true }} onChange={() => {}} checked={false}>Sync</Switch>);
-      expect(el('old-pending').getAttribute('aria-busy')).toBe('true');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('switch-pending'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
-  });
-});

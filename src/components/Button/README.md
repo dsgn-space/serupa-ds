@@ -106,7 +106,7 @@ A button holds a label, an icon beside a label, or an icon alone:
 | Label only | `children` | Text |
 | Left icon | `leftIcon` + `children` | Icon, then text |
 | Right icon | `rightIcon` + `children` | Text, then icon |
-| Icon only | IconButton (`icon` + `label`) | A square: 24, 32 or 44px. Button's own `icon` is deprecated, and removed in 15.0.0 |
+| Icon only | IconButton (`icon` + `label`) | A square: 24, 32 or 44px. Button has no `icon` of its own since 15.0.0 |
 
 **Optical balance.** An icon reads lighter than text, so a button with one icon adds 4px of padding on the text side:
 
@@ -118,7 +118,7 @@ A button holds a label, an icon beside a label, or an icon alone:
 
 Button applies this automatically. With `buttonClass`, pass `iconPosition: 'left'` or `'right'`.
 
-Pass any Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. Button's `icon` (an icon on its own) is deprecated, and removed in 15.0.0: it logs a warning, and IconButton does the same with a `label` the types require.
+Pass any Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. For an icon on its own, use IconButton: its `label` is required by the types.
 
 ### Links
 
@@ -238,7 +238,7 @@ Button's behaviour follows web standards; its look comes only from this design s
 
 ## Props
 
-Button's own props are `variant` (`primary`), `destructive`, `size` (`md`), `leftIcon`, `rightIcon`, `icon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence; `loadingText` is its deprecated old name, removed in 15.0.0), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
+Button's own props are `variant` (`primary`), `destructive`, `size` (`md`), `leftIcon`, `rightIcon`, `loading` (default: on while a `type="submit"` button's `<form action>` is being sent), `loadingLabel` (what screen readers hear when loading starts; default "Loading…", `""` for silence; `loadingText` is its deprecated old name, removed in 15.0.0), `disabledReason` (why it's disabled: keeps it focusable and describes it), `successText` (shown with a check and announced after a promise from `onClick` resolves) and `wrap` (a long label takes more lines instead of an ellipsis; default `false`). With `href` it renders a link and takes link attributes (`target`, `rel`, `download`…); without, it's a `<button>` and takes button attributes (`type`, which defaults to `"button"`, `form`, `name`…). Everything else (`onClick`, `disabled`, `aria-label`…) passes straight through, and `id` goes to the `<button>` or `<a>` itself. That includes the native popover and invoker attributes, typed here because React's types don't list them yet: `popoverTarget` with `popoverTargetAction` (`show`, `hide` or `toggle`) works a `[popover]` element by id, and `commandfor` with `command` (such as `show-modal` for a `<dialog>`) sends it an invoker command.
 
 `buttonClass({ variant, size, destructive, iconOnly, iconPosition, className })` returns the class names, to style any other element as a button. `Serupa.configure({ link })` sets the component that renders link Buttons.
 
@@ -301,11 +301,8 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-focus-ring` | `focus-ring` | Keyboard focus ring. |
 | `--button-destructive-focus-ring` | `danger` | Keyboard focus ring on a destructive button. |
 | `--button-bg-disabled` | `surface-muted` | A disabled filled, outline or secondary button's background, in place of fading its own colors: muted, so it reads as off, with its label still at least 3:1. |
-| `--button-disabled-bg` | `surface-muted` | The old name of `--button-bg-disabled`, read when that isn't set. Removed in 15.0.0. |
 | `--button-text-disabled` | `text-muted` | A disabled button's label and icon, in every variant (at least 3:1 on bg-disabled, more with more contrast). |
-| `--button-disabled-text` | `text-muted` | The old name of `--button-text-disabled`, read when that isn't set. Removed in 15.0.0. |
 | `--button-border-disabled` | `border` | A disabled outline or secondary button's border. |
-| `--button-disabled-border` | `border` | The old name of `--button-border-disabled`, read when that isn't set. Removed in 15.0.0. |
 
 **Spacing**
 

@@ -19,8 +19,6 @@ export interface TooltipProps {
   placement?: Placement | undefined;
   /** Milliseconds the pointer rests before it shows. Default: 400. Keyboard focus shows it at once, and so does the pointer while another tooltip is open or closed less than 300ms ago. */
   openDelay?: number | undefined;
-  /** @deprecated Use openDelay, as HoverCard names it (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as openDelay is, when openDelay isn't given. */
-  delay?: number | undefined;
   /** 'description' (default): adds to the element's name (aria-describedby). 'label': is its name (aria-labelledby), for an icon-only button with no other label. */
   role?: 'description' | 'label' | undefined;
   /** Open it yourself (controlled); with onOpenChange. */
@@ -169,8 +167,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   }
   const cp: TriggerProps = { ...child.props, ...fwd };
   const passedRef = (props as { ref?: React.Ref<HTMLElement> }).ref;
-  if (process.env.NODE_ENV !== 'production' && props.delay != null) warnOnce('tooltip-delay', 'Tooltip: delay is deprecated and removed in 15.0.0. Use openDelay, which does the same.');
-  const delay = props.openDelay ?? props.delay ?? hoverIntent;
+  const delay = props.openDelay ?? hoverIntent;
   const touch = (e: React.SyntheticEvent) => 'pointerType' in e && e.pointerType === 'touch';
   const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own: unknown = cp[name]; if (typeof own === 'function') (own as Handler)(e); fn(e); };
   const childRef = elementRef<HTMLElement>(child);

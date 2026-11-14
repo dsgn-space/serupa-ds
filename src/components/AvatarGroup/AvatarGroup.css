@@ -28,7 +28,7 @@
 .dk-avatar-group__more > .dk-avatar__frame { background: var(--avatar-group-more-bg, var(--secondary)); color: var(--avatar-group-more-color, var(--text)); letter-spacing: var(--tracking-tight); font-variant-numeric: tabular-nums; }
 /* With showMore or onMore, "+N" is a button: no button chrome, a pointer, and the focus ring round the circle. */
 button.dk-avatar-group__more { padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--rounded-full); background: none; font: inherit; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-@media (hover: hover) { button.dk-avatar-group__more:hover > .dk-avatar__frame { background: var(--avatar-group-more-bg-hover, var(--avatar-group-more-hover-bg, var(--secondary-hover))); } }
+@media (hover: hover) { button.dk-avatar-group__more:hover > .dk-avatar__frame { background: var(--avatar-group-more-bg-hover, var(--secondary-hover)); } }
 /* The "+N" fades to its hover fill as the controls beside it do, and fills at once while held. */
 button.dk-avatar-group__more > .dk-avatar__frame { transition: background-color var(--motion-hover) var(--ease-move); }
 button.dk-avatar-group__more:active > .dk-avatar__frame { background: var(--avatar-group-more-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }

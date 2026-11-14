@@ -226,10 +226,11 @@ describe('Stepper', () => {
     expect([low, n]).toEqual([[], 54]);
   });
 
-  test('--stepper-bg-active, --stepper-text-active, --stepper-bg-error and --stepper-text-error override one stepper; the old names, state first (--stepper-active-bg), still work until 15.0.0', async () => {
+  test('--stepper-bg-active, --stepper-text-active, --stepper-bg-error and --stepper-text-error override one stepper; the old names, state first (--stepper-active-bg), are gone since 15.0.0', async () => {
     await setup();
     const look = (id: string) => { const c = css(el(id).querySelector(inStep(IND))); return `${c.backgroundColor} / ${c.color}`; };
-    expect([look('tok'), look('tok-old'), look('tok-err')]).toEqual(['rgb(1, 2, 3) / rgb(4, 5, 6)', 'rgb(1, 2, 3) / rgb(4, 5, 6)', 'rgb(7, 8, 9) / rgb(4, 5, 6)']);
+    expect([look('tok'), look('tok-err')]).toEqual(['rgb(1, 2, 3) / rgb(4, 5, 6)', 'rgb(7, 8, 9) / rgb(4, 5, 6)']);
+    expect(look('tok-old')).not.toContain('rgb(1, 2, 3)');
   });
   test('a long single word in a title wraps, in the line under the circles and in a vertical stepper, so 320px never scrolls sideways (RF1, WCAG 1.4.10)', async () => {
     const long = [{ title: 'Account' }, { title: 'Donaudampfschifffahrtsgesellschaftskapitänskajüte', optional: true }, { title: 'Review' }];

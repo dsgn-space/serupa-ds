@@ -42,17 +42,6 @@
           }
         }
       },
-      "active-bg": {
-        "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The old name of `--stepper-bg-active`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--stepper-active-bg"
-          }
-        },
-        "$deprecated": "Use --stepper-bg-active; removed in 15.0.0."
-      },
       "text-active": {
         "$type": "color",
         "$value": "{color.on-primary}",
@@ -62,17 +51,6 @@
             "cssVar": "--stepper-text-active"
           }
         }
-      },
-      "active-text": {
-        "$type": "color",
-        "$value": "{color.on-primary}",
-        "$description": "The old name of `--stepper-text-active`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--stepper-active-text"
-          }
-        },
-        "$deprecated": "Use --stepper-text-active; removed in 15.0.0."
       },
       "bg-error": {
         "$type": "color",
@@ -84,17 +62,6 @@
           }
         }
       },
-      "error-bg": {
-        "$type": "color",
-        "$value": "{color.danger}",
-        "$description": "The old name of `--stepper-bg-error`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--stepper-error-bg"
-          }
-        },
-        "$deprecated": "Use --stepper-bg-error; removed in 15.0.0."
-      },
       "text-error": {
         "$type": "color",
         "$value": "{color.on-danger}",
@@ -104,17 +71,6 @@
             "cssVar": "--stepper-text-error"
           }
         }
-      },
-      "error-text": {
-        "$type": "color",
-        "$value": "{color.on-danger}",
-        "$description": "The old name of `--stepper-text-error`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--stepper-error-text"
-          }
-        },
-        "$deprecated": "Use --stepper-text-error; removed in 15.0.0."
       },
       "warning-bg": {
         "$type": "color",
@@ -297,17 +253,6 @@
             "cssVar": "--stepper-depth-active"
           }
         }
-      },
-      "active-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The old name of `--stepper-depth-active`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--stepper-active-depth"
-          }
-        },
-        "$deprecated": "Use --stepper-depth-active; removed in 15.0.0."
       }
     }
   }

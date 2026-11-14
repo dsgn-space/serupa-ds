@@ -25,9 +25,9 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
   indeterminate?: boolean | undefined;
   /** A danger border (while unchecked) and focus ring, and aria-invalid. */
   invalid?: boolean | undefined;
-  /** 'plain' or 'card' ('default' is the deprecated name for 'plain', removed in 15.0.0): the box, label and description in a bordered card that's pressed as a whole, with a 2px
+  /** 'plain' or 'card': the box, label and description in a bordered card that's pressed as a whole, with a 2px
    *  primary border once checked. In a CheckboxGroup, the group's variant by default. */
-  variant?: 'plain' | 'card' | 'default' | undefined;
+  variant?: 'plain' | 'card' | undefined;
   /** Focusable and read out (aria-readonly), but a click or Space doesn't change it; a checked box is still submitted. */
   readOnly?: boolean | undefined;
   /** In a CheckboxGroup: the box that checks or clears every other box. It's checked when all are, and indeterminate when some are. Leave out value. */
@@ -51,8 +51,8 @@ export interface CheckboxGroupProps<V extends string | number = string | number>
   /** The boxes' size, unless a Checkbox sets its own. */
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** 'plain' (a box beside its label) or 'card' (each box a bordered card, for add-ons, features and other choices
-   *  with a description), unless a Checkbox sets its own. Default: 'plain'. 'default' is the deprecated name for 'plain', removed in 15.0.0. */
-  variant?: 'plain' | 'card' | 'default' | undefined;
+   *  with a description), unless a Checkbox sets its own. Default: 'plain'. */
+  variant?: 'plain' | 'card' | undefined;
   /** A danger border on every unchecked box, and aria-invalid on the group. Field sets it from its error. */
   invalid?: boolean | undefined;
   /** Disables every box. */
@@ -95,7 +95,7 @@ function boxView(g: GroupState, key: string, all: boolean): string {
   return head + '|' + g.values.includes(key) + '|' + (g.required && !g.values.some((v) => g.boxes.has(v)));
 }
 
-const VARIANTS = ['plain', 'card', 'default'] as const;
+const VARIANTS = ['plain', 'card'] as const;
 const noSubscribe = () => () => {};
 const GroupContext = /* @__PURE__ */ React.createContext<GroupContextValue | null>(null);
 
@@ -120,7 +120,6 @@ function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<
 /** Any number of choices from a set of Checkboxes: a <div role="group"> that names them, holds the checked values and passes size, invalid, disabled and required down. A Checkbox with selectAll checks or clears the rest. */
 export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxGroupProps>('CheckboxGroup', function CheckboxGroup(props: CheckboxGroupProps, ref) {
   const rest = omit(props, GROUP_OWN);
-  if (process.env.NODE_ENV !== 'production' && props.variant === 'default') warnOnce('variant-default', "CheckboxGroup: variant 'default' is deprecated and removed in 15.0.0. Use 'plain', the name List, Accordion and VirtualList give the same look.", 'variant-default:CheckboxGroup');
   const autoName = domId('dk-cbg', React.useId());
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<readonly (string | number)[]>(props.defaultValue || []);
@@ -198,7 +197,6 @@ const OWN = { size: 1, variant: 1, invalid: 1, indeterminate: 1, selectAll: 1, o
 /** A native checkbox with its label (ref, checked, onChange and every input attribute go to the <input>); className and style go to the <label> around it. */
 export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProps>('Checkbox', function Checkbox(props, ref) {
   const nameRef = useNameCheck('Checkbox', NAME_HOW.label);   // warns when it has no accessible name
-  if (process.env.NODE_ENV !== 'production' && props.variant === 'default') warnOnce('variant-default', "Checkbox: variant 'default' is deprecated and removed in 15.0.0. Use 'plain', the name List, Accordion and VirtualList give the same look.", 'variant-default:Checkbox');
   if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Checkbox: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Checkbox');
   const store = React.useContext(GroupContext);
   const key = props.value == null ? '' : String(props.value);

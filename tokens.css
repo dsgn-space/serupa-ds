@@ -1920,7 +1920,6 @@
   --animate-spin-reduced: spin 3s linear infinite;
   --animate-ping: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
   --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-bounce: bounce 1s infinite;
   --animate-enter: enter var(--motion-enter-md) var(--ease-enter) backwards;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;

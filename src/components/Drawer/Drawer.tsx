@@ -31,8 +31,6 @@ export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogE
   /** The edge it slides in from: 'right' (default), 'left', 'top' or 'bottom', or 'start' and 'end', the edges
       the reading starts and ends at ('start' is the left in a left-to-right page and the right in a right-to-left one). */
   placement?: DrawerPlacement | undefined;
-  /** @deprecated Use placement (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as placement is, when placement isn't given. */
-  side?: 'right' | 'left' | 'top' | 'bottom' | undefined;
   /** The width of a left or right drawer: 'sm' 320px, 'md' 384px (default) or 'lg' 512px, at most the screen. Top and bottom drawers fit their content. */
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** The heading, which also names the drawer. */
@@ -73,7 +71,7 @@ export interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogE
 
 const FLICK = 0.2;   // px per ms over the last 100ms toward the edge: a let-go this fast closes it, however short (KW5a)
 const INWARD = 24;   // px at most a drag away from the edge moves the panel, against growing resistance
-const OWN = { open: 1, defaultOpen: 1, onOpenChange: 1, placement: 1, side: 1, size: 1, title: 1, description: 1, footer: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, modal: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, snapPoints: 1, snap: 1, defaultSnap: 1, onSnapChange: 1, className: 1, children: 1 } as const;
+const OWN = { open: 1, defaultOpen: 1, onOpenChange: 1, placement: 1, size: 1, title: 1, description: 1, footer: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, modal: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, snapPoints: 1, snap: 1, defaultSnap: 1, onSnapChange: 1, className: 1, children: 1 } as const;
 
 /* Drawer: a modal panel that slides in from an edge of the screen, for navigation on small screens, filters,
    or details and edits without leaving the page. It's a native <dialog> (showModal) like Dialog: focus stays
@@ -90,8 +88,7 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   const base = domId('dk-drw', React.useId());
   const el = React.useRef<HTMLDialogElement | null>(null);
   const back = React.useRef<HTMLElement | null>(null);
-  if (process.env.NODE_ENV !== 'production' && props.side != null) warnOnce('drawer-side', 'Drawer: side is deprecated and removed in 15.0.0. Use placement, which takes the same edges, and start and end.');
-  const side = oneOf(['right', 'left', 'top', 'bottom', 'start', 'end'] as const, props.placement ?? props.side, 'right');
+  const side = oneOf(['right', 'left', 'top', 'bottom', 'start', 'end'] as const, props.placement, 'right');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const showClose = props.closeButton !== false;
   // snapPoints: the heights a bottom sheet stops at, shares of the screen from the shortest; none for other sides.

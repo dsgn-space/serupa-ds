@@ -95,7 +95,6 @@ The thumb slides in 100ms (`motion-press`, `ease-move`: feedback for a toggle ta
 | `invalid` | boolean | `false` | A 2px danger edge on the track (on or off), a danger focus ring, and `aria-invalid` |
 | `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), but clicks and Space don't flip it; an on switch is still submitted |
 | `loading` | boolean | `false` | While a change is saved: a ring on the thumb, `aria-busy`, and clicks and Space don't flip it |
-| `pending` | boolean | | Deprecated, removed in 15.0.0: use `loading`, as Button names it |
 
 `onCheckedChange(checked, event)` runs after `onChange` with the new state, the same shape as ToggleButton's `onPressedChange`, so you needn't read `event.target.checked`. Not while read-only or loading.
 

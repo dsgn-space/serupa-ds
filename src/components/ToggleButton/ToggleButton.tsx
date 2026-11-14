@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { cn, oneOf } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
+import type { IconSource } from '../Icon/Icon';
 import { component } from '../../internal/component';
 
-export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' | 'destructive' | 'loading' | 'loadingLabel' | 'loadingText'> {
+export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' | 'destructive' | 'loading' | 'loadingLabel'> {
   /** Whether it's on (controlled). Use with onPressedChange. */
   pressed?: boolean | undefined;
   /** Whether it starts on (uncontrolled). Default: false. */
@@ -13,6 +14,8 @@ export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' |
   onPressedChange?: ((pressed: boolean) => void) | undefined;
   /** 'outline' (default) or 'ghost' (for toolbars). */
   variant?: 'outline' | 'ghost' | undefined;
+  /** Icon-only: an icon name (custom or Material Symbols) or element, in a square at the size's height, in place of children; give it an aria-label. */
+  icon?: IconSource | undefined;
 }
 
 /* ToggleButton: a Button that stays on or off (aria-pressed), for a setting that applies right away: bold,

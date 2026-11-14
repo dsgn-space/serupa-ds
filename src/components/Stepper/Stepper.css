@@ -43,11 +43,11 @@ button.dk-stepper__head:active .dk-stepper__indicator { scale: var(--stepper-pre
 .dk-stepper__indicator .dk-icon { font-size: var(--spacing-4); }
 .dk-stepper--size-sm .dk-stepper__indicator .dk-icon { font-size: var(--spacing-3\.5); }
 .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator {
-  border-color: var(--stepper-bg-active, var(--stepper-active-bg, var(--primary))); background: var(--depth-sheen), var(--stepper-bg-active, var(--stepper-active-bg, var(--primary))); color: var(--stepper-text-active, var(--stepper-active-text, var(--on-primary)));
-  box-shadow: var(--stepper-depth-active, var(--stepper-active-depth, var(--depth-part)));   /* raised like a pressed-in key in a tactile brand; nothing in the flat ones */
+  border-color: var(--stepper-bg-active, var(--primary)); background: var(--depth-sheen), var(--stepper-bg-active, var(--primary)); color: var(--stepper-text-active, var(--on-primary));
+  box-shadow: var(--stepper-depth-active, var(--depth-part));   /* raised like a pressed-in key in a tactile brand; nothing in the flat ones */
 }
-.dk-stepper__step--current .dk-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--stepper-active-bg, var(--primary))); outline-offset: var(--outline-offset-2); }
-.dk-stepper__step--error .dk-stepper__indicator { border-color: var(--stepper-bg-error, var(--stepper-error-bg, var(--danger))); background: var(--stepper-bg-error, var(--stepper-error-bg, var(--danger))); color: var(--stepper-text-error, var(--stepper-error-text, var(--on-danger))); }
+.dk-stepper__step--current .dk-stepper__indicator { outline: var(--outline-width-2) solid var(--stepper-bg-active, var(--primary)); outline-offset: var(--outline-offset-2); }
+.dk-stepper__step--error .dk-stepper__indicator { border-color: var(--stepper-bg-error, var(--danger)); background: var(--stepper-bg-error, var(--danger)); color: var(--stepper-text-error, var(--on-danger)); }
 .dk-stepper__step--warning .dk-stepper__indicator { border-color: var(--stepper-warning-border, var(--warning-text)); background: var(--stepper-warning-bg, var(--warning-subtle)); color: var(--stepper-warning-text, var(--warning-text)); }
 .dk-stepper__text { display: flex; flex-direction: column; min-width: var(--spacing-0); padding-top: var(--dk-step-text-pad); overflow-wrap: anywhere; }
 .dk-stepper { --dk-step-text-pad: calc((var(--dk-step-size) - var(--text-sm--line-height)) / 2); }

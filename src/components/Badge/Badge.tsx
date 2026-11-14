@@ -57,8 +57,6 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
   loading?: boolean | undefined;
   /** Said to screen readers when loading starts, not shown. Default: "Loading…" (labels.loading); "" says nothing. */
   loadingLabel?: string | undefined;
-  /** @deprecated Use loadingLabel: a prop named …Text is shown, and these words are only said; removed in 15.0.0. Read as loadingLabel is, when loadingLabel isn't given. */
-  loadingText?: string | undefined;
 }
 
 /* Badge: a short label for status, counts and categories. variant "subtle" (default: a tint), "solid" (a full
@@ -73,7 +71,7 @@ export interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
 const VARIANTS: readonly BadgeVariant[] = ['subtle', 'solid', 'outline'];
 const TONES: readonly BadgeTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 const PLAIN = { useGrouping: false } as const;
-const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, loadingText: 1, className: 1, children: 1 } as const;
+const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, className: 1, children: 1 } as const;
 
 /** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
 export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge', function Badge(props, ref) {
@@ -84,8 +82,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge',
   const tone = oneOf(TONES, props.tone, 'neutral');
   // Once it shows, the ring stays at least spinnerMinShown, so loading that ends a moment later doesn't flash it (EB1).
   const loading = useShowAfter(!!props.loading, 0);
-  if (process.env.NODE_ENV !== 'production' && props.loadingText != null) warnOnce('badge-loading-text', 'Badge: loadingText is deprecated and removed in 15.0.0. Use loadingLabel, which does the same.');
-  const loadingText = props.loadingLabel ?? props.loadingText ?? sds.labels.loading;
+  const loadingText = props.loadingLabel ?? sds.labels.loading;
   // Hooks first: a count of 0 renders nothing below, and hooks must run on every render.
   React.useEffect(function () { ensureAnnouncer(); }, []);   // no cleanup: the region is shared
   // Announces only when loading starts: a new loadingLabel while it loads re-runs this but announces nothing.

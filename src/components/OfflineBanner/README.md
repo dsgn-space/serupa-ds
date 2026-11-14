@@ -65,7 +65,6 @@ Drawn from the `WithMoreWords` story.
 | `placement` | `'bottom' \| 'top' \| 'inline'` | `'bottom'` | Fixed to an edge of the screen, in the middle, or in the page. |
 | `children` | `ReactNode` | | More words after "You’re offline". |
 | `onOnlineChange` | `(online: boolean) => void` | | Runs when it drops and when it comes back. |
-| `onChange` | `(online: boolean) => void` | | Deprecated, removed in 15.0.0: use `onOnlineChange`. |
 
 `className`, `ref` and other props go to the `<div>`, which has `data-component="offline-banner"` and `data-state="offline"` or `"back"`.
 

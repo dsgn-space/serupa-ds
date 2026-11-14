@@ -11,7 +11,6 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">
     disabled?: boolean | undefined;
     group?: boolean | undefined;
     orientation?: "horizontal" | "vertical" | undefined;
-    layout?: "horizontal" | "vertical" | undefined;
     name?: string | undefined;
     id?: string | undefined;
     children?: React.ReactNode | undefined;

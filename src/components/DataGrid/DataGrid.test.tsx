@@ -298,28 +298,14 @@ describe('DataGrid stickyHeader', () => {
   });
 });
 
-
 describe('DataGrid labels', () => {
   test('copied and pasted say the count as given, in the locale\'s digits ("٤ sel disalin")', () => {
     expect([idLabels.dataGridCopied(4, '٤'), idLabels.dataGridPasted(2, '٢')]).toEqual(['٤ sel disalin', '٢ sel ditempel']);
   });
 });
 
-describe('DataGrid: busy, the old name of loading', () => {
-  test('still sets aria-busy and draws placeholders as loading does, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<DataGrid id="old-busy" aria-label="Stock" columns={COLS} rows={[]} {...{ busy: true }} />);
-      const grid = document.querySelector('[role="grid"]')!;
-      expect(grid.getAttribute('aria-busy')).toBe('true');
-      expect(grid.getAttribute('aria-rowcount')).toBe('-1');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('data-grid-busy'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
-  });
-});
-
 describe('DataGrid token names', () => {
-  test('a selected cell reads --data-grid-bg-selected (the state last); the old --data-grid-selected-bg still works until 15.0.0', async () => {
+  test('a selected cell reads --data-grid-bg-selected (the state last); the old --data-grid-selected-bg is gone since 15.0.0', async () => {
     await render(<>
       <div id="tk-new" style={{ '--data-grid-bg-selected': 'rgb(1, 2, 3)' } as React.CSSProperties}><Live /></div>
     </>);
@@ -327,7 +313,8 @@ describe('DataGrid token names', () => {
     await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
     await expect.poll(() => css(cell('Kopi')).backgroundColor).toBe('rgb(1, 2, 3)');
     (document.getElementById('tk-new') as HTMLElement).style.cssText = '--data-grid-selected-bg: rgb(4, 5, 6)';
-    await expect.poll(() => css(cell('Kopi')).backgroundColor).toBe('rgb(4, 5, 6)');
+    await expect.poll(() => css(cell('Kopi')).backgroundColor).not.toBe('rgb(1, 2, 3)');
+    expect(css(cell('Kopi')).backgroundColor).not.toBe('rgb(4, 5, 6)');
   });
 });
 

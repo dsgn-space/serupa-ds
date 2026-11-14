@@ -8,7 +8,7 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
     description?: React.ReactNode | undefined;
     indeterminate?: boolean | undefined;
     invalid?: boolean | undefined;
-    variant?: "card" | "default" | "plain" | undefined;
+    variant?: "card" | "plain" | undefined;
     readOnly?: boolean | undefined;
     selectAll?: boolean | undefined;
     onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
@@ -20,7 +20,7 @@ interface CheckboxGroupProps<V extends number | string = number | string> extend
     name?: string | undefined;
     orientation?: "horizontal" | "vertical" | undefined;
     size?: "lg" | "md" | "sm" | undefined;
-    variant?: "card" | "default" | "plain" | undefined;
+    variant?: "card" | "plain" | undefined;
     invalid?: boolean | undefined;
     disabled?: boolean | undefined;
     required?: boolean | undefined;

@@ -351,17 +351,6 @@
           }
         }
       },
-      "disabled-bg": {
-        "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The old name of `--button-bg-disabled`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--button-disabled-bg"
-          }
-        },
-        "$deprecated": "Use --button-bg-disabled; removed in 15.0.0."
-      },
       "text-disabled": {
         "$type": "color",
         "$value": "{color.text-muted}",
@@ -372,17 +361,6 @@
           }
         }
       },
-      "disabled-text": {
-        "$type": "color",
-        "$value": "{color.text-muted}",
-        "$description": "The old name of `--button-text-disabled`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--button-disabled-text"
-          }
-        },
-        "$deprecated": "Use --button-text-disabled; removed in 15.0.0."
-      },
       "border-disabled": {
         "$type": "color",
         "$value": "{color.border}",
@@ -392,17 +370,6 @@
             "cssVar": "--button-border-disabled"
           }
         }
-      },
-      "disabled-border": {
-        "$type": "color",
-        "$value": "{color.border}",
-        "$description": "The old name of `--button-border-disabled`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--button-disabled-border"
-          }
-        },
-        "$deprecated": "Use --button-border-disabled; removed in 15.0.0."
       }
     },
     "spacing": {

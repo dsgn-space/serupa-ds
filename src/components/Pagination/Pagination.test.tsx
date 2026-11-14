@@ -197,13 +197,14 @@ describe('Pagination', () => {
     expect([...el('prtl').querySelectorAll('button [data-icon]')].map((i) => iconPoints(i)).join()).toBe('right,left');
   });
 
-  test('Pagination tokens (--pagination-bg-current, --pagination-text-current, --pagination-size) override one pagination; the old names, state first (--pagination-current-bg), still work until 15.0.0', async () => {
+  test('Pagination tokens (--pagination-bg-current, --pagination-text-current, --pagination-size) override one pagination; the old names, state first (--pagination-current-bg), are gone since 15.0.0', async () => {
     await render(<>
       <Pagination id="ptok" count={3} style={{ '--pagination-bg-current': 'rgb(1, 2, 3)', '--pagination-text-current': 'rgb(4, 5, 6)', '--pagination-size': '40px' } as React.CSSProperties} />
       <Pagination id="ptok-old" count={3} style={{ '--pagination-current-bg': 'rgb(1, 2, 3)', '--pagination-current-text': 'rgb(4, 5, 6)' } as React.CSSProperties} />
     </>);
     const e = q('ptok', '[aria-current]'), o = q('ptok-old', '[aria-current]');
-    await expect.poll(() => [css(e).backgroundColor, css(e).color, css(o).backgroundColor, css(o).color].join(' / ')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6) / rgb(1, 2, 3) / rgb(4, 5, 6)');
+    await expect.poll(() => [css(e).backgroundColor, css(e).color].join(' / ')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6)');
+    expect([css(o).backgroundColor, css(o).color]).not.toContain('rgb(1, 2, 3)');
     expect(e.getBoundingClientRect().height).toBe(40);
   });
 

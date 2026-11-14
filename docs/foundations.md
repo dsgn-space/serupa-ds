@@ -986,7 +986,7 @@ Two kinds of layout change get a direction:
 
 **Performance.** Animate `opacity`, `transform`, `translate`, `scale` and `rotate`, which the compositor runs without laying the page out again. Animate colors only on small controls. Never animate `width`, `height`, `top`, `left`, margins or padding, and avoid `transition-all`, which animates them too. The one exception is a disclosure panel's height (Accordion), where a jump of everything below reads as a glitch: one panel, only while it moves, never under reduced motion.
 
-**Reduced motion.** When the viewer prefers reduced motion (`prefers-reduced-motion: reduce`), surfaces appear and leave with a fade or not at all, with no sliding or scaling. Loops stop moving: the components' spinners stand still and breathe (opacity) over twice `motion-loop-spinner`, so progress still shows, because a spinner that stops completely reads as stuck; the `animate-spin` utility turns three times slower (`animate-spin-reduced`). `bundle.css` stops `ping`, `pulse` and `bounce`, slows `spin`, turns `animate-enter` into a plain fade and drops the `stagger` delays. Every component's own animations do the same, and yours should too.
+**Reduced motion.** When the viewer prefers reduced motion (`prefers-reduced-motion: reduce`), surfaces appear and leave with a fade or not at all, with no sliding or scaling. Loops stop moving: the components' spinners stand still and breathe (opacity) over twice `motion-loop-spinner`, so progress still shows, because a spinner that stops completely reads as stuck; the `animate-spin` utility turns three times slower (`animate-spin-reduced`). `bundle.css` stops `ping` and `pulse`, slows `spin`, turns `animate-enter` into a plain fade and drops the `stagger` delays. Every component's own animations do the same, and yours should too.
 
 **An app's own "Reduce motion" setting.** Put `data-motion="reduce"` on `<html>` and everything gets exactly what the system setting gives: the same fades, still spinners and instant moves, in the components, `base.css` and the utilities. Use it for a "Reduce motion" switch in your app's settings, for people who want less motion in your app without changing it for their whole device. On a section, it reduces motion inside that section. It only ever reduces: there is no attribute that brings motion back when the system asks for less. Save the choice with the rest of the person's settings and set the attribute before the first paint. In JavaScript, `useReducedMotion()` follows both, and `prefersReducedMotion(el)` answers once, for an event handler.
 
@@ -1007,11 +1007,10 @@ Two kinds of layout change get a direction:
 | `animate-spin` | `spin 1s linear infinite` | Turning things: refresh icons, simple spinners. (The Loader component has its own, livelier ring.) |
 | `animate-ping` | `ping 1s cubic-bezier(0, 0, 0.2, 1) infinite` | A radar ping behind a notification dot or live badge. |
 | `animate-pulse` | `pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite` | Skeleton placeholders while content loads. |
-| `animate-bounce` | `bounce 1s infinite` | Deprecated, removed in 15.0.0: it bounces without end, which the rules above turn down (WCAG 2.2.2 asks for a pause past five seconds). Point down with a still icon, or let the content arrive once with `animate-enter`. |
 | `animate-enter` | `enter` over `motion-enter-md` with `ease-enter` | Content arriving: it fades in as it rises 8px into place. With `stagger` on the parent, the items arrive one after another. Under reduced motion it only fades. |
 | `animate-none` | `none` | Turns an animation off. |
 
-The `spin`, `ping`, `pulse`, `bounce`, `enter` and `fade-in` keyframes ship in `bundle.css`.
+The `spin`, `ping`, `pulse`, `enter` and `fade-in` keyframes ship in `bundle.css`.
 
 ```html
 <ul class="stagger">

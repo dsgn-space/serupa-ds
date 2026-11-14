@@ -110,61 +110,26 @@ An arrow that takes you to the first or last page turns disabled, so focus moves
 Each is an optional override: set it on the page, a container or one pagination. The list lives in `src/components/Pagination/pagination.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from pagination.tokens.json by npm run tokens: edit the descriptions there) -->
-**Colors**
-
 | Token | Default | Use |
 | --- | --- | --- |
 | `--pagination-text` | `text` | A page number and the arrows. |
 | `--pagination-bg-hover` | `secondary` | A page or arrow on hover. |
 | `--pagination-bg-pressed` | `pressed` | A page or arrow while it's pressed, one step past hover. |
 | `--pagination-bg-current` | `primary` | The current page's background. |
-| `--pagination-current-bg` | `primary` | The old name of `--pagination-bg-current`, read when that isn't set. Removed in 15.0.0. |
 | `--pagination-text-current` | `on-primary` | The current page's number (4.5:1 on current-bg). |
-| `--pagination-current-text` | `on-primary` | The old name of `--pagination-text-current`, read when that isn't set. Removed in 15.0.0. |
 | `--pagination-ellipsis` | `text-muted` | The … between page ranges (4.5:1 on surface). |
 | `--pagination-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--pagination-summary` | `text-muted` | The summary with total and pageSize, "21–30 of 245" (4.5:1 on surface). |
-
-**Type**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--pagination-font-size` | `text-sm` | Page numbers (14px). |
 | `--pagination-weight-current` | `font-semibold` | The current page's weight (600). |
-
-**Sizing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--pagination-size` | `control-height-md` | A page's width and height at size md (32px). |
 | `--pagination-size-sm` | `control-height-sm` | At size sm (24px). |
 | `--pagination-size-lg` | `control-height-lg` | At size lg (44px), the touch-target size. |
-
-**Spacing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--pagination-gap` | `spacing-1` | Space between pages (4px). |
 | `--pagination-padding-x` | `spacing-2` | Side padding inside a page, for wide numbers (8px). |
 | `--pagination-padding-x-sm` | `spacing-0.5` | At size sm (2px), so two semibold digits fit in the 24px square. |
 | `--pagination-summary-gap` | `spacing-4` | Space between the summary and the pages (16px). |
-
-**Radius**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--pagination-radius` | `radius-control` | A page's corners (6px). |
-
-**Opacity**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--pagination-disabled` | `opacity-disabled` | Previous or next when there's no page that way. |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--pagination-depth-current` | `depth-part` | The current page in a tactile brand: raised like a part, under the top light. Nothing in a flat brand. |
-| `--pagination-current-depth` | `depth-part` | The old name of `--pagination-depth-current`, read when that isn't set. Removed in 15.0.0. |
 <!-- token-table:end -->

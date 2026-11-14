@@ -120,7 +120,6 @@ It returns the toast's id. Keep the usual duration or longer, so people have tim
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the Toaster's root `<section>`, the region toasts show in. |
 | `placement` | `'bottom-end'` \| `'bottom-start'` \| `'bottom-center'` \| `'top-start'` \| `'top-center'` \| `'top-end'` | `'bottom-end'` | Where toasts appear, 16px from the edges; start and end follow the text direction. The newest is nearest the edge |
-| `position` | | | Deprecated, removed in 15.0.0: use `placement` |
 | `label` | string | `'Notifications'` | The region's name |
 | `dismissLabel` | string | `'Dismiss'` | The close buttons' name |
 | `duration` | number | `5000` | How long each toast stays, in milliseconds, unless it sets its own |

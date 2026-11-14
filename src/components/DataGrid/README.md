@@ -104,7 +104,6 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
 | `stickyHeader` | `boolean` | `false` | Keeps the header row in view while the grid scrolls in a frame with a height. |
 | `containerProps` | `HTMLAttributes<HTMLDivElement>` | | Props for the scrolling frame, such as a `maxHeight` for `stickyHeader`. |
 | `loading` | `boolean` | `false` | Rows are loading: sets `aria-busy`, and with no rows shows placeholders. |
-| `busy` | `boolean` | | Deprecated, removed in 15.0.0: use `loading`, the API naming table's name. |
 | `loadingRows` | `number` | `3` | How many placeholder rows. |
 | `loadingLabel` | `string` | `"Loading"` | Said once as the placeholders appear. |
 | `message` | `ReactNode` | | Shown across every column when there are no rows and it isn't loading: an EmptyState or an Alert. |
@@ -116,8 +115,6 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
 Each is an optional override: set it on the page, a container or one DataGrid. The list lives in `src/components/DataGrid/data-grid.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from data-grid.tokens.json by npm run tokens: edit the descriptions there) -->
-**Colors**
-
 | Token | Default | Use |
 | --- | --- | --- |
 | `--data-grid-bg` | `surface` | The cells' background. |
@@ -127,38 +124,17 @@ Each is an optional override: set it on the page, a container or one DataGrid. T
 | `--data-grid-header-bg` | `surface-muted` | The header row's background. |
 | `--data-grid-header-text` | `text-muted` | The header row's text (4.5:1 on header-bg). |
 | `--data-grid-bg-selected` | `primary-subtle` | The selected range's background. |
-| `--data-grid-selected-bg` | `primary-subtle` | The old name of `--data-grid-bg-selected`, read when that isn't set. Removed in 15.0.0. |
 | `--data-grid-focus-ring` | `focus-ring` | The ring inside the active cell (3:1 on bg and selected-bg). |
 | `--data-grid-input-bg` | `field` | A cell's background while it's edited. |
-
-**Type**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--data-grid-font-size` | `text-sm` | The cells' text (14px). |
 | `--data-grid-header-weight` | `font-medium` | The header text's weight (500). |
 | `--data-grid-font-size-lg` | `text-base` | The cells' text with size lg (16px). |
-
-**Spacing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--data-grid-padding-x` | `spacing-3` | Space at a cell's sides (12px). |
 | `--data-grid-padding-y` | `spacing-2` | Space above and below a cell's text (8px). |
 | `--data-grid-padding-y-sm` | `spacing-1` | The same with size sm (4px). |
 | `--data-grid-padding-x-lg` | `spacing-4` | A cell's inline padding with size lg (16px). |
 | `--data-grid-padding-y-lg` | `spacing-2.5` | A cell's block padding with size lg (10px): with 16px text, a row at least 44px tall. |
 | `--data-grid-message-padding` | `spacing-6` | Space around the message shown in place of rows (24px). |
-
-**Border**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--data-grid-border-width` | `border-width-1` | The frame's and lines' width (1px). |
-
-**Radius**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--data-grid-radius` | `radius-surface` | The frame's corners. |
 <!-- token-table:end -->

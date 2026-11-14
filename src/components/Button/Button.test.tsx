@@ -731,32 +731,15 @@ describe('Button pressed', () => {
   });
 });
 
-describe('Button: loadingText, the old name of loadingLabel', () => {
-  test('is still said when loading starts, as loadingLabel is, and warns once that it is deprecated', async () => {
-    // Tests run in a random order, and the file collects every warning: take this one back out after.
-    const from = warnings.length;
-    try {
-      const { rerender } = await render(<Button {...{ loadingText: 'Saving draft' }}>Save</Button>);
-      await rerender(<Button loading {...{ loadingText: 'Saving draft' }}>Save</Button>);
-      await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '').toContain('Saving draft');
-      expect(warnings.slice(from).filter((m) => m.includes('button-loading-text'))).toHaveLength(1);
-    } finally { warnings.splice(from); }
-  });
-});
-
-describe('Button: icon, deprecated for IconButton', () => {
-  test('an icon alone still draws the square button, and warns once that icon is deprecated; IconButton, built on the same button, doesn\'t', async () => {
-    const from = warnings.length;
-    try {
-      await render(<><Button id="dep-icon" icon="close" aria-label="Close" /><Button icon="add" aria-label="Add" /><IconButton id="dep-ib" icon="close" label="Close" /></>);
-      expect([el('dep-icon').hasAttribute('data-icon-only'), el('dep-ib').hasAttribute('data-icon-only')]).toEqual([true, true]);
-      expect(warnings.slice(from).filter((m) => m.includes('warning button-icon:') && m.includes('deprecated') && m.includes('IconButton'))).toHaveLength(1);
-    } finally { warnings.splice(from); }
+describe('Button: no icon of its own (15.0.0)', () => {
+  test('an icon passed anyway draws no icon-only button: that is IconButton, with its required label', async () => {
+    await render(<><Button id="no-icon" {...{ icon: 'close' }} aria-label="Close">Close</Button><IconButton id="ib-icon" icon="close" label="Close" /></>);
+    expect([el('no-icon').hasAttribute('data-icon-only'), el('no-icon').textContent, el('ib-icon').hasAttribute('data-icon-only')]).toEqual([false, 'Close', true]);
   });
 });
 
 describe('Button token names', () => {
-  test('a disabled button reads --button-bg-disabled, --button-text-disabled and --button-border-disabled (the state last); the old names, state first, still work until 15.0.0', async () => {
+  test('a disabled button reads --button-bg-disabled, --button-text-disabled and --button-border-disabled (the state last); the old names, state first, are gone since 15.0.0', async () => {
     await render(<>
       <Button id="tk-new" variant="outline" disabled style={vars({ '--button-bg-disabled': 'rgb(1, 2, 3)', '--button-text-disabled': 'rgb(4, 5, 6)', '--button-border-disabled': 'rgb(7, 8, 9)' })}>New</Button>
       <Button id="tk-old" variant="outline" disabled style={vars({ '--button-disabled-bg': 'rgb(1, 2, 3)', '--button-disabled-text': 'rgb(4, 5, 6)', '--button-disabled-border': 'rgb(7, 8, 9)' })}>Old</Button>
@@ -764,8 +747,7 @@ describe('Button token names', () => {
     </>);
     const look = (id: string) => { const c = getComputedStyle(el(id)); return [c.backgroundColor, c.color, c.borderTopColor].join(' / '); };
     await expect.poll(() => look('tk-new')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6) / rgb(7, 8, 9)');
-    await expect.poll(() => look('tk-old')).toBe('rgb(1, 2, 3) / rgb(4, 5, 6) / rgb(7, 8, 9)');
-    // The new name wins over the old one.
+    expect(look('tk-old').split(' / ')).not.toContain('rgb(1, 2, 3)');
     await expect.poll(() => getComputedStyle(el('tk-both')).backgroundColor).toBe('rgb(1, 2, 3)');
   });
 });

@@ -9,7 +9,6 @@ interface SplitterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chil
         React.ReactNode
     ];
     orientation?: "horizontal" | "vertical" | undefined;
-    direction?: "horizontal" | "vertical" | undefined;
     size?: number | undefined;
     defaultSize?: number | undefined;
     onSizeChange?: ((size: number) => void) | undefined;

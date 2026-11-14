@@ -52,17 +52,6 @@
           }
         }
       },
-      "more-hover-bg": {
-        "$type": "color",
-        "$value": "{color.secondary-hover}",
-        "$description": "The old name of `--avatar-group-more-bg-hover`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--avatar-group-more-hover-bg"
-          }
-        },
-        "$deprecated": "Use --avatar-group-more-bg-hover; removed in 15.0.0."
-      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",

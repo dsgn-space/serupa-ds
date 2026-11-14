@@ -115,7 +115,6 @@ Each is an optional override: set it on the page, a container or one carousel. T
 | `--carousel-radius` | `radius-container` | The slides' corners (12px). |
 | `--carousel-dot-size` | `spacing-2` | A dot's size (8px). |
 | `--carousel-dot-width-active` | `spacing-6` | The current dot's width (24px). |
-| `--carousel-dot-active-width` | `spacing-6` | The old name of `--carousel-dot-width-active`, read when that isn't set. Removed in 15.0.0. |
 | `--carousel-gap` | `spacing-3` | Space between the slides and the dots (12px). |
 | `--carousel-slide-gap` | `spacing-4` | Space between slides shown side by side, with `perView` (16px). |
 | `--carousel-arrow-offset` | `spacing-2` | The previous and next buttons' distance from the sides (8px). |

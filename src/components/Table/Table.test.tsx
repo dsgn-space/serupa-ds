@@ -993,17 +993,6 @@ describe('Table loading and messages (GR316)', () => {
   });
 });
 
-describe('Table: busy, the old name of loading', () => {
-  test('still sets aria-busy as loading does, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<Table id="old-busy" caption="Projects" {...{ busy: true }}><TableBody><TableRow><TableCell>A</TableCell></TableRow></TableBody></Table>);
-      expect(document.getElementById('old-busy')!.getAttribute('aria-busy')).toBe('true');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('table-busy'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
-  });
-});
-
 describe('TableRow href: a ticked checkbox (GR408)', () => {
   // The row lifts its controls above the link that covers it. Lifting the checkbox's input too put it in a layer
   // of its own, over the tick drawn after it: a ticked box in a linked row was a blank blue square.
