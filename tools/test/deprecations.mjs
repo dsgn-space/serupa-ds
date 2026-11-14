@@ -4,7 +4,8 @@
 // $deprecated token says "removed in N.0.0", and this fails when one has no N, or when the major the next release
 // ships as has reached N, so a major can't ship with an expired deprecation. A deprecated prop or warning also needs
 // its warnings.md section and a line in CHANGELOG.md or a pending changeset that names it. And a major can't remove
-// a name sooner than four weeks after the release that deprecated it (GR247).
+// a name sooner than four weeks after the release that deprecated it (GR247), unless tools/release-policy.json
+// switches that window off.
 //   node tools/test/deprecations.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -106,11 +107,16 @@ export const tooSoon = (name, changelog, pending, today) => {
     && tooSoon('onChange', log, '', '2026-12-05') === '' && /only in a pending/.test(tooSoon('size', log, '- Deprecated: `size`.', '2026-11-08'))
     && tooSoon('hideTitle', log, '', '2026-11-08') === '', 'deprecatedIn and tooSoon');
 }
+// The window can be switched off in tools/release-policy.json ("deprecationWindow": false): Diki suspended it on
+// 14 Nov 2026, while the API is still being adjusted, so a major may remove a name as soon as it is deprecated. It
+// still needs its migration note and, where a script can make it, its serupa-migrate change.
+const windowOn = JSON.parse(read('tools/release-policy.json')).deprecationWindow !== false;
+t(`reads the deprecation window's switch from tools/release-policy.json (${windowOn ? 'on' : 'off'})`, typeof windowOn === 'boolean');
 const today = process.env.SERUPA_TODAY || new Date().toISOString().slice(0, 10);
 const changelog = read('CHANGELOG.md');
 const pendingText = changesets.map((n) => read(path.join('.changeset', n))).join('\n');
 for (const [n, bump] of bumps) {
-  if (bump !== 'major') continue;
+  if (bump !== 'major' || !windowOn) continue;
   for (const line of read(path.join('.changeset', n)).split('\n').filter((l) => /\bRemoved\b/.test(l))) {
     for (const [, name] of line.matchAll(/`([\w.-]+)`/g)) {
       const why = tooSoon(name, changelog, pendingText, today);
