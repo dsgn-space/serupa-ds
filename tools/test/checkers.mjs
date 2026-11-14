@@ -86,6 +86,8 @@ expect('browser-baseline.mjs', run('browser-baseline.mjs', fixture({
   'dist/utilities-extra.css': '',   // read with bundle.css (the masks and gradients)
   'dist/serupa.iife.js': 'Error.isError(1);\n',
   'README.md': '# Fixture\n\n## Browser support\n\nAny.\n',
+  // The floor the check reads (tools/browser-floor.mjs), as the package's own.
+  'package.json': JSON.stringify({ browserslist: JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), 'utf8')).browserslist }),
 }), { arg: true }), [
   ['bundle.css: every property is a known CSS property', 'colr'],
   ['bundle.css works in Chrome and Edge', 'text-box-trim'],
