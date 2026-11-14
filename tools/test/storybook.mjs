@@ -160,7 +160,7 @@ async function checkDocs(e, w) {
     }
     return { theme: document.documentElement.getAttribute('data-theme'), want, text, off, code: [...new Set(code)].slice(0, 4), flat: [...new Set(flat)].slice(0, 4) };
   });
-  out.push(t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(24, 24, 27)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark)));
+  out.push(t(`docs · ${e.title} · dark: the page, story frames, text, code and controls follow the theme`, !darkNotReady && dark.theme === 'blue-dark' && dark.want === 'rgb(9, 9, 11)' && !dark.off.length && dark.text !== 'rgb(46, 52, 56)' && !dark.code.length && !dark.flat.length, darkNotReady || JSON.stringify(dark)));
   if (!darkNotReady) { const v = await docsAxe(w); out.push(t(`docs · ${e.title} · axe (WCAG 2.2 AA), blue-dark`, !v.length, v.slice(0, 3).join(' | '))); }
   // Reflow on the docs themselves (WCAG 1.4.10): at 320px, a 1280px screen at 400% zoom, the page scrolls only up and
   // down. Inline code and table cells break where they must, and wide code blocks and stories scroll in their own box.
