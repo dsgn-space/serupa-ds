@@ -133,4 +133,15 @@ describe('Patterns/Billing', () => {
     expect(onRetry).toHaveBeenCalledOnce();
     expect(screen.getByRole('heading', { level: 2, name: 'Couldn’t load billing' }).elements()).toHaveLength(1);
   });
+
+  test('on a wide screen each card is a row: the method beside its link, the plan beside its buttons, both at the start', async () => {
+    const sideBySide = (a: Element, b: Element) => { const r = a.getBoundingClientRect(), q = b.getBoundingClientRect(); return r.top < q.bottom && q.top < r.bottom && (r.right <= q.left || q.right <= r.left); };
+    await render(<Billing />);
+    const card = document.querySelector('#billing-card')!.nextElementSibling!;
+    const text = [...card.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Visa'))!;
+    expect(sideBySide(text, card.querySelector('a')!)).toBe(true);
+    expect(Math.abs(text.getBoundingClientRect().left - card.getBoundingClientRect().left)).toBeLessThan(40);
+    const plan = document.querySelector('#billing-plan')!.nextElementSibling!;
+    expect(sideBySide(plan.querySelector('p')!, [...plan.querySelectorAll('a, button')].find((b) => b.textContent === 'Change plan')!)).toBe(true);
+  });
 });
