@@ -1,7 +1,7 @@
 // Grades what a coding agent wrote for the skill eval's tasks (tools/skill-eval/tasks.json), one TSX file per task, on
 // the things the Serupa skill (skills/serupa/SKILL.md) tells an agent to do. Each check passes or fails per answer:
 //   parses       the answer is TSX that parses
-//   serupa       it imports from "serupa-ds"
+//   serupa       it imports from "@diki-stwn/serupa-ds"
 //   components   it uses the task's expected components (an "A|B" entry takes either)
 //   no-rebuilds  no native <button>, <input>, <select>, <textarea>, <table> or <dialog> where Serupa has one, and no
 //                widget built by hand: a widget role (dialog, menu, listbox, tab, tooltip…) or aria-expanded on a
@@ -91,7 +91,7 @@ export function grade(source, expect = []) {
   }
   const imported = new Set();
   for (const s of file.statements) {
-    if (ts.isImportDeclaration(s) && ts.isStringLiteral(s.moduleSpecifier) && s.moduleSpecifier.text === 'serupa-ds') {
+    if (ts.isImportDeclaration(s) && ts.isStringLiteral(s.moduleSpecifier) && /^(@diki-stwn\/)?serupa-ds$/.test(s.moduleSpecifier.text)) {
       const b = s.importClause?.namedBindings;
       if (b && ts.isNamedImports(b)) for (const e of b.elements) imported.add((e.propertyName ?? e.name).text);
     }
@@ -99,7 +99,7 @@ export function grade(source, expect = []) {
   for (const s of file.statements) {
     if (ts.isImportDeclaration(s) && ts.isStringLiteral(s.moduleSpecifier) && EXTRAS.test(s.moduleSpecifier.text)) fail('no-extras', `imports ${s.moduleSpecifier.text} beside Serupa`);
   }
-  if (!imported.size) fail('serupa', 'nothing imported from "serupa-ds"');
+  if (!imported.size) fail('serupa', 'nothing imported from "@diki-stwn/serupa-ds"');
   const missing = expect.filter((alts) => !alts.split('|').some((a) => imported.has(a)));
   if (missing.length) fail('components', 'missing ' + missing.join(', '));
 

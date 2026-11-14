@@ -118,7 +118,7 @@ A button holds a label, an icon beside a label, or an icon alone:
 
 Button applies this automatically. With `buttonClass`, pass `iconPosition: 'left'` or `'right'`.
 
-Pass any Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. For an icon on its own, use IconButton: its `label` is required by the types.
+Pass any Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `@diki-stwn/serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. For an icon on its own, use IconButton: its `label` is required by the types.
 
 ### Links
 

@@ -3,7 +3,7 @@
 A small line drawing for an empty state, an error page or a finished flow. It's drawn in the theme's own colors, so it fits all six themes and follows a brand's overrides without new artwork.
 
 ```tsx
-import { EmptyState, Illustration } from "serupa-ds";
+import { EmptyState, Illustration } from "@diki-stwn/serupa-ds";
 
 <EmptyState icon={<Illustration name="search" />} title="No results for “mars”" description="Check the spelling or try a broader search." />
 ```

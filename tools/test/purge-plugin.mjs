@@ -28,7 +28,7 @@ const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-purge-plugin-'));
 try {
   fs.mkdirSync(path.join(dir, 'src'));
   // The package's files by name (the build below maps serupa-ds to dist/), as a project imports them.
-  fs.writeFileSync(path.join(dir, 'src', 'main.js'), 'import "serupa-ds/bundle.css";\nimport "serupa-ds/utilities-extra.css";\nimport "./app.css";\ndocument.body.className = "flex md:grid-cols-3 bg-linear-to-r from-primary"; // renders <Button>\n');
+  fs.writeFileSync(path.join(dir, 'src', 'main.js'), 'import "@diki-stwn/serupa-ds/bundle.css";\nimport "@diki-stwn/serupa-ds/utilities-extra.css";\nimport "./app.css";\ndocument.body.className = "flex md:grid-cols-3 bg-linear-to-r from-primary"; // renders <Button>\n');
   fs.writeFileSync(path.join(dir, 'src', 'app.css'), '.my-card { color: red }\n.grid-cols-7 { color: blue }\n');
   fs.writeFileSync(path.join(dir, 'index.html'), '<!doctype html><title>t</title><script type="module" src="/src/main.js"></script>');
   fs.writeFileSync(path.join(dir, 'safe.txt'), 'gap-7\n');
@@ -39,7 +39,7 @@ try {
 
   // Vite: a production build of the page.
   const { build } = await import('vite');
-  const out = await build({ root: dir, logLevel: 'silent', configFile: false, resolve: { alias: { 'serupa-ds': path.join(PROJECT, 'dist') } }, plugins: [serupaPurge({ keep: ['@safe.txt'] })], build: { outDir: path.join(dir, 'out'), write: false } });
+  const out = await build({ root: dir, logLevel: 'silent', configFile: false, resolve: { alias: { '@diki-stwn/serupa-ds': path.join(PROJECT, 'dist') } }, plugins: [serupaPurge({ keep: ['@safe.txt'] })], build: { outDir: path.join(dir, 'out'), write: false } });
   const css = [out].flat().flatMap((o) => /** @type {any} */ (o).output).filter((a) => a.fileName.endsWith('.css')).map((a) => a.source).join('\n');
   t('Vite: the build keeps the utility classes the sources use', has(css, 'flex') && has(css, 'md:grid-cols-3'), css.length);
   t('Vite: it drops one they don\'t use, and --keep\'s safelist file works', !has(css, 'grid-cols-5') && has(css, 'gap-7'), css.length);
@@ -80,4 +80,4 @@ try {
 } finally {
   fs.rmSync(dir, { recursive: true, force: true });
 }
-done(report('serupa-ds/purge (Vite and PostCSS plugins)', R));
+done(report('@diki-stwn/serupa-ds/purge (Vite and PostCSS plugins)', R));

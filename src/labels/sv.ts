@@ -1,5 +1,5 @@
 // serupa-ds/labels/sv: every built-in word in Swedish.
-//   import { labels, locale } from "serupa-ds/labels/sv";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/sv";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

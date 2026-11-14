@@ -3,7 +3,7 @@
 Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours". It keeps itself up to date, and the exact date is its tooltip.
 
 ```tsx
-import { RelativeTime } from "serupa-ds";
+import { RelativeTime } from "@diki-stwn/serupa-ds";
 
 <p>Edited <RelativeTime date={doc.updatedAt} /></p>
 <RelativeTime date="2026-10-24T09:30:00Z" format="short" />           // "3 hr. ago"

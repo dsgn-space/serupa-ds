@@ -22,7 +22,7 @@ The grader reads the code only, so it can't tell whether the page works. It chec
 | Check | Passes when |
 |---|---|
 | `parses` | the answer is TSX that parses |
-| `serupa` | it imports from `serupa-ds` |
+| `serupa` | it imports from `@diki-stwn/serupa-ds` |
 | `components` | it uses the components the task expects |
 | `no-rebuilds` | it has no native `<button>`, `<input>`, `<select>`, `<textarea>`, `<table>` or `<dialog>` where Serupa has a component, and no widget built by hand: a widget role (`dialog`, `menu`, `listbox`, `option`, `tab`, `tooltip`, …) or `aria-expanded` on a plain element, a month's grid of days, or a panel placed absolutely at `top: 100%` under its trigger |
 | `tokens` | it has no raw colors (`#hex`, `rgb()`, `hsl()`), and no pixel sizes or durations in style props, CSS strings or classes such as `p-[12px]` |
@@ -58,7 +58,7 @@ A review can find more than was planted, and that isn't counted against it. The 
 
 ## Agentic mode
 
-`run.mjs` reads the agent's answer. `agentic.mjs` grades what the agent leaves behind instead. Each run makes a fresh app with `serupa-create`, with the packed package installed, so the agent can read `node_modules/serupa-ds`. Claude Code then works in that app with its tools: read, edit, write, and `npm run`. With the skill, the app's `AGENTS.md` and `CLAUDE.md` send the agent to it. Without the skill, the app has neither file. Then hidden checks run on the app the agent left:
+`run.mjs` reads the agent's answer. `agentic.mjs` grades what the agent leaves behind instead. Each run makes a fresh app with `serupa-create`, with the packed package installed, so the agent can read `node_modules/@diki-stwn/serupa-ds`. Claude Code then works in that app with its tools: read, edit, write, and `npm run`. With the skill, the app's `AGENTS.md` and `CLAUDE.md` send the agent to it. Without the skill, the app has neither file. Then hidden checks run on the app the agent left:
 
 | Check | Passes when |
 |---|---|
@@ -67,7 +67,7 @@ A review can find more than was planted, and that isn't counted against it. The 
 | render | the built page shows text in `#root`, with no page error and no console error |
 | axe | axe finds no WCAG 2.2 A or AA violation in any of the six themes |
 | tab | Tab from the top reaches every visible control. A radio group counts once, and so does a roving-tabindex widget. |
-| task | the agent did the task: `src/App.tsx` is no longer the starter, and it imports at least half the components the task expects from `serupa-ds` |
+| task | the agent did the task: `src/App.tsx` is no longer the starter, and it imports at least half the components the task expects from `@diki-stwn/serupa-ds` |
 
 The starter app passes the first five checks by itself. So a run whose agent failed (not signed in, timed out, no JSON) fails every check, with the error as the reason, and `task` catches an agent that changed nothing.
 

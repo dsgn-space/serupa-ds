@@ -7,7 +7,9 @@ const escape = (s) => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 export function parseChangeset(text, name) {
   const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(text);
   if (!m) return { error: 'no front matter (a --- block naming the bump)' };
-  const bump = (new RegExp(`^\\s*["']?${escape(name)}["']?\\s*:\\s*(major|minor|patch)\\s*$`, 'm').exec(m[1]) || [])[1];
+  // 15.0.0 scoped the name (@diki-stwn/serupa-ds): a changeset written for serupa-ds still counts.
+  const names = [name, name.replace(/^@[^/]+\//, '')].map(escape).join('|');
+  const bump = (new RegExp(`^\\s*["']?(?:${names})["']?\\s*:\\s*(major|minor|patch)\\s*$`, 'm').exec(m[1]) || [])[1];
   if (!bump) return { error: `no bump for ${name} ("${name}": major, minor or patch)` };
   return { bump, body: m[2] };
 }

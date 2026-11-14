@@ -1,5 +1,5 @@
 // serupa-ds/labels/nl: every built-in word in Dutch.
-//   import { labels, locale } from "serupa-ds/labels/nl";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/nl";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

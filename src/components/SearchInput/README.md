@@ -5,7 +5,7 @@ A search field: a search icon at the start, and a × at the end once something i
 **Also called:** search, search field, search box.
 
 ```tsx
-import { SearchInput } from "serupa-ds";
+import { SearchInput } from "@diki-stwn/serupa-ds";
 
 <SearchInput aria-label="Search projects" placeholder="Search projects" onSearch={run} />
 

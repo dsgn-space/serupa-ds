@@ -19,6 +19,19 @@ npm install github:dsgn-space/serupa-ds#v14.7.0
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
+**Or from GitHub Packages.** From 15.0.0 the package is `@diki-stwn/serupa-ds` on GitHub's npm registry too (never on the public npm registry). Add two lines to your project's `.npmrc`, with a GitHub token with the read:packages scope in `GITHUB_TOKEN`, then install it by version:
+
+```ini
+@diki-stwn:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+```sh
+npm install @diki-stwn/serupa-ds
+```
+
+Installed either way, the package is `@diki-stwn/serupa-ds` in your imports (`import { Button } from '@diki-stwn/serupa-ds'`). Before 15.0.0 it was `serupa-ds`: `npx serupa-migrate src --from 14 --write` rewrites the imports.
+
 Always pin a tag (`#v14.7.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
@@ -39,11 +52,11 @@ Add `--brand violet` or `--brand emerald` for another brand. Then steps 2 and 3 
 In a React app (Vite, Next.js, Remix):
 
 ```js
-import 'serupa-ds/tokens.css';
-import 'serupa-ds/base.css';     // page defaults; leave out when adding the system to an existing app
-import 'serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
-// import 'serupa-ds/utilities-extra.css';   // masks and gradients (mask-*, bg-linear-*, from-*…), if you use them
-import { Button, Field, Input } from 'serupa-ds';
+import '@diki-stwn/serupa-ds/tokens.css';
+import '@diki-stwn/serupa-ds/base.css';     // page defaults; leave out when adding the system to an existing app
+import '@diki-stwn/serupa-ds/bundle.css';   // or components.css, plus utilities.css if you use the classes
+// import '@diki-stwn/serupa-ds/utilities-extra.css';   // masks and gradients (mask-*, bg-linear-*, from-*…), if you use them
+import { Button, Field, Input } from '@diki-stwn/serupa-ds';
 
 export function SignUp() {
   return (
@@ -102,7 +115,7 @@ Or set one theme directly on any element: `data-theme="violet-dark"`. A theme sw
 ```js
 // vite.config.js
 import react from '@vitejs/plugin-react';
-import { serupaPurge } from 'serupa-ds/purge';
+import { serupaPurge } from '@diki-stwn/serupa-ds/purge';
 
 export default { plugins: [react(), serupaPurge()] };
 ```
@@ -111,7 +124,7 @@ export default { plugins: [react(), serupaPurge()] };
 
 ```js
 // postcss.config.mjs
-import { serupaPurgePostcss } from 'serupa-ds/purge';
+import { serupaPurgePostcss } from '@diki-stwn/serupa-ds/purge';
 
 export default { plugins: [serupaPurgePostcss()] };
 ```
@@ -151,10 +164,10 @@ npx serupa-usage src
 | `dist/serupa-icons.iife.js` | Every Material Symbol by name, for a plain page. `serupa.iife.js` loads it from its own folder when an Icon needs it, so keep the two together. |
 | `dist/theme.js` | Automatic dark mode and the theme switcher API. |
 | `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. Escape turns it off. `Serupa.debug.inspect(element)` and `Serupa.debug.contrast(element)` give the same as objects. Leave it out of production. |
-| `dist/eslint.js` (`serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
-| `dist/stylelint.js` (`serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length, a radius, or a duration or easing written out where a token belongs. See Getting started in Storybook. |
-| `dist/testing.js` (`serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
-| `dist/purge.js` (`serupa-ds/purge`) | `serupaPurge()` for Vite and `serupaPurgePostcss()` for PostCSS: they trim `bundle.css` in your build to the utility classes your code uses, as `serupa-purge` does. See Ship it above. |
+| `dist/eslint.js` (`@diki-stwn/serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
+| `dist/stylelint.js` (`@diki-stwn/serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length, a radius, or a duration or easing written out where a token belongs. See Getting started in Storybook. |
+| `dist/testing.js` (`@diki-stwn/serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
+| `dist/purge.js` (`@diki-stwn/serupa-ds/purge`) | `serupaPurge()` for Vite and `serupaPurgePostcss()` for PostCSS: they trim `bundle.css` in your build to the utility classes your code uses, as `serupa-purge` does. See Ship it above. |
 | `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. Both are made from `tokens/serupa.tokens.json` in the repository. |
 
 ### For your own components
@@ -178,7 +191,7 @@ The package also exports what the components use themselves, so a component you 
 | `useCopyToClipboard({ copiedLabel?, announce?, timeout? })` | CopyButton's copying for a control that isn't a CopyButton, such as a "Copy link" menu item: `copy(value)` resolves `true` once it's on the clipboard (`false` when the browser refuses), `copied` stays true for `timeout` ms, and it says "Copied", or why it couldn't, to screen readers unless `announce` is `false`. It works inside a modal Dialog and where the clipboard API is refused. |
 
 ```tsx
-import { announce, useLocale } from "serupa-ds";
+import { announce, useLocale } from "@diki-stwn/serupa-ds";
 
 function SavedAt({ at }: { at: Date }) {
   const locale = useLocale();
@@ -189,7 +202,7 @@ announce("Draft saved");
 ```
 
 ```tsx
-import { announcePage } from "serupa-ds";
+import { announcePage } from "@diki-stwn/serupa-ds";
 
 // In the app's layout, with your router's location
 function RouteAnnouncer({ path }: { path: string }) {
@@ -203,7 +216,7 @@ function RouteAnnouncer({ path }: { path: string }) {
 ```
 
 ```tsx
-import { Button, Menu, MenuItem, toast, useBreakpoint, useCopyToClipboard } from "serupa-ds";
+import { Button, Menu, MenuItem, toast, useBreakpoint, useCopyToClipboard } from "@diki-stwn/serupa-ds";
 
 function ShareMenu({ url }: { url: string }) {
   const wide = useBreakpoint("md");
@@ -217,7 +230,7 @@ function ShareMenu({ url }: { url: string }) {
 ```
 
 ```tsx
-import { withViewTransition } from "serupa-ds";
+import { withViewTransition } from "@diki-stwn/serupa-ds";
 
 function Cards({ items }: { items: { id: string; title: string }[] }) {
   const [sorted, setSorted] = React.useState(items);
@@ -451,7 +464,7 @@ To check a token file of your own (a theme you add, a component's overrides) as 
 
 ```json
 {
-  "json.schemas": [{ "fileMatch": ["*.tokens.json"], "url": "./node_modules/serupa-ds/design-tokens/tokens.schema.json" }]
+  "json.schemas": [{ "fileMatch": ["*.tokens.json"], "url": "./node_modules/@diki-stwn/serupa-ds/design-tokens/tokens.schema.json" }]
 }
 ```
 
@@ -461,7 +474,7 @@ The Figma variables workflow keeps a Figma file's variables in step with the tok
 
 ## Tokens for native apps
 
-`dist/native/` (`serupa-ds/native/…`) holds the colors, spacing, radii, border widths, sizes, font sizes, opacities and durations for an iOS or Android app that sits beside a web app on Serupa, made from the same tokens by `npm run build`. A rem is 16 points (dp).
+`dist/native/` (`@diki-stwn/serupa-ds/native/…`) holds the colors, spacing, radii, border widths, sizes, font sizes, opacities and durations for an iOS or Android app that sits beside a web app on Serupa, made from the same tokens by `npm run build`. A rem is 16 points (dp).
 
 | File | Holds |
 | --- | --- |
@@ -474,7 +487,7 @@ Shadows, easings and the type styles aren't in them yet.
 
 ## Tokens for email
 
-Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed stylesheets, so the components' CSS can't go in an email. `dist/email/` (`serupa-ds/email/…`) has Serupa's colors, type and spacing written out in hex and px instead, made from the same tokens by `npm run build`.
+Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed stylesheets, so the components' CSS can't go in an email. `dist/email/` (`@diki-stwn/serupa-ds/email/…`) has Serupa's colors, type and spacing written out in hex and px instead, made from the same tokens by `npm run build`.
 
 | File | Holds |
 | --- | --- |
@@ -490,8 +503,8 @@ The package carries [VS Code custom data](https://code.visualstudio.com/api/exte
 
 ```json
 {
-  "html.customData": ["./node_modules/serupa-ds/dist/vscode/serupa.html-data.json"],
-  "css.customData": ["./node_modules/serupa-ds/dist/vscode/serupa.css-data.json"]
+  "html.customData": ["./node_modules/@diki-stwn/serupa-ds/dist/vscode/serupa.html-data.json"],
+  "css.customData": ["./node_modules/@diki-stwn/serupa-ds/dist/vscode/serupa.css-data.json"]
 }
 ```
 
@@ -505,7 +518,7 @@ The package carries a skill for coding agents: `skills/serupa/SKILL.md`. It tell
 npx serupa-agents
 ```
 
-It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Copilot and others), telling agents to read `node_modules/serupa-ds/skills/serupa/SKILL.md` before any UI work, and adds `@AGENTS.md` to `CLAUDE.md` for Claude Code. It makes either file when it's missing, and running it again changes nothing. Because the skill is read from the installed package, it always matches the release the project pinned. An app made with `serupa-create` already has both files.
+It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Copilot and others), telling agents to read `node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md` before any UI work, and adds `@AGENTS.md` to `CLAUDE.md` for Claude Code. It makes either file when it's missing, and running it again changes nothing. Because the skill is read from the installed package, it always matches the release the project pinned. An app made with `serupa-create` already has both files.
 
 A second skill, `skills/serupa-review/SKILL.md`, reviews a change to an app's UI. It checks what lint can't judge: a widget built by hand where a component exists, the app's part of accessibility, the right feedback for a message, and the words. Findings come grouped as Must fix, Should fix and Nice to have, each with its problem, fix and what happens if it's skipped, and end with a one-line verdict. The `serupa-agents` section points agents at it too.
 
@@ -556,5 +569,5 @@ The system is self-contained: every file it needs is in it, and nothing loads fr
 | --- | --- | --- |
 | Tailwind CSS (Tailwind Labs) | The naming and values of the utility classes, the palette and the scales, checked against its compiler (v4.3.3) | MIT, `licenses/TailwindCSS-MIT.txt` |
 | Inter (Rasmus Andersson) | `font-sans`: `fonts/InterVariable.woff2`, `fonts/InterVariable-Italic.woff2`, and the same split by script, `fonts/InterVariable-*.woff2` | SIL Open Font License 1.1, `licenses/Inter-OFL-1.1.txt` |
-| Material Symbols (Google) | Icons, as SVG in the components and `serupa-ds/icons`: the Rounded, filled, weight-400 style | Apache 2.0, `licenses/MaterialSymbols-Apache-2.0.txt` |
+| Material Symbols (Google) | Icons, as SVG in the components and `@diki-stwn/serupa-ds/icons`: the Rounded, filled, weight-400 style | Apache 2.0, `licenses/MaterialSymbols-Apache-2.0.txt` |
 | React 19.3.1 (Meta) | Running the components on plain pages: `dist/lib/`, built from the `react` and `react-dom` packages by the build | MIT, `licenses/React-MIT.txt` |

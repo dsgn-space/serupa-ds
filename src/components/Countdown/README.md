@@ -3,7 +3,7 @@
 Shows the time left until a moment, as a clock ("4:59") or in words ("4 minutes, 59 seconds"), and keeps itself up to date. It says the time aloud at a few steps (5 minutes, 1 minute, 10 seconds…) and when it ends, never every second.
 
 ```tsx
-import { Countdown } from "serupa-ds";
+import { Countdown } from "@diki-stwn/serupa-ds";
 
 <p>Offer ends in <Countdown to={offer.endsAt} label="Offer ends in" endText="The offer has ended" /></p>
 <Countdown to={exam.endsAt} label="Time left" format="words" announceAt={[600, 300, 60]} onEnd={submit} />
