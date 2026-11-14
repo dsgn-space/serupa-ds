@@ -9,6 +9,9 @@
   border: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); border-radius: var(--table-radius, var(--radius-surface));
   background: var(--table-bg, var(--surface));
 }
+/* Set straight in a Card with no padding, the card is the frame: a second border and a tighter curve inside the card's
+   showed as a doubled edge, worst at the corners. */
+.dk-card--padding-none > .dk-table { border: var(--spacing-0); border-radius: var(--dk-card-inner-radius); }
 .dk-table:focus-visible { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-table__table { width: var(--sizing-full); border-collapse: separate; border-spacing: 0; color: var(--table-text, var(--text)); font-family: var(--font-sans); font-size: var(--table-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
 .dk-table__caption { padding: var(--table-padding-y, var(--spacing-3)) var(--table-padding-x, var(--spacing-3)); text-align: start; font-weight: var(--font-semibold); caption-side: top; border-bottom: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); }
