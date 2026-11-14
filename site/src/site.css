@@ -2,7 +2,7 @@
    own styles, and the docs' blocks (anatomy, do and don't) theirs from .storybook/docs.css, which main.tsx imports. */
 
 /* ── The frame ─────────────────────────────────────────────────────────────────────────────────────────────── */
-.site { display: flex; flex-direction: column; min-block-size: 100dvh; background: var(--surface); color: var(--text); }
+.site { display: flex; flex-direction: column; min-block-size: 100dvh; background: var(--surface-page); color: var(--text); }
 .site-brand { display: inline-flex; align-items: center; gap: var(--spacing-2); color: var(--text); font-size: var(--text-lg); font-weight: var(--font-semibold); letter-spacing: var(--tracking-tight); text-decoration: none; border-radius: var(--radius-inner); }
 .site-brand:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 /* The mark: a tile in the brand color with a lighter quarter, so it reads as a shape in forced colors too. */
@@ -176,9 +176,9 @@ ol.site-list { list-style: decimal; }
 .site-screen__dots > span { inline-size: var(--spacing-2); block-size: var(--spacing-2); border-radius: var(--radius-pill); background: var(--border-strong); }
 .site-screen__address { flex: auto; min-inline-size: 0; padding: var(--spacing-px) var(--spacing-3); border-radius: var(--radius-pill); background: var(--surface); color: var(--text-muted); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .site-screen__view { overflow: hidden; }
-.site-screen__page { display: block; border: 0; transform-origin: 0 0; background: var(--surface); }
+.site-screen__page { display: block; border: 0; transform-origin: 0 0; background: var(--surface-page); }
 [dir="rtl"] .site-screen__page { transform-origin: 100% 0; }
-.site-frame { min-block-size: 100dvh; background: var(--surface); color: var(--text); }
+.site-frame { min-block-size: 100dvh; background: var(--surface-page); color: var(--text); }
 
 /* ── The showcase and the themes page ────────────────────────────────────────────────────────────────────────── */
 .site-showcase__bar, .site-themes__axes { display: flex; flex-wrap: wrap; align-items: end; gap: var(--spacing-4) var(--spacing-6); margin-block-end: var(--spacing-8); }

@@ -117,7 +117,7 @@ Each is an optional override: set it on the page, a container or one upload. The
 <!-- token-table:start (made from file-upload.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--file-upload-zone-bg` | `surface-muted` | The drop area's background. |
+| `--file-upload-zone-bg` | `surface-control` | The drop area's background: zinc-50 in light, a step above the page in dark (zinc-900), as it is something to press. |
 | `--file-upload-zone-border` | `border-control` | The drop area's dashed outline (3:1 on the surface). |
 | `--file-upload-zone-bg-active` | `primary-subtle` | The drop area while files are dragged over it. |
 | `--file-upload-zone-border-active` | `primary` | Its outline then. |
