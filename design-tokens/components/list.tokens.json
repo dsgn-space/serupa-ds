@@ -171,7 +171,7 @@
       "indicator-width": {
         "$type": "dimension",
         "$value": "{borders.highlight-indicator-width}",
-        "$description": "The selected item's bar (2px).",
+        "$description": "The width of the selected item's bar: none by default, 2px with more contrast.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--list-indicator-width"

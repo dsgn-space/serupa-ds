@@ -191,6 +191,6 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-padding-y` | `spacing-3` | An item's top and bottom padding (12px). |
 | `--list-gap` | `spacing-3` | Space between the leading element, the text and the trailing element (12px). |
 | `--list-border-width` | `border-width-1` | Lines and frame (1px). |
-| `--list-indicator-width` | `highlight-indicator-width` | The selected item's bar (2px). |
+| `--list-indicator-width` | `highlight-indicator-width` | The width of the selected item's bar: none by default, 2px with more contrast. |
 | `--list-radius` | `radius-surface` | The corners of variant="card" (8px). |
 <!-- token-table:end -->

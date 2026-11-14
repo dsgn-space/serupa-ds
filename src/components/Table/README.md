@@ -222,7 +222,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | Token | Default | Use |
 | --- | --- | --- |
 | `--table-border-width` | `border-width-1` | The frame and row lines (1px). |
-| `--table-indicator-width` | `highlight-indicator-width` | The selected row's bar (2px). |
+| `--table-indicator-width` | `highlight-indicator-width` | The width of the selected row's bar: none by default, 2px with more contrast. Forced colors always draw a 2px border there. |
 
 **Radius**
 

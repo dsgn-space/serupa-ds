@@ -243,7 +243,7 @@
       "indicator-width": {
         "$type": "dimension",
         "$value": "{borders.highlight-indicator-width}",
-        "$description": "The selected row's bar (2px).",
+        "$description": "The width of the selected row's bar: none by default, 2px with more contrast. Forced colors always draw a 2px border there.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-indicator-width"
