@@ -43,6 +43,12 @@ export const Default: Story = {};
 /** Adding fails: the button is busy while it tries, then a toast says it couldn't add it and to try again. */
 export const AddFails: Story = { args: { onAddToCart: fail } };
 
+/** The products are on their way: placeholder cards in the grid's place, named once ("Loading products"). */
+export const Loading: Story = { args: { loading: true } };
+
+/** The products didn't load: the grid says so once, and Try again loads them again. */
+export const LoadFailed: Story = { args: { loadFailed: true, onRetry: wait } };
+
 /** In Indonesian rupiah, with the words in Indonesian: money and counts are written the locale's way. */
 export const Indonesian: Story = {
   args: {
