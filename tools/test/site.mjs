@@ -117,7 +117,10 @@ await inParallel(pages, workers, async (p, w) => {
   t(`${p.path} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
   // On a 320px phone the page doesn't scroll sideways (WCAG 1.4.10); a wide example scrolls in its own box.
   await w.page.setViewportSize({ width: 320, height: 640 });
-  // The frame swaps its sidebar for a drawer on the next render: measure two frames later.
+  // The frame swaps its sidebar for a drawer on the next render, and the examples lay out again after it: the page has
+  // up to 2s to stop scrolling sideways, then is measured two frames later. Two frames alone weren't always enough on a
+  // busy runner (/components/chat, 228px wider once on 14 Nov, fine on the next run).
+  await w.page.waitForFunction(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth, null, { timeout: 2000, polling: 100 }).catch(() => {});
   const wide = await w.page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => done(document.documentElement.scrollWidth - document.documentElement.clientWidth)))));
   await w.page.setViewportSize({ width: 1280, height: 800 });
   t(`${p.path} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen`);
