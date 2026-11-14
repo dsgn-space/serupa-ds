@@ -1,3 +1,64 @@
+# AddAndMove
+- button "Today"
+- button "Previous week"
+- button "Next week"
+- heading "March 16 – 22, 2025" [level=2]
+- radiogroup "View":
+  - radio "Month"
+  - radio "Week" [checked]
+  - radio "Day"
+  - radio "Agenda"
+- grid "March 16 – 22, 2025":
+  - rowgroup:
+    - row "Sunday, March 16, 2025 Monday, March 17, 2025 Tuesday, March 18, 2025 Wednesday, March 19, 2025 Thursday, March 20, 2025 Friday, March 21, 2025 Saturday, March 22, 2025":
+      - columnheader "Sunday, March 16, 2025"
+      - columnheader "Monday, March 17, 2025"
+      - columnheader "Tuesday, March 18, 2025"
+      - columnheader "Wednesday, March 19, 2025"
+      - columnheader "Thursday, March 20, 2025"
+      - columnheader "Friday, March 21, 2025"
+      - columnheader "Saturday, March 22, 2025"
+  - rowgroup:
+    - row "Sunday, March 16, 2025, No events Monday, March 17, 2025, No events Tuesday, March 18, 2025, 5 events Team offsite, Tuesday, March 18, All day 12:00 PM Lunch with Sari, Tuesday, March 18, 12:00 PM to 1:00 PM 3:00 PM Customer demo, Tuesday, March 18, 3:00 PM to 4:00 PM 3:30 PM Partner call, Tuesday, March 18, 3:30 PM to 4:30 PM 4:30 PM Sprint retro, Tuesday, March 18, 4:30 PM to 5:00 PM Wednesday, March 19, 2025, 1 event Team offsite, Wednesday, March 19, All day Thursday, March 20, 2025, 1 event Team offsite, Thursday, March 20, All day Friday, March 21, 2025, No events Saturday, March 22, 2025, No events":
+      - gridcell "Sunday, March 16, 2025, No events":
+        - text: Sunday, March 16, 2025, No events
+        - list
+      - gridcell "Monday, March 17, 2025, No events":
+        - text: Monday, March 17, 2025, No events
+        - list
+      - gridcell "Tuesday, March 18, 2025, 5 events Team offsite, Tuesday, March 18, All day 12:00 PM Lunch with Sari, Tuesday, March 18, 12:00 PM to 1:00 PM 3:00 PM Customer demo, Tuesday, March 18, 3:00 PM to 4:00 PM 3:30 PM Partner call, Tuesday, March 18, 3:30 PM to 4:30 PM 4:30 PM Sprint retro, Tuesday, March 18, 4:30 PM to 5:00 PM":
+        - text: Tuesday, March 18, 2025, 5 events
+        - list:
+          - listitem:
+            - button "Team offsite, Tuesday, March 18, All day": Team offsite
+        - list:
+          - listitem:
+            - button "12:00 PM Lunch with Sari, Tuesday, March 18, 12:00 PM to 1:00 PM": 12:00 PM Lunch with Sari
+          - listitem:
+            - button "3:00 PM Customer demo, Tuesday, March 18, 3:00 PM to 4:00 PM": 3:00 PM Customer demo
+          - listitem:
+            - button "3:30 PM Partner call, Tuesday, March 18, 3:30 PM to 4:30 PM": 3:30 PM Partner call
+          - listitem:
+            - button "4:30 PM Sprint retro, Tuesday, March 18, 4:30 PM to 5:00 PM": 4:30 PM Sprint retro
+      - gridcell "Wednesday, March 19, 2025, 1 event Team offsite, Wednesday, March 19, All day":
+        - text: Wednesday, March 19, 2025, 1 event
+        - list:
+          - listitem:
+            - button "Team offsite, Wednesday, March 19, All day": Team offsite
+        - list
+      - gridcell "Thursday, March 20, 2025, 1 event Team offsite, Thursday, March 20, All day":
+        - text: Thursday, March 20, 2025, 1 event
+        - list:
+          - listitem:
+            - button "Team offsite, Thursday, March 20, All day": Team offsite
+        - list
+      - gridcell "Friday, March 21, 2025, No events":
+        - text: Friday, March 21, 2025, No events
+        - list
+      - gridcell "Saturday, March 22, 2025, No events":
+        - text: Saturday, March 22, 2025, No events
+        - list
+
 # Agenda
 - button "Today"
 - button "Previous month"

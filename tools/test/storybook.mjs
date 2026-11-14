@@ -165,15 +165,22 @@ async function checkDocs(e, w) {
   // Reflow on the docs themselves (WCAG 1.4.10): at 320px, a 1280px screen at 400% zoom, the page scrolls only up and
   // down. Inline code and table cells break where they must, and wide code blocks and stories scroll in their own box.
   // Stories that measure themselves re-lay out a moment after the resize, so the page has up to 2s to settle. One
-  // still wider names the outermost box that sticks out.
+  // still wider names the outermost box that sticks out. When nothing does, the page was still settling: it gets one
+  // more second, read after two frames (PhoneInput, 14 Nov: "scrolls sideways … first to stick out: nothing in the docs"
+  // once on a busy runner, and fine on the re-run).
   await w.page.setViewportSize({ width: 320, height: 640 });
-  const wide = await w.page.waitForFunction(() => document.documentElement.scrollWidth <= 321, null, { timeout: 2000, polling: 100 }).then(() => null, () => w.page.evaluate(() => {
+  const settled = (timeout) => w.page.waitForFunction(() => document.documentElement.scrollWidth <= 321, null, { timeout, polling: 100 }).then(() => true, () => false);
+  const culprit = () => w.page.evaluate(async () => {
+    await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+    if (document.documentElement.scrollWidth <= 321) return null;
     // Not what sits in a box that scrolls or clips (a wide code block's lines): that box keeps it in.
     const kept = (el) => { for (let a = el.parentElement; a && a.id !== 'storybook-docs'; a = a.parentElement) if (/auto|scroll|hidden|clip/.test(getComputedStyle(a).overflowX)) return true; return false; };
     const out = [...document.querySelectorAll('#storybook-docs *')].find((el) => el.getBoundingClientRect().right > 322 && el.parentElement.getBoundingClientRect().right <= 322 && !kept(el));
-    const name = out ? `${out.tagName.toLowerCase()}${out.id ? '#' + out.id : ''}${typeof out.className === 'string' && out.className ? '.' + out.className.split(' ')[0] : ''} "${out.textContent.trim().slice(0, 40)}"` : 'nothing in the docs';
-    return `it scrolls sideways to ${document.documentElement.scrollWidth}px; first to stick out: ${name}`;
-  }));
+    return out ? `${out.tagName.toLowerCase()}${out.id ? '#' + out.id : ''}${typeof out.className === 'string' && out.className ? '.' + out.className.split(' ')[0] : ''} "${out.textContent.trim().slice(0, 40)}"` : '';
+  });
+  let found = (await settled(2000)) ? null : await culprit();
+  if (found === '') found = (await settled(1000)) ? null : await culprit();
+  const wide = found === null ? null : `it scrolls sideways to ${await w.page.evaluate(() => document.documentElement.scrollWidth)}px; first to stick out: ${found || 'nothing in the docs'}`;
   await w.page.setViewportSize({ width: 1000, height: 800 });
   // A known page that no longer scrolls sideways fails too, so the list only shrinks.
   const known = DOCS_REFLOW_KNOWN.has(e.id);

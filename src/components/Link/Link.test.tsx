@@ -22,6 +22,20 @@ function Para({ r }: { r?: React.Ref<HTMLAnchorElement> }) {
 }
 
 describe('Link', () => {
+  test('the new-tab icon is centred on the capitals beside it, not sat low on the text\'s bottom', async () => {
+    await render(<p style={{ fontSize: '16px' }}><Link id="cap" href="#" external>Docs</Link></p>);
+    const icon = el('cap').querySelector('[data-icon] path')!.getBoundingClientRect();
+    const mark = document.createElement('span');
+    mark.style.cssText = 'display:inline-block;width:0;height:0';
+    el('cap').querySelector('[data-icon]')!.before(mark);
+    const baseline = mark.getBoundingClientRect().top;
+    mark.remove();
+    const s = css(el('cap')), c = document.createElement('canvas').getContext('2d')!;
+    c.font = `${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
+    const cap = c.measureText('H').actualBoundingBoxAscent;
+    expect(Math.abs((icon.top + icon.bottom) / 2 - baseline + cap / 2)).toBeLessThanOrEqual(1);
+  });
+
   test('external says "(opens in a new tab)" in the provider\'s words: "(terbuka di tab baru)" under id-ID', async () => {
     await render(<><Link id="ext-en" href="#" external>Docs</Link><SerupaProvider locale="id-ID" labels={idLabels}><Link id="ext-id" href="#" external>Dokumen</Link></SerupaProvider></>);
     expect([el('ext-en').textContent, el('ext-id').textContent]).toEqual(['Docs (opens in a new tab)', 'Dokumen (terbuka di tab baru)']);
@@ -70,6 +84,11 @@ describe('Link', () => {
     await expect.poll(() => underline('lhov').line).toBe('underline');
     expect(before).toBe('none');
     await away();
+  });
+
+  test('underline="hover" inside a paragraph stays underlined: in running text, color alone (1.8:1 against the text in the dark themes) can\'t mark a link (WCAG 1.4.1)', async () => {
+    await render(<><p>Read the <Link id="lpara" href="#c" underline="hover">guide</Link> first, or <span><Link id="lspan" href="#d" underline="hover">the summary</Link></span>.</p><nav aria-label="Footer"><ul><li><Link id="lnav" href="#e" underline="hover">Pricing</Link></li></ul></nav></>);
+    expect([underline('lpara').line, underline('lspan').line, underline('lnav').line]).toEqual(['underline', 'underline', 'none']);
   });
 
   test('tone="neutral" with underline="hover" warns once: it looks like plain text until hovered (CB1); either alone doesn\'t', async () => {

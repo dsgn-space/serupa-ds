@@ -18,12 +18,14 @@ import path from 'node:path';
 import postcss from 'postcss';
 import bcd from '@mdn/browser-compat-data' with { type: 'json' };
 import { projectArg, report, done, fail } from './lib.mjs';
+import { floor } from '../browser-floor.mjs';
 
 const P = projectArg();
 // The README's floor: light-dark() needs Chrome and Edge 123 and Safari 17.5; @property, which every utility that
 // composes through --dk-* variables (transforms, shadows, rings, gradients, filters, masks) needs for its starting
 // values, needs Firefox 128.
-const BASELINE = { chrome: 123, edge: 123, safari: 17.5, firefox: 128 };
+// package.json's browserslist holds the numbers (tools/browser-floor.mjs).
+const BASELINE = floor(P);
 
 // Newer than BASELINE, on purpose. The key is what the scan prints; the value says what happens without it.
 // readme: text the README's "Browser support" section has to contain, for what users should know.
@@ -56,6 +58,11 @@ const KNOWN = {
   'property forced-color-adjust': { why: 'Safari has no forced colors mode, so there is nothing to adjust' },
   'forced-color-adjust: none': { why: 'as forced-color-adjust' },
   'forced-color-adjust: auto': { why: 'as forced-color-adjust' },
+  ':checkmark': { why: 'Select\'s styled list, inside @supports (appearance: base-select): the browser draws its own list and tick without it' },
+  ':picker-icon': { why: 'as :checkmark: the browser\'s own arrow, which the box replaces' },
+  ':picker': { why: 'as :checkmark: the styled list\'s surface' },
+  'anchor-size()': { why: 'as :checkmark: the styled list at least as wide as the box' },
+  'min-inline-size: anchor-size': { why: 'as anchor-size()' },
   'property overflow-anchor': { why: 'VirtualList turns the browser\'s scroll anchoring off to keep its own (Safari has none): there is nothing to turn off' },
   'overflow-anchor: none': { why: 'as overflow-anchor' },
   'break-before: avoid': { why: 'print and column breaks: a hint browsers may ignore' },

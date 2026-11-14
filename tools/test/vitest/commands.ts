@@ -51,6 +51,14 @@ export const coarsePointer: BrowserCommand<[on: boolean]> = async (ctx, on) => {
   if (!cdp) { cdp = await page.context().newCDPSession(page); touch.set(page, cdp); }
   await cdp.send('Emulation.setTouchEmulationEnabled', on ? { enabled: true, maxTouchPoints: 5 } : { enabled: false });
 };
+/** Gives the page a phone's safe-area insets (env(safe-area-inset-*): a notch, a home bar), or takes them away with
+ *  none. Chromium only (DevTools); elsewhere it throws. */
+export const safeArea: BrowserCommand<[insets: { top: number; right: number; bottom: number; left: number } | null]> = async (ctx, insets) => {
+  const { page } = playwright(ctx);
+  let cdp = touch.get(page);
+  if (!cdp) { cdp = await page.context().newCDPSession(page); touch.set(page, cdp); }
+  await cdp.send('Emulation.setSafeAreaInsetsOverride' as 'Emulation.setTouchEmulationEnabled', { insets: insets ?? { top: 0, right: 0, bottom: 0, left: 0 } } as never);
+};
 /** Lays the page out as for printing (@media print) or back for the screen. */
 export const printMedia: BrowserCommand<[on: boolean]> = async (ctx, on) => {
   await playwright(ctx).page.emulateMedia({ media: on ? 'print' : 'screen' });
@@ -67,7 +75,7 @@ export const ariaMode: BrowserCommand<[]> = async () =>
   (process.env.SERUPA_BROWSER && process.env.SERUPA_BROWSER !== 'chromium') || process.env.SERUPA_LOCALE ? 'off' : process.env.SERUPA_UPDATE_ARIA ? 'update' : 'check';
 /** With SERUPA_BENCH set to a folder, adds a test's timings (name → ms) to <folder>/<suite>.jsonl for
  *  tools/test/bench.mjs, which keeps them from night to night (F9). Otherwise does nothing. */
-export const recordBench: BrowserCommand<[suite: 'mount' | 'inp', times: Record<string, number>]> = async (_ctx, suite, times) => {
+export const recordBench: BrowserCommand<[suite: 'mount' | 'update' | 'inp', times: Record<string, number>]> = async (_ctx, suite, times) => {
   const dir = process.env.SERUPA_BENCH;
   if (!dir) return;
   const fs = await import('node:fs');

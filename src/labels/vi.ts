@@ -342,6 +342,7 @@ export const labels: SerupaLabels = {
   eventTime: (from, to) => 'từ ' + from + ' đến ' + to,
   repeats: 'Lặp lại',
   noEvents: 'Không có sự kiện nào trong tháng này',
+  eventChanged: (title, when) => title + ', giờ là ' + when,
   dateFieldDay: 'Ngày',
   dateFieldMonth: 'Tháng',
   dateFieldYear: 'Năm',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, forcedColors, keepMotion, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, keepMotion, press, safeArea, withMotion } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Menu, MenuItem } from '../Menu/Menu';
 import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
@@ -598,5 +598,21 @@ describe('NavbarMenu (RU14)', () => {
     await userEvent.keyboard('{Escape}');
     expect(expanded('Products')).toBe('false');
     expect(page.getByRole('button', { name: 'Menu' }).element().getAttribute('aria-expanded')).toBe('true');
+  });
+
+  test('sticky on a phone with a notch: the bar\'s fill runs up under it and its content starts below it; the menu panel clears the home bar', async () => {
+    await page.viewport(390, 700);
+    const screen = await render(<Navbar id="nsa" sticky menuLabel="Open the menu" brand={<a href="#home" id="sab">Serupa</a>}><NavbarLink href="#a">A</NavbarLink></Navbar>);
+    const top = () => el('sab').getBoundingClientRect().top - el('nsa').getBoundingClientRect().top;
+    const before = top();
+    await safeArea(async (on) => {
+      if (!on) return;
+      await expect.poll(() => css(el('nsa')).paddingTop).toBe('47px');
+      expect(Math.round(top() - before)).toBe(47);
+      const panel = el('nsa').querySelector('nav') as HTMLElement;
+      expect(css(panel).paddingBottom).toBe('34px');
+    });
+    await page.viewport(1000, 700);
+    await screen.unmount();
   });
 });

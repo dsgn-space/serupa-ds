@@ -84,7 +84,7 @@ export function Doc({ page }: { page: Page }) {
   }, [ready, page]);
   const docs = React.useMemo<Docs>(() => ({ componentStories: () => storiesOf(shown?.page.stories), page: shown?.page ?? null, docs: shown?.docs ?? [] }), [shown]);
   if (failed) throw failed;
-  return <Shell aside={shown && <TableOfContents key={`${shown.page.path}:${named}`} container="#article" headings={HEADINGS} />}>
+  return <Shell aside={shown && <TableOfContents key={`${shown.page.path}:${named}`} variant="rail" container="#article" headings={HEADINGS} />}>
     {!shown ? <div className="site-loading"><Loader size="lg" label={`Loading ${page.name}`} /></div> : <DocsContext.Provider value={docs}>
       <article id="article" ref={article} className="site-doc" aria-busy={!ready || undefined} key={shown.page.path}>
         <ErrorBoundary className="site-broken" title="This page couldn’t be shown" resetKeys={[shown.page.path]}>

@@ -21,6 +21,19 @@ function Cal(props: { picks?: string[]; months?: string[]; cref?: React.Ref<HTML
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Calendar', () => {
+  test('a parent that renders again with the same props doesn\'t draw the 42 days again; a new value draws them', async () => {
+    // isDateDisabled is asked once a day drawn: counting the calls counts the days drawn.
+    const isDateDisabled = vi.fn((d: Date) => d.getDay() === 0);
+    const month = new Date(2026, 10, 1);
+    const r = await render(<Calendar month={month} value="2026-11-10" isDateDisabled={isDateDisabled} locale="en-US" />);
+    isDateDisabled.mockClear();
+    await r.rerender(<Calendar month={month} value="2026-11-10" isDateDisabled={isDateDisabled} locale="en-US" />);
+    expect(isDateDisabled).not.toHaveBeenCalled();
+    await r.rerender(<Calendar month={month} value="2026-11-12" isDateDisabled={isDateDisabled} locale="en-US" />);
+    expect(isDateDisabled).toHaveBeenCalledTimes(42);
+    expect(document.querySelector('[aria-selected="true"] button')!.getAttribute('data-date')).toBe('2026-11-12');
+  });
+
   test('pairedNav (two months side by side) hides the month button the other month shows, on a wide screen only', async () => {
     await page.viewport(900, 700);
     await render(<div><Calendar id="a" defaultMonth={new Date(2026, 10, 1)} pairedNav="next" /><Calendar id="b" defaultMonth={new Date(2026, 11, 1)} pairedNav="previous" /></div>);
@@ -303,8 +316,9 @@ describe('Calendar weekday headers in Arabic, Persian, Hebrew and Thai (GR6)', (
       // The week, edge to edge, leaves a 3rem gutter (60px here) for the page's and a popover's padding.
       const week = Math.max(...days.map((d) => d.getBoundingClientRect().right)) - Math.min(...days.map((d) => d.getBoundingClientRect().left));
       expect([week <= 320 - 60 + 1, Math.min(...days.map((d) => d.getBoundingClientRect().width)) >= 24]).toEqual([true, true]);
-      // Each day a whole pixel wide (178), not a seventh of the screen (37.14px), so the edges stay sharp.
-      expect([...new Set(days.map((d) => d.getBoundingClientRect().width))]).toEqual([37]);
+      // Each day a whole pixel wide (178), not a seventh of the screen (37.14px), so the edges stay sharp. Chrome and
+      // Edge 123 and 124 have no round(): there the day keeps the unrounded size the CSS falls back to.
+      expect([...new Set(days.map((d) => d.getBoundingClientRect().width))]).toEqual([CSS.supports('width: round(down, 1px, 1px)') ? 37 : 37.140625]);
     } finally { document.documentElement.style.fontSize = ''; await page.viewport(900, 700); }
   });
 });
