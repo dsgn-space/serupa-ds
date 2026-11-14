@@ -271,9 +271,10 @@ export function ChartColors() {
 export function TypeScale() {
   return <div data-token-sheet="type-scale">{T.type.groups.map((g) => <div key={g.name} style={{ marginBottom: 24 }}>
     <h3>{g.name}</h3>{g.note && <p>{code(g.note)}</p>}
-    {g.styles.map((s) => <div key={s.name} style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 16, alignItems: 'baseline', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-      <div style={{ fontSize: 12 }}><code>{s.name}</code><br />{s.fontSize} / {s.lineHeight} · {s.fontWeight}</div>
-      <div className={s.name}>The quick brown fox jumps over the lazy dog</div>
+    {/* The name beside its sample, or above it on a phone, where a 128px sample has the whole width to wrap in. */}
+    {g.styles.map((s) => <div key={s.name} style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'baseline', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ flex: '0 0 180px', fontSize: 12 }}><code>{s.name}</code><br />{s.fontSize} / {s.lineHeight} · {s.fontWeight}</div>
+      <div className={s.name} style={{ flex: '1 1 16rem', minWidth: 0, overflowWrap: 'anywhere' }}>The quick brown fox jumps over the lazy dog</div>
     </div>)}
   </div>)}</div>;
 }
