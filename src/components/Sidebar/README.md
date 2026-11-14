@@ -69,7 +69,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 ## Accessibility
 
 - It's a `<nav>` landmark with lists of links; section titles name their lists.
-- The current page has `aria-current="page"`, a shaded background and a 2px bar in the primary color at its start. Hover shades an item the same way but never draws the bar, so a hovered item never reads as the current page; the current page itself darkens one step under the pointer. A group holding it is text-colored, so the trail stays visible when it's closed.
+- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar at its start. Hover shades an item the same way but never draws the bar, so a hovered item never reads as the current page; the current page itself darkens one step under the pointer. A group holding it is text-colored, so the trail stays visible when it's closed.
 - A group is a button with `aria-expanded` and `aria-controls`.
 - Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus, on a group's button too. Use a string `label` so the tooltip can show it.
 - Collapsed, an item's badge is hidden on screen like its label but still read: the tooltip names the item ("Inbox") and the badge describes it ("4"), and an 8px dot on the icon's corner shows there is one. The dot keeps 3:1 in all six themes, and is CanvasText in forced-colors mode.
@@ -133,7 +133,7 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past hover. |
 | `--sidebar-item-bg-active` | `highlight` | The current page's item background. |
 | `--sidebar-item-bg-active-hover` | `pressed` | The current page's item background under the pointer: one step past its rest. |
-| `--sidebar-item-indicator` | `highlight-indicator` | The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
+| `--sidebar-item-indicator` | `highlight-indicator` | The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--sidebar-section-title-color` | `text-muted` | A section's title (4.5:1 on bg). |
 | `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--sidebar-focus-gap-color` | `surface` | The gap between the focus ring and a filled item (the current page, or a hovered or pressed one), so the ring keeps 3:1 against what it touches. |

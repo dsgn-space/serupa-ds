@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMoreContrast } from '../../../tools/test/vitest/helpers';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
 import { Card as SurfaceCard } from '../Card/Card';
@@ -145,12 +145,12 @@ describe('List', () => {
     expect([document.activeElement === b, css(b).outlineStyle, css(b).outlineWidth, css(b).outlineOffset]).toEqual([true, 'solid', '2px', '-2px']);
   });
 
-  test('selected: aria-current, shaded; the 2px bar at the start is highlight-indicator, drawn only with more contrast (GR407)', async () => {
+  test('selected: aria-current and shaded, with no bar; more contrast draws a 2px bar at the start (GR407, GR413)', async () => {
     await render(<Card clicks={[]} />);
     const li = el('isel'), s = css(li);
     expect([li.querySelector('a')!.getAttribute('aria-current'), s.backgroundColor]).toEqual(['true', bg('var(--surface-muted)')]);
-    expect(s.boxShadow).toMatch(/2px 0px 0px 0px inset$/);
-    expect(s.boxShadow).toContain(color('var(--highlight-indicator)'));
+    expect(s.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);   // no width: nothing drawn, whatever the fill
+    await withMoreContrast(() => { expect(s.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(s.boxShadow).toContain(color('var(--highlight-indicator)')); });
   });
 
   test('linkProps\' aria-current wins over selected\'s "true", so a nav list can mark the current page (GF3)', async () => {
