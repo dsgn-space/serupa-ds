@@ -90,7 +90,7 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
   | Escape | Closes the calendar and returns focus to the field. |
 
 - **ARIA states:** the button has `aria-haspopup="dialog"` and `aria-expanded`; the popup is a `role="dialog"` in the top layer holding a Calendar.
-- **Contrast:** the calendar icon keeps 3:1 on the field in all six themes (`DatePicker.test.tsx`).
+- **Contrast:** the calendar icon keeps 3:1 on the field in every theme (`DatePicker.test.tsx`).
 - **What's still yours:** the label, and the format in the hint.
 
 ## Props

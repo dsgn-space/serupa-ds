@@ -45,7 +45,7 @@ describe('Quote', () => {
     expect([parseFloat(s.borderRightWidth) > 0, parseFloat(s.borderLeftWidth)]).toEqual([true, 0]);
   });
 
-  test('its words and its source read 4.5:1 on the page in all six themes', async () => {
+  test('its words and its source read 4.5:1 on the page in every theme', async () => {
     await render(<Quote id="c" author="Ada" source="Lumen">Text</Quote>);
     const src = [...el('c').querySelectorAll('figcaption span')].find((s) => s.textContent === 'Lumen')!;
     for (const th of THEMES) {

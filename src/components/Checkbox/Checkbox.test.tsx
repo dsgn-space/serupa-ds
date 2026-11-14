@@ -211,7 +211,7 @@ describe('Checkbox', () => {
     expect(input('g2').matches(':disabled')).toBe(true);
   });
 
-  test('contrast in all six themes: label and description 4.5:1; checked fill, focus ring and invalid border 3:1, the soft border 1.3:1; the check 4.5:1 on its fill', () => {
+  test('contrast in every theme: label and description 4.5:1; checked fill, focus ring and invalid border 3:1, the soft border 1.3:1; the check 4.5:1 on its fill', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],

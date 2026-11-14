@@ -43,7 +43,7 @@ const meta = {
   args: { steps: [] },
   argTypes: { steps: { control: false } },
   // On the docs page every story starts closed with a "Take the tour" button, so the open panels don't all take
-  // focus and scroll the page; in its own canvas a story shows its step open, for the Storybook test in all six themes.
+  // focus and scroll the page; in its own canvas a story shows its step open, for the Storybook test in every theme.
   render: view(),
 } satisfies Meta<typeof Tour>;
 export default meta;

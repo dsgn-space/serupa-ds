@@ -54,7 +54,7 @@ Drawn from the `Playground` story.
 - **Role and name:** a `<nav>` landmark named by `label`, with a list of links, so screen readers say how many there are. The current one has `aria-current="page"`. Icons are hidden; the label is each link's name.
 - **Keyboard:** each link is a Tab stop, in order; the focus ring is drawn inside the link so the bar doesn't cut it.
 - **Target size:** each link fills its column and the bar's 64px height.
-- **Contrast:** labels and the current page read 4.5:1 on the bar in all six themes (`BottomNav.test.tsx`). In forced-colors mode the current page keeps an outline.
+- **Contrast:** labels and the current page read 4.5:1 on the bar in every theme (`BottomNav.test.tsx`). In forced-colors mode the current page keeps an outline.
 - **Print:** it and its spacer are hidden.
 - **What's still yours:** short labels that make sense alone, `active` on the right link, and the same destinations reachable above `hideFrom`.
 

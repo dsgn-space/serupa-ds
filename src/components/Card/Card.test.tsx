@@ -117,7 +117,7 @@ describe('Card', () => {
     expect(f.boxShadow === 'none' || /0px 0px 0px 0px/.test(f.boxShadow)).toBe(true);
   });
 
-  test('outline: the edge is border, zinc-200 in light and zinc-800 in dark, a quiet step off the zinc-900 card, in all six themes', async () => {
+  test('outline: the edge is border, zinc-200 in light and zinc-800 in dark, a quiet step off the zinc-900 card, in every theme', async () => {
     await render(<Variants />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -292,7 +292,7 @@ describe('Card', () => {
     expect([s.backgroundColor, s.borderTopLeftRadius, s.paddingTop]).toEqual(['rgb(1, 2, 3)', '3px', '7px']);
   });
 
-  test('contrast: title, description and body keep 4.5:1 on all three variants in all six themes', async () => {
+  test('contrast: title, description and body keep 4.5:1 on all three variants in every theme', async () => {
     await render(<Variants />);
     const still = document.createElement('style');
     still.textContent = '*, *::before, *::after { transition: none !important; }';

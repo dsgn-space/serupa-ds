@@ -206,7 +206,7 @@ describe('List', () => {
     expect([css(q('#ltok > li > :first-child')).paddingTop, css(q('#ltok > li > :first-child > span:last-child > span:first-child')).color]).toEqual(['5px', 'rgb(1, 2, 3)']);
   });
 
-  test('a selected row shows on a filled, elevated or outline Card, on a muted panel and on a floating surface, as on the page, with its text at 4.5:1, in all six themes', async () => {
+  test('a selected row shows on a filled, elevated or outline Card, on a muted panel and on a floating surface, as on the page, with its text at 4.5:1, in every theme', async () => {
     await render(<div style={{ width: '420px' }}>
       <SurfaceCard id="filled" variant="filled"><List aria-label="On a filled card"><ListItem id="sfill" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard>
       <div id="muted" className="bg-surface-muted"><List aria-label="On a muted panel"><ListItem id="smuted" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
@@ -228,7 +228,7 @@ describe('List', () => {
     expect(low).toEqual([]);
   });
 
-  test('contrast: titles and descriptions keep 4.5:1 on plain and shaded rows, the selected bar 3:1, in all six themes', async () => {
+  test('contrast: titles and descriptions keep 4.5:1 on plain and shaded rows, the selected bar 3:1, in every theme', async () => {
     await render(<People />);
     const low: string[] = [];
     for (const th of THEMES) {
@@ -412,7 +412,7 @@ describe('List with selectionMode', () => {
     expect(at()).toBe(box('Budget.xlsx'));
   });
 
-  test('a picked row reads 4.5:1 with its focus ring 3:1 in all six themes', async () => {
+  test('a picked row reads 4.5:1 with its focus ring 3:1 in every theme', async () => {
     await render(<Files start={['Budget.xlsx']} />);
     row('Budget.xlsx').focus();
     await userEvent.keyboard('{ArrowDown}{ArrowUp}');

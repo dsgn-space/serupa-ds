@@ -2,7 +2,7 @@
   "color": {
     "primary": {
       "$type": "color",
-      "$value": "{color.teal-700}",
+      "$value": "{color.emerald-700}",
       "$description": "Alias. Brand color: primary buttons, links, selected states. Light themes: brand 600 (emerald 700) with white text; dark themes: brand 400 with brand-950 text. More contrast: brand 800 / brand 300, 7:1+ on `surface` and `primary-subtle`.",
       "$extensions": {
         "com.serupa": {
@@ -12,7 +12,7 @@
     },
     "primary-hover": {
       "$type": "color",
-      "$value": "{color.teal-800}",
+      "$value": "{color.emerald-800}",
       "$description": "Alias. Hover / pressed state of `primary` (one step darker in light themes, lighter in dark). More contrast: brand 900 / brand 200.",
       "$extensions": {
         "com.serupa": {
@@ -22,7 +22,7 @@
     },
     "primary-subtle": {
       "$type": "color",
-      "$value": "{color.teal-50}",
+      "$value": "{color.emerald-50}",
       "$description": "Alias. Brand tint for selected rows and badges (brand 50 light, brand 950 dark).",
       "$extensions": {
         "com.serupa": {
@@ -272,7 +272,7 @@
     },
     "field-action": {
       "$type": "color",
-      "$value": "{color.teal-700}",
+      "$value": "{color.emerald-700}",
       "$description": "Alias. A text action inside a field (Input's \"Apply\"): `primary`, which keeps 4.5:1 on the field. Its own alias so a brand whose primary falls short on the field can take a lighter shade.",
       "$extensions": {
         "com.serupa": {
@@ -400,7 +400,7 @@
     },
     "focus-ring": {
       "$type": "color",
-      "$value": "{color.teal-600}",
+      "$value": "{color.emerald-600}",
       "$description": "Alias. Keyboard focus outline, in the brand hue (3:1+ on `surface` in every theme). More contrast: brand 700 / brand 300.",
       "$extensions": {
         "com.serupa": {
@@ -700,7 +700,7 @@
     },
     "chart-1": {
       "$type": "color",
-      "$value": "{color.teal-800}",
+      "$value": "{color.blue-800}",
       "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -720,7 +720,7 @@
     },
     "chart-3": {
       "$type": "color",
-      "$value": "{color.purple-700}",
+      "$value": "{color.pink-800}",
       "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -730,7 +730,7 @@
     },
     "chart-4": {
       "$type": "color",
-      "$value": "{color.blue-500}",
+      "$value": "{color.cyan-600}",
       "$description": "Alias. Chart series 4 (cyan): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -750,7 +750,7 @@
     },
     "chart-6": {
       "$type": "color",
-      "$value": "{color.pink-500}",
+      "$value": "{color.teal-600}",
       "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -770,7 +770,7 @@
     },
     "chart-8": {
       "$type": "color",
-      "$value": "{color.red-500}",
+      "$value": "{color.red-600}",
       "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
@@ -780,7 +780,7 @@
     },
     "chart-seq-1": {
       "$type": "color",
-      "$value": "{color.teal-200}",
+      "$value": "{color.blue-200}",
       "$description": "Alias. Sequential ramp, step 1 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -790,7 +790,7 @@
     },
     "chart-seq-2": {
       "$type": "color",
-      "$value": "{color.teal-400}",
+      "$value": "{color.blue-400}",
       "$description": "Alias. Sequential ramp, step 2 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -800,7 +800,7 @@
     },
     "chart-seq-3": {
       "$type": "color",
-      "$value": "{color.teal-600}",
+      "$value": "{color.blue-600}",
       "$description": "Alias. Sequential ramp, step 3 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -810,7 +810,7 @@
     },
     "chart-seq-4": {
       "$type": "color",
-      "$value": "{color.teal-800}",
+      "$value": "{color.blue-800}",
       "$description": "Alias. Sequential ramp, step 4 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
@@ -820,7 +820,7 @@
     },
     "chart-seq-5": {
       "$type": "color",
-      "$value": "{color.teal-950}",
+      "$value": "{color.blue-950}",
       "$description": "Alias. Sequential ramp, step 5 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before, and the last is 3:1+.",
       "$extensions": {
         "com.serupa": {
@@ -870,7 +870,7 @@
     },
     "chart-div-5": {
       "$type": "color",
-      "$value": "{color.teal-300}",
+      "$value": "{color.blue-200}",
       "$description": "Alias. Diverging ramp, step 5 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
@@ -880,7 +880,7 @@
     },
     "chart-div-6": {
       "$type": "color",
-      "$value": "{color.teal-600}",
+      "$value": "{color.blue-500}",
       "$description": "Alias. Diverging ramp, step 6 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
@@ -890,7 +890,7 @@
     },
     "chart-div-7": {
       "$type": "color",
-      "$value": "{color.teal-800}",
+      "$value": "{color.blue-700}",
       "$description": "Alias. Diverging ramp, step 7 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle; the ends are 3:1+.",
       "$extensions": {
         "com.serupa": {

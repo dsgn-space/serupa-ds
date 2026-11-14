@@ -82,7 +82,7 @@ The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `p
 - The body text and the header's description sit above the link's area, so they can be selected and copied with the mouse. A plain click on them still follows the link. A click that ends a text selection doesn't. A Ctrl, Cmd or Shift click, or a middle click, on them opens the link in a new tab, as it would on the title.
 - The card itself stays a `<div>` (or `as`), so buttons and links inside are never nested in a link, which is invalid HTML.
 - In forced-colors mode every card gets a visible border.
-- The title, description and body text keep 4.5:1 on every variant, in all six themes (`Card.test.tsx`).
+- The title, description and body text keep 4.5:1 on every variant, in every theme (`Card.test.tsx`).
 - In print, a card isn't split across two pages.
 - **Keyboard:** with `href`, the card is one Tab stop (its link), and Enter opens it. Buttons and links inside are Tab stops of their own. Without `href`, the card adds no Tab stop.
 

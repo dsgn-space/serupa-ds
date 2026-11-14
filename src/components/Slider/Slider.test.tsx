@@ -282,7 +282,7 @@ describe('Slider', () => {
     expect(now('rtl')).toBe(90);
   });
 
-  test('contrast: the track, fill and thumb ring keep 3:1 on the page in all six themes', async () => {
+  test('contrast: the track, fill and thumb ring keep 3:1 on the page in every theme', async () => {
     await setup();
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
@@ -334,7 +334,7 @@ describe('Slider', () => {
     expect(new FormData(el('ro-form') as HTMLFormElement).get('v')).toBe('30');
   });
 
-  test('invalid: aria-invalid on each thumb, and a danger fill and ring that keep 3:1 on the page in all six themes', async () => {
+  test('invalid: aria-invalid on each thumb, and a danger fill and ring that keep 3:1 on the page in every theme', async () => {
     await render(<div style={{ width: '420px' }}><Slider id="bad" aria-label="Bad" invalid defaultValue={[20, 60]} /></div>);
     expect([...el('bad').querySelectorAll('[role=slider]')].map((t) => t.getAttribute('aria-invalid'))).toEqual(['true', 'true']);
     expect(el('bad').hasAttribute('aria-invalid')).toBe(false);
@@ -412,7 +412,7 @@ describe('Slider', () => {
     await expect.poll(() => css(chip()).opacity).toBe('0');
   });
 
-  test('contrast: mark labels keep 4.5:1 on the page, and the value chip\'s text 4.5:1 on the chip, in all six themes', async () => {
+  test('contrast: mark labels keep 4.5:1 on the page, and the value chip\'s text 4.5:1 on the chip, in every theme', async () => {
     await render(<div style={{ width: '420px' }}><Slider id="mc" aria-label="Heat" marks={[{ value: 50, label: 'Half' }]} showValue defaultValue={20} /></div>);
     const low: string[] = [];
     for (const th of THEMES) {

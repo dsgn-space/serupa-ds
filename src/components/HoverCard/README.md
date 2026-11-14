@@ -41,7 +41,7 @@ import { HoverCard, Link, Avatar } from "@diki-stwn/serupa-ds";
 - **Keyboard:** focus resting on the link opens the card after `openDelay` (keyboard focus only, not a click). Tab then goes into the card, and Shift+Tab back to the link. Focus leaving both closes it. Escape closes it from anywhere and, from inside the card, puts focus back on the link (WCAG 1.4.13: dismissible, hoverable, persistent).
 - **Pointer:** the pointer can move from the link onto the card, and the card stays while it's there.
 - **Touch:** the link points at the card with `interestfor` (interest invokers), so where the browser has them (Chrome 142 and later, including on Android), a long press on the link opens the card at once. The browser's own showing is cancelled and the card opens itself, so the delays and Escape stay the same with a mouse or the keyboard. A tap outside or Escape closes it. Elsewhere the attribute does nothing.
-- **Contrast:** its text reads 4.5:1 on its background in all six themes (`HoverCard.test.tsx`).
+- **Contrast:** its text reads 4.5:1 on its background in every theme (`HoverCard.test.tsx`).
 - **What's still yours:** the same details reachable without hover (the page the link opens), and links in the card with names that make sense on their own.
 
 | Key | Does |

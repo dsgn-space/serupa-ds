@@ -3,7 +3,7 @@
 A design system by **Diki**. Tokens, themes, utility classes and accessible React components that every project starts from, so new projects are quicker to build, look consistent, and pick up fixes with a version bump.
 
 - **Token-driven.** Every color, size, space, radius, shadow, motion and type value is a design token. Components never hardcode a value.
-- **Six themes.** Blue (the default), Violet and Emerald, each light and dark and the same in everything but color, switched with one attribute and no component changes.
+- **A theme for every accent color.** Blue (the default), Violet, Emerald and 14 more, each light and dark and the same in everything but the brand color, switched with one attribute and no component changes.
 - **Accessible by default.** WCAG 2.2 AA in every theme (contrast, target size, focus), full keyboard support, visible focus, correct roles and labels, checked by the test suite on every story in every theme.
 - **Works anywhere.** ES modules for React 19 apps, or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
 
@@ -45,7 +45,7 @@ npm install
 npm run dev
 ```
 
-Add `--brand violet` or `--brand emerald` for another brand. Then steps 2 and 3 below are done for you.
+Add `--brand violet`, `--brand emerald` or any other accent color for another brand. Then steps 2 and 3 below are done for you.
 
 ### 2. Load the styles and use the components
 
@@ -101,7 +101,7 @@ On a plain page without a bundler:
 Set the brand and mode on `<html>` and load `theme.js` first in `<head>`, so the page follows the visitor's light or dark setting without a flash:
 
 ```html
-<html data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
+<html data-brand="blue" data-mode="auto">   <!-- brand: blue, violet, emerald… any accent color; mode: auto | light | dark -->
 ```
 
 A server-rendered app can save the request by pasting the text of `dist/theme.js` into an inline `<script>` in `<head>` (give it a nonce under a strict Content Security Policy); the file is written so it works inline. If both the inline copy and the file end up on a page, the second one does nothing, so the first keeps running the theme.
@@ -153,7 +153,7 @@ npx serupa-usage src
 
 | File | What it is |
 | --- | --- |
-| `tokens.css` | Every token as a CSS variable, the six themes, and the fonts. Load it first. |
+| `tokens.css` | Every token as a CSS variable, the themes, and the fonts. Load it first. |
 | `dist/base.css` | Page defaults (font, colors, focus style, reduced motion, print), all inside `:where()` so any class wins. When printing, filled controls (Button, Badge, Progress, checked boxes) keep their colors, toasts, tooltips and open menus and pickers are left out, and `data-print-urls` on a container prints each outside link's address after it. |
 | `dist/components.css` | The component styles (`dk-*`), about 450 KB (60 KB gzipped, 46 KB with Brotli). |
 | `dist/utilities.css` | The utility classes, apart from masks and gradients. |
@@ -166,7 +166,7 @@ npx serupa-usage src
 | `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. Escape turns it off. `Serupa.debug.inspect(element)` and `Serupa.debug.contrast(element)` give the same as objects. Leave it out of production. |
 | `dist/eslint.js` (`@diki-stwn/serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
 | `dist/stylelint.js` (`@diki-stwn/serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length, a radius, or a duration or easing written out where a token belongs. See Getting started in Storybook. |
-| `dist/testing.js` (`@diki-stwn/serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each of the six themes, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
+| `dist/testing.js` (`@diki-stwn/serupa-ds/testing`) | `forEachTheme(page, fn)` for your own CI: it draws a Playwright page in each theme, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. |
 | `dist/purge.js` (`@diki-stwn/serupa-ds/purge`) | `serupaPurge()` for Vite and `serupaPurgePostcss()` for PostCSS: they trim `bundle.css` in your build to the utility classes your code uses, as `serupa-purge` does. See Ship it above. |
 | `tokens.json`, `design-tokens/` | The tokens as data, and in the W3C format for Figma and Style Dictionary. Both are made from `tokens/serupa.tokens.json` in the repository. |
 
@@ -495,7 +495,7 @@ Most email clients drop CSS variables, `rem`, colors with alpha and `<link>`ed s
 | `<brand>.html` | A starting email with those styles already inline: a 600px table layout, a preview line, a heading, text, a button, a callout, a divider and a footer |
 | `tokens.json` | Every theme's colors in hex (a color with alpha mixed over its surface), and the type sizes, spacing and radii in px, for a template language or an email builder |
 
-Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in all six themes, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way. Outlook for Windows ignores padding on a link, so the button's padding is also on its `serupa-button-cell` as `mso-padding-alt`, which only Outlook reads: keep the link inside that cell.
+Text, links, the button and the callouts pass WCAG 2.2 AA (4.5:1) in every theme, and the email fits a 375px phone. Clients that ignore `prefers-color-scheme` (Gmail, Outlook) show the light theme, or darken it in their own way. Outlook for Windows ignores padding on a link, so the button's padding is also on its `serupa-button-cell` as `mso-padding-alt`, which only Outlook reads: keep the link inside that cell.
 
 ## Editor autocomplete
 
@@ -557,7 +557,7 @@ The source is in `src/`: one folder per component in `src/components/<Name>/` (t
 
 `npm run new-component -- <Name> --group <Storybook group>` starts one: it writes the folder with every file the contract asks for, already wired to the tokens, the layers and the docs, plus its server-render case, and marks each place that needs your words `TODO(new-component)` (the contract check fails while one is left), then prints the remaining steps. A new component lives in its own folder and nothing else needs a line for it: its `index.ts` says what the package exports, its words go in its `labels.ts` (with the Indonesian), and `tools/build/registry.mjs` builds the export list, the CSS import list and the label sets from the folders into `src/generated/` (not committed). Its stylesheet joins `components.css` after the ones listed in `src/styles/cascade.txt`; list it there only when it must come before another component's styles. Its server-render case is `tools/test/ssr/<Name>.mjs`, and `node tools/test/api.mjs --update` writes its `tools/test/baseline-api/<Name>.d.ts`, and `node tools/test/size.mjs --update <Name>` its size budgets, `tools/test/baseline-size/<Name>.json`. So two pull requests that add or change different components don't conflict.
 
-What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares every utility class (its count is in `tools/README.md`) and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in all six themes. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
+What's coming next, by theme: [ROADMAP.md](ROADMAP.md). How to make a change, and a new component, step by step: [CONTRIBUTING.md](CONTRIBUTING.md). `tools/` holds the build, the test suite, the design tokens export, the release script and the CSS trimmer; see `tools/README.md`. Run `npm test` before publishing a change; it builds first. It checks the package (every export exists, the components render on the server, the types), audits the foundation (every value reads its token, fallbacks match, contrast in every theme, one version everywhere, nothing loads from outside), checks the design tokens export and builds it through Style Dictionary, compares every utility class (its count is in `tools/README.md`) and every Storybook story with saved screenshots, tests Button's behaviour, the custom icon build and the page groundwork, and opens every Storybook story and page, checking each story against WCAG 2.2 AA in every theme. The documentation is Storybook: `npm run storybook`. Add `--compat safari` (or `firefox`, `webkitgtk`) to compare another browser engine. Products don't need `tools/`.
 
 ## Credits
 

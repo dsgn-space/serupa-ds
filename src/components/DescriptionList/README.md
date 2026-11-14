@@ -70,7 +70,7 @@ Drawn from the `Default` story.
 
 - **Role and name:** a `<dl>` with `<dt>` terms and `<dd>` details; each pair is wrapped in a `<div>`, which HTML allows in a `<dl>`. Give the list a heading before it, or `aria-label`, when the page has several.
 - **Keyboard:** nothing of its own to focus; links and controls in the details are in the Tab order as usual.
-- **Contrast:** terms and details read 4.5:1 on the page in all six themes (`DescriptionList.test.tsx`).
+- **Contrast:** terms and details read 4.5:1 on the page in every theme (`DescriptionList.test.tsx`).
 - **Right to left:** every side is logical, so the term column and the split details mirror.
 - **What's still yours:** terms that make sense on their own, and a text value for anything shown only as an icon or color.
 

@@ -11,4 +11,4 @@
 - [ ] A changeset (`npx changeset`), or the `no-changeset` label for tests, tools or workflows only
 - [ ] A breaking change is a major with a migration note
 - [ ] Baselines updated on purpose (API, size, screenshots), with why
-- [ ] WCAG 2.2 AA in all six themes for anything people see
+- [ ] WCAG 2.2 AA in every theme for anything people see

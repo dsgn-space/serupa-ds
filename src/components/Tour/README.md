@@ -58,7 +58,7 @@ The element the step points at gets a 2px primary ring (`[data-tour-target]`), s
 
 - **Role and name:** each step is a `dialog` named by its title (a heading, level 2 by default: `headingLevel` fits it to the page) and described by its text.
 - **Focus:** showing a step moves focus to its panel, so a screen reader reads its title and text; when the tour ends, focus goes back to where it was.
-- **Contrast:** its text and its step count read 4.5:1 on its background in all six themes (`Tour.test.tsx`).
+- **Contrast:** its text and its step count read 4.5:1 on its background in every theme (`Tour.test.tsx`).
 - **What's still yours:** the target's own name, and a way to start the tour again. It isn't modal, so don't put anything in a step that must be done before going on.
 
 ### Keyboard

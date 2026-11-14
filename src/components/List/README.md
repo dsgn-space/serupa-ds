@@ -92,7 +92,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 - A whole row is one link or button, named by its title and description; trailing actions are separate controls, so give them names that say which row they're for ("More for Ada Lovelace").
 - An Avatar beside a written name repeats it, so give it `alt=""`, as in the example above. Otherwise every row reads the name twice ("Ada Lovelace Ada Lovelace ada@example.com"). An icon beside a title that says the same is decorative too.
 - Selected rows have a bar and `aria-current` or `aria-pressed`, not only a background.
-- Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in all six themes (`List.test.tsx`).
+- Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in every theme (`List.test.tsx`).
 - **Keyboard:** an item with `href` or `onClick` has one Tab stop, its main area, where Enter (Space too for a button) acts. A disabled one is skipped. Controls in `trailing` are Tab stops of their own. Plain items add none.
 - **With `selectionMode`:** the list is a grid (`role="grid"`, `aria-multiselectable` when multiple) of rows named by their titles, with `aria-selected`. It's one Tab stop: Up and Down move between rows, Home and End go to the ends, Right and Left reach the row's checkbox, link and actions. Space picks the focused row, Shift with Up or Down picks as it moves, Ctrl or Cmd+A picks every row, and Enter follows the row's link or presses its button. A picked row has a checked box and the primary bar, not only a background.
 

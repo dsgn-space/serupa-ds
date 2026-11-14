@@ -36,22 +36,35 @@ Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the
 
 ## Themes
 
-Six themes share **one set of foundations**: the same palette, type, spacing scale and components. A theme is its colors and nothing else: Violet and Emerald only change where the brand colors point, so every corner, shadow, border, surface, space and motion is the same in all six. Blue is the default.
+Every theme shares **one set of foundations**: the same palette, type, spacing scale and components. A theme is a brand color and a mode, and nothing else: it only changes where the brand colors point, so every corner, shadow, border, surface, space, chart color and motion is the same in all of them. There is a theme for each accent color of the palette, light and dark, 34 in all. Blue is the default.
 
-| Theme | Brand hue | Mode |
+| Brand | `primary` in light | `primary` in dark |
 | --- | --- | --- |
-| Blue Light *(default)* | `blue` | light |
-| Blue Dark | `blue` | dark |
-| Violet Light | `violet` | light |
-| Violet Dark | `violet` | dark |
-| Emerald Light | `emerald` (teal) | light |
-| Emerald Dark | `emerald` (teal) | dark |
+| `blue` *(default)* | `blue-600` | `blue-400` |
+| `red` | `red-600` | `red-400` |
+| `orange` | `orange-700` | `orange-400` |
+| `amber` | `amber-700` | `amber-400` |
+| `yellow` | `yellow-700` | `yellow-400` |
+| `lime` | `lime-700` | `lime-400` |
+| `green` | `green-700` | `green-400` |
+| `emerald` | `emerald-700` | `emerald-400` |
+| `teal` | `teal-700` | `teal-400` |
+| `cyan` | `cyan-700` | `cyan-400` |
+| `sky` | `sky-700` | `sky-400` |
+| `indigo` | `indigo-600` | `indigo-400` |
+| `violet` | `violet-600` | `violet-400` |
+| `purple` | `purple-600` | `purple-400` |
+| `fuchsia` | `fuchsia-600` | `fuchsia-400` |
+| `pink` | `pink-700` | `pink-400` |
+| `rose` | `rose-600` | `rose-400` |
 
-Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
+A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
 
-### Emerald
+### The brand shade
 
-Emerald's accent is the `teal` ramp: `primary`, `primary-hover`, `primary-subtle` and `focus-ring` are teal 700 / 800 / 50 / 600 in light (one step darker than the other brands, because white text on `teal-600` is below 4.5:1) and 400 / 300 / 950 / 400 in dark. Its charts lead with the accent too: `chart-1` is teal and the sequential and diverging ramps run in teal, so a sparkline or a first series matches the buttons and links, and the other series are re-picked so neighbours still differ for every reader. `data-contrast="more"` steps the teal up to 800 / 300.
+`primary` is a fill with text on it and a text color of its own (links, ghost and outline buttons), so in light themes it is the first step of the brand ramp that reaches 4.5:1 both ways: under white text and on a white page. That is step 600 for `blue`, `red`, `indigo`, `violet`, `purple`, `fuchsia` and `rose`, and step 700 for the lighter ramps: `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky` and `pink`. So Yellow Light is a deep, golden yellow rather than a bright one. In dark themes every brand is step 400 with its own 950 as the text on it. `data-contrast="more"` steps each brand up within its own ramp, to 7:1.
+
+The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 
 **Brand and mode without JavaScript**: `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
 
@@ -76,7 +89,7 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 **Automatic dark mode**: `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
 
 ```html
-<html data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
+<html data-brand="blue" data-mode="auto">   <!-- brand: blue, violet, emerald… any accent color; mode: auto | light | dark -->
 <script src="dist/theme.js"></script>
 ```
 
@@ -96,7 +109,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 
 **Use aliases in your UI, the palette for the aliases.** Build screens with `primary`, `text`, `border`… and only reach for a palette color like `blue-600` directly when no alias fits; a palette color looks the same in every theme.
 
-`‹brand›` below is `blue`, `violet` or `emerald`. One exception: `emerald` uses the `teal` ramp, one step darker in light: `primary` is `teal-700`, `primary-hover` `teal-800` and `focus-ring` `teal-600`, because white text on `teal-600` is below 4.5:1; see [Emerald](#emerald).
+`‹brand›` below is the theme's brand. The lighter ramps sit one step darker in light themes: `primary` is `‹brand›-700` and `primary-hover` `‹brand›-800`; see [The brand shade](#the-brand-shade).
 
 | Alias | Light themes | Dark themes | Use |
 | --- | --- | --- | --- |
@@ -109,7 +122,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text and icons keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. In a dropdown list the fill alone marks the row; `highlight-indicator` adds a bar at its start only with more contrast. |
 | `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface-page` | `white` | `zinc-950` | The page itself: the `<html>` and `<body>` background, and a `data-mode` or `data-theme` section's. The same as `surface` in light; in dark a step below the cards, panels and bars on it, so they and every control sit lighter than the page. |
-| `surface` | `white` | `zinc-900` | Card, panel and bar background. Emerald dark keeps `zinc-950`. |
+| `surface` | `white` | `zinc-900` | Card, panel and bar background. |
 | `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. Never the fill of a control. |
 | `surface-control` | `zinc-50` | `zinc-900` | The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. The same as `surface-muted` in light; in dark a step above the page, so a control never looks sunk into it. |
 | `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
@@ -524,7 +537,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 
 **Light and dark**
 
-In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, with the same `zinc-200` edge. In dark themes (a `zinc-950` page under `zinc-900` cards), shadows hardly show, so a raised surface steps up to `zinc-800`, and an overlay's edge to `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in all six themes.
+In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, with the same `zinc-200` edge. In dark themes (a `zinc-950` page under `zinc-900` cards), shadows hardly show, so a raised surface steps up to `zinc-800`, and an overlay's edge to `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in every theme.
 
 In forced-colors mode, backgrounds and shadows are replaced, so only the edge survives. Every floating surface has a real border for that reason; keep it if you restyle one.
 
@@ -1218,7 +1231,7 @@ When a pattern breaks one of these, the fix is in the pattern, not in the words 
 
 ## Accessibility standard
 
-The target is **WCAG 2.2 level AA**, in all six themes, at any zoom up to 400%, with a keyboard, a screen reader, a touch screen, and in forced-colors (high-contrast) mode. The components meet their share of it; a page meets the rest only if the app does its part. This is who does what.
+The target is **WCAG 2.2 level AA**, in every theme, at any zoom up to 400%, with a keyboard, a screen reader, a touch screen, and in forced-colors (high-contrast) mode. The components meet their share of it; a page meets the rest only if the app does its part. This is who does what.
 
 **What the system guarantees**
 

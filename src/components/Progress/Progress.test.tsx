@@ -93,7 +93,7 @@ describe('Progress', () => {
     expect([el('cind').getAttribute('aria-valuenow'), dash('cind'), withMotion(() => css(el('cind').querySelector('svg')).animationName)]).toEqual([null, '25 100', 'dk-progress-turn']);
   });
 
-  test('contrast: every tone\'s fill keeps 3:1 on the page and on the bar\'s track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and values 4.5:1, in all six themes', async () => {
+  test('contrast: every tone\'s fill keeps 3:1 on the page and on the bar\'s track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and values 4.5:1, in every theme', async () => {
     const tones = ['primary', 'success', 'warning', 'danger'] as const;
     await render(<Wrap>
       <Progress id="p1" value={45} label="Uploading" showValue />

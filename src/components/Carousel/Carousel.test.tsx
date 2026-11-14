@@ -334,7 +334,7 @@ describe('Carousel', () => {
     expect(left()).toEqual(before);
   });
 
-  test('contrast: the dots and the button icons keep 3:1 in all six themes', async () => {
+  test('contrast: the dots and the button icons keep 3:1 in every theme', async () => {
     await render(<App />);
     const low: string[] = [];
     let n = 0;

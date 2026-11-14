@@ -52,7 +52,7 @@ Drawn from the `Status` story.
 - With a name, the avatar is one image (`role="img"`) named by it; the picture inside is decorative. Next to the written name, pass `alt=""` so it isn't read twice.
 - The status is part of the name, and each one has its own shape: online is a filled dot, busy a dot with a bar across, away a ring with a dot inside, and offline an empty ring. So it isn't told by color alone, and the four stay apart in forced-colors mode.
 - With `alt=""`, the picture is hidden from screen readers but the status isn't: the dot is read on its own ("online").
-- Initials and the person icon keep 4.5:1 on their background in all six themes (`Avatar.test.tsx`).
+- Initials and the person icon keep 4.5:1 on their background in every theme (`Avatar.test.tsx`).
 - In forced-colors mode the frame gets a border.
 - **Keyboard:** none of its own: it isn't focusable. Inside a link or a Tooltip trigger, that element takes the focus.
 

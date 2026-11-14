@@ -20,8 +20,8 @@ t(`class offers every utility class, responsive variants too (${classes.length})
 const bare = html?.globalAttributes?.find((a) => a.name === 'class')?.values?.filter((v) => !v.description) || [];
 t('each class says what it sets', !bare.length, bare.slice(0, 10).map((v) => v.name).join(', '));
 const { themes } = tokensCss();
-t('data-theme offers the six themes', attr('data-theme').join() === [...themes].sort().join(), attr('data-theme').join());
-t('data-brand and data-mode offer what theme.js reads', attr('data-brand').join() === 'blue,emerald,violet' && attr('data-mode').join() === 'auto,dark,light', JSON.stringify([attr('data-brand'), attr('data-mode')]));
+t('data-theme offers the themes', attr('data-theme').join() === [...themes].sort().join(), attr('data-theme').join());
+t('data-brand and data-mode offer what theme.js reads', attr('data-brand').join() === 'amber,blue,cyan,emerald,fuchsia,green,indigo,lime,orange,pink,purple,red,rose,sky,teal,violet,yellow' && attr('data-mode').join() === 'auto,dark,light', JSON.stringify([attr('data-brand'), attr('data-mode')]));
 const tokens = tokenList(fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8')).map((x) => x.name);
 const props = css?.properties?.map((p) => p.name) || [];
 t(`the CSS data offers every token (${tokens.length}), with what it is and its value`, tokens.length > 250 && tokens.join() === props.join() && css.properties.every((p) => /in blue-light/.test(p.description?.value || '')), `missing: ${tokens.filter((x) => !props.includes(x)).slice(0, 10).join(', ')}`);

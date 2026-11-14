@@ -1,4 +1,4 @@
-// serupa-ds/testing: screenshots of your own pages in each of Serupa's six themes, for your app's CI. Serupa checks
+// serupa-ds/testing: screenshots of your own pages in each of Serupa's themes, for your app's CI. Serupa checks
 // its components in every theme; this lets your screens get the same check, with Playwright (or anything with a
 // page.evaluate()).
 //   import { test, expect } from "@playwright/test";
@@ -13,8 +13,8 @@
 // emulated color scheme to it when the page can emulate one, turns off transitions, animations and the text caret so
 // a picture doesn't catch a fade halfway, and waits for fonts and two frames. Afterwards the page is as it was.
 
-/** Serupa's six themes, in the order the docs show them. */
-export const THEMES = Object.freeze(['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark']);
+/** Serupa's themes, a light and a dark one for each of its 17 brand colors, blue (the default) first. */
+export const THEMES = Object.freeze(['blue-light', 'blue-dark', 'red-light', 'red-dark', 'orange-light', 'orange-dark', 'amber-light', 'amber-dark', 'yellow-light', 'yellow-dark', 'lime-light', 'lime-dark', 'green-light', 'green-dark', 'emerald-light', 'emerald-dark', 'teal-light', 'teal-dark', 'cyan-light', 'cyan-dark', 'sky-light', 'sky-dark', 'indigo-light', 'indigo-dark', 'violet-light', 'violet-dark', 'purple-light', 'purple-dark', 'fuchsia-light', 'fuchsia-dark', 'pink-light', 'pink-dark', 'rose-light', 'rose-dark']);
 
 const STILL = '*,*::before,*::after{transition:none!important;animation:none!important;caret-color:transparent!important}';
 

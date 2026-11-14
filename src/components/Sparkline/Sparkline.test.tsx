@@ -64,7 +64,7 @@ describe('Sparkline', () => {
     expect([r.width, r.height, part(el('s'), 'line')!.getAttribute('vector-effect'), css(part(el('s'), 'line')!).strokeWidth]).toEqual([80, 20, 'non-scaling-stroke', '2px']);
   });
 
-  test('its line reads 3:1 on the surface in all six themes', async () => {
+  test('its line reads 3:1 on the surface in every theme', async () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><Sparkline id="c" data={[1, 2]} label="x" /></div>);
     const line = part(el('c'), 'line')!;
     for (const th of THEMES) {

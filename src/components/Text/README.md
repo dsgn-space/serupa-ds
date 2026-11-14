@@ -42,7 +42,7 @@ const { Text } = window.Serupa;
 
 ## Accessibility
 
-- Every tone keeps 4.5:1 on `surface` in all six themes (`Text.test.tsx`). On other backgrounds, check it yourself.
+- Every tone keeps 4.5:1 on `surface` in every theme (`Text.test.tsx`). On other backgrounds, check it yourself.
 - Don't use color alone to say something is wrong: say it in the words too.
 - A truncated line hides the rest: put the full text in a `title` or somewhere else on the page.
 - With `lines`, the hidden lines are still read by screen readers and found by find-in-page; only the eye misses them. Give people who see the screen a way to the rest: a link to the full item, or, to open it in place, [ShowMore](../ShowMore/README.md) instead of Text.

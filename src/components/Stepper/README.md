@@ -66,7 +66,7 @@ Drawn from the `LongLabels` story.
 ## Accessibility
 
 - An `<ol>` inside a `<nav>`. The current step has `aria-current="step"`, and completed, error or warning steps add ", completed", ", has an error" or ", needs attention" for screen readers, so the state isn't shown by color alone.
-- Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in all six themes (`Stepper.test.tsx`).
+- Numbers and text keep 4.5:1, and circles, rings and marks keep 3:1, in every theme (`Stepper.test.tsx`).
 - When it's too narrow and shows only the current step, the other titles stay in the list, clipped, so screen readers still read every step. The "Step 2 of 4" line is hidden from them, since the list already says it. This keeps it within reflow (WCAG 1.4.10) at 320px.
 - In forced colors (Windows high contrast) the current and completed circles are Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide the number or check.
 

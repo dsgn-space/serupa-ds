@@ -82,7 +82,7 @@ Drawn from the `Multiple` story.
 - An option is named by its label alone. A text `description` is its `aria-description`, so it's read after a pause instead of run into the name.
 - When typing stops, the number of matching options is said ("3 results", `labels.resultsCount`).
 - With `multiple`, the listbox has `aria-multiselectable="true"` and each picked option `aria-selected="true"`. Focus stays in the field, so each pick and removal is read out ("Brazil added", "Brazil removed": the `valueAdded` and `valueRemoved` labels). Each tag's remove button is named "Remove" and the label ("Remove Brazil").
-- Labels and descriptions keep 4.5:1, even on the highlighted option, and the chevron 3:1, in all six themes (`Combobox.test.tsx`).
+- Labels and descriptions keep 4.5:1, even on the highlighted option, and the chevron 3:1, in every theme (`Combobox.test.tsx`).
 
 ### Keyboard
 

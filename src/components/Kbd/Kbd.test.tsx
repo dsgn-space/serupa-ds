@@ -126,7 +126,7 @@ describe('Kbd', () => {
     expect(Math.abs((word.top + word.bottom) / 2 - (key.top + key.bottom) / 2)).toBeLessThanOrEqual(3);
   });
 
-  test('contrast: labels and the + keep 4.5:1 in all six themes; --kbd-bg overrides one key', async () => {
+  test('contrast: labels and the + keep 4.5:1 in every theme; --kbd-bg overrides one key', async () => {
     windows();
     await render(<><Keys /><Kbd id="tok" style={{ '--kbd-bg': 'rgb(1, 2, 3)' } as React.CSSProperties}>T</Kbd></>);
     const k = caps('combo')[0]!, plus = el('combo').querySelector(':scope > span')!, low: string[] = [];

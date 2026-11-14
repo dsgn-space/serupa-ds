@@ -13,7 +13,7 @@ const root = document.documentElement;
 afterEach(() => root.removeAttribute('data-theme'));
 
 describe('the dark page', () => {
-  test('the page is below its cards in blue and violet dark, and a SegmentedControl track and a FileUpload drop zone are never below the page in dark, with muted text at 4.5:1 in all six themes', async () => {
+  test('the page is below its cards in blue and violet dark, and a SegmentedControl track and a FileUpload drop zone are never below the page in dark, with muted text at 4.5:1 in every theme', async () => {
     const { container } = await render(<div>
       <SegmentedControl aria-label="View" options={[{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }]} defaultValue="list" />
       <FileUpload aria-label="Files" />

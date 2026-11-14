@@ -177,7 +177,7 @@ describe('Switch', () => {
     expect(new FormData(document.getElementById('ro-form') as HTMLFormElement).get('wifi')).toBe('on');
   });
 
-  test('loading: aria-busy and a ring turning on the thumb; clicks and Space leave it, onChange doesn\'t run, it stays focusable and submitted, and the ring keeps 3:1 on the thumb on and off in all six themes', async () => {
+  test('loading: aria-busy and a ring turning on the thumb; clicks and Space leave it, onChange doesn\'t run, it stays focusable and submitted, and the ring keeps 3:1 on the thumb on and off in every theme', async () => {
     const onChange = vi.fn();
     function Saving() {
       const [on, setOn] = React.useState(false), [busy, setBusy] = React.useState(false);
@@ -259,7 +259,7 @@ describe('Switch', () => {
     }
   });
 
-  test('contrast in all six themes: label and description 4.5:1; tracks on the page, thumbs on their tracks (rest and hover) and the focus ring 3:1', () => {
+  test('contrast in every theme: label and description 4.5:1; tracks on the page, thumbs on their tracks (rest and hover) and the focus ring 3:1', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

@@ -339,7 +339,7 @@ describe('Chart', () => {
     expect(text).toMatch(/prefers-reduced-motion: no-preference\)[^@]*dk-chart-draw/);
   });
 
-  test('labels, title and table text read 4.5:1 on the surface in all six themes', async () => {
+  test('labels, title and table text read 4.5:1 on the surface in every theme', async () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><Chart id="c" title="V" categories={CATS} series={TWO} /></div>);
     const label = document.querySelector('svg[aria-describedby] > g[aria-hidden] > g > text') as SVGElement;
     for (const th of THEMES) {

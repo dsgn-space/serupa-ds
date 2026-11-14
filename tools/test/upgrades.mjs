@@ -122,6 +122,16 @@ one('16.0.0: the ease-toggle class and token reference are ease-move; the name i
   t('each removed motion role\'s replacement is a token', Object.values(MOTION_TOKENS_16).every((n) => global.has(n)), '');
   t('no theme says it is tactile, and tokens.css has no depth axis', !tokens.color.themes.some((x) => 'depth' in x) && !/data-depth|--depth-/.test(fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8')), '');
 }
+// 16.0.0: every accent color has a theme. The brand called emerald drew in teal; it draws in emerald now, and teal is
+// a brand of its own. Both exist, so each place that names emerald is listed and nothing is rewritten.
+{
+  const src = `<html data-brand="emerald" data-theme='emerald-dark'>\n<div {...{ 'data-brand': 'emerald' }} />\n[data-brand="emerald"] { color: var(--emerald-600) }\nthemes: ['emerald-light']\nSerupa.theme.set({ brand: 'emerald' });\nnpm create serupa my-app --brand emerald\n<Badge color="emerald" /> data-brand="emeralds" emerald-lights var(--emerald-50)`;
+  const r = fix(src, 'a.tsx');
+  t('16.0.0: each place that names the emerald brand or its themes is listed, and nothing is rewritten; a palette step and a Badge color are left', r.text === src && r.notes.filter((n) => n.id === 'emerald-is-emerald').map((n) => n.line).join() === '1,1,2,3,4,5,6', JSON.stringify(r.notes.map((n) => [n.id, n.line])));
+  const themes = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8')).color.themes.map((x) => x.id);
+  const css = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
+  t('teal and emerald are both themes, each in its own ramp', ['teal-light', 'teal-dark', 'emerald-light', 'emerald-dark'].every((id) => themes.includes(id)) && /\[data-theme="teal-light"\][^}]*--primary: var\(--teal-700\)/.test(css) && /\[data-theme="emerald-light"\][^}]*--primary: var\(--emerald-700\)/.test(css), '');
+}
 // The package's new name, made only by a serupa-migrate that ships under it.
 {
   const [r] = packageNameChange('@diki-stwn/serupa-ds');

@@ -335,6 +335,16 @@ export const TRANSFORMS = [
       ] };
     },
   },
+  {
+    // 16.0.0: every accent color has a theme, so "emerald" is the emerald ramp and what it was (the teal ramp) is "teal".
+    // Both are themes now, so which one a page wants is its own choice: each place is listed, none is rewritten.
+    version: '16.0.0', id: 'emerald-is-emerald', exts: ALL,
+    title: 'The `emerald` brand draws in the emerald ramp, and the teal it drew in before is the new `teal` brand',
+    run(src) {
+      const named = /(?<![\w-])emerald-(?:light|dark)(?![\w-])|data-brand["']?\s*[:=]\s*\{?\s*["'`]emerald(?=["'`])|\bbrand\s*[:=]\s*["'`]emerald["'`]|--brand[ =]emerald\b/g;
+      return { text: src, count: 0, notes: notesFor(src, named, 'the `emerald` brand is now the emerald ramp, a greener green: write `teal` here (`teal-light`, `teal-dark`, `data-brand="teal"`) to keep the color it was') };
+    },
+  },
 ];
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);

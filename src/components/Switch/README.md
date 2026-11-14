@@ -74,7 +74,7 @@ The thumb slides in 100ms (`motion-press`, `ease-move`: feedback for a toggle ta
 - `loading` sets `aria-busy` and stops clicks and Space from flipping it until the save is done, so a change can't be sent twice. It stays focusable and is still submitted. The ring is Loader's: a quarter arc on a faint track of the same color, turning once a second (`motion-loop-spinner`). It is decorative (`aria-hidden`), stands still and breathes with `prefers-reduced-motion`, and uses system colors in forced-colors mode.
 - `readOnly` keeps it focusable and read out with `aria-readonly`, but a click or Space doesn't flip it, and `onChange` doesn't run (your `onClick` does). The browser's own `readonly` does nothing on a checkbox, so Switch cancels the click. An on read-only switch is still submitted, which `disabled` isn't.
 - In forced-colors mode the track gets a border and the thumb and on track use system colors.
-- The label and description keep 4.5:1; the tracks on the page, each thumb on its track (at rest and on hover) and the focus ring 3:1, in all six themes (`Switch.test.tsx`).
+- The label and description keep 4.5:1; the tracks on the page, each thumb on its track (at rest and on hover) and the focus ring 3:1, in every theme (`Switch.test.tsx`).
 
 ### Keyboard
 

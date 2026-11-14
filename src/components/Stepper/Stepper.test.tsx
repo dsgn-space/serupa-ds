@@ -205,7 +205,7 @@ describe('Stepper', () => {
     expect(rect(li[0]!).left).toBeGreaterThan(rect(li[1]!).left);
   });
 
-  test('contrast: numbers and text keep 4.5:1, circles, rings and marks 3:1, in all six themes', async () => {
+  test('contrast: numbers and text keep 4.5:1, circles, rings and marks 3:1, in every theme', async () => {
     await setup();
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {

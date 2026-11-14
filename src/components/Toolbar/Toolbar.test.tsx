@@ -166,7 +166,7 @@ describe('Toolbar', () => {
     expect([s.display, s.flexWrap, s.alignItems, s.columnGap, s.paddingTop, s.borderTopLeftRadius]).toEqual(['flex', 'wrap', 'center', '4px', '4px', '10px']);
   });
 
-  test('its text reads 4.5:1 on its background in all six themes', async () => {
+  test('its text reads 4.5:1 on its background in every theme', async () => {
     await render(<Toolbar id="c" aria-label="Status">Text</Toolbar>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

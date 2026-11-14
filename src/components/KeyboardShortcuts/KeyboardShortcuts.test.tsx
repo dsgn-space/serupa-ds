@@ -223,7 +223,7 @@ describe('KeyboardShortcuts', () => {
     expect(listed()).toEqual([['', [['Tampilkan pintasan keyboard', '?']]]]);
   });
 
-  test('group headings read 4.5:1 on the dialog in all six themes', async () => {
+  test('group headings read 4.5:1 on the dialog in every theme', async () => {
     await render(<KeyboardShortcuts defaultOpen shortcuts={[{ keys: ['A'], description: 'One', group: 'First' }, { keys: ['B'], description: 'Two', group: 'Second' }]} />);
     await expect.poll(() => dialog() !== null).toBe(true);
     const heading = dialog()!.querySelector('h3') as HTMLElement;

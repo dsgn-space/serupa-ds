@@ -60,7 +60,7 @@ Drawn from the `MonthYearPicker` story.
 - A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
 - Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
 - Weekday headers show the short name, and screen readers read the full one ("Monday", from visually hidden text, and in `abbr`), since "Mon" or "M" is read letter by letter or not at all by some.
-- Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`Calendar.test.tsx`).
+- Text keeps 4.5:1 and the selected fill 3:1 in every theme (`Calendar.test.tsx`).
 - In forced colors (Windows high contrast) the selected day is drawn in Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide its number. The same goes for DatePicker's and DateRangePicker's pop-ups.
 
 ### Keyboard

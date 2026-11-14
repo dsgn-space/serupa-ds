@@ -47,7 +47,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 - **Role and name:** a grid (`role="grid"`) named by its label, with a row per tag; the tag's words are its first cell and its × the second, a button named "Remove Design". Picked tags have `aria-selected`, and a multiple-choice group `aria-multiselectable`.
 - **Keyboard:** one Tab stop, on the last tag focused (the table below).
 - **Focus:** removing a tag moves focus to the next one, so it's never dropped to the page.
-- **Contrast:** a tag's words read 4.5:1 and its border 3:1 in all six themes, picked or not (`TagGroup.test.tsx`).
+- **Contrast:** a tag's words read 4.5:1 and its border 3:1 in every theme, picked or not (`TagGroup.test.tsx`).
 - **What's still yours:** the label, and what removing or picking a tag does in your app (saving it, undoing it).
 
 ### Keyboard

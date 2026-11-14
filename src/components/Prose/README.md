@@ -35,7 +35,7 @@ import { Prose } from "@diki-stwn/serupa-ds";
 
 - **Role and name:** none of its own. It's a `<div>` by default; use `as="article"` for content that stands on its own, such as a post. The headings inside keep their levels, so start them below the page's own.
 - **Keyboard:** none of its own. Links inside take the base focus ring, and a table or code block that scrolls can be scrolled with the trackpad or the scrollbar.
-- **Contrast:** body text, headings, quotes and list markers keep 4.5:1 on the page, and a visited link reads 4.5:1 on `surface` and `surface-muted` in all six themes (`Prose.test.tsx`, and the foundation check for `link-visited`). Browsers allow only a color change on a visited link, so it's a reading aid, never the only way to tell something.
+- **Contrast:** body text, headings, quotes and list markers keep 4.5:1 on the page, and a visited link reads 4.5:1 on `surface` and `surface-muted` in every theme (`Prose.test.tsx`, and the foundation check for `link-visited`). Browsers allow only a color change on a visited link, so it's a reading aid, never the only way to tell something.
 - **What's still yours:** sanitized HTML, sensible heading levels, and alt text on the images.
 
 ## Props

@@ -5,7 +5,8 @@
 //
 // tokens.css, in order:
 //   :root, [data-theme="<first theme>"]   every themed token (the colors and the shadows) at its first theme's value
-//   [data-theme="<theme>"]                each other theme: the tokens with a value per theme (the alias colors)
+//   [data-theme$="-light"], [$="-dark"]   the alias colors every brand shares, once per mode
+//   [data-theme="<theme>"]                each other theme: the alias colors its brand changes
 //   theme axes (ADR-0011)                 data-brand / data-mode on an element without data-theme: the colors that
 //                                         differ between themes as light-dark() pairs, so the operating system's
 //                                         light or dark setting applies from the first paint, with no JavaScript
@@ -57,9 +58,21 @@ export function buildTokensCss(t) {
   css += `:root, [data-theme="${themes[0]}"] {\n`;
   for (const x of all.filter(themed)) css += line(x.name, x.value[themes[0]]);
   css += '}\n';
+  // A theme is a brand and a mode. The colors every brand shares (the neutrals, the status colors, the charts) are
+  // written once per mode, for every theme of that mode; each theme then sets only the few its brand changes.
+  const multi = all.filter((x) => themed(x) && Object.keys(x.value).length > 1);
+  const ofMode = (mode) => themes.filter((th) => th.endsWith(`-${mode}`));
+  const byBrand = new Set(multi.filter((x) => ['light', 'dark'].some((mode) => new Set(ofMode(mode).map((th) => x.value[th])).size > 1)));
+  for (const mode of ['light', 'dark']) {
+    const th = ofMode(mode)[0];
+    if (!th) continue;
+    css += `[data-theme$="-${mode}"] {\n`;
+    for (const x of multi.filter((x) => !byBrand.has(x))) css += line(x.name, x.value[th]);
+    css += '}\n';
+  }
   for (const th of themes.slice(1)) {
     css += `[data-theme="${th}"] {\n`;
-    for (const x of all.filter((x) => themed(x) && Object.keys(x.value).length > 1 && x.value[th] != null)) css += line(x.name, x.value[th]);
+    for (const x of multi.filter((x) => byBrand.has(x) && x.value[th] != null)) css += line(x.name, x.value[th]);
     css += '}\n';
   }
 

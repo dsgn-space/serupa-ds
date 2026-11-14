@@ -183,7 +183,7 @@ describe('PinInput', () => {
     expect(b[0]!.getBoundingClientRect().left).toBeLessThan(b[1]!.getBoundingClientRect().left);
   });
 
-  test('contrast in all six themes: characters 4.5:1 on the box; focus ring and danger border 3:1 on the surface, the soft border 1.3:1 (under 3:1 on purpose)', async () => {
+  test('contrast in every theme: characters 4.5:1 on the box; focus ring and danger border 3:1 on the surface, the soft border 1.3:1 (under 3:1 on purpose)', async () => {
     await render(<div style={{ background: 'var(--surface)' }} id="bg"><PinInput id="p" aria-label="Code" defaultValue="1" /><PinInput id="v" aria-label="Bad" invalid /></div>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

@@ -459,7 +459,7 @@ describe('Navbar', () => {
     expect(vis('#nav nav')).toBe(false);
   });
 
-  test('contrast: links, and the current page and hovered links (text on the shaded background), keep 4.5:1 in all six themes', async () => {
+  test('contrast: links, and the current page and hovered links (text on the shaded background), keep 4.5:1 in every theme', async () => {
     await render(<Main />);
     const cur = q('#nav [aria-current]'), low: string[] = [];
     for (const th of THEMES) {

@@ -7,12 +7,16 @@ import { Button } from '../components/Button/Button';
 import { Card } from '../components/Card/Card';
 import { Input } from '../components/Input/Input';
 import { Switch } from '../components/Switch/Switch';
-import { contrast, lowContrast, THEMES, withMotion } from '../../tools/test/vitest/helpers';
+import { contrast, lowContrast, withMotion } from '../../tools/test/vitest/helpers';
 
 // Theme axes (ADR-0011): data-brand and data-mode on an element without data-theme give the same colors as the
 // flat data-theme="<brand>-<mode>" themes, through light-dark() pairs that the element's color-scheme resolves.
 const root = document.documentElement;
 type Tok = { name: string; value: unknown };
+// Every brand tokens.json has a theme for, the default first.
+// These tests are about the themes themselves, so they run in all of them, not only the ones the component tests use.
+const THEMES = tokens.color.themes.map((t: { id: string }) => t.id);
+const BRANDS = [...new Set(tokens.color.themes.map((t: { id: string }) => t.id.replace(/-(light|dark)$/, '')))];
 const varying = (tokens.color.tokens as Tok[]).filter((t) => t.value && typeof t.value === 'object' && new Set(Object.values(t.value)).size > 1).map((t) => t.name);
 
 // The resolved color of every varying token on a probe inside `host`.
@@ -148,7 +152,7 @@ describe('Contrast axis', () => {
     ['focus ring', 'var(--focus-ring)', 'var(--surface)', 4.5],
   ];
 
-  test('data-contrast="more": 7:1 text and stronger borders in all six themes', () => {
+  test('data-contrast="more": 7:1 text and stronger borders in every theme', () => {
     expect(lowContrast(pairs)).not.toEqual([]);   // without it muted text is 4.5:1, so passing below is the attribute's work
     root.setAttribute('data-contrast', 'more');
     expect(lowContrast(pairs)).toEqual([]);
@@ -197,7 +201,7 @@ describe('Contrast axis', () => {
   test('the brand keeps its hue: each brand gets its own stronger shade, from the axes and in a nested section', () => {
     const hue = (host: HTMLElement) => { const p = document.createElement('span'); host.appendChild(p); p.style.color = 'var(--primary)'; const c = getComputedStyle(p).color; p.remove(); return c; };
     const swatch = (name: string) => { const p = document.createElement('span'); document.body.appendChild(p); p.style.color = `var(--${name})`; const c = getComputedStyle(p).color; p.remove(); return c; };
-    for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'teal-300'], ['blue', 'dark', 'blue-300']]) {
+    for (const [brand, mode, shade] of [['violet', 'light', 'violet-800'], ['emerald', 'dark', 'emerald-300'], ['yellow', 'light', 'yellow-900'], ['blue', 'dark', 'blue-300']]) {
       axes(brand, mode);
       root.setAttribute('data-contrast', 'more');
       expect(hue(document.body), `${brand}-${mode}`).toBe(swatch(shade!));
@@ -212,11 +216,11 @@ describe('Contrast axis', () => {
     const blue = document.createElement('section');
     blue.setAttribute('data-theme', 'blue-light');
     document.body.append(emerald, blue);
-    expect(hue(emerald)).toBe(swatch('teal-300'));
+    expect(hue(emerald)).toBe(swatch('emerald-300'));
     expect(hue(blue)).toBe(swatch('blue-800'));
     // …and without it, the normal shades.
     root.removeAttribute('data-contrast');
-    expect(hue(emerald)).toBe(swatch('teal-400'));
+    expect(hue(emerald)).toBe(swatch('emerald-400'));
     expect(hue(blue)).toBe(swatch('blue-600'));
     emerald.remove();
     blue.remove();
@@ -291,7 +295,7 @@ describe('Density axis', () => {
     expect(shadow('el-brand')).not.toBe(shadow('el-root'));
   });
 
-  test('a theme is its colors: violet and emerald draw every corner, shadow, border, surface, space and motion as blue does, in light and dark', async () => {
+  test('a theme is its colors: every brand draws every corner, shadow, border, surface, space and motion as blue does, in light and dark', async () => {
     await render(<div>
       <Button id="co-btn">Save</Button>
       <Button id="co-out" variant="outline">Later</Button>
@@ -318,7 +322,7 @@ describe('Density axis', () => {
     for (const mode of ['light', 'dark']) {
       root.setAttribute('data-theme', `blue-${mode}`);
       const blue = read();
-      for (const brand of ['violet', 'emerald']) {
+      for (const brand of BRANDS.slice(1)) {
         root.setAttribute('data-theme', `${brand}-${mode}`);
         expect(read(), `${brand}-${mode}`).toEqual(blue);
       }
@@ -336,7 +340,12 @@ describe('Density axis', () => {
       if (new Set(v).size > 1 && !v.every(hue)) wrong.push(`${t.name} (${mode}): ${v.join(', ')}`);
     }
     expect(wrong).toEqual([]);
-    expect(tokens.color.themes.map((t: { name: string }) => t.name)).toEqual(['Blue Light', 'Blue Dark', 'Violet Light', 'Violet Dark', 'Emerald Light', 'Emerald Dark']);
+    // Only the brand's own aliases differ from one brand to the next: the neutrals, the statuses and the charts don't.
+    const brandOf = (t: Tok, mode: string) => new Set(Object.entries(per(t)!).filter(([th]) => th.endsWith(mode)).map(([, x]) => x)).size > 1;
+    expect(varied.filter(([, t]) => brandOf(t, 'light') || brandOf(t, 'dark')).map(([, t]) => t.name).sort()).toEqual(['field-action', 'focus-ring', 'link-visited', 'on-primary', 'primary', 'primary-hover', 'primary-subtle']);
+    // A theme for every accent color of the palette, blue first, each light and dark and named after its color.
+    expect(BRANDS).toEqual(['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']);
+    expect(tokens.color.themes.map((t: { id: string; name: string }) => `${t.id}: ${t.name}`)).toEqual(BRANDS.flatMap((b) => [`${b}-light: ${b[0]!.toUpperCase()}${b.slice(1)} Light`, `${b}-dark: ${b[0]!.toUpperCase()}${b.slice(1)} Dark`]));
     expect(groups.flatMap(([, g]) => g.tokens!).filter((t) => /^depth-/.test(t.name) || 'tactile' in t).map((t) => t.name)).toEqual([]);
   });
   test('GR333: the recessed surface sits on the other side of the page from the raised one in every theme, so dark keeps depth the right way round', () => {

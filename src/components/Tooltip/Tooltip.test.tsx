@@ -252,7 +252,7 @@ describe('Tooltip', () => {
     await expect.poll(() => (el('tdlg') as HTMLDialogElement).open).toBe(false);
   });
 
-  test('contrast: the text keeps 4.5:1 on the tooltip in all six themes', async () => {
+  test('contrast: the text keeps 4.5:1 on the tooltip in every theme', async () => {
     await render(<Tooltip content="Settings" open><button id="b">B</button></Tooltip>);
     const low: string[] = [];
     for (const th of THEMES) {
@@ -263,7 +263,7 @@ describe('Tooltip', () => {
     expect(low).toEqual([]);
   });
 
-  test('a shortcut in the tooltip (Kbd) keeps its "+" at 4.5:1 on the tooltip in all six themes', async () => {
+  test('a shortcut in the tooltip (Kbd) keeps its "+" at 4.5:1 on the tooltip in every theme', async () => {
     await render(<Tooltip content={<>Save <Kbd keys={['mod', 'S']} /></>} open><button id="b">B</button></Tooltip>);
     const plus = [...tipOf('b').querySelectorAll('*')].find((e) => e.textContent === '+')!;
     const low: string[] = [];
