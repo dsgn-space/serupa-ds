@@ -8,6 +8,8 @@
 //                    export), for the docs pages
 //   tested.ts        each component's test names, grouped as its <Name>.test.tsx groups them, for the "What the
 //                    tests check" part of its docs page (docs/blocks.tsx)
+//   facts.ts         in docs/generated/ too: each component's docs page id, other names, label uses and tokens, and the
+//                    waiting changesets, for the docs blocks (docs/blocks.tsx)
 //   labels.ts        each component's own words (src/components/<Name>/labels.ts: <Name>Labels, en, id), merged into one English and
 //                    one Indonesian set (src/internal/labels.ts adds the shared ones)
 // The build, Storybook, Vitest, typecheck and lint run it first: node tools/build/registry.mjs.
@@ -45,7 +47,10 @@ export const STATUSES = ['alpha', 'beta', 'stable', 'deprecated'];
 export function status(n, root = ROOT) {
   const file = path.join(root, 'src', 'components', n, `${n}.tsx`);
   if (!fs.existsSync(file)) return 'stable';
-  const text = fs.readFileSync(file, 'utf8');
+  return statusIn(fs.readFileSync(file, 'utf8'), n, `src/components/${n}/${n}.tsx`);
+}
+/** The same, from the text of <Name>.tsx (at any commit: tools/api-diff.mjs reads it from git). */
+export function statusIn(text, n, where = n) {
   const at = new RegExp(`^export (?:const|function) ${n}\\b`, 'm').exec(text);
   if (!at) return 'stable';
   // The doc comment that ends on the line just before the export.
@@ -53,7 +58,7 @@ export function status(n, root = ROOT) {
   if (!before.endsWith('*/')) return 'stable';
   const doc = before.slice(before.lastIndexOf('/**'));
   const tags = [...doc.matchAll(/@(alpha|beta|deprecated)\b/g)].map((m) => m[1]);
-  if (tags.length > 1) throw new Error(`src/components/${n}/${n}.tsx: its export says @${tags.join(' and @')}; give it one status`);
+  if (tags.length > 1) throw new Error(`${where}: its export says @${tags.join(' and @')}; give it one status`);
   return tags[0] ?? 'stable';
 }
 
@@ -80,6 +85,71 @@ export function testNames(n, root = ROOT) {
     else (groups.at(-1) || groups[groups.push({ group: n, tests: [] }) - 1]).tests.push(name);
   }
   return groups.filter((g) => g.tests.length);
+}
+
+/** docs/generated/facts.ts: what the docs blocks need from every component folder at once, read here rather than by
+ *  the page. A page that imported each README, story file, stylesheet and token file to draw one link asked a
+ *  development server for some 650 files before its first paint. */
+export function docsFacts(root = ROOT) {
+  const all = components(root);
+  const read = (n, f) => { const file = path.join(root, 'src', 'components', n, f); return fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : ''; };
+  const files = (n, end) => fs.readdirSync(path.join(root, 'src', 'components', n)).filter((f) => f.endsWith(end)).sort();
+  // Each component's docs page id, from its stories' meta title, so links follow the grouping. Only a title with a
+  // group counts: the first title: in a file can be a story's data (Stepper's steps, Kanban's cards).
+  const docs = {};
+  for (const n of all) for (const f of files(n, '.stories.tsx')) {
+    const title = /\btitle:\s*(['"])((?:Components|Foundations|Blocks|Patterns)\/[^'"]+)\1/.exec(read(n, f))?.[2];
+    if (title) docs[n] = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  }
+  // The other names each is known by: the "**Also called:**" line under its README's first paragraph.
+  const names = all.flatMap((n) => {
+    const line = /^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(read(n, 'README.md'))?.[1];
+    return line ? line.split(/,\s*/).map((other) => ({ other, name: n })) : [];
+  }).sort((a, b) => a.other.localeCompare(b.other, 'en', { sensitivity: 'base' }));
+  // Which component says each of its own labels: the doc comment above the key (or group of keys) in its labels.ts.
+  const use = {};
+  for (const n of all) {
+    const source = read(n, 'labels.ts');
+    let doc = '';
+    for (const line of source.slice(source.indexOf('export interface '), source.indexOf('\n}\n')).split('\n').slice(1)) {
+      const said = /^\s*\/\*\*\s*(.*?)\s*\*\/$/.exec(line), key = /^\s*(\w+):/.exec(line);
+      if (said) doc = said[1]; else if (key) use[key[1]] = doc;
+    }
+  }
+  // Which components' CSS reads each custom property, and each component's own tokens (<name>.tokens.json).
+  const users = {}, own = [];
+  for (const n of all) {
+    for (const f of files(n, '.css')) for (const m of read(n, f).matchAll(/var\(\s*(--[\w\\.-]+)/g)) {
+      const v = m[1].replace(/\\/g, '');
+      if (!(users[v] ||= []).includes(n)) users[v].push(n);
+    }
+    for (const f of files(n, '.tokens.json')) for (const [group, entries] of Object.entries(Object.values(JSON.parse(read(n, f)))[0])) {
+      if (group.startsWith('$')) continue;
+      for (const [key, t] of Object.entries(entries)) {
+        if (key.startsWith('$')) continue;
+        const v = t.$value;
+        const ref = typeof v === 'string' ? /^\{[^.}]+\.([^}]+)\}$/.exec(v)?.[1]?.replace(/_/g, '.') : undefined;
+        const value = ref ? `--${ref}` : (v && typeof v === 'object' && v.alpha === 0 ? 'transparent' : typeof v === 'string' ? v : v?.hex ?? JSON.stringify(v));
+        own.push({ css: t.$extensions['com.serupa'].cssVar, component: n, value, usage: t.$description ?? '' });
+      }
+    }
+  }
+  // The changesets waiting for a release, for the upgrade guide's next major.
+  const dir = path.join(root, '.changeset');
+  const pending = Object.fromEntries((fs.existsSync(dir) ? fs.readdirSync(dir) : []).filter((f) => f.endsWith('.md')).sort().map((f) => [f, fs.readFileSync(path.join(dir, f), 'utf8')]));
+  const json = (v) => JSON.stringify(v, null, 1);
+  return '/** Each component\'s docs page id (components-forms-input), by its folder. */\n'
+    + `export const componentDocs: Record<string, string> = ${json(docs)};\n`
+    + '/** The other names components are known by, A to Z. */\n'
+    + `export const otherNames: { other: string; name: string }[] = ${json(names)};\n`
+    + '/** Where each component label is used, by its key. */\n'
+    + `export const componentLabelUse: Record<string, string> = ${json(use)};\n`
+    + '/** The components whose CSS reads each custom property. */\n'
+    + `export const tokenUsers: Record<string, string[]> = ${json(users)};\n`
+    + '/** Every component token. */\n'
+    + `export const componentTokens: { css: string; component: string; value: string; usage: string }[] = ${json(own)};\n`
+    + '/** The changesets waiting for a release, by file name. */\n'
+    + `export const pendingChangesets: Record<string, string> = ${json(pending)};\n`;
 }
 
 export function buildRegistry(root = ROOT) {
@@ -116,6 +186,7 @@ export function buildRegistry(root = ROOT) {
   write(path.join(root, 'docs', 'generated', 'status.ts'), BANNER
     + '/** Each component that isn\'t stable, by name: alpha, beta or deprecated, from the doc comment on its export. */\n'
     + `export const componentStatus: Record<string, 'alpha' | 'beta' | 'deprecated'> = {${unstable.map(([n, st]) => ` ${n}: '${st}'`).join(',')}${unstable.length ? ' ' : ''}};\n`);
+  write(path.join(root, 'docs', 'generated', 'facts.ts'), BANNER + docsFacts(root));
 }
 
 const START = '<!-- components:start (written by tools/build/registry.mjs) -->';

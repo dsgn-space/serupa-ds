@@ -164,3 +164,29 @@
       - link "Questions people ask":
         - /url: "#toc-faq"
 
+# Rail
+- navigation "On this page":
+  - paragraph: On this page
+  - list:
+    - listitem:
+      - link "Introduction":
+        - /url: "#toc-intro"
+    - listitem:
+      - link "Installation":
+        - /url: "#toc-install"
+    - listitem:
+      - link "With npm":
+        - /url: "#toc-npm"
+    - listitem:
+      - link "From a CDN":
+        - /url: "#toc-cdn"
+    - listitem:
+      - link "Usage":
+        - /url: "#toc-usage"
+    - listitem:
+      - link "Theming":
+        - /url: "#toc-theming"
+    - listitem:
+      - link "Questions people ask":
+        - /url: "#toc-faq"
+

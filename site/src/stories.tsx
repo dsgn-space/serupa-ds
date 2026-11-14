@@ -73,6 +73,13 @@ export function StoryView({ entry }: { entry: StoryEntry }) {
   return <ErrorBoundary className="site-broken" title={`${entry.name} couldn’t be shown`}>{ui}</ErrorBoundary>;
 }
 
+const modules = import.meta.glob(['../../src/**/*.stories.tsx']);
+/** A stories file's stories, once the file has loaded: for a page that shows stories no .mdx page brought with it. */
+export async function loadStories(file: string): Promise<StoryEntry[]> {
+  await modules[`../../${file}`]?.();
+  return storiesOf(file);
+}
+
 const sources = import.meta.glob<string>(['../../src/**/*.stories.tsx'], { query: '?raw', import: 'default' });
 /** A story's code as its file has it: fetched when someone asks to see it. */
 export async function sourceOf(entry: StoryEntry): Promise<string> {

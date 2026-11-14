@@ -107,6 +107,19 @@ describe('Card', () => {
     document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
+  test('a form field on an elevated card stands out from the card in every dark theme (field-raised), and on an outline card keeps the page\'s field', async () => {
+    await render(<Col><Card id="fel" variant="elevated"><input id="fe" /></Card><Card id="fdf"><input id="fd" /></Card></Col>);
+    // An <input> reads the shared field fill through --field, as every field does.
+    for (const id of ['fe', 'fd']) el(id).style.background = 'var(--field)';
+    for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect([th, css(el('fe')).backgroundColor]).toEqual([th, color('var(--field-raised)')]);
+      expect(css(el('fe')).backgroundColor).not.toBe(css(el('fel')).backgroundColor);
+      expect([th, css(el('fd')).backgroundColor]).toEqual([th, color('var(--field)')]);
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
   test('padding sm 12px, lg 24px, none 0', async () => {
     await render(<Col><Card id="sm" padding="sm">S</Card><Card id="lg" padding="lg">L</Card><Card id="none" padding="none">N</Card></Col>);
     expect(['sm', 'lg', 'none'].map((id) => css(el(id)).paddingTop)).toEqual(['12px', '24px', '0px']);

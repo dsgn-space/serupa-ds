@@ -1014,6 +1014,22 @@
         }
       }
     },
+    "field-raised": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. Emerald dark, whose overlays are zinc-900, keeps zinc-800. `field-hover` and `field-pressed` already sit a step past it.",
+      "$extensions": {
+        "com.serupa": {
+          "themes": {
+            "blue-dark": "#333338",
+            "violet-light": "{white}",
+            "violet-dark": "#333338",
+            "emerald-light": "{white}",
+            "emerald-dark": "{zinc-800}"
+          }
+        }
+      }
+    },
     "field-border-invalid": {
       "$type": "color",
       "$value": "{color.red-600}",
@@ -8829,6 +8845,10 @@
     "icon-weight-bold": {
       "$value": "0.035em",
       "$description": "Thickens a Material Symbol to go with `font-bold` text and headings, close to weight 700 (0.84px at 24px). `<Icon weight=\"bold\">`."
+    },
+    "icon-cap-align": {
+      "$value": "-0.125em",
+      "$description": "The vertical-align that centres a 1em icon in running text on the capitals beside it rather than on the x-height (`middle`) or the text's bottom: Link's new-tab icon."
     },
     "sizing-1-2": {
       "$value": "50%",

@@ -4,6 +4,7 @@ import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { component } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
+import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
 import { typeahead, typing, type Typed } from '../../internal/typeahead';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { useServerStyles } from '../../internal/serverStyles';
@@ -138,7 +139,12 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
     if (props.value === undefined) setOwnValue(next);
     if (props.onValueChange) props.onValueChange(next);
   };
+  // Opened or closed by a key, the chevron is turned in the same frame, as focus and selection move (KW1, KW15); a
+  // click keeps the turn.
+  const [keyed, setKeyed] = React.useState(false);
+  useIsoLayoutEffect(listenForInput, []);
   const setOpen = (next: string[]) => {
+    setKeyed(lastInputKeyboard());
     if (props.expanded === undefined) setOwnOpen(next);
     if (props.onExpandedChange) props.onExpandedChange(next);
   };
@@ -237,7 +243,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   return (
     <ul {...rest} ref={mergedRef} role="tree"
       aria-multiselectable={multi || undefined}
-      className={cn('dk-tree-view', props.className)} data-component="tree-view" onKeyDown={onKeyDown}
+      className={cn('dk-tree-view', props.className)} data-component="tree-view" data-instant={keyed ? '' : undefined} onKeyDown={onKeyDown}
       onFocus={(e) => { focusedIn.current = true; if (rest.onFocus) rest.onFocus(e); }}
       onBlur={(e) => { if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget)) focusedIn.current = false; if (rest.onBlur) rest.onBlur(e); }}>
       <TreeContext.Provider value={ctx}><Rows list={props.items} level={1} /></TreeContext.Provider>

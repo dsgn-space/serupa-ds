@@ -18,12 +18,14 @@ import path from 'node:path';
 import postcss from 'postcss';
 import bcd from '@mdn/browser-compat-data' with { type: 'json' };
 import { projectArg, report, done, fail } from './lib.mjs';
+import { floor } from '../browser-floor.mjs';
 
 const P = projectArg();
 // The README's floor: light-dark() needs Chrome and Edge 123 and Safari 17.5; @property, which every utility that
 // composes through --dk-* variables (transforms, shadows, rings, gradients, filters, masks) needs for its starting
 // values, needs Firefox 128.
-const BASELINE = { chrome: 123, edge: 123, safari: 17.5, firefox: 128 };
+// package.json's browserslist holds the numbers (tools/browser-floor.mjs).
+const BASELINE = floor(P);
 
 // Newer than BASELINE, on purpose. The key is what the scan prints; the value says what happens without it.
 // readme: text the README's "Browser support" section has to contain, for what users should know.

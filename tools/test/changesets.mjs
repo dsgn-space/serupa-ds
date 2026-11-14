@@ -54,7 +54,7 @@ t('bullets alone are one entry each, and plain text is one', JSON.stringify(entr
   const env = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith('GIT_')));
   const git = (...a) => execFileSync('git', ['-C', dir, '-c', 'user.name=t', '-c', 'user.email=t@t', ...a], { encoding: 'utf8', env });
   const put = (f, text) => { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), text); };
-  for (const f of ['tools/changeset-check.mjs', 'tools/changesets.mjs']) put(f, read(f));
+  for (const f of ['tools/changeset-check.mjs', 'tools/changesets.mjs', 'tools/api-diff.mjs', 'tools/build/registry.mjs']) put(f, read(f));
   const pkg = { name, version: '1.0.0', scripts: { test: 'a' }, devDependencies: { vitest: '1.0.0' }, dependencies: {} };
   put('package.json', JSON.stringify(pkg));
   git('init', '-q'); git('add', '-A'); git('commit', '-qm', 'base');
@@ -69,6 +69,19 @@ t('bullets alone are one entry each, and plain text is one', JSON.stringify(entr
   t('a change to tools/tokens/ needs one (the build writes it into tokens.css and debug.js)', needs('tokens', () => put('tools/tokens/contrast-pairs.mjs', 'export const PAIRS = [];')));
   t('a change to tools/lint/a11y-components.mjs needs one (the build writes it into eslint.js)', needs('lint', () => put('tools/lint/a11y-components.mjs', 'export const a = 1;')));
   t('a change to another lint rule needs none', !needs('rule', () => put('tools/lint/no-literal-words.mjs', 'export const b = 1;')));
+  // The API decides the smallest bump: a prop that goes away is a major, not the minor a new prop is.
+  const api = (props) => `// exports: Chip, type ChipProps\ninterface ChipProps {\n${props.map((p) => `    ${p}?: string | undefined;\n`).join('')}}\ndeclare const Chip: (props: ChipProps) => null;\n`;
+  const bump = (b) => `---\n"${name}": ${b}\n---\n\n- Chip changed.\n`;
+  const chip = (props, b, f) => { put('tools/test/baseline-api/Chip.d.ts', api(props)); put('src/components/Chip/Chip.tsx', `// ${props.join(', ')}\n`); put(`.changeset/${f}.md`, bump(b)); };
+  t('a new component with a minor changeset passes', !needs('chip', () => chip(['tone'], 'minor', 'chip')));
+  t('a new prop with a minor changeset passes', !needs('add', () => chip(['tone', 'size'], 'minor', 'add')));
+  t('a removed prop with a minor changeset fails (it breaks code that passes it)', needs('remove', () => chip(['size'], 'minor', 'remove')));
+  t('a removed prop with a major changeset passes', !needs('remove-major', () => chip([], 'major', 'remove-major')));
+  // An alpha or beta component may change its API in a minor (registry.mjs, status).
+  put('src/components/Chip/Chip.tsx', '/** A chip. @beta */\nexport const Chip = () => null;\n'); git('add', '-A'); git('commit', '-qm', 'beta');
+  t('a removed prop of a beta component with a minor changeset passes', !needs('beta', () => { put('tools/test/baseline-api/Chip.d.ts', api(['tone'])); put('src/components/Chip/Chip.tsx', '/** A chip. @beta */\nexport const Chip = () => null; // tone\n'); put('.changeset/beta.md', bump('minor')); }));
+  t('…and the same component once stable needs a major again', needs('stable', () => { put('tools/test/baseline-api/Chip.d.ts', api(['tone', 'size'])); put('src/components/Chip/Chip.tsx', '/** A chip. */\nexport const Chip = () => null;\n'); put('.changeset/stable.md', bump('minor')); }) === false
+    && needs('stable-remove', () => { put('tools/test/baseline-api/Chip.d.ts', api(['size'])); put('src/components/Chip/Chip.tsx', '/** A chip. */\nexport const Chip = () => null; // size\n'); put('.changeset/stable-remove.md', bump('minor')); }));
   fs.rmSync(dir, { recursive: true, force: true });
 }
 

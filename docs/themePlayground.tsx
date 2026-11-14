@@ -32,7 +32,7 @@ export const AXES: Axis[] = [
 
 /** The attributes for a choice of axes, as they'd go on <html>: the ones left at their default are left out. */
 export function attributesOf(values: Record<string, string>): Array<[string, string]> {
-  return AXES.filter((a) => values[a.key] !== a.omit && values[a.key] != null).map((a) => [a.attr, values[a.key]]);
+  return AXES.filter((a) => values[a.key] !== a.omit && values[a.key] != null).map((a) => [a.attr, values[a.key] ?? '']);
 }
 
 export function ThemePlayground() {
