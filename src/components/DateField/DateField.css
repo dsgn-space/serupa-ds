@@ -12,4 +12,8 @@
 .dk-date-field__part--year { width: var(--date-field-year-width, var(--spacing-24)); }
 .dk-date-field__input { width: var(--sizing-full); font-variant-numeric: tabular-nums; }
 .dk-date-field--disabled .dk-date-field__label { opacity: var(--opacity-disabled); }
+/* What's wrong, on a line of its own under the boxes, as a Field's error is drawn. */
+.dk-date-field__error { display: flex; flex-basis: var(--sizing-full); align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); margin-block-start: calc(var(--spacing-0) - var(--date-field-gap, var(--spacing-4)) + var(--spacing-1\.5)); color: var(--field-error-color, var(--danger-text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); overflow-wrap: anywhere; }
+.dk-date-field__error-icon { flex-shrink: 0; font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); }
+.dk-date-field__part--month:has(.dk-date-field__input--select) { width: auto; min-width: var(--date-field-year-width, var(--spacing-24)); }
 }

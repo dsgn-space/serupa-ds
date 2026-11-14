@@ -3,7 +3,9 @@ interface DateFieldLabels {
     dateFieldDay: string;
     dateFieldMonth: string;
     dateFieldYear: string;
+    dateFieldError: (what: DateFieldMessage, detail?: string, days?: number) => string;
 }
+type DateFieldMessage = "after-max" | "before-min" | "day" | "missing-day" | "missing-month" | "missing-year" | "month" | "not-real" | "year";
 type DatePart = "day" | "month" | "year";
 type DateFieldProblem = "after-max" | "before-min" | "empty" | "missing-day" | "missing-month" | "missing-year" | "not-a-date";
 interface DateFieldChangeDetails {
@@ -28,5 +30,6 @@ interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "def
     readOnly?: boolean | undefined;
     invalid?: boolean | undefined;
     size?: "lg" | "md" | "sm" | undefined;
+    monthInput?: "number" | "select" | undefined;
 }
 declare const DateField: React.ForwardRefExoticComponent<DateFieldProps & React.RefAttributes<HTMLDivElement>>;
