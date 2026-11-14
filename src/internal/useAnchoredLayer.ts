@@ -58,7 +58,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(a); };
     // The layer follows the anchor in CSS between the handlers below (anchor positioning); an anchor that isn't an
     // HTML element (an SVG's) is placed in px, as before.
-    const [name, unname] = a instanceof HTMLElement ? anchorName(a) : [undefined, () => {}];
+    const named = a instanceof HTMLElement ? anchorName(a) : undefined, name = named && named[0];
     const update = () => {
       if (matchWidth) p.style.minWidth = a.offsetWidth + 'px';
       placeLayer(p, a, placement, offset, fallback, rtl, name);
@@ -77,7 +77,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const vv = window.visualViewport;
     if (vv) { vv.addEventListener('resize', resized); vv.addEventListener('scroll', update); }
     return () => {
-      unname();
+      if (named) named[1]();
       if (ro) ro.disconnect(); window.removeEventListener('scroll', scrolled, true); window.removeEventListener('resize', resized);
       fontsOff();
       if (vv) { vv.removeEventListener('resize', resized); vv.removeEventListener('scroll', update); }
