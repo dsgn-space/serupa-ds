@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { Billing, billingDate, money } from './Billing';
+import { Billing, billingDate, methodText, money } from './Billing';
 import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
@@ -42,6 +42,45 @@ describe('Patterns/Billing', () => {
     await expect.element(alert.getByText(/^The payment on .+ failed$/)).toBeVisible();
     await expect.element(alert.getByRole('link', { name: 'Update card' })).toHaveAttribute('href', '#pay');
     await expect.element(screen.getByRole('table').getByText('Payment failed')).toBeVisible();
+  });
+
+  test('each way to pay is said in words, with the way to change it', async () => {
+    expect(methodText({ kind: 'card', brand: 'Visa', last4: '4242', expires: '2028-04' })).toBe('Visa ending 4242');
+    const screen = await render(<Billing updateCardHref="#pay" paymentMethod={{ kind: 'bank', bank: 'BCA', last4: '7781' }} />);
+    const section = screen.getByRole('region', { name: 'Payment method' });
+    await expect.element(section.getByText('Direct debit from BCA, account ending 7781')).toBeVisible();
+    await expect.element(section.getByRole('link', { name: 'Change payment method' })).toHaveAttribute('href', '#pay');
+    expect(section.getByRole('link', { name: 'Update card' }).elements()).toHaveLength(0);
+    await screen.rerender(<Billing paymentMethod={{ kind: 'ewallet', provider: 'GoPay', phoneLast4: '4410' }}
+      invoices={[{ id: 'x', date: '2026-11-01', amount: 24, status: 'failed', href: '#x' }]} />);
+    await expect.element(section.getByText('GoPay, phone ending 4410')).toBeVisible();
+    const alert = screen.getByRole('alert');
+    await expect.element(alert.getByRole('link', { name: 'Change payment method' })).toBeVisible();
+    expect(alert.element().textContent).toContain('Change your payment method to keep Team.');
+  });
+
+  test('a card that runs out before the next payment says so in words, and a cancelled plan doesn\'t worry about it', async () => {
+    const card = { kind: 'card' as const, brand: 'Mastercard', last4: '5100', expires: '2026-11' };
+    const screen = await render(<SerupaProvider locale="en-GB"><Billing paymentMethod={card} /></SerupaProvider>);
+    const section = screen.getByRole('region', { name: 'Payment method' });
+    await expect.element(section.getByText('Expires soon')).toBeVisible();
+    await expect.element(section.getByText('It runs out before the next payment on 1 December 2026. Update it to keep Team.')).toBeVisible();
+    await expect.element(section.getByRole('link', { name: 'Update card' })).toBeVisible();
+    // A card that lasts through the renewal month is fine.
+    await screen.rerender(<SerupaProvider locale="en-GB"><Billing paymentMethod={{ ...card, expires: '2026-12' }} /></SerupaProvider>);
+    expect(section.getByText('Expires soon').elements()).toHaveLength(0);
+    await screen.unmount();
+    await render(<Billing plan={cancelled} paymentMethod={card} />);
+    await expect.element(page.getByText(/^Active until/)).toBeVisible();
+    expect(page.getByText('Expires soon').elements()).toHaveLength(0);
+  });
+
+  test('with nothing on file, it says so, by when, and Add payment method', async () => {
+    const screen = await render(<SerupaProvider locale="en-GB"><Billing paymentMethod={null} /></SerupaProvider>);
+    const section = screen.getByRole('region', { name: 'Payment method' });
+    await expect.element(section.getByText('No payment method yet.')).toBeVisible();
+    await expect.element(section.getByText('Add one before 1 December 2026 to keep Team.')).toBeVisible();
+    await expect.element(section.getByRole('link', { name: 'Add payment method' })).toBeVisible();
   });
 
   test('Cancel plan asks once, says what changes, and Keep my plan closes it with nothing done', async () => {
