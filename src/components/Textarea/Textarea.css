@@ -28,6 +28,8 @@
   color: inherit; font: inherit; letter-spacing: inherit; resize: vertical;
 }
 .dk-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
+/* Filled in by the browser (an address): the box keeps its look, as Input's does (GR411). */
+.dk-textarea__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--textarea-text, var(--text)); }
 .dk-textarea--resize-none .dk-textarea__field, .dk-textarea--disabled .dk-textarea__field, .dk-textarea__field:where(:disabled), .dk-textarea--readonly .dk-textarea__field { resize: none; }
 .dk-textarea--auto .dk-textarea__field { overflow-y: hidden; }
 /* autoResize where the browser sizes a field to its content: rows lines at least, maxRows at most (unset: no limit,
