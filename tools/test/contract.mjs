@@ -9,7 +9,7 @@
 import fs from 'node:fs';
 import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import path from 'node:path';
-import { HERE, PROJECT, kebab, tokensCss, report, done } from './lib.mjs';
+import { HERE, PROJECT, kebab, report, done } from './lib.mjs';
 import { componentIndex } from '../build/registry.mjs';
 
 const SKIP = [];
