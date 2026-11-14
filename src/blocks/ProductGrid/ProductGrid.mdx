@@ -24,9 +24,14 @@ Product cards in a grid that fits the screen, for a shop's category, search or "
 - **Add to cart names its product** (2.4.6, 2.5.3). Each button reads "Add to cart, Linen shirt": it starts with the words people see, so voice control finds it, and a list of buttons still says which is which.
 - **Adding says how it went** (4.1.3). The button is busy until `onAddToCart` settles, then a toast says the product is in the cart, or that it couldn't be added and to try again.
 - **Sold out says so in words**, in place of the button.
+- **While the products load**, set `loading`: placeholder cards stand in the grid's place, the list says it's busy, and the placeholders are named once, "Loading products" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry` for "Couldn’t load the products" with Try again.
 - **Money is the locale's.** Prices and review counts are written the way the reader's locale writes them, and every word is in `labels`.
 
 <Canvas of={Stories.AddFails} />
+
+<Canvas of={Stories.Loading} />
+
+<Canvas of={Stories.LoadFailed} />
 
 <Canvas of={Stories.Indonesian} />
 
