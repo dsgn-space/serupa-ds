@@ -520,6 +520,14 @@ npx serupa-agents
 
 It adds a short section to the project's `AGENTS.md` (read by Codex, Cursor, Copilot and others), telling agents to read `node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md` before any UI work, and adds `@AGENTS.md` to `CLAUDE.md` for Claude Code. It makes either file when it's missing, and running it again changes nothing. Because the skill is read from the installed package, it always matches the release the project pinned. An app made with `serupa-create` already has both files.
 
+Agents (and people) look up a component's guide from the installed release with `serupa-docs`, offline and for the exact version the project pinned. `dist/llms.txt` is the short summary an agent reads first; it points to the same command:
+
+```sh
+npx serupa-docs                     # every component, by group
+npx serupa-docs Button props        # one part of a guide: props, keyboard, accessibility, "when not to use"
+npx serupa-docs search date range   # components, topics and tokens that match
+```
+
 A second skill, `skills/serupa-review/SKILL.md`, reviews a change to an app's UI. It checks what lint can't judge: a widget built by hand where a component exists, the app's part of accessibility, the right feedback for a message, and the words. Findings come grouped as Must fix, Should fix and Nice to have, each with its problem, fix and what happens if it's skipped, and end with a one-line verdict. The `serupa-agents` section points agents at it too.
 
 Or install the skill with the `skills` command, `npx skills add dsgn-space/serupa-ds`. That takes it from `main`, which can name components and props newer than the release the project installed.
