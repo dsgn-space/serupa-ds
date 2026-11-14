@@ -124,10 +124,27 @@
   border-top: var(--border-width-2) solid var(--event-calendar-now, var(--primary)); pointer-events: none;
 }
 
+/* Creating and moving (onSlotSelect, onEventChange). An event that moves shows a grab cursor, and while it's dragged
+   it's drawn where it would land, lifted with the overlay shadow. A slot dragged down a day's hours is outlined there
+   in the focus color. Its end, at the bottom of a timed event, drags its length. Nothing in the hours selects as text. */
+.dk-event-calendar__event--movable { cursor: grab; }
+.dk-event-calendar[data-dragging], .dk-event-calendar[data-dragging] .dk-event-calendar__event { cursor: grabbing; -webkit-user-select: none; user-select: none; }
+.dk-event-calendar__event--dragging { box-shadow: var(--elevation-overlay); }
+.dk-event-calendar__hours { -webkit-user-select: none; user-select: none; }
+.dk-event-calendar__resize {
+  position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--spacing-1\.5); cursor: ns-resize;
+}
+.dk-event-calendar__ghost {
+  position: absolute; inset-inline: var(--spacing-0\.5); box-sizing: border-box; pointer-events: none;
+  top: calc(var(--dk-evc-hour) * var(--dk-evc-at)); height: calc(var(--dk-evc-hour) * var(--dk-evc-for));
+  border: var(--border-width-2) dashed var(--event-calendar-focus-ring, var(--focus-ring)); border-radius: var(--event-calendar-event-radius, var(--radius-inner));
+  background: var(--event-calendar-event-bg, var(--primary-subtle));
+}
+
 .dk-event-calendar__agenda { display: flex; flex-direction: column; gap: var(--spacing-4); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-event-calendar__agenda-date { margin: var(--spacing-0) var(--spacing-0) var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-semibold); }
 .dk-event-calendar__agenda-day--today .dk-event-calendar__agenda-date { color: var(--event-calendar-today, var(--primary)); text-decoration-line: underline; text-decoration-thickness: var(--border-width-2); text-underline-offset: var(--spacing-1); }
 .dk-event-calendar__agenda .dk-event-calendar__event { padding-block: var(--spacing-2); font-size: var(--text-sm); line-height: var(--text-sm--line-height); flex-wrap: wrap; }
 .dk-event-calendar__empty { margin: var(--spacing-0); color: var(--event-calendar-muted, var(--text-muted)); }
-@media (forced-colors: active) { .dk-event-calendar__now { border-top-color: Highlight; } .dk-event-calendar__event { border: var(--border-width-1) solid ButtonText; border-inline-start-width: var(--border-width-2); } .dk-event-calendar__day--today .dk-event-calendar__date { text-decoration: underline; } }
+@media (forced-colors: active) { .dk-event-calendar__now { border-top-color: Highlight; } .dk-event-calendar__ghost { border-color: Highlight; } .dk-event-calendar__event { border: var(--border-width-1) solid ButtonText; border-inline-start-width: var(--border-width-2); } .dk-event-calendar__day--today .dk-event-calendar__date { text-decoration: underline; } }
 }

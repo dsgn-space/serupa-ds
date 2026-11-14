@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { EventCalendar, type CalendarEvent } from './EventCalendar';
 
@@ -42,6 +43,17 @@ export const LongText: Story = {
     ],
   },
 };
+
+// Adding and moving: press or drag down the hours to add an event, drag one (or its end) to move it, or Shift and an arrow key.
+function Planner(args: React.ComponentProps<typeof EventCalendar>) {
+  const [events, setEvents] = React.useState<CalendarEvent[]>(() => [...args.events]);
+  return (
+    <EventCalendar {...args} events={events}
+      onSlotSelect={(slot) => setEvents((l) => [...l, { id: 'new-' + l.length, title: 'New event', start: slot.start, end: slot.end, allDay: slot.allDay }])}
+      onEventMove={(e, change) => setEvents((l) => l.map((x) => (x.id === e.id ? { ...x, start: change.start, end: change.end } : x)))} />
+  );
+}
+export const AddAndMove: Story = { name: 'Adding and moving', args: { events: WEEK, defaultMonth: new Date(2025, 2, 18), defaultView: 'week' }, render: (args) => <Planner {...args} /> };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Do: say what a color means in the title too. */
