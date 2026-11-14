@@ -25,6 +25,10 @@ const TEXT = 'The quick brown fox jumps over the lazy dog. Settings, accounts an
 /** @type {Array<[string, number, string[]]>} */
 const FACES = [
   ['normal', 400, ['Arial', 'ArialMT', 'Helvetica', 'Liberation Sans', 'LiberationSans', 'Arimo']],
+  // 500 (buttons, labels) and 600 (titles): Arial has neither, so its regular and bold are each sized again for
+  // them. Left to the 400 and 700 faces, a button's label drew 2% narrower than in Inter and grew when it arrived.
+  ['normal', 500, ['Arial', 'ArialMT', 'Helvetica', 'Liberation Sans', 'LiberationSans', 'Arimo']],
+  ['normal', 600, ['Arial Bold', 'Arial-BoldMT', 'Helvetica Bold', 'Helvetica-Bold', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
   ['normal', 700, ['Arial Bold', 'Arial-BoldMT', 'Helvetica Bold', 'Helvetica-Bold', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
   ['italic', 400, ['Arial Italic', 'Arial-ItalicMT', 'Helvetica Oblique', 'Helvetica-Oblique', 'Liberation Sans Italic', 'LiberationSans-Italic', 'Arimo Italic', 'Arimo-Italic', 'Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
   ['italic', 700, ['Arial Bold Italic', 'Arial-BoldItalicMT', 'Helvetica Bold Oblique', 'Helvetica-BoldOblique', 'Liberation Sans Bold Italic', 'LiberationSans-BoldItalic', 'Arimo Bold Italic', 'Arimo-BoldItalic', 'Arial', 'Helvetica', 'Liberation Sans', 'Arimo']],
@@ -63,18 +67,50 @@ const got = await p.evaluate(async ({ text, faces }) => {
   });
 }, { text: TEXT, faces: FACES });
 const lost = (await p.evaluate(() => [...document.fonts].filter((f) => f.status !== 'loaded').map((f) => `${f.family} ${f.style} ${f.weight}`)));
-await b.close();
-fs.rmSync(dir, { recursive: true, force: true });
-if (lost.length) { console.error(`Not found: ${lost.join(', ')}. On Linux: apt install fonts-liberation`); process.exit(1); }
+if (lost.length) { await b.close(); fs.rmSync(dir, { recursive: true, force: true }); console.error(`Not found: ${lost.join(', ')}. On Linux: apt install fonts-liberation`); process.exit(1); }
 
-tokens.type.fallbacks = FACES.map(([style, weight, names], i) => {
+// The type scale in px, where a line's baseline has to land on Inter's.
+const SIZES = [12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72, 96, 128];
+const faces = [];
+for (const [i, [style, weight, names]] of FACES.entries()) {
   // Rounded first, so the overrides divide by the size-adjust the browser reads; size-adjust scales them too.
   const size = Math.round((got[i].inter / got[i].arial) * 1e4) / 1e4;
-  console.log(`${style} ${weight}: size-adjust ${pct(size)}`);
-  return {
+  const sizeAdjust = `${Number((size * 100).toFixed(2))}%`;
+  // Inter's ascent is 0.96875 em: 15.5px at 16px and 46.5px at 48px, which a browser rounds up. The same number
+  // through size-adjust and a percentage lands a hair under the half and rounds down, and every line of body text
+  // then sits 1px higher until Inter arrives. So the override steps up, 0.01% at a time, to the first value whose
+  // baseline and line box match Inter's at every size of the type scale (0.06% in Chromium; 0.2% is the most tried).
+  const fit = await p.evaluate(async ({ style, weight, names, sizeAdjust, ascent, descent, sizes }) => {
+    const line = (family, px) => {
+      const d = document.createElement('div');
+      d.style.cssText = `position:absolute;top:0;left:0;font:${style} ${weight} ${px}px/normal ${family};white-space:nowrap`;
+      d.innerHTML = 'Hg<span style="display:inline-block;width:1px;height:0"></span>';
+      document.body.appendChild(d);
+      const r = [d.firstElementChild.getBoundingClientRect().bottom, d.getBoundingClientRect().height];
+      d.remove();
+      return r;
+    };
+    const want = sizes.map((px) => line('I', px));
+    let best = null;
+    for (let step = 0; step <= 20; step++) {
+      const a = `${(ascent + step * 0.01).toFixed(3)}%`;
+      const f = new FontFace(`T${weight}${style}${step}`, names.map((n) => `local("${n}")`).join(','), /** @type {FontFaceDescriptors} */ ({ weight: String(weight), style, sizeAdjust, ascentOverride: a, descentOverride: `${descent}%`, lineGapOverride: '0%' }));
+      await f.load(); document.fonts.add(f);
+      const off = sizes.filter((px, k) => { const r = line(f.family, px); return r[0] !== want[k][0] || r[1] !== want[k][1]; });
+      document.fonts.delete(f);
+      if (!best || off.length < best.off.length) best = { ascent: a, off };
+      if (!off.length) break;
+    }
+    return best;
+  }, { style, weight, names, sizeAdjust, ascent: parseFloat(pct(got[i].ascent / size)), descent: parseFloat(pct(got[i].descent / size)), sizes: SIZES });
+  console.log(`${style} ${weight}: size-adjust ${sizeAdjust}, ascent-override ${fit.ascent}${fit.off.length ? `; a line still differs from Inter's at ${fit.off.join(', ')}px` : ''}`);
+  faces.push({
     family: 'Inter Fallback', local: names, weight: String(weight), style,
-    sizeAdjust: `${Number((size * 100).toFixed(2))}%`, ascentOverride: pct(got[i].ascent / size),
+    sizeAdjust, ascentOverride: fit.ascent.replace(/\.?0+%$/, '%'),
     descentOverride: pct(got[i].descent / size), lineGapOverride: '0%', unicodeRange: LATIN,
-  };
-});
+  });
+}
+await b.close();
+fs.rmSync(dir, { recursive: true, force: true });
+tokens.type.fallbacks = faces;
 fs.writeFileSync(tokensPath, JSON.stringify(source, null, 2) + '\n');

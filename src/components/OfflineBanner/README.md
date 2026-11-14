@@ -3,7 +3,7 @@
 Says when the connection drops and when it comes back, on screen and to screen readers. Put one in the app's layout: it shows nothing while the app is online.
 
 ```tsx
-import { OfflineBanner } from "serupa-ds";
+import { OfflineBanner } from "@diki-stwn/serupa-ds";
 
 <OfflineBanner />
 <OfflineBanner>Changes are kept and sent when you're back.</OfflineBanner>

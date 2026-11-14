@@ -5,7 +5,7 @@ A set of pictures shown full size, one at a time, over the page. People move thr
 **Also called:** image viewer, media viewer, photo gallery viewer, slideshow.
 
 ```tsx
-import { Image, Lightbox } from "serupa-ds";
+import { Image, Lightbox } from "@diki-stwn/serupa-ds";
 
 const photos = [
   { src: "/photos/bromo.jpg", alt: "A hillside at dusk", caption: "Bromo, before sunrise", width: 1600, height: 1000 },

@@ -1,5 +1,5 @@
 // serupa-ds/labels/pl: every built-in word in Polish, with its plural forms (plural()).
-//   import { labels, locale } from "serupa-ds/labels/pl";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/pl";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 import { plural } from '../internal/plural';

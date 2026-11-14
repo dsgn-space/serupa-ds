@@ -12,7 +12,7 @@ function Article() {
     <ul><li>Install the package.</li><li>Import the styles once.<ul><li>Or link the CSS file from a plain page.</li></ul></li><li>Render a component.</li></ul>
     <h3 id="install">Install</h3>
     <ol><li>Run the installer.</li><li>Restart the dev server.</li></ol>
-    <pre><code>{'npm install serupa-ds\nimport "serupa-ds/styles.css";'}</code></pre>
+    <pre><code>{'npm install @diki-stwn/serupa-ds\nimport "@diki-stwn/serupa-ds/styles.css";'}</code></pre>
     <blockquote><p>Good defaults make the right thing the easy thing.</p></blockquote>
     <table><thead><tr><th>Plan</th><th>Seats</th><th>Price</th></tr></thead><tbody><tr><td>Free</td><td>3</td><td>$0</td></tr><tr><td>Team</td><td>25</td><td>$12 a seat</td></tr></tbody></table>
     <hr />

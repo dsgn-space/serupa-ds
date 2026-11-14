@@ -1,5 +1,5 @@
 // serupa-ds/labels/tr: every built-in word in Turkish.
-//   import { labels, locale } from "serupa-ds/labels/tr";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/tr";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

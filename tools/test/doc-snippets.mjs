@@ -13,7 +13,7 @@ import { PROJECT, done, report } from './lib.mjs';
 const tsc = path.join(PROJECT, 'node_modules', 'typescript', 'bin', 'tsc');
 const DTS = path.join(PROJECT, 'dist', 'index.d.ts');
 const built = fs.existsSync(DTS);
-// Inside the package, so 'serupa-ds' resolves to it through package.json's exports (a self-reference).
+// Inside the package, so '@diki-stwn/serupa-ds' resolves to it through package.json's exports (a self-reference).
 const OUT = path.join(PROJECT, 'node_modules', '.cache', 'doc-snippets');
 
 const dts = built ? fs.readFileSync(DTS, 'utf8') : '';
@@ -45,7 +45,7 @@ function moduleOf(code, loose = []) {
   const ours = [...exported].filter((n) => used(n) && !has(n));
   const hooks = HOOKS.filter((n) => used(n) && !has(n));
   const head = [!/import\s+(\*\s+as\s+)?React\b/.test(code) && 'import * as React from "react";',
-    hooks.length && `import { ${hooks.join(', ')} } from "react";`, ours.length && `import { ${ours.join(', ')} } from "serupa-ds";`,
+    hooks.length && `import { ${hooks.join(', ')} } from "react";`, ours.length && `import { ${ours.join(', ')} } from "@diki-stwn/serupa-ds";`,
     ...loose.map((n) => `declare const ${n}: any;`)].filter(Boolean);
   // A sketch: JSX examples (from a line that starts with <, to a blank line or the next statement or note at the margin) between
   // statements (const [open, setOpen] = useState(false); toast("Saved")). Each example is checked as an expression.
@@ -80,7 +80,7 @@ else {
   fs.mkdirSync(OUT, { recursive: true });
   const files = blocks.map((b, i) => `block${i}.tsx`);
   // Other packages an example imports (next/headers, a router) are any: what's checked is this package's API.
-  const others = new Set(blocks.flatMap((b) => [...b.code.matchAll(/from\s*["']([^"'.][^"']*)["']/g)].map((m) => m[1])).filter((m) => !/^(react|react-dom|serupa-ds)(\/|$)/.test(m)));
+  const others = new Set(blocks.flatMap((b) => [...b.code.matchAll(/from\s*["']([^"'.][^"']*)["']/g)].map((m) => m[1])).filter((m) => !/^(react|react-dom|@diki-stwn\/serupa-ds)(\/|$)/.test(m)));
   fs.writeFileSync(path.join(OUT, 'others.d.ts'), [...others].map((m) => `declare module ${JSON.stringify(m)};`).join('\n') + '\n');
   files.push('others.d.ts');
   fs.writeFileSync(path.join(OUT, 'tsconfig.json'), JSON.stringify({

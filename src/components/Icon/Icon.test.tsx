@@ -175,7 +175,7 @@ describe('Icon: the size scale and weights (116+76)', () => {
 });
 
 describe('Icon: outlined (I10)', () => {
-  test('serupa-ds/icons/outlined has every name serupa-ds/icons has; an icon with an outlined drawing is its own (named "<name>:outlined"), the rest are the filled ones; both draw', async () => {
+  test('@diki-stwn/serupa-ds/icons/outlined has every name serupa-ds/icons has; an icon with an outlined drawing is its own (named "<name>:outlined"), the rest are the filled ones; both draw', async () => {
     const [filled, outlined] = await Promise.all([import('../../material/icons'), import('../../material/outlined')]);
     const names = (m: object) => Object.keys(m).filter((k) => /^[A-Z]/.test(k)).sort();
     expect(names(outlined)).toEqual(names(filled));

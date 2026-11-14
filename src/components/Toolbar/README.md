@@ -3,7 +3,7 @@
 A set of controls, such as an editor's formatting buttons, that takes one Tab stop instead of one per control. Once focus is in it, the arrow keys move between the controls, so keyboard users get past a long row of buttons in one keystroke.
 
 ```tsx
-import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem, Button } from "serupa-ds";
+import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem, Button } from "@diki-stwn/serupa-ds";
 
 <Toolbar aria-label="Text formatting">
   <ButtonGroup aria-label="Style">

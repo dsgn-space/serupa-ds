@@ -1,5 +1,5 @@
 // serupa-ds/labels/ru: every built-in word in Russian, with its three plural forms (plural()).
-//   import { labels, locale } from "serupa-ds/labels/ru";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/ru";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 import { plural } from '../internal/plural';

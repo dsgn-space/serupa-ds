@@ -5,7 +5,7 @@ An ordered list of events, each with a marker on a line that joins them, a title
 **Also called:** activity feed, history.
 
 ```tsx
-import { Timeline, TimelineItem } from "serupa-ds";
+import { Timeline, TimelineItem } from "@diki-stwn/serupa-ds";
 
 <Timeline aria-label="Order history">
   <TimelineItem title="Order placed" time="12 Mar, 09:14" dateTime="2026-03-12T09:14" status="primary" icon="shopping_cart">

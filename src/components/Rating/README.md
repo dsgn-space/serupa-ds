@@ -5,7 +5,7 @@ Stars to pick a score (how was your stay, how useful was this article) or to sho
 **Also called:** star rating.
 
 ```tsx
-import { Rating } from "serupa-ds";
+import { Rating } from "@diki-stwn/serupa-ds";
 
 const [stars, setStars] = React.useState<number | null>(null);
 <Field label="How was your stay?">
