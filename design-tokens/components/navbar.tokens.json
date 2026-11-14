@@ -82,6 +82,16 @@
           }
         }
       },
+      "menu-link-bg-hover": {
+        "$type": "color",
+        "$value": "{color.surface-hover-raised}",
+        "$description": "A link in a menu panel on hover: the raised hover step, since the panel floats, and a step quieter than the current link's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--navbar-menu-link-bg-hover"
+          }
+        }
+      },
       "link-bg-active": {
         "$type": "color",
         "$value": "{color.secondary}",

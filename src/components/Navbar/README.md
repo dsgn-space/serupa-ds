@@ -146,6 +146,7 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | `--navbar-link-text-hover` | `text` | A link on hover. |
 | `--navbar-link-text-active` | `text` | The current page's link. |
 | `--navbar-link-bg-hover` | `surface-hover` | A link's background on hover: a step quieter than the current page's, so the link pointed at and the current one never look the same. |
+| `--navbar-menu-link-bg-hover` | `surface-hover-raised` | A link in a menu panel on hover: the raised hover step, since the panel floats, and a step quieter than the current link's fill. |
 | `--navbar-link-bg-active` | `secondary` | The current page's link background. |
 | `--navbar-link-bg-active-hover` | `pressed` | The current page's link background under the pointer: one step past its rest. |
 | `--navbar-link-indicator` | `highlight-indicator` | The 2px bar under the current page's link (at the start of a menu link), which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
