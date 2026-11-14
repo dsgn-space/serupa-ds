@@ -20,39 +20,20 @@ import bcd from '@mdn/browser-compat-data' with { type: 'json' };
 import { projectArg, report, done, fail } from './lib.mjs';
 
 const P = projectArg();
-// The README's floor: light-dark() needs Chrome and Edge 123 and Safari 17.5; @property, which every utility that
-// composes through --dk-* variables (transforms, shadows, rings, gradients, filters, masks) needs for its starting
-// values, needs Firefox 128.
-const BASELINE = { chrome: 123, edge: 123, safari: 17.5, firefox: 128 };
+// The README's floor: CSS anchor positioning (anchor(), position-area and position-try-fallbacks) needs Chrome and
+// Edge 129 and Firefox 147; @scope, which every component's styles sit inside, needs Safari 26.4.
+const BASELINE = { chrome: 129, edge: 129, safari: 26.4, firefox: 147 };
 
 // Newer than BASELINE, on purpose. The key is what the scan prints; the value says what happens without it.
 // readme: text the README's "Browser support" section has to contain, for what users should know.
 const KNOWN = {
   // Progressive: without them, a page works and looks the same or near enough.
-  '@starting-style': { why: 'entry fades and slides (Firefox 129): elements appear without them' },
-  'property transition-behavior': { why: 'exit animations of discrete properties (Firefox 129): elements leave without them' },
-  'transition-behavior: allow-discrete': { why: 'as transition-behavior' },
-  'transition-behavior: normal': { why: 'as transition-behavior' },
-  'property content-visibility': { why: 'Accordion panels (Safari 18): closed content is also hidden="until-found", so it stays hidden' },
-  'content-visibility: hidden': { why: 'as content-visibility' },
-  'content-visibility: visible': { why: 'as content-visibility' },
-  'content-visibility: auto': { why: 'TreeView rows out of view wait to be laid out (Safari 26): a big tree lays out every row at once there, as before' },
   'property animation-range': { why: 'scroll-driven animations are progressive and behind @supports (animation-timeline: scroll()): a sticky Navbar keeps its line and lifts with no shadow' },
-  'property view-transition-name': { why: 'view transitions are progressive: the change happens without the animation' },
-  'view-transition-name: none': { why: 'as view-transition-name' },
-  'view-transition-name: match-element': { why: 'as view-transition-name' },
+  'view-transition-name: match-element': { why: 'view transitions are progressive: the change happens without the animation' },
   'property print-color-adjust': { why: 'Chart keeps its series colors and patterns when printed with background graphics off (Chrome and Edge 136); before, they print as the browser chooses' },
   'print-color-adjust: exact': { why: 'as print-color-adjust' },
   'text-wrap: pretty': { why: 'line breaking only (Safari 26, not Firefox)' },
   'property hyphenate-limit-chars': { why: 'Card, Alert and Toast hyphenate only words of 10 letters or more (not Safari, nor Firefox before 137): shorter words hyphenate too there' },
-  'property scrollbar-gutter': { why: 'Dialog and Drawer keep the page from shifting (Safari 18.2): the page shifts by the scrollbar width there' },
-  'scrollbar-gutter: stable': { why: 'as scrollbar-gutter' },
-  'scrollbar-gutter: auto': { why: 'as scrollbar-gutter' },
-  'property scrollbar-width': { why: 'Tabs hide the tab list\'s scrollbar (Safari 18.2); macOS overlay scrollbars show only while scrolling' },
-  'scrollbar-width: none': { why: 'as scrollbar-width' },
-  'scrollbar-width: auto': { why: 'as scrollbar-width' },
-  'scrollbar-width: thin': { why: 'as scrollbar-width' },
-  'property scrollbar-color': { why: 'scrollbar colors (Safari 26.2): the browser\'s own scrollbar' },
   'property forced-color-adjust': { why: 'Safari has no forced colors mode, so there is nothing to adjust' },
   'forced-color-adjust: none': { why: 'as forced-color-adjust' },
   'forced-color-adjust: auto': { why: 'as forced-color-adjust' },
@@ -80,10 +61,6 @@ const KNOWN = {
   'mask-origin: stroke-box': { why: 'Safari', readme: 'same `mask-origin-*`' },
   'mask-origin: view-box': { why: 'Safari', readme: 'same `mask-origin-*`' },
   'mix-blend-mode: plus-darker': { why: 'Safari only', readme: '`mix-blend-plus-darker`' },
-  'align-content: safe': { why: 'Safari 17.6', readme: '`*-safe`' },
-  'align-items: safe': { why: 'Safari 17.6', readme: '`*-safe`' },
-  'align-self: safe': { why: 'Safari 17.6', readme: '`*-safe`' },
-  'justify-content: safe': { why: 'Safari 17.6', readme: '`*-safe`' },
   'property field-sizing': { why: 'Textarea asks @supports first and measures in script elsewhere', readme: '`field-sizing-*`' },
   'field-sizing: fixed': { why: 'as field-sizing', readme: '`field-sizing-*`' },
   'field-sizing: content': { why: 'as field-sizing', readme: '`field-sizing-*`' },

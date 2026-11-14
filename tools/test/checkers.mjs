@@ -79,19 +79,19 @@ updates:
   ['dependabot.yml: npm updates wait', 'default-days: 0'],
 ]);
 
-// Browser baseline: a misspelt property, one Firefox 128 lacks, an @supports every baseline browser passes, a
-// built-in Safari 17.5 lacks, and a README that names no baseline.
+// Browser baseline: a misspelt property, one Chrome 129 lacks, an @supports every baseline browser passes, a
+// built-in Safari 26.4 lacks, and a README that names no baseline.
 expect('browser-baseline.mjs', run('browser-baseline.mjs', fixture({
-  'dist/bundle.css': '.a { colr: red; }\n.b { anchor-name: --b; }\n@supports (display: grid) { .c { display: grid; } }\n',
+  'dist/bundle.css': '.a { colr: red; }\n.b { text-box-trim: trim-both; }\n@supports (display: grid) { .c { display: grid; } }\n',
   'dist/utilities-extra.css': '',   // read with bundle.css (the masks and gradients)
-  'dist/serupa.iife.js': 'Promise.try(() => 1);\n',
+  'dist/serupa.iife.js': 'Error.isError(1);\n',
   'README.md': '# Fixture\n\n## Browser support\n\nAny.\n',
 }), { arg: true }), [
   ['bundle.css: every property is a known CSS property', 'colr'],
-  ['bundle.css works in Chrome and Edge', 'anchor-name'],
+  ['bundle.css works in Chrome and Edge', 'text-box-trim'],
   ['No @supports tests for what the baseline already has', 'display: grid'],
-  ['serupa.iife.js: every static built-in works at the baseline', 'Promise.try'],
-  ['KNOWN lists only what the baseline lacks', '@starting-style'],
+  ['serupa.iife.js: every static built-in works at the baseline', 'Error.isError'],
+  ['KNOWN lists only what the baseline lacks', 'break-after: avoid'],
   ['The README states the same baseline', 'Safari'],
 ]);
 
