@@ -33,6 +33,30 @@ export const Variants: Story = {
   </Row>,
 };
 
+// Over a photo: onMedia="dark" draws every variant in white, onMedia="light" in black, the same in all six themes.
+// Each photo has a scrim (a dark or light wash) under the controls, so they keep 4.5:1 at its lightest or darkest point.
+const DUSK = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200"><defs><linearGradient id="a" x2="0" y2="1"><stop offset="0" stop-color="#2b3a67"/><stop offset="1" stop-color="#e0805a"/></linearGradient></defs><rect width="600" height="200" fill="url(#a)"/><path d="M0 160 Q150 110 300 150 T600 130 V200 H0Z" fill="#1b1f3a"/></svg>');
+const NOON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200"><defs><linearGradient id="b" x2="0" y2="1"><stop offset="0" stop-color="#bfe3f7"/><stop offset="1" stop-color="#f6f1dc"/></linearGradient></defs><rect width="600" height="200" fill="url(#b)"/><path d="M0 170 Q200 130 380 165 T600 150 V200 H0Z" fill="#a9cf8e"/></svg>');
+const Photo = ({ src, scrim, children }: { src: string; scrim: string; children: React.ReactNode }) => (
+  <div style={{ padding: '24px', borderRadius: '12px', backgroundImage: `linear-gradient(${scrim}, ${scrim}), url("${src}")`, backgroundSize: 'cover' }}>{children}</div>
+);
+export const OnMedia: Story = {
+  render: () => <div style={{ display: 'grid', gap: '16px' }}>
+    <Photo src={DUSK} scrim="rgb(0 0 0 / 0.45)"><Row>
+      <Button onMedia="dark">Book now</Button>
+      <Button variant="outline" onMedia="dark">Details</Button>
+      <Button variant="ghost" onMedia="dark">Save</Button>
+      <IconButton icon="share" label="Share" onMedia="dark" />
+    </Row></Photo>
+    <Photo src={NOON} scrim="rgb(255 255 255 / 0.55)"><Row>
+      <Button onMedia="light">Book now</Button>
+      <Button variant="outline" onMedia="light">Details</Button>
+      <Button variant="ghost" onMedia="light">Save</Button>
+      <IconButton icon="share" label="Share" onMedia="light" />
+    </Row></Photo>
+  </div>,
+};
+
 export const Destructive: Story = {
   render: () => <Row>
     <Button destructive>Delete</Button>
