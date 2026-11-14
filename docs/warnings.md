@@ -20,6 +20,10 @@ A dot Badge with no label, icon or count is an indicator: too small to click or 
 A Badge with `onClick` or `href` is a button or a link, which can't hold another button, so its `onRemove` is ignored. Use one or the other.
 
 
+## browser-shortcut
+
+A `useShortcut` on keys the browser keeps for itself: mod (Ctrl, or ⌘ on a Mac) with N, T, W or Q, or with Tab, with or without Shift. They open a new window or tab, close it, quit or switch tabs before the page hears them, so the shortcut never runs. It's still set up, and listed in KeyboardShortcuts, which is misleading. Choose other keys: add Alt, or use a letter the browser leaves alone, such as `["mod", "shift", "K"]`.
+
 ## button-icon-label
 
 A Button with only an icon has no text for a screen reader to say. Give it an `aria-label` (or `aria-labelledby`, or a `title`), or use IconButton, whose `label` is required.

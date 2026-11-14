@@ -134,6 +134,9 @@ function setSingleKeys(on: boolean): void {
   try { if (on) localStorage.removeItem(SINGLE_KEYS_KEY); else localStorage.setItem(SINGLE_KEYS_KEY, 'off'); } catch { /* blocked: this page only */ }
   changed();
 }
+// Keys the browser keeps: with mod (or Ctrl or ⌘ alone), N, T, W and Q open, close and quit, and Tab switches tabs,
+// with or without Shift. A page can't prevent them, so a shortcut on them never runs.
+const kept = (c: Combo): boolean => (c.mod || c.ctrl || c.meta) && !c.alt && /^([ntwq]|Tab)$/.test(c.key);
 const characterKey = (c: Combo): boolean => c.key.length === 1 && !c.mod && !c.ctrl && !c.meta && !c.alt;
 const on = () => true;
 
@@ -159,6 +162,7 @@ export function useShortcut(keys: string | string[], handler: (event: KeyboardEv
       if (process.env.NODE_ENV !== 'production') warnOnce('shortcut-keys', `useShortcut: ${id} isn't one key with its modifiers, so it's not set up. Give one key, plus mod, ctrl, cmd, alt or shift if it needs them, such as ["mod", "K"].`, 'shortcut-keys' + id);
       return;
     }
+    if (process.env.NODE_ENV !== 'production' && kept(combo)) warnOnce('browser-shortcut', `useShortcut: ${id} is a key the browser keeps for itself (a new window or tab, closing it, quitting, switching tabs), so the page never hears it. Choose other keys, such as ["mod", "shift", "K"], or ["alt", "N"] for "new".`, 'browser-shortcut' + id);
     return add(Object.assign(combo, { keys: k, run, description, group, inInputs, apple: apple != null ? apple : isApple() }));
   }, [id, description, group, enabled, inInputs, apple]);
 }
