@@ -9,7 +9,7 @@ const meta = {
   args: { icon: 'add', label: 'New project', placement: 'static' },
   argTypes: {
     size: { control: 'inline-radio', options: ['md', 'sm'] },
-    position: { control: 'inline-radio', options: ['static', 'bottom-end', 'bottom-start', 'top-end', 'top-start'] },
+    placement: { control: 'inline-radio', options: ['static', 'bottom-end', 'bottom-start', 'top-end', 'top-start'] },
   },
   parameters: { docs: { description: { component: 'The examples use placement="static" so they stay in the page; a real FAB is fixed to a corner (bottom-end by default).' } } },
 } satisfies Meta<typeof Fab>;

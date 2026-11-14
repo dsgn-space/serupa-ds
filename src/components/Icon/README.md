@@ -1,15 +1,15 @@
 # Icon
 
-Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon straight to Button's `leftIcon`, `rightIcon` or `icon`.
+Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon straight to Button's `leftIcon` or `rightIcon`, or IconButton's `icon`.
 
 ```jsx
-const { Icon, Button } = window.Serupa;
+const { Icon, Button, IconButton } = window.Serupa;
 
 <Icon name="home" />                       // 24px, decorative
 <Icon name="warning" size={20} style={{ color: 'var(--warning)' }} />
 <Icon name="error" aria-label="Error" />   // meaningful: announced as "Error"
 <Button leftIcon="add">New project</Button>
-<Button variant="ghost" icon="settings" aria-label="Settings" />
+<IconButton icon="settings" label="Settings" />
 <Icon name="rocket_launch" />              // any of the ~3,800 Material Symbols works by name
 ```
 

@@ -3,6 +3,9 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { Prose } from './Prose';
+import { Kbd } from '../Kbd';
+import { Pagination } from '../Pagination';
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../Table';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const top = (id: string) => parseFloat(css(el(id)).marginTop);
@@ -100,5 +103,17 @@ describe('Prose', () => {
     await render(<div dir="rtl" style={{ width: 200 }}><Prose id="pr2" dangerouslySetInnerHTML={{ __html: '<pre id="pc2"><code>run(); // done. and a line long enough to need scrolling inside its own box</code></pre>' }} /></div>);
     const pre = el('pc2'), code = pre.firstElementChild as HTMLElement;
     expect([css(pre).direction, css(pre).unicodeBidi, pre.scrollLeft, Math.round(code.getBoundingClientRect().left - pre.getBoundingClientRect().left - parseFloat(css(pre).paddingLeft))]).toEqual(['ltr', 'isolate', 0, 0]);
+  });
+  test('a component inside keeps its own look: Prose styles its content, not the Pagination, Table or Kbd in it', async () => {
+    const parts = [
+      <Pagination key="p" count={9} page={2} onPageChange={() => {}} />,
+      <Table key="t" caption="Orders"><TableHead><TableRow><TableHeaderCell>Item</TableHeaderCell></TableRow></TableHead><TableBody><TableRow><TableCell>Tea</TableCell></TableRow></TableBody></Table>,
+      <p key="k">Press <Kbd>K</Kbd></p>,
+    ];
+    await render(<><div id="out">{parts}</div><Prose id="in"><p>First</p>{parts}</Prose></>);
+    const PROPS = ['display', 'margin-top', 'padding-inline-start', 'list-style-type', 'font-family', 'font-size', 'block-size', 'max-inline-size'];
+    const look = (root: Element) => [...root.querySelectorAll('*')].filter((e) => ![root, null].includes(e.closest('[class^="dk-"]'))).map((e) => `${e.tagName} ${PROPS.map((p) => (p === 'margin-top' && e.parentElement === root ? '' : css(e as HTMLElement).getPropertyValue(p))).join(' ')}`);   // a root's own margin is the flow's
+    expect(look(el('in'))).toEqual(look(el('out')));
+    expect(parseFloat(css(el('in').children[1] as HTMLElement).marginTop)).toBe(16);   // still spaced from the paragraph before it
   });
 });
