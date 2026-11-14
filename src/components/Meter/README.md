@@ -5,7 +5,7 @@ Shows a measurement within a known range: storage used, a plan's seats, a passwo
 **Also called:** gauge.
 
 ```tsx
-import { Meter } from "serupa-ds";
+import { Meter } from "@diki-stwn/serupa-ds";
 
 <Meter value={72} label="Storage" showValue />
 // low values are good: up to 80% is fine, then warning, over 95% danger

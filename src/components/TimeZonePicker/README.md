@@ -3,7 +3,7 @@
 A searchable list of time zones, by city, with each one's offset now and its name in the reader's language. People find their zone by typing a city, a zone's name or an offset, and the value is the zone's IANA name, ready for dates and servers.
 
 ```tsx
-import { TimeZonePicker } from "serupa-ds";
+import { TimeZonePicker } from "@diki-stwn/serupa-ds";
 
 <Field label="Time zone"><TimeZonePicker defaultValue="Asia/Jakarta" /></Field>
 <TimeZonePicker aria-label="Time zone" value={zone} onValueChange={setZone} />

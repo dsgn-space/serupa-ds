@@ -5,7 +5,7 @@ Shows a keyboard key or shortcut as keycaps, in help text, tooltips, menus and e
 **Also called:** keycap, keyboard key.
 
 ```tsx
-import { Kbd } from "serupa-ds";
+import { Kbd } from "@diki-stwn/serupa-ds";
 
 <p>Press <Kbd>/</Kbd> to search.</p>
 <Kbd keys={["mod", "K"]} />        // ⌘ K on a Mac, Ctrl + K elsewhere

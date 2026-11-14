@@ -1,5 +1,5 @@
 ---
-"serupa-ds": minor
+"@diki-stwn/serupa-ds": minor
 ---
 
 Optical polish, found by three new measurements across every story:

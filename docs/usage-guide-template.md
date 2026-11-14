@@ -21,7 +21,7 @@ Rules:
 **Also called:** <Optional. Other names people know it by from other design systems, lowercase, comma-separated: snackbar, notification. Never another Serupa component's name. Guides/Choose a component lists them all.>
 
 ```tsx
-import { <Name> } from "serupa-ds";
+import { <Name> } from "@diki-stwn/serupa-ds";
 
 <The smallest realistic example, using Field for labels where it applies.>
 ```

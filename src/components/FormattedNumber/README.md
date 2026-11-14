@@ -3,7 +3,7 @@
 Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. It also writes short numbers (1.2K), percentages, money, file sizes and units, so a page doesn't mix localized dates with English numbers.
 
 ```tsx
-import { FormattedNumber, formatNumber } from "serupa-ds";
+import { FormattedNumber, formatNumber } from "@diki-stwn/serupa-ds";
 
 <FormattedNumber value={1234.5} />                                   // "1,234.5"
 <FormattedNumber value={1234567} format="compact" />                 // "1.2M", with "1,234,567" as its tooltip

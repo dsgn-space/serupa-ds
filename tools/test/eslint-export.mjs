@@ -45,4 +45,4 @@ const missing = await lint('export const A = () => <Image src="team.png" />;\n')
 const empty = await lint('export const A = () => <Image src="team.png" alt="" />;\n');
 t('with it, a project\'s lint fails <Image src> with no alt (alt-text) and passes <Image alt="">', missing.includes('jsx-a11y-x/alt-text') && !empty.length, `no alt: ${missing.join(', ') || 'nothing'}; alt="": ${empty.join(', ') || 'nothing'}`);
 
-done(report('serupa-ds/eslint', R));
+done(report('@diki-stwn/serupa-ds/eslint', R));

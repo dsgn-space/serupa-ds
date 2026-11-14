@@ -3,7 +3,7 @@
 A line, bar or area chart of a few series over the same categories, such as visitors per month or orders per region, or a donut of one series' shares, such as traffic by source. It draws itself as SVG at its box's width, tells a screen reader what it shows, lets the keyboard reach every point, and shows the same numbers as a table at the press of a button.
 
 ```tsx
-import { Chart } from "serupa-ds";
+import { Chart } from "@diki-stwn/serupa-ds";
 
 <Chart
   title="Visitors and sign-ups"
