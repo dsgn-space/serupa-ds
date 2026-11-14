@@ -91,7 +91,7 @@ const children = kids === 'loading' ? [{ id: 'docs-wait', label: 'Loading…', d
 | Ctrl / Cmd + A | With `"multiple"`: picks every item in view |
 
 - **Pointer:** a click on a row picks it (Shift+click picks a range with `"multiple"`), and a click on its chevron opens or closes it without picking. The chevron is a 24px target (WCAG 2.5.8) around its 20px icon.
-- **Contrast:** labels read 4.5:1 on the background, and the picked row's on its highlight, in all six themes (`TreeView.test.tsx`). The picked row also has a 2px bar at its start, so it doesn't rely on the background alone.
+- **Contrast:** labels read 4.5:1 on the background, and the picked row's on its highlight, in all six themes (`TreeView.test.tsx`). With more contrast the picked row also has a 2px bar at its start.
 - **What's still yours:** a name for the tree, and labels that make sense read alone ("Invoices", not "Folder 3").
 
 ## Props
@@ -122,7 +122,7 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-text` | `text` | The labels (4.5:1 on bg). |
 | `--tree-view-item-bg-hover` | `secondary` | A row's background on hover. |
 | `--tree-view-item-bg-selected` | `highlight` | The picked row's background. |
-| `--tree-view-item-indicator` | `highlight-indicator` | The 2px bar at the picked row's start. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
+| `--tree-view-item-indicator` | `highlight-indicator` | The 2px bar at the picked row's start. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--tree-view-icon-color` | `text-muted` | The chevrons and item icons. |
 | `--tree-view-focus-ring` | `focus-ring` | The ring inside the focused row. |
 | `--tree-view-item-bg-pressed` | `pressed` | A row's fill while it's held down. |

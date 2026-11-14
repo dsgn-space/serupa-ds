@@ -6020,6 +6020,16 @@
         }
       }
     },
+    "highlight-indicator-width": {
+      "$type": "dimension",
+      "$value": "{borders.border-width-0}",
+      "$description": "The width of the bar that `highlight-indicator` colors on a current or selected item: Sidebar's current page, Navbar's current link, and the selected row of List, TreeView and Table. 0 by default, so no bar is drawn and the fill alone marks the item, whatever fill it has (hovered, pressed or a component's own). 2px with more contrast (`data-contrast=\"more\"` or the system setting), where the bar is `text`-dark.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--highlight-indicator-width"
+        }
+      }
+    },
     "focus-ring-offset": {
       "$type": "dimension",
       "$value": "{borders.outline-offset-2}",

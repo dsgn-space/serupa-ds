@@ -1576,6 +1576,7 @@
   --outline-offset-4: 4px;
   --outline-offset-8: 8px;
   --focus-ring-width: var(--outline-width-2);
+  --highlight-indicator-width: var(--border-width-0);
   --focus-ring-offset: var(--outline-offset-2);
   --stroke-width-0: 0;
   --stroke-width-1: 1;
@@ -2014,6 +2015,7 @@
   --info: light-dark(var(--sky-800), var(--sky-300));
   --info-text: light-dark(var(--sky-900), var(--sky-200));
   --focus-ring-width: calc(var(--outline-width-2) + var(--outline-width-1));
+  --highlight-indicator-width: var(--border-width-2);
 }
 [data-contrast="more"]:not(#dk-more), [data-contrast="more"] :is([data-mode], [data-brand], [data-theme]):not(#dk-more) {
   --primary: var(--dk-more-primary);
@@ -2043,6 +2045,7 @@
   --info: light-dark(var(--sky-800), var(--sky-300));
   --info-text: light-dark(var(--sky-900), var(--sky-200));
   --focus-ring-width: calc(var(--outline-width-2) + var(--outline-width-1));
+  --highlight-indicator-width: var(--border-width-2);
 }
 :root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) :is([data-mode], [data-brand], [data-theme]):not([data-contrast="normal"], [data-contrast="normal"] *, #dk-more) {
   --primary: var(--dk-more-primary);

@@ -75,7 +75,7 @@
       "row-indicator-selected": {
         "$type": "color",
         "$value": "{color.highlight-indicator}",
-        "$description": "The bar at the start of a selected row. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item.",
+        "$description": "The bar at the start of a selected row. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--table-row-indicator-selected"
@@ -242,7 +242,7 @@
       },
       "indicator-width": {
         "$type": "dimension",
-        "$value": "{borders.border-width-2}",
+        "$value": "{borders.highlight-indicator-width}",
         "$description": "The selected row's bar (2px).",
         "$extensions": {
           "com.serupa": {

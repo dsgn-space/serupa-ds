@@ -158,7 +158,7 @@ With Ctrl, ⌘ or Alt held, a resize handle leaves the arrows, Home and End to t
 | Part | Element | Props |
 | --- | --- | --- |
 | `TableHead`, `TableBody`, `TableFoot` | `<thead>`, `<tbody>`, `<tfoot>` | everything goes to the element |
-| `TableRow` | `<tr>` | `selected`: shaded, with a primary bar at its start; `href` (with `target`, `rel`): the whole row is one link, from its link cell |
+| `TableRow` | `<tr>` | `selected`: shaded (with a bar at its start when more contrast is asked for); `href` (with `target`, `rel`): the whole row is one link, from its link cell |
 | `TableSelectCell` | `<td>`, or `<th scope="col">` with `header` | `label` (required, the checkbox's name: "Select Ada", "Select all rows"); `checked`, `defaultChecked`, `indeterminate`, `onChange`, `disabled`, `name`, `value` and `ref` go to the [Checkbox](../Checkbox/README.md); `cellProps` to the cell. A row whose checkbox is checked is shaded like a selected one |
 | `TableHeaderCell` | `<th scope="col">` | `align` (`'start'` \| `'center'` \| `'end'`); `width`: the column's width with `layout="fixed"`; `sort` (`'ascending'` \| `'descending'` \| `'none'`) and `onSort` make it a sort button; `resizable` adds a resize handle, within `minWidth` (48) and `maxWidth` (800), with `onWidthChange(width)` (with a number `width`, it's controlled). Pass `scope="row"` for a row header |
 | `TableActionBar` | `<div role="group">`, before the Table | `count` (required: the bar shows while it's above 0); `onClear` adds "Clear selection"; `clearLabel` renames it; children are the actions; `className`, `ref` and the rest go to the `<div>` |
@@ -186,7 +186,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-header-text` | `text-muted` | Header text (4.5:1 on header-bg). |
 | `--table-row-bg-hover` | `surface-hover` | A body row on hover, and every other row when striped (muted text keeps 4.5:1). |
 | `--table-row-bg-selected` | `surface-hover` | A selected row's background. |
-| `--table-row-indicator-selected` | `highlight-indicator` | The bar at the start of a selected row. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
+| `--table-row-indicator-selected` | `highlight-indicator` | The bar at the start of a selected row. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--table-focus-ring` | `focus-ring` | The keyboard focus ring (sort buttons, a scrolling table). |
 | `--table-sort-bg-pressed` | `pressed` | A sortable header's fill while it's held down. |
 | `--table-action-bar-bg` | `primary-subtle` | TableActionBar's background. |
@@ -222,7 +222,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | Token | Default | Use |
 | --- | --- | --- |
 | `--table-border-width` | `border-width-1` | The frame and row lines (1px). |
-| `--table-indicator-width` | `border-width-2` | The selected row's bar (2px). |
+| `--table-indicator-width` | `highlight-indicator-width` | The selected row's bar (2px). |
 
 **Radius**
 
