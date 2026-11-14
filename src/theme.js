@@ -55,7 +55,7 @@
   function save() { try { localStorage.setItem(KEY, JSON.stringify({ brand: state.brand, mode: state.mode })); } catch (e) {} }
   function resolved() { return state.mode === 'auto' ? (media && media.matches ? 'dark' : 'light') : state.mode; }
   function info() { return { brand: state.brand, mode: state.mode, theme: state.brand + '-' + resolved() }; }
-  // <meta name="theme-color"> (a phone's bars) is the body's surface, or the token value before the CSS; a page's own stays.
+  // <meta name="theme-color"> (a phone's bars) is the body's fill (surface-page), or the token value before the CSS; a page's own stays.
   var tint;
   function chrome() {
     if (!tint) {
@@ -64,7 +64,7 @@
       tint.name = 'theme-color';
     }
     var b = document.body ? getComputedStyle(document.body).backgroundColor : '';
-    tint.content = /\d/.test(b) && !/, 0\)$/.test(b) ? b : resolved() === 'dark' ? '#18181b' : '#fff';
+    tint.content = /\d/.test(b) && !/, 0\)$/.test(b) ? b : resolved() === 'dark' ? '#09090b' : '#fff';
   }
   // After the first paint a switch crossfades the page at once (a View Transition, type "serupa-theme").
   var shown = false, mine = null, heard = null;
