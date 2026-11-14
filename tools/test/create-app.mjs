@@ -25,7 +25,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-create-'));
 const made = spawnSync(process.execPath, [bin, path.join(tmp, 'Hello World')], { encoding: 'utf8' });
 const written = fs.existsSync(path.join(tmp, 'Hello World', 'package.json')) ? JSON.parse(fs.readFileSync(path.join(tmp, 'Hello World', 'package.json'), 'utf8')) : {};
 const again = spawnSync(process.execPath, [bin, path.join(tmp, 'Hello World')], { encoding: 'utf8' });
-const brand = spawnSync(process.execPath, [bin, path.join(tmp, 'b'), '--brand', 'red'], { encoding: 'utf8' });
+const brand = spawnSync(process.execPath, [bin, path.join(tmp, 'b'), '--brand', 'slate'], { encoding: 'utf8' });
 
 // The lint, offline: the app as written, its node_modules linked to the repository's and serupa-ds to the build.
 if (!fs.existsSync(path.join(PROJECT, 'dist', 'eslint.js'))) fail('no dist/eslint.js: run npm run build first');
