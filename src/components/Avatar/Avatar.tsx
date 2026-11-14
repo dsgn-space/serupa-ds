@@ -75,7 +75,7 @@ export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>('A
     return () => clearTimeout(t);
   }, [props.src]);
   const text = initials(props.name);
-  const under = showImg && late && late[0] === props.src ? late : null;
+  const under = late && late[0] === props.src ? late : null;
   const img = props.imgProps;
   const fallback = text ? <span className="dk-avatar__initials" aria-hidden="true">{text}</span> : <Icon className="dk-avatar__icon" icon={icons.Person} />;
   const body = showImg
