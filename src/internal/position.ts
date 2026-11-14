@@ -68,14 +68,24 @@ export function place(anchor: DOMRect, floating: { width: number; height: number
 // module state: browser elements, weakly held.
 const ownMaxWidth = new WeakMap<HTMLElement, string>();
 
-export function placeLayer(layer: HTMLElement, anchor: Element, placement: string | undefined, offset: number, fallback?: Placement, rtl?: boolean): void {
+/** With `name`, the anchor's anchor-name (see anchorName): left and top are written against anchor() rather than in
+    px, so the layer moves with the anchor in CSS as the page scrolls, in the same frame, instead of a frame behind
+    once the scroll handler places it again. The decisions (side, slide, caps, origin) are place()'s either way; each
+    anchor() carries the px it is now as its fallback, for an anchor CSS can't reach. */
+export function placeLayer(layer: HTMLElement, anchor: Element, placement: string | undefined, offset: number, fallback?: Placement, rtl?: boolean, name?: string): void {
   const scroll = layer.scrollTop;
   if (!ownMaxWidth.has(layer)) ownMaxWidth.set(layer, layer.style.maxWidth);
   const own = ownMaxWidth.get(layer)!;
   layer.style.maxHeight = ''; layer.style.overflowY = ''; layer.style.maxWidth = own;
   const a = restingRect(anchor);
   const r = place(a, { width: layer.offsetWidth, height: layer.offsetHeight }, placement, offset, fallback, undefined, rtl);
-  layer.style.left = r.x + 'px'; layer.style.top = r.y + 'px'; layer.dataset.side = r.side;
+  // The default anchor (position-anchor): the one a scroll moves the layer with; anchor() of any other is fixed where it was.
+  if (name) layer.style.setProperty('position-anchor', name);
+  const at = (x: number, y: number) => {
+    layer.style.left = name ? `calc(anchor(${name} left, ${a.left}px) + ${x - a.left}px)` : x + 'px';
+    layer.style.top = name ? `calc(anchor(${name} top, ${a.top}px) + ${y - a.top}px)` : y + 'px';
+  };
+  at(r.x, r.y); layer.dataset.side = r.side;
   if (r.maxHeight !== undefined) { layer.style.maxHeight = r.maxHeight + 'px'; layer.style.overflowY = 'auto'; }
   if (r.maxWidth !== undefined) {
     layer.style.maxWidth = own ? 'min(' + own + ', ' + r.maxWidth + 'px)' : r.maxWidth + 'px';
@@ -84,7 +94,7 @@ export function placeLayer(layer: HTMLElement, anchor: Element, placement: strin
     if (layer.offsetWidth > r.maxWidth) {
       const vv = window.visualViewport, L = vv ? vv.offsetLeft : 0, R = vv ? L + vv.width : document.documentElement.clientWidth;
       r.x = Math.round(Math.max(L + 8, Math.min(r.x, R - 8 - layer.offsetWidth)));
-      layer.style.left = r.x + 'px';
+      at(r.x, r.y);
     }
   }
   layer.scrollTop = scroll;
@@ -94,6 +104,17 @@ export function placeLayer(layer: HTMLElement, anchor: Element, placement: strin
   const ox = r.side === 'left' ? w : r.side === 'right' ? 0 : clamp(a.left + a.width / 2 - r.x, w);
   const oy = r.side === 'top' ? h : r.side === 'bottom' ? 0 : clamp(a.top + a.height / 2 - r.y, h);
   layer.style.setProperty('--dk-layer-origin', ox + 'px ' + oy + 'px');
+}
+
+// module state: a counter for unique anchor names.
+let anchors = 0;
+/** Gives `el` an anchor name of its own, added to any it has (a Button can anchor a Tooltip and a Menu at once), and
+    returns it with the function that takes it off again. */
+export function anchorName(el: HTMLElement): [string, () => void] {
+  const name = '--dk-anchor-' + ++anchors;
+  const list = () => el.style.getPropertyValue('anchor-name').split(',').map((x) => x.trim()).filter((x) => x && x !== 'none');
+  el.style.setProperty('anchor-name', [...list(), name].join(', '));
+  return [name, () => { const rest = list().filter((x) => x !== name); if (rest.length) el.style.setProperty('anchor-name', rest.join(', ')); else el.style.removeProperty('anchor-name'); }];
 }
 
 /** The anchor's box without its own scale: a Button shrinks while it's pressed, which is when a Menu opens (and

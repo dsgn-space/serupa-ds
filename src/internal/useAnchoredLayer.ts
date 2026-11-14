@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useIsoLayoutEffect } from './cn';
 import { onFontsLoaded } from './fontsLoaded';
 import { markDismissal } from './layers';
-import { cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Placement } from './position';
+import { anchorName, cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Placement } from './position';
 
 type Ref = React.RefObject<HTMLElement | null>;
 
@@ -56,9 +56,12 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     // theme switch), not on every scroll.
     let offset = 0, rtl = false;
     const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(a); };
+    // The layer follows the anchor in CSS between the handlers below (anchor positioning); an anchor that isn't an
+    // HTML element (an SVG's) is placed in px, as before.
+    const [name, unname] = a instanceof HTMLElement ? anchorName(a) : [undefined, () => {}];
     const update = () => {
       if (matchWidth) p.style.minWidth = a.offsetWidth + 'px';
-      placeLayer(p, a, placement, offset, fallback, rtl);
+      placeLayer(p, a, placement, offset, fallback, rtl, name);
     };
     const resized = () => { measure(); update(); };
     // Scrolling inside the layer doesn't move it.
@@ -74,6 +77,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const vv = window.visualViewport;
     if (vv) { vv.addEventListener('resize', resized); vv.addEventListener('scroll', update); }
     return () => {
+      unname();
       if (ro) ro.disconnect(); window.removeEventListener('scroll', scrolled, true); window.removeEventListener('resize', resized);
       fontsOff();
       if (vv) { vv.removeEventListener('resize', resized); vv.removeEventListener('scroll', update); }
