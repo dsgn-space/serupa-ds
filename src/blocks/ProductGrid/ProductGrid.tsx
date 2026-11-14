@@ -6,10 +6,12 @@ import { Card } from '../../components/Card/Card';
 import { Heading } from '../../components/Heading/Heading';
 import { Image } from '../../components/Image/Image';
 import { Link } from '../../components/Link/Link';
+import { Loader } from '../../components/Loader/Loader';
 import { Rating } from '../../components/Rating/Rating';
 import { toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 
 /* Product grid (RU18): product cards in a responsive grid, for a shop's category or search page. What it carries
    (WCAG 2.2):
@@ -24,6 +26,8 @@ import { useLocale } from '../../internal/provider';
      buttons still makes sense out of context and voice control still finds "Add to cart".
    - 4.1.3: adding shows the button busy (loading), then a toast says what was added, or that it failed and why.
    - Sold out says so in words, in place of the button.
+   - 4.1.3: while the products load, the list says it's busy (aria-busy) and its placeholder cards are named once, not
+     once per card; a failed load says so once, with Try again (EmptyLoadFailed).
    - Prices are written the way the reader's locale writes money. Each word is a label, English by default. */
 
 export interface Product {
@@ -59,6 +63,10 @@ export interface ProductGridLabels {
   /** The toast when adding failed. */
   notAdded: (name: string) => string;
   soldOut: string;
+  /** The one name of the placeholder cards while the products load. */
+  loading: string;
+  /** The failed load's title. */
+  loadFailed: string;
 }
 
 const english: ProductGridLabels = {
@@ -70,6 +78,8 @@ const english: ProductGridLabels = {
   added: (name) => `Added ${name} to your cart`,
   notAdded: (name) => `Couldn’t add ${name} to your cart. Try again.`,
   soldOut: 'Sold out',
+  loading: 'Loading products',
+  loadFailed: 'Couldn’t load the products',
 };
 
 export interface ProductGridProps {
@@ -81,10 +91,18 @@ export interface ProductGridProps {
   /** Each product's name. Default: 3, under the page's h2. */
   headingLevel?: 2 | 3 | 4 | undefined;
   labels?: Partial<ProductGridLabels> | undefined;
+  /** Placeholder cards in place of the products while they load, named once ("Loading products"). Default: false. */
+  loading?: boolean | undefined;
+  /** How many placeholder cards to show while loading. Default: 4. */
+  loadingCount?: number | undefined;
+  /** The products failed to load: a "Couldn’t load the products" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 /** One product: its picture, name as the link to its page, price, rating and Add to cart. */
-export function ProductCard({ product: p, currency, onAddToCart, headingLevel = 3, labels }: Omit<ProductGridProps, 'products'> & { product: Product }) {
+export function ProductCard({ product: p, currency, onAddToCart, headingLevel = 3, labels }: Omit<ProductGridProps, 'products' | 'loading' | 'loadingCount' | 'loadFailed' | 'onRetry'> & { product: Product }) {
   const l = { ...english, ...labels };
   const locale = useLocale();
   const [busy, setBusy] = React.useState(false);
@@ -127,10 +145,20 @@ export function ProductCard({ product: p, currency, onAddToCart, headingLevel = 
 }
 
 /** Products in a grid that fits the screen: one column on a phone, up to four on a wide screen. */
-export function ProductGrid({ products, ...card }: ProductGridProps) {
+export function ProductGrid({ products, loading = false, loadingCount = 4, loadFailed = false, onRetry, ...card }: ProductGridProps) {
+  const l = { ...english, ...card.labels };
+  if (loadFailed) return <EmptyLoadFailed title={l.loadFailed} onRetry={() => onRetry?.()} headingLevel={card.headingLevel ?? 3} />;
   return (
-    <ul role="list" className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {products.map((p) => <ProductCard key={p.id} product={p} {...card} />)}
+    <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {loading
+        ? Array.from({ length: loadingCount }, (_, i) => (
+          // One name for all of them: the first card's lines are named, the rest are only pictures.
+          <Card as="li" key={i} padding="md" className="flex flex-col gap-3">
+            <Loader variant="skeleton" shape="rect" label="" className="aspect-square h-auto" />
+            <Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? l.loading : ''} />
+          </Card>
+        ))
+        : products.map((p) => <ProductCard key={p.id} product={p} {...card} />)}
     </ul>
   );
 }

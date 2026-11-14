@@ -37,6 +37,12 @@ export interface HelpCenterProps {
   replyTime?: string | undefined;
   /** Send was pressed with a topic and a message. Return its promise: a rejection says it wasn't sent. */
   onSend?: ((message: HelpMessage) => unknown) | undefined;
+  /** The form's first answers, to bring a message back. */
+  initial?: Partial<HelpMessage> | undefined;
+  /** Start at the form, or with the message already sent. Default: "form". */
+  start?: 'form' | 'sent' | undefined;
+  /** Start with what went wrong already said: "empty" names what's missing, "send" says the last send failed. */
+  failed?: 'empty' | 'send' | undefined;
 }
 
 const demoTopics: HelpTopic[] = [
@@ -66,12 +72,15 @@ export function messageProblems(m: HelpMessage): { field: 'topic' | 'message'; t
 }
 
 /** The help page: a skip link, a header, then main with the h1, the topics, the questions and the message form. */
-export function HelpCenter({ topics = demoTopics, questions = demoQuestions, email = 'ana@example.com', replyTime = 'within one working day', onSend }: HelpCenterProps) {
-  const [value, setValue] = React.useState<HelpMessage>({ topic: '', message: '' });
-  const [problems, setProblems] = React.useState<ReturnType<typeof messageProblems>>([]);
-  const [state, setState] = React.useState<'editing' | 'sending' | 'sent' | 'failed'>('editing');
+export function HelpCenter({ topics = demoTopics, questions = demoQuestions, email = 'ana@example.com', replyTime = 'within one working day', onSend,
+  initial, start = 'form', failed }: HelpCenterProps) {
+  const [value, setValue] = React.useState<HelpMessage>({ topic: '', message: '', ...initial });
+  const [problems, setProblems] = React.useState(() => (failed === 'empty' ? messageProblems(value) : []));
+  const [state, setState] = React.useState<'editing' | 'sending' | 'sent' | 'failed'>(start === 'sent' ? 'sent' : failed === 'send' ? 'failed' : 'editing');
+  // Focus moves to "We got your message" when it's sent here, not when the page opens on it.
+  const sentHere = React.useRef(false);
   const sentHeading = React.useRef<HTMLHeadingElement>(null);
-  React.useEffect(() => { if (state === 'sent') sentHeading.current?.focus(); }, [state]);
+  React.useEffect(() => { if (state === 'sent' && sentHere.current) sentHeading.current?.focus(); }, [state]);
   const problem = (f: 'topic' | 'message') => problems.find((p) => p.field === f)?.text;
   const set = (patch: Partial<HelpMessage>) => {
     const next = { ...value, ...patch };
@@ -85,7 +94,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
     setProblems(found);
     if (found[0]) { document.getElementById(`help-${found[0].field}`)?.focus(); return; }
     setState('sending');
-    void Promise.resolve().then(() => onSend?.(value)).then(() => setState('sent'), () => setState('failed'));
+    void Promise.resolve().then(() => onSend?.(value)).then(() => { sentHere.current = true; setState('sent'); }, () => setState('failed'));
   };
 
   return (
