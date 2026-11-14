@@ -35,6 +35,17 @@ const toDate = (d: Date | string) => {
   return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(d);
 };
 
+const wordOf = (L: typeof words, s: StatusState) => (s === 'up' ? L.statusUp : s === 'degraded' ? L.statusDegraded : s === 'down' ? L.statusDown : L.statusNone);
+
+// The bars, each named in words. Memoized: pointing at a day changes only the caption, so the 90 bars and their names
+// aren't drawn again on every move of the pointer, nor when a parent renders with the same days.
+const Bars = /* @__PURE__ */ React.memo(function Bars(p: { days: StatusDay[]; current: number; say: (d: StatusDay) => string; on: (i: number, focus: boolean) => void }) {
+  return p.days.map((d, i) => (
+    <li key={i} className="dk-status-tracker__day" data-state={d.state} aria-label={p.say(d)} {...{ tabIndex: i === p.current ? 0 : -1 }}
+      onFocus={() => p.on(i, true)} onMouseEnter={() => p.on(i, false)} />
+  ));
+});
+
 /* StatusTracker: a strip of bars, one a day, for uptime or job history. Each state differs by shape as well as color:
    up a solid bar, degraded a striped one, down a short one, no data an outline. The strip is one tab stop: the arrow
    keys, Home and End move between days, and the caption under it says the focused or pointed day in words ("Nov 3,
@@ -50,9 +61,8 @@ export const StatusTracker = /* @__PURE__ */ component<HTMLDivElement, StatusTra
   const setAt = (i: number) => setAtIndex(i === days.length - 1 ? null : i);
   const [shown, setShown] = React.useState<number | null>(null);
   const list = React.useRef<HTMLOListElement | null>(null);
-  const word = (s: StatusState) => (s === 'up' ? L.statusUp : s === 'degraded' ? L.statusDegraded : s === 'down' ? L.statusDown : L.statusNone);
   const dateFmt = React.useMemo(() => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }), [locale]);
-  const say = (d: StatusDay) => L.statusDay(dateFmt.format(toDate(d.date)), word(d.state)) + (d.note ? '. ' + d.note : '');
+  const say = React.useCallback((d: StatusDay) => L.statusDay(dateFmt.format(toDate(d.date)), wordOf(L, d.state)) + (d.note ? '. ' + d.note : ''), [L, dateFmt]);
 
   const known = days.filter((d) => d.state !== 'none');
   const upShare = known.length ? known.filter((d) => d.state === 'up').length / known.length : 1;
@@ -89,22 +99,22 @@ export const StatusTracker = /* @__PURE__ */ component<HTMLDivElement, StatusTra
     const el = list.current;
     if (el && el.scrollWidth > el.clientWidth) el.scrollLeft = getComputedStyle(el).direction === 'rtl' ? -el.scrollWidth : el.scrollWidth;
   }, [days.length]);
+  // The bars read the latest setAt through this, so Bars' props stay the same while only the pointed day changes.
+  const live = React.useRef(setAt); live.current = setAt;
+  const on = React.useCallback((i: number, focus: boolean) => { if (focus) live.current(i); setShown(i); }, []);
   const caption = shown != null && days[shown] ? say(days[shown]) : null;
   return (
     <div {...rest} ref={(n) => setRef(ref, n)} className={cn('dk-status-tracker', props.className)} data-component="status-tracker">
       {/* One tab stop for the days (roving tabindex, as Table's and CodeBlock's scroll areas spread theirs): the keys
           move focus between the list's own items, so the list takes them. */}
       <ol className="dk-status-tracker__days" role="list" ref={list} aria-label={props.label} {...listEvents}>
-        {days.map((d, i) => (
-          <li key={i} className="dk-status-tracker__day" data-state={d.state} aria-label={say(d)} {...{ tabIndex: i === current ? 0 : -1 }}
-            onFocus={() => { setAt(i); setShown(i); }} onMouseEnter={() => setShown(i)} />
-        ))}
+        <Bars days={days} current={current} say={say} on={on} />
       </ol>
       <div className="dk-status-tracker__caption" aria-hidden>{caption || ' '}</div>
       {summary != null ? <p className="dk-status-tracker__summary">{summary}</p> : null}
       {props.legend !== false ? (
         <ul className="dk-status-tracker__legend" role="list">
-          {STATES.map((s) => <li key={s} className="dk-status-tracker__key" data-state={s}><span className="dk-status-tracker__swatch" aria-hidden />{word(s)}</li>)}
+          {STATES.map((s) => <li key={s} className="dk-status-tracker__key" data-state={s}><span className="dk-status-tracker__swatch" aria-hidden />{wordOf(L, s)}</li>)}
         </ul>
       ) : null}
     </div>

@@ -105,6 +105,39 @@ function formats(locale: string): Formats {
   return f;
 }
 
+interface DayHandlers { pick: (d: Date) => void; focus: (d: Date) => void; hover: (d: Date) => void }
+interface WeeksProps {
+  month: number; ws: number; stop: number; value: number | null; marked: number | null; min: number | null; max: number | null; locale: string;
+  isDateDisabled: CalendarProps['isDateDisabled']; isDateSelected: CalendarProps['isDateSelected']; dayLabel: CalendarProps['dayLabel']; dayClassName: CalendarProps['dayClassName'];
+  hideOutside: boolean; hover: boolean; on: DayHandlers;
+}
+// The grid's weeks of days. Memoized, by times rather than Dates: a parent that renders again with the same props, or
+// a RangeCalendar's other month, doesn't draw the 42 days and their names again.
+const Weeks = /* @__PURE__ */ React.memo(function Weeks(p: WeeksProps) {
+  const month = new Date(p.month), first = startOfWeek(month, p.ws), full = formats(p.locale).full;
+  const weeks: Date[][] = [];
+  for (let w = 0; w < 6; w++) { const row: Date[] = []; for (let i = 0; i < 7; i++) row.push(addDays(first, w * 7 + i)); weeks.push(row); }
+  const disabled = (d: Date) => (p.min !== null && d.getTime() < p.min) || (p.max !== null && d.getTime() > p.max) || (p.isDateDisabled ? p.isDateDisabled(d) : false);
+  return weeks.map((row, w) => (
+    <tr key={w}>
+      {row.map((d) => {
+        const t = d.getTime(), off = !!disabled(d), sel = p.isDateSelected ? p.isDateSelected(d) : t === p.value, outside = !sameMonth(d, month), now = t === p.marked;
+        if (outside && p.hideOutside) return <td key={t} role="gridcell" className="dk-calendar__blank" />;
+        return (
+          <td key={t} aria-selected={sel} role="gridcell">
+            <button type="button" tabIndex={t === p.stop ? 0 : -1} aria-label={p.dayLabel ? p.dayLabel(d, full.format(d)) : full.format(d)} aria-disabled={off || undefined} aria-current={now ? 'date' : undefined}
+              className={cn('dk-calendar__day', outside && 'dk-calendar__day--outside', sel && 'dk-calendar__day--selected', now && 'dk-calendar__day--today', off && 'dk-calendar__day--disabled', p.dayClassName && p.dayClassName(d))}
+              data-date={d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')}
+              onClick={() => p.on.pick(d)} onFocus={() => p.on.focus(d)} onMouseEnter={p.hover ? () => p.on.hover(d) : undefined}>
+              {d.getDate()}
+            </button>
+          </td>
+        );
+      })}
+    </tr>
+  ));
+});
+
 const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, onLeaveMonth: 1, className: 1 } as const;
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
@@ -233,15 +266,16 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
 
   const stop = hydrated ? focus : value && sameMonth(value, month) ? value : month;
   const first = startOfWeek(month, ws);
-  const weeks: Date[][] = [];
-  for (let w = 0; w < 6; w++) { const row: Date[] = []; for (let i = 0; i < 7; i++) row.push(addDays(first, w * 7 + i)); weeks.push(row); }
-  const { short, long, full, month: monthName } = formats(locale);
+  const { short, long, month: monthName } = formats(locale);
   const title = formats(locale).title.format(month);
-  const selected = (d: Date) => (props.isDateSelected ? props.isDateSelected(d) : sameDay(d, value));
   // A month arrow that reaches min or max turns disabled under focus (FJ1): focus goes to the other arrow.
   const handover = useFocusHandover();
   const presets: PresetItem[] | null = props.presets === true ? dayPresets(sds.labels)
     : Array.isArray(props.presets) && props.presets.length ? props.presets.map((p) => ({ label: p.label, start: toDay(typeof p.value === 'function' ? p.value() : p.value, 'Calendar'), end: null })) : null;
+  // The days read the latest handlers through this, so Weeks' props stay the same while nothing they draw changes.
+  const live = React.useRef({ pick, focus: (d: Date) => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }, hover: props.onDayHover });
+  live.current = { pick, focus: (d: Date) => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }, hover: props.onDayHover };
+  const on = React.useMemo<DayHandlers>(() => ({ pick: (d) => live.current.pick(d), focus: (d) => live.current.focus(d), hover: (d) => { if (live.current.hover) live.current.hover(d); } }), []);
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
     <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.pairedNav && 'dk-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">
@@ -255,28 +289,11 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
       </div>
       <table ref={grid} lang={lang} className="dk-calendar__grid" role="grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>
         <thead>
-          <tr>{(weeks[0] ?? []).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
+          <tr>{Array.from({ length: 7 }, (_, i) => addDays(first, i)).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
         </thead>
         <tbody>
-          {weeks.map((row, w) => (
-            <tr key={w}>
-              {row.map((d) => {
-                const off = !!disabled(d), sel = selected(d), outside = !sameMonth(d, month), now = !!marked && sameDay(d, marked);
-                if (outside && props.hideOutside) return <td key={d.getTime()} role="gridcell" className="dk-calendar__blank" />;
-                return (
-                  <td key={d.getTime()} aria-selected={sel} role="gridcell">
-                    <button type="button" tabIndex={sameDay(d, stop) ? 0 : -1} aria-label={props.dayLabel ? props.dayLabel(d, full.format(d)) : full.format(d)} aria-disabled={off || undefined} aria-current={now ? 'date' : undefined}
-                      className={cn('dk-calendar__day', outside && 'dk-calendar__day--outside', sel && 'dk-calendar__day--selected', now && 'dk-calendar__day--today', off && 'dk-calendar__day--disabled', props.dayClassName && props.dayClassName(d))}
-                      data-date={d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')}
-                      onClick={() => pick(d)} onFocus={() => { if (!sameDay(d, focus)) setFocus(d); if (props.onDayHover) props.onDayHover(d); }}
-                      onMouseEnter={props.onDayHover ? () => props.onDayHover!(d) : undefined}>
-                      {d.getDate()}
-                    </button>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
+          <Weeks month={monthTime} ws={ws} stop={stop.getTime()} value={value ? value.getTime() : null} marked={marked ? marked.getTime() : null} min={min ? min.getTime() : null} max={max ? max.getTime() : null}
+            locale={locale} isDateDisabled={props.isDateDisabled} isDateSelected={props.isDateSelected} dayLabel={props.dayLabel} dayClassName={props.dayClassName} hideOutside={!!props.hideOutside} hover={!!props.onDayHover} on={on} />
         </tbody>
       </table>
       {presets ? <PresetList label={sds.labels.presets} items={presets} allowed={(d) => !disabled(d)} current={{ start: value, end: null }} onPick={(it) => { if (it.start) pick(it.start); }} /> : null}
