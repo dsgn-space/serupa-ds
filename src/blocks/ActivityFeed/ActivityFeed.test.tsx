@@ -37,6 +37,15 @@ describe('Blocks/Activity feed', () => {
     expect(page.getByRole('img').elements()).toHaveLength(0);   // the avatars are decoration: the name is in the text
   });
 
+  test('a sentence that wraps, its time and its detail all start at one edge, beside the avatar rather than under it', async () => {
+    await render(<div style={{ width: '260px' }}><Harness /></div>);
+    const first = page.getByRole('region', { name: 'Activity' }).getByRole('listitem').first().element();
+    const name = [...first.querySelectorAll('strong')].find((s) => s.textContent === 'Ana Putri')!.getBoundingClientRect().left;
+    const time = first.querySelector('time')!.getBoundingClientRect().left;
+    const detail = [...first.querySelectorAll('span')].filter((s) => s.textContent === 'Looks good on a phone.').pop()!.getBoundingClientRect().left;
+    expect([Math.round(time - name), Math.round(detail - name)]).toEqual([0, 0]);
+  });
+
   test('Load more keeps focus on the button, says how many were added, and lands on the end text after the last page', async () => {
     await render(<Harness />);
     const button = page.getByRole('button', { name: 'Load more' });

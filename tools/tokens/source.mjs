@@ -80,7 +80,9 @@ export function toSource(t) {
         if (PRINT[r[0]](r[1]) !== v) ext.css = v;
       } else tok.$value = v;
       if ('usage' in x) tok.$description = x.usage;
-      for (const k of Object.keys(x)) if (!['name', 'value', 'usage'].includes(k)) ext[k] = x[k];
+      // A deprecation is the format's own $deprecated (true or why), so other tools see it too.
+      if ('$deprecated' in x) tok.$deprecated = x.$deprecated;
+      for (const k of Object.keys(x)) if (!['name', 'value', 'usage', '$deprecated'].includes(k)) ext[k] = x[k];
       if (Object.keys(ext).length) tok.$extensions = { [NS]: ext };
       out[pathName(x.name)] = tok;
     }
@@ -119,6 +121,7 @@ export function fromSource(src) {
       const value = ext.themes ? { [first]: css, ...ext.themes } : ext.themed ? { [first]: css } : css;
       const x = { name, value };
       if ('$description' in tok) x.usage = tok.$description;
+      if ('$deprecated' in tok) x.$deprecated = tok.$deprecated;
       for (const [k, v] of Object.entries(ext)) if (!['name', 'css', 'themes', 'themed'].includes(k)) x[k] = v;
       tokens.push(x);
     }

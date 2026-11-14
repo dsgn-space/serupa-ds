@@ -57,14 +57,72 @@ export function Description() {
   return text ? <div className="site-lead"><Markdown plain>{text}</Markdown></div> : null;
 }
 
+// Nothing opens over the page until someone asks. A story that opens a dialog, a menu or a tooltip as it arrives (an
+// open palette, a dialog shown on arrival) would cover the page it documents, and a page with eight of them opens
+// eight. The browser's own calls that put an element on top of the page are held back for a story nobody has touched
+// yet: the stage hears of it and shows a button in the story's place, which runs the story for real.
+const ARMED = 'data-site-armed';
+const HELD = 'site:held';
+function holdBack<K extends 'showModal' | 'showPopover' | 'togglePopover'>(proto: Record<K, (...args: never[]) => unknown> | undefined, method: K) {
+  const real = proto?.[method];
+  if (!proto || typeof real !== 'function') return;
+  proto[method] = function held(this: HTMLElement, ...args: never[]) {
+    const stage = this.closest('[data-site-demo]');
+    // A tooltip is the exception: it is a line of text beside its button, takes no focus and covers nothing to use.
+    if (!stage || stage.hasAttribute(ARMED) || this.getAttribute('role') === 'tooltip') return real.apply(this, args);
+    // The story's effects run before its stage's, so the stage may not be listening yet: leave it a note as well.
+    stage.setAttribute('data-site-held', '');
+    stage.dispatchEvent(new CustomEvent(HELD));
+    return undefined;
+  };
+}
+if (typeof window !== 'undefined') {
+  holdBack(window.HTMLDialogElement?.prototype as never, 'showModal');
+  holdBack(window.HTMLElement?.prototype as never, 'showPopover');
+  holdBack(window.HTMLElement?.prototype as never, 'togglePopover');
+}
+
 /** A story's stage. It starts inert and wakes a moment later: a story that takes focus as it mounts (an error
- *  summary, an open dialog's first field) would otherwise pull the page down to it before anyone has read a line. */
+ *  summary, a field with autoFocus) would otherwise pull the page down to it before anyone has read a line. A story
+ *  that opens something over the page waits behind a button (see holdBack above). */
 function Stage({ entry, className }: { entry: StoryEntry; className?: string }) {
   const [awake, setAwake] = React.useState(false);
+  // 'live': drawn, and held back until someone points at it or tabs into it. 'held': it tried to open something on
+  // arrival, so the button stands in for it. 'run': someone pressed the button.
+  const [mode, setMode] = React.useState<'live' | 'held' | 'run'>('live');
+  const stage = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => { const t = setTimeout(() => setAwake(true), 400); return () => clearTimeout(t); }, []);
+  React.useEffect(() => {
+    const el = stage.current;
+    if (!el || mode !== 'live') return;
+    const hold = () => { el.removeAttribute('data-site-held'); setMode('held'); };
+    if (el.hasAttribute('data-site-held')) hold();
+    el.addEventListener(HELD, hold);
+    return () => el.removeEventListener(HELD, hold);
+  }, [mode]);
+  // A tooltip follows its button to the edge of the window and waits there once the button has scrolled away: a page
+  // of them would pile up at the edge. While most of a stage is out of view, its tooltips are hidden (site.css).
+  React.useEffect(() => {
+    const el = stage.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const seen = new IntersectionObserver(([e]) => {
+      if (e) el.toggleAttribute('data-site-away', e.intersectionRatio < 0.75 && e.intersectionRect.height < (e.rootBounds?.height ?? 0) * 0.75);
+    }, { rootMargin: '-72px 0px 0px 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
+    seen.observe(el);
+    return () => seen.disconnect();
+  }, []);
+  const arm = () => stage.current?.setAttribute(ARMED, '');
   // A whole screen scrolls inside its frame, so the frame is a stop for the keyboard to scroll it from.
   const scrolls = parameter(entry, 'layout') === 'fullscreen' && !!className;
-  return <div className={className} data-site-demo="" inert={!awake} {...(scrolls ? { tabIndex: 0, role: 'group', 'aria-label': `${entry.name}, example` } : {})}><StoryView entry={entry} /></div>;
+  return <div ref={stage} className={className} data-site-demo="" inert={!awake} {...(mode === 'run' ? { [ARMED]: '' } : {})} onPointerEnter={arm} onFocus={arm}
+    {...(scrolls && mode !== 'held' ? { tabIndex: 0, role: 'group', 'aria-label': `${entry.name}, example` } : {})}>
+    {mode === 'held'
+      ? <div className="site-held">
+        <p>This example opens over the page.</p>
+        <Button variant="outline" leftIcon="play_arrow" onClick={() => setMode('run')}>Open the example<span className="sr-only">: {entry.name}</span></Button>
+      </div>
+      : <StoryView key={mode} entry={entry} />}
+  </div>;
 }
 
 /** One story in its frame: the live example, and its code on request. */

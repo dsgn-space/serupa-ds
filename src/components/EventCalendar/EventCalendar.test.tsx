@@ -23,6 +23,19 @@ const EVENTS: CalendarEvent[] = [
 ];
 
 describe('EventCalendar', () => {
+  test('a parent that renders again with the same props doesn\'t draw the days and events again; new events draw them', async () => {
+    // Each event's button reads its title: counting the reads counts the events drawn.
+    let reads = 0;
+    const events = EVENTS.map((e) => ({ ...e, get title() { reads++; return e.title; } }));
+    const r = await render(<EventCalendar events={events} defaultMonth={MARCH} weekStartsOn={0} />);
+    reads = 0;
+    await r.rerender(<EventCalendar events={events} defaultMonth={MARCH} weekStartsOn={0} />);
+    expect(reads).toBe(0);
+    await r.rerender(<EventCalendar events={[...events]} defaultMonth={MARCH} weekStartsOn={0} />);
+    expect(reads).toBeGreaterThan(0);
+    expect(names('2025-03-04')).toEqual(['9:30 AM Team standup, Tuesday, March 4, 9:30 AM to 9:45 AM, Repeats', '2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM']);
+  });
+
   test('a <div> with a toolbar and a grid named by its month; ref, className and other props reach the div', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<EventCalendar id="x" ref={ref} className="extra" data-x="y" events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} />);
@@ -375,6 +388,10 @@ describe('EventCalendar labels', () => {
   test('eventCount and moreEvents say the count as given, in the locale\'s digits ("٢ acara", "+٣ lagi")', () => {
     expect([idLabels.eventCount(2, '٢'), idLabels.moreEvents(3, '٣'), idLabels.eventCount(0, '٠')]).toEqual(['٢ acara', '+٣ lagi', 'Tidak ada acara']);
   });
+
+  test('eventChanged says the moved event\'s title, then its new day and time ("Rapat desain, sekarang …")', () => {
+    expect(idLabels.eventChanged('Rapat desain', 'Kamis, 6 Maret, 14.00 sampai 15.00')).toBe('Rapat desain, sekarang Kamis, 6 Maret, 14.00 sampai 15.00');
+  });
 });
 
 describe('EventCalendar held state', () => {
@@ -405,5 +422,142 @@ describe('EventCalendar held state', () => {
       expect(html).not.toMatch(/[\u2009\u202f]/);
       expect(html).toContain('9:30 AM');
     } finally { spy.mockRestore(); }
+  });
+});
+
+// Creating and moving: a calendar that moves its events as onEventMove says, as an app does.
+const stamp = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+function Planner({ log = [] as string[], events = EVENTS, ...rest }: { log?: string[]; events?: CalendarEvent[] } & Partial<React.ComponentProps<typeof EventCalendar>>) {
+  const [list, setList] = React.useState(events);
+  return (
+    <EventCalendar events={list} defaultMonth={MARCH} weekStartsOn={0} {...rest}
+      onEventMove={(e, c) => { log.push(`${e.id} ${stamp(c.start)} ${stamp(c.end)}${c.allDay ? ' all day' : ''}`); setList((l) => l.map((x) => (x.id === e.id ? { ...x, start: c.start, end: c.end } : x))); }} />
+  );
+}
+const tick = () => new Promise((r) => setTimeout(r, 0));
+const fire = (type: string, target: EventTarget, x: number, y: number, pointerType = 'mouse') =>
+  target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0, pointerType, isPrimary: true }));
+const middle = (n: Element) => { const r = n.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2] as const; };
+// A day's all-day row and its hours, in the week and day views: after its hidden name, in that order.
+const pinned = (d: string) => cell(d).children[1]!, hoursOf = (d: string) => cell(d).lastElementChild!;
+// The slot being dragged out: the one place in the hours with a length but no event.
+const ghostIn = (d: string) => hoursOf(d).querySelector<HTMLElement>(':scope > [aria-hidden][style*="--dk-evc-for"]');
+// A point in a day's hours (week and day views), at an hour of the day.
+const at = (d: string, hour: number) => { const r = hoursOf(d).getBoundingClientRect(); return [r.left + r.width / 2, r.top + (r.height * hour) / 24] as const; };
+// A drag with a mouse (or another pointer) from a point, through the next ones, letting React draw after each step.
+async function drag(from: Element, points: (readonly [number, number])[], start = middle(from), pointerType = 'mouse', release = true) {
+  fire('pointerdown', from, start[0], start[1], pointerType);
+  for (const [x, y] of points) { fire('pointermove', document, x, y, pointerType); await tick(); }
+  if (release) { const [x, y] = points.at(-1) ?? start; fire('pointerup', document, x, y, pointerType); await tick(); }
+}
+const eventIn = (d: string, id: string) => cell(d).querySelector<HTMLElement>(`[data-event-id="${id}"]`);
+const said = () => document.querySelector('[data-dk-announcer]')?.textContent;
+
+describe('EventCalendar creating and moving', () => {
+  test('onSlotSelect: a press on a day\'s empty space, or Enter or Space on a day, chooses the whole day; a press on an event doesn\'t', async () => {
+    const slots: string[] = [], clicked: string[] = [];
+    await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} onSlotSelect={(s) => slots.push(`${stamp(s.start)} ${stamp(s.end)} ${s.allDay}`)} onEventClick={(e) => clicked.push(e.id)} />);
+    await userEvent.click(cell('2025-03-05'));
+    expect(slots).toEqual(['2025-03-05T00:00 2025-03-05T00:00 true']);
+    await userEvent.click(eventIn('2025-03-04', 'b')!);
+    expect([slots.length, clicked]).toEqual([1, ['b']]);
+    cell('2025-03-05').focus();
+    await userEvent.keyboard('{ArrowRight}{Enter}');
+    await userEvent.keyboard(' ');
+    expect(slots.slice(1)).toEqual(['2025-03-06T00:00 2025-03-06T00:00 true', '2025-03-06T00:00 2025-03-06T00:00 true']);
+  });
+
+  test('in the hours, a press chooses the hour from the half hour pressed, and a drag down chooses its span by quarter hours, outlined as it goes', async () => {
+    const slots: string[] = [];
+    await render(<EventCalendar events={EVENTS} defaultMonth={new Date(2025, 2, 4)} defaultView="week" weekStartsOn={0} onSlotSelect={(s) => slots.push(`${stamp(s.start)} ${stamp(s.end)} ${s.allDay}`)} />);
+    const hours = hoursOf('2025-03-05');
+    await drag(hours, [], at('2025-03-05', 10.2));
+    await drag(hours, [at('2025-03-05', 10.6), at('2025-03-05', 11.4)], at('2025-03-05', 10.2), 'mouse', false);
+    const ghost = ghostIn('2025-03-05')!;
+    expect([ghost.style.getPropertyValue('--dk-evc-at'), ghost.style.getPropertyValue('--dk-evc-for')]).toEqual(['10', '1.5']);
+    fire('pointerup', document, ...at('2025-03-05', 11.4)); await tick();
+    // The all-day row is the whole day, as the month's days are.
+    await drag(pinned('2025-03-05'), []);
+    expect(slots).toEqual(['2025-03-05T10:00 2025-03-05T11:00 false', '2025-03-05T10:00 2025-03-05T11:30 false', '2025-03-05T00:00 2025-03-05T00:00 true']);
+    expect(ghostIn('2025-03-05')).toBeNull();
+  });
+
+  test('onEventMove: an event dragged to another day keeps its time, is drawn there as it goes, is said in words, and the press isn\'t a click', async () => {
+    const log: string[] = [], clicked: string[] = [];
+    await render(<Planner log={log} onEventClick={(e) => clicked.push(e.id)} />);
+    const b = eventIn('2025-03-04', 'b')!;
+    expect([b.classList.contains('dk-event-calendar__event--movable'), b.getAttribute('aria-keyshortcuts')]).toEqual([true, 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown']);
+    await drag(b, [middle(cell('2025-03-05')), middle(cell('2025-03-06'))], middle(b), 'mouse', false);
+    expect([eventIn('2025-03-04', 'b'), eventIn('2025-03-06', 'b')?.classList.contains('dk-event-calendar__event--dragging'), document.querySelector('[data-component=event-calendar]')!.hasAttribute('data-dragging')]).toEqual([null, true, true]);
+    fire('pointerup', document, ...middle(cell('2025-03-06'))); await tick();
+    expect(log).toEqual(['b 2025-03-06T14:00 2025-03-06T15:00']);
+    await expect.poll(said).toBe('Design review, now Thursday, March 6, 2:00 PM to 3:00 PM');
+    eventIn('2025-03-06', 'b')!.click();
+    expect(clicked).toEqual([]);
+    await userEvent.click(eventIn('2025-03-06', 'b')!);
+    expect(clicked).toEqual(['b']);
+  });
+
+  test('in the hours, an event drags by quarter hours and to another day, and its end drags its length (a quarter hour at least)', async () => {
+    const log: string[] = [];
+    await render(<Planner log={log} defaultMonth={new Date(2025, 2, 4)} defaultView="week" />);
+    await drag(eventIn('2025-03-04', 'b')!, [at('2025-03-04', 14.6), at('2025-03-05', 15.5)], at('2025-03-04', 14.5));
+    expect(log).toEqual(['b 2025-03-05T15:00 2025-03-05T16:00']);
+    const end = cell('2025-03-05').querySelector('[data-resize="b"]')!;
+    await drag(end, [at('2025-03-05', 16.2), at('2025-03-05', 16.6)], at('2025-03-05', 16));
+    await drag(cell('2025-03-05').querySelector('[data-resize="b"]')!, [at('2025-03-05', 15.5), at('2025-03-05', 14)], at('2025-03-05', 16.5));
+    expect(log.slice(1)).toEqual(['b 2025-03-05T15:00 2025-03-05T16:30', 'b 2025-03-05T15:00 2025-03-05T15:15']);
+  });
+
+  test('Shift and the arrow keys move the focused event, and focus follows it to its new day; Escape during a drag puts it back; a touch drag doesn\'t move it', async () => {
+    const log: string[] = [];
+    const r = await render(<Planner log={log} />);
+    eventIn('2025-03-04', 'b')!.focus();
+    await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+    await expect.poll(() => document.activeElement === eventIn('2025-03-05', 'b')).toBe(true);
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    await expect.poll(() => document.activeElement === eventIn('2025-03-12', 'b')).toBe(true);
+    expect(log).toEqual(['b 2025-03-05T14:00 2025-03-05T15:00', 'b 2025-03-12T14:00 2025-03-12T15:00']);
+    await drag(eventIn('2025-03-12', 'b')!, [middle(cell('2025-03-13')), middle(cell('2025-03-14'))], undefined, 'mouse', false);
+    expect(eventIn('2025-03-14', 'b')).not.toBeNull();
+    await userEvent.keyboard('{Escape}');
+    fire('pointerup', document, ...middle(cell('2025-03-14'))); await tick();
+    expect([eventIn('2025-03-12', 'b') !== null, log.length]).toEqual([true, 2]);
+    await drag(eventIn('2025-03-12', 'b')!, [middle(cell('2025-03-13')), middle(cell('2025-03-14'))], undefined, 'touch');
+    expect([eventIn('2025-03-12', 'b') !== null, log.length]).toEqual([true, 2]);
+    // In the hours, up and down are a quarter hour; an all-day event there stays on its day.
+    await r.rerender(<Planner log={log} events={[...EVENTS, { id: 'e', title: 'Retro', start: '2025-03-13T16:00', end: '2025-03-13T16:30' }]} defaultMonth={new Date(2025, 2, 12)} defaultView="week" key="week" />);
+    eventIn('2025-03-12', 'c')!.focus();
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    expect(log.length).toBe(2);
+    await userEvent.keyboard('{Shift>}{ArrowLeft}{/Shift}');
+    expect(log.at(-1)).toBe('c 2025-03-11T00:00 2025-03-11T00:00 all day');
+    await expect.poll(() => document.activeElement === eventIn('2025-03-11', 'c')).toBe(true);
+    eventIn('2025-03-13', 'e')!.focus();
+    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    expect(log.at(-1)).toBe('e 2025-03-13T16:15 2025-03-13T16:45');
+  });
+
+  test('moved onto a day with no room left, it goes under "+N more" and the day takes focus; without onEventMove nothing moves', async () => {
+    const full: CalendarEvent[] = [
+      { id: 'x', title: 'Breakfast', start: '2025-03-06T08:00' }, { id: 'y', title: 'Lunch', start: '2025-03-06T12:00' },
+      { id: 'z', title: 'Late call', start: '2025-03-05T20:00' },
+    ];
+    await render(<Planner events={full} maxPerDay={2} />);
+    eventIn('2025-03-05', 'z')!.focus();
+    await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+    await expect.poll(() => document.activeElement === cell('2025-03-06')).toBe(true);
+    expect(eventIn('2025-03-06', 'z')).toBeNull();
+  });
+
+  test('without onEventMove an event neither drags nor moves with the keys, and isn\'t marked as movable', async () => {
+    const clicked: string[] = [];
+    await render(<EventCalendar events={EVENTS} defaultMonth={MARCH} weekStartsOn={0} onEventClick={(e) => clicked.push(e.id)} />);
+    const b = eventIn('2025-03-04', 'b')!;
+    expect([b.classList.contains('dk-event-calendar__event--movable'), b.hasAttribute('aria-keyshortcuts')]).toEqual([false, false]);
+    await drag(b, [middle(cell('2025-03-05')), middle(cell('2025-03-06'))]);
+    b.focus();
+    await userEvent.keyboard('{Shift>}{ArrowRight}{/Shift}');
+    expect([eventIn('2025-03-04', 'b') === b, document.activeElement === b]).toEqual([true, true]);
   });
 });

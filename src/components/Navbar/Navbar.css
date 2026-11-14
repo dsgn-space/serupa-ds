@@ -6,7 +6,8 @@
 @layer dk.components {
 .dk-navbar:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-navbar { --dk-bar: var(--border-width-2); position: relative; background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
-.dk-navbar--sticky { position: sticky; top: 0; z-index: var(--navbar-z-index, var(--z-40)); }
+/* Stuck to the top, the bar's fill runs up under a phone's status bar and notch, its content below them. */
+.dk-navbar--sticky { position: sticky; top: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-top: env(safe-area-inset-top); }
 /* Sticky, the bar lifts once the page scrolls under it (149): a shadow fades in over the first bar height of
    scroll, tied to the scroll rather than a clock, so it never runs on its own. Where scroll-driven animations
    aren't supported (Firefox), the line under the bar alone, as before. */
@@ -53,7 +54,7 @@
 /* Pressed: one step past hover while held, at once (no fade in); letting go fades back. */
 .dk-navbar__link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); color: var(--navbar-link-text-hover, var(--text)); transition-duration: var(--duration-0); }
 /* The current page: a bar along the bottom that hover never draws, and one step darker under the pointer. */
-.dk-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); box-shadow: inset 0 calc(var(--spacing-0) - var(--border-width-2)) 0 var(--navbar-link-indicator, var(--primary)); }
+.dk-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); box-shadow: inset 0 calc(var(--spacing-0) - var(--border-width-2)) 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
 @media (hover: hover) { .dk-navbar__link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
 /* Forced colors drop the background and color, so the current page gets an outline. */
 @media (forced-colors: active) { .dk-navbar__link--active, .dk-navbar__link[aria-current="page"], .dk-navbar__menu-link--active, .dk-navbar__menu-link[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; } }
@@ -81,7 +82,7 @@
 }
 @media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); } }
 .dk-navbar__menu-link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
-.dk-navbar__menu-link--active { background: var(--navbar-link-bg-active, var(--secondary)); box-shadow: inset var(--dk-bar) 0 0 var(--navbar-link-indicator, var(--primary)); }
+.dk-navbar__menu-link--active { background: var(--navbar-link-bg-active, var(--secondary)); box-shadow: inset var(--dk-bar) 0 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
 @media (hover: hover) { .dk-navbar__menu-link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
 .dk-navbar__menu-name { font-weight: var(--font-medium); }
 .dk-navbar__menu-desc { color: var(--navbar-menu-desc-text, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
@@ -90,7 +91,9 @@
 @media (max-width: 767.98px) {
   .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
     /* More links than fit below the bar scroll inside the panel, not behind a sticky bar out of reach. */
-    max-height: calc(var(--sizing-dvh) - var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain; }
+    max-height: calc(var(--sizing-dvh) - var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
+    /* Its last link clears a phone's home bar when the panel reaches the bottom of the screen. */
+    padding-bottom: max(var(--spacing-2), env(safe-area-inset-bottom)); }
   .dk-navbar[data-state="open"] .dk-navbar__nav { display: block; }
   /* Motion (GH2): the panel fades in (with @starting-style) and fades out, as Popover and Menu do; with motion
      allowed it also unrolls from the bar (a clip-path, as Accordion). Navbar keeps it shown, after the menu button,

@@ -679,17 +679,21 @@ describe('Combobox', () => {
     expect(low).toEqual([]);
   });
 
-  test('the highlighted option: highlight background and a 2px primary bar at its start, on the right in rtl', async () => {
+  test('the highlighted option: the grey highlight fill and no bar; with more contrast a 2px bar at its start, 3:1 on the fill, on the right in rtl', async () => {
     await render(<Countries />);
     await open();
     await userEvent.keyboard('{ArrowDown}');
     const act = () => activeOf('cb');
-    const probe = document.createElement('div'); probe.style.background = 'var(--highlight)'; probe.style.color = 'var(--primary)'; document.body.appendChild(probe);
-    await expect.poll(() => getComputedStyle(act()).backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
-    expect(getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} 2px 0px 0px 0px inset`);
+    const probe = document.createElement('div'); probe.style.background = 'var(--highlight)'; probe.style.color = 'var(--text)'; document.body.appendChild(probe);
+    const fill = () => getComputedStyle(probe).backgroundColor;
+    await expect.poll(() => getComputedStyle(act()).backgroundColor).toBe(fill());
+    expect(getComputedStyle(act()).boxShadow).toBe(`${fill()} 2px 0px 0px 0px inset`);
+    document.documentElement.setAttribute('data-contrast', 'more');
+    await expect.poll(() => getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} 2px 0px 0px 0px inset`);
+    expect(contrast(getComputedStyle(probe).color, fill())).toBeGreaterThanOrEqual(3);
     document.documentElement.dir = 'rtl';
     await expect.poll(() => getComputedStyle(act()).boxShadow).toBe(`${getComputedStyle(probe).color} -2px 0px 0px 0px inset`);
-    document.documentElement.removeAttribute('dir'); probe.remove();
+    document.documentElement.removeAttribute('dir'); document.documentElement.removeAttribute('data-contrast'); probe.remove();
   });
 
   test('the × is named after the field: "Clear Country" from a Field label (without its * or "(optional)"), aria-labelledby or aria-label; "Clear" with no label; clearLabel wins', async () => {

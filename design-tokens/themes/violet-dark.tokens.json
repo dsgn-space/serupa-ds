@@ -68,7 +68,7 @@
     "highlight": {
       "$type": "color",
       "$value": "{color.zinc-700}",
-      "$description": "The keyboard-highlighted item in a list: Menu items, Combobox and TimePicker options, the Sidebar's current page. One step stronger than `secondary` in light (about 1.3:1 on `surface`); in dark it shares `secondary`'s zinc-700 (1.7:1 on `surface`, 1.4:1 on `surface-overlay`), so a `primary` bar keeps 3:1 on it in every brand, paired with a 2px `primary` bar at the item's start. Text on it keeps 4.5:1.",
+      "$description": "The keyboard-highlighted item in a list: Menu items, Combobox and TimePicker options, the Sidebar's current page. In light the same zinc-100 as `secondary` (about 1.1:1 on `surface`); in dark it shares `secondary`'s zinc-700 (1.7:1 on `surface`, 1.4:1 on `surface-overlay`), with no bar by default (`highlight-indicator`). Text on it keeps 4.5:1.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--highlight"
@@ -173,6 +173,16 @@
         }
       }
     },
+    "highlight-indicator": {
+      "$type": "color",
+      "$value": "{color.zinc-700}",
+      "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `highlight` in every theme (change both together), so no bar shows and the grey fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `highlight`, and forced colors outline the item in `Highlight`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--highlight-indicator"
+        }
+      }
+    },
     "field-border": {
       "$type": "color",
       "$value": "{color.zinc-700}",
@@ -230,6 +240,24 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-pressed"
+        }
+      }
+    },
+    "field-raised": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2,
+          0.2,
+          0.2196
+        ],
+        "hex": "#333338"
+      },
+      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. Emerald dark, whose overlays are zinc-900, keeps zinc-800. `field-hover` and `field-pressed` already sit a step past it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-raised"
         }
       }
     },

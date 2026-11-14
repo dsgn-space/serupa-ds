@@ -21,6 +21,11 @@ async function tabIn(chart: Element = document.querySelector('figure[data-compon
 }
 
 describe('Chart', () => {
+  test('the key sets a numeric series name (a year) in tabular figures, so keys of years line up', async () => {
+    await render(<Chart title="Visitors" categories={CATS} series={[{ name: '2025', values: [1, 2, 3, 4] }, { name: '2026', values: [2, 3, 4, 5] }]} />);
+    expect([...document.querySelectorAll('li')].filter((li) => /^202[56]/.test(li.textContent)).map((k) => css(k).fontVariantNumeric)).toEqual(['tabular-nums', 'tabular-nums']);
+  });
+
   test('a <figure> named by its title; ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLElement>();
     await render(<Chart id="c" ref={ref} className="extra" data-x="y" title="Visitors" categories={CATS} series={TWO} />);
@@ -155,6 +160,23 @@ describe('Chart', () => {
     await userEvent.unhover(pt);
     await userEvent.hover(page.getByRole('figure').element().querySelector('figcaption')!);
     await expect.poll(() => document.querySelector('svg[aria-describedby] + div')).toBeNull();
+  });
+
+  test('the pointer moving across the plot draws the tip and marks the category\'s markers, without drawing every point again', async () => {
+    // formatValue is asked for each point drawn (its name says its value), each tick and each row of the tip: with
+    // 100 categories in two series, drawing the points again would ask it 200 times more.
+    const formatValue = vi.fn((v: number) => String(v));
+    const cats = Array.from({ length: 100 }, (_, i) => 'D' + i);
+    const two = [{ name: 'A', values: cats.map((_, i) => i) }, { name: 'B', values: cats.map((_, i) => 100 - i) }];
+    await render(<Chart title="Daily" categories={cats} series={two} formatValue={formatValue} />);
+    const marks = () => [...document.querySelectorAll<SVGElement>('g[role="group"] > [role="img"]')];
+    formatValue.mockClear();
+    await userEvent.hover(marks()[10]!);
+    await expect.poll(() => document.querySelector('svg[aria-describedby] + div')?.textContent).toBe('D10A10B90');
+    expect(formatValue.mock.calls.length).toBeLessThan(30);
+    expect(marks().filter((m) => m.hasAttribute('data-active')).map((m) => m.getAttribute('aria-label'))).toEqual(['A, D10: 10', 'B, D10: 90']);
+    await userEvent.hover(marks()[40]!);
+    await expect.poll(() => marks().filter((m) => m.hasAttribute('data-active')).map((m) => m.getAttribute('aria-label'))).toEqual(['A, D40: 40', 'B, D40: 60']);
   });
 
   test('each series has its own marker shape, in the legend too', async () => {

@@ -106,6 +106,21 @@ describe('StatusTracker', () => {
     expect([n.scrollWidth <= 240, strip.scrollWidth > strip.clientWidth, strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 1]).toEqual([true, true, true]);
   });
 
+  test('pointing along the strip, or a parent rendering with the same days, draws only the caption again, not every bar', async () => {
+    // Each bar's name reads its day's note: counting the reads counts the bars drawn.
+    let reads = 0;
+    const days = sampleDays().map((d) => ({ date: d.date, state: d.state, get note() { reads++; return d.note; } }));
+    const r = await render(<Days days={days} />);
+    reads = 0;
+    await userEvent.hover(bar(30));
+    await expect.element(page.getByText(/^Sep 8, 2026: Up/)).toBeVisible();
+    await userEvent.hover(bar(31));
+    await expect.element(page.getByText(/^Sep 9, 2026: Up/)).toBeVisible();
+    await r.rerender(<Days days={days} />);
+    // The caption's two days, each read once or twice; not 90 bars a move.
+    expect(reads).toBeLessThan(10);
+  });
+
   test('its words come from the labels', async () => {
     await render(<SerupaProvider labels={idLabels} locale="id-ID"><StatusTracker label="API" days={sampleDays(10)} /></SerupaProvider>);
     await expect.element(page.getByText('100% aktif selama 10 hari, tanpa insiden')).toBeVisible();

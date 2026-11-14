@@ -124,6 +124,10 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         if (activeIn(t) !== t) return;
+        // Still out of the window altogether, the browser never scrolled to it: the caller asked it not to
+        // (focus({ preventScroll: true })), say to glide there itself. Only Safari leaves a shadow root's field there.
+        const r = t.getBoundingClientRect();
+        if (!(t.getRootNode() instanceof ShadowRoot) && (r.top >= window.innerHeight || r.bottom <= 0)) return;
         // Safari doesn't scroll a field focused inside a shadow root into view at all: below the window, it comes up.
         const below = t.getBoundingClientRect().bottom - window.innerHeight;
         if (below > 0) window.scrollBy(0, below);

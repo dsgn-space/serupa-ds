@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, forcedColors, keepMotion, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, keepMotion, press, safeArea, withMotion } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Menu, MenuItem } from '../Menu/Menu';
 import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
@@ -141,6 +141,29 @@ describe('Navbar', () => {
     await new Promise((r) => setTimeout(r, 100));
     const bar = el('nshadow').getBoundingClientRect(), r = f.getBoundingClientRect();
     expect([r.top >= Math.round(bar.bottom) - 1, r.bottom <= window.innerHeight]).toEqual([true, true]);
+  });
+
+  test('sticky: focus that asks for no scroll (preventScroll) leaves the page where it is, so a smooth scroll to it glides', async () => {
+    await render(<div>
+      <Navbar id="nquiet" sticky brand="Docs"><NavbarLink href="#a">A</NavbarLink></Navbar>
+      <div style={{ height: '2400px' }} />
+      <h2 id="nquiet-h" tabIndex={-1}>Far down</h2>
+      <div style={{ height: '2400px' }} />
+    </div>);
+    window.scrollTo(0, 0);
+    await expect.poll(() => window.scrollY).toBe(0);
+    const frames = async () => { await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); await new Promise((r) => setTimeout(r, 100)); };
+    // Below the window: the page stays at the top.
+    el('nquiet-h').focus({ preventScroll: true });
+    await frames();
+    expect([document.activeElement?.id, window.scrollY]).toEqual(['nquiet-h', 0]);
+    // Above it too.
+    (document.activeElement as HTMLElement).blur();
+    window.scrollTo(0, 3400);
+    await expect.poll(() => window.scrollY).toBe(3400);
+    el('nquiet-h').focus({ preventScroll: true });
+    await frames();
+    expect([document.activeElement?.id, window.scrollY]).toEqual(['nquiet-h', 3400]);
   });
 
   test('sticky: no shadow at the top of the page; scrolled under, the bar lifts with the shadow-scrolled token, tied to the scroll (149)', async () => withMotion(async () => {
@@ -528,7 +551,7 @@ describe('NavbarMenu (RU14)', () => {
     expect([button('Products').element().getAttribute('aria-current'), button('Resources').element().hasAttribute('aria-current')]).toEqual(['true', false]);
   });
 
-  test('the current menu link has a 2px primary bar at its start (the end in right to left) that a hovered link never has', async () => {
+  test('the current menu link has a 2px bar at its start (the end in right to left) that a hovered link never has', async () => {
     await render(<Mega />);
     await userEvent.click(button('Products').element());
     const alerts = page.getByRole('link', { name: 'Alerts' }).element(), dash = page.getByRole('link', { name: 'Dashboards' }).element();
@@ -598,5 +621,21 @@ describe('NavbarMenu (RU14)', () => {
     await userEvent.keyboard('{Escape}');
     expect(expanded('Products')).toBe('false');
     expect(page.getByRole('button', { name: 'Menu' }).element().getAttribute('aria-expanded')).toBe('true');
+  });
+
+  test('sticky on a phone with a notch: the bar\'s fill runs up under it and its content starts below it; the menu panel clears the home bar', async () => {
+    await page.viewport(390, 700);
+    const screen = await render(<Navbar id="nsa" sticky menuLabel="Open the menu" brand={<a href="#home" id="sab">Serupa</a>}><NavbarLink href="#a">A</NavbarLink></Navbar>);
+    const top = () => el('sab').getBoundingClientRect().top - el('nsa').getBoundingClientRect().top;
+    const before = top();
+    await safeArea(async (on) => {
+      if (!on) return;
+      await expect.poll(() => css(el('nsa')).paddingTop).toBe('47px');
+      expect(Math.round(top() - before)).toBe(47);
+      const panel = el('nsa').querySelector('nav') as HTMLElement;
+      expect(css(panel).paddingBottom).toBe('34px');
+    });
+    await page.viewport(1000, 700);
+    await screen.unmount();
   });
 });

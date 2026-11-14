@@ -138,6 +138,22 @@ describe('FileUpload', () => {
     expect(names(ro)).toBe('');
   });
 
+  test('a screenshot pasted with focus on the choose button is added in Chrome before 125, which sends the paste to the body', async () => {
+    await render(<Many />);
+    const el = q(many);
+    const paste = (...files: File[]) => {
+      const dt = new DataTransfer(); for (const f of files) dt.items.add(f);
+      const e = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(e, 'clipboardData', { value: dt });
+      document.body.dispatchEvent(e); return e.defaultPrevented;
+    };
+    expect(paste(file('away.png', 'image/png', 40))).toBe(false);   // focus outside: the page's own paste
+    expect(names(el)).toBe('');
+    choose(el).focus();
+    expect(paste(file('shot.png', 'image/png', 40))).toBe(true);
+    await expect.poll(() => names(el)).toBe('shot.png');
+  });
+
   test('an error under it is a Field error\'s size, 14px, with the icon centred on the first line (GR392)', async () => {
     await render(<><Field label="Contract" error="Add the signed contract"><FileUpload id="gr392f" /></Field><FileUpload id="gr392" accept="image/*" /></>);
     const fieldError = document.querySelector('[data-icon="error"]')!.parentElement!;   // the only error until the upload
@@ -589,6 +605,17 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     // The words' box inside the button is the one that cuts a label too long for it.
     const label = screen.getByRole('button', { name: 'Try again a.png' }).element().querySelector('span[id$="-retry"]')!.parentElement!;
     expect([label.textContent, label.scrollWidth <= label.clientWidth]).toEqual(['Try again', true]);
+  });
+
+  test('a failure message that wraps keeps its icon on the first line, not centred on the whole message', async () => {
+    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
+    const failed = [...document.querySelectorAll('span')].find((s) => s.textContent === long.message)!, icon = failed.querySelector('svg')!.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents([...failed.childNodes].find((n) => n.nodeType === 3)!);
+    const lines = range.getClientRects();
+    expect(lines.length).toBeGreaterThan(1);
+    expect(Math.abs((icon.top + icon.bottom) / 2 - (lines[0]!.top + lines[0]!.bottom) / 2)).toBeLessThanOrEqual(1);
   });
 
   test('no retry button without onRetry or when read-only; removing a file still moves focus to the next remove button', async () => {

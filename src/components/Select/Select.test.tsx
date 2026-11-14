@@ -2,10 +2,11 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { color, css, lowContrast, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, lowContrast, withMotion } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Select } from './Select';
 import { Combobox } from '../Combobox/Combobox';
+import { Card } from '../Card/Card';
 import { DatePicker } from '../DatePicker/DatePicker';
 
 const field = (id: string) => document.getElementById(id) as HTMLSelectElement;
@@ -46,25 +47,27 @@ describe('Select', () => {
   test('a native <select> (no system arrow) in a .dk-select box (data-component="select"); md 32px text-sm, 12px start padding and room for the chevron at the end, 1px border, 6px corners', async () => {
     await render(<Grid><Role changes={[]} /></Grid>);
     const b = css(box('md')), f = css(field('md'));
-    expect([field('md').tagName, box('md').dataset.component, f.appearance]).toEqual(['SELECT', 'select', 'none']);
+    expect([field('md').tagName, box('md').dataset.component, f.appearance]).toEqual(['SELECT', 'select', CSS.supports('appearance', 'base-select') ? 'base-select' : 'none']);
     expect(box('md').className).toMatch(/dk-select dk-select--size-md/);
     expect([b.height, f.fontSize, f.paddingLeft, f.paddingRight, b.borderTopWidth, b.borderRadius]).toEqual(['32px', '14px', '12px', '32px', '1px', '6px']);
   });
 
-  test('keyboard table: Tab reaches the select; ArrowDown and ArrowUp pick the next and previous option, skipping a disabled one; Space goes to the browser, which opens its list (FH1)', async () => {
+  test('keyboard table: Tab reaches the select; ArrowDown and ArrowUp pick the next and previous option, skipping a disabled one (where the list is styled, ArrowDown opens it instead, as on macOS); Space goes to the browser, which opens its list (FH1)', async () => {
     const changes: string[] = [];
     await render(<Grid><button id="kb-before">before</button><Select id="kb-s" aria-label="Pick" defaultValue="a" onChange={(e) => changes.push(e.target.value)} options={['a', { value: 'b', label: 'Bee', disabled: true }, 'c']} /></Grid>);
     document.getElementById('kb-before')!.focus();
     await userEvent.tab();
     const at = document.activeElement?.id;
     await userEvent.keyboard('{ArrowDown}{ArrowUp}');
+    const styled = CSS.supports('appearance', 'base-select');
+    if (styled) await userEvent.keyboard('{Escape}');
     let cancelled: boolean | null = null;
     const watch = (e: KeyboardEvent) => { if (e.key === ' ') cancelled = e.defaultPrevented; };
     window.addEventListener('keydown', watch);
     await userEvent.keyboard(' ');
     window.removeEventListener('keydown', watch);
     await userEvent.keyboard('{Escape}');
-    expect([at, changes, cancelled]).toEqual(['kb-s', ['c', 'a'], false]);
+    expect([at, changes, cancelled]).toEqual(['kb-s', styled ? [] : ['c', 'a'], false]);
   });
 
   test('sizes: sm 24px text-xs, lg 44px text-base; an unknown size falls back to md; multiple is ignored with a warning', async () => {
@@ -257,7 +260,8 @@ describe('Select', () => {
     await render(<Select id="dg" aria-label="Seats" defaultValue="1" onChange={(e) => changes.push(e.target.value)}
       options={[1, { label: 'Sold out', disabled: true, options: [2, 3] }, 4]} />);
     field('dg').focus();
-    await userEvent.keyboard('{ArrowDown}');
+    // Where the list is styled (appearance: base-select), Down opens it first and Enter picks, as in a styled list's keys.
+    await userEvent.keyboard(CSS.supports('appearance', 'base-select') ? '{ArrowDown}{ArrowDown}{Enter}' : '{ArrowDown}');
     expect([changes, field('dg').querySelector('optgroup')!.disabled]).toEqual([['4'], true]);
   });
 
@@ -266,5 +270,103 @@ describe('Select', () => {
     const chevron = box('rtl-s').lastElementChild!.getBoundingClientRect(), b = box('rtl-s').getBoundingClientRect();
     expect(chevron.left - b.left).toBeLessThan(b.right - chevron.right);
     expect(parseFloat(css(field('rtl-s')).paddingLeft)).toBeGreaterThan(parseFloat(css(field('rtl-s')).paddingRight));
+  });
+});
+
+describe('Select: the styled list', () => {
+  const FRUIT = ['Apple', 'Banana', { value: 'c', label: 'Cherry', disabled: true }, { label: 'Citrus', options: ['Lemon', 'Lime'] }];
+  const styled = typeof CSS !== 'undefined' && CSS.supports('appearance', 'base-select');
+  const radius = (v: string) => { const d = document.createElement('div'); d.style.borderRadius = v; document.body.appendChild(d); const r = css(d).borderTopLeftRadius; d.remove(); return r; };
+  const opt = (label: string) => [...document.querySelectorAll('option')].find((o) => o.textContent === label)!;
+
+  test('where the browser lets the page style it, the list is an overlay surface like Combobox\'s; elsewhere the browser draws its own', async () => {
+    await render(<div style={{ width: '280px', height: '360px' }}><Select aria-label="Fruit" placeholder="Choose a fruit" options={FRUIT} /></div>);
+    const s = document.querySelector('select')!;
+    if (!styled) { expect(css(s).appearance).toBe('none'); return; }
+    await userEvent.click(s);
+    const pick = getComputedStyle(s, '::picker(select)');
+    expect([s.matches(':open'), pick.backgroundColor, pick.borderTopLeftRadius, getComputedStyle(s, '::picker-icon').display])
+      .toEqual([true, color('var(--surface-overlay)'), radius('var(--radius-surface)'), 'none']);
+    await userEvent.keyboard('{Escape}');
+  });
+
+  test('keys: Down opens it and moves, Enter picks and says so through onChange, a disabled option is passed over, Escape closes it with nothing changed', async () => {
+    const changes: string[] = [];
+    await render(<Select aria-label="Fruit" options={FRUIT} defaultValue="Banana" onChange={(e) => changes.push(e.target.value)} />);
+    const s = document.querySelector('select')!;
+    s.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    if (styled) {
+      expect(s.matches(':open')).toBe(true);
+      await userEvent.keyboard('{ArrowDown}{Enter}');
+      expect([s.matches(':open'), s.value, changes]).toEqual([false, 'Lemon', ['Lemon']]);
+      await userEvent.keyboard('{ArrowDown}{ArrowUp}{Escape}');
+      expect([s.matches(':open'), s.value, changes]).toEqual([false, 'Lemon', ['Lemon']]);
+    } else {
+      expect(changes.length).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test('the option under the keyboard has the grey highlight fill and no bar (a 2px bar with more contrast); text reads 4.5:1 on the list and on that fill, the tick 3:1, and the more-contrast bar 3:1 on the fill, in all six themes', async () => {
+    await render(<div style={{ width: '280px', height: '360px' }}><Select aria-label="Fruit" options={FRUIT} defaultValue="Apple" /></div>);
+    const s = document.querySelector('select')!;
+    if (!styled) return expect(css(s).appearance).toBe('none');
+    s.focus();
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    const act = document.activeElement as HTMLOptionElement;
+    expect([act.textContent, css(act).backgroundColor, css(act).boxShadow]).toEqual(['Banana', color('var(--highlight)'), `${color('var(--highlight)')} 2px 0px 0px 0px inset`]);
+    const still = document.createElement('style'); still.textContent = '*, *::before, *::after, ::picker(select) { transition: none !important; }'; document.head.appendChild(still);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const bg = getComputedStyle(s, '::picker(select)').backgroundColor, abg = css(act).backgroundColor;
+      const pairs: Array<[string, string, string, number]> = [['option', css(opt('Apple')).color, bg, 4.5], ['active option', css(act).color, abg, 4.5], ['group', getComputedStyle(document.querySelector('optgroup legend') ?? document.querySelector('optgroup')!).color, bg, 4.5], ['tick', getComputedStyle(opt('Apple'), '::checkmark').color, bg, 3], ];
+      document.documentElement.setAttribute('data-contrast', 'more');
+      pairs.push(['more-contrast bar', css(act).boxShadow.match(/rgb\([^)]+\)/)![0], css(act).backgroundColor, 3]);
+      document.documentElement.removeAttribute('data-contrast');
+      for (const [k, fg, on, min] of pairs) { const r = contrast(fg, on); if (r < min) low.push(`${th} ${k} ${r.toFixed(2)}`); }
+    }
+    still.remove();
+    await userEvent.keyboard('{Escape}');
+    expect(low).toEqual([]);
+  });
+
+  test('a group sits on the list\'s own surface, with no band of the field\'s color behind it (on a raised Card in dark the field is lighter than the list)', async () => {
+    await render(<Card variant="elevated"><Select aria-label="Fruit" options={FRUIT} defaultValue="Apple" /></Card>);
+    const s = document.querySelector('select')!;
+    if (!styled) return expect(css(s).appearance).toBe('none');
+    await userEvent.click(s);
+    const bands: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const g = css(document.querySelector('optgroup')).backgroundColor;
+      if (g !== 'rgba(0, 0, 0, 0)') bands.push(`${th} ${g}`);
+    }
+    await userEvent.keyboard('{Escape}');
+    expect(bands).toEqual([]);
+  });
+
+  test('a long option wraps inside the window, as Combobox\'s list does, rather than widening the list past the screen', async () => {
+    const long = 'Regional office relocation programme for the northern territories, phase two '.repeat(3) + 'Supercalifragilisticexpialidocious'.repeat(4);
+    await render(<div style={{ width: '200px' }}><Select aria-label="Project" options={['Short', long]} defaultValue="Short" /></div>);
+    const s = document.querySelector('select')!;
+    if (!styled) return expect(css(s).appearance).toBe('none');
+    await userEvent.click(s);
+    const r = opt(long).getBoundingClientRect();
+    await userEvent.keyboard('{Escape}');
+    expect([r.left >= 0, r.right <= document.documentElement.clientWidth]).toEqual([true, true]);
+  });
+
+  test('forced colors: the option under the keyboard is outlined in Highlight, since the fill is gone', async () => {
+    await render(<div style={{ width: '280px', height: '360px' }}><Select aria-label="Fruit" options={FRUIT} defaultValue="Apple" /></div>);
+    const s = document.querySelector('select')!;
+    if (!styled) return expect(css(s).appearance).toBe('none');
+    await forcedColors(async () => {
+      s.focus();
+      await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+      const act = document.activeElement as HTMLElement;
+      expect([act.textContent, css(act).outlineStyle, css(act).outlineWidth]).toEqual(['Banana', 'solid', css(document.documentElement).getPropertyValue('--focus-ring-width').trim()]);
+      await userEvent.keyboard('{Escape}');
+    });
   });
 });

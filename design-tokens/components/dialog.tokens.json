@@ -12,6 +12,16 @@
           }
         }
       },
+      "field-bg": {
+        "$type": "color",
+        "$value": "{color.field-raised}",
+        "$description": "The fill of a form field in the dialog: a step up from its surface in dark, so the field stands out from it",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--dialog-field-bg"
+          }
+        }
+      },
       "bg": {
         "$type": "color",
         "$value": "{color.surface-overlay}",

@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { DetailPage } from './DetailPage';
 import { SerupaProvider } from '../../internal/provider';
 
+// A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
+// match getByText, and a locator that finds two fails.
+const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]'));
+const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).length;
 const active = () => document.activeElement as HTMLElement;
 const h1 = () => document.querySelector('main h1')?.textContent;
 // The toast that says text: its Undo has no aria-label (its words name it), its close button is "Dismiss".
@@ -72,7 +76,7 @@ describe('Patterns/Detail page', () => {
 
     await screen.getByRole('button', { name: /Project name/ }).click();
     await userEvent.keyboard('{Control>}a{/Control}{Backspace}{Enter}');
-    await expect.element(screen.locator.getByText('Enter a name for the project.')).toBeVisible();
+    await expect.poll(() => shown('Enter a name for the project.')).toBe(1);
     await userEvent.keyboard('{Escape}');
     expect(h1()).toBe('Site refresh');
     expect(onRename).toHaveBeenCalledTimes(1);

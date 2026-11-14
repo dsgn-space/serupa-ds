@@ -46,6 +46,19 @@ describe('SortableList', () => {
     expect(screen.container.querySelector('#noitems')!.querySelectorAll('li').length).toBe(0);
   });
 
+  test('moving a picked-up item a step redraws the rows whose place changes, not every row', async () => {
+    // renderItem is called once per row drawn: counting the calls counts the rows drawn.
+    let drawn = 0;
+    const many = Array.from({ length: 100 }, (_, i) => ({ id: 'i' + i, name: 'Item ' + i }));
+    await render(<SortableList id="sl" items={many} getKey={(t) => t.id} getLabel={(t) => t.name} renderItem={(t) => { drawn++; return t.name; }} onReorder={() => {}} />);
+    handle('Item 0').focus();
+    await userEvent.keyboard(' ');
+    drawn = 0;
+    await userEvent.keyboard('{ArrowDown}');
+    expect(names().slice(0, 2)).toEqual(['Item 1', 'Item 0']);
+    expect(drawn).toBeLessThanOrEqual(2);
+  });
+
   test('keyboard: Space picks up, the arrows move (focus stays on the handle), Space drops and reports the move once; each step is announced', async () => {
     const moves: Array<{ from: number; to: number }> = [];
     await render(<List moves={moves} />);

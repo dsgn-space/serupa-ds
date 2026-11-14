@@ -7,6 +7,7 @@ import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
+import { Card } from '../Card/Card';
 import { SerupaProvider } from '../../internal/provider';
 import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
@@ -52,6 +53,24 @@ const setup = async (tref?: React.Ref<HTMLTableElement>) => {
 };
 
 describe('Table', () => {
+  test('a Table filling a Card with no padding takes the card\'s frame: no second border inside the card\'s, and corners that follow the card\'s curve', async () => {
+    await render(<Card id="tcard" padding="none"><Table caption="Projects" hideCaption>{head()}{body()}</Table></Card>);
+    const card = el('tcard'), frame = page.getByRole('table').element().parentElement!;
+    const c = getComputedStyle(card), f = getComputedStyle(frame);
+    expect([f.borderTopWidth, f.borderRightWidth, f.borderBottomWidth, f.borderLeftWidth]).toEqual(['0px', '0px', '0px', '0px']);
+    const inner = `${parseFloat(c.borderTopLeftRadius) - parseFloat(c.borderTopWidth)}px`;
+    expect([f.borderTopLeftRadius, f.borderTopRightRadius, f.borderBottomRightRadius, f.borderBottomLeftRadius]).toEqual([inner, inner, inner, inner]);
+    // Its own frame stays everywhere else.
+    await render(<Table caption="Alone" hideCaption>{head()}{body()}</Table>);
+    expect(getComputedStyle(page.getByRole('table', { name: 'Alone' }).element().parentElement!).borderTopWidth).toBe('1px');
+  });
+
+  test('every cell sets its numbers in tabular figures, so a column of numbers lines up digit under digit', async () => {
+    await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Total</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell id="tn">Ada</TableCell><TableCell id="tt">1,111</TableCell></TableRow></TableBody></Table>);
+    expect([css(el('tn')).fontVariantNumeric, css(el('tt')).fontVariantNumeric]).toEqual(['tabular-nums', 'tabular-nums']);
+  });
+
   test('a native <table> in a frame; caption, scope="col" headers; ref and className on the table, containerProps on the frame; a table that fits adds no tab stop or region', async () => {
     const ref = React.createRef<HTMLTableElement>();
     await setup(ref);
@@ -114,13 +133,13 @@ describe('Table', () => {
     });
   });
 
-  test('selected: shaded, a 2px primary bar at its start; no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
+  test('selected: shaded; the 2px bar at its start is highlight-indicator, drawn only with more contrast (GR407); no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
     await setup();
     const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
     expect([r.hasAttribute('aria-selected'), q('#tdef [data-i="0"]').hasAttribute('aria-selected')]).toEqual([false, false]);
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
     expect(bar).toMatch(/2px 0px 0px 0px inset$/);
-    expect(bar).toContain(color('var(--primary)'));
+    expect(bar).toContain(color('var(--highlight-indicator)'));
   });
 
   test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {
@@ -982,5 +1001,22 @@ describe('Table: busy, the old name of loading', () => {
       expect(document.getElementById('old-busy')!.getAttribute('aria-busy')).toBe('true');
       expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('table-busy'))).toHaveLength(1);
     } finally { warn.mockRestore(); }
+  });
+});
+
+describe('TableRow href: a ticked checkbox (GR408)', () => {
+  // The row lifts its controls above the link that covers it. Lifting the checkbox's input too put it in a layer
+  // of its own, over the tick drawn after it: a ticked box in a linked row was a blank blue square.
+  test('the tick of a ticked box in a linked row is drawn over the box, and the box still ticks without following the link', async () => {
+    const s = await render(<Table caption="Users"><TableBody>
+      <TableRow id="k1" href="#ada"><TableSelectCell label="Select Ada" defaultChecked /><TableCell>Ada</TableCell></TableRow>
+    </TableBody></Table>);
+    const input = s.container.querySelector('input')!;
+    expect(getComputedStyle(input).zIndex).toBe('auto');   // no layer of its own: the tick, after it, paints over it
+    expect(getComputedStyle(input.closest('label')!).zIndex).toBe('10');   // the whole checkbox is above the row's link
+    const before = location.hash;
+    await userEvent.click(input);
+    expect(input.checked).toBe(false);
+    expect(location.hash).toBe(before);
   });
 });

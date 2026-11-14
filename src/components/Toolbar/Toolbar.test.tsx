@@ -57,6 +57,15 @@ describe('Toolbar', () => {
     expect(['tsm', 'tmd', 'tlg', 'tnone'].map(heights)).toEqual([[24, 24, 24, 24, 32], [32, 32, 32, 24, 32], [44, 44, 44, 24, 32], [32, 32, 32, 24, 32]]);
   });
 
+  test('its corners are concentric with the buttons inside: their radius plus the padding (6 + 4 = 10px; 8 + 4 in Modern); --toolbar-radius still sets them', async () => {
+    await render(<><Toolbar id="tb1" aria-label="A"><Button id="b1">One</Button></Toolbar>
+      <div data-brand="modern"><Toolbar id="tb2" aria-label="B"><Button id="b2">Two</Button></Toolbar></div>
+      <Toolbar id="tb3" aria-label="C" style={{ '--toolbar-radius': '3px' } as React.CSSProperties}><Button>Three</Button></Toolbar></>);
+    const r = (id: string) => parseFloat(css(el(id)).borderTopLeftRadius);
+    const pad = (id: string) => parseFloat(css(el(id)).paddingTop);
+    expect([r('tb1') - pad('tb1') === r('b1'), r('tb2') - pad('tb2') === r('b2'), r('tb1'), r('tb3')]).toEqual([true, true, 10, 3]);
+  });
+
   test('one Tab stop: the first control; Tab goes in and straight out again', async () => {
     await render(<Format />);
     expect(stops('tb')).toBe('b:0,i:-1,off:-1,link:-1');
@@ -154,7 +163,7 @@ describe('Toolbar', () => {
   test('layout: controls 4px apart inside 4px of padding, centered in a wrapping row', async () => {
     await render(<Format />);
     const s = css(el('tb'));
-    expect([s.display, s.flexWrap, s.alignItems, s.columnGap, s.paddingTop, s.borderTopLeftRadius]).toEqual(['flex', 'wrap', 'center', '4px', '4px', '6px']);
+    expect([s.display, s.flexWrap, s.alignItems, s.columnGap, s.paddingTop, s.borderTopLeftRadius]).toEqual(['flex', 'wrap', 'center', '4px', '4px', '10px']);
   });
 
   test('its text reads 4.5:1 on its background in all six themes', async () => {
