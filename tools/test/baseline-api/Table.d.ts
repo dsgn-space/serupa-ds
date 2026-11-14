@@ -24,7 +24,6 @@ interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
     pinStart?: boolean | undefined;
     pinEnd?: boolean | undefined;
     loading?: boolean | undefined;
-    busy?: boolean | undefined;
 }
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     selected?: boolean | undefined;

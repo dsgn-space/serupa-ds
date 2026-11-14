@@ -71,6 +71,8 @@ one('15.0.0: variant="default" is "plain" on Checkbox, CheckboxGroup, Radio and 
 one('a rename leaves a tag that already has the new name (a wrapper passing both through)', '<Drawer placement={p.placement} side={p.side} />', '<Drawer placement={p.placement} side={p.side} />');
 one('15.0.0: component tokens put the state last, in CSS and in a style object', '.x { --button-disabled-bg: red; color: var(--stepper-active-text); --button-disabled-bg-extra: 1; }', '.x { --button-bg-disabled: red; color: var(--stepper-text-active); --button-disabled-bg-extra: 1; }', 'a.css');
 one('15.0.0: a file that already names the new token keeps the old one beside it (a fallback chain)', 'a { background: var(--button-bg-disabled, var(--button-disabled-bg, gray)); }', 'a { background: var(--button-bg-disabled, var(--button-disabled-bg, gray)); }', 'a.css');
+one('15.0.0: border-raised is border, as a variable, a token reference and a utility class; a longer name is left', '.x { border-color: var(--border-raised); --my-border-raised: 1; } <div className="bg-border-raised hover:border-x-border-raised" /> {"$value": "{color.border-raised}"}', '.x { border-color: var(--border); --my-border-raised: 1; } <div className="bg-border hover:border-x-border" /> {"$value": "{color.border}"}');
+one('15.0.0: a migration note naming `--border-raised` in its own code span keeps it', 'Rename `--border-raised` and `bg-border-raised` to `--border`.', 'Rename `--border-raised` and `bg-border-raised` to `--border`.');
 {
   const r = fix('<Button icon="settings" aria-label="Settings" />\n<Button leftIcon="add">Add</Button>\n<IconButton icon="x" label="Close" />');
   t('15.0.0: an icon-only Button is listed to make an IconButton, and nothing else is', r.text.includes('<Button icon=') && r.notes.filter((n) => n.id === 'button-icon').map((n) => n.line).join() === '1', JSON.stringify(r.notes));
@@ -87,10 +89,16 @@ one('15.0.0: a file that already names the new token keeps the old one beside it
     }
   }
   const to = new Set(Object.values(TOKENS_15));
-  t(`serupa-migrate renames each of the ${due.length} tokens deprecated for 15.0.0`, due.length === Object.keys(TOKENS_15).length && due.every((n) => to.has(n)), `missing: ${due.filter((n) => !to.has(n)).join(', ')}`);
   const css = comps.map((c) => path.join(PROJECT, 'src', 'components', c, `${c}.css`)).filter((f) => fs.existsSync(f)).map((f) => fs.readFileSync(f, 'utf8')).join('\n');
-  const unread = Object.entries(TOKENS_15).filter(([a, b]) => !css.includes(`var(${b}, var(${a},`));
-  t('each old token name is its new one\'s fallback in the component CSS', !unread.length, unread.map(([a, b]) => `${a} to ${b}`).join(', '));
+  if (due.length) {
+    t(`serupa-migrate renames each of the ${due.length} tokens deprecated for 15.0.0`, due.length === Object.keys(TOKENS_15).length && due.every((n) => to.has(n)), `missing: ${due.filter((n) => !to.has(n)).join(', ')}`);
+    const unread = Object.entries(TOKENS_15).filter(([a, b]) => !css.includes(`var(${b}, var(${a},`));
+    t('each old token name is its new one\'s fallback in the component CSS', !unread.length, unread.map(([a, b]) => `${a} to ${b}`).join(', '));
+  } else {
+    // 15.0.0 removed them: the component CSS reads only the new names.
+    const left = Object.keys(TOKENS_15).filter((a) => new RegExp(`${a}(?![\\w-])`).test(css));
+    t(`the ${Object.keys(TOKENS_15).length} old token names serupa-migrate renames are gone from the component CSS (15.0.0)`, Object.keys(TOKENS_15).length === 20 && !left.length, left.join(', '));
+  }
 }
 // The package's new name, made only by a serupa-migrate that ships under it.
 {

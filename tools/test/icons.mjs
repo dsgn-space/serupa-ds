@@ -36,7 +36,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(h('div', null,
   h('div', { 'data-theme': 'violet-dark', style: { color: 'var(--primary)' } }, h(D.Icon, { id: 'themed', name: 'test-ring' })),
   h(D.Button, { id: 'btn', leftIcon: 'test-square' }, 'Custom'),
   h(D.Button, { id: 'btnf', leftIcon: 'add' }, 'Font'),
-  h(D.Button, { id: 'only', icon: 'test-ring', 'aria-label': 'Ring', size: 'lg' }),
+  h(D.IconButton, { id: 'only', icon: 'test-ring', label: 'Ring', size: 'lg' }),
   h(D.Button, { id: 'busy', leftIcon: 'test-square', loading: true }, 'Busy')));
 </script>`;
 
@@ -85,7 +85,7 @@ t('inside a nested theme it follows that theme\'s colors', info.themedStroke ===
 t('other names still come from Material Symbols (an SVG on the 960 grid)', info.font[0] === 'add' && info.font[1] === '0 -960 960 960' && info.font[2] === 'dk-icon', JSON.stringify(info.font));
 t('names like "constructor" are not mistaken for custom icons or Material Symbols (an empty box)', info.proto[0] === 'dk-icon' && !info.proto[1], JSON.stringify(info.proto));
 t('Button leftIcon: same size as a Material Symbol (16px in md), same button height', info.btnIcon.join() === info.btnFontIcon.join() && info.btnIcon.join() === '16,16' && info.btnH === info.btnfH, JSON.stringify([info.btnIcon, info.btnFontIcon, info.btnH, info.btnfH]));
-t('Button icon-only (lg): 20px icon in a 44px square', info.onlyIcon.join() === '20,20' && info.only.join() === '44,44', JSON.stringify([info.onlyIcon, info.only]));
+t('IconButton (lg), built on Button: 20px icon in a 44px square', info.onlyIcon.join() === '20,20' && info.only.join() === '44,44', JSON.stringify([info.onlyIcon, info.only]));
 t('Button loading: the custom icon hides behind the centered spinner', info.busyIconOpacity === '0' && info.busySpinner, info.busyIconOpacity);
 // pixels: the square really paints, in the text color (read back the screenshot's center pixel)
 const shot = (await p.locator('#big').screenshot()).toString('base64');

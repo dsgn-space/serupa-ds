@@ -168,13 +168,3 @@ describe('Fab above what shares its edge (GR157)', () => {
   });
 });
 
-describe('Fab: position, the old name of placement', () => {
-  test('still places it as placement does, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<Fab id="old-pos" icon="add" label="Old" {...{ position: 'top-start' } as const} />);
-      expect(el('old-pos').getAttribute('data-position')).toBe('top-start');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('fab-position'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
-  });
-});

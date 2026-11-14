@@ -14,25 +14,16 @@ A `locale` (on a component or SerupaProvider) that Intl can't read, so it's igno
 
 A dot Badge with no label, icon or count is an indicator: too small to click or to remove. Its `onClick`, `href` and `onRemove` are ignored. Name and handle the control it sits on instead.
 
-## badge-loading-text
-
-Badge's `loadingText` is deprecated, and removed in 15.0.0. It still works as `loadingLabel` does. Rename it to `loadingLabel`: a prop named `…Text` is shown on screen, and these words are only said to screen readers, as Chart's, DataGrid's and Kanban's `loadingLabel` are.
 
 ## badge-remove-interactive
 
 A Badge with `onClick` or `href` is a button or a link, which can't hold another button, so its `onRemove` is ignored. Use one or the other.
 
-## button-icon
-
-Button's `icon` (a button with only an icon) is deprecated, and removed in 15.0.0. It still works. Use IconButton: it draws the same square button, its `label` is required by the types, so an icon-only button can't ship without a name, and it shows that label in a tooltip.
 
 ## button-icon-label
 
 A Button with only an icon has no text for a screen reader to say. Give it an `aria-label` (or `aria-labelledby`, or a `title`), or use IconButton, whose `label` is required.
 
-## button-loading-text
-
-Button's `loadingText` is deprecated, and removed in 15.0.0. It still works as `loadingLabel` does. Rename it to `loadingLabel`: a prop named `…Text` is shown on screen, and these words are only said to screen readers, as Chart's, DataGrid's and Kanban's `loadingLabel` are.
 
 ## combobox-duplicate-value
 
@@ -46,9 +37,6 @@ A CommandPalette command's `href` isn't a web page (http or https), a `mailto:` 
 
 A Countdown whose `to` isn't a date (a typo, an empty string, a format `Date` can't read), or whose `seconds` isn't a number, shows nothing, with no other sign. Pass `to` as a `Date`, a timestamp in milliseconds or an ISO string such as `"2026-11-14T18:00:00Z"`, or the time left as `seconds`.
 
-## data-grid-busy
-
-DataGrid's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
 ## date-string
 
@@ -58,21 +46,12 @@ A date component (Calendar, DatePicker, DateRangePicker) got a string it can't r
 
 A date component got a date and time as a string (`"2026-10-24T00:00:00Z"`, as an API often sends a date). It's read as the day it writes, 24 October, and the time is ignored, so the day doesn't move with the reader's time zone. Pass the `"yyyy-mm-dd"` day itself (`value.slice(0, 10)`) to say that's what you mean.
 
-## drawer-side
 
-Drawer's `side` is deprecated, and removed in 15.0.0. It still works as `placement` does. Rename it to `placement`, the name the API naming table gives to where a floating part sits (CONTRIBUTING.md). `placement` also takes `start` and `end`, the edges the reading starts and ends at, so a navigation drawer opens from the right in a right-to-left page with no code of yours. A NotificationCenter passes both to its Drawer.
-
-## fab-position
-
-Fab's `position` is deprecated, and removed in 15.0.0. It still works as `placement` does. Rename it to `placement`, the name the API naming table gives to where a floating part sits (CONTRIBUTING.md).
 
 ## field-control
 
 A Field's label points at its control by id, and nothing on the page has that id, so the label names nothing. Put the control inside the Field, or pass the control's `id`.
 
-## field-layout
-
-Field's `layout` is deprecated, and removed in 15.0.0. It still works as `orientation` does. Rename it to `orientation`, the name the API naming table gives to which way parts run.
 
 ## filter-value
 
@@ -98,9 +77,6 @@ Radio, Checkbox or Switch was given `label`, as other libraries name these contr
 
 A Link with `tone="neutral"` and `underline="hover"` looks like plain text until it's hovered, so people can't tell it's a link. Keep the underline, or use `tone="primary"` where the place already says it holds links.
 
-## list-busy
-
-List's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
 ## list-value
 
@@ -150,21 +126,12 @@ useShortcut was given keys that aren't one key with its modifiers, such as `["G"
 
 A SkipLink was followed, but there's no element on the page with its target's id ("main" unless you pass `target`), so it can't move focus to the main content. Give the main content that id (`<main id="main">`), or pass its id as `target`.
 
-## splitter-direction
-
-Splitter's `direction` is deprecated, and removed in 15.0.0. It still works as `orientation` does. Rename it to `orientation`.
 
 ## splitter-two
 
 Splitter needs exactly two children, its two panes.
 
-## switch-pending
 
-Switch's `pending` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
-
-## table-busy
-
-Table's `busy` is deprecated, and removed in 15.0.0. It still works as `loading` does. Rename it to `loading`, as Button and the API naming table name it.
 
 ## table-row-click
 
@@ -190,17 +157,11 @@ A `toast.promise` `success` or `error` message function threw. Rather than leave
 
 `toast.undo` was called with no Toaster on the page, so nobody could see its Undo. The action is committed at once (its `commit` runs) instead of waiting for an Undo that can't come. Render one Toaster, once, near the root.
 
-## toaster-position
-
-Toaster's `position` is deprecated, and removed in 15.0.0. It still works as `placement` does. Rename it to `placement`.
 
 ## toaster-twice
 
 A second Toaster mounted, so only the newer one shows toasts. Render one Toaster, once, near the root of the app.
 
-## tooltip-delay
-
-Tooltip's `delay` is deprecated, and removed in 15.0.0. It still works as `openDelay` does. Rename it to `openDelay`, as HoverCard names it.
 
 ## tooltip-interactive
 
@@ -213,7 +174,3 @@ The element given to a Popover, Menu, ContextMenu or Tooltip as its trigger does
 ## utc-date
 
 A date component got a `Date` at UTC midnight, which is the day before in a time zone behind UTC. A `Date` made from `"yyyy-mm-dd"` is UTC. Pass the `"yyyy-mm-dd"` string itself instead.
-
-## variant-default
-
-Checkbox, CheckboxGroup, Radio and RadioGroup's `variant` value `'default'` is deprecated, and removed in 15.0.0. It still draws the plain look. Rename it to `'plain'`, the name List, Accordion and VirtualList give the same look.

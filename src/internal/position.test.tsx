@@ -123,3 +123,25 @@ describe('style reads while a layer follows its anchor (148)', () => {
     } finally { reads.mockRestore(); }
   });
 });
+
+describe('a layer tracks its anchor in CSS (anchor positioning)', () => {
+  test('a scroll moves an open menu with its button even with no scroll handler run (the compositor scrolls it, a frame ahead of script)', async () => {
+    // Every scroll event stopped before the layer's own handler hears it, and no resize seen: only CSS can move it now.
+    const stop = (e: Event) => e.stopImmediatePropagation();
+    window.addEventListener('scroll', stop, true);
+    vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} });
+    try {
+      await render(<div style={{ height: 2000, paddingTop: 100, paddingInlineStart: 300 }}><Menu defaultOpen placement="bottom-start" trigger={<Button>Actions</Button>}><MenuItem>Edit</MenuItem><MenuItem>Delete</MenuItem></Menu></div>);
+      const menu = document.querySelector<HTMLElement>('[role="menu"]')!, button = document.querySelector<HTMLElement>('button')!;
+      await expect.poll(() => menu.matches(':popover-open')).toBe(true);
+      const gap = () => [Math.round(menu.getBoundingClientRect().top - button.getBoundingClientRect().bottom), Math.round(menu.getBoundingClientRect().left - button.getBoundingClientRect().left)];
+      const before = gap();
+      document.documentElement.scrollTop = 60;
+      await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+      // Where there's no anchor() (Chrome before 125) the layer is placed in px, still under its button, and the
+      // scroll handler moves it: a left and top in anchor() there would be dropped, leaving it mid-screen.
+      if (CSS.supports('top', 'anchor(--a top, 0px)')) expect([before, gap()]).toEqual([[4, 0], [4, 0]]);
+      else expect([before, menu.style.top.includes('anchor(')]).toEqual([[4, 0], false]);
+    } finally { window.removeEventListener('scroll', stop, true); vi.unstubAllGlobals(); document.documentElement.scrollTop = 0; }
+  });
+});

@@ -21,8 +21,6 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   readOnly?: boolean | undefined;
   /** While a change is being saved: a small Loader turns on the thumb, aria-busy is set, and clicks and Space don't flip it, so it can't be sent twice. It stays focusable. Set checked when the save succeeds. */
   loading?: boolean | undefined;
-  /** @deprecated Use loading, as Button names it (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
-  pending?: boolean | undefined;
   /** Called with the new state and the change event, after onChange: the same shape as ToggleButton's onPressedChange. */
   onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }
@@ -32,7 +30,7 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
    labelPosition "end" (default) or "start"; invalid. Renders <label class="dk-switch">: className and style go
    to the label, every other prop (checked, defaultChecked, onChange, name, disabled, aria-*…) and ref to the
    <input>. */
-const OWN = { size: 1, invalid: 1, loading: 1, pending: 1, onCheckedChange: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
+const OWN = { size: 1, invalid: 1, loading: 1, onCheckedChange: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
 
 // Safari 18 draws <input type="checkbox" switch> as a native switch and, on iOS, gives a haptic tick when it flips.
 // appearance: none keeps our drawn track; the attribute is spelled out as switch="" so React writes it.
@@ -55,8 +53,7 @@ export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>('
   // Read-only: the native readonly does nothing on a checkbox, so a click (Space clicks too) is cancelled, which
   // puts the switch back, and aria-readonly says why. Your onClick still runs first; onChange doesn't, since nothing changes.
   // Pending blocks a flip the same way, with aria-busy instead: it isn't read-only, it's waiting.
-  if (process.env.NODE_ENV !== 'production' && props.pending != null) warnOnce('switch-pending', 'Switch: pending is deprecated and removed in 15.0.0. Use loading, which does the same.');
-  const readOnly = !!rest.readOnly, pending = !!(props.loading ?? props.pending);
+  const readOnly = !!rest.readOnly, pending = !!props.loading;
   if (pending) rest['aria-busy'] = true;
   if (readOnly || pending) {
     if (readOnly) rest['aria-readonly'] = true;

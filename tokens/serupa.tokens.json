@@ -1247,15 +1247,15 @@
     "border": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. Default borders and dividers.",
+      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines (emerald: 10% ink, 8% white). A quiet line, never a control's boundary: those use `field-border` or `border-control`.",
       "$extensions": {
         "com.serupa": {
           "themes": {
-            "blue-dark": "{zinc-700}",
+            "blue-dark": "{zinc-800}",
             "violet-light": "{zinc-200}",
-            "violet-dark": "{zinc-700}",
+            "violet-dark": "{zinc-800}",
             "emerald-light": "#09090b1a",
-            "emerald-dark": "#ffffff1f"
+            "emerald-dark": "#ffffff14"
           },
           "contrastMore": {
             "light": "{zinc-500}",
@@ -1284,22 +1284,8 @@
         }
       }
     },
-    "border-raised": {
-      "$type": "color",
-      "$value": "{color.white}",
-      "$description": "Alias. A raised card's edge: invisible in light (white on white), a 1px lighter edge in dark.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "#09090b1a",
-            "emerald-dark": "#ffffff1f"
-          }
-        }
-      }
-    },
+
+
     "border-overlay": {
       "$type": "color",
       "$value": "{color.zinc-200}",
@@ -10913,11 +10899,6 @@
     "animate-pulse": {
       "$value": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       "$description": "`animate-pulse`: skeleton placeholders while content loads."
-    },
-    "animate-bounce": {
-      "$value": "bounce 1s infinite",
-      "$description": "`animate-bounce`: a scroll-down hint. Deprecated: it bounces without end, which the motion rules turn down (WCAG 2.2.2); point down with a still icon, or `animate-enter` once.",
-      "$deprecated": "Bounces without end (WCAG 2.2.2); use a still icon or animate-enter; removed in 15.0.0."
     },
     "animate-enter": {
       "$value": "enter {motion-enter-md} {ease-enter} backwards",

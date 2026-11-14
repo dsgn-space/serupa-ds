@@ -39,7 +39,6 @@
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
-  --border-raised: var(--white);
   --border-overlay: var(--zinc-200);
   --focus-ring: var(--blue-500);
   --success: var(--green-600);
@@ -420,9 +419,8 @@
   --text: var(--zinc-50);
   --text-muted: var(--zinc-400);
   --text-inverse: var(--zinc-900);
-  --border: var(--zinc-700);
+  --border: var(--zinc-800);
   --border-strong: var(--zinc-600);
-  --border-raised: var(--zinc-700);
   --border-overlay: var(--zinc-600);
   --focus-ring: var(--blue-400);
   --success: var(--green-500);
@@ -543,7 +541,6 @@
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
-  --border-raised: var(--white);
   --border-overlay: var(--zinc-200);
   --focus-ring: var(--violet-500);
   --success: var(--green-600);
@@ -662,9 +659,8 @@
   --text: var(--zinc-50);
   --text-muted: var(--zinc-400);
   --text-inverse: var(--zinc-900);
-  --border: var(--zinc-700);
+  --border: var(--zinc-800);
   --border-strong: var(--zinc-600);
-  --border-raised: var(--zinc-700);
   --border-overlay: var(--zinc-600);
   --focus-ring: var(--violet-400);
   --success: var(--green-500);
@@ -785,7 +781,6 @@
   --text-inverse: var(--white);
   --border: #09090b1a;
   --border-strong: #09090b2e;
-  --border-raised: #09090b1a;
   --border-overlay: var(--zinc-200);
   --focus-ring: var(--teal-600);
   --success: var(--green-600);
@@ -904,9 +899,8 @@
   --text: var(--zinc-50);
   --text-muted: var(--zinc-400);
   --text-inverse: var(--zinc-950);
-  --border: #ffffff1f;
+  --border: #ffffff14;
   --border-strong: #ffffff38;
-  --border-raised: #ffffff1f;
   --border-overlay: var(--zinc-700);
   --focus-ring: var(--teal-400);
   --success: var(--green-500);
@@ -1025,9 +1019,8 @@
   --text: light-dark(var(--zinc-900), var(--zinc-50));
   --text-muted: light-dark(var(--zinc-500), var(--zinc-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
-  --border: light-dark(var(--zinc-200), var(--zinc-700));
+  --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
-  --border-raised: light-dark(var(--white), var(--zinc-700));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --success: light-dark(var(--green-600), var(--green-500));
@@ -1120,9 +1113,8 @@
   --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--blue-600), var(--blue-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
-  --border: light-dark(var(--zinc-200), var(--zinc-700));
+  --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
-  --border-raised: light-dark(var(--white), var(--zinc-700));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
@@ -1185,9 +1177,8 @@
   --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--violet-600), var(--violet-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
-  --border: light-dark(var(--zinc-200), var(--zinc-700));
+  --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
-  --border-raised: light-dark(var(--white), var(--zinc-700));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--violet-500), var(--violet-400));
   --link-visited: light-dark(var(--fuchsia-700), var(--fuchsia-300));
@@ -1250,9 +1241,8 @@
   --field-raised: light-dark(var(--white), var(--zinc-800));
   --field-action: light-dark(var(--teal-700), var(--teal-400));
   --text-inverse: light-dark(var(--white), var(--zinc-950));
-  --border: light-dark(#09090b1a, #ffffff1f);
+  --border: light-dark(#09090b1a, #ffffff14);
   --border-strong: light-dark(#09090b2e, #ffffff38);
-  --border-raised: light-dark(#09090b1a, #ffffff1f);
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-700));
   --focus-ring: light-dark(var(--teal-600), var(--teal-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
@@ -1315,9 +1305,8 @@
   --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--blue-600), var(--blue-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
-  --border: light-dark(var(--zinc-200), var(--zinc-700));
+  --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
-  --border-raised: light-dark(var(--white), var(--zinc-700));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--blue-500), var(--blue-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
@@ -1380,9 +1369,8 @@
   --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--violet-600), var(--violet-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
-  --border: light-dark(var(--zinc-200), var(--zinc-700));
+  --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
-  --border-raised: light-dark(var(--white), var(--zinc-700));
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-600));
   --focus-ring: light-dark(var(--violet-500), var(--violet-400));
   --link-visited: light-dark(var(--fuchsia-700), var(--fuchsia-300));
@@ -1445,9 +1433,8 @@
   --field-raised: light-dark(var(--white), var(--zinc-800));
   --field-action: light-dark(var(--teal-700), var(--teal-400));
   --text-inverse: light-dark(var(--white), var(--zinc-950));
-  --border: light-dark(#09090b1a, #ffffff1f);
+  --border: light-dark(#09090b1a, #ffffff14);
   --border-strong: light-dark(#09090b2e, #ffffff38);
-  --border-raised: light-dark(#09090b1a, #ffffff1f);
   --border-overlay: light-dark(var(--zinc-200), var(--zinc-700));
   --focus-ring: light-dark(var(--teal-600), var(--teal-400));
   --link-visited: light-dark(var(--violet-700), var(--violet-300));
@@ -1935,7 +1922,6 @@
   --animate-spin-reduced: spin 3s linear infinite;
   --animate-ping: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
   --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-bounce: bounce 1s infinite;
   --animate-enter: enter var(--motion-enter-md) var(--ease-enter) backwards;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -2065,13 +2051,13 @@
   --control-height-lg: 2.75rem;
 }
 [data-shadow="brand"] {
-  --shadow-2xs: 0 1px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.05);
-  --shadow-xs: 0 1px 2px 0 rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.05);
-  --shadow-sm: 0 1px 3px 0 rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1), 0 1px 2px -1px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1), 0 2px 4px -2px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1), 0 4px 6px -4px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1), 0 8px 10px -6px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.1);
-  --shadow-2xl: 0 25px 50px -12px rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / 0.25);
+  --shadow-2xs: 0 1px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 5%, transparent);
+  --shadow-xs: 0 1px 2px 0 color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 5%, transparent);
+  --shadow-sm: 0 1px 3px 0 color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 1px 2px -1px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --shadow-md: 0 4px 6px -1px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 2px 4px -2px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --shadow-lg: 0 10px 15px -3px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 4px 6px -4px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --shadow-xl: 0 20px 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 8px 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --shadow-2xl: 0 25px 50px -12px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 25%, transparent);
   --elevation-rest: var(--shadow-xs);
   --elevation-part: var(--shadow-sm);
   --elevation-raised: var(--shadow-md);
