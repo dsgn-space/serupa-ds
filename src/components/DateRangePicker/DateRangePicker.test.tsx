@@ -36,6 +36,33 @@ function Ctl(props: { changes: string[]; setRef: { set?: (r: DateRange) => void 
 }
 
 describe('DateRangePicker', () => {
+  test('the calendar doesn\'t float on once its field has scrolled out of view: it hides, and comes back joined to the field when it scrolls back', async () => {
+    await page.viewport(800, 600);
+    await render(<div><div style={{ height: '200px' }} /><DateRangePicker data-testid="sc" locale="en-US" defaultValue={{ start: new Date(2026, 10, 5), end: null }} /><div style={{ height: '3000px' }} /></div>);
+    await userEvent.click(btn('sc'));
+    const seen = () => getComputedStyle(pop('sc')).visibility;
+    expect([isOpen('sc'), seen()]).toEqual([true, 'visible']);
+    window.scrollTo(0, 800);
+    await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
+    // The field is 600px above the window: nothing of the popup shows, rather than a calendar pinned to the top.
+    expect([box('sc').getBoundingClientRect().bottom < 0, seen()]).toEqual([true, 'hidden']);
+    window.scrollTo(0, 0);
+    await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
+    const f = box('sc').getBoundingClientRect(), p = pop('sc').getBoundingClientRect();
+    expect([seen(), Math.round(p.top - f.bottom) >= 0 && Math.round(p.top - f.bottom) <= 8]).toEqual(['visible', true]);
+  });
+
+  test('both dates are as wide as their text, so the gaps either side of the dash are the same, and spare width goes before the calendar button', async () => {
+    await render(<div style={{ width: '400px' }}><DateRangePicker data-testid="w" locale="en-US" style={{ width: '100%' }} defaultValue={{ start: new Date(2026, 0, 1), end: new Date(2026, 11, 31) }} /></div>);
+    const [a, b] = fields('w'), dash = box('w').querySelector(':scope > span[aria-hidden]')!.getBoundingClientRect();
+    const ra = a!.getBoundingClientRect(), rb = b!.getBoundingClientRect();
+    expect([Math.round(dash.left - ra.right), Math.round(rb.left - dash.right)]).toEqual([8, 8]);
+    // Each field fits its own date: no room past the text.
+    expect([a!.scrollWidth <= a!.clientWidth + 1, a!.clientWidth - a!.scrollWidth < 2, b!.clientWidth - b!.scrollWidth < 2]).toEqual([true, true, true]);
+    const end = btn('w').getBoundingClientRect(), outer = box('w').getBoundingClientRect();
+    expect(Math.round(outer.right - end.right)).toBeLessThan(8);
+  });
+
   test('switching to another window or tab mid-typing keeps the typed text and says nothing (L8E27)', async () => {
     const calls: string[] = [];
     await render(<DateRangePicker data-testid="drpw" locale="en-US" onInvalidInput={(t, r) => calls.push(t + ':' + r)} />);

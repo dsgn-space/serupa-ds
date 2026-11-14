@@ -6,6 +6,25 @@ import { cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Pla
 
 type Ref = React.RefObject<HTMLElement | null>;
 
+// The anchor's ancestors that clip it (a scrolling list, a card with overflow hidden), nearest first.
+function clippers(a: HTMLElement): Element[] {
+  const out: Element[] = [];
+  for (let e = a.parentElement; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
+    const cs = getComputedStyle(e);
+    if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') out.push(e);
+  }
+  return out;
+}
+/** True when nothing of the anchor can be seen: it has scrolled out of the window or out of a box that clips it. An
+    anchor with no box (display: none) counts as seen, so its layer is placed as before. */
+function anchorGone(a: HTMLElement, clips: Element[]): boolean {
+  const r = a.getBoundingClientRect();
+  if (!r.width && !r.height) return false;
+  let top = 0, left = 0, bottom = window.innerHeight, right = window.innerWidth;
+  for (const c of clips) { const b = c.getBoundingClientRect(); top = Math.max(top, b.top); left = Math.max(left, b.left); bottom = Math.min(bottom, b.bottom); right = Math.min(right, b.right); }
+  return r.bottom <= top || r.top >= bottom || r.right <= left || r.left >= right;
+}
+
 export interface AnchoredLayerOptions {
   /** Where the layer goes; an unknown or missing value becomes `fallback`. */
   placement?: Placement;
@@ -43,7 +62,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     if (!p) return;
     if (!open || !a) { hideLayer(p); return; }
     if (docked) {
-      for (const k of ['left', 'top', 'max-height', 'max-width', 'overflow-y', 'min-width']) p.style.removeProperty(k);
+      for (const k of ['left', 'top', 'max-height', 'max-width', 'overflow-y', 'min-width', 'visibility']) p.style.removeProperty(k);
       p.setAttribute('data-side', 'bottom');
       showLayer(p);
       return;
@@ -54,9 +73,15 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     showLayer(p);
     // The gap and the anchor's direction are style reads: once, and again only when sizes change (a density or
     // theme switch), not on every scroll.
-    let offset = 0, rtl = false;
-    const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(a); };
+    let offset = 0, rtl = false, clips: Element[] = [];
+    const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(a); clips = clippers(a); };
+    // Once its anchor has scrolled out of view the layer hides, rather than staying pinned to the window's edge with
+    // nothing under it (over a sticky header), and shows again, placed, when the anchor comes back. Focus in it
+    // leaves as it hides, which closes the layers that close when focus leaves (onFocusOutside).
     const update = () => {
+      const gone = anchorGone(a, clips);
+      p.style.visibility = gone ? 'hidden' : '';
+      if (gone) return;
       if (matchWidth) p.style.minWidth = a.offsetWidth + 'px';
       placeLayer(p, a, placement, offset, fallback, rtl);
     };

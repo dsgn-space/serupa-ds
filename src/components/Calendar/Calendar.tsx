@@ -3,12 +3,17 @@ import * as React from 'react';
 import { cn, domId, omit } from '../../internal/cn';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isoDate, isValid, sameDay, sameMonth, startOfMonth, startOfWeek, toDay } from '../../internal/dates';
 import { IconButton } from '../IconButton/IconButton';
+import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { useFocusHandover } from '../../internal/focus';
 import { dayPresets, PresetList, type PresetItem } from '../../internal/datePresets';
-import { en as words } from './labels';
+import { en as calendarWords } from './labels';
+import { en as periodWords } from '../PeriodPicker/labels';
+import { isComposing } from '../../internal/ime';
+// module state: Calendar's words and PeriodPicker's ("Previous year", "Choose a month"), for the month and year grids.
+const words = { ...calendarWords, ...periodWords };
 
 /** A shortcut beside the days (Calendar and DatePicker presets): its name and the day it picks, as a Date, a
     "yyyy-mm-dd" string, or a function that gives one when the list draws (so "Next Monday" follows today). */
@@ -69,7 +74,7 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
 
 // The four formats a Calendar draws with, built once per locale rather than on every render (a grid of 42 days
 // re-renders on each arrow key).
-type Formats = { title: Intl.DateTimeFormat; short: Intl.DateTimeFormat; long: Intl.DateTimeFormat; full: Intl.DateTimeFormat; month: Intl.DateTimeFormat };
+type Formats = { title: Intl.DateTimeFormat; short: Intl.DateTimeFormat; long: Intl.DateTimeFormat; full: Intl.DateTimeFormat; month: Intl.DateTimeFormat; monthShort: Intl.DateTimeFormat; year: Intl.DateTimeFormat };
 // module state: a cache by locale.
 const FORMATS = new Map<string, Formats>();
 // The weekday headers' format: "short", or "narrow" where short is no shorter than the full name (Arabic, Persian:
@@ -99,6 +104,8 @@ function formats(locale: string): Formats {
       long: new Intl.DateTimeFormat(locale, { weekday: 'long' }),
       full: new Intl.DateTimeFormat(locale, { ...greg, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
       month: new Intl.DateTimeFormat(locale, { ...greg, month: 'long' }),
+      monthShort: new Intl.DateTimeFormat(locale, { ...greg, month: 'short' }),
+      year: new Intl.DateTimeFormat(locale, { ...greg, year: 'numeric' }),
     };
     FORMATS.set(locale, f);
   }
@@ -209,6 +216,16 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   }
   const grid = React.useRef<HTMLTableElement | null>(null);
   const wantFocus = React.useRef(!!props.autoFocus);
+  // The heading opens a grid of the year's months, and that grid's heading a grid of twelve years, to jump far (a
+  // birth date) in a few clicks; a pick goes back down. Not with the menus (monthYearPicker), nor in RangeCalendar's
+  // or DateRangePicker's two months, where each turns with the other. In the months, focus is a month counted from year 0 (y * 12 + m); in the years, a year.
+  const drill = !props.monthYearPicker && !props.pairedNav && !props.hideOutside;
+  const [view, setView] = React.useState<'days' | PeriodView>('days');
+  const [pFocus, setPFocus] = React.useState(0);
+  const periods = React.useRef<HTMLTableElement | null>(null), heading = React.useRef<HTMLButtonElement | null>(null);
+  const wantPeriod = React.useRef<'grid' | 'heading' | null>(null);
+  // The month that was in focus when the years opened, so coming back to a year lands on it (June 2025 to June 1990).
+  const inYear = React.useRef(0);
 
   const disabled = (d: Date) => (min && compare(d, min) < 0) || (max && compare(d, max) > 0) || (props.isDateDisabled ? props.isDateDisabled(d) : false);
   const showMonth = (m: Date) => { const s = startOfMonth(m); if (!controlledMonth) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
@@ -239,6 +256,58 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
     if (!sameMonth(d, month)) showMonth(d);
     setFocus(d);
   };
+  const minN = (v: PeriodView) => (min ? (v === 'months' ? min.getFullYear() * 12 + min.getMonth() : min.getFullYear()) : null);
+  const maxN = (v: PeriodView) => (max ? (v === 'months' ? max.getFullYear() * 12 + max.getMonth() : max.getFullYear()) : null);
+  const clampN = (v: PeriodView, n: number) => { const lo = minN(v), hi = maxN(v); return lo != null && n < lo ? lo : hi != null && n > hi ? hi : n; };
+  const showPeriods = (v: PeriodView, n: number) => { setView(v); setPFocus(clampN(v, n)); wantPeriod.current = 'grid'; };
+  const pickPeriod = (n: number) => {
+    if (view === 'days') return;
+    if (clampN(view, n) !== n) return;
+    if (view === 'years') { showPeriods('months', n * 12 + inYear.current); return; }
+    const m = new Date(2000, n % 12, 1);
+    m.setFullYear(Math.floor(n / 12));
+    // Focus keeps its day of the month (the 17th of August to the 17th of September 1988), within the month and min..max.
+    let d = new Date(m); d.setDate(Math.min(focus.getDate(), new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate()));
+    if (min && compare(d, min) < 0) d = day(min);
+    if (max && compare(d, max) > 0) d = day(max);
+    setFocus(d); setView('days'); showMonth(m); wantFocus.current = true;
+  };
+  // Escape goes back a level, not out of a DatePicker's popup: the years to the months, the months to the days (and
+  // focus to the heading that opened them).
+  const back = () => {
+    if (view === 'years') showPeriods('months', pFocus * 12 + inYear.current);
+    else { setView('days'); wantPeriod.current = 'heading'; }
+  };
+  const onPeriodKey = (e: React.KeyboardEvent<HTMLTableElement>) => {
+    if (view === 'days' || isComposing(e)) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); back(); return; }
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl', rowStart = pFocus - ((pFocus - pPage) % 3);
+    let n: number;
+    switch (e.key) {
+      case 'ArrowLeft': n = pFocus + (rtl ? 1 : -1); break;
+      case 'ArrowRight': n = pFocus + (rtl ? -1 : 1); break;
+      case 'ArrowUp': n = pFocus - 3; break;
+      case 'ArrowDown': n = pFocus + 3; break;
+      case 'Home': n = rowStart; break;
+      case 'End': n = rowStart + 2; break;
+      case 'PageUp': n = pFocus - 12; break;
+      case 'PageDown': n = pFocus + 12; break;
+      case 'Enter': case ' ': e.preventDefault(); pickPeriod(pFocus); return;
+      default: return;
+    }
+    e.preventDefault();
+    setPFocus(clampN(view, n)); wantPeriod.current = 'grid';
+  };
+  // every render: a view change or a key asks for focus, and what takes it is there only after the render.
+  React.useEffect(() => {
+    const want = wantPeriod.current;
+    if (!want) return;
+    wantPeriod.current = null;
+    const b = want === 'heading' ? heading.current : periods.current && periods.current.querySelector<HTMLButtonElement>('button[tabindex="0"]');
+    if (b) b.focus();
+  });
+
   const onKeyDown = (e: React.KeyboardEvent) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (e.altKey || e.ctrlKey || e.metaKey) return;
@@ -267,7 +336,10 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const stop = hydrated ? focus : value && sameMonth(value, month) ? value : month;
   const first = startOfWeek(month, ws);
   const { short, long, month: monthName } = formats(locale);
-  const title = formats(locale).title.format(month);
+  const fmts = formats(locale), title = fmts.title.format(month);
+  // The months' or the years' page: the year's first month (y * 12), or the first of twelve years (2016 for 2016 to 2027).
+  const pPage = Math.floor(pFocus / 12) * 12;
+  const periodTitle = view === 'months' ? yearText(fmts, pPage / 12) : view === 'years' ? yearText(fmts, pPage) + '–' + yearText(fmts, pPage + 11) : '';
   // A month arrow that reaches min or max turns disabled under focus (FJ1): focus goes to the other arrow.
   const handover = useFocusHandover();
   const presets: PresetItem[] | null = props.presets === true ? dayPresets(sds.labels)
@@ -280,14 +352,27 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   return (
     <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.pairedNav && 'dk-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">
       <div className="dk-calendar__header">
-        <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
+        {view === 'days' ? <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />
-        <h2 className={cn('dk-calendar__title', props.monthYearPicker && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month)} lang={lang} aria-live="polite">{title}</h2>
+          : <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={sds.labels.periodPrevious(view === 'months' ? 'month' : 'year')} size="sm" variant="ghost" hideTitle
+          disabled={minN(view) != null && pPage - 1 < minN(view)!} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); setPFocus(clampN(view, pFocus - 12)); }} ref={prevNav} />}
+        <h2 className={cn('dk-calendar__title', (props.monthYearPicker || drill) && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month)} lang={lang} aria-live="polite">{view === 'days' ? title : periodTitle}</h2>
         {props.monthYearPicker ? <MonthYear month={month} min={min} max={max} today={hydrated ? today : month} names={monthName} lang={lang} monthLabel={sds.labels.month} yearLabel={sds.labels.year} onPick={showMonth} /> : null}
-        <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" hideTitle
+        {drill && view !== 'years' ? <button ref={heading} type="button" className="dk-calendar__heading" lang={lang} aria-describedby={titleId + '-hint'}
+          onClick={() => (view === 'days' ? showPeriods('months', month.getFullYear() * 12 + month.getMonth()) : (inYear.current = pFocus % 12, showPeriods('years', Math.floor(pFocus / 12))))}>
+          {view === 'days' ? title : periodTitle}<Icon icon={icons.ExpandMore} className="dk-calendar__heading-icon" />
+          <span id={titleId + '-hint'} hidden>{sds.labels.periodPlaceholder(view === 'days' ? 'month' : 'year')}</span>
+        </button> : null}
+        {drill && view === 'years' ? <span className="dk-calendar__heading dk-calendar__heading--static" lang={lang} aria-hidden>{periodTitle}</span> : null}
+        {view === 'days' ? <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={props.nextLabel || sds.labels.nextMonth} size="sm" variant="ghost" hideTitle
           disabled={!!max && compare(addMonths(month, 1), max) > 0} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); showMonth(addMonths(month, 1)); }} ref={nextNav} />
+          : <IconButton icon={icons.ChevronRight} className="dk-calendar__nav dk-calendar__nav--next" label={sds.labels.periodNext(view === 'months' ? 'month' : 'year')} size="sm" variant="ghost" hideTitle
+          disabled={maxN(view) != null && pPage + 12 > maxN(view)!} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); setPFocus(clampN(view, pFocus + 12)); }} ref={nextNav} />}
       </div>
-      <table ref={grid} lang={lang} className="dk-calendar__grid" role="grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>
+      {view !== 'days' ? <table ref={periods} lang={lang} role="grid" className="dk-calendar__periods" data-view={view} aria-labelledby={titleId} onKeyDown={onPeriodKey}>
+        <Periods view={view} page={pPage} focus={pFocus} value={value} today={marked} min={minN(view)} max={maxN(view)} fmt={fmts} onPick={pickPeriod} onFocus={setPFocus} />
+      </table> : null}
+      <table ref={grid} lang={lang} className="dk-calendar__grid" role="grid" hidden={view !== 'days' || undefined} aria-labelledby={titleId} onKeyDown={onKeyDown}>
         <thead>
           <tr>{Array.from({ length: 7 }, (_, i) => addDays(first, i)).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
         </thead>
@@ -305,6 +390,40 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
    readers. Months and years outside min..max aren't offered; a year whose month is out of range clamps to the nearest one.
    They choose what the grid shows, not a value to send, so form="" keeps them out of any form around the calendar:
    a form reset would put them back on their first options (January, the first year) while the grid stayed put (GR87). */
+type PeriodView = 'months' | 'years';
+// A year in the locale's words, with its digits: setFullYear keeps a year before 100 as written.
+function yearText(f: Formats, y: number): string { const d = new Date(2000, 6, 1); d.setFullYear(y); return f.year.format(d); }
+function monthOf(n: number): Date { const d = new Date(2000, n % 12, 1); d.setFullYear(Math.floor(n / 12)); return d; }
+/* The months of a year, or twelve years, in rows of three: the ARIA date grid pattern, as the days and PeriodPicker are.
+   One Tab stop; arrows move one or a row, Home and End to the row's ends, PageUp and PageDown a page; Enter or a
+   click picks. As tall and wide as the days, so the calendar keeps its size. */
+function Periods(p: { view: PeriodView; page: number; focus: number; value: Date | null; today: Date | null; min: number | null; max: number | null; fmt: Formats; onPick: (n: number) => void; onFocus: (n: number) => void }) {
+  const at = (d: Date | null) => (d ? (p.view === 'months' ? d.getFullYear() * 12 + d.getMonth() : d.getFullYear()) : null);
+  const sel = at(p.value), now = at(p.today);
+  const rows: number[][] = [];
+  for (let r = 0; r < 4; r++) rows.push([0, 1, 2].map((i) => p.page + r * 3 + i));
+  return (
+      <tbody>
+        {rows.map((row) => (
+          <tr key={row[0]}>
+            {row.map((n) => {
+              const off = (p.min != null && n < p.min) || (p.max != null && n > p.max);
+              return (
+                <td key={n} role="gridcell" aria-selected={n === sel}>
+                  <button type="button" tabIndex={n === p.focus ? 0 : -1} aria-disabled={off || undefined} aria-current={n === now ? 'date' : undefined}
+                    className={cn('dk-calendar__period', n === sel && 'dk-calendar__period--selected', n === now && 'dk-calendar__period--today', off && 'dk-calendar__period--disabled')}
+                    onClick={() => p.onPick(n)} onFocus={() => { if (n !== p.focus) p.onFocus(n); }}>
+                    {p.view === 'months' ? <><span aria-hidden>{p.fmt.monthShort.format(monthOf(n))}</span><span className="dk-visually-hidden">{p.fmt.title.format(monthOf(n))}</span></> : yearText(p.fmt, n)}
+                  </button>
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+  );
+}
+
 // The month a server drew, from the title's data-month, while its markup waits for hydration. Null in a render with
 // no server markup: the title isn't in the page yet.
 function serverMonth(titleId: string): Date | null {
