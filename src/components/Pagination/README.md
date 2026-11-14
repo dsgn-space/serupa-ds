@@ -94,7 +94,7 @@ An arrow that takes you to the first or last page turns disabled, so focus moves
 | `linkAs` | a component | the `configure({ link })` link, else `'a'` | With `getHref`, your router's link component for the page links (it gets `href`, `className` and the rest). The disabled arrows stay plain `<a>` |
 | `siblings` | number | `1` | Pages on each side of the current one |
 | `boundaries` | number | `1` | Pages always shown at each end |
-| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24px, 32px or 44px squares; `lg` has 16px text and a large page-size select, to sit beside large fields and buttons and give a touch-sized target |
+| `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24px, 32px or 44px squares; `lg` has 16px text and a large page-size select, to sit beside large fields and buttons. On a touch screen every size takes a press 44px high, and the gap between two pages splits at its middle |
 | `aria-label` | string | `"Pagination"` | The nav's name |
 | `previousLabel`, `nextLabel` | string | `"Previous page"`, `"Next page"` | The arrows' names |
 | `pageLabel` | `(page) => string` | `"Page " + page` | A page's name |
