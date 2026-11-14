@@ -5,7 +5,7 @@ Shows how far along a task is when you can tell: an upload, a setup, a quota. Us
 **Also called:** progress bar.
 
 ```tsx
-import { Progress } from "serupa-ds";
+import { Progress } from "@diki-stwn/serupa-ds";
 
 <Progress value={45} label="Uploading report.pdf" showValue />
 <Progress value={3} max={8} label="Setup" showValue formatValue={(v, m) => `${v} of ${m} steps`} />

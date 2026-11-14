@@ -1,5 +1,5 @@
 // serupa-ds/labels/vi: every built-in word in Vietnamese.
-//   import { labels, locale } from "serupa-ds/labels/vi";
+//   import { labels, locale } from "@diki-stwn/serupa-ds/labels/vi";
 //   <SerupaProvider locale={locale} labels={labels}>
 import type { SerupaLabels } from '../internal/labels';
 

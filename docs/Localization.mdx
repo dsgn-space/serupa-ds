@@ -8,7 +8,7 @@ import * as Stories from '../src/internal/provider.stories';
 `<SerupaProvider>` gives every component inside it a locale, the words the components say on their own, and extra icons. It's React context, so it reaches client components from a server layout, differs between concurrent server requests, and can change for one part of a page (ADR-0010).
 
 ```tsx
-import { SerupaProvider, idLabels } from 'serupa-ds';
+import { SerupaProvider, idLabels } from '@diki-stwn/serupa-ds';
 
 export default function RootLayout({ children }) {
   return (
@@ -29,11 +29,11 @@ export default function RootLayout({ children }) {
 
 ## Language packs
 
-Each language the package ships is an entry of its own, `serupa-ds/labels/<language>`, so an app loads only the languages it imports. A pack gives every built-in word (`labels`) and the locale it's written for (`locale`):
+Each language the package ships is an entry of its own, `@diki-stwn/serupa-ds/labels/<language>`, so an app loads only the languages it imports. A pack gives every built-in word (`labels`) and the locale it's written for (`locale`):
 
 ```tsx
-import { SerupaProvider } from 'serupa-ds';
-import { labels, locale } from 'serupa-ds/labels/id';
+import { SerupaProvider } from '@diki-stwn/serupa-ds';
+import { labels, locale } from '@diki-stwn/serupa-ds/labels/id';
 
 <SerupaProvider locale={locale} labels={labels}>{children}</SerupaProvider>
 ```
@@ -47,7 +47,7 @@ What wins, in order: the component's own prop (`dismissLabel`, `locale`, …), t
 Some labels take a number, such as Combobox's `resultsCount` or Pagination's `page`. English needs two forms ("1 result", "2 results"); Russian needs three, Arabic six, Indonesian one. `plural(locale, count, forms)` picks the form with `Intl.PluralRules` and writes the count the locale's way where the words have `#`. Only `other` is required; a form left out falls back to it.
 
 ```tsx
-import { plural, SerupaProvider } from "serupa-ds";
+import { plural, SerupaProvider } from "@diki-stwn/serupa-ds";
 
 const ruLabels = {
   resultsCount: (n: number) => plural("ru", n, { one: "# результат", few: "# результата", many: "# результатов", other: "# результата" }),

@@ -18,7 +18,7 @@ const drift = Object.entries(VERSIONS).filter(([name, v]) => !/^\d+\.\d+\.\d+$/.
 const out = files({ name: 'my-app', serupa: 'github:diki-stwn/serupa-ds#v1.2.3', brand: 'violet' });
 const app = JSON.parse(out['package.json']);
 const main = out['src/main.tsx'];
-const order = ['serupa-ds/tokens.css', 'serupa-ds/base.css', 'serupa-ds/bundle.css'].map((f) => main.indexOf(f));
+const order = ['@diki-stwn/serupa-ds/tokens.css', '@diki-stwn/serupa-ds/base.css', '@diki-stwn/serupa-ds/bundle.css'].map((f) => main.indexOf(f));
 
 const bin = path.join(PROJECT, 'bin', 'serupa-create.mjs');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-create-'));
@@ -39,13 +39,14 @@ fs.mkdirSync(modules);
 for (const name of fs.readdirSync(path.join(PROJECT, 'node_modules'))) {
   if (!name.startsWith('.')) fs.symlinkSync(path.join(PROJECT, 'node_modules', name), path.join(modules, name), 'junction');
 }
-fs.symlinkSync(PROJECT, path.join(modules, 'serupa-ds'), 'junction');
+fs.mkdirSync(path.join(modules, '@diki-stwn'), { recursive: true });
+fs.symlinkSync(PROJECT, path.join(modules, '@diki-stwn/serupa-ds'), 'junction');
 const lint = () => ({
   eslint: spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'eslint', 'bin', 'eslint.js'), '.'], { cwd: lintApp, encoding: 'utf8' }),
   stylelint: spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'stylelint', 'bin', 'stylelint.mjs'), 'src/**/*.css', '--allow-empty-input'], { cwd: lintApp, encoding: 'utf8' }),
 });
 const clean = lint();
-fs.writeFileSync(path.join(lintApp, 'src', 'Team.tsx'), `import { Image } from 'serupa-ds';\n\nexport const Team = () => <Image src="team.png" />;\n`);
+fs.writeFileSync(path.join(lintApp, 'src', 'Team.tsx'), `import { Image } from '@diki-stwn/serupa-ds';\n\nexport const Team = () => <Image src="team.png" />;\n`);
 fs.writeFileSync(path.join(lintApp, 'src', 'team.css'), '.team { color: #6b7280; }\n');
 const planted = lint();
 fs.rmSync(tmp, { recursive: true, force: true });
@@ -70,16 +71,16 @@ spawnSync(process.execPath, [agentsBin, empty], { encoding: 'utf8' });
 const fresh = { agents: fs.readFileSync(path.join(empty, 'AGENTS.md'), 'utf8'), claude: fs.readFileSync(path.join(empty, 'CLAUDE.md'), 'utf8') };
 fs.rmSync(proj, { recursive: true, force: true });
 fs.rmSync(empty, { recursive: true, force: true });
-const SKILL = 'node_modules/serupa-ds/skills/serupa/SKILL.md';
+const SKILL = 'node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md';
 const shipped = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), 'utf8')).files.includes('skills/') && fs.existsSync(path.join(PROJECT, 'skills', 'serupa', 'SKILL.md'));
 
 done(report('Starter app', [
   { name: 'it pins the React, Vite, TypeScript and types the repository tests with', ok: !drift.length, detail: drift.join('; ') },
-  { name: 'the app installs the given serupa-ds and builds, checks types and serves with Vite', ok: app.dependencies['serupa-ds'] === 'github:diki-stwn/serupa-ds#v1.2.3' && app.scripts.build === 'vite build' && app.scripts.typecheck === 'tsc --noEmit' && app.scripts.dev === 'vite', detail: out['package.json'] },
+  { name: 'the app installs the given serupa-ds and builds, checks types and serves with Vite', ok: app.dependencies['@diki-stwn/serupa-ds'] === 'github:diki-stwn/serupa-ds#v1.2.3' && app.scripts.build === 'vite build' && app.scripts.typecheck === 'tsc --noEmit' && app.scripts.dev === 'vite', detail: out['package.json'] },
   { name: 'the page sets the brand and mode, and the stylesheets load tokens, base, then bundle', ok: out['index.html'].includes('<html lang="en" data-brand="violet" data-mode="auto">') && order.every((n, i) => n > 0 && (i === 0 || n > order[i - 1])), detail: main },
   { name: 'the app has a skip link, a main landmark it targets, one h1, and a labelled field', ok: /<SkipLink \/>/.test(out['src/App.tsx']) && /as="main" id="main"/.test(out['src/App.tsx']) && (out['src/App.tsx'].match(/level=\{1\}/g) || []).length === 1 && /<Field label="Email"/.test(out['src/App.tsx']) },
   { name: 'theme.js is served and built as its own file ahead of the app, and the build trims the CSS', ok: /injectTo: 'head-prepend'/.test(out['vite.config.ts']) && /emitFile/.test(out['vite.config.ts']) && /serupaPurge\(\{ components: true \}\)/.test(out['vite.config.ts']) },
-  { name: 'by default the app installs this release by its tag, named from the folder', ok: made.status === 0 && written.name === 'hello-world' && written.dependencies?.['serupa-ds'] === `github:dsgn-space/serupa-ds#v${pkg.version}`, detail: made.stderr + JSON.stringify(written) },
+  { name: 'by default the app installs this release by its tag, named from the folder', ok: made.status === 0 && written.name === 'hello-world' && written.dependencies?.['@diki-stwn/serupa-ds'] === `github:dsgn-space/serupa-ds#v${pkg.version}`, detail: made.stderr + JSON.stringify(written) },
   { name: 'it refuses a folder with files in it, and a brand it doesn\'t have', ok: again.status === 1 && /isn't empty/.test(again.stderr) && brand.status === 2, detail: again.stderr + brand.stderr },
   { name: 'the app\'s AGENTS.md sends its agents to the skill the installed release ships, and CLAUDE.md imports it', ok: out['AGENTS.md'].startsWith('# My app\n') && out['AGENTS.md'].includes(SECTION) && SECTION.includes(SKILL) && shipped && out['CLAUDE.md'] === '@AGENTS.md\n', detail: out['AGENTS.md'] + out['CLAUDE.md'] },
   { name: 'serupa-agents adds the section to a project\'s own AGENTS.md and @AGENTS.md to its CLAUDE.md, keeping what they said', ok: first.status === 0 && once.agents.startsWith('# Shop\n\nUse pnpm.\n\n') && once.agents.endsWith(SECTION) && once.claude === 'Be brief.\n\n@AGENTS.md\n', detail: first.stdout + first.stderr + once.agents + once.claude },

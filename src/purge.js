@@ -1,10 +1,10 @@
 // serupa-ds/purge __VERSION__: serupa-purge inside the build, as a Vite plugin and a PostCSS plugin, so a project
 // that imports bundle.css ships the component styles and only the utility classes its code uses.
 //   // vite.config.js
-//   import { serupaPurge } from "serupa-ds/purge";
+//   import { serupaPurge } from "@diki-stwn/serupa-ds/purge";
 //   export default { plugins: [react(), serupaPurge()] };
 //   // postcss.config.js (Next.js, webpack, or CSS that @imports bundle.css)
-//   import { serupaPurgePostcss } from "serupa-ds/purge";
+//   import { serupaPurgePostcss } from "@diki-stwn/serupa-ds/purge";
 //   export default { plugins: [serupaPurgePostcss()] };
 // It trims Serupa's own stylesheets only (bundle.css, utilities.css, utilities-extra.css and components.css), the
 // same way the serupa-purge command does: see bin/serupa-purge.mjs for what is always kept. Your own CSS passes
@@ -31,8 +31,8 @@ function scan(options, root) {
   const kind = new Map(content.map((c) => [c, fs.statSync(c, { throwIfNoEntry: false })]));
   const sources = options.content ? content : content.filter((c) => kind.get(c));
   const missing = sources.filter((c) => !kind.get(c));
-  if (missing.length) throw new Error(`serupa-ds/purge: no such file or folder: ${missing.join(', ')}`);
-  if (!sources.length) throw new Error(`serupa-ds/purge: found none of src/, index.html, app/, pages/ or components/ in ${root}. Name your sources with the content option.`);
+  if (missing.length) throw new Error(`@diki-stwn/serupa-ds/purge: no such file or folder: ${missing.join(', ')}`);
+  if (!sources.length) throw new Error(`@diki-stwn/serupa-ds/purge: found none of src/, index.html, app/, pages/ or components/ in ${root}. Name your sources with the content option.`);
   const manifest = JSON.parse(fs.readFileSync(path.join(DIST, 'components.json'), 'utf8'));
   const keep = (options.keep || []).map((k) => (k.startsWith('@') ? `@${path.resolve(root, k.slice(1))}` : k));
   const used = usedClasses(sources, [...keep, ...manifest.runtimeUtilities]);

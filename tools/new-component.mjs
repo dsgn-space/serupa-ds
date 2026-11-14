@@ -173,7 +173,7 @@ import guide from './README.md?raw';
 ${TODO}: one or two sentences: what it is and the job it does for the person using the product.
 
 \`\`\`tsx
-import { ${name} } from "serupa-ds";
+import { ${name} } from "@diki-stwn/serupa-ds";
 
 <${name}>…</${name}>
 \`\`\`
