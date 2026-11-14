@@ -7,8 +7,12 @@ import vitest from '@vitest/eslint-plugin';
 import globals from 'globals';
 import noLiteralWords from './tools/lint/no-literal-words.mjs';
 import noLiteralDelay from './tools/lint/no-literal-delay.mjs';
+import cardDirection from './tools/lint/card-direction.mjs';
 import jsxA11y from 'eslint-plugin-jsx-a11y-x';
 import { a11yComponents } from './tools/lint/a11y-components.mjs';
+
+// The repo's own rules, as one plugin: ESLint takes a plugin name once, whichever files it covers.
+const serupa = { rules: { 'no-literal-words': noLiteralWords, 'no-literal-delay': noLiteralDelay, 'card-direction': cardDirection } };
 
 export default tseslint.config(
   // tools/skill-eval/results/ holds agents' answers as they wrote them, which the eval grades: not our code to lint.
@@ -96,10 +100,16 @@ export default tseslint.config(
     },
   },
   {
+    // Card is a flex column: one laid out as a row says flex-row, or its children stack and centre.
+    files: ['src/**/*.tsx'],
+    plugins: { serupa },
+    rules: { 'serupa/card-direction': 'error' },
+  },
+  {
     // A component's words come from its labels.ts (English and Indonesian), never written into its JSX (T1).
     files: ['src/components/**/*.tsx'],
     ignores: ['src/components/**/*.{test,stories}.tsx'],
-    plugins: { serupa: { rules: { 'no-literal-words': noLiteralWords, 'no-literal-delay': noLiteralDelay } } },
+    plugins: { serupa },
     // A wait is named in src/internal/timing.ts (TF6), never a number in a setTimeout or setInterval.
     rules: { 'serupa/no-literal-words': 'error', 'serupa/no-literal-delay': 'error' },
   },
