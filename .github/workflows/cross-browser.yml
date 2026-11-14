@@ -74,14 +74,13 @@ jobs:
           path: test-output.txt
           if-no-files-found: ignore
   # The component tests in the oldest Chrome the package supports (package.json's browserslist, through
-  # tools/browser-floor.mjs), on main and on the next major's branch, whose floor is higher. Firefox and WebKit at
-  # their floor can't be driven by this Playwright; browser-baseline.mjs holds the CSS and script to it instead.
+  # tools/browser-floor.mjs). Nightly on main; on next (whose floor is higher) run this workflow from the Actions tab
+  # with next as the branch. It never checks out another ref than the run's own: the setup action's cache is shared
+  # with the default branch, and a checkout of another ref there is cache poisoning (CodeQL).
+  # Firefox and WebKit at their floor can't be driven by this Playwright; browser-baseline.mjs holds the CSS and
+  # script to it instead.
   floor:
-    name: components (Chrome floor, ${{ matrix.ref }})
-    strategy:
-      fail-fast: false
-      matrix:
-        ref: [main, next]
+    name: components (Chrome floor)
     runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -96,29 +95,14 @@ jobs:
       - name: Clear stale git locks
         shell: bash
         run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
-      # next exists only between a major's first pull request and its release.
-      - name: Is there a ${{ matrix.ref }} branch?
-        id: ref
-        shell: bash
-        env:
-          REF: ${{ matrix.ref }}
-          REPO: ${{ github.server_url }}/${{ github.repository }}
-        run: |
-          if git ls-remote --exit-code --heads "$REPO" "$REF" >/dev/null; then echo "run=true" >> "$GITHUB_OUTPUT"; else echo "No $REF branch: nothing to test."; fi
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: steps.ref.outputs.run == 'true'
         with:
           persist-credentials: false
-          ref: ${{ matrix.ref }}
       - uses: ./.github/actions/setup
-        if: steps.ref.outputs.run == 'true'
-      - if: steps.ref.outputs.run == 'true'
-        run: apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null)
-      - if: steps.ref.outputs.run == 'true'
-        name: Build the package
+      - run: apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null)
+      - name: Build the package
         run: npm run build
-      - if: steps.ref.outputs.run == 'true'
-        name: Components in Chrome at the floor
+      - name: Components in Chrome at the floor
         shell: bash
         run: |
           set -o pipefail
@@ -127,15 +111,13 @@ jobs:
       - name: List the failures
         if: failure()
         shell: bash
-        env:
-          REF: ${{ matrix.ref }}
         run: |
-          { echo "## Failing: components in Chrome at the floor ($REF)"; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          { echo "## Failing: components in Chrome at the floor"; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload the output
-        if: always() && steps.ref.outputs.run == 'true'
+        if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: test-output-floor-${{ matrix.ref }}-chromium
+          name: test-output-floor-chromium
           path: test-output.txt
           if-no-files-found: ignore
   # A scheduled run opens one issue when it fails (or updates the open one) and closes it when it's green again.
@@ -161,5 +143,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RESULT: ${{ needs.floor.result == 'failure' && 'failure' || needs.components.result }}
-          JOBS: floor-main-chromium,components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
+          JOBS: floor-chromium,components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
         run: node tools/nightly-issue.mjs artifacts "$RESULT"
