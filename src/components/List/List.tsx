@@ -16,8 +16,8 @@ export interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   children?: React.ReactNode | undefined;
   /** 'plain' (default) or 'card': inside a bordered, rounded frame. */
   variant?: 'plain' | 'card' | undefined;
-  /** Lines between items. Default: true. */
-  divided?: boolean | undefined;
+  /** Lines between items. 'inset': each line starts where the text starts, after the avatar or icon. Default: true. */
+  divided?: boolean | 'inset' | undefined;
   /** 'ul' (default) or 'ol' when the order matters. */
   as?: 'ul' | 'ol' | undefined;
   /** Its rows are loading (or reloading): sets aria-busy on the list. Pair it with ListLoadingItems. Default: false. */
@@ -155,7 +155,7 @@ export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List
     onKeyDown: mode ? (e: React.KeyboardEvent<HTMLUListElement>) => { if (theirs.key) theirs.key(e); if (!e.defaultPrevented) onKeyDown(e); } : theirs.key,
     onClick: mode ? (e: React.MouseEvent<HTMLUListElement>) => { if (theirs.click) theirs.click(e); onClick(e); } : theirs.click,
     onFocus: mode ? (e: React.FocusEvent<HTMLUListElement>) => { if (theirs.focus) theirs.focus(e); onFocus(e); } : theirs.focus,
-    className: cn('dk-list', variant === 'card' && 'dk-list--card', props.divided !== false && 'dk-list--divided', mode && 'dk-list--selectable', props.className),
+    className: cn('dk-list', variant === 'card' && 'dk-list--card', props.divided === 'inset' ? 'dk-list--inset' : props.divided !== false && 'dk-list--divided', mode && 'dk-list--selectable', props.className),
   }));
   return <PickContext.Provider value={ctx}>{el}</PickContext.Provider>;
 });
