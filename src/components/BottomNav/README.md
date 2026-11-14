@@ -32,12 +32,13 @@ Drawn from the `Playground` story.
 2. **List** (`.dk-bottom-nav__list`): the destinations, side by side in equal widths.
 3. **Link** (`.dk-bottom-nav__link`): one destination; the current page is shaded and has `aria-current="page"`.
 4. **Icon** (`.dk-bottom-nav__icon`): the destination's icon, in a pill that is shaded on the current page.
-5. **Label** (`.dk-bottom-nav__label`): the destination's name, always shown under its icon.
-6. **Spacer** (`.dk-bottom-nav__spacer`): holds the bar's height at the end of the page, so the bar never covers the last content.
+5. **Badge** (`.dk-bottom-nav__badge`): an optional count or dot on the icon's top-end corner, such as unread items.
+6. **Label** (`.dk-bottom-nav__label`): the destination's name, always shown under its icon.
+7. **Spacer** (`.dk-bottom-nav__spacer`): holds the bar's height at the end of the page, so the bar never covers the last content.
 
 ## Usage
 
-- **Links:** BottomNavLink takes an `icon` and a label of one or two short words; `active` marks the current page. `as` renders your router's link, typed with its props, or set it once with `configure({ link })`.
+- **Links:** BottomNavLink takes an `icon` and a label of one or two short words; `active` marks the current page, and `badge` puts a count on its icon (`badge={<Badge count={4} tone="danger" variant="solid" />}`, or a lone `<Badge dot />` for "something new"). `as` renders your router's link, typed with its props, or set it once with `configure({ link })`.
 - **Widths:** `hideFrom` is the width from which it hides: `'md'` (768px, default), `'sm'` (640px), `'lg'` (1024px) or `false` to keep it at every width. Show the same destinations in the Navbar or Sidebar above that width.
 - **Room on the page:** while it shows, a spacer before it takes its height at the end of the page, so the last content scrolls clear of it, and `scroll-padding-bottom` keeps anything focused or scrolled to from hiding under it.
 - **Other things on the bottom edge:** a bottom [Toaster](../Toast/README.md), [OfflineBanner](../OfflineBanner/README.md) and [Fab](../Fab/README.md) move up above the bar while it shows.
@@ -51,7 +52,7 @@ Drawn from the `Playground` story.
 
 ## Accessibility
 
-- **Role and name:** a `<nav>` landmark named by `label`, with a list of links, so screen readers say how many there are. The current one has `aria-current="page"`. Icons are hidden; the label is each link's name.
+- **Role and name:** a `<nav>` landmark named by `label`, with a list of links, so screen readers say how many there are. The current one has `aria-current="page"`. Icons are hidden; the label is each link's name. A `badge` is read after the name, as its description ("Inbox, link, 4"), so a count needs no extra words; give a lone dot an `aria-label` ("New messages") or it says nothing.
 - **Keyboard:** each link is a Tab stop, in order; the focus ring is drawn inside the link so the bar doesn't cut it.
 - **Target size:** each link fills its column and the bar's 64px height.
 - **Contrast:** labels and the current page read 4.5:1 on the bar in all six themes (`BottomNav.test.tsx`). In forced-colors mode the current page keeps an outline.
@@ -77,6 +78,7 @@ Drawn from the `Playground` story.
 | --- | --- | --- | --- |
 | `icon` | icon name, icon or element | | Over the label |
 | `active` | `boolean` | `false` | The current page |
+| `badge` | `ReactNode` | none | A count or dot on the icon's top-end corner, such as `<Badge count={4} />`; read after the link's name |
 | `as` | component | `configure({ link })` or `'a'` | Your router's link |
 | `children` | `ReactNode` | | The label |
 
@@ -99,5 +101,7 @@ Each is an optional override: set it on the page, a container or one BottomNav. 
 | `--bottom-nav-icon-bg-active` | `primary-subtle` | The pill behind the current page's icon. |
 | `--bottom-nav-focus-ring` | `focus-ring` | The keyboard focus ring, inside the link. |
 | `--bottom-nav-height` | `spacing-16` | The bar's height above the safe-area inset (64px); links fill it, so each is a 64px-tall target. |
+| `--bottom-nav-badge-offset-x` | `spacing-8` | How far from the icon pill's start edge a badge starts: 4px past the middle, so it sits on the icon's top-end corner. |
+| `--bottom-nav-badge-offset-y` | `spacing-0` | How far below the icon pill's top edge a badge sits. |
 | `--bottom-nav-z-index` | `z-40` | Its stacking: with a sticky Navbar, under dialogs and toasts. |
 <!-- token-table:end -->

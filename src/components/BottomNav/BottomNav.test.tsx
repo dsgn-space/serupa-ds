@@ -5,6 +5,7 @@ import { page } from 'vitest/browser';
 import { THEMES, contrast, css, color, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { BottomNav, BottomNavLink } from './BottomNav';
 import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
+import { Badge } from '../Badge/Badge';
 
 const nav = () => document.querySelector('[data-component="bottom-nav"]') as HTMLElement;
 const links = () => [...nav().querySelectorAll('a')] as HTMLElement[];
@@ -60,6 +61,21 @@ describe('BottomNav', () => {
     expect(css(nav()).display).toBe('none');
     await page.viewport(600, 800);
     expect(css(nav()).display).not.toBe('none');
+  });
+
+  test('badge: a count on the icon\'s top-end corner, read after the link\'s name; the link keeps its name and size', async () => {
+    await render(<BottomNav label="Main" hideFrom={false}>
+      <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
+      <BottomNavLink href="#inbox" icon="inbox" badge={<Badge count={4} />} aria-describedby="hint">Inbox</BottomNavLink>
+    </BottomNav>);
+    const inbox = page.getByRole('link', { name: 'Inbox' });
+    await expect.element(inbox).toHaveAccessibleDescription(/4/);
+    expect(inbox.element().getAttribute('aria-describedby')).toMatch(/^hint /);
+    const icon = inbox.element().querySelector('.dk-bottom-nav__icon')!.getBoundingClientRect(), badge = inbox.element().querySelector('.dk-bottom-nav__badge')!.getBoundingClientRect();
+    // Over the icon's top-end quarter: starts past the pill's middle, its top at the pill's top.
+    expect(badge.left).toBeGreaterThan(icon.left + icon.width / 2);
+    expect(Math.round(badge.top)).toBe(Math.round(icon.top));
+    expect(Math.round(links()[1]!.getBoundingClientRect().height)).toBe(Math.round(links()[0]!.getBoundingClientRect().height));
   });
 
   test('a bottom OfflineBanner sits above the bar', async () => {
