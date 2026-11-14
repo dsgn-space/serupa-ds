@@ -214,8 +214,10 @@ function roundness(all, line) {
 // Shadows tinted with the brand (73): data-shadow="brand" swaps each box shadow's black for a deep shade of the
 // brand color (its red, green and blue at 30%), at the same opacity, so a raised card or a menu reads as part of
 // the brand rather than grey. data-shadow="neutral" puts the black back in a section. The shade is worked out where
-// the attribute is, from that element's --primary.
-const TINT = 'rgb(from var(--primary) calc(r * 0.3) calc(g * 0.3) calc(b * 0.3) / $1)';
+// the attribute is, from that element's --primary. As color-mix() with black (30% of each channel, in sRGB) and then
+// with transparent (the opacity), not a relative rgb(from …): Chrome 129, the floor, can't take a light-dark() --primary
+// (a data-brand section's) as a relative color's origin, so every tinted shadow there was dropped.
+const TINT = (_, a) => `color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) ${Math.round(Number(a) * 100)}%, transparent)`;
 function tintedShadows(all, line) {
   const box = all.filter((x) => /^shadow-(2xs|xs|sm|md|lg|xl|2xl)$/.test(x.name));
   const at = (x) => (typeof x.value === 'object' ? Object.values(x.value)[0] : x.value);
