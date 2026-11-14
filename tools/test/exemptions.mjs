@@ -2,13 +2,14 @@
 // reason, so a shortcut taken "for now" can't quietly stay forever. An entry that is meant to go away says what
 // it waits for with "until": a browser ("until Safari 26"), a pull request ("until #1234") or a work-queue item
 // ("until GR123"). Fails when an entry gives no reason, and when what it waits for has happened: the browser floor
-// in browser-baseline.mjs has reached that version, or that pull request is merged on this branch. A queue item's
+// in package.json's browserslist has reached that version, or that pull request is merged on this branch. A queue item's
 // status lives outside the repository, so pass the queue to check those too:
 //   node tools/test/exemptions.mjs [--queue path/to/work-queue.md] [--list]
 // --list prints the whole ledger. eslint-suppressions.json is counted too; ESLint keeps no reason there, so each
 // suppression's reason is the comment in the code it suppresses.
 import fs from 'node:fs';
 import path from 'node:path';
+import { floor as browserFloor } from '../browser-floor.mjs';
 import { execFileSync } from 'node:child_process';
 import ts from '@typescript/typescript6';
 import { PROJECT, report, done } from './lib.mjs';
@@ -68,8 +69,8 @@ function scan(f, text) {
 const ledger = fs.readdirSync(DIR).filter((x) => x.endsWith('.mjs')).sort().flatMap((f) => scan(f, fs.readFileSync(path.join(DIR, f), 'utf8')));
 
 // What a temporary entry waits for.
-const BASE = fs.readFileSync(path.join(DIR, 'browser-baseline.mjs'), 'utf8');
-const floor = Object.fromEntries([...(/const BASELINE = \{([^}]*)\}/.exec(BASE)?.[1] ?? '').matchAll(/(\w+):\s*([\d.]+)/g)].map(([, b, v]) => [b, Number(v)]));
+// The floor browser-baseline.mjs holds the package to: package.json's browserslist.
+const floor = browserFloor();
 const BROWSER = { chrome: 'chrome', edge: 'edge', safari: 'safari', firefox: 'firefox' };
 const queueFile = arg('--queue');
 const queue = queueFile ? fs.readFileSync(queueFile, 'utf8') : '';

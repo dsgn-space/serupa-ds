@@ -18,11 +18,13 @@ import path from 'node:path';
 import postcss from 'postcss';
 import bcd from '@mdn/browser-compat-data' with { type: 'json' };
 import { projectArg, report, done, fail } from './lib.mjs';
+import { floor } from '../browser-floor.mjs';
 
 const P = projectArg();
 // The README's floor: CSS anchor positioning (anchor(), position-area and position-try-fallbacks) needs Chrome and
 // Edge 129 and Firefox 147; @scope, which every component's styles sit inside, needs Safari 26.4.
-const BASELINE = { chrome: 129, edge: 129, safari: 26.4, firefox: 147 };
+// package.json's browserslist holds the numbers (tools/browser-floor.mjs).
+const BASELINE = floor(P);
 
 // Newer than BASELINE, on purpose. The key is what the scan prints; the value says what happens without it.
 // readme: text the README's "Browser support" section has to contain, for what users should know.

@@ -21,7 +21,9 @@ const words = /* @__PURE__ */ Object.assign({}, EventCalendarWords, CalendarWord
 /* A time with the hour as 'numeric' asks: "9.30", not "09.30". Engines differ for some 24-hour locales (Firefox writes
    id-ID as "09.30", Chromium and Node as "9.30"), and the server's HTML has to match what the browser renders. */
 function numericHour(f: Intl.DateTimeFormat): { format: (d: Date) => string } {
-  return { format: (d) => f.formatToParts(d).map((x) => (x.type === 'hour' ? x.value.replace(/^0(?=\d)/, '') : x.value)).join('') };
+  // A narrow or thin space ("9:30\u202fAM" in Chrome before 124 and older Safari, a plain one in Node and newer
+  // browsers) is written as a plain space, so the server's text and the browser's match on hydration.
+  return { format: (d) => f.formatToParts(d).map((x) => (x.type === 'hour' ? x.value.replace(/^0(?=\d)/, '') : x.value.replace(/[\u2009\u202f]/g, ' '))).join('') };
 }
 
 /** One event. The app expands repeating events into their occurrences and marks them with repeating. */
