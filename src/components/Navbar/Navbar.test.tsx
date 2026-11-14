@@ -528,7 +528,7 @@ describe('NavbarMenu (RU14)', () => {
     expect([button('Products').element().getAttribute('aria-current'), button('Resources').element().hasAttribute('aria-current')]).toEqual(['true', false]);
   });
 
-  test('the current menu link has a 2px primary bar at its start (the end in right to left) that a hovered link never has', async () => {
+  test('the current menu link has a 2px bar at its start (the end in right to left) that a hovered link never has', async () => {
     await render(<Mega />);
     await userEvent.click(button('Products').element());
     const alerts = page.getByRole('link', { name: 'Alerts' }).element(), dash = page.getByRole('link', { name: 'Dashboards' }).element();

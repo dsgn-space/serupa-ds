@@ -133,13 +133,13 @@ describe('Table', () => {
     });
   });
 
-  test('selected: shaded, a 2px primary bar at its start; no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
+  test('selected: shaded; the 2px bar at its start is highlight-indicator, drawn only with more contrast (GR407); no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
     await setup();
     const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
     expect([r.hasAttribute('aria-selected'), q('#tdef [data-i="0"]').hasAttribute('aria-selected')]).toEqual([false, false]);
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
     expect(bar).toMatch(/2px 0px 0px 0px inset$/);
-    expect(bar).toContain(color('var(--primary)'));
+    expect(bar).toContain(color('var(--highlight-indicator)'));
   });
 
   test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {
