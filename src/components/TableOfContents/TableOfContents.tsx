@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { reducedMotion as reduced } from '../../internal/mediaList';
 import { component } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
@@ -27,6 +27,10 @@ export interface TableOfContentsProps extends Omit<React.HTMLAttributes<HTMLElem
   /** How far from the top of the window a heading counts as reached, in pixels: past it, its section is the current one.
    *  Set it to a sticky header's height plus a little. Default: 96. */
   offset?: number | undefined;
+  /** "list" (default): the title and the links. "rail": a narrow column of short dashes, one per heading, indented by
+   *  level, the current section's in the accent color; pointing at it, focusing a link or tapping it shows the full
+   *  list in a panel over the page. For a side column with little room. */
+  variant?: 'list' | 'rail' | undefined;
 }
 
 const slug = (text: string) => text.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '') || 'section';
@@ -40,7 +44,8 @@ const slug = (text: string) => text.toLowerCase().normalize('NFKD').replace(/[̀
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfContentsProps>('TableOfContents', function TableOfContents(props, ref) {
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { items: 1, container: 1, headings: 1, title: 1, offset: 1, className: 1 } as const);
+  const rest = omit(props, { items: 1, container: 1, headings: 1, title: 1, offset: 1, variant: 1, className: 1 } as const);
+  const rail = props.variant === 'rail';
   const titleId = domId('dk-toc', React.useId()) + '-title';
   const offset = props.offset ?? 96;
   const [found, setFound] = React.useState<TocItem[]>([]);
@@ -144,19 +149,50 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
     setCurrent(id);
   };
 
+  // The rail's panel: shown by the pointer over it or focus in it (CSS), and by a tap (open). Escape hides it until the
+  // pointer or focus leaves (dismissed), as content shown on hover or focus must be dismissible (WCAG 1.4.13).
+  const [open, setOpen] = React.useState(false);
+  const [dismissed, setDismissed] = React.useState(false);
+  const navEl = React.useRef<HTMLElement | null>(null);
+  const setNav = useMergedRef(styled, (n: HTMLElement | null) => { navEl.current = n; });
+  React.useEffect(() => {
+    if (!open) return;
+    // A tap anywhere else closes it.
+    const away = (e: PointerEvent) => { if (navEl.current && !navEl.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener('pointerdown', away, true);
+    return () => document.removeEventListener('pointerdown', away, true);
+  }, [open]);
+  const railHandlers = rail ? {
+    onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => { if (props.onKeyDown) props.onKeyDown(e); if (e.key === 'Escape' && !e.defaultPrevented && !dismissed) { setDismissed(true); setOpen(false); } },
+    onPointerLeave: (e: React.PointerEvent<HTMLElement>) => { if (props.onPointerLeave) props.onPointerLeave(e); if (e.pointerType === 'mouse' && navEl.current && !navEl.current.contains(document.activeElement)) setDismissed(false); },
+    onBlur: (e: React.FocusEvent<HTMLElement>) => { if (props.onBlur) props.onBlur(e); if (!e.currentTarget.contains(e.relatedTarget)) { setDismissed(false); setOpen(false); } },
+  } : null;
+
   const title = props.title === undefined ? L.tocTitle : props.title;
   const minLevel = items.reduce((m, i) => Math.min(m, i.level ?? 2), 6);
+  const list = (
+    <ul className="dk-toc__list" role="list">
+      {items.map((it) => (
+        <li key={it.id} className="dk-toc__item" style={{ '--dk-toc-depth': Math.max(0, (it.level ?? 2) - minLevel) } as React.CSSProperties}>
+          <a className="dk-toc__link" href={'#' + it.id} aria-current={current === it.id ? 'location' : undefined} onClick={(e) => { go(e, it.id); if (rail) setOpen(false); }}>{it.label}</a>
+        </li>
+      ))}
+    </ul>
+  );
+  const head = title != null ? <p className="dk-toc__title" id={titleId}>{title}</p> : null;
   return (
-    <nav {...rest} ref={styled} className={cn('dk-toc', props.className)} data-component="table-of-contents"
+    <nav {...rest} {...railHandlers} ref={setNav} className={cn('dk-toc', rail && 'dk-toc--rail', props.className)} data-component="table-of-contents"
+      data-variant={rail ? 'rail' : undefined} data-open={rail && open ? '' : undefined} data-dismissed={rail && dismissed ? '' : undefined}
       aria-labelledby={props['aria-label'] || props['aria-labelledby'] || title == null ? props['aria-labelledby'] : titleId}>
-      {title != null ? <p className="dk-toc__title" id={titleId}>{title}</p> : null}
-      <ul className="dk-toc__list" role="list">
-        {items.map((it) => (
-          <li key={it.id} className="dk-toc__item" style={{ '--dk-toc-depth': Math.max(0, (it.level ?? 2) - minLevel) } as React.CSSProperties}>
-            <a className="dk-toc__link" href={'#' + it.id} aria-current={current === it.id ? 'location' : undefined} onClick={(e) => go(e, it.id)}>{it.label}</a>
-          </li>
-        ))}
-      </ul>
+      {rail ? <>
+        {/* The dashes are a picture of the list: the links are in the panel, for the keyboard and screen readers. A
+            tap (touch or pen) shows the panel, as the pointer over it does with a mouse. */}
+        <div className="dk-toc__rail" aria-hidden="true" onPointerDown={(e) => { if (e.pointerType !== 'mouse') { setDismissed(false); setOpen((o) => !o); } }}>
+          {items.map((it) => <span key={it.id} className="dk-toc__dash" data-current={current === it.id ? '' : undefined}
+            style={{ '--dk-toc-depth': Math.min(2, Math.max(0, (it.level ?? 2) - minLevel)) } as React.CSSProperties} />)}
+        </div>
+        <div className="dk-toc__panel">{head}{list}</div>
+      </> : <>{head}{list}</>}
     </nav>
   );
 });
