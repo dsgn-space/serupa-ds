@@ -167,6 +167,30 @@ await inParallel(pages, workers, async (p, w) => {
   await w.page.setViewportSize({ width: 1280, height: 800 });
 }
 
+// A theme change on a page with a screen: the screen follows it, with no View Transition of its own inside the one
+// the page runs (site/src/Frame.tsx), and the page is still there afterwards.
+{
+  const context = await workers[0].page.context().browser().newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  let crashed = false;
+  page.on('crash', () => { crashed = true; });
+  await page.goto(base + '/');
+  const frame = page.frameLocator('.site-screen__page');
+  await page.locator('.site-screen').scrollIntoViewIfNeeded();
+  const drawn = await frame.locator('[data-site-frame]').waitFor({ timeout: 15000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  const inner = page.frames().find((f) => f.url().includes('/frame/'));
+  const before = inner ? await inner.evaluate(() => document.documentElement.getAttribute('data-theme')) : null;
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.getByRole('button', { name: 'Switch to the dark theme' }).click();
+  await page.waitForTimeout(1500);
+  const after = crashed || !inner ? null : await inner.evaluate(() => ({ theme: document.documentElement.getAttribute('data-theme'), fades: typeof document.startViewTransition })).catch(() => null);
+  const outer = crashed ? null : await page.evaluate(() => document.documentElement.getAttribute('data-theme')).catch(() => null);
+  t('/: the light and dark switch changes the page and its screen together, the screen with no crossfade of its own',
+    !drawn && !crashed && !!after && !!outer && outer.endsWith('-dark') && after.theme === outer && after.theme !== before && after.fades === 'undefined',
+    drawn || JSON.stringify({ crashed, before, outer, after }));
+  await context.close();
+}
+
 // A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
 if (t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
   const w = workers[0];
