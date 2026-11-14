@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Sparkline/labels.ts"],
+  "sourcesContent": ["// Sparkline's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface SparklineLabels {\n  /** Sparkline: its accessible name, from what it measures and its numbers, already formatted (\"Revenue: from 12 to 18, low 9, high 21\"). */\n  sparklineSummary: (label: string, first: string, last: string, min: string, max: string) => string;\n}\nexport const en: SparklineLabels = {\n  sparklineSummary: (label, first, last, min, max) => label + ': from ' + first + ' to ' + last + ', low ' + min + ', high ' + max,\n};\nexport const id: SparklineLabels = {\n  sparklineSummary: (label, first, last, min, max) => label + ': dari ' + first + ' ke ' + last + ', terendah ' + min + ', tertinggi ' + max,\n};\n"],
+  "mappings": ";AAMO,IAAM,KAAsB;AAAA,EACjC,kBAAkB,CAAC,OAAO,OAAO,MAAM,KAAK,QAAQ,QAAQ,YAAY,QAAQ,SAAS,OAAO,WAAW,MAAM,YAAY;AAC/H;AACO,IAAM,KAAsB;AAAA,EACjC,kBAAkB,CAAC,OAAO,OAAO,MAAM,KAAK,QAAQ,QAAQ,YAAY,QAAQ,SAAS,OAAO,gBAAgB,MAAM,iBAAiB;AACzI;",
+  "names": []
+}

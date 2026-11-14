@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/TagGroup/labels.ts"],
+  "sourcesContent": ["// TagGroup's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface TagGroupLabels {\n  /** TagGroup: the name of a tag's \u00D7 button, with the tag's own words. */\n  tagRemove: (name: string) => string;\n}\nexport const en: TagGroupLabels = {\n  tagRemove: (name) => 'Remove ' + name,\n};\nexport const id: TagGroupLabels = {\n  tagRemove: (name) => 'Hapus ' + name,\n};\n"],
+  "mappings": ";AAMO,IAAM,KAAqB;AAAA,EAChC,WAAW,CAAC,SAAS,YAAY;AACnC;AACO,IAAM,KAAqB;AAAA,EAChC,WAAW,CAAC,SAAS,WAAW;AAClC;",
+  "names": []
+}

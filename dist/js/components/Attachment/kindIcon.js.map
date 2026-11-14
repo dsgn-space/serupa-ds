@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Attachment/kindIcon.ts"],
+  "sourcesContent": ["// Each file kind's icon, shared by Attachment and FileUpload's rows so a file shows the same icon in both.\nimport * as icons from '../../material/builtin';\nimport type { AttachmentKind } from './attachmentKind';\n\nexport const KIND_ICONS = {\n  pdf: icons.PictureAsPdf, image: icons.Image, sheet: icons.TableChart, doc: icons.Description, slides: icons.Slideshow,\n  archive: icons.FolderZip, code: icons.Code, audio: icons.AudioFile, video: icons.Movie, other: icons.Draft,\n} as const satisfies Record<AttachmentKind, unknown>;\n"],
+  "mappings": ";AACA,YAAY,WAAW;AAGhB,IAAM,aAAa;AAAA,EACxB,KAAW;AAAA,EAAc,OAAa;AAAA,EAAO,OAAa;AAAA,EAAY,KAAW;AAAA,EAAa,QAAc;AAAA,EAC5G,SAAe;AAAA,EAAW,MAAY;AAAA,EAAM,OAAa;AAAA,EAAW,OAAa;AAAA,EAAO,OAAa;AACvG;",
+  "names": []
+}

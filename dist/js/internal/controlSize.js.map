@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/controlSize.ts"],
+  "sourcesContent": ["import * as React from 'react';\n\n/** The size a group (ButtonGroup) gives the buttons in it that don't set their own: one size on the group, rather\n    than the same size on every button. A button's own size wins. */\nexport const ControlSize = /* @__PURE__ */ React.createContext<'sm' | 'md' | 'lg' | undefined>(undefined);\n"],
+  "mappings": ";AAAA,YAAY,WAAW;AAIhB,IAAM,cAA8B,gBAAM,oBAA8C,MAAS;",
+  "names": []
+}

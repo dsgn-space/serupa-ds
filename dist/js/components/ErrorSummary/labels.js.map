@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/ErrorSummary/labels.ts"],
+  "sourcesContent": ["// ErrorSummary's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface ErrorSummaryLabels {\n  /** ErrorSummary: its heading, from how many errors it lists. `formatted` is the count in the locale's digits and\n   *  grouping; `count` is there for plural rules. */\n  errorSummaryTitle: (count: number, formatted: string) => string;\n}\nexport const en: ErrorSummaryLabels = {\n  errorSummaryTitle: (count, formatted = String(count)) => (count === 1 ? 'There is a problem' : 'There are ' + formatted + ' problems'),\n};\nexport const id: ErrorSummaryLabels = {\n  errorSummaryTitle: (count, formatted = String(count)) => (count === 1 ? 'Ada satu masalah' : 'Ada ' + formatted + ' masalah'),\n};\n"],
+  "mappings": ";AAOO,IAAM,KAAyB;AAAA,EACpC,mBAAmB,CAAC,OAAO,YAAY,OAAO,KAAK,MAAO,UAAU,IAAI,uBAAuB,eAAe,YAAY;AAC5H;AACO,IAAM,KAAyB;AAAA,EACpC,mBAAmB,CAAC,OAAO,YAAY,OAAO,KAAK,MAAO,UAAU,IAAI,qBAAqB,SAAS,YAAY;AACpH;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/DateField/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { DateField } from './DateField';\nexport type { DateFieldProps, DateFieldChangeDetails, DateFieldProblem, DatePart } from './DateField';\n"],
+  "mappings": ";AACA,SAAS,iBAAiB;",
+  "names": []
+}

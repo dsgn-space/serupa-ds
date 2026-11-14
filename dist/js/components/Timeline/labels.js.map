@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Timeline/labels.ts"],
+  "sourcesContent": ["// Timeline's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface TimelineLabels {\n  /** A horizontal Timeline's scrolling box, while it scrolls, when it has no aria-label or aria-labelledby. */\n  timeline: string;\n}\nexport const en: TimelineLabels = {\n  timeline: 'Timeline',\n};\nexport const id: TimelineLabels = {\n  timeline: 'Linimasa',\n};\n"],
+  "mappings": ";AAMO,IAAM,KAAqB;AAAA,EAChC,UAAU;AACZ;AACO,IAAM,KAAqB;AAAA,EAChC,UAAU;AACZ;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/TagGroup/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { TagGroup } from './TagGroup';\nexport type { TagGroupProps, TagItem } from './TagGroup';\n"],
+  "mappings": ";AACA,SAAS,gBAAgB;",
+  "names": []
+}

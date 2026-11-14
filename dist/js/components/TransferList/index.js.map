@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/TransferList/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { TransferList } from './TransferList';\nexport type { TransferListProps, TransferListOption } from './TransferList';\n"],
+  "mappings": ";AACA,SAAS,oBAAoB;",
+  "names": []
+}

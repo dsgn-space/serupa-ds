@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/RangeCalendar/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { RangeCalendar } from './RangeCalendar';\nexport type { RangeCalendarProps } from './RangeCalendar';\n"],
+  "mappings": ";AACA,SAAS,qBAAqB;",
+  "names": []
+}
