@@ -30,6 +30,28 @@ describe('ToggleGroup', () => {
     expect(Math.round(b!.left - a!.right)).toBe(-1);   // attached: the borders overlap into one line
   });
 
+  test('the line an on toggle shares with a hovered neighbour is the on one\'s, in a row, a column and right to left; a focused one comes above both', async () => {
+    const top = (b: HTMLElement, n: HTMLElement) => {
+      // The 1px the two share: inside b, on the side facing n.
+      const r = b.getBoundingClientRect(), o = n.getBoundingClientRect();
+      const x = o.left >= r.right - 1 ? r.right - 0.5 : o.right <= r.left + 1 ? r.left + 0.5 : r.left + r.width / 2;
+      const y = o.top >= r.bottom - 1 ? r.bottom - 0.5 : r.top + r.height / 2;
+      return document.elementFromPoint(x, y)?.closest('button');
+    };
+    for (const [props, dir] of [[{}, 'ltr'], [{ orientation: 'vertical' as const }, 'ltr'], [{}, 'rtl']] as const) {
+      const s = await render(<div dir={dir}><Align defaultValue={['left']} {...props} /></div>);
+      const [left, center] = [btn('Left').element(), btn('Center').element()] as HTMLElement[];
+      await userEvent.hover(center!);
+      expect([dir, props, top(left!, center!)]).toEqual([dir, props, left]);
+      center!.focus({ focusVisible: true });
+      await userEvent.keyboard('{Shift>}{Tab}{/Shift}{Tab}');
+      await expect.poll(() => center!.matches(':focus-visible')).toBe(true);
+      expect([dir, props, top(left!, center!)]).toEqual([dir, props, center]);
+      await userEvent.unhover(center!);
+      await s.unmount();
+    }
+  });
+
   test('single: pressing one turns the others off, pressing it again turns it off; onValueChange hears each', async () => {
     const onValueChange = vi.fn();
     await render(<Align defaultValue={['left']} onValueChange={onValueChange} />);
