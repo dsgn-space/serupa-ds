@@ -4,6 +4,7 @@ interface LinkLabels {
 }
 interface LinkOwnProps {
     tone?: "neutral" | "primary" | undefined;
+    onMedia?: "dark" | "light" | undefined;
     underline?: "always" | "hover" | undefined;
     external?: boolean | undefined;
 }
