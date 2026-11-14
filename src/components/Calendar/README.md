@@ -119,9 +119,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-today-color` | `primary` | Today's number (4.5:1 on surface). |
 | `--calendar-today-color-hover` | `text` | Today's number under the pointer: full text, as primary drops under 4.5:1 on the hover fill in dark. It stays semibold. |
 | `--calendar-bg-selected` | `primary` | The selected day. |
-| `--calendar-selected-bg` | `primary` | The old name of `--calendar-bg-selected`, read when that isn't set. Removed in 15.0.0. |
 | `--calendar-color-selected` | `on-primary` | Its number. |
-| `--calendar-selected-color` | `on-primary` | The old name of `--calendar-color-selected`, read when that isn't set. Removed in 15.0.0. |
 | `--calendar-range-bg` | `primary-subtle` | Days between the start and end of a range (DateRangePicker). |
 | `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
@@ -156,5 +154,4 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--calendar-depth-selected` | `depth-part` | The selected day's tactile layers: raised, with a soft, short shadow. None in the flat brands. |
-| `--calendar-selected-depth` | `depth-part` | The old name of `--calendar-depth-selected`, read when that isn't set. Removed in 15.0.0. |
 <!-- token-table:end -->

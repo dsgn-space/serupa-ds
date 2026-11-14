@@ -153,7 +153,6 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 | `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
 | `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile. Once the ring shows, it stays at least 500ms, so loading that ends a moment later doesn't flash it |
 | `loadingLabel` | string | `'Loading…'` | Said to screen readers when loading starts, not shown ("" says nothing) |
-| `loadingText` | string | | Deprecated, removed in 15.0.0: use `loadingLabel` (a `…Text` prop is shown; these words are only said) |
 
 Any other attribute (`id`, `className`, `style`, `title`, `type`, `aria-*`, `data-*`, `ref`) goes to the outer element: a `<span>`, or the `<button>` or link when clickable. Every badge has `data-component="badge"`, `data-variant`, `data-tone` and `data-size` for tests, plus `data-interactive` when clickable and `data-loading` while loading.
 

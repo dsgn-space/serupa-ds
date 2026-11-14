@@ -83,7 +83,6 @@ Drawn from the `Playground` story.
 | `id` | `string` | | Goes to the root `<div>`. |
 | `children` | two `ReactNode`s | | The first and second panes. The handle resizes the first; the second takes the rest. |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Side by side (the first at the start) or stacked (the first on top). |
-| `direction` | | | Deprecated, removed in 15.0.0: use `orientation` |
 | `size` | `number` | | The first pane's size in percent (controlled). |
 | `defaultSize` | `number` | `50` | The first pane's size at first (uncontrolled). `0` starts it collapsed when `collapsible`. |
 | `onSizeChange` | `(size: number) => void` | | Each new size in percent, while dragging or moving with the keys. |

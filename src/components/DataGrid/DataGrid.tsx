@@ -5,7 +5,6 @@ import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { announce } from '../../internal/announce';
-import { warnOnce } from '../../internal/warn';
 import { isComposing } from '../../internal/ime';
 import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { en as words } from './labels';
@@ -66,8 +65,6 @@ export interface DataGridProps<R extends object = DataGridRow> extends Omit<Reac
   /** Its rows are loading (or reloading): sets aria-busy, and while there are no rows yet, shows placeholder rows
    *  the height of real ones. Default: false. */
   loading?: boolean | undefined;
-  /** @deprecated Use loading (CONTRIBUTING.md, API naming table); removed in 15.0.0. Read as loading is, when loading isn't given. */
-  busy?: boolean | undefined;
   /** How many placeholder rows show while loading with no rows: about as many as will load. Default: 3. */
   loadingRows?: number | undefined;
   /** Said once as the placeholders appear ("Loading timesheet"), after the loader's delay. Default: "Loading" (labels.loading). */
@@ -78,7 +75,7 @@ export interface DataGridProps<R extends object = DataGridRow> extends Omit<Reac
 }
 
 type Pos = { r: number; c: number };
-const OWN = { columns: 1, rows: 1, rowKey: 1, onRowsChange: 1, size: 1, stickyHeader: 1, containerProps: 1, loading: 1, busy: 1, loadingRows: 1, loadingLabel: 1, message: 1, className: 1, onKeyDown: 1, onCopy: 1, onPaste: 1 } as const;
+const OWN = { columns: 1, rows: 1, rowKey: 1, onRowsChange: 1, size: 1, stickyHeader: 1, containerProps: 1, loading: 1, loadingRows: 1, loadingLabel: 1, message: 1, className: 1, onKeyDown: 1, onCopy: 1, onPaste: 1 } as const;
 const textOf = (col: DataGridColumn, row: DataGridRow) => (col.format ? col.format(row) : row[col.key] == null ? '' : String(row[col.key]));
 // Clipboard text as rows of cells: tab between cells, a line break between rows (what spreadsheets copy).
 const parseTsv = (text: string) => text.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').map((l) => l.split('\t'));
@@ -218,8 +215,7 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
   const frame = React.useRef<HTMLDivElement>(null);
   // A sticky header covers the top of the frame: measured, so the active cell scrolls in below it (the CSS reads --dk-data-grid-head).
   useStickyHead(frame, !!props.stickyHeader, 'thead', '--dk-data-grid-head');
-  if (process.env.NODE_ENV !== 'production' && props.busy != null) warnOnce('data-grid-busy', 'DataGrid: busy is deprecated and removed in 15.0.0. Use loading, which does the same.');
-  const loading = !!(props.loading ?? props.busy);
+  const loading = !!props.loading;
   const placeholders = !rows.length && loading ? Math.min(50, Math.max(1, Math.floor(Number(props.loadingRows)) || 3)) : 0;
   const message = !rows.length && !placeholders && props.message != null && props.message !== false ? props.message : null;
   // Stable handlers for the memoised rows, reading the latest state through a ref: an arrow key then redraws the two

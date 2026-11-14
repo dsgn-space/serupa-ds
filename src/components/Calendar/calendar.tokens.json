@@ -132,17 +132,6 @@
           }
         }
       },
-      "selected-bg": {
-        "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The old name of `--calendar-bg-selected`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--calendar-selected-bg"
-          }
-        },
-        "$deprecated": "Use --calendar-bg-selected; removed in 15.0.0."
-      },
       "color-selected": {
         "$type": "color",
         "$value": "{color.on-primary}",
@@ -152,17 +141,6 @@
             "cssVar": "--calendar-color-selected"
           }
         }
-      },
-      "selected-color": {
-        "$type": "color",
-        "$value": "{color.on-primary}",
-        "$description": "The old name of `--calendar-color-selected`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--calendar-selected-color"
-          }
-        },
-        "$deprecated": "Use --calendar-color-selected; removed in 15.0.0."
       },
       "range-bg": {
         "$type": "color",
@@ -263,17 +241,6 @@
             "cssVar": "--calendar-depth-selected"
           }
         }
-      },
-      "selected-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The old name of `--calendar-depth-selected`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--calendar-selected-depth"
-          }
-        },
-        "$deprecated": "Use --calendar-depth-selected; removed in 15.0.0."
       }
     }
   }
