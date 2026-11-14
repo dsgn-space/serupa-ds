@@ -164,7 +164,7 @@ describe('touch-sized buttons', () => {
       const d = box('.hit-day'), w = box('.hit-week'), dy = d.top + d.height / 2;
       expect([btn(d.right - 2, dy), btn(w.left + 2, dy)]).toEqual(['day', 'week']);
       // Pagination: a page takes a press 5px above and below it, and the gap between two pages splits at its middle.
-      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('.dk-pagination__item')].filter((e) => /^[0-9]+$/.test(e.textContent || ''));
+      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('button, a')].filter((e) => /^[0-9]+$/.test(e.textContent || ''));
       pages[1]!.scrollIntoView({ block: 'center' });
       const p1 = pages[0]!.getBoundingClientRect(), p2 = pages[1]!.getBoundingClientRect(), py = p1.top + p1.height / 2, pm = (p1.right + p2.left) / 2;
       expect([btn(p2.left + p2.width / 2, p2.top - 5), btn(p2.left + p2.width / 2, p2.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)]).toEqual(['2', '2', '1', '2']);
