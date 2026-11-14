@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Table: a 1px-bordered, rounded frame that scrolls when the table is too wide; text-sm cells with 12px padding
    (sm: 8px top and bottom) and a line between rows; a surface-muted header in muted, font-medium text. Body rows
-   shade on hover (or every other one, striped); a selected row is shaded with a 2px primary bar at its start.
+   shade on hover (or every other one, striped); a selected row is shaded (with a 2px bar at its start with more contrast).
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-table {
@@ -34,8 +34,8 @@
   .dk-table:not(.dk-table--striped) .dk-table__body .dk-table__row:hover { --dk-table-row: var(--table-row-bg-hover, var(--surface-hover)); background: var(--dk-table-row); }
 }
 .dk-table__row--selected, .dk-table .dk-table__body .dk-table__row--selected, .dk-table .dk-table__body .dk-table__row:has(> .dk-table__select :checked) { --dk-table-row: var(--table-row-bg-selected, var(--surface-hover)); background: var(--dk-table-row); }
-.dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--border-width-2)) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
-.dk-table__row--selected:dir(rtl) > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--border-width-2))) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
+.dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { box-shadow: inset var(--table-indicator-width, var(--highlight-indicator-width)) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
+.dk-table__row--selected:dir(rtl) > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked):dir(rtl) > :first-child { box-shadow: inset calc(var(--spacing-0) - var(--table-indicator-width, var(--highlight-indicator-width))) 0 0 var(--table-row-indicator-selected, var(--highlight-indicator)); }
 .dk-table__select { width: var(--spacing-px); padding-inline-end: var(--spacing-0); }
 /* Next to a sortable header, whose button fills its cell, the select-all checkbox keeps a gap, so each has a 24px
    target that doesn't touch the other (WCAG 2.5.8). */
@@ -91,7 +91,7 @@
 .dk-table__row--link :is(a[href], button, input:not(label input), select, textarea, label, summary, [tabindex]):not(.dk-table__row-link) { position: relative; z-index: var(--z-10); }
 @media (hover: hover) { .dk-table__row--link:hover .dk-table__row-link { text-decoration: underline; } }
 .dk-table__row--link:has(.dk-table__row-link:focus-visible) { outline: var(--focus-ring-width) solid var(--table-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-@media (forced-colors: active) { .dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { border-inline-start: var(--table-indicator-width, var(--border-width-2)) solid Highlight; } }
+@media (forced-colors: active) { .dk-table__row--selected > :first-child, .dk-table__body .dk-table__row:has(> .dk-table__select :checked) > :first-child { border-inline-start: var(--border-width-2) solid Highlight; } }
 /* Resizable columns: a handle on the header's end edge, a line that darkens on hover, while dragged and on focus. */
 .dk-table__header--resizable { position: relative; }
 .dk-table__resize { position: absolute; inset-block: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-10); width: var(--spacing-3); cursor: col-resize; touch-action: none; -webkit-user-select: none; user-select: none; }

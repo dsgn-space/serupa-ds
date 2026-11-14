@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, contrast, css, forcedColors, press, settle, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, contrast, css, forcedColors, press, settle, settled, THEMES, withMotion, withMoreContrast } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
@@ -133,13 +133,13 @@ describe('Table', () => {
     });
   });
 
-  test('selected: shaded; the 2px bar at its start is highlight-indicator, drawn only with more contrast (GR407); no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
+  test('selected: shaded, with no bar; more contrast draws a 2px bar at its start (GR407, GR413); no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
     await setup();
-    const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
+    const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild);
     expect([r.hasAttribute('aria-selected'), q('#tdef [data-i="0"]').hasAttribute('aria-selected')]).toEqual([false, false]);
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
-    expect(bar).toMatch(/2px 0px 0px 0px inset$/);
-    expect(bar).toContain(color('var(--highlight-indicator)'));
+    expect(bar.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
+    await withMoreContrast(() => { expect(bar.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(bar.boxShadow).toContain(color('var(--highlight-indicator)')); });
   });
 
   test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {
@@ -174,7 +174,7 @@ describe('Table', () => {
     const u = q('#tun [data-i="u"]');
     await userEvent.click(u.querySelector('input')!);
     await expect.poll(() => css(u).backgroundColor).toBe(bg('var(--surface-muted)'));
-    expect(css(u.firstElementChild).boxShadow).toMatch(/2px 0px 0px 0px inset$/);
+    await withMoreContrast(() => expect(css(u.firstElementChild).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/));
   });
 
   test('a body row shades on hover', async () => {
