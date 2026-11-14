@@ -101,6 +101,18 @@ type Text = Exclude<keyof CheckoutDetails, 'delivery' | 'tip'>;
 const id = (k: keyof CheckoutDetails) => `checkout-${k}`;
 
 /** What's wrong with each field, in the order the fields come, as the ErrorSummary lists them. */
+// The card expiry as typed: digits only, with the slash put in after the month once a third digit comes, so 0827
+// reads 08/27 and backspace goes straight through it.
+function formatExpiry(v: string): string {
+  const n = v.replace(/\D/g, '').slice(0, 4);
+  return n.length > 2 ? n.slice(0, 2) + '/' + n.slice(2) : n;
+}
+// A card is good to the end of its expiry month.
+function expired(mmYY: string, now = new Date()): boolean {
+  const m = /^(0[1-9]|1[0-2]) ?\/ ?(\d{2})$/.exec(mmYY.trim());
+  return !!m && (2000 + Number(m[2])) * 12 + Number(m[1]) - 1 < now.getFullYear() * 12 + now.getMonth();
+}
+
 function checkoutProblems(d: CheckoutDetails): ErrorSummaryItem[] {
   const digits = d.cardNumber.replace(/[\s-]/g, '');
   const rules: [Text, boolean, string][] = [
@@ -113,6 +125,7 @@ function checkoutProblems(d: CheckoutDetails): ErrorSummaryItem[] {
     ['cardNumber', !/^\d{13,19}$/.test(digits), 'Enter the long number on the front of the card: 13 to 19 digits'],
     ['cardName', !d.cardName.trim(), 'Enter the name as it’s written on the card'],
     ['cardExpiry', !/^(0[1-9]|1[0-2]) ?\/ ?\d{2}$/.test(d.cardExpiry.trim()), 'Enter the expiry date as MM/YY, like 08/27'],
+    ['cardExpiry', expired(d.cardExpiry), 'This card has expired: check the expiry date, or use another card'],
     ['cardCode', !/^\d{3,4}$/.test(d.cardCode.trim()), 'Enter the 3 or 4 digit security code from the back of the card'],
   ];
   return rules.filter(([, bad]) => bad).map(([k, , message]) => ({ field: id(k), message }));
@@ -243,7 +256,7 @@ export function Checkout({ lines = demoLines, currency = 'USD', expressPrice = 9
                   {text('cardNumber', 'Card number', 'cc-number', { inputMode: 'numeric', spellCheck: false }, 'The long number on the front of the card.')}
                   {text('cardName', 'Name on card', 'cc-name')}
                   <div className="grid gap-4 sm:grid-cols-2">
-                    {text('cardExpiry', 'Expiry date', 'cc-exp', { inputMode: 'numeric', className: 'max-w-48' }, 'MM/YY, like 08/27')}
+                    {text('cardExpiry', 'Expiry date', 'cc-exp', { inputMode: 'numeric', className: 'max-w-48', onChange: (e: React.ChangeEvent<HTMLInputElement>) => setD({ ...d, cardExpiry: formatExpiry(e.target.value) }) }, 'MM/YY, like 08/27')}
                     {text('cardCode', 'Security code', 'cc-csc', { inputMode: 'numeric', className: 'max-w-48' }, '3 digits on the back, 4 on the front for Amex')}
                   </div>
                 </Card>

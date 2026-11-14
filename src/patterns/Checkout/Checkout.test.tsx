@@ -50,6 +50,23 @@ describe('Patterns/Checkout', () => {
     }
   });
 
+  test('the card expiry is one box: digits only, the slash put in for you (0827 is 08/27), backspace past it works, and a date gone by is refused', async () => {
+    const screen = await render(<Checkout initial={{ ...filled, cardExpiry: '' }} />);
+    const box = screen.getByLabelText('Expiry date').element() as HTMLInputElement;
+    await userEvent.type(box, '0827');
+    expect(box.value).toBe('08/27');
+    await userEvent.type(box, '{Backspace}{Backspace}');
+    expect(box.value).toBe('08');
+    await userEvent.type(box, 'x1');
+    await userEvent.type(box, '999');
+    expect([box.value, box.autocomplete, box.inputMode]).toEqual(['08/19', 'cc-exp', 'numeric']);
+    await userEvent.clear(box);
+    await userEvent.type(box, '0120');
+    await screen.getByRole('button', { name: 'Review your order' }).click();
+    await vi.waitFor(() => expect(active().textContent).toContain('There'));
+    expect([...active().querySelectorAll('a')].map((a) => a.textContent)).toEqual(['This card has expired: check the expiry date, or use another card']);
+  });
+
   test('"Review your order" lists every problem at once, in an error summary that takes focus and links to each field', async () => {
     const screen = await render(<Checkout initial={{ email: 'ada', cardExpiry: '13/27' }} />);
     await screen.getByRole('button', { name: 'Review your order' }).click();
