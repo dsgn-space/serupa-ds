@@ -186,7 +186,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-header-text` | `text-muted` | Header text (4.5:1 on header-bg). |
 | `--table-row-bg-hover` | `surface-hover` | A body row on hover, and every other row when striped (muted text keeps 4.5:1). |
 | `--table-row-bg-selected` | `surface-hover` | A selected row's background. |
-| `--table-row-indicator-selected` | `primary` | The bar at the start of a selected row. |
+| `--table-row-indicator-selected` | `highlight-indicator` | The bar at the start of a selected row. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
 | `--table-focus-ring` | `focus-ring` | The keyboard focus ring (sort buttons, a scrolling table). |
 | `--table-sort-bg-pressed` | `pressed` | A sortable header's fill while it's held down. |
 | `--table-action-bar-bg` | `primary-subtle` | TableActionBar's background. |

@@ -133,7 +133,7 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past hover. |
 | `--sidebar-item-bg-active` | `highlight` | The current page's item background. |
 | `--sidebar-item-bg-active-hover` | `pressed` | The current page's item background under the pointer: one step past its rest. |
-| `--sidebar-item-indicator` | `primary` | The 2px bar at the start of the current page's item, which hover never draws. |
+| `--sidebar-item-indicator` | `highlight-indicator` | The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item. |
 | `--sidebar-section-title-color` | `text-muted` | A section's title (4.5:1 on bg). |
 | `--sidebar-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--sidebar-focus-gap-color` | `surface` | The gap between the focus ring and a filled item (the current page, or a hovered or pressed one), so the ring keeps 3:1 against what it touches. |

@@ -16,6 +16,7 @@
   background: var(--card-bg, var(--surface));
   border: var(--card-border-width, var(--border-width-1)) solid var(--card-border, var(--border));
   border-radius: var(--card-radius, var(--radius-container));
+  --dk-card-inner-radius: calc(var(--card-radius, var(--radius-container)) - var(--card-border-width, var(--border-width-1)));   /* the curve just inside the border, for a child that fills a card with no padding (Table) */
   --dk-card-lift: var(--card-depth, var(--depth-card));   /* the tactile layers: resting on the page, lifted on a link card's hover (below); none in the flat brands */
   box-shadow: var(--dk-card-lift), var(--card-shadow, var(--elevation-rest));
   color: var(--card-text, var(--text));

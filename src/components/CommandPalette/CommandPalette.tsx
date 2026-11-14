@@ -161,6 +161,12 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
     setChosen({ c: r.c });
   };
   const move = (to: number) => { if (usable.length) setActive((to + usable.length) % usable.length); };
+  // Stable handlers for the memoised rows, reading the latest state through a ref: moving the highlight then redraws
+  // the two rows it moves between, not every command.
+  const handlers = { choose, hover: (r: Row) => { if (!r.c.disabled && current !== r) setActive(usable.indexOf(r)); } };
+  const live = React.useRef(handlers);
+  live.current = handlers;
+  const act = React.useMemo<OptionActs>(() => ({ choose: (r) => live.current.choose(r), hover: (r) => live.current.hover(r) }), []);
   const at = current ? usable.indexOf(current) : 0;
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (isComposing(e)) return;
@@ -182,25 +188,30 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
         {groups.map(([name, rs], g) => (
           <div key={name} role="group" aria-labelledby={base + '-g' + g} className="dk-command-palette__group">
             <div id={base + '-g' + g} role="presentation" className="dk-command-palette__heading">{name}</div>
-            {rs.map((r) => {
-              const on = current === r;
-              return (
-                // Focus stays in the field (a press doesn't take it); an option focused some other way, as a screen
-                // reader can, is chosen with Enter or Space.
-                <div key={r.c.id} id={optId(r)} role="option" tabIndex={-1} aria-selected={on} aria-disabled={r.c.disabled || undefined}
-                  className={cn('dk-command-palette__option', on && 'dk-command-palette__option--active', r.c.disabled && 'dk-command-palette__option--disabled')}
-                  onMouseDown={(e) => e.preventDefault()} onMouseMove={() => { if (!r.c.disabled && !on) setActive(usable.indexOf(r)); }} onClick={() => choose(r)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(r); } }}>
-                  {r.c.icon != null ? <span className="dk-command-palette__icon" aria-hidden>{asIcon(r.c.icon)}</span> : null}
-                  <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>
-                  {r.c.shortcut && r.c.shortcut.length ? <Kbd className="dk-command-palette__keys" keys={r.c.shortcut} size="sm" /> : null}
-                </div>
-              );
-            })}
+            {rs.map((r) => <Option key={r.c.id} r={r} id={optId(r)} on={current === r} query={query} act={act} />)}
           </div>
         ))}
       </div>
       {!usable.length && query.trim() ? <p className="dk-command-palette__empty">{props.emptyText != null ? props.emptyText : labels.noCommands}</p> : null}
     </Dialog>
+  );
+});
+
+interface OptionActs { choose: (r: Row) => void; hover: (r: Row) => void }
+
+// One row. Memoised on what it shows (its command, whether it's highlighted, the query it marks), so an arrow key or
+// the pointer moving the highlight redraws two rows, not the whole list.
+const Option = /* @__PURE__ */ React.memo(function Option({ r, id, on, query, act }: { r: Row; id: string; on: boolean; query: string; act: OptionActs }) {
+  return (
+    // Focus stays in the field (a press doesn't take it); an option focused some other way, as a screen reader can, is
+    // chosen with Enter or Space.
+    <div id={id} role="option" tabIndex={-1} aria-selected={on} aria-disabled={r.c.disabled || undefined}
+      className={cn('dk-command-palette__option', on && 'dk-command-palette__option--active', r.c.disabled && 'dk-command-palette__option--disabled')}
+      onMouseDown={(e) => e.preventDefault()} onMouseMove={() => act.hover(r)} onClick={() => act.choose(r)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act.choose(r); } }}>
+      {r.c.icon != null ? <span className="dk-command-palette__icon" aria-hidden>{asIcon(r.c.icon)}</span> : null}
+      <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>
+      {r.c.shortcut && r.c.shortcut.length ? <Kbd className="dk-command-palette__keys" keys={r.c.shortcut} size="sm" /> : null}
+    </div>
   );
 });

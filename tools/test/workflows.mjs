@@ -114,6 +114,10 @@ if (fs.existsSync(path.join(GH, 'workflows/ci.yml'))) {
   const cancelled = held(0), refused = held(1);
   t('ci.yml: a held run cancels itself, and its test check still fails', job >= 0 && cancelled.calls === 'run cancel 42' && cancelled.status === 1, JSON.stringify(cancelled));
   t('ci.yml: a held run whose cancel is refused fails its test check', refused.status === 1, JSON.stringify(refused));
+  // GitHub stops a running job on a cancel only when its condition then comes out false: always() kept the held job
+  // running past its own cancel, to a red X (#1890, 14 Nov).
+  const cond = lines.slice(job, run).find((l) => /^\s*if:/.test(l)) ?? '';
+  t('ci.yml: the test check is cancelled with a held run, and runs whatever else happens', /!cancelled\(\)/.test(cond) && /hold != '1'/.test(cond) && !/always\(\)/.test(cond), cond.trim());
   fs.rmSync(bin, { recursive: true, force: true });
 }
 

@@ -138,6 +138,22 @@ describe('FileUpload', () => {
     expect(names(ro)).toBe('');
   });
 
+  test('a screenshot pasted with focus on the choose button is added in Chrome before 125, which sends the paste to the body', async () => {
+    await render(<Many />);
+    const el = q(many);
+    const paste = (...files: File[]) => {
+      const dt = new DataTransfer(); for (const f of files) dt.items.add(f);
+      const e = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(e, 'clipboardData', { value: dt });
+      document.body.dispatchEvent(e); return e.defaultPrevented;
+    };
+    expect(paste(file('away.png', 'image/png', 40))).toBe(false);   // focus outside: the page's own paste
+    expect(names(el)).toBe('');
+    choose(el).focus();
+    expect(paste(file('shot.png', 'image/png', 40))).toBe(true);
+    await expect.poll(() => names(el)).toBe('shot.png');
+  });
+
   test('an error under it is a Field error\'s size, 14px, with the icon centred on the first line (GR392)', async () => {
     await render(<><Field label="Contract" error="Add the signed contract"><FileUpload id="gr392f" /></Field><FileUpload id="gr392" accept="image/*" /></>);
     const fieldError = document.querySelector('[data-icon="error"]')!.parentElement!;   // the only error until the upload

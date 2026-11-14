@@ -62,4 +62,16 @@ await tc('raw colors in a component: hex, a named color and a color function are
 await tc('colors from tokens pass, and so do transparent, currentColor, color-mix() and black in a mask', layered(`.dk-card { color: var(--card-text, var(--text)); border-color: transparent; fill: currentColor; background: color-mix(in oklch, var(--card-bg, var(--surface)) 80%, transparent); }
 .dk-card__fade { mask-image: linear-gradient(transparent, black); --dk-card-fade: color-mix(in srgb, black 16%, transparent); }`), []);
 
+const NA = { 'serupa/no-accent-on-current': [true, { known: ['x-bg-selected'] }], 'serupa/color-through-component-token': null };
+await t('no-accent-on-current: a current row marked by the fill, a neutral line and the shared bar token pass; so does a focus ring, a child of a selected item, and a known filled pick', layered(`.dk-x__item[aria-current="page"] { background: var(--x-item-bg-active, var(--highlight)); box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--highlight-indicator)); }
+.dk-x__tab[aria-selected="true"]::after { background: var(--x-indicator, var(--text)); }
+.dk-x__tab[aria-selected="true"]:focus-visible { outline: var(--focus-ring-width) solid var(--x-ring, var(--primary)); }
+.dk-x__option--selected .dk-x__tick { color: var(--x-tick, var(--primary)); }
+.dk-x__day--selected { background: var(--x-bg-selected, var(--x-selected-bg, var(--primary))); }
+.dk-x__item:not(.dk-x__item--active):hover { color: var(--x-hover, var(--primary)); }`), [], NA);
+await t('no-accent-on-current: the accent on a selected, current, active or highlighted item is flagged, bare, as a default, and behind an old token name', layered(`.dk-x__item[aria-current="page"] { box-shadow: inset var(--border-width-2) 0 0 var(--x-item-indicator, var(--primary)); }
+.dk-x__tab[aria-selected="true"]::after { background: var(--primary); }
+.dk-x__link--active { color: var(--x-text-active, var(--x-active-text, var(--primary-hover))); }
+.dk-x__option--highlighted { background: var(--x-option-bg, var(--primary-subtle)); }`), ['serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current', 'serupa/no-accent-on-current'], NA);
+
 done(report('Stylelint rules', R));

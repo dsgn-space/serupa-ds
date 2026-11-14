@@ -51,8 +51,8 @@
   },
   "src/internal/nameCheck.ts": {
     "mutants": 17,
-    "killed": 16,
-    "score": 0.941
+    "killed": 17,
+    "score": 1
   },
   "src/internal/numbers.ts": {
     "mutants": 51,

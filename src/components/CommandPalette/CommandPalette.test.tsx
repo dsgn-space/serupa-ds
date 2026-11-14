@@ -80,6 +80,25 @@ describe('CommandPalette', () => {
     await expect.poll(() => isOpen('p')).toBe(false);
   });
 
+  test('an arrow key or the pointer moving the highlight redraws the two rows it moves between, not every row', async () => {
+    // Each row drawn reads its command's label once: counting the reads counts the rows drawn.
+    let reads = 0;
+    const many: Command[] = Array.from({ length: 200 }, (_, i) => {
+      const label = 'Command ' + i;
+      return { id: 'c' + i, get label() { reads++; return label; } };
+    });
+    await render(<CommandPalette open hotkey={false} commands={many} />);
+    await expect.poll(() => options().length).toBe(200);
+    reads = 0;
+    await userEvent.keyboard('{ArrowDown}');
+    expect(activeLabel()).toBe('Command 1');
+    expect(reads).toBeLessThanOrEqual(4);
+    reads = 0;
+    await userEvent.hover(options()[5]!);
+    expect(activeLabel()).toBe('Command 5');
+    expect(reads).toBeLessThanOrEqual(4);
+  });
+
   test('a press on a row leaves focus in the field; a row focused another way (as a screen reader can) is chosen with Enter', async () => {
     const onSelect = vi.fn();
     await render(<CommandPalette id="p" defaultOpen commands={COMMANDS} onSelect={onSelect} />);

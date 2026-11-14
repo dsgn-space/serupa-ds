@@ -7,6 +7,7 @@ import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
+import { Card } from '../Card/Card';
 import { SerupaProvider } from '../../internal/provider';
 import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
@@ -52,6 +53,18 @@ const setup = async (tref?: React.Ref<HTMLTableElement>) => {
 };
 
 describe('Table', () => {
+  test('a Table filling a Card with no padding takes the card\'s frame: no second border inside the card\'s, and corners that follow the card\'s curve', async () => {
+    await render(<Card id="tcard" padding="none"><Table caption="Projects" hideCaption>{head()}{body()}</Table></Card>);
+    const card = el('tcard'), frame = page.getByRole('table').element().parentElement!;
+    const c = getComputedStyle(card), f = getComputedStyle(frame);
+    expect([f.borderTopWidth, f.borderRightWidth, f.borderBottomWidth, f.borderLeftWidth]).toEqual(['0px', '0px', '0px', '0px']);
+    const inner = `${parseFloat(c.borderTopLeftRadius) - parseFloat(c.borderTopWidth)}px`;
+    expect([f.borderTopLeftRadius, f.borderTopRightRadius, f.borderBottomRightRadius, f.borderBottomLeftRadius]).toEqual([inner, inner, inner, inner]);
+    // Its own frame stays everywhere else.
+    await render(<Table caption="Alone" hideCaption>{head()}{body()}</Table>);
+    expect(getComputedStyle(page.getByRole('table', { name: 'Alone' }).element().parentElement!).borderTopWidth).toBe('1px');
+  });
+
   test('every cell sets its numbers in tabular figures, so a column of numbers lines up digit under digit', async () => {
     await render(<Table aria-label="Totals"><TableHead><TableRow><TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Total</TableHeaderCell></TableRow></TableHead>
       <TableBody><TableRow><TableCell id="tn">Ada</TableCell><TableCell id="tt">1,111</TableCell></TableRow></TableBody></Table>);
@@ -120,13 +133,13 @@ describe('Table', () => {
     });
   });
 
-  test('selected: shaded, a 2px primary bar at its start; no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
+  test('selected: shaded; the 2px bar at its start is highlight-indicator, drawn only with more contrast (GR407); no aria-selected (ignored in a table: TableSelectCell says it)', async () => {
     await setup();
     const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild).boxShadow;
     expect([r.hasAttribute('aria-selected'), q('#tdef [data-i="0"]').hasAttribute('aria-selected')]).toEqual([false, false]);
     await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
     expect(bar).toMatch(/2px 0px 0px 0px inset$/);
-    expect(bar).toContain(color('var(--primary)'));
+    expect(bar).toContain(color('var(--highlight-indicator)'));
   });
 
   test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {
