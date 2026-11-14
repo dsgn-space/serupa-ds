@@ -157,7 +157,9 @@ try {
   const list = cli('--list');
   t('--list prints every change with its version', list.status === 0 && TRANSFORMS.every((x) => list.stdout.includes(x.id)), list.stdout);
 } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
-const own = spawnSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-migrate.mjs'), 'src', 'docs', 'skills', '.storybook'], { cwd: PROJECT, encoding: 'utf8' });
+// docs/generated/ is build output that quotes the changesets word for word, front matter and all, so it is left out.
+const docs = fs.readdirSync(path.join(PROJECT, 'docs')).filter((f) => f !== 'generated').map((f) => path.join('docs', f));
+const own = spawnSync(process.execPath, [path.join(PROJECT, 'bin', 'serupa-migrate.mjs'), 'src', ...docs, 'skills', '.storybook'], { cwd: PROJECT, encoding: 'utf8' });
 t('this repository\'s code and docs use only the current names', own.status === 0 && own.stdout.trim().startsWith('Nothing to change.'), own.stdout.slice(0, 600));
 
 done(report('Upgrades', R));
