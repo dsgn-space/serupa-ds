@@ -1,6 +1,6 @@
 {
   "name": "serupa-ds",
-  "version": "14.6.0",
+  "version": "14.7.0",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
@@ -197,6 +197,13 @@
     "vitest-browser-react": "2.3.0",
     "webpack": "5.112.2"
   },
+  "browserslist": [
+    "chrome >= 123",
+    "edge >= 123",
+    "safari >= 17.5",
+    "ios_saf >= 17.5",
+    "firefox >= 128"
+  ],
   "engines": {
     "node": ">=22"
   },

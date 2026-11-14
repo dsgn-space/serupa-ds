@@ -591,6 +591,17 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     expect([label.textContent, label.scrollWidth <= label.clientWidth]).toEqual(['Try again', true]);
   });
 
+  test('a failure message that wraps keeps its icon on the first line, not centred on the whole message', async () => {
+    const long = { state: 'error' as const, message: "The server didn't answer. Try again in a moment." };
+    await render(<div style={{ width: '320px' }}><Uploads status={new Map<File, S>([[a, long]])} /></div>);
+    const failed = [...document.querySelectorAll('span')].find((s) => s.textContent === long.message)!, icon = failed.querySelector('svg')!.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents([...failed.childNodes].find((n) => n.nodeType === 3)!);
+    const lines = range.getClientRects();
+    expect(lines.length).toBeGreaterThan(1);
+    expect(Math.abs((icon.top + icon.bottom) / 2 - (lines[0]!.top + lines[0]!.bottom) / 2)).toBeLessThanOrEqual(1);
+  });
+
   test('no retry button without onRetry or when read-only; removing a file still moves focus to the next remove button', async () => {
     const status = new Map<File, S>([[a, { state: 'error' }]]);
     const screen = await render(<Uploads status={status} retry={false} />);

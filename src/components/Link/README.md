@@ -70,7 +70,7 @@ Drawn from the `External` story.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `tone` | `'primary'` \| `'neutral'` | `'primary'` | The primary color, or the surrounding text's color (still underlined) |
-| `underline` | `'always'` \| `'hover'` | `'always'` | Always underlined, or only on hover and focus |
+| `underline` | `'always'` \| `'hover'` | `'always'` | Always underlined, or only on hover and focus (a link in a paragraph stays underlined) |
 | `external` | boolean | `false` | Opens a new tab (`target="_blank"`, adds `noopener noreferrer` to your `rel`), with a new-tab icon and "(opens in a new tab)" for screen readers. Your `target="_self"` (or `_parent`, `_top`) keeps it in the tab, without the icon or the note |
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component; it gets `className`, `ref` and every other prop. Set it once for the app with `configure({ link })`; `as` wins for one link. Typed: the props and `ref` are those of the element `as` names, so `as={RouterLink} to="/x"` checks `to`, and without `as` they're an `<a>`'s. A link set only with `configure({ link })` is typed as an `<a>`, so pass it `href`. |
 

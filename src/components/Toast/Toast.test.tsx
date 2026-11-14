@@ -78,6 +78,27 @@ describe('Toast', () => {
     expect(['10 4 4', '10 4']).toContain(css(title).getPropertyValue('hyphenate-limit-chars'));
   });
 
+  test('a toast flicked away carries on from where the finger let go: it never shows back at its place on the way out', async () => {
+    await withMotion(async () => {
+      await render(<App />);
+      React.act(() => { toast({ title: 'Flick me', duration: 0 }); });
+      await landed();
+      const t = toasts()[0]!, r = t.getBoundingClientRect(), x = r.left + 40, y = r.top + 10, t0 = performance.now();
+      const ev = (name: string, cx: number, at: number) => {
+        const e = new PointerEvent(name, { bubbles: true, cancelable: true, pointerId: 9, isPrimary: true, pointerType: 'touch', clientX: cx, clientY: y });
+        Object.defineProperty(e, 'timeStamp', { value: t0 + at });
+        t.dispatchEvent(e);
+      };
+      ev('pointerdown', x, 0);
+      for (let i = 1; i <= 5; i++) ev('pointermove', x + 20 * i, 16 * i);
+      const lefts: number[] = [];
+      React.act(() => { ev('pointerup', x + 100, 80); });
+      // Every frame from the moment it is let go until it has gone.
+      lefts.push(t.getBoundingClientRect().left - r.left);
+      while (t.isConnected && lefts.length < 120) { await new Promise(requestAnimationFrame); if (t.isConnected) lefts.push(t.getBoundingClientRect().left - r.left); }
+      expect(lefts.filter((l) => l < 99).map(Math.round)).toEqual([]);
+    });
+  });
   test('swipe to dismiss: a touch drag sideways past a third, or a flick (even a gentle one), carries on at the finger\'s speed on ease-fling and closes it; a short slow drag, a vertical one or a mouse drag leave it', async () => {
     await withMotion(async () => {
       await render(<App />);
@@ -509,6 +530,20 @@ describe('Toast: motion (DZ1)', () => {
   const ms = (a: Animation) => Number(a.effect!.getComputedTiming().duration);
   const runs = (e: Element) => e.getAnimations().filter((a) => a instanceof CSSTransition).map((a) => [(a).transitionProperty, ms(a)]).sort();
   const byTitle = (t: string) => toasts().find((x) => x.textContent.includes(t))!;
+  test('the glide keeps its time when the tokens are written in seconds, as a minified stylesheet writes them (.2s for 200ms)', async () => {
+    document.documentElement.style.setProperty('--motion-enter-md', '.2s');
+    try {
+      await withMotion(async () => {
+        await render(<App />);
+        React.act(() => { toast({ title: 'First', duration: 0 }); });
+        React.act(() => { toast({ title: 'Second', duration: 0 }); });
+        await landed();
+        React.act(() => { toast.dismiss(byTitle('Second').dataset.toast); });
+        const glide = byTitle('First').getAnimations().find((x) => x.id === 'dk-toast-move');
+        expect(glide && ms(glide)).toBe(200);
+      });
+    } finally { document.documentElement.style.removeProperty('--motion-enter-md'); }
+  });
   test('slides in with a transition; closed, it fades and slides back toward its edge (kept, inert, until it ends) and the one left glides into its place at once, over 200ms; one there as the Toaster arrives is not slid in', async () => {
     await withMotion(async () => {
       await render(<App />);

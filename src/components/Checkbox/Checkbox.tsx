@@ -63,7 +63,7 @@ export interface CheckboxGroupProps<V extends string | number = string | number>
   children?: React.ReactNode | undefined;
 }
 
-interface GroupContextValue {
+interface GroupState {
   name: string;
   values: readonly string[];
   size: unknown;
@@ -73,11 +73,30 @@ interface GroupContextValue {
   required: boolean;
   /** The boxes in the group, in the order they mounted, and which are disabled (select-all leaves those as they are). */
   boxes: Map<string, boolean>;
-  register(value: string | number, disabled: boolean): () => void;
-  toggle(value: string, on: boolean, event: React.ChangeEvent<HTMLInputElement>): void;
-  toggleAll(on: boolean, event: React.ChangeEvent<HTMLInputElement>): void;
 }
+/** The group as a store each box subscribes to for its own part, so a toggle draws again only the boxes whose
+ *  checked state (or select-all's count) changed, not all of them: a context value would draw every box. */
+interface GroupContextValue {
+  get: () => GroupState;
+  subscribe: (listener: () => void) => () => void;
+  register: (value: string | number, disabled: boolean) => () => void;
+  toggle: (value: string, on: boolean, event: React.ChangeEvent<HTMLInputElement>) => void;
+  toggleAll: (on: boolean, event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+/** What a box draws from the group, as one string: it changes only when that box has to draw again. */
+function boxView(g: GroupState, key: string, all: boolean): string {
+  const head = [g.name, g.size, g.variant, g.invalid, g.disabled, g.required].join('|');
+  if (all) {
+    let enabled = 0, on = 0;
+    g.boxes.forEach((dis, k) => { if (!dis) { enabled++; if (g.values.includes(k)) on++; } });
+    return head + '|' + enabled + '/' + on;
+  }
+  return head + '|' + g.values.includes(key) + '|' + (g.required && !g.values.some((v) => g.boxes.has(v)));
+}
+
 const VARIANTS = ['plain', 'card', 'default'] as const;
+const noSubscribe = () => () => {};
 const GroupContext = /* @__PURE__ */ React.createContext<GroupContextValue | null>(null);
 
 /* CheckboxGroup: any number of choices from a set of Checkboxes. It names them (name, or a generated one), holds the
@@ -127,16 +146,34 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
   // Until they have (on the server, and in the first render that hydrates it), the Checkboxes among the children
   // stand in, so select-all is enabled, and checked or mixed, from the first paint.
   const known = boxes.size ? boxes : childBoxes(props.children, !!props.disabled);
-  const ctx: GroupContextValue = {
-    name: props.name || autoName, values: raw.map(String), size: props.size, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, boxes: known,
-    register(v, dis) { const k = String(v); boxes.set(k, dis); typed.set(k, v); rerender((n) => n + 1); return () => { boxes.delete(k); rerender((n) => n + 1); }; },
-    toggle(v, on, e) { const next = new Set(latest.current.map(String)); if (on) next.add(v); else next.delete(v); emit(next, e); },
-    toggleAll(on, e) {
+  const state: GroupState = { name: props.name || autoName, values: raw.map(String), size: props.size, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, boxes: known };
+  const api = {
+    register(v: string | number, dis: boolean) { const k = String(v); boxes.set(k, dis); typed.set(k, v); rerender((n) => n + 1); return () => { boxes.delete(k); rerender((n) => n + 1); }; },
+    toggle(v: string, on: boolean, e: React.ChangeEvent<HTMLInputElement>) { const next = new Set(latest.current.map(String)); if (on) next.add(v); else next.delete(v); emit(next, e); },
+    toggleAll(on: boolean, e: React.ChangeEvent<HTMLInputElement>) {
       const next = new Set(latest.current.map(String));
       boxes.forEach((dis, k) => { if (!dis) { if (on) next.add(k); else next.delete(k); } });
       emit(next, e);
     },
   };
+  const live = React.useRef(api); live.current = api;
+  // One store for the group's life: the boxes read the state it holds and draw again only when their part of it
+  // changes. The first render's state is there from the start; each later one is published once committed.
+  const store = React.useRef<{ ctx: GroupContextValue; state: GroupState; listeners: Set<() => void> } | null>(null);
+  if (!store.current) {
+    const st = { state, listeners: new Set<() => void>() } as { ctx: GroupContextValue; state: GroupState; listeners: Set<() => void> };
+    st.ctx = {
+      get: () => st.state,
+      subscribe(l) { st.listeners.add(l); return () => { st.listeners.delete(l); }; },
+      register: (v, dis) => live.current.register(v, dis),
+      toggle: (v, on, e) => live.current.toggle(v, on, e),
+      toggleAll: (on, e) => live.current.toggleAll(on, e),
+    };
+    store.current = st;
+  }
+  const st = store.current;
+  // every render: the state is new each render, and the boxes compare their own part of it.
+  useIsoLayoutEffect(function () { st.state = state; st.listeners.forEach((l) => l()); });
   useAutoFocus(props.autoFocus, () => root.current);   // through the delegation below; the <div> ignored it
   // ref.current.focus() (a form library focusing the first invalid field) lands on the first box that can be
   // checked; the <div> took no focus (L8E91).
@@ -146,7 +183,7 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
   return (
     <div {...rest} ref={groupRef} role="group" aria-disabled={props.disabled || undefined}
       className={cn('dk-checkbox-group', 'dk-checkbox-group--' + orientation, props.variant === 'card' && 'dk-checkbox-group--card', invalid && 'dk-checkbox-group--invalid', props.className)} data-component="checkbox-group" data-orientation={orientation}>
-      <GroupContext.Provider value={ctx}>{props.children}</GroupContext.Provider>
+      <GroupContext.Provider value={st.ctx}>{props.children}</GroupContext.Provider>
     </div>
   );
 }) as (<V extends string | number = string | number>(props: CheckboxGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
@@ -163,7 +200,12 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   const nameRef = useNameCheck('Checkbox', NAME_HOW.label);   // warns when it has no accessible name
   if (process.env.NODE_ENV !== 'production' && props.variant === 'default') warnOnce('variant-default', "Checkbox: variant 'default' is deprecated and removed in 15.0.0. Use 'plain', the name List, Accordion and VirtualList give the same look.", 'variant-default:Checkbox');
   if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Checkbox: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Checkbox');
-  const group = React.useContext(GroupContext);
+  const store = React.useContext(GroupContext);
+  const key = props.value == null ? '' : String(props.value);
+  const all = !!(store && props.selectAll);
+  // Subscribed to its own part of the group: another box's toggle doesn't draw this one again.
+  React.useSyncExternalStore(store ? store.subscribe : noSubscribe, () => (store ? boxView(store.get(), key, all) : ''), () => (store ? boxView(store.get(), key, all) : ''));
+  const group = store ? Object.assign({}, store.get(), { register: store.register, toggle: store.toggle, toggleAll: store.toggleAll }) : null;
   // In a group, the group's Field labels and describes the group, not each box.
   const fromField = useFieldControl(props);
   if (!group) props = fromField;
@@ -175,8 +217,6 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   if (invalid || (group && group.invalid)) rest['aria-invalid'] = true;
   let mixed = !!props.indeterminate;
   let need = false;
-  const key = props.value == null ? '' : String(props.value);
-  const all = !!(group && props.selectAll);
   const counted = !!group && !all && key !== '';
   const labels = useSettings(words).labels;
   const boxDisabled = !!(rest.disabled || (group && group.disabled));

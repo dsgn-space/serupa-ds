@@ -44,6 +44,34 @@ async function mountTime(ui: React.ReactElement): Promise<number> {
   return best;
 }
 
+// How long a story takes to render again when its parent does and nothing it was given changed (the same props, a
+// new element): the work a re-render of the page costs it. React's Profiler counts the update's render and commit, the
+// fastest of RUNS. The slowest on 14 Nov 2026 took about 6 ms on a busy machine (EventCalendar/Month; most take well
+// under 1), so UPDATE_BUDGET, the mount's 20, leaves room for a CI machine three times slower and still fails a story
+// that redoes a heavy mount's work on every render. The nightly Benchmarks run keeps each time, so a component that
+// starts redoing work shows as a change on the night it starts, long before the budget.
+const UPDATE_BUDGET = 20;
+async function updateTime(ui: React.ReactElement): Promise<number> {
+  const host = document.body.appendChild(document.createElement('div'));
+  const root = createRoot(host);
+  let took = 0;
+  const onRender: React.ProfilerOnRenderCallback = (_id, phase, actual) => { if (phase !== 'mount') took += actual; };
+  const render = () => flushSync(() => root.render(<React.Profiler id="u" onRender={onRender}>{React.cloneElement(ui)}</React.Profiler>));
+  render();
+  // Effects that set state on mount (a measure, a media query) settle before the updates are counted.
+  await frame(); await frame();
+  let best = Infinity;
+  for (let i = 0; i < RUNS; i++) {
+    took = 0;
+    render();
+    best = Math.min(best, took);
+    await frame();
+  }
+  root.unmount();
+  host.remove();
+  return best;
+}
+
 describe('mount time', () => {
   for (const [name, list] of storiesToRun()) {
     test(`${name} stories each mount within their budget`, async () => {
@@ -67,5 +95,26 @@ describe('mount time', () => {
       await commands.recordBench('mount', times);
       expect(slow).toEqual([]);
     }, 120_000);   // the pauses above, when a busy machine slows several of a component's stories
+  }
+});
+
+describe('update time', () => {
+  for (const [name, list] of storiesToRun()) {
+    test(`${name} stories each render again, with nothing changed, within ${UPDATE_BUDGET} ms`, async () => {
+      const slow: string[] = [], times: Record<string, number> = {};
+      for (const [exportName, ui] of list) {
+        const budget = UPDATE_BUDGET * SLOWER;
+        let ms = await updateTime(ui);
+        // As for the mount: noise only ever makes it slower, so measure again after a pause before calling it slow.
+        for (let again = 0; again < 3 && ms > budget; again++) {
+          await new Promise((r) => setTimeout(r, 500 * 2 ** again));
+          ms = Math.min(ms, await updateTime(ui));
+        }
+        times[`${name}/${exportName}`] = ms;
+        if (ms > budget) slow.push(`${exportName}: ${ms.toFixed(1)} ms (budget ${budget})`);
+      }
+      await commands.recordBench('update', times);
+      expect(slow).toEqual([]);
+    }, 120_000);
   }
 });

@@ -80,6 +80,9 @@ export default defineConfig({
           // @media (hover: hover)) would never apply. Give it a desktop's fine, hovering pointer, as lib.mjs does.
           provider: playwright({
             ...(process.env.SERUPA_BROWSER === 'firefox' ? { launchOptions: { firefoxUserPrefs: { 'ui.primaryPointerCapabilities': 6, 'ui.allPointerCapabilities': 6 } } } : {}),
+            // SERUPA_CHROMIUM=<path> runs them in that Chromium instead of Playwright's: the nightly Floor run passes the
+            // oldest Chrome the package supports (tools/browser-floor.mjs, from package.json's browserslist).
+            ...(BROWSER === 'chromium' && process.env.SERUPA_CHROMIUM ? { launchOptions: { executablePath: process.env.SERUPA_CHROMIUM } } : {}),
             // SERUPA_LOCALE=ar runs them with the browser in that language (navigator.language and Intl's default
             // locale), so nothing reads the default and quietly expects English (run.mjs --locale).
             ...(process.env.SERUPA_LOCALE ? { contextOptions: { locale: process.env.SERUPA_LOCALE } } : {}),

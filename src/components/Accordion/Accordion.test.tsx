@@ -123,6 +123,47 @@ describe('Accordion', () => {
     expect([state('adef'), props(2), props(1)]).toEqual(['0100', ['clip-path', 'dk-accordion-height', 'opacity'], ['clip-path', 'dk-accordion-height', 'opacity']]);
   }));
 
+  test('an item opened a second time grows to its height again, as it did the first time, instead of snapping open', () => withMotion(async () => {
+    await render(<Faq />);
+    const pn = panel('adef');
+    const grows = () => pn.getAnimations().some((x) => x.id === 'dk-accordion-height');
+    await userEvent.click(trigger('adef', 1));
+    expect(grows()).toBe(true);
+    await settled(el('adef'), { subtree: true });
+    await userEvent.click(trigger('adef', 1));
+    await settled(el('adef'), { subtree: true });
+    await expect.poll(() => [pn.getBoundingClientRect().height, contentOf('adef').hasAttribute('hidden')]).toEqual([0, true]);
+    await userEvent.click(trigger('adef', 1));
+    expect(grows()).toBe(true);
+    // Paused at the start, it has no height yet: what's below starts from where it was.
+    const g = pn.getAnimations().find((x) => x.id === 'dk-accordion-height')!;
+    g.pause(); g.currentTime = 0;
+    expect(pn.getBoundingClientRect().height).toBe(0);
+    g.play();
+  }));
+
+  test('one item closing as another opens: the two heights move over the same time on the same curve, so what\'s below goes straight to its new place', () => withMotion(async () => {
+    await render(<><Faq /><p id="below">Below</p></>);
+    await userEvent.click(trigger('adef', 1));
+    await settled(el('adef'), { subtree: true });
+    const top0 = el('below').getBoundingClientRect().top;
+    await userEvent.click(trigger('adef', 2));
+    const h = (n: number) => panel('adef', n).getAnimations().find((x) => x.id === 'dk-accordion-height')!;
+    const time = (x: Animation) => { const t = x.effect!.getComputedTiming() as { duration?: number; easing?: string }; return [t.duration, t.easing]; };
+    expect(time(h(1))).toEqual(time(h(2)));
+    // Every moment of the swap: what's below is never further down than where it starts or ends.
+    const all = [h(1), h(2)];
+    const tops: number[] = [];
+    for (const ms of [0, 25, 50, 75, 100, 150, 199]) { all.forEach((x) => { x.pause(); x.currentTime = ms; }); tops.push(el('below').getBoundingClientRect().top); }
+    all.forEach((x) => x.play());
+    await settled(el('adef'), { subtree: true });
+    const top1 = el('below').getBoundingClientRect().top;
+    expect(tops.map((t) => t <= Math.max(top0, top1) + 0.5 && t >= Math.min(top0, top1) - 0.5)).toEqual(tops.map(() => true));
+    // On its own, an item still closes on its own time and curve.
+    await userEvent.click(trigger('adef', 2));
+    expect(time(h(2))[0]).toBe(150);
+  }));
+
   test('type="single": opening one closes the other; collapsible (default): the open one closes again; a disabled item doesn\'t open, and fades to 50%', async () => {
     await render(<Faq />);
     await userEvent.click(trigger('adef', 1));
