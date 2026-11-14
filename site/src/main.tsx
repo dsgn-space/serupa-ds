@@ -11,12 +11,16 @@ import { Button } from '../../src/components/Button/Button';
 import { EmptyState } from '../../src/components/EmptyState/EmptyState';
 import { Heading } from '../../src/components/Heading/Heading';
 import { ErrorBoundary } from '../../src/components/ErrorBoundary/ErrorBoundary';
+import { About } from './About';
 import { Doc } from './Doc';
+import { Frame } from './Frame';
 import { Home } from './Home';
 import { Index } from './Index';
 import { pageAt, sections } from './pages';
 import { RouterLink, usePath } from './router';
 import { Shell } from './Shell';
+import { Showcase } from './Showcase';
+import { Themes } from './Themes';
 
 // Every Serupa component with an href (Navbar, Sidebar, Card, Button, Link) goes through the site's router.
 configure({ link: RouterLink });
@@ -35,7 +39,9 @@ function App() {
   const page = pageAt(path);
   const section = sections.find((s) => s.lead && s.path === path);
   return <ErrorBoundary resetKeys={[path]}>
-    {path === '/' ? <Home /> : page ? <Doc page={page} /> : section ? <Index section={section} /> : <NotFound />}
+    {path === '/' ? <Home /> : page ? <Doc page={page} /> : section ? <Index section={section} />
+      : path === '/about' ? <About /> : path === '/themes' ? <Themes /> : path === '/showcase' ? <Showcase />
+      : path.startsWith('/frame/') ? <Frame id={path.slice(7)} /> : <NotFound />}
   </ErrorBoundary>;
 }
 
