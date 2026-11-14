@@ -154,7 +154,7 @@ export default config;
 // stylelint.js: the Stylelint config for an app's own CSS (serupa-ds/stylelint), shipped as written.
 fs.writeFileSync(path.join(D, 'stylelint.js'), stamp(read('src/stylelint.js')));
 fs.copyFileSync(path.join(P, 'src', 'stylelint.d.ts'), path.join(D, 'stylelint.d.ts'));
-// testing.js (184): forEachTheme() for screenshots of an app's own pages in each theme (serupa-ds/testing), as written.
+// testing.js (184): the testers and forEachTheme() for an app's own tests (serupa-ds/testing), as written.
 fs.writeFileSync(path.join(D, 'testing.js'), stamp(read('src/testing.js')));
 fs.copyFileSync(path.join(P, 'src', 'testing.d.ts'), path.join(D, 'testing.d.ts'));
 // Language packs (I7): serupa-ds/labels/<language> is dist/js/labels/<language>.js, one module per src/labels/ file,
