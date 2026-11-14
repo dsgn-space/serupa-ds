@@ -49,6 +49,7 @@
   padding: var(--dialog-padding, var(--space-surface));
   background: var(--dialog-bg, var(--surface-overlay));
   --dk-row-hover: var(--dialog-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
+  --field: var(--dialog-field-bg, var(--field-raised));   /* its form fields, a step up from it in dark */
   border-radius: var(--dialog-radius, var(--radius-container));
   box-shadow: var(--dialog-depth, var(--depth-surface)), var(--dialog-shadow, var(--elevation-modal));
 }

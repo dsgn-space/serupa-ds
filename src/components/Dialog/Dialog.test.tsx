@@ -741,5 +741,29 @@ describe('Dialog and Drawer on a phone', () => {
     await expect.poll(pads).toEqual(['24px', '24px']);
     await screen.unmount();
   });
-});
 
+  test('a form field in a dialog, drawer or popover stands out from it in every theme: in dark the field steps up from the zinc-800 surface instead of matching it', async () => {
+    const screen = await render(<>
+      <Dialog open title="Rename" onOpenChange={() => {}}><Input aria-label="In dialog" /></Dialog>
+      <Drawer open title="Filters" onOpenChange={() => {}}><Input aria-label="In drawer" /></Drawer>
+      <Popover defaultOpen trigger={<Button>More</Button>}><Input aria-label="In popover" /></Popover>
+    </>);
+    const field = (name: string) => page.getByRole('textbox', { name }).element() as HTMLElement;
+    // The fill may be on the box around the <input>, so read the nearest painted one.
+    const fill = (e: HTMLElement | null): string => { for (; e; e = e.parentElement) { const b = getComputedStyle(e).backgroundColor; if (b !== 'rgba(0, 0, 0, 0)') return b; } return ''; };
+    const surface = (e: HTMLElement) => fill(e.closest('dialog > *, [popover]'));
+    await expect.poll(() => ['In dialog', 'In drawer', 'In popover'].every((n) => field(n).checkVisibility())).toBe(true);
+    const flat: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const name of ['In dialog', 'In drawer', 'In popover']) {
+        const f = field(name), r = contrast(fill(f), surface(f));
+        // White on white in light is fine (the border draws it); in dark the fill has to differ.
+        if (th.endsWith('-dark') && r < 1.1) flat.push(`${th} ${name} ${r.toFixed(2)}`);
+      }
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+    expect(flat).toEqual([]);
+    await screen.unmount();
+  });
+});

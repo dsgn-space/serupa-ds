@@ -24,6 +24,7 @@
   --border-control-hover: var(--zinc-600);
   --field-hover: var(--zinc-100);
   --field-pressed: var(--zinc-200);
+  --field-raised: var(--white);
   --field-border-invalid: var(--red-600);
   --field-action: var(--blue-600);
   --placeholder: var(--zinc-500);
@@ -403,6 +404,7 @@
   --border-control-hover: var(--zinc-300);
   --field-hover: var(--zinc-700);
   --field-pressed: var(--zinc-600);
+  --field-raised: #333338;
   --field-border-invalid: var(--red-600);
   --field-action: var(--blue-400);
   --placeholder: var(--zinc-400);
@@ -520,6 +522,7 @@
   --border-control-hover: var(--zinc-600);
   --field-hover: var(--zinc-100);
   --field-pressed: var(--zinc-200);
+  --field-raised: var(--white);
   --field-border-invalid: var(--red-600);
   --field-action: var(--violet-600);
   --placeholder: var(--zinc-500);
@@ -637,6 +640,7 @@
   --border-control-hover: var(--zinc-300);
   --field-hover: var(--zinc-700);
   --field-pressed: var(--zinc-600);
+  --field-raised: #333338;
   --field-border-invalid: var(--red-600);
   --field-action: var(--violet-400);
   --placeholder: var(--zinc-400);
@@ -754,6 +758,7 @@
   --border-control-hover: var(--zinc-600);
   --field-hover: var(--zinc-100);
   --field-pressed: var(--zinc-200);
+  --field-raised: var(--white);
   --field-border-invalid: var(--red-600);
   --field-action: var(--teal-700);
   --placeholder: var(--zinc-500);
@@ -871,6 +876,7 @@
   --border-control-hover: var(--zinc-300);
   --field-hover: var(--zinc-700);
   --field-pressed: var(--zinc-600);
+  --field-raised: var(--zinc-800);
   --field-border-invalid: var(--red-600);
   --field-action: var(--teal-400);
   --placeholder: var(--zinc-400);
@@ -989,6 +995,7 @@
   --border-control-hover: light-dark(var(--zinc-600), var(--zinc-300));
   --field-hover: light-dark(var(--zinc-100), var(--zinc-700));
   --field-pressed: light-dark(var(--zinc-200), var(--zinc-600));
+  --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--blue-600), var(--blue-400));
   --placeholder: light-dark(var(--zinc-500), var(--zinc-400));
   --overlay: light-dark(#18181b80, #09090bb3);
@@ -1088,6 +1095,7 @@
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
+  --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--blue-600), var(--blue-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
@@ -1151,6 +1159,7 @@
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
+  --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--violet-600), var(--violet-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
@@ -1214,6 +1223,7 @@
   --surface-muted: light-dark(var(--zinc-50), var(--black));
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
+  --field-raised: light-dark(var(--white), var(--zinc-800));
   --field-action: light-dark(var(--teal-700), var(--teal-400));
   --text-inverse: light-dark(var(--white), var(--zinc-950));
   --border: light-dark(#09090b1a, #ffffff1f);
@@ -1277,6 +1287,7 @@
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
+  --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--blue-600), var(--blue-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
@@ -1340,6 +1351,7 @@
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
+  --field-raised: light-dark(var(--white), #333338);
   --field-action: light-dark(var(--violet-600), var(--violet-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-700));
@@ -1403,6 +1415,7 @@
   --surface-muted: light-dark(var(--zinc-50), var(--black));
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
+  --field-raised: light-dark(var(--white), var(--zinc-800));
   --field-action: light-dark(var(--teal-700), var(--teal-400));
   --text-inverse: light-dark(var(--white), var(--zinc-950));
   --border: light-dark(#09090b1a, #ffffff1f);

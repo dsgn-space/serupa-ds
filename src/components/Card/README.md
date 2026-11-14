@@ -126,6 +126,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | Token | Default | Use |
 | --- | --- | --- |
 | `--card-row-bg-hover-elevated` | `surface-hover-raised` | A List or InlineEdit row on an elevated card, hovered or selected: a step up from the card in dark |
+| `--card-field-bg-elevated` | `field-raised` | The fill of a form field on an elevated card: a step up from the card in dark, so the field stands out from it |
 | `--card-bg` | `surface` | The background of an outline card |
 | `--card-bg-filled` | `surface-muted` | The background of a filled card |
 | `--card-row-bg-hover` | `surface-hover` | A List or InlineEdit row on the card, hovered or selected |
