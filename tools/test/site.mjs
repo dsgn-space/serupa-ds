@@ -212,6 +212,8 @@ if (t('some page has a story that waits behind its button', !!held, 'no page sho
     if (!t(`${at} opens`, !failed, failed)) continue;
     // A screen (site/src/Screen.tsx) is a story on a page of its own, in a frame: it has drawn once that page has content.
     const screens = w.page.locator('iframe.site-screen__page');
+    // The showcase draws its screen once the pattern's stories have loaded, after the page is ready (WebKit can take longer).
+    if (at === '/showcase') await screens.first().waitFor({ state: 'attached', timeout: 30000 }).catch(() => {});
     let drawn = '';
     if (await screens.count()) {
       await screens.first().scrollIntoViewIfNeeded();
