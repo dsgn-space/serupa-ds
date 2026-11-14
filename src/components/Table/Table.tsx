@@ -373,18 +373,26 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
     };
     const p = panel.current;
     const isOpen = () => !!p && p.matches(':popover-open');
+    // While open, the panel follows the handle as the page or table scrolls, under it, or above when there's no room.
+    let follow: (() => void) | null = null;
     const show = () => {
       if (!p || isOpen()) return;
       p.showPopover();
-      const r = h.getBoundingClientRect(), b = p.getBoundingClientRect(), gap = 8;
-      p.style.left = Math.round(Math.max(gap, Math.min(r.left + r.width / 2 - b.width / 2, innerWidth - b.width - gap))) + 'px';
-      p.style.top = Math.round(r.bottom + b.height + gap <= innerHeight ? r.bottom + gap : Math.max(gap, r.top - b.height - gap)) + 'px';
+      const place = () => {
+        const r = h.getBoundingClientRect(), b = p.getBoundingClientRect(), gap = 8;
+        p.style.left = Math.round(Math.max(gap, Math.min(r.left + r.width / 2 - b.width / 2, innerWidth - b.width - gap))) + 'px';
+        p.style.top = Math.round(r.bottom + b.height + gap <= innerHeight ? r.bottom + gap : Math.max(gap, r.top - b.height - gap)) + 'px';
+      };
+      place();
+      window.addEventListener('scroll', place, true); window.addEventListener('resize', place);
+      follow = () => { window.removeEventListener('scroll', place, true); window.removeEventListener('resize', place); follow = null; };
       const first = p.querySelector<HTMLElement>('button:not(:disabled)');
       if (first) first.focus();
     };
     // Closed by Escape or a press outside: focus goes back to the handle, unless it went somewhere on purpose.
     const onToggle = (e: Event) => {
       if ((e as ToggleEvent).newState !== 'closed' || !p) return;
+      if (follow) follow();
       const at = activeIn(h);
       if (!at || at === p.ownerDocument.body || p.contains(at)) h.focus({ preventScroll: true });
     };
@@ -442,6 +450,7 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
       h.removeEventListener('dblclick', onFit);
       h.removeEventListener('click', onClick);
       if (p) p.removeEventListener('toggle', onToggle);
+      if (follow) follow();
     };
   }, [resizable]);
   // The handle's name: the column's text, read once it's drawn. With no width set yet, its value is the drawn width.
