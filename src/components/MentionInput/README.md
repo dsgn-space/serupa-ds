@@ -99,7 +99,7 @@ Each is an optional override: set it on the page, a container or one MentionInpu
 | `--mention-input-listbox-border` | `border-overlay` | The list's outline. |
 | `--mention-input-option-color` | `text` | An option's label, and its second line while it's highlighted. |
 | `--mention-input-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). |
-| `--mention-input-option-indicator` | `primary` | The 2px bar at the highlighted option's start. |
+| `--mention-input-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--mention-input-description-color` | `text-muted` | An option's second line and the no-match message. |
 | `--mention-input-listbox-shadow` | `elevation-overlay` | The list's shadow. |
 | `--mention-input-listbox-radius` | `radius-surface` | The list's corners (8px). |

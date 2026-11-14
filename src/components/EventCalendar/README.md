@@ -1,6 +1,6 @@
 # EventCalendar
 
-A month of events: meetings, deadlines, bookings. People see what's on each day, move through the month by keyboard, and open an event. A week or a day shows the hours, with each event at its time. On a phone, or by choice, the month shows as an agenda: a list of the days that have events.
+A month of events: meetings, deadlines, bookings. People see what's on each day, move through the month by keyboard, open an event, and, where your app allows it, add one at a time they pick and move it to another. A week or a day shows the hours, with each event at its time. On a phone, or by choice, the month shows as an agenda: a list of the days that have events.
 
 **Also called:** scheduler, agenda.
 
@@ -48,7 +48,9 @@ Drawn from the `Month` story.
 - The week and day views show the hours in a box that scrolls, opened at 8 AM or the first event if it's earlier. Each event sits at its time, as tall as it lasts (half an hour at least, so it's still a target with its title showing). Events that overlap share the day's width side by side. All-day events are in a row on top, which stays with the weekday names as the hours scroll. Today has a line at the time now, and the time zone shows over the hour scale.
 - Previous and Next move a week or a day in those views. `onMonthChange` still gets the month whenever the shown week or day moves into another one, so pass the events of the weeks that cross into the next month too.
 - Below 640px wide, the week shows as the agenda, as the month does: seven columns don't fit a phone. The day view stays. A day in the week is never narrower than 96px at the default text size and grows with larger text, so with large text the week scrolls sideways in its box rather than cutting off an event's time.
-- Creating events by selecting a time, and moving or resizing them by drag, come in a later step.
+- **Adding events:** with `onSlotSelect`, a press on a day's empty space chooses it for a new event. In the month that's the whole day; in the hours it's the hour from the half hour pressed. A drag down a day's hours chooses the span, by quarter hours, outlined as it goes. Enter or Space on a day chooses the whole day. Open your form from there, with the slot's times filled in.
+- **Moving events:** with `onEventMove`, events move. Drag one to another day (it keeps its time) or, in the hours, to another time by quarter hours. Drag its end to change how long it lasts. Shift and an arrow key move the focused event: a day to either side, and up or down a week in the month or a quarter hour in the hours. The calendar doesn't move the event itself: update `events` with the new times, or it goes back. Each move is said in words ("Design review, now Thursday, March 6, 2:00 PM to 3:00 PM").
+- Dragging is for a mouse or a pen. On a touch screen a drag scrolls the page. A tap on an event is still `onEventClick`, so your event form is the way to change its times there, and for anyone who can't drag (WCAG 2.5.7). Escape during a drag puts the event back.
 
 ### Do and don't
 
@@ -59,7 +61,8 @@ Drawn from the `Month` story.
 
 - **Role and name:** the month is a `role="grid"` named by its title ("March 2025"). The week and day views are a grid with a single row, named by their title ("March 2 – 8, 2025"). Each day in that row is a cell, so the names, keys and Tab stop work as in the month. The hour scale, the time zone and the line at the time now are hidden from screen readers, since each event already says its time. Each day is a cell that starts with its full date and how many events it has ("Tuesday, March 4, 2025, 1 event"), as hidden text so the name never hides the events. Today has `aria-current="date"`. Each event is a button named by what it shows (its time and title), then its day, its whole time and "Repeats" ("2:00 PM Design review, Tuesday, March 4, 2:00 PM to 3:00 PM").
 - **Keyboard:** one Tab stop on the days. Arrow keys move a day or a week, Home and End go to the week's start and end, and PageUp and PageDown go a month (a week or a day in those views). Moving past the month shows the next one. Tab from a day goes to its events and "+N more", and Escape on an event goes back to its day. Previous, Next and Today are buttons before the grid.
-- **Changes are said:** the month's title is a polite live region, so Previous, Next, Today and paging say the new month.
+- **Changes are said:** the month's title is a polite live region, so Previous, Next, Today and paging say the new month. A moved event's new day and time are said through the shared polite region.
+- **Dragging has an alternative (2.5.7):** every move a drag makes, Shift and the arrow keys make too. A press without a drag opens the event, where your form changes its times. A movable event lists its keys in `aria-keyshortcuts`.
 - **Reading order:** the agenda is an ordered list of days, each with a heading one level below the title, so a screen reader can jump by day.
 - **Contrast:** dates, weekday names and event text read 4.5:1 in all six themes (`EventCalendar.test.tsx`).
 - **What's still yours:** the event details, and returning focus to the event when they close.
@@ -73,7 +76,10 @@ Drawn from the `Month` story.
 | Home, End | The start or end of the week |
 | PageUp, PageDown | The same day a month before or after; in the week and day views, a week or a day |
 | Enter, Space (on an event) | Opens it (`onEventClick`) |
-| Escape (on an event) | Back to its day |
+| Escape (on an event) | Back to its day; during a drag, puts the event back |
+| Enter, Space (on a day) | With `onSlotSelect`, chooses the whole day for a new event |
+| Shift + Left, Right (on an event) | With `onEventMove`, moves it a day earlier or later (mirrored right to left) |
+| Shift + Up, Down (on an event) | With `onEventMove`, moves it a week in the month, or a quarter hour in the week and day views |
 
 ## Props
 
@@ -91,6 +97,8 @@ Drawn from the `Month` story.
 | `locale` | `string` | provider's | Month, weekday and time names, and the first day of the week. |
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |
 | `headingLevel` | `2`–`6` | `2` | The title's level. The agenda's days are one below. |
+| `onSlotSelect` | `(slot: { start, end, allDay }) => void` | | An empty time chosen for a new event: a press on a day's empty space, a drag down its hours, or Enter or Space on a day. A whole day has its midnight at both ends, as an all-day event does. |
+| `onEventMove` | `(event, change: { start, end, allDay }) => void` | | An event dragged, its end dragged, or moved with Shift and an arrow key. Given, events can move. Update `events` with the new times. |
 
 `id`, `className`, `ref` and other props go to the outer `<div>`.
 
