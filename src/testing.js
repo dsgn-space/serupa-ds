@@ -2,7 +2,7 @@
 // its components in every theme; this lets your screens get the same check, with Playwright (or anything with a
 // page.evaluate()).
 //   import { test, expect } from "@playwright/test";
-//   import { forEachTheme } from "serupa-ds/testing";
+//   import { forEachTheme } from "@diki-stwn/serupa-ds/testing";
 //   test("checkout", async ({ page }) => {
 //     await page.goto("/checkout");
 //     await forEachTheme(page, async (theme) => {
@@ -22,7 +22,7 @@ const STILL = '*,*::before,*::after{transition:none!important;animation:none!imp
 export async function forEachTheme(page, fn, options = {}) {
   const themes = options.themes || THEMES;
   const unknown = themes.filter((t) => !THEMES.includes(t));
-  if (unknown.length) throw new Error(`serupa-ds/testing: no theme called ${unknown.join(', ')}. The themes are ${THEMES.join(', ')}.`);
+  if (unknown.length) throw new Error(`@diki-stwn/serupa-ds/testing: no theme called ${unknown.join(', ')}. The themes are ${THEMES.join(', ')}.`);
   const still = options.still !== false;
   const emulate = typeof page.emulateMedia === 'function';
   // What to put back: the page's own data-theme (or none), and whether the style that stills it was added here.

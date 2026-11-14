@@ -5,7 +5,7 @@ A text field with a list of options that narrows as you type: pick a country, an
 **Also called:** autocomplete, autosuggest, typeahead.
 
 ```tsx
-import { Combobox } from "serupa-ds";
+import { Combobox } from "@diki-stwn/serupa-ds";
 
 <Combobox aria-label="Country" placeholder="Choose a country" options={["Argentina", "Brazil", "Canada"]} />
 

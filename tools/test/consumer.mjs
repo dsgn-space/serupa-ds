@@ -34,7 +34,7 @@ const release = process.argv.includes('--release');
 const repo = process.env.GITHUB_REPOSITORY ? `https://github.com/${process.env.GITHUB_REPOSITORY}` : pkg.repository.url.replace(/^git\+/, '').replace(/\.git$/, '');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'serupa-consumer-'));
 let tarball;
-if (release) tarball = `${repo}/releases/download/v${pkg.version}/${pkg.name}-${pkg.version}.tgz`;
+if (release) tarball = `${repo}/releases/download/v${pkg.version}/${pkg.name.replace(/^@/, '').replace('/', '-')}-${pkg.version}.tgz`;   // npm pack's file name: @scope/name is scope-name
 else {
   if (!fs.existsSync(path.join(PROJECT, 'dist', 'index.js'))) { console.log('FAIL  nothing built: run npm run build first'); process.exit(1); }
   // The package exactly as a release ships it (pack.mjs).
@@ -56,7 +56,7 @@ run(['install', '--no-audit', '--no-fund', '--ignore-scripts', ...(reactVersion 
 // Runs inside the project, so serupa-ds resolves from its node_modules as in any app.
 const SSR = path.join(HERE, 'ssr');
 const fixtures = fs.readdirSync(SSR).filter((f) => f.endsWith('.mjs')).sort().map((f) => pathToFileURL(path.join(SSR, f)).href);
-const FILES = ['serupa-ds/tokens.css', 'serupa-ds/base.css', 'serupa-ds/bundle.css', 'serupa-ds/components.css', 'serupa-ds/utilities.css', 'serupa-ds/utilities-extra.css', 'serupa-ds/theme.js', 'serupa-ds/serupa.iife.js', 'serupa-ds/package.json'];
+const FILES = ['@diki-stwn/serupa-ds/tokens.css', '@diki-stwn/serupa-ds/base.css', '@diki-stwn/serupa-ds/bundle.css', '@diki-stwn/serupa-ds/components.css', '@diki-stwn/serupa-ds/utilities.css', '@diki-stwn/serupa-ds/utilities-extra.css', '@diki-stwn/serupa-ds/theme.js', '@diki-stwn/serupa-ds/serupa.iife.js', '@diki-stwn/serupa-ds/package.json'];
 fs.writeFileSync(path.join(app, 'check.mjs'), `
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -65,9 +65,9 @@ const React = (await import('react')).default;
 const { renderToString } = await import('react-dom/server');
 t('React ' + React.version + ' is installed', ${JSON.stringify(reactVersion ?? '')} !== 'canary' || React.version.includes('canary'), React.version);
 let D, icons;
-try { D = await import('serupa-ds'); t('import "serupa-ds"', Object.keys(D).length > 100, Object.keys(D).length + ' exports'); } catch (e) { t('import "serupa-ds"', false, e.stack); }
-try { icons = await import('serupa-ds/icons'); t('import "serupa-ds/icons"', Object.keys(icons).length > 100, Object.keys(icons).length + ' exports'); } catch (e) { t('import "serupa-ds/icons"', false, e.stack); }
-const installed = JSON.parse(fs.readFileSync(fileURLToPath(import.meta.resolve('serupa-ds/package.json')), 'utf8')).version;
+try { D = await import('@diki-stwn/serupa-ds'); t('import "@diki-stwn/serupa-ds"', Object.keys(D).length > 100, Object.keys(D).length + ' exports'); } catch (e) { t('import "@diki-stwn/serupa-ds"', false, e.stack); }
+try { icons = await import('@diki-stwn/serupa-ds/icons'); t('import "@diki-stwn/serupa-ds/icons"', Object.keys(icons).length > 100, Object.keys(icons).length + ' exports'); } catch (e) { t('import "@diki-stwn/serupa-ds/icons"', false, e.stack); }
+const installed = JSON.parse(fs.readFileSync(fileURLToPath(import.meta.resolve('@diki-stwn/serupa-ds/package.json')), 'utf8')).version;
 t('the installed version is ${pkg.version}', installed === ${JSON.stringify(pkg.version)}, 'installed ' + installed);
 for (const f of ${JSON.stringify(FILES)}) {
   let file; try { file = fileURLToPath(import.meta.resolve(f)); } catch (e) { t(f + ' resolves', false, e.message); continue; }
@@ -107,7 +107,7 @@ const { renderToString } = await import('react-dom/server');
 const { createRoot } = await import('react-dom/client');
 const { flushSync } = await import('react-dom');
 let D;
-try { D = await import('serupa-ds'); t('import "serupa-ds"', Object.keys(D).length > 100, Object.keys(D).length + ' exports'); } catch (e) { t('import "serupa-ds"', false, e.message); }
+try { D = await import('@diki-stwn/serupa-ds'); t('import "@diki-stwn/serupa-ds"', Object.keys(D).length > 100, Object.keys(D).length + ' exports'); } catch (e) { t('import "@diki-stwn/serupa-ds"', false, e.message); }
 if (D) {
   const h = React.createElement, cases = {};
   for (const f of ${JSON.stringify(fixtures)}) Object.assign(cases, (await import(f)).default({ h, D }));
@@ -131,7 +131,7 @@ results.push(...check(preact));
 // that installs this same package. Its own scripts must pass: the check (types and lint), and `vite build` puts theme.js in the
 // built page ahead of the app (so no flash of the wrong theme) and trims bundle.css with serupaPurge().
 const starter = path.join(tmp, 'starter');
-const made = spawnSync(process.execPath, [path.join(app, 'node_modules', 'serupa-ds', 'bin', 'serupa-create.mjs'), starter, '--serupa', /^https?:/.test(tarball) ? tarball : `file:${tarball}`], { encoding: 'utf8' });
+const made = spawnSync(process.execPath, [path.join(app, 'node_modules', '@diki-stwn/serupa-ds', 'bin', 'serupa-create.mjs'), starter, '--serupa', /^https?:/.test(tarball) ? tarball : `file:${tarball}`], { encoding: 'utf8' });
 results.push({ name: 'Starter: serupa-create makes the app', ok: made.status === 0 && fs.existsSync(path.join(starter, 'src', 'App.tsx')), detail: made.stdout + made.stderr });
 if (made.status === 0) {
   run(['install', '--no-audit', '--no-fund', '--ignore-scripts'], starter);
@@ -144,7 +144,7 @@ if (made.status === 0) {
   const html = fs.existsSync(path.join(out, 'index.html')) ? fs.readFileSync(path.join(out, 'index.html'), 'utf8') : '';
   const themeAt = html.indexOf('<script src="/serupa-theme.js">');
   results.push({ name: 'Starter: the built page loads theme.js as a plain script before the app', ok: themeAt >= 0 && themeAt < html.indexOf('type="module"'), detail: html });
-  const shipped = path.join(app, 'node_modules', 'serupa-ds', 'dist');
+  const shipped = path.join(app, 'node_modules', '@diki-stwn/serupa-ds', 'dist');
   const same = fs.existsSync(path.join(out, 'serupa-theme.js')) && fs.readFileSync(path.join(out, 'serupa-theme.js'), 'utf8') === fs.readFileSync(path.join(shipped, 'theme.js'), 'utf8');
   results.push({ name: 'Starter: the build copies the installed theme.js', ok: same });
   const css = fs.existsSync(path.join(out, 'assets')) ? fs.readdirSync(path.join(out, 'assets')).filter((f) => f.endsWith('.css')) : [];

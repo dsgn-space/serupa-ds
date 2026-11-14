@@ -5,7 +5,7 @@ The "Skip to content" link that keyboard and screen reader users need first on e
 **Also called:** skip to content link.
 
 ```tsx
-import { SkipLink } from "serupa-ds";
+import { SkipLink } from "@diki-stwn/serupa-ds";
 
 <SkipLink />
 <Navbar sticky>…</Navbar>

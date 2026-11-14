@@ -5,7 +5,7 @@ Two panes with a handle between them that people drag, or move with the keys, to
 **Also called:** resizable panels, split view, split pane.
 
 ```tsx
-import { Splitter } from "serupa-ds";
+import { Splitter } from "@diki-stwn/serupa-ds";
 
 <Splitter separatorLabel="Folders" defaultSize={25} min={15} max={50} collapsible storageKey="mail-folders" style={{ height: "100%" }}>
   <FolderList />

@@ -15,7 +15,7 @@ const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 
 const GOOD = `import * as React from 'react';
-import { Button, Field, Input, IconButton, Checkbox, Image, Stack } from 'serupa-ds';
+import { Button, Field, Input, IconButton, Checkbox, Image, Stack } from '@diki-stwn/serupa-ds';
 export function SignIn() {
   const [email, setEmail] = React.useState('');
   return (
@@ -38,7 +38,7 @@ t('a good answer passes every check', CHECKS.every((c) => good[c].ok), CHECKS.fi
 // Each mistake, as one change to the good answer, and the one check it must fail.
 const BAD = [
   ['parses', GOOD.replace('</form>', '</fom>')],
-  ['serupa', GOOD.replace("from 'serupa-ds'", "from './ui'")],
+  ['serupa', GOOD.replace("from '@diki-stwn/serupa-ds'", "from './ui'")],
   ['components', GOOD.replace('Button, Field, ', 'Field, ').replace(/<Button type="submit">Sign in<\/Button>/, '')],
   ['no-rebuilds', GOOD.replace('<Button type="submit">Sign in</Button>', '<button type="submit">Sign in</button>')],
   ['tokens', GOOD.replace("padding: 'var(--spacing-4)'", 'padding: 16')],
@@ -127,7 +127,7 @@ t('a change that adds only what was asked passes every check', !tidy(phone, 'add
 const requoted = phone.replace(/'/g, '"');
 t('a change that also rewrites the old code fails "surgical" alone', tidy(requoted, 'add-phone').join() .startsWith('surgical') && tidy(requoted, 'add-phone').length === 1, tidy(requoted, 'add-phone').join(', '));
 const legacy = startOf(task('legacy-page'));
-const search = legacy.replace("import { Card, Heading, Stack, Text } from 'serupa-ds';", "import { Card, Heading, SearchInput, Stack, Text } from 'serupa-ds';")
+const search = legacy.replace("import { Card, Heading, Stack, Text } from '@diki-stwn/serupa-ds';", "import { Card, Heading, SearchInput, Stack, Text } from '@diki-stwn/serupa-ds';")
   .replace('export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {', "export function ItemsPage({ items, onNew }: { items: Item[]; onNew: () => void }) {\n  const [q, setQ] = React.useState('');")
   .replace('<Heading level={1}>Items</Heading>', '<Heading level={1}>Items</Heading>\n        <SearchInput aria-label="Search items" value={q} onChange={(e) => setQ(e.target.value)} />')
   .replace('{items.map((item) => (', '{items.filter((item) => item.name.toLowerCase().includes(q.toLowerCase())).map((item) => (');
@@ -200,7 +200,7 @@ t('agentic table: a run with no cost doesn\'t make NaN', !row.includes('NaN'), r
   const app = (body) => { fs.mkdirSync(path.join(tmp, 'r.1', 'src'), { recursive: true }); fs.writeFileSync(path.join(tmp, 'r.1', 'src', 'App.tsx'), body); return path.join(tmp, 'r.1'); };
   const starter = didTask(app(createFiles({ name: 'eval-app', serupa: 'file:serupa-ds.tgz', brand: 'blue' })['src/App.tsx']), { expect: ['Button'] });
   t('agentic task check: the untouched starter fails', !starter.ok && /starter/.test(starter.why), JSON.stringify(starter));
-  const half = didTask(app("import { Field, Input as I } from 'serupa-ds';\nexport default () => null;\n"), { expect: ['Field', 'Input', 'AlertDialog|Dialog', 'Button'] });
+  const half = didTask(app("import { Field, Input as I } from '@diki-stwn/serupa-ds';\nexport default () => null;\n"), { expect: ['Field', 'Input', 'AlertDialog|Dialog', 'Button'] });
   t('agentic task check: half the expected components (an alias counts) pass, and the rest are named', half.ok && half.why === "doesn't use AlertDialog|Dialog, Button", JSON.stringify(half));
   fs.writeFileSync(path.join(tmp, 'r.1', 'grade.json'), JSON.stringify({ grade: Object.fromEntries(APP_CHECKS.map((c) => [c, { ok: true, why: '' }])), error: 'Command failed: claude -p' }));
   const failed = readDir(tmp)[0].runs[0].grade;

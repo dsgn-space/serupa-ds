@@ -3,7 +3,7 @@
 Catches an error thrown while rendering anything inside it and shows a message with "Try again" in its place, so one broken widget doesn't blank the whole page.
 
 ```tsx
-import { ErrorBoundary } from "serupa-ds";
+import { ErrorBoundary } from "@diki-stwn/serupa-ds";
 
 <ErrorBoundary onError={(error, info) => report(error, info.componentStack)}>
   <SalesChart />

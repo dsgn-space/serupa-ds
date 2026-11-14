@@ -83,7 +83,7 @@ for (const app of names) {
   const dir = path.join(tmp, app);
   fs.cpSync(path.join(APPS, app), dir, { recursive: true });
   const own = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
-  own.dependencies = { ...own.dependencies, 'serupa-ds': `file:${tarball}`, react: dep('react'), 'react-dom': dep('react-dom') };
+  own.dependencies = { ...own.dependencies, '@diki-stwn/serupa-ds': `file:${tarball}`, react: dep('react'), 'react-dom': dep('react-dom') };
   fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(own, null, 2) + '\n');
   const installed = npmRun(['install', '--no-audit', '--no-fund'], dir);
   t(app, 'npm install', installed.status === 0, tail(installed));

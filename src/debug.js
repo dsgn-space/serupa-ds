@@ -2,7 +2,7 @@
 /* Serupa debug overlay: shows which Serupa component drew what on a page, for finding why a screen looks off.
    Optional and standalone (no React, nothing else loads it). Load it on a page you're checking:
 
-     <script src="node_modules/serupa-ds/dist/debug.js">   and the closing script tag
+     <script src="node_modules/@diki-stwn/serupa-ds/dist/debug.js">   and the closing script tag
 
    It stays off until the page's address has ?serupa-debug (or &serupa-debug), or Serupa.debug.on() is called; the
    choice is kept for this tab (sessionStorage), so it survives a reload or a click to another page.

@@ -1,11 +1,11 @@
 ---
 // Astro with its React integration: the layout and text render to static HTML with no JavaScript, Button is an
 // island, and theme.js is inlined first in <head> (is:inline keeps Astro from bundling it).
-import 'serupa-ds/tokens.css';
-import 'serupa-ds/base.css';
-import 'serupa-ds/bundle.css';
-import theme from 'serupa-ds/theme.js?raw';
-import { Container, Heading, Stack, Text } from 'serupa-ds';
+import '@diki-stwn/serupa-ds/tokens.css';
+import '@diki-stwn/serupa-ds/base.css';
+import '@diki-stwn/serupa-ds/bundle.css';
+import theme from '@diki-stwn/serupa-ds/theme.js?raw';
+import { Container, Heading, Stack, Text } from '@diki-stwn/serupa-ds';
 import Save from '../components/Save.jsx';
 ---
 <html lang="en">

@@ -7,8 +7,8 @@ import {
   Button, Checkbox, Combobox, DataGrid, DatePicker, DateRangePicker, Dialog, IconButton, Image, Input, Link, NumberInput, RadioGroup, Radio,
   SegmentedControl, Select, SerupaProvider, Slider, SortableList, Stack, Tabs, toast, announce, configure, enLabels, idLabels, plural, useCollator, useLocale, useSerupa, version,
   type ButtonProps, type CarouselPerView, type ComboboxMultipleProps, type ComboboxSingleProps, type DateRange, type SliderMark, type TreeViewItem, type IconName, type SerupaLabels, type SliderValue, type ToastOptions,
-} from 'serupa-ds';
-import type { IconData } from 'serupa-ds/icons';
+} from '@diki-stwn/serupa-ds';
+import type { IconData } from '@diki-stwn/serupa-ds/icons';
 
 // Equal<A, B> is true only when A and B are the same type (not merely assignable either way).
 type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2) ? true : false;

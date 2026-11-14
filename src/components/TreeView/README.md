@@ -5,7 +5,7 @@ Nested items that open and close, such as folders and files, a table of contents
 **Also called:** tree, nested list navigation.
 
 ```tsx
-import { TreeView, type TreeViewItem } from "serupa-ds";
+import { TreeView, type TreeViewItem } from "@diki-stwn/serupa-ds";
 
 const files: TreeViewItem[] = [
   { id: "src", label: "src", icon: "folder", children: [

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Field, Input, Stack, Text } from 'serupa-ds';
+import { Button, Field, Input, Stack, Text } from '@diki-stwn/serupa-ds';
 
 export function ProfileForm({ onSave }: { onSave: (name: string, email: string) => Promise<void> }) {
   const [name, setName] = React.useState('');

@@ -5,7 +5,7 @@ Shows where people are in a task split into steps, such as sign-up, checkout or 
 **Also called:** progress indicator, steps, wizard steps, progress tracker.
 
 ```tsx
-import { Stepper } from "serupa-ds";
+import { Stepper } from "@diki-stwn/serupa-ds";
 
 <Stepper current={1} steps={[
   { title: "Account", description: "Email and password" },
@@ -97,7 +97,7 @@ It renders a `<nav>`; name it with `aria-label` (default `'Progress'`). `classNa
 The state of a form split into steps, to go with Stepper: which step is open, a check before each step forward, and focus moved to each step as it opens.
 
 ```tsx
-import { Stepper, useSteps } from "serupa-ds";
+import { Stepper, useSteps } from "@diki-stwn/serupa-ds";
 
 const s = useSteps({ steps, validate: (i) => checkStep(i), onComplete: submit });
 

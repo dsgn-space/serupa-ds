@@ -3,7 +3,7 @@
 The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. The browser fetches only the version it shows.
 
 ```tsx
-import { Logo } from "serupa-ds";
+import { Logo } from "@diki-stwn/serupa-ds";
 
 <a href="/" aria-label="Acme home">
   <Logo src="/logo.svg" darkSrc="/logo-dark.svg" markSrc="/mark.svg" markDarkSrc="/mark-dark.svg" variant="auto" alt="" />

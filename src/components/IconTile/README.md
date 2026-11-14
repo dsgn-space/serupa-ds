@@ -3,7 +3,7 @@
 An icon centered in a tinted rounded square (or a circle), to mark what a card, a settings row or an empty state is about at a glance.
 
 ```tsx
-import { IconTile } from "serupa-ds";
+import { IconTile } from "@diki-stwn/serupa-ds";
 
 <IconTile icon="cloud_done" tone="primary" />
 <IconTile icon="warning" tone="warning" size="lg" />
