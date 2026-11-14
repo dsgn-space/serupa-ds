@@ -47,6 +47,9 @@ Drawn from the `Bottom` story, opened.
 - Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 - Use the function form of `children` to close it from a Done, Cancel or submit button.
 - When it holds only text, set `initialFocus="panel"`: there's no control inside to focus.
+- Show one at a time, and never open a popover from inside another: a chain of them is hard to follow and to close. For a second level of choices, use a [Menu](../Menu/README.md)'s `MenuSub`, or move the task into a [Dialog](../Dialog/README.md).
+- Don't use a popover for a warning: a click elsewhere closes it, so it's easy to miss. Use an [Alert](../Alert/README.md) in the page, or a Dialog with `alert` when people must answer.
+- A click outside closes it, often by accident, so keep what people typed: hold the fields' values in your state, and save or reuse them when it opens again. A Cancel button is the way to throw them away.
 - On a phone, a panel by its button is small to tap and covers what's around it. Set `sheet="mobile"` and under 640px it becomes a sheet along the foot of the screen, the screen's width, as Dialog's `fullScreen="mobile"` fills it; `sheet` makes it one everywhere. For a sheet people pull taller, or one with a backdrop, use a bottom [Drawer](../Drawer/README.md) with `snapPoints`.
 
 ### Do and don't
