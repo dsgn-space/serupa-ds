@@ -443,7 +443,7 @@ describe('Patterns/Checkout: promo code', () => {
     await expect.element(screen.getByRole('heading', { name: 'Check your order' })).toBeVisible();
     for (const part of ['Delivery address', 'Delivery', 'Payment']) {
       const h = screen.getByRole('heading', { name: part, exact: true }).element();
-      const button = h.closest('.dk-card')!.querySelector('button, a')!;
+      const button = h.parentElement!.parentElement!.querySelector('button, a')!   // the part's card: its text column, then the card;
       expect(sideBySide(h, button), part).toBe(true);
     }
   });
