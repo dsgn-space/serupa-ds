@@ -52,6 +52,27 @@ describe('MentionInput', () => {
     expect(pop.top).toBeGreaterThanOrEqual(field.top + parseFloat(getComputedStyle(box()).lineHeight));   // under the caret's (first) line
   });
 
+  test('with many people, a key that only moves the highlight doesn\'t search them all again, and a letter searches each once', async () => {
+    // A person's label is read each time the search looks at it: counting the reads counts the work.
+    let reads = 0;
+    const many: MentionOption[] = Array.from({ length: 300 }, (_, i) => {
+      const name = (i % 2 ? 'Ana ' : 'Budi ') + i;
+      return { id: 'p' + i, get label() { reads++; return name; } };
+    });
+    await render(<MentionInput aria-label="Comment" options={many} />);
+    await userEvent.click(box());
+    await userEvent.keyboard('@a');
+    await expect.poll(isOpen).toBe(true);
+    reads = 0;
+    await userEvent.keyboard('n');
+    expect(names()[0]).toBe('Ana 1');
+    expect(reads).toBeLessThan(700);
+    reads = 0;
+    await userEvent.keyboard('{ArrowDown}');
+    expect(active()).toBe('Ana 3');
+    expect(reads).toBeLessThan(30);
+  });
+
   test('Down and Up move through the options, skipping one that can\'t be picked, and wrap; Enter puts "@Name " in and the caret after it', async () => {
     const onMention = vi.fn<(o: MentionOption) => void>();
     await render(<Box defaultValue="" onMention={onMention} />);

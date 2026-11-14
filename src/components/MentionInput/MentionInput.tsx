@@ -129,13 +129,23 @@ export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, Menti
 
   const q = query && query.start !== dismissed ? query : null;
   const max = Math.max(1, Math.floor(maxOptions) || 8);
-  const shown = !q ? [] : (filter ? options.filter((o) => !q.text || highlightRanges(o.label, q.text).length > 0)
-    .sort((a, b) => Number(!(highlightRanges(a.label, q.text)[0]?.[0] === 0)) - Number(!(highlightRanges(b.label, q.text)[0]?.[0] === 0))) : options.slice()).slice(0, max);
+  const qText = q ? q.text : null;
+  // Searched once per mention typed, not on every render (a key that moves the highlight, a caret move): each name
+  // is matched once, and the ones starting with the text come first, in their order.
+  const shown = React.useMemo(() => {
+    if (qText == null) return [];
+    if (!filter || !qText) return options.slice(0, max);
+    const starts: MentionOption[] = [], inside: MentionOption[] = [];
+    for (const o of options) {
+      const at = highlightRanges(o.label, qText)[0];
+      if (at) (at[0] === 0 ? starts : inside).push(o);
+    }
+    return starts.concat(inside).slice(0, max);
+  }, [options, qText, filter, max]);
   const open = !!q && !rest.disabled && !rest.readOnly;
   const pickable = shown.map((o, i) => (o.disabled ? -1 : i)).filter((i) => i >= 0);
   const current = pickable.indexOf(active) >= 0 ? active : (pickable[0] ?? -1);
 
-  const qText = q ? q.text : null;
   const onQuery = React.useRef(onSearch);
   // every render: keeps the latest onSearch without making the query effect run again.
   useIsoLayoutEffect(() => { onQuery.current = onSearch; });
