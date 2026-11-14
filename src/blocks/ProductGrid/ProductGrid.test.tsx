@@ -117,4 +117,20 @@ describe('Blocks/Product grid', () => {
     const bare = [...document.querySelectorAll('ul, ol')].filter((l) => getComputedStyle(l).listStyleType === 'none' && !l.closest('[role="region"], section'));
     expect(bare.map((l) => l.getAttribute('role'))).toEqual(['list']);
   });
+
+  test('loading: the list is busy, and only one placeholder is named, so "Loading products" is said once', async () => {
+    await render(grid({ products: [], loading: true, loadingCount: 3 }));
+    expect(document.querySelector('ul')!.getAttribute('aria-busy')).toBe('true');
+    expect(document.querySelectorAll('ul > li')).toHaveLength(3);
+    await expect.poll(() => [...document.querySelectorAll('ul [aria-label]')].map((e) => e.getAttribute('aria-label'))).toEqual(['Loading products']);
+  });
+
+  test('a failed load says so once in the grid\'s place, and Try again calls onRetry', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(grid({ loadFailed: true, onRetry, headingLevel: 4, labels: { loadFailed: 'Couldn’t load the shirts' } }));
+    await expect.element(screen.getByRole('heading', { name: 'Couldn’t load the shirts', level: 4 })).toBeVisible();
+    expect(document.querySelectorAll('ul')).toHaveLength(0);
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

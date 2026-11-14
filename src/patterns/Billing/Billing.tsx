@@ -16,14 +16,16 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { useLocale } from '../../internal/provider';
 
-/* Billing: the plan with what it costs and when it renews, how much of it is used, the card it's paid with, past
-   invoices, and cancelling. For an app to copy. What it carries (WCAG 2.2, and the Ethical design rules):
+/* Billing: the plan with what it costs and when it renews, how much of it is used, how it's paid (a card, a direct
+   debit or an e-wallet), past invoices, and cancelling. For an app to copy. What it carries (WCAG 2.2, and the Ethical design rules):
    - The plan says what it costs and the day it renews, in the reader's locale, before anyone looks for it.
    - Cancelling takes no more steps than signing up: one button, then a dialog that says what changes and when, with
      Keep my plan and Cancel plan side by side, the same size. Nothing is deleted, and a cancelled plan can be resumed.
    - 1.4.1: usage says how much in words ("4 of 10 seats"), and "almost full" in words too, not only in color.
    - 1.3.1: invoices are a table with a caption; each Download link names its invoice ("Download the invoice of
      1 October 2026").
+   - 3.3.1: a card that runs out before the next payment says so, in words as well as a badge, and so does a plan
+     with no way to pay yet, each with the way to fix it.
    - 3.3.1, 4.1.3: a failed payment says so at the top, with the way to fix it; a cancel that fails says so in the
      dialog, which stays open; cancelling and resuming are said in a toast.
    - 4.1.3: while billing loads, main is busy with one placeholder name ("Loading billing"); a failed load says so,
@@ -43,6 +45,11 @@ export interface BillingPlan {
 }
 export interface BillingUsage { seats: { used: number; limit: number }; storageGb: { used: number; limit: number } }
 export interface BillingCard { brand: string; last4: string; expires: string }
+/** How the plan is paid: a card, a direct debit from a bank account, or an e-wallet. */
+export type BillingPaymentMethod =
+  | ({ kind: 'card' } & BillingCard)
+  | { kind: 'bank'; bank: string; last4: string }
+  | { kind: 'ewallet'; provider: string; phoneLast4: string };
 export interface BillingInvoice { id: string; date: string; amount: number; status: 'paid' | 'due' | 'failed'; href: string }
 
 export interface BillingProps {
@@ -50,8 +57,10 @@ export interface BillingProps {
   plan?: BillingPlan | undefined;
   /** How much of the plan is used. Default: demo numbers. */
   usage?: BillingUsage | undefined;
-  /** The card it's paid with. */
+  /** The card it's paid with. Pass `paymentMethod` instead for a bank account or an e-wallet. */
   card?: BillingCard | undefined;
+  /** How it's paid: a card, a direct debit or an e-wallet; null when nothing is on file yet. Wins over `card`. */
+  paymentMethod?: BillingPaymentMethod | null | undefined;
   /** Past invoices, newest first. */
   invoices?: readonly BillingInvoice[] | undefined;
   /** Cancel plan was confirmed. Return its promise: a rejection keeps the dialog open and says so. */
@@ -60,7 +69,7 @@ export interface BillingProps {
   onResume?: (() => void) | undefined;
   /** Where Change plan leads. Default: "#plans". */
   changePlanHref?: string | undefined;
-  /** Where Update card leads. Default: "#card". */
+  /** Where Update card (or Change payment method, or Add payment method) leads. Default: "#card". */
   updateCardHref?: string | undefined;
   /** Billing is on its way: placeholder parts, named once ("Loading billing"). Default: false. */
   loading?: boolean | undefined;
@@ -93,10 +102,16 @@ export function money(amount: number, currency: string, locale: string): string 
   try { return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount); } catch { return `${amount} ${currency}`; }
 }
 
+/** The method in words: "Visa ending 4242", "Direct debit from BCA, account ending 7781", "GoPay, phone ending 4410". */
+export function methodText(m: BillingPaymentMethod): string {
+  return m.kind === 'card' ? `${m.brand} ending ${m.last4}`
+    : m.kind === 'bank' ? `Direct debit from ${m.bank}, account ending ${m.last4}` : `${m.provider}, phone ending ${m.phoneLast4}`;
+}
+
 const STATUS = { paid: ['Paid', 'success'], due: ['Due', 'warning'], failed: ['Payment failed', 'danger'] } as const;
 
 /** The billing page: a skip link, a header, then main with the h1, the plan, usage, the card and the invoices. */
-export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, invoices = demoInvoices, onCancel, onResume,
+export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, paymentMethod, invoices = demoInvoices, onCancel, onResume,
   changePlanHref = '#plans', updateCardHref = '#card', loading = false, loadFailed = false, onRetry }: BillingProps) {
   const locale = useLocale();
   const [cancelled, setCancelled] = React.useState(!!plan.cancelled);
@@ -105,6 +120,11 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, i
   const date = (iso: string) => billingDate(iso, locale);
   const price = money(plan.price, plan.currency, locale);
   const unpaid = invoices.find((i) => i.status === 'failed');
+  const method = paymentMethod === undefined ? { kind: 'card' as const, ...card } : paymentMethod;
+  // The way to fix the method names what it is: a card is updated, anything else is changed, and nothing is added.
+  const fix = !method ? 'Add payment method' : method.kind === 'card' ? 'Update card' : 'Change payment method';
+  // A card that runs out before the next payment ("2026-11" before a renewal on "2026-12-01") fails on that day.
+  const runsOut = !cancelled && method?.kind === 'card' && method.expires < plan.renews.slice(0, 7);
 
   const ask = (open: boolean) => { setAsking(open); if (!open) setFailed(false); };
   // A cancel that fails, by rejecting or by throwing, keeps the dialog open and says so. The promise goes back to
@@ -141,8 +161,8 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, i
         ) : <>
           {unpaid ? (
             <Alert tone="danger" title={`The payment on ${date(unpaid.date)} failed`}
-              actions={<Link href={updateCardHref}>Update card</Link>}>
-              Update your card to keep {plan.name}. We’ll try the payment again when you do.
+              actions={<Link href={updateCardHref}>{fix}</Link>}>
+              {method?.kind === 'card' ? 'Update your card' : method ? 'Change your payment method' : 'Add a payment method'} to keep {plan.name}. We’ll try the payment again when you do.
             </Alert>
           ) : null}
 
@@ -178,8 +198,15 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, i
           <section aria-labelledby="billing-card" className="flex flex-col gap-3">
             <Heading level={2} size="lg" id="billing-card">Payment method</Heading>
             <Card className="flex flex-wrap items-center justify-between gap-3">
-              <p className="m-0">{card.brand} ending {card.last4}, expires {date(card.expires)}</p>
-              <Link href={updateCardHref}>Update card</Link>
+              <div className="flex flex-col gap-1">
+                {method ? <p className="m-0">
+                  {methodText(method)}{method.kind === 'card' ? `, expires ${date(method.expires)}` : ''}
+                  {runsOut ? <Badge tone="warning" className="ms-2">Expires soon</Badge> : null}
+                </p> : <p className="m-0">No payment method yet.</p>}
+                {runsOut ? <p className="m-0 text-text-muted">It runs out before the next payment on {date(plan.renews)}. Update it to keep {plan.name}.</p>
+                  : !method && !cancelled ? <p className="m-0 text-text-muted">Add one before {date(plan.renews)} to keep {plan.name}.</p> : null}
+              </div>
+              <Link href={updateCardHref}>{fix}</Link>
             </Card>
           </section>
 
