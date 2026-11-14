@@ -130,7 +130,7 @@ one('16.0.0: the ease-toggle class and token reference are ease-move; the name i
   t('16.0.0: each place that names the emerald brand or its themes is listed, and nothing is rewritten; a palette step and a Badge color are left', r.text === src && r.notes.filter((n) => n.id === 'emerald-is-emerald').map((n) => n.line).join() === '1,1,2,3,4,5,6', JSON.stringify(r.notes.map((n) => [n.id, n.line])));
   const themes = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8')).color.themes.map((x) => x.id);
   const css = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
-  t('teal and emerald are both themes, each in its own ramp', ['teal-light', 'teal-dark', 'emerald-light', 'emerald-dark'].every((id) => themes.includes(id)) && /\[data-theme="teal-light"\][^}]*--primary: var\(--teal-700\)/.test(css) && /\[data-theme="emerald-light"\][^}]*--primary: var\(--emerald-700\)/.test(css), '');
+  t('teal and emerald are both themes, each in its own ramp', 'teal-light teal-dark emerald-light emerald-dark'.split(' ').every((id) => themes.includes(id)) && /\[data-theme="teal-light"\][^}]*--primary: var\(--teal-700\)/.test(css) && /\[data-theme="emerald-light"\][^}]*--primary: var\(--emerald-700\)/.test(css), '');
 }
 // The package's new name, made only by a serupa-migrate that ships under it.
 {
