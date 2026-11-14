@@ -12,7 +12,7 @@ import { buildUtilities } from './tools/utilities/build.mjs';
 import { buildRegistry } from './tools/build/registry.mjs';
 import { TOUCH } from './tools/test/vitest/touch.ts';
 import { TimedSequencer } from './tools/test/vitest/shard.ts';
-import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, writeAriaBaseline } from './tools/test/vitest/commands.ts';
+import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, safeArea, writeAriaBaseline } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
@@ -98,7 +98,7 @@ export default defineConfig({
             { browser: BROWSER, name: `components (${BROWSER}, touch)`, include: TOUCH },
           ],
           viewport: { width: 900, height: 700 },
-          commands: { pointerDrag, pointerDown, pointerUp, forcedColors, coarsePointer, printMedia, ariaSnapshot, ariaMode, writeAriaBaseline, recordBench },
+          commands: { pointerDrag, pointerDown, pointerUp, forcedColors, coarsePointer, printMedia, safeArea, ariaSnapshot, ariaMode, writeAriaBaseline, recordBench },
         },
       },
     }, {

@@ -18,4 +18,31 @@
 .dk-toc__link:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-toc__link[aria-current="location"] { color: var(--table-of-contents-current, var(--text)); box-shadow: inset var(--dk-bar) 0 0 var(--table-of-contents-line-current, var(--primary)); border-inline-start-color: var(--table-of-contents-line-current, var(--primary)); }
 @media (forced-colors: active) { .dk-toc__link[aria-current="location"] { border-inline-start-color: CanvasText; outline: var(--outline-width-2) solid CanvasText; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); } }
+/* The rail (variant="rail"): a 24px-wide column of 2px dashes, 12px long and 6px apart, one per heading, each level
+   4px shorter (two levels at most) and pushed to the end edge; the current section's in line-current, the others in dash. Pointing at it,
+   focus in it or a tap (data-open) shows the panel: the title and the links, over the page from the rail's top end
+   corner, on surface-overlay with a border, corners and the overlay shadow, 256px at most. It fades and grows in over
+   motion-enter-sm and out over motion-exit-sm; with focus from the keyboard it's there at once (KW1); reduced motion:
+   the fade alone. Escape hides it (data-dismissed) until the pointer and focus leave. While hidden its links keep
+   their place for screen readers and the Tab key, and take no presses. */
+.dk-toc--rail { position: relative; inline-size: var(--spacing-6); }
+.dk-toc__rail { display: flex; flex-direction: column; align-items: flex-end; gap: var(--spacing-1\.5); padding-block: var(--spacing-2); cursor: default; }
+.dk-toc__dash { display: block; block-size: var(--border-width-2); inline-size: calc(var(--spacing-3) - var(--spacing-1) * var(--dk-toc-depth, 0)); border-radius: var(--radius-pill); background: var(--table-of-contents-dash, var(--border-strong)); }
+.dk-toc__dash[data-current] { background: var(--table-of-contents-line-current, var(--primary)); }
+.dk-toc--rail .dk-toc__panel {
+  box-sizing: border-box; position: absolute; inset-block-start: var(--spacing-0); inset-inline-end: var(--spacing-0); z-index: var(--z-popover);
+  inline-size: max-content; max-inline-size: var(--container-3xs); padding: var(--spacing-3);
+  /* As tall as the window less panel-gap at most (room for a sticky column's offset above and a margin below); a
+     longer list scrolls inside it, so the last links stay in reach on a page of many headings. */
+  max-block-size: calc(var(--sizing-dvh) - var(--table-of-contents-panel-gap, var(--spacing-16))); overflow-y: auto; overscroll-behavior: contain;
+  border: var(--border-width-1) solid var(--table-of-contents-panel-border, var(--border-overlay)); border-radius: var(--radius-surface);
+  background: var(--table-of-contents-panel, var(--surface-overlay)); box-shadow: var(--depth-surface), var(--elevation-overlay);
+  transform-origin: top right; opacity: var(--opacity-0); scale: var(--scale-95); pointer-events: none;
+  transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit);
+}
+.dk-toc--rail .dk-toc__panel:dir(rtl) { transform-origin: top left; }
+.dk-toc--rail:is([data-open], :focus-within):not([data-dismissed]) .dk-toc__panel { opacity: var(--opacity-100); scale: none; pointer-events: auto; transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); }
+@media (hover: hover) { .dk-toc--rail:hover:not([data-dismissed]) .dk-toc__panel { opacity: var(--opacity-100); scale: none; pointer-events: auto; transition: opacity var(--motion-enter-sm) var(--ease-enter), scale var(--motion-enter-sm) var(--ease-enter); } }
+.dk-toc--rail:is([data-open], :focus-within):not([data-dismissed]):has(:focus-visible) .dk-toc__panel, .dk-toc--rail[data-dismissed] .dk-toc__panel { transition: none; }
+@media (forced-colors: active) { .dk-toc__dash { background: CanvasText; } .dk-toc__dash[data-current] { background: Highlight; } .dk-toc--rail .dk-toc__panel { border-color: CanvasText; } }
 }

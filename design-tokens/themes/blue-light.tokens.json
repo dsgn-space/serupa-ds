@@ -220,6 +220,16 @@
         }
       }
     },
+    "field-raised": {
+      "$type": "color",
+      "$value": "{color.white}",
+      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. Emerald dark, whose overlays are zinc-900, keeps zinc-800. `field-hover` and `field-pressed` already sit a step past it.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--field-raised"
+        }
+      }
+    },
     "field-border-invalid": {
       "$type": "color",
       "$value": "{color.red-600}",

@@ -117,7 +117,10 @@ await inParallel(pages, workers, async (p, w) => {
   t(`${p.path} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
   // On a 320px phone the page doesn't scroll sideways (WCAG 1.4.10); a wide example scrolls in its own box.
   await w.page.setViewportSize({ width: 320, height: 640 });
-  // The frame swaps its sidebar for a drawer on the next render: measure two frames later.
+  // The frame swaps its sidebar for a drawer on the next render, and the examples lay out again after it: the page has
+  // up to 2s to stop scrolling sideways, then is measured two frames later. Two frames alone weren't always enough on a
+  // busy runner (/components/chat, 228px wider once on 14 Nov, fine on the next run).
+  await w.page.waitForFunction(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth, null, { timeout: 2000, polling: 100 }).catch(() => {});
   const wide = await w.page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => done(document.documentElement.scrollWidth - document.documentElement.clientWidth)))));
   await w.page.setViewportSize({ width: 1280, height: 800 });
   t(`${p.path} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen`);
@@ -142,6 +145,26 @@ await inParallel(pages, workers, async (p, w) => {
   await w.page.waitForTimeout(300);
   const after = await w.page.evaluate(() => window.scrollY);
   t('/guides/localization: a press inside an example keeps the page where it was', before > 0 && after === before, `the page was at ${before}px before the press and at ${after}px after it`);
+}
+
+// "On this page" is the contents' rail (site/src/Doc.tsx): pointing at it opens the list, inside the window even on a
+// page with more headings than the window is tall.
+{
+  const w = workers[0];
+  await w.page.setViewportSize({ width: 1280, height: 720 });
+  await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
+  const rail = w.page.locator('.site-aside .dk-toc--rail');
+  const hovered = await rail.hover({ timeout: 10000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
+  await w.page.waitForTimeout(500);
+  const panel = hovered ? null : await w.page.evaluate(() => {
+    const el = document.querySelector('.site-aside .dk-toc__panel');
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return { shown: getComputedStyle(el).opacity === '1', top: r.top, bottom: r.bottom, left: r.left, right: r.right, links: el.querySelectorAll('a').length };
+  });
+  t('/components/button: pointing at the rail opens "On this page", inside the window', !!panel && panel.shown && panel.links > 0 && panel.top >= 0 && panel.left >= 0 && panel.bottom <= 720 && panel.right <= 1280, hovered || JSON.stringify(panel));
+  await w.page.mouse.move(0, 0);
+  await w.page.setViewportSize({ width: 1280, height: 800 });
 }
 
 // A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
