@@ -162,6 +162,23 @@ describe('Chart', () => {
     await expect.poll(() => document.querySelector('svg[aria-describedby] + div')).toBeNull();
   });
 
+  test('the pointer moving across the plot draws the tip and marks the category\'s markers, without drawing every point again', async () => {
+    // formatValue is asked for each point drawn (its name says its value), each tick and each row of the tip: with
+    // 100 categories in two series, drawing the points again would ask it 200 times more.
+    const formatValue = vi.fn((v: number) => String(v));
+    const cats = Array.from({ length: 100 }, (_, i) => 'D' + i);
+    const two = [{ name: 'A', values: cats.map((_, i) => i) }, { name: 'B', values: cats.map((_, i) => 100 - i) }];
+    await render(<Chart title="Daily" categories={cats} series={two} formatValue={formatValue} />);
+    const marks = () => [...document.querySelectorAll<SVGElement>('g[role="group"] > [role="img"]')];
+    formatValue.mockClear();
+    await userEvent.hover(marks()[10]!);
+    await expect.poll(() => document.querySelector('svg[aria-describedby] + div')?.textContent).toBe('D10A10B90');
+    expect(formatValue.mock.calls.length).toBeLessThan(30);
+    expect(marks().filter((m) => m.hasAttribute('data-active')).map((m) => m.getAttribute('aria-label'))).toEqual(['A, D10: 10', 'B, D10: 90']);
+    await userEvent.hover(marks()[40]!);
+    await expect.poll(() => marks().filter((m) => m.hasAttribute('data-active')).map((m) => m.getAttribute('aria-label'))).toEqual(['A, D40: 40', 'B, D40: 60']);
+  });
+
   test('each series has its own marker shape, in the legend too', async () => {
     await render(<Chart title="Eight" categories={['a', 'b']} series={Array.from({ length: 8 }, (_, s) => ({ name: 'S' + s, values: [s, s + 1] }))} />);
     const shapes = new Set(Array.from({ length: 8 }, (_, s) => markerPath(s, 0, 0, 4)));
