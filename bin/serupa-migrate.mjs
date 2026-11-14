@@ -20,9 +20,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { ALL, migrate, transformsAfter } from './migrate/transforms.mjs';
+import { ALL, migrate, renamePackage, transformsAfter } from './migrate/transforms.mjs';
 
-export { migrate, TRANSFORMS, transformsAfter, renameProp, removeProp, openTags } from './migrate/transforms.mjs';
+export { migrate, TRANSFORMS, transformsAfter, renameProp, removeProp, openTags, renamePackage, TOKENS_15 } from './migrate/transforms.mjs';
+
+// The package this command came in. From 15.0.0 it is published under a scoped name (docs/rfcs/15.0.0.md), so its
+// serupa-migrate also rewrites `serupa-ds` in imports and paths to that name. Run from a package still called
+// serupa-ds, it leaves them: an app must not import a name it hasn't installed.
+const OWN = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8')).name;
+/** The change that rewrites imports of `serupa-ds` to `name`, or none while the package is still serupa-ds. */
+export const packageNameChange = (name = OWN) => (name === 'serupa-ds' ? [] : [{
+  version: '15.0.0', id: 'package-name', exts: ALL,
+  title: `The package is \`${name}\` (it was \`serupa-ds\`): every import and path changes once`,
+  run: (src) => ({ ...renamePackage(src, name), notes: [] }),
+}]);
 const SKIP = ['node_modules', '.git', 'dist', 'build', '.next', '.nuxt', '.svelte-kit', 'storybook-static', 'coverage'];
 
 // A linked folder is skipped (it may lead back up); a linked file is read.
@@ -55,7 +66,8 @@ export function main(argv) {
     else if (a.startsWith('-')) stop(`unknown option ${a}`);
     else sources.push(a);
   }
-  const transforms = transformsAfter(from);
+  // The rename runs last: 7.0.0's and 8.0.0's changes find `serupa-ds` in an import or a path, so they go first.
+  const transforms = [...transformsAfter(from), ...(from == null || major(from) < 15 ? packageNameChange() : [])];
   if (list) {
     for (const t of transforms) console.log(`${t.version.padEnd(7)} ${t.id.padEnd(24)} ${t.title.replace(/`/g, '')}`);
     return 0;

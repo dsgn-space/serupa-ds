@@ -13,7 +13,9 @@
 @media (hover: hover) { .dk-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 .dk-link--neutral { color: inherit; }
 @media (hover: hover) { .dk-link--neutral:hover { color: inherit; } }
-@media (hover: hover) { .dk-link--hover-underline:not(:hover, :focus-visible) { text-decoration-line: none; } }
+/* Hover-only underlines are for links whose place says they are links (a nav bar, a footer). In a paragraph the underline
+   stays: there color alone can't tell a link from the text around it (WCAG 1.4.1). */
+@media (hover: hover) { .dk-link--hover-underline:not(:hover, :focus-visible, p *) { text-decoration-line: none; } }
 .dk-link:focus-visible { outline: var(--focus-ring-width) solid var(--link-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-link__last { white-space: nowrap; }
 .dk-link__icon.dk-icon { margin-inline-start: var(--link-icon-gap, var(--spacing-0\.5)); font-size: 1em; vertical-align: var(--icon-cap-align); text-decoration: none; }
