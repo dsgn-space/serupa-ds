@@ -1007,7 +1007,7 @@ Two kinds of layout change get a direction:
 | `animate-spin` | `spin 1s linear infinite` | Turning things: refresh icons, simple spinners. (The Loader component has its own, livelier ring.) |
 | `animate-ping` | `ping 1s cubic-bezier(0, 0, 0.2, 1) infinite` | A radar ping behind a notification dot or live badge. |
 | `animate-pulse` | `pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite` | Skeleton placeholders while content loads. |
-| `animate-bounce` | `bounce 1s infinite` | A scroll-down hint. Use sparingly. |
+| `animate-bounce` | `bounce 1s infinite` | Deprecated, removed in 15.0.0: it bounces without end, which the rules above turn down (WCAG 2.2.2 asks for a pause past five seconds). Point down with a still icon, or let the content arrive once with `animate-enter`. |
 | `animate-enter` | `enter` over `motion-enter-md` with `ease-enter` | Content arriving: it fades in as it rises 8px into place. With `stagger` on the parent, the items arrive one after another. Under reduced motion it only fades. |
 | `animate-none` | `none` | Turns an animation off. |
 
