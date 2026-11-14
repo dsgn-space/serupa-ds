@@ -269,6 +269,17 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     expect(outside.mock.calls.flat().filter((k) => k === 'Escape')).toEqual([]);
   });
 
+  test('the year buttons turn the months a year at a time, and the one that reaches min or max hands focus to the other, as the month arrows do', async () => {
+    await render(<Calendar data-testid="cal" locale="en-US" defaultValue={new Date(2025, 2, 10)} min={new Date(2024, 4, 1)} max={new Date(2026, 8, 30)} />);
+    await userEvent.click(cal('.dk-calendar__heading'));
+    const prev = () => q<HTMLButtonElement>('[data-testid=cal] [aria-label="Previous year"]'), next = () => q<HTMLButtonElement>('[data-testid=cal] [aria-label="Next year"]');
+    await userEvent.click(next());
+    expect([title(), next().disabled, document.activeElement === prev()]).toEqual(['2026', true, true]);
+    await userEvent.click(prev());
+    await userEvent.click(prev());
+    expect([title(), prev().disabled, document.activeElement === next()]).toEqual(['2024', true, true]);
+  });
+
   test('the months and years keep to min and max: the ones outside are disabled and can\'t be picked, the page buttons stop, and keys stop at the ends', async () => {
     const months: string[] = [];
     await render(<Cal months={months} />);   // min Feb 3 2025, max Jun 20 2025
