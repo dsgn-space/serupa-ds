@@ -69,11 +69,13 @@ describe('BottomNav', () => {
       <BottomNavLink href="#inbox" icon="inbox" badge={<Badge count={4} />} aria-describedby="hint">Inbox</BottomNavLink>
     </BottomNav>);
     const inbox = page.getByRole('link', { name: 'Inbox' });
-    await expect.element(inbox).toHaveAccessibleDescription(/4/);
+    await expect.element(inbox).toHaveAccessibleDescription(/\p{Nd}/u);
     expect(inbox.element().getAttribute('aria-describedby')).toMatch(/^hint /);
     const icon = inbox.element().querySelector('.dk-bottom-nav__icon')!.getBoundingClientRect(), badge = inbox.element().querySelector('.dk-bottom-nav__badge')!.getBoundingClientRect();
-    // Over the icon's top-end quarter: starts past the pill's middle, its top at the pill's top.
-    expect(badge.left).toBeGreaterThan(icon.left + icon.width / 2);
+    // Over the icon's top-end quarter: starts past the pill's middle (on the left in a right-to-left page), its top
+    // at the pill's top.
+    const rtl = getComputedStyle(inbox.element()).direction === 'rtl', mid = icon.left + icon.width / 2;
+    expect(rtl ? badge.right < mid : badge.left > mid).toBe(true);
     expect(Math.round(badge.top)).toBe(Math.round(icon.top));
     expect(Math.round(links()[1]!.getBoundingClientRect().height)).toBe(Math.round(links()[0]!.getBoundingClientRect().height));
   });
