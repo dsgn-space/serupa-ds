@@ -52,6 +52,12 @@ export const Default: Story = {};
 /** An empty cart says so, with a way back to the shop. */
 export const Empty: Story = { args: { items: [] } };
 
+/** The cart is on its way: a placeholder under the heading, named once ("Loading your cart"). */
+export const Loading: Story = { args: { items: [], loading: true } };
+
+/** The cart didn't load: it says so under the heading, and Try again loads it again. */
+export const LoadFailed: Story = { args: { items: [], loadFailed: true, onRetry: wait } };
+
 /** In Indonesian rupiah with 11% PPN, the words in Indonesian: money is written the locale's way. */
 export const Indonesian: Story = {
   args: {
