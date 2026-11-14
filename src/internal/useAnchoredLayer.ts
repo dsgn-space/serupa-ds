@@ -6,15 +6,20 @@ import { cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Pla
 
 type Ref = React.RefObject<HTMLElement | null>;
 
-// The anchor's ancestors that clip it (a scrolling list, a card with overflow hidden), nearest first.
+// The anchor's ancestors that clip it (a scrolling list, a card with overflow hidden), nearest first. Up to the layer
+// it sits in, if any (a submenu's item in its menu): that layer is in the top layer, drawn where it's placed, so what
+// holds it in the page doesn't clip it.
+const TOP = ':popover-open, :modal';
 function clippers(a: HTMLElement): Element[] {
   const out: Element[] = [];
   for (let e = a.parentElement; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
     const cs = getComputedStyle(e);
     if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') out.push(e);
+    if (inTopLayer(e)) break;
   }
   return out;
 }
+function inTopLayer(e: Element): boolean { try { return e.matches(TOP); } catch { return false; } }
 /** True when nothing of the anchor can be seen: it has scrolled out of the window or out of a box that clips it. An
     anchor with no box (display: none) counts as seen, so its layer is placed as before. */
 function anchorGone(a: HTMLElement, clips: Element[]): boolean {
