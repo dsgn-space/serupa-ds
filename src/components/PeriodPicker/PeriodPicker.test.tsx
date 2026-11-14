@@ -24,6 +24,11 @@ beforeEach(() => { errors = vi.spyOn(console, 'error'); vi.useFakeTimers({ toFak
 afterEach(() => { vi.useRealTimers(); expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); document.documentElement.removeAttribute('data-theme'); });
 
 describe('PeriodPicker', () => {
+  test('the value is set in tabular figures, so the field keeps its width from one period to the next', async () => {
+    await render(<EnUS><PeriodPicker aria-label="Report month" defaultValue="2026-11" /></EnUS>);
+    expect(css([...button().querySelectorAll('span')].find((s) => s.textContent === 'November 2026')!).fontVariantNumeric).toBe('tabular-nums');
+  });
+
   test('a combobox button (aria-haspopup dialog, collapsed) with the placeholder, md 32px with a 1px field border and 6px corners; ref, className, data and aria props reach it', async () => {
     const ref = React.createRef<HTMLButtonElement>();
     await render(<EnUS><PeriodPicker ref={ref} aria-label="Report month" className="extra" data-x="y" /></EnUS>);
