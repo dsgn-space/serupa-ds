@@ -91,7 +91,7 @@
 /* line */
 .dk-tabs--line .dk-tabs__tab { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
 .dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"]) { color: var(--tabs-text-selected, var(--text)); }
-.dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { content: ""; position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--tabs-indicator-width, var(--border-width-2)); background: var(--tabs-indicator, var(--text)); }
+.dk-tabs--line .dk-tabs__tab:is([aria-selected="true"], [aria-current="page"])::after { content: ""; position: absolute; inset-inline: var(--spacing-0); bottom: var(--spacing-0); height: var(--tabs-indicator-width, var(--border-width-2)); background: var(--tabs-indicator, var(--primary)); }
 
 /* pill */
 @media (hover: hover) { .dk-tabs--pill .dk-tabs__tab:hover:not(:disabled):not([aria-selected="true"], [aria-current="page"]) { background: var(--tabs-pill-bg-hover, var(--secondary)); } }

@@ -113,7 +113,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-text` | `text-muted` | A tab's label (4.5:1 on surface). |
 | `--tabs-text-hover` | `text` | A tab's label on hover. |
 | `--tabs-text-selected` | `text` | The selected tab's label (line). |
-| `--tabs-indicator` | `text` | The line under the selected tab (3:1 on surface). Neutral: the accent is kept for focus. |
+| `--tabs-indicator` | `primary` | The line under the selected tab (3:1 on surface). |
 | `--tabs-border` | `border` | The line under the whole tab list (line). |
 | `--tabs-pill-bg-hover` | `secondary` | A pill tab's background on hover. |
 | `--tabs-pill-bg-pressed` | `pressed` | A pill tab's background while it's pressed, before it's selected, one step past hover. |

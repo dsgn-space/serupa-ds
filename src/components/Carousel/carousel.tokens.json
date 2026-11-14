@@ -34,8 +34,8 @@
       },
       "dot-active": {
         "$type": "color",
-        "$value": "{color.text}",
-        "$description": "The current slide's dot. Neutral: the accent is kept for focus.",
+        "$value": "{color.primary}",
+        "$description": "The current slide's dot.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--carousel-dot-active"

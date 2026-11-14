@@ -77,6 +77,6 @@ Each is an optional override: set it on the page, a container or one TableOfCont
 | `--table-of-contents-title` | `text` | The title, and a link under the pointer (4.5:1). |
 | `--table-of-contents-current` | `text` | The current section's link (4.5:1). |
 | `--table-of-contents-line` | `border` | The line along the links. |
-| `--table-of-contents-line-current` | `text` | The line beside the current section's link (3:1). Neutral: the accent is kept for focus. |
+| `--table-of-contents-line-current` | `primary` | The line beside the current section's link (3:1). |
 | `--table-of-contents-focus-ring` | `focus-ring` | The ring around a focused link. |
 <!-- token-table:end -->
