@@ -35,6 +35,13 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
 - One choice out of a few: use [SegmentedControl](../SegmentedControl/README.md) or a [RadioGroup](../Radio/README.md).
 - A site's main links: use [Navbar](../Navbar/README.md) or [Sidebar](../Sidebar/README.md). A toolbar is for controls, not navigation.
 
+## Anatomy
+
+Drawn from the `MoreMenu` story.
+
+1. **Toolbar** (`.dk-toolbar`): the row (or column) of controls, on its own surface, with one Tab stop.
+2. **More** (`.dk-toolbar__more`): with `overflow`, the button at the end of the row that opens the controls with no room; it shows only while one is hidden.
+
 ## Usage
 
 - Put any controls inside, at any depth: Buttons, IconButtons, ToggleButtons, ButtonGroups, a Menu's trigger, a Select or an Input. Set `size` on the toolbar and every button in it takes it, in its ButtonGroups too (a button's own `size` still wins); give a Select or an Input in it the same `size` yourself.

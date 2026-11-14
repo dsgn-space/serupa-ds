@@ -228,8 +228,9 @@ describe('Toolbar', () => {
 });
 
 describe('Toolbar overflow', () => {
-  const hidden = (id: string) => [...el(id).children].filter((k) => getComputedStyle(k).display === 'none' && !k.classList.contains('dk-toolbar__more') && k.getAttribute('role') !== 'tooltip').map((k) => k.id || k.getAttribute('role'));
-  const more = () => document.querySelector<HTMLElement>('.dk-toolbar__more button');
+  const hidden = (id: string) => [...el(id).children].filter((k) => getComputedStyle(k).display === 'none' && !k.querySelector('[aria-label="More"]') && k.getAttribute('role') !== 'tooltip').map((k) => k.id || k.getAttribute('role'));
+  const more = () => document.querySelector<HTMLElement>('#of button[aria-label="More"]');
+  const moreShown = () => getComputedStyle(more()!.parentElement!).display !== 'none';
   function Wide({ width, onCopy = () => {} }: { width: number; onCopy?: () => void }) {
     const [bold, setBold] = React.useState(false);
     return (
@@ -250,7 +251,7 @@ describe('Toolbar overflow', () => {
   test('with room for everything: one row, nothing hidden and no More button', async () => {
     await render(<Wide width={800} />);
     expect(hidden('of')).toEqual([]);
-    expect(getComputedStyle(document.querySelector('.dk-toolbar__more')!).display).toBe('none');
+    expect(moreShown()).toBe(false);
     expect(getComputedStyle(el('of')).flexWrap).toBe('nowrap');
   });
 
@@ -259,7 +260,7 @@ describe('Toolbar overflow', () => {
     await expect.poll(() => hidden('of')).toContain('paste');
     expect(hidden('of')).not.toContain('find');
     expect(hidden('of')).not.toContain('undo');
-    expect(more()).not.toBeNull();
+    expect(moreShown()).toBe(true);
     expect(more()!.getAttribute('aria-label')).toBe('More');
     expect(el('of').scrollWidth).toBeLessThanOrEqual(el('of').clientWidth + 1);
     const shown = [...el('of').children].filter((k) => getComputedStyle(k).display !== 'none');
@@ -295,15 +296,15 @@ describe('Toolbar overflow', () => {
     expect(document.activeElement).toBe(more());
     await screen.rerender(<Wide width={900} />);
     await expect.poll(() => hidden('of')).toEqual([]);
-    await expect.poll(() => getComputedStyle(document.querySelector('.dk-toolbar__more')!).display).toBe('none');
+    await expect.poll(moreShown).toBe(false);
   });
 
   test('vertical ignores overflow, and moreLabel and the labels name the More button', async () => {
     await render(<div style={{ height: 40 }}><Toolbar id="v" aria-label="Tools" orientation="vertical" overflow><IconButton icon="undo" label="Undo" /><IconButton icon="redo" label="Redo" /></Toolbar></div>);
-    expect(document.querySelector('#v .dk-toolbar__more')).toBeNull();
+    expect(el('v').querySelector('button[aria-label="More"]')).toBeNull();
     await render(<SerupaProvider labels={idLabels}><div style={{ width: 60 }}><Toolbar id="id1" aria-label="A" overflow><Button>One long label</Button><Button>Two long label</Button></Toolbar></div></SerupaProvider>);
-    await expect.poll(() => document.querySelector('#id1 .dk-toolbar__more button')?.getAttribute('aria-label')).toBe('Lainnya');
+    await expect.poll(() => el('id1').lastElementChild?.querySelector('button')?.getAttribute('aria-label')).toBe('Lainnya');
     await render(<div style={{ width: 60 }}><Toolbar id="ml" aria-label="B" overflow moreLabel="More actions"><Button>One long label</Button><Button>Two long label</Button></Toolbar></div>);
-    await expect.poll(() => document.querySelector('#ml .dk-toolbar__more button')?.getAttribute('aria-label')).toBe('More actions');
+    await expect.poll(() => el('ml').lastElementChild?.querySelector('button')?.getAttribute('aria-label')).toBe('More actions');
   });
 });

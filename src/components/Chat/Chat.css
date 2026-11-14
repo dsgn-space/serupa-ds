@@ -113,4 +113,6 @@
 }
 
 /* ChatReplyActions: a quiet row of small ghost buttons under a reply. */
+@layer dk.components {
 .dk-chat-reply-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-1); margin-block-start: var(--spacing-1); }
+}
