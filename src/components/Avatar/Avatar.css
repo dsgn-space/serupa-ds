@@ -23,6 +23,7 @@
 .dk-avatar--lg { --dk-avatar-size: var(--avatar-size-lg, var(--spacing-12)); --dk-avatar-dot: var(--spacing-3); --dk-avatar-icon: var(--spacing-7); font-size: var(--text-base); }
 .dk-avatar--xl { --dk-avatar-size: var(--avatar-size-xl, var(--spacing-16)); --dk-avatar-dot: var(--spacing-4); --dk-avatar-icon: var(--spacing-10); font-size: var(--text-xl); }
 .dk-avatar__frame {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,6 +43,12 @@
   width: var(--sizing-full); height: var(--sizing-full); object-fit: cover; border-radius: inherit;
   outline: var(--outline-width-1) solid var(--avatar-edge, var(--picture-edge)); outline-offset: calc(var(--spacing-0) - var(--outline-width-1));
 }
+/* A late picture (still loading after quickArrival) lies over the initials or the icon, which fade in under it. When
+   it arrives it fades in over them, and they go once it has. Reduced motion: they swap at once. */
+.dk-avatar__img--late { position: absolute; inset: var(--spacing-0); }
+.dk-avatar__img--late ~ *, .dk-avatar__img--in { animation: dk-avatar-in var(--motion-enter-md) var(--ease-enter); }
+@keyframes dk-avatar-in { from { opacity: var(--opacity-0); } }
+@media (prefers-reduced-motion: reduce) { .dk-avatar__img--late ~ *, .dk-avatar__img--in { animation: var(--animate-none); } .dk-avatar__img--in ~ * { display: none; } }
 .dk-avatar .dk-avatar__icon { font-size: var(--dk-avatar-icon); }
 .dk-avatar__status {
   position: absolute;

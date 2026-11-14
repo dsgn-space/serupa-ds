@@ -93,7 +93,6 @@ Drawn from the `Bottom` story.
 | `defaultOpen` | `boolean` | `false` | Open at first, then it closes itself (uncontrolled). Escape, the × or the backdrop close it, and `onOpenChange(false)` still comes. |
 | `onOpenChange` | `(open, { reason }) => void` | | Called with `false` on Escape, the ×, or a click on the backdrop. `reason` says which: `'escape'`, `'close'` (the ×), `'outside'` (the backdrop) or `'api'` (the browser closed it, as `dialog.close()` or a `method="dialog"` form do) |
 | `placement` | `'right' \| 'left' \| 'top' \| 'bottom' \| 'start' \| 'end'` | `'right'` | The edge it slides in from. `right` and `left` are physical edges, so they stay put in right-to-left pages; `start` and `end` are the edges the reading starts and ends at. |
-| `side` | `'right' \| 'left' \| 'top' \| 'bottom'` | | Deprecated, removed in 15.0.0: use `placement`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | The width of a left or right drawer: 320, 384 or 512px, never wider than the screen. |
 | `title` | `ReactNode` | | The heading; it also names the drawer. Without one, give it an `aria-label`. |
 | `description` | `ReactNode` | | A muted line under the title. |

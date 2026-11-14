@@ -1,7 +1,7 @@
 // serupa-purge's command line, without a browser (page.mjs checks what it keeps): a mistake in the arguments ends
 // with a message and exit 2, not a stack trace; a linked source file is read and a linked folder or a link to a
 // folder is skipped without crashing; a CSS escape for no character reads as U+FFFD, as CSS says; the rules inside
-// @starting-style are trimmed like those inside @media; with --components, a word every component exports (their
+// @starting-style are trimmed like those inside @media, and an @scope goes with its root; with --components, a word every component exports (their
 // label sets, en and id) marks none of them used. Build first.
 //   node tools/test/purge-cli.mjs
 import fs from 'node:fs';
@@ -65,6 +65,10 @@ try {
   // @starting-style holds rules like @media does: a dropped component's or an unused class's go with it.
   const start = purge('@starting-style { .dk-dialog { opacity: 0 } .dk-btn { opacity: 0 } .grid { opacity: 0 } }', new Set(), new Set(['dk-dialog']));
   t('trims the rules inside @starting-style', start.includes('.dk-btn') && !start.includes('dk-dialog') && !start.includes('.grid'), start);
+
+  // @scope goes with its root: a dropped component's scope goes whole; a kept one's rules are trimmed as the rest are.
+  const scoped = purge('@scope (.dk-prose) to (.dk-x) { :scope :where(ul) { color: red } } @scope (.dk-card) { :scope .grid { color: red } :scope p { color: blue } }', new Set(), new Set(['dk-prose']));
+  t('drops an @scope whose root is a dropped component, and trims the rules inside a kept one', !scoped.includes('dk-prose') && scoped.includes('@scope (.dk-card)') && scoped.includes(':scope p') && !scoped.includes('.grid'), scoped);
 
   // --components: a word every component's label sets share (en, id) marks none of them used (GR99).
   const manifest = JSON.parse(fs.readFileSync(path.join(PROJECT, 'dist', 'components.json'), 'utf8'));

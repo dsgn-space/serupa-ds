@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useIsoLayoutEffect } from './cn';
 import { onFontsLoaded } from './fontsLoaded';
 import { markDismissal } from './layers';
-import { cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Placement } from './position';
+import { anchorName, cssLength, firstSide, hideLayer, isRtl, placeLayer, showLayer, type Placement } from './position';
 
 type Ref = React.RefObject<HTMLElement | null>;
 
@@ -28,6 +28,10 @@ export interface AnchoredLayerOptions {
       the anchor, and what placing set on it before is cleared. */
   docked?: boolean;
 }
+
+// module state: whether the browser has anchor positioning, asked once.
+let anchorable: boolean | undefined;
+const canAnchor = (): boolean => (anchorable ??= typeof CSS !== 'undefined' && CSS.supports('top', 'anchor(--a top, 0px)'));
 
 /** Shows `layer` in the top layer next to `anchor` while open, following scrolls, resizes and size changes;
     a press outside the layer (and `inside`) calls onOutside, as does the <dialog> it sits in closing, and focus
@@ -56,9 +60,13 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     // theme switch), not on every scroll.
     let offset = 0, rtl = false;
     const measure = () => { offset = cssLength(p, offsetVar); rtl = isRtl(a); };
+    // The layer follows the anchor in CSS between the handlers below (anchor positioning); an anchor that isn't an
+    // HTML element (an SVG's), or a browser without anchor() (Chrome before 125, which would drop the whole left and
+    // top and leave the layer mid-screen), is placed in px, as before.
+    const named = a instanceof HTMLElement && canAnchor() ? anchorName(a) : undefined, name = named && named[0];
     const update = () => {
       if (matchWidth) p.style.minWidth = a.offsetWidth + 'px';
-      placeLayer(p, a, placement, offset, fallback, rtl);
+      placeLayer(p, a, placement, offset, fallback, rtl, name);
     };
     const resized = () => { measure(); update(); };
     // Scrolling inside the layer doesn't move it.
@@ -74,6 +82,7 @@ export function useAnchoredLayer(open: boolean, layer: Ref, anchor: Ref, opts: A
     const vv = window.visualViewport;
     if (vv) { vv.addEventListener('resize', resized); vv.addEventListener('scroll', update); }
     return () => {
+      if (named) named[1]();
       if (ro) ro.disconnect(); window.removeEventListener('scroll', scrolled, true); window.removeEventListener('resize', resized);
       fontsOff();
       if (vv) { vv.removeEventListener('resize', resized); vv.removeEventListener('scroll', update); }

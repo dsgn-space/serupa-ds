@@ -283,7 +283,7 @@ describe('AvatarGroup at 320px (GR4)', () => {
 });
 
 describe('AvatarGroup token names', () => {
-  test('the "+N" button reads --avatar-group-more-bg-hover on hover (the state last); the old --avatar-group-more-hover-bg still works until 15.0.0', async () => {
+  test('the "+N" button reads --avatar-group-more-bg-hover on hover (the state last); the old --avatar-group-more-hover-bg is gone since 15.0.0', async () => {
     const people = (k: string) => ['Ana Putri', 'Budi', 'Citra', 'Dewi', 'Eko'].map((n) => <Avatar key={k + n} name={n} />);
     await render(<>
       <AvatarGroup id="tk-new" max={3} onMore={() => {}} style={{ '--avatar-group-more-bg-hover': 'rgb(1, 2, 3)' } as React.CSSProperties}>{people('n')}</AvatarGroup>
@@ -292,7 +292,7 @@ describe('AvatarGroup token names', () => {
     await userEvent.hover(more('tk-new')!);
     await expect.poll(() => css(more('tk-new')!.firstElementChild).backgroundColor).toBe('rgb(1, 2, 3)');
     await userEvent.hover(more('tk-old')!);
-    await expect.poll(() => css(more('tk-old')!.firstElementChild).backgroundColor).toBe('rgb(4, 5, 6)');
+    await expect.poll(() => css(more('tk-old')!.firstElementChild).backgroundColor).not.toBe('rgb(4, 5, 6)');
   });
 });
 

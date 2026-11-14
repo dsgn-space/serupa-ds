@@ -64,16 +64,6 @@ describe('OfflineBanner', () => {
     } finally { real(); }
   });
 
-  // GR166: onChange was the only callback not named for its state; it still works until 15.0.0.
-  test('the deprecated onChange is called as onOnlineChange is, and onOnlineChange wins when both are given', async () => {
-    const old = vi.fn(), both = vi.fn(), next = vi.fn();
-    try {
-      await render(<><OfflineBanner placement="inline" {...{ onChange: old }} /><OfflineBanner placement="inline" {...{ onChange: both }} onOnlineChange={next} /></>);
-      await React.act(async () => network(false));
-      await React.act(async () => network(true));
-      expect([old.mock.calls, both.mock.calls, next.mock.calls]).toEqual([[[false], [true]], [], [[false], [true]]]);
-    } finally { real(); }
-  });
 
   test('offline from the start, it shows and says so; online from the start it says nothing', async () => {
     const heard = listen();

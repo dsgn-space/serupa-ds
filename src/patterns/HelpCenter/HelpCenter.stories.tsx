@@ -13,3 +13,15 @@ type Story = StoryObj<typeof meta>;
 
 /** Four topics, four questions in two groups, and the message form. */
 export const Default: Story = {};
+
+/** Send was pressed with no message: it's named next to its field, and the topic chosen stays. */
+export const Errors: Story = { args: { failed: 'empty', initial: { topic: 'Billing' } } };
+
+/** The message wasn't sent (the network failed): the form says so over the fields, and every word stays. Here
+    `onSend` rejects again on another try. */
+export const SendFails: Story = {
+  args: { failed: 'send', initial: { topic: 'Billing', message: 'I was charged twice for October.' }, onSend: () => Promise.reject(new Error('offline')) },
+};
+
+/** Sent: the form gives way to what happens next, and where the answer goes. */
+export const Sent: Story = { args: { start: 'sent' } };

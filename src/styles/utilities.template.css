@@ -137,15 +137,10 @@
 @keyframes pulse { 50% { opacity: 0.5; } }
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes enter { from { opacity: 0; translate: 0 var(--spacing-2); } }
-@keyframes bounce {
-  0%, 100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
-  50% { transform: none; animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
-}
 .animate-none { animation: var(--animate-none); }
 .animate-spin { animation: var(--animate-spin); }
 .animate-ping { animation: var(--animate-ping); }
 .animate-pulse { animation: var(--animate-pulse); }
-.animate-bounce { animation: var(--animate-bounce); }
 .animate-enter { animation: var(--animate-enter); }
 
 /* transition-property: classes animate with the default duration and easing unless duration-* / ease-* set them */
@@ -195,7 +190,7 @@
 
 /* Reduced motion: stop decorative loops, slow spinners, keep transitions short */
 @media (prefers-reduced-motion: reduce) {
-  .animate-ping, .animate-bounce, .animate-pulse { animation: var(--animate-none); }
+  .animate-ping, .animate-pulse { animation: var(--animate-none); }
   .animate-spin { animation: var(--animate-spin-reduced); }
   .animate-enter { animation-name: fade-in; }
   .stagger > :nth-child(n) { --dk-stagger-delay: 0ms; }

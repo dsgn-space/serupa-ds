@@ -42,17 +42,6 @@
           }
         }
       },
-      "current-bg": {
-        "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The old name of `--pagination-bg-current`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--pagination-current-bg"
-          }
-        },
-        "$deprecated": "Use --pagination-bg-current; removed in 15.0.0."
-      },
       "text-current": {
         "$type": "color",
         "$value": "{color.on-primary}",
@@ -62,17 +51,6 @@
             "cssVar": "--pagination-text-current"
           }
         }
-      },
-      "current-text": {
-        "$type": "color",
-        "$value": "{color.on-primary}",
-        "$description": "The old name of `--pagination-text-current`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--pagination-current-text"
-          }
-        },
-        "$deprecated": "Use --pagination-text-current; removed in 15.0.0."
       },
       "ellipsis": {
         "$type": "color",
@@ -235,17 +213,6 @@
             "cssVar": "--pagination-depth-current"
           }
         }
-      },
-      "current-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The old name of `--pagination-depth-current`, read when that isn't set. Removed in 15.0.0.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--pagination-current-depth"
-          }
-        },
-        "$deprecated": "Use --pagination-depth-current; removed in 15.0.0."
       }
     }
   }

@@ -198,11 +198,11 @@
     "webpack": "5.112.2"
   },
   "browserslist": [
-    "chrome >= 123",
-    "edge >= 123",
-    "safari >= 17.5",
-    "ios_saf >= 17.5",
-    "firefox >= 128"
+    "chrome >= 129",
+    "edge >= 129",
+    "safari >= 26.4",
+    "ios_saf >= 26.4",
+    "firefox >= 147"
   ],
   "engines": {
     "node": ">=22"

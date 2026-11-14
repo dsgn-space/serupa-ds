@@ -469,15 +469,6 @@ describe('Drawer', () => {
     } finally { document.documentElement.dir = ''; }
   });
 
-  test('side, the old name of placement, still places it, and warns once that it is deprecated', async () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      await render(<Drawer id="dold" open placement={undefined} {...{ side: 'left' } as const} title="Menu" />);
-      await settled();
-      expect(el('dold').getAttribute('data-side')).toBe('left');
-      expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('drawer-side'))).toHaveLength(1);
-    } finally { warn.mockRestore(); }
-  });
 
   test('a parent that keeps open true: Escape asks each time and it stays open, even when the browser force-closes it on a second Escape', async () => {
     const asks: boolean[] = [];
