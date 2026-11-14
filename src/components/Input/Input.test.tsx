@@ -158,6 +158,21 @@ describe('Input', () => {
     await expect.poll(() => css(box('h')).borderTopColor).not.toBe(css(box('r')).borderTopColor);
   });
 
+  test('the hover border is the resting border one gray step stronger, in every theme: zinc-400 on zinc-300 in light, zinc-600 on zinc-700 in dark', async () => {
+    await render(<><Input id="hz" aria-label="Hover" /><Input id="rz" aria-label="Rest" /></>);
+    await page.getByRole('textbox', { name: 'Hover' }).hover();
+    const seen: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const dark = th.endsWith('dark');
+      const want = [color(dark ? 'var(--zinc-700)' : 'var(--zinc-300)'), color(dark ? 'var(--zinc-600)' : 'var(--zinc-400)')];
+      await expect.poll(() => css(box('hz')).borderTopColor).toBe(color('var(--field-border-hover)'));
+      if ([css(box('rz')).borderTopColor, css(box('hz')).borderTopColor].join() !== want.join()) seen.push(th);
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(seen).toEqual([]);
+  });
+
   test('invalid: aria-invalid, a danger border and a danger focus ring', async () => {
     await render(<Input id="i" invalid aria-label="Invalid" />);
     const danger = color('var(--field-border-invalid)');

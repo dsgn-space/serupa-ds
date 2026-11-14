@@ -93,3 +93,19 @@ describe('Countdown', () => {
     warn.mockRestore();
   });
 });
+
+// Two rules a mutation run on Countdown.tsx found no test for (run 273).
+describe('Countdown: rules no test covered', () => {
+  test('a thousand hours and more are written without a separator ("1500:00:00")', () => {
+    expect([countdownClock(1500 * 3600, 'en-US'), countdownClock(1500 * 3600, 'de-DE')]).toEqual(['1500:00:00', '1500:00:00']);
+  });
+
+  test('endText names the timer only once it has ended; until then, and with no endText, the name is the time left in words', async () => {
+    await render(<SerupaProvider locale="en-US">
+      <Countdown id="a" seconds={10} label="Offer ends in" endText="The offer has ended" />
+      <Countdown id="b" seconds={0} label="Offer ends in" />
+    </SerupaProvider>);
+    expect([el('a').getAttribute('aria-label'), el('a').textContent, el('b').getAttribute('aria-label'), el('b').textContent])
+      .toEqual(['Offer ends in: 10 seconds', '0:10', 'Offer ends in: 0 seconds', '0:00']);
+  });
+});

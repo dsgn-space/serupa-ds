@@ -39,7 +39,7 @@ interface ButtonOwnProps {
   leftIcon?: IconSource | undefined;
   /** Icon after the label: an icon name (custom or Material Symbols, "arrow_forward") or any element. */
   rightIcon?: IconSource | undefined;
-  /** Icon-only button: an icon name (custom or Material Symbols) or element, in a square at the size's height. Ignores children, leftIcon and rightIcon; needs an aria-label. */
+  /** @deprecated Use IconButton, whose label is required; removed in 15.0.0. Icon-only button: an icon name (custom or Material Symbols) or element, in a square at the size's height. Ignores children, leftIcon and rightIcon; needs an aria-label. */
   icon?: IconSource | undefined;
   /** Shows a centered Loader (ring) and blocks clicks, keys and Enter-key form submission while an action runs, so a request can't be sent twice. Keeps size, colors and keyboard focus; sets aria-busy, aria-disabled and data-loading. Default: false, except that a type="submit" button inside a `<form action={fn}>` is loading while that form is being sent. Set it to override. */
   loading?: boolean | undefined;
@@ -100,7 +100,7 @@ function slot(source: IconSource, side: string): React.ReactNode {
 }
 
 /* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
-/** Button without the overloads, for components built on it (IconButton, Fab) that pass either shape through. */
+/** Button without the overloads, for components built on it (IconButton, Fab, CopyButton, Alert's dismiss) that pass either shape through, and an icon alone without Button's deprecation warning. */
 export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('Button', function Button(props, ref) {
   const sds = useSettings();
   // Both shapes (button and link) are HTML attributes; which ones apply depends on href below.
@@ -249,7 +249,10 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps>('B
 });
 
 /** A <button> for actions; pass href for navigation and it renders a link. Built-in micro-interactions: press and a loading cross-fade, plus an opt-in right-icon nudge (--button-icon-nudge); off under reduced motion. Colors, spacing, sizes, borders and motion can be overridden with the --button-* component tokens (button.tokens.json) on the page, a container or one button. */
-export const Button = ButtonBase as unknown as {
+export const Button = /* @__PURE__ */ component<HTMLElement, ButtonProps>('Button', function Button(props, ref) {
+  if (process.env.NODE_ENV !== 'production' && props.icon != null) warnOnce('button-icon', 'Button: icon is deprecated and removed in 15.0.0. Use IconButton, whose label is required.');
+  return React.createElement(ButtonBase, Object.assign({}, props, { ref: ref }));
+}) as unknown as {
   (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): React.ReactElement | null;
   (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): React.ReactElement | null;
   displayName?: string | undefined;

@@ -7,7 +7,8 @@ import * as Serupa from '../../index';
 import { config, configure } from '../../internal/config';
 import { Loader } from '../Loader/Loader';
 import { Tooltip } from '../Tooltip/Tooltip';
-import { Button, buttonClass } from './Button';
+import { Button, ButtonBase, buttonClass } from './Button';
+import { IconButton } from '../IconButton/IconButton';
 
 // About motion: transitions and animations stay on for this file (setup.ts turns them off elsewhere).
 keepMotion();
@@ -84,7 +85,7 @@ function App({ linkRef }: { linkRef?: React.Ref<HTMLAnchorElement> }) {
     <Button href="https://example.com/" id="ext" target="_blank">External</Button>
     <Button href="#bad" id="dlink" disabled onClick={() => log.push('BAD-disabledlink')}>Off</Button>
     <Button id="dis" disabled variant="outline" size="lg" destructive onClick={() => log.push('BAD-dis')}>Dis</Button>
-    <Button id="icononly" icon="settings" aria-label="Settings" loading={loading} />
+    <ButtonBase id="icononly" icon="settings" aria-label="Settings" loading={loading} />
     <Button id="left" leftIcon="save" loading={loading}>Save file</Button>
     <Button id="attrs" type="submit" form="other" formAction="/x" formMethod="post" formEncType="multipart/form-data" formNoValidate formTarget="_blank" name="intent" value="save">All</Button>
     <Button id="pbtn" popoverTarget="pop" popoverTargetAction="toggle">Pop</Button>
@@ -391,7 +392,7 @@ describe('Button', () => {
 
   test('no warnings for correct use; it warns on an icon-only button without a label', async () => {
     expect(warnings).toEqual([]);
-    await render(<Button icon="close" />);
+    await render(<ButtonBase icon="close" />);
     expect(warnings.join(' | ')).toMatch(/needs an aria-label/);
   });
 
@@ -655,7 +656,7 @@ describe('Button in a flex row at 288px (GR5)', () => {
   test('a long label shrinks to its ellipsis instead of pushing its neighbour out; an icon-only button keeps its square; LTR and RTL', async () => {
     const long = 'Download the quarterly financial report as PDF';
     const row = (id: string, dir?: string) => <div id={id} dir={dir} style={{ display: 'flex', gap: '8px', width: '288px' }}>
-      <Button>{long}</Button><Button variant="outline">Cancel</Button><Button icon="close" aria-label="Close" />
+      <Button>{long}</Button><Button variant="outline">Cancel</Button><ButtonBase icon="close" aria-label="Close" />
     </div>;
     await render(<div>{row('gr5')}{row('gr5r', 'rtl')}</div>);
     for (const id of ['gr5', 'gr5r']) {
@@ -739,6 +740,17 @@ describe('Button: loadingText, the old name of loadingLabel', () => {
       await rerender(<Button loading {...{ loadingText: 'Saving draft' }}>Save</Button>);
       await expect.poll(() => document.querySelector('[data-dk-announcer]')?.textContent || '').toContain('Saving draft');
       expect(warnings.slice(from).filter((m) => m.includes('button-loading-text'))).toHaveLength(1);
+    } finally { warnings.splice(from); }
+  });
+});
+
+describe('Button: icon, deprecated for IconButton', () => {
+  test('an icon alone still draws the square button, and warns once that icon is deprecated; IconButton, built on the same button, doesn\'t', async () => {
+    const from = warnings.length;
+    try {
+      await render(<><Button id="dep-icon" icon="close" aria-label="Close" /><Button icon="add" aria-label="Add" /><IconButton id="dep-ib" icon="close" label="Close" /></>);
+      expect([el('dep-icon').hasAttribute('data-icon-only'), el('dep-ib').hasAttribute('data-icon-only')]).toEqual([true, true]);
+      expect(warnings.slice(from).filter((m) => m.includes('warning button-icon:') && m.includes('deprecated') && m.includes('IconButton'))).toHaveLength(1);
     } finally { warnings.splice(from); }
   });
 });

@@ -2,10 +2,11 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, contrast, css, press, settle, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, contrast, css, forcedColors, press, settle, settled, THEMES, withMotion } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
+import { Dialog } from '../Dialog/Dialog';
 import { SerupaProvider } from '../../internal/provider';
 import { Table, TableActionBar, TableBody, TableCell, TableColumnsMenu, TableDetailRow, TableExpandCell, TableFoot, TableHead, TableHeaderCell, TableLoadingRows, TableMessageRow, TableRow, TableSelectCell, TableVirtualBody, type SortDirection, type TableColumnOption } from './Table';
 
@@ -122,6 +123,13 @@ describe('Table', () => {
     expect(bar).toContain(color('var(--primary)'));
   });
 
+  test('forced colors: a selected row, which the shading alone would lose, keeps its bar at its start in Highlight; a plain row has none', async () => {
+    await setup();
+    const sel = q('#tdef [data-i="1"]').firstElementChild!, plain = q('#tdef [data-i="0"]').firstElementChild!;
+    const r = await forcedColors((active) => active && [css(sel).borderInlineStartStyle, css(sel).borderInlineStartWidth, css(plain).borderInlineStartStyle]);
+    if (r) expect(r).toEqual(['solid', '2px', 'none']);
+  });
+
   test('TableSelectCell: a narrow cell with a checkbox named by label (a <th scope="col"> with header); checked, indeterminate, onChange, name and ref reach it; a checked row is shaded with the bar, uncontrolled too', async () => {
     const r = React.createRef<HTMLInputElement>(), picks: string[] = [];
     function Pick() {
@@ -209,6 +217,18 @@ describe('Table', () => {
     await expect.poll(() => said.at(-1)).toMatch(/Sorted by Calls, descending\.$/);
     seen.disconnect();
     expect(idLabels.tableSorted('Jumlah', 'ascending')).toBe('Diurutkan menurut Jumlah, naik.');
+  });
+
+  test('sort without onSort warns once in development: its button would do nothing; with onSort, or without sort, it does not', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const calls = () => warn.mock.calls.filter(([m]) => String(m).includes('warning table-sort:'));
+    await render(<Table caption="T"><TableHead><TableRow>
+      <TableHeaderCell sort="none">Name</TableHeaderCell><TableHeaderCell sort="ascending">Role</TableHeaderCell>
+      <TableHeaderCell sort="none" onSort={() => {}}>Team</TableHeaderCell><TableHeaderCell>Notes</TableHeaderCell>
+    </TableRow></TableHead><TableBody><TableRow><TableCell>Ada</TableCell><TableCell>Admin</TableCell><TableCell>Core</TableCell><TableCell>-</TableCell></TableRow></TableBody></Table>);
+    expect(calls()).toHaveLength(1);
+    expect(String(calls()[0]![0])).toMatch(/^TableHeaderCell: sort without onSort/);
+    warn.mockRestore();
   });
 
   test('print: the frame shows the whole table, the header repeats on each page and rows aren\'t split (201)', () => {
@@ -731,6 +751,16 @@ describe('Table column tools (RU10)', () => {
     await expect.element(handle).toHaveAttribute('aria-valuenow', '176');
   });
 
+  test('with Ctrl, ⌘ or Alt the arrows, Home and End on a handle are left to the system: the width stays (L8E35)', async () => {
+    const seen: number[] = [];
+    const s = await render(<Resizing onWidthChange={(n) => seen.push(n)} />);
+    const handle = s.getByRole('separator', { name: 'Resize Name column' });
+    (handle.element() as HTMLElement).focus();
+    await userEvent.keyboard('{Control>}{ArrowRight}{ArrowLeft}{Home}{/Control}{Meta>}{ArrowRight}{End}{/Meta}{Alt>}{ArrowLeft}{/Alt}');
+    await expect.element(handle).toHaveAttribute('aria-valuenow', '160');
+    expect([seen, w()]).toEqual([[], expect.closeTo(160, 0)]);
+  });
+
   test('dragging the handle changes the width, within the limits; a double-click fits the widest cell on one line', async () => {
     const s = await render(<Resizing />);
     const h = s.getByRole('separator').element() as HTMLElement;
@@ -771,6 +801,28 @@ describe('Table column tools (RU10)', () => {
     await userEvent.keyboard('{Home}{Enter}');
     await expect.element(dialog).toBeVisible();
     await expect.element(page.getByRole('button', { name: 'Narrower' })).toBeDisabled();   // at its 80px least
+  });
+
+  test('bug bash: two tables in StrictMode, the second in a Dialog; each handle opens its own width buttons, over the dialog, and Escape closes only them', async () => {
+    const T = (p: { id: string; caption: string }) => <Table caption={p.caption} layout="fixed">
+      <TableHead><TableRow><TableHeaderCell id={p.id} resizable width={160}>Nom élevé 🚀</TableHeaderCell><TableHeaderCell>Rôle</TableHeaderCell></TableRow></TableHead>
+      <TableBody><TableRow><TableCell>Łucja Żółć</TableCell><TableCell>Admin</TableCell></TableRow></TableBody>
+    </Table>;
+    const s = await render(<React.StrictMode><T id="ha" caption="Équipe" /><Dialog open title="Membres" onOpenChange={() => {}}><T id="hb" caption="Membres" /></Dialog></React.StrictMode>);
+    const handles = s.getByRole('separator', { name: 'Resize Nom élevé 🚀 column' });
+    const [, inDialog] = handles.elements() as HTMLElement[];
+    inDialog!.focus();
+    await userEvent.keyboard('{Enter}');
+    const open = () => [...document.querySelectorAll('[role=dialog][popover]')].filter((d) => d.matches(':popover-open'));
+    await expect.poll(() => open().length).toBe(1);
+    const panel = open()[0]!;
+    expect([inDialog!.closest('dialog')!.contains(panel), document.elementFromPoint(...((r) => [r.left + r.width / 2, r.top + r.height / 2] as const)(panel.getBoundingClientRect()))?.closest('[popover]') === panel]).toEqual([true, true]);
+    await userEvent.click(s.getByRole('button', { name: 'Wider' }));
+    await expect.poll(() => el('hb').getBoundingClientRect().width).toBeCloseTo(176, 0);
+    expect(el('ha').getBoundingClientRect().width).toBeCloseTo(160, 0);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => open().length).toBe(0);
+    expect([(document.querySelector('dialog') as HTMLDialogElement).open, document.activeElement]).toEqual([true, inDialog]);
   });
 
   test('the click that ends a drag doesn\'t open the popover; with no width set, the value is the drawn width (GR296)', async () => {
@@ -857,6 +909,17 @@ describe('Table column tools (RU10)', () => {
     await expect.element(b).toHaveAttribute('aria-expanded', 'true');
     await expect.element(s.getByText('Notes for 2')).toBeVisible();
     expect(el('d2').querySelector('td')!.colSpan).toBe(2);
+  });
+
+  test('keyboard table: Enter or Space on a row\'s details button shows and hides its details', async () => {
+    const s = await render(<Expanding />);
+    const b = s.getByRole('button', { name: 'Details, Order 2' });
+    (b.element() as HTMLElement).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect.element(s.getByText('Notes for 2')).toBeVisible();
+    await userEvent.keyboard(' ');
+    await expect.element(b).toHaveAttribute('aria-expanded', 'false');
+    await expect.element(s.getByText('Notes for 2')).not.toBeVisible();
   });
 
   test('striped shades every other data row, whether or not detail rows sit between them', async () => {

@@ -5,6 +5,7 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import remarkGfm from 'remark-gfm';
 import { buildUtilities } from '../tools/utilities/build.mjs';
 import { buildRegistry } from '../tools/build/registry.mjs';
+import { docgenOptions } from '../tools/site/props.mjs';
 
 // src/styles/index.css imports the generated utilities.css; make it from the template and tokens first.
 buildUtilities(fileURLToPath(new URL('..', import.meta.url)));
@@ -29,15 +30,9 @@ const config: StorybookConfig = {
       // The components only (tsconfig.json's project, src/): the docs' own blocks and Storybook's preview have no props
       // table, and outside that project the plugin skipped them with a warning each.
       include: ['src/**/*.tsx'],
-      shouldExtractLiteralValuesFromEnum: true,
-      shouldRemoveUndefinedFromOptional: true,
-      propFilter: (prop) => {
-        // A tag in the TSDoc ("renders a <button>") is code here, not HTML the docs page should render.
-        prop.description = prop.description.replace(/(?<!`)<\/?[a-z][\w-]*(?:\s[^<>]*)?>(?!`)/g, '`$&`');
-        // Props typed only as undefined (href on the <button> form of Button) exist to rule a combination out, and
-        // @internal ones (Calendar's plumbing for DateRangePicker) aren't in the package's public types.
-        return prop.type.name !== 'undefined' && !('internal' in (prop.tags ?? {})) && (!prop.parent || !/node_modules/.test(prop.parent.fileName));
-      },
+      // The site's props tables read the types with the same options (tools/site/props.mjs), so the two agree: what
+      // is an enum's value, which props are left out (undefined-only, @internal, React's own DOM attributes).
+      ...docgenOptions,
     },
   },
   viteFinal: async (cfg) => {

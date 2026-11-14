@@ -71,6 +71,15 @@ Table only lays out what you give it: sorting, filtering and selection state sta
 - With `stickyHeader`, give the frame a height through `containerProps`. The frame measures the header and keeps that much scroll padding at the top, so a focused link or button in a row scrolls into view below the header, not under it (WCAG 2.4.11).
 - For thousands of rows, use `TableVirtualBody` in place of `TableBody`: it draws only the rows in view of the frame, plus a few either side, so 10,000 rows scroll as quickly as 20. Give the frame a height (`containerProps={{ style: { maxHeight: 480 } }}`, usually with `stickyHeader`), since without one every row is in view. Columns size to the rows drawn, so set widths (`table-layout: fixed` or a width per header cell) where a column mustn't shift while scrolling. Each drawn row gets `aria-rowindex` and the table `aria-rowcount`, a row with focus stays drawn when it scrolls away, and `striped` shades the same rows as a `TableBody` would. In print it draws every row, up to the first 5,000 (about 100 pages); for more, offer an export (CSV) instead of print. Sorting and filtering stay yours: sort the data, then draw row `index` from it.
 
+## Behavior
+
+- The frame scrolls when the table is wider than it, and then becomes a focusable region named by the caption. A table that fits adds no tab stop.
+- A row's hover shading eases in only while the pointer is over the body, so "Select all" repaints every row at once.
+- With `stickyHeader`, the header stays at the top of the frame and lifts with a shadow once rows scroll under it. At the top it is flat.
+- A resize handle's width buttons open under the handle, or above it when there's no room, with focus on the first that can be pressed. They appear and go at once. Escape or a press outside closes them.
+- A row's details chevron turns down while its details show, and turns back as they hide. Under reduced motion it turns at once.
+- Nothing in the table reorders, filters or selects rows by itself: it draws the order and state you pass.
+
 ### Do and don't
 
 - **Do:** End-align number columns, in the header and the cells, so the digits line up by place. (`DoAlignNumbers`)
@@ -115,8 +124,13 @@ The table keeps its header and caption in every state, so the page doesn't move 
 | --- | --- |
 | Tab | To each sortable header's button, and to the frame when the table is too wide and scrolls |
 | Enter / Space | On a sortable header, sorts by it; the new order is announced |
+| Enter / Space | On a resize handle, opens Narrower, Wider and Fit to content, with focus on the first that can be pressed |
+| Enter / Space | On a row's details button (`TableExpandCell`), shows or hides the row's details |
 | Arrow keys | With focus on the scrolling frame, scroll the table; on a resize handle, narrow or widen the column 16px (mirrored right to left) |
 | Home / End | On a resize handle, the column's narrowest and widest |
+| Escape | In the width buttons, closes them and puts focus back on the handle |
+
+With Ctrl, ⌘ or Alt held, a resize handle leaves the arrows, Home and End to the system and the browser.
 
 ## Props
 

@@ -7,7 +7,7 @@ A design system by **Diki**. Tokens, themes, utility classes and accessible Reac
 - **Accessible by default.** WCAG 2.2 AA in every theme (contrast, target size, focus), full keyboard support, visible focus, correct roles and labels, checked by the test suite on every story in every theme.
 - **Works anywhere.** ES modules for React 19 apps, or one script tag on a plain page. Fonts and icons ship inside the package; nothing loads from another server.
 
-The documentation is Storybook: run `npm run storybook` in this repo and open http://localhost:6006. The foundations (colors, themes, type, spacing, motion and the utility classes) are written in `docs/foundations.md`; each component's guide is `src/components/<Name>/README.md`.
+The documentation is Storybook: run `npm run storybook` in this repo and open http://localhost:6006. The same pages are also a site built with Serupa itself: `npm run site`, at http://localhost:6007. The foundations (colors, themes, type, spacing, motion and the utility classes) are written in `docs/foundations.md`; each component's guide is `src/components/<Name>/README.md`.
 
 ## Getting started
 

@@ -4,7 +4,7 @@
 export default {
   extends: 'stylelint-config-recommended',
   plugins: ['./tools/lint/stylelint-serupa.mjs'],
-  ignoreFiles: ['dist/**', 'storybook-static/**', 'node_modules/**', 'tokens.css', 'src/styles/utilities.template.css'],
+  ignoreFiles: ['dist/**', 'storybook-static/**', 'site-static/**', 'node_modules/**', 'tokens.css', 'src/styles/utilities.template.css'],
   rules: {
     'no-descending-specificity': null,
     'no-duplicate-selectors': null,

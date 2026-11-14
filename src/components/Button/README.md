@@ -3,7 +3,7 @@
 Triggers an action: submitting a form, opening a dialog, confirming or cancelling. With `href` it becomes a link that looks like a button, for navigation. Every variant also has a destructive version; every value comes from this system's tokens.
 
 ```jsx
-const { Button, buttonClass } = window.Serupa;
+const { Button, IconButton, buttonClass } = window.Serupa;
 
 <Button>Save changes</Button>
 <Button variant="outline">Cancel</Button>
@@ -11,9 +11,9 @@ const { Button, buttonClass } = window.Serupa;
 <Button variant="outline" destructive>Delete</Button>
 <Button leftIcon="add">New project</Button>
 <Button variant="outline" rightIcon="arrow_forward">Continue</Button>
-<Button variant="ghost" icon="settings" aria-label="Settings" />
+<IconButton icon="settings" label="Settings" />
 <Button loading={saving} leftIcon="save">Save changes</Button>
-<Button variant="ghost" size="sm" destructive icon="delete" aria-label="Remove" />
+<IconButton size="sm" destructive icon="delete" label="Remove" />
 <Button href="/signup" rightIcon="arrow_forward">Get started</Button>
 <Button href="https://example.com" target="_blank" variant="link">Help</Button>
 <label className={buttonClass({ variant: 'outline' })}>Upload <input type="file" hidden /></label>
@@ -49,7 +49,7 @@ When an action succeeds (`success`), a check takes the loader's place for a mome
 - One `primary` button per view or dialog; everything else is `secondary`, `outline` or `ghost`.
 - Label with a verb: "Save changes", not "OK".
 - Use `destructive` only for actions that delete or can't be undone, and only one solid (`primary`) destructive button per view, usually in the confirmation step.
-- An icon-only button needs an `aria-label`. Prefer a label with an icon unless the icon is universally understood (close, search, settings).
+- An icon on its own is an IconButton, whose `label` is required. Prefer a label with an icon unless the icon is universally understood (close, search, settings).
 - Use a left icon to reinforce the action (`add` for create) and a right icon for direction (`arrow_forward` for next, `expand_more` for menus). Don't use both.
 - Prefer `disabledReason` to a bare `disabled`: people can find out what to do instead of guessing.
 - Use `loading` (or return a promise from `onClick`) for actions that take longer than about a second, and keep the label as it was ("Save changes", not "Saving…") so the width doesn't jump.
@@ -106,7 +106,7 @@ A button holds a label, an icon beside a label, or an icon alone:
 | Label only | `children` | Text |
 | Left icon | `leftIcon` + `children` | Icon, then text |
 | Right icon | `rightIcon` + `children` | Text, then icon |
-| Icon only | `icon` + `aria-label` | A square: 24, 32 or 44px |
+| Icon only | IconButton (`icon` + `label`) | A square: 24, 32 or 44px. Button's own `icon` is deprecated, and removed in 15.0.0 |
 
 **Optical balance.** An icon reads lighter than text, so a button with one icon adds 4px of padding on the text side:
 
@@ -118,7 +118,7 @@ A button holds a label, an icon beside a label, or an icon alone:
 
 Button applies this automatically. With `buttonClass`, pass `iconPosition: 'left'` or `'right'`.
 
-Pass any Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. An icon-only button logs a warning if it has no `aria-label`.
+Pass any Material Symbols name (see the Icon guidelines) as a string (`leftIcon="add"`), or an icon imported from `serupa-ds/icons` (`leftIcon={Add}`), and Button renders it as an `Icon` in the Rounded, filled style at the right size. You can also pass an element. Button's `icon` (an icon on its own) is deprecated, and removed in 15.0.0: it logs a warning, and IconButton does the same with a `label` the types require.
 
 ### Links
 

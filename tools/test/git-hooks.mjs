@@ -27,7 +27,7 @@ const bin = path.join(tmp, 'bin');
 fs.mkdirSync(bin);
 const seen = path.join(tmp, 'seen');
 const stub = (name, body) => { fs.writeFileSync(path.join(bin, name), `#!/bin/sh\n${body}\n`); fs.chmodSync(path.join(bin, name), 0o755); };
-stub('node', `env | grep '^GIT_' > '${seen}.env'; echo "$@" > '${seen}.args'; exit 0`);
+stub('node', `env | grep '^GIT_' > '${seen}.env'; echo "$@" > '${seen}.args'; echo "$@" >> '${seen}.all'; exit 0`);
 stub('gh', 'exit 0');
 stub('timeout', 'shift; exec "$@"');
 
@@ -46,6 +46,8 @@ const args = fs.existsSync(`${seen}.args`) ? fs.readFileSync(`${seen}.args`, 'ut
 t('the hook runs the checks', status === 0 && env !== null, `exit ${status}`);
 t('the checks get no GIT_DIR, GIT_WORK_TREE or GIT_INDEX_FILE from the hook', env === '', env || '(none)');
 t('they test what the push adds: since the branch\'s last push', args.includes(`--since ${first}`) && args.includes('--only tokens,build,typecheck,lint,components'), args);
+const all = fs.existsSync(`${seen}.all`) ? fs.readFileSync(`${seen}.all`, 'utf8').trim().split('\n') : [];
+t('the source checks CI fails most on run first: effects, then class queries', all[0] === 'tools/test/effects.mjs' && all[1] === 'tools/test/class-queries.mjs', all.join(' | '));
 fs.rmSync(tmp, { recursive: true, force: true });
 
 done(report('Git hooks', R));
