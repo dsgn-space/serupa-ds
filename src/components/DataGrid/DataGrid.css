@@ -10,6 +10,8 @@
   border: var(--data-grid-border-width, var(--border-width-1)) solid var(--data-grid-border, var(--border)); border-radius: var(--data-grid-radius, var(--radius-surface));
   background: var(--data-grid-bg, var(--surface));
 }
+/* Set straight in a Card with no padding, the card is the frame: no second border inside its own. */
+.dk-card--padding-none > .dk-data-grid { border: var(--spacing-0); border-radius: var(--dk-card-inner-radius); }
 .dk-data-grid__table { width: var(--sizing-full); border-collapse: collapse; color: var(--data-grid-text, var(--text)); font-family: var(--font-sans); font-size: var(--data-grid-font-size, var(--text-sm)); line-height: var(--text-sm--line-height); }
 .dk-data-grid__header, .dk-data-grid__cell {
   position: relative; padding: var(--data-grid-padding-y, var(--spacing-2)) var(--data-grid-padding-x, var(--spacing-3)); text-align: start; white-space: nowrap;
