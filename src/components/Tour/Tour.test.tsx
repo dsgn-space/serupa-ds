@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, safeArea } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Tour, type TourStep } from './Tour';
 
@@ -216,5 +216,14 @@ describe('Tour', () => {
       expect(contrast(css(el('t')).color, css(el('t')).backgroundColor), th).toBeGreaterThanOrEqual(4.5);
       expect(contrast(css(count).color, css(el('t')).backgroundColor), th + ' count').toBeGreaterThanOrEqual(4.5);
     }
+  });
+
+  test('on a phone with a notch and a home bar, a step in the middle of the screen sits between them, and a long one stops short of them', async () => {
+    await render(<Page open steps={[{ title: 'Welcome' }]} />);
+    await safeArea(async (on) => {
+      if (!on) return;
+      await expect.poll(() => [css(el('t')).top, css(el('t')).bottom]).toEqual(['47px', '34px']);
+      expect(parseFloat(css(el('t')).maxHeight)).toBe(innerHeight - 16 - 47 - 34);
+    });
   });
 });

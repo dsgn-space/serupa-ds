@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, withMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, safeArea, withMotion, settled } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { topModal } from '../../internal/layers';
@@ -741,5 +741,21 @@ describe('Dialog and Drawer on a phone', () => {
     await expect.poll(pads).toEqual(['24px', '24px']);
     await screen.unmount();
   });
-});
 
+  test('on a phone with a notch and a home bar, the margin round the panel clears them, and the sides in landscape', async () => {
+    const screen = await render(<Dialog id="sa" open title="Rename" onOpenChange={() => {}}>Body</Dialog>);
+    const pad = () => { const s = getComputedStyle(dlg('sa')); return [s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft]; };
+    expect(pad()).toEqual(['16px', '16px', '16px', '16px']);
+    await safeArea(async (on) => { if (on) await expect.poll(pad).toEqual(['47px', '16px', '34px', '16px']); });
+    await safeArea(async (on) => { if (on) await expect.poll(pad).toEqual(['16px', '47px', '21px', '47px']); }, true);
+    await screen.unmount();
+  });
+
+  test('fullScreen on a phone in landscape: the panel\'s padding clears the notch on either side, in right-to-left text too', async () => {
+    const screen = await render(<div dir="rtl"><Dialog id="saf" open fullScreen title="Rename" onOpenChange={() => {}}>Body</Dialog></div>);
+    const pad = () => { const s = getComputedStyle(panel('saf')); return [s.paddingLeft, s.paddingRight]; };
+    expect(pad()).toEqual(['24px', '24px']);
+    await safeArea(async (on) => { if (on) await expect.poll(pad).toEqual(['47px', '47px']); }, true);
+    await screen.unmount();
+  });
+});
