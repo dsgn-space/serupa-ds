@@ -60,7 +60,7 @@ Each is an optional override: set it on the page, a container or one SkipLink. T
 | --- | --- | --- |
 | `--skip-link-bg` | `surface-raised` | The shown link's background. |
 | `--skip-link-text` | `primary` | The link's text (4.5:1 on its background). |
-| `--skip-link-border` | `border-raised` | The shown link's border. |
+| `--skip-link-border` | `border` | The shown link's border. |
 | `--skip-link-focus-ring` | `focus-ring` | The focus ring around it while it's shown. |
 | `--skip-link-shadow` | `elevation-overlay` | Lifts it above the page and a sticky Navbar. |
 | `--skip-link-radius` | `radius-control` | Its corners. |
