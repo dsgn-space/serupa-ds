@@ -188,6 +188,20 @@ await inParallel(pages, workers, async (p, w) => {
   t('/: the light and dark switch changes the page and its screen together, the screen with no crossfade of its own',
     !drawn && !crashed && !!after && !!outer && outer.endsWith('-dark') && after.theme === outer && after.theme !== before && after.fades === 'undefined',
     drawn || JSON.stringify({ crashed, before, outer, after }));
+  // A link in "On this page" glides to its heading: the sticky bar's own focus scroll doesn't jump there first.
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto(base + '/components/button');
+  const link = page.locator('.site-aside .dk-toc__panel a').last();
+  const glide = await page.locator('.site-aside .dk-toc--rail').hover({ timeout: 15000 }).then(() => link.evaluate((a) => new Promise((done) => {
+    const ys = [], t0 = performance.now();
+    const tick = () => { ys.push(Math.round(window.scrollY)); if (performance.now() - t0 < 1500) requestAnimationFrame(tick); else done(ys); };
+    a.addEventListener('click', () => requestAnimationFrame(tick), { once: true });
+    /** @type {HTMLElement} */ (a).click();
+  }))).catch((e) => String(e.message).split('\n')[0]);
+  const end = Array.isArray(glide) ? glide[glide.length - 1] : 0;
+  t('/components/button: a link in "On this page" glides to its heading rather than jumping there',
+    Array.isArray(glide) && end > 720 && glide.filter((y) => y > 0 && y < end).length >= 3,
+    Array.isArray(glide) ? 'the page was at ' + glide.slice(0, 8).join(', ') + ' on the first frames, and ended at ' + end : glide);
   await context.close();
 }
 
