@@ -156,18 +156,25 @@ describe('touch-sized buttons', () => {
       expect(outside('.hit-small', 9).slice(0, 2)).toEqual(['small', 'small']);
       // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap all round (rows of a wrapped toolbar are
       // 4px apart too), and its own face to the edge.
+      // Measured left to right, so it holds in a right-to-left page too.
       $('.hit-bold').scrollIntoView({ block: 'center' });
-      const b = box('.hit-bold'), i = box('.hit-italic'), y = b.top + b.height / 2, mid = (b.right + i.left) / 2;
-      expect([btn(mid - 1, y), btn(mid + 1, y), btn(b.right - 1, y), btn(i.left + 1, y), btn(b.left + b.width / 2, b.top - 1.5)]).toEqual(['bold', 'italic', 'bold', 'italic', 'bold']);
+      const [l, r] = ['.hit-bold', '.hit-italic'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect];
+      const ln = btn(l.left + 1, l.top + 1), rn = btn(r.right - 1, r.top + 1), y = l.top + l.height / 2, mid = (l.right + r.left) / 2;
+      expect([ln, rn].sort()).toEqual(['bold', 'italic']);
+      expect([btn(mid - 1, y), btn(mid + 1, y), btn(l.right - 1, y), btn(r.left + 1, y), btn(l.left + l.width / 2, l.top - 1.5)]).toEqual([ln, rn, ln, rn, ln]);
       // Attached (one shared border line): no reach into the neighbour's face, from either side.
       $('.hit-day').scrollIntoView({ block: 'center' });
-      const d = box('.hit-day'), w = box('.hit-week'), dy = d.top + d.height / 2;
-      expect([btn(d.right - 2, dy), btn(w.left + 2, dy)]).toEqual(['day', 'week']);
+      const [dl, dr] = ['.hit-day', '.hit-week'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect], dy = dl.top + dl.height / 2;
+      expect([btn(dl.right - 2, dy), btn(dr.left + 2, dy)]).toEqual([btn(dl.left + 2, dy), btn(dr.right - 2, dy)]);
+      expect([btn(dl.left + 2, dy), btn(dr.right - 2, dy)].sort()).toEqual(['day', 'week']);
       // Pagination: a page takes a press 5px above and below it, and the gap between two pages splits at its middle.
-      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('button, a')].filter((e) => /^[0-9]+$/.test(e.textContent || ''));
+      // Pages by their digits in any script (ar-EG writes Arabic-Indic ones).
+      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('button, a')].filter((e) => /^\p{Nd}+$/u.test(e.textContent || ''));
       pages[1]!.scrollIntoView({ block: 'center' });
-      const p1 = pages[0]!.getBoundingClientRect(), p2 = pages[1]!.getBoundingClientRect(), py = p1.top + p1.height / 2, pm = (p1.right + p2.left) / 2;
-      expect([btn(p2.left + p2.width / 2, p2.top - 5), btn(p2.left + p2.width / 2, p2.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)]).toEqual(['2', '2', '1', '2']);
+      const [pl, pr] = [pages[0]!, pages[1]!].sort((m, n) => m.getBoundingClientRect().left - n.getBoundingClientRect().left) as [HTMLElement, HTMLElement];
+      const a = pl.getBoundingClientRect(), c = pr.getBoundingClientRect(), py = a.top + a.height / 2, pm = (a.right + c.left) / 2, two = pages[1]!.getBoundingClientRect();
+      expect([btn(two.left + two.width / 2, two.top - 5), btn(two.left + two.width / 2, two.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)])
+        .toEqual([pages[1]!.textContent, pages[1]!.textContent, pl.textContent, pr.textContent]);
     });
   });
 });
