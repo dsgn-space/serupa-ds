@@ -5,7 +5,7 @@ import * as Stories from './Checkout.stories';
 
 # Checkout
 
-The page where an order is paid for: a delivery address, a delivery speed, an optional tip and card details, with the order summary beside them. "Review your order" checks everything at once, then shows it all before anything is charged.
+The page where an order is paid for: a delivery address, a delivery speed, an optional tip and how to pay (a card, a device wallet, a bank transfer, an e-wallet or a QR code), with the order summary and a promo code beside them. "Review your order" checks everything at once, then shows it all before anything is charged.
 
 <Canvas of={Stories.Details} />
 
@@ -22,10 +22,22 @@ The page where an order is paid for: a delivery address, a delivery speed, an op
 - **One check, all at once.** "Review your order" checks every field. An ErrorSummary takes focus and links to each field, and each field says what to write, not just that it's wrong (3.3.1, 3.3.3). A second try with the same problems takes focus again.
 - **A Radio group for the delivery speed**, with the price in the label and the days in the description, and **a NumberInput for the tip** in the order's currency, in its minor units (`minorUnits`), so $2.50 is never read as 250 and the sums don't drift.
 - **Every amount in minor units** of `currency`, as integers: prices, `expressPrice`, the tip and the total. That's cents for USD, but whole yen for JPY and fils (a thousandth) for KWD, so ￥1,800 is `1800`, not `180000`.
+- **The ways to pay as data** (`methods`): radio cards in one group, each with a generic icon (never a brand's logo) and a line on what it takes. List only what you accept, and a device wallet only where the browser offers it. A method can be `unavailable`, with the reason in its place ("Not for orders over $5,000"). The chosen method's questions show right under the list, and only they are checked:
+  - **Card:** saved cards first (only the brand, last four digits and expiry; an expired one can't be picked), then "A new card" with the number, the name, the expiry as **one MM/YY field** (`cc-exp`, the slash put in as it's typed, a filled "08/2027" kept as "08/27") and the security code. A date in the past says the card has expired.
+  - **Apple Pay, Google Pay:** nothing to type; "Place order" becomes "Pay … with Apple Pay", and the wallet's own sheet confirms it.
+  - **Bank transfer:** the bank. Once the order is placed, the virtual account's number and the amount, each with a copy button, and the time left to pay.
+  - **E-wallet:** which one, and the phone number its app asks to approve on. Once placed: which app to open, and the time left.
+  - **QRIS:** once placed, the code to scan (`qrImage` from your provider; the demo draws a stand-in) and how long it works.
+  - When the time runs out, the page says the order is cancelled and nothing was charged, with "Choose another way to pay".
+- **A promo code** in the order summary, above the total: "Add promo code" opens a field and focuses it. Apply is busy while `onApplyPromo` checks; a code that doesn't apply says why at the field; one that does shows as a badge with Remove and adds a discount line. Each change is said aloud.
 - **The order summary** beside the form (below it on a phone) with every line, the delivery, the tip and the total, updated as they change.
 - **A review step** before anything is charged: the address, the delivery and the card (only its last four digits), each with a "Change" button that goes back with every answer kept and focus on that part's first field (3.3.4, 3.3.7). "Place order" says the amount, and comes after the summary, so on a phone every line of the total is passed before the button that pays.
 - **Focus on each new step's heading**, so a screen reader reads where it is (2.4.3). Placing the order is announced; a failure keeps the review and says nothing was charged.
 - **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.SavedCards} />
+
+<Canvas of={Stories.BankTransfer} />
 
 <Canvas of={Stories.Review} />
 
@@ -37,8 +49,15 @@ Once the order is placed, the confirmation says where the receipt went and what 
 
 <Canvas of={Stories.Placed} />
 
+For a bank transfer, an e-wallet or a QR code, the order is placed first and paid after: resolve `onPlaceOrder` with what to show (`accountNumber`, `qrImage`, and `payBy` or `secondsLeft`), and the confirmation says how to pay and how long is left.
+
+<Canvas of={Stories.AwaitingBankTransfer} />
+
+<Canvas of={Stories.AwaitingQris} />
+
 ## What stays your app's job
 
+- **Taking the payment, and the codes.** Promo codes are checked on your server (`onApplyPromo`: resolve with the discount, reject with an Error that says why). The virtual account, the e-wallet request and the QR code come from your payment provider.
 - **Taking the payment.** Use your payment provider's own card fields where it requires them (they keep card numbers off your server), its 3-D Secure step, and its own error messages, put into words a person can act on. `onPlaceOrder` gets the order; reject its promise when the payment fails.
 - **Checking the address** with a postcode lookup, and the countries you deliver to, with each country's own address fields.
 - **Prices, taxes and the order number**, from your server. The summary here adds up what it's given.
