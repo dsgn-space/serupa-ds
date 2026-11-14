@@ -74,8 +74,8 @@
       },
       "border-elevated": {
         "$type": "color",
-        "$value": "{color.border-raised}",
-        "$description": "An elevated card's edge: invisible in light, a 1px lighter edge in dark",
+        "$value": "{color.border}",
+        "$description": "An elevated card's edge: the same `border` as an outline card's; the raised fill and shadow carry the lift",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--card-border-elevated"
