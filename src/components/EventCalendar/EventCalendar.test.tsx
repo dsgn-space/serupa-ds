@@ -395,4 +395,15 @@ describe('EventCalendar held state', () => {
     });
     expect(low).toEqual([]);
   });
+  test('times read the same in every engine: a narrow space before AM (older Chrome and Safari) is written as the plain one Node writes, so server text hydrates', async () => {
+    const parts = Intl.DateTimeFormat.prototype.formatToParts;
+    const spy = vi.spyOn(Intl.DateTimeFormat.prototype, 'formatToParts').mockImplementation(function (this: Intl.DateTimeFormat, d?: Date | number) {
+      return parts.call(this, d).map((x) => (x.type === 'literal' ? { ...x, value: x.value.replace(/ /g, '\u202f') } : x));
+    });
+    try {
+      const html = renderToString(<EnUS><EventCalendar events={EVENTS} defaultMonth={MARCH} /></EnUS>);
+      expect(html).not.toMatch(/[\u2009\u202f]/);
+      expect(html).toContain('9:30 AM');
+    } finally { spy.mockRestore(); }
+  });
 });

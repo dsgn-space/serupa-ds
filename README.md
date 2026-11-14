@@ -14,19 +14,19 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.6.0
+npm install github:dsgn-space/serupa-ds#v14.7.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
 
-Always pin a tag (`#v14.6.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v14.7.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v14.6.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v14.7.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -288,6 +288,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [ShowMore](src/components/ShowMore/README.md) (beta) | Long text cut after a few lines, with a "Show more" button under it that shows the rest. |
 | [SortableList](src/components/SortableList/README.md) | A list people put in their own order: tasks by priority, steps in a flow, columns in a table. |
 | [Table](src/components/Table/README.md) | A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. |
+| [TagGroup](src/components/TagGroup/README.md) (beta) | Short labels people remove or pick: the labels on a ticket, the recipients of a message, the skills on a profile. |
 | [VirtualList](src/components/VirtualList/README.md) (beta) | A [List](src/components/List/README.md) of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. |
 
 ### Data display
@@ -295,8 +296,10 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | Component | What it's for |
 | --- | --- |
 | [Chart](src/components/Chart/README.md) (beta) | A line, bar or area chart of a few series over the same categories, such as visitors per month or orders per region, or a donut of one series' shares, such as traffic by source. |
+| [Countdown](src/components/Countdown/README.md) | Shows the time left until a moment, as a clock ("4:59") or in words ("4 minutes, 59 seconds"), and keeps itself up to date. |
 | [EventCalendar](src/components/EventCalendar/README.md) (beta) | A month of events: meetings, deadlines, bookings. |
 | [Sparkline](src/components/Sparkline/README.md) (beta) | A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value. |
+| [StatusTracker](src/components/StatusTracker/README.md) (beta) | A strip of bars, one a day, for uptime or a job's history: up, degraded, down or no data, told apart by shape as well as color. |
 | [Timeline](src/components/Timeline/README.md) | An ordered list of events, each with a marker on a line that joins them, a title, a time and optional content. |
 
 ### Feedback
@@ -340,6 +343,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [PhoneInput](src/components/PhoneInput/README.md) | A phone number field with a country menu at the start. |
 | [PinInput](src/components/PinInput/README.md) | A one-time code or PIN, shown as one box per character, such as the 6-digit code texted at sign-in. |
 | [Radio](src/components/Radio/README.md) | Native radios for one choice from a short list. |
+| [RangeCalendar](src/components/RangeCalendar/README.md) (beta) | A calendar on the page that picks a range of days: the check-in and check-out of a booking, a report's period, the first and last day of a leave request. |
 | [Rating](src/components/Rating/README.md) | Stars to pick a score (how was your stay, how useful was this article) or to show one (a product's average). |
 | [SearchInput](src/components/SearchInput/README.md) | A search field: a search icon at the start, and a × at the end once something is typed. |
 | [SegmentedControl](src/components/SegmentedControl/README.md) | Picks one of a few options shown side by side, such as a view (List, Board) or a period (Day, Week, Month). |
@@ -350,6 +354,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Textarea](src/components/Textarea/README.md) | A multi-line text field, Input's sibling: a native `<textarea>` in a box. |
 | [TimePicker](src/components/TimePicker/README.md) | A time-of-day field: people type a time, or pick one from a list. |
 | [TimeZonePicker](src/components/TimeZonePicker/README.md) (beta) | A searchable list of time zones, by city, with each one's offset now and its name in the reader's language. |
+| [TransferList](src/components/TransferList/README.md) | Two lists, Available and Chosen, with Add and Remove between them, for picking a set out of many: the columns a table shows, the permissions a role has, the people on a team. |
 | [TypeToConfirm](src/components/TypeToConfirm/README.md) | A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted. |
 
 ### Layout and type
@@ -521,7 +526,7 @@ Current Chrome, Edge, Safari and Firefox. The tests run in Chromium, and the cro
 
 Command buttons (`command`), `text-wrap: pretty`, phrase breaks in Japanese headings (`word-break: auto-phrase`), scroll-driven animations and `view-transition-name: match-element` are progressive: browsers without them ignore them and the page still works.
 
-Two features set the oldest versions that get the whole system, so the baseline is Chrome and Edge 129, Safari 26.4 and Firefox 147 (from 15.0.0; 14.x supports Chrome and Edge 123, Safari 17.5 and Firefox 128). A check (`tools/test/browser-baseline.mjs`) holds every property, value and at-rule in `bundle.css` to it, with MDN's compatibility data, and lists what is newer on purpose:
+Two features set the oldest versions that get the whole system, so the baseline is Chrome and Edge 129, Safari 26.4 and Firefox 147 (from 15.0.0; 14.x supports Chrome and Edge 123, Safari 17.5 and Firefox 128). The numbers live in `package.json`'s `browserslist`, so a project's own tools can read them. A check (`tools/test/browser-baseline.mjs`) holds every property, value and at-rule in `bundle.css` to them, with MDN's compatibility data, and lists what is newer on purpose. Every night the component tests also run in Chrome at that version:
 
 | Feature | Needs | Without it |
 | --- | --- | --- |
