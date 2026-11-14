@@ -430,4 +430,10 @@ describe('Patterns/Checkout: promo code', () => {
     await vi.waitFor(() => expect(total()).toBe('100'));
     await vi.waitFor(() => expect(said()).toContain('Promo code SAVE10 removed'));
   });
+
+  test('once the order is placed there is no promo code to add: the summary shows the discount, if any, and nothing to change', async () => {
+    await render(<Checkout initial={filled} placed promo={{ code: 'WELCOME10', discount: 615 }} />);
+    expect([...document.querySelectorAll('aside button')].length).toBe(0);
+    expect([...document.querySelectorAll('aside dt')].map((t) => t.textContent)).toContain('Discount (WELCOME10)');
+  });
 });
