@@ -6,6 +6,7 @@ import { THEMES, color, contrast, css, forcedColors, lowContrast, withMotion } f
 import { Field } from '../Field/Field';
 import { Select } from './Select';
 import { Combobox } from '../Combobox/Combobox';
+import { Card } from '../Card/Card';
 import { DatePicker } from '../DatePicker/DatePicker';
 
 const field = (id: string) => document.getElementById(id) as HTMLSelectElement;
@@ -328,6 +329,32 @@ describe('Select: the styled list', () => {
     still.remove();
     await userEvent.keyboard('{Escape}');
     expect(low).toEqual([]);
+  });
+
+  test('a group sits on the list\'s own surface, with no band of the field\'s color behind it (on a raised Card in dark the field is lighter than the list)', async () => {
+    await render(<Card variant="elevated"><Select aria-label="Fruit" options={FRUIT} defaultValue="Apple" /></Card>);
+    const s = document.querySelector('select')!;
+    if (!styled) return expect(css(s).appearance).toBe('none');
+    await userEvent.click(s);
+    const bands: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const g = css(document.querySelector('optgroup')).backgroundColor;
+      if (g !== 'rgba(0, 0, 0, 0)') bands.push(`${th} ${g}`);
+    }
+    await userEvent.keyboard('{Escape}');
+    expect(bands).toEqual([]);
+  });
+
+  test('a long option wraps inside the window, as Combobox\'s list does, rather than widening the list past the screen', async () => {
+    const long = 'Regional office relocation programme for the northern territories, phase two '.repeat(3) + 'Supercalifragilisticexpialidocious'.repeat(4);
+    await render(<div style={{ width: '200px' }}><Select aria-label="Project" options={['Short', long]} defaultValue="Short" /></div>);
+    const s = document.querySelector('select')!;
+    if (!styled) return expect(css(s).appearance).toBe('none');
+    await userEvent.click(s);
+    const r = opt(long).getBoundingClientRect();
+    await userEvent.keyboard('{Escape}');
+    expect([r.left >= 0, r.right <= document.documentElement.clientWidth]).toEqual([true, true]);
   });
 
   test('forced colors: the option under the keyboard is outlined in Highlight, since the fill is gone', async () => {

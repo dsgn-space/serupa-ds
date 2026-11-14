@@ -64,8 +64,8 @@
       },
       "indicator-selected": {
         "$type": "color",
-        "$value": "{color.primary}",
-        "$description": "The bar at the start of a selected item.",
+        "$value": "{color.highlight-indicator}",
+        "$description": "The bar at the start of a selected item. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--list-indicator-selected"
