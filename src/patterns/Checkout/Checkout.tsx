@@ -344,7 +344,7 @@ export function Checkout({
             ) : step === 'review' ? (
               <div className="flex flex-col gap-4">
                 {failed ? <p className="m-0 text-danger-text">Your order wasn’t placed. Nothing was charged. Try again, or {method?.kind === 'card' ? 'use another card' : 'choose another way to pay'}.</p> : null}
-                <Card className="flex flex-wrap items-start justify-between gap-3">
+                <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Delivery address</Heading>
                     <p className="m-0 whitespace-pre-line text-sm">{[d.name, d.line1, d.line2, `${d.city} ${d.postcode}`, country].filter(Boolean).join('\n')}</p>
@@ -352,7 +352,7 @@ export function Checkout({
                   </div>
                   {change('address', 'the delivery address')}
                 </Card>
-                <Card className="flex flex-wrap items-start justify-between gap-3">
+                <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Delivery</Heading>
                     <p className="m-0 text-sm">{d.delivery === 'express' ? 'Express, next working day' : 'Standard, 3 to 5 working days'}</p>
@@ -360,7 +360,7 @@ export function Checkout({
                   </div>
                   {change('delivery', 'the delivery')}
                 </Card>
-                <Card className="flex flex-wrap items-start justify-between gap-3">
+                <Card className="flex flex-row flex-wrap items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-col gap-1 wrap-anywhere">
                     <Heading level={3}>Payment</Heading>
                     <p className="m-0 text-sm">{methodSummary(method, answers, { last4, expiry: d.cardExpiry })}</p>
