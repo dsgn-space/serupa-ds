@@ -207,6 +207,21 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
     if (list.length) announce(L.dataGridPasted(list.length, displayNumber(list.length, locale)));
   };
 
+  // With no text selected, Chrome before 125 and Firefox send Ctrl+C and Ctrl+V to the body, not to the focused cell:
+  // handed on to the table, so copy and paste work wherever focus is in the grid.
+  React.useEffect(() => {
+    const hand = (e: ClipboardEvent) => {
+      const t = table.current;
+      if (!t || !(e.target instanceof Node) || t.contains(e.target) || !t.contains(document.activeElement)) return;
+      // The browser's own clipboard rides along (Firefox drops one given to new ClipboardEvent).
+      const again = new ClipboardEvent(e.type, { bubbles: true, cancelable: true });
+      Object.defineProperty(again, 'clipboardData', { value: e.clipboardData });
+      if (!t.dispatchEvent(again)) e.preventDefault();
+    };
+    document.addEventListener('copy', hand); document.addEventListener('paste', hand);
+    return () => { document.removeEventListener('copy', hand); document.removeEventListener('paste', hand); };
+  }, []);
+
   const pick = (p: Pos, e: React.MouseEvent) => { if (edit) return; move(p, e.shiftKey && p.r > 0); };
   const tabStop = (r: number, c: number) => (r === cur.r && c === cur.c ? 0 : -1);
   // With no rows: placeholders the height of real rows while loading (only the first says "Loading", once), otherwise
