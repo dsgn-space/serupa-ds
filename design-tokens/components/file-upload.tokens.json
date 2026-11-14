@@ -4,8 +4,8 @@
     "color": {
       "zone-bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The drop area's background.",
+        "$value": "{color.surface-control}",
+        "$description": "The drop area's background: zinc-50 in light, a step above the page in dark (zinc-900), as it is something to press.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--file-upload-zone-bg"

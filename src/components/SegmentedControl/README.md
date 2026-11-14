@@ -104,9 +104,9 @@ Each is an optional override: set it on the page, a container or one control. Th
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--segmented-control-bg` | `surface-muted` | The control's background. |
+| `--segmented-control-bg` | `surface-control` | The track behind the segments: zinc-50 in light, a step above the page in dark (zinc-900), so the control never looks sunk into the page. |
 | `--segmented-control-border` | `field-border` | The control's outline: the same soft hairline as a form field's (under 3:1 by design, as field-border is; more contrast brings back 3:1). |
-| `--segmented-control-indicator` | `surface` | The selected segment's background. |
+| `--segmented-control-indicator` | `field` | The selected segment's background: white in light, zinc-800 in dark, a step up from the track. |
 | `--segmented-control-indicator-border` | `field-border` | The selected segment's outline: the field's hairline, the selection standing out by its raised surface and shadow. |
 | `--segmented-control-text` | `text-muted` | The other segments' labels (4.5:1 on bg). |
 | `--segmented-control-text-selected` | `text` | The selected segment's label. |
