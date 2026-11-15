@@ -120,6 +120,36 @@ describe('Patterns/File browser', () => {
     await expect.element(dialog.getByRole('textbox', { name: /^Name/ })).toHaveValue('Handbook.pdf');
   });
 
+  test('ways out that change nothing: Clear selection, Cancel and Escape in each dialog, and a rename to the same name', async () => {
+    const onMove = vi.fn(), onRename = vi.fn();
+    const screen = await render(<FileBrowser files={files} folders={folders} onMove={onMove} onRename={onRename} defaultSelected={['a']} />);
+    await screen.getByRole('button', { name: 'Clear selection' }).click();
+    await expect.element(screen.getByRole('checkbox', { name: 'Logo.svg' })).not.toBeChecked();
+    // One file moves from its own menu, without being picked first: the dialog names it.
+    await screen.getByRole('button', { name: 'More for Notes.docx' }).click();
+    await screen.getByRole('menuitem', { name: 'Move' }).click();
+    await expect.element(screen.getByRole('dialog', { name: 'Move “Notes.docx”' })).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
+    await screen.getByRole('button', { name: 'More for Notes.docx' }).click();
+    await screen.getByRole('menuitem', { name: 'Move' }).click();
+    await screen.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
+    await screen.getByRole('button', { name: 'More for Notes.docx' }).click();
+    await screen.getByRole('menuitem', { name: 'Rename' }).click();
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
+    await screen.getByRole('button', { name: 'More for Notes.docx' }).click();
+    await screen.getByRole('menuitem', { name: 'Rename' }).click();
+    await screen.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
+    await screen.getByRole('button', { name: 'More for Notes.docx' }).click();
+    await screen.getByRole('menuitem', { name: 'Rename' }).click();
+    await screen.getByRole('dialog').getByRole('button', { name: 'Rename' }).click();
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
+    expect([onMove.mock.calls.length, onRename.mock.calls.length, screen.getByRole('row').elements().length]).toEqual([0, 0, 3]);
+  });
+
   test('the keyboard picks rows: Space on the focused row, and Ctrl+A for every file', async () => {
     const screen = await render(<FileBrowser files={files} folders={folders} />);
     (document.querySelector('#file-list [tabindex="0"]') as HTMLElement).focus();
@@ -144,6 +174,7 @@ describe('Patterns/File browser', () => {
     await screen.rerender(<FileBrowser files={[]} onUpload={onUpload} />);
     await expect.element(screen.getByRole('heading', { level: 2, name: 'This folder is empty' })).toBeVisible();
     await screen.getByRole('main').getByRole('button', { name: 'Upload files' }).last().click();
-    expect(onUpload).toHaveBeenCalledTimes(1);
+    await screen.getByRole('main').getByRole('button', { name: 'Upload files' }).first().click();
+    expect(onUpload).toHaveBeenCalledTimes(2);
   });
 });

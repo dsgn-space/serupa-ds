@@ -89,6 +89,21 @@ describe('Patterns/Task board', () => {
     await expect.element(screen.getByRole('button', { name: 'Move Delta to…' })).toBeVisible();
   });
 
+  test('Cancel and Escape close New task without adding, and it opens empty again', async () => {
+    const onAdd = vi.fn();
+    const screen = await render(<TaskBoard columns={board()} onAdd={onAdd} />);
+    await screen.getByRole('button', { name: 'New task' }).click();
+    await screen.getByRole('dialog').getByRole('textbox', { name: /^Title/ }).fill('Delta');
+    await screen.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
+    await screen.getByRole('button', { name: 'New task' }).click();
+    await expect.element(screen.getByRole('dialog').getByRole('textbox', { name: /^Title/ })).toHaveValue('');
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
+    expect(onAdd).not.toHaveBeenCalled();
+    expect(document.body.textContent).toContain('3 tasks');
+  });
+
   test('while the tasks load the board is busy with no cards and New task waits; a failed load says so with Try again', async () => {
     const onRetry = vi.fn();
     const screen = await render(<TaskBoard columns={board()} loading />);
