@@ -1,0 +1,40 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Invoice.stories';
+
+<Meta of={Stories} />
+
+# Invoice
+
+One bill, as the person paying it reads it: whether it's due, paid or overdue, who it's from and to, its lines, the totals, and a way to pay or keep a copy.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The page an invoice email links to, or a row in a list of invoices opens.
+- Not for the list of invoices and the plan they come from: that's the Billing pattern.
+- Not for paying for a basket: that's the Checkout pattern.
+
+## What each part is for
+
+- **Where it stands is a word and a sentence**: "Due" in a badge, then "Due on March 31, 2025", or "Overdue by 5 days. It was due on March 3, 2025". The badge's color is never the only sign (1.4.1).
+- **The amount comes first**, as the page's first h2, with what to do with it ("to pay").
+- **The lines are a table** with a caption and column headers, the amounts aligned at the end, written the way the reader's locale writes money (1.3.1).
+- **The totals are a description list**, ending with the amount due, named so (1.3.1).
+- **Dates are the reader's own**, written out in full, with a date a machine can read.
+- **Download says what it downloads**: "Download invoice INV-2041 (PDF)" (2.4.4).
+- **Pay marks it paid only once the server says so.** The button shows it's busy; a payment that fails says so next to it, and says nothing was taken (3.3.1, 4.1.3).
+- **Once paid, the Pay button is gone**, so focus goes to the h1; the badge says "Paid" and a toast says so (2.4.3, 4.1.3).
+- **While the invoice loads**, set `loading`: one placeholder, named "Loading invoice". **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Overdue} />
+
+<Canvas of={Stories.Paid} />
+
+## What stays your app's job
+
+- **Paying.** `onPay` gets the amount due: take the payment there, and reject its promise when it fails. For a card, send the reader to your payment provider's page from there.
+- **The PDF.** `pdf` is its address; make it on the server, with the same lines and totals.
+- **Today.** Pass `today` as the reader's date, so overdue is right.
+- **Tax rules.** One rate on the whole invoice is all the pattern does; work out mixed rates on the server.

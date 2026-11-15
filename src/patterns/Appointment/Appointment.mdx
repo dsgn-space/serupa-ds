@@ -1,0 +1,39 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Appointment.stories';
+
+<Meta of={Stories} />
+
+# Appointment
+
+A time with someone, picked by day and then by time, with your details and a confirmation.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A visit, a call, a test drive or a haircut: one person's time, in slots, on some days.
+- Not for a stay over several nights: that's the Booking pattern.
+- Not for a team's own events: that's the Team calendar pattern.
+
+## What each part is for
+
+- **The day comes first, on a calendar.** Days with no free time are struck through and can't be picked, and the line under the calendar says so (1.4.1).
+- **Picking a day says how many times are free on it**, in a status that's read out (4.1.3).
+- **The times are a named group of radios**, named by the day ("Times on Tuesday, March 4"). A taken time stays in the list, disabled, with "taken" in its name, so the reader knows it exists and why it can't be chosen (1.3.1, 4.1.2).
+- **Times are written the way the reader's locale writes them**: "10:30 AM" or "10.30".
+- **Name and email are required and say so**; the email's hint says what it's for. Both say what they are for autofill (3.3.2, 1.3.5).
+- **What's missing is said next to its field** when you press Book, and focus goes to the first. Book with no day or time says what to choose and puts focus on the calendar or the times (3.3.1).
+- **The appointment is summed up as a description list** beside the form: what, with whom, when and where, filled in as you choose (1.3.1).
+- **Book books only once the server says so.** A time taken meanwhile says so next to the button and keeps everything (3.3.1, 4.1.3).
+- **Once booked, the form gives way to a confirmation** whose heading takes focus and says when (2.4.3, 4.1.3).
+- **While the times load**, set `loading`: one placeholder, named "Loading times". **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.BookFails} />
+
+## What stays your app's job
+
+- **Booking.** `onBook` gets the day as "yyyy-mm-dd", the time as "HH:mm", and the details: return its promise, and reject it when the time was taken. Then load the times again, so it shows as taken.
+- **Time zones.** Times are shown as given: send them in the place's own zone, and say which when the reader may be elsewhere.
+- **Today.** Pass `today` as the visitor's date, so days before it are closed.
+- **Changing or cancelling**, from the link in the email that `onBook` sends.
