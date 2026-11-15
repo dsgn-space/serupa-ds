@@ -1,0 +1,84 @@
+import * as React from 'react';
+import { describe, expect, test, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { ExpenseReport, expenseProblems, missingReceipts, type Expense } from './ExpenseReport';
+
+const active = () => document.activeElement as HTMLElement;
+const alertText = () => [...document.querySelectorAll('[role="alert"]')].map((e) => e.textContent).join(' ');
+const described = (el: Element) => (el.getAttribute('aria-describedby') ?? '').split(' ').map((id) => document.getElementById(id)?.textContent ?? '').join(' ');
+const rows = () => [...document.querySelectorAll('tbody tr')].map((r) => r.querySelectorAll('td')[1]?.firstChild?.textContent);
+const today = '2026-02-12';
+const expenses: Expense[] = [
+  { id: 'a', date: '2026-02-03', category: 'travel', what: 'Train', amount: 18 },
+  { id: 'b', date: '2026-02-04', category: 'meals', what: 'Dinner', amount: 64 },
+];
+const good = { date: '2026-02-05', category: 'travel', what: 'Taxi', amount: 12, receipt: null };
+
+// Expense report: fields that say what they take, problems next to each with focus on the first, a table with the
+// total in its footer and "Receipt needed" in words, Remove moving focus on, and Send checked before it sends.
+describe('Patterns/Expense report', () => {
+  test('what\'s wrong with an expense, and the receipts missing', () => {
+    expect(expenseProblems(good, today, 25)).toEqual({});
+    expect(Object.keys(expenseProblems({ date: '', category: '', what: ' ', amount: null, receipt: null }, today, 25))).toEqual(['date', 'category', 'what', 'amount']);
+    expect(expenseProblems({ ...good, date: '2026-03-01' }, today, 25).date).toBe('Enter a date that isn’t in the future.');
+    expect(expenseProblems({ ...good, amount: 0 }, today, 25).amount).toBe('Enter how much it cost.');
+    expect(expenseProblems({ ...good, amount: 40 }, today, 25).receipt).toBe('Add the receipt: it’s needed over 25.');
+    expect(expenseProblems({ ...good, amount: 40, receipt: new File(['x'], 'r.pdf') }, today, 25)).toEqual({});
+    expect(missingReceipts(expenses, 25).map((e) => e.id)).toEqual(['b']);
+  });
+
+  test('one main and h1, the skip link first, the expenses as a table with the total in its footer, and receipts in words', async () => {
+    await render(<ExpenseReport expenses={expenses} today={today} />);
+    await userEvent.tab();
+    expect(active().getAttribute('href')).toBe('#main');
+    expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
+    expect(document.querySelector('caption')?.textContent).toBe('Expenses in this report, with the total');
+    expect(document.querySelector('tfoot th')?.textContent).toBe('Total');
+    expect(document.querySelector('tfoot')?.textContent).toMatch(/82|٨٢/);
+    expect([...document.querySelectorAll('tbody tr')].map((r) => r.querySelectorAll('td')[3]?.textContent)).toEqual(['Not needed', 'Receipt needed']);
+  });
+
+  test('Add with problems names each next to its field and focuses the first; a good one joins the table', async () => {
+    const screen = await render(<ExpenseReport expenses={[]} today={today} />);
+    await screen.getByRole('button', { name: 'Add expense' }).click();
+    await expect.poll(() => active().id).toBe('expense-category');
+    expect(described(active())).toContain('Choose what it was for.');
+    await screen.getByRole('combobox', { name: /^What for/ }).selectOptions('travel');
+    await screen.getByRole('textbox', { name: /^What it was/ }).fill(' Taxi to the client ');
+    await screen.getByRole('spinbutton', { name: /^Amount/ }).fill('40');
+    await screen.getByRole('button', { name: 'Add expense' }).click();
+    await expect.poll(() => document.body.textContent).toContain('Add the receipt: it’s needed over 25.');
+    await userEvent.upload(document.getElementById('expense-receipt') as HTMLInputElement, [new File(['x'], 'taxi.jpg', { type: 'image/jpeg' })]);
+    await screen.getByRole('button', { name: 'Add expense' }).click();
+    await expect.poll(rows).toEqual(['Taxi to the client']);
+    expect(document.querySelector('tbody')?.textContent).toContain('taxi.jpg');
+    expect((document.getElementById('expense-what') as HTMLInputElement).value).toBe('');
+  });
+
+  test('Remove moves focus to the next row\'s Remove, then the form\'s first field', async () => {
+    const screen = await render(<ExpenseReport expenses={expenses} today={today} />);
+    await screen.getByRole('button', { name: 'Remove: Train' }).click();
+    await expect.poll(() => active().id).toBe('expense-remove-b');
+    await screen.getByRole('button', { name: 'Remove: Dinner' }).click();
+    await expect.poll(() => active().closest('#expense-date') !== null).toBe(true);
+    expect(document.body.textContent).toContain('None yet.');
+  });
+
+  test('Send is checked first: no expenses, then a missing receipt; a send that fails says so; sent, the answer takes focus', async () => {
+    const onSubmit = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
+    const { rerender } = await render(<ExpenseReport expenses={[]} today={today} onSubmit={onSubmit} />);
+    const sendButton = () => [...document.querySelectorAll('button')].find((b) => b.textContent === 'Send for approval')!;
+    sendButton().click();
+    await expect.poll(alertText).toContain('Add at least one expense first.');
+    await rerender(<ExpenseReport key="2" expenses={expenses} today={today} onSubmit={onSubmit} />);
+    sendButton().click();
+    await expect.poll(alertText).toContain('Add the receipt for Dinner');
+    await rerender(<ExpenseReport key="3" expenses={[expenses[0]!]} today={today} onSubmit={onSubmit} />);
+    sendButton().click();
+    await expect.poll(alertText).toContain('Couldn’t send the report.');
+    sendButton().click();
+    await expect.poll(() => active().textContent).toBe('Sent for approval');
+    expect(onSubmit).toHaveBeenLastCalledWith([expenses[0]]);
+  });
+});

@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './EmailPreferences.stories';
+
+<Meta of={Stories} />
+
+# Email preferences
+
+The page an email's "Manage emails" or "Unsubscribe" link opens, with no sign-in: which emails come, a switch for each, and one button to stop them all.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The link at the foot of every marketing email.
+- Not for alerts inside the app: that's the Notifications pattern, whose settings link goes to your own settings page.
+- Not for a whole account's settings: that's the Settings form pattern.
+
+## What each part is for
+
+- **The address it's about is said first**, so someone with two addresses knows which one this is (1.3.1).
+- **Each kind of email is a switch named by what it is**, with how often it comes as its description (1.3.1, 3.3.2).
+- **Stopping every email is one button**, as easy to reach as Save, with no "Are you sure?"; it takes effect at once.
+- **Save shows it's busy and says what changed** once saved; one that fails says so and keeps the switches as set (4.1.3, 3.3.4).
+- **After "Stop all emails", the answer's heading takes focus**, with "Turn them back on" (2.4.3).
+- **The emails that can't be turned off are named in a sentence**, not shown as switches that can't be switched.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.SaveFails} />
+
+## What stays your app's job
+
+- **Knowing who.** The link carries a token for the address; check it on the server, and let it change only that address's emails.
+- **Saving.** `onSave` gets every topic's choice: reject when they can't be saved. Stop sending within the day you say.
+- **The kinds.** Pass the topics you really send, with how often; an "Unsubscribe" link in an email should turn off only that email's kind, then show this page.

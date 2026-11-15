@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './SupportTicket.stories';
+
+<Meta of={Stories} />
+
+# Support ticket
+
+One request to a support team, as the person who asked sees it: where it's got to, the conversation so far, and a reply box, or a way to reopen it once solved.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The page a "We've replied to your request" email links to.
+- Not for writing in the first time: that's the Contact form pattern.
+- Not for a live chat: that's the Messages pattern.
+
+## What each part is for
+
+- **Where it's got to is a word in a badge**, "Waiting on you", with what that means in a sentence, not a color alone. The reference, when it was opened and its priority are named facts (1.4.1, 1.3.1).
+- **The conversation is a list, oldest first**; each message is an article named by who wrote it and when, and says "Support" or "You" in words, besides its picture (1.3.1).
+- **The reply says what it takes**; an empty one is named next to the box, which takes focus (3.3.1, 3.3.2).
+- **Send shows it's busy**; a sent reply joins the list and a toast says so; one that can't be sent says so and keeps the words and the files (4.1.3, 3.3.4).
+- **Mark as solved moves focus to the heading that says it's solved**, with Reopen; Reopen brings the reply box back and focuses it (2.4.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Solved} />
+
+## What stays your app's job
+
+- **Sending.** `onReply` gets the words, trimmed, and the files: reject when it can't be sent.
+- **Where it's got to.** Move it to "Waiting on you" when an agent asks something, and back to "Open" when the person replies, as the page does.
+- **Solving.** `onSolve` and `onReopen` hear the person's choice; say how long a solved request can be reopened.
