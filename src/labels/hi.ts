@@ -38,6 +38,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'और',
   previousMonth: 'पिछला महीना',
   timeZoneYours: 'आपका समय क्षेत्र',
+  timeZonePlaceholder: 'शहर या समय क्षेत्र खोजें',
   nextMonth: 'अगला महीना',
   month: 'महीना',
   year: 'साल',

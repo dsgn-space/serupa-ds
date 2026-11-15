@@ -39,6 +39,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'Lagi',
   previousMonth: 'Bulan sebelumnya',
   timeZoneYours: 'Zon waktu anda',
+  timeZonePlaceholder: 'Cari bandar atau zon waktu',
   nextMonth: 'Bulan seterusnya',
   month: 'Bulan',
   year: 'Tahun',

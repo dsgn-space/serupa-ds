@@ -42,6 +42,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'Altro',
   previousMonth: 'Mese precedente',
   timeZoneYours: 'Il tuo fuso orario',
+  timeZonePlaceholder: 'Cerca una città o un fuso orario',
   nextMonth: 'Mese successivo',
   month: 'Mese',
   year: 'Anno',
