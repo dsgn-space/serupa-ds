@@ -571,3 +571,88 @@ describe('a day under the pointer', () => {
     expect(low).toEqual([]);
   });
 });
+
+describe('Calendar: other calendar systems (RX9)', () => {
+  // The shown month's days: from its 1st to the day before the next month's 1st (the grid's other days are the months around it).
+  const inMonth = () => {
+    const all = [...document.querySelectorAll<HTMLButtonElement>('[data-testid=cal] [role=grid]:not([hidden]) button[data-date]')], from = all.findIndex((b) => b.textContent === '1');
+    const to = all.findIndex((b, i) => i > from && b.textContent === '1');
+    return all.slice(from, to < 0 ? undefined : to);
+  };
+  const titleIn = (calendar: string, d: Date, locale = 'en-US') => new Intl.DateTimeFormat(locale, { calendar, numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(d);
+
+  test('calendar="persian": the grid is the Persian month (Aban 1405 runs 23 Oct to 21 Nov 2026), its days numbered 1 to 30; keys and picks give Dates', async () => {
+    const picks: string[] = [], months: string[] = [];
+    await render(<Calendar data-testid="cal" calendar="persian" locale="en-US" weekStartsOn={6} defaultValue="2026-11-15" onValueChange={(_, iso) => picks.push(iso)} onMonthChange={(m) => months.push(m.toDateString())} />);
+    const days = inMonth();
+    expect([title(), days.length, days[0]!.dataset.date, days[0]!.textContent, days.at(-1)!.dataset.date, days.at(-1)!.textContent]).toEqual([titleIn('persian', new Date(2026, 10, 15)), 30, '2026-10-23', '1', '2026-11-21', '30']);
+    expect(title()).toContain('1405');
+    // The selected day's name is in the Persian calendar too.
+    expect(cal('[aria-selected=true] button').getAttribute('aria-label')).toBe(new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(2026, 10, 15)));
+    // PageDown: the 24th of Aban to the 24th of Azar, which is 15 Dec; the next month starts on 22 Nov.
+    cal<HTMLButtonElement>('[data-date="2026-11-15"]').focus();
+    await userEvent.keyboard('{PageDown}');
+    expect([focused(), months.at(-1), inMonth()[0]!.dataset.date]).toEqual(['2026-12-15', new Date(2026, 10, 22).toDateString(), '2026-11-22']);
+    await userEvent.keyboard('{Enter}');
+    expect(picks).toEqual(['2026-12-15']);
+  });
+
+  test('calendar="islamic-umalqura" in Arabic: Jumada II 1448 from 11 Nov 2026, with Latin digits; Hijri months of 29 and 30 days step right', async () => {
+    await render(<Calendar data-testid="cal" calendar="islamic-umalqura" locale="ar-SA" defaultMonth={new Date(2026, 10, 15)} />);
+    expect([title(), inMonth()[0]!.dataset.date, inMonth()[0]!.textContent]).toEqual([titleIn('islamic-umalqura', new Date(2026, 10, 15), 'ar-SA'), '2026-11-11', '1']);
+    const lengths: number[] = [];
+    for (let i = 0; i < 12; i++) { lengths.push(inMonth().length); await userEvent.click(cal('.dk-calendar__nav--next')); }
+    // Every month has 29 or 30 days, and twelve of them make a lunar year of 354 or 355.
+    expect([lengths.every((n) => n === 29 || n === 30), [354, 355].includes(lengths.reduce((a, b) => a + b))]).toEqual([true, true]);
+  });
+
+  test('buddhist, japanese and roc keep the Gregorian months and name the year their way', async () => {
+    const r = await render(<Calendar data-testid="cal" calendar="buddhist" locale="en-US" defaultMonth={new Date(2026, 10, 15)} />);
+    expect([title(), inMonth()[0]!.dataset.date, inMonth().length]).toEqual([titleIn('buddhist', new Date(2026, 10, 1)), '2026-11-01', 30]);
+    expect(title()).toContain('2569');
+    await r.rerender(<Calendar data-testid="cal" calendar="japanese" locale="ja-JP" defaultMonth={new Date(2026, 10, 15)} />);
+    expect([title(), inMonth()[0]!.dataset.date]).toEqual([titleIn('japanese', new Date(2026, 10, 1), 'ja-JP'), '2026-11-01']);
+  });
+
+  test('the months, the years and the menus count in the calendar: the heading opens Persian 1405, and Dey starts on 22 Dec 2026', async () => {
+    await render(<Calendar data-testid="cal" calendar="persian" locale="en-US" defaultMonth={new Date(2026, 10, 15)} />);
+    await userEvent.click(cal('.dk-calendar__heading'));
+    const grid = () => cal<HTMLTableElement>('[role=grid]:not([hidden])');
+    const cells = () => [...grid().querySelectorAll('button')].map((b) => b.querySelector('span:last-child')?.textContent ?? b.textContent);
+    expect([title(), cells()[0], cells()[9]]).toEqual([new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', year: 'numeric' }).format(new Date(2026, 10, 15)), titleIn('persian', new Date(2026, 2, 21)), titleIn('persian', new Date(2026, 11, 22))]);
+    await userEvent.click(grid().querySelectorAll('button')[9]!);
+    expect([title(), inMonth()[0]!.dataset.date]).toEqual([titleIn('persian', new Date(2026, 11, 22)), '2026-12-22']);
+  });
+
+  test('monthYearPicker in a Hijri calendar: the year menu lists Hijri years, and a pick shows that year\'s month', async () => {
+    const seen: string[] = [];
+    await render(<Calendar data-testid="cal" calendar="islamic-umalqura" monthYearPicker locale="en-US" defaultMonth={new Date(2026, 10, 15)} onMonthChange={(m) => seen.push(m.toDateString())} />);
+    const [month, year] = [...document.querySelectorAll<HTMLSelectElement>('[data-testid=cal] select')];
+    expect([month!.value, year!.value, month!.options[5]!.textContent]).toEqual(['5', '1448', new Intl.DateTimeFormat('en-US', { calendar: 'islamic-umalqura', month: 'long' }).format(new Date(2026, 10, 15))]);
+    await userEvent.selectOptions(year!, '1447');
+    // Jumada II 1447 began on 22 Nov 2025.
+    expect([inMonth()[0]!.dataset.date, seen.at(-1)]).toEqual(['2025-11-22', new Date(2025, 10, 22).toDateString()]);
+  });
+
+  test('every calendar system: the month\'s days run 1 to its last (29 to 31) on days in a row, and the next month starts the day after', async () => {
+    const after = (iso: string) => { const [y, m, d] = iso.split('-').map(Number); const t = new Date(y!, m! - 1, d! + 1); return [t.getFullYear(), String(t.getMonth() + 1).padStart(2, '0'), String(t.getDate()).padStart(2, '0')].join('-'); };
+    for (const calendar of ['gregory', 'buddhist', 'japanese', 'roc', 'persian', 'islamic-umalqura', 'islamic-civil', 'islamic-tbla', 'indian'] as const) {
+      const r = await render(<Calendar data-testid="cal" calendar={calendar} locale="en-US" defaultMonth={new Date(2026, 10, 15)} />);
+      const days = inMonth(), dates = days.map((b) => b.dataset.date!);
+      expect([calendar, days.map((b) => b.textContent).join(), dates.every((d, i) => i === 0 || d === after(dates[i - 1]!)), days.length >= 29 && days.length <= 31])
+        .toEqual([calendar, days.map((_, i) => String(i + 1)).join(), true, true]);
+      expect(title()).toBe(titleIn(calendar, new Date(2026, 10, 15)));
+      await userEvent.click(cal('.dk-calendar__nav--next'));
+      expect([calendar, inMonth()[0]!.dataset.date]).toEqual([calendar, after(dates.at(-1)!)]);
+      await r.unmount();
+    }
+  });
+
+  test('a calendar the grids don\'t draw (hebrew, of 13 months) warns once and draws Gregorian', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await render(<Calendar data-testid="cal" calendar={'hebrew' as 'gregory'} locale="en-US" defaultMonth={new Date(2026, 10, 15)} />);
+    expect([title(), inMonth()[0]!.dataset.date]).toEqual(['November 2026', '2026-11-01']);
+    expect(warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('calendar-system'))).toHaveLength(1);
+    warn.mockRestore();
+  });
+});

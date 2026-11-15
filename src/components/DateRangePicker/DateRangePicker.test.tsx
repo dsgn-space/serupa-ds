@@ -402,3 +402,28 @@ describe('DateRangePicker presets (RU11)', () => {
     expect(pop('none').querySelector('[role=group]')).toBe(null);
   });
 });
+
+describe('DateRangePicker: another calendar system (RX9)', () => {
+  test('calendar="islamic-umalqura": the popup\'s two months are Hijri months, and the typed dates stay Gregorian', async () => {
+    await render(<DateRangePicker data-testid="hj" aria-label="Stay" calendar="islamic-umalqura" locale="en-US" defaultValue={{ start: new Date(2026, 10, 15), end: null }} />);
+    await userEvent.click(btn('hj'));
+    const fmt = (d: Date) => new Intl.DateTimeFormat('en-US', { calendar: 'islamic-umalqura', numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(d);
+    const titles = [...pop('hj').querySelectorAll('[role=grid]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent);
+    // Jumada II 1448 starts on 11 Nov 2026, so the second month starts 29 or 30 days on.
+    expect(titles[0]).toBe(fmt(new Date(2026, 10, 15)));
+    if (titles.length > 1) expect(titles[1]).toBe(fmt(new Date(2026, 11, 15)));
+    await userEvent.click(day('hj', '2026-11-20'));
+    expect(vals('hj')).toBe('11/15/2026 – 11/20/2026');
+  });
+
+  test('every calendar system: the popup\'s first month is named as Intl names it', async () => {
+    for (const calendar of ['gregory', 'buddhist', 'japanese', 'roc', 'persian', 'islamic-umalqura', 'islamic-civil', 'islamic-tbla', 'indian'] as const) {
+      const r = await render(<DateRangePicker data-testid="all" aria-label="Stay" calendar={calendar} locale="en-US" defaultValue={{ start: new Date(2026, 10, 15), end: null }} />);
+      await userEvent.click(btn('all'));
+      const g = pop('all').querySelector('[role=grid]')!;
+      expect([calendar, document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent]).toEqual([calendar, new Intl.DateTimeFormat('en-US', { calendar, numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(new Date(2026, 10, 15))]);
+      await r.unmount();
+    }
+  });
+});
+

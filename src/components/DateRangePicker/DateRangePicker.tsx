@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useMergedRef, cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
-import { addMonths, compare, datePattern, formatDate, isoDate, parseDate, sameDay, sameMonth, startOfMonth, toDay } from '../../internal/dates';
+import { compare, datePattern, formatDate, isoDate, parseDate, sameDay, toDay } from '../../internal/dates';
+import { calendarOf, type CalendarSystem } from '../../internal/calendars';
 import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
@@ -48,6 +49,10 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
   isDateDisabled?: ((date: Date) => boolean) | undefined;
   /** A BCP 47 locale for the typed format, names and first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string | undefined;
+  /** The calendar system the popup's months follow, as Calendar's calendar: "persian", "islamic-umalqura",
+      "buddhist", "japanese" or "roc". The typed date stays Gregorian, so it reads back as the same day. Default:
+      "gregory". */
+  calendar?: CalendarSystem | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
   weekStartsOn?: number | undefined;
   /** 'sm', 'md' (default) or 'lg', like Input. */
@@ -95,8 +100,9 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>('DateRangePicker', function DateRangePicker(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
+  const system = calendarOf(calendar, 'DateRangePicker');
   const size = oneOf(SIZES, props.size, 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const describedBy = rest['aria-describedby'], required = rest['aria-required'] ?? (requiredProp || undefined);
@@ -121,7 +127,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   // With no start, today, or min or max when today is outside them, so the popup doesn't open on a month where
   // nothing can be picked (L8E79).
   const home = () => { const t = new Date(); return min && compare(t, min) < 0 ? min : max && compare(t, max) > 0 ? max : t; };
-  const [base, setBase] = React.useState(() => startOfMonth(value.start || home()));
+  const [base, setBase] = React.useState(() => system.start(value.start || home()));
   const popId = domId('dk-drp', React.useId());
   const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the fields
   const box = React.useRef<HTMLSpanElement | null>(null);
@@ -162,7 +168,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const close = (focus: boolean) => { setOpen(false); setHover(null); if (focus && startField.current) startField.current.focus(); };
   const show = () => {
     const typed = parseDate(text.start, locale);
-    setBase(startOfMonth((typed && allowed(typed) ? typed : null) || value.start || home()));
+    setBase(system.start((typed && allowed(typed) ? typed : null) || value.start || home()));
     setPicking(value.start && !value.end ? 'end' : 'start');
     setOpen(true);
   };
@@ -189,7 +195,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const presets: PresetItem[] | null = presetsProp === true ? rangePresets(sds.labels, max)
     : Array.isArray(presetsProp) && presetsProp.length ? presetsProp.map((p) => { const r = norm(typeof p.value === 'function' ? p.value() : p.value); return { label: p.label, ...r }; }) : null;
   // A preset sets both ends and brings its start's month into view; the popup stays open to show it (RU11).
-  const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(startOfMonth(it.start)); setPicking('start'); setHover(null); };
+  const choose = (it: PresetItem) => { commit({ start: it.start, end: it.end }); if (it.start) setBase(system.start(it.start)); setPicking('start'); setHover(null); };
   const field = (which: 'start' | 'end') => (
     <input type="text" inputMode="numeric" autoComplete="off" className="dk-input__field dk-date-range-picker__field"
       ref={which === 'start' ? startField : undefined} id={which === 'start' ? id : undefined}
@@ -204,7 +210,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   );
   // With two months, a key that crosses into the month the other grid shows moves focus there, and the months stay put.
   const leave = (first: boolean) => (d: Date) => {
-    if (!two || !sameMonth(d, first ? addMonths(base, 1) : base)) return false;
+    if (!two || !system.same(d, first ? system.add(base, 1) : base)) return false;
     const grid = panel.current && panel.current.querySelectorAll('[role="grid"]')[first ? 1 : 0];
     const b = grid && grid.querySelector<HTMLElement>(`[data-date="${isoDate(d)}"]`);
     if (!b) return false;
@@ -212,8 +218,8 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
     return b.matches(':focus');
   };
   const cal = (m: Date, first: boolean) => (
-    <Calendar month={m} onMonthChange={(n) => setBase(first ? n : addMonths(n, -1))} value={first ? value.start : value.end}
-      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus={first} hideOutside={two}
+    <Calendar month={m} onMonthChange={(n) => setBase(first ? n : system.add(n, -1))} value={first ? value.start : value.end}
+      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} autoFocus={first} hideOutside={two}
       isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
@@ -237,9 +243,9 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
         onMouseLeave={() => setHover(null)}>
         {open || exit.leaving ? <>
           {presets ? <div className="dk-date-range-picker__body">
-            <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>
+            <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(system.add(base, 1), false) : null}</div>
             <PresetList label={sds.labels.presets} items={presets} allowed={allowed} current={value} onPick={choose} />
-          </div> : <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}</div>}
+          </div> : <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(system.add(base, 1), false) : null}</div>}
           <p className="dk-date-range-picker__status" aria-live="polite">{picking === 'start' ? sds.labels.chooseStartDate : sds.labels.chooseEndDate}</p>
         </> : null}
       </div>
