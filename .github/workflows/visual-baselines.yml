@@ -542,7 +542,7 @@ jobs:
     needs: [render, render-cross, commit]
     if: always() && (github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines') && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 8
     permissions:
       pull-requests: write
       actions: write
@@ -574,6 +574,14 @@ jobs:
             GH_TOKEN=$BOT_TOKEN gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$LABEL"
             exit 0
           fi
+          # The held run may still be stopping (its plan job cancels it) when this starts: wait for it to finish, or
+          # the loop below finds no completed run and the pull request sits with a cancelled CI (#1928, 15 Nov: 50
+          # minutes armed and out of the queue).
+          for _ in $(seq 1 20); do
+            busy=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=pull_request&head_sha=$head" --jq '[.workflow_runs[] | select(.status != "completed")] | length')
+            [ "$busy" = 0 ] && break
+            sleep 10
+          done
           for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=pull_request&head_sha=$head&status=completed" --jq '.workflow_runs[].id'); do
             held=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq '[.jobs[] | select(.name == "build" and .conclusion == "skipped")] | length')
             [ "$held" = 0 ] && continue
