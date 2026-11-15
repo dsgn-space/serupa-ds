@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Runner watch: the jobs of this repository that have waited too long for a self-hosted runner.
 //
-//   node tools/runner-watch.mjs --stuck 10    one line per job waiting over 10 minutes; nothing when none is
+//   node tools/runner-watch.mjs --stuck 10    one line per job waiting over 10 minutes; nothing when none is, or
+//                                             when a self-hosted runner started a job in those 10 minutes (busy,
+//                                             not gone)
 //   node tools/runner-watch.mjs --report 10   the same, kept in one issue ("Jobs waiting for a runner"): opened or
 //                                             updated while jobs wait, closed once none does; and merges that stall
 //                                             (nothing merged for 30 minutes while pull requests wait to, or an
@@ -35,14 +37,21 @@ async function api(path, init = {}) {
   return res.json();
 }
 
-/** Every job of a queued or running run that waits for a self-hosted runner for longer than `limit` minutes. */
-export async function stuckJobs(limit, now = Date.now()) {
+/**
+ * Every job of a queued or running run that waits for a self-hosted runner for longer than `limit` minutes. With
+ * `goneOnly`, none while a self-hosted runner has started a job in the last `limit` minutes: then the machines are
+ * there and only busy, and sending jobs to GitHub's runners would only queue them there (15 Nov: a queue run's 17
+ * x86 jobs went to GitHub's runners while those were starved, and the burst slots sat idle).
+ */
+export async function stuckJobs(limit, now = Date.now(), goneOnly = false) {
   const out = [];
+  let alive = false;
   for (const status of ['queued', 'in_progress']) {
     const { workflow_runs: runs } = await api(`repos/${repo}/actions/runs?status=${status}&per_page=50`);
     for (const run of runs) {
       const { jobs } = await api(`repos/${repo}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`);
       for (const job of jobs) {
+        if (job.labels.includes('self-hosted') && job.started_at && job.runner_name && now - Date.parse(job.started_at) < limit * 60_000) alive = true;
         if (job.status !== 'queued' || !job.labels.includes('self-hosted')) continue;
         const since = Date.parse(job.created_at || job.started_at);
         const waited = Math.floor((now - since) / 60_000);
@@ -50,6 +59,7 @@ export async function stuckJobs(limit, now = Date.now()) {
       }
     }
   }
+  if (goneOnly && alive) return [];
   return out.sort((a, b) => b.waited - a.waited).map((j) => j.line);
 }
 
@@ -97,7 +107,7 @@ async function report(lines) {
 }
 
 try {
-  const lines = await stuckJobs(minutes);
+  const lines = await stuckJobs(minutes, Date.now(), mode === '--stuck');
   if (mode === '--stuck') { if (lines.length) console.log(lines.join('\n')); } else await report(lines);
 } catch (e) {
   console.error(`runner-watch: ${e.message}`);
