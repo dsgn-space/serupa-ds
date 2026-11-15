@@ -26,6 +26,12 @@ Each of these is the real component. Use it, then turn on reduced motion in your
 | Time a transition with a role: `motion-enter-sm`, `motion-change-md`, `ease-exit`. | Write `0.3s ease` or a `cubic-bezier()` in a component. |
 | Make a press answer at once and let go smoothly, as Button does. | Make someone wait for an animation before they can act again. |
 | Name the properties that move: `opacity`, `translate`, `scale`. | Write `transition: all`, which animates a theme switch too. |
+| Move what people meet now and then: a dialog opening, a panel sliding in, a toast arriving, a state that changed. | Animate what they meet all the time: a row's hover, a list's highlight, every keystroke's suggestions. |
+| Let an exit be quicker than its entry (`motion-exit-md` is 150ms to `motion-enter-md`'s 200ms), and leave the way it came in. | Make an exit linger, or leave in a new direction. |
+| Grow a menu, popover or tooltip from its trigger, and keep page-wide parts (toasts, the command palette) in one fixed place. | Fly a popup in from a screen edge that has nothing to do with what opened it. |
+| Follow the navigation: forward comes in from the end, back from the start, mirrored right to left. | Slide every new view in from the same side, whichever way people went. |
+| Keep the page usable while something moves: a click or a key during an animation still counts. | Hold input until a transition ends. |
+| Save a bounce (`ease-celebrate`) for a moment worth celebrating, and only for a move or a scale. | Overshoot a color, an opacity or a size that holds content. |
 
 <DoDontExample
   doText="Press it: the motion comes from roles, and goes under reduced motion."

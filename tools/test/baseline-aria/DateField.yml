@@ -87,7 +87,6 @@
   - textbox "Day"
   - text: Month
   - combobox "Month":
-    - option "Month" [disabled] [selected]
     - option "January"
     - option "February"
     - option "March"

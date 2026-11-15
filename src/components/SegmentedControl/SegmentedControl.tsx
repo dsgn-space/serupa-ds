@@ -137,17 +137,31 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const indicator = React.useRef<HTMLSpanElement | null>(null);
   const last = React.useRef<{ x: number; w: number; v: string | undefined } | null>(null);
   const sliding = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // Where a sliding indicator is drawn this moment: the span it slides across less the cut its border layer has
+  // reached. The span is kept, since React has already put the new choice's left and width on it by now.
+  const span = React.useRef({ l: 0, w: 0 });
+  const drawnAt = (el: HTMLElement) => {
+    const [, r = 0, , l = 0] = (getComputedStyle(el, '::before').clipPath.match(/-?[\d.]+(?:e-?\d+)?px/g) || []).map(parseFloat);
+    return { x: span.current.l + l, w: span.current.w - l - r };
+  };
   const settle = (el: HTMLElement, at: { x: number; w: number }) => { el.removeAttribute('data-slide'); el.style.left = at.x + 'px'; el.style.width = at.w + 'px'; };
   useIsoLayoutEffect(() => {
-    const was = last.current, el = indicator.current;
+    const el = indicator.current;
+    let was = last.current;
     last.current = box ? { ...box, v: value } : null;
     clearTimeout(sliding.current);
-    if (el && box && el.hasAttribute('data-slide')) settle(el, box);
+    if (el && box && el.hasAttribute('data-slide')) {
+      // A new choice mid-slide (quick clicks): it goes on from where it is drawn now, part way, not from where the last
+      // slide was going, which made it jump there first and seem to skip a move.
+      if (was) was = { ...was, ...drawnAt(el) };
+      settle(el, box);
+    }
     if (!el || !box || !was || was.v === value || !box.w || (was.x === box.x && was.w === box.w) || lastInputKeyboard()) return;
     const l = Math.min(was.x, box.x), r = Math.max(was.x + was.w, box.x + box.w);
     const cut = (at: { x: number; w: number }) => { el.style.setProperty('--dk-seg-l', at.x - l + 'px'); el.style.setProperty('--dk-seg-r', r - at.x - at.w + 'px'); };
     el.setAttribute('data-flip', '');
     el.setAttribute('data-slide', '');
+    span.current = { l, w: r - l };
     el.style.left = l + 'px';
     el.style.width = r - l + 'px';
     cut(was);
