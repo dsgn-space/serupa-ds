@@ -1,0 +1,19 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { ReadmeSections } from '../blocks';
+
+<Meta title="Foundations/Data formats" />
+
+# Data formats
+
+<ReadmeSections headings={["Data formats"]} reserve={["Data formats"]} />
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| Let the locale write every number and date: `FormattedNumber`, `RelativeTime`, `Intl` with `useLocale()`. | Build "1,200.00" or "03/04/2026" from strings. It's wrong for half your readers. |
+| Align a column of numbers to the end, with the same decimals in every row. | Center numbers, or mix "12", "12.5" and "12.50" in one column. |
+| Write the currency with every amount, and its code when more than one currency can appear. | Show a bare "1,200" and leave the reader to guess the currency. |
+| Use relative time for activity and the date for anything people act on by date. | Write "3 months ago" on an invoice. |
+| Show an em dash (`—`) with "Not set" for screen readers when a value is missing. | Leave the cell empty, or write "0", "null" or "N/A" for something that isn't there. |
+| Keep the last four characters of a masked value and say what it is: "Card ending in 1208". | Mask with one asterisk per character, which gives away the length and reads as noise. |
