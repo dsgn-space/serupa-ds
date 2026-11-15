@@ -131,6 +131,8 @@ Each is an optional override: set it on the page, a container or one slider. The
 | `--slider-mark-label` | `text-muted` | The marks' text under the track (4.5:1 on the surface). |
 | `--slider-value-bg` | `surface-inverse` | showValue's chip over the thumb. |
 | `--slider-value-text` | `text-inverse` | showValue's text (4.5:1 on value-bg). |
+| `--slider-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
+| `--slider-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

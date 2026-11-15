@@ -74,7 +74,7 @@ Drawn from the `Disabled` story.
 | Focus | From the keyboard: a 2px `focus-ring` outline 2px out (`focus-ring-width`, `focus-ring-offset`), like Button. The gap is transparent, so it reads on any background, and forced-colors mode draws it too |
 | Invalid | `danger` border while unchecked, and a `danger` focus ring |
 | Read-only | Looks as it is, with a default cursor and no hover or press change |
-| Disabled | 50% opacity, `not-allowed` cursor, a `surface-muted` circle; also inside a disabled fieldset (`Field group disabled`) |
+| Disabled | Neutral colors at full opacity: a `disabled-border` circle with a `disabled-text` dot when chosen, and a `disabled-text` label; `not-allowed` cursor; also inside a disabled fieldset (`Field group disabled`) |
 | Card | A `surface` card with a 1px `border` and 16px padding, the label in `font-medium`; `field-border-hover` under the pointer; checked, a 2px `primary` border drawn inside, so nothing moves (the dot shows it too); the focus ring goes round the whole card; invalid, a `danger` border while unchecked; in forced colors, a checked card's border is Highlight |
 
 ## Accessibility
@@ -153,6 +153,9 @@ Each is an optional override: set it on the page, a container or one radio. The 
 | `--radio-card-border` | `border` | A card's border. |
 | `--radio-card-border-hover` | `field-border-hover` | A card's border under the pointer. |
 | `--radio-card-border-checked` | `primary` | A checked card's border, 2px. |
+| `--radio-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--radio-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
+| `--radio-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

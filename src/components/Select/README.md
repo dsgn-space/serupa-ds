@@ -68,7 +68,7 @@ Drawn from the `WithIcon` story.
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), like Input; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, default cursor, no hover change; the value at full contrast |
-| Disabled | `field-readonly` background at 50%, `not-allowed` cursor |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor |
 | Open, where the list is styled | `picker-bg` surface with a `picker-border` border, `picker-radius` corners and `picker-shadow`, at least as wide as the box and at most `picker-max-height` tall, then scrolling. Rows are `option-height` tall (`option-height-touch` on a touch screen) |
 | Option under the pointer or keyboard | `option-bg-active` fill; with more contrast also a 2px `option-indicator` bar at the start edge, and in forced-colors mode a `Highlight` outline |
 | Chosen option | A tick in `check` at the start |
@@ -134,6 +134,8 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--select-check` | `primary` | The tick by the chosen option. |
 | `--select-group-label` | `text-muted` | A group's name over its options. |
+| `--select-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

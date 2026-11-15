@@ -74,7 +74,7 @@ Drawn from the `Icons` story.
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), shown at once and faded out on blur; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change; still focusable and selectable |
-| Disabled | `field-readonly` background at 50%, `not-allowed` cursor |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor |
 
 ## Accessibility
 
@@ -123,7 +123,7 @@ Drawn from the `Icons` story.
 | --- | --- | --- | --- |
 | `label` | string | required | The action's name: the words on a text action, the accessible name of an icon action |
 | `icon` | icon name or element | | Makes it an icon action: the icon, at the field's icon size, in `text-muted` |
-| `disabled` | boolean | the Input's | Disabled on its own, dimmed to 50% as a disabled Button is; a disabled Input disables it anyway |
+| `disabled` | boolean | the Input's | Disabled on its own, drawn in `disabled-text` as a disabled Button is; a disabled Input disables it anyway |
 
 Every other button attribute (`onClick`, `aria-*`) and `ref` go to the `<button>`, which has `data-component="input-action"`.
 
@@ -158,6 +158,8 @@ Each is an optional override: set it on the page, a container or one input. The 
 | `--input-action-text-bg-hover` | `primary-subtle` | A text action's background on hover. |
 | `--input-action-focus-ring` | `focus-ring` | The ring around a focused action. |
 | `--input-rejected-color` | `text-muted` | The line under a DatePicker, DateRangePicker, TimePicker or NumberInput saying why typed text was put back. |
+| `--input-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--input-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

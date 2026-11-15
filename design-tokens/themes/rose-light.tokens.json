@@ -180,6 +180,36 @@
         }
       }
     },
+    "disabled-text": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. The text, icon and mark of anything disabled, in place of fading it: the same neutral in every brand, so a disabled primary, danger or brand control reads as off, never as a faint version of itself. At least 3:1 on `disabled-surface` and the surfaces (4.5:1 with more contrast).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--disabled-text"
+        }
+      }
+    },
+    "disabled-surface": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. The fill of a disabled control that has one (a checked box, a switch's track, a slider's fill, the selected segment): a neutral a step off the page, whatever its color when on.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--disabled-surface"
+        }
+      }
+    },
+    "disabled-border": {
+      "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. The edge of a disabled control: a box, a track, a field's border.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--disabled-border"
+        }
+      }
+    },
     "highlight-indicator": {
       "$type": "color",
       "$value": "{color.zinc-100}",

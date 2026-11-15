@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, drag } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, drag, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Input } from '../Input/Input';
 import { Slider } from './Slider';
@@ -254,10 +254,10 @@ describe('Slider', () => {
     expect(now('stp')).toBe(0.2);
   });
 
-  test('disabled: out of the Tab order, aria-disabled, faded, and presses do nothing', async () => {
+  test('disabled: out of the Tab order, aria-disabled, in the neutral disabled colors, and presses do nothing', async () => {
     await setup();
     const th = thumb('dis');
-    expect([th.tabIndex, th.getAttribute('aria-disabled'), css(el('dis')).opacity]).toEqual([-1, 'true', '0.5']);
+    expect([th.tabIndex, th.getAttribute('aria-disabled'), css(el('dis')).opacity, disabledLook(el('dis').querySelector(':scope > div > div'), 'backgroundColor')]).toEqual([-1, 'true', '1', 'neutral']);
     await press('dis', 0.9);
     expect(now('dis')).toBe(30);
   });

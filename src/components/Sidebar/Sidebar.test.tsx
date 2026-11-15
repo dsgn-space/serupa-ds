@@ -141,7 +141,7 @@ describe('Sidebar', () => {
   test('a group is a button (aria-expanded, aria-controls), closed when no child is active; pressing it shows the nested items, lined up with its label, and the chevron turns', async () => {
     await render(<App />);
     const b = el('gproj'), list = el(b.getAttribute('aria-controls')!);
-    expect([b.tagName, b.getAttribute('aria-expanded'), list.hidden]).toEqual(['BUTTON', 'false', true]);
+    expect([b.tagName, b.getAttribute('aria-expanded'), !!list.hidden]).toEqual(['BUTTON', 'false', true]);
     await userEvent.click(b);
     expect([b.getAttribute('aria-expanded'), rect(el('iweb')).height > 0]).toEqual(['true', true]);
     await expect.poll(() => css(b.querySelector(':scope > [data-icon]')).rotate).toBe('180deg');
@@ -171,9 +171,19 @@ describe('Sidebar', () => {
       expect(closing).toEqual(['false', false, true, ['clip-path', 'opacity'], true]);
       list.removeEventListener('transitionrun', look);
       await settled(list);
-      await expect.poll(() => list.hidden).toBe(true);
+      await expect.poll(() => list.getAttribute('hidden')).toBe('until-found');
       expect(rect(list).height).toBe(0);
     });
+  });
+
+  test('find-in-page reaches a closed group: its list is hidden="until-found" (not inert, which find skips), and a match (beforematch) opens it', async () => {
+    await render(<App />);
+    const b = el('gproj'), list = el(b.getAttribute('aria-controls')!);
+    await expect.poll(() => list.getAttribute('hidden')).toBe('until-found');
+    expect([list.inert, rect(el('iweb')).height]).toEqual([false, 0]);
+    list.dispatchEvent(new Event('beforematch'));
+    await expect.poll(() => b.getAttribute('aria-expanded')).toBe('true');
+    expect([list.hasAttribute('hidden'), rect(el('iweb')).height > 0]).toEqual([false, true]);
   });
 
   test('from the keyboard a group opens at once as it closes at once: Enter shows its items with no fold, and Enter again hides them (KW1)', async () => {
@@ -185,7 +195,7 @@ describe('Sidebar', () => {
       await userEvent.keyboard('{Enter}');
       expect([b.getAttribute('aria-expanded'), list.hidden, runs(list), css(list).opacity, css(list).clipPath]).toEqual(['true', false, [], '1', 'inset(0px)']);
       await userEvent.keyboard('{Enter}');
-      expect([b.getAttribute('aria-expanded'), list.hidden]).toEqual(['false', true]);
+      expect([b.getAttribute('aria-expanded'), !!list.hidden]).toEqual(['false', true]);
     });
   });
 

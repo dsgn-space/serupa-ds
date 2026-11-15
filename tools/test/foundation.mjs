@@ -55,6 +55,9 @@ const TV = new Map(all.map((x) => [x.name, String(first(x.value))]));
 const FAM = new Set(Object.keys(t.type.families).map((k) => 'font-' + k));
 for (const g of t.type.groups) for (const s of g.styles) FAM.add('text-' + s.name);
 const isToken = (n) => TV.has(n) || FAM.has(n);
+// Variables an app sets and Serupa leaves unset, always read with a fallback: --font-heading, an app's own heading face
+// (foundations.md, "Your own heading face"), in front of --font-sans so each language's stack still follows it.
+const HOOKS = new Set(['font-heading']);
 
 // 1. tokens.json
 const names = all.map((x) => x.name);
@@ -105,7 +108,7 @@ const norm = (v) => v.trim().replace(/^"|"$/g, '').replace(/"/g, "'").replace(/\
 const missing = new Set(), withFallback = new Set();
 for (const m of css.matchAll(/var\(--([A-Za-z0-9\\._-]+)(?:,\s*((?:[^()]|\((?:[^()]|\([^()]*\))*\))*))?\)/g)) {
   const n = m[1].replace(/\\/g, '');
-  if (n.startsWith('dk-') || COMP.has(n)) continue;
+  if (n.startsWith('dk-') || COMP.has(n) || HOOKS.has(n)) continue;
   if (!isToken(n)) { missing.add(n); continue; }
   if (m[2] != null) withFallback.add(`${n}, ${m[2].trim().slice(0, 30)}`);
 }
