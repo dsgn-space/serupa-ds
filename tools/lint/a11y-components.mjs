@@ -15,6 +15,10 @@ const BY_NAME = { Button: 'button', TableHeaderCell: 'th' };
 // Rendered as an a, but with its own href and words, so <SkipLink /> is complete: read as an a, jsx-a11y would ask an
 // app for both (anchor-has-content, anchor-is-valid). ChatCitation writes its own words too (its number and host).
 const COMPLETE = ['SkipLink', 'ChatCitation'];
+// Rendered as an a only sometimes, so read as one they flag what's right: BreadcrumbItem is text for the current page,
+// with or without href (anchor-is-valid on PageHeader's trail), and a ListItem's click lands on the link it renders
+// when given href, not on the li (click-events-have-key-events on ListDetail's list). Left out, as plain components.
+const SOMETIMES = ['BreadcrumbItem', 'ListItem'];
 
 export function a11yComponents(root) {
   const dir = path.join(root, 'src', 'components');
@@ -33,6 +37,6 @@ export function a11yComponents(root) {
       if (alias && TAGS[alias[1]]) map[m[2]] = TAGS[alias[1]];
     }
   }
-  for (const name of COMPLETE) delete map[name];
+  for (const name of [...COMPLETE, ...SOMETIMES]) delete map[name];
   return { ...map, ...BY_NAME };
 }
