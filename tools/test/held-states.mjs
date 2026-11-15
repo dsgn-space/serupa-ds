@@ -11,6 +11,8 @@ import { PROJECT, done, report } from './lib.mjs';
 
 const EXEMPT = {
   'Button .dk-btn--ghost': 'Button shows a press by its shrink (scale), on every variant',
+  'Button .dk-btn--primary': 'Button shows a press by its shrink (scale), on every variant',
+  'Button .dk-btn--outline': 'Button shows a press by its shrink (scale), on every variant',
   'Button .dk-btn--secondary': 'Button shows a press by its shrink (scale), on every variant',
   'Button .dk-btn--ghost.dk-btn--destructive': 'Button shows a press by its shrink (scale), on every variant',
   'Button .dk-btn--outline.dk-btn--destructive': 'Button shows a press by its shrink (scale), on every variant',

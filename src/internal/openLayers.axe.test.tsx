@@ -1,6 +1,6 @@
 // axe on the open states (E2). The Storybook check runs axe on every story, but a story shows a Dialog, Menu or
 // picker closed, so what opens on top (the list, the calendar, the panel and its buttons) was never checked. Here
-// each one is opened as people open it, then checked in all six themes with the same WCAG 2.2 AA rules.
+// each one is opened as people open it, then checked in every theme with the same WCAG 2.2 AA rules.
 import * as React from 'react';
 import axe from 'axe-core';
 import { describe, expect, test } from 'vitest';
@@ -39,7 +39,7 @@ async function violations(): Promise<string[]> {
 
 const shown = (sel: string) => expect.poll(() => { const el = document.querySelector(sel); return !!el && (el as HTMLElement).checkVisibility(); }).toBe(true);
 
-describe('open layers pass axe (WCAG 2.2 AA) in all six themes', () => {
+describe('open layers pass axe (WCAG 2.2 AA) in every theme', () => {
   // Label in name (WCAG 2.5.3, level A): a control's accessible name holds the words it shows. axe used to tag this
   // rule experimental, which these tags left out; since 4.x it is plain wcag21a. This keeps it in, here and in
   // tools/test/storybook.mjs (the same tags), if axe ever moves it back out.

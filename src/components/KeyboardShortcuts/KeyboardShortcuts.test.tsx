@@ -107,6 +107,21 @@ describe('useShortcut', () => {
       expect([log, listed(), warn.mock.calls.filter(([m]) => String(m).includes('shortcut-keys')).length]).toEqual([['info'], [['', [['Show info', 'Shift+I'], ['Show keyboard shortcuts', '?']]]], 2]);
     } finally { warn.mockRestore(); }
   });
+
+  test('a shortcut on keys the browser keeps (mod with N, T, W, Q or Tab) warns once, since the page never hears them; mod+K and Alt+N don\'t', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const log: string[] = [];
+      await render(<SerupaProvider platform="other">
+        <Shortcut keys={['mod', 'N']} log={log} name="new" />
+        <Shortcut keys={['ctrl', 'shift', 'T']} log={log} name="reopen" />
+        <Shortcut keys={['mod', 'K']} log={log} name="search" />
+        <Shortcut keys={['alt', 'N']} log={log} name="alt new" />
+      </SerupaProvider>);
+      const said = warn.mock.calls.map(([m]) => String(m)).filter((m) => m.includes('browser-shortcut'));
+      expect([said.length, said.some((m) => m.includes('["mod","N"]')), said.some((m) => m.includes('["ctrl","shift","T"]'))]).toEqual([2, true, true]);
+    } finally { warn.mockRestore(); }
+  });
 });
 
 describe('KeyboardShortcuts', () => {
@@ -223,7 +238,7 @@ describe('KeyboardShortcuts', () => {
     expect(listed()).toEqual([['', [['Tampilkan pintasan keyboard', '?']]]]);
   });
 
-  test('group headings read 4.5:1 on the dialog in all six themes', async () => {
+  test('group headings read 4.5:1 on the dialog in every theme', async () => {
     await render(<KeyboardShortcuts defaultOpen shortcuts={[{ keys: ['A'], description: 'One', group: 'First' }, { keys: ['B'], description: 'Two', group: 'Second' }]} />);
     await expect.poll(() => dialog() !== null).toBe(true);
     const heading = dialog()!.querySelector('h3') as HTMLElement;

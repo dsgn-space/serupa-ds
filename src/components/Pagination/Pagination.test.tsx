@@ -217,7 +217,7 @@ describe('Pagination', () => {
     expect(e.getBoundingClientRect().height).toBe(40);
   });
 
-  test('contrast: pages (also on hover), the current page and the ellipsis keep 4.5:1 in all six themes', async () => {
+  test('contrast: pages (also on hover), the current page and the ellipsis keep 4.5:1 in every theme', async () => {
     // On page 7, as the script left it: page 1 is a plain page and there is an ellipsis.
     await render(<Pagination id="pdef" count={10} defaultPage={7} />, { wrapper: EnUS });
     const pg = named('pdef', 'Page 1'), cur = q('pdef', '[aria-current]'), ell = q('pdef', '.dk-pagination__ellipsis');

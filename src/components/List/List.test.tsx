@@ -71,6 +71,23 @@ describe('List', () => {
     expect([...el('ldef').children].map((li) => css(li).borderTopWidth)).toEqual(['0px', '1px', '1px']);
   });
 
+  test('divided="inset": each line starts where the row\'s text starts and runs to the row\'s end', async () => {
+    await render(<div style={{ width: '420px' }}><List id="linset" divided="inset" aria-label="People">
+      <ListItem title="Ada Lovelace" leading={<Avatar name="Ada Lovelace" size="sm" />} />
+      <ListItem title="Grace Hopper" leading={<Avatar name="Grace Hopper" size="sm" />} trailing="Owner" />
+      <ListItem title="Report.pdf" leading="description" />
+    </List></div>);
+    const rows = [...el('linset').children] as HTMLElement[];
+    expect(rows.map((li) => css(li).borderTopWidth)).toEqual(['0px', '0px', '0px']);
+    const rule = (li: HTMLElement) => {
+      const text = li.querySelector(':scope > :first-child > span:last-child')!, b = getComputedStyle(text, '::before'), r = li.getBoundingClientRect(), t = text.getBoundingClientRect();
+      const ltr = getComputedStyle(li).direction !== 'rtl', start = ltr ? parseFloat(b.left) : r.width - parseFloat(b.right);
+      return { line: b.content !== 'none' && b.borderTopWidth === '1px', start: Math.round(start), text: Math.round(ltr ? t.left - r.left : t.right - r.left), reaches: Math.round(parseFloat(b.width)) >= Math.round(r.width) };
+    };
+    expect(getComputedStyle(rows[0]!.querySelector(':scope > :first-child > span:last-child')!, '::before').content).toBe('none');
+    for (const li of rows.slice(1)) { const x = rule(li); expect([x.line, x.reaches, x.start]).toEqual([true, true, x.text]); }
+  });
+
   test('an icon name as leading: a 20px muted icon', async () => {
     await render(<People />);
     const i = q('#iicon > :first-child > span:first-child > [data-icon]');
@@ -206,7 +223,7 @@ describe('List', () => {
     expect([css(q('#ltok > li > :first-child')).paddingTop, css(q('#ltok > li > :first-child > span:last-child > span:first-child')).color]).toEqual(['5px', 'rgb(1, 2, 3)']);
   });
 
-  test('a selected row shows on a filled, elevated or outline Card, on a muted panel and on a floating surface, as on the page, with its text at 4.5:1, in all six themes', async () => {
+  test('a selected row shows on a filled, elevated or outline Card, on a muted panel and on a floating surface, as on the page, with its text at 4.5:1, in every theme', async () => {
     await render(<div style={{ width: '420px' }}>
       <SurfaceCard id="filled" variant="filled"><List aria-label="On a filled card"><ListItem id="sfill" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></SurfaceCard>
       <div id="muted" className="bg-surface-muted"><List aria-label="On a muted panel"><ListItem id="smuted" title="Ada Lovelace" description="ada@example.com" onClick={() => {}} selected /></List></div>
@@ -228,7 +245,7 @@ describe('List', () => {
     expect(low).toEqual([]);
   });
 
-  test('contrast: titles and descriptions keep 4.5:1 on plain and shaded rows, the selected bar 3:1, in all six themes', async () => {
+  test('contrast: titles and descriptions keep 4.5:1 on plain and shaded rows, the selected bar 3:1, in every theme', async () => {
     await render(<People />);
     const low: string[] = [];
     for (const th of THEMES) {
@@ -412,7 +429,7 @@ describe('List with selectionMode', () => {
     expect(at()).toBe(box('Budget.xlsx'));
   });
 
-  test('a picked row reads 4.5:1 with its focus ring 3:1 in all six themes', async () => {
+  test('a picked row reads 4.5:1 with its focus ring 3:1 in every theme', async () => {
     await render(<Files start={['Budget.xlsx']} />);
     row('Budget.xlsx').focus();
     await userEvent.keyboard('{ArrowDown}{ArrowUp}');

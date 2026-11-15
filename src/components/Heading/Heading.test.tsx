@@ -63,7 +63,7 @@ describe('Heading', () => {
     expect([fits('hflex', 'hrow'), fits('hcell', 'hgrid'), css(el('hflex')).overflowWrap]).toEqual([true, true, 'anywhere']);
   });
 
-  test('contrast: a heading keeps 4.5:1 on surface in all six themes', async () => {
+  test('contrast: a heading keeps 4.5:1 on surface in every theme', async () => {
     await render(<Heading id="h1" level={1}>Level 1</Heading>);
     const low: string[] = [];
     for (const th of THEMES) {

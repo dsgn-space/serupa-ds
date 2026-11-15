@@ -108,6 +108,16 @@
           }
         }
       },
+      "peek": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-12}",
+        "$description": "How much of the next slide shows at the end with peek (48px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--carousel-peek"
+          }
+        }
+      },
       "arrow-offset": {
         "$type": "dimension",
         "$value": "{spacing.spacing-2}",

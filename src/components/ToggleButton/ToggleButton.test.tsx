@@ -117,7 +117,7 @@ describe('ToggleButton', () => {
     expect(getComputedStyle(el('ttok')).backgroundColor).toBe('rgb(1, 2, 3)');
   });
 
-  test('contrast: pressed text 4.5:1 on its background, the pressed border 3:1 on surface, in all six themes', async () => {
+  test('contrast: pressed text 4.5:1 on its background, the pressed border 3:1 on surface, in every theme', async () => {
     await render(<Formatting />);
     const low: string[] = [];
     let n = 0;

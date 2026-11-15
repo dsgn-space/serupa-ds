@@ -122,7 +122,7 @@ describe('SearchInput', () => {
       .toEqual(['progressbar', 'Searching', 16, null]);
   });
 
-  test('contrast: the icon and × keep 3:1 and the text 4.5:1 on the field in all six themes', async () => {
+  test('contrast: the icon and × keep 3:1 and the text 4.5:1 on the field in every theme', async () => {
     await render(<Wrap><SearchInput id="slg" aria-label="Lg" size="lg" defaultValue="big" clearLabel="Clear" /></Wrap>);
     const low: string[] = [];
     let n = 0;
@@ -174,7 +174,7 @@ describe('SearchInput held state', () => {
   test('held down: the clear button fills one step past its hover (--search-input-clear-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<SearchInput aria-label="Find" defaultValue="tea" clearLabel="Wipe the search" />);
     const b = page.getByRole('button', { name: 'Wipe the search' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

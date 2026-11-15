@@ -428,11 +428,11 @@ describe('Loader', () => {
     runs.forEach((a) => a.play());
   });
 
-  test('shine: the resting words (text at 65%) keep 4.5:1 on surface in all six themes', () => {
+  test('shine: the resting words (text at 65%) keep 4.5:1 on surface in every theme', () => {
     const rgb = (c: string) => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
     const lum = (c: number[]) => { const v = c.map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0]! + 0.7152 * v[1]! + 0.0722 * v[2]!; };
     const out: Record<string, number> = {};
-    for (const th of ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark']) {
+    for (const th of ['blue-light', 'blue-dark', 'yellow-light', 'yellow-dark', 'violet-light', 'violet-dark']) {
       const d = document.createElement('div');
       d.setAttribute('data-theme', th);
       d.style.cssText = 'color:var(--text);background:var(--surface);opacity:var(--loader-label-dim, var(--opacity-65))';

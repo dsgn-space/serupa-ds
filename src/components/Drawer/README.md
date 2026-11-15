@@ -70,7 +70,7 @@ Drawn from the `Bottom` story.
 ## Accessibility
 
 - `aria-modal` (left out with `modal={false}`), named by the title (`aria-labelledby`) and described by the description.
-- The title, description and body text keep 4.5:1 on the panel in all six themes (`Drawer.test.tsx`). In forced-colors mode the panel gets a border.
+- The title, description and body text keep 4.5:1 on the panel in every theme (`Drawer.test.tsx`). In forced-colors mode the panel gets a border.
 - A Dialog opened from inside it closes on its own: Escape closes the Dialog first, and the next Escape the Drawer.
 - On Android, the system back gesture asks to close it, like Escape. Under `<React.StrictMode>`, a Drawer that is open on its first render stays the innermost modal, so toasts and announcements still move into it.
 - With `unsaved`, Escape, the ×, the backdrop, a swipe or the browser closing it first ask "Discard changes?" in a small alert dialog on top, with Keep editing focused, as Dialog does. Keep editing (or Escape) goes back to the form as it was; Discard closes both, and only then does `onOpenChange(false)` come, with the reason of the first request. Leaving or reloading the page while it's open asks too (the browser's own `beforeunload` question). Your own Cancel button sets `open` itself, so it closes without asking.
@@ -117,8 +117,6 @@ Every other prop, `className` and `ref` go to the native `<dialog>`.
 Each is an optional override: set it on the page, a container or one drawer. The list lives in `src/components/Drawer/drawer.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from drawer.tokens.json by npm run tokens: edit the descriptions there) -->
-**Colors**
-
 | Token | Default | Use |
 | --- | --- | --- |
 | `--drawer-row-bg-hover` | `surface-hover-raised` | A List or InlineEdit row in the drawer, hovered or selected: a step up from its surface in dark |
@@ -131,45 +129,14 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--drawer-grip` | `text-muted` | A sheet's grip, at the top of a drawer with snapPoints (3:1 on bg). |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--drawer-shadow` | `elevation-modal` | The panel's shadow. |
-| `--drawer-depth` | `depth-surface` | The drawer's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
-
-**Sizing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |
 | `--drawer-width-md` | `container-sm` | size="md", the default (384px). |
 | `--drawer-width-lg` | `container-lg` | size="lg" (512px). |
-
-**Spacing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--drawer-padding` | `space-surface` | Padding inside the panel (24px; 16px on screens under 640px wide). |
 | `--drawer-gap` | `spacing-4` | Space between the header and the body (16px). |
-
-**Border**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--drawer-border-width` | `border-width-1` | The line above the footer (1px). |
 | `--drawer-radius` | `radius-container` | The corners on the open side of a top or bottom drawer (12px). |
-
-**Type**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--drawer-title-weight` | `font-semibold` | The title's weight (600). |
-
-**Motion**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--drawer-duration` | `motion-enter-lg` | Sliding in (300ms). Sliding out takes `motion-exit-lg` (200ms). |
 <!-- token-table:end -->

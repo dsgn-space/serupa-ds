@@ -117,22 +117,22 @@ describe('Card', () => {
     expect(f.boxShadow === 'none' || /0px 0px 0px 0px/.test(f.boxShadow)).toBe(true);
   });
 
-  test('outline: the edge is border, zinc-200 in light and zinc-800 in dark, a quiet step off the zinc-900 card (emerald 10% ink, 8% white), in all six themes', async () => {
+  test('outline: the edge is border, zinc-200 in light and zinc-800 in dark, a quiet step off the zinc-900 card, in every theme', async () => {
     await render(<Variants />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const want = th === 'emerald-light' ? '#09090b1a' : th === 'emerald-dark' ? '#ffffff14' : th.endsWith('-dark') ? 'var(--zinc-800)' : 'var(--zinc-200)';
+      const want = th.endsWith('-dark') ? 'var(--zinc-800)' : 'var(--zinc-200)';
       expect([th, css(el('def')).borderTopColor]).toEqual([th, color(want)]);
     }
     document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
-  test('elevated in dark: one step up from the page (zinc-800 on zinc-900, Modern zinc-900 on zinc-950) with the same border edge as an outline card (Modern\'s is see-through white), in every dark theme', async () => {
+  test('elevated in dark: one step up from the page (zinc-800 on zinc-900) with the same border edge as an outline card, in every dark theme', async () => {
     await render(<Variants />);
     for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
       document.documentElement.setAttribute('data-theme', th);
       const e = css(el('el'));
-      const [bg, edge] = th === 'emerald-dark' ? ['var(--zinc-900)', '#ffffff14'] : ['var(--zinc-800)', 'var(--zinc-800)'];
+      const [bg, edge] = ['var(--zinc-800)', 'var(--zinc-800)'];
       expect([th, e.backgroundColor, e.borderTopColor]).toEqual([th, color(bg), color(edge)]);
       expect(e.backgroundColor).not.toBe(color('var(--surface)'));
     }
@@ -292,7 +292,7 @@ describe('Card', () => {
     expect([s.backgroundColor, s.borderTopLeftRadius, s.paddingTop]).toEqual(['rgb(1, 2, 3)', '3px', '7px']);
   });
 
-  test('contrast: title, description and body keep 4.5:1 on all three variants in all six themes', async () => {
+  test('contrast: title, description and body keep 4.5:1 on all three variants in every theme', async () => {
     await render(<Variants />);
     const still = document.createElement('style');
     still.textContent = '*, *::before, *::after { transition: none !important; }';

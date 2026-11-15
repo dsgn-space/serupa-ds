@@ -54,7 +54,7 @@ const { Tooltip, IconButton, Button } = window.Serupa;
 - Don't put anything only in a tooltip that people need to do the task: touch screens have no hover, and few people know a long press shows it.
 - A disabled `<button>` can't take focus or hover events, so a tooltip on it never shows. For a Serupa [Button](../Button/README.md), pass `disabledReason` with `disabled`: it stays focusable, and a Tooltip with the same words shows on hover and focus. For other elements, use `aria-disabled` instead of `disabled`.
 - It fades in and slides 4px away from the element over 150ms, and fades and slides back over 100ms as it hides; with `prefers-reduced-motion` it only fades. Moving from one tooltip to the next (the warm-up) swaps them at once, with no fade either way. Firefox and Safari can't keep a hiding tooltip in the top layer yet, so there it hides at once.
-- The text keeps 4.5:1 on the tooltip in all six themes (`Tooltip.test.tsx`). In forced-colors mode it gets a border.
+- The text keeps 4.5:1 on the tooltip in every theme (`Tooltip.test.tsx`). In forced-colors mode it gets a border.
 
 ### Keyboard
 
@@ -90,7 +90,6 @@ Each is an optional override: set it on the page, a container or one tooltip. Th
 | `--tooltip-bg` | `surface-inverse` | The background: the inverse surface, so it stands out in light and dark themes. |
 | `--tooltip-text` | `text-inverse` | The text (4.5:1 on the background). |
 | `--tooltip-shadow` | `elevation-raised` | The shadow. |
-| `--tooltip-depth` | `depth-surface` | The tooltip's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--tooltip-radius` | `radius-control` | The corners (6px). |
 | `--tooltip-padding-x` | `spacing-2` | Padding at the sides (8px). |
 | `--tooltip-padding-y` | `spacing-1` | Padding at the top and bottom (4px). |

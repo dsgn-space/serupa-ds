@@ -170,7 +170,7 @@ describe('SignaturePad', () => {
     expect([png!.type, bmp.width, bmp.height]).toEqual(['image/png', 120, 40]);
   });
 
-  test('on the surface, the how-to text and the ink read 4.5:1, and the box outline and the line 3:1, in all six themes', async () => {
+  test('on the surface, the how-to text and the ink read 4.5:1, and the box outline and the line 3:1, in every theme', async () => {
     await render(<SignaturePad id="c" aria-label="Signature" />);
     const root = el('c'), box = area(root).parentElement!, line = box.querySelector('span[aria-hidden]')!, ink = area(root).querySelector('g')!;
     for (const th of THEMES) {

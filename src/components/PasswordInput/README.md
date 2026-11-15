@@ -50,7 +50,7 @@ Drawn from the `CapsLockOn` story.
 - Showing or hiding the password keeps the caret and any selection where they were (changing the field's type would put the caret at the start), so typing goes on where it stopped. In a long password the field also stays scrolled to the caret, rather than jumping back to the start.
 - While Caps Lock is on and the field has focus, "Caps Lock is on" shows before the eye, joins the field's description and is read out once (the `capsLockOn` label). It goes away when Caps Lock is turned off or focus leaves. `capsLockHint={false}` turns it off.
 - Pasting is never blocked, so a password manager or a copied password can fill the field (WCAG 3.3.8, accessible authentication). Don't add an `onPaste` that prevents it.
-- The text keeps 4.5:1 and the eye icon 3:1 on the field in all six themes (`PasswordInput.test.tsx`).
+- The text keeps 4.5:1 and the eye icon 3:1 on the field in every theme (`PasswordInput.test.tsx`).
 
 ### Keyboard
 

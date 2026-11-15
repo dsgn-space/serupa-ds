@@ -88,7 +88,7 @@ Drawn from the `<Story>` story.
   | <Tab> | <…> |
 
 - **ARIA states:** <aria-expanded, aria-invalid, aria-selected… that it manages for you.>
-- **Contrast:** <which parts are checked, at what ratio, in all six themes, and the test that checks it.>
+- **Contrast:** <which parts are checked, at what ratio, in every theme, and the test that checks it.>
 - **What's still yours:** <what the person using the component must provide, such as a label or alt text.>
 
 ## Props
