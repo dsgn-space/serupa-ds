@@ -112,11 +112,12 @@ const pct = (xs, p) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.min(xs.le
  */
 export function throughputLines(merged, failed, now = Date.now()) {
   const out = [];
-  for (const [label, hours] of [['Last hour', 1], ['Last 24 hours', 24]]) {
+  for (const [label, hours] of /** @type {[string, number][]} */ ([['Last hour', 1], ['Last 24 hours', 24]])) {
     const from = now - hours * 3_600_000;
     const m = merged.filter((x) => Date.parse(x.merged) >= from);
     const waits = m.filter((x) => x.queued).map((x) => Math.round((Date.parse(x.merged) - Date.parse(x.queued)) / 60_000));
     const f = failed.filter((x) => Date.parse(x.at) >= from);
+    /** @type {Map<string, number>} */
     const by = new Map();
     for (const x of f) for (const j of x.jobs.length ? x.jobs : ['(no job failed: cancelled)']) by.set(j, (by.get(j) || 0) + 1);
     const reasons = [...by].sort((a, b) => b[1] - a[1]).map(([j, n]) => `${j} ${n}`).join(', ');
