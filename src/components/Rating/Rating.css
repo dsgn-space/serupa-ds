@@ -38,6 +38,8 @@
   margin: var(--spacing-0); appearance: none; opacity: var(--opacity-0); cursor: pointer; touch-action: manipulation;
 }
 .dk-rating__choice--half { pointer-events: none; }
+/* Touch (EQ1): 44px high to press, as Apple and Material ask; across, each star keeps its half of the gap. */
+@media (pointer: coarse) { .dk-rating__choice { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--dk-reach-block); } }
 .dk-rating__star:has(.dk-rating__choice:focus-visible) { outline: var(--focus-ring-width) solid var(--rating-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-rating[aria-invalid="true"] .dk-rating__empty { color: var(--rating-invalid, var(--danger)); }   /* the error shows on the stars, as on a field's border */
 .dk-rating--disabled { opacity: var(--opacity-disabled); }

@@ -49,6 +49,7 @@ Drawn from the `Pill` story.
 - Keep tab labels to a word or two. When the tabs don't fit, the row scrolls sideways: the edge with more tabs past it fades out, and the selected tab is always scrolled into view, but people can still miss the tabs out of view. It scrolls in a CSS grid track or a flex row too, without widening the page.
 - Use `orientation="vertical"` for a settings page or anything with more than about six tabs: a column at the start of the panels, which has room for them all.
 - Set `activation="manual"` when a panel is slow to show, so arrowing past a tab doesn't select it.
+- Keep each panel's controls about that panel: a Save or a filter inside one tab changes only what's in that tab. Controls that act on every tab go above the tab row.
 - Hidden panels keep their state. Set `keepMounted={false}` on a panel that doesn't need to, so it renders only while it's selected.
 - The browser's find-in-page searches kept panels too. They're `hidden="until-found"`, so a match on another tab selects that tab and shows it, as Accordion opens an item. A disabled tab's panel isn't searched.
 - Show a tab people can't use yet as `disabled` rather than leaving it out, when knowing it exists helps them.

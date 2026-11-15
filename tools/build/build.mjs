@@ -34,6 +34,7 @@ import { nativeFiles } from './native-tokens.mjs';
 import { emailFiles } from './email-kit.mjs';
 import { tokenDescriptions } from '../tokens/build.mjs';
 import { docsData, llmsTxt } from './docs-data.mjs';
+import { templates } from './templates.mjs';
 import { a11yComponents } from '../lint/a11y-components.mjs';
 import { PAIRS as CONTRAST_PAIRS } from '../tokens/contrast-pairs.mjs';
 
@@ -127,6 +128,9 @@ fs.writeFileSync(path.join(D, 'theme.js'), stamp(read('src/theme.js')));
 // summary a coding agent reads first: both from this release, so a lookup never names something it doesn't have.
 fs.writeFileSync(path.join(D, 'docs.json'), JSON.stringify(docsData(P, version)) + '\n');
 fs.writeFileSync(path.join(D, 'llms.txt'), llmsTxt(P, version));
+// The patterns and blocks serupa-add writes into an app, their imports pointed at the package (tools/build/templates.mjs).
+const made = templates(P);
+fs.writeFileSync(path.join(D, 'templates.json'), JSON.stringify({ version, templates: made.templates }) + '\n');
 // debug.js (204): the opt-in overlay that names each component on a page, its classes, state and overridden tokens.
 // Its contrast guard (203) checks the pairs tools/test/foundation.mjs checks, written in at build.
 fs.writeFileSync(path.join(D, 'debug.js'), stamp(read('src/debug.js')).replace('/*__PAIRS__*/[]', JSON.stringify(CONTRAST_PAIRS)));
