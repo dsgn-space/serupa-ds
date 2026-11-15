@@ -34,7 +34,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { measure, print as printConsistency } from './consistency.mjs';
 import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
-import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
+import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents, inShard } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
 const REDRAW = 0.0001;            // share past which Chromium's --update rewrites a picture (see "--update in Chromium")
@@ -76,7 +76,7 @@ const all = Object.values(JSON.parse(fs.readFileSync(path.join(SB, 'index.json')
   .sort((a, b) => a.id.localeCompare(b.id));
 // SERUPA_ONLY (run.mjs --since on a pull request): only the stories of the components the change touches.
 const only = onlyComponents();
-const stories = all.filter((e) => !only || only.has(component(e))).filter((_, i) => i % shards === shard - 1);
+const stories = all.filter((e) => !only || only.has(component(e))).filter((e) => inShard(e.id, shard, shards));
 // Every baseline a story can have, to find the ones whose story is gone.
 const expected = new Set(all.flatMap((e) => [
   ...THEMES.map((th) => `${component(e)}/${e.exportName}-${th}-rest.png`), ...STATES.map((s) => `${component(e)}/${e.exportName}-${THEMES[0]}-${s}.png`),
