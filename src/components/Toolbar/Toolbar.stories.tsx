@@ -54,6 +54,21 @@ export const Overflow: Story = {
   render: (args) => <div style={{ width: 200 }}><Toolbar {...args} /></div>,
 };
 
+// overflow: the row doesn't wrap; what has no room (lowest data-priority, then last) moves into More at the end.
+export const MoreMenu: Story = {
+  args: { overflow: true, 'aria-label': 'Text formatting', children: [
+    <ButtonGroup key="f" aria-label="Style" data-priority={2}>
+      <ToggleButton icon="format_bold" aria-label="Bold" defaultPressed />
+      <ToggleButton icon="format_italic" aria-label="Italic" />
+    </ButtonGroup>,
+    <Divider key="d1" orientation="vertical" />,
+    <IconButton key="l" variant="ghost" icon="link" label="Insert link" data-priority={1} />,
+    <IconButton key="i" variant="ghost" icon="image" label="Insert image" />,
+    <Button key="c" variant="ghost">Clear formatting</Button>,
+  ] },
+  render: (args) => <div style={{ width: 200 }}><Toolbar {...args} /></div>,
+};
+
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").
 /** Do: related controls in groups, with a divider between the groups. */
 export const DoGroupControls: Story = { name: 'Do: group related controls' };

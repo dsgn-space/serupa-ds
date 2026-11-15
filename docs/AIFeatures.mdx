@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/AI features" />
+
+# AI features
+
+An assistant, a generated summary or a suggested reply is still part of your app: people should know when it's at work, stay in charge of what it does, and be able to undo or improve what it made. The [Chat](?path=/docs/components-content-chat--docs) parts cover a conversation; the rules below go for any feature that generates.
+
+## Say where it's at work
+
+- Name what made a result where it shows ("Summary written by the assistant"), in words, not only by an icon or a color.
+- Say in a sentence what it can't do or may get wrong, where people decide to use it, not in a policy page.
+- Show confidence in plain words ("Likely", "Not sure") when it matters, never as a bare number.
+
+## Keep people in charge
+
+- Ask before it acts on anything that leaves the page or costs something: a payment, a message sent, a file deleted. [ChatApproval](?path=/docs/components-content-chat--docs) puts what it will do in words, with Approve and Deny.
+- Let people stop it while it works (ChatComposer's `onStop`), and keep what was typed.
+- Show what it did on the way, step by step, with `steps` on a reply, so a wrong turn can be seen.
+
+## Let people change results
+
+- Offer another version rather than one fixed answer: Regenerate in [ChatReplyActions](?path=/docs/components-content-chat--docs) asks again, and `branch` keeps the earlier versions to go back to.
+- Let people edit a result, or correct the assistant, and correct that correction again. Never lock a generated value.
+- Undo an action it took the same way as any other: [toast.undo](?path=/docs/guides-destructive-actions--docs) and Ctrl+Z.
+
+## Ask for feedback, lightly
+
+- Helpful and Not helpful under a reply (`ChatReplyActions` `onFeedback`), always optional, one press each, and pressing again takes it back.
+- Act on it at once: after "Not helpful", offer Regenerate or a way to say more, rather than a form first.
+- Say it was heard ("Thanks, noted", which ChatReplyActions says) and don't ask again for the same reply.
+
+## While it works
+
+- Say what it's doing, specifically: "Reading 3 files", not only "Thinking…". The reply's `thinking`, `reasoning` and `steps` carry this.
+- Stream long answers as they come (`streaming` on the reply); screen readers wait for the whole answer.
+- For a wait with no visible text, follow [Loading and waiting](?path=/docs/guides-loading-and-waiting--docs).

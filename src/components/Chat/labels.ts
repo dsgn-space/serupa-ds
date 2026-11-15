@@ -34,6 +34,13 @@ export interface ChatLabels {
   chatResponseOf: (index: number, count: number) => string;
   chatPreviousResponse: string;
   chatNextResponse: string;
+  /** ChatReplyActions: the row's name, its Regenerate button, its two feedback toggles, and what's said when a rating is given or taken back. */
+  chatReplyActions: string;
+  chatRegenerate: string;
+  chatHelpful: string;
+  chatNotHelpful: string;
+  chatFeedbackNoted: string;
+  chatFeedbackRemoved: string;
 }
 export const en: ChatLabels = {
   chatNewMessages: (count, formatted = String(count)) => count === 1 ? `${formatted} new message` : `${formatted} new messages`,
@@ -59,6 +66,12 @@ export const en: ChatLabels = {
   chatResponseOf: (i, c) => 'Response ' + i + ' of ' + c,
   chatPreviousResponse: 'Previous response',
   chatNextResponse: 'Next response',
+  chatReplyActions: 'Response actions',
+  chatRegenerate: 'Regenerate',
+  chatHelpful: 'Helpful',
+  chatNotHelpful: 'Not helpful',
+  chatFeedbackNoted: 'Thanks, noted',
+  chatFeedbackRemoved: 'Rating removed',
 };
 export const id: ChatLabels = {
   chatNewMessages: (count, formatted = String(count)) => `${formatted} pesan baru`,
@@ -84,4 +97,10 @@ export const id: ChatLabels = {
   chatResponseOf: (i, c) => 'Jawaban ' + i + ' dari ' + c,
   chatPreviousResponse: 'Jawaban sebelumnya',
   chatNextResponse: 'Jawaban berikutnya',
+  chatReplyActions: 'Tindakan jawaban',
+  chatRegenerate: 'Buat ulang',
+  chatHelpful: 'Membantu',
+  chatNotHelpful: 'Tidak membantu',
+  chatFeedbackNoted: 'Terima kasih, sudah dicatat',
+  chatFeedbackRemoved: 'Penilaian dihapus',
 };

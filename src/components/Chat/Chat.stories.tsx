@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatSteps } from './Chat';
-import type { ChatApprovalStatus } from './Chat';
+import { Chat, ChatApproval, ChatCitation, ChatComposer, ChatDivider, ChatMessage, ChatReplyActions, ChatSteps } from './Chat';
+import type { ChatApprovalStatus, ChatFeedback } from './Chat';
 import { HoverCard } from '../HoverCard/HoverCard';
 import { Meter } from '../Meter/Meter';
 import { Select } from '../Select/Select';
@@ -107,6 +107,21 @@ export const Approval: Story = {
           <ChatApproval status={status} onApprove={() => setStatus('approved')} onDeny={() => setStatus('denied')}
             detail="Charges the customer's card again; they get an email.">Reverse refund 2 on order 1042 ($24.00)</ChatApproval>
         }>This needs your OK first.</ChatMessage>
+      </Chat>
+      <ChatComposer placeholder="Ask the assistant" />
+    </Frame>;
+  },
+};
+
+// The row under a reply: Copy, Regenerate, and Helpful / Not helpful as toggles; a rating is said back ("Thanks, noted").
+export const ReplyActions: Story = {
+  render: function Render(args) {
+    const [feedback, setFeedback] = React.useState<ChatFeedback | null>('good');
+    const text = 'Card refunds take 5 to 10 business days to show up.';
+    return <Frame>
+      <Chat {...args} className="flex-auto">
+        <ChatMessage own>How long do refunds take?</ChatMessage>
+        <ChatMessage author="Assistant" attachments={<ChatReplyActions copyText={text} onRegenerate={() => {}} feedback={feedback} onFeedback={setFeedback} />}>{text}</ChatMessage>
       </Chat>
       <ChatComposer placeholder="Ask the assistant" />
     </Frame>;

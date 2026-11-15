@@ -29,6 +29,16 @@ The frame around an app's pages: a skip link, a sticky Navbar, a Sidebar beside 
 
 <Canvas of={Stories.AdaptiveNavigation} />
 
+## Keeping state
+
+When people come back to a page, show it as they left it, so they never retrace their steps. Decide by who should see it:
+
+- **In the URL**, for what someone may share or bookmark: the open tab, a search, filters, sort, the page of a list. Read it on load and write it on change, with the components controlled: Tabs `value` and `onValueChange`, FilterBar `value` and `onValueChange`, Table's `sort` and `onSort` on each TableHeaderCell, Pagination's `page` and `onPageChange`.
+- **In storage** (localStorage, or the person's settings on your server when it should follow them to another device), for their own layout: the Sidebar's `collapsed`, column widths (TableHeaderCell `width` and `onWidthChange`), which Accordion sections are open (`value` and `onValueChange`). Splitter keeps its sizes itself with `storageKey`, and KeyboardShortcuts keeps the single-key setting itself.
+- **Nowhere**, for what's over once it closes: an open Menu, Popover or Dialog, a hover, a toast. Opening a page with a dialog already open surprises people.
+
+Wrap every storage read in try/catch, since it can be blocked, and fall back to the default.
+
 ## Copying it
 
 Copy the story's `render` into your app's layout, change the imports to `serupa`, and put each page's content in main.
