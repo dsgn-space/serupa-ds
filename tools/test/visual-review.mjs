@@ -14,11 +14,20 @@ fs.writeFileSync(path.join(dir, 'changes-2.json'), JSON.stringify([{ name: 'Tabs
 fs.writeFileSync(path.join(dir, 'changes-1.json'), JSON.stringify([{ name: 'Badge/New-axes', kind: 'added' }, { name: 'Badge/Old-axes', kind: 'removed' }]));
 const changes = readChanges(dir);
 t('the shards\' reports are read together, sorted by picture', changes.map((c) => c.name).join() === 'Badge/New-axes,Badge/Old-axes,Tabs/Default-blue-light-rest');
+fs.writeFileSync(path.join(dir, 'changes-4.json'), JSON.stringify([{ name: 'playground.stories.tsx/Element-blue-light-rest', kind: 'added' }]));
+t('a story without a component folder (src/internal\'s playground) is a picture too', readChanges(dir).some((c) => c.name === 'playground.stories.tsx/Element-blue-light-rest'));
+fs.rmSync(path.join(dir, 'changes-4.json'));
 t('nothing reported: nothing to review', readChanges(path.join(dir, 'none')).length === 0);
 fs.writeFileSync(path.join(dir, 'changes-3.json'), JSON.stringify([{ name: '../../.github/workflows/ci', kind: 'changed' }]));
 let refused = false;
 try { readChanges(dir); } catch { refused = true; }
 t('a name that isn\'t a picture\'s (a path out of the folder) is refused', refused);
+for (const name of ['../ci', 'Tabs/../../x', '.git/config', 'Tabs/.hidden', 'a/b/c']) {
+  fs.writeFileSync(path.join(dir, 'changes-3.json'), JSON.stringify([{ name, kind: 'added' }]));
+  let no = false;
+  try { readChanges(dir); } catch { no = true; }
+  t(`"${name}" is refused`, no);
+}
 fs.rmSync(dir, { recursive: true, force: true });
 t('an added picture has no before, a removed one no after, a changed one both',
   filesOf(changes[0]).join() === 'Badge/New-axes.png' && filesOf(changes[1]).join() === 'Badge/Old-axes.before.png'
