@@ -47,6 +47,7 @@ Drawn from the `Settings` story.
 
 - Put actions in `trailing`, never inside the row's link or button, and name them for their row ("More for Ada Lovelace").
 - Use `as="ol"` when the order matters.
+- Use `divided="inset"` when every row leads with an avatar or icon: the lines start at the text, so the pictures read as one column.
 - Use `variant="card"` for a list that stands on its own; inside a Card or a panel that already has a frame, keep it `plain`.
 - With a router, pass its link component as `as` and its props (such as `to`) in `linkProps`.
 
@@ -116,7 +117,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<ul>` or `<ol>`. |
 | `variant` | `'plain'` \| `'card'` | `'plain'` | Bare rows, or rows in a bordered, rounded frame |
-| `divided` | boolean | `true` | Lines between rows |
+| `divided` | boolean \| `'inset'` | `true` | Lines between rows; `'inset'` starts each line where the text starts, after the avatar or icon, so a list of people reads as one group per row |
 | `as` | `'ul'` \| `'ol'` | `'ul'` | `ol` when the order matters |
 | `loading` | boolean | `false` | Its rows are loading: sets `aria-busy` on the list. Pair it with `ListLoadingItems` |
 | `selectionMode` | `'none'` \| `'single'` \| `'multiple'` | `'none'` | Rows people pick: a grid with one Tab stop, and a checkbox per row when multiple |
