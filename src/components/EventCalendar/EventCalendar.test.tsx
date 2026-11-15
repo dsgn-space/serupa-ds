@@ -361,7 +361,7 @@ describe('EventCalendar', () => {
     }
   });
 
-  test('its text reads 4.5:1 on its background, and an event\'s on each tone, in all six themes', async () => {
+  test('its text reads 4.5:1 on its background, and an event\'s on each tone, in every theme', async () => {
     await render(<EventCalendar id="c" events={EVENTS} defaultMonth={MARCH} />);
     const bg = () => css(el('c')).backgroundColor;
     for (const th of THEMES) {
@@ -395,7 +395,7 @@ describe('EventCalendar labels', () => {
 });
 
 describe('EventCalendar held state', () => {
-  test('held down: "+N more" fills one step past its hover (--event-calendar-more-bg-pressed), and its text or icon keeps 4.5:1 on it in all six themes', async () => {
+  test('held down: "+N more" fills one step past its hover (--event-calendar-more-bg-pressed), and its text or icon keeps 4.5:1 on it in every theme', async () => {
     await render(<EventCalendar events={Array.from({ length: 5 }, (_, i) => ({ id: 'e' + i, title: 'Call ' + (i + 1), start: `2025-03-06T1${i}:00` }))} defaultMonth={MARCH} maxPerDay={3} />);
     const b = page.getByRole('button', { name: '+3 more' }).element() as HTMLElement;
     const f = () => b;

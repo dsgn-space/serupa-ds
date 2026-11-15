@@ -80,7 +80,7 @@ describe('ScrollArea', () => {
     await expect.poll(cls).toEqual([true, true]);
   });
 
-  test('the scrollbar thumb reads 3:1 on the surface, and the focus ring too, in all six themes', async () => {
+  test('the scrollbar thumb reads 3:1 on the surface, and the focus ring too, in every theme', async () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><ScrollArea id="s" aria-label="List" style={{ maxHeight: 100 }}>{rows(10)}</ScrollArea></div>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

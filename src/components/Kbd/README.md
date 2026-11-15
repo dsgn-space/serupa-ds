@@ -70,7 +70,7 @@ Use `mod` for shortcuts that follow the platform. Any other text shows as it is,
 ## Accessibility
 
 - A combination is one `<kbd>` holding a `<kbd>` per key, as HTML recommends. Symbols are hidden from screen readers and replaced with the key's name, through the `keyName` label (so "Panah atas" and "Spasi" in `idLabels`); the + between keys is hidden.
-- Labels and the + keep 4.5:1 in all six themes (`Kbd.test.tsx`).
+- Labels and the + keep 4.5:1 in every theme (`Kbd.test.tsx`).
 - **Keyboard:** none: it shows keys, it doesn't take them.
 
 ## Props
@@ -99,5 +99,4 @@ Each is an optional override: set it on the page, a container or one key. The li
 | `--kbd-height-md` | `spacing-6` | size="md", the default (24px). |
 | `--kbd-padding-x` | `spacing-1.5` | Space on each side of a key's label (6px). |
 | `--kbd-gap` | `spacing-1` | Space between keys and the + in a combination (4px). |
-| `--kbd-depth` | `depth-control` | The keycap's tactile layers: raised off the page like a Button. None in the flat brands. |
 <!-- token-table:end -->

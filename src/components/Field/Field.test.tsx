@@ -185,7 +185,7 @@ describe('Field', () => {
     error.mockRestore(); warn.mockRestore();
   });
 
-  test('contrast in all six themes: label, hint, error and * at 4.5:1 on surface (the error on surface-muted too)', () => {
+  test('contrast in every theme: label, hint, error and * at 4.5:1 on surface (the error on surface-muted too)', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['hint', 'var(--text-muted)', 'var(--surface)', 4.5],

@@ -340,16 +340,6 @@
       }
     },
     "shadow": {
-      "depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-field}",
-        "$description": "The tactile inner shade along the top of the box. None in the flat brands.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--select-depth"
-          }
-        }
-      },
       "picker-shadow": {
         "$type": "shadow",
         "$value": "{shadow.elevation-overlay}",
@@ -357,16 +347,6 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--select-picker-shadow"
-          }
-        }
-      },
-      "picker-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-surface}",
-        "$description": "The list's tactile layer (none in the flat brands).",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--select-picker-depth"
           }
         }
       }

@@ -135,7 +135,7 @@ describe('LoadMore', () => {
     expect([el('id').textContent, el('id2').textContent]).toEqual(['Menampilkan 20 dari 134Muat lagi', 'Sudah sampai akhir']);
   });
 
-  test('the summary and end text read 4.5:1 on the page in all six themes', async () => {
+  test('the summary and end text read 4.5:1 on the page in every theme', async () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><LoadMore id="c" onLoadMore={() => {}} count={1} total={2} /><LoadMore id="d" onLoadMore={() => {}} hasMore={false} /></div>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

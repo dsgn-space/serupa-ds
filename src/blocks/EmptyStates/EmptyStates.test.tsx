@@ -59,7 +59,7 @@ describe('Blocks/Empty states', () => {
     expect(send).toHaveBeenCalledTimes(2);
   });
 
-  test('no access: the failure text is 4.5:1 on the page in all six themes (GR140)', async () => {
+  test('no access: the failure text is 4.5:1 on the page in every theme (GR140)', async () => {
     const view = await render(<EmptyNoAccess description="Ana Putri owns this project." onRequest={() => Promise.reject(new Error('offline'))} />);
     await userEvent.click(page.getByRole('button', { name: 'Request access' }));
     const text = view.locator.getByText('Couldn’t send the request. Try again.');

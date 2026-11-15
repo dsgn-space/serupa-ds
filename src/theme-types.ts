@@ -1,5 +1,5 @@
 /** A shipped brand, or one made with serupa-brand and named in the page's data-brands. */
-export type ThemeBrand = 'blue' | 'violet' | 'emerald' | (string & {});
+export type ThemeBrand = 'blue' | 'red' | 'orange' | 'amber' | 'yellow' | 'lime' | 'green' | 'emerald' | 'teal' | 'cyan' | 'sky' | 'indigo' | 'violet' | 'purple' | 'fuchsia' | 'pink' | 'rose' | (string & {});
 export type ThemeMode = 'auto' | 'light' | 'dark';
 export interface ThemeInfo { brand: ThemeBrand; /** What was asked for. */ mode: ThemeMode; /** What is applied, e.g. "violet-dark". */ theme: string }
 /** theme.js (standalone, no React): picks the page theme and follows the system's light/dark setting. */

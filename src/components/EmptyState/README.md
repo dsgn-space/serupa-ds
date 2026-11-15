@@ -65,7 +65,7 @@ Drawn from the `LongText` story.
 - The title is a heading (`h3` by default), so people can find it; set `headingLevel` to fit the page.
 - The icon is decorative and hidden from screen readers.
 - When the empty state appears after an action (a search, a filter), set `announce`: as it appears, its title and description are said politely through the same live region as Toast and Loader ("No results. Nothing matches "mars"."), which moves into an open Dialog or Drawer so it's heard there too. It's said once; give it a new `key` to say it again for a new query. Leave it off for a page that's empty on arrival, which people find by reading.
-- The title and description keep 4.5:1 on `surface`, and the icon 3:1 on its circle, in all six themes (`EmptyState.test.tsx`).
+- The title and description keep 4.5:1 on `surface`, and the icon 3:1 on its circle, in every theme (`EmptyState.test.tsx`).
 - Suggestions are link-style buttons at least 24px tall after "Did you mean:"; with `announce` they're said with the title and description. Without `onSuggestion` they're plain bold text.
 - **Keyboard:** none of its own. Tab reaches the suggestions, then the buttons and links in its actions, then Clear filters.
 

@@ -161,10 +161,4 @@ Each is an optional override: set it on the page, a container or one pagination.
 | Token | Default | Use |
 | --- | --- | --- |
 | `--pagination-disabled` | `opacity-disabled` | Previous or next when there's no page that way. |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
-| `--pagination-depth-current` | `depth-part` | The current page in a tactile brand: raised like a part, under the top light. Nothing in a flat brand. |
 <!-- token-table:end -->

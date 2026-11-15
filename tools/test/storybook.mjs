@@ -1,7 +1,7 @@
 // Storybook (npm run build-storybook first): every story and docs page renders without errors (and no docs page
 // prints a Markdown table as raw text), every docs page's own content passes axe's WCAG 2.2 AA checks in blue-light
 // and blue-dark, and every
-// story passes axe's WCAG 2.2 AA checks in all six themes, and once more in blue-light with data-contrast="more"
+// story passes axe's WCAG 2.2 AA checks in every theme, and once more in blue-light with data-contrast="more"
 // (text in a disabled control is exempt from contrast, as WCAG 1.4.3 says). In the first theme, each story also
 // takes the WCAG 1.4.12 text spacing (line height 1.5, letter spacing 0.12em, word spacing 0.16em, paragraph
 // spacing 2em) and no text may end up cut off by a box that hides its overflow (text ending in an ellipsis is
@@ -12,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import { PAGES, PROJECT, browser, fixClock, inParallel, inParallelRetry, openUrl, report, serve, onlyComponents } from './lib.mjs';
 
 const DIR = path.join(PROJECT, 'storybook-static');
@@ -23,7 +24,7 @@ if (!fs.existsSync(path.join(DIR, 'index.json'))) {
 const { base, close } = serve(DIR);
 const { entries } = JSON.parse(fs.readFileSync(path.join(DIR, 'index.json'), 'utf8'));
 const axe = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
-const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+const THEMES = SHOWN_THEMES;   // the themes with pictures and axe runs (tools/design-qa.mjs)
 // The more-contrast axis swaps text, border and focus-ring tokens: one more axe run, in the first theme, checks
 // that it never takes a story below AA.
 const RUNS = [...THEMES, 'blue-light+more'];
@@ -320,7 +321,7 @@ async function checkStory(e, w) {
       if (cut.length) problems.push(`text spacing (WCAG 1.4.12) cuts off ${cut.slice(0, 3).join(', ')}`);
     }
   }
-  out.push(t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in all six themes and with more contrast, with text at 200%, wider text spacing and at 320px`, !problems.length, problems.slice(0, 3).join('\n      ')));
+  out.push(t(`${e.title} · ${e.name}: renders and passes WCAG 2.2 AA in every theme and with more contrast, with text at 200%, wider text spacing and at 320px`, !problems.length, problems.slice(0, 3).join('\n      ')));
   return out;
 }
 R.push(...(await inParallel(docs, workers, recycled(checkDocs))).flat(), ...(await inParallelRetry(stories, workers, recycled(checkStory), (e) => e.id)).flat());
