@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { css } from '../../../tools/test/vitest/helpers';
 import { Grid } from './Grid';
 
@@ -78,5 +79,28 @@ describe('Grid', () => {
     await render(<Grid id="gul" as="ul" columns={2}><li>a</li><li>b</li></Grid>);
     const s = css(el('gul'));
     expect([s.listStyleType, s.paddingLeft]).toEqual(['none', '0px']);
+  });
+
+  describe('per screen width', () => {
+    afterEach(async () => { await page.viewport(414, 800); });
+
+    test('columns={{ base: 1, sm: 2, lg: 4 }} and gap per width: one column on a phone, two from 640px, four from 1024px', async () => {
+      await render(<Grid id="gresp" columns={{ base: 1, sm: 2, lg: 4 }} gap={{ base: 2, md: 4 }}>{boxes(4)}</Grid>);
+      const across = async (w: number) => { await page.viewport(w, 800); const k = kids('gresp'); return [k.filter((c) => c.y === k[0]!.y).length, css(el('gresp')).columnGap]; };
+      expect(await across(414)).toEqual([1, '8px']);
+      expect(await across(700)).toEqual([2, '8px']);
+      expect(await across(800)).toEqual([2, '16px']);
+      expect(await across(1100)).toEqual([4, '16px']);
+    });
+
+    test('per-width columns with minColumnWidth are "up to" at each width; a nested Grid takes none of them', async () => {
+      await page.viewport(1100, 800);
+      await render(<div style={{ width: '600px' }}><Grid id="gup" columns={{ base: 2, lg: 3 }} minColumnWidth="250px" gap={0}>{boxes(3)}<Grid id="ginner" columns={2} gap={0}>{boxes(2)}</Grid></Grid></div>);
+      expect(el('gup').className).toBe('dk-grid dk-grid--upto dk-grid--cols');
+      const k = kids('gup');
+      expect(k.filter((c) => c.y === k[0]!.y).length).toBe(2);   // three wanted, but only two of 250px fit in 600
+      const i = kids('ginner');
+      expect(i[1]!.y).toBe(i[0]!.y);
+    });
   });
 });

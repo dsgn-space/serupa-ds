@@ -49,6 +49,12 @@
 - combobox "Country"
 - button "Show options"
 
+# SearchWithRecent
+- text: Search help articles
+- combobox "Search help articles"
+- button "Show options"
+- button "Clear recent searches"
+
 # Sizes
 - combobox "Small": Kenya
 - button "Show options"

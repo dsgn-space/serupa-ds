@@ -10,6 +10,10 @@ export interface TableLabels {
   tableSelected: (count: number, formatted: string) => string;
   /** TableActionBar: the button that clears the selection. */
   clearSelection: string;
+  /** TableActionBar with total: the button that selects every matching row, on every page ("Select all 1,240"). */
+  tableSelectAll: (count: number, formatted: string) => string;
+  /** TableActionBar with total: the count once every matching row is selected ("All 1,240 selected"). */
+  tableAllSelected: (count: number, formatted: string) => string;
   /** TableHeaderCell resizable: the handle's name, given the column's name ("Resize Name column"). */
   tableResizeColumn: (column: string) => string;
   /** Table: the buttons in a resizable column's width popover, opened by a click or Enter on its handle. */
@@ -31,6 +35,8 @@ export const en: TableLabels = {
   tableSorted: (column, direction) => 'Sorted by ' + column + ', ' + direction + '.',
   tableSelected: (count, formatted = String(count)) => formatted + ' selected',
   clearSelection: 'Clear selection',
+  tableSelectAll: (count, formatted = String(count)) => 'Select all ' + formatted,
+  tableAllSelected: (count, formatted = String(count)) => 'All ' + formatted + ' selected',
   tableResizeColumn: (column) => 'Resize ' + column + ' column',
   tableNarrower: 'Narrower',
   tableWider: 'Wider',
@@ -45,6 +51,8 @@ export const id: TableLabels = {
   tableSorted: (column, direction) => 'Diurutkan menurut ' + column + ', ' + (direction === 'ascending' ? 'naik' : 'turun') + '.',
   tableSelected: (count, formatted = String(count)) => formatted + ' dipilih',
   clearSelection: 'Hapus pilihan',
+  tableSelectAll: (count, formatted = String(count)) => 'Pilih semua ' + formatted,
+  tableAllSelected: (count, formatted = String(count)) => 'Semua ' + formatted + ' dipilih',
   tableResizeColumn: (column) => 'Ubah lebar kolom ' + column,
   tableNarrower: 'Lebih sempit',
   tableWider: 'Lebih lebar',

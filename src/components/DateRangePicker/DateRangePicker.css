@@ -14,6 +14,13 @@
    rather than growing the box past the control height. */
 .dk-date-range-picker.dk-input--size-sm .dk-date-range-picker__button { margin-block: calc(var(--spacing-0) - var(--input-border-width, var(--border-width-1))); }
 .dk-date-range-picker__dash { flex-shrink: 0; color: var(--date-range-picker-dash, var(--placeholder)); }
+/* Each field as wide as its date (or its pattern while empty), so the dates and the dash sit together at the start,
+   the input gap either side of the dash, and any spare width goes before the calendar button, which stays at the end.
+   Digits are tabular, so a date doesn't change width as it's typed. Where field-sizing isn't supported (Firefox), each
+   keeps the fixed --date-range-picker-field-width. */
+.dk-date-range-picker__field { font-variant-numeric: tabular-nums; }
+@supports (field-sizing: content) { .dk-date-range-picker__field { field-sizing: content; width: auto; min-width: var(--spacing-4); } }
+.dk-date-range-picker__button { margin-inline-start: auto; }
 /* With presets, the shortcuts sit after the months, and under them on a narrow screen (RU11). */
 .dk-date-range-picker__body { display: flex; align-items: flex-start; gap: var(--spacing-4); }
 @media (max-width: 639.98px) { .dk-date-range-picker__body { flex-direction: column; } }
