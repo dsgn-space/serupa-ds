@@ -64,8 +64,8 @@
       },
       "item-bg-hover": {
         "$type": "color",
-        "$value": "{color.highlight}",
-        "$description": "An item's background on hover: the highlight fill (zinc-100 in light themes), the current page's own, so the shade shows on a white sidebar. Only the current page draws the bar, with more contrast.",
+        "$value": "{color.surface-hover}",
+        "$description": "An item's background on hover: zinc-100 in light themes, as the current page's, so the shade shows on a white sidebar. Only the current page draws the bar, with more contrast.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--sidebar-item-bg-hover"

@@ -137,7 +137,7 @@ describe('Table', () => {
     await setup();
     const r = q('#tdef [data-i="1"]'), bar = css(r.firstElementChild);
     expect([r.hasAttribute('aria-selected'), q('#tdef [data-i="0"]').hasAttribute('aria-selected')]).toEqual([false, false]);
-    await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
+    await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-hover)'));
     expect(bar.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => { expect(bar.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(bar.boxShadow).toContain(color('var(--highlight-indicator)')); });
   });
@@ -173,7 +173,7 @@ describe('Table', () => {
     expect([boxes.map((b) => b.checked).join(), boxes[0]!.indeterminate]).toEqual(['true,true,true,true', false]);
     const u = q('#tun [data-i="u"]');
     await userEvent.click(u.querySelector('input')!);
-    await expect.poll(() => css(u).backgroundColor).toBe(bg('var(--surface-muted)'));
+    await expect.poll(() => css(u).backgroundColor).toBe(bg('var(--surface-hover)'));
     await withMoreContrast(() => expect(css(u.firstElementChild).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/));
   });
 
@@ -182,7 +182,7 @@ describe('Table', () => {
     const r = q('#tdef [data-i="2"]');
     expect(css(r).backgroundColor).toBe(NONE);
     await userEvent.hover(r.querySelector('td')!);
-    await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-muted)'));
+    await expect.poll(() => css(r).backgroundColor).toBe(bg('var(--surface-hover)'));
     await away();
   });
 
@@ -196,7 +196,7 @@ describe('Table', () => {
     await setup();
     const rows = [...el('tsm').querySelectorAll('tbody tr')];
     expect(css(q('#tsm td')).paddingTop).toBe('8px');
-    await expect.poll(() => rows.map((x) => css(x).backgroundColor)).toEqual([NONE, bg('var(--surface-muted)'), NONE]);
+    await expect.poll(() => rows.map((x) => css(x).backgroundColor)).toEqual([NONE, bg('var(--surface-hover)'), NONE]);
     expect(rows[0]!.hasAttribute('aria-selected')).toBe(false);
     await userEvent.hover(rows[0]!.querySelector('td')!);
     await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
@@ -356,15 +356,16 @@ describe('Table', () => {
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const surf = bg('var(--surface)'), muted = bg('var(--surface-muted)');
-      const text = css(q('#tdef td')).color, mt = css(q('#tdef td .dk-text')).color, hd = css(q('#tdef th')).color;
-      const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, muted], ['muted text on a shaded row', mt, muted], ['header', hd, muted]];
+      const surf = bg('var(--surface)'), muted = bg('var(--surface-muted)'), shaded = bg('var(--surface-hover)');
+      // Muted text in a selected row (shaded like a hovered or striped one) is read from that row: it steps to text-muted-shaded.
+      const text = css(q('#tdef td')).color, mt = css(q('#tdef [data-i="0"] .dk-text')).color, mts = css(q('#tdef [data-i="1"] .dk-text')).color, hd = css(q('#tdef th')).color;
+      const pairs: Array<[string, string, string]> = [['text', text, surf], ['muted text', mt, surf], ['text on a shaded row', text, shaded], ['muted text on a shaded row', mts, css(q('#tdef [data-i="1"]')).backgroundColor], ['header', hd, muted]];
       for (const [name, fg, on] of pairs) { const r = contrast(fg, on); n++; if (r < 4.5) low.push(`${th} ${name}: ${r.toFixed(2)}`); }
-      const bar = contrast('var(--primary)', muted); n++;
+      const bar = contrast('var(--primary)', shaded); n++;
       if (bar < 3) low.push(`${th} selected bar: ${bar.toFixed(2)}`);
       // A TableSelectCell's unchecked box, on a shaded row: the field border is soft by design, under 3:1 on purpose
       // (Checkbox README, Accessibility), so it's held to 1.3:1, where it still shows.
-      const box = contrast('var(--field-border)', muted); n++;
+      const box = contrast('var(--field-border)', shaded); n++;
       if (box < 1.3) low.push(`${th} checkbox outline on a shaded row: ${box.toFixed(2)}`);
     }
     still.remove();

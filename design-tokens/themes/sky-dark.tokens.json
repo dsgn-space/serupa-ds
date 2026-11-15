@@ -123,7 +123,7 @@
     "surface-hover": {
       "$type": "color",
       "$value": "{color.zinc-800}",
-      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): one quiet step off `surface` in every theme (zinc-50 light, zinc-800 dark), and a step under `highlight`, so an item pointed at never looks like the current one.",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a step off `surface` in every theme (zinc-100 light, the same as `highlight`; zinc-800 dark). Grey text on it reads `text-muted-shaded`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover"
@@ -141,7 +141,7 @@
         ],
         "hex": "#333338"
       },
-      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-50 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1: always a step under the current item's fill.",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1. Grey text on it reads `text-muted-shaded`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover-raised"
@@ -371,6 +371,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--text-muted"
+        }
+      }
+    },
+    "text-muted-shaded": {
+      "$type": "color",
+      "$value": "{color.zinc-400}",
+      "$description": "Alias. Secondary text inside a shaded row (`surface-hover`, `surface-hover-raised`: hovered, selected or striped), where `text-muted` would fall under 4.5:1 on zinc-100: zinc-600 in light, `text-muted`'s zinc-400 in dark. 4.5:1+ on either fill in every theme.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--text-muted-shaded"
         }
       }
     },

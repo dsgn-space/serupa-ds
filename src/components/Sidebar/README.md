@@ -69,7 +69,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 ## Accessibility
 
 - It's a `<nav>` landmark with lists of links; section titles name their lists.
-- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar at its start. Hover shades an item with the same `highlight` fill but never draws the bar; the current page itself darkens one step under the pointer. A group holding it is text-colored, so the trail stays visible when it's closed.
+- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar at its start. Hover shades an item (`surface-hover`, zinc-100 in light, like the current page) but never draws the bar; the current page itself darkens one step under the pointer. A group holding it is text-colored, so the trail stays visible when it's closed.
 - A group is a button with `aria-expanded` and `aria-controls`.
 - Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus, on a group's button too. Use a string `label` so the tooltip can show it.
 - Collapsed, an item's badge is hidden on screen like its label but still read: the tooltip names the item ("Inbox") and the badge describes it ("4"), and an 8px dot on the icon's corner shows there is one. The dot keeps 3:1 in every theme, and is CanvasText in forced-colors mode.
@@ -129,7 +129,7 @@ Each is an optional override: set it on the page, a container or one sidebar. Th
 | `--sidebar-item-text-hover` | `text` | An item on hover. |
 | `--sidebar-item-text-active` | `text` | The current page's item. |
 | `--sidebar-dot` | `primary` | Collapsed: the dot on an item's icon when it has a badge (3:1 on bg and on the current page's highlight). |
-| `--sidebar-item-bg-hover` | `highlight` | An item's background on hover: the highlight fill (zinc-100 in light themes), the current page's own, so the shade shows on a white sidebar. Only the current page draws the bar, with more contrast. |
+| `--sidebar-item-bg-hover` | `surface-hover` | An item's background on hover: zinc-100 in light themes, as the current page's, so the shade shows on a white sidebar. Only the current page draws the bar, with more contrast. |
 | `--sidebar-item-bg-pressed` | `pressed` | An item's background while it's pressed, one step past hover. |
 | `--sidebar-item-bg-active` | `highlight` | The current page's item background. |
 | `--sidebar-item-bg-active-hover` | `pressed` | The current page's item background under the pointer: one step past its rest. |
