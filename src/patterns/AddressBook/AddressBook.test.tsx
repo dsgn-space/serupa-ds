@@ -34,7 +34,7 @@ describe('Patterns/Address book', () => {
   test('Make default moves the badge and says so; then the old default can be removed', async () => {
     const onDefaultChange = vi.fn();
     const screen = await render(<AddressBook onDefaultChange={onDefaultChange} />);
-    await screen.getByRole('button', { name: 'Make Office the default' }).click();
+    await screen.getByRole('button', { name: 'Make default: Office' }).click();
     expect(onDefaultChange).toHaveBeenCalledWith('a2');
     await expect.poll(said).toContain('Office is now your default address');
     await expect.poll(() => active().getAttribute('aria-label')).toBe('Edit Office');

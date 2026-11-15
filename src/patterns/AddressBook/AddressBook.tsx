@@ -20,7 +20,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 /* Address book: the addresses you've saved for delivery, one of them the default, each edited, removed or made the
    default in place. For an app to copy. What it carries (WCAG 2.2):
    - 1.3.1: the addresses are a list, each an <address>; the default one says so in words in a badge.
-   - 2.4.6: every button names the address it acts on ("Edit Home", "Remove Office", "Make Office the default").
+   - 2.4.6: every button names the address it acts on ("Edit Home", "Remove Office", "Make default: Office", each starting with the words it shows).
    - 1.3.5, 3.3.2: the form's fields say what they are for autofill (name, address lines, city, postal code,
      country, phone) and which are optional.
    - 3.3.1: a missing field is said next to it when you save, and focus goes to the first.
@@ -167,7 +167,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
                         <div className="mt-auto flex flex-wrap gap-2">
                           <Button id={`edit-${a.id}`} size="sm" variant="outline" aria-label={`Edit ${a.label}`} onClick={() => open(a)}>Edit</Button>
                           {isDef && shown.length > 1 ? null : <Button id={`remove-${a.id}`} size="sm" variant="ghost" aria-label={`Remove ${a.label}`} onClick={() => remove(a)}>Remove</Button>}
-                          {isDef ? null : <Button size="sm" variant="ghost" aria-label={`Make ${a.label} the default`} onClick={() => makeDef(a)}>Make default</Button>}
+                          {isDef ? null : <Button size="sm" variant="ghost" aria-label={`Make default: ${a.label}`} onClick={() => makeDef(a)}>Make default</Button>}
                         </div>
                       </Card>
                     </li>
