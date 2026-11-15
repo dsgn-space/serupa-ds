@@ -20,13 +20,13 @@
   border: none; border-radius: var(--menubar-item-radius, var(--radius-control));
   background: transparent; color: var(--menubar-item-text, var(--text));
   font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium);
-  cursor: pointer; touch-action: manipulation;
+  cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover);
 }
 @media (hover: hover) { .dk-menubar__item:hover:not([aria-disabled="true"]) { background: var(--menubar-item-bg-hover, var(--highlight)); } }
 .dk-menubar__item:active:not([aria-disabled="true"]) { background: var(--menubar-item-bg-pressed, var(--pressed)); }   /* held down: one step past hover */
 .dk-menubar__item[aria-expanded="true"] { background: var(--menubar-item-bg-open, var(--pressed)); }
 .dk-menubar__item:focus-visible { outline: var(--focus-ring-width) solid var(--menubar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-menubar__item[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-menubar__item[aria-disabled="true"] { color: var(--menubar-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 @media (forced-colors: active) { .dk-menubar__item[aria-expanded="true"] { background: Highlight; color: HighlightText; } }
 }

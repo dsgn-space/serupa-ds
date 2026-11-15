@@ -46,7 +46,7 @@ Drawn from the `Pill` story.
 
 ## Usage
 
-- Keep tab labels to a word or two. When the tabs don't fit, the row scrolls sideways: the edge with more tabs past it fades out, and the selected tab is always scrolled into view, but people can still miss the tabs out of view. It scrolls in a CSS grid track or a flex row too, without widening the page.
+- Keep tab labels to a word or two. When the tabs don't fit, the row scrolls sideways: the edge with more tabs past it fades out, and the selected tab, or one reached with Tab, is always scrolled into view clear of the fade, but people can still miss the tabs out of view. It scrolls in a CSS grid track or a flex row too, without widening the page.
 - Use `orientation="vertical"` for a settings page or anything with more than about six tabs: a column at the start of the panels, which has room for them all.
 - Set `activation="manual"` when a panel is slow to show, so arrowing past a tab doesn't select it.
 - Keep each panel's controls about that panel: a Save or a filter inside one tab changes only what's in that tab. Controls that act on every tab go above the tab row.
@@ -65,7 +65,7 @@ Drawn from the `Pill` story.
 ## Accessibility
 
 - `role="tablist"`, `"tab"` and `"tabpanel"`, with `aria-selected`, `aria-controls` and `aria-labelledby` set for you.
-- Only the selected tab is in the Tab order, and the shown panel itself can take focus, so keyboard users always reach the content (a kept panel of another tab is out of the Tab order). When a controlled `value` matches no tab (a stale link, data still loading), the first enabled tab takes the Tab stop instead, so the list can still be reached.
+- Only the selected tab is in the Tab order, and the shown panel itself can take focus when it starts with text, so keyboard users always reach the content. A panel that starts with a link, button or field leaves the stop to that, so Tab from the tab lands on it directly; a kept panel of another tab is out of the Tab order. When a controlled `value` matches no tab (a stale link, data still loading), the first enabled tab takes the Tab stop instead, so the list can still be reached.
 - Tab labels keep 4.5:1, and the selected line and pill 3:1 against `surface`, in every theme (`Tabs.test.tsx`). The focus ring sits inside the tab so the scrolling row can't clip it.
 - The selected line or fill slides from the tab selected before. Pick another tab mid-slide and it turns back from where it is, not from the last tab. With reduced motion it moves at once, and so it does when an arrow, Home or End picks the tab.
 - In forced-colors mode the selected tab is marked in `Highlight`.
@@ -122,6 +122,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-pill-text-selected` | `on-primary` | The selected pill tab's label. |
 | `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
 | `--tabs-focus-gap-color` | `surface` | The gap between the focus ring and the selected pill's fill. |
+| `--tabs-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

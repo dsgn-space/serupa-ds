@@ -35,15 +35,15 @@
 }
 .dk-rating__choice {
   position: absolute; inset-block: var(--spacing-0); inset-inline: var(--dk-rating-reach);
-  margin: var(--spacing-0); appearance: none; opacity: var(--opacity-0); cursor: pointer; touch-action: manipulation;
+  margin: var(--spacing-0); appearance: none; opacity: var(--opacity-0); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-rating__choice--half { pointer-events: none; }
 /* Touch (EQ1): 44px high to press, as Apple and Material ask; across, each star keeps its half of the gap. */
 @media (pointer: coarse) { .dk-rating__choice { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--dk-reach-block); } }
 .dk-rating__star:has(.dk-rating__choice:focus-visible) { outline: var(--focus-ring-width) solid var(--rating-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-rating[aria-invalid="true"] .dk-rating__empty { color: var(--rating-invalid, var(--danger)); }   /* the error shows on the stars, as on a field's border */
-.dk-rating--disabled { opacity: var(--opacity-disabled); }
-.dk-rating--disabled .dk-rating__choice { cursor: not-allowed; }
+.dk-rating--disabled { --rating-fill: var(--rating-text-disabled, var(--disabled-text)); --rating-empty: var(--rating-border-disabled, var(--disabled-border)); }
+.dk-rating--disabled .dk-rating__choice { cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {
   /* An empty star is an outline in the text color, not GrayText, which forced colors keep for what's disabled: the
      full stars are solid CanvasText, so the score reads by shape, not by a second gray. */

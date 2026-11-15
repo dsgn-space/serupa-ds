@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { css, lowContrast, disabledLook } from '../../../tools/test/vitest/helpers';
 import { page, userEvent } from 'vitest/browser';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import { Combobox } from '../Combobox/Combobox';
@@ -138,7 +138,7 @@ describe('Field', () => {
   test('disabled disables the control and dims the label', async () => {
     await render(<Field label="Locked" disabled><Input id="locked" /></Field>);
     expect(el('locked').disabled).toBe(true);
-    expect(css(el('locked').closest('[data-component="field"]')!.querySelector('label')).opacity).toBe('0.5');
+    expect(disabledLook(el('locked').closest('[data-component="field"]')!.querySelector('label'))).toBe('neutral');
   });
 
   test('group: a <fieldset> whose <legend> lays out like a label; the hint and error describe the fieldset; controls keep their ids; a disabled group disables every control', async () => {

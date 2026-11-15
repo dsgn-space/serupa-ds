@@ -167,6 +167,16 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.goto(own);
   const kept = await p.evaluate(() => [...document.querySelectorAll('meta[name="theme-color"]')].map((m) => m.getAttribute('content')).join());
   t('theme.js: a theme-color meta the page wrote itself is left as it is', kept === '#123456', kept);
+  // <meta name="color-scheme"> is the mode shown, from before the stylesheets (a dark canvas from the first paint), and
+  // follows a switch; a page's own is left alone.
+  await p.goto(writePage('color-scheme-bare.html', '<p>x</p>', { theme: true, bundle: 'none.css', htmlAttrs: 'data-mode="dark"', extraHead: '<script>window.__scheme = [document.querySelector(\'meta[name="color-scheme"]\')?.content, getComputedStyle(document.documentElement).colorScheme].join();</script>' }));
+  const scheme = await p.evaluate(() => { const early = window.__scheme; Serupa.theme.set({ mode: 'light' }); const after = document.querySelector('meta[name="color-scheme"]')?.getAttribute('content'); Serupa.theme.reset(); return [early, after, document.querySelectorAll('meta[name="color-scheme"]').length].join(' '); });
+  t('theme.js: color-scheme meta is the mode shown before the stylesheets (dark) and follows a switch (light)', scheme === 'dark,normal light 1', scheme);
+  const ownScheme = writePage('color-scheme-own.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-mode="dark"' });
+  fs.writeFileSync(fileURLToPath(ownScheme), fs.readFileSync(fileURLToPath(ownScheme), 'utf8').replace('<script src="../dist/theme.js">', '<meta name="color-scheme" content="light dark"><script src="../dist/theme.js">'));
+  await p.goto(ownScheme);
+  const keptScheme = await p.evaluate(() => [...document.querySelectorAll('meta[name="color-scheme"]')].map((m) => m.getAttribute('content')).join());
+  t('theme.js: a color-scheme meta the page wrote itself is left as it is', keptScheme === 'light dark', keptScheme);
   await ctx.close();
 }
 {
@@ -260,8 +270,21 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.goto(url);
   await p.waitForSelector('#b');
   t('debug.js: it stays on for the tab after the address loses ?serupa-debug', await p.evaluate(() => Serupa.debug.isOn()));
+  const themePanel = await p.evaluate(() => {
+    const g = document.querySelector('#serupa-debug-theme[role="group"]');
+    return g ? { mode: Serupa.theme.get().mode, names: [...g.querySelectorAll('select')].map((x) => x.name + '=' + x.value + ':' + (x.labels[0]?.textContent || '')), text: g.textContent } : null;
+  });
+  t('debug.js: a Theme panel names each theme setting, with the page\'s own picked', themePanel?.names.length === 8 && themePanel.names.includes('mode=' + themePanel.mode + ':mode') && themePanel.names.includes('radius=:radius') && /passes|fail/.test(themePanel.text), JSON.stringify(themePanel));
+  await p.selectOption('#serupa-debug-theme-radius', 'round');
+  await p.selectOption('#serupa-debug-theme-mode', 'dark');
+  await p.waitForFunction(() => /-dark$/.test(document.documentElement.getAttribute('data-theme')), null, { timeout: 3000 }).catch(() => {});
+  const picked = await p.evaluate(() => ({ radius: document.documentElement.getAttribute('data-radius'), theme: document.documentElement.getAttribute('data-theme'), mode: Serupa.theme.get().mode }));
+  t('debug.js: picking a setting applies it to the page live, brand and mode through theme.js', picked.radius === 'round' && /-dark$/.test(picked.theme) && picked.mode === 'dark', JSON.stringify(picked));
+  const tried = await p.evaluate(async () => ({ ...await Serupa.debug.theme({ radius: '', contrast: 'more', density: 'compact' }), attr: document.documentElement.hasAttribute('data-radius'), select: /** @type {HTMLSelectElement | null} */ (document.getElementById('serupa-debug-theme-density'))?.value }));
+  t('debug.js: theme(o) changes settings, \'\' puts one back, and the pairs are checked again in the new theme', tried.theme.radius === '' && tried.theme.contrast === 'more' && tried.theme.density === 'compact' && tried.lowContrast.length === 0 && !tried.attr && tried.select === 'compact', JSON.stringify(tried));
+  await p.evaluate(() => Serupa.debug.theme({ contrast: '', density: '', mode: 'auto' }));
   await p.keyboard.press('Escape');
-  t('debug.js: Escape turns it off and takes its outline and panel away', await p.evaluate(() => !Serupa.debug.isOn() && !document.getElementById('serupa-debug') && !document.getElementById('serupa-debug-panel') && sessionStorage.getItem('serupa-debug') === null));
+  t('debug.js: Escape turns it off and takes its outline and panels away', await p.evaluate(() => !Serupa.debug.isOn() && !document.getElementById('serupa-debug') && !document.getElementById('serupa-debug-panel') && !document.getElementById('serupa-debug-theme') && sessionStorage.getItem('serupa-debug') === null));
   await p.close();
 }
 

@@ -9,7 +9,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { VERSIONS, files } from '../../bin/serupa-create.mjs';
+import { VERSIONS, files, pages } from '../../bin/serupa-create.mjs';
+import { plan } from '../../bin/serupa-add.mjs';
 import { SECTION } from '../../bin/serupa-agents.mjs';
 import { PROJECT, done, fail, report } from './lib.mjs';
 
@@ -46,6 +47,27 @@ const lint = () => ({
   stylelint: spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'stylelint', 'bin', 'stylelint.mjs'), 'src/**/*.css', '--allow-empty-input'], { cwd: lintApp, encoding: 'utf8' }),
 });
 const clean = lint();
+// The same app started on a page template (--template dashboard): the pattern and its blocks in src/serupa/, App.tsx
+// rendering it. Every other pattern and block goes in beside them, as serupa-add would write them, so the app's own
+// lint and types have to pass on all of them: what we hand an app must pass the check we tell its agent to run.
+const list = fs.existsSync(path.join(PROJECT, 'dist', 'templates.json')) ? JSON.parse(fs.readFileSync(path.join(PROJECT, 'dist', 'templates.json'), 'utf8')).templates : [];
+const paged = files({ name: 'lint', serupa: 'file:..', brand: 'blue', template: { name: 'Dashboard', files: plan(list, ['Dashboard']).files || {} } });
+const pageApp = path.join(tmp, 'page');
+const every = Object.assign({}, ...list.map((t) => Object.fromEntries(Object.entries(t.files).map(([f, text]) => [`src/serupa/${f}`, text]))));
+for (const [file, text] of Object.entries({ ...every, ...paged })) {
+  fs.mkdirSync(path.dirname(path.join(pageApp, file)), { recursive: true });
+  fs.writeFileSync(path.join(pageApp, file), text);
+}
+fs.symlinkSync(modules, path.join(pageApp, 'node_modules'), 'junction');
+const onPage = {
+  eslint: spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'eslint', 'bin', 'eslint.js'), '.'], { cwd: pageApp, encoding: 'utf8' }),
+  tsc: spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'typescript', 'bin', 'tsc'), '--noEmit', '-p', '.'], { cwd: pageApp, encoding: 'utf8' }),
+};
+const signIn = spawnSync(process.execPath, [bin, path.join(tmp, 'sign'), '--template', 'sign-in'], { encoding: 'utf8' });
+const signApp = (f) => (fs.existsSync(path.join(tmp, 'sign', f)) ? fs.readFileSync(path.join(tmp, 'sign', f), 'utf8') : '');
+const signed = { page: signApp('src/serupa/SignIn.tsx'), card: signApp('src/serupa/AuthCard.tsx'), app: signApp('src/App.tsx') };
+const noPage = spawnSync(process.execPath, [bin, path.join(tmp, 'nope'), '--template', 'Spaceship'], { encoding: 'utf8' });
+const listed = spawnSync(process.execPath, [bin, '--template'], { encoding: 'utf8' });
 fs.writeFileSync(path.join(lintApp, 'src', 'Team.tsx'), `import { Image } from '@diki-stwn/serupa-ds';\n\nexport const Team = () => <Image src="team.png" />;\n`);
 fs.writeFileSync(path.join(lintApp, 'src', 'team.css'), '.team { color: #6b7280; }\n');
 const planted = lint();
@@ -87,6 +109,10 @@ done(report('Starter app', [
   { name: 'run again, it changes nothing; over last release\'s section, it puts the new one in its place', ok: second.status === 0 && /nothing changed/.test(second.stdout) && twice.agents === once.agents && twice.claude === once.claude && updated === '# Shop\n\n' + SECTION.trimEnd() + '\n\nUse pnpm.\n', detail: second.stdout + updated },
   { name: 'in a folder with neither file, it makes both', ok: fresh.agents === '# Agents\n\n' + SECTION && fresh.claude === '@AGENTS.md\n', detail: fresh.agents + fresh.claude },
   { name: 'npm run check runs the types, then ESLint and Stylelint with Serupa\'s configs', ok: app.scripts.check === 'npm run typecheck && npm run lint' && /eslint \./.test(app.scripts.lint) && /stylelint/.test(app.scripts.lint) && /serupa-ds\/eslint/.test(out['eslint.config.js']) && /serupa-ds\/stylelint/.test(out['stylelint.config.js']), detail: out['package.json'] },
+  { name: '--template starts the app on a pattern: it and its blocks in src/serupa/, and App.tsx renders it', ok: !!paged['src/serupa/Dashboard.tsx'] && !!paged['src/serupa/StatsRow.tsx'] && /import \{ Dashboard \} from '\.\/serupa\/Dashboard';/.test(paged['src/App.tsx']) && /return <Dashboard \/>;/.test(paged['src/App.tsx']) && paged['package.json'] === out['package.json'].replace('"my-app"', '"lint"').replace('github:diki-stwn/serupa-ds#v1.2.3', 'file:..'), detail: Object.keys(paged).join(', ') },
+  { name: `the app passes its own lint and type check with all ${list.length} patterns and blocks in it, as serupa-add writes them`, ok: list.length >= 40 && onPage.eslint.status === 0 && onPage.tsc.status === 0, detail: said(onPage.eslint) + said(onPage.tsc) },
+  { name: 'serupa-create --template sign-in writes SignIn and the AuthCard it builds on; an unknown page lists the pages', ok: signIn.status === 0 && /export function SignIn\(/.test(signed.page) && /export function AuthCard/.test(signed.card) && /<SignIn \/>/.test(signed.app) && noPage.status === 2 && /no page called "Spaceship"/.test(noPage.stderr) && !fs.existsSync(path.join(tmp, 'nope')), detail: signIn.stdout + signIn.stderr + noPage.stderr },
+  { name: '--template alone lists every pattern a page can start on (each with demo data), and none that needs props', ok: listed.status === 0 && pages(list).length >= 20 && pages(list).every((t) => listed.stdout.includes(`  ${t.name}: `)) && !/ErrorPages/.test(listed.stdout) && /Dashboard/.test(listed.stdout), detail: listed.stdout.slice(0, 400) + listed.stderr },
   { name: 'the lint passes on the app as made', ok: clean.eslint.status === 0 && clean.stylelint.status === 0, detail: said(clean.eslint) + said(clean.stylelint) },
   { name: 'and fails an <Image> with no alt (jsx-a11y) and a #hex in the app\'s CSS (serupa/no-raw-color)', ok: planted.eslint.status !== 0 && /alt-text/.test(planted.eslint.stdout) && planted.stylelint.status !== 0 && /serupa\/no-raw-color/.test(planted.stylelint.stdout + planted.stylelint.stderr), detail: said(planted.eslint) + said(planted.stylelint) },
 ]));

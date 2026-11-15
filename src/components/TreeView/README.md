@@ -120,12 +120,13 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | --- | --- | --- |
 | `--tree-view-bg` | `surface` | The background. |
 | `--tree-view-text` | `text` | The labels (4.5:1 on bg). |
-| `--tree-view-item-bg-hover` | `surface-hover` | A row's background on hover: a step quieter than the selected row's, so the row pointed at and the selected one never look the same. |
+| `--tree-view-item-bg-hover` | `surface-hover` | A row's background on hover: zinc-100 in light, like the selected row's. |
 | `--tree-view-item-bg-selected` | `highlight` | The picked row's background. |
 | `--tree-view-item-indicator` | `highlight-indicator` | The 2px bar at the picked row's start. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--tree-view-icon-color` | `text-muted` | The chevrons and item icons. |
 | `--tree-view-focus-ring` | `focus-ring` | The ring inside the focused row. |
 | `--tree-view-item-bg-pressed` | `pressed` | A row's fill while it's held down. |
+| `--tree-view-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--tree-view-radius` | `radius-control` | The tree's corners (6px). |
 | `--tree-view-item-radius` | `radius-inner` | A row's corners (4px). |
 | `--tree-view-padding` | `spacing-1` | Space inside the tree (4px). |

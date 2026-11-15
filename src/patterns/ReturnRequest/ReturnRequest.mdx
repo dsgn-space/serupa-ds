@@ -1,0 +1,35 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './ReturnRequest.stories';
+
+<Meta of={Stories} />
+
+# Return request
+
+Sending back some of an order: which items and why, how they go back, where the money goes, and what happens next.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A page reached from an order, to return or exchange what was in it.
+- Not for cancelling an order that hasn't shipped: the Order status pattern does that in one step.
+- Not for a problem that needs a person: that's the Contact form pattern.
+
+## What each part is for
+
+- **The items are a named group of checkboxes.** One that can't be returned is disabled and says why next to it (1.3.1, 3.3.2).
+- **The reason is asked for only for an item you've chosen**, and labelled with its name: "Why are you returning the Linen shirt?" (3.3.2, 2.4.6).
+- **What's missing is said next to it** when you send, and focus goes to the first (3.3.1).
+- **How it goes back and where the money goes are named radio groups**, and a cost is said in the choice's own words (1.3.1).
+- **The refund is worked out as you choose**, with a pickup's cost taken off by name, and none for an item that arrived damaged or wrong.
+- **Start return shows it's busy**; one that fails says so next to the button and keeps every choice (3.3.4, 4.1.3).
+- **Once sent, the next steps take focus**: how to send it, by when, and when the money comes back (2.4.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.SendFails} />
+
+## What stays your app's job
+
+- **Making the return.** `onSend` gets the items with their reasons, how they go back and where the refund goes: resolve with the return's number, or reject.
+- **What can be returned.** Set `notReturnable` on an item with the reason in words; the pattern disables it.
+- **The refund.** The pattern adds it up for show; the server works out what's paid back.

@@ -82,7 +82,7 @@ export function buildTokensCss(t) {
   css += ':root {\n';
   for (const x of all.filter((x) => !themed(x))) css += line(x.name, x.value);
   for (const [k, v] of Object.entries(t.type.families)) css += `  --font-${k}: ${v};\n`;
-  for (const s of styles) css += line(`text-${s.name}`, `${s.fontWeight} ${s.fontSize}/${s.lineHeight} var(--font-${s.family})`);
+  for (const s of styles) css += line(`text-${s.name}`, `${s.fontWeight} ${s.fontSize}/${s.lineHeight} ${fam(s.family)}`);
   css += '}\n';
   css += contrastAndDensity(all, line);   // after :root, so data-density on the root wins over it
   css += tintedShadows(all, line);
@@ -91,7 +91,7 @@ export function buildTokensCss(t) {
   css += scripts(t, all);
   for (const s of styles) {
     const f = fluid(s.fontSize) && scaleOf(all, s.fontSize);
-    css += `.${s.name} {\n  font-family: var(--font-${s.family});\n  font-size: ${f ? `var(--text-${f})` : s.fontSize};\n  line-height: ${f ? snap('1em', ratio(s.lineHeight, s.fontSize)) : s.lineHeight};\n  font-weight: ${s.fontWeight};\n  letter-spacing: ${s.letterSpacing};\n`;
+    css += `.${s.name} {\n  font-family: ${fam(s.family)};\n  font-size: ${f ? `var(--text-${f})` : s.fontSize};\n  line-height: ${f ? snap('1em', ratio(s.lineHeight, s.fontSize)) : s.lineHeight};\n  font-weight: ${s.fontWeight};\n  letter-spacing: ${s.letterSpacing};\n`;
     if (s.fontStyle && s.fontStyle !== 'normal') css += `  font-style: ${s.fontStyle};\n`;
     if (s.textTransform) css += `  text-transform: ${s.textTransform};\n`;
     if (s.opticalSize != null) css += `  font-variation-settings: "opsz" ${s.opticalSize};\n`;
@@ -220,7 +220,8 @@ function roundness(all, line) {
 // (a data-brand section's) as a relative color's origin, so every tinted shadow there was dropped.
 const TINT = (_, a) => `color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) ${Math.round(Number(a) * 100)}%, transparent)`;
 function tintedShadows(all, line) {
-  const box = all.filter((x) => /^shadow-(2xs|xs|sm|md|lg|xl|2xl)$/.test(x.name));
+  // The directional modal shadows (elevation-modal-up, -left, -right) are box shadows of their own, tinted alike.
+  const box = all.filter((x) => /^(?:shadow-(2xs|xs|sm|md|lg|xl|2xl)|elevation-modal-(?:up|left|right))$/.test(x.name));
   const at = (x) => (typeof x.value === 'object' ? Object.values(x.value)[0] : x.value);
   // The elevation roles (elevation-overlay → shadow-lg) are set again beside the shadows they name: a custom property's
   // var() is worked out where it's set, so one set only on :root would keep the root's shadow inside data-shadow="brand".
@@ -237,6 +238,10 @@ function tintedShadows(all, line) {
 // narrows the viewport, so at 200% a heading grows only about 1.6 times; by 300% it is at least double (3 × 70%,
 // GR82). The --text-* sizes, the --text-type-*
 // shorthands and the .type-* classes all follow; data-type-scale="fixed" puts the fixed sizes back in a section.
+// A style's font-family. family "heading" (the display and heading roles) is --font-heading, the faces an app names
+// for its headings (unset by default), then the sans stack. Both are read where the heading is drawn, so a :lang()
+// block's --font-sans (its CJK font, in scripts() below) still applies under a custom heading face.
+const fam = (f) => (f === 'heading' ? 'var(--font-heading, var(--font-sans)), var(--font-sans)' : `var(--font-${f})`);
 const rem = (v) => (/^[\d.]+rem$/.test(v) ? parseFloat(v) : null);
 const fluid = (v) => rem(v) != null && rem(v) >= 1.5;
 const r4 = (n) => +n.toFixed(4);
@@ -249,7 +254,7 @@ const scaleOf = (all, v) => sizesOf(all).find((x) => x.value === v)?.name.slice(
 function fluidType(all, styles, line) {
   const sizes = sizesOf(all), big = styles.filter((s) => scaleOf(all, s.fontSize));
   const lead = (x) => all.find((y) => y.name === `${x.name}--line-height`)?.value;
-  const short = (s, lh) => line(`text-${s.name}`, `${s.fontWeight} var(--text-${scaleOf(all, s.fontSize)})/${lh} var(--font-${s.family})`);
+  const short = (s, lh) => line(`text-${s.name}`, `${s.fontWeight} var(--text-${scaleOf(all, s.fontSize)})/${lh} ${fam(s.family)}`);
   // A line height follows its size in the fluid scale, at the ratio it has at full size, snapped up to the 4px grid
   // (AX9): on a phone a 21px heading had a 36px line (1.71) and a 33.6px display size a 33.6px one, off the grid.
   const fl = (size, lh) => snap(`var(--text-${size})`, ratio(lh, all.find((x) => x.name === `text-${size}`).value));

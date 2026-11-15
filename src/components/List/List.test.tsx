@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMoreContrast } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMoreContrast, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
 import { Card as SurfaceCard } from '../Card/Card';
@@ -108,7 +108,7 @@ describe('List', () => {
 
   test('link and button items shade on hover; static items don\'t', async () => {
     await render(<><People /><Card clicks={[]} /></>);
-    const shade = bg('var(--surface-muted)');
+    const shade = bg('var(--surface-hover)');
     expect(css(el('ilink')).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     await userEvent.hover(titleOf('ilink'));
     await expect.poll(() => css(el('ilink')).backgroundColor).toBe(shade);
@@ -165,7 +165,7 @@ describe('List', () => {
   test('selected: aria-current and shaded, with no bar; more contrast draws a 2px bar at the start (GR407, GR413)', async () => {
     await render(<Card clicks={[]} />);
     const li = el('isel'), s = css(li);
-    expect([li.querySelector('a')!.getAttribute('aria-current'), s.backgroundColor]).toEqual(['true', bg('var(--surface-muted)')]);
+    expect([li.querySelector('a')!.getAttribute('aria-current'), s.backgroundColor]).toEqual(['true', bg('var(--surface-hover)')]);
     expect(s.boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);   // no width: nothing drawn, whatever the fill
     await withMoreContrast(() => { expect(s.boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/); expect(s.boxShadow).toContain(color('var(--highlight-indicator)')); });
   });
@@ -186,10 +186,10 @@ describe('List', () => {
     expect([a.hasAttribute('data-router'), a.getAttribute('href'), a.className]).toEqual([true, '#router/team', 'dk-list__main']);
   });
 
-  test('disabled: no href, aria-disabled, out of the tab order, dimmed, clicks do nothing', async () => {
+  test('disabled: no href, aria-disabled, out of the tab order, in disabled-text, clicks do nothing', async () => {
     await render(<Card clicks={[]} />);
     const a = main('idis');
-    expect([a.getAttribute('href'), a.getAttribute('aria-disabled'), a.tabIndex, css(a).opacity]).toEqual([null, 'true', -1, '0.5']);
+    expect([a.getAttribute('href'), a.getAttribute('aria-disabled'), a.tabIndex, disabledLook(a)]).toEqual([null, 'true', -1, 'neutral']);
     await userEvent.click(titleOf('idis'));
     expect(location.hash).toBe('');
   });
@@ -253,7 +253,7 @@ describe('List', () => {
       const title = css(titleOf('iada')).color, desc = css(titleOf('iada').nextElementSibling).color;
       for (const [name, fg, back, need] of [
         ['title', title, 'var(--surface)', 4.5], ['description', desc, 'var(--surface)', 4.5],
-        ['title on a shaded row', title, 'var(--surface-hover)', 4.5], ['description on a shaded row', desc, 'var(--surface-hover)', 4.5],
+        ['title on a shaded row', title, 'var(--surface-hover)', 4.5], ['description on a shaded row (text-muted-shaded)', 'var(--text-muted-shaded)', 'var(--surface-hover)', 4.5],
         ['selected bar', 'var(--primary)', 'var(--surface-hover)', 3],
       ] as const) {
         const r = contrast(fg, back);

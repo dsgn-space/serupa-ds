@@ -125,13 +125,14 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `surface` | `white` | `zinc-900` | Card, panel and bar background. |
 | `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. Never the fill of a control. |
 | `surface-control` | `zinc-50` | `zinc-900` | The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. The same as `surface-muted` in light; in dark a step above the page, so a control never looks sunk into it. |
-| `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer: one quiet step off `surface`, and a step under `highlight`, so an item pointed at never looks like the current one. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
-| `surface-hover-raised` | `zinc-50` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer, a Navbar menu panel): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1; in emerald dark halfway from `zinc-900` to `zinc-800`. |
+| `surface-hover` | `zinc-100` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer: a step off `surface`, in light the same as `highlight`. Grey text in such a row reads `text-muted-shaded`. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
+| `surface-hover-raised` | `zinc-100` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer, a Navbar menu panel): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1; in emerald dark halfway from `zinc-900` to `zinc-800`. |
 | `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
 | `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
 | `text` | `zinc-900` | `zinc-50` | Body text and headings on `surface`. |
 | `text-muted` | `zinc-500` | `zinc-400` | Secondary text, captions, placeholders. |
+| `text-muted-shaded` | `zinc-600` | `zinc-400` | Secondary text in a hovered, selected or striped row, where `text-muted` on `zinc-100` would be 4.4:1. List, Table and InlineEdit set it on their shaded rows. |
 | `text-inverse` | `white` | `zinc-900` | Text on `surface-inverse`. |
 | `border` | `zinc-200` | `zinc-800` | Default borders and dividers, and every card's edge. In dark a quiet step off the `zinc-900` cards and bars it outlines. Never a control's boundary: fields use `field-border`, other controls `border-control`. |
 | `border-strong` | `zinc-300` | `zinc-600` | Emphasised dividers and outlines. Form fields use `field-border`. |
@@ -169,6 +170,9 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. In dark, a fill that sets a field apart from the page. |
 | `field-raised` | `white` | `#333338` | `field` on a raised or floating surface: Dialog, Drawer, Popover, an elevated Card and `bg-surface-raised` or `bg-surface-overlay` panels set `--field` to it, so in dark a field there steps up from the `zinc-800` surface instead of matching it. Emerald dark keeps `zinc-800` (its overlays are `zinc-900`). |
 | `field-readonly` | `zinc-50` | `zinc-900` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
+| `disabled-text` | `zinc-500` | `zinc-400` | Labels, marks and icons of a disabled control: at least 3:1 on every surface, `zinc-700` / `zinc-300` with more contrast. |
+| `disabled-surface` | `zinc-100` | `zinc-800` | Fill of a disabled control that has one (a checked box, a switch track, a slider fill's track). |
+| `disabled-border` | `zinc-300` | `zinc-700` | Edge of a disabled control or field. |
 | `field-border` | `zinc-300` | `zinc-700` | Border of form fields, soft by design: under the 3:1 WCAG 1.4.11 asks of a control's edge (see [Contrast, checked in every theme](#contrast-checked-in-every-theme)). |
 | `field-border-hover` | `zinc-400` | `zinc-600` | Field border on hover: the resting `field-border` one gray step stronger. The accent is kept for focus. |
 | `border-control` | `zinc-500` | `zinc-400` | The edge of a control that isn't a field: Slider and Switch tracks, Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches, FileUpload's drop area, SignaturePad's box. 3:1+ on `surface` (WCAG 1.4.11). |
@@ -231,8 +235,11 @@ The type scales and font families, named by role (`text-xl`, `font-semibold`, `t
 | Token | Font | Use |
 | --- | --- | --- |
 | `font-sans` | Inter | Default for UI and body text. |
+| `font-heading` | Unset: headings use `font-sans` | Your own face for headings: the display and heading roles, Heading, and Dialog and Drawer titles read it. |
 | `font-serif` | Georgia | Editorial or long-form accents. |
 | `font-mono` | The system's monospace: SF Mono, Menlo, Consolas or Liberation Mono | Code, IDs, tabular figures. A bare `<kbd>` uses `font-sans`, like `<Kbd>`. |
+
+**Your own heading face.** Set `--font-heading` to the face, or faces, to try first: `:root { --font-heading: "Fraunces"; }`. Name faces only, not a generic family such as `serif`: the language's sans stack follows it, so a character the face doesn't have, such as Japanese or Arabic text, still finds its Noto font. Body text stays in `font-sans`.
 
 Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900). Icons are SVGs, not a font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
 
@@ -510,7 +517,7 @@ Rules of thumb:
 - Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
-- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary: use `text-muted`.
+- `opacity-disabled` (50%) for a disabled thing of your own whose colors you don't choose, such as a picture or a user's color swatch. Serupa's controls draw disabled in neutral colors instead (`disabled-text`, `disabled-surface`, `disabled-border`; see States), which stay readable where a fade may not. Don't lower the opacity of text to make it secondary: use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 
@@ -534,7 +541,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 - Keep to one raised level per region. A card inside a card stays at level 1; give the inner one `filled` or no border instead of a second shadow.
 - Elevation means "this is above the page", not "this is important". Use color and type for emphasis.
 
-**Roles.** The components take their shadow from a role named for the level, not from a step of the shadow scale: `elevation-rest` (level 1, `shadow-xs`), `elevation-raised` (level 2 and the tooltip, `shadow-md`), `elevation-overlay` (level 3, `shadow-lg`) and `elevation-modal` (level 4, `shadow-xl`). `elevation-part` (`shadow-sm`) lifts a part over the control it sits on: a slider thumb, a segmented control's indicator, carousel arrows, a table head once rows scroll under it. Give your own surfaces the same roles. They follow `data-shadow="brand"` like the shadows they name, in a section as well as on the page.
+**Roles.** The components take their shadow from a role named for the level, not from a step of the shadow scale: `elevation-rest` (level 1, `shadow-xs`), `elevation-raised` (level 2 and the tooltip, `shadow-md`), `elevation-overlay` (level 3, `shadow-lg`) and `elevation-modal` (level 4, `shadow-xl`). The light is above the page, so a shadow falls toward what the surface sits over: `elevation-modal-up` for a panel against the bottom edge (a bottom sheet), and `elevation-modal-left` and `elevation-modal-right` for one against the right or left edge, cast toward the page. Drawer picks the one for its side. `elevation-part` (`shadow-sm`) lifts a part over the control it sits on: a slider thumb, a segmented control's indicator, carousel arrows, a table head once rows scroll under it. Give your own surfaces the same roles. They follow `data-shadow="brand"` like the shadows they name, in a section as well as on the page.
 
 **Light and dark**
 
@@ -1063,7 +1070,7 @@ Every interactive component moves through the same eight states, in this order o
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
 | Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
 | Dragged | It's being moved, by pointer or by keyboard (SortableList, Kanban) | Lifted to level 2: a `primary` border and the `elevation-raised` shadow, a `grabbing` cursor; a `Highlight` outline in forced colors | `primary`, `elevation-raised` |
-| Disabled | It can't be used (`disabled`, `aria-disabled`) | The whole thing at `opacity-disabled`, with a `not-allowed` cursor and no hover or pressed | `opacity-disabled` |
+| Disabled | It can't be used (`disabled`, `aria-disabled`) | Neutral colors at full opacity: `disabled-text` for labels and marks (at least 3:1 on every surface), `disabled-surface` for a fill, `disabled-border` for an edge; a `not-allowed` cursor and no hover or pressed | `disabled-text`, `disabled-surface`, `disabled-border` |
 | Invalid | Its value is wrong (`aria-invalid`) | A `danger` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `danger`, `danger-text` |
 
 Focus shows on top of every other state, and disabled turns hover and pressed off. A component's README lists its own values under "States".
@@ -1098,7 +1105,7 @@ Interactivity utilities, as classes in `bundle.css`. Colors come from the palett
 
 Rules of thumb:
 
-- Cursors: `cursor-pointer` on anything clickable that isn't a link (Button does this), `cursor-not-allowed` when disabled, `cursor-progress` while loading, `cursor-grab`/`cursor-grabbing` on draggable items, `cursor-text` on editable areas.
+- Cursors: the components read four tokens, `--cursor-interactive` (`pointer`), `--cursor-disabled` (`not-allowed`), `--cursor-grab` and `--cursor-grabbing`, so one line on `:root` changes them everywhere (`--cursor-interactive: default` for a desktop-app feel). Write `var(--cursor-interactive)` in your own CSS too: the `serupa/no-raw-cursor` stylelint rule warns about the written-out keywords. `cursor-pointer` on anything clickable that isn't a link (Button does this), `cursor-not-allowed` when disabled, `cursor-progress` while loading, `cursor-grab`/`cursor-grabbing` on draggable items, `cursor-text` on editable areas.
 - Form controls: `accent-primary` makes checkboxes, radios, range sliders and progress bars match the theme; `caret-primary` colors the text cursor. Use `appearance-none` only when you redraw the control yourself, and keep its focus style.
 - `state-layer` gives the system's hover, pressed and dragged states to a surface whose color serupa doesn't know: a tile in a category color, a brand panel, a row tinted by data. Put it on the clickable element itself; its text color sets the tint, so check that text against the background as usual. Components keep their own tuned hover colors.
 - Dark themes: put `scheme-dark` on the root (or `scheme-light-dark`) so native scrollbars, inputs and date pickers turn dark too.

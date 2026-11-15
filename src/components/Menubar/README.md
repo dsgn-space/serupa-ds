@@ -58,7 +58,7 @@ Drawn from the `Open` story.
 
 - **Role and name:** `role="menubar"`, named by `aria-label` or `aria-labelledby`. Each name is a `menuitem` button with `aria-haspopup="menu"` and `aria-expanded`, and its menu is a `menu` named by it. A disabled menu's name has `aria-disabled` and stays reachable.
 - **Keyboard:** below. The bar keeps the last name used as its Tab stop.
-- **Pointer:** a click opens or closes a menu, a mouse press opens it so it can be dragged onto an item (as in Menu). While a menu is open, pointing at another name opens that one.
+- **Pointer:** a click opens or closes a menu, a mouse press opens it so it can be dragged onto an item (as in Menu). While a menu is open, pointing at another name opens that one, and the two swap at once with no fade, as in a desktop app.
 - **Contrast:** names read 4.5:1 on the bar, under the pointer and while open, and the focus ring 3:1, in every theme (`Menubar.test.tsx`). In forced colors the open name is drawn in Highlight.
 - **What's still yours:** the bar's name, wiring the shortcuts you show, and keeping commands where people expect them.
 
@@ -111,6 +111,7 @@ Each is an optional override: set it on the page, a container or one Menubar. Th
 | `--menubar-item-bg-pressed` | `pressed` | Its background while held down, one step past hover. |
 | `--menubar-item-bg-open` | `pressed` | The background of the name whose menu is open. |
 | `--menubar-focus-ring` | `focus-ring` | The focus ring around a menu's name (3:1 on bg). |
+| `--menubar-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--menubar-item-radius` | `radius-control` | A menu name's corners (6px). |
 | `--menubar-padding` | `spacing-1` | Space inside the bar, on every side (4px). |
 | `--menubar-gap` | `spacing-1` | Space between the menus' names (4px). |

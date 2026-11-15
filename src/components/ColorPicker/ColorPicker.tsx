@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, omit } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
 import { component } from '../../internal/component';
@@ -94,7 +95,8 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
   const [missing, setMissing] = React.useState(false);
   if (missing && value) setMissing(false);
   const invalid = !!props.invalid || truthy(props['aria-invalid']) || missing;
-  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
+  const sized = useControlSize(props.size);
+  const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const [text, setText] = React.useState((value || '').replace('#', ''));
   const typing = React.useRef(false);
   // A code on its way to six digits ("1d4") isn't marked invalid until Enter: only one that can't become a color is.

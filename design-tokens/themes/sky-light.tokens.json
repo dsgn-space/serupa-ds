@@ -122,8 +122,8 @@
     },
     "surface-hover": {
       "$type": "color",
-      "$value": "{color.zinc-50}",
-      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): one quiet step off `surface` in every theme (zinc-50 light, zinc-800 dark), and a step under `highlight`, so an item pointed at never looks like the current one.",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): a step off `surface` in every theme (zinc-100 light, the same as `highlight`; zinc-800 dark). Grey text on it reads `text-muted-shaded`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover"
@@ -132,8 +132,8 @@
     },
     "surface-hover-raised": {
       "$type": "color",
-      "$value": "{color.zinc-50}",
-      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-50 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1: always a step under the current item's fill.",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-100 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1. Grey text on it reads `text-muted-shaded`.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--surface-hover-raised"
@@ -177,6 +177,36 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--field-readonly"
+        }
+      }
+    },
+    "disabled-text": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. The text, icon and mark of anything disabled, in place of fading it: the same neutral in every brand, so a disabled primary, danger or brand control reads as off, never as a faint version of itself. At least 3:1 on `disabled-surface` and the surfaces (4.5:1 with more contrast).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--disabled-text"
+        }
+      }
+    },
+    "disabled-surface": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. The fill of a disabled control that has one (a checked box, a switch's track, a slider's fill, the selected segment): a neutral a step off the page, whatever its color when on.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--disabled-surface"
+        }
+      }
+    },
+    "disabled-border": {
+      "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. The edge of a disabled control: a box, a track, a field's border.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--disabled-border"
         }
       }
     },
@@ -355,6 +385,16 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--text-muted"
+        }
+      }
+    },
+    "text-muted-shaded": {
+      "$type": "color",
+      "$value": "{color.zinc-600}",
+      "$description": "Alias. Secondary text inside a shaded row (`surface-hover`, `surface-hover-raised`: hovered, selected or striped), where `text-muted` would fall under 4.5:1 on zinc-100: zinc-600 in light, `text-muted`'s zinc-400 in dark. 4.5:1+ on either fill in every theme.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--text-muted-shaded"
         }
       }
     },

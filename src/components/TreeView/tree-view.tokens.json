@@ -25,7 +25,7 @@
       "item-bg-hover": {
         "$type": "color",
         "$value": "{color.surface-hover}",
-        "$description": "A row's background on hover: a step quieter than the selected row's, so the row pointed at and the selected one never look the same.",
+        "$description": "A row's background on hover: zinc-100 in light, like the selected row's.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tree-view-item-bg-hover"
@@ -79,6 +79,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tree-view-item-bg-pressed"
+          }
+        }
+      },
+      "text-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-text}",
+        "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tree-view-text-disabled"
           }
         }
       }

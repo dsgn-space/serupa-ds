@@ -96,7 +96,7 @@ Drawn from the `BottomEnd` story, opened.
 
 | Key | On the button | In the menu |
 | --- | --- | --- |
-| Enter, Space | Opens it on the first item | Chooses the item |
+| Enter, Space | Opens it on the first item | Chooses the item. Space on a `MenuCheckboxItem` or `MenuRadioItem` changes it and keeps the menu open, so several settings take one trip |
 | ↓ / ↑ | Opens it on the first / last item | The next / previous item, wrapping |
 | Home, End | | The first or last item |
 | Letters | | The next item starting with them. Letters typed within half a second make one word ("de" finds Delete past Duplicate), the same letter again steps through the items starting with it, and accents and case don't matter ("e" finds "Éditer"). A Space within half a second of a letter is part of the word ("save as" finds "Save as…"), so it doesn't choose |
@@ -109,7 +109,7 @@ On a `ContextMenu`'s target, Shift+F10 or the Menu key opens it at the focused e
 
 In a submenu, ↑ ↓ Home End and letters move among its own items only. Choosing an item in a submenu closes every level and focus goes back to the button.
 
-A mouse opens the menu as the button is pressed, so it can be dragged onto an item and let go there to choose it, as in a desktop app's menus; a quick click opens it and leaves it open. A touch or pen opens it on the tap, and so does a mouse when the trigger has its own `onClick` (which can call `preventDefault()` to stop it). Hovering an item highlights it, and a press outside closes the menu. Hovering a `MenuSub` opens its submenu after 150ms, and it closes 150ms after the pointer settles on another item, so the pointer can cut across an item on the way into the submenu.
+A mouse opens the menu as the button is pressed, so it can be dragged onto an item and let go there to choose it, as in a desktop app's menus; a quick click opens it and leaves it open. A touch or pen opens it on the tap, and so does a mouse when the trigger has its own `onClick` (which can call `preventDefault()` to stop it). Hovering an item highlights it, and a press outside closes the menu. Hovering a `MenuSub` opens its submenu after 150ms, and it closes 150ms after the pointer settles on another item. While the pointer keeps moving toward the submenu, across the items below or above on the way, it stays open, as native menus do.
 
 ## Props
 
@@ -203,6 +203,7 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | `--menu-danger` | `danger-text` | A destructive item's label and icon. |
 | `--menu-danger-bg-active` | `danger-subtle` | A highlighted destructive item's background. |
 | `--menu-separator` | `border` | The line between groups. |
+| `--menu-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Shadow**
 

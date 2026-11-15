@@ -35,7 +35,7 @@
   margin: var(--spacing-0); padding: var(--spacing-0) var(--spacing-2); border: var(--spacing-0);
   border-inline-start: var(--border-width-2) solid var(--dk-evc-tone); border-radius: var(--event-calendar-event-radius, var(--radius-inner));
   background: var(--dk-evc-fill); color: var(--event-calendar-event-text, var(--text)); font: inherit; font-size: var(--text-xs); line-height: var(--text-xs--line-height);
-  text-align: start; cursor: pointer; touch-action: manipulation;
+  text-align: start; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-event-calendar__event--info { --dk-evc-tone: var(--event-calendar-info-tone, var(--info)); --dk-evc-fill: var(--event-calendar-info-bg, var(--info-subtle)); }
 .dk-event-calendar__event--success { --dk-evc-tone: var(--event-calendar-success-tone, var(--success)); --dk-evc-fill: var(--event-calendar-success-bg, var(--success-subtle)); }
@@ -51,7 +51,7 @@
 .dk-event-calendar__more {
   margin: var(--spacing-1) var(--spacing-0) var(--spacing-0); padding: var(--spacing-0) var(--spacing-2); min-height: var(--spacing-6);
   border: var(--spacing-0); border-radius: var(--event-calendar-event-radius, var(--radius-inner)); background: transparent;
-  color: var(--event-calendar-muted, var(--text-muted)); font: inherit; font-size: var(--text-xs); font-weight: var(--font-medium); cursor: pointer; touch-action: manipulation;
+  color: var(--event-calendar-muted, var(--text-muted)); font: inherit; font-size: var(--text-xs); font-weight: var(--font-medium); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 @media (hover: hover) { .dk-event-calendar__more:hover { background: var(--event-calendar-more-bg-hover, var(--surface-hover)); color: var(--event-calendar-text, var(--text)); } }
 .dk-event-calendar__more:active { background: var(--event-calendar-more-bg-pressed, var(--pressed)); }
@@ -114,11 +114,12 @@
 }
 /* In the hours an event fills its time: the time over the title, both wrapping, cut at its bottom. */
 .dk-event-calendar__timed .dk-event-calendar__event { height: var(--sizing-full); flex-direction: column; align-items: stretch; gap: var(--spacing-0); padding: var(--spacing-0\.5) var(--spacing-1); overflow: hidden; }
-.dk-event-calendar__timed .dk-event-calendar__title { white-space: normal; hyphens: auto; }
+/* The title ends on a whole line: what's left of the event's height under its time line, in whole lines. */
+.dk-event-calendar__timed .dk-event-calendar__title { white-space: normal; hyphens: auto; max-height: round(down, calc(var(--dk-evc-hour) * var(--dk-evc-for) - 2 * var(--border-width-1) - 2 * var(--spacing-0\.5) - 1lh), 1lh); }   /* stylelint-disable-line serupa/no-raw-value -- a line's height (1lh) has no token */
 .dk-event-calendar__timed .dk-event-calendar__time { white-space: normal; }
 /* Under 45 minutes there's room for one line: the time and the title side by side, the title cut short. */
 .dk-event-calendar__timed > li[data-short] .dk-event-calendar__event { flex-direction: row; align-items: center; gap: var(--spacing-1); padding-block: var(--spacing-0); }
-.dk-event-calendar__timed > li[data-short] .dk-event-calendar__title { white-space: nowrap; overflow-wrap: normal; }
+.dk-event-calendar__timed > li[data-short] .dk-event-calendar__title { white-space: nowrap; overflow-wrap: normal; max-height: none; }
 .dk-event-calendar__now {
   position: absolute; inset-inline: var(--spacing-0); z-index: var(--z-10); top: calc(var(--dk-evc-hour) * var(--dk-evc-at));
   border-top: var(--border-width-2) solid var(--event-calendar-now, var(--primary)); pointer-events: none;
@@ -127,8 +128,8 @@
 /* Creating and moving (onSlotSelect, onEventChange). An event that moves shows a grab cursor, and while it's dragged
    it's drawn where it would land, lifted with the overlay shadow. A slot dragged down a day's hours is outlined there
    in the focus color. Its end, at the bottom of a timed event, drags its length. Nothing in the hours selects as text. */
-.dk-event-calendar__event--movable { cursor: grab; }
-.dk-event-calendar[data-dragging], .dk-event-calendar[data-dragging] .dk-event-calendar__event { cursor: grabbing; -webkit-user-select: none; user-select: none; }
+.dk-event-calendar__event--movable { cursor: var(--cursor-grab); }
+.dk-event-calendar[data-dragging], .dk-event-calendar[data-dragging] .dk-event-calendar__event { cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
 .dk-event-calendar__event--dragging { box-shadow: var(--elevation-overlay); }
 .dk-event-calendar__hours { -webkit-user-select: none; user-select: none; }
 .dk-event-calendar__resize {

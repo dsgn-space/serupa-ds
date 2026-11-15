@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { commands, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Textarea } from './Textarea';
 
@@ -233,11 +233,11 @@ describe('Textarea', () => {
     await expect.poll(() => box('inv').bs).toContain(d);
   });
 
-  test('read-only: field-readonly background, no handle; disabled: native disabled, 50%, not-allowed, no handle', async () => {
+  test('read-only: field-readonly background, no handle; disabled: native disabled, disabled-text, not-allowed, no handle', async () => {
     await setup();
     const ro = box('ro'), dis = box('dis');
     expect(ro.bg).not.toBe(box('md').bg);
-    expect([ro.resize, el('ro').readOnly, el('dis').disabled, dis.op, dis.resize, css(el('dis')).cursor]).toEqual(['none', true, true, '0.5', 'none', 'not-allowed']);
+    expect([ro.resize, el('ro').readOnly, el('dis').disabled, dis.op, disabledLook(el('dis')), dis.resize, css(el('dis')).cursor]).toEqual(['none', true, true, '1', 'neutral', 'none', 'not-allowed']);
     expect(ro.wrap).toMatch(/readonly/);
     expect(dis.wrap).toMatch(/disabled/);
   });

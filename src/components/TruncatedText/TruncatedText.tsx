@@ -78,7 +78,8 @@ export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTex
   }, []);
 
   // A tap (touch or pen) shows it and the next tap hides it; a mouse has its hover. The Tooltip hides on the press,
-  // so whether it was showing is read before that.
+  // so whether it was showing is read before that. Inside a control the tap is the control's (a picker opening, a
+  // link followed): the whole text would cover what it opens.
   const press = React.useRef({ touch: false, open: false });
   const refs = useMergedRef(ref, (n) => { el.current = n; });
   const text = React.createElement(oneOf(TAGS, as, 'span'), {
@@ -91,7 +92,7 @@ export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTex
     tabIndex: cut && !inside ? 0 : rest.tabIndex,
     className: cn('dk-truncated-text', clamp && 'dk-truncated-text--clamp', className),
     onPointerDown: (e: React.PointerEvent<HTMLElement>) => { press.current = { touch: e.pointerType !== 'mouse', open }; if (onPointerDown) onPointerDown(e); },
-    onClick: (e: React.MouseEvent<HTMLElement>) => { if (onClick) onClick(e); if (cut && press.current.touch && !press.current.open) setOpen(true); },
+    onClick: (e: React.MouseEvent<HTMLElement>) => { if (onClick) onClick(e); if (cut && !inside && press.current.touch && !press.current.open) setOpen(true); },
   }, children);
   return <Tooltip visual content={children} open={open} onOpenChange={setOpen} disabled={!cut} placement={placement}>{text}</Tooltip>;
 });

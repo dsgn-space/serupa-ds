@@ -35,6 +35,15 @@ function Main({ r, lr }: { r?: React.Ref<HTMLElement>; lr?: React.Ref<HTMLAnchor
 }
 
 describe('Navbar', () => {
+  test('a brand passed as text that the actions cut short shows whole on hover', async () => {
+    await page.viewport(360, 640);
+    await render(<Navbar aria-label="Main" brand="Acme Corporation International Holdings" actions={<Button size="sm">Sign in to your account</Button>} />);
+    const t = document.querySelector<HTMLElement>('[data-component="navbar"] [data-component="truncated-text"]')!;
+    await expect.poll(() => t.hasAttribute('data-truncated')).toBe(true);
+    await userEvent.hover(t);
+    await expect.poll(() => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]')?.textContent).toBe('Acme Corporation International Holdings');
+  });
+
   test('NavbarLink: as is typed (G10), with the props and ref of the element it names, an <a>\'s by default', async () => {
     const a = React.createRef<HTMLAnchorElement>(), r = React.createRef<HTMLAnchorElement>(), b = React.createRef<HTMLButtonElement>(), wrong = React.createRef<HTMLAnchorElement>();
     await render(<Navbar id="nav-t">
@@ -82,9 +91,9 @@ describe('Navbar', () => {
     expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px 0px 0px 0px inset$/)]);
     await withMoreContrast(() => expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px -2px 0px 0px inset$/)]));
     await userEvent.hover(el('lp'));
-    // Under the pointer a link takes the text color and a fill one step quieter than the current page's (GR415).
+    // Under the pointer a link takes the text color and the hover fill, zinc-100 in light like the current page's;
+    // only the current page draws the bar, with more contrast.
     await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color, css(el('lp')).boxShadow]).toEqual([color('var(--surface-hover)'), active.color, 'none']);
-    expect(color('var(--surface-hover)')).not.toBe(active.bg);
     await userEvent.hover(cur);
     await expect.poll(() => css(cur).backgroundColor).not.toBe(active.bg);
     await away();
@@ -561,9 +570,8 @@ describe('NavbarMenu (RU14)', () => {
     expect(css(alerts).boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/));
     await userEvent.hover(dash);
-    // The panel floats, so the link pointed at takes the raised hover step: still not the current link's fill (GR415).
+    // The panel floats, so the link pointed at takes the raised hover step, and never the current link's bar.
     await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([color('var(--surface-hover-raised)'), 'none']);
-    expect(css(dash).backgroundColor).not.toBe(css(alerts).backgroundColor);
     document.documentElement.dir = 'rtl';
     try { await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/)); } finally { document.documentElement.dir = ''; }
     await away();

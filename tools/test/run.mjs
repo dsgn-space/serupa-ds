@@ -13,7 +13,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -60,7 +60,9 @@ if (arg('--since')) {
   const storyWide = diff.stdout.split('\n').some((l) => STORY_WIDE.includes(l.split('\t')[2]));
   // It changes no picture and no Storybook page, though: Visual and Storybook stay narrowed to the changed components.
   const wide = storyWide && !['visual', 'storybook'].includes(arg('--group'));
-  const changed = diff.status === 0 && !wide ? affectedComponents(scopeFiles(diff.stdout)) : null;
+  // Visual leaves out what draws main's pictures and the branch's alike (visualScope in lib.mjs).
+  const scope = diff.status === 0 ? (arg('--group') === 'visual' ? visualScope(scopeFiles(diff.stdout)) : scopeFiles(diff.stdout)) : null;
+  const changed = scope && !wide ? affectedComponents(scope) : null;
   sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   changedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && /^src\/.+\.test\.tsx?$/.test(f) && !/^src\/(components|blocks|patterns)\//.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
@@ -138,6 +140,18 @@ const steps = [
   vitest('Checks (Vitest)', 'checks', 'checks', ...(process.env.SERUPA_SHARD && arg('--group') === 'checks' ? [`--shard=${process.env.SERUPA_SHARD}`] : [])),
   ...Object.entries(GROUPS).flatMap(([g, list]) => list.map(node(g))),
 ];
+// SERUPA_VISUAL_BASE=<main's storybook-static> (CI on a pull request, ADR-0016): Visual draws main's pictures first, from
+// that build, then compares this tree with them and reports what differs, for review, instead of comparing with the
+// committed pictures, which another pull request's merge could have made stale.
+if (process.env.SERUPA_VISUAL_BASE && !update.length) {
+  const main = path.join(PROJECT, '.visual-main'), report = path.join(PROJECT, '.visual-review');
+  fs.rmSync(main, { recursive: true, force: true });
+  fs.rmSync(report, { recursive: true, force: true });
+  const at = steps.findIndex((step) => step[3] === 'visual');
+  if (at >= 0) steps.splice(at, 1,
+    ["Visual snapshots: main's", 'node', [path.join(HERE, 'visual.mjs'), '--update'], 'visual', { SERUPA_STORYBOOK: process.env.SERUPA_VISUAL_BASE, SERUPA_VISUAL_DIR: main }],
+    ['Visual snapshots: this change against main', 'node', [path.join(HERE, 'visual.mjs')], 'visual', { SERUPA_VISUAL_DIR: main, SERUPA_VISUAL_REPORT: report }]);
+}
 if (arg('--group')) {
   const g = arg('--group');
   if (!steps.some((step) => step[3] === g)) { console.error(`Unknown --group "${g}" (checks, components, visual or storybook)`); process.exit(2); }

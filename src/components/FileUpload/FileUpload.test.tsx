@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
 import { formatNumber } from '../FormattedNumber/formatNumber';
@@ -47,6 +47,19 @@ describe('FileUpload', () => {
     expect(el.className).toMatch(/extra/);
     expect([el.dataset.component, el.querySelector(TITLE)!.textContent, btn.textContent, document.getElementById(btn.getAttribute('aria-describedby')!)!.textContent]).toEqual(['file-upload', 'Drag files here', 'Choose files', 'Images or PDF, up to 1 MB']);
     expect([inp.accept, inp.multiple, inp.name, inp.id, inp.getAttribute('aria-hidden'), inp.tabIndex]).toEqual(['image/*,.pdf', true, 'docs', 'many', 'true', -1]);
+  });
+
+  test('pointing at the drop area darkens its outline, as a field does; not while disabled, read-only or invalid', async () => {
+    await render(<div><FileUpload data-testid="live" /><FileUpload data-testid="off" disabled /><FileUpload data-testid="ro" readOnly /><FileUpload data-testid="bad" invalid /></div>);
+    const zone = (id: string) => document.querySelector(`[data-testid=${id}] ${ZONE}`) as HTMLElement;
+    const edge = (id: string) => getComputedStyle(zone(id)).borderTopColor;
+    for (const id of ['live', 'off', 'ro', 'bad']) {
+      const at = edge(id);
+      await userEvent.hover(zone(id));
+      await new Promise((r) => setTimeout(r, 400));   // past the outline's hover transition
+      expect(edge(id) !== at, id).toBe(id === 'live');
+      await userEvent.unhover(zone(id));
+    }
   });
 
   test('form: a FileUpload outside its form submits with it (the native input carries the form attribute)', async () => {
@@ -264,16 +277,15 @@ describe('FileUpload', () => {
     expect(on.current).toBe(rootOf('ffr'));
   });
 
-  test('disabled: the button and input are disabled, the area faded', async () => {
+  test('disabled: the button and input are disabled, the area in the neutral disabled colors', async () => {
     await render(<FileUpload id="dis" disabled />);
     const el = rootOf('dis');
     expect([choose(el).disabled, input(el).disabled]).toEqual([true, true]);
-    await expect.poll(() => getComputedStyle(el.querySelector(ZONE)!).opacity).toBe('0.5');
-    // The button inside is faded once, with the area, as every other disabled control is (at 0.5): its own disabled
-    // fade on top took it to 0.25.
+    await expect.poll(() => disabledLook(el.querySelector(ZONE))).toBe('neutral');
+    // Nothing inside is faded: the area and its button are drawn in the neutral disabled colors at full opacity.
     let shown = 1;
     for (let n: Element | null = choose(el); n && n !== el; n = n.parentElement) shown *= Number(getComputedStyle(n).opacity);
-    expect(shown).toBe(0.5);
+    expect(shown).toBe(1);
   });
 
   test('in a Field with an error and required: the button is described by "Required" first, then the error (a button supports neither aria-invalid nor aria-errormessage, TF1b), the input is aria-invalid, the native input required, the area outlined in danger; nothing leaks onto the wrapper and React doesn\'t warn', async () => {

@@ -1,6 +1,7 @@
 // exports: allTimeZones, timeZoneInfo, type TimeZoneInfo, TimeZonePicker, type TimeZonePickerProps
 interface TimeZonePickerLabels {
     timeZoneYours: string;
+    timeZonePlaceholder: string;
 }
 interface TimeZonePickerProps extends Omit<ComboboxSingleProps, "debounce" | "filter" | "loadOptions" | "multiple" | "options"> {
     zones?: readonly string[] | undefined;

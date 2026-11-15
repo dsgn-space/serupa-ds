@@ -38,7 +38,7 @@ Give the group a `size` and every button in it takes it (a button's own `size` s
 
 An attached row that's wider than its container wraps as separate, spaced buttons (with `data-wrapped` on the group), so a narrow screen never scrolls sideways and no label is cut; it joins again once there's room. This holds in a CSS grid column or a flex row too. A vertical group doesn't wrap. The group is never wider than its container: a single label too long for a whole line (a long German compound at 320px) is cut with an ellipsis, with the whole label as the button's title, as a lone Button's is.
 
-A button can be a Menu's trigger or sit in a Tooltip, as in a split button (`<Menu trigger={<IconButton … />}>` last): the outer corners go to the first and last buttons, whatever popup follows them.
+For a main action with a menu of variations, use [SplitButton](../SplitButton/README.md), which wires the menu and its names for you. A button can still be a Menu's trigger or sit in a Tooltip (`<Menu trigger={<IconButton … />}>` last): the outer corners go to the first and last buttons, whatever popup follows them.
 
 ### Do and don't
 

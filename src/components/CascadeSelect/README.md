@@ -61,7 +61,7 @@ Drawn from the `Open` story.
 | Focus | Like the other fields: the border and a 1px ring hugging it take the `focus-ring` color (danger when invalid), and stay while the panel is open; inside the panel, an outline on the focused option or column |
 | Open | The panel under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
-| Disabled | `field-readonly` background at 50%, `not-allowed` cursor; it doesn't open |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; it doesn't open |
 | Loading | "Loading…" in the next column |
 
 ### Do and don't
@@ -72,6 +72,7 @@ Drawn from the `Open` story.
 ## Accessibility
 
 - **Role and name:** the button is a `combobox` with `aria-haspopup="dialog"` and `aria-expanded`, named by a Field, a `<label>` or `aria-label`; the panel is a `dialog` named the same way. Each column is a `listbox` named by its level, and the highlighted option in each is `aria-selected`. An option with children is described as "More options: press Right arrow" (Left in right-to-left text).
+- **Long paths:** a chosen path or placeholder that doesn't fit ends in an ellipsis and shows whole on hover and on the button's keyboard focus ([TruncatedText](../TruncatedText/README.md)); the button reads all of it.
 - **Keyboard:** see the table. Focus moves into the panel when it opens, onto the chosen option, and back to the button when it closes.
 - **Contrast:** text and placeholder keep 4.5:1 on `field`, the chevron 3:1; option text and level names 4.5:1 on the panel and the highlight; the check 3:1, in every theme (`CascadeSelect.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the stronger border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - **What's still yours:** a name for it (Field, `<label>` or `aria-label`), `levels` that say what each column is, and the error text when a required choice is missing.
@@ -137,6 +138,8 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-option-bg-pressed` | `pressed` | An option's background while it's held down, one step past hover. |
 | `--cascade-select-option-on` | `primary-subtle` | The highlighted option in each column. |
 | `--cascade-select-option-indicator` | `primary` | The 2px bar at the start of each option on the chosen path (3:1 on option-on). |
+| `--cascade-select-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--cascade-select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Radius**
 

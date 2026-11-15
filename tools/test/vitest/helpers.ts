@@ -68,6 +68,24 @@ export function css(el: Element | null): CSSStyleDeclaration {
   return getComputedStyle(el);
 }
 
+/** How many px of el's focus ring the nearest ancestor that clips (overflow hidden, clip, auto or scroll) cuts off,
+ * on its worst side; 0 when the whole ring shows. Measures the outline as drawn now, so focus el first (tabTo). An
+ * outline that is none, 0 wide or transparent (a ring drawn inside, as Tabs does) has nothing to cut. */
+export function ringCut(el: Element): number {
+  const s = getComputedStyle(el);
+  const width = parseFloat(s.outlineWidth) || 0;
+  if (s.outlineStyle === 'none' || !width || /rgba\([^)]*,\s*0\)|transparent/.test(s.outlineColor)) return 0;
+  const reach = width + (parseFloat(s.outlineOffset) || 0);
+  const r = el.getBoundingClientRect();
+  for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+    const o = getComputedStyle(a);
+    if (o.overflowX === 'visible' && o.overflowY === 'visible') continue;
+    const b = a.getBoundingClientRect();
+    return Math.max(0, b.left - (r.left - reach), b.top - (r.top - reach), r.right + reach - b.right, r.bottom + reach - b.bottom);
+  }
+  return 0;
+}
+
 /** Focuses el the way a keyboard does, with Tab from a stand-in just before it, so it matches :focus-visible in
  * every engine. Firefox and WebKit don't count el.focus() after a click as keyboard focus; Chromium does. */
 export async function tabTo(el: HTMLElement): Promise<void> {
@@ -200,3 +218,12 @@ export const pasteText = (target: HTMLElement, text: string) => {
   // What the browser does with a paste no handler stopped: the text goes in where the caret is.
   if (target.dispatchEvent(e)) document.execCommand('insertText', false, text);
 };
+
+/**
+ * How a disabled control looks: 'neutral' when it is drawn at full opacity in the disabled text color (the
+ * disabled-text token, as Serupa draws disabled controls), otherwise the opacity and color it has.
+ */
+export function disabledLook(el: Element | null, prop: 'color' | 'backgroundColor' | 'borderTopColor' = 'color', token = '--disabled-text'): string {
+  const s = css(el);
+  return s.opacity === '1' && s[prop] === color(`var(${token})`) ? 'neutral' : `${s.opacity} ${s[prop]}`;
+}

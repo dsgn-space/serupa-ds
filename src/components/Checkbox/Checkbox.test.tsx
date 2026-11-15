@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, press, settle, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, press, settle, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Checkbox, CheckboxGroup } from './Checkbox';
 import { SerupaProvider } from '../../internal/provider';
@@ -166,11 +166,11 @@ describe('Checkbox', () => {
     expect(label('i').className).toMatch(/dk-checkbox--invalid/);
   });
 
-  test('disabled: native disabled at 50% with a not-allowed cursor and a surface-muted box; clicks do nothing', async () => {
+  test('disabled: native disabled in the neutral disabled colors with a not-allowed cursor; clicks do nothing', async () => {
     const onChange = vi.fn();
     await render(<Checkbox id="x" disabled onChange={onChange}>Disabled</Checkbox>);
     const s = css(label('x'));
-    expect([s.opacity, s.cursor]).toEqual(['0.5', 'not-allowed']);
+    expect([disabledLook(label('x')), s.cursor]).toEqual(['neutral', 'not-allowed']);
     expect(css(input('x')).backgroundColor).toBe(color('var(--surface-muted)'));
     expect(label('x').className).toMatch(/dk-checkbox--disabled/);
     label('x').click();
@@ -198,7 +198,7 @@ describe('Checkbox', () => {
     expect([input('roc').checked, warned]).toEqual([true, []]);
   });
 
-  test('in a Field: described and invalid with the error; in a disabled Field group every checkbox is disabled and dimmed', async () => {
+  test('in a Field: described and invalid with the error; in a disabled Field group every checkbox is disabled and drawn in disabled-text', async () => {
     await render(<>
       <Field label="Agreement" error="Accept the terms to go on."><Checkbox id="fld">I accept the terms</Checkbox></Field>
       <Field label="Notify me" group disabled><Checkbox id="g1">Email</Checkbox><Checkbox id="g2">SMS</Checkbox></Field>
@@ -207,7 +207,7 @@ describe('Checkbox', () => {
     expect(input('fld').getAttribute('aria-invalid')).toBe('true');
     expect(label('fld').className).toMatch(/dk-checkbox--invalid/);
     expect(input('fld').getAttribute('aria-describedby')).toBeTruthy();
-    expect(css(label('g1')).opacity).toBe('0.5');
+    expect(disabledLook(label('g1'))).toBe('neutral');
     expect(input('g2').matches(':disabled')).toBe(true);
   });
 

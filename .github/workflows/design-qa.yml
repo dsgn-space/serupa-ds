@@ -1,55 +1,57 @@
 name: Design QA
 
-# Before a pull request that changes how components look merges, someone looks at each changed story in all six
-# themes (96). This job writes the review sheet into its summary (tools/design-qa.mjs): every story with a changed
-# picture, its six themes before and after. With the repository variable DESIGN_QA set to "required" it also waits
-# for the "design-qa" label, added after the last commit that changed a picture; until then it only shows the sheet
-# and passes. Make "design QA" a required check in the branch rules to hold merges on it.
+# The design-qa label signs a pull request's pictures off (ADR-0016). CI's visual-review job lays out every picture that
+# differs from main's, drawn from the commit the pull request merges into, and fails until the label was added after the
+# pull request's last commit that isn't a merge. Adding the label runs that job again here, so the pull request goes
+# green without a push: the failed jobs of its newest CI run (visual-review and test) start again. Whoever owns the
+# pull request reviews and adds the label.
+# A label added while that run is still going, after visual review already failed, can't start it again yet (a run's
+# failed jobs rerun only once the run is done), so the run's end looks again: when visual review failed before the
+# label was added, it reruns then. A job that already saw the label isn't rerun, so this never loops.
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
-    paths: ['tools/test/baseline-visual/**']
+    types: [labeled]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
 
-# A newer run of the same workflow on the same branch or pull request cancels the one before it.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: read
-  pull-requests: read
+permissions: {}
 
 jobs:
-  design-qa:
-    name: design QA
+  rerun:
+    if: >-
+      github.event_name == 'pull_request' && github.event.label.name == 'design-qa' && github.event.pull_request.head.repo.full_name == github.repository ||
+      github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    permissions:
+      actions: write
+      pull-requests: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          persist-credentials: false
-          fetch-depth: 0
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .nvmrc
-      - name: The changed stories in every theme
-        run: node tools/design-qa.mjs "$BASE_SHA" >> "$GITHUB_STEP_SUMMARY"
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          DESIGN_QA: ${{ vars.DESIGN_QA }}
-      - name: Looked at since the last change to a picture
-        if: ${{ vars.DESIGN_QA == 'required' }}
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.workflow_run.head_sha }}
+          NUMBER: ${{ github.event.pull_request.number || github.event.workflow_run.pull_requests[0].number }}
+          RUN: ${{ github.event.workflow_run.id }}
         run: |
           set -euo pipefail
-          changed=$(git log -1 --format=%ct "$HEAD_SHA" -- tools/test/baseline-visual)
-          labeled=$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/events" --paginate \
-            --jq '[.[] | select(.event == "labeled" and .label.name == "design-qa")] | last | .created_at // ""')
-          has=$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/labels" --jq 'map(.name) | index("design-qa") != null')
-          if [ "$has" != true ]; then echo "::error::Review the sheet in this job's summary, then add the design-qa label."; exit 1; fi
-          if [ "$(date -d "$labeled" +%s)" -lt "$changed" ]; then echo "::error::The pictures changed after the design-qa label was added ($labeled): review again, then remove and add the label."; exit 1; fi
-          echo "Reviewed at $labeled, after the last change to a picture."
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          NUMBER: ${{ github.event.pull_request.number }}
+          if [ -z "$RUN" ]; then
+            run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$HEAD_SHA&event=pull_request&per_page=1" \
+              --jq '.workflow_runs[0] | select(.status == "completed") | .id')
+            if [ -z "$run" ]; then echo "CI is still running on $HEAD_SHA: its visual review reads the label, or its end runs it again."; exit 0; fi
+          else
+            run=$RUN
+          fi
+          review=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run/jobs?per_page=100" \
+            --jq '.jobs[] | select(.name == "visual review") | "\(.conclusion) \(.completed_at)"')
+          if [ "${review%% *}" != failure ]; then echo "Run $run's visual review: ${review:-not run}. Nothing to run again."; exit 0; fi
+          if [ -z "$NUMBER" ]; then echo "Run $run belongs to no open pull request."; exit 0; fi
+          labeled=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$NUMBER/events?per_page=100" \
+            --jq '.[] | select(.event == "labeled" and .label.name == "design-qa") | .created_at' | tail -1)
+          # ISO 8601 times in UTC compare as strings.
+          if [ -z "$labeled" ] || [[ ! "$labeled" > "${review#* }" ]]; then
+            echo "Run $run's visual review failed ${review#* }, and design-qa ${labeled:+was added $labeled, before it}${labeled:-is not on the pull request}: nothing new to read."
+            exit 0
+          fi
+          echo "Running the failed jobs of run $run again: visual review failed ${review#* }, before design-qa was added $labeled."
+          gh api -X POST "repos/$GITHUB_REPOSITORY/actions/runs/$run/rerun-failed-jobs" >/dev/null

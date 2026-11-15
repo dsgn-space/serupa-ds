@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -13,6 +14,7 @@ import { typeahead, type Typed } from '../../internal/typeahead';
 import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 
 /** One choice in a CascadeSelect, with the choices under it. */
 export interface CascadeOption {
@@ -77,7 +79,8 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, loadOptions: 1, levels: 1, selectParents: 1, placeholder: 1, size: 1, invalid: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1, readOnly: 1 } as const);
   const base = domId('dk-cs', React.useId());
-  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
+  const sized = useControlSize(props.size);
+  const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const disabled = !!props.disabled, readOnly = !!props.readOnly;
   const controlled = props.value !== undefined;
@@ -244,7 +247,7 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
         aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || undefined} aria-readonly={readOnly || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
-        <span className={cn('dk-cascade-select__value', empty && 'dk-cascade-select__value--empty')} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</span>
+        <TruncatedText className={cn('dk-cascade-select__value', empty && 'dk-cascade-select__value--empty')} dir="auto">{empty ? props.placeholder ?? L.cascadePlaceholder : L.cascadePath(chosenLabels)}</TruncatedText>
         <Icon icon={icons.ExpandMore} className="dk-cascade-select__chevron" />
       </button>
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value[value.length - 1] || ''} disabled={disabled} /> : <input ref={hidden} type="hidden" disabled />}

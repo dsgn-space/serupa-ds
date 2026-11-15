@@ -22,6 +22,16 @@
           }
         }
       },
+      "zone-border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "The drop area's outline while the pointer is over it (a click there browses for files).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--file-upload-zone-border-hover"
+          }
+        }
+      },
       "zone-bg-active": {
         "$type": "color",
         "$value": "{color.primary-subtle}",
@@ -119,6 +129,26 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--file-upload-item-border"
+          }
+        }
+      },
+      "border-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-border}",
+        "$description": "Disabled: the edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--file-upload-border-disabled"
+          }
+        }
+      },
+      "text-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-text}",
+        "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--file-upload-text-disabled"
           }
         }
       }

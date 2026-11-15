@@ -45,7 +45,7 @@ Drawn from the `Playground` story.
 - Keep the links to the main pages, a few short words each; below 768px they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
 - Mark the current page with `active` on its NavbarLink.
 - Register your router's link component once with `configure({ link })`, or pass it in `as`, so links don't reload the page.
-- Keep `actions` compact below 768px, such as one small button and an Avatar. If they don't fit, the brand shrinks and ends in an ellipsis so the menu button stays on screen; if they still don't, they scroll sideways within the bar (Tab scrolls each into view), and the page never does.
+- Keep `actions` compact below 768px, such as one small button and an Avatar. If they don't fit, the brand shrinks and ends in an ellipsis so the menu button stays on screen (a brand passed as text shows whole on hover and focus; in a link of your own, put the name in a [TruncatedText](../TruncatedText/README.md) to do the same); if they still don't, they scroll sideways within the bar (Tab scrolls each into view), and the page never does.
 - Set `size` to the same width as the page's Container, so the bar lines up with the content.
 - For a section with several pages, use a `NavbarMenu` with a `label` and its links, grouped in `NavbarMenuGroup`s with a `title` when there are more than a handful. Give each `NavbarMenuLink` a short `description` when the name alone doesn't say what's there. Keep a panel to what fits on one screen: it's a way in, not a site map.
 - A NavbarMenu's button doesn't go anywhere itself. Give the section's own page a link in its panel, such as "All products".
@@ -58,7 +58,7 @@ Drawn from the `Playground` story.
 ## Accessibility
 
 - It's a `<header>` (the banner landmark, when it's the page's top-level header) holding a `<nav>` named "Main", so people can jump to the links.
-- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar along its bottom (at the start of a link in a menu panel). Hover shades a link one step quieter (`surface-hover`; `surface-hover-raised` in a menu panel) and never draws the bar, so a hovered link never reads as the current page; the current page darkens one step under the pointer. In forced colors (Windows High Contrast), where the shading is dropped, it has an outline.
+- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar along its bottom (at the start of a link in a menu panel). Hover shades a link (`surface-hover`; `surface-hover-raised` in a menu panel; zinc-100 in light, like the current page) but never draws the bar; the current page darkens one step under the pointer. In forced colors (Windows High Contrast), where the shading is dropped, it has an outline.
 - On small screens the menu button has `aria-expanded` and `aria-controls`. Escape closes the menu and returns focus to the button. On a phone, the Back gesture or button closes it the same way, an open NavbarMenu panel first, before it leaves the page.
 - With the menu open, Tab goes from the button into the links, in the order they appear, since the panel opens under the bar: the links come after the button in the DOM while it's open. Tab past the last link, any move of focus out of the bar, or a press outside it closes the menu.
 - The panel fades in as it opens and unrolls down from the bar, over 150ms, and fades back out when it closes, as Popover and Menu do. While it fades out it stays after the button and can't be used. With reduced motion it only fades.
@@ -145,8 +145,8 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | `--navbar-link-text` | `text-muted` | A link (4.5:1 on bg and link-bg-hover). |
 | `--navbar-link-text-hover` | `text` | A link on hover. |
 | `--navbar-link-text-active` | `text` | The current page's link. |
-| `--navbar-link-bg-hover` | `surface-hover` | A link's background on hover: a step quieter than the current page's, so the link pointed at and the current one never look the same. |
-| `--navbar-menu-link-bg-hover` | `surface-hover-raised` | A link in a menu panel on hover: the raised hover step, since the panel floats, and a step quieter than the current link's fill. |
+| `--navbar-link-bg-hover` | `surface-hover` | A link's background on hover: zinc-100 in light, like the current page's; only the current page draws the bar. |
+| `--navbar-menu-link-bg-hover` | `surface-hover-raised` | A link in a menu panel on hover: the raised hover step, since the panel floats. |
 | `--navbar-link-bg-active` | `secondary` | The current page's link background. |
 | `--navbar-link-bg-active-hover` | `pressed` | The current page's link background under the pointer: one step past its rest. |
 | `--navbar-link-indicator` | `highlight-indicator` | The 2px bar under the current page's link (at the start of a menu link), which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |

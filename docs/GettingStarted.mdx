@@ -57,6 +57,7 @@ A bundler hashes the file names and compresses them for you, so of the delivery 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="text-scale" content="scale">
   <title>Hello · Example</title>
   <script src="dist/theme.js"></script>
   <link rel="preload" href="fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -112,7 +113,7 @@ It sets the settings for eslint-plugin-jsx-a11y and for its maintained fork, esl
 
 ## Lint your CSS for raw values
 
-A hex color in your own CSS doesn't change in dark mode, a `13px` gap sits off the spacing scale, and a hand-picked `0.3s ease` moves out of step with every component. `@diki-stwn/serupa-ds/stylelint` is a Stylelint config with four rules that flag those values and name the token to use instead. Install `stylelint`, then extend the config in `stylelint.config.js`:
+A hex color in your own CSS doesn't change in dark mode, a `13px` gap sits off the spacing scale, and a hand-picked `0.3s ease` moves out of step with every component. `@diki-stwn/serupa-ds/stylelint` is a Stylelint config with five rules that flag those values and name the token to use instead. Install `stylelint`, then extend the config in `stylelint.config.js`:
 
 ```js
 export default {
@@ -124,6 +125,7 @@ export default {
 - `serupa/no-raw-spacing` flags a fixed length, such as `12px` or `1.5rem`, in `margin`, `padding`, `gap` or `inset`. A percentage or a viewport or container unit, such as `inset: 50%` or `1vw`, passes, because no token says that. Use a spacing token, such as `var(--spacing-4)`.
 - `serupa/no-raw-radius` flags a length in `border-radius`. Use a rounded token, such as `var(--rounded-md)`.
 - `serupa/no-raw-motion` flags, in `transition` and `animation`, a duration or delay written out (`300ms`, `.2s`), an easing written out (`ease`, `ease-out`, `cubic-bezier()`, `linear()`, `steps()`), and `all`, which animates every property that changes, layout and paint included. Use a motion role and an easing token, such as `transition: opacity var(--motion-enter-sm) var(--ease-enter)`; the Motion foundation says which role fits. `none`, `0s`, a duration under 1ms (the usual way to switch motion off under reduced motion) and the keyword `linear` pass. It is a warning for now, so upgrading doesn't fail your lint; it becomes an error in the next major.
+- `serupa/no-raw-cursor` flags `pointer`, `not-allowed`, `grab` and `grabbing` written out in `cursor`. Use `var(--cursor-interactive)`, `var(--cursor-disabled)`, `var(--cursor-grab)` or `var(--cursor-grabbing)`, so one setting on `:root` changes every cursor. It is a warning too.
 
 These values always pass: anything inside `var()` (including its fallback), `calc()` over tokens, `0`, `transparent` and `currentcolor`, and the values of custom properties, since that is where your own tokens go. When a line needs a raw value, say why in a comment: `/* stylelint-disable-next-line serupa/no-raw-color -- the logo's exact ink */`.
 
