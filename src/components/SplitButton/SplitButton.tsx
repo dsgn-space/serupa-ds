@@ -6,7 +6,6 @@ import type { OpenChangeDetails } from '../../internal/openChange';
 import type { Placement } from '../../internal/position';
 import * as icons from '../../material/builtin';
 import { Button } from '../Button/Button';
-import { ButtonGroup } from '../ButtonGroup/ButtonGroup';
 import type { IconSource } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import { Menu } from '../Menu/Menu';
@@ -45,7 +44,7 @@ export interface SplitButtonProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 const OWN = { children: 1, onClick: 1, menu: 1, menuLabel: 1, variant: 1, size: 1, destructive: 1, leftIcon: 1, disabled: 1, loading: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1 } as const;
 
 /* SplitButton: a main action and an arrow button that opens a menu of other ways to do it, joined into one control
-   (an attached ButtonGroup in a wrapper <div>). The main button runs onClick; the arrow is an IconButton named by
+   (an attached ButtonGroup row in a wrapper <div>, which never comes apart: a long label ends in an ellipsis). The main button runs onClick; the arrow is an IconButton named by
    menuLabel, with aria-haspopup and aria-expanded from Menu. aria-label and aria-labelledby name the group; className,
    ref and every other prop go to the wrapper. */
 /** A main action joined to an arrow button that opens a menu of other ways to do it.
@@ -59,13 +58,14 @@ export const SplitButton = /* @__PURE__ */ component<HTMLDivElement, SplitButton
   delete rest['aria-label']; delete rest['aria-labelledby'];
   return (
     <div {...rest} ref={ref} className={cn('dk-split-button', props.className)} data-component="split-button">
-    <ButtonGroup size={size} aria-label={label} aria-labelledby={labelledBy}>
-      <Button variant={variant} destructive={props.destructive} leftIcon={props.leftIcon} disabled={props.disabled} loading={props.loading} onClick={props.onClick}>{props.children}</Button>
+    {/* ButtonGroup's markup and classes, attached, but never coming apart: a long label shortens with an ellipsis instead. */}
+    <div role="group" aria-label={label} aria-labelledby={labelledBy} data-component="button-group" data-orientation="horizontal" className="dk-button-group dk-button-group--attached">
+      <Button size={size} variant={variant} destructive={props.destructive} leftIcon={props.leftIcon} disabled={props.disabled} loading={props.loading} onClick={props.onClick}>{props.children}</Button>
       <Menu placement={props.placement ?? 'bottom-end'} open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}
-        trigger={<IconButton className="dk-split-button__menu" variant={variant} destructive={props.destructive} disabled={props.disabled} icon={icons.ExpandMore} label={props.menuLabel} />}>
+        trigger={<IconButton className="dk-split-button__menu" size={size} variant={variant} destructive={props.destructive} disabled={props.disabled} icon={icons.ExpandMore} label={props.menuLabel} />}>
         {props.menu}
       </Menu>
-    </ButtonGroup>
+    </div>
     </div>
   );
 });
