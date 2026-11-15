@@ -1655,6 +1655,10 @@
   --z-40: 40;
   --z-50: 50;
   --z-auto: auto;
+  --cursor-interactive: pointer;
+  --cursor-disabled: not-allowed;
+  --cursor-grab: grab;
+  --cursor-grabbing: grabbing;
   --z-sticky: 20;
   --z-dropdown: 30;
   --z-overlay: 40;

@@ -1101,7 +1101,7 @@ Interactivity utilities, as classes in `bundle.css`. Colors come from the palett
 
 Rules of thumb:
 
-- Cursors: `cursor-pointer` on anything clickable that isn't a link (Button does this), `cursor-not-allowed` when disabled, `cursor-progress` while loading, `cursor-grab`/`cursor-grabbing` on draggable items, `cursor-text` on editable areas.
+- Cursors: the components read four tokens, `--cursor-interactive` (`pointer`), `--cursor-disabled` (`not-allowed`), `--cursor-grab` and `--cursor-grabbing`, so one line on `:root` changes them everywhere (`--cursor-interactive: default` for a desktop-app feel). Write `var(--cursor-interactive)` in your own CSS too: the `serupa/no-raw-cursor` stylelint rule warns about the written-out keywords. `cursor-pointer` on anything clickable that isn't a link (Button does this), `cursor-not-allowed` when disabled, `cursor-progress` while loading, `cursor-grab`/`cursor-grabbing` on draggable items, `cursor-text` on editable areas.
 - Form controls: `accent-primary` makes checkboxes, radios, range sliders and progress bars match the theme; `caret-primary` colors the text cursor. Use `appearance-none` only when you redraw the control yourself, and keep its focus style.
 - `state-layer` gives the system's hover, pressed and dragged states to a surface whose color serupa doesn't know: a tile in a category color, a brand panel, a row tinted by data. Put it on the clickable element itself; its text color sets the tint, so check that text against the background as usual. Components keep their own tuned hover colors.
 - Dark themes: put `scheme-dark` on the root (or `scheme-light-dark`) so native scrollbars, inputs and date pickers turn dark too.

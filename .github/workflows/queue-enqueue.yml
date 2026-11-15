@@ -86,7 +86,7 @@ jobs:
             why="auto-merge on"
             if [ "$state" = off ]; then
               drops=$(bash .github/dropped.sh "$number" </dev/null)
-              [ "$drops" = - ] || [ "$drops" -gt 1 ] && continue
+              [[ "$drops" =~ ^[01]$ ]] || continue
               why="dropped by the queue ($([ "$drops" = 0 ] && echo "redrawn since" || echo "once at this commit"))"
             elif [ "$state" != on ]; then continue; fi
             pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" </dev/null) || continue
@@ -112,6 +112,8 @@ jobs:
             node tools/fresh.mjs --base "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha </dev/null)" --head "$head" </dev/null || continue
             node tools/fresh.mjs --queue "$number" </dev/null || continue
             echo "Queueing #$number: green, $why, not in the queue."
-            GH_TOKEN=$BOT_TOKEN gh api graphql -f id="$id" -f query='mutation($id: ID!) { enqueuePullRequest(input: { pullRequestId: $id }) { clientMutationId } }' </dev/null >/dev/null ||
-              echo "::warning::#$number couldn't be queued"
+            if GH_TOKEN=$BOT_TOKEN gh api graphql -f id="$id" -f query='mutation($id: ID!) { enqueuePullRequest(input: { pullRequestId: $id }) { clientMutationId } }' </dev/null >/dev/null; then
+              # Back in the queue: a later removal by a person is a person's again (.github/dropped.sh).
+              [ "$state" = off ] && GH_TOKEN=$BOT_TOKEN gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/$number/labels/queue-stale" </dev/null >/dev/null 2>&1
+            else echo "::warning::#$number couldn't be queued"; fi
           done <<< "$prs"
