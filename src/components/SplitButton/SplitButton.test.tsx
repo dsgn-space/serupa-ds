@@ -75,4 +75,15 @@ describe('SplitButton', () => {
     const arrow = el('sb').querySelectorAll('button')[1]!;
     expect(css(arrow).borderInlineStartColor).not.toBe(css(el('sb').querySelector('button')).borderInlineStartColor);
   });
+  test('placement: the menu opens on the side asked for, every one of the twelve (bottom-end by default)', async () => {
+    const all = ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left', 'left-start', 'left-end', 'right', 'right-start', 'right-end'] as const;
+    const sides: string[] = [];
+    for (const p of [undefined, ...all]) {
+      const r = await render(<div style={{ padding: 240 }}><SplitButton aria-label="Save" menuLabel="More" placement={p} defaultOpen menu={<MenuItem>Save a copy</MenuItem>}>Save</SplitButton></div>);
+      await expect.poll(() => document.querySelector<HTMLElement>('[role="menu"]')?.dataset.side).toBeTruthy();
+      sides.push(document.querySelector<HTMLElement>('[role="menu"]')!.dataset.side!);
+      await r.unmount();
+    }
+    expect(sides).toEqual(['bottom', ...all.map((p) => p.split('-')[0])]);
+  });
 });
