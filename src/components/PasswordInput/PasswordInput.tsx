@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { announce } from '../../internal/announce';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
@@ -43,7 +44,7 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
   const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1, capsLockHint: 1 } as const);
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   if (rest.autoComplete === undefined) rest.autoComplete = 'current-password';

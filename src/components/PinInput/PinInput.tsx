@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { component } from '../../internal/component';
@@ -44,7 +45,7 @@ export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProp
   const rest = omit(props, { length: 1, value: 1, defaultValue: 1, onValueChange: 1, onComplete: 1, type: 1, mask: 1, size: 1, invalid: 1, className: 1, style: 1 } as const);
   const length = Math.max(1, Math.floor(props.length || 6));
   const type = oneOf(['numeric', 'alphanumeric'] as const, props.type, 'numeric');
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   // Digits in any script read as ASCII, and full-width letters as the usual ones: an Arabic or Persian keyboard types
   // ٤٥٦, a Japanese IME ４５６ or ＡＢ, and a code read off the screen is the same code (GR42).
   const clean = (s: string | undefined) => latinDigits((s || '').normalize('NFKC')).replace(KEEP[type], '').slice(0, length);
