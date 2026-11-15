@@ -26,7 +26,8 @@
 .dk-lightbox__fallback { position: absolute; inset: var(--spacing-0); display: grid; place-items: center; color: var(--lightbox-fallback-color, var(--text-muted)); }
 .dk-lightbox__fallback .dk-icon { inline-size: var(--lightbox-fallback-icon, var(--spacing-6)); block-size: var(--lightbox-fallback-icon, var(--spacing-6)); }
 .dk-lightbox__caption { max-inline-size: var(--sizing-full); color: var(--lightbox-caption-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: center; overflow-wrap: anywhere; }
-.dk-lightbox__nav { display: flex; align-items: center; gap: var(--lightbox-gap, var(--spacing-3)); }
+/* Room under the arrows for their focus ring: the dialog's body scrolls, so it clips whatever reaches past its end. */
+.dk-lightbox__nav { display: flex; align-items: center; gap: var(--lightbox-gap, var(--spacing-3)); padding-block-end: calc(var(--focus-ring-width) + var(--focus-ring-offset)); }
 .dk-lightbox__count { min-inline-size: var(--spacing-16); color: var(--lightbox-caption-color, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: center; font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) { .dk-lightbox__stage[data-fades][data-state="loaded"] .dk-lightbox__img { transition: none; } }   /* the picture appears at once */
 @media (forced-colors: active) { .dk-lightbox__stage { border: var(--border-width-1) solid CanvasText; } .dk-lightbox__stage[data-state="loaded"]::after { display: none; } }

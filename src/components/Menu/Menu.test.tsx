@@ -420,6 +420,27 @@ describe('Menu', () => {
     expect([el('share').getAttribute('aria-expanded'), focus()]).toEqual(['true', 'Email']);
   });
 
+  test('MenuSub: a diagonal move toward the open submenu, across the items below its own, keeps it open; resting on another item closes it (the pointer\'s path, as native menus do)', async () => {
+    await render(<Nested chosen={[]} />);
+    await userEvent.click(el('nb'));
+    await userEvent.click(el('share'));
+    const share = rect(el('share')), more = rect(el('more'));
+    const move = async (x: number, y: number) => {
+      const t = document.elementFromPoint(x, y)!;
+      t.dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y, pointerType: 'mouse', bubbles: true }));
+      await settle(40);
+    };
+    // From the lower start of Share to More apps, two rows down in the submenu: the path crosses Close first.
+    const from = { x: share.left + 24, y: share.bottom - 4 }, to = { x: more.left + 16, y: more.top + more.height / 2 };
+    for (let k = 0; k <= 10; k++) await move(from.x + (to.x - from.x) * k / 10, from.y + (to.y - from.y) * k / 10);
+    expect([el('share').getAttribute('aria-expanded'), focus()]).toEqual(['true', 'More apps']);
+    // Resting on Close, the submenu goes after a moment.
+    const close = [...menuOf('nb').querySelectorAll<HTMLElement>(':scope > [role="menuitem"]')].pop()!, c = rect(close);
+    await move(c.left + 24, c.top + c.height / 2);
+    expect(focus()).toBe('Close');
+    await expect.poll(() => el('share').getAttribute('aria-expanded')).toBe('false');
+  });
+
   test('MenuSub in rtl: ← opens it on the left, → closes it; the chevron points left', async () => {
     await render(<Nested chosen={[]} dir="rtl" />);
     await userEvent.click(el('nb'));
@@ -644,6 +665,31 @@ describe('Menu', () => {
     await userEvent.click(el('rs'));
     await userEvent.keyboard('{Enter}');
     expect([el('rs').getAttribute('aria-expanded'), asks]).toEqual(['false', []]);
+  });
+
+  test('Space on a MenuCheckboxItem or MenuRadioItem changes it and keeps the menu open on it, so several settings take one trip; Enter and a click still close (APG)', async () => {
+    const asks: string[] = [];
+    function View() {
+      const [grid, setGrid] = React.useState(false), [by, setBy] = React.useState('name');
+      return <Menu trigger={<Button id="sp">View</Button>}>
+        <MenuCheckboxItem checked={grid} onCheckedChange={(v) => { asks.push('grid:' + v); setGrid(v); }}>Show grid</MenuCheckboxItem>
+        <MenuRadioGroup label="Sort by" value={by} onValueChange={(v) => { asks.push('sort:' + v); setBy(v); }}>
+          <MenuRadioItem value="name">Name</MenuRadioItem>
+          <MenuRadioItem value="date">Date</MenuRadioItem>
+        </MenuRadioGroup>
+      </Menu>;
+    }
+    await render(<View />);
+    const checked = () => [...menuOf('sp').querySelectorAll<HTMLElement>('[aria-checked]')].map((x) => x.getAttribute('aria-checked')).join();
+    el('sp').focus();
+    await userEvent.keyboard('{Enter}');
+    expect(document.activeElement!.textContent).toBe('Show grid');
+    await userEvent.keyboard(' ');
+    expect([el('sp').getAttribute('aria-expanded'), document.activeElement!.textContent, checked()]).toEqual(['true', 'Show grid', 'true,true,false']);
+    await userEvent.keyboard('{ArrowDown}{ArrowDown} ');
+    expect([el('sp').getAttribute('aria-expanded'), document.activeElement!.textContent, checked()]).toEqual(['true', 'Date', 'true,false,true']);
+    await userEvent.keyboard('{ArrowUp}{Enter}');
+    expect([el('sp').getAttribute('aria-expanded'), asks]).toEqual(['false', ['grid:true', 'sort:date', 'sort:name']]);
   });
 
   test('L8E80: an item hidden by CSS or the hidden attribute is skipped by the arrows, Home, End and on open, so focus never sticks', async () => {
