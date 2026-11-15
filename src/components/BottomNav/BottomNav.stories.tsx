@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Badge } from '../Badge/Badge';
 import { Toaster, toast } from '../Toast';
 import { BottomNav, BottomNavLink } from './BottomNav';
 
@@ -46,6 +47,21 @@ export const Default: Story = {};
 /** A bottom Toaster sits above the bar, not under it. */
 export const WithToast: Story = {
   render: (args) => <WithToastDemo {...args} />,
+};
+/** Unread counts on the icons: a number on Inbox, a lone dot on Account ("something new"). Each is read after the
+ *  link's name. Past 99 the count shows "99+". */
+export const WithBadges: Story = {
+  render: (args) => (
+    <>
+      <Page />
+      <BottomNav {...args}>
+        <BottomNavLink href="#home" icon="home">Home</BottomNavLink>
+        <BottomNavLink href="#inbox" icon="inbox" active badge={<Badge variant="solid" tone="danger" count={4} />}>Inbox</BottomNavLink>
+        <BottomNavLink href="#activity" icon="notifications" badge={<Badge variant="solid" tone="danger" count={120} />}>Activity</BottomNavLink>
+        <BottomNavLink href="#account" icon="person" badge={<Badge dot tone="danger" aria-label="New sign-in" />}>Account</BottomNavLink>
+      </BottomNav>
+    </>
+  ),
 };
 // The stress story (G14): five links with long labels; each label cuts with an ellipsis in its own column.
 export const LongText: Story = {

@@ -99,6 +99,28 @@
       - link "Account":
         - /url: "#account"
 
+# WithBadges
+- main:
+  - heading "Inbox" [level=1]
+  - paragraph: "Message 1: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 2: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 3: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+  - paragraph: "Message 4: the page scrolls under the bar, and the spacer keeps its last line clear of it."
+- navigation "Main":
+  - list:
+    - listitem:
+      - link "Home":
+        - /url: "#home"
+    - listitem:
+      - link "Inbox":
+        - /url: "#inbox"
+    - listitem:
+      - link "Activity":
+        - /url: "#activity"
+    - listitem:
+      - link "Account":
+        - /url: "#account"
+
 # WithToast
 - main:
   - heading "Inbox" [level=1]
