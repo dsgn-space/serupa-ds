@@ -23,6 +23,13 @@ const EVENTS: CalendarEvent[] = [
 ];
 
 describe('EventCalendar', () => {
+  test("in the week, an hour-long event's title in a narrow day ends on a whole line, never through the middle of one", async () => {
+    await render(<div style={{ width: 700 }}><EventCalendar defaultMonth={new Date(2025, 2, 18)} defaultView="week" weekStartsOn={0} events={[{ id: 'demo', title: 'Customer demo with the regional partners', start: '2025-03-18T15:00', end: '2025-03-18T16:00' }]} /></div>);
+    const t = document.querySelector<HTMLElement>('[data-event-id="demo"] [data-component="truncated-text"]')!;
+    const line = parseFloat(getComputedStyle(t).lineHeight), h = t.getBoundingClientRect().height;
+    expect([h > 0, Math.abs(h / line - Math.round(h / line)) < 0.05]).toEqual([true, true]);
+  });
+
   test("a title cut short in the month shows whole on hover; the event's name holds it all the while", async () => {
     const title = 'Quarterly planning with the regional sales leads';
     await render(<div style={{ width: 760 }}><EventCalendar events={[{ id: 'q', title, start: '2025-03-04T09:30', end: '2025-03-04T10:30' }]} defaultMonth={MARCH} weekStartsOn={0} /></div>);
