@@ -256,6 +256,15 @@ export function folderForKebab(k) {
 // key fails the typecheck), so --since leaves them out of the scope (run.mjs), and the new component's own folder
 // decides it. A change that removes or edits a line in one still tests everything.
 export const ADDITIVE = /^src\/(labels\/[\w-]+\.ts|material\/[\w-]+\.ts|index\.ts)$/;
+// Visual on a pull request draws main's pictures and the branch's in the same job (ADR-0016), so a change to how CI
+// runs (the workflow, its actions, Node's version) draws both alike and can't make them differ. For Visual these files
+// cover no component (visualScope); Button still draws, so a broken Visual job shows on the pull request that broke it.
+export const DRAWN_ALIKE = /^(\.github\/workflows\/ci\.yml|\.github\/actions\/.+|\.nvmrc)$/;
+/** The files that decide Visual's scope: scopeFiles' without DRAWN_ALIKE, and Button when that leaves nothing. */
+export function visualScope(files) {
+  const rest = files.filter((f) => !DRAWN_ALIKE.test(f));
+  return rest.length || !files.length ? rest : ['src/components/Button/Button.tsx'];
+}
 // A shared test (src/internal/*.test.tsx) changes no component: it runs itself (run.mjs adds it) and widens nothing.
 export const SHARED_TEST = /^src\/internal\/[\w-]+\.test\.tsx?$/;
 /** The changed files that decide the scope: rows of `git diff --numstat` ("added\tremoved\tfile"), without the

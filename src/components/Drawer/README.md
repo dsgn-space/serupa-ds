@@ -129,7 +129,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--drawer-grip` | `text-muted` | A sheet's grip, at the top of a drawer with snapPoints (3:1 on bg). |
-| `--drawer-shadow` | `elevation-modal` | The panel's shadow. |
+| `--drawer-shadow` | `elevation-modal` | The panel's shadow, on every side. Unset, it falls toward the page: `elevation-modal-up` from the bottom, `elevation-modal-right` and `elevation-modal-left` from a side, `elevation-modal` from the top. |
 | `--drawer-width-sm` | `container-xs` | size="sm" (320px). |
 | `--drawer-width-md` | `container-sm` | size="md", the default (384px). |
 | `--drawer-width-lg` | `container-lg` | size="lg" (512px). |

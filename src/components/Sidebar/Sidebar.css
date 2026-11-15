@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Sidebar: a 256px column (collapsed: a 64px icon rail) with a 1px line on its inner edge, the parent's height:
    header, the scrolling items, then the footer at the bottom. Items are muted text-sm font-medium with a 20px
-   icon, shaded on hover (a step quieter than the current page) and darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
+   icon, shaded on hover (surface-hover, zinc-100 in light like the current page) and darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
 @layer dk.components {
