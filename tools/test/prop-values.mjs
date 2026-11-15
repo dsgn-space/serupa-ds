@@ -30,7 +30,8 @@ const GAPS = {};
 function defaults(folder, options) {
   const found = new Set();
   const tested = new Map();   // prop → the values the code compares it with
-  const prop = (n, sf) => n.getText(sf).replace(/^props\./, '');
+  // useControlSize(props.size) is the prop with the size around it as its fallback, so it counts as the prop.
+  const prop = (n, sf) => n.getText(sf).replace(/^useControlSize\((.*)\)$/, '$1').replace(/^props\./, '');
   for (const f of fs.readdirSync(folder).filter((f) => /^[A-Z]\w*\.tsx$/.test(f) && !/\.(test|stories)\.tsx$/.test(f))) {
     const sf = program.getSourceFile(path.join(folder, f));
     if (!sf) continue;
