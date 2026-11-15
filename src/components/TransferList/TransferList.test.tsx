@@ -120,7 +120,7 @@ describe('TransferList', () => {
     expect(title('Tersedia').textContent).toBe('Tersedia (5)');
   });
 
-  test('the lists\' text and count read 4.5:1 on their background in all six themes', async () => {
+  test('the lists\' text and count read 4.5:1 on their background in every theme', async () => {
     await render(en(<TransferList aria-label="Columns" options={options} />));
     const side = title('Available').parentElement!, count = title('Available').lastElementChild as HTMLElement;
     const none = page.getByText('None').element() as HTMLElement, empty = none.parentElement!;

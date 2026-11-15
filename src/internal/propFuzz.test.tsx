@@ -2,7 +2,7 @@
 // using every combination would. The props come from its public types (tools/test/baseline-api/<Component>.d.ts,
 // which api.mjs keeps equal to dist/): each option prop (a union of strings) gets one of its values, each boolean
 // true or false, and each text the story passes becomes empty or very long, sometimes right to left and in any of
-// the six themes. A combination fails on a throw, a console.error, or an axe violation (WCAG 2.2 AA).
+// the themes. A combination fails on a throw, a console.error, or an axe violation (WCAG 2.2 AA).
 // The values come from a seeded generator, so a failure names its combination and the same ones come back on the
 // next run. A boolean that is one half of a controlled pair (open with onOpenChange, checked with defaultChecked)
 // is left as the story sets it: set alone, it is a controlled value nobody updates, which React rightly warns about.

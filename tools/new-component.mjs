@@ -138,7 +138,7 @@ describe('${name}', () => {
     expect([e.tagName, e.textContent, ref.current === e, e.className, e.dataset.x, e.dataset.component]).toEqual(['DIV', 'Hello', true, 'dk-${kebab} extra', 'y', '${kebab}']);
   });
 
-  test('its text reads 4.5:1 on its background in all six themes', async () => {
+  test('its text reads 4.5:1 on its background in every theme', async () => {
     await render(<${name} id="c">Text</${name}>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -194,7 +194,7 @@ import { ${name} } from "@diki-stwn/serupa-ds";
 
 - **Role and name:** ${TODO}
 - **Keyboard:** ${TODO}
-- **Contrast:** its text reads 4.5:1 on its background in all six themes (\`${name}.test.tsx\`).
+- **Contrast:** its text reads 4.5:1 on its background in every theme (\`${name}.test.tsx\`).
 - **What's still yours:** ${TODO}
 
 ## Props

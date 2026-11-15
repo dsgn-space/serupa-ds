@@ -53,7 +53,7 @@ Drawn from the `Default` story.
 
 - **Role and name:** a `nav` landmark holding a list of links. Give it an `aria-label` that names the thing ("Project"), since a page often has more than one `nav`. The current link has `aria-current="page"`, which screen readers say as "current page".
 - **Keyboard:** each link is a Tab stop, and Enter follows it. There are no arrow keys and no tab roles, because those promise panels on this page, which isn't what happens.
-- **Contrast:** link labels keep 4.5:1, and the current line and pill 3:1 against `surface`, in all six themes, as on Tabs (`TabNav.test.tsx`). The focus ring sits inside the link, so the scrolling row can't clip it.
+- **Contrast:** link labels keep 4.5:1, and the current line and pill 3:1 against `surface`, in every theme, as on Tabs (`TabNav.test.tsx`). The focus ring sits inside the link, so the scrolling row can't clip it.
 - **What's still yours:** the `aria-label`, and setting `current` on the right link for the page that's showing.
 
 ## Props

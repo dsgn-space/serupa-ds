@@ -133,3 +133,23 @@
     - gridcell "Remove Checkout":
       - button "Remove Checkout"
 
+# WithIconsAndAvatars
+- text: To
+- grid "To":
+  - row "Ada Lovelace Remove Ada Lovelace":
+    - gridcell "Ada Lovelace"
+    - gridcell "Remove Ada Lovelace":
+      - button "Remove Ada Lovelace"
+  - row "Grace Hopper Remove Grace Hopper":
+    - gridcell "Grace Hopper"
+    - gridcell "Remove Grace Hopper":
+      - button "Remove Grace Hopper"
+- text: Labels
+- grid "Labels":
+  - row "Bug":
+    - gridcell "Bug"
+  - row "Docs" [selected]:
+    - gridcell "Docs"
+  - row "Urgent":
+    - gridcell "Urgent"
+

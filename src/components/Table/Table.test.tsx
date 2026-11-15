@@ -350,7 +350,7 @@ describe('Table', () => {
     expect([c.backgroundColor, c.paddingLeft]).toEqual(['rgb(1, 2, 3)', '20px']);
   });
 
-  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the selected bar and the select checkbox outline 3:1; all six themes', async () => {
+  test('contrast: text and muted text on plain, hovered, striped and selected rows, and the header, keep 4.5:1; the selected bar and the select checkbox outline 3:1; every theme', async () => {
     await setup();
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;
@@ -509,7 +509,7 @@ describe('TableActionBar (62)', () => {
     expect(el('bar').textContent).toBe('4 dipilihHapus pilihan');
   });
 
-  test('contrast: the count reads 4.5:1 on the bar in all six themes', async () => {
+  test('contrast: the count reads 4.5:1 on the bar in every theme', async () => {
     await render(<TableActionBar id="bar" count={2} />);
     const count = el('bar').firstElementChild as HTMLElement;
     for (const th of THEMES) {

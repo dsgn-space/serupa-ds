@@ -378,7 +378,7 @@ describe('Dialog', () => {
     expect(asks.join()).toBe('outer:false');
   });
 
-  test('look: 24px padding, 12px corners, shadow-xl, 16px between parts, a text-lg semibold title, actions at the end; contrast: title and description 4.5:1 on the panel in all six themes; closed again, the page scrolls', async () => {
+  test('look: 24px padding, 12px corners, shadow-xl, 16px between parts, a text-lg semibold title, actions at the end; contrast: title and description 4.5:1 on the panel in every theme; closed again, the page scrolls', async () => {
     const ctl: Partial<Ctl> = {};
     await render(<App asks={[]} ctl={ctl} />);
     React.act(() => ctl.setOpen!(true));

@@ -72,7 +72,7 @@ Drawn from the `LongText` story.
 | <kbd>Escape</kbd> | Closes it, and focus goes back to where it was. |
 
 - The dialog is a [Dialog](../Dialog/README.md), titled "Keyboard shortcuts". Each group is a heading over a `<dl>`: what a shortcut does, then its keys in [Kbd](../Kbd/README.md), so screen readers hear "Search, Control K".
-- **Contrast:** group headings read 4.5:1 on the dialog in all six themes (`KeyboardShortcuts.test.tsx`).
+- **Contrast:** group headings read 4.5:1 on the dialog in every theme (`KeyboardShortcuts.test.tsx`).
 - **What's still yours:** don't take keys the browser or screen readers use (such as Ctrl+L, Ctrl+T, or a screen reader's single-letter keys in browse mode, which it handles before the page), and let people turn off single-key shortcuts (WCAG 2.1.4).
 
 ## useShortcut(keys, handler, options)

@@ -198,7 +198,7 @@ describe('CopyButton', () => {
     await expect.poll(() => shown('id')).toBe('Disalin');
   });
 
-  test('contrast: the check keeps 3:1 on outline, ghost and secondary buttons in all six themes', async () => {
+  test('contrast: the check keeps 3:1 on outline, ghost and secondary buttons in every theme', async () => {
     await render(<>{(['outline', 'ghost', 'secondary'] as const).map((v) => <CopyButton key={v} id={'v-' + v} variant={v} value="x" />)}</>);
     for (const v of ['outline', 'ghost', 'secondary']) { await userEvent.click(el('v-' + v)); }
     await expect.poll(() => document.querySelectorAll('[data-copied]').length).toBe(3);

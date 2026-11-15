@@ -73,7 +73,7 @@ function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; a
           <p className="mt-2 text-sm text-text-muted">Twelve active projects in the Acme workspace.</p>
           <section aria-labelledby="recent" className="mt-6">
             <Heading level={2} id="recent">Recent</Heading>
-            <ul className="mt-3 flex flex-col gap-3">
+            <ul className="mt-3 flex list-none flex-col gap-3 p-0">
               {rows.map((r) => <li key={r} className="rounded-md border border-border p-4">{r}</li>)}
             </ul>
           </section>

@@ -235,7 +235,7 @@ describe('Image', () => {
     expect([Math.round(r.top - f.top), Math.round(f.right - r.right)]).toEqual([8, 8]);
   });
 
-  test('contrast: the fallback icon and the remove button\'s icon keep 3:1 in all six themes', async () => {
+  test('contrast: the fallback icon and the remove button\'s icon keep 3:1 in every theme', async () => {
     await render(<Row><Pic id="broken" src={BROKEN} alt="Team photo" ratio="square" /><Viewer removed={() => {}} /></Row>);
     await expect.poll(() => frame('broken').dataset.state).toBe('error');
     const f = frame('broken'), fb = f.querySelector(FALLBACK)!, rm = frame('view').querySelector(REMOVE)!, low: string[] = [];

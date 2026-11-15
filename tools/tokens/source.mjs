@@ -11,7 +11,10 @@
 //   css           the CSS value as written, when it isn't how $value prints ("5%" for the number 0.05, ".75rem",
 //                 a shadow written with rgb()). The check makes sure it still means $value: change both, or take
 //                 css out to have $value printed
-//   themes        a value per theme for the other themes (an alias color); $value is the first theme's
+//   dark          the value in every dark theme, for an alias color that is the same in every brand (a neutral, a
+//                 status color); $value is the light themes'
+//   themes        a value per theme for the other themes, for an alias color that follows the brand; $value is the
+//                 first theme's
 //   themed        a value that is set with the themed tokens though it's the same in every theme (the palette)
 //   contrastMore, compact   the value with more contrast, and in the compact density, as in tokens.json
 // A token the format has no type for yet (degrees, em, keywords, CSS shorthands) has no $type and its CSS as $value.
@@ -65,6 +68,7 @@ export function toSource(t) {
         const keys = Object.keys(v);
         if (keys[0] !== first) throw new Error(`${x.name}: the first theme's value comes first`);
         if (keys.length === 1) ext.themed = true;
+        else if (keys.every((k) => v[k] === (k.endsWith('-dark') ? v[keys.find((d) => d.endsWith('-dark'))] : v[first])) && keys.some((k) => k.endsWith('-dark'))) ext.dark = v[keys.find((k) => k.endsWith('-dark'))];
         else ext.themes = Object.fromEntries(keys.slice(1).map((k) => [k, v[k]]));
         v = v[first];
       }
@@ -118,11 +122,11 @@ export function fromSource(src) {
           if (!back || back[0] !== tok.$type || !isDeepStrictEqual(back[1], tok.$value)) problems.push(`${g}.${p}: its css "${ext.css}" no longer means its $value; change both, or take css out`);
         }
       } else css = String(tok.$value);
-      const value = ext.themes ? { [first]: css, ...ext.themes } : ext.themed ? { [first]: css } : css;
+      const value = ext.themes ? { [first]: css, ...ext.themes } : ext.dark != null ? Object.fromEntries(meta.themes.map((th) => [th.id, th.id.endsWith('-dark') ? ext.dark : css])) : ext.themed ? { [first]: css } : css;
       const x = { name, value };
       if ('$description' in tok) x.usage = tok.$description;
       if ('$deprecated' in tok) x.$deprecated = tok.$deprecated;
-      for (const [k, v] of Object.entries(ext)) if (!['name', 'css', 'themes', 'themed'].includes(k)) x[k] = v;
+      for (const [k, v] of Object.entries(ext)) if (!['name', 'css', 'themes', 'dark', 'themed'].includes(k)) x[k] = v;
       tokens.push(x);
     }
     return tokens;

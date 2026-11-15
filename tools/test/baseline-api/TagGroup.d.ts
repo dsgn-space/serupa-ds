@@ -6,6 +6,8 @@ interface TagItem {
     id: string;
     label: string;
     disabled?: boolean | undefined;
+    icon?: IconSource | undefined;
+    avatar?: React.ReactNode | undefined;
 }
 interface TagGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "onSelect"> {
     items: readonly TagItem[];

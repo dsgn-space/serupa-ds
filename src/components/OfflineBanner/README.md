@@ -53,7 +53,7 @@ Drawn from the `WithMoreWords` story.
 - **Announcements:** "You’re offline" and "Back online" are said once each through the polite live region the components share, which moves into an open Dialog or Drawer so they're heard there too. The bar isn't a live region itself, so it isn't read twice.
 - **Role and name:** a plain `<div>`, with an icon screen readers skip and the words.
 - **Keyboard:** none: nothing in it takes focus. It never covers a focused control's place in the tab order, nor the control itself: while a fixed bar shows, a field Tab moves to (or a #link jumps to) scrolls into view clear of it (WCAG 2.4.11), and the bar adds its room to that end of the page (the start for a top bar, the end for a bottom one) so the first or last field can scroll clear too. With a sticky Navbar, a top bar sits just below it, so the Navbar's links and Menu button stay in reach, and the room counts both.
-- **Contrast:** its words read 4.5:1 and its icons 3:1 on its background in all six themes (`OfflineBanner.test.tsx`).
+- **Contrast:** its words read 4.5:1 and its icons 3:1 on its background in every theme (`OfflineBanner.test.tsx`).
 - **What's still yours:** keep what people typed while offline, and don't let buttons that need the server look like they worked. A fixed bar covers the bottom of the page: leave room for it, or use `placement="top"` or `"inline"`, where it would cover something people need.
 
 ## Props
@@ -81,7 +81,6 @@ Each is an optional override: set it on the page, a container or one OfflineBann
 | `--offline-banner-icon` | `text-muted` | The icon while offline (3:1 on bg). |
 | `--offline-banner-icon-online` | `success` | The icon once it's back online (3:1 on bg). |
 | `--offline-banner-shadow` | `shadow-lg` | Its shadow, which lifts it off the page. |
-| `--offline-banner-depth` | `depth-surface` | A tactile brand's hairline edge and, in dark mode, a faint top light, as on every floating pane. None in the flat brands. |
 | `--offline-banner-radius` | `radius-surface` | The corners (8px). |
 | `--offline-banner-padding-x` | `spacing-4` | Space inside, at the start and end (16px). |
 | `--offline-banner-padding-y` | `spacing-2` | Space inside, above and below (8px). |
