@@ -201,6 +201,20 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
   // From the keyboard it opens at once, as it closes at once (KW1).
   const nested = React.useRef<HTMLUListElement | null>(null);
   const exit = useExit(open, nested);
+  // A closed group's list is hidden="until-found", as Accordion's panels are: hidden from everyone, but find-in-page
+  // still searches it, and a match fires beforematch, which opens the group (search-hidden-content). The server's
+  // HTML has plain hidden (React can only write hidden=""); it becomes until-found here, once it's done folding.
+  const toggleRef = React.useRef(toggle);
+  React.useInsertionEffect(function () { toggleRef.current = toggle; });   // every render: the latest toggle, for beforematch
+  const shut = !open && !exit.leaving;
+  React.useEffect(function () {
+    const el = nested.current;
+    if (!el || !shut) return;
+    el.setAttribute('hidden', 'until-found');
+    const onMatch = function () { toggleRef.current(); };
+    el.addEventListener('beforematch', onMatch);
+    return function () { el.removeEventListener('beforematch', onMatch); };
+  }, [shut]);
   const rail = ctx.collapsed && ctx.depth === 0;
   // In the rail the badge is hidden on screen, like the label, and a dot on the icon says there is one.
   const dot = rail && props.badge != null && props.badge !== false;
@@ -246,7 +260,7 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
       <li className="dk-sidebar__li" data-state={open ? 'open' : 'closed'}>
         <button type="button" {...btnProps} ref={ref as React.Ref<HTMLButtonElement>} className={cls} aria-expanded={open} aria-controls={listId} onClick={(e) => { if (props.onClick) props.onClick(e); toggle(); }}>{inner(true)}</button>
         <SidebarContext.Provider value={{ collapsed: ctx.collapsed, depth: ctx.depth + 1 }}>
-          <ul ref={nested} id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={!open && !exit.leaving} inert={!open || undefined} data-instant={exit.instant || undefined}>{kids}</ul>
+          <ul ref={nested} id={listId} className="dk-sidebar__list dk-sidebar__list--nested" hidden={shut} inert={(!open && exit.leaving) || undefined} data-instant={exit.instant || undefined}>{kids}</ul>
         </SidebarContext.Provider>
       </li>
     );
