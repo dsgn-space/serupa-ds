@@ -134,6 +134,18 @@
 - textbox "Message"
 - button "Send" [disabled]
 
+# ReplyActions
+- log "Conversation with Support":
+  - text: You How long do refunds take? Assistant Card refunds take 5 to 10 business days to show up.
+  - group "Response actions":
+    - button "Copy"
+    - button "Regenerate"
+    - button "Helpful" [pressed]
+    - button "Not helpful"
+- textbox "Message":
+  - /placeholder: Ask the assistant
+- button "Send" [disabled]
+
 # Statuses
 - log "Conversation with Support":
   - text: 24 Oct 2026 Rina Kusuma

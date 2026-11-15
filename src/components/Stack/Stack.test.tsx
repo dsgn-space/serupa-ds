@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { css } from '../../../tools/test/vitest/helpers';
 import { Stack } from './Stack';
 
@@ -63,5 +64,28 @@ describe('Stack', () => {
   test('the --stack-gap token sets the default gap', async () => {
     await render(<Stack id="stok" style={{ '--stack-gap': '3px' } as React.CSSProperties}>{boxes(2)}</Stack>);
     expect(css(el('stok')).rowGap).toBe('3px');
+  });
+
+  describe('per screen width', () => {
+    afterEach(async () => { await page.viewport(414, 800); });
+
+    test('direction={{ base: "column", md: "row" }}: stacked on a phone, side by side from 768px; align follows each width\'s direction', async () => {
+      await render(<Stack id="sresp" direction={{ base: 'column', md: 'row' }} gap={{ base: 2, lg: 6 }}>{boxes(2, '20px')}</Stack>);
+      const at = async (w: number) => { await page.viewport(w, 800); const s = css(el('sresp')); return [s.flexDirection, s.alignItems, s.rowGap]; };
+      expect(await at(414)).toEqual(['column', 'stretch', '8px']);
+      expect(await at(700)).toEqual(['column', 'stretch', '8px']);
+      expect(await at(800)).toEqual(['row', 'center', '8px']);
+      expect(await at(1100)).toEqual(['row', 'center', '24px']);
+    });
+
+    test('align per width, and the server markup carries every width: classes for the changes, the gaps as variables', async () => {
+      await page.viewport(414, 800);
+      await render(<Stack id="salign" direction="row" align={{ base: 'start', sm: 'end' }} gap={{ sm: 3 }}>{boxes(2)}</Stack>);
+      expect(el('salign').className).toBe('dk-stack dk-stack--row dk-stack--align-start dk-stack--sm-align-end dk-stack--gaps');
+      expect(css(el('salign')).alignItems).toBe('flex-start');
+      expect(css(el('salign')).columnGap).toBe('16px');   // no base: the default gap
+      await page.viewport(700, 800);
+      expect([css(el('salign')).alignItems, css(el('salign')).columnGap]).toEqual(['flex-end', '12px']);
+    });
   });
 });
