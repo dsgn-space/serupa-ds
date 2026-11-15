@@ -4,7 +4,7 @@ import { cn, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import { typeahead, type Typed } from '../../internal/typeahead';
-import { Menu } from '../Menu/Menu';
+import { Menu, MenuSwap } from '../Menu/Menu';
 
 export interface MenubarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'role'> {
   /** The bar's name for screen readers ("Editor"): every menu bar needs one, by aria-label or aria-labelledby. */
@@ -54,6 +54,10 @@ export const Menubar = /* @__PURE__ */ component<HTMLDivElement, MenubarProps>('
   const [at, setAt] = React.useState(() => open ?? 0);
   const typed = React.useRef<Typed>({ text: '', at: 0 });
   const bar = React.useMemo(() => ({ open, setOpen, at, setAt }), [open, at]);
+  // One open menu swapped for another (pointing at the next name, or ← →) goes at once, both of them, as desktop menu
+  // bars do; the first open and the last close keep their motion.
+  const [was, setWas] = React.useState(open), [swap, setSwap] = React.useState(false);
+  if (was !== open) { setWas(open); setSwap(was !== null && open !== null); }
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (props.onKeyDown) props.onKeyDown(e);
@@ -84,11 +88,11 @@ export const Menubar = /* @__PURE__ */ component<HTMLDivElement, MenubarProps>('
   };
 
   return (
-    <BarContext.Provider value={bar}>
+    <BarContext.Provider value={bar}><MenuSwap.Provider value={swap}>
       <div {...omit(props, OWN)} ref={ref} role="menubar" tabIndex={-1} className={cn('dk-menubar', props.className)} data-component="menubar" onKeyDown={onKeyDown}>
         {menus.map((m, i) => <IndexContext.Provider key={m.key ?? i} value={i}>{m}</IndexContext.Provider>)}
       </div>
-    </BarContext.Provider>
+    </MenuSwap.Provider></BarContext.Provider>
   );
 });
 
