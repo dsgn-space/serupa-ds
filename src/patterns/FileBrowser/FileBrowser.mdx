@@ -1,0 +1,48 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './FileBrowser.stories';
+
+<Meta of={Stories} />
+
+# File browser
+
+One folder's files as a list people pick from: move or delete several at once, with Undo, and rename, move or delete any one from its row.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Things people keep and tidy: files, documents, recordings, saved reports.
+- Not for records with columns to compare or sort: that's a Table with select cells, as in the List with search and filters pattern.
+- Not for adding files to a form: that's File upload on its own.
+
+## What each part is for
+
+- **The files are a list with rows to pick.** List with `selectionMode="multiple"` is a grid with one Tab stop: Up and Down move between rows, Space picks the focused one, Shift with the arrows picks a run, and Ctrl or Cmd+A picks every file. Each row is named by its file and says whether it's picked (1.3.1, 2.1.1, 4.1.2). The checkboxes are there for the pointer.
+- **Select all sits above the list**, checked when every file is picked and mixed when some are.
+- **The bar says how many are picked**, "3 selected", as the count changes, with Move, Delete and Clear selection. It appears away from the row that was pressed, so it's announced (4.1.3).
+- **Each row has a More menu** named with its file, "More for Logo.svg", with Rename, Move and Delete, reached from the row with Right (2.4.6). One file doesn't need to be picked first.
+- **Each row says its size and when it changed**, in the reader's units and words ("4.8 MB, changed 3 hours ago"). A folder says "Folder".
+- **Delete happens at once, with Undo** in a toast, for one file or many. It's final only when the toast goes, so nothing asks "Are you sure?" first (3.3.4). The toast names the one file, or says how many.
+- **Move asks where.** The dialog lists the folders as radios. Pressing Move with none chosen says "Choose a folder." A move that fails says so in the dialog, which stays open with the folder still chosen (3.3.1, 3.3.3).
+- **Rename checks the name before it's sent.** An empty name, or one another file here already has, is said next to the field, which keeps focus. After a rename, focus goes back to the file's More button (2.4.3).
+- **After a delete or a move**, focus goes to the list, or to the h1 when the folder is now empty. It never falls to the top of the page (2.4.3).
+- **The h1 is the folder's name**, with the breadcrumb above it and how many files under it (2.4.8).
+- **An empty folder says so**, with what to do and Upload files. **While the files load**, set `loading`: the list is busy with placeholder rows, named once ("Loading files"). **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+With files picked:
+
+<Canvas of={Stories.Selected} />
+
+<Canvas of={Stories.Empty} />
+
+<Canvas of={Stories.Loading} />
+
+## What stays your app's job
+
+- **Storing the changes.** `onDelete` gets the files once their Undo has passed. `onMove` gets the files and the folder, and `onRename` the file and its new name: return their promises, and reject them when saving fails.
+- **Uploading.** `onUpload` gets Upload files: open your own dialog with File upload, then pass the new `files`.
+- **Opening a file or a folder.** Give each file an `href`: the row's name becomes a link, and only its checkbox picks it.
+- **Many files.** Load them a page at a time, or draw them with Virtual list, and say how many there are in all.
+- **Who may change what.** Leave Move, Delete and Rename out for people who can only read, and say so on the page.
+- Rendering a `Toaster` once in the app.

@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { SortableList } from '../SortableList/SortableList';
 import { Kanban, type KanbanColumn, type KanbanMove } from './Kanban';
 
 type T = { id: string; t: string };
@@ -51,6 +52,13 @@ describe('Kanban', () => {
     await said('To do 0 moved to To do, position 2 of 100.');
     expect([...draws.keys()]).toEqual(['0-0']);
   });
+  test('the drag handle\'s icon is 20px in its 24px button, as SortableList\'s, not an icon\'s 24px default (GR421)', async () => {
+    await render(<><Kanban id="kh" aria-label="Sprint" columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />
+      <SortableList id="sh" aria-label="Order" items={['a', 'b']} getKey={(x) => x} getLabel={(x) => x} renderItem={(x) => x} onReorder={() => {}} /></>);
+    const sizes = (id: string) => { const b = document.querySelector<HTMLElement>('#' + id + ' button[aria-pressed]')!, i = b.querySelector<HTMLElement>('[data-icon]')!.getBoundingClientRect(); return [b.getBoundingClientRect().width, i.width, i.height]; };
+    expect([sizes('kh'), sizes('sh')]).toEqual([[24, 20, 20], [24, 20, 20]]);
+  });
+
   test('a named group of columns, each a section headed by its title with a list of its cards; ref, className and props reach the board', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Kanban ref={ref} id="k" className="extra" data-x="y" aria-label="Sprint" columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
@@ -174,6 +182,20 @@ describe('Kanban', () => {
     const items = [...document.querySelectorAll('[role=menuitem]')].map((m) => m.textContent);
     expect(items).toEqual(['To do', 'Done']);
     await userEvent.keyboard('{Escape}');
+  });
+
+  test('a picked-up card shows the dragged state every drag surface shares: a primary border and the raised shadow', async () => {
+    await render(<Board />);
+    const li = handle('Alpha').element().closest('li')!;
+    const probe = document.body.appendChild(document.createElement('div'));
+    probe.style.cssText = 'border: 1px solid var(--primary); box-shadow: var(--elevation-raised)';
+    handle('Alpha').element().focus();
+    await userEvent.keyboard(' ');
+    await expect.poll(() => li.dataset.state).toBe('dragging');
+    expect(css(li).borderTopColor).toBe(css(probe).borderTopColor);
+    expect(css(li).boxShadow).toBe(css(probe).boxShadow);
+    await userEvent.keyboard('{Escape}');
+    probe.remove();
   });
 
   test('pointer: dragging a handle onto another column drops the card there', async () => {

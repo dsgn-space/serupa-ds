@@ -49,6 +49,7 @@ const SAMPLES = {
   statusSummary: [['99.8%', 90, 2], ['100%', 1, 0], ['97%', 30, 1]], statusDay: [['Nov 3, 2026', 'Degraded']],
   periodPlaceholder: [['month'], ['quarter'], ['year']], periodPrevious: [['month'], ['year']], periodNext: [['month'], ['year']], periodQuarter: [[4], [4, '2026']],
   filterIs: [['Status', 'Open or Closed']], filterFrom: [['Due', 'Nov 2, 2026']], filterUntil: [['Due', 'Nov 8, 2026']], filterContains: [['Title', 'bug']], filterAny: [['Status']], filterRemove: [['Status']], tagRemove: [['Design']], rangeSelected: [['Nov 3 – 8, 2026']], filterResults: [[1, '1'], [24, '24']],
+  dateFieldError: [['day'], ['month'], ['year'], ['missing-day'], ['missing-month'], ['missing-year'], ['not-real', 'February 2026', 28], ['before-min', 'Jan 1, 1900'], ['after-max', 'Nov 14, 2026']],
   toastShortcut: [['F8']], moreToasts: [[2]], toastRepeated: [[3]], typePhraseFirst: [['delete']], page: [[3]],
 };
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.
