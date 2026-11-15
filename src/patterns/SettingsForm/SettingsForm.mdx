@@ -15,6 +15,12 @@ A settings page made of sections, each with its own Save, its own errors and its
 - Use one form with one Save instead when the settings only make sense together, such as a single short preferences page.
 - Not for settings that take effect as they're changed (a theme, a language): a Switch or a Select that applies at once, with no Save, is clearer there.
 
+## Choosing the layout
+
+- **One way of saving per page.** Either every change applies at once, or changes wait for a Save. Mixing the two on one page leaves people unsure what has been saved. Use Save whenever settings depend on each other (a start and an end time), take a moment to check on the server, or are hard to take back.
+- **Group by how many there are.** Under about 7 settings, one list with no sections. From 7 to 15, sections with headings, as here. More than 15, a page per group behind vertical [Tabs](?path=/docs/components-navigation-tabs--docs) or a [Sidebar](?path=/docs/components-navigation-sidebar--docs), so no page scrolls past two screens.
+- **Order by use.** The settings people change most come first; the ones that can't be undone (delete the workspace, leave the team) come last, in their own section.
+
 ## What each part is for
 
 - **A Settings section block per group**: a region named by its heading, a sentence on what it's for, the fields, and its own Save with SaveStatus beside it. A change in one section never saves another (3.2.2). Each Save names its section ("Save profile"), so a screen reader's list of buttons tells them apart.

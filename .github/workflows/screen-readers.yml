@@ -1,8 +1,8 @@
 name: Screen readers
 
-# Every night, VoiceOver (macOS, WebKit) and NVDA (Windows, Chromium) read Button, Checkbox, Switch, Tabs and Dialog
-# through Guidepup (I9, tools/test/screen-reader.mjs). It doesn't block pull requests: a red run is a screen reader
-# difference to look at. What each reader said is in the run's artifacts.
+# Every night, VoiceOver (macOS, WebKit) and NVDA (Windows, Chromium) read Button, Checkbox, Switch, Tabs, Dialog,
+# Combobox, Menu, Toast and DatePicker through Guidepup (I9, tools/test/screen-reader.mjs). It doesn't block pull
+# requests: a red run is a screen reader difference to look at. What each reader said is in the run's artifacts.
 on:
   schedule:
     - cron: '0 4 * * *'

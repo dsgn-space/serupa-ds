@@ -60,6 +60,21 @@ On a phone, the keyboard that comes up decides how hard a field is to fill. Say 
 - **Never block paste**, least of all in a password or a code field: a password manager and a texted code both arrive by paste.
 - **Fill in what you already know**, such as the country from the account, or the email the person signed in with, and let them change it.
 
+## A list of things to fill in
+
+Phone numbers, line items, team members to invite: people add, change and remove entries of one kind. Pick the layout by how many fields one entry has.
+
+| One entry has… | Use |
+| --- | --- |
+| 1 to 3 short fields that need no label each | Rows with a Remove button on each and "Add another" after the last. Name each row's fields for screen readers ("Phone 2") |
+| 2 to 5 fields that fit across the page | An editable table, a row per entry: a [DataGrid](?path=/docs/components-content-datagrid--docs) with editable cells |
+| 6 to 8 fields | An [Accordion](?path=/docs/components-content-accordion--docs), a panel per entry, named after it ("Ada Lovelace, admin"), the one being edited open |
+| More than 8 | The entries in a list or a table, each edited in a [Drawer](?path=/docs/components-overlays-drawer--docs) or on its own page |
+
+- "Add another" stays after the last entry, and adding one moves focus to its first field.
+- Removing an entry moves focus to the entry before it, or to "Add another" when none is left, and can be undone ([Destructive actions](?path=/docs/guides-destructive-actions--docs)).
+- Say the limit before people reach it ("Up to 5 numbers"), and keep at least one entry when one is required.
+
 ## With a form library or a server action
 
 Serupa's fields are native form controls underneath, so they work with a plain `<form>`, a React form `action` and form libraries without adapters. Wire each piece by what it is:
