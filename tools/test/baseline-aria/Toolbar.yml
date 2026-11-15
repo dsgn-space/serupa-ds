@@ -21,6 +21,16 @@
   - button "Cancel"
   - button "Save"
 
+# MoreMenu
+- toolbar "Text formatting":
+  - group "Style":
+    - button "Bold" [pressed]
+    - button "Italic"
+  - separator
+  - button "Insert link"
+  - button "Insert image"
+  - button "More"
+
 # Overflow
 - toolbar "Text formatting":
   - group "Style":

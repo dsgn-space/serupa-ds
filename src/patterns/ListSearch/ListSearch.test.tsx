@@ -117,6 +117,20 @@ describe('Patterns/List with search and filters', () => {
     expect(screen.getByRole('checkbox', { name: `Select ${b}` }).element()).not.toBeChecked();
   });
 
+  test('"Select all 24" reaches every matching row on every page, and Export gets them all', async () => {
+    const onExport = vi.fn();
+    const screen = await render(<SerupaProvider locale="en"><ListSearch onExport={onExport} /></SerupaProvider>);
+    await screen.getByRole('checkbox', { name: 'Select all projects on this page' }).click();
+    await expect.element(screen.getByRole('group', { name: /^(10|١٠) selected$/ })).toBeVisible();
+    await screen.getByRole('button', { name: /^Select all (24|٢٤)$/ }).click();
+    await expect.element(screen.getByRole('group', { name: /^All (24|٢٤) selected$/ })).toBeVisible();
+    expect(document.activeElement?.textContent).toBe('Export');
+    await screen.getByRole('button', { name: /^Page (3|٣)$/ }).click();
+    expect(document.querySelectorAll('tbody input:checked')).toHaveLength(4);
+    await screen.getByRole('button', { name: 'Export' }).click();
+    expect(onExport.mock.calls[0]![0]).toHaveLength(24);
+  });
+
   test('Archive takes the rows away with Undo and archives them for good only once its toast closes; Export says what it did', async () => {
     const onArchive = vi.fn(), onExport = vi.fn();
     const screen = await render(<SerupaProvider locale="en"><ListSearch onArchive={onArchive} onExport={onExport} /></SerupaProvider>);

@@ -15,4 +15,37 @@ fieldset.dk-stack { border: var(--spacing-0); }
 .dk-stack--justify-center { justify-content: center; }
 .dk-stack--justify-end { justify-content: flex-end; }
 .dk-stack--justify-between { justify-content: space-between; }
+/* Per screen width (direction, align and gap as { base, sm, md, lg }): a class where a width changes the value,
+   and the gap's value at each width in --dk-stack-gap-<width>. Later widths come later, so they win. */
+.dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-base); }
+@media (min-width: 640px) {
+  .dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-sm); }
+  .dk-stack--sm-row { flex-direction: row; }
+  .dk-stack--sm-column { flex-direction: column; }
+  .dk-stack--sm-align-stretch { align-items: stretch; }
+  .dk-stack--sm-align-start { align-items: flex-start; }
+  .dk-stack--sm-align-center { align-items: center; }
+  .dk-stack--sm-align-end { align-items: flex-end; }
+  .dk-stack--sm-align-baseline { align-items: baseline; }
+}
+@media (min-width: 768px) {
+  .dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-md); }
+  .dk-stack--md-row { flex-direction: row; }
+  .dk-stack--md-column { flex-direction: column; }
+  .dk-stack--md-align-stretch { align-items: stretch; }
+  .dk-stack--md-align-start { align-items: flex-start; }
+  .dk-stack--md-align-center { align-items: center; }
+  .dk-stack--md-align-end { align-items: flex-end; }
+  .dk-stack--md-align-baseline { align-items: baseline; }
+}
+@media (min-width: 1024px) {
+  .dk-stack--gaps { --dk-stack-gap: var(--dk-stack-gap-lg); }
+  .dk-stack--lg-row { flex-direction: row; }
+  .dk-stack--lg-column { flex-direction: column; }
+  .dk-stack--lg-align-stretch { align-items: stretch; }
+  .dk-stack--lg-align-start { align-items: flex-start; }
+  .dk-stack--lg-align-center { align-items: center; }
+  .dk-stack--lg-align-end { align-items: flex-end; }
+  .dk-stack--lg-align-baseline { align-items: baseline; }
+}
 }
