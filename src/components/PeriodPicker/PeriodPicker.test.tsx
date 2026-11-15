@@ -24,6 +24,14 @@ beforeEach(() => { errors = vi.spyOn(console, 'error'); vi.useFakeTimers({ toFak
 afterEach(() => { vi.useRealTimers(); expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); document.documentElement.removeAttribute('data-theme'); });
 
 describe('PeriodPicker', () => {
+  test('a period cut short in a narrow field shows whole on hover', async () => {
+    await render(<EnUS><div style={{ width: 100 }}><PeriodPicker aria-label="Report month" defaultValue="2025-09" /></div></EnUS>);
+    const t = document.querySelector<HTMLElement>('[role=combobox] [data-component="truncated-text"]')!;
+    await expect.poll(() => t.hasAttribute('data-truncated')).toBe(true);
+    await userEvent.hover(t);
+    await expect.poll(() => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]')?.textContent).toBe(t.textContent);
+  });
+
   test('the value is set in tabular figures, so the field keeps its width from one period to the next', async () => {
     await render(<EnUS><PeriodPicker aria-label="Report month" defaultValue="2026-11" /></EnUS>);
     expect(css([...button().querySelectorAll('span')].find((s) => s.textContent === 'November 2026')!).fontVariantNumeric).toBe('tabular-nums');

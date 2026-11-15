@@ -114,11 +114,12 @@
 }
 /* In the hours an event fills its time: the time over the title, both wrapping, cut at its bottom. */
 .dk-event-calendar__timed .dk-event-calendar__event { height: var(--sizing-full); flex-direction: column; align-items: stretch; gap: var(--spacing-0); padding: var(--spacing-0\.5) var(--spacing-1); overflow: hidden; }
-.dk-event-calendar__timed .dk-event-calendar__title { white-space: normal; hyphens: auto; }
+/* The title ends on a whole line: what's left of the event's height under its time line, in whole lines. */
+.dk-event-calendar__timed .dk-event-calendar__title { white-space: normal; hyphens: auto; max-height: round(down, calc(var(--dk-evc-hour) * var(--dk-evc-for) - 2 * var(--border-width-1) - 2 * var(--spacing-0\.5) - 1lh), 1lh); }   /* stylelint-disable-line serupa/no-raw-value -- a line's height (1lh) has no token */
 .dk-event-calendar__timed .dk-event-calendar__time { white-space: normal; }
 /* Under 45 minutes there's room for one line: the time and the title side by side, the title cut short. */
 .dk-event-calendar__timed > li[data-short] .dk-event-calendar__event { flex-direction: row; align-items: center; gap: var(--spacing-1); padding-block: var(--spacing-0); }
-.dk-event-calendar__timed > li[data-short] .dk-event-calendar__title { white-space: nowrap; overflow-wrap: normal; }
+.dk-event-calendar__timed > li[data-short] .dk-event-calendar__title { white-space: nowrap; overflow-wrap: normal; max-height: none; }
 .dk-event-calendar__now {
   position: absolute; inset-inline: var(--spacing-0); z-index: var(--z-10); top: calc(var(--dk-evc-hour) * var(--dk-evc-at));
   border-top: var(--border-width-2) solid var(--event-calendar-now, var(--primary)); pointer-events: none;

@@ -34,7 +34,7 @@ import { TruncatedText } from "@diki-stwn/serupa-ds";
 
 - **Role and name:** plain text with no role. The whole text stays in the element, so screen readers and find-in-page get all of it, cut or not. The text shown on hover repeats it for the eye, so it is hidden from screen readers and nothing points at it.
 - **Keyboard:** cut text takes a tab stop, and focus shows the whole text; `Esc` hides it. Text that fits has no tab stop. Inside a link, a button or another element that takes focus, it adds no tab stop of its own: that control's keyboard focus shows the whole text.
-- **Touch:** a tap shows the whole text, and the next tap, or a tap elsewhere, hides it.
+- **Touch:** a tap shows the whole text, and the next tap, or a tap elsewhere, hides it. Inside a link or a button, a tap is the control's: it follows the link or opens the picker, and the whole text stays in the control's name.
 - **Contrast:** it takes the surrounding text's color; its focus ring reads 3:1 on the surface in every theme (`TruncatedText.test.tsx`).
 - **What's still yours:** a width for its container, and a color for the text that reads 4.5:1 on its background.
 
