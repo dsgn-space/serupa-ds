@@ -75,7 +75,7 @@ export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>('
     <label className={cn('dk-switch', 'dk-switch--size-' + size, props.labelPosition === 'start' && 'dk-switch--label-start', invalid && 'dk-switch--invalid', rest.disabled && 'dk-switch--disabled', readOnly && 'dk-switch--readonly', pending && 'dk-switch--pending', !hasLabel && !hasDesc && 'dk-switch--bare', props.className)} style={props.style} data-component="switch" data-size={size} data-pending={pending ? '' : undefined}>
       <span className="dk-switch__control" key="control">
         <input {...rest} {...NATIVE_SWITCH} ref={nameRef} type="checkbox" role="switch" className="dk-switch__input" key="input" />
-        <span className="dk-switch__thumb" aria-hidden key="thumb">{pending ? <span className="dk-switch__spinner" key="spin" /> : props.icon ? <svg className="dk-switch__check" key="check" viewBox="0 -960 960 960" fill="currentColor" focusable="false"><path d={Check.d} /></svg> : null}</span>
+        <span className="dk-switch__thumb" aria-hidden key="thumb">{pending ? <span className="dk-switch__spinner" key="spin" /> : props.icon ? <svg className="dk-switch__check" key="check" width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" focusable="false"><path d={Check.d} /></svg> : null}</span>
       </span>
       {hasLabel || hasDesc ? <span className="dk-switch__text" key="text">
         {hasLabel ? <span className="dk-switch__label" id={labelId} key="label">{props.children}</span> : null}
