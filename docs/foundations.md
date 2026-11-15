@@ -231,8 +231,11 @@ The type scales and font families, named by role (`text-xl`, `font-semibold`, `t
 | Token | Font | Use |
 | --- | --- | --- |
 | `font-sans` | Inter | Default for UI and body text. |
+| `font-heading` | Unset: headings use `font-sans` | Your own face for headings: the display and heading roles, Heading, and Dialog and Drawer titles read it. |
 | `font-serif` | Georgia | Editorial or long-form accents. |
 | `font-mono` | The system's monospace: SF Mono, Menlo, Consolas or Liberation Mono | Code, IDs, tabular figures. A bare `<kbd>` uses `font-sans`, like `<Kbd>`. |
+
+**Your own heading face.** Set `--font-heading` to the face, or faces, to try first: `:root { --font-heading: "Fraunces"; }`. Name faces only, not a generic family such as `serif`: the language's sans stack follows it, so a character the face doesn't have, such as Japanese or Arabic text, still finds its Noto font. Body text stays in `font-sans`.
 
 Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900). Icons are SVGs, not a font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
 
