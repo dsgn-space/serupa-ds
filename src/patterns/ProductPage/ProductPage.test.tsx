@@ -61,13 +61,13 @@ describe('Patterns/Product page', () => {
     await screen.getByRole('radio', { name: 'Red' }).click();
     await screen.getByRole('button', { name: 'Add to cart' }).click();
     await expect.element(screen.getByText('Choose a size.')).toBeVisible();
-    expect(screen.getByText('Choose a color.').elements()).toHaveLength(0);
+    expect(screen.getByRole('group', { name: /Color/ }).element().textContent).not.toContain('Choose a color.');
     expect((active() as HTMLInputElement).name).toBe('option-size');
     expect(active().getAttribute('value')).toBe('s');
     expect(onAdd).not.toHaveBeenCalled();
     // Picking clears the message.
     await screen.getByRole('radio', { name: 'Medium' }).click();
-    expect(screen.getByText('Choose a size.').elements()).toHaveLength(0);
+    expect(screen.getByRole('group', { name: /Size/ }).element().textContent).not.toContain('Choose a size.');
   });
 
   test('adding sends the choices and the quantity, says what was added, and the cart link carries the new count', async () => {

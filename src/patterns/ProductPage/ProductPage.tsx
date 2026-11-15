@@ -201,7 +201,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
   </> : loading ? (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2" aria-busy="true">
       <h1 className="sr-only">Product</h1>
-      <Loader variant="skeleton" shape="rect" label="Loading product" style={{ aspectRatio: '1', inlineSize: '100%', blockSize: 'auto' }} />
+      <Loader variant="skeleton" shape="rect" label="Loading product" className="aspect-square h-auto" />
       <div className="flex flex-col gap-4" aria-hidden="true">
         <Loader variant="skeleton" shape="text" lines={2} label="" />
         <Loader variant="skeleton" shape="text" lines={5} label="" />
@@ -288,7 +288,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
       <main id="main" className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-8 outline-none">
         <Breadcrumb>
           {/* The last item, the page itself, has no link. */}
-          {[['Shop', '#shop'], ['Shirts', '#shirts'], ...(loading || loadFailed ? [] : [[product.name, undefined]])].map(([label, href]) => (
+          {[['Shop', '#shop'], ['Shirts', '#shirts'], [loading || loadFailed ? 'Product' : product.name, undefined]].map(([label, href]) => (
             <BreadcrumbItem key={label} href={href}>{label}</BreadcrumbItem>
           ))}
         </Breadcrumb>
