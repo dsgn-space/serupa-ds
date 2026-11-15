@@ -123,7 +123,7 @@ if (fs.existsSync(path.join(GH, 'workflows/ci.yml'))) {
   // running past its own cancel, to a red X (#1890, 14 Nov).
   const cond = lines.slice(job, run).find((l) => /^\s*if:/.test(l)) ?? '';
   // fix-proof diffs against the main the run's merge commit sits on, not the event's base.sha, which main can pass first.
-  const proof = lines.slice(lines.findIndex((l) => l === '  fix-proof:'), lines.findIndex((l, i) => i > lines.findIndex((x) => x === '  fix-proof:') && /^  [a-z][\w-]*:$/.test(l))).join('\n');
+  const proof = lines.slice(lines.findIndex((l) => l === '  fix-proof:'), lines.findIndex((l, i) => i > lines.findIndex((x) => x === '  fix-proof:') && /^ {2}[a-z][\w-]*:$/.test(l))).join('\n');
   t('ci.yml: fix proof takes its base from the merge commit, not the event', /git rev-parse HEAD\^1/.test(proof) && !/pull_request\.base\.sha/.test(proof));
   t('ci.yml: the test check is cancelled with a held run, and runs whatever else happens', /!cancelled\(\)/.test(cond) && /hold != '1'/.test(cond) && !/always\(\)/.test(cond), cond.trim());
   fs.rmSync(bin, { recursive: true, force: true });
