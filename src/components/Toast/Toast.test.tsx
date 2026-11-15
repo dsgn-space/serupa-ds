@@ -7,6 +7,7 @@ import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { Drawer } from '../Drawer/Drawer';
 import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
+import { isApple } from '../../internal/keys';
 import { toast, Toaster, type ToasterPosition } from './Toast';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -755,6 +756,8 @@ describe('Toast: autoDismiss and the Toaster\'s defaults (FY1)', () => {
     expect(new Set(ids).size).toBe(4);   // each its own toast, not a count on one
   });
 
+  // The key the browser's platform undoes with: ⌘ where it says it is an Apple device (WebKit's does, on Linux too).
+  const MOD = isApple() ? 'Meta' : 'Control';
   test('Ctrl+Z (⌘Z on Apple devices) chooses Undo on the newest undo toast, one per press, outside a text field, as people expect undo to work', async () => {
     await render(<><input aria-label="Name" /><Toaster limit={5} duration={0} /></>);
     const log: string[] = [];
@@ -766,15 +769,15 @@ describe('Toast: autoDismiss and the Toaster\'s defaults (FY1)', () => {
     });
     // In a text field the keys undo the typing, and Shift+Ctrl+Z is redo: neither touches a toast.
     await userEvent.click(page.getByRole('textbox', { name: 'Name' }));
-    await userEvent.keyboard('{Control>}{Z}{/Control}');
+    await userEvent.keyboard(`{${MOD}>}{Z}{/${MOD}}`);
     (document.activeElement as HTMLElement).blur();
-    await userEvent.keyboard('{Control>}{Shift>}{Z}{/Shift}{/Control}');
+    await userEvent.keyboard(`{${MOD}>}{Shift>}{Z}{/Shift}{/${MOD}}`);
     expect([log, toasts().length]).toEqual([[], 3]);
-    await userEvent.keyboard('{Control>}{Z}{/Control}');
+    await userEvent.keyboard(`{${MOD}>}{Z}{/${MOD}}`);
     expect(log).toEqual(['undo invoice']);
     await expect.poll(() => titles()).toEqual(['Report moved to trash', 'Archived']);
-    await userEvent.keyboard('{Control>}{Z}{/Control}');
-    await userEvent.keyboard('{Control>}{Z}{/Control}');   // no undo toast left: the other toast's action isn't chosen
+    await userEvent.keyboard(`{${MOD}>}{Z}{/${MOD}}`);
+    await userEvent.keyboard(`{${MOD}>}{Z}{/${MOD}}`);   // no undo toast left: the other toast's action isn't chosen
     expect([log, acted]).toEqual([['undo invoice', 'undo report'], 0]);
     await expect.poll(() => titles()).toEqual(['Archived']);
   });
@@ -786,7 +789,7 @@ describe('Toast: autoDismiss and the Toaster\'s defaults (FY1)', () => {
       toast.undo({ title: 'Report moved to trash', commit: () => log.push('commit report'), onUndo: () => log.push('undo report') });
       toast.undo({ title: 'Invoice moved to trash', commit: () => log.push('commit invoice'), onUndo: () => log.push('undo invoice') });
     });
-    await userEvent.keyboard('{Control>}{Z}{/Control}');
+    await userEvent.keyboard(`{${MOD}>}{Z}{/${MOD}}`);
     expect(log).toEqual(['undo invoice']);
   });
 

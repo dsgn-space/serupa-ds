@@ -26,13 +26,14 @@ export function fromStory(f: Fiber) {
 
 // An element a story's render prop returns (SortableList's renderItem={(t) => <div style={…}>}) is the story's too,
 // but in WebKit that arrow is a tail call as well, and what's left is the library's frame that called it, with the
-// library component as owner. So, only for an element whose owner was handed a render function: its inline style is
-// the story's if every one of its declarations is written in the story file, as `key: value`.
+// library's component (or a row component of its own, as SortableList's memoized Row) as owner. So, only for an
+// element whose owner was handed a render function: its inline style is the story's if every one of its declarations
+// is written in the story file, as `key: value`.
 type Owner = { type?: unknown; memoizedProps?: Record<string, unknown> };
 export function fromRenderProp(f: Fiber, storySource: string) {
   const owner = f._debugOwner as Owner | null | undefined;
   const style = f.memoizedProps?.style;
-  if (!owner || !LIBRARY.has(owner.type) || !style || typeof style !== 'object') return false;
+  if (!owner || !style || typeof style !== 'object') return false;
   if (!Object.entries(owner.memoizedProps || {}).some(([k, v]) => /^render[A-Z]/.test(k) && typeof v === 'function')) return false;
   const pairs = Object.entries(style as Record<string, unknown>);
   const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

@@ -39,6 +39,42 @@ A short form of one or two fields can skip the summary: move focus to the first 
 - A form in a [Dialog](?path=/docs/components-overlays-dialog--docs) takes `unsaved` while it has changes, so closing it by accident asks "Discard changes?" first.
 - When the save fails for a reason that isn't a field, say so with an [Alert](?path=/docs/components-feedback-alert--docs) at the top of the form, and keep the changes. [Messages and feedback](?path=/docs/guides-messages-and-feedback--docs) says which message to use when.
 
+## The right keyboard and autofill
+
+On a phone, the keyboard that comes up decides how hard a field is to fill. Say what the field holds, and the browser shows the matching keys and offers what it already knows.
+
+| The field holds | Use | What people get |
+| --- | --- | --- |
+| An email address | [Input](?path=/docs/components-forms-input--docs) `type="email"`, `autoComplete="email"` | A keyboard with @ and the dot, no capital first letter, their address offered |
+| A phone number | [PhoneInput](?path=/docs/components-forms-phoneinput--docs) | The phone keypad, and `autoComplete="tel"` already set |
+| A whole number or an amount | [NumberInput](?path=/docs/components-forms-numberinput--docs) | Digits, with the decimal key only when the field takes decimals |
+| A code sent by text or email | [PinInput](?path=/docs/components-forms-pininput--docs) | Digits, and the code offered above the keyboard (`one-time-code`) |
+| Digits that aren't an amount: a card number, a postal code | Input with `inputMode="numeric"` | Digits, with no steppers and no thousands separators |
+| A web address | Input `type="url"` | A keyboard with the slash and ".com" |
+| A search | [SearchInput](?path=/docs/components-forms-searchinput--docs) | A Return key that says Search |
+| A password | [PasswordInput](?path=/docs/components-forms-passwordinput--docs) with `autoComplete="current-password"` or `"new-password"` | The password manager fills or suggests one |
+
+- **Name what the field is with `autoComplete`** whenever it's about the person filling it in: `name`, `email`, `tel`, `street-address`, `postal-code`, `cc-number`. People then fill a form with one tap, and WCAG 1.3.5 asks for it. Turn it off (`autoComplete="off"`) only for a field about someone else, such as a customer's address typed by support.
+- **Say what Return does with `enterKeyHint`** when it isn't the default: `next` in a run of fields, `send` in a message box, `done` on the last field, `go` for an address. SearchInput sets `search` itself.
+- **Leave spelling help on for prose and off for codes.** Input already turns off capital letters and spelling for email, URL, user name and code fields; set `autoCapitalize="words"` on a name field, and `spellCheck={false}` on anything that isn't words (a coupon, a serial number).
+- **Never block paste**, least of all in a password or a code field: a password manager and a texted code both arrive by paste.
+- **Fill in what you already know**, such as the country from the account, or the email the person signed in with, and let them change it.
+
+## A list of things to fill in
+
+Phone numbers, line items, team members to invite: people add, change and remove entries of one kind. Pick the layout by how many fields one entry has.
+
+| One entry has… | Use |
+| --- | --- |
+| 1 to 3 short fields that need no label each | Rows with a Remove button on each and "Add another" after the last. Name each row's fields for screen readers ("Phone 2") |
+| 2 to 5 fields that fit across the page | An editable table, a row per entry: a [DataGrid](?path=/docs/components-content-datagrid--docs) with editable cells |
+| 6 to 8 fields | An [Accordion](?path=/docs/components-content-accordion--docs), a panel per entry, named after it ("Ada Lovelace, admin"), the one being edited open |
+| More than 8 | The entries in a list or a table, each edited in a [Drawer](?path=/docs/components-overlays-drawer--docs) or on its own page |
+
+- "Add another" stays after the last entry, and adding one moves focus to its first field.
+- Removing an entry moves focus to the entry before it, or to "Add another" when none is left, and can be undone ([Destructive actions](?path=/docs/guides-destructive-actions--docs)).
+- Say the limit before people reach it ("Up to 5 numbers"), and keep at least one entry when one is required.
+
 ## With a form library or a server action
 
 Serupa's fields are native form controls underneath, so they work with a plain `<form>`, a React form `action` and form libraries without adapters. Wire each piece by what it is:
@@ -86,4 +122,5 @@ The submit Button shows `loading` by itself while a form `action` runs. Whicheve
 | "Work email", with "Like name@example.com" as the hint | "Please enter your email address here", with the format only in the placeholder |
 | Show the error when someone leaves the field | Show "Invalid email" after the first letter |
 | "Enter your full name" | "Name is invalid" |
+| `inputMode="numeric"` for a card number | `type="number"`, whose arrows and scroll wheel change the number |
 | Keep the answers when the submit fails, and focus the summary | Clear the form, or leave focus on the button with nothing said |
