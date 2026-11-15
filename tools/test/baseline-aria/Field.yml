@@ -55,7 +55,6 @@
 - textbox "Message"
 - text: 0 / 280 Country
 - combobox "Country":
-  - option "Choose a country" [disabled] [selected]
   - option "Indonesia"
   - option "Malaysia"
   - option "Singapore"
