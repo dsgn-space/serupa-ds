@@ -1,7 +1,7 @@
 // The release's changelog step (tools/version.mjs) on a scratch copy: each changeset's lines go under [Unreleased]
 // in their sections, with the notes already there kept, the changesets deleted and tools/release.mjs called with the
 // biggest bump; a hand-written note it has nowhere to put stops it instead of vanishing (T8). No network: npm and
-// release.mjs are stand-ins here. The new version's RFC, when it has one, is marked released.
+// release.mjs and since.mjs are stand-ins here. The new version's RFC, when it has one, is marked released.
 //   node tools/test/version.mjs
 import fs from 'node:fs';
 import os from 'node:os';
@@ -20,6 +20,8 @@ function scratch(changelog, changesets) {
   for (const f of ['version.mjs', 'changesets.mjs']) fs.copyFileSync(path.join(PROJECT, 'tools', f), path.join(dir, 'tools', f));
   // The stand-in release writes the bump it got, and sets the version to 1.1.0 as a minor would.
   fs.writeFileSync(path.join(dir, 'tools', 'release.mjs'), "import fs from 'node:fs';\nfs.writeFileSync(new URL('../released.txt', import.meta.url), process.argv[2]);\nfs.writeFileSync(new URL('../package.json', import.meta.url), JSON.stringify({ name: 'serupa-ds', version: '1.1.0' }));\n");
+  // The stand-in since.mjs writes what it was asked to stamp.
+  fs.writeFileSync(path.join(dir, 'tools', 'since.mjs'), "import fs from 'node:fs';\nfs.writeFileSync(new URL('../since.txt', import.meta.url), process.argv.slice(2).join(' '));\n");
   fs.mkdirSync(path.join(dir, 'docs', 'rfcs'), { recursive: true });
   fs.writeFileSync(path.join(dir, 'docs', 'rfcs', '1.1.0.md'), '# 1.1.0\n\n**Status:** Being cut (1 January 2026).\n\nThe rest stays.\n');
   fs.writeFileSync(path.join(dir, 'bin', 'npm'), '#!/bin/sh\nexit 0\n', { mode: 0o755 });
@@ -29,7 +31,7 @@ function scratch(changelog, changesets) {
   for (const [f, text] of Object.entries(changesets)) fs.writeFileSync(path.join(dir, '.changeset', f), text);
   const run = spawnSync(process.execPath, [path.join(dir, 'tools', 'version.mjs')], { cwd: dir, encoding: 'utf8', env: { ...process.env, PATH: `${path.join(dir, 'bin')}${path.delimiter}${process.env.PATH}` } });
   const read = (f) => (fs.existsSync(path.join(dir, f)) ? fs.readFileSync(path.join(dir, f), 'utf8') : null);
-  const out = { status: run.status, stderr: run.stderr, log: read('CHANGELOG.md'), released: read('released.txt'), rfc: read('docs/rfcs/1.1.0.md'), left: fs.readdirSync(path.join(dir, '.changeset')) };
+  const out = { status: run.status, stderr: run.stderr, log: read('CHANGELOG.md'), released: read('released.txt'), since: read('since.txt'), rfc: read('docs/rfcs/1.1.0.md'), left: fs.readdirSync(path.join(dir, '.changeset')) };
   fs.rmSync(dir, { recursive: true, force: true });
   return out;
 }
@@ -49,6 +51,7 @@ if (ok.status === 0) {
   t('the released versions below are untouched', ok.log.endsWith(TAIL));
   t('the changesets are deleted, README.md stays', JSON.stringify(ok.left) === '["README.md"]', ok.left.join(', '));
   t('release.mjs gets the biggest bump (minor over patch)', ok.released === 'minor', ok.released);
+  t('the new version is stamped on the components and props new since the last (since.mjs)', ok.since === '--release 1.1.0', ok.since);
   t('the new version\'s RFC says it is released, the rest of it untouched', /^\*\*Status:\*\* Released in 1\.1\.0 \(\d{1,2} [A-Z][a-z]+ \d{4}\)\.$/m.test(ok.rfc) && ok.rfc.includes('The rest stays.') && !ok.rfc.includes('Being cut'), ok.rfc);
 }
 const CS = { 'a.md': '---\n"serupa-ds": patch\n---\n\n- Fixed: x.\n' };

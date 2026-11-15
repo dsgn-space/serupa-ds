@@ -198,7 +198,7 @@
     "shadow": {
       "tip-shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-md}",
+        "$value": "{shadow.elevation-raised}",
         "$description": "The tooltip's shadow.",
         "$extensions": {
           "com.serupa": {

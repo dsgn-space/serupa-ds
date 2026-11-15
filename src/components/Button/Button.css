@@ -106,7 +106,7 @@
 
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
 .dk-btn.dk-btn--on-dark, .dk-btn.dk-btn--on-light { --dk-btn-shadow: var(--shadow-none); }
-.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--shadow-xs); }
+.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--elevation-rest); }
 .dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) { --dk-btn-shadow: var(--shadow-none); }
 
 /* Destructive: a modifier on every variant (destructive prop) */
