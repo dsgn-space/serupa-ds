@@ -298,7 +298,7 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
     expect([title(), months]).toEqual(['June 2025', [new Date(2025, 5, 1).toDateString()]]);
   });
 
-  test('the months, years and heading in all six themes: names 4.5:1, the picked one 4.5:1 on its fill; the months keep the days\' size, so the calendar doesn\'t jump', async () => {
+  test('the months, years and heading in every theme: names 4.5:1, the picked one 4.5:1 on its fill; the months keep the days\' size, so the calendar doesn\'t jump', async () => {
     await render(<Cal min={undefined} max={undefined} isDateDisabled={undefined} />);
     const box = () => { const r = q('[data-testid=cal]').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; };
     const days = box();
