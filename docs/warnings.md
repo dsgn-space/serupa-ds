@@ -110,6 +110,10 @@ A Popover, Dialog or Drawer was opened inside a `<form>` and holds a form or a t
 
 PhoneInput was given a number starting with `+` or `00` and a calling code it doesn't know, so it reads the digits as a number in the current country. Add the country's row to `countries`.
 
+## qr-code-too-long
+
+A QRCode's `value` is longer than the largest QR code holds at its `level` (about 2,300 characters at `L`, 1,270 at `H`), so it draws an empty square. Shorten the value, lower `level` if nothing covers the code, or put the rest on a page and encode its link.
+
 ## relative-time-date
 
 A RelativeTime whose `date` isn't a date (a typo, an empty string, a format `Date` can't read) shows nothing, with no other sign. Pass a `Date`, a timestamp in milliseconds, or an ISO string such as `"2026-10-24T09:30:00Z"`.

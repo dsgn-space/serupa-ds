@@ -56,8 +56,14 @@
   function resolved() { return state.mode === 'auto' ? (media && media.matches ? 'dark' : 'light') : state.mode; }
   function info() { return { brand: state.brand, mode: state.mode, theme: state.brand + '-' + resolved() }; }
   // <meta name="theme-color"> (a phone's bars) is the body's fill (surface-page), or the token value before the CSS; a page's own stays.
-  var tint;
+  // <meta name="color-scheme"> is the mode it shows, so a dark page's canvas (and its scrollbars and form controls) is
+  // dark from the first paint, before tokens.css sets color-scheme; a page's own stays (dark-mode guide).
+  var tint, scheme;
   function chrome() {
+    if (scheme !== false) {
+      if (!scheme) scheme = document.querySelector('meta[name="color-scheme"]') ? false : document.head.appendChild(document.createElement('meta'));
+      if (scheme) { scheme.name = 'color-scheme'; scheme.content = resolved(); }
+    }
     if (!tint) {
       if (document.querySelector('meta[name="theme-color"]')) return;
       tint = document.head.appendChild(document.createElement('meta'));

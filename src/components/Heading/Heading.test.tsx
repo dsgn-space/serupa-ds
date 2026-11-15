@@ -8,6 +8,21 @@ const el = (id: string) => document.getElementById(id) as HTMLElement;
 const LEVELS: HeadingLevel[] = [1, 2, 3, 4, 5, 6];
 
 describe('Heading', () => {
+  test('--font-heading puts an app\'s own heading face first, and the language\'s sans stack still follows it (Japanese keeps Noto Sans JP); body text keeps the sans stack', async () => {
+    await render(<div style={{ '--font-heading': '"Brand Display"' } as React.CSSProperties}>
+      <Heading id="hen" level={1}>Plans</Heading>
+      <p id="pen">Body</p>
+      <div lang="ja"><Heading id="hja" level={2}>料金プラン</Heading><p className="type-heading-3" id="tja">見出し</p></div>
+    </div>);
+    const fam = (id: string) => css(el(id)).fontFamily;
+    expect(fam('hen')).toMatch(/^"Brand Display", Inter,/);
+    expect(fam('pen')).not.toMatch(/Brand Display/);
+    for (const id of ['hja', 'tja']) expect(fam(id)).toMatch(/^"Brand Display", Inter, "Inter Fallback", "Noto Sans JP"/);
+    // Unset, a heading is drawn in the sans stack, as before.
+    await render(<Heading id="plain">Plain</Heading>);
+    expect(fam('plain').startsWith('Inter, "Inter Fallback"')).toBe(true);
+  });
+
   test('defaults: an <h2>; ref, className and props reach it', async () => {
     const r = React.createRef<HTMLHeadingElement>();
     await render(<Heading id="hdef" ref={r} className="extra" data-x="y">Default</Heading>);

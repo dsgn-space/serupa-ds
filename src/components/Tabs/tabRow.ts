@@ -90,16 +90,17 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
   }, [tab, on]);
   // Which ends have tabs past them: before is the left (or top) edge, after the right (or bottom). In RTL,
   // scrollLeft runs from 0 down to minus the overflow.
-  const measure = React.useCallback(() => {
+  const edges = React.useCallback(() => {
     const el = list.current;
     if (!el) return;
-    place();
     const max = vertical ? el.scrollHeight - el.clientHeight : el.scrollWidth - el.clientWidth;
     let at = vertical ? el.scrollTop : el.scrollLeft;
     if (!vertical && getComputedStyle(el).direction === 'rtl') at = max + at;
     const next = { before: max > 1 && at > 1, after: max > 1 && at < max - 1 };
     setFade((f) => (f.before === next.before && f.after === next.after ? f : next));
-  }, [vertical, place]);
+  }, [vertical]);
+  // The tabs' places, then the fades. A scroll only needs the fades: the tabs don't move inside the row as it scrolls.
+  const measure = React.useCallback(() => { place(); edges(); }, [place, edges]);
   useIsoLayoutEffect(() => {
     const el = list.current;
     if (!el) return;
@@ -107,12 +108,12 @@ export function useTabRow<E extends HTMLElement>(tab: string, on: string, vertic
     // The fades ease only once the list has been scrolled (Tabs.css): one that's there from the first frame is just there.
     // The row's own scroll to the selected tab as it mounts doesn't count: Firefox fires its scroll event late enough
     // that a fade measured after it would ease in on the first frame.
-    const scrolled = () => { if ((vertical ? el.scrollTop : el.scrollLeft) !== own.current) el.setAttribute('data-scrolled', ''); measure(); };
+    const scrolled = () => { if ((vertical ? el.scrollTop : el.scrollLeft) !== own.current) el.setAttribute('data-scrolled', ''); edges(); };
     el.addEventListener('scroll', scrolled, { passive: true });
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
     if (ro) { ro.observe(el); Array.from(el.children).forEach((c) => ro.observe(c)); }
     return () => { el.removeEventListener('scroll', scrolled); if (ro) ro.disconnect(); };
-  }, [measure]);
+  }, [measure, edges]);
   // The selected tab, scrolled into view inside the list only (the page doesn't move), with the fade's room to spare.
   const reveal = React.useCallback((first?: boolean) => {
     const el = list.current;

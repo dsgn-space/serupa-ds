@@ -62,7 +62,7 @@ Drawn from the `MonthYearPicker` story.
 
 - A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
 - The heading button is named by the month it shows and described by what it does ("Choose a month", in the month grid "Choose a year"). The month and year grids are `role="grid"` too, named by the hidden title, which says "2025" or "2016–2027" as the view changes. Months are shown short and read in full ("March 2025").
-- Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
+- Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (in `disabled-text` and struck through).
 - Weekday headers show the short name, and screen readers read the full one ("Monday", from visually hidden text, and in `abbr`), since "Mon" or "M" is read letter by letter or not at all by some.
 - Text keeps 4.5:1 and the selected fill 3:1 in every theme (`Calendar.test.tsx`).
 - In forced colors (Windows high contrast) the selected day is drawn in Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide its number. The same goes for DatePicker's and DateRangePicker's pop-ups.
@@ -131,6 +131,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-range-bg` | `primary-subtle` | Days between the start and end of a range (DateRangePicker). |
 | `--calendar-range-color` | `text` | Their numbers (4.5:1 on range-bg). |
 | `--calendar-focus-ring` | `focus-ring` | A day's keyboard focus ring. |
+| `--calendar-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

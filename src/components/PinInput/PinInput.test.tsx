@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { cdp, page, server, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, pasteText, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, pasteText, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { PinInput } from './PinInput';
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
@@ -149,14 +149,14 @@ describe('PinInput', () => {
     await expect.poll(() => shown('p')).toBe('12____');
   });
 
-  test('sizes: square boxes at 24, 32 and 44px, 8px apart; disabled is faded and can\'t be typed in', async () => {
+  test('sizes: square boxes at 24, 32 and 44px, 8px apart; disabled is in the neutral disabled colors and can\'t be typed in', async () => {
     await render(<div>
       <PinInput id="s" aria-label="S" size="sm" length={2} /><PinInput id="m" aria-label="M" length={2} /><PinInput id="l" aria-label="L" size="lg" length={2} />
       <PinInput id="d" aria-label="D" disabled length={2} />
     </div>);
     const dim = (id: string) => { const r = boxes(id)[0]!.getBoundingClientRect(), r2 = boxes(id)[1]!.getBoundingClientRect(); return [r.width, r.height, r2.left - r.right]; };
     expect([dim('s'), dim('m'), dim('l')]).toEqual([[24, 24, 8], [32, 32, 8], [44, 44, 8]]);
-    expect([el('d').disabled, css(root('d')).opacity]).toEqual([true, '0.5']);
+    expect([el('d').disabled, disabledLook(boxes('d')[0]!)]).toEqual([true, 'neutral']);
   });
 
   test('in a narrow column the boxes shrink together and stay square, down to 24px, so six lg or eight md boxes fit 288px (a 320px screen with 16px gutters) (GJ3)', async () => {

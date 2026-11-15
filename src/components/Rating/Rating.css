@@ -42,7 +42,7 @@
 @media (pointer: coarse) { .dk-rating__choice { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--dk-reach-block); } }
 .dk-rating__star:has(.dk-rating__choice:focus-visible) { outline: var(--focus-ring-width) solid var(--rating-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-rating[aria-invalid="true"] .dk-rating__empty { color: var(--rating-invalid, var(--danger)); }   /* the error shows on the stars, as on a field's border */
-.dk-rating--disabled { opacity: var(--opacity-disabled); }
+.dk-rating--disabled { --rating-fill: var(--rating-text-disabled, var(--disabled-text)); --rating-empty: var(--rating-border-disabled, var(--disabled-border)); }
 .dk-rating--disabled .dk-rating__choice { cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {
   /* An empty star is an outline in the text color, not GrayText, which forced colors keep for what's disabled: the

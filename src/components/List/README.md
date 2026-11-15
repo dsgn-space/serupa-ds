@@ -139,7 +139,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 | `as` | a component | the `configure({ link })` link, else `'a'` | Your router's link component; its props (such as `to`) go in `linkProps`. Set it once for the app with `configure({ link })`; `as` wins for one link. |
 | `linkProps` | object | none | Extra props for the link or button |
 | `selected` | boolean | `false` | Shaded (with a bar at its start when more contrast is asked for); `aria-current="true"` on a link (an `aria-current` in `linkProps`, such as `"page"` for the current page of a nav list, wins), `aria-pressed` on a button |
-| `disabled` | boolean | `false` | Dims a link or button row and stops it; with `selectionMode`, it can't be picked |
+| `disabled` | boolean | `false` | Draws a link or button row in `disabled-text` and stops it; with `selectionMode`, it can't be picked |
 | `value` | string | | With `selectionMode`: what `onSelectedChange` reports for this row |
 
 `className`, `ref` and everything else go to the `<li>`.
@@ -183,6 +183,7 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--list-bg-pressed` | `pressed` | A link or button item while it's pressed (not while its trailing action is), one step past hover. |
 | `--list-indicator-selected` | `highlight-indicator` | The bar at the start of a selected item. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
 | `--list-focus-ring` | `focus-ring` | The keyboard focus ring. |
+| `--list-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--list-title-size` | `text-sm` | Titles (14px). |
 | `--list-title-weight` | `font-medium` | Title weight (500). |
 | `--list-description-size` | `text-sm` | Descriptions (14px). |

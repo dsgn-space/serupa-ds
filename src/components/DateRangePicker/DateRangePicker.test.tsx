@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { DateRangePicker, type DateRange } from './DateRangePicker';
 
@@ -274,10 +274,10 @@ describe('DateRangePicker', () => {
     expect(fields('rqf').map((x) => x.getAttribute('aria-required'))).toEqual(['true', 'true']);
   });
 
-  test('disabled: both fields and the button are disabled and faded', async () => {
+  test('disabled: both fields and the button are disabled and in the neutral disabled colors', async () => {
     await render(<DateRangePicker data-testid="dis" aria-label="Off" disabled />);
     expect([...box('dis').querySelectorAll<HTMLInputElement | HTMLButtonElement>('input, button')].every((x) => x.disabled)).toBe(true);
-    await expect.poll(() => getComputedStyle(box('dis')).opacity).toBe('0.5');
+    await expect.poll(() => disabledLook(box('dis'))).toBe('neutral');
   });
 
   test('opening with only a start asks for the end: one pick completes it; contrast: days in the range, the status line and the dash keep 4.5:1 in every theme; --calendar-range-bg overrides the fill', async () => {

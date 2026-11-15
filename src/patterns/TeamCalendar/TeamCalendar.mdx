@@ -1,0 +1,43 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './TeamCalendar.stories';
+
+<Meta of={Stories} />
+
+# Team calendar
+
+A team's events by month, week, day or as a list: add one from a form, open one to see when it is, move one by dragging or by keyboard, and delete one with Undo.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Events people plan around and share: meetings, launches, time off, an on-call rota.
+- Not for picking one day in a form: that's Date picker.
+- Not for a list of dated things with no times to plan around: that's the Activity log pattern, or Timeline.
+
+## What each part is for
+
+- **Nothing needs a drag.** EventCalendar moves an event with Shift and the arrow keys as well as by dragging, and New event opens the same form a press on an empty day or hour does (2.5.7, 2.1.1).
+- **A press on an empty day or hour opens the form there**, on that day, at that hour, or all day from the month. The form needs only a title.
+- **The form says what's missing next to the field**: "Enter a title for the event.", "Choose an end after the start.", and focus goes to the first (3.3.1, 3.3.2). All day hides the times, so there's nothing there to get wrong. An add that fails says so in the dialog, which stays open with what was typed.
+- **After an add**, focus goes back to where the form was opened from, and a toast says the event and when (2.4.3, 4.1.3).
+- **A move shows at once and is saved after.** One that can't be saved goes back, and a toast names the event and when it is again: "Couldn’t move “Design review”. It’s back on Tuesday, March 4, 2025, 2:00 PM to 3:00 PM." (4.1.3).
+- **An event's dialog says when it is in words**, the whole day and the times, so nobody has to read it off the grid (1.3.1).
+- **Delete is in the event's own dialog**, named "Delete event" under the event's title. The event goes at once, a toast offers Undo, and focus goes back to the calendar (3.3.4, 2.4.3).
+- **The h1 is the calendar's name**, and the month (or week, or day) is the h2, so the headings list says where you are.
+- **While the events load**, set `loading`: one placeholder, named "Loading events", and New event waits. **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+A move that can't be saved. Move any event to try it:
+
+<Canvas of={Stories.MoveFails} />
+
+<Canvas of={Stories.AddFails} />
+
+## What stays your app's job
+
+- **Saving.** `onAdd` gets the form (the day as "yyyy-mm-dd", times as "HH:mm"): return the new event's id, or a promise of it. `onMove` gets the event and its new times: return its promise. Reject either when saving fails. `onDelete` is called once Undo has passed.
+- **Repeating events.** Expand them into their occurrences, each marked `repeating`, and ask whether a change is for one or all before you save it.
+- **Time zones.** Times are the reader's local times. A team across time zones says which one the event was set in, in its title or its details.
+- **Other people's changes.** When someone else changes an event, pass new `events` on a new `key`, and say what changed in a toast.
+- Rendering a `Toaster` once in the app.

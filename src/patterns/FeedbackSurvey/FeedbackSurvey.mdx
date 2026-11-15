@@ -1,0 +1,35 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './FeedbackSurvey.stories';
+
+<Meta of={Stories} />
+
+# Feedback survey
+
+A few questions after something happened, such as a visit, an order or a call: a rating, what you came to do, what could be better, your own words, and whether we may write back.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A short survey linked from an email, a receipt or the end of a task. Keep it to a few questions, with only one needed.
+- Not for long research questionnaires with pages of questions: those are the Multi-step form pattern.
+- Not for reporting a problem that needs an answer: that's the Help center pattern's contact form.
+
+## What each part is for
+
+- **The page says how many questions there are** and that only the first is needed; each other one says it's optional (3.3.2).
+- **The rating is a named group of radios, one per star**, each named with its number, so it's chosen with the arrow keys and read as a choice, not a picture (1.3.1, 4.1.2).
+- **The choices are named groups**: radios when there's one answer, checkboxes when there can be several (1.3.1).
+- **The email shows only once you've said we may write back**, and it's then needed. It says what it's for autofill (3.3.2, 1.3.5).
+- **What's missing is said next to its question when you send**, and focus goes to it (3.3.1).
+- **Send thanks you only once the server has the answers.** Answers that can't be sent say so and stay (3.3.1, 4.1.3).
+- **The thanks take focus** and say whether you'll hear back (2.4.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.AfterAnOrder} />
+
+## What stays your app's job
+
+- **Sending.** `onSend` gets the answers: return its promise, and reject it when they can't be sent.
+- **The questions.** Copy the pattern and change them; keep one needed question at most, and say how many there are.
+- **Not asking twice.** Remember who has answered, and don't show the survey to them again.

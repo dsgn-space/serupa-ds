@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, iconPoints } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, iconPoints, disabledLook } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { IconButton } from '../IconButton/IconButton';
@@ -161,11 +161,11 @@ describe('Pagination', () => {
     expect([r.width + 'x' + r.height, css(named('plg', 'Page 1')).fontSize, Math.round(select.parentElement!.getBoundingClientRect().height)]).toEqual(['44x44', '16px', 44]);
   });
 
-  test('arrows with nowhere to go fade to 50%; a bad count, page, size and siblings fall back: no pages, both arrows disabled', async () => {
+  test('arrows with nowhere to go turn disabled-text; a bad count, page, size and siblings fall back: no pages, both arrows disabled', async () => {
     // @ts-expect-error: an unknown size, as plain JavaScript could pass
     await render(<Pagination id="pbad" count={-4} defaultPage={99} size="xl" siblings={-1} />);
     const s = css(named('pbad', 'Previous page'));
-    expect([s.opacity, s.cursor]).toEqual(['0.5', 'not-allowed']);
+    expect([disabledLook(named('pbad', 'Previous page')), s.cursor]).toEqual(['neutral', 'not-allowed']);
     expect(shown('pbad')).toBe('(<) (>)');
     expect(el('pbad').className).toBe('dk-pagination');
   });

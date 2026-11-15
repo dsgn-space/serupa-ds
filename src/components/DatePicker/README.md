@@ -36,7 +36,7 @@ Drawn from the `Disabled` story.
 ## Usage
 
 - Always wrap it in [Field](../Field/README.md) with a label, and put the expected format in the `hint` ("mm/dd/yyyy") for people who type.
-- Set `min`, `max` or `isDateDisabled` rather than rejecting a date after it's entered: blocked days show faded and struck through in the calendar and a blocked typed date puts back the last good value.
+- Set `min`, `max` or `isDateDisabled` rather than rejecting a date after it's entered: blocked days show in `disabled-text` and struck through in the calendar and a blocked typed date puts back the last good value.
 - Leave `locale` unset in most products so the format follows the visitor's browser. Set it only when the whole product uses one locale.
 - Use `name` in a plain form: it sends `yyyy-mm-dd`, whatever the display format.
 - Keep a day from an API or database as the plain `"yyyy-mm-dd"` string and pass it as is: `value="2026-10-24"`, and store `iso` from `onValueChange`. `new Date("2026-10-24")` is UTC midnight, which is 23 October anywhere west of Greenwich; DatePicker warns once in the console when it's given such a Date there.
