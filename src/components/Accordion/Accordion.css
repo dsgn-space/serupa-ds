@@ -15,7 +15,7 @@
 .dk-accordion__heading { margin: var(--spacing-0); font: inherit; }
 .dk-accordion__trigger {
   box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-4); width: var(--sizing-full);
-  padding: var(--accordion-padding-y, var(--spacing-4)) var(--spacing-0); border: var(--spacing-0); background: transparent; cursor: pointer; touch-action: manipulation;
+  padding: var(--accordion-padding-y, var(--spacing-4)) var(--spacing-0); border: var(--spacing-0); background: transparent; cursor: var(--cursor-interactive); touch-action: manipulation;
   color: var(--accordion-title-color, var(--text)); font-family: inherit; font-size: var(--accordion-title-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--accordion-title-weight, var(--font-medium)); text-align: start;
   border-radius: var(--radius-inner);
 }
@@ -25,7 +25,7 @@
 .dk-accordion__trigger:active:not(:disabled, [aria-disabled="true"]) { background: var(--accordion-trigger-bg-pressed, var(--pressed)); }
 .dk-accordion__trigger:focus-visible { outline: var(--focus-ring-width) solid var(--accordion-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-accordion--card .dk-accordion__trigger:focus-visible { outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-accordion__trigger:disabled { color: var(--accordion-text-disabled, var(--disabled-text)); cursor: not-allowed; }
+.dk-accordion__trigger:disabled { color: var(--accordion-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-accordion__trigger[aria-disabled="true"] { cursor: default; }
 /* A word longer than the line (a German compound, a URL) breaks instead of pushing the page sideways (WCAG 1.4.10). */
 .dk-accordion__title { text-wrap: balance; min-width: var(--spacing-0); overflow-wrap: anywhere; }

@@ -14,7 +14,7 @@
   display: inline-flex; align-items: flex-start; gap: var(--radio-gap, var(--spacing-2));
   vertical-align: top; color: var(--radio-label-color, var(--text));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--dk-radio-lh);
-  cursor: pointer; touch-action: manipulation;
+  cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-radio--size-sm { --dk-radio-box: var(--radio-size-sm, var(--spacing-3\.5)); --dk-radio-dot: var(--radio-dot-size-sm, var(--spacing-1\.5)); --dk-radio-lh: var(--text-xs--line-height); font-size: var(--text-xs); }
 .dk-radio--size-lg { --dk-radio-box: var(--radio-size-lg, var(--spacing-5)); --dk-radio-dot: var(--radio-dot-size-lg, var(--spacing-2)); --dk-radio-lh: var(--text-base--line-height); font-size: var(--text-base); }
@@ -56,7 +56,7 @@
 /* Read-only: a default cursor and no hover or press change, since a click does nothing. */
 .dk-radio--readonly { cursor: default; }
 /* Disabled, by its own prop, the group's or a disabled fieldset (Field group). */
-.dk-radio:has(.dk-radio__input:disabled) { color: var(--radio-text-disabled, var(--disabled-text)); cursor: not-allowed; }
+.dk-radio:has(.dk-radio__input:disabled) { color: var(--radio-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-radio:has(.dk-radio__input:disabled) .dk-radio__description { color: var(--radio-text-disabled, var(--disabled-text)); }
 /* Neutral, not faded (foundations.md, States): a chosen radio is a disabled-surface fill in a disabled-border edge, with a disabled-text dot. */
 .dk-radio__input:disabled { --dk-radio-bd: var(--radio-border-disabled, var(--disabled-border)); --dk-radio-fill: var(--radio-fill-disabled, var(--disabled-surface)); }

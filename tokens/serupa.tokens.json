@@ -8386,6 +8386,22 @@
       "$value": "auto",
       "$description": "Follow the parent stacking context."
     },
+    "cursor-interactive": {
+      "$value": "pointer",
+      "$description": "Cursor: over anything that acts on a click (buttons, tabs, options, links styled as controls). Set it to `default` for the platform's arrow on buttons, as desktop apps do; links keep the hand."
+    },
+    "cursor-disabled": {
+      "$value": "not-allowed",
+      "$description": "Cursor: over a disabled control. Set it to `default` to show nothing special."
+    },
+    "cursor-grab": {
+      "$value": "grab",
+      "$description": "Cursor: over something that can be dragged (a handle, a card, a splitter's thumb)."
+    },
+    "cursor-grabbing": {
+      "$value": "grabbing",
+      "$description": "Cursor: while something is being dragged."
+    },
     "z-sticky": {
       "$type": "number",
       "$value": 20,

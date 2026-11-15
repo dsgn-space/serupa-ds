@@ -14,7 +14,7 @@
   display: inline-flex; align-items: flex-start; gap: var(--switch-gap, var(--spacing-2));
   vertical-align: top; color: var(--switch-label-color, var(--text));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--dk-switch-lh);
-  cursor: pointer; touch-action: manipulation;
+  cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-switch--size-sm { --dk-switch-w: var(--switch-width-sm, var(--spacing-7)); --dk-switch-h: var(--switch-height-sm, var(--spacing-4)); --dk-switch-thumb: var(--switch-thumb-size-sm, var(--spacing-3)); --dk-switch-lh: var(--text-xs--line-height); font-size: var(--text-xs); }
 .dk-switch--size-lg { --dk-switch-w: var(--switch-width-lg, var(--spacing-11)); --dk-switch-h: var(--switch-height-lg, var(--spacing-6)); --dk-switch-thumb: var(--switch-thumb-size-lg, var(--spacing-5)); --dk-switch-lh: var(--text-base--line-height); font-size: var(--text-base); }
@@ -76,7 +76,7 @@
 .dk-switch__input:checked + .dk-switch__thumb > .dk-switch__check { display: block; }
 @keyframes dk-switch-breathe { 50% { opacity: var(--opacity-50); } }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
-.dk-switch:has(.dk-switch__input:disabled) { color: var(--switch-text-disabled, var(--disabled-text)); cursor: not-allowed; }
+.dk-switch:has(.dk-switch__input:disabled) { color: var(--switch-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-switch:has(.dk-switch__input:disabled) .dk-switch__description { color: var(--switch-text-disabled, var(--disabled-text)); }
 /* Neutral, not faded (foundations.md, States): on or off, a disabled-surface track in a disabled-border edge, with a disabled-text thumb. */
 .dk-switch__input:disabled { --dk-switch-track: var(--switch-fill-disabled, var(--disabled-surface)); --dk-switch-on: var(--switch-fill-disabled, var(--disabled-surface)); box-shadow: inset 0 0 0 var(--border-width-1) var(--switch-border-disabled, var(--disabled-border)); }
