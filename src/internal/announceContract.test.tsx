@@ -152,7 +152,7 @@ const SITES: Record<string, Site> = {
     act: (next) => next(), says: /Approved: Reverse refund 2/ },
   'Pagination: Go to page': {
     ui: () => <Pagination count={50} jump onPageChange={() => {}} />,
-    act: async () => { $('dialog[open] input').focus(); await userEvent.keyboard('7{Enter}'); }, says: /Page 7/ },
+    act: async () => { $('dialog[open] input').focus(); await userEvent.keyboard('7{Enter}'); }, says: /Page [7٧]/ },
   'Chat: the next version of a reply': {
     ui: () => <ChatMessage branch={1} branches={3} onBranchChange={() => {}}>One</ChatMessage>,
     act: async () => { await userEvent.click($('button[aria-label="Next response"]')); }, says: /Response 2 of 3/ },
