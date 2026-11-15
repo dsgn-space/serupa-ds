@@ -38,7 +38,7 @@
   fill: currentColor;
   transform-box: fill-box;
   transform-origin: center;
-  animation: dk-loader-dot var(--loader-dots-duration, var(--duration-1000)) var(--ease-in-out) infinite both;
+  animation: dk-loader-dot var(--loader-dots-duration, var(--duration-1000)) var(--ease-move) infinite both;
 }
 .dk-loader__dot:nth-child(2) { animation-delay: var(--loader-dots-stagger, var(--delay-150)); }
 .dk-loader__dot:nth-child(3) { animation-delay: calc(var(--loader-dots-stagger, var(--delay-150)) + var(--loader-dots-stagger, var(--delay-150))); }
@@ -51,7 +51,7 @@
 .dk-loader__px {
   fill: currentColor;
   opacity: var(--loader-pixel-dim, var(--opacity-15));
-  animation: dk-loader-pixel var(--loader-pixel-duration, var(--duration-1200)) var(--ease-in-out) infinite both;
+  animation: dk-loader-pixel var(--loader-pixel-duration, var(--duration-1200)) var(--ease-move) infinite both;
 }
 /* stylelint-disable-next-line color-named -- inside the SVG mask: black cuts, white keeps; not a color anyone sees */
 .dk-loader__px-cut { fill: none; stroke: black; stroke-width: var(--loader-pixel-divider-width, var(--stroke-width-1)); }
@@ -77,7 +77,7 @@
 .dk-loader--pattern-random .dk-loader__px--r8 { animation-duration: calc(var(--duration-1000) + var(--duration-700) + var(--duration-200)); animation-delay: var(--delay-75); }
 /* Step patterns (sweep, fall, rise, snake, spiral, cross, checker): each square has a step, 0 to 8, and starts one
    --loader-pixel-stagger (75ms) per step after step 0. Each square rises, holds and fades exactly like the
-   wave's (dk-loader-pixel, ease-in-out), so every pattern moves as smoothly as the wave.
+   wave's (dk-loader-pixel, ease-move), so every pattern moves as smoothly as the wave.
    Wave, sweep, fall and rise loop in --loader-pixel-duration (1.2s), rows and columns stepping two at a time
    (150ms); snake and spiral, nine steps, loop in 1.5s; cross and checker light one group, then the other 525ms
    later, in a 1s loop. */
@@ -128,7 +128,7 @@
   40% { opacity: var(--opacity-100); }
 }
 /* Text variant: the words in the text color, dimmed to --loader-label-dim, with a band of full color
-   sweeping left to right through them every 2s (ease-in-out: easing in and out), a shine. The dimmed text keeps 4.5:1 on surface in every
+   sweeping left to right through them every 2s (ease-move: easing in and out), a shine. The dimmed text keeps 4.5:1 on surface in every
    theme. The band is a window (.dk-loader__glint, a soft-edged half of the label) that slides across on translate, holding a full-color
    copy of the words (::after, the label's width) that slides back by as much, so the copy stays on the words: both run on the compositor. */
 .dk-loader__label {
@@ -152,7 +152,7 @@
   pointer-events: none;
   -webkit-mask-image: var(--dk-loader-glint-edge);
   mask-image: var(--dk-loader-glint-edge);
-  animation: dk-loader-glint calc(var(--duration-1000) + var(--duration-1000)) var(--ease-in-out) infinite;   /* ease-in-out: the shine eases in, glides through, eases out */
+  animation: dk-loader-glint calc(var(--duration-1000) + var(--duration-1000)) var(--ease-move) infinite;   /* ease-move: the shine eases in, glides through, eases out */
 }
 .dk-loader__glint::after {
   --dk-loader-glint-from: calc(var(--sizing-full) / 2);
@@ -169,7 +169,7 @@
 .dk-loader__glint:dir(rtl)::after { --dk-loader-glint-from: calc(var(--sizing-full) / -2); --dk-loader-glint-to: var(--sizing-full); }
 @keyframes dk-loader-glint { from { translate: var(--dk-loader-glint-from) 0; } to { translate: var(--dk-loader-glint-to) 0; } }
 /* Skeleton variant: placeholder shapes in the place of content that is loading, with the same shine as the text
-   variant (a lighter band sweeping left to right every 2s, ease-in-out). Shapes: "text" (lines as tall as the
+   variant (a lighter band sweeping left to right every 2s, ease-move). Shapes: "text" (lines as tall as the
    size's text line, the last of several shorter), "circle" (an avatar, the loader's size) and "rect" (an image or
    a card, full width). Width and height follow utility classes (w-48, size-12, h-40, aspect-video…), which come
    later in this file and win. Structure: .dk-loader--skeleton > .dk-loader__line > .dk-loader__bone (text), or
@@ -200,7 +200,7 @@
   inset-inline-end: var(--spacing-0);
   width: calc(var(--sizing-full) + var(--sizing-full) + var(--sizing-full));
   background-image: linear-gradient(to right, var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-glint), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill), var(--dk-loader-fill));   /* evenly spaced stops: a band about half the bone wide */
-  animation: dk-loader-sweep calc(var(--duration-1000) + var(--duration-1000)) var(--ease-in-out) infinite;
+  animation: dk-loader-sweep calc(var(--duration-1000) + var(--duration-1000)) var(--ease-move) infinite;
 }
 .dk-loader__bone:dir(rtl)::after { --dk-loader-sweep: calc(var(--sizing-full) * -2 / 3); }
 @keyframes dk-loader-sweep { to { translate: var(--dk-loader-sweep) 0; } }

@@ -21,6 +21,8 @@ import { transformsAfter } from '../bin/migrate/transforms.mjs';
 import acr from './acr.json';
 import { componentTests } from './generated/tested';
 import { changesFor } from './changes';
+import since from './since.json';
+import { sinceText, type Since } from './since';
 import { AnatomyDiagram, parseAnatomy, type Anatomy } from './anatomy';
 import { DoDont, doDontAt } from './doDont';
 // What the blocks need from every component folder at once (each one's docs page id, other names, label uses, tokens)
@@ -92,6 +94,7 @@ export function Guide({ source }: { source: string }) {
       <span>The whole guide as Markdown, to paste into a coding agent.</span>
     </div>}
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
+    {name && <ComponentSince name={name} />}
     {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <DocMarkdown key={i} slugify={slugify}>{relink(part)}</DocMarkdown>
       : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
@@ -154,6 +157,13 @@ export function ComponentStatus({ status }: { status: keyof typeof STATUS_TEXT }
     <strong style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: '0.04em' }}>{status}</strong>
     <span>{STATUS_TEXT[status]}</span>
   </p>;
+}
+
+/** Which release a component arrived in and last changed its API, and the props new in the latest releases (AX6). */
+export function ComponentSince({ name }: { name: string }) {
+  const text = sinceText((since as Record<string, Since>)[name]);
+  if (!text) return null;
+  return <div className="sb-since" style={{ font: '14px/20px var(--font-sans)', color: 'var(--text-muted)' }}><Markdown>{text}</Markdown></div>;
 }
 
 const ROOT = readme;
