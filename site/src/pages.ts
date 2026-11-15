@@ -51,7 +51,7 @@ const az = (a: Page, b: Page) => a.name.localeCompare(b.name, 'en', { sensitivit
 const inSection = (section: string) => pages.filter((p) => p.section === section);
 // The reading order Storybook's sidebar gives the Foundations pages (.storybook/preview.tsx); the rest follow A to Z.
 const FOUNDATIONS = ['Design principles', 'Colors', 'Themes', 'Theme playground', 'Typography', 'Spacing', 'Layout', 'Corner radius', 'Effects and borders', 'Elevation and layers', 'Motion',
-  'Content and voice', 'Ethical design', 'Accessibility', 'Utility classes', 'Icons'];
+  'Content and voice', 'Data formats', 'Ethical design', 'Accessibility', 'Utility classes', 'Icons'];
 const ordered = (list: Page[], order: string[]) => [...list].sort((a, b) => {
   const i = order.indexOf(a.name), j = order.indexOf(b.name);
   return (i < 0 ? order.length : i) - (j < 0 ? order.length : j) || az(a, b);

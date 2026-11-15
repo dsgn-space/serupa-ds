@@ -72,7 +72,7 @@ Drawn from the `Bottom` story.
 - `aria-modal` (left out with `modal={false}`), named by the title (`aria-labelledby`) and described by the description.
 - The title, description and body text keep 4.5:1 on the panel in every theme (`Drawer.test.tsx`). In forced-colors mode the panel gets a border.
 - A Dialog opened from inside it closes on its own: Escape closes the Dialog first, and the next Escape the Drawer.
-- On Android, the system back gesture asks to close it, like Escape. Under `<React.StrictMode>`, a Drawer that is open on its first render stays the innermost modal, so toasts and announcements still move into it.
+- On Android, the system back gesture asks to close it, like Escape, with `modal={false}` too (Escape on the page still leaves a non-modal one open). Under `<React.StrictMode>`, a Drawer that is open on its first render stays the innermost modal, so toasts and announcements still move into it.
 - With `unsaved`, Escape, the ×, the backdrop, a swipe or the browser closing it first ask "Discard changes?" in a small alert dialog on top, with Keep editing focused, as Dialog does. Keep editing (or Escape) goes back to the form as it was; Discard closes both, and only then does `onOpenChange(false)` come, with the reason of the first request. Leaving or reloading the page while it's open asks too (the browser's own `beforeunload` question). Your own Cancel button sets `open` itself, so it closes without asking.
 - To keep it open for another reason, leave `open` true when `onOpenChange(false)` comes. Chromium closes a modal dialog itself on a second Escape with no click in between; the component shows it again, so `open` stays the truth.
 
