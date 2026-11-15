@@ -291,6 +291,18 @@ describe('TimePicker', () => {
   });
 });
 
+describe('TimePicker: the list reads as Combobox\'s', () => {
+  test('a wide field: the list is as wide as the field, and its rows have Combobox\'s padding and corners nested in the list\'s', async () => {
+    const r = await render(<div style={{ width: '320px' }}><TimePicker id="tpw" aria-label="Start" defaultValue="09:00" /></div>);
+    await userEvent.click(button('tpw'));
+    await expect.poll(() => listOf('tpw').hidden).toBe(false);
+    const box = el('tpw').closest('[data-component="time-picker"]') as HTMLElement, l = listOf('tpw'), o = l.querySelector('[role="option"]')!;
+    await expect.poll(() => Math.round(l.getBoundingClientRect().width)).toBe(Math.round(box.getBoundingClientRect().width));
+    expect([css(o).paddingTop, css(o).paddingBottom, css(o).paddingInlineStart, css(o).borderTopLeftRadius]).toEqual(['6px', '6px', '8px', '3px']);
+    await r.unmount();
+  });
+});
+
 describe('TimePicker: autocomplete', () => {
   test('off by default; a passed autoComplete reaches the field', async () => {
     await render(<><TimePicker id="tpac" aria-label="Start" /><TimePicker id="tpon" aria-label="Arrival" autoComplete="on" /></>);
