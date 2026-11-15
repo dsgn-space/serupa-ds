@@ -54,6 +54,9 @@ const itemsOf = (panel: HTMLElement | null): HTMLElement[] => {
   return shown.length ? shown : all;
 };
 
+/** True while a Menubar swaps one open menu for another: both go at once, with no fade (not exported by the package). */
+export const MenuSwap = /* @__PURE__ */ React.createContext(false);
+
 /* The keys inside an open menu (or a submenu's panel, whose keys bubble to the menu's element): ↑ ↓ move,
    wrapping, Home and End jump, typing goes to the next item starting with what was typed, Escape closes and puts
    focus back, Tab closes. Shared by Menu and ContextMenu. */
@@ -106,6 +109,7 @@ export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>('Menu',
   // A press outside the menu and its button closes it (focus stays where the press put it).
   // Its items stay, inert, while it fades out (DZ1); one open on arrival doesn't fade in.
   const exit = useExit(open, menuRef);
+  const swap = React.useContext(MenuSwap);
   useAnchoredLayer(open, menuRef, triggerRef, { placement: props.placement, fallback: 'bottom-start', offsetVar: '--dk-menu-offset', onOutside: () => close('outside', false), inside: triggerRef });
   // On open, focus goes to the first item (or the last, opened with ↑).
   useIsoLayoutEffect(() => {
@@ -166,7 +170,7 @@ export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>('Menu',
       {trigger}
       <div {...omit(props, OWN_MENU)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
         aria-label={props['aria-label']} aria-labelledby={props['aria-label'] || props['aria-labelledby'] ? props['aria-labelledby'] : cp.id || (triggerRef.current && triggerRef.current.id) || own + '-button'}
-        className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
+        className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant || swap ? '' : undefined}
         inert={!open || undefined} onKeyDown={onMenuKey}>
         {open || exit.leaving ? props.children : null}
       </div>
@@ -403,13 +407,17 @@ export interface MenuCheckboxItemProps extends CheckableProps {
   onCheckedChange?: ((checked: boolean) => void) | undefined;
 }
 
+/** Space on a setting changes it and keeps the menu open on it, so several take one trip (the APG's menu pattern);
+ *  Enter and a click choose and close, as on any item. */
+const stayOnSpace = (e: React.SyntheticEvent) => { if ((e as React.KeyboardEvent).key === ' ') e.preventDefault(); };
+
 /* MenuCheckboxItem: an on/off setting in a Menu (role menuitemcheckbox, aria-checked), with a check before the
-   label while it's on. Choosing it asks for the other state and closes the menu, as MenuItem does; call
-   event.preventDefault() in onSelect to keep the menu open. */
+   label while it's on. Choosing it asks for the other state and closes the menu, as MenuItem does, except with Space,
+   which keeps it open; call event.preventDefault() in onSelect to keep the menu open. */
 /** A setting in a Menu that's on or off, such as "Show grid". */
 export const MenuCheckboxItem = /* @__PURE__ */ component<HTMLElement, MenuCheckboxItemProps>('MenuCheckboxItem', function MenuCheckboxItem(props, ref) {
   const rest = omit(props, { checked: 1, onCheckedChange: 1, onSelect: 1, icon: 1, shortcut: 1 });
-  const onSelect = (e: React.SyntheticEvent) => { if (props.onCheckedChange) props.onCheckedChange(!props.checked); if (props.onSelect) props.onSelect(e); };
+  const onSelect = (e: React.SyntheticEvent) => { if (props.onCheckedChange) props.onCheckedChange(!props.checked); if (props.onSelect) props.onSelect(e); stayOnSpace(e); };
   return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: 'menuitemcheckbox', 'aria-checked': !!props.checked }} onSelect={onSelect} />;
 });
 
@@ -443,7 +451,7 @@ export interface MenuRadioItemProps extends CheckableProps {
 export const MenuRadioItem = /* @__PURE__ */ component<HTMLElement, MenuRadioItemProps>('MenuRadioItem', function MenuRadioItem(props, ref) {
   const group = React.useContext(RadioContext);
   const rest = omit(props, { value: 1, onSelect: 1, icon: 1, shortcut: 1 });
-  const onSelect = (e: React.SyntheticEvent) => { if (group) group.choose(props.value); if (props.onSelect) props.onSelect(e); };
+  const onSelect = (e: React.SyntheticEvent) => { if (group) group.choose(props.value); if (props.onSelect) props.onSelect(e); stayOnSpace(e); };
   return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: 'menuitemradio', 'aria-checked': !!group && group.value === props.value }} onSelect={onSelect} />;
 });
 
@@ -463,6 +471,14 @@ export interface MenuSubProps extends Omit<React.HTMLAttributes<HTMLElement>, 'c
    to the item; ↑ ↓ Home End and letters work inside it alone. Hovering the item opens it after a moment, and the
    pointer can cross the items in between on its way: it closes a moment after the focus settles on another item
    of its menu. Choosing an item in it closes the whole menu. */
+type Point = { x: number; y: number };
+/** Whether p is inside the triangle a, b, c (on an edge counts). */
+const inTriangle = (p: Point, a: Point, b: Point, c: Point) => {
+  const side = (u: Point, v: Point) => (v.x - u.x) * (p.y - u.y) - (v.y - u.y) * (p.x - u.x);
+  const d1 = side(a, b), d2 = side(b, c), d3 = side(c, a);
+  return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
+};
+
 /** An item that opens a submenu of more items. */
 export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>('MenuSub', function MenuSub(props, ref) {
   const id = domId('dk-menu-sub', React.useId());
@@ -502,14 +518,26 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>('Men
   React.useEffect(() => {
     const item = itemRef.current, parent = item && item.closest<HTMLElement>('[role="menu"]');
     if (!open || !item || !parent) return;
+    // While the pointer heads for the submenu across the items below or above this one, they take focus on the way
+    // but the submenu stays: each moment it checks again whether the pointer is still moving inside the triangle from
+    // where it was toward the submenu's near edge (the "safe triangle" of native menus). Resting, or moving off it, closes.
+    let at = { x: 0, y: 0, t: 0 }, from = at;
+    const onMove = (e: PointerEvent) => { if (e.pointerType === 'mouse') at = { x: e.clientX, y: e.clientY, t: e.timeStamp }; };
+    const check = () => {
+      const r = panelRef.current && panelRef.current.getBoundingClientRect();
+      const x = r && (from.x <= r.left ? r.left : r.right);
+      if (r && at !== from && performance.now() - at.t < submenuIntent && inTriangle(at, from, { x: x!, y: r.top }, { x: x!, y: r.bottom })) { from = at; timer.current = setTimeout(check, submenuIntent); }
+      else setOpen(false);
+    };
     const onFocus = (e: FocusEvent) => {
       const t = e.target;
       if (!(t instanceof Node)) return;
       clearTimeout(timer.current);
-      if (t !== item && !(panelRef.current && panelRef.current.contains(t)) && parent.contains(t)) timer.current = setTimeout(() => { setOpen(false); }, submenuIntent);
+      if (t !== item && !(panelRef.current && panelRef.current.contains(t)) && parent.contains(t)) { from = at; timer.current = setTimeout(check, submenuIntent); }
     };
     document.addEventListener('focusin', onFocus);
-    return () => { document.removeEventListener('focusin', onFocus); };
+    document.addEventListener('pointermove', onMove, true);
+    return () => { document.removeEventListener('focusin', onFocus); document.removeEventListener('pointermove', onMove, true); };
   }, [open]);
 
   const opens = (key: string) => key === 'Enter' || key === ' ' || key === (rtl() ? 'ArrowLeft' : 'ArrowRight');

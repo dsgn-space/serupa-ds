@@ -290,7 +290,13 @@ describe('InlineEdit', () => {
       const page = css(root('c').parentElement).backgroundColor, hover = css(document.getElementById('hover-bg')).backgroundColor;
       for (const [id, need] of [['c', 4.5], ['cp', 4.5]] as const) {
         const fg = css(view(id).querySelector(TEXT)).color;
-        for (const [where, bg] of [['page', page], ['hover', hover]]) { const r = contrast(fg, bg!); if (r < need) low.push(`${th} ${id} on ${where} ${r.toFixed(2)}`); }
+        { const r = contrast(fg, page); if (r < need) low.push(`${th} ${id} on page ${r.toFixed(2)}`); }
+        // Under the pointer the placeholder steps to text-muted-shaded, read from the hovered button itself.
+        await userEvent.hover(view(id));
+        await expect.poll(() => css(view(id)).backgroundColor).toBe(hover);
+        const on = css(view(id).querySelector(TEXT)).color, r = contrast(on, hover);
+        if (r < need) low.push(`${th} ${id} on hover ${r.toFixed(2)}`);
+        await userEvent.unhover(view(id));
       }
     }
     document.documentElement.removeAttribute('data-theme');

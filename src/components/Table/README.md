@@ -184,6 +184,7 @@ Each is an optional override: set it on the page, a container or one table's fra
 | `--table-border` | `border` | The frame and the lines between rows. |
 | `--table-header-bg` | `surface-muted` | The header row's background. |
 | `--table-header-text` | `text-muted` | Header text (4.5:1 on header-bg). |
+| `--table-text-muted-shaded` | `text-muted-shaded` | Grey text in a hovered, striped or selected row, where `text-muted` would fall under 4.5:1 on the shaded fill; it reaches muted text in your cells too. |
 | `--table-row-bg-hover` | `surface-hover` | A body row on hover, and every other row when striped (muted text keeps 4.5:1). |
 | `--table-row-bg-selected` | `surface-hover` | A selected row's background. |
 | `--table-row-indicator-selected` | `highlight-indicator` | The bar at the start of a selected row. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |

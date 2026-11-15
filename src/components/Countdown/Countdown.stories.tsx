@@ -22,7 +22,7 @@ export const Hours: Story = { args: { seconds: 3600 + 4 * 60 + 59 } };
 export const Words: Story = { args: { format: 'words' } };
 /** Ended: endText in place of the time, and said aloud as it ends. */
 export const Ended: Story = { args: { seconds: 0, endText: 'The offer has ended' }, render: (args) => <p className="m-0"><Countdown {...args} /></p> };
-// The stress story (G14): days in words in a narrow column; the time stays on one line.
+// The stress story (G14): days in words in a narrow column; they wrap between units, never inside one.
 export const LongText: Story = {
   args: { seconds: 2 * 86400 + 3 * 3600 + 4 * 60 + 5, format: 'words', label: 'Registration closes in' },
   render: (args) => <p className="m-0 w-40">Registration closes in <Countdown {...args} /></p>,

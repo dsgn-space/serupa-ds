@@ -109,6 +109,18 @@ describe('Menubar', () => {
     expect(top('Edit').getAttribute('aria-expanded')).toBe('false');
   });
 
+  test('pointing from one open menu to the next swaps them at once, as desktop menu bars do: no fade out and in; the first open still fades in', async () => {
+    await render(<Editor />);
+    const panel = (name: string) => document.getElementById(top(name).getAttribute('aria-controls')!)!;
+    await userEvent.click(top('File'));
+    const file = panel('File');
+    expect(file.hasAttribute('data-instant')).toBe(false);
+    await userEvent.hover(top('View'));
+    expect([top('View').getAttribute('aria-expanded'), panel('View').hasAttribute('data-instant')]).toEqual(['true', true]);
+    // The menu left behind goes at once too, so two never show while one fades.
+    expect([file.hidden, file.hasAttribute('data-instant'), file.getAnimations().length]).toEqual([true, true, 0]);
+  });
+
   test('a disabled menu does not open on a click', async () => {
     await render(<Editor />);
     await userEvent.click(top('Format'), { force: true });
