@@ -41,12 +41,12 @@ export const MaskedValue = /* @__PURE__ */ component<HTMLSpanElement, MaskedValu
   const [own, setOwn] = React.useState(false);
   const controlled = props.revealed !== undefined;
   const shown = !!props.revealable && (controlled ? !!props.revealed : own);
-  const set = React.useRef<(v: boolean) => void>(() => {});
+  const set = React.useRef<((v: boolean) => void) | null>(null);
   set.current = (v: boolean) => { if (!controlled) setOwn(v); if (props.onRevealedChange) props.onRevealedChange(v); };
   // Leaving the page hides it again, so a value shown for a moment isn't left on a screen someone walks away from.
   React.useEffect(() => {
     if (!shown) return;
-    const hide = () => { if (document.visibilityState === 'hidden') set.current(false); };
+    const hide = () => { if (document.visibilityState === 'hidden') set.current?.(false); };
     document.addEventListener('visibilitychange', hide);
     return () => document.removeEventListener('visibilitychange', hide);
   }, [shown]);
@@ -58,7 +58,7 @@ export const MaskedValue = /* @__PURE__ */ component<HTMLSpanElement, MaskedValu
         ? <span className="dk-masked-value__text">{props.value}</span>
         : <><span className="dk-masked-value__text" aria-hidden>{masked}</span><span className="dk-visually-hidden">{said}</span></>}
       {props.revealable ? <IconButton className="dk-masked-value__toggle" icon={shown ? icons.VisibilityOff : icons.Visibility} label={sds.labels.showValue(props.label)} hideTitle
-        size="sm" variant="ghost" aria-pressed={shown} onClick={() => set.current(!shown)} /> : null}
+        size="sm" variant="ghost" aria-pressed={shown} onClick={() => set.current?.(!shown)} /> : null}
     </span>
   );
 });

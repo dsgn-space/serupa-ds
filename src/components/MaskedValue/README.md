@@ -25,6 +25,13 @@ maskValue("4111111111111208")   // "•••• 1208", the same text outside Re
 - A value the reader isn't allowed to see at all. Mask it on the server and send only the end: masking in the browser only hides it from people looking at the screen.
 - A key someone needs to copy once, right after making it: show it whole with a [CopyButton](../CopyButton/README.md), and say it won't be shown again.
 
+## Anatomy
+
+Drawn from the `Revealable` story.
+
+1. **Value** (`.dk-masked-value__text`): the kept characters after four bullets, or the whole value once shown. Hidden from screen readers while masked.
+2. **Show button** (`.dk-masked-value__toggle`): with `revealable`, an IconButton that shows and hides the value.
+
 ## Usage
 
 - Keep the least that lets the owner recognize it: the last four of a card or an id, the last three or four of a phone, the first letter of an email, a key's prefix. The Data formats page lists them.

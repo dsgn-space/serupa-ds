@@ -23,6 +23,17 @@ import { QRCode } from "@diki-stwn/serupa-ds";
 - For a long text. A code holds about 2,300 characters at most, and long ones get too dense to scan from a small screen: link to a page that holds the rest.
 - To decorate. A code that does nothing for the reader is noise.
 
+## Anatomy
+
+Drawn from the `Statuses` story.
+
+1. **Code** (`.dk-qr-code__code`): the SVG image, named by `label`.
+2. **Light** (`.dk-qr-code__light`): the white square under the modules, quiet zone included, and the square behind a logo.
+3. **Dark modules** (`.dk-qr-code__dark`): one path of every dark module.
+4. **Status** (`.dk-qr-code__status`): over the faded code, with a status other than `active`.
+5. **Message** (`.dk-qr-code__message`): "Code expired" or "Scanned".
+6. **Check** (`.dk-qr-code__icon`): beside "Scanned".
+
 ## Usage
 
 - Keep the value short. A short URL makes a code with big modules that scans fast, even at `sm`.
