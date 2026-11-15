@@ -219,6 +219,28 @@ describe('Switch', () => {
     expect(low).toEqual([]);
   });
 
+  test('icon: a check sits on the thumb only while on, in primary at 3:1 or more on the thumb in every theme, and the name stays the label', async () => {
+    await render(<Switch id="ic" icon>Dark mode</Switch>);
+    const box = el('ic').closest('label') as HTMLElement, thumb = box.querySelector('input + span')!;
+    // The check is the thumb's only child.
+    const shown = () => (thumb.firstElementChild ? css(thumb.firstElementChild).display : 'none');
+    const check = () => thumb.querySelector<SVGElement>('svg');
+    expect(shown()).toBe('none');
+    await userEvent.click(box);
+    expect(el('ic').checked).toBe(true);
+    await expect.poll(shown).not.toBe('none');
+    const t = thumb.getBoundingClientRect(), i = check()!.getBoundingClientRect();
+    expect([i.width > 0, i.left >= t.left, i.right <= t.right, i.top >= t.top, i.bottom <= t.bottom]).toEqual([true, true, true, true, true]);
+    await expect.element(page.getByRole('switch', { name: 'Dark mode' })).toBeInTheDocument();
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const c = contrast(css(check()).color, css(thumb).backgroundColor); if (c < 3) low.push(`${th}: ${c.toFixed(2)}`);
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+  });
+
   test('L8E74 loading and controlled (checked with onChange): no React warning while it waits, and it stays as it was', async () => {
     const warned: unknown[] = [], warn = console.error;
     console.error = (...a: unknown[]) => { warned.push(a[0]); };

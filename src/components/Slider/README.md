@@ -39,6 +39,7 @@ Drawn from the `Marks` story.
 - Use `formatValue` whenever the number has a unit or a currency, so screen readers hear "$40", not "40".
 - Update what's on screen in `onValueChange`, and save or fetch in `onValueCommit`, which runs once per change.
 - Set `step` to the precision people need, so values snap to sensible numbers.
+- In a narrow column, such as a mixer or a level beside a picture, set `orientation="vertical"`. Keep it horizontal everywhere else: a horizontal track is easier to read and to label.
 - For a value with a middle, such as a balance or an offset from -10 to +10, set `origin={0}` so the fill starts in the middle and shows which way it leans.
 - Use `marks` when a few values matter, such as `[{ value: 0, label: "Off" }, { value: 100, label: "Max" }]`, or `marks` alone for a tick per step on a short scale. Keep the labels short; they sit on one line under the track.
 - Use `showValue` when people need to see the number while they drag, and there is no label nearby that shows it.
@@ -103,6 +104,7 @@ Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in i
 | `marks` | `boolean \| { value: number; label?: ReactNode }[]` | | Ticks on the track: `true` for every step, or the listed values with text under them. Visual only. |
 | `showValue` | `boolean` | `false` | The value over the thumb while it's focused, hovered or dragged. Visual only. |
 | `inputs` | `boolean` | `false` | A number field beside each thumb, kept in step with it, for typing an exact value. |
+| `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | `'vertical'` runs the track bottom to top, min at the bottom, `--slider-length` long; Up and Right raise it, in either direction of text, and the thumbs say `aria-orientation="vertical"`. Mark labels sit to the right of the track, the value chip to its left |
 | `origin` | `number` | `min` | Where a single thumb's fill starts: `0` on a -10 to +10 scale fills from the middle toward the thumb, either way. A range ignores it. |
 | `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
 | `form` | `string` | | The id of a form it sits outside of: its hidden inputs submit, and reset, with that form. |
@@ -141,6 +143,7 @@ Each is an optional override: set it on the page, a container or one slider. The
 | `--slider-thumb-size-md` | `spacing-5` | The thumb, size="md" (20px). |
 | `--slider-thumb-size-lg` | `spacing-6` | The thumb, size="lg" (24px). |
 | `--slider-input-width` | `spacing-20` | With inputs, each number field's width (80px). |
+| `--slider-length` | `spacing-48` | A vertical slider's length, along the track (192px). |
 
 **Border**
 
