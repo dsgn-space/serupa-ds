@@ -106,7 +106,7 @@ describe('Alert', () => {
     expect([s.backgroundColor, s.borderTopLeftRadius, s.paddingLeft]).toEqual(['rgb(1, 2, 3)', '3px', '7px']);
   });
 
-  test('contrast: title and message 4.5:1, icon 3:1, on all five tones in all six themes', async () => {
+  test('contrast: title and message 4.5:1, icon 3:1, on all five tones in every theme', async () => {
     await render(<Box><Tones /></Box>);
     const low: string[] = [];
     let n = 0;

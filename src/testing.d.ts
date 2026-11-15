@@ -1,5 +1,5 @@
-/** Serupa's six themes, in the order the docs show them. */
-export type SerupaTheme = 'blue-light' | 'blue-dark' | 'violet-light' | 'violet-dark' | 'emerald-light' | 'emerald-dark';
+/** Serupa's themes, in the order the docs show them: a light and a dark one for each brand color. */
+export type SerupaTheme = 'blue-light' | 'blue-dark' | 'red-light' | 'red-dark' | 'orange-light' | 'orange-dark' | 'amber-light' | 'amber-dark' | 'yellow-light' | 'yellow-dark' | 'lime-light' | 'lime-dark' | 'green-light' | 'green-dark' | 'emerald-light' | 'emerald-dark' | 'teal-light' | 'teal-dark' | 'cyan-light' | 'cyan-dark' | 'sky-light' | 'sky-dark' | 'indigo-light' | 'indigo-dark' | 'violet-light' | 'violet-dark' | 'purple-light' | 'purple-dark' | 'fuchsia-light' | 'fuchsia-dark' | 'pink-light' | 'pink-dark' | 'rose-light' | 'rose-dark';
 export declare const THEMES: readonly SerupaTheme[];
 
 /** What forEachTheme needs from a page: Playwright's Page fits, and so does anything with the same evaluate(). */
@@ -10,7 +10,7 @@ export interface ThemedPage {
 }
 
 export interface ForEachThemeOptions {
-  /** Only these themes, in this order. Default: all six. */
+  /** Only these themes, in this order. Default: every theme; name the ones your app uses. */
   themes?: readonly SerupaTheme[];
   /** Turn off transitions, animations and the text caret while it runs. Default: true. */
   still?: boolean;

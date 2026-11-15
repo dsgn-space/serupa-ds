@@ -48,7 +48,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 - **Role and name:** a grid (`role="grid"`) named by its label, with a row per tag; the tag's words are its first cell and its × the second, a button named "Remove Design". Picked tags have `aria-selected`, and a multiple-choice group `aria-multiselectable`.
 - **Keyboard:** one Tab stop, on the last tag focused (the table below).
 - **Focus:** removing a tag moves focus to the next one, so it's never dropped to the page.
-- **Contrast:** a tag's words read 4.5:1 and its border 3:1 in all six themes, picked or not (`TagGroup.test.tsx`).
+- **Contrast:** a tag's words read 4.5:1 and its border 3:1 in every theme, picked or not (`TagGroup.test.tsx`).
 - **What's still yours:** the label, and what removing or picking a tag does in your app (saving it, undoing it).
 
 ### Keyboard
@@ -101,4 +101,5 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-radius` | `radius-control` | A tag's corners, as other controls'. |
 | `--tag-group-gap` | `spacing-2` | The space between tags, and between the label and the tags (8px). |
 | `--tag-group-avatar-size` | `spacing-6` | The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag. |
+| `--tag-group-icon-size` | `spacing-4` | A tag's icon, the check of a selected tag and the × (16px), beside the 14px label. |
 <!-- token-table:end -->

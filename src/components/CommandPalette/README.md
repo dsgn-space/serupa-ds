@@ -71,7 +71,7 @@ Drawn from the `Default` story.
 - **Role and name:** a modal `<dialog>` named "Command palette" (`labels.commandPalette`, or your `aria-label`). The search field is a `role="combobox"` with `aria-expanded`, `aria-controls`, `aria-autocomplete="list"` and `aria-activedescendant`, over a `role="listbox"` with one `role="group"` per group, named by its heading, of `role="option"` rows. A disabled command has `aria-disabled="true"`.
 - **Keyboard:** focus stays in the field, and goes back to where it was when the palette closes (table below).
 - **Screen readers:** once typing stops, the number of matches ("3 commands", `labels.commandsCount`) or "No matching commands" is said through the shared announcer.
-- **Contrast:** the field, headings, rows and active row read 4.5:1 in all six themes (`CommandPalette.test.tsx`). In forced colors (Windows high contrast) the active row has an outline in Highlight, since the highlight and its bar are dropped there.
+- **Contrast:** the field, headings, rows and active row read 4.5:1 in every theme (`CommandPalette.test.tsx`). In forced colors (Windows high contrast) the active row has an outline in Highlight, since the highlight and its bar are dropped there.
 - **What's still yours:** labels people can guess, and a visible way to open it (a Button showing the keys) for people who don't know ⌘K.
 
 | Key | Does |
@@ -116,4 +116,5 @@ Each is an optional override: set it on the page, a container or one CommandPale
 | `--command-palette-indicator-active` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--command-palette-list-height` | `spacing-80` | The most the list grows to before it scrolls (320px). |
 | `--command-palette-option-height` | `control-height-lg` | A row's least height (44px). |
+| `--command-palette-icon-size` | `spacing-5` | A command's icon (20px), beside the 14px label in a 44px row. |
 <!-- token-table:end -->

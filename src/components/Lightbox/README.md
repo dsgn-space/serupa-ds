@@ -61,7 +61,7 @@ Drawn from the `Default` story.
 - **Role and name:** a modal dialog titled with the shown picture's `alt`, and described by "2 of 5". The picture itself has empty alt text, so it isn't read twice.
 - **Keyboard:** see below. Focus starts on the × and stays in the dialog.
 - **Moves are said:** each move says the new picture's alt text and where it is ("The sea under a pale sky, 2 of 4").
-- **Contrast:** the caption and the count read 4.5:1 on the dialog in all six themes (`Lightbox.test.tsx`).
+- **Contrast:** the caption and the count read 4.5:1 on the dialog in every theme (`Lightbox.test.tsx`).
 - **What's still yours:** alt text that says what each picture shows, and the button that opens it.
 
 ### Keyboard

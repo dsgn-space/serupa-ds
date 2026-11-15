@@ -208,7 +208,7 @@ describe('Tour', () => {
     expect(el('r').hasAttribute('data-tour-target')).toBe(true);
   });
 
-  test('its text reads 4.5:1 on its background in all six themes', async () => {
+  test('its text reads 4.5:1 on its background in every theme', async () => {
     await render(<SerupaProvider locale="en"><Page open /></SerupaProvider>);
     const count = page.getByText('Step 1 of 3').element() as HTMLElement;
     for (const th of THEMES) {

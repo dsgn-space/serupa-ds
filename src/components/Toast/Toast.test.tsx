@@ -371,7 +371,7 @@ describe('Toast', () => {
     expect(Math.round(q('.dk-toaster').getBoundingClientRect().left)).toBe(16);
   });
 
-  test('contrast: title and description 4.5:1, icons 3:1, for every tone in all six themes', async () => {
+  test('contrast: title and description 4.5:1, icons 3:1, for every tone in every theme', async () => {
     await render(<Toaster limit={4} />);
     React.act(() => { (['info', 'success', 'warning', 'danger'] as const).forEach((k) => toast({ title: k, description: 'Details', tone: k, duration: 0 })); });
     const still = document.createElement('style'); still.textContent = '* { animation: none !important; }'; document.head.appendChild(still);
@@ -429,7 +429,7 @@ describe('Toast', () => {
     expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['C'], '+2 lainnya']);
   });
 
-  test('contrast: the count and the waiting line 4.5:1 in all six themes', async () => {
+  test('contrast: the count and the waiting line 4.5:1 in every theme', async () => {
     await render(<App />);
     React.act(() => { for (const t of ['B', 'C', 'D']) toast({ title: t, duration: 0 }); toast({ title: 'Same', duration: 0 }); toast({ title: 'Same', duration: 0 }); });
     const low: string[] = [];
@@ -753,6 +753,41 @@ describe('Toast: autoDismiss and the Toaster\'s defaults (FY1)', () => {
     React.act(() => toast.dismiss());
     expect([...log].sort()).toEqual(['commit a', 'commit c', 'commit d', 'undo b']);
     expect(new Set(ids).size).toBe(4);   // each its own toast, not a count on one
+  });
+
+  test('Ctrl+Z (⌘Z on Apple devices) chooses Undo on the newest undo toast, one per press, outside a text field, as people expect undo to work', async () => {
+    await render(<><input aria-label="Name" /><Toaster limit={5} duration={0} /></>);
+    const log: string[] = [];
+    let acted = 0;
+    React.act(() => {
+      toast.undo({ title: 'Report moved to trash', commit: () => log.push('commit report'), onUndo: () => log.push('undo report') });
+      toast.undo({ title: 'Invoice moved to trash', commit: () => log.push('commit invoice'), onUndo: () => log.push('undo invoice') });
+      toast({ title: 'Archived', action: { label: 'Open', onClick: () => { acted++; } } });
+    });
+    // In a text field the keys undo the typing, and Shift+Ctrl+Z is redo: neither touches a toast.
+    await userEvent.click(page.getByRole('textbox', { name: 'Name' }));
+    await userEvent.keyboard('{Control>}{Z}{/Control}');
+    (document.activeElement as HTMLElement).blur();
+    await userEvent.keyboard('{Control>}{Shift>}{Z}{/Shift}{/Control}');
+    expect([log, toasts().length]).toEqual([[], 3]);
+    await userEvent.keyboard('{Control>}{Z}{/Control}');
+    expect(log).toEqual(['undo invoice']);
+    await expect.poll(() => titles()).toEqual(['Report moved to trash', 'Archived']);
+    await userEvent.keyboard('{Control>}{Z}{/Control}');
+    await userEvent.keyboard('{Control>}{Z}{/Control}');   // no undo toast left: the other toast's action isn't chosen
+    expect([log, acted]).toEqual([['undo invoice', 'undo report'], 0]);
+    await expect.poll(() => titles()).toEqual(['Archived']);
+  });
+
+  test('Ctrl+Z picks the newest undo toast when toasts stack down from the top too', async () => {
+    await render(<Toaster placement="top-end" duration={0} />);
+    const log: string[] = [];
+    React.act(() => {
+      toast.undo({ title: 'Report moved to trash', commit: () => log.push('commit report'), onUndo: () => log.push('undo report') });
+      toast.undo({ title: 'Invoice moved to trash', commit: () => log.push('commit invoice'), onUndo: () => log.push('undo invoice') });
+    });
+    await userEvent.keyboard('{Control>}{Z}{/Control}');
+    expect(log).toEqual(['undo invoice']);
   });
 
   test('toast.undo with the id of one still open: the first one\'s action is done for good then, not lost', async () => {

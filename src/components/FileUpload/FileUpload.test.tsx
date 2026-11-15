@@ -325,7 +325,7 @@ describe('FileUpload', () => {
     expect([0, 12, 999, 1000, 1500, 10_000_001, 3.25e9, 1024].map((b) => formatFileSize(b)).join('|')).toBe('0 bytes|12 bytes|999 bytes|1 kB|1.5 kB|10 MB|3.3 GB|1 kB');
   });
 
-  test('contrast: text 4.5:1 (also while dragging), the icon and outline (also invalid) 3:1, in all six themes', async () => {
+  test('contrast: text 4.5:1 (also while dragging), the icon and outline (also invalid) 3:1, in every theme', async () => {
     await render(<Many />);
     const el = q(many);
     await userEvent.upload(input(el), file('photo.png', 'image/png', 10));
@@ -659,7 +659,7 @@ describe('FileUpload: each file\'s upload and thumbnails (N9)', () => {
     expect(items(el)[0]!.querySelector('canvas')).toBeNull();
   });
 
-  test('"Uploaded", the failed message and the failed outline have contrast in all six themes', async () => {
+  test('"Uploaded", the failed message and the failed outline have contrast in every theme', async () => {
     await render(<Uploads status={new Map<File, S>([[a, { state: 'done' }], [b, { state: 'error' }]])} />);
     const el = rootOf('up'), still = document.createElement('style');
     still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);

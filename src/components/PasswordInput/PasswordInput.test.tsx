@@ -136,7 +136,7 @@ describe('PasswordInput', () => {
     expect(['pinv', 'pw', 'pnew'].map((id) => css(toggle(id).querySelector('[data-icon]')).fontSize)).toEqual(['14px', '16px', '20px']);
   });
 
-  test('contrast: the text 4.5:1 and the eye icon 3:1 on the field in all six themes', async () => {
+  test('contrast: the text 4.5:1 and the eye icon 3:1 on the field in every theme', async () => {
     await render(<Wrap><PasswordInput id="pnew" aria-label="New" defaultVisible size="lg" /></Wrap>);
     const low: string[] = [];
     let n = 0;
@@ -254,7 +254,7 @@ describe('PasswordInput held state', () => {
   test('held down: the show/hide button fills one step past its hover (--password-input-toggle-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<PasswordInput aria-label="Password" toggleLabel="Reveal" />);
     const b = page.getByRole('button', { name: 'Reveal' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

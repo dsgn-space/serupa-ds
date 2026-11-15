@@ -63,7 +63,7 @@ Drawn from the `Playground` story.
 - With the menu open, Tab goes from the button into the links, in the order they appear, since the panel opens under the bar: the links come after the button in the DOM while it's open. Tab past the last link, any move of focus out of the bar, or a press outside it closes the menu.
 - The panel fades in as it opens and unrolls down from the bar, over 150ms, and fades back out when it closes, as Popover and Menu do. While it fades out it stays after the button and can't be used. With reduced motion it only fades.
 - **NavbarMenu** is a disclosure, not an ARIA menu (`role="menu"` is for app commands): a `<button>` with `aria-expanded` and `aria-controls`, and the panel after it, so Tab goes from the button into its links. Each group is a `role="group"` named by its title. A link with a `description` is named by its text and described by the line (`aria-describedby`), so a screen reader says the name first. Escape closes the panel and returns focus to its button, and in the small-screen menu it leaves that menu open. A press outside, focus leaving it, following a link or opening another NavbarMenu closes it: one is open at a time. On small screens the panel opens in place, under its button, inside the menu.
-- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in all six themes (`Navbar.test.tsx`).
+- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in every theme (`Navbar.test.tsx`).
 
 ### Keyboard
 
@@ -205,5 +205,4 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | --- | --- | --- |
 | `--navbar-shadow-scrolled` | `elevation-raised` | A sticky bar's shadow once the page has scrolled under it. |
 | `--navbar-menu-shadow` | `elevation-overlay` | A dropdown panel's shadow on wide screens. |
-| `--navbar-menu-depth` | `depth-surface` | The narrow-screen menu's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 <!-- token-table:end -->

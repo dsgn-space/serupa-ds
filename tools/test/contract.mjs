@@ -7,8 +7,9 @@
 // that fills it with long words, long labels and more items than fit, so the visual baselines show how it wraps,
 // truncates or scrolls.
 import fs from 'node:fs';
+import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import path from 'node:path';
-import { HERE, PROJECT, kebab, tokensCss, report, done } from './lib.mjs';
+import { HERE, PROJECT, kebab, report, done } from './lib.mjs';
 import { componentIndex } from '../build/registry.mjs';
 
 const SKIP = [];
@@ -27,7 +28,8 @@ const EXEMPT = {
 const GAPS = {};
 const COMP = path.join(PROJECT, 'src', 'components');
 const comps = fs.readdirSync(COMP).filter((c) => fs.statSync(path.join(COMP, c)).isDirectory() && !SKIP.includes(c)).sort();
-const { themes } = tokensCss();
+// The themes with pictures: three brands that stand for all of them (tools/design-qa.mjs).
+const themes = SHOWN_THEMES;
 // baseline-visual/<Name>/<Story>-<theme>-<state>.png (tools/test/visual.mjs).
 const baselines = (c) => { const d = path.join(HERE, 'baseline-visual', c); return fs.existsSync(d) ? fs.readdirSync(d) : []; };
 
@@ -55,7 +57,7 @@ for (const c of comps) {
     if (GAPS[c]?.[part]) { if (ok) fixed.push(part); continue; }
     if (!ok) missing.push(part);
   }
-  const what = { code: `${c}.tsx`, index: 'index.ts (its public exports)', css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: `${c}.test.tsx`, visual: `a visual baseline in each of the ${themes.length} themes (add the "update-visual-baselines" label)`, stress: 'a stress story (export const LongText, LongLabels, Overflow…): long words, long labels, more items than fit' };
+  const what = { code: `${c}.tsx`, index: 'index.ts (its public exports)', css: `${c}.css`, tokens: `${kebab(c)}.tokens.json`, stories: `${c}.stories.tsx`, docs: `${c}.mdx`, guide: 'README.md', preview: 'preview.html', test: `${c}.test.tsx`, visual: `a visual baseline in each of the ${themes.length} themes with pictures (add the "update-visual-baselines" label)`, stress: 'a stress story (export const LongText, LongLabels, Overflow…): long words, long labels, more items than fit' };
   t(`${c} has everything a component ships with`, !missing.length && !fixed.length,
     [missing.length && `missing: ${missing.map((p) => what[p]).join(', ')}`, fixed.length && `known gap now fixed, remove it from GAPS in contract.mjs: ${fixed.join(', ')}`].filter(Boolean).join('; '));
 }

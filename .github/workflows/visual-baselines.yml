@@ -27,8 +27,8 @@ name: Update baselines
 # anything else stops it, since only a person can resolve that. Heal runs none of the branch's code: a run by hand
 # belongs to the default branch, so the branch's code there could write to main's caches.
 # Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone, and the ones
-# whose pictures it made stale (tools/fresh.mjs). One with a conflict anywhere else is left for its author, with a
-# notice in the run.
+# whose pictures it made stale (tools/fresh.mjs), when their auto-merge is on and they aren't labelled "hold-visual".
+# One with a conflict anywhere else is left for its author, with a notice in the run.
 # Every push to main also draws again the components it changed, on main as it now is, and opens a pull request
 # (branch baselines/after-main, queued to merge; one at a time, replaced while it is open) with any picture that
 # came out different: one redrawn before
@@ -103,6 +103,11 @@ jobs:
               [ "$state" = unknown ] || break
               sleep 10
             done
+            # Only one whose author has it on its way to the queue: auto-merge off (dropped, held for a theme change)
+            # or "hold-visual" waits for a person. Healing one would redraw its pictures on runners nobody asked for,
+            # and the redraw's label made Queue enqueue put it back (#1948, 15 Nov). A queued one reads auto-merge
+            # off too: a push would take it out of the queue anyway.
+            jq -e '.auto_merge == null or ([.labels[].name] | index("hold-visual"))' <<< "$pull" > /dev/null && continue
             if [ "$state" = dirty ]; then prs+=("$n"); continue; fi
             jq -e '[.labels[].name] | index("update-visual-baselines")' <<< "$pull" > /dev/null && continue
             # 1 is stale; anything else (GitHub didn't answer) heals nothing.
@@ -202,26 +207,32 @@ jobs:
 
   # After a push to main, the redraw waits for the merge queue to settle: while a group is building, another push is
   # coming, and it cancelled the redraw before (314 runner-minutes of cancelled redraws on 12 Nov, 12 of 14 runs). The
-  # push that empties the queue (or the first after two hours without a redraw) redraws everything since the last
-  # redraw that finished, so a skipped push loses nothing.
+  # push that empties the queue (or the first half an hour after the last redraw that ran) redraws everything since
+  # that redraw (.github/last-redraw.sh), so a skipped push loses nothing.
   settled:
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
+      actions: read
     outputs:
       go: ${{ steps.queue.outputs.go }}
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: .github
+          persist-credentials: false
       - id: queue
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           n=$(gh api "repos/$GITHUB_REPOSITORY/git/matching-refs/heads/gh-readonly-queue/main" --jq length)
-          # A queue that never empties still gets a redraw every two hours.
-          last=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/visual-baselines.yml/runs?event=push&branch=main&status=success&per_page=1" --jq '.workflow_runs[0].created_at // "1970-01-01T00:00:00Z"')
-          age=$(( $(date +%s) - $(date -d "$last" +%s) ))
-          if [ "$n" = 0 ] || [ "$age" -gt 7200 ]; then echo go=1 >> "$GITHUB_OUTPUT"
+          # A queue that never empties still gets a redraw every half hour, counted from the last one that ran: a
+          # picture main drew differently fails every queue group until the redraw's pull request merges.
+          last=$(bash .github/last-redraw.sh | cut -d, -f2)
+          age=$(( $(date +%s) - $(date -d "${last:-1970-01-01T00:00:00Z}" +%s) ))
+          if [ "$n" = 0 ] || [ "$age" -gt 1800 ]; then echo go=1 >> "$GITHUB_OUTPUT"
           else echo "$n queue groups building, last redraw $((age / 60)) minutes ago: the push that empties the queue redraws."; fi
 
   # On a push to main, render draws again the components the pushes since the last finished run changed, on main
@@ -231,7 +242,7 @@ jobs:
   render:
     needs: [settled]
     # Not after merging the bot's own pull request: a story that isn't steady would open one after another. After a
-    # push, only once the merge queue has nothing building (settled).
+    # push, only once the merge queue has nothing building or the last redraw is half an hour old (settled).
     if: >-
       !cancelled() && (
       github.event_name == 'push' && needs.settled.outputs.go == '1' && !contains(github.event.head_commit.message, '/baselines/after-main') ||
@@ -242,7 +253,8 @@ jobs:
     # Four shards side by side, as CI's Visual jobs: a whole run took 21 minutes in one job. Shard 1 also draws the
     # Foundations pages, rewrites baseline-utilities.json and removes pictures whose story is gone.
     # After a push to main, one shard at a time: the redraw isn't waited on, and the merge queue needs the x86 runners
-    # more. A newer push cancels a redraw still running (concurrency), and while the queue is busy none starts (settled).
+    # more. A newer push cancels a redraw still running (concurrency), and while the queue is busy none starts (settled)
+    # unless the last one that ran is over half an hour old.
     strategy:
       fail-fast: true
       max-parallel: ${{ github.event_name == 'push' && 1 || 4 }}
@@ -286,11 +298,12 @@ jobs:
         run: |
           if [ "$GITHUB_EVENT_NAME" = push ]; then
             # While the bot's pull request (baselines/after-main) is open, from where it started, since this run
-            # replaces it; else from the last push run that finished, so a run a newer push cancelled loses nothing;
+            # replaces it; else from the last push run whose redraw finished (.github/last-redraw.sh), so a run a newer
+            # push cancelled, or one that skipped the redraw while the queue was busy, loses nothing;
             # else the push itself.
             open=$(gh api "repos/$GITHUB_REPOSITORY/pulls?head=$GITHUB_REPOSITORY_OWNER:baselines/after-main&state=open" --jq '.[0].head.sha // empty' || true)
             base=${open:+$(gh api "repos/$GITHUB_REPOSITORY/commits/$open" --jq .commit.message | sed -n 's/^Since: \([0-9a-f]\{40\}\)$/\1/p')}
-            [ -n "$base" ] || base=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/visual-baselines.yml/runs?event=push&branch=main&status=success&per_page=1" --jq '.workflow_runs[0].head_sha // empty' || true)
+            [ -n "$base" ] || base=$(bash .github/last-redraw.sh | cut -d, -f1)
             git cat-file -e "${base:-none}^{commit}" 2>/dev/null && git merge-base --is-ancestor "$base" HEAD || base=$BEFORE
             echo "since=$base" >> "$GITHUB_OUTPUT"
           elif git log -1 --format=%s | grep -qE '^Merge .+ into the branch \(Update baselines\)$'; then

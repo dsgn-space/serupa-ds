@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { SortableList } from '../SortableList/SortableList';
 import { Kanban, type KanbanColumn, type KanbanMove } from './Kanban';
 
 type T = { id: string; t: string };
@@ -51,6 +52,13 @@ describe('Kanban', () => {
     await said('To do 0 moved to To do, position 2 of 100.');
     expect([...draws.keys()]).toEqual(['0-0']);
   });
+  test('the drag handle\'s icon is 20px in its 24px button, as SortableList\'s, not an icon\'s 24px default (GR421)', async () => {
+    await render(<><Kanban id="kh" aria-label="Sprint" columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />
+      <SortableList id="sh" aria-label="Order" items={['a', 'b']} getKey={(x) => x} getLabel={(x) => x} renderItem={(x) => x} onReorder={() => {}} /></>);
+    const sizes = (id: string) => { const b = document.querySelector<HTMLElement>('#' + id + ' button[aria-pressed]')!, i = b.querySelector<HTMLElement>('[data-icon]')!.getBoundingClientRect(); return [b.getBoundingClientRect().width, i.width, i.height]; };
+    expect([sizes('kh'), sizes('sh')]).toEqual([[24, 20, 20], [24, 20, 20]]);
+  });
+
   test('a named group of columns, each a section headed by its title with a list of its cards; ref, className and props reach the board', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Kanban ref={ref} id="k" className="extra" data-x="y" aria-label="Sprint" columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
@@ -284,7 +292,7 @@ describe('Kanban', () => {
     expect([n.getBoundingClientRect().width <= 320, n.scrollWidth > n.clientWidth, css(n).overflowX]).toEqual([true, true, 'auto']);
   });
 
-  test('text, counts and "Over limit" read 4.5:1 and the handle 3:1 on the column and card, in all six themes', async () => {
+  test('text, counts and "Over limit" read 4.5:1 and the handle 3:1 on the column and card, in every theme', async () => {
     await render(<Board start={START().map((c, i) => i === 1 ? { ...c, items: [...c.items, { id: 'e', t: 'Echo' }] } : c)} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

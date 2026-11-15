@@ -23,14 +23,15 @@
 .dk-kanban__card {
   position: relative; display: flex; align-items: flex-start; gap: var(--spacing-1); padding: var(--kanban-card-padding, var(--spacing-2));
   border: var(--border-width-1) solid var(--kanban-card-border, var(--border)); border-radius: var(--kanban-card-radius, var(--radius-control)); background: var(--kanban-card-bg, var(--surface));
-  box-shadow: var(--kanban-card-depth, var(--depth-card));   /* resting on the column in a tactile brand; nothing in the flat ones */
 }
 .dk-kanban__card--dragging { z-index: var(--z-sticky); box-shadow: var(--kanban-card-shadow, var(--elevation-overlay)); }
 .dk-kanban__content { flex: auto; min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-kanban__handle {
   display: inline-flex; flex: none; align-items: center; justify-content: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); padding: var(--spacing-0);
-  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--kanban-muted, var(--text-muted)); cursor: grab; touch-action: none; font-size: var(--spacing-5);
+  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--kanban-muted, var(--text-muted)); cursor: grab; touch-action: none;
 }
+/* On the icon itself: an Icon sets its own 24px, so a size on the button never reached it. 20px, as SortableList's handle. */
+.dk-kanban__handle .dk-icon { font-size: var(--spacing-5); }
 /* Touch (EQ1): the handle takes a press 44px high, as Apple and Material ask, without moving anything; the width
    stays, so a press beside it still lands on the card's own content. */
 @media (pointer: coarse) {

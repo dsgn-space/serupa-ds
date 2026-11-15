@@ -218,7 +218,7 @@ describe('Select', () => {
     expect(box('fld').className).toMatch(/dk-select--invalid/);
   });
 
-  test('contrast in all six themes: text and placeholder 4.5:1 on the field; chevron, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
+  test('contrast in every theme: text and placeholder 4.5:1 on the field; chevron, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
@@ -307,7 +307,7 @@ describe('Select: the styled list', () => {
     }
   });
 
-  test('the option under the keyboard has the grey highlight fill and no bar (a 2px bar with more contrast); text reads 4.5:1 on the list and on that fill, the tick 3:1, and the more-contrast bar 3:1 on the fill, in all six themes', async () => {
+  test('the option under the keyboard has the grey highlight fill and no bar (a 2px bar with more contrast); text reads 4.5:1 on the list and on that fill, the tick 3:1, and the more-contrast bar 3:1 on the fill, in every theme', async () => {
     await render(<div style={{ width: '280px', height: '360px' }}><Select aria-label="Fruit" options={FRUIT} defaultValue="Apple" /></div>);
     const s = document.querySelector('select')!;
     if (!styled) return expect(css(s).appearance).toBe('none');

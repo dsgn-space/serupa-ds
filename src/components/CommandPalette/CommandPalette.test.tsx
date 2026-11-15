@@ -42,6 +42,15 @@ describe('CommandPalette', () => {
     expect(options()[3]!.getAttribute('aria-disabled')).toBe('true');
   });
 
+  test('a command\'s icon is 20px beside its 14px label, as a Sidebar item\'s, not an icon\'s 24px default; --command-palette-icon-size sets it (GR421)', async () => {
+    const commands = [{ id: 'home', label: 'Home', icon: 'home' }, { id: 'set', label: 'Settings', icon: 'settings' }];
+    const { rerender } = await render(<CommandPalette id="pi" defaultOpen commands={commands} />);
+    const sizes = () => [...document.querySelectorAll<HTMLElement>('#pi [role=option] [data-icon]')].map((i) => Math.round(i.getBoundingClientRect().height));
+    expect(sizes()).toEqual([20, 20]);
+    await rerender(<CommandPalette id="pi" defaultOpen commands={commands} style={{ '--command-palette-icon-size': '16px' } as React.CSSProperties} />);
+    expect(sizes()).toEqual([16, 16]);
+  });
+
   test('typing filters, ignoring case and accents, best matches first, by keyword too; nothing matched shows the empty text', async () => {
     await render(<CommandPalette defaultOpen commands={[...COMMANDS, { id: 'cafe', label: 'Café menu' }]} />);
     await userEvent.type(field(), 'pro');
@@ -255,7 +264,7 @@ describe('CommandPalette', () => {
     expect(labels().length).toBe(10);
   });
 
-  test('its field, headings, rows and active row, every word in it with the shortcut\'s "+", read 4.5:1 in all six themes', async () => {
+  test('its field, headings, rows and active row, every word in it with the shortcut\'s "+", read 4.5:1 in every theme', async () => {
     await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[0]!, shortcut: ['mod', 'shift', 'H'] }, ...COMMANDS.slice(1)]} />);
     const low: string[] = [];
     for (const th of THEMES) {
