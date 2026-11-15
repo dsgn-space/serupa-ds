@@ -1,0 +1,40 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Booking.stories';
+
+<Meta of={Stories} />
+
+# Booking
+
+A stay at one place: the day the guests arrive and the day they leave, picked on two months side by side, with the nights already booked named, the price worked out, and a way to reserve.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A room, a house, a desk or a piece of kit that's booked by the night or the day, with some days already taken.
+- Not for times within a day, such as a meeting room by the hour: that's the Team calendar pattern's form, or a TimePicker.
+- Not for paying: Reserve hands the stay to your app, which goes on to the Checkout pattern if it takes money now.
+
+## What each part is for
+
+- **Two months side by side**, so a stay across the end of a month is picked without paging. They stack on a narrow screen. The calendar is named by the "Your dates" heading, and names the picked days "start date" and "end date" (1.3.1).
+- **Booked nights are struck through and also listed in words** under "Already booked", each written as the stay it is, so nobody has to tell closed days by their look (1.4.1).
+- **A stay can end on the day a booked one starts, and start on the day one ends.** Only a day whose night and the night before are both booked is closed; the sentence under the list says so.
+- **Dates that take in a booked night, or are shorter than the place allows, are said at once** in an alert under the calendar, naming the nights. The calendar points to it with aria-describedby, so it's read again from the calendar (3.3.1, 4.1.3).
+- **Reserve with no dates says what to choose** and puts focus on the calendar, rather than being a disabled button that doesn't say why (3.3.1).
+- **The guests field says how many the place sleeps**, and its count can't go past it (3.3.2).
+- **The price is a description list**: the nightly price times the nights, the cleaning fee and the total, with the total named "Total" (1.3.1).
+- **Reserve books only once the server says so.** The button shows it's busy; a booking that fails says so next to the button and keeps the dates (3.3.1, 4.1.3).
+- **Once booked, the form gives way to a confirmation** whose heading takes focus and says the dates, the nights and the guests (2.4.3, 4.1.3).
+- **While the place loads**, set `loading`: one placeholder, named "Loading place". **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.ReserveFails} />
+
+## What stays your app's job
+
+- **Booking.** `onReserve` gets the days as "yyyy-mm-dd" and the number of guests: return its promise, and reject it when the dates were taken in the meantime. Then load the place again, so the new booked nights show.
+- **Today.** Pass `today` as the visitor's date, so days before it are closed.
+- **The booked nights.** `taken` holds each night by the day it starts, the way a hotel counts them.
+- **Prices that change by the night**, taxes and discounts: work them out on the server and show them in the same description list.
+- **Paying**, and who's booking: send them on to the Checkout pattern and the Sign in pattern.
