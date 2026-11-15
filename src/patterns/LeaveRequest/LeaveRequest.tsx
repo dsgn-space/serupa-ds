@@ -13,7 +13,6 @@ import { DescriptionList, DescriptionItem } from '../../components/DescriptionLi
 import { Loader } from '../../components/Loader/Loader';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
-import { addDays, isoDate, toDay } from '../../internal/dates';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
@@ -97,12 +96,17 @@ const STATUS: Record<LeaveRequestItem['status'], { label: string; tone: BadgeTon
   waiting: { label: 'Waiting', tone: 'warning' }, approved: { label: 'Approved', tone: 'success' }, declined: { label: 'Declined', tone: 'danger' },
 };
 
+// A "yyyy-mm-dd" day at local midnight, the day n days on from d, and a day as "yyyy-mm-dd".
+const day = (s: string) => { const [y, m, d] = s.split('-').map(Number); return new Date(y!, m! - 1, d); };
+const shift = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
 /** The working days from the first day to the last, both in, as "yyyy-mm-dd": weekends and holidays left out. */
 export function workingDays(start: string, end: string, rest: { holidays?: readonly LeaveHoliday[] | undefined; weekend?: readonly number[] | undefined } = {}): string[] {
   const off = new Set((rest.holidays ?? []).map((h) => h.date)), weekend = rest.weekend ?? [0, 6];
   const out: string[] = [];
-  for (let d = toDay(start)!, last = toDay(end)!; d <= last; d = addDays(d, 1)) {
-    if (!weekend.includes(d.getDay()) && !off.has(isoDate(d))) out.push(isoDate(d));
+  for (let d = day(start), last = day(end); d <= last; d = shift(d, 1)) {
+    if (!weekend.includes(d.getDay()) && !off.has(iso(d))) out.push(iso(d));
   }
   return out;
 }
@@ -116,7 +120,7 @@ export function leaveProblem(range: { start: string; end: string } | null, kind:
 
 const dayWords = (locale: string | undefined, a: string, b?: string, weekday = false) => {
   const f = new Intl.DateTimeFormat(locale, weekday ? { weekday: 'short', month: 'short', day: 'numeric', calendar: 'gregory', numberingSystem: 'latn' } : { dateStyle: 'medium', calendar: 'gregory', numberingSystem: 'latn' });
-  return (b && b !== a ? f.formatRange(toDay(a)!, toDay(b)!) : f.format(toDay(a)!)).replace(/[\u2009\u202f]/g, ' ');
+  return (b && b !== a ? f.formatRange(day(a), day(b)) : f.format(day(a))).replace(/[\u2009\u202f]/g, ' ');
 };
 
 /** The leave page: a skip link, a header, then main with the h1, the balance, the request form and the requests. */
@@ -131,10 +135,10 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
   const [failed, setFailed] = React.useState(false);
   const calendar = React.useRef<HTMLDivElement>(null);
   const list = React.useRef<HTMLUListElement>(null);
-  const [month, setMonth] = React.useState(() => toDay(today)!);
+  const [month, setMonth] = React.useState(() => day(today));
 
   const off = React.useMemo(() => new Set(holidays.map((h) => h.date)), [holidays]);
-  const closed = React.useCallback((d: Date) => weekend.includes(d.getDay()) || off.has(isoDate(d)), [weekend, off]);
+  const closed = React.useCallback((d: Date) => weekend.includes(d.getDay()) || off.has(iso(d)), [weekend, off]);
   const waiting = requests.filter((r) => r.status === 'waiting' && r.kind === 'annual').reduce((n, r) => n + r.days, 0);
   const left = balance - waiting;
   const days = range ? workingDays(range.start, range.end, { holidays, weekend }).length : 0;
@@ -142,7 +146,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
   const shownProblem = range || asked ? problem : null;
   const inside = range ? holidays.filter((h) => h.date >= range.start && h.date <= range.end) : [];
   // The holidays in the two months shown.
-  const from = isoDate(new Date(month.getFullYear(), month.getMonth(), 1)), to = isoDate(new Date(month.getFullYear(), month.getMonth() + 2, 0));
+  const from = iso(new Date(month.getFullYear(), month.getMonth(), 1)), to = iso(new Date(month.getFullYear(), month.getMonth() + 2, 0));
   const inView = holidays.filter((h) => h.date >= from && h.date <= to);
   const count = (n: number) => `${formatNumber(n, locale)} ${n === 1 ? 'day' : 'days'}`;
 
