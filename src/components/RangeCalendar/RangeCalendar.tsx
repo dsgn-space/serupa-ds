@@ -114,7 +114,8 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
     const inside = (d: Date) => !!s && !!e && between(d, s, e);
     return {
       isEnd: (d: Date) => sameDay(d, s) || sameDay(d, e),
-      dayClass: (d: Date) => (inside(d) ? 'dk-calendar__day--in-range' : undefined),
+      // The ends join the band between them, so each is square on the band's side (none when they're the same day).
+      dayClass: (d: Date) => (inside(d) ? 'dk-calendar__day--in-range' : s && e && s < e ? (sameDay(d, s) ? 'dk-calendar__day--range-start' : sameDay(d, e) ? 'dk-calendar__day--range-end' : undefined) : undefined),
       dayLabel: (d: Date, name: string) => {
         if (sameDay(d, s)) return name + ', ' + (sameDay(d, e) ? L.startDate + ', ' + L.endDate : L.startDate);
         if (sameDay(d, e)) return name + ', ' + L.endDate;

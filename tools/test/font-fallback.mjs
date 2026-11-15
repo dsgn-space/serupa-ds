@@ -5,7 +5,8 @@
 //   - it finds a font on this machine (Liberation Sans on Linux: playwright install-deps installs it);
 //   - a line of English is within 2% of its width in Inter, and its ascent and descent (at 100px, where a pixel's
 //     rounding doesn't hide them) are within a pixel of Inter's;
-//   - at every size of the type scale, a line's baseline and its line box are on the same pixel as Inter's (Inter's
+//   - at every size of the type scale, a line's baseline and its line box are on the same pixel as Inter's (less than a
+//     pixel apart in an engine that keeps fractions of one, where Chromium rounds to whole pixels) (Inter's
 //     ascent is 15.5px at 16px: a fallback a hair under it rounds down, and all body text sits 1px higher until Inter
 //     arrives);
 //   - a paragraph in a 320px column (a phone) wraps within a line of Inter's (lines within 2% of each other's width
@@ -64,7 +65,11 @@ const got = await p.evaluate(async () => {
       e.remove();
       return r;
     };
-    const lines = [12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72, 96, 128].map((px) => [px, line('I', px), line('F', px)]).filter((r) => r[1] !== r[2]);
+    // Chromium rounds a line's ascent and height to whole pixels, so there the two are equal or a pixel apart. Firefox
+    // and WebKit keep fractions (11.86 against 12): less than a pixel apart is the same pixel there, and the swap
+    // moves the text by that fraction, not a pixel.
+    const apart = (a, b) => a.split('/').some((v, k) => Math.abs(Number(v) - Number(b.split('/')[k])) >= 1);
+    const lines = [12, 14, 16, 18, 20, 24, 30, 36, 48, 60, 72, 96, 128].map((px) => [px, line('I', px), line('F', px)]).filter((r) => apart(r[1], r[2]));
     return { k: d.dataset.k, wi: i.width, wf: f.width, ws, ci, cf, mi: metric('I'), mf: metric('F'), lines };
   });
   return { faces, interMissing, rows };

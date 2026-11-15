@@ -33,6 +33,10 @@ interface ButtonOwnProps {
   variant?: ButtonVariant | undefined;
   /** Danger colors on any variant, for deleting or irreversible actions. Default: false. */
   destructive?: boolean | undefined;
+  /** Over a photo, a video or a colored panel: 'dark' draws the button in white for dark media, 'light' in black for
+      light media, the same in every theme. Put a scrim on the media so the button keeps its contrast at the media's
+      lightest (or darkest) point. */
+  onMedia?: 'dark' | 'light' | undefined;
   /** Height: sm 24px, md 32px, lg 44px (the control-height tokens). Default: 'md'. */
   size?: ButtonSize | undefined;
   /** Icon before the label: an icon name (custom or Material Symbols, "add") or any element. */
@@ -86,7 +90,7 @@ export interface ButtonAsLinkProps extends ButtonOwnProps, Omit<React.AnchorHTML
 
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
-const OWN = { variant: 1, size: 1, destructive: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingLabel: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
+const OWN = { variant: 1, size: 1, destructive: 1, onMedia: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingLabel: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
 
@@ -110,6 +114,7 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps & {
   const groupSize = React.useContext(ControlSize);   // a ButtonGroup's size, for a button with none of its own
   const size = oneOf(SIZES, props.size ?? groupSize, 'md');
   let classes = buttonClass({ variant: variant, size: size, destructive: props.destructive, iconOnly: iconOnly, iconPosition: pos, wrap: props.wrap, className: props.className });
+  if (props.onMedia === 'dark' || props.onMedia === 'light') classes += ' dk-btn--on-' + props.onMedia;
   if (process.env.NODE_ENV !== 'production' && iconOnly && !rest['aria-label'] && !rest['aria-labelledby'] && !rest.title) {
     warnOnce('button-icon-label', 'Button: an icon-only button needs an aria-label.');
   }
