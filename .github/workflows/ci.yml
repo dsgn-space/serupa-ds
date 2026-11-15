@@ -302,7 +302,8 @@ jobs:
         run: node tools/fix-proof.mjs "$BASE_SHA"
 
   # The suite's groups as parallel jobs (tools/test/run.mjs --group, SERUPA_PART, SERUPA_SHARD). x86: the component tests,
-  # whose timing budgets were measured on x64, and Visual, whose baselines are drawn with Chrome for Testing on x64.
+  # whose timing budgets were measured on x64, and Visual, whose baselines are drawn with Chrome for Testing on x64 (a
+# pull request's Visual excepted, below).
   suite-x86:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
     # Not after build: each job builds what it tests itself (about 25 s), where waiting for the build job took 100 s
@@ -312,7 +313,10 @@ jobs:
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
     # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
     # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
-    runs-on: ${{ fromJSON(needs.plan.outputs.x86runner) }}
+    # A pull request's Visual shards take SERUPA_RUNNER instead: since ADR-0016 they draw main's pictures and the
+    # branch's in the same job, so any machine compares fairly, and on the x86 runners they kept queue jobs waiting
+    # 15 to 36 minutes to start (15 Nov, about 70% of a queue run's job time spent waiting).
+    runs-on: ${{ fromJSON(matrix.group == 'visual' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER || needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
