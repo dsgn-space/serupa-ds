@@ -5,7 +5,8 @@
    (notification-center.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-notification-center__list { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+/* Room on every side for a row's focus ring and its Mark as read button's: the drawer's body scrolls, so it clips. */
+.dk-notification-center__list { margin: var(--spacing-0); padding: calc(var(--focus-ring-width) + var(--focus-ring-offset)); list-style: none; }
 .dk-notification-center__item { display: flex; align-items: flex-start; gap: var(--spacing-3); padding-block: var(--notification-center-row-padding, var(--spacing-3)); }
 .dk-notification-center__item + .dk-notification-center__item { border-top: var(--border-width-1) solid var(--notification-center-divider, var(--border)); }
 .dk-notification-center__item:focus-visible, .dk-notification-center__empty:focus-visible { outline: var(--focus-ring-width) solid var(--notification-center-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
