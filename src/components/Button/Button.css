@@ -82,7 +82,30 @@
 .dk-btn--link { background-color: transparent; color: var(--button-link-text, var(--primary)); text-underline-offset: var(--underline-offset-4); }
 @media (hover: hover) { .dk-btn--link:hover:not(:disabled, [aria-disabled="true"]) { text-decoration: underline; } }
 
+/* onMedia: over a photo or a colored panel, white (on dark media) or black (on light), whatever the theme: the
+   variants' own tokens set to the one ink, a translucent wash of it on hover, and a ring in it. No shadow, which
+   would read as a smudge on a photo. Destructive keeps its danger colors. */
+.dk-btn--on-dark {
+  --dk-btn-ink: var(--button-on-dark, var(--white)); --dk-btn-paper: var(--button-on-dark-text, var(--black));
+  --button-primary-bg: var(--dk-btn-ink); --button-primary-text: var(--dk-btn-paper); --button-primary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-85), var(--dk-btn-paper));
+  --button-outline-bg: transparent; --button-outline-text: var(--dk-btn-ink); --button-outline-border: var(--dk-btn-ink); --button-outline-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent);
+  --button-secondary-bg: transparent; --button-secondary-text: var(--dk-btn-ink); --button-secondary-border: var(--dk-btn-ink); --button-secondary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-secondary-text-hover: var(--dk-btn-ink); --button-secondary-border-hover: var(--dk-btn-ink);
+  --button-ghost-text: var(--dk-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent);
+  --button-link-text: var(--dk-btn-ink); --button-focus-ring: var(--dk-btn-ink);
+  --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-40), transparent);
+}
+.dk-btn--on-light {
+  --dk-btn-ink: var(--button-on-light, var(--black)); --dk-btn-paper: var(--button-on-light-text, var(--white));
+  --button-primary-bg: var(--dk-btn-ink); --button-primary-text: var(--dk-btn-paper); --button-primary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-85), var(--dk-btn-paper));
+  --button-outline-bg: transparent; --button-outline-text: var(--dk-btn-ink); --button-outline-border: var(--dk-btn-ink); --button-outline-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent);
+  --button-secondary-bg: transparent; --button-secondary-text: var(--dk-btn-ink); --button-secondary-border: var(--dk-btn-ink); --button-secondary-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent); --button-secondary-text-hover: var(--dk-btn-ink); --button-secondary-border-hover: var(--dk-btn-ink);
+  --button-ghost-text: var(--dk-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent);
+  --button-link-text: var(--dk-btn-ink); --button-focus-ring: var(--dk-btn-ink);
+  --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-40), transparent);
+}
+
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
+.dk-btn.dk-btn--on-dark, .dk-btn.dk-btn--on-light { --dk-btn-shadow: var(--shadow-none); }
 .dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--shadow-xs); }
 .dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) { --dk-btn-shadow: var(--shadow-none); }
 

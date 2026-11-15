@@ -12,6 +12,7 @@ import * as icons from '../../material/builtin';
 import { useScrolls } from '../../internal/useScrolls';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { isComposing } from '../../internal/ime';
+import { useCloseWatcher } from '../../internal/closeWatcher';
 import { deepActive } from '../../internal/root';
 import { isRtl } from '../../internal/position';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
@@ -182,6 +183,10 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
     if (e.target instanceof Element && e.target.closest('dialog') !== e.currentTarget) return;   // a dialog opened from inside it
     e.preventDefault(); request('escape');
   };
+  // Non-modal: shown in place, so the browser doesn't send it Back on a phone as it does a modal one; Back asks to
+  // close it as Escape inside it does. Escape on the page still leaves it open. No watcher while "Discard changes?"
+  // is asked: Back then goes to the question.
+  useCloseWatcher(open && !modal && !asking, () => request('escape'), true);
   const onCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => { if (rest.onCancel) rest.onCancel(e); if (e.target !== e.currentTarget) return; e.preventDefault(); request('escape'); };
   // The browser can close it on its own (dialog.close(), a form with method="dialog", an Escape it doesn't let us
   // cancel, such as Chromium's second Escape with no click in between): if open is still true, ask to close. A

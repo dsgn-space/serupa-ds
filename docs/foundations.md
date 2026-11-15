@@ -84,7 +84,7 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
 
-**Fluid type**: `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Line heights stay as they are. `data-type-scale="fixed"` puts the fixed sizes back for one section.
+**Fluid type**: `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Their line heights follow at the same ratio, rounded up to the 4px grid, so a 21px heading on a phone sits on a 28px line rather than its desktop 36px. `data-type-scale="fixed"` puts the fixed sizes back for one section.
 
 **Automatic dark mode**: `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
 
@@ -1182,6 +1182,8 @@ Say what happened and how to fix it, in that order, next to the thing that needs
 
 **Numbers, dates and units**
 
+The Data formats page has the full rules, with money, missing values and masked values.
+
 - Let the locale write them. `SerupaProvider`'s `locale` sets how the date and time components show and read dates; use `Intl.NumberFormat` and `Intl.DateTimeFormat` with the same locale for your own text.
 - In English, write dates with the month as a word, "24 Oct 2026", so they can't be read as day-month or month-day. Use relative dates ("2 hours ago", "Yesterday") only where the exact time doesn't matter, and give the exact one in a tooltip or title.
 - Numerals for every number, "3 files", not "three files". Group thousands ("12,400").
@@ -1208,6 +1210,75 @@ Close buttons, loading text, pagination and the other built-in words come from o
 - **Dates and times.** Day, month, year, with no comma: "24 Okt 2026" or "24 Oktober 2026". Times use a full stop, "14.30", as `Intl.DateTimeFormat` writes for `id-ID`. Let the locale write both.
 - **Numbers and money.** A full stop groups thousands and a comma marks decimals: "12.400", "2,5 MB". Rupiah goes before the amount, and whole rupiah need no ",00": "Rp 12.400" (`maximumFractionDigits: 0`). Let `Intl.NumberFormat` with `id-ID` write them; never build one by hand from the English form.
 - **Ranges.** In a sentence write "sampai" ("3 sampai 12"); in a short label use an en dash with no spaces ("1–5"), as in English.
+
+## Data formats
+
+How values read on a screen: numbers, money, dates, values that are missing and values that are partly hidden. One app writes each kind one way everywhere, and the reader's locale decides the marks, so "Rp 1.200.000" and "IDR 1,200,000.00" never meet on the same page. Content and voice covers the words around them.
+
+**Numbers**
+
+| Value | Write it | With |
+| --- | --- | --- |
+| A count or a measurement | Grouped digits, as the locale groups them: "12,400" in English, "12.400" in Indonesian | `FormattedNumber`, `formatNumber()` |
+| A large count where the exact figure doesn't matter at a glance | Short, "1.2M", with the full number in its tooltip | `format="compact"` |
+| A share | A percentage, with as many decimals as the decision needs and no more: "46%", "12.3%" | `format="percent"` |
+| A change | Its sign, and its direction in words where color shows it too: "+3.1%", "Up 12%" | `options={{ signDisplay: "always" }}` |
+| A measurement with a unit | A space before the unit, except % and °: "12 MB", "50 km/h" | `format="unit"`, `format="bytes"`, `formatFileSize()` |
+| Progress through a set | Both numbers: "12 of 30" in a sentence, "12/30" in a tight label | `plural()` for the words |
+| A code that only looks like a number (an order number, a phone number, a postcode) | As it is, never grouped | plain text |
+
+- In a table, a column of numbers aligns to the end with tabular digits (`align="end"` on its cells and its header), so the digits line up and two rows compare at a glance. Text columns align to the start.
+- Give every number in a column the same number of decimals.
+- Round for reading and keep the exact value where someone can reach it: a tooltip, the detail page or the export.
+
+**Money**
+
+- The amount and its currency always go together. With one currency in the app, the symbol is enough ("Rp 12.400", "$19.99"). When two or more can appear, write the code so "$" can't be read as the wrong dollar ("US$19.99", or "USD 19.99" with `options={{ currencyDisplay: "code" }}`).
+- The currency sets the decimals: two for dollars, none for rupiah or yen. `format="currency"` knows; don't add ",00" by hand.
+- A total is exact. Shorten ("Rp 1,2 jt") only on a chart axis or a summary tile, with the exact amount one step away.
+- Negative amounts take a minus sign, and say what they are in words: "Refund −Rp 50.000". Never color alone.
+
+**Dates and times**
+
+| Value | Write it | With |
+| --- | --- | --- |
+| A day | The month as a word, so it can't be read two ways: "24 Oct 2026" | `Intl.DateTimeFormat` with `dateStyle: "medium"` and `useLocale()` |
+| A day and a time | The locale's own order and clock, 12 or 24 hours: "24 Oct 2026, 14:30" | `dateStyle: "medium", timeStyle: "short"` |
+| A time people must match across places | The time zone with it: "14:30 WIB", "9:00 AM GMT+7" | `timeZoneName: "short"` |
+| A range | An en dash, with spaces only when either side has one: "1–5 Oct", "24 Oct 2026 – 3 Jan 2027" | `formatRange()` of `Intl.DateTimeFormat` |
+| Something recent, where how long ago matters more than when | Words, then the date after a week: "3 minutes ago", "Yesterday", "24 Oct 2026" | `RelativeTime` |
+| Time left until a deadline | A count that runs down | `Countdown` |
+
+- Use relative time for activity (a comment, a notification, "last saved") and the exact date for anything people look up, compare or act on by date: an invoice, a deadline, a booking, a log.
+- A relative time always carries the exact one: RelativeTime puts it in the tooltip. Where the exact time matters, show it as text.
+- Never write a date as numbers alone ("03/04/2026") or to a fixed pattern (`YYYY-MM-DD`) in the interface. Keep that pattern for exports, file names and the `datetime` attribute.
+- Send and store dates with their offset (ISO 8601 with `Z` or `+07:00`) and format them in the reader's zone on the screen.
+
+**Missing values**
+
+- A value that isn't there shows an em dash (`—`), never an empty cell: an empty cell reads as "still loading" or "nothing went wrong", and a screen reader says nothing at all. Give it words for screen readers ("Not set", "No data"), with `VisuallyHidden` beside a dash that has `aria-hidden`.
+- Zero is a value. Write "0", not a dash.
+- Say why when the reason matters: "Not set" (nobody entered it), "Not applicable", "No access". A dash can't tell them apart.
+- While a value loads, show a skeleton in its place (`Loader variant="skeleton"`), not a dash that later turns into a number.
+
+**Hidden and partly hidden values**
+
+Mask what a passer-by, a screenshot or a shared screen shouldn't show. Keep just enough for the owner to recognize it.
+
+| Value | Keep | Example |
+| --- | --- | --- |
+| A card or account number | The last four digits | •••• 1208 |
+| A phone number | The country code and the last three or four | +62 ••• ••• 402 |
+| An email address | The first character and the domain | a•••@example.com |
+| A name | The first character of each part | A••• W••• |
+| A national id or tax number | The last four | •••• •••• •••• 2233 |
+| A key, a token or a one-time code | Its first few characters, or nothing | sk_live_•••• |
+| An amount people chose to hide | Nothing | •••••• |
+
+- Use the bullet "•", not an asterisk, and a fixed number of them: the count shouldn't give away the length.
+- Say what's hidden in words for screen readers ("Card ending in 1208"), since a row of bullets is read as "bullet bullet bullet" or skipped.
+- A Show button reveals it for the person who owns it, says "Show" or "Hide" with what it acts on ("Show card number") and hides it again when they leave the page. Don't reveal on hover.
+- Mask on the server when the reader isn't allowed to see the value. Masking in the browser only hides it from people looking at the screen.
 
 ## Ethical design
 
@@ -1257,7 +1328,7 @@ The target is **WCAG 2.2 level AA**, in every theme, at any zoom up to 400%, wit
 **What the system guarantees**
 
 - **Contrast.** Text, placeholder, icon, control-border and focus-ring colors meet 4.5:1 or 3:1 in every theme; the foundation check measures every pair on every change. `data-contrast="more"` (or the system's "increase contrast" setting) raises body, muted, placeholder, status and brand-colored text to 7:1.
-- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. On a phone, the Back gesture or button closes what's open the way Escape does, innermost first: a Menu, Popover, picker list, HoverCard or Tour step as well as a Dialog or Drawer, before it leaves the page. Each README has a Keyboard table.
+- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. On a phone, the Back gesture or button closes what's open the way Escape does, innermost first: a Menu, Popover, picker list, HoverCard or Tour step, the Navbar's small-screen menu and its NavbarMenu panels, as well as a Dialog or Drawer (modal or not), before it leaves the page. Each README has a Keyboard table.
 - **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Inside a strong fill (`bg-primary`, `bg-danger`, `bg-surface-inverse`) the ring takes the fill's text color, so it still stands out at 3:1; a light surface nested inside such a fill should set `--focus-ring` back itself. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
 - **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
 - **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.

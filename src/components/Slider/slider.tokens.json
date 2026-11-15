@@ -173,6 +173,16 @@
             "cssVar": "--slider-input-width"
           }
         }
+      },
+      "length": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-48}",
+        "$description": "A vertical slider's length, along the track (192px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-length"
+          }
+        }
       }
     },
     "borders": {

@@ -35,6 +35,13 @@ export const WithInputs: Story = {
 export const SingleWithInput: Story = { args: { 'aria-label': 'Volume', defaultValue: 35, inputs: true } };
 /** origin: a balance from -10 to +10 fills from the middle toward the thumb. */
 export const FromTheMiddle: Story = { name: 'From the middle', args: { 'aria-label': 'Balance', min: -10, max: 10, origin: 0, defaultValue: -4, marks: [{ value: -10, label: 'Left' }, { value: 0, label: 'Center' }, { value: 10, label: 'Right' }] } };
+/** orientation="vertical": min at the bottom, for a level or volume control in a narrow column. */
+export const Vertical: Story = {
+  render: () => <div className="flex gap-12">
+    <Slider aria-label="Volume" orientation="vertical" defaultValue={60} />
+    <Slider aria-label="Treble" orientation="vertical" min={-10} max={10} origin={0} defaultValue={4} marks={[{ value: -10, label: '-10' }, { value: 0, label: '0' }, { value: 10, label: '+10' }]} />
+  </div>,
+};
 export const Small: Story = { args: { size: 'sm', defaultValue: 30 } };
 export const Large: Story = { args: { size: 'lg', defaultValue: 60 } };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 70 } };
