@@ -24,3 +24,6 @@ export const Loading: Story = { args: { loading: true } };
 
 /** The devices failed to load: a message in their place with Try again. */
 export const LoadFailed: Story = { args: { loadFailed: true, onRetry: () => new Promise((r) => setTimeout(r, 1000)) } };
+
+/** A delete asked for with 14 days to change one's mind, on a paid plan: the banner says the day, with Keep my account. */
+export const DeletionScheduled: Story = { args: { deleteAfter: 14, deletionDate: '2026-11-28', plan: 'Pro' } };
