@@ -33,7 +33,7 @@ describe('Countdown', () => {
       <Countdown id="w" seconds={3600 + 120} label="Time left" format="words" />
       <Countdown id="e" seconds={0} label="Offer ends in" endText="The offer has ended" />
     </SerupaProvider>);
-    expect([el('w').textContent, el('e').textContent, el('e').getAttribute('aria-label'), el('e').classList.contains('dk-countdown--ended')])
+    expect([el('w').textContent.replace(/\u00a0/g, ' '), el('e').textContent, el('e').getAttribute('aria-label'), el('e').classList.contains('dk-countdown--ended')])
       .toEqual(['1 hour, 2 minutes', 'The offer has ended', 'Offer ends in: The offer has ended', true]);
   });
 
@@ -91,6 +91,16 @@ describe('Countdown', () => {
     expect(el('n').textContent).toBe('');
     expect(warn.mock.calls.flat().join(' ')).toContain('Countdown: seconds');
     warn.mockRestore();
+  });
+
+  test('in words, a long time wraps between units inside a narrow column instead of running past it; a clock stays on one line', async () => {
+    const screen = await render(<SerupaProvider locale="en-US"><p style={{ width: '160px', margin: 0 }}>Closes in <Countdown seconds={2 * 86400 + 3 * 3600 + 4 * 60 + 5} format="words" label="Closes in" /></p><p style={{ width: '160px', margin: 0 }}><Countdown seconds={3599} label="Left" /></p></SerupaProvider>);
+    const [words, clock] = [...screen.container.querySelectorAll('time')] as HTMLElement[];
+    const column = words!.parentElement!.getBoundingClientRect();
+    expect(Math.max(...[...words!.getClientRects()].map((r) => r.right))).toBeLessThanOrEqual(column.right + 0.5);
+    expect(words!.textContent).toContain('2\u00a0days');   // each unit holds together
+    expect(words!.getAttribute('aria-label')).toBe('Closes in: 2 days, 3 hours, 4 minutes, 5 seconds');
+    expect(clock!.getClientRects().length).toBe(1);
   });
 });
 

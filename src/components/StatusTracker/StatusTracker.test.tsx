@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { css, lowContrast, ringCut } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { StatusTracker, type StatusDay, type StatusState } from './StatusTracker';
@@ -137,5 +137,15 @@ describe('StatusTracker', () => {
       ['summary', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['focus', 'var(--focus-ring)', 'var(--surface)', 3],
     ])).toEqual([]);
+  });
+
+  test('the focused day\'s ring shows whole: the strip scrolls sideways, so it keeps room for it', async () => {
+    await render(<><button>before</button><Days /></>);
+    await userEvent.click(page.getByRole('button', { name: 'before' }));
+    await userEvent.tab();
+    expect(document.activeElement).toBe(bar(89));
+    expect(ringCut(bar(89))).toBe(0);
+    await userEvent.keyboard('{Home}');
+    expect(ringCut(bar(0))).toBe(0);
   });
 });
