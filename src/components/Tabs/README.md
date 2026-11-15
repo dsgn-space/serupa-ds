@@ -46,7 +46,7 @@ Drawn from the `Pill` story.
 
 ## Usage
 
-- Keep tab labels to a word or two. When the tabs don't fit, the row scrolls sideways: the edge with more tabs past it fades out, and the selected tab is always scrolled into view, but people can still miss the tabs out of view. It scrolls in a CSS grid track or a flex row too, without widening the page.
+- Keep tab labels to a word or two. When the tabs don't fit, the row scrolls sideways: the edge with more tabs past it fades out, and the selected tab, or one reached with Tab, is always scrolled into view clear of the fade, but people can still miss the tabs out of view. It scrolls in a CSS grid track or a flex row too, without widening the page.
 - Use `orientation="vertical"` for a settings page or anything with more than about six tabs: a column at the start of the panels, which has room for them all.
 - Set `activation="manual"` when a panel is slow to show, so arrowing past a tab doesn't select it.
 - Keep each panel's controls about that panel: a Save or a filter inside one tab changes only what's in that tab. Controls that act on every tab go above the tab row.
@@ -122,6 +122,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-pill-text-selected` | `on-primary` | The selected pill tab's label. |
 | `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
 | `--tabs-focus-gap-color` | `surface` | The gap between the focus ring and the selected pill's fill. |
+| `--tabs-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

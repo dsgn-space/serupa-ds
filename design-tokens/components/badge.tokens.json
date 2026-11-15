@@ -411,6 +411,36 @@
             "cssVar": "--badge-indicator-ring-color"
           }
         }
+      },
+      "border-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-border}",
+        "$description": "Disabled: the edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-border-disabled"
+          }
+        }
+      },
+      "fill-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-surface}",
+        "$description": "Disabled: the fill, whatever its color when enabled.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-fill-disabled"
+          }
+        }
+      },
+      "text-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-text}",
+        "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--badge-text-disabled"
+          }
+        }
       }
     },
     "sizing": {

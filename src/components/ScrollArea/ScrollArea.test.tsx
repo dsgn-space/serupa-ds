@@ -67,6 +67,16 @@ describe('ScrollArea', () => {
     expect(css(el('s')).maskImage).toBe('none');
   });
 
+  test('fade: a control scrolled to (focus, scrollIntoView with "nearest", as Firefox and WebKit do on Tab) stops clear of the fade, not in it', async () => {
+    await render(<ScrollArea id="sf" fade aria-label="Links" style={{ maxHeight: 120 }}>
+      {Array.from({ length: 10 }, (_, i) => <p key={i} style={{ margin: 0, height: 40 }}><a href={'#r' + i} id={'sf' + i}>Row {i + 1}</a></p>)}
+    </ScrollArea>);
+    await expect.poll(() => el('sf').classList.contains('dk-scroll-area--more-end')).toBe(true);
+    el('sf3').scrollIntoView({ block: 'nearest' });   // the fourth row starts at 120px, under the box's end
+    const box = el('sf').getBoundingClientRect(), row = el('sf3').getBoundingClientRect();
+    expect(box.bottom - row.bottom).toBeGreaterThanOrEqual(32 - 1);   // the 32px fade's room left below it
+  });
+
   test('fade: content that grows while it already scrolls (rows added, a row that wraps once a font loads) fades the end again', async () => {
     const { rerender } = await render(<ScrollArea id="g" fade aria-label="List" style={{ maxHeight: 100 }}>{rows(10)}</ScrollArea>);
     const cls = () => [el('g').classList.contains('dk-scroll-area--more-start'), el('g').classList.contains('dk-scroll-area--more-end')];

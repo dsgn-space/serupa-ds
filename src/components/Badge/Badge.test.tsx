@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, css, keepMotion, press, tabTo, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, css, keepMotion, press, tabTo, settled, disabledLook } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Badge, type BadgeTone, type BadgeVariant } from './Badge';
 import { Loader } from '../Loader/Loader';
@@ -362,15 +362,15 @@ describe('Badge', () => {
     expect([d.classList.contains('dk-badge--interactive'), css(d).cursor, getComputedStyle(d, '::before').content]).toEqual([false, 'auto', 'none']);
   });
 
-  test('L8E73 a disabled link badge: no href, so it can\'t be followed or focused; role="link" and aria-disabled say what it is; your onClick doesn\'t run; faded', async () => {
+  test('L8E73 a disabled link badge: no href, so it can\'t be followed or focused; role="link" and aria-disabled say what it is; your onClick doesn\'t run; drawn in the neutral disabled colors', async () => {
     const hit = vi.fn();
     await render(<div><button id="before">Before</button><Badge id="dl" href="#gone" onClick={hit} disabled>Archived</Badge><button id="after">After</button></div>);
     const l = el('dl');
     l.click();   // a script's (or screen reader's) click: Playwright won't click an aria-disabled element
     el('before').focus();
     await userEvent.keyboard('{Tab}');
-    expect([l.tagName, l.hasAttribute('href'), l.hasAttribute('disabled'), l.getAttribute('role'), l.getAttribute('aria-disabled'), hit.mock.calls.length, location.hash, document.activeElement!.id, css(l).opacity])
-      .toEqual(['A', false, false, 'link', 'true', 0, '', 'after', '0.5']);
+    expect([l.tagName, l.hasAttribute('href'), l.hasAttribute('disabled'), l.getAttribute('role'), l.getAttribute('aria-disabled'), hit.mock.calls.length, location.hash, document.activeElement!.id, disabledLook(l)])
+      .toEqual(['A', false, false, 'link', 'true', 0, '', 'after', 'neutral']);
   });
 
   test('interactive: click, Enter and Space call onClick', async () => {
@@ -382,7 +382,7 @@ describe('Badge', () => {
     await expect.poll(() => clicks).toBe(3);
   });
 
-  test('hover and active: a layer in the text color, 10% on hover and 15% while pressed, with the text 30% darker (subtle and outline); solid uses black in light themes; disabled fades to 50% with no layer', async () => {
+  test('hover and active: a layer in the text color, 10% on hover and 15% while pressed, with the text 30% darker (subtle and outline); solid uses black in light themes; disabled is neutral, not faded, with no layer', async () => {
     await show();
     const layer = (e: Element) => { const c = getComputedStyle(e, '::before'); return [c.opacity, c.backgroundColor]; };
     const txt = css(el('btn')).color;
@@ -400,7 +400,7 @@ describe('Badge', () => {
     await userEvent.hover(el('dis'), { force: true });
     await settled();
     expect(layer(el('dis'))[0]).toBe('0');
-    expect([css(el('dis')).opacity, css(el('dis')).cursor]).toEqual(['0.5', 'not-allowed']);
+    expect([disabledLook(el('dis')), css(el('dis')).cursor]).toEqual(['neutral', 'not-allowed']);
   });
 
   test('focus: keyboard focus draws the focus ring, a 2px outline 2px out with a transparent gap (also drawn in forced-colors mode)', async () => {

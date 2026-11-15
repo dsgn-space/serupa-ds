@@ -176,7 +176,10 @@
 
 /* stagger: the children of .stagger arrive one after another. Each waits its place times motion-stagger (the first
    none), up to motion-stagger-limit, as animation-delay and in --dk-stagger-delay for a transition of your own.
-   sibling-index() counts every child; where it's missing, the first six are counted and the rest wait the limit. */
+   sibling-index() counts every child; where it's missing, the first six are counted and the rest wait the limit.
+   Registered as a <time>, so it's worked out on the child itself: an element inside it that reads the variable gets
+   the child's delay, not its own sibling-index() (dynamic-sibling-animations). */
+@property --dk-stagger-delay { syntax: '<time>'; inherits: true; initial-value: 0ms; }
 .stagger > * { --dk-stagger-delay: var(--motion-stagger-limit); animation-delay: var(--dk-stagger-delay); }
 .stagger > :nth-child(1) { --dk-stagger-delay: 0ms; }
 .stagger > :nth-child(2) { --dk-stagger-delay: var(--motion-stagger); }
@@ -184,7 +187,7 @@
 .stagger > :nth-child(4) { --dk-stagger-delay: calc(var(--motion-stagger) * 3); }
 .stagger > :nth-child(5) { --dk-stagger-delay: calc(var(--motion-stagger) * 4); }
 .stagger > :nth-child(6) { --dk-stagger-delay: calc(var(--motion-stagger) * 5); }
-@supports (order: sibling-index()) {
+@supports (animation-delay: calc(sibling-index() * 1ms)) {
   .stagger > :nth-child(n) { --dk-stagger-delay: min(calc(var(--motion-stagger) * (sibling-index() - 1)), var(--motion-stagger-limit)); }
 }
 

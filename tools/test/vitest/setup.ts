@@ -73,3 +73,13 @@ beforeEach(async () => {
   window.focus();
   await userEvent.click(document.documentElement, { position: { x: 0, y: 0 }, force: true });
 });
+
+// In the merge queue a failed test runs once more (retry in vitest.config.ts), so one flake can't drop a group. A test
+// that passes only on its second try says so in the log; CI collects these lines into the "Flaky tests" issue, where
+// each is a test to fix.
+beforeEach((ctx) => {
+  ctx.onTestFinished(() => {
+    const r = ctx.task.result;
+    if (r?.state === 'pass' && (r.retryCount ?? 0) > 0) console.log(`FLAKY ${ctx.task.file?.name ?? ''} > ${ctx.task.name}`);
+  });
+});

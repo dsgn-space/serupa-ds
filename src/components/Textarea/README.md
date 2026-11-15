@@ -60,7 +60,7 @@ Drawn from the `Actions` story.
 | Focus | The border and a 1px ring hugging it in `focus-ring` (2px in all), like Input; a visible outline in forced-colors mode |
 | Invalid | `danger` border, and a `danger` focus ring |
 | Read-only | `field-readonly` background, no hover change, no resize handle; still focusable and selectable |
-| Disabled | `field-readonly` background at 50%, `not-allowed` cursor, no resize handle |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor, no resize handle |
 | Printed | Grows to all of its text, `rows` lines at least, so nothing is cut off at the visible lines (where the browser has `field-sizing: content`) |
 
 ### Do and don't
@@ -108,6 +108,8 @@ Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `disabled`,
 Each is an optional override: set it on the page, a container or one textarea. The list lives in `src/components/Textarea/textarea.tokens.json` (also in `design-tokens/components/`). The defaults are the same shared tokens Input uses.
 
 <!-- token-table:start (made from textarea.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--textarea-bg` | `field` | Background |
@@ -120,6 +122,13 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-invalid` | `field-border-invalid` | Border and ring when invalid |
 | `--textarea-count` | `placeholder` | The character count |
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
+| `--textarea-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--textarea-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--textarea-padding-x-sm` | `spacing-2` | Side padding, sm (8px), like Input sm. |
 | `--textarea-padding-x-md` | `spacing-3` | Side padding, md (12px). |
 | `--textarea-padding-x-lg` | `spacing-4` | Side padding, lg (16px). |
@@ -128,6 +137,11 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px). |
 | `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
 | `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
+
+**Border**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--textarea-border-width` | `border-width-1` | Border width (1px) |
 | `--textarea-radius` | `radius-control` | Corner radius (6px), like Input and Button |
 <!-- token-table:end -->

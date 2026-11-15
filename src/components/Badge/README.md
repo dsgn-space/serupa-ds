@@ -103,7 +103,7 @@ Only a clickable badge (`onClick` or `href`) has hover, focus and active states,
 | Active (pressed) | The same layer at 15% |
 | Focus | Keyboard focus only: a 2px `focus-ring` outline 2px out, like Button. The gap is transparent, and forced-colors mode draws it too |
 | Loading | Any badge: a 12px ring in the text color, centered over the hidden content; the badge keeps its width and colors |
-| Disabled | A disabled clickable badge: 50% opacity, `not-allowed` cursor, no layer |
+| Disabled | A disabled clickable badge: `disabled-surface` fill, `disabled-border` edge and `disabled-text` label at full opacity, `not-allowed` cursor, no layer |
 
 ## Behavior
 
@@ -150,7 +150,7 @@ The same as Button's, each with a component token to tune it or turn it off. Onl
 | `removeLabel` | string | `'Remove'` | The × button's accessible name, before the label: "Remove Design" |
 | `onClick` | function | | Renders a `<button type="button">` with hover, focus and active states. `onRemove` is ignored then (a button can't hold another button) |
 | `href` | string | | Renders a link (the component set with `Serupa.configure({ link })`, `<a>` by default) with the same states; `target="_blank"` gets `rel="noopener noreferrer"` |
-| `disabled` | boolean | `false` | With `onClick`: a native disabled button, at 50% with no states |
+| `disabled` | boolean | `false` | With `onClick`: a native disabled button, in the neutral disabled colors with no states |
 | `loading` | boolean | `false` | A ring at the icon size replaces the content and the badge keeps its width. Sets `aria-busy`; on a clickable badge also `aria-disabled`, and clicks, Enter and Space do nothing while focus stays. A remove button is disabled meanwhile. Once the ring shows, it stays at least 500ms, so loading that ends a moment later doesn't flash it |
 | `loadingLabel` | string | `'Loading…'` | Said to screen readers when loading starts, not shown ("" says nothing) |
 
@@ -206,6 +206,9 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 | `--badge-info-outline-border` | `info` | Info outline: border |
 | `--badge-info-solid-hover` | `info-hover` | Info solid: the color a clickable badge moves toward on hover and press |
 | `--badge-indicator-ring-color` | `surface` | The indicator's ring color; set it to the color behind |
+| `--badge-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--badge-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
+| `--badge-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 

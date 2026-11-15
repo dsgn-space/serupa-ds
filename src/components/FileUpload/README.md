@@ -64,7 +64,7 @@ const [status, setStatus] = useState(new Map<File, FileUploadStatus>());
 - Each file's icon shows its kind, the same icon an [Attachment](../Attachment/README.md) shows for it: PDF, image, spreadsheet, document, slides, archive, code, audio, video or other, from its MIME type and then its extension.
 - With `thumbnails`, an image file shows a 40px picture of itself in place of its type icon. The picture is decoded in the browser (`createImageBitmap`) and drawn on a canvas, so no URL made from the file reaches the page. An image the browser can't decode, such as HEIC in most browsers, keeps the icon.
 - The native input always holds the listed files, including dropped ones, so a form sends exactly what's shown.
-- `readOnly` shows the files without remove buttons and ignores the button and drops; the files are still submitted. `disabled` also fades it and leaves the files out of the form.
+- `readOnly` shows the files without remove buttons and ignores the button and drops; the files are still submitted. `disabled` also draws it in the neutral disabled colors and leaves the files out of the form.
 
 ### Do and don't
 
@@ -130,6 +130,8 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-done-color` | `success-text` | A finished upload's "Complete" and its check (fileStatus). |
 | `--file-upload-item-bg` | `surface` | A file row's background. |
 | `--file-upload-item-border` | `border` | A file row's outline. |
+| `--file-upload-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--file-upload-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--file-upload-zone-radius` | `radius-surface` | The drop area's corners (8px). |
 | `--file-upload-item-radius` | `radius-control` | A file row's corners (6px). |
 | `--file-upload-zone-padding` | `spacing-6` | Space inside the drop area (24px). |

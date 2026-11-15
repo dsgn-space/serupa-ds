@@ -1,0 +1,41 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Messages.stories';
+
+<Meta of={Stories} />
+
+# Messages
+
+One-to-one conversations: the list beside the open one, each row named by the person with how many are unread, and a field to write in that says who will read it.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- People writing to each other in an app: a buyer and a seller, a patient and a clinic, two teammates.
+- Not for email-like messages with subjects, read one at a time: that's the List and detail pattern.
+- Not for talking to an assistant: that's the AI chat block.
+
+## What each part is for
+
+- **The conversations are a list under an h2**, each row a link named by the person, then how many are unread in words, "Ana Lima 2 unread", then the last message, "You: …" when it was yours (1.3.1, 2.4.4). Unread is never only bold text or a dot (1.4.1).
+- **Nothing opens by itself.** A conversation is marked read only when someone opens it, so nothing is lost to a page that was left open.
+- **Opening a conversation moves focus to its heading**, an h2 named by the person, so a screen reader hears whose messages follow (2.4.3, 2.4.6).
+- **The field is named "Message to Ana Lima"**, so it's clear who will read what's typed (3.3.2). Enter sends and Shift+Enter starts a new line.
+- **A message shows at once as "Sending…".** One that can't be sent says "Not sent" under it, with Try again, and keeps its text; the page says "Your message wasn’t sent. Try again." once, assertively (4.1.3, 3.3.1).
+- **On a phone, one pane shows at a time.** "Back to conversations" returns, and focus goes back to the row it came from (2.4.3).
+- **No conversations** says so. **While they load**, set `loading`: one placeholder, named "Loading conversations". **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+A message that can't be sent:
+
+<Canvas of={Stories.SendFails} />
+
+<Canvas of={Stories.Empty} />
+
+## What stays your app's job
+
+- **Sending.** `onSend` gets the conversation and the text: return its promise, and reject it when the message can't be sent.
+- **New messages while the page is open.** Pass new `conversations` as they arrive, and say the new one with `announce`, with the sender's name: "Ana Lima: Could you look at the forms?". Don't move focus for it.
+- **Marking read on the server.** `onOpen` is called with the conversation's id as it opens.
+- **Older messages.** Pass Chat's `hasOlder` and `onLoadOlder` when a conversation is longer than you load at once.
+- **Who someone is.** Link the name in the heading to the person's profile.
