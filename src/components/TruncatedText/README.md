@@ -24,6 +24,7 @@ import { TruncatedText } from "@diki-stwn/serupa-ds";
 ## Usage
 
 - It is a block as wide as its container, so the container decides where it cuts: a grid column, a table cell with a width, a flex item (it can shrink below its text's width).
+- A grid column or flex item that holds it must be allowed to shrink below the text's width, or the whole text widens it: a `minmax(0, 1fr)` column, or `min-width: 0` on the flex item (`min-w-0`).
 - Pass the text as a string. Style it from the parent, or with `className`: it uses the surrounding font and color.
 - `lines` allows 2 to 6 lines before the cut, for a title that may take two lines but not three.
 - Keep it out of a `<p>`: the full text is drawn in an element of its own beside it, which a paragraph can't hold. Use `as="p"` to make it the paragraph.
