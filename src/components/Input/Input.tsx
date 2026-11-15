@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { useValidityMessages } from '../../internal/validity';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
@@ -105,7 +106,7 @@ export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>('In
   const nameRef = useNameCheck('Input', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   let rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, actions: 1, className: 1, style: 1 } as const);
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   if (rest.type === undefined) rest.type = 'text';

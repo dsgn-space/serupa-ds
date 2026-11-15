@@ -18,6 +18,9 @@
 //                                   -container, -pill), not a step of the rounded scale, so a brand that makes its
 //                                   controls or surfaces rounder (or squarer) reaches every component (GR244).
 //                                   rounded-none, rounded-xs (a hairline curve on a text mark) and rounded-full pass
+//   serupa/shadow-through-role      a component's shadows read an elevation role (elevation-rest, -part, -raised,
+//                                   -overlay, -modal), not a step of the shadow scale, so a theme that lifts its
+//                                   surfaces differently reaches every component. shadow-none passes
 //   serupa/outline-width-token     an outline is sized by an outline-width token (or focus-ring-width for a ring), not a
 //                                   border-width one, so the outline scale (and its contrast-more step) reaches it
 //   serupa/no-accent-on-current    where a selector marks an item as the selected, current or active one (aria-selected,
@@ -185,6 +188,21 @@ const radiusRole = rule('serupa/radius-through-role', {
   });
 });
 
+const SHADOW_STEP = /^--shadow-(2xs|xs|sm|md|lg|xl|2xl)$/;
+const ELEVATION = { '2xs': 'elevation-rest', xs: 'elevation-rest', sm: 'elevation-part', md: 'elevation-raised', lg: 'elevation-overlay', xl: 'elevation-modal', '2xl': 'elevation-modal' };
+const shadowRole = rule('serupa/shadow-through-role', {
+  rejected: (n, role) => `var(--${n}) is a step of the shadow scale: use the elevation role it stands for (${role} is the same shadow today), so a theme's elevation reaches this component`,
+}, (root, flag, m) => {
+  root.walkDecls((decl) => {
+    valueParser(decl.value).walk((n) => {
+      if (n.type !== 'function' || n.value !== 'var') return;
+      const name = n.nodes[0]?.value || '';
+      const step = SHADOW_STEP.exec(name);
+      if (step) flag(decl, m.rejected(name.slice(2), ELEVATION[step[1]]), name);
+    });
+  });
+});
+
 // The last compound of a selector (what the rule styles), past any combinator, with :is()/:where()/:not() kept.
 const subject = (sel) => sel.split(/\s*[>+~]\s*|\s+(?![^(]*\))/).filter(Boolean).at(-1) || '';
 const ownBlock = rule('serupa/own-block', {
@@ -249,4 +267,4 @@ const noAccent = rule('serupa/no-accent-on-current', {
   });
 });
 
-export default [layer, raw, color, focus, physical, radiusRole, outlineWidth, ownBlock, noAccent];
+export default [layer, raw, color, focus, physical, radiusRole, shadowRole, outlineWidth, ownBlock, noAccent];

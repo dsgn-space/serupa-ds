@@ -84,7 +84,7 @@ Each is an optional override: set it on the page, a container or one FAB. The li
 | `--fab-icon-size` | `spacing-6` | The icon (24px). |
 | `--fab-label-max` | `container-xs` | How wide an extended="auto" FAB's label can open (320px); it folds to 0 while the page scrolls down. |
 | `--fab-shadow` | `elevation-overlay` | The raised shadow at rest. |
-| `--fab-shadow-hover` | `shadow-xl` | The shadow on hover. |
+| `--fab-shadow-hover` | `elevation-modal` | The shadow on hover. |
 | `--fab-radius` | `radius-pill` | The corners (round). |
 | `--fab-offset` | `spacing-6` | The distance from the corner of the screen (24px). |
 | `--fab-padding-x` | `spacing-5` | Padding at the sides of an extended FAB (20px). |

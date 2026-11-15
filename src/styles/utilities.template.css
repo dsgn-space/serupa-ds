@@ -144,12 +144,12 @@
 .animate-enter { animation: var(--animate-enter); }
 
 /* transition-property: classes animate with the default duration and easing unless duration-* / ease-* set them */
-.transition { transition-property: var(--transition-colors), var(--transition); transition-timing-function: var(--dk-ease, var(--ease-in-out)); transition-duration: var(--dk-duration, var(--duration-150)); }
-.transition-colors { transition-property: var(--transition-colors); transition-timing-function: var(--dk-ease, var(--ease-in-out)); transition-duration: var(--dk-duration, var(--duration-150)); }
-.transition-opacity { transition-property: var(--transition-opacity); transition-timing-function: var(--dk-ease, var(--ease-in-out)); transition-duration: var(--dk-duration, var(--duration-150)); }
-.transition-shadow { transition-property: var(--transition-shadow); transition-timing-function: var(--dk-ease, var(--ease-in-out)); transition-duration: var(--dk-duration, var(--duration-150)); }
-.transition-transform { transition-property: var(--transition-transform); transition-timing-function: var(--dk-ease, var(--ease-in-out)); transition-duration: var(--dk-duration, var(--duration-150)); }
-.transition-all { transition-property: var(--transition-all); transition-timing-function: var(--dk-ease, var(--ease-in-out)); transition-duration: var(--dk-duration, var(--duration-150)); }
+.transition { transition-property: var(--transition-colors), var(--transition); transition-timing-function: var(--dk-ease, var(--ease-move)); transition-duration: var(--dk-duration, var(--duration-150)); }
+.transition-colors { transition-property: var(--transition-colors); transition-timing-function: var(--dk-ease, var(--ease-move)); transition-duration: var(--dk-duration, var(--duration-150)); }
+.transition-opacity { transition-property: var(--transition-opacity); transition-timing-function: var(--dk-ease, var(--ease-move)); transition-duration: var(--dk-duration, var(--duration-150)); }
+.transition-shadow { transition-property: var(--transition-shadow); transition-timing-function: var(--dk-ease, var(--ease-move)); transition-duration: var(--dk-duration, var(--duration-150)); }
+.transition-transform { transition-property: var(--transition-transform); transition-timing-function: var(--dk-ease, var(--ease-move)); transition-duration: var(--dk-duration, var(--duration-150)); }
+.transition-all { transition-property: var(--transition-all); transition-timing-function: var(--dk-ease, var(--ease-move)); transition-duration: var(--dk-duration, var(--duration-150)); }
 .transition-none { transition-property: var(--transition-none); }
 /* transition-behavior */
 .transition-normal { transition-behavior: normal; }

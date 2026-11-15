@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { ControlSize } from './controlSize';
 import type { IconData } from '../material/types';
 import { isIconData } from '../icons';
 import { DEFAULT_LABELS, SHARED_LABELS, type SerupaLabels, type SharedLabels } from './labels';
@@ -21,6 +22,10 @@ export interface SerupaProviderProps {
    *  User-Agent or Sec-CH-UA-Platform header) so the server writes the right keys and nothing changes on hydration.
    *  Default: found on the device after it mounts. */
   platform?: 'apple' | 'other';
+  /** The size of every control inside that doesn't set its own: Buttons and the fields (Input, Select, Checkbox,
+   *  DatePicker …), as on a dense admin screen or one form. A control's own size, or a group's, still wins. Put it on
+   *  a provider around a form for that form only. Default: each control's own default, md. */
+  size?: 'sm' | 'md' | 'lg';
   /** The part of the page these settings apply to. */
   children?: React.ReactNode;
 }
@@ -70,7 +75,9 @@ export function SerupaProvider(props: SerupaProviderProps): React.ReactElement {
     }
     return { locale: locale || outer.locale, labels: merged, icons: map, platform: platform === 'apple' || platform === 'other' ? platform : outer.platform };
   }, [outer, locale, labels, icons, platform]);
-  return <Context.Provider value={value}>{props.children}</Context.Provider>;
+  const size = props.size === 'sm' || props.size === 'md' || props.size === 'lg' ? props.size : undefined;
+  const inner = <Context.Provider value={value}>{props.children}</Context.Provider>;
+  return size ? <ControlSize.Provider value={size}>{inner}</ControlSize.Provider> : inner;
 }
 SerupaProvider.displayName = 'SerupaProvider';
 

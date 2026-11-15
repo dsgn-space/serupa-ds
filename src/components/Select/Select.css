@@ -28,7 +28,7 @@
   margin: var(--spacing-0); border: 0; border-radius: inherit; background: transparent; outline: none;
   padding-block: var(--spacing-0);
   padding-inline: var(--dk-select-px) calc(var(--spacing-2) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2)));
-  color: inherit; font: inherit; letter-spacing: inherit; text-overflow: ellipsis; cursor: pointer; touch-action: manipulation;
+  color: inherit; font: inherit; letter-spacing: inherit; text-overflow: ellipsis; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-select--has-icon .dk-select__field { padding-inline-start: calc(var(--dk-select-px) + var(--dk-select-icon) + var(--select-gap, var(--spacing-2))); }
 .dk-select__field option, .dk-select__field optgroup { background-color: var(--select-bg, var(--field)); color: var(--select-text, var(--text)); }
@@ -52,7 +52,7 @@
 @media (hover: hover) { .dk-select:has(.dk-select__field:user-invalid):hover:not(:focus-within) { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native select follows that on its own). */
 .dk-select--disabled, .dk-select:where(:has(.dk-select__field:disabled)) { background: var(--select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); }
-.dk-select--disabled .dk-select__field, .dk-select__field:where(:disabled) { cursor: not-allowed; }
+.dk-select--disabled .dk-select__field, .dk-select__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* Read-only: the read-only field background, as Input, and a default cursor, since it doesn't open. */
 .dk-select--readonly { background: var(--select-bg-disabled, var(--field-readonly)); }
 .dk-select--readonly .dk-select__field { cursor: default; }
@@ -83,7 +83,7 @@
     --dk-bar: var(--border-width-2);
     display: flex; flex-direction: row-reverse; justify-content: flex-end; align-items: center; gap: var(--spacing-2); box-sizing: border-box; min-block-size: var(--select-option-height, var(--control-height-md));
     padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)); border-radius: var(--dk-select-nest, var(--radius-control));
-    background: transparent; color: var(--select-text, var(--text)); cursor: pointer; touch-action: manipulation; outline: none;
+    background: transparent; color: var(--select-text, var(--text)); cursor: var(--cursor-interactive); touch-action: manipulation; outline: none;
   }
   .dk-select__field option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
   .dk-select__field option:focus-visible:not(:disabled) { background: var(--select-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--select-option-indicator, var(--highlight-indicator)); }
@@ -109,7 +109,7 @@
   .dk-select__field option.dk-select__placeholder { display: none; }
   /* Open, focus is in the list, so :focus-within no longer holds: the field keeps its focus ring, as Combobox's does. */
   .dk-select:has(.dk-select__field:open) { transition-duration: var(--duration-0); --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
-  .dk-select__field option:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+  .dk-select__field option:disabled { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
   .dk-select__field optgroup { display: block; background: transparent; }   /* on the list's surface: the field's color (lighter on a raised Card) showed as a band */
   .dk-select__field optgroup legend { padding: var(--spacing-1\.5) var(--select-option-padding-x, var(--spacing-2)) var(--spacing-1); color: var(--select-group-label, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); }
   @media (pointer: coarse) { .dk-select__field option { min-block-size: var(--select-option-height-touch, var(--control-height-lg)); } }

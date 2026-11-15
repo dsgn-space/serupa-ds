@@ -98,7 +98,7 @@ Each is an optional override: set it on the page, a container or one Tour. The l
 | `--tour-border` | `border-overlay` | The panel's edge. |
 | `--tour-ring` | `primary` | The ring round the element a step points at (3:1 on the page). |
 | `--tour-focus-ring` | `focus-ring` | The panel's focus ring, when the keyboard brings focus to it. |
-| `--tour-shadow` | `shadow-lg` | The panel's shadow. |
+| `--tour-shadow` | `elevation-overlay` | The panel's shadow. |
 | `--tour-radius` | `radius-surface` | The panel's corners (8px). |
 | `--tour-border-width` | `border-width-1` | The panel's edge (1px). |
 | `--tour-ring-width` | `outline-width-2` | The ring round the element (2px). |

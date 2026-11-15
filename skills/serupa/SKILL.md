@@ -37,7 +37,7 @@ Put the brand and mode on `<html>`, and load `theme.js` first in `<head>` (or pa
 
 Pick the brand by its color: `blue` (the default) or any other accent color of the palette (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`). A brand changes the accent color only; every corner, shadow, space and motion is the same in all of them. Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
 
-One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`. For router links, call `configure({ link: Link })` once at startup.
+One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`; its `size="sm"` (or `"lg"`) sets every form control's default size, so don't repeat `size` on each one. For router links, call `configure({ link: Link })` once at startup.
 
 ## Rules
 

@@ -78,7 +78,7 @@
   font-weight: var(--tabs-weight, var(--font-medium));
   white-space: nowrap;
   text-decoration: none;   /* TabNav's tabs are links */
-  cursor: pointer; touch-action: manipulation;
+  cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: color var(--motion-hover) var(--ease-move), background-color var(--motion-hover) var(--ease-move);
 }
 .dk-tabs--sm .dk-tabs__tab { height: var(--tabs-height-sm, var(--control-height-md)); }
@@ -93,7 +93,7 @@
 .dk-tabs__icon .dk-icon { font-size: var(--spacing-4); }
 @media (hover: hover) { .dk-tabs__tab:hover:not(:disabled) { color: var(--tabs-text-hover, var(--text)); } }
 .dk-tabs__tab:focus-visible { outline: var(--focus-ring-width) solid transparent; box-shadow: inset 0 0 0 var(--focus-ring-width) var(--tabs-focus-ring, var(--focus-ring)); }   /* inside the tab, since the scrolling row would clip a ring outside it; the transparent outline shows in forced colors */
-.dk-tabs__tab:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-tabs__tab:disabled { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
 
 /* line */
 .dk-tabs--line .dk-tabs__tab { border-end-start-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
