@@ -270,7 +270,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.waitForFunction(() => /-dark$/.test(document.documentElement.getAttribute('data-theme')), null, { timeout: 3000 }).catch(() => {});
   const picked = await p.evaluate(() => ({ radius: document.documentElement.getAttribute('data-radius'), theme: document.documentElement.getAttribute('data-theme'), mode: Serupa.theme.get().mode }));
   t('debug.js: picking a setting applies it to the page live, brand and mode through theme.js', picked.radius === 'round' && /-dark$/.test(picked.theme) && picked.mode === 'dark', JSON.stringify(picked));
-  const tried = await p.evaluate(async () => ({ ...await Serupa.debug.theme({ radius: '', contrast: 'more', density: 'compact' }), attr: document.documentElement.hasAttribute('data-radius'), select: document.getElementById('serupa-debug-theme-density').value }));
+  const tried = await p.evaluate(async () => ({ ...await Serupa.debug.theme({ radius: '', contrast: 'more', density: 'compact' }), attr: document.documentElement.hasAttribute('data-radius'), select: document.querySelector('select#serupa-debug-theme-density')?.value }));
   t('debug.js: theme(o) changes settings, \'\' puts one back, and the pairs are checked again in the new theme', tried.theme.radius === '' && tried.theme.contrast === 'more' && tried.theme.density === 'compact' && tried.lowContrast.length === 0 && !tried.attr && tried.select === 'compact', JSON.stringify(tried));
   await p.evaluate(() => Serupa.debug.theme({ contrast: '', density: '', mode: 'auto' }));
   await p.keyboard.press('Escape');
