@@ -203,6 +203,21 @@ jobs:
           LABEL: ${{ inputs.which == 'cross-browser' && 'update-cross-browser-baselines' || 'update-visual-baselines' }}
         run: |
           set -euo pipefail
+          # A queued branch can't take the push (GH006), and its pictures fail the queue's fresh check in seconds
+          # anyway: take it out first, labelled "queue-stale" so it still counts as on its way (.github/dropped.sh) and
+          # Queue enqueue puts it back once the redraw is green. Until 15 Nov the heal failed on every queued one.
+          q=$(GH_TOKEN=$BOT_TOKEN gh api graphql -F n="$NUMBER" -f owner="${GITHUB_REPOSITORY%/*}" -f name="${GITHUB_REPOSITORY#*/}" -f query='
+            query($owner: String!, $name: String!, $n: Int!) { repository(owner: $owner, name: $name) { pullRequest(number: $n) { id mergeQueueEntry { id } } } }' \
+            --jq '.data.repository.pullRequest | "\(.id) \(.mergeQueueEntry != null)"')
+          if [ "${q#* }" = true ]; then
+            echo "::notice::#$NUMBER is in the merge queue with stale pictures: taking it out to heal it."
+            GH_TOKEN=$BOT_TOKEN gh pr edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label queue-stale
+            GH_TOKEN=$BOT_TOKEN gh api graphql -f id="${q% *}" -f query='mutation($id: ID!) { dequeuePullRequest(input: { id: $id }) { clientMutationId } }' >/dev/null
+            for _ in $(seq 12); do
+              [ "$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/timeline?per_page=100" --jq '[.[] | select(.event | test("merge_queue$"))] | last | .event')" = removed_from_merge_queue ] && break
+              sleep 5
+            done
+          fi
           auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
           echo "::add-mask::$auth"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$HEAD_REF"
@@ -490,6 +505,21 @@ jobs:
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit --quiet -m "$msg"
           # The token goes to this one push only. On a pull request the push is refused if the branch moved on since render.
+          # A queued branch can't take the push (GH006), and its pictures fail the queue's fresh check in seconds
+          # anyway: take it out first, labelled "queue-stale" so it still counts as on its way (.github/dropped.sh) and
+          # Queue enqueue puts it back once the redraw is green. Until 15 Nov the heal failed on every queued one.
+          q=$(GH_TOKEN=$BOT_TOKEN gh api graphql -F n="$NUMBER" -f owner="${GITHUB_REPOSITORY%/*}" -f name="${GITHUB_REPOSITORY#*/}" -f query='
+            query($owner: String!, $name: String!, $n: Int!) { repository(owner: $owner, name: $name) { pullRequest(number: $n) { id mergeQueueEntry { id } } } }' \
+            --jq '.data.repository.pullRequest | "\(.id) \(.mergeQueueEntry != null)"')
+          if [ "${q#* }" = true ]; then
+            echo "::notice::#$NUMBER is in the merge queue with stale pictures: taking it out to heal it."
+            GH_TOKEN=$BOT_TOKEN gh pr edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label queue-stale
+            GH_TOKEN=$BOT_TOKEN gh api graphql -f id="${q% *}" -f query='mutation($id: ID!) { dequeuePullRequest(input: { id: $id }) { clientMutationId } }' >/dev/null
+            for _ in $(seq 12); do
+              [ "$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/timeline?per_page=100" --jq '[.[] | select(.event | test("merge_queue$"))] | last | .event')" = removed_from_merge_queue ] && break
+              sleep 5
+            done
+          fi
           auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
           echo "::add-mask::$auth"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push ${force:-} origin "HEAD:refs/heads/$HEAD_REF"
