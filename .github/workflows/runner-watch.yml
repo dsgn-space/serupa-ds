@@ -4,7 +4,9 @@ name: Runner watch
 # waited over ten minutes for a self-hosted runner, and keeps them in one issue ("Jobs waiting for a runner", label
 # runner-watch), closed again once none waits. On 14 Nov the burst runner was off for an hour and a merge-queue run
 # waited for it the whole time with nothing to say so. CI's plan job asks the same question before each run and sends
-# its x86 jobs to GitHub's runners meanwhile. It runs tools/runner-watch.mjs from main and no code from any branch.
+# its x86 jobs to GitHub's runners meanwhile. It also keeps "Merges stalled" open while nothing has merged into main for
+# half an hour with pull requests waiting, or an armed one sits with a conflict (15 Nov: five hours, unnoticed).
+# It runs tools/runner-watch.mjs from main and no code from any branch.
 on:
   schedule:
     - cron: '*/10 * * * *'
@@ -24,6 +26,7 @@ jobs:
       contents: read
       actions: read
       issues: write
+      pull-requests: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

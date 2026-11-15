@@ -52,6 +52,16 @@
           }
         }
       },
+      "card-border-active": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "The border of the card being moved, as in SortableList.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-card-border-active"
+          }
+        }
+      },
       "target-border": {
         "$type": "color",
         "$value": "{color.primary}",
@@ -118,8 +128,8 @@
     "shadow": {
       "card-shadow": {
         "$type": "shadow",
-        "$value": "{shadow.elevation-overlay}",
-        "$description": "The card being dragged.",
+        "$value": "{shadow.elevation-raised}",
+        "$description": "The card being dragged: level 2, raised, as in SortableList.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--kanban-card-shadow"
