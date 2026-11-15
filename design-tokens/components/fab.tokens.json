@@ -56,7 +56,7 @@
       },
       "shadow-hover": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-xl}",
+        "$value": "{shadow.elevation-modal}",
         "$description": "The shadow on hover.",
         "$extensions": {
           "com.serupa": {

@@ -148,7 +148,7 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 
 | Token | Default | Use |
 | --- | --- | --- |
-| `--chart-tip-shadow` | `shadow-md` | The tooltip's shadow. |
+| `--chart-tip-shadow` | `elevation-raised` | The tooltip's shadow. |
 
 **Border**
 
