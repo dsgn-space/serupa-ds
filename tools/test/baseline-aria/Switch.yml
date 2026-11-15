@@ -58,3 +58,11 @@
 - switch "Auto-update" [checked]
 - text: Auto-update Install updates overnight
 
+# WithIcon
+- switch "Dark mode" [checked]
+- text: Dark mode
+- switch "Reduce motion"
+- text: Reduce motion
+- switch "Large" [checked]
+- text: Large
+

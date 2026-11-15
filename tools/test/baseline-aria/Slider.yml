@@ -47,6 +47,10 @@
 # Small
 - slider "Volume"
 
+# Vertical
+- slider "Volume"
+- slider "Treble"
+
 # WithInputs
 - group "Price, in dollars":
   - text: Price, in dollars
