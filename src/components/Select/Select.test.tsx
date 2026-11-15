@@ -4,11 +4,15 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, forcedColors, lowContrast, withMotion } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
+import { isApple } from '../../internal/keys';
 import { Select } from './Select';
 import { Combobox } from '../Combobox/Combobox';
 import { Card } from '../Card/Card';
 import { DatePicker } from '../DatePicker/DatePicker';
 
+// The key that opens a styled list (appearance: base-select): Down in Chromium; Space where the browser says it is an
+// Apple device, as on the Mac, since WebKit's styled list doesn't open on the arrow keys (it does on Space and Enter).
+const OPEN = isApple() ? ' ' : '{ArrowDown}';
 const field = (id: string) => document.getElementById(id) as HTMLSelectElement;
 const box = (id: string) => field(id).parentElement as HTMLElement;
 
@@ -261,7 +265,7 @@ describe('Select', () => {
       options={[1, { label: 'Sold out', disabled: true, options: [2, 3] }, 4]} />);
     field('dg').focus();
     // Where the list is styled (appearance: base-select), Down opens it first and Enter picks, as in a styled list's keys.
-    await userEvent.keyboard(CSS.supports('appearance', 'base-select') ? '{ArrowDown}{ArrowDown}{Enter}' : '{ArrowDown}');
+    await userEvent.keyboard(CSS.supports('appearance', 'base-select') ? OPEN + '{ArrowDown}{Enter}' : '{ArrowDown}');
     expect([changes, field('dg').querySelector('optgroup')!.disabled]).toEqual([['4'], true]);
   });
 
@@ -290,12 +294,12 @@ describe('Select: the styled list', () => {
     await userEvent.keyboard('{Escape}');
   });
 
-  test('keys: Down opens it and moves, Enter picks and says so through onChange, a disabled option is passed over, Escape closes it with nothing changed', async () => {
+  test('keys: Down (Space on Apple devices) opens it and moves, Enter picks and says so through onChange, a disabled option is passed over, Escape closes it with nothing changed', async () => {
     const changes: string[] = [];
     await render(<Select aria-label="Fruit" options={FRUIT} defaultValue="Banana" onChange={(e) => changes.push(e.target.value)} />);
     const s = document.querySelector('select')!;
     s.focus();
-    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard(styled ? OPEN : '{ArrowDown}');
     if (styled) {
       expect(s.matches(':open')).toBe(true);
       await userEvent.keyboard('{ArrowDown}{Enter}');
@@ -312,7 +316,7 @@ describe('Select: the styled list', () => {
     const s = document.querySelector('select')!;
     if (!styled) return expect(css(s).appearance).toBe('none');
     s.focus();
-    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    await userEvent.keyboard(OPEN + '{ArrowDown}');
     const act = document.activeElement as HTMLOptionElement;
     expect([act.textContent, css(act).backgroundColor, css(act).boxShadow]).toEqual(['Banana', color('var(--highlight)'), `${color('var(--highlight)')} 2px 0px 0px 0px inset`]);
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after, ::picker(select) { transition: none !important; }'; document.head.appendChild(still);
@@ -363,7 +367,7 @@ describe('Select: the styled list', () => {
     if (!styled) return expect(css(s).appearance).toBe('none');
     await forcedColors(async () => {
       s.focus();
-      await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+      await userEvent.keyboard(OPEN + '{ArrowDown}');
       const act = document.activeElement as HTMLElement;
       expect([act.textContent, css(act).outlineStyle, css(act).outlineWidth]).toEqual(['Banana', 'solid', css(document.documentElement).getPropertyValue('--focus-ring-width').trim()]);
       await userEvent.keyboard('{Escape}');

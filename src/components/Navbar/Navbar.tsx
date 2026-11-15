@@ -12,6 +12,7 @@ import { flattenChildren } from '../../internal/children';
 import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { activeIn } from '../../internal/root';
+import { useCloseWatcher } from '../../internal/closeWatcher';
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** The logo or product name on the left, usually a link home. */
@@ -141,6 +142,13 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
   // closes when the screen grows past the breakpoint, so it isn't open the next time it shrinks
   const wide = useBreakpoint('md');
   React.useEffect(() => { if (wide) setOpen(false); }, [wide]);
+  // Back on a phone closes the open menu, as Escape in it does, with focus back on the menu button unless it had gone
+  // somewhere else on the page.
+  useCloseWatcher(open, () => {
+    setOpen(false);
+    const a = document.activeElement;
+    if (toggle.current && (!a || a === document.body || (bar.current && bar.current.contains(a)))) toggle.current.focus();
+  });
   // A press outside the bar (on the page under the open panel) closes it, as a Popover does. Focus stays where the press puts it.
   React.useEffect(() => {
     if (!open) return;
@@ -241,6 +249,12 @@ export const NavbarMenu = /* @__PURE__ */ component<HTMLDivElement, NavbarMenuPr
     el.addEventListener('keydown', key);
     return () => { document.removeEventListener('pointerdown', press, true); el.removeEventListener('focusout', leave); el.removeEventListener('keydown', key); };
   }, [open, set]);
+  // Back closes this panel first (it opened after the small-screen menu around it), focus back on its button.
+  useCloseWatcher(open, () => {
+    set(false);
+    const a = document.activeElement;
+    if (!a || a === document.body || (root.current && root.current.contains(a))) button.current?.focus();
+  });
   // Links on their own are one list; each NavbarMenuGroup is its own.
   const parts: React.ReactNode[] = [];
   let loose: React.ReactNode[] = [];
