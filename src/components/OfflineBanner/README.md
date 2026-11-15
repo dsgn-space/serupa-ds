@@ -80,7 +80,7 @@ Each is an optional override: set it on the page, a container or one OfflineBann
 | `--offline-banner-text` | `text` | The words (4.5:1 on bg). |
 | `--offline-banner-icon` | `text-muted` | The icon while offline (3:1 on bg). |
 | `--offline-banner-icon-online` | `success` | The icon once it's back online (3:1 on bg). |
-| `--offline-banner-shadow` | `shadow-lg` | Its shadow, which lifts it off the page. |
+| `--offline-banner-shadow` | `elevation-overlay` | Its shadow, which lifts it off the page. |
 | `--offline-banner-radius` | `radius-surface` | The corners (8px). |
 | `--offline-banner-padding-x` | `spacing-4` | Space inside, at the start and end (16px). |
 | `--offline-banner-padding-y` | `spacing-2` | Space inside, above and below (8px). |

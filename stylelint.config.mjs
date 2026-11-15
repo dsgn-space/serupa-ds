@@ -21,6 +21,7 @@ export default {
         'serupa/focus-ring-outline': true,
         'serupa/no-physical-shorthand': true,
         'serupa/radius-through-role': true,
+        'serupa/shadow-through-role': true,
         'serupa/outline-width-token': true,
         // No accent bar beside the selected or current row (GR407): the fill marks it. known: what keeps the accent by
         // design, by the component token each reads it through: the filled picks (a chosen value drawn as a primary

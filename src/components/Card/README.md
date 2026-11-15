@@ -67,7 +67,7 @@ Drawn from the `FooterLayouts` story.
 | Hover (a linked card) | A `border-strong` border |
 | Focus (a linked card) | From the keyboard: a 2px `focus-ring` outline, 2px outside the card |
 
-The hover border fades in 150ms (`duration-150`, `ease-in-out`), at once with `prefers-reduced-motion`.
+The hover border fades in 150ms (`duration-150`, `ease-move`), at once with `prefers-reduced-motion`.
 
 ### Do and don't
 
