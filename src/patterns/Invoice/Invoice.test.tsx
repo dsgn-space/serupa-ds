@@ -30,7 +30,7 @@ describe('Patterns/Invoice', () => {
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Invoice INV-7']);
     expect(document.getElementById('standing')?.textContent).toMatch(/to pay\s*Due$/);
     expect(document.body.textContent).toContain('Due on ');
-    expect(screen.getByRole('link', { name: 'Download invoice INV-7 (PDF)' }).element().getAttribute('href')).toBe('#inv-7.pdf');
+    expect(screen.getByRole('link', { name: 'Download PDF of invoice INV-7' }).element().getAttribute('href')).toBe('#inv-7.pdf');
     expect(screen.getByRole('button', { name: /^Pay/ }).elements()).toHaveLength(0);
   });
 

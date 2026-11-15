@@ -3,6 +3,7 @@ import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Button } from '../../components/Button/Button';
 import { Link } from '../../components/Link/Link';
+import { VisuallyHidden } from '../../components/VisuallyHidden/VisuallyHidden';
 import { Alert } from '../../components/Alert/Alert';
 import { Badge, type BadgeTone } from '../../components/Badge/Badge';
 import { Card } from '../../components/Card/Card';
@@ -22,7 +23,7 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
      5 days"), never a color alone.
    - 1.3.1: the lines are a table with a caption and column headers, the amounts aligned at the end; the totals are a
      description list, with the amount due named so.
-   - 2.4.4: Download names what it downloads ("Download invoice INV-2041 (PDF)").
+   - 2.4.4: Download names what it downloads ("Download PDF of invoice INV-2041"), starting with the words it shows (2.5.3).
    - 3.3.4, 4.1.3: Pay shows it's busy and marks the invoice paid only once the server says so; a payment that fails
      says so next to the button.
    - 2.4.3, 4.1.3: once paid, the Pay button is gone, so focus goes to the h1; the state says "Paid" and a toast says so.
@@ -154,7 +155,7 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
                 <p className="m-0 text-text-muted">{sentence}</p>
                 <div className="flex flex-wrap items-center gap-3">
                   {onPay && !inv.paid ? <Button loading={busy} onClick={pay}>Pay {money(sums.total)}</Button> : null}
-                  <Link href={inv.pdf} download aria-label={`Download invoice ${inv.number} (PDF)`}>Download PDF</Link>
+                  <Link href={inv.pdf} download>Download PDF<VisuallyHidden> of invoice {inv.number}</VisuallyHidden></Link>
                 </div>
                 {failed ? <Alert tone="danger">The payment didn’t go through. Nothing was taken; try again, or use another card.</Alert> : null}
               </section>
