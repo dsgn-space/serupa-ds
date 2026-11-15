@@ -19,6 +19,7 @@ const KNOWN = new Map<string, string>([
   ['ButtonGroup/LongLabels', 'wraps to fit'],
   ['ButtonGroup/Narrow', 'wraps to fit'],
   ['ToggleGroup/LongLabels', 'wraps to fit'],
+  ['SplitButton/LongText', 'wraps to fit (its attached ButtonGroup)'],
   ['Stepper/LongLabels', 'stacks to fit'],
   ['Stepper/Narrow', 'stacks to fit'],
   ['Stepper/DontLongTitles', 'stacks to fit'],
