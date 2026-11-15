@@ -1053,7 +1053,7 @@ Rules of thumb:
 
 ## States
 
-Every interactive component moves through the same seven states, in this order of precedence (a later one wins):
+Every interactive component moves through the same eight states, in this order of precedence (a later one wins):
 
 | State | When | How it looks | Tokens |
 | --- | --- | --- | --- |
@@ -1062,6 +1062,7 @@ Every interactive component moves through the same seven states, in this order o
 | Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover: `pressed` for rows, tabs, days and page buttons; filled buttons shrink slightly instead | `pressed`, `--button-press-scale` |
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
 | Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
+| Dragged | It's being moved, by pointer or by keyboard (SortableList, Kanban) | Lifted to level 2: a `primary` border and the `elevation-raised` shadow, a `grabbing` cursor; a `Highlight` outline in forced colors | `primary`, `elevation-raised` |
 | Disabled | It can't be used (`disabled`, `aria-disabled`) | The whole thing at `opacity-disabled`, with a `not-allowed` cursor and no hover or pressed | `opacity-disabled` |
 | Invalid | Its value is wrong (`aria-invalid`) | A `danger` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `danger`, `danger-text` |
 
@@ -1069,7 +1070,7 @@ Focus shows on top of every other state, and disabled turns hover and pressed of
 
 ## Interactivity
 
-Interactivity utilities, as classes in `bundle.css`. They add no tokens: colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, and the rest are keywords.
+Interactivity utilities, as classes in `bundle.css`. Colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, `state-layer` uses the `opacity-state-*` tokens, and the rest are keywords.
 
 | Property | Classes |
 | --- | --- |
@@ -1090,6 +1091,7 @@ Interactivity utilities, as classes in `bundle.css`. They add no tokens: colors 
 | scroll-snap-align | `snap-start` `snap-end` `snap-center` `snap-align-none` |
 | scroll-snap-stop | `snap-normal` `snap-always` |
 | scroll-snap-type | `snap-x` `snap-y` `snap-both` `snap-none`, with `snap-mandatory` or `snap-proximity` (default) |
+| state-layer | `state-layer`: the element's text color over its own background at `opacity-state-hover` (8%) on hover, `opacity-state-pressed` (12%) while pressed and `opacity-state-dragged` (16%) with `data-state="dragging"`, under its content; nothing when disabled or in forced colors |
 | touch-action | `touch-auto` `touch-none` `touch-manipulation`, `touch-pan-x` `-pan-left` `-pan-right` `-pan-y` `-pan-up` `-pan-down` `-pinch-zoom` (these combine) |
 | user-select | `select-none` `select-text` `select-all` `select-auto` |
 | will-change | `will-change-auto` `-scroll` `-contents` `-transform` |
@@ -1098,6 +1100,7 @@ Rules of thumb:
 
 - Cursors: the components read four tokens, `--cursor-interactive` (`pointer`), `--cursor-disabled` (`not-allowed`), `--cursor-grab` and `--cursor-grabbing`, so one line on `:root` changes them everywhere (`--cursor-interactive: default` for a desktop-app feel). Write `var(--cursor-interactive)` in your own CSS too: the `serupa/no-raw-cursor` stylelint rule warns about the written-out keywords. `cursor-pointer` on anything clickable that isn't a link (Button does this), `cursor-not-allowed` when disabled, `cursor-progress` while loading, `cursor-grab`/`cursor-grabbing` on draggable items, `cursor-text` on editable areas.
 - Form controls: `accent-primary` makes checkboxes, radios, range sliders and progress bars match the theme; `caret-primary` colors the text cursor. Use `appearance-none` only when you redraw the control yourself, and keep its focus style.
+- `state-layer` gives the system's hover, pressed and dragged states to a surface whose color serupa doesn't know: a tile in a category color, a brand panel, a row tinted by data. Put it on the clickable element itself; its text color sets the tint, so check that text against the background as usual. Components keep their own tuned hover colors.
 - Dark themes: put `scheme-dark` on the root (or `scheme-light-dark`) so native scrollbars, inputs and date pickers turn dark too.
 - `field-sizing-content` for comment boxes and tag inputs that should grow as people type; give them a `max-h-*`.
 - Anchors under a sticky header: `scroll-mt-16` on the targets (or `scroll-pt-16` on the scrolling container) so the header doesn't cover them. Pair `scroll-smooth` with reduced-motion handling.
