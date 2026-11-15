@@ -3,11 +3,11 @@
   - button "Publish"
   - button "More publish options"
 - group:
-  - button "Publish"
-  - button "More publish options"
+  - button "Save"
+  - button "More save options"
 - group:
-  - button "Publish"
-  - button "More publish options"
+  - button "Share"
+  - button "More share options"
 
 # LongText
 - group:
@@ -31,14 +31,14 @@
 
 # Sizes
 - group:
-  - button "Publish"
-  - button "More publish options"
+  - button "Save"
+  - button "More save options"
 - group:
   - button "Publish"
   - button "More publish options"
 - group:
-  - button "Publish"
-  - button "More publish options"
+  - button "Share"
+  - button "More share options"
 
 # States
 - group:

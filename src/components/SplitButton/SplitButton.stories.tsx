@@ -24,15 +24,15 @@ export const Playground: Story = {};
 export const Default: Story = {
   render: (args) => <div className="flex flex-wrap gap-4">
     <SplitButton {...args} />
-    <SplitButton {...args} variant="secondary" />
-    <SplitButton {...args} variant="outline" />
+    <SplitButton {...args} variant="secondary" menuLabel="More save options">Save</SplitButton>
+    <SplitButton {...args} variant="outline" menuLabel="More share options">Share</SplitButton>
   </div>,
 };
 export const Sizes: Story = {
   render: (args) => <div className="flex flex-wrap items-center gap-4">
-    <SplitButton {...args} size="sm" />
+    <SplitButton {...args} size="sm" menuLabel="More save options">Save</SplitButton>
     <SplitButton {...args} />
-    <SplitButton {...args} size="lg" />
+    <SplitButton {...args} size="lg" menuLabel="More share options">Share</SplitButton>
   </div>,
 };
 /** The menu open, under the arrow. */
