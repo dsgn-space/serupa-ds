@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render as draw } from 'vitest-browser-react';
+import { DEFAULT_LABELS } from './labels';
+import { SerupaProvider } from './provider';
 import { Prose } from '../components/Prose/Prose';
 import { toast, Toaster } from '../components/Toast/Toast';
 import { TransferList } from '../components/TransferList/TransferList';
@@ -8,6 +10,8 @@ import { TransferList } from '../components/TransferList/TransferList';
 // GR424 (audit runs 298 and 299): numbers that change or sit in a column use tabular figures, so they keep their
 // width as they change and line up down a column; small text keeps the small text's own line height.
 const tabular = (el: Element | null | undefined) => getComputedStyle(el!).fontVariantNumeric;
+// The test finds things by their English words and digits, so it renders in English in every locale run.
+const render = (ui: React.ReactNode) => draw(<SerupaProvider locale="en-US" labels={DEFAULT_LABELS}>{ui}</SerupaProvider>);
 // The innermost element whose whole text is this.
 const byText = (text: string) => [...document.body.querySelectorAll('*')].reverse().find((x) => x.textContent?.trim() === text);
 
