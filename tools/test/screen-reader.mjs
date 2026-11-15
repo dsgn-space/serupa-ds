@@ -35,6 +35,18 @@ const CASES = [
   ['Dialog: opening it says its title and that it is a dialog',
     "h(function () { var s = React.useState(false); return h(React.Fragment, null, h(S.Button, { onClick: function () { s[1](true); } }, 'Invite people'), h(S.Dialog, { open: s[0], onOpenChange: s[1], title: 'Invite people', description: 'They get an email with a link.' }, h(S.Button, null, 'Send'))); })",
     [['Tab', ['invite people', 'button']], ['Enter', ['invite people', 'dialog']]]],
+  ['Combobox: name and role, and the highlighted option as the arrow moves through the list',
+    "h(S.Combobox, { 'aria-label': 'Favorite fruit', options: ['Apple', 'Banana', 'Cherry'] })",
+    [['Tab', ['favorite fruit', 'combo box|combobox']], ['ArrowDown', ['apple']], ['ArrowDown', ['banana']]]],
+  ['Menu: the trigger is a button that opens a menu; opening it lands on the first item, an arrow on the next',
+    "h(S.Menu, { trigger: h(S.Button, null, 'Row actions') }, h(S.MenuItem, null, 'Rename'), h(S.MenuItem, null, 'Archive'))",
+    [['Tab', ['row actions', 'button']], ['Enter', ['rename']], ['ArrowDown', ['archive']]]],
+  ['Toast: a message that appears is read out, with focus left where it was',
+    "h(React.Fragment, null, h(S.Toaster), h(S.Button, { onClick: function () { S.toast('Changes saved'); } }, 'Save changes'))",
+    [['Tab', ['save changes', 'button']], ['Enter', ['changes saved']]]],
+  ['DatePicker: the field by its name, then the calendar button, which opens a dialog',
+    "h(S.DatePicker, { 'aria-label': 'Due date', locale: 'en-US' })",
+    [['Tab', ['due date']], ['Tab', ['choose a date', 'button']], ['Enter', ['choose a date', 'dialog']]]],
 ];
 
 const said = [];
@@ -88,6 +100,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
         heard = (await sr.spokenPhraseLog()).join(' | ');
         if (!missed(heard).length || Date.now() > end) break;
       }
+      // What the reader's cursor is on, for a word the speech log lacks: VoiceOver can say an item's name and its usage
+      // hint as two phrases, and the log polled after a key that moves focus into a new popup (Menu's first item on
+      // Enter) kept only the hint. The item text is what the reader has for the focused control, so its name still counts.
+      let item = '';
+      if (missed(heard).length) { item = await sr.itemText().catch(() => ''); heard = item ? `${heard} [item: ${item}]` : heard; }
       said.push(`${name} / ${key}: ${heard}`);
       const missing = missed(heard);
       if (missing.length) misses.push(`${key}: no "${missing.join('", "')}" in "${heard}"`);
@@ -100,4 +117,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
   fs.mkdirSync(path.join(PROJECT, '.test-tmp'), { recursive: true });
   fs.writeFileSync(path.join(PROJECT, '.test-tmp', `screen-reader-${reader}.txt`), said.join('\n') + '\n');
 }
+// What was said, in the job's log too: the artifact is a download away, and a red run starts with reading this.
+console.log(said.join('\n') + '\n');
 done(report(`Screen reader (${reader === 'voiceover' ? 'VoiceOver, WebKit' : 'NVDA, Chromium'})`, R));

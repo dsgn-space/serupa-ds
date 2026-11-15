@@ -184,6 +184,20 @@ describe('Kanban', () => {
     await userEvent.keyboard('{Escape}');
   });
 
+  test('a picked-up card shows the dragged state every drag surface shares: a primary border and the raised shadow', async () => {
+    await render(<Board />);
+    const li = handle('Alpha').element().closest('li')!;
+    const probe = document.body.appendChild(document.createElement('div'));
+    probe.style.cssText = 'border: 1px solid var(--primary); box-shadow: var(--elevation-raised)';
+    handle('Alpha').element().focus();
+    await userEvent.keyboard(' ');
+    await expect.poll(() => li.dataset.state).toBe('dragging');
+    expect(css(li).borderTopColor).toBe(css(probe).borderTopColor);
+    expect(css(li).boxShadow).toBe(css(probe).boxShadow);
+    await userEvent.keyboard('{Escape}');
+    probe.remove();
+  });
+
   test('pointer: dragging a handle onto another column drops the card there', async () => {
     const moves: KanbanMove<T>[] = [];
     await render(<Board moves={moves} />);
