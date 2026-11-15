@@ -79,6 +79,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'Ayuda',
   contextualInfo: 'Información',
   copyFailed: 'No se pudo copiar. Selecciona el texto y cópialo tú.',
+  copyFailedShort: 'No se pudo copiar',
   chatNewMessages: (count) => count === 1 ? '1 mensaje nuevo' : n(count) + ' mensajes nuevos',
   chatLoadOlder: 'Cargar mensajes anteriores',
   chatLoadingOlder: 'Cargando mensajes anteriores',

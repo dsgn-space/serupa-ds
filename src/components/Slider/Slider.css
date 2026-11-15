@@ -14,7 +14,9 @@
   position: relative; display: flex; align-items: center; box-sizing: border-box;
   inline-size: var(--sizing-full); block-size: var(--dk-slider-thumb);
   padding-block: var(--spacing-0); padding-inline: var(--dk-slider-half);
-  touch-action: none; -webkit-user-select: none; user-select: none; cursor: pointer;
+  /* A swipe across the page that starts on the slider scrolls the page (the browser then cancels the press, and the
+     thumb goes back): only a press along the track moves it (modern web guidance, accessibility: target sizes). */
+  touch-action: pan-y; -webkit-user-select: none; user-select: none; cursor: pointer;
 }
 /* inputs: a number field at each end of the strip (or after it, for one thumb), as tall as a control, so the strip
    grows to fit them; the fields keep the text cursor and let text be selected. */
@@ -69,7 +71,7 @@
    it) rule above still holds. The track runs top to bottom; Slider.tsx counts places from the top, so min sits at the
    bottom. The text (mark labels, the value chip, the number fields) stays upright; the labels sit to the right of the
    track and the chip to its left. */
-.dk-slider--vertical { writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
+.dk-slider--vertical { touch-action: pan-x; writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
 .dk-slider--vertical .dk-slider__mark-label > span, .dk-slider--vertical .dk-slider__value > span, .dk-slider--vertical .dk-slider__input { writing-mode: horizontal-tb; }
 .dk-slider--invalid .dk-slider__fill { background: var(--slider-invalid, var(--danger)); }
 .dk-slider--invalid .dk-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }

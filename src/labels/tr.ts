@@ -76,6 +76,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'Yardım',
   contextualInfo: 'Bilgi',
   copyFailed: 'Kopyalanamadı. Metni seçip kendiniz kopyalayın.',
+  copyFailedShort: 'Kopyalanamadı',
   chatNewMessages: (count) => n(count) + ' yeni mesaj',
   chatLoadOlder: 'Önceki mesajları yükle',
   chatLoadingOlder: 'Önceki mesajlar yükleniyor',

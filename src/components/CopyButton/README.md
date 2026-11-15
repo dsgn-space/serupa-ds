@@ -28,7 +28,8 @@ Drawn from the `VariantsAndSizes` story.
 1. **Icons** (`.dk-copy-btn__icons`): the copy icon and, in the same place, the check that replaces it once copied.
 2. **Copy icon** (`.dk-copy-btn__icon--copy`): shown until a copy.
 3. **Copied icon** (`.dk-copy-btn__icon--done`): shown for a moment after a copy.
-4. **Labels** (`.dk-copy-btn__labels`): "Copy" and "Copied" in the same place, so the button keeps the width of the longer one.
+4. **Failed icon** (`.dk-copy-btn__icon--failed`): shown instead when the browser refused.
+5. **Labels** (`.dk-copy-btn__labels`): "Copy" and "Copied" in the same place, so the button keeps the width of the longer one. "Couldn’t copy" joins them only while it shows.
 
 ## Usage
 
@@ -40,7 +41,7 @@ Drawn from the `VariantsAndSizes` story.
 
 - Copies with the Clipboard API, and falls back to the older `execCommand("copy")` on pages where that API isn't available (plain `http:` or an iframe without permission).
 - Then shows a check (success color) and "Copied" for `timeout` ms (2000). Both labels take the same space, so the button doesn't change width. The copy icon cross-fades into the check (a short scale and blur when motion is allowed).
-- If the browser refuses, it says "Couldn’t copy. Select the text and copy it yourself." (`labels.copyFailed`) and calls `onCopyError`.
+- If the browser refuses, it says "Couldn’t copy. Select the text and copy it yourself." (`labels.copyFailed`), shows an error icon (danger color) and "Couldn’t copy" (`labels.copyFailedShort`) for the same `timeout`, and calls `onCopyError`. So people who see the button aren't left thinking it worked. The button can grow to fit those words while they show: a failure is rare, and worth noticing.
 - Your `onClick` runs first; call `event.preventDefault()` in it to stop the copy.
 
 ### Do and don't
@@ -51,8 +52,8 @@ Drawn from the `VariantsAndSizes` story.
 ## Accessibility
 
 - It's a real `<button>`. "Copied" is announced in the shared polite status region, and a failure in the assertive one.
-- Only the current label is read out: the other is hidden from screen readers. An `iconOnly` button's name changes to "Copied" while it shows the check, and it has a tooltip (`title`).
-- The check keeps 3:1 on the button in every theme (`CopyButton.test.tsx`). In forced-colors mode it uses the button's text color.
+- Only the current label is read out: the other is hidden from screen readers. An `iconOnly` button's name changes to "Copied" while it shows the check, or "Couldn’t copy" while it shows the error icon, and it has a tooltip (`title`).
+- The check and the error icon keep 3:1 on the button in every theme (`CopyButton.test.tsx`). In forced-colors mode they use the button's text color.
 
 ### Keyboard
 
@@ -72,10 +73,10 @@ Drawn from the `VariantsAndSizes` story.
 | `iconOnly` | `boolean` | `false` | Only the icon, with `children` as its name and tooltip. |
 | `timeout` | `number` | `2000` | How long "Copied" stays, in ms. |
 | `onCopy` | `(text) => void` | | Once the text is on the clipboard. |
-| `onCopyError` | `(error) => void` | | When copying fails. |
+| `onCopyError` | `(error) => void` | | When copying fails (it also shows and says so). |
 | `variant`, `size` | as Button | `'outline'`, `'sm'` | |
 
-Every other [Button](../Button/README.md) prop and `ref` go to the `<button>`, which has `data-component="button"`, the `dk-copy-btn` class, and `data-copied` while it shows "Copied".
+Every other [Button](../Button/README.md) prop and `ref` go to the `<button>`, which has `data-component="button"`, the `dk-copy-btn` class, `data-copied` while it shows "Copied", and `data-failed` while it shows "Couldn’t copy".
 
 ## Component tokens
 
@@ -85,4 +86,5 @@ Each is an optional override: set it on the page, a container or one button. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--copy-button-done-color` | `success-text` | The check icon once it has copied (3:1 on the button). |
+| `--copy-button-failed-color` | `danger-text` | The error icon when the browser refused to copy (3:1 on the button). |
 <!-- token-table:end -->

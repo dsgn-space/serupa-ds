@@ -133,13 +133,17 @@ describe('CopyButton', () => {
     await expect.poll(() => errs.length).toBe(1);
     await expect.poll(() => announcerIdle() && shout()).toBe('Couldn’t copy. Select the text and copy it yourself.');
     expect([el('bad').hasAttribute('data-copied'), clicks]).toEqual([false, ['bad']]);
+    // Shown, not only said: an error icon (not color alone: its own shape) and "Couldn't copy", for the timeout.
+    const failedIcon = el('bad').querySelector('.dk-copy-btn__icon--failed')!;
+    expect([el('bad').hasAttribute('data-failed'), shown('bad')]).toEqual([true, 'Couldn’t copy']);
+    await expect.poll(() => [getComputedStyle(failedIcon).opacity, getComputedStyle(el('bad').querySelector('.dk-copy-btn__icon--copy')!).opacity]).toEqual(['1', '0']);
     writeText.mockReset();
     await userEvent.click(el('stop'));
     expect([clicks, writeText.mock.calls.length, el('stop').hasAttribute('data-copied')]).toEqual([['bad', 'stop'], 0, false]);
     vi.restoreAllMocks();
   });
 
-  test('a copy that fails while the last one still shows "Copied" takes the check away, so it doesn\'t claim this one worked (L8E60)', async () => {
+  test('a copy that fails while the last one still shows "Copied" takes the check away and says it failed, so it doesn\'t claim this one worked (L8E60)', async () => {
     const errs: unknown[] = [];
     await render(<CopyButton id="again" value="x" onCopyError={(e) => errs.push(e)} />);
     await userEvent.click(el('again'));
@@ -148,7 +152,7 @@ describe('CopyButton', () => {
     vi.spyOn(document, 'execCommand').mockReturnValue(false);
     await userEvent.click(el('again'));
     await expect.poll(() => errs.length).toBe(1);
-    expect([el('again').hasAttribute('data-copied'), shown('again')]).toEqual([false, 'Copy']);
+    expect([el('again').hasAttribute('data-copied'), shown('again')]).toEqual([false, 'Couldn’t copy']);
     vi.restoreAllMocks();
   });
 
@@ -198,7 +202,7 @@ describe('CopyButton', () => {
     await expect.poll(() => shown('id')).toBe('Disalin');
   });
 
-  test('contrast: the check keeps 3:1 on outline, ghost and secondary buttons in every theme', async () => {
+  test('contrast: the check and the error icon keep 3:1 on outline, ghost and secondary buttons in every theme', async () => {
     await render(<>{(['outline', 'ghost', 'secondary'] as const).map((v) => <CopyButton key={v} id={'v-' + v} variant={v} value="x" />)}</>);
     for (const v of ['outline', 'ghost', 'secondary']) { await userEvent.click(el('v-' + v)); }
     await expect.poll(() => document.querySelectorAll('[data-copied]').length).toBe(3);
@@ -208,12 +212,14 @@ describe('CopyButton', () => {
       document.documentElement.setAttribute('data-theme', th);
       for (const v of ['outline', 'ghost', 'secondary']) {
         const b = el('v-' + v), bg = css(b).backgroundColor === 'rgba(0, 0, 0, 0)' ? 'var(--surface)' : css(b).backgroundColor;
-        const r = contrast(css(b.querySelector('[data-icon="check"]')).color, bg); n++;
-        if (r < 3) low.push(`${th} ${v} ${r.toFixed(2)}`);
+        for (const icon of ['check', 'error']) {
+          const r = contrast(css(b.querySelector(`[data-icon="${icon}"]`)).color, bg); n++;
+          if (r < 3) low.push(`${th} ${v} ${icon} ${r.toFixed(2)}`);
+        }
       }
     }
     document.documentElement.setAttribute('data-theme', 'blue-light'); still.remove();
-    expect([low, n]).toEqual([[], 18]);
+    expect([low, n]).toEqual([[], 36]);
   });
 });
 

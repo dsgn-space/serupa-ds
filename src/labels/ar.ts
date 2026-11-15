@@ -80,6 +80,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'مساعدة',
   contextualInfo: 'معلومات',
   copyFailed: 'تعذّر النسخ. حدّد النص وانسخه بنفسك.',
+  copyFailedShort: 'تعذّر النسخ',
   chatNewMessages: (count) => 'رسائل جديدة: ' + n(count),
   chatLoadOlder: 'تحميل الرسائل السابقة',
   chatLoadingOlder: 'جارٍ تحميل الرسائل السابقة',

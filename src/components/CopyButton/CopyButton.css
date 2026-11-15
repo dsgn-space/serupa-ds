@@ -1,6 +1,7 @@
 /* ---------------------------------------------------------------
    CopyButton: a Button (outline, sm by default) with a copy icon and "Copy". Once it has copied, the icon is a check
-   in the success color and the label reads "Copied", for 2 seconds. Both labels share one grid cell, so the
+   in the success color and the label reads "Copied", for 2 seconds; if the browser refused, an error icon in the
+   danger color and "Couldn't copy", for as long. Both labels share one grid cell, so the
    button keeps one width.
    --------------------------------------------------------------- */
 @layer dk.components {
@@ -13,10 +14,13 @@
    motion: the fade alone. */
 .dk-copy-btn__icons { display: inline-grid; grid-template-areas: "icon"; }
 .dk-copy-btn__icons > * { grid-area: icon; transition: opacity var(--motion-change-sm) var(--ease-enter); }
-.dk-copy-btn:not([data-copied]) .dk-copy-btn__icon--done, .dk-copy-btn[data-copied] .dk-copy-btn__icon--copy { opacity: var(--opacity-0); }
+.dk-copy-btn__icon--failed { color: var(--copy-button-failed-color, var(--danger-text)); }
+.dk-copy-btn:not([data-copied]) .dk-copy-btn__icon--done, .dk-copy-btn[data-copied] .dk-copy-btn__icon--copy,
+.dk-copy-btn:not([data-failed]) .dk-copy-btn__icon--failed, .dk-copy-btn[data-failed] .dk-copy-btn__icon--copy { opacity: var(--opacity-0); }
 @media (prefers-reduced-motion: no-preference) {
   .dk-copy-btn__icons > * { transition: opacity var(--motion-change-sm) var(--ease-enter), scale var(--motion-change-sm) var(--ease-enter), filter var(--motion-change-sm) var(--ease-enter); }
-  .dk-copy-btn:not([data-copied]) .dk-copy-btn__icon--done, .dk-copy-btn[data-copied] .dk-copy-btn__icon--copy { scale: var(--scale-90); filter: blur(var(--blur-xs)); }
+  .dk-copy-btn:not([data-copied]) .dk-copy-btn__icon--done, .dk-copy-btn[data-copied] .dk-copy-btn__icon--copy,
+  .dk-copy-btn:not([data-failed]) .dk-copy-btn__icon--failed, .dk-copy-btn[data-failed] .dk-copy-btn__icon--copy { scale: var(--scale-90); filter: blur(var(--blur-xs)); }
 }
-@media (forced-colors: active) { .dk-copy-btn__icon--done { color: inherit; } }
+@media (forced-colors: active) { .dk-copy-btn__icon--done, .dk-copy-btn__icon--failed { color: inherit; } }
 }

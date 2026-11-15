@@ -47,7 +47,7 @@ Drawn from the `Marks` story.
 
 ## Behavior
 
-- A press anywhere on the track moves the nearest thumb there, and dragging follows the pointer even off the slider.
+- A press anywhere on the track moves the nearest thumb there, and dragging follows the pointer even off the slider. On a touch screen, a swipe across the page that starts on the slider scrolls the page instead (`touch-action: pan-y`, `pan-x` when vertical): the thumb goes back and nothing commits.
 - Range thumbs can't cross.
 - The thumb grows a little while pressed; it doesn't with `prefers-reduced-motion`.
 - `marks` draws a tick for each mark between the ends, and its label centered under it. With labels, the slider is taller by one line of small text, so nothing overlaps what follows. `true` draws a mark per step, or one per `largeStep` steps past 100 marks. Marks off the track are left out. A press on a label moves the nearest thumb there.

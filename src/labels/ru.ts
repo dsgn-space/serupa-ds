@@ -82,6 +82,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'Справка',
   contextualInfo: 'Информация',
   copyFailed: 'Не удалось скопировать. Выделите текст и скопируйте его сами.',
+  copyFailedShort: 'Не удалось скопировать',
   chatNewMessages: (count) => 'Новых сообщений: ' + n(count),
   chatLoadOlder: 'Загрузить предыдущие сообщения',
   chatLoadingOlder: 'Загрузка предыдущих сообщений',

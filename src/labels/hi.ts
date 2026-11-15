@@ -75,6 +75,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'सहायता',
   contextualInfo: 'जानकारी',
   copyFailed: 'कॉपी नहीं हो सका। टेक्स्ट चुनकर ख़ुद कॉपी करें।',
+  copyFailedShort: 'कॉपी नहीं हो सका',
   chatNewMessages: (count) => n(count) + ' नए संदेश',
   chatLoadOlder: 'पिछले संदेश लोड करें',
   chatLoadingOlder: 'पिछले संदेश लोड हो रहे हैं',

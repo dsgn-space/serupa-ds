@@ -176,6 +176,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const inField = (t: EventTarget) => t instanceof Element && !!t.closest('.dk-slider__input');
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX, e.clientY)); };
   const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); if (latest.current.some((v, k) => v !== from.current[k])) commit(); };
+  // The browser took the press for a scroll of the page (touch-action: pan-y): the thumb goes back, and nothing commits.
+  const cancel = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerCancel) rest.onPointerCancel(e); const i = drag.current; if (i == null) return; drag.current = null; set(i, at(from.current, i)); };
   // Your onKeyDown runs first, on the root as the key goes down to the focused part (the capture phase), so its
   // currentTarget is the root its type names, and preventDefault() in it keeps the control's own handling of that key
   // from running.
@@ -269,7 +271,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
       aria-describedby={isRange ? props['aria-describedby'] : undefined}
       className={cn('dk-slider', 'dk-slider--size-' + size, disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.inputs && 'dk-slider--inputs', vertical && 'dk-slider--vertical', props.className)}
       data-component="slider" data-size={size} data-orientation={vertical ? 'vertical' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
-      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
+      onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={cancel}
       onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
       {props.inputs && isRange ? field(0) : null}
       <div className="dk-slider__track">

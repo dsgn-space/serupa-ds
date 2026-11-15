@@ -22,6 +22,9 @@ export const WithAField: Story = {
   </div>,
 };
 
+/** When the browser refuses (here, on purpose): press it to see the error icon and "Couldn’t copy" for two seconds. */
+export const Failed: Story = { name: 'When copying fails', args: { value: () => Promise.reject(new Error('Refused')), children: 'Copy link', size: 'md' } };
+
 export const LongLabel: Story = {
   render: (args) => (
     <div style={{ width: 200 }}>
