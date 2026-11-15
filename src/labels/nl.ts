@@ -39,6 +39,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'Meer',
   previousMonth: 'Vorige maand',
   timeZoneYours: 'Je tijdzone',
+  timeZonePlaceholder: 'Zoek een stad of tijdzone',
   nextMonth: 'Volgende maand',
   month: 'Maand',
   year: 'Jaar',

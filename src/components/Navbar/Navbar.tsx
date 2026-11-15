@@ -13,6 +13,7 @@ import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { activeIn } from '../../internal/root';
 import { useCloseWatcher } from '../../internal/closeWatcher';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** The logo or product name on the left, usually a link home. */
@@ -189,7 +190,7 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
     <NavbarContext.Provider value={ctx}>
       <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.sticky && props.condense && 'dk-navbar--condense', props.className)}>
         <div className={cn('dk-navbar__inner dk-container dk-container--padded', 'dk-container--' + size)}>
-          {props.brand != null ? <div className="dk-navbar__brand">{typeof props.brand === 'string' || typeof props.brand === 'number' ? <span>{props.brand}</span> : props.brand}</div> : null}
+          {props.brand != null ? <div className="dk-navbar__brand">{typeof props.brand === 'string' || typeof props.brand === 'number' ? <TruncatedText>{String(props.brand)}</TruncatedText> : props.brand}</div> : null}
           {open || leaving ? null : nav}
           {props.actions != null ? <div className="dk-navbar__actions">{props.actions}</div> : null}
           {hasLinks ? (

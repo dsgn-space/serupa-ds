@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render as draw } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
+import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 import { TimeZonePicker, allTimeZones, timeZoneInfo } from './TimeZonePicker';
 
@@ -35,6 +36,15 @@ describe('TimeZonePicker', () => {
     await userEvent.click(ny);
     expect(onValueChange).toHaveBeenLastCalledWith('America/New_York');
     expect(input().value).toBe('New York');
+  });
+
+  test("an empty picker says what to type, in the app's language; a placeholder you pass wins", async () => {
+    const { rerender } = await render(<TimeZonePicker aria-label="Time zone" at={AT} />);
+    expect(input().placeholder).toBe('Search a city or time zone');
+    await rerender(<TimeZonePicker aria-label="Time zone" at={AT} placeholder="Where are you?" />);
+    expect(input().placeholder).toBe('Where are you?');
+    await draw(<SerupaProvider locale="id-ID" labels={idLabels}><TimeZonePicker aria-label="Zona waktu" at={AT} /></SerupaProvider>);
+    expect(document.querySelectorAll<HTMLInputElement>('input[role="combobox"]')[1]!.placeholder).toBe('Cari kota atau zona waktu');
   });
 
   test('the whole list is made only once the field is focused, pointed at or opened: a page of pickers nobody has opened formats a few zones, not 400 each', async () => {

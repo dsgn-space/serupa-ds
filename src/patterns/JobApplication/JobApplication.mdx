@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './JobApplication.stories';
+
+<Meta of={Stories} />
+
+# Job application
+
+What a job is, one short form to apply with a CV, and what happens next.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A job's own page on a careers site, with the form under the job's facts.
+- Not for a long form in several steps, such as a grant or a visa: that's the Multi-step form pattern.
+- Not for a quick question to a team: that's the Contact form pattern.
+
+## What each part is for
+
+- **The job's facts come first, as a list of named facts**: team, place, hours and pay, so they're read before applying (1.3.1).
+- **Each field says what it's for**, which are optional, and its format; name, email and phone say what they are for autofill. The CV says the file types and size it takes (3.3.2, 1.3.5).
+- **Sending with problems shows a summary at the top that takes focus**, each problem a link to its field: the CV's lands on its Choose button, the question's on its first answer. Each field says its own problem too (3.3.1, 2.4.3).
+- **Send shows it's busy**; an application that can't be sent says so next to the button and keeps every field and the CV (3.3.4, 4.1.3).
+- **Once sent, the answer's heading takes focus**, with what happens next, in order, and a promise to answer either way (2.4.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.SendFails} />
+
+## What stays your app's job
+
+- **Sending.** `onApply` gets the application, trimmed, with the CV as a `File`: reject when it can't be sent.
+- **The questions.** Ask only what you need to decide on a call; each extra question loses people. Copy the pattern and change them.
+- **Keeping it.** Say how long you keep an application and why in the privacy notice, and delete it when that time is up.

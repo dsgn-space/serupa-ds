@@ -92,7 +92,7 @@ button.dk-stepper__head:active .dk-stepper__indicator { scale: var(--stepper-pre
 .dk-stepper--tight:not(.dk-stepper--measure) .dk-stepper__indicator { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-stepper--tight:not(.dk-stepper--measure) .dk-stepper__indicator .dk-icon { font-size: var(--spacing-3\.5); }
 /* A long word wraps, here and in the titles, so a narrow stepper never makes the page scroll sideways (RF1). */
-.dk-stepper__summary { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); color: var(--stepper-description-color, var(--text-muted)); overflow-wrap: anywhere; }
+.dk-stepper__summary { margin: var(--spacing-2) var(--spacing-0) var(--spacing-0); font-variant-numeric: tabular-nums; color: var(--stepper-description-color, var(--text-muted)); overflow-wrap: anywhere; }
 .dk-stepper__summary .dk-stepper__title { color: var(--stepper-title-color, var(--text)); }
 @media (forced-colors: active) {
   .dk-stepper__step--current .dk-stepper__indicator, .dk-stepper__step--complete .dk-stepper__indicator { background: Highlight; color: HighlightText; border-color: Highlight; forced-color-adjust: none; }

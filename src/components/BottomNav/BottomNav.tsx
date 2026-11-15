@@ -5,6 +5,7 @@ import { component } from '../../internal/component';
 import { config } from '../../internal/config';
 import { asIcon } from '../Icon/asIcon';
 import type { IconSource } from '../Icon/Icon';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 
 export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
   /** The navigation's name for screen readers ("Main"), so it's told apart from the Navbar and other landmarks. */
@@ -64,7 +65,7 @@ const BottomNavLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, BottomNav
   return React.createElement(props.as || config.link, Object.assign(rest, {
     ref: ref, 'aria-current': props.active ? 'page' : undefined,
     className: cn('dk-bottom-nav__link', props.active && 'dk-bottom-nav__link--active', props.className),
-  }), <span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="dk-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>, <span className="dk-bottom-nav__label">{props.children}</span>);
+  }), <span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="dk-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>, typeof props.children === 'string' ? <TruncatedText className="dk-bottom-nav__label">{props.children}</TruncatedText> : <span className="dk-bottom-nav__label">{props.children}</span>);
 });
 
 /** A destination in a BottomNav: an icon over a short label. active marks the current page. `as` renders your router's link, typed with its props. */

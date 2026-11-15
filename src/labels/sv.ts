@@ -39,6 +39,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'Mer',
   previousMonth: 'Föregående månad',
   timeZoneYours: 'Din tidszon',
+  timeZonePlaceholder: 'Sök en stad eller tidszon',
   nextMonth: 'Nästa månad',
   month: 'Månad',
   year: 'År',
