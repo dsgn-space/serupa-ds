@@ -1,3 +1,8 @@
+# Checking
+- text: Username Letters, numbers and dashes
+- textbox "Username": ada-l
+- text: Checking the name…
+
 # Disabled
 - text: Email We'll send the receipt here.
 - textbox "Email" [disabled]:
@@ -70,4 +75,9 @@
 - textbox "Email" [invalid]:
   - /placeholder: you@example.com
 - text: Enter an email address like name@example.com
+
+# WithWarning
+- text: Project name
+- textbox "Project name": Atlas
+- text: A project with this name was archived last year
 

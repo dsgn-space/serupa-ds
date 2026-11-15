@@ -48,6 +48,26 @@
     - listitem:
       - button "Next page" [disabled]
 
+# Jump
+- navigation "Pagination":
+  - list:
+    - listitem:
+      - button "Previous page"
+    - listitem:
+      - button "Page 1": "1"
+    - listitem:
+      - button "Page 119": "119"
+    - listitem:
+      - button "Page 120": "120"
+    - listitem:
+      - button "Page 121": "121"
+    - listitem:
+      - button "Page 400": "400"
+    - listitem:
+      - button "Next page"
+  - text: Go to page
+  - textbox "Go to page"
+
 # Large
 - navigation "Pagination":
   - paragraph: 1–20 of 160
