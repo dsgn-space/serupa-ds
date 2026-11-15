@@ -9,7 +9,7 @@ import {
 } from '../../index';
 
 // Kitchen sink (132): most components together on one page, at rest, as an app would put them. The visual tests shoot
-// it in each of the six themes (and with the other axes: right to left, more contrast, compact), so a token change
+// it in each theme (and with the other axes: right to left, more contrast, compact), so a token change
 // shows where it meets every component at once, and the a11y checks run axe on the whole page in each theme. Pick a
 // theme in the toolbar to see it.
 const meta = {

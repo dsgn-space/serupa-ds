@@ -4,6 +4,7 @@
 //
 //   npm i -D style-dictionary@5
 //   node tools/tokens/style-dictionary.config.mjs [out dir]
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import StyleDictionary from 'style-dictionary';
@@ -11,7 +12,7 @@ import StyleDictionary from 'style-dictionary';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const TOKENS = path.join(HERE, '..', '..', 'design-tokens');
 const OUT = process.argv[2] || 'build/tokens';
-const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+const THEMES = fs.readdirSync(path.join(TOKENS, 'themes')).map((f) => f.replace(/\.tokens\.json$/, ''));
 
 // Writes the format's duration object ({ value: 150, unit: 'ms' }) in its own unit, as tokens.css does. Style
 // Dictionary's time/seconds (left out below) would turn it into 0.15s.

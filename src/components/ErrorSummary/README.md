@@ -54,7 +54,7 @@ Drawn from the `WithDescription` story.
 
 - **Role and name:** a `<div>` named by its heading (`aria-labelledby`), an `<h2>` by default (`headingLevel`), then a list of links. It takes focus (`tabIndex={-1}`) rather than being a live region, so it's read once, in full, when it appears.
 - **Keyboard:** each error is a Tab stop. Enter follows it to its field.
-- **Contrast:** its text reads 4.5:1 on its background in all six themes (`ErrorSummary.test.tsx`), and so do its links.
+- **Contrast:** its text reads 4.5:1 on its background in every theme (`ErrorSummary.test.tsx`), and so do its links.
 - **What's still yours:** keep each field's own error (Field `error`) so the problem shows next to it too, and write messages that say how to fix it.
 
 ## Props

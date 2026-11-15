@@ -177,6 +177,36 @@
             "cssVar": "--pagination-summary-gap"
           }
         }
+      },
+      "icon-size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-3_5}",
+        "$description": "The arrows at size sm (14px), as an icon-only Button.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-icon-size-sm"
+          }
+        }
+      },
+      "icon-size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "The arrows at size md (16px), as an icon-only Button.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-icon-size-md"
+          }
+        }
+      },
+      "icon-size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "The arrows at size lg (20px), as an icon-only Button.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-icon-size-lg"
+          }
+        }
       }
     },
     "radius": {
@@ -199,18 +229,6 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--pagination-disabled"
-          }
-        }
-      }
-    },
-    "shadow": {
-      "depth-current": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The current page in a tactile brand: raised like a part, under the top light. Nothing in a flat brand.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--pagination-depth-current"
           }
         }
       }

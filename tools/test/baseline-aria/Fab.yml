@@ -18,6 +18,10 @@
 # Extended
 - button "Compose"
 
+# ExtendedAuto
+- paragraph: "Scroll down: the button folds to its icon. Scroll up: the label comes back."
+- button "Compose"
+
 # ExtendedSmall
 - button "Compose"
 

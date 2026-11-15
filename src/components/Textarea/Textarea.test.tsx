@@ -242,7 +242,7 @@ describe('Textarea', () => {
     expect(dis.wrap).toMatch(/disabled/);
   });
 
-  test('contrast in all six themes: text, placeholder and count 4.5:1 on the field; focus ring and invalid border 3:1; the soft border 1.3:1', () => {
+  test('contrast in every theme: text, placeholder and count 4.5:1 on the field; focus ring and invalid border 3:1; the soft border 1.3:1', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

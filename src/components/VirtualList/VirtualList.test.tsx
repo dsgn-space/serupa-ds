@@ -265,7 +265,7 @@ describe('VirtualList', () => {
     expect(errors).toEqual([]);
   });
 
-  test('its rows and focus ring read in all six themes', async () => {
+  test('its rows and focus ring read in every theme', async () => {
     await render(<VirtualList id="v" variant="card" aria-label="Rows" count={100} renderItem={(i) => <ListItem title={'Row ' + i} description="Muted" />} />);
     el('v').focus();
     const low: string[] = [];

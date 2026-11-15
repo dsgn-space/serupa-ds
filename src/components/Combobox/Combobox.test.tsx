@@ -663,7 +663,7 @@ describe('Combobox', () => {
     seen.disconnect();
   });
 
-  test('contrast: labels and descriptions keep 4.5:1, even highlighted, and the chevron 3:1, in all six themes', async () => {
+  test('contrast: labels and descriptions keep 4.5:1, even highlighted, and the chevron 3:1, in every theme', async () => {
     await render(<Countries />);
     await open();
     await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
@@ -1235,7 +1235,7 @@ describe('Combobox held state', () => {
   test('held down: the chevron button fills one step past its hover (--combobox-chevron-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<Combobox aria-label="Country" options={COUNTRIES} toggleLabel="All countries" />);
     const b = page.getByRole('button', { name: 'All countries' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

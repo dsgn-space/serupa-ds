@@ -192,7 +192,7 @@ describe('ChatMessage', () => {
     await expect.element(page.getByRole('button', { name: 'Coba lagi' })).toBeVisible();
   });
 
-  test('text, authors, times and "Not sent" read 4.5:1 in all six themes, on both bubbles and the page', async () => {
+  test('text, authors, times and "Not sent" read 4.5:1 in every theme, on both bubbles and the page', async () => {
     await render(<><ChatMessage id="x" author="Rina" time={new Date()}>Hi</ChatMessage><ChatMessage id="y" own status="failed">Me</ChatMessage><ChatDivider id="d">Today</ChatDivider></>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -247,7 +247,7 @@ describe('ChatMessage: an agent at work', () => {
     expect([m.querySelector('summary')!.textContent, m.querySelector('li')!.textContent]).toEqual(['Berpikir selama 3 detik', 'Cari, Berjalan']);
   });
 
-  test('reasoning and a done step read 4.5:1 in all six themes', async () => {
+  test('reasoning and a done step read 4.5:1 in every theme', async () => {
     await render(<ChatMessage id="c" reasoning="Why" reasoningTime={2} steps={[{ id: '1', label: 'Step', status: 'done' }]}>A</ChatMessage>);
     const m = document.getElementById('c')!;
     m.querySelector('details')!.open = true;
@@ -337,7 +337,7 @@ describe('ChatApproval', () => {
     await expect.element(page.getByRole('button', { name: 'Setujui' })).toBeVisible();
   });
 
-  test('text and the record read 4.5:1 in all six themes', async () => {
+  test('text and the record read 4.5:1 in every theme', async () => {
     await render(<><ChatApproval id="p" detail="Why">Do it</ChatApproval><ChatApproval id="d" status="approved">Done it</ChatApproval></>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -360,7 +360,7 @@ describe('ChatCitation', () => {
     expect(page.getByRole('link').element().textContent).toBe('٣localhost');
   });
 
-  test('its text reads 4.5:1 on a bubble in all six themes', async () => {
+  test('its text reads 4.5:1 on a bubble in every theme', async () => {
     await render(<ChatMessage id="m">See <ChatCitation href="https://example.com" index={1} /></ChatMessage>);
     const a = document.querySelector('#m a')!;
     for (const th of THEMES) {

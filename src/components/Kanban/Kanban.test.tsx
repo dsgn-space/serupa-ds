@@ -284,7 +284,7 @@ describe('Kanban', () => {
     expect([n.getBoundingClientRect().width <= 320, n.scrollWidth > n.clientWidth, css(n).overflowX]).toEqual([true, true, 'auto']);
   });
 
-  test('text, counts and "Over limit" read 4.5:1 and the handle 3:1 on the column and card, in all six themes', async () => {
+  test('text, counts and "Over limit" read 4.5:1 and the handle 3:1 on the column and card, in every theme', async () => {
     await render(<Board start={START().map((c, i) => i === 1 ? { ...c, items: [...c.items, { id: 'e', t: 'Echo' }] } : c)} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

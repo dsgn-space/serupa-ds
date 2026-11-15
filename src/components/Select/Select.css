@@ -18,7 +18,6 @@
   border-radius: var(--select-radius, var(--radius-control));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   vertical-align: middle;
-  box-shadow: var(--select-depth, var(--depth-field));   /* a tactile brand's inner shade (none in the flat ones) */
   transition: border-color var(--motion-hover) var(--ease-move), box-shadow var(--motion-hover) var(--ease-move);
 }
 .dk-select--size-sm { --dk-select-h: var(--select-height-sm, var(--control-height-sm)); --dk-select-px: var(--select-padding-x-sm, var(--spacing-2)); --dk-select-icon: var(--select-icon-size-sm, var(--spacing-3\.5)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
@@ -45,7 +44,7 @@
 @media (hover: hover) { .dk-select:hover:not(.dk-select--disabled, :has(.dk-select__field:disabled), .dk-select--readonly, :focus-within) { --dk-select-bd: var(--select-border-hover, var(--field-border-hover)); } }
 /* Focus: like Input, the border and a ring hugging it take the focus color (2px in all), and a transparent outline
    that forced-colors mode draws. */
-.dk-select:focus-within { transition-duration: var(--duration-0); --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-ring), var(--select-depth, var(--depth-field)); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
+.dk-select:focus-within { transition-duration: var(--duration-0); --dk-select-bd: var(--dk-select-ring); box-shadow: 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-ring); outline: var(--focus-ring-width) solid transparent; outline-offset: var(--spacing-0); }
 .dk-select--invalid { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); --dk-select-ring: var(--select-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .dk-select--invalid:hover:not(.dk-select--disabled, :has(.dk-select__field:disabled), :focus-within) { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
 /* A required select left on its empty option after people change it or try to send the form: as Input (:user-invalid). */
@@ -74,7 +73,7 @@
     margin-block: var(--spacing-1); padding: var(--select-picker-padding, var(--spacing-1)); overflow-y: auto; overscroll-behavior: contain;
     border: var(--border-width-1) solid var(--select-picker-border, var(--border-overlay)); border-radius: var(--select-picker-radius, var(--radius-surface));
     background: var(--select-picker-bg, var(--surface-overlay)); color: var(--select-text, var(--text));
-    box-shadow: var(--select-picker-depth, var(--depth-surface)), var(--select-picker-shadow, var(--elevation-overlay));
+    box-shadow: var(--select-picker-shadow, var(--elevation-overlay));
     font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   }
   .dk-select__field option {

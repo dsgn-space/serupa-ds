@@ -170,7 +170,7 @@ describe('AvatarGroup', () => {
     expect([lap(a[0]!, a[1]!), css(a[0]!.querySelector(`${AV} > span:first-child`)).boxShadow.includes('rgb(1, 2, 3)')]).toEqual([20, true]);
   });
 
-  test('contrast: the "+N" text keeps 4.5:1 on its background in all six themes', async () => {
+  test('contrast: the "+N" text keeps 4.5:1 on its background in every theme', async () => {
     await render(<AvatarGroup id="max" max={3}>{av(5)}</AvatarGroup>);
     const low: string[] = [];
     let n = 0;
@@ -225,7 +225,7 @@ describe('AvatarGroup', () => {
     expect([onMore.mock.calls.length, more('om')!.getAttribute('aria-expanded'), more('st')!.tagName, more('st')!.getAttribute('role')]).toEqual([1, null, 'SPAN', 'img']);
   });
 
-  test('contrast: the "+N" button keeps 4.5:1 on hover in all six themes', async () => {
+  test('contrast: the "+N" button keeps 4.5:1 on hover in every theme', async () => {
     await render(<AvatarGroup id="hv" max={3} onMore={() => {}}>{av(5)}</AvatarGroup>);
     await userEvent.hover(more('hv')!);
     const low: string[] = [];
@@ -297,7 +297,7 @@ describe('AvatarGroup token names', () => {
 });
 
 describe('AvatarGroup held state', () => {
-  test('held down: the "+N" button fills one step past its hover (--avatar-group-more-bg-pressed), and its text or icon keeps 4.5:1 on it in all six themes', async () => {
+  test('held down: the "+N" button fills one step past its hover (--avatar-group-more-bg-pressed), and its text or icon keeps 4.5:1 on it in every theme', async () => {
     await render(<AvatarGroup id="held" max={3} onMore={() => {}}>{av(5)}</AvatarGroup>);
     const b = more('held')!;
     const f = () => b.firstElementChild;

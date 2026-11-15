@@ -90,7 +90,7 @@ Drawn from the `FullScreen` story.
 - Use `alert` only for decisions people must make; Escape still cancels.
 - Stacked: a Dialog or Drawer opened from inside another takes focus, and Escape, its × and its backdrop close only it. The next Escape closes the one underneath.
 - A press on the backdrop while a Menu, Popover or other popup is open inside only closes the popup. The next one closes the dialog.
-- The title and description keep 4.5:1 on the panel in all six themes (`Dialog.test.tsx`). In forced-colors mode the panel gets a border.
+- The title and description keep 4.5:1 on the panel in every theme (`Dialog.test.tsx`). In forced-colors mode the panel gets a border.
 
 ### Keyboard
 
@@ -163,7 +163,6 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | `--dialog-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--dialog-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--dialog-shadow` | `elevation-modal` | The panel's shadow. |
-| `--dialog-depth` | `depth-surface` | The dialog's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--dialog-radius` | `radius-container` | The panel's corners (12px). |
 | `--dialog-width-sm` | `container-sm` | size="sm" (384px). |
 | `--dialog-width-md` | `container-lg` | size="md", the default (512px). |

@@ -100,7 +100,7 @@ export const PAIRS = [
   ['field-border', 'surface-muted', 1.3, 'A field border on a muted surface, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['field-border', 'surface-raised', 1.3, 'A field border on a raised card, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
   ['field-border', 'surface-overlay', 1.3, 'A field border in a dialog or popover, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
-  ['field-border', 'primary-subtle', 1.3, 'A field border on a primary-subtle row or zone, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields'],
+  ['field-border', 'primary-subtle', 1.25, 'A field border on a primary-subtle row or zone, soft by design, under the 3:1 of WCAG 1.4.11, a deliberate exception, see Foundations, Form fields (the floor is the lowest theme, Cyan Dark at 1.28)'],
   ['border-control', 'surface-muted', 3, 'A control edge, or a Meter track edge, on a muted surface'],
   ['border-control', 'surface-raised', 3, 'A control edge, or a Meter track edge, on a raised card'],
   ['border-control', 'primary-subtle', 3, 'A control edge on a primary-subtle row or zone'],

@@ -145,7 +145,7 @@ describe('ErrorSummary', () => {
     seen.disconnect();
   });
 
-  test('its text and links read 4.5:1 on its background in all six themes', async () => {
+  test('its text and links read 4.5:1 on its background in every theme', async () => {
     await render(<ErrorSummary id="c" autoFocus={false} errors={ERRORS} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
