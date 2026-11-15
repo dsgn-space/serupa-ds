@@ -29,11 +29,16 @@ One thing, here a project: where it sits, its name and details, its parts in tab
 - **Dates in the reader's locale.** Created reads "14 September 2026" in en-GB, from `Intl.DateTimeFormat` with the provider's locale, and keeps the ISO date in `<time dateTime>`.
 - **While the project loads**, set `loading`: the page keeps an h1 and the way back to the projects, with one placeholder for the details named "Loading project", and main is busy until it arrives (4.1.3).
 - **A load that fails says so.** Set `loadFailed` and pass `onRetry`: the page says "Couldn’t load this project" with Try again, in place of the details (3.3.1).
+- **A supporting pane**, such as the project's activity or its people, goes in `aside` with a title. It sits beside the tabs from 1024px and drops below them on a narrower screen, in reading order, so nothing scrolls sideways (1.4.10). It's a complementary landmark named by its title (1.3.1). Keep what people need to do the task in the tabs: the pane is for context.
 - **A skip link** first, into main, as on every page.
 
 A delete that fails, as `deleteFailed` starts it:
 
 <Canvas of={Stories.DeleteFails} />
+
+With a supporting pane, the project's activity:
+
+<Canvas of={Stories.WithActivity} />
 
 ## What stays your app's job
 

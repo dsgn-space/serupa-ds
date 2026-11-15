@@ -39,6 +39,46 @@ A short form of one or two fields can skip the summary: move focus to the first 
 - A form in a [Dialog](?path=/docs/components-overlays-dialog--docs) takes `unsaved` while it has changes, so closing it by accident asks "Discard changes?" first.
 - When the save fails for a reason that isn't a field, say so with an [Alert](?path=/docs/components-feedback-alert--docs) at the top of the form, and keep the changes. [Messages and feedback](?path=/docs/guides-messages-and-feedback--docs) says which message to use when.
 
+## With a form library or a server action
+
+Serupa's fields are native form controls underneath, so they work with a plain `<form>`, a React form `action` and form libraries without adapters. Wire each piece by what it is:
+
+| The field | Submits | With React Hook Form |
+| --- | --- | --- |
+| Input, Textarea, PasswordInput, Select, Checkbox, Radio, Switch | Its own native control, under its `name` | `{...register('email')}`: the ref and events reach the native control |
+| NumberInput, Slider, Combobox, DatePicker, DateRangePicker, TimePicker, PhoneInput | A hidden input with its `name`: the number, the option's value, the date as `YYYY-MM-DD` | A `Controller`, passing `value` and `onValueChange` |
+
+```tsx
+<form onSubmit={handleSubmit(save)} noValidate>
+  <Field label="Work email" error={errors.email?.message}>
+    <Input type="email" {...register('email', { required: 'Enter your work email' })} />
+  </Field>
+  <Controller name="country" control={control} rules={{ required: 'Choose a country' }} render={({ field, fieldState }) => (
+    <Field label="Country" error={fieldState.error?.message}>
+      <Combobox options={countries} value={field.value ?? null} onValueChange={field.onChange} onBlur={field.onBlur} ref={field.ref} />
+    </Field>
+  )} />
+  <Button type="submit">Save</Button>
+</form>
+```
+
+**Errors from the server.** Wrap the form in `FormErrors` and give it the errors by field name, as the server answered: each Field inside shows its own, an `ErrorSummary` with no `errors` of its own lists them and takes focus, and a field's message goes as soon as it's edited. A schema validator's field errors fit as they are (with Zod, `error.flatten().fieldErrors`, taking the first message of each).
+
+```tsx
+const [state, action] = React.useActionState(saveProfile, { errors: null });
+
+<form action={action}>
+  <FormErrors errors={state.errors}>
+    <ErrorSummary />
+    <Field label="Display name"><Input name="displayName" /></Field>
+    <Field label="Birthday"><DatePicker name="birthday" /></Field>
+    <Button type="submit">Save</Button>
+  </FormErrors>
+</form>
+```
+
+The submit Button shows `loading` by itself while a form `action` runs. Whichever way the errors come, the rules above still hold: check on leaving a field, never on each keystroke, and keep what people typed.
+
 ## Do and don't
 
 | Do | Don't |

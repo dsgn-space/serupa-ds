@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Sidebar: a 256px column (collapsed: a 64px icon rail) with a 1px line on its inner edge, the parent's height:
    header, the scrolling items, then the footer at the bottom. Items are muted text-sm font-medium with a 20px
-   icon, shaded on hover and a step darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
+   icon, shaded on hover (a step quieter than the current page) and darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
 @layer dk.components {
@@ -58,7 +58,7 @@
   text-align: start; text-decoration: none; cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--highlight)); color: var(--sidebar-item-text-hover, var(--text)); } }
+@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
 .dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
 /* The current page: with more contrast, a bar at the start that hover never draws (no width otherwise, GR413), and
@@ -84,6 +84,8 @@
 .dk-sidebar__chevron.dk-icon { --dk-sidebar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--motion-change-md) var(--ease-move); }
 .dk-sidebar__li[data-state="open"] > .dk-sidebar__item .dk-sidebar__chevron { rotate: var(--dk-sidebar-turn); }
 /* collapsed: icons only, centered; labels stay for screen readers */
+/* Touch (EQ1): items at least 44px high on a touch screen, as Apple and Material ask; stacked, so the row grows. */
+@media (pointer: coarse) { .dk-sidebar__item { min-height: var(--spacing-11); } }
 .dk-sidebar--collapsed .dk-sidebar__item { justify-content: center; padding-inline: var(--spacing-0); }
 .dk-sidebar--collapsed .dk-sidebar__label, .dk-sidebar--collapsed .dk-sidebar__section-title, .dk-sidebar--collapsed .dk-sidebar__badge {
   position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap;
