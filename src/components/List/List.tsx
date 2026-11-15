@@ -57,7 +57,7 @@ export interface ListItemOwnProps extends Omit<React.LiHTMLAttributes<HTMLLIElem
   onClick?: ((event: React.MouseEvent<HTMLElement>) => void) | undefined;
   /** Shaded with a primary bar at its start, and aria-current="true" (or aria-pressed for a button). For the current page in a nav list, also pass linkProps={{ "aria-current": "page" }}, which wins. Default: false. */
   selected?: boolean | undefined;
-  /** Dims a link or button item and stops it. In a List with selectionMode, it can't be picked either. Default: false. */
+  /** Draws a link or button item in disabled-text and stops it. In a List with selectionMode, it can't be picked either. Default: false. */
   disabled?: boolean | undefined;
   /** In a List with selectionMode: what onSelectedChange reports for this row. Unique within the list. */
   value?: string | undefined;

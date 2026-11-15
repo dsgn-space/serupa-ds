@@ -151,6 +151,26 @@
             "cssVar": "--select-group-label"
           }
         }
+      },
+      "border-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-border}",
+        "$description": "Disabled: the edge.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-border-disabled"
+          }
+        }
+      },
+      "text-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-text}",
+        "$description": "Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--select-text-disabled"
+          }
+        }
       }
     },
     "sizing": {

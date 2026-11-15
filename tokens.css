@@ -20,6 +20,9 @@
   --surface-overlay: var(--white);
   --field: var(--white);
   --field-readonly: var(--zinc-50);
+  --disabled-text: var(--zinc-500);
+  --disabled-surface: var(--zinc-100);
+  --disabled-border: var(--zinc-300);
   --highlight-indicator: var(--zinc-100);
   --field-border: var(--zinc-300);
   --field-border-hover: var(--zinc-400);
@@ -376,6 +379,9 @@
   --surface-overlay: var(--white);
   --field: var(--white);
   --field-readonly: var(--zinc-50);
+  --disabled-text: var(--zinc-500);
+  --disabled-surface: var(--zinc-100);
+  --disabled-border: var(--zinc-300);
   --highlight-indicator: var(--zinc-100);
   --field-border: var(--zinc-300);
   --field-border-hover: var(--zinc-400);
@@ -463,6 +469,9 @@
   --surface-overlay: var(--zinc-800);
   --field: var(--zinc-800);
   --field-readonly: var(--zinc-900);
+  --disabled-text: var(--zinc-400);
+  --disabled-surface: var(--zinc-800);
+  --disabled-border: var(--zinc-700);
   --highlight-indicator: var(--zinc-700);
   --field-border: var(--zinc-700);
   --field-border-hover: var(--zinc-600);
@@ -984,6 +993,9 @@
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field: light-dark(var(--white), var(--zinc-800));
   --field-readonly: light-dark(var(--zinc-50), var(--zinc-900));
+  --disabled-text: light-dark(var(--zinc-500), var(--zinc-400));
+  --disabled-surface: light-dark(var(--zinc-100), var(--zinc-800));
+  --disabled-border: light-dark(var(--zinc-300), var(--zinc-700));
   --highlight-indicator: light-dark(var(--zinc-100), var(--zinc-700));
   --field-border: light-dark(var(--zinc-300), var(--zinc-700));
   --field-border-hover: light-dark(var(--zinc-400), var(--zinc-600));
@@ -1992,6 +2004,7 @@
 [data-theme$="-light"] { color-scheme: light; }
 [data-theme$="-dark"] { color-scheme: dark; }
 [data-contrast="more"]:not(#dk-more), [data-contrast="more"] [data-mode]:not(#dk-more) {
+  --disabled-text: light-dark(var(--zinc-700), var(--zinc-300));
   --highlight-indicator: light-dark(var(--zinc-950), var(--white));
   --field-border: light-dark(var(--zinc-700), var(--zinc-300));
   --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));
@@ -2022,6 +2035,7 @@
 }
 @media (prefers-contrast: more) {
 :root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *, #dk-more) {
+  --disabled-text: light-dark(var(--zinc-700), var(--zinc-300));
   --highlight-indicator: light-dark(var(--zinc-950), var(--white));
   --field-border: light-dark(var(--zinc-700), var(--zinc-300));
   --field-border-hover: light-dark(var(--zinc-900), var(--zinc-100));

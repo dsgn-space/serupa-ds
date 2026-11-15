@@ -105,6 +105,8 @@ Each is an optional override: set it on the page, a container or one Rating. The
 | `--rating-empty` | `border-control` | A star's empty part (3:1 on the page). |
 | `--rating-invalid` | `danger` | The empty stars' color when invalid (3:1 on the page), so the error shows on the stars as well as in the Field's message. |
 | `--rating-focus-ring` | `focus-ring` | The ring around the focused star. |
+| `--rating-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--rating-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--rating-size-sm` | `spacing-5` | A star at size sm (20px). |
 | `--rating-size-md` | `spacing-6` | A star at size md (24px). |
 | `--rating-size-lg` | `spacing-8` | A star at size lg (32px). |

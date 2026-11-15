@@ -59,6 +59,10 @@ export default defineConfig({
         // Files and the tests in each run in a random order (Vitest prints the seed; --sequence.seed=<n> repeats
         // one), so no test can lean on what the one before it left behind.
         sequence: { shuffle: true },
+        // In the merge queue a failed test runs once more: a flake there drops the pull request and rebuilds every group
+        // behind it. A test that passes only the second time prints FLAKY (setup.ts) and lands in the "Flaky tests"
+        // issue (ci.yml's test job), to be fixed. Pull requests and the nightly flake hunt never retry.
+        retry: process.env.GITHUB_EVENT_NAME === 'merge_group' ? 1 : 0,
         setupFiles: ['./tools/test/vitest/setup.ts'],
         // Every story rendered to HTML in Node first, for the hydration check (src/internal/hydrateStories.test.tsx).
         globalSetup: ['./tools/test/vitest/serverStories.ts'],

@@ -33,7 +33,7 @@
 }
 .dk-period-picker--invalid { --dk-pp-bd: var(--period-picker-invalid, var(--field-border-invalid)); --dk-pp-ring: var(--period-picker-invalid, var(--field-border-invalid)); }
 .dk-period-picker--readonly .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); cursor: default; }
-.dk-period-picker--disabled .dk-period-picker__button { background: var(--period-picker-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-period-picker--disabled .dk-period-picker__button { --dk-pp-bd: var(--period-picker-border-disabled, var(--disabled-border)); background: var(--period-picker-bg-disabled, var(--field-readonly)); color: var(--period-picker-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-period-picker__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .dk-period-picker__value--empty { color: var(--period-picker-placeholder, var(--placeholder)); }
 .dk-period-picker__icon { flex: none; color: var(--period-picker-icon, var(--text-muted)); font-size: var(--dk-pp-icon, var(--spacing-4)); }   /* 14, 16 or 20px by size, 8px inside the end edge, as Select's chevron */
@@ -75,7 +75,7 @@
 .dk-period-picker__period:focus-visible { outline: var(--focus-ring-width) solid var(--period-picker-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-period-picker__period--current { color: var(--period-picker-current, var(--primary)); font-weight: var(--font-semibold); }
 .dk-period-picker__period--selected { background: var(--period-picker-bg-selected, var(--primary)); color: var(--period-picker-text-selected, var(--on-primary)); }
-.dk-period-picker__period--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: var(--cursor-disabled); }
+.dk-period-picker__period--disabled { color: var(--period-picker-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {
   .dk-period-picker__panel { border-color: CanvasText; }
   .dk-period-picker__period--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; }
