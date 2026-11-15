@@ -84,6 +84,8 @@
 .dk-sidebar__chevron.dk-icon { --dk-sidebar-turn: 180deg; flex-shrink: 0; font-size: var(--spacing-4); transition: rotate var(--motion-change-md) var(--ease-move); }
 .dk-sidebar__li[data-state="open"] > .dk-sidebar__item .dk-sidebar__chevron { rotate: var(--dk-sidebar-turn); }
 /* collapsed: icons only, centered; labels stay for screen readers */
+/* Touch (EQ1): items at least 44px high on a touch screen, as Apple and Material ask; stacked, so the row grows. */
+@media (pointer: coarse) { .dk-sidebar__item { min-height: var(--spacing-11); } }
 .dk-sidebar--collapsed .dk-sidebar__item { justify-content: center; padding-inline: var(--spacing-0); }
 .dk-sidebar--collapsed .dk-sidebar__label, .dk-sidebar--collapsed .dk-sidebar__section-title, .dk-sidebar--collapsed .dk-sidebar__badge {
   position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: calc(var(--spacing-0) - var(--spacing-px)); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap;

@@ -5,7 +5,7 @@ interface ListLabels {
 interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
     children?: React.ReactNode | undefined;
     variant?: "card" | "plain" | undefined;
-    divided?: boolean | undefined;
+    divided?: "inset" | boolean | undefined;
     as?: "ol" | "ul" | undefined;
     loading?: boolean | undefined;
     selectionMode?: "multiple" | "none" | "single" | undefined;
