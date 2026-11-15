@@ -64,7 +64,7 @@ Drawn from the `Overflow` story.
 
 - **Role and name:** `role="group"`, named by `label`. Each avatar keeps its own name (and status), so a screen reader reads every person shown, then "N more".
 - **Keyboard:** with `showMore` or `onMore`, "+N" is a button that Tab reaches and Enter or Space opens, named like the picture ("2 more"). Otherwise nothing of its own; avatars inside links or Tooltips are reached by Tab as usual.
-- **Contrast:** the "+N" text keeps 4.5:1 on its background in all six themes (`AvatarGroup.test.tsx`).
+- **Contrast:** the "+N" text keeps 4.5:1 on its background in every theme (`AvatarGroup.test.tsx`).
 - **What's still yours:** a `label` for the group, and a `name` on every Avatar.
 
 ## Props

@@ -58,7 +58,7 @@ describe('ContextualHelp', () => {
     expect(btn().getAttribute('aria-label')).toBe('Bantuan');
   });
 
-  test('the "?" and "i" read 3:1 on the page in all six themes', async () => {
+  test('the "?" and "i" read 3:1 on the page in every theme', async () => {
     await render(<><ContextualHelp>a</ContextualHelp><ContextualHelp variant="info">b</ContextualHelp></>);
     const [h, i] = [...document.querySelectorAll('button')] as HTMLElement[];
     for (const th of THEMES) {

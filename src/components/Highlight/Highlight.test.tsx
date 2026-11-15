@@ -52,7 +52,7 @@ describe('Highlight', () => {
       .toEqual([[[0, 4]], [[4, 5]], [[0, 4]], [], []]);
   });
 
-  test('a match is semibold, not only tinted; its text keeps 4.5:1 on the tint in all six themes; Mark and MarkText would apply in forced colors', async () => {
+  test('a match is semibold, not only tinted; its text keeps 4.5:1 on the tint in every theme; Mark and MarkText would apply in forced colors', async () => {
     await render(<p style={{ background: 'var(--surface)' }}><Highlight id="c" query="match">a match here</Highlight></p>);
     const m = el('c').querySelector('mark')!;
     const low: string[] = [];

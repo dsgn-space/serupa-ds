@@ -9,7 +9,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { PROJECT, read, report, done } from './lib.mjs';
 import { parseChangeset } from '../changesets.mjs';
-import { migrate, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
+import { COMPONENT_TOKENS_REMOVED_16, DEPTH_TOKENS_16, migrate, MOTION_TOKENS_16, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
 import { majorsIn, nextMajor, upcomingMajor } from '../../docs/upgrades.ts';
 
 const R = [];
@@ -100,6 +100,38 @@ one('15.0.0: a migration note naming `--border-raised` in its own code span keep
     t(`the ${Object.keys(TOKENS_15).length} old token names serupa-migrate renames are gone from the component CSS (15.0.0)`, Object.keys(TOKENS_15).length === 20 && !left.length, left.join(', '));
   }
 }
+// 16.0.0: the tactile look is removed. A removed motion role read through var() takes what it always was in the flat
+// brands; what can't be rewritten (a depth token, a declaration of one, data-depth) is listed, one note a line.
+one('16.0.0: motion-toggle, ease-toggle and motion-draw read through var() take the tokens they were', '.x { transition: translate var(--motion-toggle) var( --ease-toggle); animation-duration: var(--motion-draw, 0s); --motion-toggle-mine: 1; }', '.x { transition: translate var(--motion-press) var( --ease-move); animation-duration: var(--duration-0, 0s); --motion-toggle-mine: 1; }', 'a.css');
+one('16.0.0: the ease-toggle class and token reference are ease-move; the name in its own code span is left', '<div className="hover:ease-toggle ease-toggles" /> {"$value": "{transitions.ease-toggle}"} `ease-toggle`', '<div className="hover:ease-move ease-toggles" /> {"$value": "{transitions.ease-move}"} `ease-toggle`');
+{
+  const r = fix('.a { --button-depth: none; }\n.b { box-shadow: var(--depth-card), var(--shadow-sm); }\n<div data-depth="tactile" style={{ "--toc-depth": 1 }} />\n.c { --motion-draw: 0s; --card-depth-hovered: 0; }', 'a.css');
+  t('16.0.0: a depth token, a declaration of a removed role and data-depth are each listed, and look-alikes are left', r.notes.filter((n) => n.id === 'theme-looks-removed').map((n) => n.line).join() === '1,2,4,3', JSON.stringify(r.notes));
+}
+{
+  // None of the removed names is a token any more, in tokens.json or in a component's tokens, and no component CSS reads one.
+  const tokens = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8'));
+  const global = new Set(Object.values(tokens).flatMap((g) => (g && Array.isArray(g.tokens) ? g.tokens.map((x) => `--${x.name}`) : [])));
+  const comps = fs.readdirSync(path.join(PROJECT, 'src', 'components'));
+  const read = (c, f) => { const p = path.join(PROJECT, 'src', 'components', c, f); return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : ''; };
+  const own = comps.map((c) => fs.readdirSync(path.join(PROJECT, 'src', 'components', c)).filter((x) => x.endsWith('.tokens.json')).map((f) => read(c, f)).join('\n')).join('\n');
+  const css = comps.map((c) => read(c, `${c}.css`)).join('\n');
+  const all = [...DEPTH_TOKENS_16, ...COMPONENT_TOKENS_REMOVED_16, ...Object.keys(MOTION_TOKENS_16)];
+  const left = all.filter((n) => global.has(n) || own.includes(`"${n}"`) || new RegExp(`${n}(?![\\w-])`).test(css));
+  t(`the ${all.length} tokens removed with the tactile look are gone from the tokens and the component CSS (16.0.0)`, all.length === 62 && !left.length, left.join(', '));
+  t('each removed motion role\'s replacement is a token', Object.values(MOTION_TOKENS_16).every((n) => global.has(n)), '');
+  t('no theme says it is tactile, and tokens.css has no depth axis', !tokens.color.themes.some((x) => 'depth' in x) && !/data-depth|--depth-/.test(fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8')), '');
+}
+// 16.0.0: every accent color has a theme. The brand called emerald drew in teal; it draws in emerald now, and teal is
+// a brand of its own. Both exist, so each place that names emerald is listed and nothing is rewritten.
+{
+  const src = `<html data-brand="emerald" data-theme='emerald-dark'>\n<div {...{ 'data-brand': 'emerald' }} />\n[data-brand="emerald"] { color: var(--emerald-600) }\nthemes: ['emerald-light']\nSerupa.theme.set({ brand: 'emerald' });\nnpm create serupa my-app --brand emerald\n<Badge color="emerald" /> data-brand="emeralds" emerald-lights var(--emerald-50)`;
+  const r = fix(src, 'a.tsx');
+  t('16.0.0: each place that names the emerald brand or its themes is listed, and nothing is rewritten; a palette step and a Badge color are left', r.text === src && r.notes.filter((n) => n.id === 'emerald-is-emerald').map((n) => n.line).join() === '1,1,2,3,4,5,6', JSON.stringify(r.notes.map((n) => [n.id, n.line])));
+  const themes = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8')).color.themes.map((x) => x.id);
+  const css = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
+  t('teal and emerald are both themes, each in its own ramp', 'teal-light teal-dark emerald-light emerald-dark'.split(' ').every((id) => themes.includes(id)) && /\[data-theme="teal-light"\][^}]*--primary: var\(--teal-700\)/.test(css) && /\[data-theme="emerald-light"\][^}]*--primary: var\(--emerald-700\)/.test(css), '');
+}
 // The package's new name, made only by a serupa-migrate that ships under it.
 {
   const [r] = packageNameChange('@diki-stwn/serupa-ds');
@@ -127,6 +159,9 @@ const p14 = fix('import "serupa-ds/bundle.css";\n<SerupaProvider labels={{ moreR
 t('14.0.0: moved mask and gradient classes and the removed moreResults label are listed with their lines', p14.notes.length === 2 && p14.notes.some((n) => n.id === 'utilities-extra' && n.line === 3 && n.message.includes('utilities-extra.css') && n.message.includes('bg-linear-to-r')) && p14.notes.some((n) => n.id === 'combobox-more-results' && n.line === 2) && !Object.keys(p14.counts).length, JSON.stringify(p14.notes));
 t('14.0.0: a file that imports utilities-extra.css, a mask-image property and words like to-do are left', !fix('import "serupa-ds/utilities-extra.css";\n<div className="mask-t-from-0" />', 'a.tsx').notes.length && !fix('<div style="mask-image: url(a.svg)" class="go-to-top">Things to-do from-here</div>', 'a.html').notes.length);
 t('14.0.0: a removed .dk-combobox__more rule is listed in a stylesheet', fix('.dk-combobox__more { color: red }', 'app.css').notes.some((n) => n.id === 'combobox-more-results'));
+const inner = fix('.dk-btn__label { color: red }\n.dk-btn--primary, [data-component="card"] { color: blue }\n.app-dk-btn__x, .dk-card__header .dk-card__title {}', 'app.css', '15.0.0');
+t('16.0.0: each line that selects an inner part\'s class is listed once, and block, modifier and data selectors are left', inner.notes.length === 2 && inner.notes.every((n) => n.id === 'inner-classes-private') && inner.notes[0].line === 1 && inner.notes[1].line === 3 && /dk-card__header/.test(inner.notes[1].message) && inner.text.startsWith('.dk-btn__label'), JSON.stringify(inner.notes));
+t('16.0.0: a querySelector for an inner part in code is listed too', fix("el.querySelector('.dk-tabs__panel')", 'a.ts', '15.0.0').notes.some((n) => n.id === 'inner-classes-private'));
 const twice = fix(fix('<IconButton noTitle /><Table captionHidden />').text);
 t('running it twice changes nothing more', !Object.keys(twice.counts).length);
 

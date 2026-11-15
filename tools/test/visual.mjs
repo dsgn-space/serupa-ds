@@ -25,6 +25,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { measure, print as printConsistency } from './consistency.mjs';
+import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock, inParallel, inParallelRetry, openUrl, report, serve, suffix, onlyComponents } from './lib.mjs';
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
@@ -35,7 +36,7 @@ const update = process.argv.includes('--update');
 // the CSS each supports, not the theme's colours, so a lighter set: each story at rest in blue-light and on the other
 // axes, two pictures where Chromium has up to twenty. Nightly (cross-browser visual in .gitlab-ci.yml).
 const LIGHT = ENGINE !== 'chromium';
-const THEMES = LIGHT ? ['blue-light'] : ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+const THEMES = LIGHT ? ['blue-light'] : SHOWN_THEMES;   // the themes with pictures (tools/design-qa.mjs)
 const STATES = LIGHT ? [] : ['hover', 'focus'];
 const SKIP = ['VisuallyHidden'];  // nothing to see
 // Components whose states (checked, selected, current, progress, drag-over) are easy to lose in forced colors: each

@@ -36,7 +36,7 @@ describe('Illustration', () => {
     expect(['s', 'm', 'l'].map((id) => { const r = el(id).getBoundingClientRect(); return [r.width, r.height]; })).toEqual([[96, 72], [160, 120], [224, 168]]);
   });
 
-  test('its lines and accent read 3:1 on the surface in all six themes', async () => {
+  test('its lines and accent read 3:1 on the surface in every theme', async () => {
     await render(<div id="bg" style={{ background: 'var(--surface)' }}><Illustration id="c" name="search" /></div>);
     const line = part(el('c'), 'line')!;
     const accent = part(el('c'), 'accent')!;

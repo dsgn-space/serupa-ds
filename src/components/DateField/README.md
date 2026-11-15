@@ -56,7 +56,7 @@ Drawn from the `Playground` story.
 | `/` `.` `-` Space | After a number, moves to the next box. In an empty box or the last one, does nothing. |
 | Ctrl+V, ⌘V | A whole date fills all three boxes; a number alone goes in the box. |
 
-- **Contrast:** the labels read 4.5:1 on the surface in all six themes (`DateField.test.tsx`); the boxes are Inputs.
+- **Contrast:** the labels read 4.5:1 on the surface in every theme (`DateField.test.tsx`); the boxes are Inputs.
 - **What's still yours:** the label and example, checking the date when the form is sent, and the error's words (`details.problem` says which).
 
 ## Props

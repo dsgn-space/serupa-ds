@@ -43,7 +43,7 @@ Drawn from the `Area` story.
 
 - **Role and name:** `role="img"`, named by `label` and a summary: "Sign-ups: from 12 to 21, low 11, high 21", in the provider's number format. The words are a label (`sparklineSummary`), so `<SerupaProvider labels>` and the language packs translate them.
 - **Keyboard:** not focusable: it has nothing to do. The numbers are in its name.
-- **Contrast:** its line reads 3:1 on the surface in all six themes (`Sparkline.test.tsx`), as WCAG 1.4.11 asks of a graphic. In forced colors the line and the dot take CanvasText.
+- **Contrast:** its line reads 3:1 on the surface in every theme (`Sparkline.test.tsx`), as WCAG 1.4.11 asks of a graphic. In forced colors the line and the dot take CanvasText.
 - **What's still yours:** the latest value as text beside it, and a table or a chart with axes where the exact numbers matter. Its trend is in its color and shape only, so don't let the color carry a meaning (red for down) the text doesn't say.
 
 ## Props

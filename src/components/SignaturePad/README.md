@@ -53,7 +53,7 @@ Drawn from the `Playground` story.
 - **Role and name:** a `group` named by its Field label or `aria-label`, described by its how-to text (and a Field's hint and error). The method switch is a radio group named "Signature method"; when the signature is invalid, it and the name field carry `aria-invalid` (a group can't). The drawing box is an image named "Signature area, empty" or "Signature drawn".
 - **Keyboard:** Tab reaches the switch; the arrow keys pick Draw or Type. The drawing box isn't a Tab stop, because nothing in it works by keyboard; Type is the keyboard way, and the how-to text says so. In Type, the "Full name" field takes the name. Undo and Clear are buttons; when they empty the box, focus goes back to the switch.
 - **Touch:** the page doesn't scroll while a finger draws in the box (`touch-action: none`); it scrolls as usual everywhere else.
-- **Contrast:** on the surface, the how-to text and the ink read 4.5:1, and the box outline and the line 3:1, in all six themes (`SignaturePad.test.tsx`). In forced colors, the outline, line and ink use the system text color.
+- **Contrast:** on the surface, the how-to text and the ink read 4.5:1, and the box outline and the line 3:1, in every theme (`SignaturePad.test.tsx`). In forced colors, the outline, line and ink use the system text color.
 - **What's still yours:** the label, telling people what they're signing, and the error when they haven't.
 
 ## Props

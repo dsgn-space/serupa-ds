@@ -1,4 +1,4 @@
-// The themes page: one piece of product under all six themes at once. Each panel is a section with that theme's
+// The themes page: one piece of product under every theme at once. Each panel is a section with that theme's
 // attributes, which is all a theme is; the axes above (contrast, density, roundness) are attributes too, set on
 // every panel. The fuller playground, with the attributes to copy, is Foundations' own page.
 import * as React from 'react';
@@ -13,7 +13,7 @@ import { Sample } from './Sample';
 import { Shell } from './Shell';
 import { useTheme } from './theme';
 
-// The axes every theme shares: the brand and the mode are what the six panels already are.
+// The axes every theme shares: the brand and the mode are what the panels already are.
 const SHARED = AXES.filter((a) => ['contrast', 'density', 'radius'].includes(a.key));
 
 export function Themes() {
@@ -25,8 +25,8 @@ export function Themes() {
     <div className="site-index">
       <header className="site-title">
         <p className="site-eyebrow">Theming</p>
-        <Heading level={1} className="site-h1">Six themes, side by side</Heading>
-        <p className="site-lead">The same components and the same markup in every panel. Only the tokens differ, and each theme meets WCAG 2.2 AA on its own.</p>
+        <Heading level={1} className="site-h1">Every theme, side by side</Heading>
+        <p className="site-lead">The same components and the same markup in every panel. Only the brand color differs, and each theme meets WCAG 2.2 AA on its own.</p>
       </header>
       <div className="site-themes__axes">
         {SHARED.map((a) => <Field key={a.key} label={a.label}>

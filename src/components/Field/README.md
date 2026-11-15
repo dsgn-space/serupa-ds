@@ -83,7 +83,7 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 - An error that appears or changes after the Field mounts (after a submit, for example) is announced politely, since focus is usually elsewhere and a description is only read on focus. An error already there on first render isn't announced, and neither are errors that appear as an ErrorSummary in the same form takes focus, since the summary reads them all.
 - If nothing on the page has the control's id (a control Field can't reach, with no `id` passed), Field warns once in the console: the label would name nothing.
 - For radios and checkboxes use `group`: screen readers announce the legend when focus enters the set.
-- Label, hint, error and `*` keep 4.5:1 on `surface` in all six themes (`Field.test.tsx`).
+- Label, hint, error and `*` keep 4.5:1 on `surface` in every theme (`Field.test.tsx`).
 - **Keyboard:** nothing of its own. Tab goes to the control it wraps, and a click on the label focuses that control.
 
 ## Props

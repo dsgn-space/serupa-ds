@@ -232,18 +232,6 @@
           }
         }
       }
-    },
-    "shadow": {
-      "depth-current": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The current page in a tactile brand: raised like a part, under the top light. Nothing in a flat brand.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--pagination-depth-current"
-          }
-        }
-      }
     }
   }
 }

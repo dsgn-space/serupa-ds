@@ -78,7 +78,7 @@ Drawn from the `Controlled` story.
 
 - **ARIA states:** the current dot has `aria-current="true"` and is the only one in the Tab order. The slides are in a polite live region, so a screen reader reads the new slide after a button press.
 - **Motion:** it never moves on its own, so nothing needs pausing (WCAG 2.2.2), and slides change at once with reduced motion.
-- **Contrast:** the dots and the buttons keep 3:1 in all six themes (`Carousel.test.tsx`).
+- **Contrast:** the dots and the buttons keep 3:1 in every theme (`Carousel.test.tsx`).
 - **What's still yours:** a `label`, and alt text on every picture in the slides.
 
 ## Props

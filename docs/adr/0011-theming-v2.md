@@ -3,6 +3,7 @@
 **Status:** Accepted
 **Status when written:** Accepted (Diki approved analysis items B2, B3 and G5 on 23 October 2026). The axes and `light-dark()` ship in a minor release; removing the flat ids is a 9.0.0 question.
 **Checked against main (31 October 2026, 11.0.0):** The axes and `light-dark()` shipped. The flat `data-theme` ids were kept past 9.0.0: `theme.js` still sets them, and they are the fallback for browsers without `light-dark()` (README, Browser support).
+**A theme is its colors (15 November 2026, 16.0.0):** A brand sets its brand colors and nothing else. Violet's tactile look and Emerald's own corners, spacing, elevation, motion and neutrals are removed, with `data-depth`; a look is a separate axis, to be designed, never part of a brand. The theme tests (`src/styles/themeAxes.test.tsx`) hold the token source and the components to it.
 **Supersedes (in part):** [ADR-0003](0003-theming.md). Its plan to generate each brand from one ramp still stands.
 **Deciders:** Diki
 
@@ -32,7 +33,6 @@
 | `data-contrast` | `auto` (default), `more` | Stronger borders, text and focus ring. `auto` follows `prefers-contrast: more`. |
 | `data-density` | `comfortable` (default), `compact` | `--control-height-*`, padding and gap tokens (G5) |
 | `data-shadow` | `neutral` (default), `brand` | `--shadow-2xs` to `--shadow-2xl`: black, or a deep shade of the element's `--primary` at the same opacity (added later, 73) |
-| `data-depth` | `flat`, `tactile` (default: the brand's, violet is tactile) | The `depth-*` layers: a top highlight, soft lift and sheen on controls, a sinking press, a lift on link cards; empty when flat (added later, the tactile violet brand) |
 | `data-type-scale` | `fixed` (default), `fluid` | `--text-2xl` to `--text-9xl` and the `--text-type-*` shorthands that use them: fixed, or a `clamp()` from 70% at a 320px viewport to the full size at 1280px (added later, 22) |
 
 Any element can carry the axes, not only `<html>`. For example, a compact table inside a comfortable page, or a dark hero section inside a light page.

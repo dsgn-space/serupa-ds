@@ -62,12 +62,12 @@ Drawn from the `Marks` story.
 
 - The slider takes a press over at least 24px of height (WCAG 2.5.8), past the 20px thumb, without taking more room, and 44px on a touch screen, as Apple and Material ask.
 - Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
-- The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
+- The track, the fill and the thumb's ring keep 3:1 on the page in every theme, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
 - In a [Field](../Field/README.md), the label names the thumb (a range's group) through `aria-labelledby`, and the hint and error describe it. Its own `aria-label` or `aria-labelledby` wins.
-- `invalid` sets `aria-invalid` on each thumb and turns the fill and the thumb's ring danger (3:1 on the page in all six themes). Color alone doesn't say what's wrong, so put the reason in text next to it: inside a [Field](../Field/README.md), its `error` does both.
+- `invalid` sets `aria-invalid` on each thumb and turns the fill and the thumb's ring danger (3:1 on the page in every theme). Color alone doesn't say what's wrong, so put the reason in text next to it: inside a [Field](../Field/README.md), its `error` does both.
 - `readOnly` keeps the thumbs in the Tab order with `aria-readonly`, so people can still hear the value, but keys and presses don't change it. With `name`, the value is still sent with the form, which `disabled` doesn't do.
 - A slider always has a value, so `required` has nothing to check. It's accepted, so Field's `required` doesn't reach the DOM, and has no effect.
-- Marks and the value chip are `aria-hidden`. The thumb's `aria-valuetext` already says the value, and mark labels would be read as stray text. Mark labels keep 4.5:1 on the page, and the chip's text 4.5:1 on the chip, in all six themes (`Slider.test.tsx`).
+- Marks and the value chip are `aria-hidden`. The thumb's `aria-valuetext` already says the value, and mark labels would be read as stray text. Mark labels keep 4.5:1 on the page, and the chip's text 4.5:1 on the chip, in every theme (`Slider.test.tsx`).
 - With `inputs`, each number field is named as its thumb is (the label, or "Minimum" and "Maximum" in a range), so a screen reader hears which value it changes. It's one more Tab stop per thumb.
 - `disabled`, or a disabled `<fieldset>` around it, takes the thumbs out of the Tab order, sets `aria-disabled` and ignores keys and presses, as native inputs do.
 
@@ -154,8 +154,6 @@ Each is an optional override: set it on the page, a container or one slider. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--slider-thumb-shadow` | `elevation-part` | The thumb's shadow. |
-| `--slider-thumb-depth` | `depth-part` | The tactile layers over each thumb's shadow. None in the flat brands. |
-| `--slider-track-depth` | `depth-well` | The track's tactile layers: a groove the thumb slides in. None in the flat brands. |
 
 **Spacing**
 

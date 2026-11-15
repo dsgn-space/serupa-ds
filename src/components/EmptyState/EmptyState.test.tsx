@@ -154,7 +154,7 @@ describe('EmptyState', () => {
     expect([part('eid', 'suggestions')!.firstElementChild!.textContent, part('eid', 'actions')!.textContent.replace(/filter_alt_off/, '').trim()]).toEqual(['Mungkin maksud Anda:', 'Hapus filter']);
   });
 
-  test('contrast: title and description 4.5:1 on surface, the icon 3:1 on its circle, in all six themes', async () => {
+  test('contrast: title and description 4.5:1 on surface, the icon 3:1 on its circle, in every theme', async () => {
     await render(<Projects />);
     const i = part('edef', 'icon')!, low: string[] = [];
     for (const th of THEMES) {

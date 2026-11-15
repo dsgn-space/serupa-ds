@@ -41,7 +41,7 @@ export function About() {
       </ol>
 
       <Heading level={2} id="next" className="site-h site-h2">See it at work</Heading>
-      <p className="site-p">The showcase puts the patterns on a phone, a tablet and a laptop, and the themes page shows one piece of product under all six themes.</p>
+      <p className="site-p">The showcase puts the patterns on a phone, a tablet and a laptop, and the themes page shows one piece of product under every theme.</p>
       <p className="site-more flex flex-wrap gap-3"><Button href="/showcase" rightIcon="arrow_forward">Open the showcase</Button><Button href="/themes" variant="outline">Compare the themes</Button></p>
     </article>
   </Shell>;
