@@ -28,6 +28,12 @@ export const Kinds: Story = {
 
 export const Small: Story = { args: { size: 'sm' } };
 export const Extended: Story = { args: { icon: 'edit', label: 'Compose', extended: true } };
+/** extended="auto": scroll the page down and it folds to its icon; scroll back up and the label returns. */
+export const ExtendedAuto: Story = {
+  name: 'Extended, shrinks on scroll',
+  args: { icon: 'edit', label: 'Compose', extended: 'auto' },
+  render: (args) => <div style={{ minHeight: '200vh', padding: 16 }}><p>Scroll down: the button folds to its icon. Scroll up: the label comes back.</p><Fab {...args} /></div>,
+};
 export const ExtendedSmall: Story = { name: 'Extended, small', args: { icon: 'edit', label: 'Compose', extended: true, size: 'sm' } };
 export const Disabled: Story = {
   render: (args) => <div className="flex gap-4 items-center">

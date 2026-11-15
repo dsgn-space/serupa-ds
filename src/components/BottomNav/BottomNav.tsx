@@ -43,6 +43,9 @@ export interface BottomNavLinkOwnProps {
   active?: boolean | undefined;
   /** The label: one or two short words. */
   children: React.ReactNode;
+  /** A count or dot on the icon's top-end corner, such as <Badge count={4} /> for unread items. Screen readers read
+   *  it after the link's name ("Inbox", then "4"). */
+  badge?: React.ReactNode | undefined;
 }
 
 /** BottomNavLink's props: its own, `as`, and the props of the element `as` names (an <a>'s by default), so
@@ -53,11 +56,15 @@ export type BottomNavLinkProps<C extends React.ElementType = 'a'> = BottomNavLin
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof BottomNavLinkOwnProps | 'as'>;
 
 const BottomNavLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, BottomNavLinkProps>('BottomNavLink', function BottomNavLink(props, ref) {
-  const rest = omit(props, { active: 1, as: 1, className: 1, icon: 1, children: 1 });
+  const rest = omit(props, { active: 1, as: 1, className: 1, icon: 1, children: 1, badge: 1 });
+  // The badge sits in the icon's pill, which is hidden from screen readers with the icon; aria-describedby reads it
+  // after the name, as Sidebar's rail does.
+  const badgeId = React.useId(), badge = props.badge != null && props.badge !== false;
+  if (badge) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
   return React.createElement(props.as || config.link, Object.assign(rest, {
     ref: ref, 'aria-current': props.active ? 'page' : undefined,
     className: cn('dk-bottom-nav__link', props.active && 'dk-bottom-nav__link--active', props.className),
-  }), <span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}</span>, <span className="dk-bottom-nav__label">{props.children}</span>);
+  }), <span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="dk-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>, <span className="dk-bottom-nav__label">{props.children}</span>);
 });
 
 /** A destination in a BottomNav: an icon over a short label. active marks the current page. `as` renders your router's link, typed with its props. */
