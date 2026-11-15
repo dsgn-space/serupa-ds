@@ -1,0 +1,9 @@
+/* ---------------------------------------------------------------
+   SplitButton: a Button and an arrow IconButton joined into one control by an attached ButtonGroup, which draws the
+   shared edge (in the text color between two primary halves) and the outer corners. The wrapper only keeps it inline
+   and inside its container; the arrow half is as wide as the control is tall.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-split-button { display: inline-flex; vertical-align: middle; max-inline-size: var(--sizing-full); }
+.dk-split-button > .dk-button-group { --button-group-divider: var(--split-button-divider, var(--opacity-40)); }
+}
