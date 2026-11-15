@@ -58,6 +58,8 @@ Ask the command line, not the web: it answers from this release.
 - \`npx serupa-docs topics\`, then \`npx serupa-docs <topic>\`: install, theme, rules, accessibility, before you finish
 - \`--json\` on any of them for data
 
+For a whole screen, start from a ready-made one: \`npx serupa-add\` lists the patterns and blocks, and \`npx serupa-add <Name>\` writes one into \`src/serupa/\` as source to change.
+
 ## Instructions
 
 Before UI work, read \`node_modules/@diki-stwn/serupa-ds/skills/serupa/SKILL.md\` and follow it. To review a UI change, follow \`node_modules/@diki-stwn/serupa-ds/skills/serupa-review/SKILL.md\`.

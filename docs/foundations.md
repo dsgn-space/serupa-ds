@@ -210,11 +210,12 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 npx serupa-brand acme "#0f766e" -o src/acme-theme.css          # corners as they are
 npx serupa-brand acme "#0f766e" --corners round -o src/acme-theme.css   # or sharp
 npx serupa-brand acme "#0f766e" --look modern -o src/acme-theme.css     # Modern's look
+npx serupa-brand acme "#0f766e" --motion brisk -o src/acme-theme.css   # or calm
 ```
 
 Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
 
-It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary` on the page at 4.5:1 in light, the mirror in dark, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. With `--look modern` the brand takes Modern's look around its color: Modern's calm neutrals and soft borders, its 8 and 12px corners, roomier surfaces, lighter shadows and softer motion. `--corners` still sets the corners on top, and `data-radius` beats either. A color no shade of which can pass says so, and makes no file.
+It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary` on the page at 4.5:1 in light, the mirror in dark, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. With `--look modern` the brand takes Modern's look around its color: Modern's calm neutrals and soft borders, its 8 and 12px corners, roomier surfaces, lighter shadows and softer motion. `--corners` still sets the corners on top, and `data-radius` beats either. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
 
 ### Adding a theme
 
@@ -1124,6 +1125,7 @@ How the words in a product built with the system should read: labels, hints, err
 - Never blame the person. "That date is before the start date", not "You entered an invalid date".
 - Point to things by their name, never by shape, color, position or sound alone: "Select Save", not "Select the button below"; "Check the start date", not "Fix the red field". Someone using a screen reader, a zoomed screen or a different layout can't see "below" or "red" (WCAG 1.3.3).
 - Leave out words that tell the reader something should be quick for them: "simply", "just", "obviously", "of course", "easy". When it isn't quick for them, the word makes them feel slow; when it is, the word adds nothing. "Add an email address", not "Just add an email address".
+- Leave out "your" and "my" where the page already says whose it is: "Favorites", "Settings", not "My favorites", "Your settings". Keep them only where two people's things meet, such as "Your files" beside "Shared with you".
 - Use plain, neutral terms: "allow list" and "block list", not "whitelist" and "blacklist"; "main" and "replica" (or "primary" and "secondary"), not "master" and "slave".
 
 **Words to use**
@@ -1257,7 +1259,7 @@ The target is **WCAG 2.2 level AA**, in all six themes, at any zoom up to 400%, 
 **What the system guarantees**
 
 - **Contrast.** Text, placeholder, icon, control-border and focus-ring colors meet 4.5:1 or 3:1 in every theme; the foundation check measures every pair on every change. `data-contrast="more"` (or the system's "increase contrast" setting) raises body, muted, placeholder, status and brand-colored text to 7:1.
-- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. Each README has a Keyboard table.
+- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. On a phone, the Back gesture or button closes what's open the way Escape does, innermost first: a Menu, Popover, picker list, HoverCard or Tour step as well as a Dialog or Drawer, before it leaves the page. Each README has a Keyboard table.
 - **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Inside a strong fill (`bg-primary`, `bg-danger`, `bg-surface-inverse`) the ring takes the fill's text color, so it still stands out at 3:1; a light surface nested inside such a fill should set `--focus-ring` back itself. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
 - **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
 - **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.
