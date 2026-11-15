@@ -7,8 +7,8 @@ import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const visible = (id: string) => el(id).querySelector('.dk-masked-value__text')!.textContent;
-const spoken = (id: string) => el(id).querySelector('.dk-visually-hidden')?.textContent;
+const visible = (id: string) => el(id).querySelector('span')!.textContent;
+const spoken = (id: string) => el(id).querySelector('span[aria-hidden] + span')?.textContent;
 const toggle = (id: string) => el(id).querySelector('button')!;
 
 describe('MaskedValue', () => {
@@ -23,7 +23,7 @@ describe('MaskedValue', () => {
   test('the full value is nowhere in the page while masked; screen readers hear what it is and the end, not the bullets', async () => {
     await render(<MaskedValue id="sr" value="4111111111111208" label="Card number" />);
     expect(el('sr').outerHTML).not.toContain('411111');
-    expect(el('sr').querySelector('.dk-masked-value__text')!.getAttribute('aria-hidden')).toBe('true');
+    expect(el('sr').querySelector('span')!.getAttribute('aria-hidden')).toBe('true');
     expect(spoken('sr')).toBe('Card number ending in 1208');
   });
 

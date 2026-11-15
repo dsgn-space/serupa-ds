@@ -66,8 +66,8 @@ describe('QRCode', () => {
     await render(<QRCode id="c" value="https://example.com" label="Code" />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const dark = css(el('c').querySelector('.dk-qr-code__dark')).fill;
-      const light = css(el('c').querySelector('.dk-qr-code__light')).fill;
+      const dark = css(el('c').querySelector('path')).fill;
+      const light = css(el('c').querySelector('rect')).fill;
       expect([color(dark), color(light)], th).toEqual(['rgb(0, 0, 0)', 'rgb(255, 255, 255)']);
     }
   });
@@ -101,10 +101,10 @@ describe('QRCode', () => {
       <QRCode id="nb" value="a" label="a" status="expired" />
     </>);
     expect(el('lo').querySelector('[data-component="loader"]')).not.toBeNull();
-    expect(el('ex').querySelector('.dk-qr-code__message')!.textContent).toBe('Code expired');
+    expect(el('ex').querySelector('p')!.textContent).toBe('Code expired');
     await userEvent.click(el('ex').querySelector('button')!);
     expect(onRefresh).toHaveBeenCalledOnce();
-    expect([el('sc').textContent, el('sc').querySelector('svg.dk-qr-code__icon, .dk-qr-code__icon') !== null]).toEqual(['Scanned', true]);
+    expect([el('sc').textContent, el('sc').querySelector('p [data-icon]') !== null]).toEqual(['Scanned', true]);
     expect(el('nb').querySelector('button')).toBeNull();
   });
 
@@ -126,9 +126,9 @@ describe('QRCode', () => {
     };
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const faded = Number(css(el('v').querySelector('.dk-qr-code__code')).opacity);
+      const faded = Number(css(el('v').querySelector('svg')).opacity);
       const surface = css(el('v')).backgroundColor;
-      const text = css(el('v').querySelector('.dk-qr-code__message')).color;
+      const text = css(el('v').querySelector('p')).color;
       for (const module of ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']) expect(contrast(text, mix(module, surface, faded)), th + ' ' + module).toBeGreaterThanOrEqual(4.5);
     }
   });
