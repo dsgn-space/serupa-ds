@@ -223,6 +223,16 @@ export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   keepMounted?: boolean | undefined;
 }
 
+const FOCUSABLE = 'a[href], button:not(:disabled), input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled), summary, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
+/** Whether the first thing in el, in reading order, is something Tab lands on rather than text. */
+function startsFocusable(el: HTMLElement): boolean {
+  const first = el.querySelector(FOCUSABLE);
+  if (!first) return false;
+  const before = el.ownerDocument.createRange();
+  before.setStart(el, 0); before.setEndBefore(first);
+  return !before.toString().trim();
+}
+
 /** The content for one tab, shown while its tab is selected. */
 export const TabPanel = /* @__PURE__ */ component<HTMLDivElement, TabPanelProps>('TabPanel', function TabPanel(props, ref) {
   const ctx = useTabs('TabPanel');
@@ -251,6 +261,18 @@ export const TabPanel = /* @__PURE__ */ component<HTMLDivElement, TabPanelProps>
     el.addEventListener('invalid', revealInvalid, true);   // a required field in it, on submit, selects its tab (L8E100)
     return () => { el.removeEventListener('beforematch', onMatch); el.removeEventListener('invalid', revealInvalid, true); };
   }, []);
+  // The shown panel is a Tab stop only while its content starts with text, as the APG asks: when it starts with a
+  // link or a field, Tab from the tab goes straight there rather than to the panel first. Content can change after
+  // the panel shows (a loaded list, a Retry button), so a change inside looks again. A tabIndex prop keeps its value.
+  useIsoLayoutEffect(() => {
+    const el = own.current;
+    if (!el || !selected || props.tabIndex !== undefined) return;
+    const look = () => { const t = startsFocusable(el) ? -1 : 0; if (el.tabIndex !== t) el.tabIndex = t; };
+    look();
+    const watch = new MutationObserver(look);
+    watch.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['disabled', 'href', 'tabindex', 'hidden'] });
+    return () => watch.disconnect();
+  }, [selected, props.tabIndex]);
   const mergedRef3 = useMergedRef(ref, (n) => { own.current = n; });
   return (
     <div tabIndex={selected ? 0 : -1} {...rest} ref={mergedRef3} role="tabpanel" id={ctx.base + '-panel-' + safe(props.value)} aria-labelledby={ctx.base + '-tab-' + safe(props.value)}

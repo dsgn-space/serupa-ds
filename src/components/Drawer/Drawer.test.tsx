@@ -606,13 +606,13 @@ describe('Drawer', () => {
     expect([n[0], n[2]]).toEqual([0, 300]);
   });
 
-  test('look: 24px padding, shadow-xl, 16px between parts, a text-lg semibold title, slides in over 300ms; contrast: title, description and body text 4.5:1 on the panel in every theme; closed again, the page scrolls', async () => {
+  test('look: 24px padding, the modal shadow cast toward the page, 16px between parts, a text-lg semibold title, slides in over 300ms; contrast: title, description and body text 4.5:1 on the panel in every theme; closed again, the page scrolls', async () => {
     const ctl: Partial<Ctl> = {};
     await render(<App asks={[]} ctl={ctl} />);
     await reopen(ctl, () => {});
     const s = getComputedStyle(panel()), ti = getComputedStyle(titleOf('drw'));
     expect([s.paddingTop, s.rowGap, ti.fontSize, ti.fontWeight, withMotion(() => getComputedStyle(panel()).transitionDuration)]).toEqual(['24px', '16px', '18px', '600', '0.3s, 0.3s']);
-    expect(s.boxShadow).toMatch(/20px 25px -5px/);
+    expect(s.boxShadow).toMatch(/-20px 0px 25px -5px/);
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;
     for (const th of THEMES) {
@@ -625,6 +625,21 @@ describe('Drawer', () => {
     expect(n).toBe(18);
     React.act(() => ctl.setOpen!(false));
     await expect.poll(() => getComputedStyle(document.documentElement).overflow).not.toBe('hidden');
+  });
+
+  test('the shadow falls from the panel toward the page, from one light above: up from a bottom sheet, sideways from a side panel, mirrored right to left; a top panel\'s falls down; --drawer-shadow sets one for every side', async () => {
+    const cases = { bottom: ['bottom'], top: ['top'], left: ['left'], right: ['right'], start: ['start'], end: ['end'], startRtl: ['start', 'rtl'], endRtl: ['end', 'rtl'], own: ['bottom', 'ltr', { '--drawer-shadow': '0 0 0 1px red' }] } as const;
+    await render(<>{Object.entries(cases).map(([k, [placement, dir = 'ltr', style]]: [string, readonly unknown[]]) => <div key={k} dir={dir as string}><Drawer id={`sh-${k}`} open={false} placement={placement as DrawerProps['placement']} title={k} style={style as React.CSSProperties}>x</Drawer></div>)}</>);
+    const got = Object.fromEntries(Object.keys(cases).map((k) => {
+      const d = el(`sh-${k}`) as HTMLDialogElement;
+      d.showModal();
+      const s = getComputedStyle(panel(`sh-${k}`)).boxShadow;
+      d.close();
+      return [k, s.replace(/rgba?\([^)]*\)\s*/g, '').trim()];
+    }));
+    const up = '0px -20px 25px -5px, 0px -8px 10px -6px', down = '0px 20px 25px -5px, 0px 8px 10px -6px';
+    const toRight = '20px 0px 25px -5px, 8px 0px 10px -6px', toLeft = '-20px 0px 25px -5px, -8px 0px 10px -6px';
+    expect(got).toEqual({ bottom: up, top: down, left: toRight, right: toLeft, start: toRight, end: toLeft, startRtl: toLeft, endRtl: toRight, own: '0px 0px 0px 1px' });
   });
 
   test('--drawer-bg overrides one drawer', async () => {

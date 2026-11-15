@@ -13,7 +13,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -60,7 +60,9 @@ if (arg('--since')) {
   const storyWide = diff.stdout.split('\n').some((l) => STORY_WIDE.includes(l.split('\t')[2]));
   // It changes no picture and no Storybook page, though: Visual and Storybook stay narrowed to the changed components.
   const wide = storyWide && !['visual', 'storybook'].includes(arg('--group'));
-  const changed = diff.status === 0 && !wide ? affectedComponents(scopeFiles(diff.stdout)) : null;
+  // Visual leaves out what draws main's pictures and the branch's alike (visualScope in lib.mjs).
+  const scope = diff.status === 0 ? (arg('--group') === 'visual' ? visualScope(scopeFiles(diff.stdout)) : scopeFiles(diff.stdout)) : null;
+  const changed = scope && !wide ? affectedComponents(scope) : null;
   sharedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && SHARED_TEST.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   changedTests = diff.status === 0 ? diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter((f) => f && /^src\/.+\.test\.tsx?$/.test(f) && !/^src\/(components|blocks|patterns)\//.test(f) && fs.existsSync(path.join(PROJECT, f))) : [];
   const names = changed && withDependents(changed);
