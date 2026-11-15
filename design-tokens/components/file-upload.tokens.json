@@ -22,6 +22,16 @@
           }
         }
       },
+      "zone-border-hover": {
+        "$type": "color",
+        "$value": "{color.field-border-hover}",
+        "$description": "The drop area's outline while the pointer is over it (a click there browses for files).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--file-upload-zone-border-hover"
+          }
+        }
+      },
       "zone-bg-active": {
         "$type": "color",
         "$value": "{color.primary-subtle}",

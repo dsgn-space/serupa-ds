@@ -17,6 +17,8 @@
   background: var(--file-upload-zone-bg, var(--surface-control)); cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move);
 }
+/* A click on the drop area browses for files, so pointing at it darkens its outline, as a field's does. */
+@media (hover: hover) { .dk-file-upload:not(.dk-file-upload--disabled, .dk-file-upload--readonly, .dk-file-upload--invalid) .dk-file-upload__zone:hover:not(.dk-file-upload__zone--over) { border-color: var(--file-upload-zone-border-hover, var(--field-border-hover)); } }
 .dk-file-upload__zone--over { border-style: solid; border-color: var(--file-upload-zone-border-active, var(--primary)); background: var(--file-upload-zone-bg-active, var(--primary-subtle)); }
 .dk-file-upload__zone--over .dk-file-upload__hint { color: var(--file-upload-title-color, var(--text)); }
 .dk-file-upload__icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-8); pointer-events: none; }

@@ -49,6 +49,19 @@ describe('FileUpload', () => {
     expect([inp.accept, inp.multiple, inp.name, inp.id, inp.getAttribute('aria-hidden'), inp.tabIndex]).toEqual(['image/*,.pdf', true, 'docs', 'many', 'true', -1]);
   });
 
+  test('pointing at the drop area darkens its outline, as a field does; not while disabled, read-only or invalid', async () => {
+    await render(<div><FileUpload data-testid="live" /><FileUpload data-testid="off" disabled /><FileUpload data-testid="ro" readOnly /><FileUpload data-testid="bad" invalid /></div>);
+    const zone = (id: string) => document.querySelector(`[data-testid=${id}] ${ZONE}`) as HTMLElement;
+    const edge = (id: string) => getComputedStyle(zone(id)).borderTopColor;
+    for (const id of ['live', 'off', 'ro', 'bad']) {
+      const at = edge(id);
+      await userEvent.hover(zone(id));
+      await new Promise((r) => setTimeout(r, 400));   // past the outline's hover transition
+      expect(edge(id) !== at, id).toBe(id === 'live');
+      await userEvent.unhover(zone(id));
+    }
+  });
+
   test('form: a FileUpload outside its form submits with it (the native input carries the form attribute)', async () => {
     await render(<><form id="fu-f" /><FileUpload data-testid="fuf" name="docs" form="fu-f" /></>);
     const input = q<HTMLInputElement>('[data-testid=fuf] input[type=file]');
