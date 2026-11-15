@@ -28,7 +28,7 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   required?: boolean | undefined;
   /** "(optional)" after the label, or your own words. Ignored with required. */
   optional?: boolean | string | undefined;
-  /** Disables the control (with group, every control in the fieldset) and dims the label and hint. */
+  /** Disables the control (with group, every control in the fieldset) and draws the label and hint in disabled-text. */
   disabled?: boolean | undefined;
   /** A <fieldset> with a <legend> for a set of checkboxes or radios; the hint and error describe the fieldset. */
   group?: boolean | undefined;

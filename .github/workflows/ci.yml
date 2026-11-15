@@ -86,11 +86,8 @@ jobs:
           set -euo pipefail
           subject=$(git log -1 --format=%s HEAD^2)
           labels=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/labels" --jq '.[].name')
-          # Heal's merge is held too, on its first attempt: its label comes right after the push. Update baselines starts
-          # the run again once the label is off when the redraw changed nothing, and that attempt has to test, or the
-          # merge commit, still the head, held it for good (#1782, 13 Nov).
-          if [ "$subject" != "Update test baselines on the CI runner" ] && { grep -qx update-visual-baselines <<< "$labels" ||
-            { [ "$GITHUB_RUN_ATTEMPT" = 1 ] && grep -qE '^Merge .+ into the branch \(Update baselines\)$' <<< "$subject"; }; }; then
+          # Heal's merge isn't held: it adds no Chromium redraw label any more (ADR-0016), so its run tests it.
+          if [ "$subject" != "Update test baselines on the CI runner" ] && grep -qx update-visual-baselines <<< "$labels"; then
             echo "hold=1" >> "$GITHUB_OUTPUT"
             echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
@@ -409,6 +406,21 @@ jobs:
         with:
           path: .result
           key: ${{ steps.key.outputs.key }}
+      # Tests that passed only on their second try in the queue (FLAKY from the component tests, "passed the second
+      # time" from Visual and Storybook), for the test job's "Flaky tests" issue.
+      - if: success() && github.event_name == 'merge_group' && steps.done.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p .flaky
+          { grep -E '^FLAKY ' test-output.txt || true; grep -oE 'passed the second time: .*' test-output.txt | sed 's/^passed the second time: /FLAKY story /' || true; } > .flaky/lines.txt
+      - if: success() && github.event_name == 'merge_group' && steps.done.outputs.cache-hit != 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: flaky-${{ github.job }}-${{ strategy.job-index }}
+          path: .flaky/
+          include-hidden-files: true
+          retention-days: 3
+          if-no-files-found: ignore
       # What Visual found different from main, before and after, for the visual-review job.
       - if: success() && matrix.group == 'visual' && github.event_name == 'pull_request'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -632,6 +644,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       actions: write
+      issues: write
     steps:
       - env:
           RESULTS: ${{ toJSON(needs) }}
@@ -652,3 +665,28 @@ jobs:
           if [ -n "$bad" ]; then echo "$bad"; exit 1; fi
           # build must have run, on every kind of run.
           echo "$RESULTS" | jq -e '.build.result == "success"' >/dev/null
+      - if: ${{ !cancelled() && github.event_name == 'merge_group' }}
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        continue-on-error: true
+        with:
+          pattern: flaky-*
+          path: .flaky
+      # A test that passed only on its second try in this queue run: noted in the one open "Flaky tests" issue (label
+      # flaky), with the run, so a flake is fixed rather than retried for good. It never fails the run.
+      - if: ${{ !cancelled() && github.event_name == 'merge_group' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          lines=$(cat .flaky/*/lines.txt 2>/dev/null | sort -u || true)
+          [ -n "$lines" ] || { echo "No test needed a second try."; exit 0; }
+          body=$(printf 'Passed only on the second try in %s:\n\n%s\n' "$RUN_URL" "$(sed 's/^FLAKY /- /' <<< "$lines")")
+          n=$(gh api "repos/$GH_REPO/issues?state=open&labels=flaky&per_page=1" --jq '.[0].number // empty')
+          if [ -n "$n" ]; then gh api "repos/$GH_REPO/issues/$n/comments" -f body="$body" >/dev/null
+          else
+            intro="Tests that failed once and passed on the retry in the merge queue (vitest.config.ts, retry). Each is a test to fix; the queue retries them only so one flake can't drop a group."
+            gh api "repos/$GH_REPO/issues" -f title="Flaky tests" -f body="$(printf '%s\n\n%s' "$intro" "$body")" -f 'labels[]=flaky' >/dev/null
+          fi
+          echo "$lines"

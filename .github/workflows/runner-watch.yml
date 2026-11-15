@@ -6,6 +6,7 @@ name: Runner watch
 # waited for it the whole time with nothing to say so. CI's plan job asks the same question before each run and sends
 # its x86 jobs to GitHub's runners meanwhile. It also keeps "Merges stalled" open while nothing has merged into main for
 # half an hour with pull requests waiting, or an armed one sits with a conflict (15 Nov: five hours, unnoticed).
+# Once an hour it rewrites "Merge queue throughput": merges, time in the queue, and failed queue runs by job.
 # It runs tools/runner-watch.mjs from main and no code from any branch.
 on:
   schedule:

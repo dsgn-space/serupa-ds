@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, settle, withMotion, press, THEMES, contrast } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, settle, withMotion, press, THEMES, contrast, disabledLook } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { labels as deLabels } from '../../labels/de';
@@ -182,7 +182,7 @@ describe('Input', () => {
     await expect.poll(() => css(box('i')).boxShadow).toContain(danger);
   });
 
-  test('read-only: a field-readonly background, still focusable; disabled: native disabled, 50%, not-allowed', async () => {
+  test('read-only: a field-readonly background, still focusable; disabled: native disabled, disabled-text, not-allowed', async () => {
     await render(<>
       <Input id="plain" aria-label="Plain" />
       <Input id="ro" readOnly defaultValue="INV-1" aria-label="Read-only" />
@@ -193,12 +193,12 @@ describe('Input', () => {
     field('ro').focus();
     expect(document.activeElement).toBe(field('ro'));
     expect(field('dis').disabled).toBe(true);
-    expect(css(box('dis')).opacity).toBe('0.5');
+    expect(disabledLook(box('dis'))).toBe('neutral');
     expect(box('dis').className).toMatch(/disabled/);
     expect(css(field('dis')).cursor).toBe('not-allowed');
   });
 
-  test('in a <fieldset disabled>: the same look as disabled (field-readonly, 50%, not-allowed), with no hover border; fields built on Input follow (NumberInput\'s steppers aren\'t dimmed twice)', async () => {
+  test('in a <fieldset disabled>: the same look as disabled (field-readonly, disabled-text, not-allowed), with no hover border; fields built on Input follow (NumberInput\'s steppers are disabled too)', async () => {
     await render(<>
       <Input id="fdref" disabled aria-label="Disabled" />
       <fieldset disabled><legend>Billing</legend>
@@ -208,13 +208,13 @@ describe('Input', () => {
     </>);
     const ref = css(box('fdref')), b = css(box('fdin'));
     expect(field('fdin').matches(':disabled')).toBe(true);
-    expect([b.opacity, b.backgroundColor, b.cursor, css(field('fdin')).cursor]).toEqual(['0.5', ref.backgroundColor, 'not-allowed', 'not-allowed']);
+    expect([disabledLook(box('fdin')), b.backgroundColor, b.cursor, css(field('fdin')).cursor]).toEqual(['neutral', ref.backgroundColor, 'not-allowed', 'not-allowed']);
     const border = css(box('fdin')).getPropertyValue('--dk-input-bd');
     await userEvent.hover(box('fdin'), { force: true });
     expect(css(box('fdin')).getPropertyValue('--dk-input-bd')).toBe(border);
     const num = field('fdnum').parentElement as HTMLElement;
-    expect(css(num).opacity).toBe('0.5');
-    expect([...num.querySelectorAll('button[aria-controls]')].map((s) => css(s).opacity)).toEqual(['1', '1']);
+    expect(disabledLook(num)).toBe('neutral');
+    expect([...num.querySelectorAll<HTMLElement>('button[aria-controls]')].map((s) => disabledLook(s))).toEqual(['neutral', 'neutral']);
   });
 
   test('icons: decorative, 16px at md, before and after the field, and they don\'t take clicks', async () => {
@@ -536,7 +536,7 @@ describe('Input actions (RU15)', () => {
     </>);
     expect([actions('ds')[0]!.disabled, actions('on')[0]!.disabled, actions('on')[1]!.disabled]).toEqual([true, true, false]);
     // Disabled alone, it dims as Button does; in a disabled field the box is dimmed already, so it isn't twice (GR282).
-    expect([css(actions('on')[0]!).opacity, css(actions('on')[1]!).opacity, css(actions('ds')[0]!).opacity, css(box('ds')).opacity]).toEqual(['0.5', '1', '1', '0.5']);
+    expect([disabledLook(actions('on')[0]!), disabledLook(actions('on')[1]!) === 'neutral', disabledLook(actions('ds')[0]!) === 'neutral', disabledLook(box('ds'))]).toEqual(['neutral', false, true, 'neutral']);
   });
 
   test('each action is the field\'s height less its border and a 2px inset at every size, and at least 24px to press', async () => {

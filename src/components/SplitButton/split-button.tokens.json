@@ -1,0 +1,17 @@
+{
+  "splitButton": {
+    "$description": "SplitButton's component tokens. Each one is an optional override: set the CSS variable (--split-button-<name>) on the page, a container or one SplitButton, and every SplitButton inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "opacity": {
+      "divider": {
+        "$type": "number",
+        "$value": "{opacity.opacity-40}",
+        "$description": "How strong the edge between two primary halves is: their text color at this opacity (40%).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--split-button-divider"
+          }
+        }
+      }
+    }
+  }
+}

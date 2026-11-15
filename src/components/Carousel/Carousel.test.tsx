@@ -102,6 +102,21 @@ async function swipe(id: string, dx: number, from?: HTMLElement) {
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Carousel', () => {
+  test('a sideways trackpad swipe (or Shift and the wheel) moves one slide per swipe, its momentum counting once; up and down scroll the page as before', async () => {
+    await render(<Carousel id="wh" label="Wheel">{slides(4, 'w')}</Carousel>);
+    const v = part('wh', VIEW), at = () => el('wh').dataset.index;
+    const wheel = (init: WheelEventInit) => { const e = new WheelEvent('wheel', { bubbles: true, cancelable: true, ...init }); v.dispatchEvent(e); return e.defaultPrevented; };
+    expect(wheel({ deltaY: 120 })).toBe(false);   // the page's scroll
+    expect(at()).toBe('0');
+    expect([wheel({ deltaX: 20 }), at()]).toEqual([true, '0']);   // not far enough yet, but not the page's either
+    wheel({ deltaX: 30 });
+    await expect.poll(at).toBe('1');
+    for (let i = 0; i < 5; i++) wheel({ deltaX: 80 });   // the same swipe's momentum
+    expect(at()).toBe('1');
+    await new Promise((r) => setTimeout(r, 250));
+    wheel({ deltaY: -60, shiftKey: true });   // Shift and the wheel, back
+    await expect.poll(at).toBe('0');
+  });
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<Carousel id="mk" label="Photos"><div>A</div><div>B</div><div>C</div></Carousel>);
     const t = document.querySelector('#mk button[aria-current="true"]') as HTMLElement;

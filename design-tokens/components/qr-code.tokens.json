@@ -1,0 +1,113 @@
+{
+  "qRCode": {
+    "$description": "QRCode's component tokens. Each one is an optional override: set the CSS variable (--qr-code-<name>) on the page, a container or one QRCode, and every QRCode inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "dark": {
+        "$type": "color",
+        "$value": "{color.black}",
+        "$description": "The dark modules: black in every theme, since scanners need the contrast. A brand color works only if it keeps about 4.5:1 on light.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-dark"
+          }
+        }
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.white}",
+        "$description": "The light modules and the quiet zone: white in every theme, dark mode included (most scanners can't read a light-on-dark code).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-light"
+          }
+        }
+      },
+      "status-bg": {
+        "$type": "color",
+        "$value": "{color.surface}",
+        "$description": "Behind a status, where the faded code shows through.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-status-bg"
+          }
+        }
+      },
+      "status-text": {
+        "$type": "color",
+        "$value": "{color.text}",
+        "$description": "A status message over the faded code (4.5:1).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-status-text"
+          }
+        }
+      },
+      "scanned-icon": {
+        "$type": "color",
+        "$value": "{color.success-text}",
+        "$description": "The check beside \"Scanned\".",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-scanned-icon"
+          }
+        }
+      }
+    },
+    "radius": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "The corners, kept small: the quiet zone is part of the code.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-radius"
+          }
+        }
+      }
+    },
+    "sizing": {
+      "size-sm": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-24}",
+        "$description": "size=\"sm\", quiet zone included (96px): a code beside text, for a short URL.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-size-sm"
+          }
+        }
+      },
+      "size-md": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-40}",
+        "$description": "size=\"md\", the default (160px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-size-md"
+          }
+        }
+      },
+      "size-lg": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-60}",
+        "$description": "size=\"lg\" (240px): a payment code to scan from across a counter, or a long value.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-size-lg"
+          }
+        }
+      }
+    },
+    "opacity": {
+      "faded": {
+        "$type": "number",
+        "$value": "{opacity.opacity-10}",
+        "$description": "How much of the code shows behind a status: a trace, so the message reads 4.5:1 over it.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--qr-code-faded"
+          }
+        }
+      }
+    }
+  }
+}

@@ -98,6 +98,8 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-focus-ring` | `focus-ring` | The focus ring around the focused tag. |
 | `--tag-group-more` | `primary` | The Show more and Show less button's words (4.5:1 on the page). |
 | `--tag-group-icon` | `text-muted` | A tag's leading icon (decorative; the words name the tag). |
+| `--tag-group-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--tag-group-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--tag-group-radius` | `radius-control` | A tag's corners, as other controls'. |
 | `--tag-group-gap` | `spacing-2` | The space between tags, and between the label and the tags (8px). |
 | `--tag-group-avatar-size` | `spacing-6` | The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag. |

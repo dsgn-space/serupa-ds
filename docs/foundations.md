@@ -169,6 +169,9 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `field` | `white` | `zinc-800` | Background of text inputs, selects and other form fields. In dark, a fill that sets a field apart from the page. |
 | `field-raised` | `white` | `#333338` | `field` on a raised or floating surface: Dialog, Drawer, Popover, an elevated Card and `bg-surface-raised` or `bg-surface-overlay` panels set `--field` to it, so in dark a field there steps up from the `zinc-800` surface instead of matching it. Emerald dark keeps `zinc-800` (its overlays are `zinc-900`). |
 | `field-readonly` | `zinc-50` | `zinc-900` | Background of read-only and disabled fields: a step flatter than `field`, so they read as not editable. |
+| `disabled-text` | `zinc-500` | `zinc-400` | Labels, marks and icons of a disabled control: at least 3:1 on every surface, `zinc-700` / `zinc-300` with more contrast. |
+| `disabled-surface` | `zinc-100` | `zinc-800` | Fill of a disabled control that has one (a checked box, a switch track, a slider fill's track). |
+| `disabled-border` | `zinc-300` | `zinc-700` | Edge of a disabled control or field. |
 | `field-border` | `zinc-300` | `zinc-700` | Border of form fields, soft by design: under the 3:1 WCAG 1.4.11 asks of a control's edge (see [Contrast, checked in every theme](#contrast-checked-in-every-theme)). |
 | `field-border-hover` | `zinc-400` | `zinc-600` | Field border on hover: the resting `field-border` one gray step stronger. The accent is kept for focus. |
 | `border-control` | `zinc-500` | `zinc-400` | The edge of a control that isn't a field: Slider and Switch tracks, Meter and Progress track edges, Carousel dots, Stepper rings, ColorPicker swatches, FileUpload's drop area, SignaturePad's box. 3:1+ on `surface` (WCAG 1.4.11). |
@@ -231,8 +234,11 @@ The type scales and font families, named by role (`text-xl`, `font-semibold`, `t
 | Token | Font | Use |
 | --- | --- | --- |
 | `font-sans` | Inter | Default for UI and body text. |
+| `font-heading` | Unset: headings use `font-sans` | Your own face for headings: the display and heading roles, Heading, and Dialog and Drawer titles read it. |
 | `font-serif` | Georgia | Editorial or long-form accents. |
 | `font-mono` | The system's monospace: SF Mono, Menlo, Consolas or Liberation Mono | Code, IDs, tabular figures. A bare `<kbd>` uses `font-sans`, like `<Kbd>`. |
+
+**Your own heading face.** Set `--font-heading` to the face, or faces, to try first: `:root { --font-heading: "Fraunces"; }`. Name faces only, not a generic family such as `serif`: the language's sans stack follows it, so a character the face doesn't have, such as Japanese or Arabic text, still finds its Noto font. Body text stays in `font-sans`.
 
 Fonts ship with the system in `fonts/` and are declared by `tokens.css`: Inter (upright and italic, variable 100–900). Icons are SVGs, not a font. Nothing loads from another server. Georgia and Courier New are pre-installed on most computers.
 
@@ -510,7 +516,7 @@ Rules of thumb:
 - Shadows barely show in dark themes, so elevation there comes from the surface: put raised content on `surface-raised` with a `border` edge, and anything in the top layer on `surface-overlay` with a `border-overlay` edge. Both are white in light themes, so the same classes work in every theme.
 - Focus: use the outline recipe from Borders, not a ring. A `ring-offset` paints its gap in one color, which shows as a band on any tinted background, and box-shadow rings disappear in forced-colors mode.
 - `text-shadow-*` only for text over images or video; never on body text over solid surfaces.
-- `opacity-disabled` (50%) for disabled controls, as every component uses; don't lower the opacity of text to make it secondary: use `text-muted`.
+- `opacity-disabled` (50%) for a disabled thing of your own whose colors you don't choose, such as a picture or a user's color swatch. Serupa's controls draw disabled in neutral colors instead (`disabled-text`, `disabled-surface`, `disabled-border`; see States), which stay readable where a fade may not. Don't lower the opacity of text to make it secondary: use `text-muted`.
 - Blend modes for illustrations and image treatments (`mix-blend-multiply` to drop a white background), not for UI chrome.
 - Masks for fading scroll edges (`mask-b-from-80%` on a scrolling list) and image vignettes (`mask-radial-from-60%`).
 
@@ -1063,7 +1069,7 @@ Every interactive component moves through the same eight states, in this order o
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
 | Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
 | Dragged | It's being moved, by pointer or by keyboard (SortableList, Kanban) | Lifted to level 2: a `primary` border and the `elevation-raised` shadow, a `grabbing` cursor; a `Highlight` outline in forced colors | `primary`, `elevation-raised` |
-| Disabled | It can't be used (`disabled`, `aria-disabled`) | The whole thing at `opacity-disabled`, with a `not-allowed` cursor and no hover or pressed | `opacity-disabled` |
+| Disabled | It can't be used (`disabled`, `aria-disabled`) | Neutral colors at full opacity: `disabled-text` for labels and marks (at least 3:1 on every surface), `disabled-surface` for a fill, `disabled-border` for an edge; a `not-allowed` cursor and no hover or pressed | `disabled-text`, `disabled-surface`, `disabled-border` |
 | Invalid | Its value is wrong (`aria-invalid`) | A `danger` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `danger`, `danger-text` |
 
 Focus shows on top of every other state, and disabled turns hover and pressed off. A component's README lists its own values under "States".

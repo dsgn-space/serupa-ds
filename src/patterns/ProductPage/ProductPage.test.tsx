@@ -60,7 +60,8 @@ describe('Patterns/Product page', () => {
     const screen = await render(<ProductPage product={mug} onAddToCart={onAdd} />);
     await screen.getByRole('radio', { name: 'Red' }).click();
     await screen.getByRole('button', { name: 'Add to cart' }).click();
-    await expect.element(screen.getByText('Choose a size.')).toBeVisible();
+    // Scoped to the group: the page's live announcer can hold the same words for a moment.
+    await expect.element(screen.getByRole('group', { name: /Size/ }).getByText('Choose a size.')).toBeVisible();
     expect(screen.getByRole('group', { name: /Color/ }).element().textContent).not.toContain('Choose a color.');
     expect((active() as HTMLInputElement).name).toBe('option-size');
     expect(active().getAttribute('value')).toBe('s');
