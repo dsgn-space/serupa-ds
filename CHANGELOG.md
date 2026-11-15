@@ -4,6 +4,20 @@ Every change to Serupa (called the Diki Design System up to 4.8.1), newest first
 
 ## [Unreleased]
 
+## [15.1.0] - 2026-11-15
+
+### Added
+
+- The Detail page pattern takes a supporting pane: `aside={{ title, content }}` adds a pane, such as the project's activity, beside the tabs from 1024px and below them on a narrower screen. It's a complementary landmark named by its title.
+- An item under the pointer no longer looks like the current one. With the bar gone, Sidebar, Navbar and TreeView gave a hovered item the same fill as the current or selected item. Their hover fill is now `surface-hover`, one step quieter than `highlight` (in a Navbar menu panel, `surface-hover-raised` through a new token, `--navbar-menu-link-bg-hover`; `--navbar-link-bg-hover` no longer reaches the panel's links). In emerald dark, `surface-hover` is `zinc-900` and `surface-hover-raised` is `#202023`, so the same one step holds there: its row hover and stripes are a step quieter too.
+- The phone's Back gesture or button closes an open Menu, Popover, HoverCard, Tour step, or the list of a Combobox, CascadeSelect, PeriodPicker, DatePicker, DateRangePicker, TimePicker or MentionInput, before it leaves the page, the way Escape does: innermost first, with focus back on the trigger. Before, only Dialog and Drawer closed on Back, so on Android Back with a Menu open left the page. It uses the browser's close request (CloseWatcher, in Chromium browsers); elsewhere nothing changes. Escape pressed while focus is outside an open layer now closes it too. Tooltips are left alone.
+- Page layout now says which navigation goes with which window width: a BottomNav below 768px, the Sidebar's icon rail from 768px, and the full Sidebar from 1024px. The Page shell pattern has an AdaptiveNavigation story that switches between the three as the window resizes.
+
+### Fixed
+
+- Progress ring: the track now stops short of the arc at both ends, with a small gap, so the arc only has to stand out from the page. The danger arc in the blue and violet dark themes and the warning arc in the light themes were under 3:1 against the track.
+- On a touch screen, a Calendar's days are 44px square (still shrinking to fit a narrow screen), and a Carousel dot, SearchInput's clear button, a Rating star and the drag handles of SortableList and Kanban take a press 44px high, as Apple and Material ask, without moving anything. With a mouse nothing changes.
+
 ## [15.0.0] - 2026-11-14
 
 ### Added
@@ -2624,7 +2638,8 @@ These still work and will be removed in 2.0.0:
 - `<Button variant="destructive">`: use `<Button destructive>`.
 - `<Button size="icon">`: use `<Button icon="…" aria-label="…">`.
 
-[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v15.0.0...HEAD
+[Unreleased]: https://github.com/dsgn-space/serupa-ds/compare/v15.1.0...HEAD
+[15.1.0]: https://github.com/dsgn-space/serupa-ds/compare/v15.0.0...v15.1.0
 [15.0.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.7.0...v15.0.0
 [14.7.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.6.0...v14.7.0
 [14.6.0]: https://github.com/dsgn-space/serupa-ds/compare/v14.5.0...v14.6.0

@@ -14,6 +14,8 @@
 }
 .dk-color-picker--size-sm { --dk-cp-size: var(--color-picker-swatch-size-sm, var(--spacing-6)); --dk-cp-check: var(--spacing-4); }
 .dk-color-picker--size-lg { --dk-cp-size: var(--color-picker-swatch-size-lg, var(--control-height-lg)); --dk-cp-check: var(--spacing-6); font-size: var(--text-base); line-height: var(--text-base--line-height); }
+/* Touch (EQ1): swatches at least 44px on a touch screen, as Apple and Material ask; packed in rows, so they grow. */
+@media (pointer: coarse) { .dk-color-picker { --dk-cp-size: max(var(--color-picker-swatch-size-md, var(--spacing-8)), var(--spacing-11)); } .dk-color-picker--size-sm { --dk-cp-size: max(var(--color-picker-swatch-size-sm, var(--spacing-6)), var(--spacing-11)); } }
 .dk-color-picker__swatches { display: flex; flex-wrap: wrap; gap: var(--color-picker-swatch-gap, var(--spacing-2)); }
 .dk-color-picker__swatch {
   position: relative; display: inline-flex; align-items: center; justify-content: center;

@@ -9,6 +9,7 @@ interface BottomNavLinkOwnProps {
     icon: IconSource;
     active?: boolean | undefined;
     children: React.ReactNode;
+    badge?: React.ReactNode | undefined;
 }
 type BottomNavLinkProps<C extends React.ElementType = "a"> = BottomNavLinkOwnProps & {
     as?: C | undefined;

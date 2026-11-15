@@ -82,6 +82,11 @@
   transition: color var(--motion-hover) var(--ease-move), background-color var(--motion-hover) var(--ease-move);
 }
 .dk-tabs--sm .dk-tabs__tab { height: var(--tabs-height-sm, var(--control-height-md)); }
+/* Touch (EQ1): tabs at least 44px high on a touch screen, as Apple and Material ask; with a mouse they stay compact. */
+@media (pointer: coarse) {
+  .dk-tabs__tab { height: max(var(--tabs-height-md, var(--spacing-9)), var(--spacing-11)); }
+  .dk-tabs--sm .dk-tabs__tab { height: max(var(--tabs-height-sm, var(--control-height-md)), var(--spacing-11)); }
+}
 .dk-tabs--lg .dk-tabs__tab { height: var(--tabs-height-lg, var(--control-height-lg)); padding-inline: var(--spacing-4); font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-tabs--lg .dk-tabs__icon .dk-icon { font-size: var(--spacing-5); }
 .dk-tabs__icon { display: inline-flex; }
