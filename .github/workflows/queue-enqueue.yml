@@ -3,15 +3,19 @@ name: Queue enqueue
 # A pull request whose auto-merge was turned on while its checks still ran sometimes stays out of the merge queue when
 # they pass: green, auto-merge on, no queue entry, until someone turns auto-merge off and on again (#1679 and #1680 on
 # 12 Nov). This puts such a pull request in the queue: each time CI finishes on a pull request, and every fifteen minutes.
-# Only one whose auto-merge is on, that is ready to merge (mergeable_state "clean": every required check green, no
+# Only one whose auto-merge is on (or that the queue dropped), that is ready to merge (mergeable_state "clean": every required check green, no
 # conflict), and that isn't a draft, already queued or labelled "hold-visual". It checks out nothing and runs no code
 # from any branch.
-# Auto-merge off means a person decides: the queue turns it off when it drops a pull request, and that one stays out
-# until its author turns it on again. Until 15 Nov this also put back a dropped one that had changed since, which put
-# picture pull requests back in the queue, after Update baselines redrew them, while their authors held them for a
-# theme change (#1948).
+# Auto-merge off means a person decides, unless the queue turned it off by dropping the pull request
+# (.github/dropped.sh): one the queue dropped is queued again once its branch changed since (Update baselines healed
+# it), or once if it didn't, as the queue drops one whose group ahead failed. "hold-visual" or a draft keeps it out.
+# Before queueing, it checks the pull request can't be dropped for stale pictures (tools/fresh.mjs): against main as it
+# is now, and against each pull request already in the queue (--queue). One that clashes waits outside: when the one
+# ahead merges, Update baselines draws its pictures again on the new main and this queues it. Until 15 Nov it was queued
+# behind it and dropped as its group built, which turned auto-merge off (14 drops in two hours).
 # "hold-visual" holds a pull request out of the queue: added to one already in it, this takes it out (the label's own
 # run, or the next one). Turning auto-merge off doesn't: GitHub keeps a queued pull request in the queue (#1949).
+# It runs main's own scripts, and reads every branch only through GitHub's API.
 on:
   pull_request:
     types: [labeled]
@@ -35,12 +39,20 @@ jobs:
       github.event_name == 'pull_request' && github.event.label.name == 'hold-visual' && github.event.pull_request.head.repo.full_name == github.repository ||
       github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
+      actions: write
       contents: read
       issues: read
       pull-requests: read
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
       - env:
           GH_TOKEN: ${{ github.token }}
           # The queue entry is made with the bot's token, as the baselines' pushes are: what the workflow token does
@@ -48,6 +60,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           OWNER: ${{ github.repository_owner }}
           NAME: ${{ github.event.repository.name }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -uo pipefail
           prs=$(gh api graphql -f owner="$OWNER" -f name="$NAME" -f query='
@@ -68,11 +81,37 @@ jobs:
                 echo "::warning::#$number couldn't be taken out of the queue"
               continue
             fi
-            # Only auto-merge on and not queued: a draft, or auto-merge off, waits for a person.
-            [ "$state" = on ] || continue
-            merge=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" --jq .mergeable_state </dev/null) || continue
-            [ "$merge" = clean ] || continue
-            echo "Queueing #$number: green, auto-merge on, not in the queue."
+            # Only auto-merge on, or dropped by the queue, and not queued: a draft, or auto-merge a person turned off,
+            # waits for a person. A dropped one goes back once its branch changed since, or once if it didn't.
+            why="auto-merge on"
+            if [ "$state" = off ]; then
+              drops=$(bash .github/dropped.sh "$number" </dev/null)
+              [ "$drops" = - ] || [ "$drops" -gt 1 ] && continue
+              why="dropped by the queue ($([ "$drops" = 0 ] && echo "redrawn since" || echo "once at this commit"))"
+            elif [ "$state" != on ]; then continue; fi
+            pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" </dev/null) || continue
+            head=$(jq -r .head.sha <<< "$pull")
+            merge=$(jq -r .mergeable_state <<< "$pull")
+            # CI's fresh job failed it because a pull request in the queue clashed with it (fresh.mjs --queue), and
+            # that one has left the queue without making this one stale: nothing else runs its CI again. Once per
+            # check, at most twice per run.
+            if [ "$merge" != clean ]; then
+              run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$head&event=pull_request&per_page=1" \
+                --jq '.workflow_runs[0] | select(.status == "completed" and .conclusion != "success" and .run_attempt < 3) | .id' </dev/null) || continue
+              [ -n "$run" ] || continue
+              gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run/jobs?per_page=100" --jq '.jobs[] | select(.name == "fresh") | .conclusion' </dev/null | grep -qx failure || continue
+              node tools/fresh.mjs --base "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha </dev/null)" --head "$head" </dev/null || continue
+              node tools/fresh.mjs --queue "$number" </dev/null || continue
+              echo "Running #$number's CI again: what failed its fresh job has left the queue."
+              gh api -X POST "repos/$GITHUB_REPOSITORY/actions/runs/$run/rerun-failed-jobs" </dev/null >/dev/null ||
+                echo "::warning::#$number's CI couldn't be run again"
+              continue
+            fi
+            # Stale against main as it is now (Update baselines heals it), or against a pull request already queued
+            # (it waits): queued, it would only be dropped. Anything but a clear 0 (GitHub didn't answer) waits too.
+            node tools/fresh.mjs --base "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha </dev/null)" --head "$head" </dev/null || continue
+            node tools/fresh.mjs --queue "$number" </dev/null || continue
+            echo "Queueing #$number: green, $why, not in the queue."
             GH_TOKEN=$BOT_TOKEN gh api graphql -f id="$id" -f query='mutation($id: ID!) { enqueuePullRequest(input: { pullRequestId: $id }) { clientMutationId } }' </dev/null >/dev/null ||
               echo "::warning::#$number couldn't be queued"
           done <<< "$prs"
