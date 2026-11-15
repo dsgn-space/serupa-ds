@@ -23,6 +23,26 @@ function Ctl(props: { calls: string[]; setRef?: { set?: (d: Date | null) => void
 }
 
 describe('DatePicker', () => {
+  test('a date of birth: typed, it opens on its month; the heading jumps by year, Escape steps back a level inside the popup and only then closes it', async () => {
+    const got: string[] = [];
+    await render(<Field label="Date of birth"><DatePicker id="dob" locale="en-US" max={new Date(2026, 10, 14)} onValueChange={(d) => got.push(d ? d.toDateString() : '-')} /></Field>);
+    await type('dob', '08/17/1990');
+    expect(got).toEqual([new Date(1990, 7, 17).toDateString()]);
+    await userEvent.click(button('dob'));
+    const head = () => popup('dob').querySelector<HTMLButtonElement>('button[aria-describedby]')!;
+    expect(head().textContent.startsWith('August 1990')).toBe(true);
+    await userEvent.click(head());
+    await userEvent.click(popup('dob').querySelector<HTMLButtonElement>('button[aria-describedby]')!);
+    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}{Enter}');
+    await userEvent.keyboard('{ArrowRight}{Enter}');
+    expect([head().textContent.startsWith('September 1988'), focused()]).toEqual([true, '1988-09-17']);
+    await userEvent.click(head());
+    await userEvent.keyboard('{Escape}');
+    expect([popup('dob').hidden, document.activeElement === head()]).toEqual([false, true]);
+    await userEvent.keyboard('{Escape}');
+    expect([popup('dob').hidden, focused()]).toEqual([true, 'dob']);
+  });
+
   test('switching to another window or tab mid-typing keeps the typed text and says nothing; leaving the field then reads it (L8E26)', async () => {
     const calls: string[] = [];
     await render(<><DatePicker id="dwb" aria-label="Start" locale="en-US" onInvalidInput={(t, r) => calls.push(t + ':' + r)} /><button id="dwbn">Next</button></>);
