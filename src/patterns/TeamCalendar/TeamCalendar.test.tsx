@@ -138,6 +138,40 @@ describe('Patterns/Team calendar', () => {
     expect(onDelete).not.toHaveBeenCalled();
   });
 
+  test('the day and start typed into the form are what\'s sent; Escape closes it with nothing added', async () => {
+    const onAdd = vi.fn(() => Promise.resolve('typed'));
+    const screen = await render(<TeamCalendar events={events()} defaultMonth={MARCH} onAdd={onAdd} />);
+    await screen.getByRole('button', { name: 'New event' }).click();
+    let dialog = screen.getByRole('dialog', { name: 'New event' });
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => document.querySelectorAll('dialog[open]').length).toBe(0);
+    expect(onAdd).not.toHaveBeenCalled();
+    await screen.getByRole('button', { name: 'New event' }).click();
+    dialog = screen.getByRole('dialog', { name: 'New event' });
+    await userEvent.fill(dialog.getByRole('textbox', { name: /Title/ }), 'Planning');
+    const day = document.getElementById('event-day') as HTMLInputElement;
+    await userEvent.clear(day);
+    await userEvent.type(day, '2025-03-21');
+    await userEvent.fill(dialog.getByRole('combobox', { name: /Starts/ }), '08:30');
+    await userEvent.keyboard('{Tab}');
+    await dialog.getByRole('button', { name: 'Add event' }).click();
+    await expect.poll(() => onAdd.mock.calls.length).toBe(1);
+    expect(onAdd).toHaveBeenCalledWith(expect.objectContaining({ title: 'Planning', day: '2025-03-21', start: '08:30', end: '10:00' }));
+    await expect.poll(() => eventIn('2025-03-21', 'typed')).not.toBeNull();
+  });
+
+  test('a deleted event is sent to onDelete once its toast closes without Undo', async () => {
+    const onDelete = vi.fn();
+    const screen = await render(<TeamCalendar events={events()} defaultMonth={MARCH} onDelete={onDelete} />);
+    await userEvent.click(eventIn('2025-03-12', 'launch')!);
+    await screen.getByRole('dialog', { name: 'Launch day' }).getByRole('button', { name: 'Delete event' }).click();
+    await expect.poll(() => toasted('Deleted “Launch day”')).toBe(true);
+    const toastItem = [...document.querySelectorAll('li')].find((e) => e.textContent?.includes('Deleted “Launch day”') && e.querySelector('button[aria-label="Dismiss"]'))!;
+    await userEvent.click(toastItem.querySelector<HTMLElement>('button[aria-label="Dismiss"]')!);
+    await expect.poll(() => onDelete.mock.calls.length).toBe(1);
+    expect((onDelete.mock.calls[0] as unknown[])[0]).toMatchObject({ id: 'launch' });
+  });
+
   test('closing an event\'s dialog leaves the event as it was', async () => {
     const screen = await render(<TeamCalendar events={events()} defaultMonth={MARCH} />);
     await userEvent.click(eventIn('2025-03-12', 'launch')!);
