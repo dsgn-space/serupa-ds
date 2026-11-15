@@ -335,6 +335,42 @@
       - cell "Edit Margaret Hamilton":
         - button "Edit Margaret Hamilton": Edit
 
+# SelectAcrossPages
+- group "4 selected":
+  - text: 4 selected
+  - button "Select all 1,240"
+  - button "Export"
+  - button "Clear selection"
+- table "Team members":
+  - caption: Team members
+  - rowgroup:
+    - row "Select all rows on this page Name Role":
+      - columnheader "Select all rows on this page":
+        - checkbox "Select all rows on this page" [checked]
+      - columnheader "Name"
+      - columnheader "Role"
+  - rowgroup:
+    - row "Select Ada Lovelace Ada Lovelace Admin":
+      - cell "Select Ada Lovelace":
+        - checkbox "Select Ada Lovelace" [checked]
+      - cell "Ada Lovelace"
+      - cell "Admin"
+    - row "Select Grace Hopper Grace Hopper Editor":
+      - cell "Select Grace Hopper":
+        - checkbox "Select Grace Hopper" [checked]
+      - cell "Grace Hopper"
+      - cell "Editor"
+    - row "Select Linus Torvalds Linus Torvalds Viewer":
+      - cell "Select Linus Torvalds":
+        - checkbox "Select Linus Torvalds" [checked]
+      - cell "Linus Torvalds"
+      - cell "Viewer"
+    - row "Select Margaret Hamilton Margaret Hamilton Editor":
+      - cell "Select Margaret Hamilton":
+        - checkbox "Select Margaret Hamilton" [checked]
+      - cell "Margaret Hamilton"
+      - cell "Editor"
+
 # SelectableRows
 - table "Team members":
   - caption: Team members

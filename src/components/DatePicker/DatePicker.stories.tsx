@@ -25,6 +25,14 @@ export const InField: Story = {
     return <Field label="Due date" hint="mm/dd/yyyy, from today on"><DatePicker value={due} onValueChange={setDue} min={new Date()} /></Field>;
   },
 };
+// A date far back: type it, or open the calendar and click its heading for the months, then again for the years.
+export const DateOfBirth: Story = {
+  name: 'Date of birth',
+  render: function Render() {
+    const [born, setBorn] = React.useState<Date | null>(null);
+    return <Field label="Date of birth" hint="mm/dd/yyyy. In the calendar, click the month for the months and years."><DatePicker value={born} onValueChange={setBorn} max={new Date()} /></Field>;
+  },
+};
 export const Sizes: Story = {
   render: () => <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-3)' }}>
     {(['sm', 'md', 'lg'] as const).map((s) => <DatePicker key={s} size={s} aria-label={s} defaultValue={new Date(2025, 10, 22)} />)}

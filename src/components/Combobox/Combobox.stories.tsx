@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Combobox, type ComboboxSingleProps } from './Combobox';
 import { Field } from '../Field/Field';
+import { Button } from '../Button/Button';
 import { usePeople, useContent } from '../../../.storybook/content';
 
 const COUNTRIES = ['Argentina', 'Australia', 'Brazil', 'Canada', 'Côte d’Ivoire', 'Denmark', 'Egypt', 'France', 'Germany', 'India', 'Japan', 'Kenya', 'Mexico', 'Norway', 'Peru'];
@@ -52,6 +53,29 @@ export const FreeText: Story = {
     return <Field label="City" hint={'Any city; these are suggestions. Value: ' + (city ?? 'none')}>
       <Combobox freeText inlineComplete value={city} onValueChange={setCity} options={CITIES} limit={5} name="city" />
     </Field>;
+  },
+};
+// A search box that remembers: recent searches when it opens empty (a click or Down), suggestions as people type, and
+// a way to clear the history, since others may see it. Enter searches and adds the text to the recent ones.
+const TOPICS = ['Refunds', 'Refund a card payment', 'Reset your password', 'Receipts and invoices', 'Remove a team member'];
+export const SearchWithRecent: Story = {
+  name: 'Search with recent searches',
+  render: function Render() {
+    const [text, setText] = React.useState<string | null>(null);
+    const [recent, setRecent] = React.useState<string[]>(['invoice', 'password']);
+    const typed = (text ?? '').trim().toLowerCase();
+    const options = typed
+      ? [{ label: 'Suggestions', options: TOPICS.filter((t) => t.toLowerCase().includes(typed)) }]
+      : recent.length ? [{ label: 'Recent searches', options: recent }] : [];
+    const search = (q: string) => { if (q.trim()) setRecent((r) => [q.trim(), ...r.filter((x) => x !== q.trim())].slice(0, 5)); };
+    return <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 360 }}>
+      <Field label="Search help articles">
+        <Combobox freeText leftIcon="search" filter={false} placeholder="Search help" value={text} onValueChange={setText} options={options}
+          emptyText={typed ? 'No suggestions' : 'No recent searches'}
+          onKeyDown={(e) => { if (e.key === 'Enter') search(e.currentTarget.value); }} />
+      </Field>
+      {recent.length ? <div><Button variant="link" size="sm" onClick={() => setRecent([])}>Clear recent searches</Button></div> : null}
+    </div>;
   },
 };
 export const LoadOptions: Story = {

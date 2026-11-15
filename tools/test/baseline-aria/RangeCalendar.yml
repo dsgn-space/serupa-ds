@@ -190,6 +190,7 @@
 - group "Choose dates":
   - button "Previous month"
   - heading "November 2026" [level=2]
+  - button "November 2026"
   - button "Next month"
   - grid "November 2026":
     - rowgroup:
@@ -298,6 +299,7 @@
 - group "Choose dates":
   - button "Previous month"
   - heading "November 2026" [level=2]
+  - button "November 2026"
   - button "Next month"
   - grid "November 2026":
     - rowgroup:
@@ -593,6 +595,7 @@
 - group "Choose dates":
   - button "Previous month"
   - heading "November 2026" [level=2]
+  - button "November 2026"
   - button "Next month"
   - grid "November 2026":
     - rowgroup:

@@ -666,7 +666,8 @@ describe('Tabs and form validation (L8E100)', () => {
     </form>);
     await expect.poll(() => document.getElementById('l8e100-city')!.closest('[hidden]')?.getAttribute('hidden')).toBe('until-found');
     await userEvent.click(document.getElementById('l8e100-go')!);
-    await expect.poll(() => document.activeElement?.id).toBe('l8e100-city');
-    expect([sent, document.querySelectorAll('[role="tab"]')[1]!.getAttribute('aria-selected')]).toEqual([0, 'true']);
+    // The field can take focus a render before its tab shows as selected (WebKit), so both are waited for.
+    await expect.poll(() => [document.activeElement?.id, document.querySelectorAll('[role="tab"]')[1]!.getAttribute('aria-selected')]).toEqual(['l8e100-city', 'true']);
+    expect(sent).toBe(0);
   });
 });
