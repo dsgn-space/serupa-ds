@@ -74,7 +74,7 @@
 .dk-slider--invalid .dk-slider__fill { background: var(--slider-invalid, var(--danger)); }
 .dk-slider--invalid .dk-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
 .dk-slider--readonly, .dk-slider--readonly .dk-slider__thumb { cursor: default; }
-.dk-slider--disabled { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-slider--disabled { --slider-fill: var(--slider-text-disabled, var(--disabled-text)); --slider-thumb-border: var(--slider-text-disabled, var(--disabled-text)); --slider-track: var(--slider-fill-disabled, var(--disabled-surface)); --slider-thumb-shadow: var(--shadow-none); cursor: var(--cursor-disabled); }
 .dk-slider--disabled .dk-slider__thumb { cursor: var(--cursor-disabled); }
 @media (prefers-reduced-motion: reduce) { .dk-slider__thumb, .dk-slider__value { transition: none; } }
 @media (forced-colors: active) {

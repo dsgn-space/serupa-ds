@@ -75,6 +75,8 @@ function usePerView(per: CarouselProps['perView']): number {
    (at once with reduced motion), and the row runs right to left in RTL. className and every other prop go
    to the <section>. With perView, two or more slides show side by side: index is the first one shown, the
    buttons and swipe still move one slide, and the dots count pages. */
+// A swipe's wheel distance that moves a slide, and how long its events must stop before the next swipe counts.
+const WHEEL_STEP = 40, WHEEL_QUIET = 150;
 const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, perView: 1, peek: 1, className: 1, style: 1 } as const;
 const SWIPE = 40; // px a swipe must travel to change the slide
 const FLICK = 0.3; // px per ms over the last 100ms: a shorter swipe this fast changes the slide too
@@ -158,6 +160,34 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
     if (!loop && (to <= 0 || to >= last)) refocus.current = step > 0 ? 'prev' : 'next';   // this button hides at the end: keep focus on the other
     go(to);
   };
+  /* A sideways swipe on a trackpad, or Shift and the wheel, moves one slide per gesture, as dragging does: the
+     wheel events of one swipe (its momentum included) count once, until they stop for a moment. Up and down still
+     scroll the page. Listened to directly, not passively, so the swipe doesn't also scroll the page sideways or go
+     back a page (carousel, swipe-to-reveal guides). */
+  const wheelTo = React.useRef(index);
+  React.useInsertionEffect(function () { wheelTo.current = index; });   // every render: the index the next swipe moves from
+  const goRef = React.useRef(go);
+  React.useInsertionEffect(function () { goRef.current = go; });   // every render: the latest go, for the listener
+  useIsoLayoutEffect(() => {
+    const v = viewport.current;
+    if (!v || last < 1) return;
+    let sum = 0, used = false, quiet = 0;
+    const onWheel = (e: WheelEvent) => {
+      const dx = e.deltaX || (e.shiftKey ? e.deltaY : 0);
+      if (e.ctrlKey || Math.abs(dx) <= Math.abs(e.shiftKey ? 0 : e.deltaY)) return;
+      e.preventDefault();
+      window.clearTimeout(quiet);
+      quiet = window.setTimeout(() => { sum = 0; used = false; }, WHEEL_QUIET);
+      if (used) return;
+      sum += dx;
+      if (Math.abs(sum) < WHEEL_STEP) return;
+      used = true;
+      const forward = (sum > 0) !== (getComputedStyle(v).direction === 'rtl');
+      goRef.current(wheelTo.current + (forward ? 1 : -1));
+    };
+    v.addEventListener('wheel', onWheel, { passive: false });
+    return () => { v.removeEventListener('wheel', onWheel); window.clearTimeout(quiet); };
+  }, [last]);
   // every render: puts focus back after a key or button moved the slides, once the render has moved them.
   useIsoLayoutEffect(() => {
     const r = refocus.current;

@@ -13,6 +13,7 @@ import { Button } from '../components/Button/Button';
 import { Combobox } from '../components/Combobox/Combobox';
 import { CommandPalette } from '../components/CommandPalette/CommandPalette';
 import { CopyButton } from '../components/CopyButton/CopyButton';
+import { QRCode } from '../components/QRCode/QRCode';
 import { Countdown } from '../components/Countdown/Countdown';
 import { ChatApproval, ChatMessage } from '../components/Chat/Chat';
 import { DataGrid } from '../components/DataGrid/DataGrid';
@@ -162,6 +163,9 @@ const SITES: Record<string, Site> = {
   'CopyButton: copying failed': {
     ui: () => <CopyButton id="copy" value="https://serupa.dev" />,
     act: async () => { writeText.mockRejectedValue(new DOMException('Denied', 'NotAllowedError')); vi.spyOn(document, 'execCommand').mockReturnValue(false); await userEvent.click($('#copy')); }, says: /Couldn’t copy/, assertive: true },
+  'QRCode: scanned': {
+    ui: (s) => <QRCode value="https://serupa.dev/login" label="Sign-in code" status={s ? 'scanned' : 'active'} />,
+    act: (next) => next(), says: /Scanned/ },
 };
 
 let writeText: ReturnType<typeof vi.fn>;

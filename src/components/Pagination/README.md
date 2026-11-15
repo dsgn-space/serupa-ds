@@ -123,6 +123,7 @@ Each is an optional override: set it on the page, a container or one pagination.
 | `--pagination-ellipsis` | `text-muted` | The … between page ranges (4.5:1 on surface). |
 | `--pagination-focus-ring` | `focus-ring` | The keyboard focus ring. |
 | `--pagination-summary` | `text-muted` | The summary with total and pageSize, "21–30 of 245" (4.5:1 on surface). |
+| `--pagination-text-disabled` | `disabled-text` | Previous or next when there's no page that way (3:1 or more on the page). |
 
 **Type**
 
@@ -157,10 +158,4 @@ Each is an optional override: set it on the page, a container or one pagination.
 | Token | Default | Use |
 | --- | --- | --- |
 | `--pagination-radius` | `radius-control` | A page's corners (6px). |
-
-**Opacity**
-
-| Token | Default | Use |
-| --- | --- | --- |
-| `--pagination-disabled` | `opacity-disabled` | Previous or next when there's no page that way. |
 <!-- token-table:end -->

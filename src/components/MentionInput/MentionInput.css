@@ -30,7 +30,7 @@
 }
 .dk-mention-input__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-mention-input__option--active { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--mention-input-option-indicator, var(--highlight-indicator)); }
-.dk-mention-input__option[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-mention-input__option[aria-disabled="true"], .dk-mention-input__option[aria-disabled="true"] * { color: var(--mention-input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-mention-input__text { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-mention-input__description { color: var(--mention-input-description-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-mention-input__option--active .dk-mention-input__description { color: var(--mention-input-option-color, var(--text)); }   /* 4.5:1 on the highlight */

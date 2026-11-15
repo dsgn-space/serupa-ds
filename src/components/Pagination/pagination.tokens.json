@@ -81,6 +81,16 @@
             "cssVar": "--pagination-summary"
           }
         }
+      },
+      "text-disabled": {
+        "$type": "color",
+        "$value": "{color.disabled-text}",
+        "$description": "Previous or next when there's no page that way (3:1 or more on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-text-disabled"
+          }
+        }
       }
     },
     "typography": {
@@ -227,18 +237,6 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--pagination-radius"
-          }
-        }
-      }
-    },
-    "opacity": {
-      "disabled": {
-        "$type": "number",
-        "$value": "{opacity.opacity-disabled}",
-        "$description": "Previous or next when there's no page that way.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--pagination-disabled"
           }
         }
       }
