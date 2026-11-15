@@ -53,6 +53,7 @@ Drawn from the `WithBadges` story.
 ## Accessibility
 
 - **Role and name:** a `<nav>` landmark named by `label`, with a list of links, so screen readers say how many there are. The current one has `aria-current="page"`. Icons are hidden; the label is each link's name. A `badge` is read after the name, as its description ("Inbox, link, 4"), so a count needs no extra words; give a lone dot an `aria-label` ("New messages") or it says nothing.
+- **Long labels:** a label passed as text that doesn't fit ends in an ellipsis and shows whole on hover and on the link's keyboard focus ([TruncatedText](../TruncatedText/README.md)); the link's name is always the whole label.
 - **Keyboard:** each link is a Tab stop, in order; the focus ring is drawn inside the link so the bar doesn't cut it.
 - **Target size:** each link fills its column and the bar's 64px height.
 - **Contrast:** labels and the current page read 4.5:1 on the bar in every theme (`BottomNav.test.tsx`). In forced-colors mode the current page keeps an outline.

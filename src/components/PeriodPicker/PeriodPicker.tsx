@@ -13,6 +13,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 
 /** What a PeriodPicker chooses: a month, a quarter or a year. */
 export type PeriodUnit = 'month' | 'quarter' | 'year';
@@ -191,7 +192,7 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
         aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || undefined} aria-readonly={readOnly || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
-        <span className={cn('dk-period-picker__value', value == null && 'dk-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</span>
+        <TruncatedText className={cn('dk-period-picker__value', value == null && 'dk-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</TruncatedText>
         <Icon icon={icons.CalendarToday} className="dk-period-picker__icon" />
       </button>
       <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value == null ? '' : periodValue(value, unit)} disabled={disabled || !props.name} />

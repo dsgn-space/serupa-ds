@@ -16,6 +16,7 @@ import { Popover } from '../Popover/Popover';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl';
 import { en as CalendarWords } from '../Calendar/labels';
 import { en as EventCalendarWords } from './labels';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 // Its own words and the month buttons' names it shares with Calendar.
 const words = /* @__PURE__ */ Object.assign({}, EventCalendarWords, CalendarWords);
 
@@ -208,7 +209,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
       aria-keyshortcuts={movable && !detail ? 'Shift+ArrowLeft Shift+ArrowRight Shift+ArrowUp Shift+ArrowDown' : undefined}
       className={cn('dk-event-calendar__event', 'dk-event-calendar__event--' + (s.e.tone || 'primary'), s.allDay && 'dk-event-calendar__event--all-day', movable && !detail && 'dk-event-calendar__event--movable', p.dragging === s.e.id && 'dk-event-calendar__event--dragging')}>
       {s.allDay && !detail ? null : <><span className="dk-event-calendar__time">{shownTime(s, detail)}</span>{' '}</>}
-      <span className="dk-event-calendar__title">{s.e.title}</span>
+      <TruncatedText className="dk-event-calendar__title">{s.e.title}</TruncatedText>
       {s.e.repeating ? <span className="dk-event-calendar__repeat" aria-hidden>↻</span> : null}
     </button>
   );

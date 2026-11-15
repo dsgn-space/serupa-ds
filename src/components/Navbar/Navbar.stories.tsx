@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
 import { Button } from '../Button/Button';
 import { Avatar } from '../Avatar/Avatar';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { useName } from '../../../.storybook/content';
 
 const links = [
@@ -38,7 +39,8 @@ export const SignedOut: Story = { args: { actions: <><Button variant="ghost" siz
 
 export const Overflow: Story = {
   args: {
-    brand: <a href="#" className="text-base font-semibold text-text no-underline">Acme Corporation International</a>,
+    // A long name in the brand link: TruncatedText cuts it and shows it whole on hover and on the link's focus.
+    brand: <a href="#" className="text-base font-semibold text-text no-underline"><TruncatedText>Acme Corporation International</TruncatedText></a>,
     children: [...links, <NavbarLink key="s" href="#">Settings and billing</NavbarLink>, <NavbarLink key="w" href="#">Donaudampfschifffahrtsgesellschaftskapitänskajüte</NavbarLink>],
   },
   render: (args) => <div style={{ maxWidth: 360 }}><Navbar {...args} /></div>,

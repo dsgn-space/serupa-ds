@@ -23,6 +23,16 @@ const EVENTS: CalendarEvent[] = [
 ];
 
 describe('EventCalendar', () => {
+  test("a title cut short in the month shows whole on hover; the event's name holds it all the while", async () => {
+    const title = 'Quarterly planning with the regional sales leads';
+    await render(<div style={{ width: 760 }}><EventCalendar events={[{ id: 'q', title, start: '2025-03-04T09:30', end: '2025-03-04T10:30' }]} defaultMonth={MARCH} weekStartsOn={0} /></div>);
+    const t = cell('2025-03-04').querySelector<HTMLElement>('[data-component="truncated-text"]')!;
+    await expect.poll(() => t.hasAttribute('data-truncated')).toBe(true);
+    await userEvent.hover(t);
+    await expect.poll(() => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]')?.textContent).toBe(title);
+    expect(names('2025-03-04')[0]).toContain(title);
+  });
+
   test('a parent that renders again with the same props doesn\'t draw the days and events again; new events draw them', async () => {
     // Each event's button reads its title: counting the reads counts the events drawn.
     let reads = 0;
@@ -83,6 +93,9 @@ describe('EventCalendar', () => {
     expect(document.activeElement).toBe(cell('2025-03-04'));
     await userEvent.keyboard('{Tab}');
     expect(document.activeElement!.getAttribute('aria-label')).toBe('9:30 AM Team standup, Tuesday, March 4, 9:30 AM to 9:45 AM, Repeats');
+    // At this width the title is cut, so focus shows it whole: the first Escape hides that, as for any tooltip.
+    await expect.poll(() => document.querySelector('[data-component="tooltip"][data-state="open"]')?.textContent).toBe('Team standup');
+    await userEvent.keyboard('{Escape}');
     await userEvent.keyboard('{Escape}');
     expect(document.activeElement).toBe(cell('2025-03-04'));
     await userEvent.keyboard('{PageDown}');

@@ -35,6 +35,15 @@ function Main({ r, lr }: { r?: React.Ref<HTMLElement>; lr?: React.Ref<HTMLAnchor
 }
 
 describe('Navbar', () => {
+  test('a brand passed as text that the actions cut short shows whole on hover', async () => {
+    await page.viewport(360, 640);
+    await render(<Navbar aria-label="Main" brand="Acme Corporation International Holdings" actions={<Button size="sm">Sign in to your account</Button>} />);
+    const t = document.querySelector<HTMLElement>('[data-component="navbar"] [data-component="truncated-text"]')!;
+    await expect.poll(() => t.hasAttribute('data-truncated')).toBe(true);
+    await userEvent.hover(t);
+    await expect.poll(() => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]')?.textContent).toBe('Acme Corporation International Holdings');
+  });
+
   test('NavbarLink: as is typed (G10), with the props and ref of the element it names, an <a>\'s by default', async () => {
     const a = React.createRef<HTMLAnchorElement>(), r = React.createRef<HTMLAnchorElement>(), b = React.createRef<HTMLButtonElement>(), wrong = React.createRef<HTMLAnchorElement>();
     await render(<Navbar id="nav-t">
