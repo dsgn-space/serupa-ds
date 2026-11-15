@@ -290,6 +290,33 @@ describe('Select: the styled list', () => {
     await userEvent.keyboard('{Escape}');
   });
 
+  test("it reads as Combobox's list: an option's text starts where the field's does, the chosen one ends in Combobox's check (no space kept in the others), the placeholder isn't a row, and the field keeps its focus ring while open, left to right and right to left", async () => {
+    for (const dir of ['ltr', 'rtl'] as const) {
+      const r = await render(<div dir={dir} style={{ width: '280px', height: '360px' }}><Select aria-label="Fruit" placeholder="Choose a fruit" options={['Apple', 'Banana']} defaultValue="Banana" /></div>);
+      const s = document.querySelector('select')!;
+      if (!styled) { expect(css(s).appearance).toBe('none'); await r.unmount(); continue; }
+      await userEvent.click(s);
+      // Where an option's text starts, from the option's start edge: its padding alone, as in Combobox, with no tick column.
+      // The tick comes first in the row, which runs reversed so it lands at the end.
+      const inset = (o: HTMLOptionElement) => {
+        const g = document.createRange(); g.selectNodeContents(o);
+        const t = g.getBoundingClientRect(), b = o.getBoundingClientRect();
+        return Math.round(dir === 'rtl' ? b.right - t.right : t.left - b.left);
+      };
+      const chosen = opt('Banana'), other = opt('Apple');
+      const tick = getComputedStyle(chosen, '::checkmark'), none = getComputedStyle(other, '::checkmark');
+      const ph = [...s.options].find((o) => o.value === '')!;
+      expect({
+        dir, open: s.matches(':open'), inset: [inset(chosen), inset(other)],
+        tick: [css(chosen).flexDirection, tick.width, tick.height, tick.clipPath.startsWith('shape('), none.display],
+        placeholder: css(ph).display,
+        ring: css(s.closest('[data-component="select"]')).boxShadow !== 'none',
+      }).toEqual({ dir, open: true, inset: [8, 8], tick: ['row-reverse', '16px', '16px', true, 'none'], placeholder: 'none', ring: true });
+      await userEvent.keyboard('{Escape}');
+      await r.unmount();
+    }
+  });
+
   test('keys: Down opens it and moves, Enter picks and says so through onChange, a disabled option is passed over, Escape closes it with nothing changed', async () => {
     const changes: string[] = [];
     await render(<Select aria-label="Fruit" options={FRUIT} defaultValue="Banana" onChange={(e) => changes.push(e.target.value)} />);
