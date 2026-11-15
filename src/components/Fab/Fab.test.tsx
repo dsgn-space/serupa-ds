@@ -55,6 +55,20 @@ describe('Fab', () => {
     expect(w).toBeGreaterThan(56);
   });
 
+  test('extended="auto": shrinks to a 56px round icon button while the page scrolls down and opens again scrolling up; its name stays the label', async () => {
+    await render(<div style={{ height: '4000px' }}><Fab id="auto" icon="edit" label="Compose" extended="auto" /></div>);
+    const fab = page.getByRole('button', { name: 'Compose' });
+    await expect.element(fab).toBeVisible();
+    const wide = el('auto').getBoundingClientRect().width;
+    expect(wide).toBeGreaterThan(80);
+    window.scrollTo(0, 400); window.dispatchEvent(new Event('scroll'));
+    await expect.poll(() => Math.round(el('auto').getBoundingClientRect().width), { timeout: 3000 }).toBe(56);
+    await expect.element(page.getByRole('button', { name: 'Compose' })).toBeVisible();
+    window.scrollTo(0, 200); window.dispatchEvent(new Event('scroll'));
+    await expect.poll(() => Math.round(el('auto').getBoundingClientRect().width), { timeout: 3000 }).toBe(Math.round(wide));
+    window.scrollTo(0, 0);
+  });
+
   test('position static stays in the flow; an unknown position falls back to bottom-end; --fab-size and --fab-offset override one', async () => {
     await render(<Fabs />);
     expect(css(el('fst')).position).not.toBe('fixed');

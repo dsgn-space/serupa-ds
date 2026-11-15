@@ -23,10 +23,18 @@ const { Fab } = window.Serupa;
 - Any other action on the same screen: use a [Button](../Button/README.md) in the page, since there's only one FAB per screen.
 - An icon action in a toolbar or a row: use [IconButton](../IconButton/README.md).
 
+## Anatomy
+
+Drawn from the `ExtendedAuto` story. It's a primary [Button](../Button/README.md), so its icon and label are Button's.
+
+1. **Button** (`.dk-fab`): the round, raised primary button, fixed to a corner of the screen; extended, a pill with the label.
+2. **Label** (`.dk-fab__label`): with `extended="auto"`, the label's text in a box that folds to nothing while the page scrolls down and opens again on the way up.
+
 ## Usage
 
 - One per screen, for the action people come to the screen for. Other actions go in the page.
 - Leave room at the end of the content so the FAB never covers the last item.
+- On a phone, an extended FAB covers a lot of a long list. `extended="auto"` folds it to its icon while the page scrolls down and opens it again on the way back up or at the top, so the label is there when people look for the action and out of the way while they read. It's named by its label either way. The width changes at once and the label fades in, or appears at once with reduced motion.
 
 ## Placement
 
@@ -58,7 +66,7 @@ const { Fab } = window.Serupa;
 | `id` | string | none | Goes to the root `<button>`. |
 | `icon` | icon name \| element | required | A custom or Material Symbols name, or any element (24px) |
 | `label` | string | required | Shown next to the icon when extended; otherwise its `aria-label` and `title` |
-| `extended` | boolean | `false` | Shows the label: a 56px pill instead of a circle. In a corner it is never wider than the screen less its offset on both sides, so a long label ends in an ellipsis |
+| `extended` | boolean \| `'auto'` | `false` | Shows the label: a 56px pill instead of a circle. In a corner it is never wider than the screen less its offset on both sides, so a long label ends in an ellipsis. `'auto'`: shrinks to the 56px circle while the page scrolls down, and shows the label again scrolling up or at the top |
 | `size` | `'md'` \| `'sm'` | `'md'` | 56px or 40px |
 | `placement` | `'bottom-end'` \| `'bottom-start'` \| `'top-end'` \| `'top-start'` \| `'static'` | `'bottom-end'` | The corner of the screen it's fixed to, 24px in; start and end follow the text direction. `static` leaves it in the page for you to place |
 
@@ -74,6 +82,7 @@ Each is an optional override: set it on the page, a container or one FAB. The li
 | `--fab-size` | `spacing-14` | The height (and width, without a label) of a medium FAB (56px). |
 | `--fab-size-sm` | `spacing-10` | The height of a small FAB (40px). |
 | `--fab-icon-size` | `spacing-6` | The icon (24px). |
+| `--fab-label-max` | `container-xs` | How wide an extended="auto" FAB's label can open (320px); it folds to 0 while the page scrolls down. |
 | `--fab-shadow` | `elevation-overlay` | The raised shadow at rest. |
 | `--fab-shadow-hover` | `shadow-xl` | The shadow on hover. |
 | `--fab-radius` | `radius-pill` | The corners (round). |
