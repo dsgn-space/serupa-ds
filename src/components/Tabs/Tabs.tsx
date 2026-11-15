@@ -226,14 +226,11 @@ export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
 const FOCUSABLE = 'a[href], button:not(:disabled), input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled), summary, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
 /** Whether the first thing in el, in reading order, is something Tab lands on rather than text. */
 function startsFocusable(el: HTMLElement): boolean {
-  const walk = el.ownerDocument.createTreeWalker(el, 5 /* elements and text */, {
-    acceptNode: (n) => (n.nodeType === 1 && ((n as Element).hasAttribute('hidden') || (n as Element).getAttribute('aria-hidden') === 'true') ? 2 /* skip */ : 1),
-  });
-  for (let n = walk.nextNode(); n; n = walk.nextNode()) {
-    if (n.nodeType === 3) { if (n.nodeValue!.trim()) return false; }
-    else if ((n as Element).matches(FOCUSABLE)) return true;
-  }
-  return false;
+  const first = el.querySelector(FOCUSABLE);
+  if (!first) return false;
+  const before = el.ownerDocument.createRange();
+  before.setStart(el, 0); before.setEndBefore(first);
+  return !before.toString().trim();
 }
 
 /** The content for one tab, shown while its tab is selected. */
