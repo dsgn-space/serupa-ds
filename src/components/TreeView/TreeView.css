@@ -13,7 +13,7 @@
   border-radius: var(--tree-view-radius, var(--radius-control));
   background: var(--tree-view-bg, var(--surface));
   color: var(--tree-view-text, var(--text));
-  font-family: var(--font-sans); font-size: var(--text-sm);
+  font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
 .dk-tree-view:dir(rtl) { --dk-tree-closed: 180deg; --dk-bar: calc(var(--highlight-indicator-width) * -1); }
 .dk-tree-view__group { margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
