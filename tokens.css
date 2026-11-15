@@ -1864,6 +1864,9 @@
   --opacity-95: 95%;
   --opacity-100: 100%;
   --opacity-disabled: 50%;
+  --opacity-state-hover: 8%;
+  --opacity-state-pressed: 12%;
+  --opacity-state-dragged: 16%;
   --duration-0: 0ms;
   --duration-75: 75ms;
   --duration-100: 100ms;

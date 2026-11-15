@@ -8198,6 +8198,36 @@
           "cssVar": "--opacity-disabled"
         }
       }
+    },
+    "opacity-state-hover": {
+      "$type": "number",
+      "$value": 0.08,
+      "$description": "The `state-layer` class on hover (8%): the element's text color laid over its own background. For surfaces the app colors itself; components keep their own tuned hover colors.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--opacity-state-hover"
+        }
+      }
+    },
+    "opacity-state-pressed": {
+      "$type": "number",
+      "$value": 0.12,
+      "$description": "The `state-layer` class while pressed (12%).",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--opacity-state-pressed"
+        }
+      }
+    },
+    "opacity-state-dragged": {
+      "$type": "number",
+      "$value": 0.16,
+      "$description": "The `state-layer` class while dragged (16%), with `data-state=\"dragging\"`.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--opacity-state-dragged"
+        }
+      }
     }
   },
   "transitions": {
