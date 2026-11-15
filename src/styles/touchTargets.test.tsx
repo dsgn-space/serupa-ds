@@ -19,6 +19,9 @@ import { ButtonGroup } from '../components/ButtonGroup/ButtonGroup';
 import { IconButton } from '../components/IconButton/IconButton';
 import { Pagination } from '../components/Pagination/Pagination';
 import { Toolbar } from '../components/Toolbar/Toolbar';
+import { SearchInput } from '../components/SearchInput/SearchInput';
+import { Calendar } from '../components/Calendar/Calendar';
+import { Carousel } from '../components/Carousel/Carousel';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
 // and Material ask for 44 to 48px), the Splitter's 8px handle a 24px-wide one, with nothing moving and no two
@@ -93,10 +96,11 @@ function Fields() {
     <Combobox className="hit-combobox" aria-label="Fruit" options={['Apple', 'Banana']} />
     <DatePicker className="hit-date" aria-label="Due" />
     <TimePicker className="hit-time" aria-label="Start" />
+    <SearchInput className="hit-search" aria-label="Search" defaultValue="maps" />
   </div>;
 }
 /** The fields, by their hit-… class; the button checked is the field's first (the number field's minus stepper). */
-const FIELDS = ['password', 'number', 'combobox', 'date', 'time'];
+const FIELDS = ['password', 'number', 'combobox', 'date', 'time', 'search'];
 /** For each field's button: does a press 6px before its start edge, and one 1px inside the field's top edge, take it? */
 const reach = () => FIELDS.map((name) => {
   const field = $('.hit-' + name), b = field.querySelector('button')!; b.scrollIntoView({ block: 'center' });
@@ -156,18 +160,55 @@ describe('touch-sized buttons', () => {
       expect(outside('.hit-small', 9).slice(0, 2)).toEqual(['small', 'small']);
       // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap all round (rows of a wrapped toolbar are
       // 4px apart too), and its own face to the edge.
+      // Measured left to right, so it holds in a right-to-left page too.
       $('.hit-bold').scrollIntoView({ block: 'center' });
-      const b = box('.hit-bold'), i = box('.hit-italic'), y = b.top + b.height / 2, mid = (b.right + i.left) / 2;
-      expect([btn(mid - 1, y), btn(mid + 1, y), btn(b.right - 1, y), btn(i.left + 1, y), btn(b.left + b.width / 2, b.top - 1.5)]).toEqual(['bold', 'italic', 'bold', 'italic', 'bold']);
+      const [l, r] = ['.hit-bold', '.hit-italic'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect];
+      const ln = btn(l.left + 1, l.top + 1), rn = btn(r.right - 1, r.top + 1), y = l.top + l.height / 2, mid = (l.right + r.left) / 2;
+      expect([ln, rn].sort()).toEqual(['bold', 'italic']);
+      expect([btn(mid - 1, y), btn(mid + 1, y), btn(l.right - 1, y), btn(r.left + 1, y), btn(l.left + l.width / 2, l.top - 1.5)]).toEqual([ln, rn, ln, rn, ln]);
       // Attached (one shared border line): no reach into the neighbour's face, from either side.
       $('.hit-day').scrollIntoView({ block: 'center' });
-      const d = box('.hit-day'), w = box('.hit-week'), dy = d.top + d.height / 2;
-      expect([btn(d.right - 2, dy), btn(w.left + 2, dy)]).toEqual(['day', 'week']);
+      const [dl, dr] = ['.hit-day', '.hit-week'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect], dy = dl.top + dl.height / 2;
+      expect([btn(dl.right - 2, dy), btn(dr.left + 2, dy)]).toEqual([btn(dl.left + 2, dy), btn(dr.right - 2, dy)]);
+      expect([btn(dl.left + 2, dy), btn(dr.right - 2, dy)].sort()).toEqual(['day', 'week']);
       // Pagination: a page takes a press 5px above and below it, and the gap between two pages splits at its middle.
-      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('button, a')].filter((e) => /^[0-9]+$/.test(e.textContent || ''));
+      // Pages by their digits in any script (ar-EG writes Arabic-Indic ones).
+      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('button, a')].filter((e) => /^\p{Nd}+$/u.test(e.textContent || ''));
       pages[1]!.scrollIntoView({ block: 'center' });
-      const p1 = pages[0]!.getBoundingClientRect(), p2 = pages[1]!.getBoundingClientRect(), py = p1.top + p1.height / 2, pm = (p1.right + p2.left) / 2;
-      expect([btn(p2.left + p2.width / 2, p2.top - 5), btn(p2.left + p2.width / 2, p2.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)]).toEqual(['2', '2', '1', '2']);
+      const [pl, pr] = [pages[0]!, pages[1]!].sort((m, n) => m.getBoundingClientRect().left - n.getBoundingClientRect().left) as [HTMLElement, HTMLElement];
+      const a = pl.getBoundingClientRect(), c = pr.getBoundingClientRect(), py = a.top + a.height / 2, pm = (a.right + c.left) / 2, two = pages[1]!.getBoundingClientRect();
+      expect([btn(two.left + two.width / 2, two.top - 5), btn(two.left + two.width / 2, two.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)])
+        .toEqual([pages[1]!.textContent, pages[1]!.textContent, pl.textContent, pr.textContent]);
+    });
+  });
+});
+
+// Rows of small targets a phone user taps (EQ1): a month's days and the slide dots. On a touch screen a day is 44px
+// square, and a dot takes a press 20px above or below its middle, 44px high, its width kept so neighbours never
+// overlap; with a mouse a day is 32px and a press 20px off a dot misses.
+function Rows() {
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '64px', padding: '64px', width: '480px' }}>
+    <Calendar locale="en-US" defaultMonth={new Date(2025, 2, 10)} />
+    <Carousel label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
+  </div>;
+}
+const rows = () => {
+  const day = box('.dk-calendar__day');
+  $('.dk-carousel__dot:not([aria-current="true"])').classList.add('hit-dot');
+  return { day: [Math.round(day.width), Math.round(day.height)], dot: around('.hit-dot', '.hit-dot') };
+};
+
+describe('touch-sized days and dots', () => {
+  test('with a mouse: 32px days, and a press 20px off a dot misses', async () => {
+    await render(<Rows />);
+    expect(rows()).toEqual({ day: [32, 32], dot: ['', ''] });
+  });
+
+  test('on a touch screen: 44px days, and a dot takes a press 20px above or below its middle', async () => {
+    await render(<Rows />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      expect(rows()).toEqual({ day: [44, 44], dot: ['dot', 'dot'] });
     });
   });
 });

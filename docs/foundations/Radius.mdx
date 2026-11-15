@@ -1,4 +1,8 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { DoDontExample } from '../doDont';
+import { Card } from '../../src/components/Card/Card';
+import { Button } from '../../src/components/Button/Button';
+
 import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../blocks';
 
 <Meta title="Foundations/Corner radius" />
@@ -8,3 +12,18 @@ import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../bloc
 <ReadmeSections headings={["Corner radius"]} reserve={["Corner radius"]} />
 
 <TokenTable group="radius" preview="radius" />
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| Round with the role for the part: `radius-control`, `radius-surface`, `radius-container`, `radius-inner`. | Pick a step (`rounded-lg`) for a component. `data-radius` and the brand can't change it. |
+| Give something nested inside a rounded box a smaller radius (`radius-inner`), so the two curves run side by side. | Give the inside the same radius as the outside. The gap between them pinches at the corners. |
+| Keep `radius-pill` for things that are meant to be pills, like badges and tags. | Round a large card into a pill. |
+
+<DoDontExample
+  doText="Read the role, so sharp and round corners follow."
+  doExample={<Card><Button>Upgrade</Button></Card>}
+  dontText="A fixed radius, the same in every brand."
+  dontExample={<Source language="css" dark={false} code={'.panel { border-radius: 12px; }'} />}
+/>
