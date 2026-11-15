@@ -345,6 +345,24 @@ export const TRANSFORMS = [
       return { text: src, count: 0, notes: notesFor(src, named, 'the `emerald` brand is now the emerald ramp, a greener green: write `teal` here (`teal-light`, `teal-dark`, `data-brand="teal"`) to keep the color it was') };
     },
   },
+  {
+    // 16.0.0 makes the classes of a component's inner parts private: they may change in any release. Nothing is
+    // renamed now, so each line that selects one is listed, with the way to style it that keeps working.
+    version: '16.0.0', id: 'inner-classes-private', exts: ALL,
+    title: 'A component\'s inner classes (`.dk-btn__label`, `.dk-card__header`) are private: style with tokens, `data-component`, `data-state` and the block and modifier classes',
+    run(src) {
+      const seen = new Set(), notes = [];
+      for (const m of src.matchAll(/(?<![\w-])dk-[a-z0-9-]+__[a-z0-9-]+/g)) {
+        // The ones an earlier major removed already have their own note.
+        if (/^dk-(btn__ripples|badge__ripples|combobox__more)$/.test(m[0])) continue;
+        const line = lineOf(src, m.index);
+        if (seen.has(line)) continue;
+        seen.add(line);
+        notes.push({ line, message: `${m[0]} is an inner part's class, which may change in any release from 16.0.0: use a component token, [data-component], [data-state] or the block and modifier classes, or ask for a token if none fits` });
+      }
+      return { text: src, count: 0, notes };
+    },
+  },
 ];
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);
