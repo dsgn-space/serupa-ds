@@ -426,6 +426,19 @@ describe('Carousel', () => {
     expect([state('pv').index, document.activeElement === dot('pv', 1)]).toEqual([3, true]);
   });
 
+  test('peek: the next slide shows 32px past a 16px gap, out of the tab order; on the last slide the previous one shows at the start instead', async () => {
+    await render(<div style={{ width: '400px' }}><Carousel id="pk" label="Products" peek>{slides(3, 'k')}</Carousel></div>);
+    const view = () => part('pk', VIEW).getBoundingClientRect(), sl = () => [...el('pk').querySelectorAll('[aria-roledescription="slide"]')].map((s) => s.getBoundingClientRect());
+    const rtl = getComputedStyle(el('pk')).direction === 'rtl', near = (r: DOMRect) => Math.round(rtl ? view().right - r.right : r.left - view().left), far = (r: DOMRect) => Math.round(rtl ? view().right - r.left : r.right - view().left);
+    expect([Math.round(sl()[0]!.width), near(sl()[0]!), near(sl()[1]!), Math.round(view().width) - near(sl()[1]!)]).toEqual([336, 0, 352, 48]);
+    expect(state('pk')).toMatchObject({ index: 0, inert: '011' });
+    await userEvent.click(arrow('pk', 'next'));
+    await userEvent.click(arrow('pk', 'next'));
+    await new Promise((r) => setTimeout(r, 400));
+    expect(state('pk')).toMatchObject({ index: 2, inert: '110' });
+    expect([far(sl()[2]!), far(sl()[1]!)]).toEqual([400, 48]);
+  });
+
   test('perView as { base, md }: one slide on a phone, two from 768px up, following the width as it changes; as many slides as fit or fewer: no buttons, no dots', async () => {
     const w = window.innerWidth, h = window.innerHeight;
     try {

@@ -57,6 +57,16 @@
   - button "3 of 4"
   - button "4 of 4"
 
+# Peek
+- region "Products":
+  - group "1 of 4":
+    - strong: Desk
+    - paragraph: Ships in two days.
+  - button "1 of 4"
+  - button "2 of 4"
+  - button "3 of 4"
+  - button "4 of 4"
+
 # PerView
 - region "Products":
   - group "1 of 7":

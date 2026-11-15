@@ -71,6 +71,23 @@ describe('List', () => {
     expect([...el('ldef').children].map((li) => css(li).borderTopWidth)).toEqual(['0px', '1px', '1px']);
   });
 
+  test('divided="inset": each line starts where the row\'s text starts and runs to the row\'s end', async () => {
+    await render(<div style={{ width: '420px' }}><List id="linset" divided="inset" aria-label="People">
+      <ListItem title="Ada Lovelace" leading={<Avatar name="Ada Lovelace" size="sm" />} />
+      <ListItem title="Grace Hopper" leading={<Avatar name="Grace Hopper" size="sm" />} trailing="Owner" />
+      <ListItem title="Report.pdf" leading="description" />
+    </List></div>);
+    const rows = [...el('linset').children] as HTMLElement[];
+    expect(rows.map((li) => css(li).borderTopWidth)).toEqual(['0px', '0px', '0px']);
+    const rule = (li: HTMLElement) => {
+      const text = li.querySelector(':scope > :first-child > span:last-child')!, b = getComputedStyle(text, '::before'), r = li.getBoundingClientRect(), t = text.getBoundingClientRect();
+      const ltr = getComputedStyle(li).direction !== 'rtl', start = ltr ? parseFloat(b.left) : r.width - parseFloat(b.right);
+      return { line: b.content !== 'none' && b.borderTopWidth === '1px', start: Math.round(start), text: Math.round(ltr ? t.left - r.left : t.right - r.left), reaches: Math.round(parseFloat(b.width)) >= Math.round(r.width) };
+    };
+    expect(getComputedStyle(rows[0]!.querySelector(':scope > :first-child > span:last-child')!, '::before').content).toBe('none');
+    for (const li of rows.slice(1)) { const x = rule(li); expect([x.line, x.reaches, x.start]).toEqual([true, true, x.text]); }
+  });
+
   test('an icon name as leading: a 20px muted icon', async () => {
     await render(<People />);
     const i = q('#iicon > :first-child > span:first-child > [data-icon]');

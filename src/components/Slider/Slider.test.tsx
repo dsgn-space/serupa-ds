@@ -50,6 +50,20 @@ const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits 
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Slider', () => {
+  test('origin: the fill runs from the origin to the thumb, either way; a range ignores it', async () => {
+    await render(<div style={{ width: '420px' }}>
+      <Slider id="org" aria-label="Balance" min={-10} max={10} origin={0} defaultValue={5} />
+      <Slider id="orr" aria-label="Price" min={0} max={100} origin={50} defaultValue={[20, 80]} />
+    </div>);
+    const fill = (id: string) => { const t = track(id), f = rect(el(id).querySelector(':scope > div > div')!), rtl = getComputedStyle(el(id)).direction === 'rtl';
+      const a = (rtl ? t.right - f.right : f.left - t.left) / t.width, b = (rtl ? t.right - f.left : f.right - t.left) / t.width; return [Math.round(a * 100), Math.round(b * 100)]; };
+    expect(fill('org')).toEqual([50, 75]);
+    thumb('org').focus();
+    await userEvent.keyboard('{Home}');
+    expect([now('org'), fill('org')]).toEqual([-10, [0, 50]]);
+    expect(fill('orr')).toEqual([20, 80]);
+  });
+
   test('size="lg" sits beside lg fields: an 8px track, a 24px thumb, and number fields as tall as an lg Input (GR393)', async () => {
     await render(<div style={{ width: '420px' }}>
       <Slider id="lg" aria-label="Large" size="lg" defaultValue={40} />
