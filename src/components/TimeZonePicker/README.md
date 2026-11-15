@@ -53,6 +53,7 @@ import { TimeZonePicker } from "@diki-stwn/serupa-ds";
 | `at` | `Date \| number` | now | The moment the offsets are for. |
 | `locale` | `string` | the provider's, else the browser's | The language of the zone names. |
 | `value` / `defaultValue` / `onValueChange` | `string \| null` | | The IANA name, as Combobox's value. |
+| `placeholder` | `string` | "Search a city or time zone" (the `timeZonePlaceholder` label) | Shown in the empty field. |
 
 Every other [Combobox](../Combobox/README.md) prop works too, except `options`, `loadOptions`, `filter` and `multiple`, which TimeZonePicker sets. `className` goes to its box, with `dk-time-zone-picker`; `ref` goes to the input.
 

@@ -5,8 +5,8 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-tag-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tag-group-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); }
-.dk-tag-group__label { color: var(--tag-group-label, var(--text)); font-size: var(--text-sm); font-weight: var(--font-medium); }
-.dk-tag-group__empty { color: var(--tag-group-muted, var(--text-muted)); font-size: var(--text-sm); }
+.dk-tag-group__label { color: var(--tag-group-label, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium); }
+.dk-tag-group__empty { color: var(--tag-group-muted, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-tag-group__empty:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-tag-group__tags { display: flex; flex-wrap: wrap; gap: var(--tag-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); outline: none; }
 .dk-tag-group__tag {

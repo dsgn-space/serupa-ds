@@ -41,6 +41,7 @@ export const labels: SerupaLabels = {
   toolbarMore: '더보기',
   previousMonth: '이전 달',
   timeZoneYours: '내 시간대',
+  timeZonePlaceholder: '도시 또는 시간대 검색',
   nextMonth: '다음 달',
   month: '월',
   year: '연도',

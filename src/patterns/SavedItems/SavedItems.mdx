@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './SavedItems.stories';
+
+<Meta of={Stories} />
+
+# Saved items
+
+Things kept for later, with what changed since they were saved, and a way to move each to the cart or let it go.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- An account page for a wish list, "Save for later" from the cart, or bookmarked products.
+- Not for browsing a shop: that's the Product grid block.
+- Not for what's about to be bought: that's the Cart summary block.
+
+## What each part is for
+
+- **Each item is a list item named by its heading**, a link to the product (1.3.1, 2.4.6).
+- **What changed is said in words in a badge**, "Price dropped", "Only 2 left" or "Sold out", and a lower price shows the old one struck through after "Was" (1.4.1).
+- **Each button's name starts with its words and ends with its item**, "Move to cart: Linen shirt", so a list of buttons read alone still says which is which (2.5.3, 2.4.6).
+- **Remove acts at once and offers Undo** in a toast, rather than asking "Are you sure?"; focus moves to the next item, or to the list's heading when none is left (3.3.4, 2.4.3).
+- **How many items, and the sort, are said in a status line** as they change (4.1.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Empty} />
+
+## What stays your app's job
+
+- **Moving and removing.** `onMoveToCart` gets the item's id: reject when it can't be moved. `onRemove` gets it once the toast closes without Undo.
+- **What changed.** Keep the price each item had when it was saved, and how many are left, so the page can say what changed.
+- **Telling people.** An email when a saved price drops is welcome only when they asked for it.

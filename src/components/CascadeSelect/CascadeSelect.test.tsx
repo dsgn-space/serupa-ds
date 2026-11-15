@@ -38,6 +38,15 @@ beforeEach(async () => { errors = vi.spyOn(console, 'error'); await page.viewpor
 afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); document.documentElement.removeAttribute('data-theme'); });
 
 describe('CascadeSelect', () => {
+  test('a chosen path cut short in a narrow field shows whole on hover and on keyboard focus', async () => {
+    await render(<div style={{ width: 180 }}><CascadeSelect aria-label="Wilayah" options={regions} defaultValue={['jabar', 'bandung', 'coblong']} /></div>);
+    const t = button().querySelector<HTMLElement>('[data-component="truncated-text"]')!;
+    await expect.poll(() => t.hasAttribute('data-truncated')).toBe(true);
+    await userEvent.hover(t);
+    await expect.poll(() => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]')?.textContent).toBe(t.textContent);
+    expect(t.textContent).toContain('Coblong');
+  });
+
   test('a combobox button (aria-haspopup dialog, collapsed) showing the placeholder, md 32px with a 1px field border and 6px corners; ref, className, data and aria props reach it', async () => {
     const ref = React.createRef<HTMLButtonElement>();
     await render(<CascadeSelect ref={ref} aria-label="Wilayah" className="extra" data-x="y" options={regions} />);

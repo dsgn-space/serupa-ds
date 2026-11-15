@@ -75,6 +75,17 @@ describe('TruncatedText', () => {
     expect(tip()).toBeNull();
   });
 
+  test("inside a button a tap is the button's: it runs, and the whole text doesn't cover what it opens", async () => {
+    let pressed = 0;
+    await render(narrow(<button type="button" id="b" style={{ display: 'block', width: '100%' }} onClick={() => { pressed++; }}><TruncatedText id="tb">{LONG}</TruncatedText></button>));
+    const e = el('tb');
+    await expect.poll(() => e.hasAttribute('data-truncated')).toBe(true);
+    e.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }));
+    e.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 50));
+    expect([pressed, tip()]).toEqual([1, null]);
+  });
+
   test('lines allows that many lines before the cut (at most six), and text that fits them is not cut', async () => {
     const words = 'Checked against the March statement, with the two refunds from the supplier added back and the duplicate invoice taken out.';
     await render(narrow(<><TruncatedText id="two" lines={2}>{words}</TruncatedText><TruncatedText id="six" lines={9}>Short</TruncatedText></>));

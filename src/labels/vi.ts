@@ -39,6 +39,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'Thêm',
   previousMonth: 'Tháng trước',
   timeZoneYours: 'Múi giờ của bạn',
+  timeZonePlaceholder: 'Tìm thành phố hoặc múi giờ',
   nextMonth: 'Tháng sau',
   month: 'Tháng',
   year: 'Năm',

@@ -39,6 +39,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'Diğer',
   previousMonth: 'Önceki ay',
   timeZoneYours: 'Saat diliminiz',
+  timeZonePlaceholder: 'Şehir veya saat dilimi arayın',
   nextMonth: 'Sonraki ay',
   month: 'Ay',
   year: 'Yıl',

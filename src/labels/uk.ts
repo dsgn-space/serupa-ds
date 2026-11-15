@@ -44,6 +44,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'Ще',
   previousMonth: 'Попередній місяць',
   timeZoneYours: 'Ваш часовий пояс',
+  timeZonePlaceholder: 'Знайдіть місто або часовий пояс',
   nextMonth: 'Наступний місяць',
   month: 'Місяць',
   year: 'Рік',

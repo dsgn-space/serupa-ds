@@ -76,7 +76,7 @@ try {
   const forced = bin('Billing', '--force', '--to', 'ui');
   t('--to writes to another folder', forced.status === 0 && fs.existsSync(path.join(app, 'ui', 'Billing.tsx')), forced.stderr);
   const list = bin();
-  t('with no name it lists the patterns and blocks with what they\'re for', list.status === 0 && /Patterns: [^\n]*\n {2}AccountSecurity: /.test(list.stdout) && list.stdout.includes('Blocks: '), list.stdout.slice(0, 200));
+  t('with no name it lists the patterns and blocks with what they\'re for', list.status === 0 && /Patterns: [^\n]*\n {2}[A-Z]\w*: /.test(list.stdout) && list.stdout.includes('\n  AccountSecurity: ') && list.stdout.includes('Blocks: '), list.stdout.slice(0, 200));
   const unknown = bin('Dashbored');
   t('an unknown name exits 1 and writes nothing', unknown.status === 1 && unknown.stderr.includes('Dashbored'), unknown.stderr);
 } finally {
