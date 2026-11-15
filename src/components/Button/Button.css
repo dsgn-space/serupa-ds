@@ -93,7 +93,6 @@
   --button-ghost-text: var(--dk-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent);
   --button-link-text: var(--dk-btn-ink); --button-focus-ring: var(--dk-btn-ink);
   --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-40), transparent);
-  --button-depth: var(--shadow-none); --button-depth-hover: var(--shadow-none); --button-depth-pressed: var(--shadow-none);
 }
 .dk-btn--on-light {
   --dk-btn-ink: var(--button-on-light, var(--black)); --dk-btn-paper: var(--button-on-light-text, var(--white));
@@ -103,7 +102,6 @@
   --button-ghost-text: var(--dk-btn-ink); --button-ghost-bg-hover: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-15), transparent);
   --button-link-text: var(--dk-btn-ink); --button-focus-ring: var(--dk-btn-ink);
   --button-bg-disabled: transparent; --button-text-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-60), transparent); --button-border-disabled: color-mix(in srgb, var(--dk-btn-ink) var(--opacity-40), transparent);
-  --button-depth: var(--shadow-none); --button-depth-hover: var(--shadow-none); --button-depth-pressed: var(--shadow-none);
 }
 
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
