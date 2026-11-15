@@ -107,7 +107,7 @@
       "shadow": {
         "$type": "shadow",
         "$value": "{shadow.elevation-modal}",
-        "$description": "The panel's shadow.",
+        "$description": "The panel's shadow, on every side. Unset, it falls toward the page: `elevation-modal-up` from the bottom, `elevation-modal-right` and `elevation-modal-left` from a side, `elevation-modal` from the top.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--drawer-shadow"
