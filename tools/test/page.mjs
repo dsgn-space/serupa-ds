@@ -167,6 +167,16 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.goto(own);
   const kept = await p.evaluate(() => [...document.querySelectorAll('meta[name="theme-color"]')].map((m) => m.getAttribute('content')).join());
   t('theme.js: a theme-color meta the page wrote itself is left as it is', kept === '#123456', kept);
+  // <meta name="color-scheme"> is the mode shown, from before the stylesheets (a dark canvas from the first paint), and
+  // follows a switch; a page's own is left alone.
+  await p.goto(writePage('color-scheme-bare.html', '<p>x</p>', { theme: true, bundle: 'none.css', htmlAttrs: 'data-mode="dark"', extraHead: '<script>window.__scheme = [document.querySelector(\'meta[name="color-scheme"]\')?.content, getComputedStyle(document.documentElement).colorScheme].join();</script>' }));
+  const scheme = await p.evaluate(() => { const early = window.__scheme; Serupa.theme.set({ mode: 'light' }); const after = document.querySelector('meta[name="color-scheme"]')?.getAttribute('content'); Serupa.theme.reset(); return [early, after, document.querySelectorAll('meta[name="color-scheme"]').length].join(' '); });
+  t('theme.js: color-scheme meta is the mode shown before the stylesheets (dark) and follows a switch (light)', scheme === 'dark,normal light 1', scheme);
+  const ownScheme = writePage('color-scheme-own.html', '<p>x</p>', { theme: true, base: true, htmlAttrs: 'data-mode="dark"' });
+  fs.writeFileSync(fileURLToPath(ownScheme), fs.readFileSync(fileURLToPath(ownScheme), 'utf8').replace('<script src="../dist/theme.js">', '<meta name="color-scheme" content="light dark"><script src="../dist/theme.js">'));
+  await p.goto(ownScheme);
+  const keptScheme = await p.evaluate(() => [...document.querySelectorAll('meta[name="color-scheme"]')].map((m) => m.getAttribute('content')).join());
+  t('theme.js: a color-scheme meta the page wrote itself is left as it is', keptScheme === 'light dark', keptScheme);
   await ctx.close();
 }
 {
