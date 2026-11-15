@@ -133,4 +133,39 @@ for (const e of ecosystems) {
   t(`dependabot.yml: ${e.trim().split(/\s/)[0]} updates wait at least 7 days after a release (cooldown)`, days >= 7, `default-days: ${days}`);
 }
 
+// Every run: script parses as bash (bash -n), with each ${{ }} expression standing in as a word. A quote that doesn't
+// close fails the step before any line runs: an apostrophe inside "${labeled:-isn't …}" kept Design QA from rerunning
+// anything (15 Nov).
+{
+  const files = [...fs.readdirSync(path.join(GH, 'workflows')).filter((f) => /\.ya?ml$/.test(f)).map((f) => path.join(GH, 'workflows', f)),
+    ...fs.readdirSync(path.join(GH, 'actions')).map((d) => path.join(GH, 'actions', d, 'action.yml')).filter((f) => fs.existsSync(f))];
+  const bad = [];
+  let scripts = 0;
+  for (const file of files) {
+    const lines = fs.readFileSync(file, 'utf8').split('\n');
+    lines.forEach((line, i) => {
+      const m = /^(\s*)(?:- )?run: (.*)$/.exec(line);
+      if (!m) return;
+      let body;
+      if (/^[|>][-+]?\s*$/.test(m[2])) {
+        const block = [];
+        let indent = null;
+        for (let j = i + 1; j < lines.length; j++) {
+          if (lines[j].trim() === '') { block.push(''); continue; }
+          const n = lines[j].length - lines[j].trimStart().length;
+          if (indent === null) indent = n;
+          if (n < indent || n <= m[1].length) break;
+          block.push(lines[j].slice(indent));
+        }
+        body = block.join('\n');
+      } else body = m[2].replace(/^(['"])(.*)\1$/, '$2');
+      body = body.replace(/\$\{\{[\s\S]*?\}\}/g, 'X');
+      scripts++;
+      const r = spawnSync('bash', ['-n'], { input: body, encoding: 'utf8' });
+      if (r.status !== 0) bad.push(`${path.relative(PROJECT, file)}:${i + 1}: ${r.stderr.trim().split('\n')[0]}`);
+    });
+  }
+  t(`every run: script in the workflows and actions parses as bash (${scripts})`, !bad.length && scripts > 50, bad.join('; '));
+}
+
 done(report('Workflows', R));
