@@ -14,6 +14,7 @@ const fill = async (screen: Awaited<ReturnType<typeof render>>) => {
   await screen.getByRole('textbox', { name: /^Full name/ }).fill(' Ana Lima ');
   await screen.getByRole('textbox', { name: /^Email/ }).fill('ana@example.com');
   await userEvent.upload(document.getElementById('job-cv') as HTMLInputElement, [cv()]);
+  await screen.getByRole('textbox', { name: /^Why this job/ }).fill(' I’ve built two payment flows. ');
   await screen.getByRole('radio', { name: 'Yes' }).click();
   await screen.getByRole('checkbox', { name: /^Keep my application/ }).click();
 };
@@ -62,7 +63,7 @@ describe('Patterns/Job application', () => {
     await fill(screen);
     await screen.getByRole('button', { name: 'Send application' }).click();
     await expect.poll(() => active().textContent).toBe('Application sent');
-    expect(onApply).toHaveBeenCalledWith(expect.objectContaining({ name: 'Ana Lima', email: 'ana@example.com', rightToWork: 'yes', consent: true }));
+    expect(onApply).toHaveBeenCalledWith(expect.objectContaining({ name: 'Ana Lima', email: 'ana@example.com', letter: 'I’ve built two payment flows.', rightToWork: 'yes', consent: true }));
     expect((onApply.mock.calls[0] as unknown as [JobApplicationAnswers])[0].cv?.name).toBe('ana-lima-cv.pdf');
     expect(document.querySelectorAll('section[aria-labelledby="applied"] li')).toHaveLength(3);
   });

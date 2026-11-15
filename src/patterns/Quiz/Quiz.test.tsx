@@ -40,6 +40,9 @@ describe('Patterns/Quiz', () => {
     await expect.poll(() => active().textContent).toMatch(/^There is a problem|^There are/);
     await screen.getByRole('link', { name: /^Answer question/ }).click();
     await expect.poll(() => active().getAttribute('type')).toBe('checkbox');
+    expect(document.body.textContent).toContain('Choose an answer.');
+    await screen.getByRole('checkbox', { name: 'Pea' }).click();
+    await expect.poll(() => document.body.textContent).not.toContain('Choose an answer.');
     expect(onCheck).not.toHaveBeenCalled();
   });
 
