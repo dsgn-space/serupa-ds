@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, forcedColors, iconPoints, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, iconPoints, press, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Calendar, type CalendarProps } from './Calendar';
 
 const q = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
@@ -168,7 +168,7 @@ describe('Calendar', () => {
     expect([...document.querySelectorAll<HTMLElement>('[data-testid=cal] [aria-selected=true] button')].map((b) => b.dataset.date).join()).toBe('2025-04-17');
   });
 
-  test('min: days before it are aria-disabled and the previous button stops at its month; isDateDisabled: refused days are aria-disabled, faded and can\'t be picked; max: the next button stops at its month', async () => {
+  test('min: days before it are aria-disabled and the previous button stops at its month; isDateDisabled: refused days are aria-disabled, in disabled-text and can\'t be picked; max: the next button stops at its month', async () => {
     const picks: string[] = [];
     await render(<Cal picks={picks} defaultMonth={new Date(2025, 3, 1)} />);
     await userEvent.click(cal('button[aria-label="Previous month"]'));
@@ -178,7 +178,7 @@ describe('Calendar', () => {
     await userEvent.click(cal('button[aria-label="Next month"]'));
     await userEvent.click(cal('[data-date="2025-03-16"]'), { force: true });
     expect([cal('[data-date="2025-03-16"]').getAttribute('aria-disabled'), picks.length]).toEqual(['true', 0]);
-    await expect.poll(() => getComputedStyle(cal('[data-date="2025-03-16"]')).opacity).toBe('0.5');
+    await expect.poll(() => disabledLook(cal('[data-date="2025-03-16"]'))).toBe('neutral');
     for (let i = 0; i < 3; i++) await userEvent.click(cal('button[aria-label="Next month"]'));
     expect([title(), cal<HTMLButtonElement>('.dk-calendar__nav--next').disabled]).toEqual(['June 2025', true]);
   });

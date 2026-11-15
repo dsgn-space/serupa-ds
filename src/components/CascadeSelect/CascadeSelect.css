@@ -33,7 +33,7 @@
 }
 .dk-cascade-select--invalid { --dk-cs-bd: var(--cascade-select-invalid, var(--field-border-invalid)); --dk-cs-ring: var(--cascade-select-invalid, var(--field-border-invalid)); }
 .dk-cascade-select--readonly .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); cursor: default; }
-.dk-cascade-select--disabled .dk-cascade-select__button { background: var(--cascade-select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-cascade-select--disabled .dk-cascade-select__button { --dk-cs-bd: var(--cascade-select-border-disabled, var(--disabled-border)); background: var(--cascade-select-bg-disabled, var(--field-readonly)); color: var(--cascade-select-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-cascade-select__value { flex: auto; min-inline-size: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dk-cascade-select__value--empty { color: var(--cascade-select-placeholder, var(--placeholder)); }
 .dk-cascade-select__chevron { flex: none; color: var(--cascade-select-icon, var(--text-muted)); font-size: var(--dk-cs-icon, var(--spacing-4)); }   /* 14, 16 or 20px by size, 8px inside the end edge, as Select's chevron */
@@ -77,7 +77,7 @@
 .dk-cascade-select__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-cascade-select__option--on { background: var(--cascade-select-option-on, var(--primary-subtle)); box-shadow: inset var(--dk-bar) 0 0 var(--cascade-select-option-indicator, var(--primary)); }
 .dk-cascade-select__option:focus-visible { outline: var(--focus-ring-width) solid var(--cascade-select-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-cascade-select__option[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-cascade-select__option[aria-disabled="true"], .dk-cascade-select__option[aria-disabled="true"] * { color: var(--cascade-select-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-cascade-select__label { flex: auto; min-inline-size: var(--spacing-0); }
 .dk-cascade-select__more, .dk-cascade-select__check { flex: none; font-size: var(--spacing-4); color: var(--cascade-select-muted, var(--text-muted)); }
 .dk-cascade-select__check { color: var(--cascade-select-check, var(--primary)); }

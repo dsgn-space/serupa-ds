@@ -1,0 +1,28 @@
+# Default
+- img "QR code to pay order 1042"
+
+# LongText
+- img "Authenticator setup code"
+- img "Expired code"
+- paragraph: Code expired
+- button "Get a new code"
+
+# Playground
+- img "QR code to pay order 1042"
+
+# Sizes
+- img "QR code to pay order 1042"
+- img "QR code to pay order 1042"
+- img "QR code to pay order 1042"
+
+# Statuses
+- img "Sign-in code, loading"
+- img "Sign-in code, expired"
+- paragraph: Code expired
+- button "Get a new code"
+- img "Sign-in code, scanned"
+- paragraph: Scanned
+
+# WithLogo
+- img "QR code to pay order 1042"
+

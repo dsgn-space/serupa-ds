@@ -1,0 +1,43 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './LeaveRequest.stories';
+
+<Meta of={Stories} />
+
+# Leave request
+
+Time off, asked for on a calendar: the working days counted, weekends and holidays left out and named, the balance that's left, and the requests already made with where each one is.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Asking for days away from work, or any request counted in working days against a balance: training days, volunteering days.
+- Not for booking a stay, where every night counts: that's the Booking pattern.
+- Not for approving requests: an approver's list is the List and detail pattern, with Approve and Decline on each.
+
+## What each part is for
+
+- **The kind of leave is a radio group** with what each one means: annual leave is paid and taken from what's left, unpaid leave isn't (1.3.1, 3.3.2).
+- **Weekends and holidays are struck through** and can't be the first or last day, since nobody starts leave on a Sunday. The leave can still span them, and they aren't counted.
+- **The holidays in view are listed in words** with their names and a date a machine can read, and the list follows the months shown (1.4.1, 1.3.1).
+- **The count says the working days**, and names the holidays inside the leave, so "3 working days" across a week is explained (1.3.1).
+- **The balance is a description list**: what you have, what's waiting for approval, and what's left after those. Leave that's waiting counts, so two requests can't spend the same days (1.3.1).
+- **Annual leave past what's left is said at once**, with the numbers and a way out: fewer days, or unpaid leave. The calendar points to the alert with aria-describedby (3.3.1, 3.3.3).
+- **Send with no dates says what to choose** and puts focus on the calendar (3.3.1).
+- **Send adds the request only once the server says so.** One that fails says so next to the button and keeps what was chosen (3.3.1, 4.1.3).
+- **A sent request goes to the top of "Your requests"** as Waiting, takes focus, and a toast says so; the form clears for the next one (2.4.3, 4.1.3).
+- **Each request's state is a word**, Waiting, Approved or Declined, not only a color (1.4.1).
+- **While the balance loads**, set `loading`: one placeholder, named "Loading leave". **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+A Friday and Saturday weekend, with nothing asked for yet:
+
+<Canvas of={Stories.NoRequests} />
+
+## What stays your app's job
+
+- **Sending.** `onSubmit` gets the kind, the first and last day as "yyyy-mm-dd", the working days and the note: return its promise, and reject it when the request can't be sent.
+- **The calendar of the place of work.** Pass its `holidays` with their names, and its `weekend` days. Half days and shifts need your own count.
+- **The balance.** `balance` is what's left before the requests still waiting; the page takes those off itself.
+- **News while the page is open.** When a request is approved or declined, pass the new `requests` on a new `key`, and say it in a toast.
+- Rendering a `Toaster` once in the app.

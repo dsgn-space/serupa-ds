@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, press, settle, withMotion, iconPoints, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, press, settle, withMotion, iconPoints, settled, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Tooltip } from '../Tooltip/Tooltip';
@@ -812,7 +812,7 @@ describe('Menu: motion (DZ1)', () => {
       expect(items.flatMap(moves)).toEqual([]);
       expect(items.map((i) => getComputedStyle(i).transitionDelay)).toEqual(items.map(() => '0s'));
       await settled(m, { subtree: true });
-      expect(items.map((i) => getComputedStyle(i).opacity)).toEqual(['1', '1', '0.5', '1', '1']);   // Archive is disabled
+      expect(items.map((i) => disabledLook(i) === 'neutral')).toEqual([false, false, true, false, false]);   // Archive is disabled
     });
   });
 

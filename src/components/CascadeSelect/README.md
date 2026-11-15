@@ -61,7 +61,7 @@ Drawn from the `Open` story.
 | Focus | Like the other fields: the border and a 1px ring hugging it take the `focus-ring` color (danger when invalid), and stay while the panel is open; inside the panel, an outline on the focused option or column |
 | Open | The panel under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
-| Disabled | `field-readonly` background at 50%, `not-allowed` cursor; it doesn't open |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; it doesn't open |
 | Loading | "Loading…" in the next column |
 
 ### Do and don't
@@ -138,6 +138,8 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-option-bg-pressed` | `pressed` | An option's background while it's held down, one step past hover. |
 | `--cascade-select-option-on` | `primary-subtle` | The highlighted option in each column. |
 | `--cascade-select-option-indicator` | `primary` | The 2px bar at the start of each option on the chosen path (3:1 on option-on). |
+| `--cascade-select-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--cascade-select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Radius**
 

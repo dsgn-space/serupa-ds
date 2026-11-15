@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, withMotion, settled, color, css, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, withMotion, settled, color, css, press, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Calendar } from '../Calendar/Calendar';
 import { Field } from '../Field/Field';
 import { DatePicker } from './DatePicker';
@@ -257,10 +257,10 @@ describe('DatePicker', () => {
     } finally { warn.mockRestore(); }
   });
 
-  test('disabled: the field and button are disabled and faded', async () => {
+  test('disabled: the field and button are disabled and in the neutral disabled colors', async () => {
     await render(<DatePicker id="dis" aria-label="Off" disabled />);
     expect([el('dis').disabled, el('dis').parentElement!.querySelector('button')!.disabled]).toEqual([true, true]);
-    await expect.poll(() => getComputedStyle(el('dis').parentElement!).opacity).toBe('0.5');
+    await expect.poll(() => disabledLook(el('dis').parentElement)).toBe('neutral');
   });
 
   test('contrast: day, weekday, outside, today, hover and selected text 4.5:1, the selected fill and calendar icon 3:1, in every theme', async () => {

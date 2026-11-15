@@ -55,7 +55,7 @@ Drawn from the `Months` story.
 | Open | The popup under the button (above it when there's no room), fading in |
 | Invalid | `danger` border, and `aria-invalid` |
 | Read-only | `field-readonly` background; it doesn't open |
-| Disabled | `field-readonly` background at 50%, `not-allowed` cursor; it doesn't open |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; it doesn't open |
 
 ## Accessibility
 
@@ -124,6 +124,8 @@ Each is an optional override: set it on the page, a container or one PeriodPicke
 | `--period-picker-current` | `primary` | This month, quarter or year (4.5:1 on panel-bg). |
 | `--period-picker-bg-selected` | `primary` | The chosen period's fill. |
 | `--period-picker-text-selected` | `on-primary` | The chosen period's text (4.5:1 on selected-bg). |
+| `--period-picker-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--period-picker-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Radius**
 
