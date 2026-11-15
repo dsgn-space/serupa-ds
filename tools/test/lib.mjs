@@ -294,6 +294,15 @@ export function affectedComponents(files) {
 }
 // SERUPA_ONLY=Button,Dialog (set by run.mjs --since): the components to test, or null for all of them.
 export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));
+// Whether a story falls in this shard (SERUPA_SHARD "2/4"), by a hash of its id, not its place in the list: Visual draws
+// main's pictures and the branch's in the same shard, and with places a story added on the branch moved every later
+// story to another shard, so the shard held main's pictures of other stories (#2001: 4 stories added, 1,566 pictures
+// "added" and 1,406 "differ", 15 Nov). FNV-1a.
+export function inShard(id, shard, shards) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 0x01000193);
+  return (h >>> 0) % shards === shard - 1;
+}
 // The components plus every component that uses one of them, since a change to Button can change how ButtonGroup
 // looks: its code imports from that folder (directly or through another component), or its stories or tests show one
 // (Field's stories show an Input).
