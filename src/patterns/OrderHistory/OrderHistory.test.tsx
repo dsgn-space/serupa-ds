@@ -78,4 +78,15 @@ describe('Patterns/Order history', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the search\'s clear button brings every order back; Buy again on a long order counts the rest', async () => {
+    const screen = await render(<OrderHistory orders={few} onBuyAgain={() => Promise.resolve()} />);
+    await screen.getByRole('searchbox', { name: /^Search orders/ }).fill('mug');
+    await expect.poll(headings).toEqual(['Order A-2']);
+    await screen.getByRole('button', { name: /^Clear/ }).click();
+    await expect.poll(headings).toEqual(['Order A-1', 'Order A-2', 'Order A-3']);
+    await screen.rerender(<OrderHistory orders={[{ ...few[2]!, state: 'delivered' }]} onBuyAgain={() => Promise.resolve()} />);
+    await screen.getByRole('button', { name: 'Buy again: order A-3' }).click();
+    await expect.poll(() => toasted('Added to your cart: Linen shirt, Notebook and')).toBe(true);
+  });
 });

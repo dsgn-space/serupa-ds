@@ -87,4 +87,13 @@ describe('Patterns/Return request', () => {
     await expect.poll(alertText).toContain('Couldn’t start the return.');
     expect((screen.getByRole('combobox', { name: /Linen shirt/ }).element() as HTMLSelectElement).value).toBe('wrong');
   });
+
+  test('unticking an item takes its reason away and the refund with it', async () => {
+    const screen = await render(<ReturnRequest />);
+    await screen.getByRole('checkbox', { name: /Linen shirt/ }).click();
+    expect(screen.getByRole('combobox', { name: /Linen shirt/ }).elements()).toHaveLength(1);
+    await screen.getByRole('checkbox', { name: /Linen shirt/ }).click();
+    await expect.poll(() => screen.getByRole('combobox').elements()).toHaveLength(0);
+    expect(document.body.textContent).toContain('Choose an item to see what comes back.');
+  });
 });

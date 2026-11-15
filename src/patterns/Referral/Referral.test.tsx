@@ -65,4 +65,11 @@ describe('Patterns/Referral', () => {
     await expect.poll(alertText).toContain('Couldn’t send the invites.');
     expect((document.getElementById('referral-emails') as HTMLTextAreaElement).value).toBe('fajar@example.com');
   });
+
+  test('focusing the link selects all of it, ready to copy by hand', async () => {
+    const screen = await render(<Referral />);
+    const link = screen.getByRole('textbox', { name: 'Your invite link' }).element() as HTMLInputElement;
+    await userEvent.click(link);
+    await expect.poll(() => [link.selectionStart, link.selectionEnd]).toEqual([0, link.value.length]);
+  });
 });

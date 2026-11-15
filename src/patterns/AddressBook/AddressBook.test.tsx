@@ -102,4 +102,26 @@ describe('Patterns/Address book', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('editing: Cancel and Escape close without saving; a saved edit replaces the address; removing the last puts focus on the heading', async () => {
+    const onSave = vi.fn(() => Promise.resolve());
+    const screen = await render(<AddressBook addresses={[{ id: 'a1', label: 'Home', name: 'Ana', line1: 'Jl. Braga 12', city: 'Bandung', postalCode: '40111', country: 'Indonesia' }]} onSave={onSave} />);
+    await screen.getByRole('button', { name: 'Edit Home' }).click();
+    await screen.getByRole('button', { name: 'Cancel' }).click();
+    await expect.poll(() => screen.getByRole('dialog').elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Edit Home' }).click();
+    await expect.element(screen.getByRole('dialog')).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => screen.getByRole('dialog').elements()).toHaveLength(0);
+    expect(onSave).not.toHaveBeenCalled();
+    await screen.getByRole('button', { name: 'Edit Home' }).click();
+    await screen.getByRole('textbox', { name: /^Phone/ }).fill('+62 812 0000 0000');
+    await screen.getByRole('button', { name: 'Save address' }).click();
+    await expect.poll(() => screen.getByRole('dialog').elements()).toHaveLength(0);
+    expect(card('Home').textContent).toContain('+62 812 0000 0000');
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ id: 'a1', phone: '+62 812 0000 0000' }));
+    await screen.getByRole('button', { name: 'Remove Home' }).click();
+    await expect.poll(() => active().id).toBe('saved');
+    await expect.element(screen.getByRole('heading', { level: 3, name: 'No addresses yet' })).toBeVisible();
+  });
 });
