@@ -149,7 +149,7 @@ jobs:
           # commit its own change lands on, so it tests what the change can affect on the exact tree that becomes main,
           # and five groups don't each run the whole suite again. Main's push run behind the queue is build only; the
           # nightly flake hunt tests main whole, with the coverage floors (nightly.yml).
-          full=""; wide=""; since=""; tests=1
+          full=""; wide=""; since=""; tests=1; ns=""
           case "$EVENT" in
             merge_group) full=1; since="$QUEUE_BASE" ;;
             push) if [ "$QUEUE" = 1 ]; then tests=""; else full=1; wide=1; fi ;;
@@ -191,6 +191,18 @@ jobs:
           if [ -n "$since" ]; then
             [ "$EVENT" = merge_group ] && git fetch -q --depth=1 origin "$since"
             has() { node tools/test/run.mjs --since "$since" --group "$1" --list | grep -q $'\t'; }
+            # Shards scale with what a narrowed run covers: each pays about a minute of setup, so a group that changes
+            # two components took 17 jobs of under 30 s of tests each (15 Nov), and the queue's demand for the burst
+            # slots, not the tests, set how long a merge took. One shard per ten components covered, up to the counts above.
+            covered=$(node tools/test/run.mjs --since "$since" --group components --list | sed -n 's/^Testing the changed components and the ones that use them: \(.*\) (main runs everything)$/\1/p' | tr ',' '\n' | grep -c .) || covered=""
+            if [ -n "$covered" ] && [ "$covered" -gt 0 ]; then
+              fit() { local n=$(( ($covered + 9) / 10 )); [ "$n" -lt "$1" ] && echo "$n" || echo "$1"; }
+              nb2=$(fit "$nb"); nl2=$(fit "$nl"); nv2=$(fit "$nv"); ns=$(fit 4)
+              x86=$(echo "$x86" | jq -c --argjson b "$nb2" --argjson l "$nl2" --argjson v "$nv2" '
+                def keep(g; p; n): map(select(.group != g or (.part // "") != p or ((.shard | split("/")[0] | tonumber) <= n)) | if .group == g and (.part // "") == p then .shard = ((.shard | split("/")[0]) + "/" + (n | tostring)) else . end);
+                .include |= (keep("components"; "base"; $b) | keep("components"; "locale"; $l) | keep("visual"; ""; $v))')
+              echo "Covers $covered components: $nb2 base, $nl2 locale, $nv2 Visual and $ns Storybook shards."
+            fi
             if ! has components; then x86=$(echo "$x86" | jq -c '.include |= map(select(.group != "components"))'); fi
             if ! has visual; then x86=$(echo "$x86" | jq -c '.include |= map(select(.group != "visual"))'); fi
             if ! has storybook; then storybook=""; fi
@@ -200,7 +212,7 @@ jobs:
           portable='{"include":[{"group":"checks","shard":"1/3"},{"group":"checks","shard":"2/3"},{"group":"checks","shard":"3/3"}'
           # Storybook in four shards: in three, a queue run that checks every page took up to 11 minutes in one (13 Nov),
           # the longest job of the run. They go on GitHub's runners, so a fourth costs no x86 runner.
-          [ -n "$storybook" ] && portable="$portable"',{"group":"storybook","shard":"1/4"},{"group":"storybook","shard":"2/4"},{"group":"storybook","shard":"3/4"},{"group":"storybook","shard":"4/4"}'
+          if [ -n "$storybook" ]; then for k in $(seq 1 "${ns:-4}"); do portable="$portable"',{"group":"storybook","shard":"'"$k/${ns:-4}"'"}'; done; fi
           portable="$portable]}"
           {
             echo "full=$full"; echo "wide=$wide"; echo "since=$since"; echo "tests=$tests"
