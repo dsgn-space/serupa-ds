@@ -129,7 +129,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
               </div>
               {plan.description && <p className="text-sm text-text-muted">{plan.description}</p>}
               <p className="flex flex-wrap items-baseline gap-x-2">
-                <span className="text-3xl font-semibold tabular-nums">{money(perMonth)}</span>
+                <span className="text-3xl font-semibold">{money(perMonth)}</span>
                 <span className="text-sm text-text-muted">{l.perMonth}</span>
                 {shown === 'yearly' && plan.yearly > 0 && <span className="w-full text-sm text-text-muted">{l.billedYearly(money(plan.yearly))}</span>}
               </p>
