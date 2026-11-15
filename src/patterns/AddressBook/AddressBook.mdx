@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './AddressBook.stories';
+
+<Meta of={Stories} />
+
+# Address book
+
+The addresses you've saved for delivery, one of them the default, each edited, removed or made the default in place.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- An account page where people keep the addresses they ship to.
+- Not for entering an address during checkout: the Checkout pattern does that, and can offer these.
+
+## What each part is for
+
+- **The addresses are a list, each an `<address>`**; the default one says so in words in a badge (1.3.1).
+- **Every button names the address it acts on**: "Edit Home", "Remove Office", "Make Office the default" (2.4.6).
+- **The form's fields say what they are for autofill**: name, address lines, city, postal code, country and phone, and which are optional (1.3.5, 3.3.2).
+- **A missing field is said next to it** when you save, and focus goes to the first (3.3.1).
+- **Saving closes the dialog only once the server says so**; one that fails says so in the dialog and keeps every field. Focus goes back to the button that opened it (3.3.4, 2.4.3).
+- **Remove takes the address out at once, with Undo.** The default address has no Remove: it says to make another the default first (3.3.4).
+- **Making one the default is said** in a status that's read out (4.1.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Empty} />
+
+## What stays your app's job
+
+- **Saving.** `onSave` gets the address, with no `id` when it's new: resolve with its id, or reject when it fails. `onRemove` is called only once Undo has gone; `onDefaultChange` when the default moves.
+- **The fields for each country.** Some countries have no postal code, or a region or a second address line in another place: change the form for the countries you ship to.
+- **Checking addresses.** Suggest a corrected address from the server if you have one, and let people keep theirs.
