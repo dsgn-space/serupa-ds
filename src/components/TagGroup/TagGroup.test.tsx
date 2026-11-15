@@ -32,10 +32,15 @@ describe('TagGroup', () => {
     expect(page.getByRole('row').elements().map((r) => r.getAttribute('tabindex'))).toEqual(['0', '-1', '-1', '-1']);
   });
 
-  test('the × is 16px beside the 14px label, not an icon\'s 24px default that filled its button; --tag-group-remove-icon-size sets it (GR421)', async () => {
-    await render(<SerupaProvider locale="en-US"><TagGroup id="xs" label="Labels" items={tags} onRemove={() => {}} /><TagGroup id="xt" label="Labels" items={tags} onRemove={() => {}} style={{ '--tag-group-remove-icon-size': '12px' } as React.CSSProperties} /></SerupaProvider>);
-    const sizes = (id: string) => { const b = document.querySelector<HTMLElement>('#' + id + ' button[aria-label^="Remove"]')!, i = b.querySelector<HTMLElement>('[data-icon]')!.getBoundingClientRect(); return [b.getBoundingClientRect().width, i.width, i.height]; };
-    expect([sizes('xs'), sizes('xt')]).toEqual([[24, 16, 16], [24, 12, 12]]);
+  test('a tag\'s icon, a selected tag\'s check and the × are 16px beside the 14px label, not an icon\'s 24px default; --tag-group-icon-size sets them (GR421)', async () => {
+    const items = [{ id: 'a', label: 'Bug', icon: 'bug_report' }, { id: 'b', label: 'Docs', icon: 'description' }];
+    await render(<SerupaProvider locale="en-US">
+      <TagGroup id="xs" label="Labels" items={items} onRemove={() => {}} selectionMode="multiple" defaultSelected={['b']} />
+      <TagGroup id="xt" label="Labels" items={items} onRemove={() => {}} style={{ '--tag-group-icon-size': '12px' } as React.CSSProperties} />
+    </SerupaProvider>);
+    const sizes = (id: string) => [...document.querySelectorAll<HTMLElement>('#' + id + ' [data-icon]')].map((i) => Math.round(i.getBoundingClientRect().height));
+    const button = document.querySelector<HTMLElement>('#xs button[aria-label^="Remove"]')!.getBoundingClientRect();
+    expect([sizes('xs'), sizes('xt'), button.width, button.height]).toEqual([[16, 16, 16, 16], [12, 12, 12, 12], 24, 24]);
   });
 
   test('icon and avatar: decorative, before the words; the tag keeps its name, its height, and a selected tag shows its check in the icon\'s place', async () => {

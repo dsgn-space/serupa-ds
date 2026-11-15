@@ -166,13 +166,13 @@
           }
         }
       },
-      "remove-icon-size": {
+      "icon-size": {
         "$type": "dimension",
         "$value": "{spacing.spacing-4}",
-        "$description": "The × icon (16px), beside the 14px label.",
+        "$description": "A tag's icon, the check of a selected tag and the × (16px), beside the 14px label.",
         "$extensions": {
           "com.serupa": {
-            "cssVar": "--tag-group-remove-icon-size"
+            "cssVar": "--tag-group-icon-size"
           }
         }
       }
