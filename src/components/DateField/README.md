@@ -32,9 +32,11 @@ Drawn from the `Playground` story.
 ## Usage
 
 - Name it with a [Field](../Field/README.md) label ("Date of birth") or `aria-label`, and give an example in the hint, in the boxes' order ("For example, 27 3 2007" with `order="dmy"`, "3 27 2007" with `"mdy"`). Without `order` the boxes follow the locale, so set it whenever the hint is fixed text, and use a day over 12 so the example shows which box is which.
-- Typing is free: nothing is blocked or moved on its own, so a mistake can be read and fixed. A `/`, `.`, `-` or space after a number moves to the next box, and a whole date pasted into any box ("17/08/1945", "1945-08-17", "17 Agustus 1945") fills all three.
+- The boxes take digits only, up to 2, 2 and 4: a letter typed or pasted is dropped, and digits in any script are read as 0–9. A wrong number isn't blocked or changed (a day of 55 stays), so a mistake can be read and fixed. A `/`, `.`, `-` or space after a number moves to the next box, and a whole date pasted into any box ("17/08/1945", "1945-08-17", "17 Agustus 1945") fills all three.
 - `onValueChange(value, details)` gives `YYYY-MM-DD`, or `""` until the boxes make a real date. `details.problem` says what's wrong: `"empty"`, `"missing-day"`, `"missing-month"`, `"missing-year"` (also a year under 4 digits), `"not-a-date"` (31 April, month 13), `"before-min"` or `"after-max"`; `details.parts` says in which boxes. Word the error from it, GOV.UK style: "Date of birth must include a month", "Date of birth must be in the past".
-- `min` and `max` don't stop anything being typed; a date outside them still comes as its value, with its problem.
+- Once focus leaves the date, or the form is sent, it says what's wrong under the boxes and marks the box to fix: "Day must be between 1 and 31", "Month must be between 1 and 12", "Year must have 4 numbers", "Enter the month", "Enter a real date: February 2025 has 28 days", "Enter a date on or before 14 November 2026". It's about the first box that's wrong, and follows what's typed after that. A form isn't sent while the date is wrong: focus goes to the box instead. The message waits until a click that took focus away has landed, so it doesn't move the button from under the pointer. When the app marks it `invalid` (a Field with an error), the Field's words show instead, so nothing is said twice.
+- `monthInput="select"` makes the month a menu of the locale's month names (Januari, Februari… in id-ID), for people who know the month by name. The value is the same.
+- `min` and `max` don't stop anything being typed; a date outside them still comes as its value, with its problem, and its message names the date.
 - With `invalid` (a Field with an error sets it), only the boxes the problem is in are marked, or all three when it's about the whole date.
 - With `name`, a hidden input sends `YYYY-MM-DD` ("" while it isn't a date), and `form.reset()` goes back to `defaultValue`.
 - Controlled, `value=""` empties the boxes only when they held a date, so a part typed so far stays.
@@ -57,7 +59,8 @@ Drawn from the `Playground` story.
 | Ctrl+V, ⌘V | A whole date fills all three boxes; a number alone goes in the box. |
 
 - **Contrast:** the labels read 4.5:1 on the surface in every theme (`DateField.test.tsx`); the boxes are Inputs.
-- **What's still yours:** the label and example, checking the date when the form is sent, and the error's words (`details.problem` says which).
+- **The message:** its line is the group's description and each marked box's, so it's read on entering the date and on the box to fix. It comes in all 20 languages, from the `dateFieldError` label.
+- **What's still yours:** the label and example, and the error's words when you want your own (`details.problem` says which, and `invalid` on the DateField or an error on its Field takes the message's place).
 
 ## Props
 
@@ -74,6 +77,7 @@ Drawn from the `Playground` story.
 | `name` | `string` | | Sends `YYYY-MM-DD` with a form in a hidden input. |
 | `form` | `string` | | The id of a form elsewhere on the page. |
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` | The boxes' size, as Input's. |
+| `monthInput` | `"number" \| "select"` | `"number"` | The month as a number box, or a menu of the locale's month names. The value is the same either way. |
 | `disabled` | `boolean` | `false` | Turns the boxes off; nothing is sent. |
 | `readOnly` | `boolean` | `false` | The boxes stay focusable and read out as read-only, and the date is still sent, unlike `disabled`; typing and a pasted date change nothing. |
 | `invalid` | `boolean` | `false` | Marks the boxes the problem is in. Field sets it from its error. |
