@@ -10,6 +10,14 @@
 //   SERUPA_SHARD=2/3 node tools/test/visual.mjs   every third story, starting with the second (CI runs the shards
 //                                                in parallel)
 // A story without a baseline fails the check; --update (or the "update-visual-baselines" label) writes one.
+// Against main, drawn on the spot (CI on a pull request, ADR-0016): no committed picture can be stale.
+//   SERUPA_STORYBOOK=<main's storybook-static> SERUPA_VISUAL_DIR=<dir> node tools/test/visual.mjs --update
+//                                         draws main's pictures into an empty folder
+//   SERUPA_VISUAL_DIR=<dir> SERUPA_VISUAL_REPORT=<out> node tools/test/visual.mjs
+//                                         compares this tree with them: a picture that differs, a new story and a
+//                                         story gone are the change to review, written to <out> (before and after,
+//                                         and changes-<shard>.json), not failures. A story that can't be drawn still
+//                                         fails.
 // Left out: the Playground stories (the default story with Storybook's controls, which another story shows), the
 // components in SKIP, and any story tagged "!visual" (tags: ['!visual'] in its story file, which takes away the
 // "visual" tag .storybook/preview.tsx gives every story: index.json lists the tags left, never the "!" ones).
@@ -30,7 +38,17 @@ import { ENGINE, HERE, PAGES, PROJECT, browser, expectedVersion, fail, fixClock,
 
 const TOLERANCE = 0.002;          // share of pixels allowed to differ
 const REDRAW = 0.0001;            // share past which Chromium's --update rewrites a picture (see "--update in Chromium")
-const DIR = path.join(HERE, `baseline-visual${suffix}`);
+const DIR = process.env.SERUPA_VISUAL_DIR ? path.resolve(process.env.SERUPA_VISUAL_DIR) : path.join(HERE, `baseline-visual${suffix}`);
+const REPORT = process.env.SERUPA_VISUAL_REPORT ? path.resolve(process.env.SERUPA_VISUAL_REPORT) : '';
+/** @type {{ name: string, kind: 'changed' | 'added' | 'removed', detail?: string }[]} */
+const changes = [];
+// Report mode: keeps the picture this tree draws (after) and main's (before) under the story's name.
+function keep(name, shot, kind, detail) {
+  fs.mkdirSync(path.dirname(path.join(REPORT, name)), { recursive: true });
+  if (shot) fs.writeFileSync(path.join(REPORT, `${name}.png`), shot);
+  if (kind !== 'added') fs.copyFileSync(path.join(DIR, `${name}.png`), path.join(REPORT, `${name}.before.png`));
+  changes.push({ name, kind, ...(detail ? { detail } : {}) });
+}
 const update = process.argv.includes('--update');
 // Firefox and WebKit (SERUPA_BROWSER, baseline-visual-<engine>/): what differs between engines is layout, text and
 // the CSS each supports, not the theme's colours, so a lighter set: each story at rest in blue-light and on the other
@@ -45,7 +63,8 @@ const SKIP = ['VisuallyHidden'];  // nothing to see
 const AXES = 'dir:rtl;contrast:more;density:compact';
 const FORCED = LIGHT ? [] : ['Checkbox', 'Combobox', 'FileUpload', 'Loader', 'Menu', 'Progress', 'Radio', 'SegmentedControl', 'Select', 'Slider', 'Switch', 'Table', 'Tabs'];
 
-const SB = path.join(PROJECT, 'storybook-static');
+const SB = process.env.SERUPA_STORYBOOK ? path.resolve(process.env.SERUPA_STORYBOOK) : path.join(PROJECT, 'storybook-static');
+fs.mkdirSync(DIR, { recursive: true });
 if (!fs.existsSync(path.join(SB, 'index.json'))) {
   console.log('FAIL  storybook-static/ is missing (npm run build-storybook)');
   process.exit(1);
@@ -234,11 +253,13 @@ async function compare(page, name, el) {
   }
   // A missing baseline fails: only --update (or the "update-visual-baselines" label) writes one, so a
   // story can't pass without being compared.
+  if (REPORT && !fs.existsSync(file)) { keep(name, shot, 'added'); return null; }
   if (!fs.existsSync(file)) {
     fs.writeFileSync(path.join(DIR, `${name}.actual.png`), shot);
     return { name, ok: false, detail: 'no baseline; add the "update-visual-baselines" label to the pull request (or run node tools/test/visual.mjs --update) and review the new images' };
   }
   const { share, box } = await diff(page, fs.readFileSync(file).toString('base64'), shot.toString('base64'));
+  if (REPORT) { if (share > TOLERANCE) keep(name, shot, 'changed', `${(share * 100).toFixed(2)}% of pixels differ (${box})`); return null; }
   if (share > TOLERANCE) fs.writeFileSync(path.join(DIR, `${name}.actual.png`), shot);
   return { name, ok: share <= TOLERANCE, detail: `${(share * 100).toFixed(2)}% of pixels differ (${box}); see ${name}.actual.png` };
 }
@@ -364,7 +385,13 @@ if (update) {
   console.log(`Visual baseline saved: ${stories.length} stories, ${sheetPages.length} Foundations pages.`);
   process.exit(sheetsFailed ? 1 : 0);
 }
-if (shard === 1) R.push({ name: 'every baseline belongs to a story', ok: !orphans.length, detail: `no story for: ${orphans.slice(0, 10).join(', ')}; add the "update-visual-baselines" label to remove them` });
+if (REPORT) {
+  if (shard === 1) for (const f of orphans) keep(f.replace(/\.png$/, ''), null, 'removed');
+  fs.mkdirSync(REPORT, { recursive: true });
+  fs.writeFileSync(path.join(REPORT, `changes-${shard}.json`), JSON.stringify(changes, null, 2));
+  console.log(changes.length ? `${changes.length} pictures differ from main's, to review:` : 'Every picture matches main\'s.');
+  for (const c of changes) console.log(`${c.kind.toUpperCase().padEnd(8)}${c.name}${c.detail ? `: ${c.detail}` : ''}`);
+} else if (shard === 1) R.push({ name: 'every baseline belongs to a story', ok: !orphans.length, detail: `no story for: ${orphans.slice(0, 10).join(', ')}; add the "update-visual-baselines" label to remove them` });
 console.log(`(${stories.length} stories, ${sheetPages.length} Foundations pages)`);
 if (measured.size) printConsistency(consistency, measuring);
 process.exitCode = report('Visual', R) ? 0 : 1;   // not process.exit: that cuts off a long report still going down a pipe

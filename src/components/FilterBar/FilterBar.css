@@ -16,7 +16,7 @@
 .dk-filter-bar__edit {
   min-inline-size: var(--spacing-0); min-block-size: var(--control-height-sm); margin: var(--spacing-0); padding-block: var(--spacing-0); padding-inline: var(--spacing-2) var(--spacing-1);
   border: var(--spacing-0); border-radius: var(--filter-bar-chip-radius, var(--radius-control)); background: transparent; color: inherit; font: inherit; font-weight: var(--font-medium);
-  text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; touch-action: manipulation;
+  text-align: start; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 @media (hover: hover) { .dk-filter-bar__edit:hover { text-decoration: underline; } }
 .dk-filter-bar__edit:focus-visible { outline: var(--focus-ring-width) solid var(--filter-bar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }

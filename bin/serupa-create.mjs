@@ -7,7 +7,11 @@
 // its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
 // node_modules/serupa-ds, which matches the installed release.
 //
-// usage:  npx --package=github:dsgn-space/serupa-ds#v<version> serupa-create <folder> [--brand <color>]
+// usage:  npx --package=github:dsgn-space/serupa-ds#v<version> serupa-create <folder> [--brand <color>] [--template <page>]
+//
+// --template dashboard (or settings-form, sign-in, task-board, any pattern's name in any spelling) starts the app on
+// that page instead of the small form: the pattern and the blocks it builds on go into src/serupa/ as source the app
+// owns, as serupa-add writes them, and App.tsx renders it. --template with no name lists the pages.
 //
 // The folder must be new or empty. The app installs this same release of serupa-ds (its tag, as the README's install
 // line does), and the React, Vite and TypeScript versions this release was tested with. --serupa <spec> installs
@@ -16,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CLAUDE, withSection } from './serupa-agents.mjs';
+import { find, plan } from './serupa-add.mjs';
 
 // The versions this release was tested with: dist/starter.json, which the build writes from the repository's
 // devDependencies (a release's package.json leaves them out), so a dependency bump moves the starter app with it.
@@ -23,11 +28,50 @@ export const VERSIONS = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../dis
 const BRANDS = ['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 
 /**
+ * The patterns an app can start on: whole pages whose component, named as the pattern, takes no prop it must be given
+ * (each has demo data). A file of several pages, such as ErrorPages, isn't one.
+ * @param {{ name: string, kind: string, summary: string, needs: string[], files: Record<string, string> }[]} list dist/templates.json's templates
+ */
+export function pages(list) {
+  return list.filter((t) => {
+    if (t.kind !== 'pattern') return false;
+    const src = t.files[`${t.name}.tsx`] || '';
+    if (!new RegExp(`^export function ${t.name}\\(`, 'm').test(src)) return false;
+    const props = new RegExp(`^export interface ${t.name}Props[^{]*\\{([\\s\\S]*?)^\\}`, 'm').exec(src);
+    return !props || !/^ {2}[A-Za-z_$][\w$]*:/m.test(props[1]);
+  });
+}
+
+/** The list of pages --template takes, with what each is for. */
+export function pageList(list) {
+  return `Pages an app can start on (serupa-create <folder> --template <page>):\n${pages(list).map((t) => `  ${t.name}: ${t.summary}`).join('\n')}\n`;
+}
+
+/**
  * The app's files, by path.
- * @param {{ name: string, serupa: string, brand: string }} o
+ * @param {{ name: string, serupa: string, brand: string, template?: { name: string, files: Record<string, string> } }} o
+ *   template: the pattern the app starts on, with its files and its blocks' (plan() in serupa-add.mjs)
  * @returns {Record<string, string>}
  */
-export function files({ name, serupa, brand }) {
+export function files({ name, serupa, brand, template }) {
+  const app = starter({ name, serupa, brand });
+  if (!template) return app;
+  const own = Object.fromEntries(Object.entries(template.files).map(([f, text]) => [`src/serupa/${f}`, text]));
+  return {
+    ...app,
+    ...own,
+    'src/App.tsx': `import { ${template.name} } from './serupa/${template.name}';
+
+// The ${template.name} pattern, as source this app owns: src/serupa/ holds it and the blocks it builds on. It starts on
+// demo data; pass your own through its props, or change the files. Its Storybook page shows each of its states.
+export function App() {
+  return <${template.name} />;
+}
+`,
+  };
+}
+
+function starter({ name, serupa, brand }) {
   const title = name.replace(/[-_]+/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
   const json = (v) => JSON.stringify(v, null, 2) + '\n';
   return {
@@ -66,7 +110,15 @@ const { default: tseslint } = await import('typescript-eslint');
 export default [
   { ignores: ['dist'] },
   ...tseslint.configs.recommended,
-  { files: ['**/*.tsx'], plugins: { 'jsx-a11y-x': jsxA11y }, rules: jsxA11y.configs.recommended.rules },
+  {
+    files: ['**/*.tsx'],
+    plugins: { 'jsx-a11y-x': jsxA11y },
+    rules: {
+      ...jsxA11y.configs.recommended.rules,
+      // role="list" on a list styled without bullets, on purpose: Safari's VoiceOver stops calling it a list otherwise.
+      'jsx-a11y-x/no-redundant-roles': ['error', { ul: ['list'], ol: ['list'] }],
+    },
+  },
   serupa,
 ];
 `,
@@ -213,11 +265,21 @@ To update Serupa, change the tag of \`serupa-ds\` in \`package.json\`, run \`npm
 }
 
 function main(argv) {
-  const USAGE = 'usage: serupa-create <folder> [--brand <color>]';
+  const USAGE = 'usage: serupa-create <folder> [--brand <color>] [--template <page>]';
   if (argv.includes('-h') || argv.includes('--help')) { console.log(USAGE); return 0; }
   const opt = (flag) => { const i = argv.indexOf(flag); if (i < 0) return undefined; const v = argv[i + 1]; argv.splice(i, 2); return v; };
   const brand = opt('--brand') ?? 'blue';
   let serupa = opt('--serupa');
+  let template;
+  if (argv.includes('--template')) {
+    const asked = opt('--template');
+    const list = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../dist/templates.json', import.meta.url)), 'utf8')).templates;
+    if (asked === undefined) { process.stdout.write(pageList(list)); return 0; }
+    if (asked.startsWith('-')) { console.error(`serupa-create: --template needs a page's name\n${USAGE}`); return 2; }
+    const page = find(pages(list), asked);
+    if (!page) { console.error(`serupa-create: no page called "${asked}".\n\n${pageList(list)}`); return 2; }
+    template = { name: page.name, files: plan(list, [page.name]).files };
+  }
   const unknown = argv.find((a) => a.startsWith('-'));
   if (unknown) { console.error(`serupa-create: unknown option ${unknown}\n${USAGE}`); return 2; }
   const [dir, extra] = argv;
@@ -231,11 +293,11 @@ function main(argv) {
     const repo = pkg.repository.url.replace(/^git\+https:\/\/github\.com\//, '').replace(/\.git$/, '');
     serupa = `github:${repo}#v${pkg.version}`;
   }
-  for (const [file, text] of Object.entries(files({ name, serupa, brand }))) {
+  for (const [file, text] of Object.entries(files({ name, serupa, brand, template }))) {
     fs.mkdirSync(path.dirname(path.join(target, file)), { recursive: true });
     fs.writeFileSync(path.join(target, file), text);
   }
-  console.log(`Made ${dir}. Next:\n\n  cd ${dir}\n  npm install\n  npm run dev\n`);
+  console.log(`Made ${dir}${template ? `, starting on ${template.name} (src/serupa/)` : ''}. Next:\n\n  cd ${dir}\n  npm install\n  npm run dev\n`);
   return 0;
 }
 
