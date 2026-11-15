@@ -35,6 +35,18 @@ const CASES = [
   ['Dialog: opening it says its title and that it is a dialog',
     "h(function () { var s = React.useState(false); return h(React.Fragment, null, h(S.Button, { onClick: function () { s[1](true); } }, 'Invite people'), h(S.Dialog, { open: s[0], onOpenChange: s[1], title: 'Invite people', description: 'They get an email with a link.' }, h(S.Button, null, 'Send'))); })",
     [['Tab', ['invite people', 'button']], ['Enter', ['invite people', 'dialog']]]],
+  ['Combobox: name and role, and the highlighted option as the arrow moves through the list',
+    "h(S.Combobox, { 'aria-label': 'Favorite fruit', options: ['Apple', 'Banana', 'Cherry'] })",
+    [['Tab', ['favorite fruit', 'combo box|combobox']], ['ArrowDown', ['apple']], ['ArrowDown', ['banana']]]],
+  ['Menu: the trigger is a button that opens a menu; opening it lands on the first item, an arrow on the next',
+    "h(S.Menu, { trigger: h(S.Button, null, 'Row actions') }, h(S.MenuItem, null, 'Rename'), h(S.MenuItem, null, 'Archive'))",
+    [['Tab', ['row actions', 'button']], ['Enter', ['rename']], ['ArrowDown', ['archive']]]],
+  ['Toast: a message that appears is read out, with focus left where it was',
+    "h(React.Fragment, null, h(S.Toaster), h(S.Button, { onClick: function () { S.toast('Changes saved'); } }, 'Save changes'))",
+    [['Tab', ['save changes', 'button']], ['Enter', ['changes saved']]]],
+  ['DatePicker: the field by its name, then the calendar button, which opens a dialog',
+    "h(S.DatePicker, { 'aria-label': 'Due date', locale: 'en-US' })",
+    [['Tab', ['due date']], ['Tab', ['choose a date', 'button']], ['Enter', ['choose a date', 'dialog']]]],
 ];
 
 const said = [];
