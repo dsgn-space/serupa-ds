@@ -1,6 +1,6 @@
 # Illustration
 
-A small line drawing for an empty state, an error page or a finished flow. It's drawn in the theme's own colors, so it fits all six themes and follows a brand's overrides without new artwork.
+A small line drawing for an empty state, an error page or a finished flow. It's drawn in the theme's own colors, so it fits every theme and follows a brand's overrides without new artwork.
 
 ```tsx
 import { EmptyState, Illustration } from "@diki-stwn/serupa-ds";
@@ -41,7 +41,7 @@ Drawn from the `Search` story.
 
 - **Role and name:** hidden from screen readers by default (`aria-hidden`), because the text beside it says the same thing. With `label`, it's `role="img"` with that name: use it only when the picture adds something the text doesn't.
 - **Keyboard:** not focusable (`focusable="false"`, also in old Edge).
-- **Contrast:** its outlines and accent read 3:1 on the surface in all six themes (`Illustration.test.tsx`), as WCAG 1.4.11 asks of a graphic. In forced colors the lines take the system colors.
+- **Contrast:** its outlines and accent read 3:1 on the surface in every theme (`Illustration.test.tsx`), as WCAG 1.4.11 asks of a graphic. In forced colors the lines take the system colors.
 - **What's still yours:** the title and description that say what happened, and the action that gets the person out.
 
 ## Props

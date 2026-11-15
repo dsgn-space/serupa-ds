@@ -33,6 +33,8 @@ import { editorData } from './editor-data.mjs';
 import { nativeFiles } from './native-tokens.mjs';
 import { emailFiles } from './email-kit.mjs';
 import { tokenDescriptions } from '../tokens/build.mjs';
+import { docsData, llmsTxt } from './docs-data.mjs';
+import { templates } from './templates.mjs';
 import { a11yComponents } from '../lint/a11y-components.mjs';
 import { PAIRS as CONTRAST_PAIRS } from '../tokens/contrast-pairs.mjs';
 
@@ -122,6 +124,13 @@ const devDependencies = JSON.parse(read('package.json')).devDependencies;
 const STARTER = ['react', 'react-dom', 'vite', 'typescript', '@types/react', '@types/react-dom', '@types/node', 'eslint', 'typescript-eslint', '@typescript/typescript6', 'eslint-plugin-jsx-a11y-x', 'stylelint'];
 fs.writeFileSync(path.join(D, 'starter.json'), JSON.stringify(Object.fromEntries(STARTER.map((n) => [n, devDependencies[n]])), null, 1) + '\n');
 fs.writeFileSync(path.join(D, 'theme.js'), stamp(read('src/theme.js')));
+// What bin/serupa-docs.mjs answers from (every guide, the skill's topics, the token descriptions) and llms.txt, the
+// summary a coding agent reads first: both from this release, so a lookup never names something it doesn't have.
+fs.writeFileSync(path.join(D, 'docs.json'), JSON.stringify(docsData(P, version)) + '\n');
+fs.writeFileSync(path.join(D, 'llms.txt'), llmsTxt(P, version));
+// The patterns and blocks serupa-add writes into an app, their imports pointed at the package (tools/build/templates.mjs).
+const made = templates(P);
+fs.writeFileSync(path.join(D, 'templates.json'), JSON.stringify({ version, templates: made.templates }) + '\n');
 // debug.js (204): the opt-in overlay that names each component on a page, its classes, state and overridden tokens.
 // Its contrast guard (203) checks the pairs tools/test/foundation.mjs checks, written in at build.
 fs.writeFileSync(path.join(D, 'debug.js'), stamp(read('src/debug.js')).replace('/*__PAIRS__*/[]', JSON.stringify(CONTRAST_PAIRS)));
@@ -154,7 +163,7 @@ export default config;
 // stylelint.js: the Stylelint config for an app's own CSS (serupa-ds/stylelint), shipped as written.
 fs.writeFileSync(path.join(D, 'stylelint.js'), stamp(read('src/stylelint.js')));
 fs.copyFileSync(path.join(P, 'src', 'stylelint.d.ts'), path.join(D, 'stylelint.d.ts'));
-// testing.js (184): forEachTheme() for screenshots of an app's own pages in each theme (serupa-ds/testing), as written.
+// testing.js (184): the testers and forEachTheme() for an app's own tests (serupa-ds/testing), as written.
 fs.writeFileSync(path.join(D, 'testing.js'), stamp(read('src/testing.js')));
 fs.copyFileSync(path.join(P, 'src', 'testing.d.ts'), path.join(D, 'testing.d.ts'));
 // Language packs (I7): serupa-ds/labels/<language> is dist/js/labels/<language>.js, one module per src/labels/ file,

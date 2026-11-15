@@ -20,9 +20,9 @@
     "score": 1
   },
   "src/internal/dates.ts": {
-    "mutants": 96,
-    "killed": 56,
-    "score": 0.583
+    "mutants": 104,
+    "killed": 83,
+    "score": 0.798
   },
   "src/internal/fling.ts": {
     "mutants": 21,
@@ -70,9 +70,9 @@
     "score": 0.75
   },
   "src/internal/position.ts": {
-    "mutants": 121,
-    "killed": 81,
-    "score": 0.669
+    "mutants": 126,
+    "killed": 103,
+    "score": 0.817
   },
   "src/internal/serverStyles.ts": {
     "mutants": 19,

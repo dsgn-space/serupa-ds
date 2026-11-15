@@ -252,7 +252,7 @@ describe('Tooltip', () => {
     await expect.poll(() => (el('tdlg') as HTMLDialogElement).open).toBe(false);
   });
 
-  test('contrast: the text keeps 4.5:1 on the tooltip in all six themes', async () => {
+  test('contrast: the text keeps 4.5:1 on the tooltip in every theme', async () => {
     await render(<Tooltip content="Settings" open><button id="b">B</button></Tooltip>);
     const low: string[] = [];
     for (const th of THEMES) {
@@ -263,7 +263,7 @@ describe('Tooltip', () => {
     expect(low).toEqual([]);
   });
 
-  test('a shortcut in the tooltip (Kbd) keeps its "+" at 4.5:1 on the tooltip in all six themes', async () => {
+  test('a shortcut in the tooltip (Kbd) keeps its "+" at 4.5:1 on the tooltip in every theme', async () => {
     await render(<Tooltip content={<>Save <Kbd keys={['mod', 'S']} /></>} open><button id="b">B</button></Tooltip>);
     const plus = [...tipOf('b').querySelectorAll('*')].find((e) => e.textContent === '+')!;
     const low: string[] = [];
@@ -331,15 +331,19 @@ describe('Tooltip warm-up (EC1)', () => {
         <Tooltip content="Bold" placement="bottom"><button id="xa">B</button></Tooltip><Tooltip content="Italic" placement="bottom"><button id="xb">I</button></Tooltip>
       </div>);
       const a = tipOf('xa'), b = tipOf('xb');
+      // Read as the transitions start, not after the command returns: a 100ms fade can be over by then on a busy runner.
+      const asItStarts = () => new Promise<[string, Array<Array<string | number>>]>((resolve) => a.addEventListener('transitionrun', () => resolve([css(a).display, runs(a)]), { once: true }));
+      let started = asItStarts();
       await userEvent.hover(el('xa'));
       await expect.poll(() => a.hidden).toBe(false);
-      expect(runs(a)).toEqual([['opacity', 150], ['translate', 150]]);
+      expect((await started)[1]).toEqual([['opacity', 150], ['translate', 150]]);
       await Promise.all(a.getAnimations().map((x) => x.finished));
+      started = asItStarts();
       await userEvent.keyboard('{Escape}');
       expect(a.hidden).toBe(true);
       // Kept in the top layer while it fades only where overlay can be held (Chromium); elsewhere it hides at once.
       if (!CSS.supports('overlay', 'auto')) { expect(css(a).display).toBe('none'); return; }
-      expect([css(a).display, runs(a)]).toEqual(['block', [['opacity', 100], ['translate', 100]]]);
+      expect(await started).toEqual(['block', [['opacity', 100], ['translate', 100]]]);
       await settled(a);
       expect(css(a).display).toBe('none');
 

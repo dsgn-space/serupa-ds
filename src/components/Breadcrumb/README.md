@@ -62,7 +62,7 @@ Drawn from the `Collapsed` story.
 - It's a `<nav>` landmark named "Breadcrumb" holding an ordered list, so screen readers say how many levels there are. Give it another name if the page has two.
 - The current page has `aria-current="page"`. Separators sit inside the item after them and are hidden from screen readers, so the list has one item per page.
 - With `collapse="menu"`, "…" is a menu button named "More pages" (`aria-haspopup="menu"`, `aria-expanded`), and the hidden pages are links in the menu. It follows Menu's keys: Enter, Space or ↓ opens it on the first page, ↑ ↓ move, Enter follows a link, and Escape closes it and returns to "…".
-- Links, the current page and separators keep 4.5:1 on `surface` in all six themes (`Breadcrumb.test.tsx`).
+- Links, the current page and separators keep 4.5:1 on `surface` in every theme (`Breadcrumb.test.tsx`).
 - Links are underlined on hover only: their place in the trail and the chevrons already say they're links.
 - **Keyboard:** Tab moves through the links, and Enter follows one. The current page is text, not a Tab stop. With `maxItems`, the "…" button is a Tab stop too, and Enter or Space shows the hidden pages (or opens their menu with `collapse="menu"`).
 

@@ -43,7 +43,9 @@ Once the script runs, the raised surface under the selected item is the **indica
 
 ## Usage
 
-- Keep labels to one or two words, so the segments stay short and even.
+- Keep labels to one or two words, so the segments stay short and even. Use nouns for what each one shows ("List", "Board"), not verbs.
+- Use words in every segment or icons in every segment, not a mix: segments with words beside icon-only ones look unequal and read unevenly.
+- Every segment picks a value. Don't make one an action ("Add view"): put that in a Button next to the control.
 - When the segments don't all fit, they share the width by content: short labels stay whole and a long one ends in an ellipsis, with its full label as its title on hover. That title isn't there for touch or the keyboard, so keep labels short enough to fit the narrowest screen, or use a [Select](../Select/README.md).
 - Give an icon-only segment an `aria-label`, and use icons alone only when they're widely understood.
 - Icon-only segments are at least 24px wide, so even in `sm` their centers are 24px apart, which meets WCAG 2.2's target size (2.5.8).
@@ -59,8 +61,8 @@ Once the script runs, the raised surface under the selected item is the **indica
 - Every option takes a press over at least 24px of height (WCAG 2.5.8), also at `size="sm"`, where options are drawn 18px tall, without taking more room. On a touch screen it's 44px high, as Apple and Material ask (the width stays, so segments never overlap).
 - `role="radiogroup"` with `role="radio"` segments and `aria-checked`.
 - In a [Field](../Field/README.md), the label names the radiogroup through `aria-labelledby`, and the hint and error describe it. Its own `aria-label` or `aria-labelledby` wins.
-- The outline keeps 3:1 on the page, and labels 4.5:1, in all six themes (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced colors (Windows high contrast) the selection is Highlight and its label HighlightText, exactly as set, so the browser's text backplate can't hide the label, and hovering the selected segment keeps it HighlightText.
-- `invalid` sets `aria-invalid` on the group and turns its outline danger (3:1 on the page in all six themes); `required` sets `aria-required`. Put the reason in text next to it: inside a [Field](../Field/README.md), its `error` and `required` do all of this.
+- The outline keeps 3:1 on the page, and labels 4.5:1, in every theme (`SegmentedControl.test.tsx`). The selected segment changes three ways (a raised surface, an outline and a darker label), so it doesn't rely on one color. In forced colors (Windows high contrast) the selection is Highlight and its label HighlightText, exactly as set, so the browser's text backplate can't hide the label, and hovering the selected segment keeps it HighlightText.
+- `invalid` sets `aria-invalid` on the group and turns its outline danger (3:1 on the page in every theme); `required` sets `aria-required`. Put the reason in text next to it: inside a [Field](../Field/README.md), its `error` and `required` do all of this.
 - `readOnly` sets `aria-readonly`. Segments stay focusable and the arrow keys move focus between them, so people can hear every option, but neither a click nor a key changes the selection. With `name`, the value is still sent with the form, which `disabled` doesn't do.
 - The selection slides over 200ms, and jumps with `prefers-reduced-motion` or when an arrow key picks the segment.
 
@@ -119,7 +121,6 @@ Each is an optional override: set it on the page, a container or one control. Th
 | Token | Default | Use |
 | --- | --- | --- |
 | `--segmented-control-indicator-shadow` | `elevation-part` | The selected segment's shadow. |
-| `--segmented-control-indicator-depth` | `depth-part` | The tactile layers over the selected segment's shadow. None in the flat brands. |
 
 **Radius**
 

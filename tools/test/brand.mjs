@@ -43,30 +43,26 @@ if (any) {
   const missing = Object.entries(any.themes).flatMap(([th, v]) => shippedAliases.filter((a) => !(a in v)).map((a) => `${th}: ${a}`));
   t('the themes set every alias the shipped themes set', !missing.length, missing.join(', '));
   t('only the brand aliases name the brand shades', !/--(?!acme-|dk-more-|primary|on-primary|focus-ring|link-visited|field-action)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
-  t('the CSS names no shipped brand hue (blue, violet, emerald) for a brand alias', !/--(primary|primary-hover|primary-subtle|on-primary|focus-ring|dk-more-[a-z-]+): [^;]*--(blue|violet|emerald)-/.test(any.css));
+  t('the CSS names no shipped brand hue for a brand alias', !/--(primary|primary-hover|primary-subtle|on-primary|focus-ring|dk-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
 }
-// --look modern: the same contrast on Modern's neutrals, which are emerald's, and Modern's corners and motion.
-const modern = {};
-for (const c of COLORS) {
-  let r, err = '';
-  try { r = brandTheme({ name: 'acme', color: c, look: 'modern', tokens }); } catch (e) { err = e.message; }
-  if (!r) { if (made[c]) t(`${c}: --look modern makes a theme when plain does`, false, err); continue; }
-  modern[c] = r;
-  const low = [];
-  for (const [th, v] of Object.entries(r.themes)) for (const [fg, bg, need] of PAIRS) {
-    if (!(fg in v) || !(bg in v)) continue;
-    const x = contrast(v[fg], v[bg]);
-    if (x < need) low.push(`${th}: ${fg} on ${bg} ${x.toFixed(2)}:1 (needs ${need})`);
-  }
-  t(`${c}: with --look modern, every contrast pair passes in acme-light and acme-dark`, !low.length, low.join('; '));
+// --motion brisk|calm: every surface and change role one step quicker or calmer, each still a step of the scale and
+// each exit still shorter than its enter; the loops and the press keep their pace.
+const scaleMs = Object.fromEntries(tokens.transitions.tokens.filter((x) => /^duration-\d+$/.test(x.name)).map((x) => [x.name, parseFloat(x.value)]));
+for (const motion of ['brisk', 'calm']) {
+  const r = brandTheme({ name: 'acme', color: '#0f766e', motion, tokens });
+  const set = Object.fromEntries([...r.css.matchAll(/--(motion-[a-z-]+): var\(--(duration-\d+)\);/g)].map((m) => [m[1], m[2]]));
+  const ms = (role) => scaleMs[set[role]];
+  const pairs = ['sm', 'md', 'lg'].map((z) => [ms(`motion-exit-${z}`), ms(`motion-enter-${z}`)]);
+  t(`--motion ${motion} sets the enter, exit and change roles to steps of the duration scale`, ['enter', 'exit', 'change'].every((k) => ['sm', 'md', 'lg'].every((z) => set[`motion-${k}-${z}`] in scaleMs)), JSON.stringify(set));
+  t(`--motion ${motion}: every exit is shorter than its enter`, pairs.every(([exit, enter]) => exit < enter), JSON.stringify(pairs));
+  t(`--motion ${motion} leaves the loops and the press alone`, !/--motion-(loop-[a-z]+|press):/.test(r.css));
+  const shipped = (role) => scaleMs[/^\{(?:transitions\.)?(.+)\}$/.exec(tokens.transitions.tokens.find((x) => x.name === role).value?.['blue-light'] ?? tokens.transitions.tokens.find((x) => x.name === role).value)?.[1]];
+  t(`--motion ${motion} is ${motion === 'brisk' ? 'quicker' : 'calmer'} than the default on every surface`, ['sm', 'md', 'lg'].every((z) => (motion === 'brisk' ? ms(`motion-enter-${z}`) < shipped(`motion-enter-${z}`) : ms(`motion-enter-${z}`) > shipped(`motion-enter-${z}`))), JSON.stringify(set));
 }
-const teal = modern['#0f766e'];
-if (teal) {
-  const emerald = (alias, mode) => tokens.color.tokens.find((x) => x.name === alias).value[`emerald-${mode}`];
-  t('--look modern takes Modern\'s neutrals: its surfaces and borders are emerald\'s', ['surface', 'surface-muted', 'border'].every((a) => ['light', 'dark'].every((m) => teal.picks[m] && teal.css.includes(`--${a}: ${emerald(a, m).replace(/^\{(.+)\}$/, 'var(--$1)')};`))), '');
-  t('--look modern sets Modern\'s corners, room, shadows and motion for the brand', ['--radius-surface: var(--rounded-xl);', '--dk-own-radius-surface: var(--rounded-xl);', '--space-surface: var(--spacing-8);', '--elevation-raised: var(--shadow-sm);', '--ease-spring: var(--ease-spring-soft);'].every((x) => teal.css.includes(x)), '');
-  t('the plain look sets none of them', !/--(space-surface|elevation-raised|ease-spring):/.test(made['#0f766e'].css));
-}
+t('the default motion sets no motion roles', !/--motion-/.test(made['#0f766e']?.css ?? ''));
+let wrongMotion = '';
+try { brandTheme({ name: 'acme', color: '#0f766e', motion: 'jumpy', tokens }); } catch (e) { wrongMotion = e.message; }
+t('an unknown motion preset is refused, naming the ones there are', wrongMotion.includes('brisk, calm'), wrongMotion);
 // A violet brand's visited links turn fuchsia, as the violet theme's do, so they stay a hue apart.
 if (made['#7c3aed']) t('a violet brand gets fuchsia visited links', made['#7c3aed'].css.includes('--link-visited: var(--fuchsia-700)'));
 for (const [name, why] of [['blue', 'a theme Serupa ships'], ['red', "a palette color's name"], ['Acme', "can't be a theme name"], ['9a', "can't be a theme name"]]) {
@@ -87,7 +83,7 @@ try {
     ['an unknown option', ['acme', '#0f766e', '--dark'], 'unknown option --dark'],
     ['-o with no file name', ['acme', '#0f766e', '-o'], '-o needs a file name'],
     ['an unknown corners preset', ['acme', '#0f766e', '--corners', 'wavy'], 'corners takes'],
-    ['an unknown look', ['acme', '#0f766e', '--look', 'retro'], 'look takes'],
+    ['an unknown motion preset', ['acme', '#0f766e', '--motion', 'jumpy'], 'motion takes'],
     ['a taken name', ['emerald', '#0f766e'], 'a theme Serupa ships'],
   ]) {
     const r = cli(...args);
@@ -96,8 +92,9 @@ try {
   const ok = cli('acme', '#0f766e', '--corners', 'round', '-o', 'themes/acme.css');
   const file = path.join(dir, 'themes', 'acme.css');
   t('the command writes the file and says what it picked', ok.status === 0 && fs.existsSync(file) && /acme-light: primary acme-\d+/.test(ok.stdout), ok.stderr.slice(0, 300));
-  const modernCli = cli('acme', '#0f766e', '--look', 'modern', '-o', 'themes/acme-modern.css');
-  t('--look modern writes the file', modernCli.status === 0 && fs.existsSync(path.join(dir, 'themes', 'acme-modern.css')), modernCli.stderr.slice(0, 300));
+  // A theme is its colors: the looks (--look) are gone in 16.0.0, and the option is an error rather than ignored.
+  const look = cli('acme', '#0f766e', '--look', 'modern');
+  t('--look is no longer an option', look.status === 2 && /unknown option --look/.test(look.stderr), look.stderr.slice(0, 300));
   const piped = cli('acme', '#0f766e');
   t('without -o the CSS goes to the standard output', piped.status === 0 && piped.stdout.startsWith('/* acme') && piped.stderr.includes('acme-dark: primary'), piped.stderr.slice(0, 300));
 
@@ -127,20 +124,15 @@ try {
     t('data-brand="acme" with data-mode="dark" in another theme gives the dark brand', got.probe.bd.primary === rgb(D.primary), JSON.stringify(got.probe.bd));
     t('more contrast gives the stronger primary', got.probe.m.primary === rgb(L['dk-more-primary']) && got.probe.m.primary !== got.probe.l.primary, JSON.stringify(got.probe.m));
     t('--corners round sets the radius roles', got.radius[0] && got.radius[0] === got.radius[1], got.radius.join(' vs '));
-    // A Modern brand: its corners and motion, and data-radius still beats them and puts them back.
-    const mcss = fs.readFileSync(path.join(dir, 'themes', 'acme-modern.css'), 'utf8');
-    await page.setContent(`<!doctype html><html><head><style>${tokensCss}\n${mcss}</style></head><body>
+    // The brand's own corners: data-radius still beats them, and data-radius="default" puts the system's back.
+    await page.setContent(`<!doctype html><html><head><style>${tokensCss}\n${fs.readFileSync(file, 'utf8')}</style></head><body>
       <div id="a" data-theme="acme-light"></div>
       <div data-radius="sharp"><div id="s" data-theme="acme-light"><div id="sd" data-radius="default"></div></div></div></body></html>`);
     const m = await page.evaluate(() => {
-      const v = (id, p) => getComputedStyle(document.getElementById(id)).getPropertyValue(`--${p}`).trim();
-      const root = (p) => getComputedStyle(document.documentElement).getPropertyValue(`--${p}`).trim();
       const px = (id, p) => { const d = document.getElementById(id).appendChild(document.createElement('div')); d.style.borderRadius = `var(--${p})`; const r = getComputedStyle(d).borderTopLeftRadius; d.remove(); return r; };
-      return { surface: px('a', 'radius-surface'), xl: px('a', 'rounded-xl'), spring: v('a', 'ease-spring'), soft: root('ease-spring-soft'), sharp: px('s', 'radius-surface'), back: px('sd', 'radius-surface') };
+      return { surface: px('a', 'radius-surface'), xl: px('a', 'rounded-xl'), lg: px('a', 'rounded-lg'), sharp: px('s', 'radius-surface'), back: px('sd', 'radius-surface') };
     });
-    t('a Modern brand gets Modern\'s corners and softer spring', m.surface === m.xl, JSON.stringify(m));
-    t('a Modern brand springs softly', m.spring === m.soft, JSON.stringify(m));
-    t('data-radius="sharp" beats a Modern brand\'s corners, and data-radius="default" puts them back', m.sharp !== m.surface && m.back === m.surface, JSON.stringify(m));
+    t('data-radius="sharp" beats a brand\'s --corners, and data-radius="default" gives the default corners', m.surface === m.xl && m.sharp !== m.surface && m.back === m.lg, JSON.stringify(m));
     await b.close();
   }
 } finally {

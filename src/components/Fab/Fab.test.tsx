@@ -55,6 +55,26 @@ describe('Fab', () => {
     expect(w).toBeGreaterThan(56);
   });
 
+  test('extended="auto": shrinks to a 56px round icon button while the page scrolls down and opens again scrolling up; its name stays the label', async () => {
+    await render(<div style={{ height: '4000px' }}><Fab id="auto" icon="edit" label="Compose" extended="auto" /></div>);
+    const fab = page.getByRole('button', { name: 'Compose' });
+    await expect.element(fab).toBeVisible();
+    // The open width once the label's font is in and the width has settled: a fallback font arriving late (Japanese)
+    // moved it 2px between this read and the one after the scroll.
+    await document.fonts.ready;
+    const w = () => el('auto').getBoundingClientRect().width;
+    let last = -1;
+    await expect.poll(() => { const now = w(), same = now === last; last = now; return same; }).toBe(true);
+    const wide = w();
+    expect(wide).toBeGreaterThan(80);
+    window.scrollTo(0, 400); window.dispatchEvent(new Event('scroll'));
+    await expect.poll(() => Math.round(el('auto').getBoundingClientRect().width), { timeout: 3000 }).toBe(56);
+    await expect.element(page.getByRole('button', { name: 'Compose' })).toBeVisible();
+    window.scrollTo(0, 200); window.dispatchEvent(new Event('scroll'));
+    await expect.poll(() => Math.round(el('auto').getBoundingClientRect().width), { timeout: 3000 }).toBe(Math.round(wide));
+    window.scrollTo(0, 0);
+  });
+
   test('position static stays in the flow; an unknown position falls back to bottom-end; --fab-size and --fab-offset override one', async () => {
     await render(<Fabs />);
     expect(css(el('fst')).position).not.toBe('fixed');

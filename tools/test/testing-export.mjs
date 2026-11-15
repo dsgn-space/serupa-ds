@@ -1,4 +1,4 @@
-// serupa-ds/testing, as an app's CI uses it (npm run build first): forEachTheme() draws the page in each of the six
+// serupa-ds/testing, as an app's CI uses it (npm run build first): forEachTheme() draws the page in each of the
 // themes, with transitions off and the color scheme to match, and puts the page back afterwards.
 //   node tools/test/testing-export.mjs
 import fs from 'node:fs';
@@ -12,7 +12,7 @@ const { THEMES, forEachTheme } = await import(pathToFileURL(file).href);
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 
-t('THEMES names the six themes tokens.css draws, in its order', JSON.stringify(THEMES) === JSON.stringify(tokensCss().themes), `${THEMES} against ${tokensCss().themes}`);
+t('THEMES names the themes tokens.css draws, in its order', JSON.stringify(THEMES) === JSON.stringify(tokensCss().themes), `${THEMES} against ${tokensCss().themes}`);
 
 const b = await browser();
 const page = await b.newPage();
@@ -42,12 +42,18 @@ const kept = await page.evaluate(() => document.documentElement.getAttribute('da
 t('themes picks some, in its order; a throw in fn stops there, comes out, and the page still gets its own theme back', some.join() === `${THEMES[2]},${THEMES[1]}` && thrown === 'picture differs' && kept === 'emerald-dark', `${some} / ${thrown} / ${kept}`);
 
 let unknown = '';
-try { await forEachTheme(page, () => {}, { themes: [THEMES[0], 'red-dark'] }); } catch (e) { unknown = e.message; }
-t('a theme that doesn\'t exist is an error that lists the six', /no theme called red-dark/.test(unknown) && unknown.includes('emerald-dark'), unknown);
+try { await forEachTheme(page, () => {}, { themes: [THEMES[0], 'slate-dark'] }); } catch (e) { unknown = e.message; }
+t('a theme that doesn\'t exist is an error that lists the ones there are', /no theme called slate-dark/.test(unknown) && unknown.includes('emerald-dark'), unknown);
 
 const still = [];
 await forEachTheme(page, async () => { still.push(await page.evaluate(() => getComputedStyle(document.getElementById('card')).transitionDuration)); }, { themes: ['blue-light'], still: false });
 t('still: false leaves transitions on', still[0] === '2s', still.join());
+
+// The testers (tested against the real components in src/testing.test.tsx): the built file exports each, and its types declare it.
+const mod = await import(pathToFileURL(file).href);
+const testers = ['combobox', 'menu', 'tabs', 'table', 'calendar', 'datePicker'];
+const types = fs.readFileSync(path.join(PROJECT, 'dist', 'testing.d.ts'), 'utf8');
+t('the built file exports every tester, and testing.d.ts declares it', testers.every((n) => typeof mod[n] === 'function' && types.includes(`export declare function ${n}(`)), testers.filter((n) => typeof mod[n] !== 'function' || !types.includes(`export declare function ${n}(`)).join(', '));
 
 await b.close();
 cleanup();

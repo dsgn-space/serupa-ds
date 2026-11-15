@@ -58,7 +58,7 @@ Drawn from the `Playground` story.
 | `/` `.` `-` Space | After a number, moves to the next box. In an empty box or the last one, does nothing. |
 | Ctrl+V, ⌘V | A whole date fills all three boxes; a number alone goes in the box. |
 
-- **Contrast:** the labels read 4.5:1 on the surface in all six themes (`DateField.test.tsx`); the boxes are Inputs.
+- **Contrast:** the labels read 4.5:1 on the surface in every theme (`DateField.test.tsx`); the boxes are Inputs.
 - **The message:** its line is the group's description and each marked box's, so it's read on entering the date and on the box to fix. It comes in all 20 languages, from the `dateFieldError` label.
 - **What's still yours:** the label and example, and the error's words when you want your own (`details.problem` says which, and `invalid` on the DateField or an error on its Field takes the message's place).
 

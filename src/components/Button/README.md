@@ -95,7 +95,7 @@ Hover fills use `danger-hover`, `danger-subtle-hover` and `danger-subtle`; keybo
 | `md` *(default)* | 32px (`control-height-md`) | 12px | `text-sm` (14px) | 16px | 6px |
 | `lg` | 44px (`control-height-lg`) | 20px | `text-base` (16px) | 20px | 8px |
 
-All sizes use `font-medium` and `radius-control` (6px; a brand can change it). `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars.
+All sizes use `font-medium` and `radius-control` (6px; a brand can change it). `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars. On a touch screen every size takes a press 44px across anyway, with nothing moving: an invisible box reaches past the button's edges. With other buttons in the same row it stops halfway into the gap (ButtonGroup and Toolbar tell it their gap; elsewhere it assumes 4px), so a press goes to the nearer button and never to a neighbour's face.
 
 ### Content
 
@@ -345,14 +345,6 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-icon-nudge` | `spacing-0` | How far a right icon slides on hover. Off by default (0); set it to `var(--spacing-0\.5)` (2px) where right icons are forward arrows. |
 | `--button-icon-nudge-duration` | `motion-change-sm` | How fast the right icon slides (150ms). |
 | `--button-loading-duration` | `motion-enter-sm` | Cross-fade between the content and the loading spinner (150ms). |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
-| `--button-depth` | `depth-control` | The tactile layers over the shadow of the primary, secondary and outline variants at rest. None in the flat brands. |
-| `--button-depth-hover` | `depth-control-hover` | The tactile layers on hover. |
-| `--button-depth-pressed` | `depth-control-pressed` | The tactile layers while the button is held down: it sinks. |
 <!-- token-table:end -->
 
 ### All tokens Button reads

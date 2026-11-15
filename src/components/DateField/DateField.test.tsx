@@ -260,7 +260,7 @@ describe('DateField', () => {
     for (const n of ['Tanggal', 'Bulan', 'Tahun']) await expect.element(page.getByRole('textbox', { name: n })).toBeInTheDocument();
   });
 
-  test('its labels read 4.5:1 on the surface in all six themes', async () => {
+  test('its labels read 4.5:1 on the surface in every theme', async () => {
     await render(<div id="s" style={{ background: 'var(--surface)' }}><DateField aria-label="Date" /></div>);
     const label = el('s').querySelector('label')!;
     for (const th of THEMES) {

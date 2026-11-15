@@ -263,7 +263,7 @@ describe('TreeView', () => {
     expect(css(row('a2x')).boxShadow).not.toBe('none');
   });
 
-  test('its labels read 4.5:1 on its background, and the picked row\'s on its highlight, in all six themes', async () => {
+  test('its labels read 4.5:1 on its background, and the picked row\'s on its highlight, in every theme', async () => {
     await render(<TreeView id="c" aria-label="Fruit" items={TREE} defaultValue={['c']} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

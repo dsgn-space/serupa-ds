@@ -13,6 +13,10 @@
   --dk-carousel-step: calc((var(--sizing-full) + var(--dk-carousel-space)) / var(--dk-carousel-per, 1));
 }
 .dk-carousel--multi { --dk-carousel-space: var(--carousel-slide-gap, var(--spacing-4)); }
+/* peek: the slides leave the peek length at the end, where the next one shows past the gap; on the last slide the
+   track pulls back by that and the gap, so the previous one shows at the start instead of an empty edge. */
+.dk-carousel--peek { --dk-carousel-step: calc((var(--sizing-full) - var(--carousel-peek, var(--spacing-12))) / var(--dk-carousel-per, 1)); }
+.dk-carousel--peek[data-end] { --dk-carousel-pull: calc(var(--carousel-peek, var(--spacing-12)) + var(--dk-carousel-space)); }
 /* perView with a breakpoint map: the count at each width comes from these media queries (the same widths as Carousel.tsx's
    matchMedia), so the server HTML is laid out for the screen before JavaScript runs. A dot past the last page at a
    width is hidden there until the dots are counted again. */
@@ -25,7 +29,7 @@
 @media (min-width: 1024px) { .dk-carousel__dot[data-past~="lg"] { display: none; } }
 .dk-carousel__track {
   display: flex; gap: var(--dk-carousel-space);
-  transform: translateX(calc(var(--spacing-0) - var(--dk-carousel-index) * var(--dk-carousel-step) + var(--dk-carousel-drag, 0px)));
+  transform: translateX(calc(var(--spacing-0) - var(--dk-carousel-index) * var(--dk-carousel-step) + var(--dk-carousel-pull, var(--spacing-0)) + var(--dk-carousel-drag, 0px)));
   transition: transform var(--dk-carousel-settle, var(--motion-change-lg)) var(--dk-carousel-ease, var(--ease-settle));
 }
 /* A loop carrying on past an end: the slides it wraps to stand in again beyond it (Carousel.tsx), then the track snaps back. */
@@ -34,7 +38,7 @@
 .dk-carousel__slide[data-wrap="before"] { translate: calc(var(--spacing-0) - var(--dk-carousel-count) * var(--dk-carousel-step)) 0; }
 .dk-carousel[data-dir="rtl"] .dk-carousel__slide[data-wrap="after"] { translate: calc(var(--spacing-0) - var(--dk-carousel-count) * var(--dk-carousel-step)) 0; }
 .dk-carousel[data-dir="rtl"] .dk-carousel__slide[data-wrap="before"] { translate: calc(var(--dk-carousel-count) * var(--dk-carousel-step)) 0; }
-.dk-carousel[data-dir="rtl"] .dk-carousel__track { transform: translateX(calc(var(--dk-carousel-index) * var(--dk-carousel-step) + var(--dk-carousel-drag, 0px))); }
+.dk-carousel[data-dir="rtl"] .dk-carousel__track { transform: translateX(calc(var(--dk-carousel-index) * var(--dk-carousel-step) - var(--dk-carousel-pull, var(--spacing-0)) + var(--dk-carousel-drag, 0px))); }
 .dk-carousel__viewport[data-dragging] .dk-carousel__track { transition: none; -webkit-user-select: none; user-select: none; }
 .dk-carousel__slide { flex: 0 0 calc(var(--dk-carousel-step) - var(--dk-carousel-space)); min-width: var(--spacing-0); }
 .dk-carousel__arrow { position: absolute; inset-block-start: var(--sizing-1-2); translate: 0 calc(var(--spacing-0) - var(--sizing-1-2)); box-shadow: var(--carousel-arrow-shadow, var(--elevation-part)); }
@@ -56,7 +60,9 @@
   background: transparent;
   cursor: pointer; touch-action: manipulation;
 }
-.dk-carousel__dot { position: relative; }
+.dk-carousel__dot { position: relative; isolation: isolate; }
+/* Touch (EQ1): 44px high to press, as Apple and Material ask; the width stays, so dots in a row never overlap. */
+@media (pointer: coarse) { .dk-carousel__dot::after { --dk-under: calc(var(--z-10) * -1); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset-block: var(--dk-reach-block); inset-inline: var(--spacing-0); } }
 /* Every dot is drawn at the current one's width, centered in its 24px target, and clipped to a circle; the current
    one lets the clip go, so it widens on the compositor without moving its neighbours (FB1). A clip keeps the round
    ends round all the way, which a scaleX would stretch. */

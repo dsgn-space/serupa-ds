@@ -1,6 +1,6 @@
 {
   "name": "@diki-stwn/serupa-ds",
-  "version": "14.7.0",
+  "version": "15.1.0",
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -81,9 +81,11 @@
     "./package.json": "./package.json"
   },
   "bin": {
+    "serupa-add": "./bin/serupa-add.mjs",
     "serupa-agents": "./bin/serupa-agents.mjs",
     "serupa-brand": "./bin/serupa-brand.mjs",
     "serupa-create": "./bin/serupa-create.mjs",
+    "serupa-docs": "./bin/serupa-docs.mjs",
     "serupa-migrate": "./bin/serupa-migrate.mjs",
     "serupa-purge": "./bin/serupa-purge.mjs",
     "serupa-usage": "./bin/serupa-usage.mjs"

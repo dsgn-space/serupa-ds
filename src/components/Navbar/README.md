@@ -58,12 +58,12 @@ Drawn from the `Playground` story.
 ## Accessibility
 
 - It's a `<header>` (the banner landmark, when it's the page's top-level header) holding a `<nav>` named "Main", so people can jump to the links.
-- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar along its bottom (at the start of a link in a menu panel). Hover shades a link the same way but never draws the bar, and the current page darkens one step under the pointer. In forced colors (Windows High Contrast), where the shading is dropped, it has an outline.
+- The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar along its bottom (at the start of a link in a menu panel). Hover shades a link one step quieter (`surface-hover`; `surface-hover-raised` in a menu panel) and never draws the bar, so a hovered link never reads as the current page; the current page darkens one step under the pointer. In forced colors (Windows High Contrast), where the shading is dropped, it has an outline.
 - On small screens the menu button has `aria-expanded` and `aria-controls`. Escape closes the menu and returns focus to the button.
 - With the menu open, Tab goes from the button into the links, in the order they appear, since the panel opens under the bar: the links come after the button in the DOM while it's open. Tab past the last link, any move of focus out of the bar, or a press outside it closes the menu.
 - The panel fades in as it opens and unrolls down from the bar, over 150ms, and fades back out when it closes, as Popover and Menu do. While it fades out it stays after the button and can't be used. With reduced motion it only fades.
 - **NavbarMenu** is a disclosure, not an ARIA menu (`role="menu"` is for app commands): a `<button>` with `aria-expanded` and `aria-controls`, and the panel after it, so Tab goes from the button into its links. Each group is a `role="group"` named by its title. A link with a `description` is named by its text and described by the line (`aria-describedby`), so a screen reader says the name first. Escape closes the panel and returns focus to its button, and in the small-screen menu it leaves that menu open. A press outside, focus leaving it, following a link or opening another NavbarMenu closes it: one is open at a time. On small screens the panel opens in place, under its button, inside the menu.
-- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in all six themes (`Navbar.test.tsx`).
+- Links keep 4.5:1 on the bar, and the current page and hovered links on their shading, in every theme (`Navbar.test.tsx`).
 
 ### Keyboard
 
@@ -145,7 +145,8 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | `--navbar-link-text` | `text-muted` | A link (4.5:1 on bg and link-bg-hover). |
 | `--navbar-link-text-hover` | `text` | A link on hover. |
 | `--navbar-link-text-active` | `text` | The current page's link. |
-| `--navbar-link-bg-hover` | `secondary` | A link's background on hover. |
+| `--navbar-link-bg-hover` | `surface-hover` | A link's background on hover: a step quieter than the current page's, so the link pointed at and the current one never look the same. |
+| `--navbar-menu-link-bg-hover` | `surface-hover-raised` | A link in a menu panel on hover: the raised hover step, since the panel floats, and a step quieter than the current link's fill. |
 | `--navbar-link-bg-active` | `secondary` | The current page's link background. |
 | `--navbar-link-bg-active-hover` | `pressed` | The current page's link background under the pointer: one step past its rest. |
 | `--navbar-link-indicator` | `highlight-indicator` | The 2px bar under the current page's link (at the start of a menu link), which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item. |
@@ -204,5 +205,4 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | --- | --- | --- |
 | `--navbar-shadow-scrolled` | `elevation-raised` | A sticky bar's shadow once the page has scrolled under it. |
 | `--navbar-menu-shadow` | `elevation-overlay` | A dropdown panel's shadow on wide screens. |
-| `--navbar-menu-depth` | `depth-surface` | The narrow-screen menu's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 <!-- token-table:end -->

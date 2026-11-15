@@ -68,7 +68,9 @@ Drawn from the `BottomEnd` story, opened.
 - The trigger is one element that passes its ref and props on to a DOM element: a Button, IconButton or link, or your own component written with `React.forwardRef` (or the `ref` prop in React 19) that spreads what it gets. A text, several elements or a Fragment throws an error that names the component, and a trigger that drops its ref warns once in the console ("Serupa: Menu's trigger doesn't forward its ref to an element.").
 - Start each label with a verb ("Edit", "Duplicate", "Delete") and keep it short.
 - Put the most used actions first, and destructive ones last, after a `MenuSeparator` or in their own `MenuGroup`.
-- Keep `disabled` items in place rather than hiding them, so people learn the action exists.
+- Keep `disabled` items in place rather than hiding them, so people learn the action exists. A `ContextMenu` is the exception: it's a shortcut to what can be done to that thing now, so leave out what can't.
+- Put nothing only in a `ContextMenu`. A right-click or long press is hidden until someone tries it, so each of its actions is also on the page, in a toolbar, a row's menu or the item's own page.
+- For a setting people turn on and off, use one `MenuCheckboxItem` ("Show grid", checked or not) rather than a pair such as "Show grid" and "Hide grid", which leaves people unsure which state they're in.
 - Use a `MenuSub` for a set of related choices that would make the menu long ("Share", "Move to"). Keep it to one level where you can: each level is one more step for keyboard and screen reader users, and harder to reach with a pointer. Never put the only way to do something two levels down.
 - Give a `ContextMenu` target `tabIndex={0}` (or use a focusable element), so keyboard users can reach it and press Shift+F10, and say in its hint or a Tooltip that it has one. Leave the browser's own menu where people expect it, such as on text they edit or links: `disabled` does that.
 - For settings, use `MenuCheckboxItem` (on or off, such as "Show grid") or a `MenuRadioGroup` of `MenuRadioItem`s (one of a set, such as a sort order). Put them in their own `MenuGroup` or `MenuRadioGroup`, to keep settings apart from actions. The menu's items unmount once it has closed, so you hold the state: `checked` with `onCheckedChange`, and `value` with `onValueChange`.
@@ -88,7 +90,7 @@ Drawn from the `BottomEnd` story, opened.
 - A `MenuCheckboxItem` is a `menuitemcheckbox` and a `MenuRadioItem` a `menuitemradio`, with `aria-checked`. The check before the label is hidden from assistive tech, which reads `aria-checked` instead.
 - A `shortcut` is given to assistive tech as `aria-keyshortcuts`, worked out from what's shown ("⌘⇧K" becomes `Meta+Shift+K`, "Ctrl+Shift+P" becomes `Control+Shift+P`; `mod` is `Meta` on a Mac and `Control` elsewhere), and the shown `<kbd>` is left out of the item's name, so it's read as "Edit" with its shortcut, not "Edit command E". Hyphens separate too ("Cmd-K" is `Meta+K`), a last `+` is the key ("Ctrl++" is `Control+Plus`), and "G then I" is two presses in a row (`G I`). Pass `aria-keyshortcuts` to set it yourself.
 - It fades and grows in out of its trigger over 150ms, and fades and shrinks back over 100ms when it closes. Its items arrive and leave with it, as one. With `prefers-reduced-motion` it only fades. The motion is a transition, so closing it while it opens turns back from where it is. Its items stay while it fades out, inert, and focus goes back at once; a submenu open when the menu closes closes and fades with it. A `ContextMenu` and a `MenuSub`'s submenu move the same way. One open on arrival (`defaultOpen`, or `open` on the first render) is there from the first frame. Firefox and Safari can't keep a closing menu in the top layer yet, so there it closes at once. From the keyboard there is no motion: opened by Enter, Space or an arrow (a submenu by ArrowRight) it is there at once, and Escape takes it away at once.
-- Labels, shortcuts and group headings keep 4.5:1 (also on the highlighted item) and icons 3:1, in all six themes (`Menu.test.tsx`).
+- Labels, shortcuts and group headings keep 4.5:1 (also on the highlighted item) and icons 3:1, in every theme (`Menu.test.tsx`).
 
 ### Keyboard
 
@@ -98,7 +100,7 @@ Drawn from the `BottomEnd` story, opened.
 | ↓ / ↑ | Opens it on the first / last item | The next / previous item, wrapping |
 | Home, End | | The first or last item |
 | Letters | | The next item starting with them. Letters typed within half a second make one word ("de" finds Delete past Duplicate), the same letter again steps through the items starting with it, and accents and case don't matter ("e" finds "Éditer"). A Space within half a second of a letter is part of the word ("save as" finds "Save as…"), so it doesn't choose |
-| Escape | | Closes it; focus goes back to the button |
+| Escape | | Closes it; focus goes back to the button. The phone's Back gesture or button does the same, innermost menu first |
 | Tab | | Closes it and moves on |
 | → (← in rtl), Enter, Space | | On a `MenuSub`: opens its submenu on the first item |
 | ← (→ in rtl), Escape | | In a submenu: closes it, and focus goes back to the item that opened it |
@@ -207,7 +209,6 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | Token | Default | Use |
 | --- | --- | --- |
 | `--menu-shadow` | `elevation-overlay` | The menu's shadow. |
-| `--menu-depth` | `depth-surface` | The menu's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 
 **Border**
 

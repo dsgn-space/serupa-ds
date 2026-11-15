@@ -47,6 +47,9 @@ Drawn from the `Bottom` story, opened.
 - Keep it outside any `<form>`. The panel renders where it's placed, so inside a form its own form nests in the page's (Enter reloads the page) and Enter in its field submits the page's form. Place it after the form; a field that belongs to the page's form can say so with the `form` attribute. In development it warns (`overlay-in-form`).
 - Use the function form of `children` to close it from a Done, Cancel or submit button.
 - When it holds only text, set `initialFocus="panel"`: there's no control inside to focus.
+- Show one at a time, and never open a popover from inside another: a chain of them is hard to follow and to close. For a second level of choices, use a [Menu](../Menu/README.md)'s `MenuSub`, or move the task into a [Dialog](../Dialog/README.md).
+- Don't use a popover for a warning: a click elsewhere closes it, so people can miss it. Use an [Alert](../Alert/README.md) in the page, or a Dialog with `alert` when people must answer.
+- A click outside closes it, often by accident, so keep what people typed: hold the fields' values in your state, and save or reuse them when it opens again. A Cancel button is the way to throw them away.
 - On a phone, a panel by its button is small to tap and covers what's around it. Set `sheet="mobile"` and under 640px it becomes a sheet along the foot of the screen, the screen's width, as Dialog's `fullScreen="mobile"` fills it; `sheet` makes it one everywhere. For a sheet people pull taller, or one with a backdrop, use a bottom [Drawer](../Drawer/README.md) with `snapPoints`.
 
 ### Do and don't
@@ -60,7 +63,7 @@ Drawn from the `Bottom` story, opened.
 - The title is an `<h2>`, as in Dialog, so screen reader users can jump to it by heading; set `headingLevel` to fit the page's outline.
 - Opening moves focus inside; Escape and `close()` return it to the trigger. It sits right after the trigger in the tab order, so Tab moves from the trigger into it.
 - A click outside or focus moving elsewhere closes it, without moving focus.
-- Text and the title keep 4.5:1 on the panel in all six themes (`Popover.test.tsx`).
+- Text and the title keep 4.5:1 on the panel in every theme (`Popover.test.tsx`).
 - It fades and grows in out of its trigger over 150ms, and fades and shrinks back over 100ms when it closes; with reduced motion it only fades. The motion is a transition, so closing it while it opens turns back from where it is. Its content stays while it fades out, inert, and focus goes back to the trigger at once. One open on arrival (`defaultOpen`, or `open` on the first render) is there from the first frame. Firefox and Safari can't keep a closing popover in the top layer yet, so there it closes at once. From the keyboard there is no motion: opened by Enter or Space it is there at once, and Escape takes it away at once.
 - As a sheet it is the same non-modal dialog, with the same keys and focus. It rises from the foot of the screen over 200ms and sinks back over 100ms (with reduced motion it only fades), stops 64px short of the top and scrolls inside, and its padding clears a phone's home bar. A `sheet="mobile"` one follows the screen while it's open: turned wide, it goes back next to its trigger.
 
@@ -70,7 +73,7 @@ Drawn from the `Bottom` story, opened.
 | --- | --- |
 | Enter / Space | On the trigger, opens it and moves focus inside |
 | Tab | From the trigger into the panel, which sits right after it; out of the panel, closes it |
-| Escape | Closes it and returns focus to the trigger |
+| Escape | Closes it and returns focus to the trigger. The phone's Back gesture or button does the same |
 
 ## Props
 
@@ -105,7 +108,6 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-title-color` | `text` | The title. |
 | `--popover-focus-ring` | `focus-ring` | The panel's focus ring, when it takes focus itself. |
 | `--popover-shadow` | `elevation-overlay` | The panel's shadow. |
-| `--popover-depth` | `depth-surface` | The panel's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--popover-radius` | `radius-surface` | The panel's corners (8px). |
 | `--popover-border-width` | `border-width-1` | The panel's border (1px). |
 | `--popover-sheet-radius` | `radius-container` | A sheet's top corners (12px). |

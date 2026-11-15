@@ -39,6 +39,9 @@ export interface ProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>
 const TONES: readonly ProgressTone[] = ['primary', 'success', 'warning', 'danger'];
 const OWN = { value: 1, max: 1, variant: 1, size: 1, tone: 1, label: 1, showValue: 1, formatValue: 1, announceComplete: 1, onComplete: 1, className: 1 } as const;
 const PERCENT = { style: 'percent', maximumFractionDigits: 0 } as const;
+// The ring's gap between arc and track, in hundredths of the ring: the arc's round end reaches 1.5 of the 24-unit box
+// past its length (half the 3-unit stroke, 2.3 hundredths of the 66-unit ring), and as much again is left clear.
+const RING_GAP = 4.5;
 
 /* Progress: how far along a task is, when you can tell: an upload, a setup, a quota. variant "bar" (default) or
    "circle"; size sm, md, lg; tone primary (default), success, warning or danger; an optional label above the
@@ -91,11 +94,14 @@ export const Progress = /* @__PURE__ */ component<HTMLDivElement, ProgressProps>
   const data = { 'data-component': 'progress', 'data-variant': variant, 'data-size': size, 'data-tone': tone, 'data-state': known ? (value >= max ? 'complete' : 'loading') : 'indeterminate' };
 
   if (variant === 'circle') {
+    // The track runs only where the arc doesn't, with a gap at each of its ends (RING_GAP), so the arc needs 3:1
+    // against the page alone, not against the track as well (WCAG 1.4.11).
+    const done = known ? share * 100 : 25;
     return (
       <div {...rest} {...aria} {...data} ref={(n) => { restyle(n); nameRef(n); }} className={cls}>
         <svg className="dk-progress__ring" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden focusable="false">
-          <circle className="dk-progress__track" cx={12} cy={12} r={10.5} />
-          <circle className="dk-progress__arc" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={known ? share * 100 + ' 100' : '25 100'} />
+          <circle className="dk-progress__track" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={Math.max(0, 100 - done - 2 * RING_GAP) + ' 100'} strokeDashoffset={-(done + RING_GAP)} />
+          <circle className="dk-progress__arc" cx={12} cy={12} r={10.5} pathLength={100} strokeDasharray={done + ' 100'} />
         </svg>
         {showValue && size !== 'sm' ? <span className="dk-progress__value" aria-hidden>{text}</span> : null}
         {nameless && !ringText ? <span id={base + '-label'} hidden>{props.label}</span> : null}

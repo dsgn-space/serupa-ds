@@ -93,7 +93,7 @@ describe('Progress', () => {
     expect([el('cind').getAttribute('aria-valuenow'), dash('cind'), withMotion(() => css(el('cind').querySelector('svg')).animationName)]).toEqual([null, '25 100', 'dk-progress-turn']);
   });
 
-  test('contrast: every tone\'s fill keeps 3:1 on the page and on the bar\'s track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and values 4.5:1, in all six themes', async () => {
+  test('contrast: every tone\'s fill keeps 3:1 on the page and on the bar\'s track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and values 4.5:1, in every theme', async () => {
     const tones = ['primary', 'success', 'warning', 'danger'] as const;
     await render(<Wrap>
       <Progress id="p1" value={45} label="Uploading" showValue />
@@ -116,6 +116,29 @@ describe('Progress', () => {
     }
     expect(low).toEqual([]);
     expect(n).toBe(90);
+  });
+
+  test('the ring\'s track stops short of its arc at both ends, so each tone\'s arc meets only the page, and keeps 3:1 on it in all six themes (WCAG 1.4.11)', async () => {
+    const tones = ['primary', 'success', 'warning', 'danger'] as const;
+    await render(<Wrap>{tones.map((t) => <Progress key={t} id={'ring-' + t} variant="circle" tone={t} value={40} aria-label={t} />)}<Progress id="ring-busy" variant="circle" aria-label="Busy" /></Wrap>);
+    // Where the track's dash runs, in hundredths of the ring (pathLength 100), against where the arc's runs.
+    const span = (id: string) => {
+      const [track, arc] = [...el(id).querySelectorAll('circle')] as SVGCircleElement[];
+      const a = parseFloat(css(arc!).strokeDasharray), t = parseFloat(css(track!).strokeDasharray), from = -parseFloat(css(track!).strokeDashoffset || '0');
+      // The arc's round end reaches half the stroke past its length: in hundredths, half the stroke over the ring's length.
+      const cap = (parseFloat(css(arc!).strokeWidth) / 2) / (2 * Math.PI * arc!.r.baseVal.value) * 100;
+      return [Math.round(from - a - cap) >= 1, Math.round(100 - (from + t) - cap) >= 1];
+    };
+    expect([span('ring-primary'), span('ring-busy')]).toEqual([[true, true], [true, true]]);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      for (const tone of tones) {
+        const r = contrast(css(el('ring-' + tone).querySelectorAll('circle')[1]!).stroke, 'var(--surface)');
+        if (r < 3) low.push(`${th} ${tone} ${r.toFixed(2)}`);
+      }
+    }
+    expect(low).toEqual([]);
   });
 
   test('--progress-fill overrides one bar', async () => {

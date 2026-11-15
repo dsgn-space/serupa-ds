@@ -43,6 +43,9 @@ Drawn from the `AnnounceComplete` story.
   "45 %" in French, "٤٥٪" in Egyptian Arabic, the same digits Calendar uses for its days. A `formatValue` of your
   own should do the same, for example with `Intl.NumberFormat(locale)`.
 - Keep `tone="primary"` for ordinary progress; switch to `warning` or `danger` when a quota is nearly full, and say so in the label or nearby text too.
+- Start without a `value` while the length is unknown, then pass one as soon as you know it (the files are counted, the size is known): a bar that shows how far along it is is easier to wait for.
+- Keep the same shape for the whole task: don't swap a ring for a bar, or a [Loader](../Loader/README.md) for a Progress, halfway, or the page jumps and people lose track of it.
+- When stopping is safe, put a Cancel button by it. When stopping loses work, say so before it stops ("Stop the import? The 3 files done so far are kept.").
 - When the task finishes, replace the bar with the result or a confirmation, such as a [Toast](../Toast/README.md).
 
 ## Behavior
@@ -58,7 +61,7 @@ Drawn from the `AnnounceComplete` story.
 ## Accessibility
 
 - `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`; an indeterminate one has no value. The bar is named by its `label`.
-- Every tone's fill keeps 3:1 on the page and on the bar's track, the track's border-control edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in all six themes (`Progress.test.tsx`). The bar's track is the page's surface inside that edge; the ring's track stays secondary, since its arc runs along the page. In forced-colors mode the bar's track gets a border and the fill uses Highlight; the ring's track is GrayText under a Highlight arc, so the arc stands apart from it in every high-contrast theme (a CanvasText track can sit too close to Highlight, as black and dark navy do).
+- Every tone's fill keeps 3:1 on the page and on the bar's track, the track's border-control edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in every theme (`Progress.test.tsx`). The bar's track is the page's surface inside that edge; the ring's track stays secondary, since its arc runs along the page. In forced-colors mode the bar's track gets a border and the fill uses Highlight; the ring's track is GrayText under a Highlight arc, so the arc stands apart from it in every high-contrast theme (a CanvasText track can sit too close to Highlight, as black and dark navy do).
 - Value changes aren't read out on their own, since reading every step is noisy. `announceComplete` says when it's done, politely ("Upload: complete", from `labels.progressComplete`, or your own words); for milestones in between, use `announce()` or your own live region.
 - **Keyboard:** none: it isn't focusable.
 
@@ -85,8 +88,6 @@ Every other prop, `className` and `ref` go to the outer `<div>`. It has `data-co
 Each is an optional override: set it on the page, a container or one progress indicator. The list lives in `src/components/Progress/progress.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from progress.tokens.json by npm run tokens: edit the descriptions there) -->
-**Colors**
-
 | Token | Default | Use |
 | --- | --- | --- |
 | `--progress-track` | `surface` | The bar's empty part: the page's surface inside a `track-border` edge, so every tone's fill keeps 3:1 against it (WCAG 1.4.11). |
@@ -98,46 +99,15 @@ Each is an optional override: set it on the page, a container or one progress in
 | `--progress-fill-danger` | `danger` | The done part, tone="danger". |
 | `--progress-label-color` | `text` | The label above the bar. |
 | `--progress-value-color` | `text-muted` | The value (45%) next to the label or inside the ring (4.5:1 on surface). |
-
-**Sizing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--progress-height-sm` | `spacing-1` | The bar's thickness, size="sm" (4px). |
 | `--progress-height-md` | `spacing-2` | The bar's thickness, size="md", the default (8px). |
 | `--progress-height-lg` | `spacing-3` | The bar's thickness, size="lg" (12px). |
 | `--progress-circle-sm` | `spacing-6` | The ring, size="sm" (24px). |
 | `--progress-circle-md` | `spacing-10` | The ring, size="md" (40px). |
 | `--progress-circle-lg` | `spacing-16` | The ring, size="lg" (64px). |
-
-**Border**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--progress-radius` | `radius-pill` | The bar's ends. |
 | `--progress-stroke-width` | `stroke-width-3` | The ring's thickness, in 24ths of its size (3: 3px at 24px). |
-
-**Spacing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--progress-gap` | `spacing-1.5` | Space between the label row and the bar (6px). |
-
-**Type**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--progress-label-weight` | `font-medium` | The label's weight (500). |
-
-**Motion**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--progress-duration` | `motion-change-lg` | How long the fill takes to move to a new value. |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
-| `--progress-track-depth` | `depth-well` | The track's tactile layers, over its border: a groove the bar fills. None in the flat brands. |
 <!-- token-table:end -->

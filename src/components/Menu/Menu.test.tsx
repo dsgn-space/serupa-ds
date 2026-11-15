@@ -493,7 +493,7 @@ describe('Menu', () => {
       .toEqual(['Control+Plus', 'Control+-', 'Meta+Plus', 'Plus', 'Meta+K', 'Control+S', 'Control+Shift+P', 'G I', 'Control+K Control+S', 'Shift+Plus']);
   });
 
-  test('contrast: labels, shortcuts and group labels 4.5:1 (also highlighted), icons 3:1, in all six themes', async () => {
+  test('contrast: labels, shortcuts and group labels 4.5:1 (also highlighted), icons 3:1, in every theme', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
@@ -817,7 +817,15 @@ describe('Menu: motion (DZ1)', () => {
   });
 
   test('a submenu open when its item is chosen fades out with its menu; one open on arrival is there from the first frame; ContextMenu fades out too', async () => {
-    await withMotion(async () => {
+    // Each menu's fade is read as its transitions start, not after the click returns: on a busy runner the 100ms fade
+    // can be over by then (as in the test above).
+    const closing = new Map<Element, unknown[]>();
+    const look = (e: Event) => {
+      const t = e.target as HTMLElement;
+      if (t.getAttribute('role') === 'menu' && t.inert && !closing.has(t)) closing.set(t, [runs(t), getComputedStyle(t).display, t.querySelectorAll('[role="menuitem"]').length]);
+    };
+    document.addEventListener('transitionrun', look, true);
+    try { await withMotion(async () => {
       await render(<Nested chosen={[]} />);
       await userEvent.click(el('nb'));
       await userEvent.click(el('share'));
@@ -829,7 +837,8 @@ describe('Menu: motion (DZ1)', () => {
       await userEvent.click(page.getByRole('menuitem', { name: 'Email' }));
       expect([openMenu(), s.hidden]).toEqual([undefined, true]);
       if (holds()) {
-        expect([runs(m), runs(s), getComputedStyle(s).display]).toEqual([[['opacity', 100], ['scale', 100]], [['opacity', 100], ['scale', 100]], 'block']);
+        const fade = [['opacity', 100], ['scale', 100]];
+        await expect.poll(() => [closing.get(m)?.[0], closing.get(s)?.slice(0, 2)]).toEqual([fade, [fade, 'block']]);
         await settled(m, { subtree: true });
       }
       await expect.poll(() => m.querySelectorAll('[role="menuitem"]').length).toBe(0);
@@ -844,8 +853,8 @@ describe('Menu: motion (DZ1)', () => {
       await settled(c, { subtree: true });
       await userEvent.click(el('ctx'), { position: { x: 4, y: 4 } });
       expect(c.hidden).toBe(true);
-      if (holds()) expect([c.inert, runs(c), c.querySelectorAll('[role="menuitem"]').length]).toEqual([true, [['opacity', 100], ['scale', 100]], 1]);
-    });
+      if (holds()) await expect.poll(() => [c.inert, closing.get(c)?.[0], closing.get(c)?.[2]]).toEqual([true, [['opacity', 100], ['scale', 100]], 1]);
+    }); } finally { document.removeEventListener('transitionrun', look, true); }
   });
 
   test('from the keyboard (KW1): opened by Enter, a submenu by ArrowRight, both are there at once; Escape takes each away at once', async () => {

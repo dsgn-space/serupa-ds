@@ -29,7 +29,7 @@
   border-radius: var(--menu-radius, var(--radius-surface));
   background: var(--menu-bg, var(--surface-overlay));
   color: var(--menu-item-text, var(--text));
-  box-shadow: var(--menu-depth, var(--depth-surface)), var(--menu-shadow, var(--elevation-overlay));
+  box-shadow: var(--menu-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--text-sm--line-height);
@@ -75,6 +75,9 @@
 .dk-menu { --dk-menu-icon-room: var(--spacing-0); --dk-menu-check-room: var(--spacing-0); }
 .dk-menu:has(> .dk-menu__item > .dk-menu__icon, > .dk-menu__group > .dk-menu__item > .dk-menu__icon) { --dk-menu-icon-room: calc(var(--spacing-4) + var(--menu-item-gap, var(--spacing-2))); }
 .dk-menu:has(> .dk-menu__item > .dk-menu__check, > .dk-menu__group > .dk-menu__item > .dk-menu__check) { --dk-menu-check-room: calc(var(--spacing-4) + var(--menu-item-gap, var(--spacing-2))); }
+/* Touch (EQ1): items at least 44px high on a touch screen, as Apple and Material ask. Stacked items can't take a
+   press past their edges without taking a neighbour's, so the row itself grows; with a mouse it stays compact. */
+@media (pointer: coarse) { .dk-menu__item { min-height: max(var(--menu-item-height, var(--control-height-md)), var(--spacing-11)); } }
 .dk-menu__item {
   --dk-menu-add-icon: var(--dk-menu-icon-room); --dk-menu-add-check: var(--dk-menu-check-room);
   padding-inline-start: calc(var(--menu-item-padding-x, var(--spacing-2)) + var(--dk-menu-add-icon) + var(--dk-menu-add-check));

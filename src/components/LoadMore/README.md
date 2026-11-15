@@ -43,7 +43,7 @@ Drawn from the `LongText` story.
 - **Announcements:** when `count` grows, the number added is said politely through the shared live region ("20 more loaded. Showing 40 of 134."). Without `count`, "More loaded" is said once a promise from `onLoadMore` settles. The button's own "Loading" isn't said, so a load is one message.
 - **Focus:** focus stays on the button, which moves down below the new items, so the next Tab goes on from there. Once the load lands, the button is scrolled back into view (only as far as needed), so keyboard users see where they are rather than pressing again off screen. When the last page leaves no button, focus goes to the end text instead of falling back to the page.
 - **Infinite scroll:** it loads when the button comes within 200px of the viewport, once per approach, and again only after `count` changes, so a load that adds nothing doesn't repeat. The button stays for keyboard and screen reader users, who don't scroll to load, and as the fallback where IntersectionObserver is missing.
-- **Contrast:** the summary and end text read 4.5:1 on the page in all six themes (`LoadMore.test.tsx`).
+- **Contrast:** the summary and end text read 4.5:1 on the page in every theme (`LoadMore.test.tsx`).
 - **What's still yours:** keep loaded items when people go back to the list, and tell people when a load fails (an [Alert](../Alert/README.md) with a retry).
 
 ### Keyboard

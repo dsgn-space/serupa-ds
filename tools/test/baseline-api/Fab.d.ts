@@ -3,7 +3,7 @@ type FabPosition = "bottom-end" | "bottom-start" | "static" | "top-end" | "top-s
 interface FabProps extends Omit<ButtonAsButtonProps, "aria-label" | "children" | "icon" | "leftIcon" | "rightIcon" | "size" | "variant"> {
     icon: IconSource;
     label: string;
-    extended?: boolean | undefined;
+    extended?: "auto" | boolean | undefined;
     size?: "md" | "sm" | undefined;
     placement?: FabPosition | undefined;
 }

@@ -30,20 +30,16 @@
   /* the properties a button changes, each with its own timing: colors and the focus ring at motion-hover,
      the release (scale) coming back at motion-release with ease-enter, with no overshoot; the press itself, below, at
      --button-press-duration (see Micro-interactions below) */
-  transition-property: background-color, color, border-color, text-decoration-color, box-shadow, scale, transform;
-  transition-duration: var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-release), var(--motion-release);
-  transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-enter), var(--ease-enter);
+  transition-property: background-color, color, border-color, text-decoration-color, box-shadow, scale;
+  transition-duration: var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-release);
+  transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-enter);
   position: relative;
   --dk-btn-press: var(--button-press-scale, var(--scale-97));
-  --dk-btn-press-y: var(--depth-press);   /* a tactile brand's press also moves down (1px); 0 in the flat ones */
   --dk-btn-nudge: var(--button-icon-nudge, var(--spacing-0));   /* off by default; opt in with --button-icon-nudge */
   --dk-btn-loader-from: var(--scale-50);
   --dk-btn-shadow: var(--shadow-none);
-  --dk-btn-depth: var(--shadow-none);   /* the tactile layers over the shadow (Depth, below); none on ghost and link */
-  --dk-btn-sheen: none;
   --dk-btn-ring: var(--button-focus-ring, var(--focus-ring));
-  box-shadow: var(--dk-btn-depth), var(--dk-btn-shadow);
-  background-image: var(--dk-btn-sheen);
+  box-shadow: var(--dk-btn-shadow);
 }
 /* A label longer than the room it has ends in an ellipsis; the whole label is still the button's name, and a Tooltip shows it. */
 .dk-btn__label { display: block; min-width: var(--spacing-0); overflow: hidden; text-overflow: ellipsis; }
@@ -88,16 +84,7 @@
 
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
 .dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--shadow-xs); }
-/* Depth: the tactile look, layered over that shadow, never in place of it. Nothing in the flat brands (the depth-*
-   tokens are empty there); in a tactile one (violet, or data-depth="tactile") a top highlight, a soft lift that rises
-   on hover, and a sheen on the filled buttons. Held down, the button sinks: an inner shade, and the sheen's light
-   goes out. Only shadows and a background image change, so nothing moves and reduced motion needs nothing more. */
-.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-depth: var(--button-depth, var(--depth-control)); }
-.dk-btn--primary { --dk-btn-sheen: var(--depth-sheen); }
-@media (hover: hover) { .dk-btn:is(.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline):hover:not(:disabled, [aria-disabled="true"]) { --dk-btn-depth: var(--button-depth-hover, var(--depth-control-hover)); } }
-.dk-btn:is(.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline):is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { --dk-btn-depth: var(--button-depth-pressed, var(--depth-control-pressed)); }
-.dk-btn--primary:is(:active, [data-pressed]):not(:disabled, [aria-disabled="true"]) { --dk-btn-sheen: var(--depth-sheen-pressed); }
-.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) { --dk-btn-shadow: var(--shadow-none); --dk-btn-depth: var(--shadow-none); --dk-btn-sheen: none; }
+.dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) { --dk-btn-shadow: var(--shadow-none); }
 
 /* Destructive: a modifier on every variant (destructive prop) */
 .dk-btn--destructive { --dk-btn-ring: var(--button-destructive-focus-ring, var(--danger)); }
@@ -175,9 +162,8 @@ a.dk-btn[aria-disabled="true"] { pointer-events: none; }
 .dk-btn:not(.dk-btn--link):active:not(:disabled, [aria-disabled="true"]),
 .dk-btn:not(.dk-btn--link)[data-pressed]:not(:disabled, [aria-disabled="true"]) {
   scale: var(--dk-btn-press);
-  transform: translateY(var(--dk-btn-press-y));   /* transform, not translate, so a button placed with translate (Carousel's arrows) keeps its place */
-  transition-duration: var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--button-press-duration, var(--motion-press)), var(--button-press-duration, var(--motion-press));
-  transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-settle), var(--ease-settle);
+  transition-duration: var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--motion-hover), var(--button-press-duration, var(--motion-press));
+  transition-timing-function: var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-move), var(--ease-settle);
 }
 /* Nudge (off by default): on hover (devices that hover), a right icon slides --button-icon-nudge in its direction.
    Set it, e.g. to var(--spacing-0\.5), where right icons are arrows that mean "go forward". */
@@ -204,11 +190,24 @@ a.dk-btn[aria-disabled="true"] { pointer-events: none; }
   .dk-btn--loading-cover > .dk-btn__label,
   .dk-btn--loading-cover > .dk-btn__icon { filter: var(--dk-btn-cross-blur); }
 }
+/* Touch: 44px to press on a touch screen, as the Design principles promise, without moving or redrawing anything. A
+   box behind the button reaches past its edges up to 44px on each axis (a 32px IconButton takes a press 6px outside
+   it). With another button in the same row it stops halfway into the gap (--dk-touch-gap, set by the rows that hold
+   buttons; 4px, the smallest gap between buttons, when nothing says), so it never takes a press meant for its neighbour. */
+@media (pointer: coarse) {
+  /* The box is placed from inside the border (--dk-btn-bw), so each reach counts it back out. */
+  .dk-btn::after {
+    --dk-btn-bw: var(--button-border-width, var(--border-width-1));
+    --dk-btn-reach: calc(min(var(--spacing-0), (100% + 2 * var(--dk-btn-bw) - var(--spacing-11)) / 2) - var(--dk-btn-bw));
+    content: ""; position: absolute; inset: var(--dk-btn-reach);
+  }
+  :is(.dk-btn ~ .dk-btn, .dk-btn:has(~ .dk-btn))::after { --dk-btn-gap: calc(var(--spacing-0) - var(--dk-touch-gap, var(--spacing-1)) / 2 - var(--dk-btn-bw)); inset: max(var(--dk-btn-reach), var(--dk-btn-gap)); }
+}
 /* A pressed toggle (aria-pressed) in forced colors: the variants' fills are gone there, so the pressed one takes the
    system highlight, as ToggleButton's does. */
 @media (forced-colors: active) { .dk-btn[aria-pressed="true"] { background: Highlight; color: HighlightText; forced-color-adjust: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .dk-btn { --dk-btn-press: var(--scale-100); --dk-btn-press-y: var(--spacing-0); --dk-btn-nudge: var(--spacing-0); --dk-btn-loader-from: var(--scale-100); }
+  .dk-btn { --dk-btn-press: var(--scale-100); --dk-btn-nudge: var(--spacing-0); --dk-btn-loader-from: var(--scale-100); }
   .dk-btn__loader { animation-name: dk-loader-in; }   /* only fades in: nothing grows */
 }
 }

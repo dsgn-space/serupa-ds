@@ -36,34 +36,35 @@ Text on white, and white text on a fill, both reach 4.5:1 at the same shade (the
 
 ## Themes
 
-Six themes share **one set of foundations**: the same palette, type, spacing scale and components. Blue and Violet only change where the alias colors point. Modern (the `emerald` brand) also sets its own shape, elevation, motion and spacing roles; see [Modern](#modern).
+Every theme shares **one set of foundations**: the same palette, type, spacing scale and components. A theme is a brand color and a mode, and nothing else: it only changes where the brand colors point, so every corner, shadow, border, surface, space, chart color and motion is the same in all of them. There is a theme for each accent color of the palette, light and dark, 34 in all. Blue is the default.
 
-| Theme | Brand hue | Mode |
+| Brand | `primary` in light | `primary` in dark |
 | --- | --- | --- |
-| Blue Light *(default)* | `blue` | light |
-| Blue Dark | `blue` | dark |
-| Violet Light | `violet` | light |
-| Violet Dark | `violet` | dark |
-| Modern Light | `emerald` (teal) | light |
-| Modern Dark | `emerald` (teal) | dark |
+| `blue` *(default)* | `blue-600` | `blue-400` |
+| `red` | `red-600` | `red-400` |
+| `orange` | `orange-700` | `orange-400` |
+| `amber` | `amber-700` | `amber-400` |
+| `yellow` | `yellow-700` | `yellow-400` |
+| `lime` | `lime-700` | `lime-400` |
+| `green` | `green-700` | `green-400` |
+| `emerald` | `emerald-700` | `emerald-400` |
+| `teal` | `teal-700` | `teal-400` |
+| `cyan` | `cyan-700` | `cyan-400` |
+| `sky` | `sky-700` | `sky-400` |
+| `indigo` | `indigo-600` | `indigo-400` |
+| `violet` | `violet-600` | `violet-400` |
+| `purple` | `purple-600` | `purple-400` |
+| `fuchsia` | `fuchsia-600` | `fuchsia-400` |
+| `pink` | `pink-700` | `pink-400` |
+| `rose` | `rose-600` | `rose-400` |
 
-Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
+A theme's id is `<brand>-light` or `<brand>-dark`. Switch themes with the `data-theme` attribute on any element, e.g. `<html data-theme="violet-dark">`. Everything inside follows: components use aliases only, so they need no changes.
 
-### Modern
+### The brand shade
 
-Modern is the `emerald` brand: a calm, neutral interface with one teal accent, in the spirit of Linear, Vercel's Geist and Stripe. Its id stays `emerald`, so pages that already use it keep working. Everything is done with tokens, so components are the same in every theme.
+`primary` is a fill with text on it and a text color of its own (links, ghost and outline buttons), so in light themes it is the first step of the brand ramp that reaches 4.5:1 both ways: under white text and on a white page. That is step 600 for `blue`, `red`, `indigo`, `violet`, `purple`, `fuchsia` and `rose`, and step 700 for the lighter ramps: `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky` and `pink`. So Yellow Light is a deep, golden yellow rather than a bright one. In dark themes every brand is step 400 with its own 950 as the text on it. `data-contrast="more"` steps each brand up within its own ramp, to 7:1.
 
-- **One accent.** `primary`, `primary-hover`, `primary-subtle` and `focus-ring` use `teal` (700 / 800 / 50 / 600 in light, 400 / 300 / 950 / 400 in dark). Everything else is neutral `zinc`.
-- **A deeper dark canvas.** In dark, `surface` is `zinc-950`, and raised and overlay surfaces and muted panels are `zinc-900`, and fields `zinc-800` as in the other themes. Overlay borders are a step softer (`zinc-700`), so edges stay quiet.
-- **See-through hairlines.** `border` and `border-strong` are ink at low opacity rather than a fixed grey: `zinc-950` at 10% (18% for `border-strong`) in light, white at 8% (22%) in dark. On white they look like `zinc-200` and `zinc-300`, and on a muted panel, a table stripe or a coloured card they stay the same step darker than what's behind them instead of disappearing. Borders that mark a control (`field-border`) and overlay borders stay solid, and `data-contrast="more"` makes them all solid and stronger.
-- **Hairlines, not heavy shadows.** A raised card keeps a 1px `border` edge, and each elevation role is one step softer: `elevation-rest` is `shadow-2xs`, `part` is `shadow-xs`, `raised` is `shadow-sm`, `overlay` is `shadow-md` and `modal` is `shadow-lg`. `data-shadow` keeps these roles.
-- **8 to 12px corners.** `radius-control` is 8px and `radius-surface` 12px, the same as `radius-container`. `radius-inner` stays 4px for small parts such as checkboxes, and `radius-pill` stays round.
-- **Quick, quiet motion.** Nothing over 200ms: `motion-enter-md`, `motion-exit-lg`, `motion-change-md` and `motion-release` are 150ms, `motion-exit-md` 100ms, `motion-enter-lg` and `motion-change-lg` 200ms. `ease-pop` uses `ease-out-quart` and `ease-celebrate` `ease-out-expo`, so nothing overshoots, and `ease-spring` is the soft spring, which settles without a visible bounce. Reduced motion still turns motion off as in every theme.
-- **Charts lead with the accent.** `chart-1` is teal (`teal-800` light, `teal-600` dark), and the sequential and diverging ramps run in teal, so a sparkline or a first series matches the buttons and links. The other series are re-picked so neighbours still differ for every reader: orange, purple, blue, yellow, pink, violet, red. The first four (teal, orange, purple, blue) stay apart as every pair, including for colour-blind readers, so two lines that cross never look alike.
-- **More room.** `space-surface` is 32px and `space-section` 48px (24px and 32px elsewhere).
-- **Type does the work.** Modern uses the same single typeface (Inter) and type scale as the other themes, whose headings are already semibold.
-
-Contrast is checked like every theme: body text, links and buttons meet 4.5:1, borders that mark a control (`border-control`) and the focus ring meet 3:1 (a form field's resting border is soft by design, as in every theme), and `data-contrast="more"` steps the teal up to 800 / 300.
+The neutral colors, the status colors and the chart colors don't follow the brand. A red theme's primary button and a danger button are both red; where the two meet, the danger one keeps its icon and its wording.
 
 **Brand and mode without JavaScript**: `data-brand` and `data-mode` work on their own, with no script. On `<html>`, or on any element:
 
@@ -79,18 +80,16 @@ Each color that changes between themes is a `light-dark()` pair, and `data-mode`
 
 **Density**: `data-density="compact"` makes `md` controls 28px and `lg` 36px (from 32 and 44) for dashboards and data-heavy screens; `sm` stays 24px, the WCAG 2.2 minimum target. Components read the `--control-height-*` tokens, so they need nothing else. `data-density="comfortable"` puts the defaults back for one section.
 
-**Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). Modern's own 8 and 12px corners give way to it too. `data-radius="default"` puts the theme's own corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
+**Roundness**: `data-radius="sharp"` or `data-radius="round"` changes how round every corner is, on any brand, by pointing the radius roles at other steps (see [Corner radius](#corner-radius)). `data-radius="default"` puts the default corners back for one section, and `radius-pill` stays round in all three. A focus ring is an outline, which follows the corner it's drawn around.
 
 **Shadows**: `data-shadow="brand"` tints the box shadows (`shadow-2xs` to `shadow-2xl`): each one's black becomes a deep shade of the brand color, at the same opacity, so raised cards, menus and dialogs sit in the brand rather than in grey. The shade is worked out where the attribute is, so a section with its own `data-brand` needs its own `data-shadow="brand"` too. `data-shadow="neutral"` puts the black back for one section.
-
-**Depth**: the violet brand is tactile, in the restrained way of a modern operating system: soft, short shadows and hairline edges, never glossy bands. Buttons sit on a two-layer shadow that rises on hover and, when filled, carry a soft light from the top edge; held down they sink under an inner shade. Switch and slider thumbs, the selected segment, and a ticked Checkbox or selected Radio are raised like a physical knob. Fields, PIN boxes, unticked boxes, and the Switch, Slider, Progress and Meter tracks are sunk into the page. Menus, popovers, list boxes, pickers, hover cards, tooltips (a chart's too), toasts, tour steps, the offline banner, dialogs and drawers float as panes with a crisp hairline edge, and a faint light along the top edge in dark mode. Cards, Kanban cards and sortable items rest on a soft, short shadow, and a card with a link lifts toward the pointer. Keycaps (Kbd) stand up like keys, and the selected calendar day, the pill tab, Stepper's current and finished steps and Pagination's current page carry the same top light as a filled button. Pages and text stay flat. The blue and emerald brands are flat. The look comes from the `depth-*` tokens (`depth-control`, `depth-control-hover`, `depth-control-pressed`, `depth-sheen`, `depth-sheen-pressed`, `depth-part`, `depth-field`, `depth-well`, `depth-surface`, `depth-card`, `depth-card-lift`), which are layers added over a component's own shadow and are empty in a flat brand, so components need nothing else. `data-depth="tactile"` turns the look on for any brand, on the page or one section, and `data-depth="flat"` turns it off, violet included. A section with its own `data-brand` takes that brand's depth. A sheen fades out by 40% of a control's height, clear of its label, so every label keeps its contrast. Forced-colors mode drops the sheens along with the shadows. Held down, a button sinks by `depth-press` (1px in a tactile brand, 0 in a flat one) and a card with a link settles back by the same amount. A tactile Switch thumb crosses on a spring (`motion-toggle`, `ease-toggle`) and a Checkbox tick draws itself on (`motion-draw`). Reduced motion keeps the shadows but drops the sinking, the spring and the drawing.
 
 **Fluid type**: `data-type-scale="fluid"` lets the heading sizes (`text-2xl` to `text-9xl`, and the `type-*` styles that use them, such as `type-display` and `type-heading-1`) follow the width of the window: 70% of their size on a 320px phone, never under 20px, growing to their full size at 1280px and wider. Body sizes (`text-xl` and smaller) don't change. Each size is a `clamp()` with a `rem` part, so browser zoom still enlarges it. Zooming also narrows the window the sizes follow, so at 200% a heading is about 1.6 times its size and at 300% at least double, which meets WCAG 1.4.4 (body text doubles at 200% as usual). Line heights stay as they are. `data-type-scale="fixed"` puts the fixed sizes back for one section.
 
 **Automatic dark mode**: `theme.js` (standalone, no React, `dist/theme.js` in the package) sets `data-theme` for the page from a brand and a mode, follows the visitor's light/dark setting live when the mode is `auto`, and remembers a choice the visitor makes. Load it first in `<head>` so the page never flashes the wrong theme:
 
 ```html
-<html data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
+<html data-brand="blue" data-mode="auto">   <!-- brand: blue, violet, emerald… any accent color; mode: auto | light | dark -->
 <script src="dist/theme.js"></script>
 ```
 
@@ -110,7 +109,7 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 
 **Use aliases in your UI, the palette for the aliases.** Build screens with `primary`, `text`, `border`… and only reach for a palette color like `blue-600` directly when no alias fits; a palette color looks the same in every theme.
 
-`‹brand›` below is `blue`, `violet` or `emerald`. One exception: Modern (`emerald`) uses the `teal` ramp, one step darker in light: `primary` is `teal-700`, `primary-hover` `teal-800` and `focus-ring` `teal-600`, because white text on `teal-600` is below 4.5:1. Its neutral roles in dark are one step deeper too; see [Modern](#modern).
+`‹brand›` below is the theme's brand. The lighter ramps sit one step darker in light themes: `primary` is `‹brand›-700` and `primary-hover` `‹brand›-800`; see [The brand shade](#the-brand-shade).
 
 | Alias | Light themes | Dark themes | Use |
 | --- | --- | --- | --- |
@@ -123,11 +122,11 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 | `highlight` | `zinc-100` | `zinc-700` | The highlighted row in a list: a focused Menu item, the active Combobox or TimePicker option, the current Sidebar page. Text and icons keep AA on it; muted text does not, so a highlighted row switches its muted lines to `text`. In a dropdown list the fill alone marks the row; `highlight-indicator` adds a bar at its start only with more contrast. |
 | `pressed` | `zinc-300` | `zinc-600` | The fill while a row, tab, day or page button is held down: one step past its hover. |
 | `surface-page` | `white` | `zinc-950` | The page itself: the `<html>` and `<body>` background, and a `data-mode` or `data-theme` section's. The same as `surface` in light; in dark a step below the cards, panels and bars on it, so they and every control sit lighter than the page. |
-| `surface` | `white` | `zinc-900` | Card, panel and bar background. Emerald dark keeps `zinc-950`. |
+| `surface` | `white` | `zinc-900` | Card, panel and bar background. |
 | `surface-muted` | `zinc-50` | `zinc-950` | Secondary panels, sidebars, table headers, filled Cards and wells: recessed, a step below `surface` in both modes. Never the fill of a control. |
 | `surface-control` | `zinc-50` | `zinc-900` | The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. The same as `surface-muted` in light; in dark a step above the page, so a control never looks sunk into it. |
-| `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit): a quiet step off the page. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
-| `surface-hover-raised` | `zinc-50` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1. |
+| `surface-hover` | `zinc-50` | `zinc-800` | A row or item under the pointer, a selected row, a striped row (List, Table, InlineEdit), a Sidebar, Navbar or TreeView item under the pointer: one quiet step off `surface`, and a step under `highlight`, so an item pointed at never looks like the current one. On a filled Card or a `bg-surface-muted` panel, List and InlineEdit rows step up to `surface-raised` instead, since there `surface-hover` would match what's under them. |
+| `surface-hover-raised` | `zinc-50` | `#333338` | The same fill on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer, a Navbar menu panel): in dark a step above `zinc-800`, halfway to `zinc-700`, where muted text still has 4.5:1; in emerald dark halfway from `zinc-900` to `zinc-800`. |
 | `surface-raised` | `white` | `zinc-800` | A raised card (Card `elevated`). In dark, where shadows don't show, the lighter surface carries the lift. |
 | `surface-overlay` | `white` | `zinc-800` | Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast, and the Combobox, DatePicker and TimePicker lists. |
 | `surface-inverse` | `zinc-900` | `zinc-50` | Contrasting blocks: tooltips, inverse banners. |
@@ -209,12 +208,12 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 ```sh
 npx serupa-brand acme "#0f766e" -o src/acme-theme.css          # corners as they are
 npx serupa-brand acme "#0f766e" --corners round -o src/acme-theme.css   # or sharp
-npx serupa-brand acme "#0f766e" --look modern -o src/acme-theme.css     # Modern's look
+npx serupa-brand acme "#0f766e" --motion brisk -o src/acme-theme.css   # or calm
 ```
 
 Load the file after `tokens.css`, then set `data-theme="acme-light"` or `"acme-dark"`, or `data-brand="acme"` with `data-mode`. With theme.js, name the brand on the page too: `<html data-brands="acme" data-brand="acme" data-mode="auto">`.
 
-It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary` on the page at 4.5:1 in light, the mirror in dark, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. With `--look modern` the brand takes Modern's look around its color: Modern's calm neutrals and soft borders, its 8 and 12px corners, roomier surfaces, lighter shadows and softer motion. `--corners` still sets the corners on top, and `data-radius` beats either. A color no shade of which can pass says so, and makes no file.
+It makes the brand's eleven shades, 50 to 950, from the color's hue, with the color itself among them. Then each brand alias takes the shade that passes the same contrast as the shipped themes: white text on `primary` and `primary` on the page at 4.5:1 in light, the mirror in dark, the focus ring at 3:1, and 7:1 for more contrast. The color is `primary` when it passes. Everything else (neutrals, status colors, shadows, type) stays the system's own. `--corners` sets the theme's corners, and `data-radius` beats it. `--motion brisk` makes every surface and change one step quicker on the duration scale (a dialog enters in 150ms instead of 200ms), and `--motion calm` one step slower (300ms). The spinner, the placeholder pulse, the press and the waits keep their pace, and every exit stays shorter than its enter. A color no shade of which can pass says so, and makes no file.
 
 ### Adding a theme
 
@@ -447,8 +446,8 @@ A container nested inside another should have a smaller radius than its parent.
 | Role | `sharp` | Default | `round` |
 | --- | --- | --- | --- |
 | `radius-inner` | 2px | 4px | 6px |
-| `radius-control` | 2px | 6px (8px in Modern) | 12px |
-| `radius-surface` | 4px | 8px (12px in Modern) | 16px |
+| `radius-control` | 2px | 6px | 12px |
+| `radius-surface` | 4px | 8px | 16px |
 | `radius-container` | 4px | 12px | 24px |
 
 Each component's own radius token (`--button-radius`, `--menu-radius`…) defaults to its role, so one component can still be set apart. The `serupa/radius-through-role` Stylelint rule holds the components to this: a corner that names `rounded-sm` up to `rounded-4xl` fails lint. `rounded-none`, `rounded-xs` (the hairline curve of a text mark, such as Highlight) and `rounded-full` pass.
@@ -539,7 +538,7 @@ How things sit above one another: the page, raised cards, floating menus and dia
 
 **Light and dark**
 
-In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, with the same `zinc-200` edge. In dark themes (a `zinc-950` page under `zinc-900` cards), shadows hardly show, so a raised surface steps up to `zinc-800`, and an overlay's edge to `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in all six themes.
+In light themes, shadows carry the lift: `surface-raised` and `surface-overlay` are white like `surface`, with the same `zinc-200` edge. In dark themes (a `zinc-950` page under `zinc-900` cards), shadows hardly show, so a raised surface steps up to `zinc-800`, and an overlay's edge to `zinc-600`. Because the tokens change with the theme, the same classes work in both: `bg-surface-overlay border border-border-overlay shadow-lg` is a correct floating panel in every theme.
 
 In forced-colors mode, backgrounds and shadows are replaced, so only the edge survives. Every floating surface has a real border for that reason; keep it if you restyle one.
 
@@ -655,6 +654,20 @@ Design for a phone first, then add what changes on wider screens. The five break
 - Change the layout where the content needs it, not at every breakpoint. Two or three changes are usually enough.
 - Test at 320px wide. WCAG 1.4.10 asks that content reflows without scrolling sideways at that width (400% zoom on a 1280px screen); only data tables, maps and diagrams may scroll.
 - For a component that sits in places of different widths (a card in a sidebar and in the main column), let its width decide, not the screen's: Grid's `columns="auto"` and `minColumnWidth`, or a container query (`@container`).
+
+**Navigation by width**
+
+Give an app's main places the navigation that fits the window, and keep the same places in the same order at every width:
+
+| Width | Navigation | Why |
+| --- | --- | --- |
+| Below `md` (under 768px) | BottomNav for three to five places, or Navbar's menu button for more | A thumb reaches the bottom of a phone, and the page keeps its whole width |
+| `md` to `lg` (768 to 1023px) | Sidebar with `collapsed`: a 64px icon rail | A tablet or a narrow window has room for icons, not for a column of names |
+| From `lg` (1024px) | The full Sidebar | The names fit, so people read where to go instead of recognising icons |
+
+- Switch on the window's width, not the device: a narrow desktop window gets the rail too. BottomNav hides from `md` by itself (`hideFrom`); collapse the Sidebar below `lg` and hide it below `md`.
+- Let people still collapse the full Sidebar by hand, and keep their choice.
+- The Page shell pattern's AdaptiveNavigation story does all three: resize the window to see it switch.
 
 **Containers**
 
@@ -885,6 +898,8 @@ If none fits, it doesn't move. How often someone sees it decides how much it may
 
 **Budget.** At most two or three things move at once on a screen, and only one of them is the one the eye should follow. A screen where a chart draws in, numbers change, a toast rises and a list staggers in all at the same moment says nothing, because nothing stands out. When a change sets off several, keep the one that explains what happened (the row that moved, the total that changed) and let the rest change at once. A loop (a spinner, a placeholder's pulse) counts toward the budget for as long as it runs, so a page of skeletons pulses as one group, never each card on its own beat. Check a full screen, not one component: open the Dashboard and Notifications patterns, do the most common action, and count what moves.
 
+**Direction.** Where something moves tells people where it came from, so pick the direction to match. A surface tied to a control grows from that control: a menu from its button, a popover from its trigger, a tooltip from what it describes. A surface that belongs to the whole app has a fixed place and arrives the same way each time, wherever it was opened from: toasts from their corner, a command palette from the top, a drawer from its edge. Moving forward (the next step, a page deeper) slides one way and going back slides the other, mirrored in right-to-left pages. An exit runs the entrance backwards, shorter and fading as it goes. It may also vanish at once: a tooltip, a hover card or a menu closed by a choice can go in the same frame, since no one watches them leave.
+
 **Keyboard.** An action someone repeats from the keyboard (arrow keys through a list, a calendar or a tab list; Tab through a form; a shortcut) should answer at once: focus and selection move in the same frame, with no slide or fade to wait for. What a key opens or closes answers at once too: a menu, popover, combobox list or date or time picker opened by Enter, Space or an arrow is there in the first frame, and one closed by Escape is gone in the same frame. A pointer or a tap keeps the enter and the exit, because there the motion shows where the surface came from. The same goes for the Tabs line or fill and the SegmentedControl selection: picked by an arrow they jump, and clicked they slide. Each reads the last input through `src/internal/lastInput.ts` (the layers through `useExit`) and puts `data-instant` on itself, and its CSS leaves out the starting style and the exit transition under it.
 
 **Turned down.** Examples of motion this system says no to, and why: a menu's items arriving one by one (people open menus all day, and the last item would be late every time); a hover lift on every card in a grid (the page shimmers as the pointer crosses it); a dialog that bounces as it opens (overshoot is for small things); a toast that wobbles (it would be the tenth one today); a delay before a dropdown opens on click (it reads as lag); a page fading in on every navigation (it slows what people do most). Effects popular in motion libraries, turned down for the same reasons: a button pulled toward the pointer, a card tilting under it, a custom cursor or a spotlight following it (pointer only: nothing for the keyboard or touch, and the target moves while someone aims at it); a highlight gliding behind each item as the pointer crosses a menu or list (seen hundreds of times a day; Tabs and SegmentedControl glide only when clicked); icons that grow as the pointer nears them, as in a dock (the one being aimed at moves); glows and light trails running round a border, and text that scrambles, waves or shimmers in place (decoration that pulls the eye and slows reading; Loader's text shine is a loading state, not decoration); and a row of logos or quotes scrolling without end (it moves for more than five seconds, so WCAG 2.2.2 asks for a pause, and people can't read what keeps leaving).
@@ -905,8 +920,6 @@ Transition and animation scales are tokens in one `transitions` group (`var(--du
 | --- | --- | --- |
 | `motion-press` | `duration-100` | A control answering while it's held down (Button scales down). |
 | `motion-release` | `duration-300` | A press let go coming back to size with `ease-enter`, settling with no overshoot (Button, Badge). |
-| `motion-toggle` | `motion-press` (tactile: `motion-release`) | A Switch thumb sliding to its new side. |
-| `motion-draw` | `duration-0` (tactile: `duration-150`) | A Checkbox tick drawing itself on, left to right, when the box is ticked under the pointer or keyboard focus. Instant in a flat brand. |
 | `motion-hover` | `duration-150` | Hover and focus changes on a control that stays put: colors, borders, shadows. |
 | `motion-enter-sm` | `duration-150` | A small surface appearing: tooltips, popovers, menus, date pickers. |
 | `motion-enter-md` | `duration-200` | A medium surface appearing: dialogs, toasts. |
@@ -928,8 +941,7 @@ Transition and animation scales are tokens in one `transitions` group (`var(--du
 | `ease-move` | `ease-in-out-cubic` | Something that stays on screen and changes: a thumb sliding, a panel resizing, a color changing. |
 | `ease-settle` | `ease-out-expo` | Something arriving at a new value or let go by the hand: a fill, a slide, a drawer dropped. Most of the travel at once, then a long glide to rest. |
 | `ease-pop` | `ease-out-back` | Something small popping into place: a check mark, a count, a dot. Overshoots by about 4%, then settles. |
-| `ease-spring` | `ease-spring-snappy` (tactile: `ease-spring-soft`) | A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Tactile brands use the softer spring. |
-| `ease-toggle` | `ease-move` (tactile: `ease-spring-snappy`) | A Switch thumb crossing to its new side. The tactile spring overshoots a little and still lands within about 100ms. |
+| `ease-spring` | `ease-spring-snappy` | A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. |
 | `ease-fling` | `ease-out-cubic` | Something the hand let go of mid-motion carrying on to rest at the hand's speed: a drawer or carousel slide flicked. |
 | `ease-celebrate` | `ease-elastic` | A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. |
 
@@ -1108,6 +1120,7 @@ How the words in a product built with the system should read: labels, hints, err
 - Never blame the person. "That date is before the start date", not "You entered an invalid date".
 - Point to things by their name, never by shape, color, position or sound alone: "Select Save", not "Select the button below"; "Check the start date", not "Fix the red field". Someone using a screen reader, a zoomed screen or a different layout can't see "below" or "red" (WCAG 1.3.3).
 - Leave out words that tell the reader something should be quick for them: "simply", "just", "obviously", "of course", "easy". When it isn't quick for them, the word makes them feel slow; when it is, the word adds nothing. "Add an email address", not "Just add an email address".
+- Leave out "your" and "my" where the page already says whose it is: "Favorites", "Settings", not "My favorites", "Your settings". Keep them only where two people's things meet, such as "Your files" beside "Shared with you".
 - Use plain, neutral terms: "allow list" and "block list", not "whitelist" and "blacklist"; "main" and "replica" (or "primary" and "secondary"), not "master" and "slave".
 
 **Words to use**
@@ -1236,16 +1249,16 @@ When a pattern breaks one of these, the fix is in the pattern, not in the words 
 
 ## Accessibility standard
 
-The target is **WCAG 2.2 level AA**, in all six themes, at any zoom up to 400%, with a keyboard, a screen reader, a touch screen, and in forced-colors (high-contrast) mode. The components meet their share of it; a page meets the rest only if the app does its part. This is who does what.
+The target is **WCAG 2.2 level AA**, in every theme, at any zoom up to 400%, with a keyboard, a screen reader, a touch screen, and in forced-colors (high-contrast) mode. The components meet their share of it; a page meets the rest only if the app does its part. This is who does what.
 
 **What the system guarantees**
 
 - **Contrast.** Text, placeholder, icon, control-border and focus-ring colors meet 4.5:1 or 3:1 in every theme; the foundation check measures every pair on every change. `data-contrast="more"` (or the system's "increase contrast" setting) raises body, muted, placeholder, status and brand-colored text to 7:1.
-- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. Each README has a Keyboard table.
+- **Keyboard.** Every component works with the keys its pattern in the ARIA Authoring Practices expects: Tab into it, arrows inside composite widgets (menus, tabs, lists, calendars), Enter and Space to act, Escape to close. On a phone, the Back gesture or button closes what's open the way Escape does, innermost first: a Menu, Popover, picker list, HoverCard or Tour step as well as a Dialog or Drawer, before it leaves the page. Each README has a Keyboard table.
 - **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Inside a strong fill (`bg-primary`, `bg-danger`, `bg-surface-inverse`) the ring takes the fill's text color, so it still stands out at 3:1; a light surface nested inside such a fill should set `--focus-ring` back itself. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
 - **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
 - **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.
-- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
+- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. On a touch screen, buttons, pages in Pagination, and checkbox, radio, switch and slider rows take a press 44px across whatever their size, without moving anything; between two neighbours the press goes to the nearer one. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
 - **Reflow and zoom.** Components fit a 320px-wide screen and wrap instead of clipping, and sizes are in `rem`, so text zoom works.
 - **Fields on iOS.** Safari on iPhone and iPad zooms into a focused field whose text is under 16px. There, Input, Textarea and Select (and the components built on them) draw their own text at 16px at every size, keeping the box height. Don't stop the zoom with `maximum-scale=1` in the viewport tag: it also stops pinch zoom, which WCAG 1.4.4 needs.
 - **Motion.** Under `prefers-reduced-motion`, components stop their animations and keep at most a short fade, and `base.css` makes every other transition on the page near-instant. Nothing flashes.

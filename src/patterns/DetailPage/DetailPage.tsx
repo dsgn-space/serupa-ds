@@ -29,6 +29,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
    - 4.1.3: the toast says what was removed; a saved name is shown in the h1 at once.
    - 3.3.1: a name left empty says so, and the old name stays; a delete that fails says so in the dialog, which stays
      open with focus on its button, so it can be tried again.
+   - 1.3.1, 1.4.10: a supporting pane (`aside`), such as the project's activity, is a complementary landmark named by
+     its heading; it sits beside the tabs on a wide screen and drops below them on a narrow one, in reading order.
    Storing the changes is the app's job: onRename, onRemoveTask and onDelete get them. */
 
 export interface ProjectTask { id: string; title: string }
@@ -51,6 +53,9 @@ export interface DetailPageProps {
   loadFailed?: boolean | undefined;
   /** Loads again, after a failed load. Return a promise: Try again shows it's working until it settles. */
   onRetry?: (() => void | Promise<unknown>) | undefined;
+  /** A supporting pane beside the tabs from 1024px, and below them on a narrower screen: the project's activity, its
+      people. Its title names the landmark. */
+  aside?: { title: string; content: React.ReactNode } | undefined;
 }
 
 const demo: Project = {
@@ -72,7 +77,7 @@ function day(iso: string, locale: string): string {
 const english = /* @__PURE__ */ new Intl.PluralRules('en');
 
 /** The detail page: a skip link, a header, then main with the breadcrumb, the h1, the tabs and the danger zone. */
-export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed, loading = false, loadFailed = false, onRetry }: DetailPageProps) {
+export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, deleteFailed, loading = false, loadFailed = false, onRetry, aside }: DetailPageProps) {
   const [name, setName] = React.useState(project.name);
   const [description, setDescription] = React.useState(project.description);
   // A new name or description from the app (another project opened, or the saved one coming back) replaces the one
@@ -137,7 +142,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" aria-busy={loading && !loadFailed ? true : undefined} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
+      <main id="main" aria-busy={loading && !loadFailed ? true : undefined} className={`mx-auto flex ${aside ? 'max-w-6xl' : 'max-w-4xl'} flex-col gap-6 px-4 py-8 outline-none`}>
         {loadFailed || loading ? (
           // The name isn't known yet, so the h1 says only what the page is; the way back stays.
           <>
@@ -157,7 +162,8 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
             <PageHeader breadcrumb={[{ label: 'Projects', href: '#projects' }, { label: name }]} title={name} description={description}
               primary={{ label: 'Share', href: '#share' }} />
 
-            <Tabs defaultValue="overview">
+            <div className={aside ? 'grid grid-cols-1 items-start gap-6 lg:grid-cols-3' : 'contents'}>
+            <Tabs defaultValue="overview" className={aside ? 'min-w-0 lg:col-span-2' : undefined}>
               <TabList aria-label="Project">
                 <Tab value="overview">Overview</Tab>
                 <Tab value="tasks">Tasks</Tab>
@@ -202,6 +208,13 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
                 </section>
               </TabPanel>
             </Tabs>
+            {aside ? (
+              <aside aria-labelledby="detail-aside" className="flex min-w-0 flex-col gap-3">
+                <Heading level={2} size="lg" id="detail-aside">{aside.title}</Heading>
+                {aside.content}
+              </aside>
+            ) : null}
+            </div>
 
             <Dialog alert open={asking} onOpenChange={ask} title={`Delete ${name}?`}
               description={`This deletes the project and ${lost} for everyone. It can’t be undone.`}>
