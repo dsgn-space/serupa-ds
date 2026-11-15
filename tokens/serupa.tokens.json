@@ -439,7 +439,7 @@
                 "letterSpacing": "-0.025em",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "Display",
                 "usage": "`type-display`: hero and marketing headlines (48px, 600, tracked tight, on a 52px line so two lines don't touch)."
               },
@@ -451,7 +451,7 @@
                 "letterSpacing": "-0.025em",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-1`: a page title. What a level 1 `Heading` renders."
               },
@@ -463,7 +463,7 @@
                 "letterSpacing": "-0.025em",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-2`: a section title. What a level 2 `Heading` renders."
               },
@@ -475,7 +475,7 @@
                 "letterSpacing": "0",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-3`: a subsection title. What a level 3 `Heading` renders."
               },
@@ -487,7 +487,7 @@
                 "letterSpacing": "0",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-4`: a group title, and Dialog and Drawer titles. What a level 4 `Heading` renders."
               },
