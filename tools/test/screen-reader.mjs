@@ -100,6 +100,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
         heard = (await sr.spokenPhraseLog()).join(' | ');
         if (!missed(heard).length || Date.now() > end) break;
       }
+      // What the reader's cursor is on, for a word the speech log lacks: VoiceOver can say an item's name and its usage
+      // hint as two phrases, and the log polled after a key that moves focus into a new popup (Menu's first item on
+      // Enter) kept only the hint. The item text is what the reader has for the focused control, so its name still counts.
+      let item = '';
+      if (missed(heard).length) { item = await sr.itemText().catch(() => ''); heard = item ? `${heard} [item: ${item}]` : heard; }
       said.push(`${name} / ${key}: ${heard}`);
       const missing = missed(heard);
       if (missing.length) misses.push(`${key}: no "${missing.join('", "')}" in "${heard}"`);
