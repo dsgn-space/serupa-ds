@@ -114,7 +114,7 @@ describe('Meter', () => {
     expect([thick('sm'), thick('lg'), thick('bad')]).toEqual([4, 12, 8]);
   });
 
-  test('contrast: every zone\'s fill keeps 3:1 on the page and on its track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in all six themes', async () => {
+  test('contrast: every zone\'s fill keeps 3:1 on the page and on its track, the track\'s edge 3:1 on the page (WCAG 1.4.11), and the label and value 4.5:1, in every theme', async () => {
     await render(<Wrap>
       <Meter id="p" value={60} label="Storage" showValue />
       <Meter id="o" value={10} low={30} high={70} optimum={0} aria-label="o" />

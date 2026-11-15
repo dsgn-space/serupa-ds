@@ -243,7 +243,7 @@ describe('Accordion', () => {
     expect([css(trigger('atok', 1)).color, css(trigger('atok', 1)).paddingTop]).toEqual(['rgb(1, 2, 3)', '7px']);
   });
 
-  test('contrast: titles and content keep 4.5:1, the chevron 3:1, on surface in all six themes', async () => {
+  test('contrast: titles and content keep 4.5:1, the chevron 3:1, on surface in every theme', async () => {
     await render(<Faq />);
     const low: string[] = [];
     let n = 0;

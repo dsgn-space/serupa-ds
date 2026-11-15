@@ -70,7 +70,7 @@ toast.undo({ title: "Moved to trash", commit: () => deleteFile(file), onUndo: ()
 - The time stops while a toast is hovered or anything in it has focus, and while the window is in the background (WCAG 2.2.1), so a toast with an `action` can go by itself like any other: hovering it, or reaching it with F8, holds it. Give one `autoDismiss: false` when people have to act on it. For anything they must act on before going on, an Alert or a Dialog is still better.
 - F8 moves focus to the newest toast (a screen reader reads it, and Tab reaches its buttons), and F8 or Escape takes focus back to where it was. The first toast with an action adds "Press F8 to reach it." to what's announced (`labels.toastShortcut`), while a Toaster is in the page. When a toast closes with keyboard focus in it (its ×, its action, or `toast.dismiss()`), focus goes back where F8 came from, or else to the toast next to it. Closed with the mouse, focus isn't moved to the next toast, so that one's time keeps running.
 - Each toast has a close button, so swiping is never the only way to close one (WCAG 2.5.1). The Toaster is a named region people can find.
-- Titles and descriptions keep 4.5:1 and icons 3:1 in all six themes (`Toast.test.tsx`).
+- Titles and descriptions keep 4.5:1 and icons 3:1 in every theme (`Toast.test.tsx`).
 - Toasts fade and slide in from their edge over 200ms, and fade and slide back toward it over 150ms when they close; the toasts left glide to their new place over 200ms instead of jumping, each keeping its place in the stack. One pushed into the waiting line by a newer toast shrinks and fades toward the "+2 more" line instead, and that line fades in and out and glides with the toasts. With `prefers-reduced-motion` toasts only fade, and the others move at once. The motion is a transition, so a toast shown again while it fades out turns back. A closing toast is inert while it fades, and focus moves on at once. Toasts already there as the Toaster arrives (shown from its first render) don't slide in.
 
 ### Keyboard
@@ -79,6 +79,7 @@ toast.undo({ title: "Moved to trash", commit: () => deleteFile(file), onUndo: ()
 | --- | --- |
 | F8 | To the newest toast; pressed again in a toast, back to where focus was |
 | Escape | In a toast reached with F8, back to where focus was |
+| Ctrl+Z (⌘Z on Apple devices) | Chooses Undo on the newest `toast.undo` shown, one per press. Not in a text field, where it undoes the typing, and not when your app handled the keys first (`preventDefault`) |
 | Tab | Within a toast, to its action and its close button |
 
 ## Props
@@ -112,7 +113,7 @@ The undo pattern, in place of a confirmation: do the action in the page at once 
 | `onUndo` | `() => void` | Runs instead of `commit` when Undo is chosen: put things back. |
 | `undoLabel` | string | The button's text. Default: "Undo" (`labels.undo`). |
 
-It returns the toast's id. Keep the usual duration or longer, so people have time to notice. The toast's time stops while it's hovered or focused, and F8 reaches its Undo button. With `duration: 0` it stays, and commits only when it's closed or the page is left.
+It returns the toast's id. Keep the usual duration or longer, so people have time to notice. The toast's time stops while it's hovered or focused, and F8 reaches its Undo button. Ctrl+Z (⌘Z on Apple devices) chooses Undo on the newest one too, from anywhere but a text field, since that's where people try undo first. With `duration: 0` it stays, and commits only when it's closed or the page is left.
 
 ### Toaster
 
@@ -145,7 +146,6 @@ Each is an optional override: set it on the page or the Toaster. The list lives 
 | `--toast-icon-danger` | `danger` | The icon of a danger toast. |
 | `--toast-focus-ring` | `focus-ring` | The ring around a toast that F8 moved focus to. |
 | `--toast-shadow` | `elevation-overlay` | A toast's shadow. |
-| `--toast-depth` | `depth-surface` | The toast's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--toast-radius` | `radius-surface` | A toast's corners (8px). |
 | `--toast-border-width` | `border-width-1` | A toast's border. |
 | `--toast-width` | `container-sm` | A toast's width (384px), at most the screen less the offset on each side. |

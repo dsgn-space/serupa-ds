@@ -63,7 +63,7 @@ Drawn from the `MonthYearPicker` story.
 - The heading button is named by the month it shows and described by what it does ("Choose a month", in the month grid "Choose a year"). The month and year grids are `role="grid"` too, named by the hidden title, which says "2025" or "2016–2027" as the view changes. Months are shown short and read in full ("March 2025").
 - Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
 - Weekday headers show the short name, and screen readers read the full one ("Monday", from visually hidden text, and in `abbr`), since "Mon" or "M" is read letter by letter or not at all by some.
-- Text keeps 4.5:1 and the selected fill 3:1 in all six themes (`Calendar.test.tsx`).
+- Text keeps 4.5:1 and the selected fill 3:1 in every theme (`Calendar.test.tsx`).
 - In forced colors (Windows high contrast) the selected day is drawn in Highlight with HighlightText, exactly as set, so the browser's text backplate can't hide its number. The same goes for DatePicker's and DateRangePicker's pop-ups.
 
 ### Keyboard
@@ -155,10 +155,4 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | --- | --- | --- |
 | `--calendar-title-weight` | `font-semibold` | The month and year (600). |
 | `--calendar-today-weight` | `font-semibold` | Today's number (600). |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
-| `--calendar-depth-selected` | `depth-part` | The selected day's tactile layers: raised, with a soft, short shadow. None in the flat brands. |
 <!-- token-table:end -->

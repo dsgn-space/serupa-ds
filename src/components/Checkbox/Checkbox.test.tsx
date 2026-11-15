@@ -156,7 +156,7 @@ describe('Checkbox', () => {
     await render(<><button type="button">Before</button><Checkbox id="f">Focus me</Checkbox></>);
     await page.getByRole('button', { name: 'Before' }).click();
     await userEvent.tab();
-    await expect.poll(() => { const s = css(input('f')); return `${s.outlineStyle} ${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow.replace(/(, )?rgba\(0, 0, 0, 0\) 0px 0px 0px 0px/g, '') || 'none'}`; }).toBe(`solid ${color('var(--focus-ring)')} 2px 2px none`);
+    await expect.poll(() => { const s = css(input('f')); return `${s.outlineStyle} ${s.outlineColor} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`; }).toBe(`solid ${color('var(--focus-ring)')} 2px 2px none`);
   });
 
   test('invalid: aria-invalid and a danger border', async () => {
@@ -211,7 +211,7 @@ describe('Checkbox', () => {
     expect(input('g2').matches(':disabled')).toBe(true);
   });
 
-  test('contrast in all six themes: label and description 4.5:1; checked fill, focus ring and invalid border 3:1, the soft border 1.3:1; the check 4.5:1 on its fill', () => {
+  test('contrast in every theme: label and description 4.5:1; checked fill, focus ring and invalid border 3:1, the soft border 1.3:1; the check 4.5:1 on its fill', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],

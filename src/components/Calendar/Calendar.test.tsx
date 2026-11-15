@@ -552,7 +552,7 @@ describe('Calendar presets (RU11)', () => {
 });
 
 describe('a day under the pointer', () => {
-  test('today keeps 4.5:1 on the hover fill in all six themes, as do the other days', async () => {
+  test('today keeps 4.5:1 on the hover fill in every theme, as do the other days', async () => {
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; }'; document.head.appendChild(still);
     await render(<Calendar aria-label="Pick a day" />);
     const days = [...document.querySelectorAll<HTMLElement>('[role="grid"] button')];

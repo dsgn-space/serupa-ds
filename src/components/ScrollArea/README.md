@@ -45,7 +45,7 @@ import { ScrollArea } from "@diki-stwn/serupa-ds";
 | Arrow keys | Scroll it a step. |
 | Page Up, Page Down, Home, End | Scroll it a page, or to the start or end. |
 
-- **Contrast:** the scrollbar thumb and the focus ring read 3:1 on the surface in all six themes (`ScrollArea.test.tsx`). In forced colors the scrollbar is the system's.
+- **Contrast:** the scrollbar thumb and the focus ring read 3:1 on the surface in every theme (`ScrollArea.test.tsx`). In forced colors the scrollbar is the system's.
 - **What's still yours:** its size and name, and keeping a box that scrolls out of another box that scrolls the same way.
 
 ## Props

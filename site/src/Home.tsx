@@ -1,5 +1,5 @@
 // The site's front page: what Serupa is, shown with Serupa. The hero's cards are live components, the brand switch
-// re-themes the whole page, the six tiles are the same markup under each theme's tokens, and the screen is a
+// re-themes the whole page, the theme tiles are the same markup under each theme's tokens, and the screen is a
 // pattern's story. The numbers and the principles are read from the sources (tools/site/facts.mjs).
 import * as React from 'react';
 import facts from 'virtual:site-facts';
@@ -9,7 +9,7 @@ import { Button } from '../../src/components/Button/Button';
 import { Card, CardHeader } from '../../src/components/Card/Card';
 import { Heading } from '../../src/components/Heading/Heading';
 import { Progress } from '../../src/components/Progress/Progress';
-import { SegmentedControl } from '../../src/components/SegmentedControl/SegmentedControl';
+import { Select } from '../../src/components/Select/Select';
 import { Switch } from '../../src/components/Switch/Switch';
 import { pages, pagesOf, sections } from './pages';
 import { InviteCard, ProjectCard, StatusCard } from './Sample';
@@ -64,7 +64,7 @@ export function Home() {
         <div className="site-hero__text">
           <p className="site-eyebrow">Serupa design system · version {__VERSION__}</p>
           <Heading level={1} className="site-hero__title">One system for every project.</Heading>
-          <p className="site-hero__lead">Design tokens, six themes and {pages.filter((p) => p.component).length} accessible React components, each with a guide. Designed and built by Diki, and everything on this site is made with it.</p>
+          <p className="site-hero__lead">Design tokens, {tokens.color.themes.length} themes and {pages.filter((p) => p.component).length} accessible React components, each with a guide. Designed and built by Diki, and everything on this site is made with it.</p>
           <div className="flex flex-wrap gap-3">
             <Button href="/getting-started" size="lg" rightIcon="arrow_forward">Get started</Button>
             <Button href="/showcase" size="lg" variant="outline">See it in use</Button>
@@ -73,7 +73,7 @@ export function Home() {
         <div className="site-hero__art">
           <div className="site-hero__switch">
             <p id="hero-brand" className="site-hero__hint">These are live components. Change the brand:</p>
-            <SegmentedControl aria-labelledby="hero-brand" size="sm" value={brand} onValueChange={(b: string) => set({ brand: b })} options={BRANDS.map((b) => ({ value: b, label: brandName(b) }))} />
+            <Select aria-labelledby="hero-brand" size="sm" style={{ inlineSize: 'auto' }} value={brand} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => set({ brand: e.target.value })} options={BRANDS.map((b) => ({ value: b, label: brandName(b) }))} />
           </div>
           <div className="site-hero__cards">
             <div className="site-hero__col"><ProjectCard headingLevel={2} /><StatusCard /></div>
@@ -86,7 +86,7 @@ export function Home() {
         {STATS.map(([n, label]) => <div key={label} className="site-stats__item"><dt>{label}</dt><dd>{n}</dd></div>)}
       </dl>
 
-      <Section id="home-themes" eyebrow="Theming" title="Six themes, one attribute" lead="Three brands, each light and dark. A theme changes the tokens and nothing else, so every component follows without a line of its own."
+      <Section id="home-themes" eyebrow="Theming" title={`${tokens.color.themes.length} themes, one attribute`} lead={`${BRANDS.length} brand colors, each light and dark. A theme changes the brand color and nothing else, so every component follows without a line of its own.`}
         action={<Button href="/themes" variant="outline" rightIcon="arrow_forward">Compare the themes</Button>}>
         <ul className="site-tiles" role="list">{tokens.color.themes.map((t) => <ThemeTile key={t.id} id={t.id} name={t.name} />)}</ul>
       </Section>

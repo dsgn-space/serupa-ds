@@ -54,7 +54,7 @@ Drawn from the `LineNumbers` story.
 
 - **Marked lines:** each is a `<mark>`, and has a bar at its start as well as the tint, so the mark isn't only a color. Line numbers are drawn by CSS, so they're neither selected, copied nor read.
 - **Direction:** code reads left to right on every page, so `run();` never becomes `;()run` on a right-to-left page.
-- **Contrast:** the code, the language and the line numbers read 4.5:1 on the box and on a marked line in all six themes (`CodeBlock.test.tsx`).
+- **Contrast:** the code, the language and the line numbers read 4.5:1 on the box and on a marked line in every theme (`CodeBlock.test.tsx`).
 - **What's still yours:** say before the block what the code does. Colors from a highlighter you add need 4.5:1 on `--code-block-bg` in each theme.
 
 ## Props

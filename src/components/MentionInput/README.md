@@ -57,7 +57,7 @@ Drawn from the `Default` story.
 - **Role and name:** a `<textarea>` (a textbox), named by its Field or `aria-label`. It has `aria-autocomplete="list"`, and while the list is open, `aria-controls` names the listbox and `aria-activedescendant` the highlighted option. (A textarea can't take `role="combobox"`, so it stays a textbox.) The listbox is named by the same label.
 - **Said:** how many match ("3 results", or "No results") is said politely after typing pauses, as in Combobox (4.1.3).
 - **Keyboard:** see below. Focus never leaves the field, so typing goes on after a pick, with the caret after the name and its space.
-- **Contrast:** options and their second line read 4.5:1 on the list, the highlighted one too, in all six themes (`MentionInput.test.tsx`).
+- **Contrast:** options and their second line read 4.5:1 on the list, the highlighted one too, in every theme (`MentionInput.test.tsx`).
 - **What's still yours:** the hint that says how to mention, unique labels, and notifying the people `mentionsIn` returns.
 
 ### Keyboard

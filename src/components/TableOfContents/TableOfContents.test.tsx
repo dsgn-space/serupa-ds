@@ -120,7 +120,7 @@ describe('TableOfContents', () => {
     await expect.element(page.getByRole('navigation', { name: 'Di halaman ini' })).toBeVisible();
   });
 
-  test('links 4.5:1 on the page, the current one\'s line 3:1, in all six themes', () => {
+  test('links 4.5:1 on the page, the current one\'s line 3:1, in every theme', () => {
     expect(lowContrast([
       ['link', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['current', 'var(--text)', 'var(--surface)', 4.5],
@@ -347,7 +347,7 @@ describe('TableOfContents rail', () => {
     expect([Math.round(p.left - r.left), Math.round(p.top - r.top), p.width > r.width]).toEqual([0, 0, true]);
   });
 
-  test('the panel\'s links 4.5:1 on it, its edge and the dashes 3:1 against the page where they stand for something (the current one), in all six themes', () => {
+  test('the panel\'s links 4.5:1 on it, its edge and the dashes 3:1 against the page where they stand for something (the current one), in every theme', () => {
     expect(lowContrast([
       ['panel link', 'var(--text-muted)', 'var(--surface-overlay)', 4.5],
       ['panel current', 'var(--text)', 'var(--surface-overlay)', 4.5],

@@ -280,7 +280,7 @@ describe('DateRangePicker', () => {
     await expect.poll(() => getComputedStyle(box('dis')).opacity).toBe('0.5');
   });
 
-  test('opening with only a start asks for the end: one pick completes it; contrast: days in the range, the status line and the dash keep 4.5:1 in all six themes; --calendar-range-bg overrides the fill', async () => {
+  test('opening with only a start asks for the end: one pick completes it; contrast: days in the range, the status line and the dash keep 4.5:1 in every theme; --calendar-range-bg overrides the fill', async () => {
     await render(<Trip value={{ start: new Date(2025, 4, 15), end: null }} />);
     await userEvent.click(btn('trip'));
     await userEvent.click(day('trip', '2025-05-20'));

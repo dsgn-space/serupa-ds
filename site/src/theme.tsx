@@ -11,7 +11,7 @@ const api = (): ThemeApi | undefined => (window as unknown as { Serupa?: { theme
 
 // The brands come from tokens.json's themes ("<brand>-<mode>"), so a brand added there shows up here.
 export const BRANDS = [...new Set(tokens.color.themes.map((t) => t.id.replace(/-(light|dark)$/, '')))];
-/** A brand's name as tokens.json's themes give it: "Modern" for emerald. */
+/** A brand's name as tokens.json's themes give it: "Emerald" for emerald. */
 export const brandName = (brand: string) => tokens.color.themes.find((t) => t.id === `${brand}-light`)?.name.replace(/ Light$/, '') ?? brand.charAt(0).toUpperCase() + brand.slice(1);
 
 const fallback: ThemeState = { brand: BRANDS[0] ?? 'blue', mode: 'auto', theme: `${BRANDS[0] ?? 'blue'}-light` };

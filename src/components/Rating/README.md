@@ -60,7 +60,7 @@ Drawn from the `Disabled` story.
 
 - **Role and name:** interactive, it's a `role="radiogroup"` named by its Field label or `aria-label`, holding a native radio per choice, named by the `ratingStars` label ("1 star", "3.5 stars"; "3,5 bintang" in `idLabels`). `readOnly` is one `role="img"` named by the `ratingValue` label ("4.3 out of 5", after its own `aria-label`: "Average, 4.3 out of 5").
 - **Keyboard:** native radio group keys, below. The focused star gets the focus ring.
-- **Contrast:** the filled and empty star colors are 3:1 on the page in all six themes (`Rating.test.tsx`). In forced colors, empty stars use the system's gray text and filled ones its text color.
+- **Contrast:** the filled and empty star colors are 3:1 on the page in every theme (`Rating.test.tsx`). In forced colors, empty stars use the system's gray text and filled ones its text color.
 - **What's still yours:** say what the rating is for in the label, and show the count of reviews in text next to a read-only average.
 
 ### Keyboard

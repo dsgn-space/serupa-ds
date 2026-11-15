@@ -493,7 +493,7 @@ describe('Menu', () => {
       .toEqual(['Control+Plus', 'Control+-', 'Meta+Plus', 'Plus', 'Meta+K', 'Control+S', 'Control+Shift+P', 'G I', 'Control+K Control+S', 'Shift+Plus']);
   });
 
-  test('contrast: labels, shortcuts and group labels 4.5:1 (also highlighted), icons 3:1, in all six themes', async () => {
+  test('contrast: labels, shortcuts and group labels 4.5:1 (also highlighted), icons 3:1, in every theme', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; animation: none !important; }'; document.head.appendChild(still);

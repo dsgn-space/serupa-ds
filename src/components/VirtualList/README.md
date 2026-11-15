@@ -58,7 +58,7 @@ import { VirtualList, ListItem } from "@diki-stwn/serupa-ds";
 
 - **Role and name:** a `<ul role="list">` (or `<ol>`) named by your `aria-label`. Each drawn row has `aria-posinset` and `aria-setsize`, so screen readers say "5,001 of 10,000" though only a few rows are in the page.
 - **Keyboard:** the list takes focus (`tabIndex` 0, while it has rows) and scrolls with the arrows, Page Up, Page Down, Home and End. Links and buttons in rows are reached with Tab; the row with focus is never removed while it has focus.
-- **Contrast:** row text reads 4.5:1 and the focus ring 3:1 in all six themes (`VirtualList.test.tsx`).
+- **Contrast:** row text reads 4.5:1 and the focus ring 3:1 in every theme (`VirtualList.test.tsx`).
 - **What's still yours:** the name, and a search or filter for lists people need to find a row in.
 
 ## Props

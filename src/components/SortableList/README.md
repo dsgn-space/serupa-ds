@@ -60,7 +60,7 @@ Drawn from the `Horizontal` story.
 - A `<ul role="list">` of `<li>` rows (the role keeps it a list in Safari). Each handle is a button named "Reorder" and the item's name, described by the keyboard instructions, with `aria-pressed` while its row is picked up.
 - Screen readers hear each step in a polite live region: "Picked up Gemini, position 2 of 4.", "Gemini, position 3 of 4.", "Dropped Gemini at position 4 of 4." or "Canceled. Gemini is back at position 2 of 4." The words come from `SerupaProvider` labels (Indonesian in `idLabels`).
 - Screen reader users in browse mode activate the handle with Enter, which picks the row up the same way.
-- The handle is at least 24 by 24px, and it keeps 3:1 (the text 4.5:1) on the row in all six themes (`SortableList.test.tsx`). In forced-colors mode the moving row gets a Highlight outline.
+- The handle is at least 24 by 24px, and it keeps 3:1 (the text 4.5:1) on the row in every theme (`SortableList.test.tsx`). In forced-colors mode the moving row gets a Highlight outline.
 
 ### Keyboard
 
@@ -105,7 +105,6 @@ Each is an optional override: set it on the page, a container or one list. The l
 | `--sortable-list-handle-bg-pressed` | `secondary-hover` | The drag handle's background while it's held down, one step past hover. |
 | `--sortable-list-focus-ring` | `focus-ring` | The handle's keyboard focus ring. |
 | `--sortable-list-item-shadow-active` | `elevation-raised` | The raised look of the row being moved. |
-| `--sortable-list-item-depth` | `depth-card` | An item's tactile layers at rest: a short, soft shadow. None in the flat brands. |
 | `--sortable-list-item-radius` | `radius-control` | A row's corners (6px). |
 | `--sortable-list-gap` | `spacing-2` | Space between rows (8px). |
 | `--sortable-list-item-gap` | `spacing-2` | Space between the handle and the content (8px). |

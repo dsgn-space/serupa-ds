@@ -20,6 +20,7 @@ import { en as ownWords } from './labels';
 import { repeatQuiet } from '../../internal/timing';
 import { deepActive } from '../../internal/root';
 import { pageShared } from '../../internal/pageShared';
+import { isApple } from '../../internal/keys';
 
 export type ToastTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
@@ -52,7 +53,8 @@ type Listener = (items: Item[]) => void;
 // Beside it, what the mounted Toaster sets (hint: the F8 hint, said once; repeated: how a repeat count is said;
 // undoWord: the Undo button's word, "" before one mounts), the timers of repeats, NotificationCenter's
 // useToastHistory hooks (watchers, told of each toast as it's shown, replaced or repeated) and what an undo toast does
-// when it closes without Undo (onClose: toast.undo's commit, by id).
+// when it closes without Undo (onClose: toast.undo's commit, by id) or when Undo is chosen (undos: its onUndo, by id,
+// for Ctrl+Z or ⌘Z).
 // module state: the browser's toast queue. toast() is for event handlers, and a Toaster starts empty on a server (its
 // list fills from the queue after mounting), so a toast() called during a server render never reaches another request's HTML.
 const page = /* @__PURE__ */ pageShared('toast@1', () => ({
@@ -61,6 +63,7 @@ const page = /* @__PURE__ */ pageShared('toast@1', () => ({
   repeatTimers: new Map<string, ReturnType<typeof setTimeout>>(),
   watchers: new Set<(t: ShownToast) => void>(),
   onClose: new Map<string, () => void>(),
+  undos: new Map<string, () => void>(),
 }));
 // Only the newest mounted Toaster shows the toasts, so two (one in a layout and one on a page, say) don't show each
 // toast twice; when it unmounts, the one before it takes them over.
@@ -182,6 +185,7 @@ function undo(options: ToastUndoOptions): string {
   const once = (f?: () => void, leaving?: boolean) => () => {
     if (settled) return;
     settled = true;
+    page.undos.delete(id);
     window.removeEventListener('pagehide', left);
     if (leaving) window.addEventListener('pageshow', returned);
     if (f) f();
@@ -189,6 +193,7 @@ function undo(options: ToastUndoOptions): string {
   const keep = once(commit), back = once(onUndo), left = once(commit, true);
   const id = show(Object.assign({}, rest, { action: { label: undoLabel || page.undoWord || ownWords.undo, onClick: back } }));
   page.onClose.set(id, keep);
+  page.undos.set(id, back);
   window.addEventListener('pagehide', left);
   unseen();
   return id;
@@ -227,10 +232,15 @@ export interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
 const POSITIONS: readonly ToasterPosition[] = ['top-start', 'top-center', 'top-end', 'bottom-start', 'bottom-center', 'bottom-end'];
 const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.Info, success: icons.CheckCircle, warning: icons.Warning, danger: icons.Error };
 
+// A field that edits text has its own undo, so Ctrl+Z or ⌘Z there undoes the typing, not a toast.undo.
+const typing = (e: Element | null) => e instanceof HTMLElement && (e.isContentEditable || e instanceof HTMLTextAreaElement
+  || (e instanceof HTMLInputElement && !/^(button|checkbox|radio|submit|reset|image|color|file|range)$/.test(e.type)));
+
 /* Toaster: where toast() messages appear. Render one, once, near the root. Each toast has a title, an optional
    description, tone icon, action and close button, and goes after its duration unless autoDismiss is false; the
    time stops while it's hovered or focused. New toasts are announced through the shared polite live region. F8
-   moves focus to the newest toast, and F8 or Escape takes it back to where it was. */
+   moves focus to the newest toast, and F8 or Escape takes it back to where it was. Ctrl+Z (⌘Z on Apple devices)
+   chooses Undo on the newest toast.undo shown, outside a text field. */
 /** The place toast() messages appear: render one, once, near the root of the app. */
 export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: ToasterProps): React.ReactElement {
   const sds = useSettings(ownWords);
@@ -270,9 +280,23 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
     const away = () => { const b = back.current; back.current = null; if (b && b.isConnected) b.focus(); };
     const onKey = (e: KeyboardEvent) => {
       const region = self.current;
-      if (!region || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (!region || e.defaultPrevented) return;
       // Focus read through shadow roots, so a Toaster inside one (or a page field inside one) still counts (GR60).
       const active = deepActive(), inside = region.contains(active);
+      // Undo where people expect it (Ctrl+Z, ⌘Z): the newest undo toast shown, one per press, as its Undo button does.
+      // Shift is redo, which a toast can't do; a text field keeps its own undo; an app that handles the keys itself
+      // (preventDefault) keeps them.
+      if (e.key.toLowerCase() === 'z' && !e.altKey && !e.shiftKey && (isApple() ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey)) {
+        if (typing(active)) return;
+        const ids = [...region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving])')].map((t) => t.dataset.toast!).filter((x) => page.undos.has(x));
+        const id = ids[pos.startsWith('top') ? 0 : ids.length - 1];
+        if (id == null) return;
+        e.preventDefault();
+        page.undos.get(id)!();
+        dismiss(id);
+        return;
+      }
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       if (e.key === HOTKEY) {
         const toasts = region.querySelectorAll<HTMLElement>('[data-toast]:not([data-leaving])');
         if (inside) { e.preventDefault(); away(); return; }

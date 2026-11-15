@@ -212,7 +212,7 @@ describe('RangeCalendar', () => {
     expect(day('2026-11-04').getAttribute('aria-label')).toMatch(/, dalam rentang$/);
   });
 
-  test('the ends, the days between and the status line read 4.5:1 in all six themes', async () => {
+  test('the ends, the days between and the status line read 4.5:1 in every theme', async () => {
     await render(<Stay defaultValue={{ start: '2026-11-03', end: '2026-11-05' }} />);
     const line = document.querySelector<HTMLElement>('[data-component="range-calendar"] > p[aria-live]')!;
     for (const th of THEMES) {

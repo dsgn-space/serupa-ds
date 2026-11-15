@@ -34,7 +34,7 @@ describe('IconTile (RU16)', () => {
     expect(parseFloat(css(el('md')).borderTopLeftRadius)).toBe(8);
   });
 
-  test('every tone keeps its icon at 3:1 on its fill in all six themes; a token overrides one tile', async () => {
+  test('every tone keeps its icon at 3:1 on its fill in every theme; a token overrides one tile', async () => {
     await render(<>{TONES.map((t) => <IconTile key={t} id={t} tone={t} icon={icons.CloudDone} />)}<IconTile id="tok" icon={icons.CloudDone} style={{ '--icon-tile-neutral-bg': 'rgb(1, 2, 3)' } as React.CSSProperties} /></>);
     const low: string[] = [];
     for (const th of THEMES) {

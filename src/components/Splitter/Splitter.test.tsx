@@ -188,7 +188,7 @@ describe('Splitter', () => {
     localStorage.removeItem('dk-test-split');
   });
 
-  test('the handle\'s line is 3:1 on the page in all six themes; the default name comes from the resizePanes label', async () => {
+  test('the handle\'s line is 3:1 on the page in every theme; the default name comes from the resizePanes label', async () => {
     await render(<Two />);
     const line = (pseudo: string) => getComputedStyle(handle('s'), pseudo).backgroundColor;
     const low: string[] = [];
