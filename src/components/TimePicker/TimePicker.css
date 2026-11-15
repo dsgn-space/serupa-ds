@@ -52,8 +52,9 @@
 }
 .dk-time-picker__option {
   display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); box-sizing: border-box;
-  min-height: var(--time-picker-option-height, var(--control-height-md)); padding: var(--spacing-0) var(--spacing-2);
-  border-radius: var(--radius-control); font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  min-height: var(--time-picker-option-height, var(--control-height-md)); padding: var(--spacing-1\.5) var(--spacing-2);   /* Combobox's rows: 6px above and below, so a wrapped label keeps them */
+  /* Its corners nest in the list's, as Combobox's do: the list's radius less the padding and border between them (8 - 4 - 1 = 3px). */
+  border-radius: max(var(--spacing-0), calc(var(--time-picker-list-radius, var(--radius-surface)) - var(--time-picker-list-padding, var(--spacing-1)) - var(--border-width-1))); font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .dk-time-picker__option { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .dk-time-picker__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
