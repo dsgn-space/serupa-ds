@@ -103,7 +103,7 @@ describe('Sidebar', () => {
     expect([s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft]).toEqual(['14px', '500', '8px', '12px']);
   });
 
-  test('muted items, shaded and text-colored on hover; the current page has no bar (2px at its start with more contrast, which hover never draws), and darkens under the pointer', async () => {
+  test('muted items, shaded (zinc-100 in light) and text-colored on hover; the current page has no bar (2px at its start with more contrast, which hover never draws), and darkens under the pointer', async () => {
     await render(<App />);
     const keys: Array<keyof CSSStyleDeclaration> = ['color', 'backgroundColor', 'boxShadow'];
     await expect.poll(() => pick(el('iinbox'), keys)[1]).toBe('rgba(0, 0, 0, 0)');
@@ -113,9 +113,9 @@ describe('Sidebar', () => {
     expect(current[2]).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => expect([css(el('ihome')).boxShadow, css(el('iinbox')).boxShadow]).toEqual([expect.stringMatching(/\) 2px 0px 0px 0px inset$/), 'none']));
     await userEvent.hover(el('iinbox'));
-    // Under the pointer an item takes the text color and a fill one step quieter than the current page's (GR415).
-    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], color('var(--surface-hover)'), 'none']);
-    expect(color('var(--surface-hover)')).not.toBe(current[1]);
+    // Under the pointer an item takes the text color and the hover fill, zinc-100 in light like the current page's, so
+    // the shade shows on white; only the current page draws the bar.
+    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], color('var(--zinc-100)'), 'none']);
     await userEvent.hover(el('ihome'));
     await expect.poll(() => css(el('ihome')).backgroundColor).not.toBe(current[1]);
     await away();
@@ -524,13 +524,13 @@ describe('Sidebar', () => {
     expect([low, n]).toEqual([[], 12]);
   });
 
-  test('in all six themes the hover fill sits between the surface and the current page\'s fill, on the page and on a raised surface, so an item pointed at never looks like the current one (GR415)', () => {
+  test('in every theme the hover fill shows: a step off the surface, on the page and on a raised surface (GR415)', () => {
     const same: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const c = (v: string) => color(`var(--${v})`);
-      if (new Set([c('surface'), c('surface-hover'), c('highlight')]).size < 3) same.push(`${th}: surface ${c('surface')}, surface-hover ${c('surface-hover')}, highlight ${c('highlight')}`);
-      if (new Set([c('surface-overlay'), c('surface-hover-raised'), c('secondary')]).size < 3) same.push(`${th}: surface-overlay ${c('surface-overlay')}, surface-hover-raised ${c('surface-hover-raised')}, secondary ${c('secondary')}`);
+      if (c('surface') === c('surface-hover')) same.push(`${th}: surface and surface-hover are both ${c('surface')}`);
+      if (c('surface-overlay') === c('surface-hover-raised')) same.push(`${th}: surface-overlay and surface-hover-raised are both ${c('surface-overlay')}`);
     }
     document.documentElement.removeAttribute('data-theme');
     expect(same).toEqual([]);

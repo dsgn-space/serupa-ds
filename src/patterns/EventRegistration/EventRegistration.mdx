@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './EventRegistration.stories';
+
+<Meta of={Stories} />
+
+# Event registration
+
+When and where an event is, how many places are left, and a short form to get tickets, or to join the waiting list once it's full.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- An event's own page: a meetup, a workshop, a class, with a set number of places.
+- Not for booking a time with a person: that's the Appointment pattern.
+- Not for a stay or a table over a range of dates: that's the Booking pattern.
+
+## What each part is for
+
+- **When and where are named facts**, and the time is shown in the event's own time zone, with its name, so nobody turns up an hour out (1.3.1).
+- **Places left are a meter with the number in words**, "13 places left", not a bar alone (1.4.1).
+- **Each ticket says its price and who it's for**; how many tickets says its limit, and the total is worked out as you choose (3.3.2).
+- **Name and email say what they are for autofill**, and what would make it easier to come is asked for, optional (1.3.5).
+- **Registering with problems shows a summary at the top that takes focus**, each problem a link to its field (3.3.1, 2.4.3).
+- **Register shows it's busy**; a registration that can't be sent says so next to the button and keeps every field (3.3.4, 4.1.3).
+- **Once registered, the answer's heading takes focus**, with the tickets, the total and a calendar file to add it (2.4.3).
+- **Once it's full, the form becomes a waiting list**, saying what happens when a place comes free.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Full} />
+
+## What stays your app's job
+
+- **Registering.** `onRegister` gets the registration, trimmed: reject when it can't be sent. Hold the places on the server, as two people can take the last one at once.
+- **Paying.** For a paid ticket, go on to the Checkout pattern with the total.
+- **The time zone.** Give the event's `timeZone` and a name for it people know; the page shows the times there, wherever it's read.

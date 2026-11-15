@@ -42,6 +42,16 @@
           }
         }
       },
+      "text-muted-shaded": {
+        "$type": "color",
+        "$value": "{color.text-muted-shaded}",
+        "$description": "The placeholder and pencil icon on the hovered button, where `text-muted` would fall under 4.5:1 on the shaded fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-text-muted-shaded"
+          }
+        }
+      },
       "bg-hover": {
         "$type": "color",
         "$value": "{color.surface-hover}",

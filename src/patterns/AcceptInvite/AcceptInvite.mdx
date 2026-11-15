@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './AcceptInvite.stories';
+
+<Meta of={Stories} />
+
+# Accept invite
+
+The page a workspace invite links to: who invited you, to what and as what, and Join or Decline; or why the invite can't be used any more.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The link in an email inviting someone into a team, a workspace or a shared project.
+- Not for inviting people: that's the Team members pattern.
+- Not for a friend's offer with a reward: that's the Referral pattern.
+
+## What each part is for
+
+- **Who invited you is the first thing said, in the h1**; your role, the members and when the invite ends are named facts, so nothing hangs on a picture (1.3.1).
+- **The members' pictures are one named group**, each picture named by its person, with how many in words (1.1.1).
+- **The account you'd join with is said before Join**, with a way to switch; when it isn't the address the invite went to, a warning says so in words (3.3.4).
+- **Join shows it's busy**; one that fails says so next to the buttons and changes nothing (3.3.4, 4.1.3).
+- **After Join or Decline, the answer's heading takes focus** and says what happened, with where to go next (2.4.3).
+- **An invite that has ended or been used says why in the h1**, and who to ask for a new one, rather than a bare error.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.OtherAccount} />
+
+## What stays your app's job
+
+- **Joining.** `onJoin` adds the signed-in account: reject when it can't. Check the invite again on the server, as it may have ended since the page loaded.
+- **Signing in.** Someone without an account goes to the Sign up pattern first, with the invite's address filled in, and comes back here.
+- **Ending invites.** Pass `used` once someone has joined with it, and an `expires` time; seven days is common.

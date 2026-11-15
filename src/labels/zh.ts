@@ -38,6 +38,7 @@ export const labels: SerupaLabels = {
   toolbarMore: '更多',
   previousMonth: '上个月',
   timeZoneYours: '您的时区',
+  timeZonePlaceholder: '搜索城市或时区',
   nextMonth: '下个月',
   month: '月',
   year: '年',

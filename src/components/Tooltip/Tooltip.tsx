@@ -190,15 +190,19 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     onBlur: chain('onBlur', () => { focused.current = false; set(false, 'blur'); }),
     onPointerDown: chain('onPointerDown', () => set(false, 'trigger')),
   });
+  // The cut line's full text (visual) is drawn only while there is something to show, and as a <span>: it often sits
+  // in a button or a link, whose content holds no <div>, and whose text shouldn't carry a second copy while it fits.
+  if (props.visual && props.disabled) return trigger;
+  const Tip = (props.visual ? 'span' : 'div') as 'div';   // typed as the div it usually is: a fixed span lays out as a block too
   return (
     <>
       {trigger}
-      <div ref={tipRef} id={id} role={props.visual ? undefined : 'tooltip'} aria-hidden={props.visual || undefined} {...{ popover: 'manual' }} hidden={!open || undefined}
+      <Tip ref={tipRef} id={id} role={props.visual ? undefined : 'tooltip'} aria-hidden={props.visual || undefined} {...{ popover: 'manual' }} hidden={!open || undefined}
         className={cn('dk-tooltip', props.className)} style={props.style} data-component="tooltip" data-state={open ? 'open' : 'closed'} data-warm={(open && instant) || (!open && handed) ? '' : undefined}
         onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, hoverLeave)}>
         {full && props.role !== 'label' ? <span data-full="" aria-hidden="true">{full}</span> : null}
         {props.content}
-      </div>
+      </Tip>
     </>
   );
 });

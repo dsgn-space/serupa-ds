@@ -122,6 +122,9 @@ if (fs.existsSync(path.join(GH, 'workflows/ci.yml'))) {
   // GitHub stops a running job on a cancel only when its condition then comes out false: always() kept the held job
   // running past its own cancel, to a red X (#1890, 14 Nov).
   const cond = lines.slice(job, run).find((l) => /^\s*if:/.test(l)) ?? '';
+  // fix-proof diffs against the main the run's merge commit sits on, not the event's base.sha, which main can pass first.
+  const proof = lines.slice(lines.findIndex((l) => l === '  fix-proof:'), lines.findIndex((l, i) => i > lines.findIndex((x) => x === '  fix-proof:') && /^ {2}[a-z][\w-]*:$/.test(l))).join('\n');
+  t('ci.yml: fix proof takes its base from the merge commit, not the event', /git rev-parse HEAD\^1/.test(proof) && !/pull_request\.base\.sha/.test(proof));
   t('ci.yml: the test check is cancelled with a held run, and runs whatever else happens', /!cancelled\(\)/.test(cond) && /hold != '1'/.test(cond) && !/always\(\)/.test(cond), cond.trim());
   fs.rmSync(bin, { recursive: true, force: true });
 }
@@ -131,6 +134,41 @@ const ecosystems = dependabot.split(/^\s*- package-ecosystem:/m).slice(1);
 for (const e of ecosystems) {
   const days = Number((e.match(/default-days:\s*(\d+)/) || [])[1] || 0);
   t(`dependabot.yml: ${e.trim().split(/\s/)[0]} updates wait at least 7 days after a release (cooldown)`, days >= 7, `default-days: ${days}`);
+}
+
+// Every run: script parses as bash (bash -n), with each ${{ }} expression standing in as a word. A quote that doesn't
+// close fails the step before any line runs: an apostrophe inside "${labeled:-isn't …}" kept Design QA from rerunning
+// anything (15 Nov).
+{
+  const files = [...fs.readdirSync(path.join(GH, 'workflows')).filter((f) => /\.ya?ml$/.test(f)).map((f) => path.join(GH, 'workflows', f)),
+    ...fs.readdirSync(path.join(GH, 'actions')).map((d) => path.join(GH, 'actions', d, 'action.yml')).filter((f) => fs.existsSync(f))];
+  const bad = [];
+  let scripts = 0;
+  for (const file of files) {
+    const lines = fs.readFileSync(file, 'utf8').split('\n');
+    lines.forEach((line, i) => {
+      const m = /^(\s*)(?:- )?run: (.*)$/.exec(line);
+      if (!m) return;
+      let body;
+      if (/^[|>][-+]?\s*$/.test(m[2])) {
+        const block = [];
+        let indent = null;
+        for (let j = i + 1; j < lines.length; j++) {
+          if (lines[j].trim() === '') { block.push(''); continue; }
+          const n = lines[j].length - lines[j].trimStart().length;
+          if (indent === null) indent = n;
+          if (n < indent || n <= m[1].length) break;
+          block.push(lines[j].slice(indent));
+        }
+        body = block.join('\n');
+      } else body = m[2].replace(/^(['"])(.*)\1$/, '$2');
+      body = body.replace(/\$\{\{[\s\S]*?\}\}/g, 'X');
+      scripts++;
+      const r = spawnSync('bash', ['-n'], { input: body, encoding: 'utf8' });
+      if (r.status !== 0) bad.push(`${path.relative(PROJECT, file)}:${i + 1}: ${r.stderr.trim().split('\n')[0]}`);
+    });
+  }
+  t(`every run: script in the workflows and actions parses as bash (${scripts})`, !bad.length && scripts > 50, bad.join('; '));
 }
 
 done(report('Workflows', R));

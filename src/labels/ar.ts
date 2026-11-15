@@ -43,6 +43,7 @@ export const labels: SerupaLabels = {
   toolbarMore: 'المزيد',
   previousMonth: 'الشهر السابق',
   timeZoneYours: 'منطقتك الزمنية',
+  timeZonePlaceholder: 'ابحث عن مدينة أو منطقة زمنية',
   nextMonth: 'الشهر التالي',
   month: 'الشهر',
   year: 'السنة',

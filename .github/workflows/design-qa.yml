@@ -50,7 +50,7 @@ jobs:
             --jq '.[] | select(.event == "labeled" and .label.name == "design-qa") | .created_at' | tail -1)
           # ISO 8601 times in UTC compare as strings.
           if [ -z "$labeled" ] || [[ ! "$labeled" > "${review#* }" ]]; then
-            echo "Run $run's visual review failed ${review#* }, and design-qa ${labeled:+was added $labeled, before it}${labeled:-isn't on the pull request}: nothing new to read."
+            echo "Run $run's visual review failed ${review#* }, and design-qa ${labeled:+was added $labeled, before it}${labeled:-is not on the pull request}: nothing new to read."
             exit 0
           fi
           echo "Running the failed jobs of run $run again: visual review failed ${review#* }, before design-qa was added $labeled."

@@ -56,6 +56,7 @@ jobs:
     outputs:
       hold: ${{ steps.hold.outputs.hold }}
       x86runner: ${{ steps.runner.outputs.x86runner }}
+      prrunner: ${{ steps.runner.outputs.prrunner }}
       wide: ${{ steps.plan.outputs.wide }}
       full: ${{ steps.plan.outputs.full }}
       since: ${{ steps.plan.outputs.since }}
@@ -101,6 +102,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           X86: ${{ vars.SERUPA_X86_RUNNER }}
           FORK: ${{ github.event.pull_request.head.repo.fork == true }}
+          EVENT: ${{ github.event_name }}
+          PR_RUNNER: ${{ vars.SERUPA_RUNNER || '"ubuntu-24.04"' }}
         run: |
           set -euo pipefail
           runner="$X86"
@@ -113,6 +116,27 @@ jobs:
           fi
           echo "x86runner=$(echo "$runner" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
           echo "x86 jobs run on: $runner"
+          # A pull request's suite jobs borrow the x86 runners while no merge queue job is waiting for one, so the queue
+          # keeps them when it needs them, and otherwise take GitHub's (SERUPA_RUNNER). Waiting for no queue run at all
+          # left the 28 burst slots mostly idle while twelve pull request runs queued for GitHub's 20 (15 Nov, 21:40: a
+          # run waited 40 minutes). A run decides once, at its start, and holds at most eight x86 jobs (max-parallel).
+          if [ "$EVENT" = pull_request ]; then
+            pr="$PR_RUNNER"
+            if [ "$FORK" = true ]; then pr='"ubuntu-24.04"'; fi
+            if [ "$FORK" != true ] && [ "$runner" = "$X86" ]; then
+              waiting=0
+              for s in queued in_progress; do
+                for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=merge_group&status=$s&per_page=20" --jq '.workflow_runs[].id') ; do
+                  n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs?filter=latest&per_page=100" --jq '[.jobs[] | select(.status == "queued" or .status == "waiting")] | length') || n=1
+                  waiting=$(( waiting + n ))
+                done
+              done
+              if [ "$waiting" = 0 ]; then pr="$X86"; fi
+              echo "The merge queue has $waiting job(s) waiting for a runner."
+            fi
+            echo "prrunner=$(echo "$pr" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
+            echo "This pull request's x86 jobs run on: $pr"
+          fi
       - id: plan
         shell: bash
         env:
@@ -126,7 +150,7 @@ jobs:
           # commit its own change lands on, so it tests what the change can affect on the exact tree that becomes main,
           # and five groups don't each run the whole suite again. Main's push run behind the queue is build only; the
           # nightly flake hunt tests main whole, with the coverage floors (nightly.yml).
-          full=""; wide=""; since=""; tests=1
+          full=""; wide=""; since=""; tests=1; ns=""
           case "$EVENT" in
             merge_group) full=1; since="$QUEUE_BASE" ;;
             push) if [ "$QUEUE" = 1 ]; then tests=""; else full=1; wide=1; fi ;;
@@ -168,6 +192,18 @@ jobs:
           if [ -n "$since" ]; then
             [ "$EVENT" = merge_group ] && git fetch -q --depth=1 origin "$since"
             has() { node tools/test/run.mjs --since "$since" --group "$1" --list | grep -q $'\t'; }
+            # Shards scale with what a narrowed run covers: each pays about a minute of setup, so a group that changes
+            # two components took 17 jobs of under 30 s of tests each (15 Nov), and the queue's demand for the burst
+            # slots, not the tests, set how long a merge took. One shard per ten components covered, up to the counts above.
+            covered=$(node tools/test/run.mjs --since "$since" --group components --list | sed -n 's/^Testing the changed components and the ones that use them: \(.*\) (main runs everything)$/\1/p' | tr ',' '\n' | grep -c .) || covered=""
+            if [ -n "$covered" ] && [ "$covered" -gt 0 ]; then
+              fit() { local n=$(( ($covered + 9) / 10 )); [ "$n" -lt "$1" ] && echo "$n" || echo "$1"; }
+              nb2=$(fit "$nb"); nl2=$(fit "$nl"); nv2=$(fit "$nv"); ns=$(fit 4)
+              x86=$(echo "$x86" | jq -c --argjson b "$nb2" --argjson l "$nl2" --argjson v "$nv2" '
+                def keep(g; p; n): map(select(.group != g or (.part // "") != p or ((.shard | split("/")[0] | tonumber) <= n)) | if .group == g and (.part // "") == p then .shard = ((.shard | split("/")[0]) + "/" + (n | tostring)) else . end);
+                .include |= (keep("components"; "base"; $b) | keep("components"; "locale"; $l) | keep("visual"; ""; $v))')
+              echo "Covers $covered components: $nb2 base, $nl2 locale, $nv2 Visual and $ns Storybook shards."
+            fi
             if ! has components; then x86=$(echo "$x86" | jq -c '.include |= map(select(.group != "components"))'); fi
             if ! has visual; then x86=$(echo "$x86" | jq -c '.include |= map(select(.group != "visual"))'); fi
             if ! has storybook; then storybook=""; fi
@@ -177,7 +213,7 @@ jobs:
           portable='{"include":[{"group":"checks","shard":"1/3"},{"group":"checks","shard":"2/3"},{"group":"checks","shard":"3/3"}'
           # Storybook in four shards: in three, a queue run that checks every page took up to 11 minutes in one (13 Nov),
           # the longest job of the run. They go on GitHub's runners, so a fourth costs no x86 runner.
-          [ -n "$storybook" ] && portable="$portable"',{"group":"storybook","shard":"1/4"},{"group":"storybook","shard":"2/4"},{"group":"storybook","shard":"3/4"},{"group":"storybook","shard":"4/4"}'
+          if [ -n "$storybook" ]; then for k in $(seq 1 "${ns:-4}"); do portable="$portable"',{"group":"storybook","shard":"'"$k/${ns:-4}"'"}'; done; fi
           portable="$portable]}"
           {
             echo "full=$full"; echo "wide=$wide"; echo "since=$since"; echo "tests=$tests"
@@ -197,6 +233,10 @@ jobs:
   build:
     needs: plan
     if: needs.plan.outputs.hold != '1'
+    # actions: write lets a failed build stop its own run (the last step).
+    permissions:
+      contents: read
+      actions: write
     runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -219,6 +259,11 @@ jobs:
         run: node tools/tokens/build.mjs --check
       - name: Build the package
         run: npm run build
+      # The size budgets take seconds once the package is built, and they are what a pull request that passed on its own
+      # most often fails in the queue, once another merged ahead of it (#1995 and #1999 by 13 to 31 bytes, 15 Nov). Here
+      # they fail a run in about two minutes; the checks group runs them again with the rest.
+      - name: Sizes within their budgets
+        run: node tools/test/size.mjs
       - name: Build Storybook
         run: npm run build-storybook
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -229,6 +274,14 @@ jobs:
             storybook-static/
           retention-days: 3
           if-no-files-found: error
+      - name: Stop the run
+        if: failure() && github.event_name != 'push'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node -e 'fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/cancel`, { method: "POST", headers: { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json" } }).then((r) => console.log(`Cancelling run ${process.env.GITHUB_RUN_ID}: ${r.status}`))' \
+            || echo "Couldn't cancel run $GITHUB_RUN_ID: the stop job will."
 
   # The checks that need neither the build nor a browser, beside the build so they don't wait for it.
   static:
@@ -284,18 +337,20 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      # The base is the merge commit's first parent, the main this run tests on, as the plan job's: the event's base.sha
+      # is main when the push came, and main can move before the job checks the merge out. Then the diff took in what
+      # main gained since, and a tools-only pull request "changed src/ but no test" (#2009, #2012's Select.css, 15 Nov).
       - id: needed
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           git config --global --add safe.directory "$PWD"
-          node tools/fix-proof.mjs "$BASE_SHA" --needed | tee needed.txt
+          echo "base=$(git rev-parse HEAD^1)" >> "$GITHUB_OUTPUT"
+          node tools/fix-proof.mjs "$(git rev-parse HEAD^1)" --needed | tee needed.txt
           grep -q '^needed=false' needed.txt && echo "needed=false" >> "$GITHUB_OUTPUT" || echo "needed=true" >> "$GITHUB_OUTPUT"
       - if: steps.needed.outputs.needed == 'true'
         uses: ./.github/actions/setup
       - if: steps.needed.outputs.needed == 'true'
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_SHA: ${{ steps.needed.outputs.base }}
         run: node tools/fix-proof.mjs "$BASE_SHA"
 
   # The suite's groups as parallel jobs (tools/test/run.mjs --group, SERUPA_PART, SERUPA_SHARD). x86: the component tests,
@@ -310,18 +365,23 @@ jobs:
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
     # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
     # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
-    # A pull request's shards take SERUPA_RUNNER instead, so the x86 runners serve the merge queue alone. Visual draws
-    # main's pictures and the branch's in the same job since ADR-0016, so any machine compares fairly, and the timing
-    # budgets leave room for a CI machine several times slower. On 15 Nov ten pull requests, up to eight x86 jobs each,
-    # filled the 28 burst slots: queue jobs waited about 40 minutes to start and nothing merged for an hour.
-    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER || '"ubuntu-24.04"') || needs.plan.outputs.x86runner) }}
+    # A pull request's shards take the x86 runners only while the merge queue is idle, and GitHub's runners
+    # (SERUPA_RUNNER) otherwise (the plan job's prrunner), so the queue always has them. Visual draws main's pictures
+    # and the branch's in the same job since ADR-0016, so any machine compares fairly, and the timing budgets leave room
+    # for a slower machine. On 15 Nov ten pull requests, up to eight x86 jobs each, filled the 28 burst slots: queue jobs
+    # waited about 40 minutes to start and nothing merged for an hour.
+    # actions: write lets a failed job stop its own run (the last step).
+    permissions:
+      contents: read
+      actions: write
+    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && needs.plan.outputs.prrunner || needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
     timeout-minutes: 30
     strategy:
-      # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
-      fail-fast: ${{ github.event_name == 'pull_request' }}
+      # On a pull request and in the queue the first failing job cancels the others; main runs every job to the end.
+      fail-fast: ${{ github.event_name != 'push' }}
       # A pull request takes at most eight runners at once, so one doesn't hold all of GitHub's; a queue group 24 of the
       # 28 burst slots.
       max-parallel: ${{ github.event_name == 'pull_request' && 8 || 24 }}
@@ -464,6 +524,17 @@ jobs:
             .test-tmp/
             tools/test/baseline-visual/**/*.actual.png
           if-no-files-found: ignore
+      # The run can't pass any more, so the rest of it only holds runners: in the queue, the groups behind it wait on them.
+      # The stop job below does the same, but only once every job it needs has ended: a group that failed at 20:41 ran on
+      # to 20:57 (15 Nov). The step runs last, after the failure details are uploaded.
+      - name: Stop the run
+        if: failure() && github.event_name != 'push'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node -e 'fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/cancel`, { method: "POST", headers: { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json" } }).then((r) => console.log(`Cancelling run ${process.env.GITHUB_RUN_ID}: ${r.status}`))' \
+            || echo "Couldn't cancel run $GITHUB_RUN_ID: the stop job will."
 
   # The checks and the Storybook checks (axe in every theme, text spacing, 200% text, reflow): no screenshot, no timing
   # budget, so any runner, Arm included.
@@ -471,13 +542,18 @@ jobs:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
     needs: [plan]
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    # actions: write lets a failed job stop its own run (the last step).
+    permissions:
+      contents: read
+      actions: write
+    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && needs.plan.outputs.prrunner || needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
     timeout-minutes: 30
     strategy:
-      fail-fast: ${{ github.event_name == 'pull_request' }}
+      fail-fast: ${{ github.event_name != 'push' }}
+      max-parallel: ${{ github.event_name == 'pull_request' && 8 || 24 }}
       matrix: ${{ fromJSON(needs.plan.outputs.portable) }}
     steps: *suite-steps
 

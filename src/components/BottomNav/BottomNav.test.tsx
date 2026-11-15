@@ -20,6 +20,16 @@ const Bar = (p: Partial<React.ComponentProps<typeof BottomNav>>) => (
 afterEach(async () => { await page.viewport(414, 800); });
 
 describe('BottomNav', () => {
+  test("a label cut short shows whole on hover; the link's name is the whole label", async () => {
+    await page.viewport(320, 640);
+    await render(<div style={{ width: 320 }}><BottomNav label="Main"><BottomNavLink href="#a" icon="home">Donaudampfschifffahrtsgesellschaft</BottomNavLink><BottomNavLink href="#b" icon="search">Search</BottomNavLink><BottomNavLink href="#c" icon="person">Account settings</BottomNavLink></BottomNav></div>);
+    const t = document.querySelector<HTMLElement>('a[href="#a"] [data-component="truncated-text"]')!;
+    await expect.poll(() => t.hasAttribute('data-truncated')).toBe(true);
+    await userEvent.hover(t);
+    await expect.poll(() => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]')?.textContent).toBe('Donaudampfschifffahrtsgesellschaft');
+    await expect.element(page.getByRole('link', { name: 'Donaudampfschifffahrtsgesellschaft' })).toBeInTheDocument();
+  });
+
   test('a <nav> named by label, a list of links, the current one with aria-current="page"; ref, className and props reach the nav', async () => {
     await page.viewport(414, 800);
     const ref = React.createRef<HTMLElement>();

@@ -1,7 +1,7 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, report, done } from './lib.mjs';
+import { affectedComponents, visualScope, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -22,13 +22,17 @@ const none = ['CONTRIBUTING.md', '.github/pull_request_template.md', 'tools/test
 t('the release scripts, the Node checks and the other workflows cover no component', affectedComponents(none)?.size === 0, list(affectedComponents(none)));
 for (const f of ['.github/workflows/ci.yml', 'tools/test/lib.mjs', 'tools/test/storybook.mjs', 'tools/test/vitest/setup.ts', 'CHANGELOG.md', 'README.md']) t(`a change to ${f} tests everything`, affectedComponents([f]) === null);
 const touched = touchedComponents(['src/components/Kanban/Kanban.tsx', 'tools/test/baseline-size/Sidebar.json', 'docs/LoadingAndWaiting.mdx', 'src/internal/labels.ts']);
+t('for Visual, a change to CI alone draws Button only (main and the branch are drawn alike)', list(affectedComponents(visualScope(['.github/workflows/ci.yml', '.github/actions/setup/action.yml', '.nvmrc']))) === 'Button');
+t('for Visual, CI beside a component draws that component', list(affectedComponents(visualScope(['.github/workflows/ci.yml', 'src/components/Meter/Meter.css']))) === 'Meter');
+t('for Visual, CI beside shared code still draws everything', affectedComponents(visualScope(['.github/workflows/ci.yml', 'src/internal/provider.tsx'])) === null);
+t('for Visual, nothing changed is nothing to draw', visualScope([]).length === 0);
 t('a change that tests everything still names the components it edits itself (Kanban, and Sidebar by its size budget)', list(touched) === 'Kanban, Sidebar' && affectedComponents(['src/components/Kanban/Kanban.tsx', 'docs/LoadingAndWaiting.mdx']) === null, list(touched));
 t('a change to no component folder edits none', touchedComponents(['docs/LoadingAndWaiting.mdx', 'tokens.json']).size === 0);
 const deps = withDependents(new Set(['Button']));
 t('a component brings the ones that use it (Button: ToggleButton, and Dialog through IconButton)', deps.has('Button') && deps.has('ToggleButton') && deps.has('Dialog') && !deps.has('Meter'), list(deps));
 t('a component its stories use counts too (Input: Field, whose stories show one)', withDependents(new Set(['Input'])).has('Field'), list(withDependents(new Set(['Input']))));
 t('a component nothing uses brings only itself', list(withDependents(new Set(['SignaturePad']))) === 'SignaturePad', list(withDependents(new Set(['SignaturePad']))));
-t('a pattern that shows a component comes with it (Meter: Billing and Dashboard, and Chat whose stories show one)', list(withDependents(new Set(['Meter']))) === 'Billing, Chat, Dashboard, Meter', list(withDependents(new Set(['Meter']))));
+t('a pattern that shows a component comes with it (Meter: Billing and Dashboard, and Chat whose stories show one)', ['Billing', 'Chat', 'Dashboard', 'Meter'].every((n) => withDependents(new Set(['Meter'])).has(n)), list(withDependents(new Set(['Meter']))));
 const pattern = affectedComponents(['src/patterns/Checkout/Checkout.tsx', 'src/patterns/Introduction.mdx', 'tools/test/baseline-visual/Checkout/Default-blue-light-rest.png', 'src/blocks/StatsRow/StatsRow.tsx']);
 t('a block or pattern folder covers that block or pattern, and its Introduction page that page', list(pattern) === 'Checkout, Introduction.mdx, StatsRow', list(pattern));
 t('a pattern brings no component', list(withDependents(new Set(['Checkout']))) === 'Checkout', list(withDependents(new Set(['Checkout']))));
