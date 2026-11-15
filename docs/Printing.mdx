@@ -1,0 +1,40 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Printing" />
+
+# Printing
+
+People still print invoices, reports, tickets and records, or save them as a PDF. Serupa's components already print sensibly; this page says what they do on paper and what the app adds.
+
+## What prints, with nothing to set up
+
+With `base.css` and the components' own styles:
+
+| On paper | What happens |
+| --- | --- |
+| Colors | A page or section with `data-mode` prints its light colors, since printers drop backgrounds. Filled controls (Button, Badge, Progress, checked boxes, Alert, the current tab) keep their fill, so a state shown by a fill still shows. |
+| What's only for the screen | Toasts, tooltips, open menus, popovers and pickers, the [Fab](?path=/docs/components-actions-fab--docs) and the skip link are left out. |
+| Scrolling areas | [Table](?path=/docs/components-content-table--docs), [DataGrid](?path=/docs/components-content-datagrid--docs), [ScrollArea](?path=/docs/components-layout-and-type-scrollarea--docs), [Splitter](?path=/docs/components-layout-and-type-splitter--docs) panes, Chat and Kanban print all their content, not the part that was scrolled into view. |
+| Tables over several pages | The header row repeats on each page, and a row is never cut in two. |
+| Cut text | [ShowMore](?path=/docs/components-content-showmore--docs) prints the whole text without its toggle. A [CodeBlock](?path=/docs/components-content-codeblock--docs) wraps its long lines and leaves out Copy. A Textarea grows to show all it holds. |
+| Cards and charts | A [Card](?path=/docs/components-content-card--docs) and a [Chart](?path=/docs/components-data-display-chart--docs) stay whole on one page where they fit. A chart keeps its colors and drops its tooltip. |
+| Links | Put `data-print-urls` on a container and each outside link prints its address after it, since paper can't be clicked. |
+
+## What the app adds
+
+- **Offer Print where people look for it**: in the page's actions or its More menu, next to Export and Share, named "Print" (or "Print invoice"). It calls `window.print()`, which opens the browser's own dialog with its page range, copies and Save as PDF. Don't build those options again.
+- **Offer it only when there's something to print.** Leave it out of an empty list, and off pages that are only controls, such as settings.
+- **Hide the app's frame.** The sidebar, the top bar, filters and bulk-action bars mean nothing on paper. Hide them in your own `@media print` rule, and let the content take the full width.
+- **Say what paper can't show.** A page printed from a filtered or paged list should state the filter and the range ("Invoices, March 2026, 1–50 of 212") near its title, and the date it was printed when the numbers go out of date.
+- **Print everything people expect, not one screenful.** A list that loads as people scroll (LoadMore, a virtual list) prints only the rows it has drawn. For a full report, load every row first, or offer a PDF or CSV export made on the server.
+- **Open what should be read.** An Accordion or Tabs print as they stand: closed sections and the other tabs' panels stay out. When the printed page is the record, such as terms or a full profile, open the sections before `window.print()`, or give the page a print view that shows them all.
+- **Check it.** Print preview in each theme and in dark mode, and look for cut tables, lone headings at the foot of a page, and text that relied on a background.
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| "Print invoice" in the page's actions, calling `window.print()` | A custom dialog asking for copies and page range |
+| Hide the navigation and filters in `@media print` | Print the sidebar on every page |
+| State the filter and the range under the title | A printed list that silently holds 50 of 212 rows |
+| `data-print-urls` on an article, so its sources print as addresses | "Click here" on paper |

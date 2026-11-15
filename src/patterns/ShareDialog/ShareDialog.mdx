@@ -1,0 +1,40 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './ShareDialog.stories';
+
+<Meta of={Stories} />
+
+# Share dialog
+
+Who can open one document and what each person may do: add people by email, change or remove someone's access, set what the link alone allows, and copy the link.
+
+<Canvas of={Stories.Open} />
+
+## When to use it
+
+- One file, document, board or report that its owner shares with a few people or by link.
+- Not for a whole workspace's members and roles: that's [Team members](?path=/docs/patterns-team-members--docs).
+- Not for posting to another app only: a Share button that opens the device's share sheet (`navigator.share`) is enough, with [CopyButton](?path=/docs/components-actions-copybutton--docs) where the browser has none.
+
+## What each part is for
+
+- **Share sits in the page's header**, where people look for it. As soon as the document is shared, the people it's shared with show beside the button, with the count in words ("Shared with 2 people"), so nobody has to open the dialog to learn that others can see their work.
+- **The dialog opens on Add people.** It takes several addresses at once and one access for them all. The form names each problem (3.3.1, 3.3.3): which addresses aren't email addresses, or which have access already. What was typed stays, and focus goes back to the field.
+- **Each access picker is named with the person**, "Access for Budi Santoso" (2.4.6). A change is said: "Budi Santoso can view" (4.1.3).
+- **Remove acts at once and leaves Undo in the row**, where focus goes (2.4.3). The removal is done for good when the dialog closes, so nothing needs "Are you sure?" first (3.3.4). The picker holds only choices; Remove is a button beside it, never an item among the choices.
+- **The owner's row says "Owner"** and has no picker. Handing over ownership is a separate, deliberate flow.
+- **The link's setting is one picker of whole phrases**: "Only people added can open", "Anyone with the link can view", "Anyone with the link can edit". The hint under it says what the choice means, and the same phrase shows on the page. Keep to a few choices that people can take in at a glance.
+- **Copy link is always there**, and says "Copied". **Share via…** opens the device's own share sheet, and shows only where the browser has one.
+- **Done closes the dialog.** Every change has already been made by then, so there is no Save to forget.
+
+<Canvas of={Stories.Default} />
+
+<Canvas of={Stories.NotShared} />
+
+<Canvas of={Stories.AnyoneWithTheLink} />
+
+## What stays your app's job
+
+- **Storing the changes.** `onInvite` gets the addresses and their access (return its promise: Add shows it's busy, and a rejection keeps what was typed and says so), `onAccessChange` a changed access, `onRemove` a removal once the dialog has closed, and `onLinkAccessChange` the link's setting.
+- **Who may share.** Show Share, the pickers and Remove only to those allowed, and say who can when someone isn't.
+- **The email itself**, and telling people when they're added, mentioned, or the document changes.
+- **A link that anyone can open** is a decision with consequences: when the document holds private data, say so beside the picker, or leave the choice out.

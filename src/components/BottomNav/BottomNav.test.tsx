@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, color, press, withMotion } from '../../../tools/test/vitest/helpers';
 import { BottomNav, BottomNavLink } from './BottomNav';
 import { OfflineBanner } from '../OfflineBanner/OfflineBanner';
@@ -118,6 +118,20 @@ describe('BottomNav held state', () => {
       return out;
     });
     expect(low).toEqual([]);
+  });
+
+  test('under the pointer the current item keeps its own color and fill, and another item takes the hover ones (GR414)', async () => {
+    await page.viewport(414, 800);
+    await render(<Bar />);
+    const [other, current] = links() as [HTMLElement, HTMLElement];
+    const look = (a: HTMLElement) => [css(a).color, css(a.firstElementChild).backgroundColor];
+    await userEvent.hover(current);
+    expect(current.matches(':hover')).toBe(true);
+    expect(look(current)).toEqual([color('var(--primary)'), color('var(--primary-subtle)')]);
+    await userEvent.hover(other);
+    expect(look(other)).toEqual([color('var(--text)'), color('var(--secondary)')]);
+    expect(look(current)).toEqual([color('var(--primary)'), color('var(--primary-subtle)')]);
+    await userEvent.unhover(other);
   });
 });
 
