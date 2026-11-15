@@ -28,7 +28,7 @@
 .dk-kanban__content { flex: auto; min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-kanban__handle {
   display: inline-flex; flex: none; align-items: center; justify-content: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); padding: var(--spacing-0);
-  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--kanban-muted, var(--text-muted)); cursor: grab; touch-action: none;
+  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--kanban-muted, var(--text-muted)); cursor: var(--cursor-grab); touch-action: none;
 }
 /* On the icon itself: an Icon sets its own 24px, so a size on the button never reached it. 20px, as SortableList's handle. */
 .dk-kanban__handle .dk-icon { font-size: var(--spacing-5); }
@@ -41,7 +41,7 @@
 .dk-kanban__handle:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-kanban:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-kanban__handle[aria-pressed="true"] { background: var(--kanban-handle-active, var(--primary-subtle)); color: var(--kanban-text, var(--text)); }
-.dk-kanban--moving .dk-kanban__handle { cursor: grabbing; }
+.dk-kanban--moving .dk-kanban__handle { cursor: var(--cursor-grabbing); }
 .dk-kanban__menu { flex: none; }
 .dk-kanban__loading > .dk-loader { flex: auto; }
 .dk-kanban__empty { padding: var(--spacing-3); color: var(--kanban-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); text-align: center; }

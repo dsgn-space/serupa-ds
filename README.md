@@ -47,6 +47,8 @@ npm run dev
 
 Add `--brand violet`, `--brand emerald` or any other accent color for another brand. Then steps 2 and 3 below are done for you.
 
+To start on a whole page instead of the small form, add `--template` and a pattern's name: `--template dashboard`, `--template settings-form`, `--template sign-in`, or any other pattern `--template` alone lists. The pattern and the blocks it builds on go into `src/serupa/` as source the app owns, the way `serupa-add` writes them, and `App.tsx` renders it with its demo data.
+
 ### 2. Load the styles and use the components
 
 In a React app (Vite, Next.js, Remix):
@@ -171,7 +173,7 @@ npx serupa-usage src
 | `dist/serupa.iife.js` | The components for a plain page (`window.Serupa`). |
 | `dist/serupa-icons.iife.js` | Every Material Symbol by name, for a plain page. `serupa.iife.js` loads it from its own folder when an Icon needs it, so keep the two together. |
 | `dist/theme.js` | Automatic dark mode and the theme switcher API. |
-| `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. Escape turns it off. `Serupa.debug.inspect(element)` and `Serupa.debug.contrast(element)` give the same as objects. Leave it out of production. |
+| `dist/debug.js` | A debug overlay for finding why a screen looks off. Load it, then add `?serupa-debug` to the page's address: every component gets a dashed outline, and pointing at one shows its name, variant and size, its state and the component tokens set on it. It also checks the color pairs against WCAG contrast where they're drawn, so a color token you override can't quietly fail: the console lists the failures on the page, and the panel adds those on the component. A Theme panel in the corner switches brand, mode, contrast, density, radius, depth, shadow and type scale live, and checks the colors again in each. Escape turns it off. `Serupa.debug.inspect(element)`, `Serupa.debug.contrast(element)` and `Serupa.debug.theme(settings)` do the same from code. Leave it out of production. |
 | `dist/eslint.js` (`@diki-stwn/serupa-ds/eslint`) | Tells eslint-plugin-jsx-a11y what each component renders, so your lint checks `<Image>` and `<IconButton>` as it checks `img` and `button`. See Getting started in Storybook. |
 | `dist/stylelint.js` (`@diki-stwn/serupa-ds/stylelint`) | A Stylelint config for your own CSS: it flags a color, a spacing length, a radius, or a duration or easing written out where a token belongs. See Getting started in Storybook. |
 | `dist/testing.js` (`@diki-stwn/serupa-ds/testing`) | For your app's own tests. Testers that drive a widget as people do: `combobox()`, `menu()`, `tabs()`, `table()`, `calendar()` and `datePicker()` (`await combobox(field, { user }).choose('Canada')`), finding parts by role and name so your tests don't depend on Serupa's markup. And `forEachTheme(page, fn)`, which draws a Playwright page in each theme, with transitions off and the color scheme to match, and calls `fn` so you can take a screenshot in each. See Guides › Testing your app in Storybook. |

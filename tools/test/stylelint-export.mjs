@@ -18,7 +18,7 @@ const t = async (name, code, want) => {
   R.push({ name, ok: JSON.stringify(got) === JSON.stringify(want), detail: `flagged ${JSON.stringify(got)}, expected ${JSON.stringify(want)}` });
 };
 
-R.push({ name: 'the config turns on the four rules it ships, and nothing else', ok: JSON.stringify(Object.keys(config.rules).sort()) === JSON.stringify(['serupa/no-raw-color', 'serupa/no-raw-motion', 'serupa/no-raw-radius', 'serupa/no-raw-spacing']) && config.plugins.length === 4, detail: Object.keys(config.rules).join(', ') });
+R.push({ name: 'the config turns on the five rules it ships, and nothing else', ok: JSON.stringify(Object.keys(config.rules).sort()) === JSON.stringify(['serupa/no-raw-color', 'serupa/no-raw-cursor', 'serupa/no-raw-motion', 'serupa/no-raw-radius', 'serupa/no-raw-spacing']) && config.plugins.length === 5, detail: Object.keys(config.rules).join(', ') });
 await t('CSS written with tokens passes', `.card { color: var(--text); background: var(--surface-raised, #fff); border: var(--border-width-1, 1px) solid var(--border);
   padding: var(--spacing-4) calc(var(--spacing-4) * 2); margin: 0 auto; gap: var(--spacing-2); inset: 0; border-radius: var(--rounded-md);
   outline-color: currentcolor; fill: transparent; background-image: url("data:image/svg+xml;utf8,<svg fill='red'/>"); width: 320px;
@@ -45,6 +45,9 @@ await t('no-raw-motion: durations, delays and easings written out, and all', `.a
 .c { transition-property: all; transition-timing-function: linear(0, 1.1 60%, 1); animation-duration: 2s; }`,
   ['serupa/no-raw-motion all', 'serupa/no-raw-motion 0.3s', 'serupa/no-raw-motion ease', 'serupa/no-raw-motion 250ms', 'serupa/no-raw-motion cubic-bezier()', 'serupa/no-raw-motion 50ms', 'serupa/no-raw-motion all', 'serupa/no-raw-motion linear()', 'serupa/no-raw-motion 2s']);
 R.push({ name: 'no-raw-motion is a warning, so an app\'s lint still passes on upgrade', ok: (await stylelint.lint({ code: '.a { transition: all 0.3s ease; }', codeFilename: path.join(PROJECT, 'app.css'), config: { extends: [file] } })).results[0].warnings.every((w) => w.severity === 'warning'), detail: 'severity' });
+await t('no-raw-cursor: the cursor tokens, default, text and the resize cursors pass', '.a { cursor: var(--cursor-interactive); } .b { cursor: default; } .c { cursor: text; } .d { cursor: col-resize; } .e { cursor: var(--cursor-grab, grab); }', []);
+await t('no-raw-cursor: pointer, not-allowed, grab and grabbing written out', '.a { cursor: pointer; } .b:disabled { cursor: not-allowed; } .c { cursor: grab; } .c:active { cursor: grabbing; }',
+  ['serupa/no-raw-cursor pointer', 'serupa/no-raw-cursor not-allowed', 'serupa/no-raw-cursor grab', 'serupa/no-raw-cursor grabbing']);
 await t('a stylelint-disable comment with a reason turns a rule off for that line', '.a {\n  /* stylelint-disable-next-line serupa/no-raw-color -- the brand file asks for this exact ink */\n  color: #0a2540;\n}', []);
 
 done(report('@diki-stwn/serupa-ds/stylelint', R));
