@@ -41,6 +41,11 @@ await t('radius-through-role: roles, a component token, none, xs and full pass',
 await t('radius-through-role: a middle step of the rounded scale, alone or as a default, is flagged', layered(`.dk-x { border-radius: var(--rounded-md); }
 .dk-y { border-radius: var(--y-radius, var(--rounded-lg)); }
 .dk-z { border-end-end-radius: var(--rounded-sm); --z-item-radius: var(--rounded-xl); }`), ['serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role', 'serupa/radius-through-role'], { 'serupa/radius-through-role': true });
+await t('shadow-through-role: elevation roles, a component token and shadow-none pass', layered(`.dk-x { box-shadow: var(--x-shadow, var(--elevation-overlay)); }
+.dk-y { --dk-y-shadow: var(--shadow-none); box-shadow: var(--elevation-rest), var(--elevation-part); }`), [], { 'serupa/shadow-through-role': true });
+await t('shadow-through-role: a step of the shadow scale, alone, as a default or in a custom property, is flagged', layered(`.dk-x { box-shadow: var(--shadow-md); }
+.dk-y { box-shadow: var(--y-shadow, var(--shadow-lg)); }
+.dk-z { --dk-z-shadow: var(--shadow-xs); }`), ['serupa/shadow-through-role', 'serupa/shadow-through-role', 'serupa/shadow-through-role'], { 'serupa/shadow-through-role': true });
 await t('outline-width-token: outline-width and focus-ring-width tokens pass', layered(`.dk-x { outline: var(--outline-width-2) solid Highlight; outline-offset: calc(var(--spacing-0) - var(--outline-width-2)); }
 .dk-y { outline-width: var(--focus-ring-width); border: var(--border-width-1) solid CanvasText; }`), [], { 'serupa/outline-width-token': true });
 await t('outline-width-token: a border-width token in an outline is flagged', layered(`.dk-x { outline: var(--border-width-1) solid Highlight; }

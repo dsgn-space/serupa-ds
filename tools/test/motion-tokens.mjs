@@ -12,13 +12,13 @@ const MOTION = /^(?:transition|animation)(?:-(?:duration|delay|timing-function))
 const RAW_TIME = /(?<![\w.-])(?!0m?s\b)\d*\.?\d+m?s\b/g;
 const RAW_EASE = /(?<![\w-])(?:linear|ease|ease-in|ease-out|ease-in-out)(?![\w-])|cubic-bezier\(/g;
 
-// The scale itself (duration-150, ease-in-out) in component CSS (FI1): a component names what moves, with a role,
+// The scale itself (duration-150) in component CSS (FI1): a component names what moves, with a role,
 // so a change to the role reaches it. Allowed: duration-0 (no transition at all) and ease-linear (a spinner or a
 // bar turning at constant speed, as the Motion page says). What still uses the scale is in KNOWN, by component,
 // with why; a KNOWN token no longer used fails too.
-const SCALE = /var\(--((?:duration-(?!0\))\d+)|ease-(?:in-out|in|out)(?:-(?:cubic|quart|expo|back))?|ease-spring-(?:soft|snappy)|ease-elastic)\)/g;
+const SCALE = /var\(--(duration-(?!0\))\d+)\)/g;
 const KNOWN = Object.fromEntries(Object.entries({
-  Loader: ['duration-1000', 'duration-500', 'ease-in-out', 'duration-1200', 'duration-150', 'duration-300', 'duration-75', 'duration-200', 'duration-100', 'duration-700'],   // its own art and rhythms: each animation is a sum of scale steps, tuned per variant
+  Loader: ['duration-1000', 'duration-500', 'duration-1200', 'duration-150', 'duration-300', 'duration-75', 'duration-200', 'duration-100', 'duration-700'],   // its own art and rhythms: each animation is a sum of scale steps, tuned per variant
 }).flatMap(([c, ts]) => ts.map((t) => [`${c}:${t}`, 'its own art, tuned per variant'])));
 
 const dir = path.join(PROJECT, 'src', 'components');
@@ -48,17 +48,23 @@ const ROLES = ['motion-press', 'motion-release', 'motion-hover', 'motion-enter-s
 const roles = ROLES.map((r) => [r, tokens.find((t) => t.name === r)]);
 const each = (t) => (t && typeof t.value === 'object' ? Object.values(t.value) : [t?.value]);
 const themes = [...new Set(roles.flatMap(([, t]) => (t && typeof t.value === 'object' ? Object.keys(t.value) : [])))];
-const badRoles = roles.filter(([, t]) => !t || each(t).some((v) => !/^\{(?:duration|delay|ease)-[\w-]+\}$/.test(v) || !names.has(v.slice(1, -1)))).map(([r, t]) => `${r}: ${t ? JSON.stringify(t.value) : 'missing'}`);
+// A duration role names a step of the scale; an easing role is the curve itself, since the easings are only roles
+// (16.0.0): there is no scale of curves behind them for an app to reach past the role.
+const CURVE = /^(?:cubic-bezier\([\d., -]+\)|linear\([\d., %-]+\))$/;
+const badRoles = roles.filter(([r, t]) => !t || each(t).some((v) => (r.startsWith('ease-') ? !CURVE.test(v) : !/^\{(?:duration|delay)-[\w-]+\}$/.test(v) || !names.has(v.slice(1, -1))))).map(([r, t]) => `${r}: ${t ? JSON.stringify(t.value) : 'missing'}`);
+const EASINGS = ['ease-linear', ...ROLES.filter((r) => r.startsWith('ease-'))];
+const extraEasings = tokens.filter((t) => t.name.startsWith('ease-') && !EASINGS.includes(t.name)).map((t) => t.name);
 const value = (n, th) => { const t = tokens.find((x) => x.name === n); const v = (typeof t.value === 'object' ? t.value[th] : t.value).slice(1, -1); return parseInt(tokens.find((x) => x.name === v)?.value, 10); };
 const springs = Object.entries(SPRINGS).filter(([n, z]) => tokens.find((t) => t.name === n)?.value !== spring(z)).map(([n]) => n);
 const exitsShorter = ['sm', 'md', 'lg'].flatMap((s) => (themes.length ? themes : [null]).filter((th) => !(badRoles.length === 0 && value(`motion-exit-${s}`, th) < value(`motion-enter-${s}`, th))).map((th) => (th ? `${s} (${th})` : s)));
 
 done(report('Motion tokens', [
-  { name: 'component CSS takes its durations, delays and easings from the motion tokens', ok: found.length === 0, detail: `raw values: ${found.join(' | ')}. Use a motion role (motion-enter-sm, ease-enter, …) or a duration-*/ease-* token` },
+  { name: 'component CSS takes its durations, delays and easings from the motion tokens', ok: found.length === 0, detail: `raw values: ${found.join(' | ')}. Use a motion role (motion-enter-sm, ease-enter, …) or a duration-* token` },
   ...[...scale].map(([k, at]) => ({ name: KNOWN[k] ? `${k.replace(':', ': ')} from the scale on purpose (${KNOWN[k]})` : `${k.replace(':', ': ')} comes from a motion role`, ok: !!KNOWN[k],
     detail: `${at} uses var(--${k.split(':')[1]}): use the role for what moves (motion-hover with ease-move for a hover color, motion-enter-sm with ease-enter for a popup, motion-change-md for a panel opening, ease-settle for a press, …)` })),
   ...Object.keys(KNOWN).filter((k) => !scale.has(k)).map((k) => ({ name: `${k.replace(':', ': ')} still from the scale`, ok: false, detail: 'it uses a role now; take it out of KNOWN in tools/test/motion-tokens.mjs' })),
-  { name: 'every motion role names a token of the duration or easing scale', ok: badRoles.length === 0, detail: badRoles.join(', ') },
+  { name: 'every duration role names a step of the scale, and every easing role is a curve', ok: badRoles.length === 0, detail: badRoles.join(', ') },
+  { name: 'the easing tokens are the roles and ease-linear, with no raw curves beside them', ok: extraEasings.length === 0, detail: `${extraEasings.join(', ')}: give the curve a role (what it is for), or use one that exists` },
   { name: 'the spring easings are the springs tools/tokens/spring.mjs draws', ok: springs.length === 0, detail: `${springs.join(', ')}: run node tools/tokens/spring.mjs and copy its linear() into tokens.json` },
   { name: 'each exit is shorter than its enter', ok: exitsShorter.length === 0, detail: `motion-exit-${exitsShorter.join(', motion-exit-')}` },
 ]));
