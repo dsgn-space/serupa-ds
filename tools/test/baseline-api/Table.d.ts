@@ -4,6 +4,8 @@ interface TableLabels {
     tableSorted: (column: string, direction: "ascending" | "descending") => string;
     tableSelected: (count: number, formatted: string) => string;
     clearSelection: string;
+    tableSelectAll: (count: number, formatted: string) => string;
+    tableAllSelected: (count: number, formatted: string) => string;
     tableResizeColumn: (column: string) => string;
     tableNarrower: string;
     tableWider: string;
@@ -55,6 +57,9 @@ interface TableActionBarProps extends React.HTMLAttributes<HTMLDivElement> {
     count: number;
     onClear?: (() => void) | undefined;
     clearLabel?: string | undefined;
+    total?: number | undefined;
+    onSelectAll?: (() => void) | undefined;
+    sticky?: boolean | undefined;
     children?: React.ReactNode | undefined;
 }
 declare const Table: React.ForwardRefExoticComponent<TableProps & React.RefAttributes<HTMLTableElement>>;

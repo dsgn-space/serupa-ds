@@ -9,6 +9,8 @@ import { isComposing } from '../../internal/ime';
 import { activeIn } from '../../internal/root';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { ToggleButton } from '../ToggleButton/ToggleButton';
+import { CopyButton } from '../CopyButton/CopyButton';
 import { Loader } from '../Loader/Loader';
 import { Icon } from '../Icon/Icon';
 import { RelativeTime } from '../RelativeTime/RelativeTime';
@@ -322,6 +324,46 @@ export const ChatApproval = /* @__PURE__ */ component<HTMLDivElement, ChatApprov
         <Button size="sm" variant="primary" onClick={answer(props.onApprove)}>{L.chatApprove}</Button>
         <Button size="sm" variant="secondary" onClick={answer(props.onDeny)}>{L.chatDeny}</Button>
       </div>
+    </div>
+  );
+});
+
+export type ChatFeedback = 'good' | 'bad';
+export interface ChatReplyActionsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+  /** The reply's text, for a Copy button: or a function that returns it when pressed. Without it, no Copy. */
+  copyText?: string | (() => string | Promise<string>) | undefined;
+  /** Called by a Regenerate button (ask for another version; show it with ChatMessage's branch). Without it, no Regenerate. */
+  onRegenerate?: (() => void) | undefined;
+  /** What the person said of this reply: 'good', 'bad', or null for nothing (controlled). Use with onFeedback. */
+  feedback?: ChatFeedback | null | undefined;
+  /** Called with 'good' or 'bad' when Helpful or Not helpful is pressed, or null when the pressed one is pressed again
+   *  to take it back. Without it, no feedback buttons. */
+  onFeedback?: ((feedback: ChatFeedback | null) => void) | undefined;
+}
+
+/** The row under an assistant's reply: Copy, Regenerate, and Helpful / Not helpful, each there only when given. A
+ *  rating is a toggle, said back to screen readers ("Thanks, noted"), and pressing it again takes it back. Put it in
+ *  ChatMessage's children, after the text.
+ *  @beta */
+export const ChatReplyActions = /* @__PURE__ */ component<HTMLDivElement, ChatReplyActionsProps>('ChatReplyActions', function ChatReplyActions(props, ref) {
+  const L = useSettings(words).labels;
+  const rest = omit(props, { copyText: 1, onRegenerate: 1, feedback: 1, onFeedback: 1, className: 1 } as const);
+  const now = props.feedback === 'good' || props.feedback === 'bad' ? props.feedback : null;
+  const rate = (to: ChatFeedback) => () => {
+    const next = now === to ? null : to;
+    if (props.onFeedback) props.onFeedback(next);
+    announce(next ? L.chatFeedbackNoted : L.chatFeedbackRemoved);
+  };
+  return (
+    <div {...rest} ref={ref} role="group" aria-label={rest['aria-label'] || L.chatReplyActions} className={cn('dk-chat-reply-actions', props.className)} data-component="chat-reply-actions">
+      {props.copyText != null ? <CopyButton value={props.copyText} iconOnly variant="ghost" size="sm">{L.copy}</CopyButton> : null}
+      {props.onRegenerate ? <IconButton icon={icons.Refresh} label={L.chatRegenerate} size="sm" onClick={props.onRegenerate} /> : null}
+      {props.onFeedback ? (
+        <>
+          <ToggleButton variant="ghost" size="sm" icon={icons.ThumbUp} aria-label={L.chatHelpful} title={L.chatHelpful} pressed={now === 'good'} onClick={rate('good')} />
+          <ToggleButton variant="ghost" size="sm" icon={icons.ThumbDown} aria-label={L.chatNotHelpful} title={L.chatNotHelpful} pressed={now === 'bad'} onClick={rate('bad')} />
+        </>
+      ) : null}
     </div>
   );
 });

@@ -217,6 +217,111 @@ describe('Calendar: long jumps and midnight (EM1)', () => {
   const menus = () => [...document.querySelectorAll<HTMLSelectElement>('[data-testid=cal] select')];
   const pickOption = async (s: HTMLSelectElement, value: string) => { await userEvent.selectOptions(s, value); };
 
+  test('the heading opens the year\'s months, and theirs twelve years: a birth date in 1990 is four clicks away, and a pick goes back down to its month\'s days', async () => {
+    const months: string[] = [];
+    await render(<Cal months={months} min={undefined} max={undefined} isDateDisabled={undefined} />);
+    const head = cal<HTMLButtonElement>('.dk-calendar__heading');
+    // Named by what it shows, described by what it does.
+    expect([head.textContent.startsWith('March 2025'), document.getElementById(head.getAttribute('aria-describedby')!)!.textContent]).toEqual([true, 'Choose a month']);
+    await userEvent.click(head);
+    const grid = () => cal<HTMLTableElement>('[role=grid]:not([hidden])');
+    const cells = () => [...grid().querySelectorAll('button')].map((b) => b.querySelector('[aria-hidden]')?.textContent ?? b.textContent);
+    // The year's months, named by the hidden title that announces the change, the day grid gone, focus on March.
+    expect([title(), cells().join(' '), grid().getAttribute('aria-labelledby'), cal('.dk-calendar__grid').hidden]).toEqual(['2025', 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec', cal('.dk-calendar__title').id, true]);
+    expect([(document.activeElement as HTMLElement).textContent, grid().querySelector('[aria-selected=true]')!.textContent]).toEqual(['MarMarch 2025', 'MarMarch 2025']);
+    expect(document.querySelector('[aria-label="Previous year"]')).not.toBeNull();
+    await userEvent.click(cal('.dk-calendar__heading'));
+    expect([title(), cells()[0], cells()[11], (document.activeElement as HTMLElement).textContent]).toEqual(['2016–2027', '2016', '2027', '2025']);
+    await userEvent.click(page.getByRole('button', { name: 'Previous 12 years' }));
+    await userEvent.click(page.getByRole('button', { name: 'Previous 12 years' }));
+    expect(title()).toBe('1992–2003');
+    await userEvent.click(page.getByRole('button', { name: 'Previous 12 years' }));
+    await userEvent.click(page.getByText('1990', { exact: true }));
+    expect([title(), (document.activeElement as HTMLElement).textContent]).toEqual(['1990', 'MarMarch 1990']);
+    await userEvent.click(page.getByText('Jul', { exact: true }));
+    expect([title(), cal('.dk-calendar__grid').hidden, months.at(-1), focused()]).toEqual(['July 1990', false, new Date(1990, 6, 1).toDateString(), '1990-07-10']);
+  });
+
+  test('the months and years by keyboard: Enter on the heading, arrows by one and by a row, Page keys by a page, Enter picks; Escape goes back a level and doesn\'t reach the page (a DatePicker\'s popup stays open)', async () => {
+    const outside = vi.fn<(key: string) => void>();
+    await render(<div onKeyDown={(e) => outside(e.key)}><Cal min={undefined} max={undefined} isDateDisabled={undefined} /></div>);
+    cal<HTMLButtonElement>('.dk-calendar__heading').focus();
+    const at = () => (document.activeElement as HTMLElement).textContent;
+    await userEvent.keyboard('{Enter}');
+    expect(at()).toBe('MarMarch 2025');
+    await userEvent.keyboard('{ArrowDown}{ArrowRight}');
+    expect(at()).toBe('JulJuly 2025');
+    await userEvent.keyboard('{Home}');
+    expect(at()).toBe('JulJuly 2025');
+    await userEvent.keyboard('{End}{PageDown}');
+    expect([at(), title()]).toEqual(['SepSeptember 2026', '2026']);
+    await userEvent.keyboard('{Escape}');
+    expect([title(), document.activeElement === cal('.dk-calendar__heading'), cal('.dk-calendar__grid').hidden, outside.mock.calls.flat().filter((k) => k === 'Escape')]).toEqual(['March 2025', true, false, []]);
+    await userEvent.keyboard('{Enter}');
+    await userEvent.click(cal('.dk-calendar__heading'));
+    expect(at()).toBe('2025');
+    await userEvent.keyboard('{ArrowUp}{PageUp}');
+    expect([at(), title()]).toEqual(['2010', '2004–2015']);
+    await userEvent.keyboard('{Escape}');
+    expect([title(), at()]).toEqual(['2010', 'MarMarch 2010']);
+    await userEvent.keyboard('{ArrowLeft}{Enter}');
+    expect([title(), focused()]).toEqual(['February 2010', '2010-02-10']);
+    expect(outside.mock.calls.flat().filter((k) => k === 'Escape')).toEqual([]);
+  });
+
+  test('the year buttons turn the months a year at a time, and the one that reaches min or max hands focus to the other, as the month arrows do', async () => {
+    await render(<Calendar data-testid="cal" locale="en-US" defaultValue={new Date(2025, 2, 10)} min={new Date(2024, 4, 1)} max={new Date(2026, 8, 30)} />);
+    await userEvent.click(cal('.dk-calendar__heading'));
+    const prev = () => q<HTMLButtonElement>('[data-testid=cal] [aria-label="Previous year"]'), next = () => q<HTMLButtonElement>('[data-testid=cal] [aria-label="Next year"]');
+    await userEvent.click(next());
+    expect([title(), next().disabled, document.activeElement === prev()]).toEqual(['2026', true, true]);
+    await userEvent.click(prev());
+    await userEvent.click(prev());
+    expect([title(), prev().disabled, document.activeElement === next()]).toEqual(['2024', true, true]);
+  });
+
+  test('the months and years keep to min and max: the ones outside are disabled and can\'t be picked, the page buttons stop, and keys stop at the ends', async () => {
+    const months: string[] = [];
+    await render(<Cal months={months} />);   // min Feb 3 2025, max Jun 20 2025
+    await userEvent.click(cal('.dk-calendar__heading'));
+    const off = () => [...cal('[role=grid]:not([hidden])').querySelectorAll('[aria-disabled=true]')].map((b) => b.querySelector('[aria-hidden]')?.textContent ?? b.textContent);
+    expect(off()).toEqual(['Jan', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+    expect([q<HTMLButtonElement>('[aria-label="Previous year"]').disabled, q<HTMLButtonElement>('[aria-label="Next year"]').disabled]).toEqual([true, true]);
+    // A click the browser lets through (aria-disabled leaves the button pressable) picks nothing.
+    page.getByText('Jan', { exact: true }).element().closest('button')!.click();
+    expect(title()).toBe('2025');
+    await userEvent.keyboard('{End}{ArrowDown}{ArrowDown}');
+    expect((document.activeElement as HTMLElement).textContent).toBe('JunJune 2025');
+    await userEvent.click(cal('.dk-calendar__heading'));
+    expect(off()).toEqual(['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2026', '2027']);
+    await userEvent.keyboard('{Enter}{Enter}');
+    expect([title(), months]).toEqual(['June 2025', [new Date(2025, 5, 1).toDateString()]]);
+  });
+
+  test('the months, years and heading in every theme: names 4.5:1, the picked one 4.5:1 on its fill; the months keep the days\' size, so the calendar doesn\'t jump', async () => {
+    await render(<Cal min={undefined} max={undefined} isDateDisabled={undefined} />);
+    const box = () => { const r = q('[data-testid=cal]').getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; };
+    const days = box();
+    await userEvent.click(cal('.dk-calendar__heading'));
+    expect(box()).toEqual(days);
+    const low: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const bg = css(q('body')).backgroundColor, sel = cal('.dk-calendar__period--selected');
+      for (const [k, fg, on] of [['heading', css(cal('.dk-calendar__heading')).color, bg], ['month', css(cal('.dk-calendar__period:not(.dk-calendar__period--selected)')).color, bg], ['picked', css(sel).color, css(sel).backgroundColor]] as const) {
+        const r = contrast(fg, on); if (r < 4.5) low.push(`${th} ${k} ${r.toFixed(2)}`);
+      }
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+  });
+
+  test('a little space between the weeks (calendar-row-gap, 4px)', async () => {
+    await render(<Cal />);
+    const rows = [...cal('.dk-calendar__grid tbody').querySelectorAll('tr')].map((r) => r.querySelector('button')!.getBoundingClientRect());
+    expect(Math.round(rows[1]!.top - rows[0]!.bottom)).toBe(4);
+  });
+
   test('monthYearPicker: Month and Year menus jump 18 months in two picks; the title stays for screen readers; the header fits the grid', async () => {
     const seen: string[] = [];
     await render(<Calendar data-testid="cal" monthYearPicker defaultMonth={new Date(2026, 9, 1)} locale="en-US" onMonthChange={(m) => seen.push(m.toISOString().slice(0, 7))} />);

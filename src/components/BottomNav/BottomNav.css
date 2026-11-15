@@ -41,7 +41,9 @@
    from the icon. */
 .dk-bottom-nav__badge { position: absolute; inset-block-start: var(--bottom-nav-badge-offset-y, var(--spacing-0)); inset-inline-start: var(--bottom-nav-badge-offset-x, var(--spacing-8)); display: inline-flex; font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-bottom-nav__label { max-inline-size: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-@media (hover: hover) { .dk-bottom-nav__link:hover { color: var(--bottom-nav-text-hover, var(--text)); } .dk-bottom-nav__link:hover .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-hover, var(--secondary)); } }
+/* Not on the current item: under the pointer it keeps its own color and fill, as it does while held (GR414).
+   The hover rule used to outrank the current one, so the current item looked like any other item pointed at. */
+@media (hover: hover) { .dk-bottom-nav__link:not(.dk-bottom-nav__link--active):hover { color: var(--bottom-nav-text-hover, var(--text)); } .dk-bottom-nav__link:not(.dk-bottom-nav__link--active):hover .dk-bottom-nav__icon { background: var(--bottom-nav-icon-bg-hover, var(--secondary)); } }
 /* The label and the pill fade to their hover colors as the controls beside them do, and the pill fills at once while held. */
 .dk-bottom-nav__link { transition: color var(--motion-hover) var(--ease-move); }
 .dk-bottom-nav__icon { transition: background-color var(--motion-hover) var(--ease-move); }

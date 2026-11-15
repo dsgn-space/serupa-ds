@@ -9,16 +9,19 @@ export interface DividerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'c
   label?: React.ReactNode | undefined;
   /** Leaves it out of the accessibility tree, when it's only decoration. Default: false. */
   decorative?: boolean | undefined;
+  /** Over a photo or a colored panel: 'dark' draws the line and label in white for dark media, 'light' in black for
+      light media, the same in every theme. */
+  onMedia?: 'dark' | 'light' | undefined;
 }
 
 /* Divider: a 1px line between content, horizontal (an <hr>) or vertical, with an optional label in the middle.
    It's a separator for screen readers unless decorative. className and every other prop go to the element. */
 /** A line between content, horizontal or vertical, with an optional label such as "or". */
 export const Divider = /* @__PURE__ */ component<HTMLElement, DividerProps>('Divider', function Divider(props, ref) {
-  const rest = omit(props, { orientation: 1, label: 1, decorative: 1, className: 1 });
+  const rest = omit(props, { orientation: 1, label: 1, decorative: 1, onMedia: 1, className: 1 });
   const vertical = props.orientation === 'vertical';
   const label = props.label != null && props.label !== false && props.label !== '' && !vertical ? props.label : null;
-  const cls = cn('dk-divider', vertical && 'dk-divider--vertical', label != null && 'dk-divider--label', props.className);
+  const cls = cn('dk-divider', vertical && 'dk-divider--vertical', label != null && 'dk-divider--label', (props.onMedia === 'dark' || props.onMedia === 'light') && 'dk-divider--on-' + props.onMedia, props.className);
   const a11y: React.AriaAttributes & { role?: React.AriaRole; 'aria-label'?: string } = props.decorative ? { role: 'none', 'aria-hidden': true } : { role: 'separator', 'aria-orientation': vertical ? 'vertical' : undefined };
   // A separator's children are presentational, so screen readers skip a label inside one. A text label names the
   // separator instead; any other label stays plain text between two lines that are only drawn.

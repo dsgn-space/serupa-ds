@@ -68,3 +68,20 @@ describe('Divider', () => {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
   });
 });
+
+describe('Divider onMedia', () => {
+  test('a half-strength white line and a white label on dark media, black on light, in every theme', async () => {
+    await render(<div id="dm">
+      <Divider id="dm-dark" onMedia="dark" />
+      <Divider id="dm-light" onMedia="light" label="or" />
+    </div>);
+    const seen = new Set<string>();
+    for (const th of THEMES) {
+      document.getElementById('dm')!.setAttribute('data-theme', th);
+      const label = document.getElementById('dm-light')!;
+      seen.add([css(document.getElementById('dm-dark')).borderTopColor, css(label).color, getComputedStyle(label, '::before').borderTopColor].join(' / '));
+    }
+    expect([...seen]).toEqual(['color(srgb 1 1 1 / 0.5) / rgb(0, 0, 0) / color(srgb 0 0 0 / 0.5)']);   // color-mix() keeps its srgb form
+    expect(contrast('rgb(0, 0, 0)', 'rgb(255, 255, 255)')).toBeGreaterThan(4.5);
+  });
+});
