@@ -1054,7 +1054,7 @@ Rules of thumb:
 
 ## States
 
-Every interactive component moves through the same seven states, in this order of precedence (a later one wins):
+Every interactive component moves through the same eight states, in this order of precedence (a later one wins):
 
 | State | When | How it looks | Tokens |
 | --- | --- | --- | --- |
@@ -1063,6 +1063,7 @@ Every interactive component moves through the same seven states, in this order o
 | Pressed | It's held down (`:active`, or Space and Enter on a Button) | One step past hover: `pressed` for rows, tabs, days and page buttons; filled buttons shrink slightly instead | `pressed`, `--button-press-scale` |
 | Focus | Keyboard focus (`:focus-visible`) | A 2px `focus-ring` outline, 2px out (inset where the box clips it) | `focus-ring`, `focus-ring-width`, `focus-ring-offset` |
 | Selected | It's the current choice (`aria-selected`, `aria-current`, `aria-checked`, `aria-pressed`) | `primary` fill or indicator, or `highlight` for the current page in a list | `primary`, `on-primary`, `highlight` |
+| Dragged | It's being moved, by pointer or by keyboard (SortableList, Kanban) | Lifted to level 2: a `primary` border and the `elevation-raised` shadow, a `grabbing` cursor; a `Highlight` outline in forced colors | `primary`, `elevation-raised` |
 | Disabled | It can't be used (`disabled`, `aria-disabled`) | The whole thing at `opacity-disabled`, with a `not-allowed` cursor and no hover or pressed | `opacity-disabled` |
 | Invalid | Its value is wrong (`aria-invalid`) | A `danger` border or edge, with a danger focus ring; the fill stays, so on and off still read correctly | `danger`, `danger-text` |
 
@@ -1070,7 +1071,7 @@ Focus shows on top of every other state, and disabled turns hover and pressed of
 
 ## Interactivity
 
-Interactivity utilities, as classes in `bundle.css`. They add no tokens: colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, and the rest are keywords.
+Interactivity utilities, as classes in `bundle.css`. Colors come from the palette and alias tokens, `scroll-m-*` and `scroll-p-*` use the spacing scale, `state-layer` uses the `opacity-state-*` tokens, and the rest are keywords.
 
 | Property | Classes |
 | --- | --- |
@@ -1091,6 +1092,7 @@ Interactivity utilities, as classes in `bundle.css`. They add no tokens: colors 
 | scroll-snap-align | `snap-start` `snap-end` `snap-center` `snap-align-none` |
 | scroll-snap-stop | `snap-normal` `snap-always` |
 | scroll-snap-type | `snap-x` `snap-y` `snap-both` `snap-none`, with `snap-mandatory` or `snap-proximity` (default) |
+| state-layer | `state-layer`: the element's text color over its own background at `opacity-state-hover` (8%) on hover, `opacity-state-pressed` (12%) while pressed and `opacity-state-dragged` (16%) with `data-state="dragging"`, under its content; nothing when disabled or in forced colors |
 | touch-action | `touch-auto` `touch-none` `touch-manipulation`, `touch-pan-x` `-pan-left` `-pan-right` `-pan-y` `-pan-up` `-pan-down` `-pinch-zoom` (these combine) |
 | user-select | `select-none` `select-text` `select-all` `select-auto` |
 | will-change | `will-change-auto` `-scroll` `-contents` `-transform` |
@@ -1099,6 +1101,7 @@ Rules of thumb:
 
 - Cursors: `cursor-pointer` on anything clickable that isn't a link (Button does this), `cursor-not-allowed` when disabled, `cursor-progress` while loading, `cursor-grab`/`cursor-grabbing` on draggable items, `cursor-text` on editable areas.
 - Form controls: `accent-primary` makes checkboxes, radios, range sliders and progress bars match the theme; `caret-primary` colors the text cursor. Use `appearance-none` only when you redraw the control yourself, and keep its focus style.
+- `state-layer` gives the system's hover, pressed and dragged states to a surface whose color serupa doesn't know: a tile in a category color, a brand panel, a row tinted by data. Put it on the clickable element itself; its text color sets the tint, so check that text against the background as usual. Components keep their own tuned hover colors.
 - Dark themes: put `scheme-dark` on the root (or `scheme-light-dark`) so native scrollbars, inputs and date pickers turn dark too.
 - `field-sizing-content` for comment boxes and tag inputs that should grow as people type; give them a `max-h-*`.
 - Anchors under a sticky header: `scroll-mt-16` on the targets (or `scroll-pt-16` on the scrolling container) so the header doesn't cover them. Pair `scroll-smooth` with reduced-motion handling.
@@ -1180,6 +1183,8 @@ Say what happened and how to fix it, in that order, next to the thing that needs
 
 **Numbers, dates and units**
 
+The Data formats page has the full rules, with money, missing values and masked values.
+
 - Let the locale write them. `SerupaProvider`'s `locale` sets how the date and time components show and read dates; use `Intl.NumberFormat` and `Intl.DateTimeFormat` with the same locale for your own text.
 - In English, write dates with the month as a word, "24 Oct 2026", so they can't be read as day-month or month-day. Use relative dates ("2 hours ago", "Yesterday") only where the exact time doesn't matter, and give the exact one in a tooltip or title.
 - Numerals for every number, "3 files", not "three files". Group thousands ("12,400").
@@ -1206,6 +1211,75 @@ Close buttons, loading text, pagination and the other built-in words come from o
 - **Dates and times.** Day, month, year, with no comma: "24 Okt 2026" or "24 Oktober 2026". Times use a full stop, "14.30", as `Intl.DateTimeFormat` writes for `id-ID`. Let the locale write both.
 - **Numbers and money.** A full stop groups thousands and a comma marks decimals: "12.400", "2,5 MB". Rupiah goes before the amount, and whole rupiah need no ",00": "Rp 12.400" (`maximumFractionDigits: 0`). Let `Intl.NumberFormat` with `id-ID` write them; never build one by hand from the English form.
 - **Ranges.** In a sentence write "sampai" ("3 sampai 12"); in a short label use an en dash with no spaces ("1–5"), as in English.
+
+## Data formats
+
+How values read on a screen: numbers, money, dates, values that are missing and values that are partly hidden. One app writes each kind one way everywhere, and the reader's locale decides the marks, so "Rp 1.200.000" and "IDR 1,200,000.00" never meet on the same page. Content and voice covers the words around them.
+
+**Numbers**
+
+| Value | Write it | With |
+| --- | --- | --- |
+| A count or a measurement | Grouped digits, as the locale groups them: "12,400" in English, "12.400" in Indonesian | `FormattedNumber`, `formatNumber()` |
+| A large count where the exact figure doesn't matter at a glance | Short, "1.2M", with the full number in its tooltip | `format="compact"` |
+| A share | A percentage, with as many decimals as the decision needs and no more: "46%", "12.3%" | `format="percent"` |
+| A change | Its sign, and its direction in words where color shows it too: "+3.1%", "Up 12%" | `options={{ signDisplay: "always" }}` |
+| A measurement with a unit | A space before the unit, except % and °: "12 MB", "50 km/h" | `format="unit"`, `format="bytes"`, `formatFileSize()` |
+| Progress through a set | Both numbers: "12 of 30" in a sentence, "12/30" in a tight label | `plural()` for the words |
+| A code that only looks like a number (an order number, a phone number, a postcode) | As it is, never grouped | plain text |
+
+- In a table, a column of numbers aligns to the end with tabular digits (`align="end"` on its cells and its header), so the digits line up and two rows compare at a glance. Text columns align to the start.
+- Give every number in a column the same number of decimals.
+- Round for reading and keep the exact value where someone can reach it: a tooltip, the detail page or the export.
+
+**Money**
+
+- The amount and its currency always go together. With one currency in the app, the symbol is enough ("Rp 12.400", "$19.99"). When two or more can appear, write the code so "$" can't be read as the wrong dollar ("US$19.99", or "USD 19.99" with `options={{ currencyDisplay: "code" }}`).
+- The currency sets the decimals: two for dollars, none for rupiah or yen. `format="currency"` knows; don't add ",00" by hand.
+- A total is exact. Shorten ("Rp 1,2 jt") only on a chart axis or a summary tile, with the exact amount one step away.
+- Negative amounts take a minus sign, and say what they are in words: "Refund −Rp 50.000". Never color alone.
+
+**Dates and times**
+
+| Value | Write it | With |
+| --- | --- | --- |
+| A day | The month as a word, so it can't be read two ways: "24 Oct 2026" | `Intl.DateTimeFormat` with `dateStyle: "medium"` and `useLocale()` |
+| A day and a time | The locale's own order and clock, 12 or 24 hours: "24 Oct 2026, 14:30" | `dateStyle: "medium", timeStyle: "short"` |
+| A time people must match across places | The time zone with it: "14:30 WIB", "9:00 AM GMT+7" | `timeZoneName: "short"` |
+| A range | An en dash, with spaces only when either side has one: "1–5 Oct", "24 Oct 2026 – 3 Jan 2027" | `formatRange()` of `Intl.DateTimeFormat` |
+| Something recent, where how long ago matters more than when | Words, then the date after a week: "3 minutes ago", "Yesterday", "24 Oct 2026" | `RelativeTime` |
+| Time left until a deadline | A count that runs down | `Countdown` |
+
+- Use relative time for activity (a comment, a notification, "last saved") and the exact date for anything people look up, compare or act on by date: an invoice, a deadline, a booking, a log.
+- A relative time always carries the exact one: RelativeTime puts it in the tooltip. Where the exact time matters, show it as text.
+- Never write a date as numbers alone ("03/04/2026") or to a fixed pattern (`YYYY-MM-DD`) in the interface. Keep that pattern for exports, file names and the `datetime` attribute.
+- Send and store dates with their offset (ISO 8601 with `Z` or `+07:00`) and format them in the reader's zone on the screen.
+
+**Missing values**
+
+- A value that isn't there shows an em dash (`—`), never an empty cell: an empty cell reads as "still loading" or "nothing went wrong", and a screen reader says nothing at all. Give it words for screen readers ("Not set", "No data"), with `VisuallyHidden` beside a dash that has `aria-hidden`.
+- Zero is a value. Write "0", not a dash.
+- Say why when the reason matters: "Not set" (nobody entered it), "Not applicable", "No access". A dash can't tell them apart.
+- While a value loads, show a skeleton in its place (`Loader variant="skeleton"`), not a dash that later turns into a number.
+
+**Hidden and partly hidden values**
+
+Mask what a passer-by, a screenshot or a shared screen shouldn't show. Keep just enough for the owner to recognize it.
+
+| Value | Keep | Example |
+| --- | --- | --- |
+| A card or account number | The last four digits | •••• 1208 |
+| A phone number | The country code and the last three or four | +62 ••• ••• 402 |
+| An email address | The first character and the domain | a•••@example.com |
+| A name | The first character of each part | A••• W••• |
+| A national id or tax number | The last four | •••• •••• •••• 2233 |
+| A key, a token or a one-time code | Its first few characters, or nothing | sk_live_•••• |
+| An amount people chose to hide | Nothing | •••••• |
+
+- Use the bullet "•", not an asterisk, and a fixed number of them: the count shouldn't give away the length.
+- Say what's hidden in words for screen readers ("Card ending in 1208"), since a row of bullets is read as "bullet bullet bullet" or skipped.
+- A Show button reveals it for the person who owns it, says "Show" or "Hide" with what it acts on ("Show card number") and hides it again when they leave the page. Don't reveal on hover.
+- Mask on the server when the reader isn't allowed to see the value. Masking in the browser only hides it from people looking at the screen.
 
 ## Ethical design
 

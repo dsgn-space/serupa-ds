@@ -75,6 +75,16 @@
             "cssVar": "--command-palette-option-height"
           }
         }
+      },
+      "icon-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-5}",
+        "$description": "A command's icon (20px), beside the 14px label in a 44px row.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--command-palette-icon-size"
+          }
+        }
       }
     }
   }
