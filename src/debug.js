@@ -16,6 +16,9 @@
        against WCAG 2.2 where they are, so a color token your app overrides can't quietly fail contrast: the ones
        that fail on the page are listed in the console when it turns on, and the panel lists any more that fail on
        the component you point at (from a token set on it, or on a section or card around it);
+     - a Theme panel in the corner sets each theme setting on <html> (brand, mode, contrast, density, radius, depth,
+       shadow, type scale), so the page can be tried in every theme; each change checks the color pairs again and
+       says how many fail (brand and mode go through theme.js when the page loads it, which remembers them);
      - Escape, or Serupa.debug.off(), turns it off.
 
    API (window.Serupa.debug):
@@ -24,11 +27,14 @@
      toggle()    on if off, off if on
      isOn()      true while it's on
      inspect(el) what the panel shows for the Serupa component at or above el, as an object, or null
-     contrast(el) each color pair as drawn at el (default: the page), with its ratio and the ratio it needs */
+     contrast(el) each color pair as drawn at el (default: the page), with its ratio and the ratio it needs
+     theme()     the theme settings on the page now, such as { brand: 'blue', mode: 'auto', radius: '', … } ('' is the default)
+     theme(o)    change some, such as theme({ radius: 'round', contrast: 'more' }) ('' puts one back); a promise of
+                 { theme, lowContrast }: the settings once applied and the color pairs that fail in them */
 (function () {
   if (window.Serupa && window.Serupa.debug) return;
   var KEY = 'serupa-debug', PINK = '#db2777';
-  var on = false, style = null, box = null, panel = null, current = null;
+  var on = false, style = null, box = null, panel = null, switcher = null, current = null;
   // The pairs that fail on the page itself, named in the console when it turns on, so the panel doesn't repeat them.
   var pageLow = {};
   // Each component's tokens, by prefix (button for Button), read once from the loaded style sheets.
@@ -188,6 +194,115 @@
   function onScroll() { if (current) { var info = inspect(current); if (info) show(info); } }
   function onKey(e) { if (e.key === 'Escape' && on) api.off(); }
 
+  // Checks the page's color pairs, keeps the ones that fail for the panel to skip, and names them in the console.
+  function checkPage(after) {
+    var low = failing(contrast());
+    pageLow = {};
+    low.forEach(function (c) { pageLow[c.foreground + ' ' + c.background] = true; });
+    if (low.length && window.console) {
+      console.warn('Serupa debug: ' + low.length + ' color pair' + (low.length > 1 ? 's' : '') + ' on this page fail WCAG contrast' + (after ? ' ' + after : ', most likely from a color token your app sets') + ':\n'
+        + low.map(function (c) { return '  ' + c.foreground + ' on ' + c.background + ': ' + c.ratio + ':1, needs ' + c.needs + ':1 (' + c.what + ')'; }).join('\n'));
+    }
+    return low;
+  }
+
+  // The theme settings tokens.css reads on <html>, each with its values; '' leaves the page's own.
+  var AXES = {
+    brand: ['blue', 'violet', 'emerald'],
+    mode: ['auto', 'light', 'dark'],
+    contrast: ['normal', 'more'],
+    density: ['compact', 'comfortable'],
+    radius: ['sharp', 'round'],
+    depth: ['flat', 'tactile'],
+    shadow: ['neutral', 'brand'],
+    'type-scale': ['fixed', 'fluid']
+  };
+  function themeNow() {
+    var root = document.documentElement, out = {}, t = window.Serupa.theme && window.Serupa.theme.get();
+    var flat = /^([a-z][a-z0-9]*)-(light|dark)$/.exec(root.getAttribute('data-theme') || '');
+    Object.keys(AXES).forEach(function (k) { out[k] = root.getAttribute('data-' + k) || ''; });
+    if (t) { out.brand = t.brand; out.mode = t.mode; } else if (flat) { out.brand = out.brand || flat[1]; out.mode = out.mode || flat[2]; }
+    return out;
+  }
+  // Brand and mode go through theme.js when the page has it (which also remembers them), and otherwise to
+  // data-theme; the rest are attributes on <html>. Then the color pairs are checked again in the new theme.
+  function setTheme(o) {
+    var root = document.documentElement, t = window.Serupa.theme, before = themeNow();
+    Object.keys(o || {}).forEach(function (k) {
+      if (!Object.prototype.hasOwnProperty.call(AXES, k)) return;
+      var v = o[k] == null ? '' : String(o[k]);
+      if (k === 'brand' || k === 'mode') return;
+      if (v) root.setAttribute('data-' + k, v); else root.removeAttribute('data-' + k);
+    });
+    var brand = o && o.brand != null ? String(o.brand) : before.brand, mode = o && o.mode != null ? String(o.mode) : before.mode;
+    if (brand !== before.brand || mode !== before.mode) {
+      if (t) t.set({ brand: brand || undefined, mode: mode || undefined });
+      else {
+        var dark = mode === 'dark' || (mode !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+        root.setAttribute('data-theme', (brand || 'blue') + '-' + (dark ? 'dark' : 'light'));
+      }
+    }
+    // theme.js may change data-theme a moment later, after a view transition: check the colors once it has.
+    return new Promise(function (resolve) {
+      var frames = 0;
+      (function settle() {
+        var want = t && t.get().theme;
+        if (want && root.getAttribute('data-theme') !== want && frames++ < 120) return requestAnimationFrame(settle);
+        var now = themeNow(), low = checkPage('in this theme (' + Object.keys(now).filter(function (k) { return now[k]; }).map(function (k) { return k + ' ' + now[k]; }).join(', ') + ')');
+        if (switcher) syncSwitcher(low);
+        resolve({ theme: now, lowContrast: low });
+      })();
+    });
+  }
+
+  // A corner panel with one select per setting, so each theme can be tried on the real page.
+  function themeSwitcher() {
+    var wrap = document.createElement('div');
+    wrap.id = 'serupa-debug-theme';
+    wrap.setAttribute('role', 'group');
+    wrap.setAttribute('aria-label', 'Serupa theme');
+    wrap.style.cssText = 'position:fixed;z-index:2147483645;right:8px;bottom:8px;display:grid;grid-template-columns:auto auto;gap:4px 8px;align-items:center;'
+      + 'padding:8px 10px;border-radius:6px;background:#18181b;color:#fafafa;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;box-shadow:0 4px 16px rgba(0,0,0,.3)';
+    var head = document.createElement('div');
+    head.style.cssText = 'grid-column:1/-1;font-weight:700;font-size:13px';
+    head.textContent = 'Theme';
+    wrap.appendChild(head);
+    var brands = AXES.brand.concat((document.documentElement.getAttribute('data-brands') || '').match(/[a-z][a-z0-9]*/g) || []);
+    Object.keys(AXES).forEach(function (k) {
+      var id = 'serupa-debug-theme-' + k, label = document.createElement('label'), select = document.createElement('select');
+      label.htmlFor = id;
+      label.textContent = k;
+      select.id = id;
+      select.name = k;
+      select.style.cssText = 'font:inherit;color:#18181b;background:#fafafa;border:0;border-radius:4px;padding:1px 4px';
+      var values = k === 'brand' ? brands : AXES[k];
+      [''].concat(values).forEach(function (v) {
+        var opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v || (k === 'brand' || k === 'mode' ? '(page)' : 'default');
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', function () { var o = {}; o[k] = select.value; setTheme(o); });
+      wrap.appendChild(label);
+      wrap.appendChild(select);
+    });
+    var note = document.createElement('div');
+    note.id = 'serupa-debug-theme-contrast';
+    note.setAttribute('role', 'status');
+    note.style.cssText = 'grid-column:1/-1;max-width:220px';
+    wrap.appendChild(note);
+    syncSwitcher(failing(contrast()), wrap);
+    return wrap;
+  }
+  function syncSwitcher(low, wrap) {
+    wrap = wrap || switcher;
+    var now = themeNow();
+    Object.keys(AXES).forEach(function (k) { var s = wrap.querySelector('select[name="' + k + '"]'); if (s) s.value = now[k]; });
+    wrap.querySelector('#serupa-debug-theme-contrast').textContent = low.length
+      ? low.length + ' color pair' + (low.length > 1 ? 's' : '') + ' fail contrast here: see the console'
+      : 'Every color pair passes contrast';
+  }
+
   var api = {
     on: function () {
       store(true);
@@ -208,13 +323,9 @@
       addEventListener('scroll', onScroll, true);
       addEventListener('resize', onScroll);
       document.addEventListener('keydown', onKey);
-      var low = failing(contrast());
-      pageLow = {};
-      low.forEach(function (c) { pageLow[c.foreground + ' ' + c.background] = true; });
-      if (low.length && window.console) {
-        console.warn('Serupa debug: ' + low.length + ' color pair' + (low.length > 1 ? 's' : '') + ' on this page fail WCAG contrast, most likely from a color token your app sets:\n'
-          + low.map(function (c) { return '  ' + c.foreground + ' on ' + c.background + ': ' + c.ratio + ':1, needs ' + c.needs + ':1 (' + c.what + ')'; }).join('\n'));
-      }
+      switcher = themeSwitcher();
+      document.body.appendChild(switcher);
+      checkPage('');
     },
     off: function () {
       store(false);
@@ -224,13 +335,14 @@
       removeEventListener('scroll', onScroll, true);
       removeEventListener('resize', onScroll);
       document.removeEventListener('keydown', onKey);
-      [style, box, panel].forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
-      style = box = panel = current = null;
+      [style, box, panel, switcher].forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
+      style = box = panel = switcher = current = null;
     },
     toggle: function () { if (on) api.off(); else api.on(); },
     isOn: function () { return on; },
     inspect: function (el) { var info = inspect(el); return info; },
-    contrast: function (el) { return contrast(el); }
+    contrast: function (el) { return contrast(el); },
+    theme: function (o) { return o ? setTheme(o) : themeNow(); }
   };
   window.Serupa = window.Serupa || {};
   window.Serupa.debug = api;

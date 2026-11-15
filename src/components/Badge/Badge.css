@@ -90,7 +90,7 @@
   width: var(--dk-badge-icon); height: var(--dk-badge-h);
   margin-block: calc(var(--spacing-0) - var(--badge-border-width, var(--border-width-1)));
   margin-inline: calc(var(--spacing-0) - var(--spacing-0\.5));
-  padding: var(--spacing-0); border: 0; background: transparent; color: inherit; cursor: pointer; touch-action: manipulation;
+  padding: var(--spacing-0); border: 0; background: transparent; color: inherit; cursor: var(--cursor-interactive); touch-action: manipulation;
   outline: none;
   opacity: var(--opacity-70);
   transition: opacity var(--motion-hover) var(--ease-move);
@@ -110,7 +110,7 @@
    color on subtle and outline, and black (light themes) or white (dark) on solid, a 2px focus ring outside a 2px surface gap, and a 50% fade when disabled. The layer sits above the
    fill and below the content, so every style and tone gets the same treatment. */
 .dk-badge--interactive, .dk-badge--loading { position: relative; isolation: isolate; }
-.dk-badge--interactive { margin: var(--spacing-0); cursor: pointer; touch-action: manipulation; text-decoration: none; text-align: center; -webkit-tap-highlight-color: transparent; }
+.dk-badge--interactive { margin: var(--spacing-0); cursor: var(--cursor-interactive); touch-action: manipulation; text-decoration: none; text-align: center; -webkit-tap-highlight-color: transparent; }
 .dk-badge--interactive::before {
   content: ""; position: absolute; pointer-events: none;
   inset: calc(var(--spacing-0) - var(--badge-border-width, var(--border-width-1)));
@@ -127,7 +127,7 @@
   /* The focus ring: an outline, so the 2px gap is truly transparent on any background and forced-colors mode draws it. */
   outline: var(--focus-ring-width) solid var(--badge-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset);
 }
-.dk-badge--interactive:disabled, a.dk-badge--interactive[aria-disabled="true"]:not(.dk-badge--loading) { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-badge--interactive:disabled, a.dk-badge--interactive[aria-disabled="true"]:not(.dk-badge--loading) { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
 /* Loading: the content fades out under a centered ring at the icon size; the badge keeps its width and colors. */
 .dk-badge--loading { cursor: progress; }
 .dk-badge--loading > :not(.dk-badge__loader) { opacity: var(--opacity-0); }

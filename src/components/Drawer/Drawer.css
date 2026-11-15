@@ -116,7 +116,7 @@
   inline-size: var(--spacing-12); block-size: var(--spacing-6);
   margin-block: calc(var(--spacing-0) - var(--spacing-4)) calc(var(--spacing-0) - var(--spacing-2));
   padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--radius-control); background: none;
-  cursor: grab; touch-action: none;
+  cursor: var(--cursor-grab); touch-action: none;
 }
 .dk-drawer__grip { inline-size: var(--spacing-9); block-size: var(--spacing-1); border-radius: var(--radius-pill); background: var(--drawer-grip, var(--text-muted)); }
 .dk-drawer__handle:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { pressFocuses } from '../../internal/affix';
 import { cn, domId, isInvalid, oneOf, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -61,7 +62,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const sds = useSettings(words);
   const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const h12 = props.hour12 ?? uses12h(locale);
   const step = props.step && Math.round(props.step) >= 1 ? Math.round(props.step) : 30;
