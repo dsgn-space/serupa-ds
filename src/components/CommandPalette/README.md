@@ -116,4 +116,5 @@ Each is an optional override: set it on the page, a container or one CommandPale
 | `--command-palette-indicator-active` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--command-palette-list-height` | `spacing-80` | The most the list grows to before it scrolls (320px). |
 | `--command-palette-option-height` | `control-height-lg` | A row's least height (44px). |
+| `--command-palette-icon-size` | `spacing-5` | A command's icon (20px), beside the 14px label in a 44px row. |
 <!-- token-table:end -->
