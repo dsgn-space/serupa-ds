@@ -320,18 +320,20 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      # The base is the merge commit's first parent, the main this run tests on, as the plan job's: the event's base.sha
+      # is main when the push came, and main can move before the job checks the merge out. Then the diff took in what
+      # main gained since, and a tools-only pull request "changed src/ but no test" (#2009, #2012's Select.css, 15 Nov).
       - id: needed
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           git config --global --add safe.directory "$PWD"
-          node tools/fix-proof.mjs "$BASE_SHA" --needed | tee needed.txt
+          echo "base=$(git rev-parse HEAD^1)" >> "$GITHUB_OUTPUT"
+          node tools/fix-proof.mjs "$(git rev-parse HEAD^1)" --needed | tee needed.txt
           grep -q '^needed=false' needed.txt && echo "needed=false" >> "$GITHUB_OUTPUT" || echo "needed=true" >> "$GITHUB_OUTPUT"
       - if: steps.needed.outputs.needed == 'true'
         uses: ./.github/actions/setup
       - if: steps.needed.outputs.needed == 'true'
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_SHA: ${{ steps.needed.outputs.base }}
         run: node tools/fix-proof.mjs "$BASE_SHA"
 
   # The suite's groups as parallel jobs (tools/test/run.mjs --group, SERUPA_PART, SERUPA_SHARD). x86: the component tests,
