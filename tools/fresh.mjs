@@ -37,6 +37,21 @@ export function staleComponents(branchFiles, mainFiles, dependents = withDepende
   return [...stale].sort();
 }
 
+// The pull requests in the merge queue this branch can't merge behind: one changes a baseline file this branch changes
+// too (a picture, a size or API baseline), or its changes make this branch's pictures stale (staleComponents, as if it
+// had merged). The queue tests each group against the one before it, so queueing this branch behind such a pull request
+// drops it the moment its group builds, and turns its auto-merge off (15 Nov: 14 drops in two hours, nearly all stale
+// pictures). Waiting out of the queue costs nothing: when that one merges, the heal after main draws this one again.
+//   queued: { [number]: its changed files }
+export function queueClashes(mine, queued, dependents = withDependents) {
+  const baselines = new Set(mine.filter((f) => f.startsWith('tools/test/baseline-')));
+  return Object.entries(queued).flatMap(([n, files]) => {
+    const both = files.filter((f) => baselines.has(f));
+    const stale = staleComponents(mine, files, dependents);
+    return both.length || stale.length ? [{ n: Number(n), baselines: both, stale }] : [];
+  });
+}
+
 // Through the gh CLI, which every GitHub runner has (GH_TOKEN) and a person is signed in to.
 const api = (path) => JSON.parse(execFileSync('gh', ['api', `repos/{owner}/{repo}/${path}`], { encoding: 'utf8', maxBuffer: 64 << 20 }));
 
@@ -52,8 +67,32 @@ function changed(base, head) {
   }
 }
 
+// Every file a pull request changes, against where it left its base, page by page.
+function prFiles(n) {
+  const files = [];
+  for (let page = 1; ; page++) {
+    const p = api(`pulls/${n}/files?per_page=100&page=${page}`);
+    files.push(...p.flatMap((f) => [f.filename, f.previous_filename].filter(Boolean)));
+    if (p.length < 100) return files;
+  }
+}
+
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const arg = (k) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
+  //   node tools/fresh.mjs --queue <number>: 1 when a pull request in the merge queue clashes with this one.
+  const pr = arg('--queue');
+  if (pr) {
+    const refs = api('git/matching-refs/heads/gh-readonly-queue/main');
+    const numbers = [...new Set(refs.map((r) => /\/pr-(\d+)-/.exec(r.ref)?.[1]).filter((n) => n && n !== pr))];
+    const clashes = queueClashes(prFiles(pr), Object.fromEntries(numbers.map((n) => [n, prFiles(n)])));
+    if (!clashes.length) { console.log(`Clear: none of the ${numbers.length} pull requests in the merge queue clashes with #${pr}.`); process.exit(0); }
+    for (const c of clashes) {
+      console.log(`#${c.n}, in the merge queue, ${[c.baselines.length && `changes these baselines too: ${c.baselines.join(' ')}`,
+        c.stale.length && `makes the pictures of ${c.stale.join(', ')} stale`].filter(Boolean).join(', and ')}.`);
+    }
+    console.log(`#${pr} waits out of the queue: when that merges, Update baselines draws its pictures again and Queue enqueue queues it.`);
+    process.exit(1);
+  }
   const base = arg('--base'), head = arg('--head');
   if (!base || !head) { console.error('Usage: node tools/fresh.mjs --base <sha> --head <sha>'); process.exit(2); }
   const branch = changed(base, head);
