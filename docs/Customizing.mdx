@@ -65,7 +65,7 @@ When a token can't do it, select on what's promised to stay the same between min
 | `[aria-expanded="true"]`, `[aria-invalid="true"]`, `:checked`, `:disabled` | States that native controls and ARIA already say |
 | `.dk-btn`, `.dk-btn--primary` | The component's own class and its variant and size modifiers |
 
-Avoid the classes of a component's inner parts (`.dk-btn__label`, `.dk-card__header`) and selectors that depend on how its markup nests (`.dk-card > div`). They move when a component is fixed or improved; the next major plans to say so in the Versioning rules. If you find yourself reaching for one, a component token or a prop is missing: [open an issue](https://github.com/dsgn-space/serupa-ds/issues) so it gets one.
+Avoid the classes of a component's inner parts (`.dk-btn__label`, `.dk-card__header`) and selectors that depend on how its markup nests (`.dk-card > div`). They move when a component is fixed or improved, and from 16.0.0 the Versioning rules say so: they may change in any release. If you find yourself reaching for one, a component token or a prop is missing: [open an issue](https://github.com/dsgn-space/serupa-ds/issues) so it gets one.
 
 The [debug overlay](https://github.com/dsgn-space/serupa-ds#whats-in-the-package) (`dist/debug.js`, then `?serupa-debug` on the page) shows, for whatever you point at, its component, variant, state and the component tokens set on it, and checks that the colors you changed still pass contrast. Its Theme panel tries the page in every theme setting.
 
