@@ -95,7 +95,7 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 | `error` | text or element | | A message under the control, in `danger-text` with an icon; makes the control invalid (`invalid` on Serupa components, `aria-invalid` on DOM elements) and is added to its `aria-describedby` |
 | `required` | boolean | `false` | A `*` after the label (hidden from screen readers) and `aria-required` on the control; with `group`, "Required" in words in the legend for screen readers. Add the control's own `required` too if you want the browser's check |
 | `optional` | boolean or text | `false` | "(optional)" after the label (the `fieldOptional` label, "(opsional)" in `idLabels`), or your own words. Ignored with `required` |
-| `disabled` | boolean | `false` | Disables the control (with `group`, every control in the fieldset) and dims the label and hint |
+| `disabled` | boolean | `false` | Disables the control (with `group`, every control in the fieldset) and draws the label and hint in `disabled-text` |
 | `group` | boolean | `false` | A `<fieldset>` and `<legend>` around a set of controls; the hint and error describe the fieldset |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | `'horizontal'`: the label in a column beside the control, the hint and error under the control. It stacks again when narrow. Not with `group` |
 | `id` | string | | The control's id; by default the control's own `id`, or a generated one |
@@ -122,6 +122,7 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--field-hint-color` | `text-muted` | Hint and "(optional)" |
 | `--field-error-color` | `danger-text` | Error message and its icon |
 | `--field-required-color` | `danger-text` | The `*` |
+| `--field-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--field-label-weight` | `font-medium` | Label weight (500) |
 | `--field-gap` | `spacing-1.5` | Space between label, hint, control and error (6px) |
 | `--field-error-gap` | `spacing-1` | Error icon to text (4px) |

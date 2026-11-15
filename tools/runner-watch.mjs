@@ -7,7 +7,9 @@
 //   node tools/runner-watch.mjs --report 10   the same, kept in one issue ("Jobs waiting for a runner"): opened or
 //                                             updated while jobs wait, closed once none does; and merges that stall
 //                                             (nothing merged for 30 minutes while pull requests wait to, or an
-//                                             armed one conflicted that long) in another ("Merges stalled")
+//                                             armed one conflicted that long) in another ("Merges stalled"); and,
+//                                             at the first run of each hour, the merge queue's numbers in a third
+//                                             that stays open ("Merge queue throughput")
 //
 // CI's plan job runs --stuck to send a run's x86 jobs to GitHub's runners when the project's machines look gone, and
 // the Runner watch workflow runs --report every 10 minutes. On 14 Nov the burst runner was off for an hour and a queue
@@ -23,6 +25,7 @@ if (!repo || !token || !['--stuck', '--report'].includes(mode) || !(minutes > 0)
 }
 const TITLE = 'Jobs waiting for a runner';
 const STALL_TITLE = 'Merges stalled';
+const THROUGHPUT_TITLE = 'Merge queue throughput';
 // On 15 Nov nothing merged for five hours: main's pictures had drifted, so the queue's Visual run failed every group,
 // and the pull request that fixed them sat with a conflict. Nobody was told. Half an hour is the limit.
 const STALL_MINUTES = 30;
@@ -100,10 +103,58 @@ export async function stalled(limit = STALL_MINUTES, now = Date.now()) {
   return out;
 }
 
+const pct = (xs, p) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor(p * xs.length))] : null);
+
+/**
+ * The merge queue's numbers over the last hour and day, one line each: merges, the time from entering the queue to
+ * merging (median and 90th percentile, in minutes), and the queue runs that failed, by the job that failed them.
+ * `merged`: [{ queued, merged }] (ISO times); `failed`: [{ at, jobs: [names] }].
+ */
+export function throughputLines(merged, failed, now = Date.now()) {
+  const out = [];
+  for (const [label, hours] of /** @type {[string, number][]} */ ([['Last hour', 1], ['Last 24 hours', 24]])) {
+    const from = now - hours * 3_600_000;
+    const m = merged.filter((x) => Date.parse(x.merged) >= from);
+    const waits = m.filter((x) => x.queued).map((x) => Math.round((Date.parse(x.merged) - Date.parse(x.queued)) / 60_000));
+    const f = failed.filter((x) => Date.parse(x.at) >= from);
+    /** @type {Map<string, number>} */
+    const by = new Map();
+    for (const x of f) for (const j of x.jobs.length ? x.jobs : ['(no job failed: cancelled)']) by.set(j, (by.get(j) || 0) + 1);
+    const reasons = [...by].sort((a, b) => b[1] - a[1]).map(([j, n]) => `${j} ${n}`).join(', ');
+    out.push(`**${label}:** ${m.length} merged (${(m.length / hours).toFixed(1)} an hour); in the queue ${waits.length ? `${pct(waits, 0.5)} minutes median, ${pct(waits, 0.9)} at the 90th percentile` : 'no data'}; ${f.length} queue run${f.length === 1 ? '' : 's'} failed${f.length ? ` (${reasons})` : ''}.`);
+  }
+  return out;
+}
+
+async function throughput(now = Date.now()) {
+  const day = now - 86_400_000;
+  const pulls = await api(`repos/${repo}/pulls?state=closed&base=main&sort=updated&direction=desc&per_page=100`);
+  const merged = [];
+  for (const p of pulls.filter((x) => x.merged_at && Date.parse(x.merged_at) >= day)) {
+    const events = await api(`repos/${repo}/issues/${p.number}/timeline?per_page=100`);
+    const queued = events.filter((e) => e.event === 'added_to_merge_queue' && e.created_at <= p.merged_at).pop()?.created_at;
+    merged.push({ queued, merged: p.merged_at });
+  }
+  const failed = [];
+  // A failed job stops the rest of its run (stop), so a failed queue run ends cancelled; one the queue cancelled
+  // itself (its group re-formed behind another's failure) has no failed job and isn't counted.
+  const { workflow_runs: runs } = await api(`repos/${repo}/actions/workflows/ci.yml/runs?event=merge_group&status=completed&per_page=100&created=>${new Date(day).toISOString()}`);
+  for (const run of runs.filter((r) => r.conclusion !== 'success')) {
+    const { jobs } = await api(`repos/${repo}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`);
+    const names = [...new Set(jobs.filter((j) => j.conclusion === 'failure' && j.name !== 'test' && j.name !== 'stop').map((j) => j.name.replace(/ \d+\/\d+\)$/, ')')))];
+    if (names.length) failed.push({ at: run.created_at, jobs: names });
+  }
+  return throughputLines(merged, failed, now);
+}
+
 async function report(lines) {
   console.log(`Waiting for a runner: ${await keepIssue(TITLE, 'runner-watch', lines, `${lines.length} job${lines.length === 1 ? '' : 's'} of this repository ${lines.length === 1 ? 'has' : 'have'} waited over ${minutes} minutes for a self-hosted runner, as of ${stamp()} UTC. The project's x86 machines may be off: see design-system/ibm-burst-runner-github/RUNBOOK.md in the project files. Meanwhile CI sends new runs' x86 jobs to GitHub's runners by itself (the plan job's "x86 jobs run on" line).`)}`);
   const stall = await stalled();
   console.log(`Merges stalled: ${await keepIssue(STALL_TITLE, 'runner-watch', stall, `Merges into main look stalled, as of ${stamp()} UTC.`)}`);
+  // Once an hour (the watch runs every 10 minutes): the numbers take a call per merged pull request.
+  if (new Date().getUTCMinutes() < 10) {
+    console.log(`Throughput: ${await keepIssue(THROUGHPUT_TITLE, 'runner-watch', await throughput(), `The merge queue as of ${stamp()} UTC. This issue stays open and is rewritten every hour.`)}`);
+  }
 }
 
 try {

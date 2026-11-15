@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
 import { formatNumber } from '../FormattedNumber/formatNumber';
@@ -264,16 +264,15 @@ describe('FileUpload', () => {
     expect(on.current).toBe(rootOf('ffr'));
   });
 
-  test('disabled: the button and input are disabled, the area faded', async () => {
+  test('disabled: the button and input are disabled, the area in the neutral disabled colors', async () => {
     await render(<FileUpload id="dis" disabled />);
     const el = rootOf('dis');
     expect([choose(el).disabled, input(el).disabled]).toEqual([true, true]);
-    await expect.poll(() => getComputedStyle(el.querySelector(ZONE)!).opacity).toBe('0.5');
-    // The button inside is faded once, with the area, as every other disabled control is (at 0.5): its own disabled
-    // fade on top took it to 0.25.
+    await expect.poll(() => disabledLook(el.querySelector(ZONE))).toBe('neutral');
+    // Nothing inside is faded: the area and its button are drawn in the neutral disabled colors at full opacity.
     let shown = 1;
     for (let n: Element | null = choose(el); n && n !== el; n = n.parentElement) shown *= Number(getComputedStyle(n).opacity);
-    expect(shown).toBe(0.5);
+    expect(shown).toBe(1);
   });
 
   test('in a Field with an error and required: the button is described by "Required" first, then the error (a button supports neither aria-invalid nor aria-errormessage, TF1b), the input is aria-invalid, the native input required, the area outlined in danger; nothing leaks onto the wrapper and React doesn\'t warn', async () => {

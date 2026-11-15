@@ -102,7 +102,7 @@
 .dk-menu__item:focus .dk-menu__shortcut { color: var(--menu-item-text, var(--text)); }
 .dk-menu__item--destructive, .dk-menu__item--destructive .dk-menu__icon { color: var(--menu-danger, var(--danger-text)); }
 .dk-menu__item--destructive:focus { background: var(--menu-danger-bg-active, var(--danger-subtle)); }
-.dk-menu__item[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-menu__item[aria-disabled="true"], .dk-menu__item[aria-disabled="true"] * { color: var(--menu-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 /* MenuSub: a chevron at the end, pointing where the submenu opens; the submenu overlaps the menu's padding so
    its first item lines up with the item that opened it. */
 .dk-menu--sub { --dk-menu-sub-offset: var(--menu-sub-offset, var(--spacing-0)); }

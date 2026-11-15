@@ -439,7 +439,7 @@
                 "letterSpacing": "-0.025em",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "Display",
                 "usage": "`type-display`: hero and marketing headlines (48px, 600, tracked tight, on a 52px line so two lines don't touch)."
               },
@@ -451,7 +451,7 @@
                 "letterSpacing": "-0.025em",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-1`: a page title. What a level 1 `Heading` renders."
               },
@@ -463,7 +463,7 @@
                 "letterSpacing": "-0.025em",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-2`: a section title. What a level 2 `Heading` renders."
               },
@@ -475,7 +475,7 @@
                 "letterSpacing": "0",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-3`: a subsection title. What a level 3 `Heading` renders."
               },
@@ -487,7 +487,7 @@
                 "letterSpacing": "0",
                 "fontStyle": "normal",
                 "opticalSize": null,
-                "family": "",
+                "family": "heading",
                 "sample": "The quick brown fox jumps over the lazy dog",
                 "usage": "`type-heading-4`: a group title, and Dialog and Drawer titles. What a level 4 `Heading` renders."
               },
@@ -1193,6 +1193,40 @@
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-900}"
+        }
+      }
+    },
+    "disabled-text": {
+      "$type": "color",
+      "$value": "{color.zinc-500}",
+      "$description": "Alias. The text, icon and mark of anything disabled, in place of fading it: the same neutral in every brand, so a disabled primary, danger or brand control reads as off, never as a faint version of itself. At least 3:1 on `disabled-surface` and the surfaces (4.5:1 with more contrast).",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-400}",
+          "contrastMore": {
+            "light": "{zinc-700}",
+            "dark": "{zinc-300}"
+          }
+        }
+      }
+    },
+    "disabled-surface": {
+      "$type": "color",
+      "$value": "{color.zinc-100}",
+      "$description": "Alias. The fill of a disabled control that has one (a checked box, a switch's track, a slider's fill, the selected segment): a neutral a step off the page, whatever its color when on.",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-800}"
+        }
+      }
+    },
+    "disabled-border": {
+      "$type": "color",
+      "$value": "{color.zinc-300}",
+      "$description": "Alias. The edge of a disabled control: a box, a track, a field's border.",
+      "$extensions": {
+        "com.serupa": {
+          "dark": "{zinc-700}"
         }
       }
     },
