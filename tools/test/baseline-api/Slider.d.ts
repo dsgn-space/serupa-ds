@@ -36,6 +36,7 @@ interface SliderProps<V extends SliderValue = SliderValue> extends Omit<React.HT
     showValue?: boolean | undefined;
     inputs?: boolean | undefined;
     origin?: number | undefined;
+    orientation?: "horizontal" | "vertical" | undefined;
 }
 declare const Slider: (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
