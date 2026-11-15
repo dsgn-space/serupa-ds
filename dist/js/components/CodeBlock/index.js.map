@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/CodeBlock/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { CodeBlock } from './CodeBlock';\nexport type { CodeBlockProps } from './CodeBlock';\n"],
+  "mappings": ";AACA,SAAS,iBAAiB;",
+  "names": []
+}

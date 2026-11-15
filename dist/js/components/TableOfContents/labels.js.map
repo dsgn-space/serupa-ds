@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/TableOfContents/labels.ts"],
+  "sourcesContent": ["// TableOfContents's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface TableOfContentsLabels {\n  /** TableOfContents: its title, and its navigation landmark's name. */\n  tocTitle: string;\n}\nexport const en: TableOfContentsLabels = {\n  tocTitle: 'On this page',\n};\nexport const id: TableOfContentsLabels = {\n  tocTitle: 'Di halaman ini',\n};\n"],
+  "mappings": ";AAMO,IAAM,KAA4B;AAAA,EACvC,UAAU;AACZ;AACO,IAAM,KAA4B;AAAA,EACvC,UAAU;AACZ;",
+  "names": []
+}
