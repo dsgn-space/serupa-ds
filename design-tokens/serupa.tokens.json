@@ -9473,9 +9473,9 @@
           "value": 0,
           "unit": "px"
         },
-        "lineHeight": 1.1
+        "lineHeight": 1.0833
       },
-      "$description": "`type-display`: hero and marketing headlines (48px, 600, tracked tight, line height 1.1 so two lines don't touch).",
+      "$description": "`type-display`: hero and marketing headlines (48px, 600, tracked tight, on a 52px line so two lines don't touch).",
       "$extensions": {
         "com.serupa": {
           "class": "type-display"
