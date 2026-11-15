@@ -56,6 +56,7 @@ jobs:
     outputs:
       hold: ${{ steps.hold.outputs.hold }}
       x86runner: ${{ steps.runner.outputs.x86runner }}
+      prrunner: ${{ steps.runner.outputs.prrunner }}
       wide: ${{ steps.plan.outputs.wide }}
       full: ${{ steps.plan.outputs.full }}
       since: ${{ steps.plan.outputs.since }}
@@ -104,6 +105,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           X86: ${{ vars.SERUPA_X86_RUNNER }}
           FORK: ${{ github.event.pull_request.head.repo.fork == true }}
+          EVENT: ${{ github.event_name }}
+          PR_RUNNER: ${{ vars.SERUPA_RUNNER || '"ubuntu-24.04"' }}
         run: |
           set -euo pipefail
           runner="$X86"
@@ -116,6 +119,23 @@ jobs:
           fi
           echo "x86runner=$(echo "$runner" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
           echo "x86 jobs run on: $runner"
+          # A pull request's x86 jobs (suite-x86) borrow the x86 runners only while the merge queue has no run going or
+          # waiting, so the queue keeps them when it needs them, and otherwise take GitHub's (SERUPA_RUNNER). A run
+          # decides once, at its start: one that started while the queue was idle keeps its up to eight x86 jobs.
+          if [ "$EVENT" = pull_request ]; then
+            pr="$PR_RUNNER"
+            if [ "$FORK" != true ] && [ "$runner" = "$X86" ]; then
+              busy=0
+              for s in queued in_progress; do
+                n=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=merge_group&status=$s&per_page=1" --jq .total_count) || n=1
+                busy=$(( busy + n ))
+              done
+              if [ "$busy" = 0 ]; then pr="$X86"; fi
+              echo "The merge queue has $busy run(s) going or waiting."
+            fi
+            echo "prrunner=$(echo "$pr" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
+            echo "This pull request's x86 jobs run on: $pr"
+          fi
       - id: plan
         shell: bash
         env:
@@ -313,11 +333,12 @@ jobs:
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
     # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
     # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
-    # A pull request's shards take SERUPA_RUNNER instead, so the x86 runners serve the merge queue alone. Visual draws
-    # main's pictures and the branch's in the same job since ADR-0016, so any machine compares fairly, and the timing
-    # budgets leave room for a CI machine several times slower. On 15 Nov ten pull requests, up to eight x86 jobs each,
-    # filled the 28 burst slots: queue jobs waited about 40 minutes to start and nothing merged for an hour.
-    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER || '"ubuntu-24.04"') || needs.plan.outputs.x86runner) }}
+    # A pull request's shards take the x86 runners only while the merge queue is idle, and GitHub's runners
+    # (SERUPA_RUNNER) otherwise (the plan job's prrunner), so the queue always has them. Visual draws main's pictures
+    # and the branch's in the same job since ADR-0016, so any machine compares fairly, and the timing budgets leave room
+    # for a slower machine. On 15 Nov ten pull requests, up to eight x86 jobs each, filled the 28 burst slots: queue jobs
+    # waited about 40 minutes to start and nothing merged for an hour.
+    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && needs.plan.outputs.prrunner || needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
