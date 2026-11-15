@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.7.0
+npm install github:dsgn-space/serupa-ds#v15.0.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -42,10 +42,11 @@ One theme on one element: `data-theme="violet-dark"`. For the app's own brand co
 ## Rules
 
 1. **Reuse before you build, in this order.** Stop at the first step that does the job:
-   1. A Serupa component from the list below. Don't rebuild a button, field, dialog, menu or table out of `div`s.
-   2. Serupa components put together: a settings page is `Stack`, `Card`, `Field` and `Switch`, not a new widget.
-   3. A native element (`<details>`, `<progress>`, `<dl>`) styled with the utility classes and tokens.
-   4. Only then your own code, on tokens, with keyboard use, focus and an accessible name kept. End the answer with one line, "Built by hand: <what>, because Serupa has no <component>.", so the gap gets seen.
+   1. A ready-made screen or section: `npx serupa-add` lists the patterns (Dashboard, Sign in, Settings form, Team members, …) and blocks (Page header, Pricing, Stats row, …), and `npx serupa-add <Name>` writes one into `src/serupa/` as source to change. For a whole screen, start from one of these.
+   2. A Serupa component from the list below. Don't rebuild a button, field, dialog, menu or table out of `div`s.
+   3. Serupa components put together: a settings page is `Stack`, `Card`, `Field` and `Switch`, not a new widget.
+   4. A native element (`<details>`, `<progress>`, `<dl>`) styled with the utility classes and tokens.
+   5. Only then your own code, on tokens, with keyboard use, focus and an accessible name kept. End the answer with one line, "Built by hand: <what>, because Serupa has no <component>.", so the gap gets seen.
 2. **Tokens only.** Write no raw colors, pixel sizes, durations or shadows. Use the utility classes (`p-4`, `gap-2`, `bg-surface`, `text-text-muted`, `rounded-md`, `shadow-md`) or `var(--…)` tokens in your CSS (`var(--spacing-4)`, `var(--primary)`).
 3. **Colors by role, not hue.** Use the alias tokens, which change per theme: `primary`, `on-primary`, `surface`, `surface-muted`, `text`, `text-muted`, `border`, `danger`, `danger-text`, `success-text`, `warning-text`, `focus-ring`. A palette color like `blue-600` looks the same in every theme. Use one only when no alias fits. For text in a status color, use the `*-text` alias, never the fill.
 4. **Restyle through component tokens.** Each component reads its own tokens (`--button-*`, `--input-*`), which default to the aliases. Override them on the page, a container or one instance, rather than overriding its `dk-*` classes. Use the components directly: no `ui/Button.tsx` that wraps Button to set its defaults, and no second component, icon, animation or CSS-in-JS library beside Serupa. `Icon` has Material Symbols, and the motion tokens and the components' own transitions cover animation.
@@ -79,7 +80,7 @@ The components meet their part of WCAG 2.2 AA. The page meets the rest only if y
 
 ## Components
 
-Each component's guide covers when to use it, when not to, its props, its keyboard keys and its tokens. It's on the component's Storybook page and in the repository at `src/components/<Name>/README.md` (https://github.com/dsgn-space/serupa-ds).
+Each component's guide covers when to use it, when not to, its props, its keyboard keys and its tokens. Print it from the installed release with `npx serupa-docs <Name>`, or one part with `npx serupa-docs <Name> props` (or `keyboard`, `accessibility`, `when not to use`). `npx serupa-docs search <words>` finds components, topics and tokens. It answers for the version the project pinned, so read it rather than the repository on GitHub, which shows main.
 
 <!-- components:start (written by tools/build/registry.mjs) -->
 

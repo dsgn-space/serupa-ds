@@ -23,4 +23,9 @@
    1px past each edge. The stacking context keeps that box under the icon, and the button paints over the text next to it. */
 .dk-search-input__clear { position: relative; isolation: isolate; }
 .dk-search-input__clear::after { --dk-under: calc(var(--z-10) * -1); --dk-reach: min(var(--spacing-0), calc((100% - var(--spacing-6)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset: var(--dk-reach); }
+/* Touch: the × takes a press up the field's whole height and 10px toward the text, so a finger a little off it
+   doesn't land in the text and open the keyboard (as PasswordInput's eye does). */
+@media (pointer: coarse) {
+  .dk-search-input__clear::after { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
+}
 }

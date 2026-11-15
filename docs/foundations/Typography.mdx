@@ -1,4 +1,8 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { DoDontExample } from '../doDont';
+import { Heading } from '../../src/components/Heading/Heading';
+import { Text } from '../../src/components/Text/Text';
+
 import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../blocks';
 
 <Meta title="Foundations/Typography" />
@@ -18,3 +22,18 @@ import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../bloc
 ## Weights, tracking and leading
 
 <TokenTable group="typography" />
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| Choose a heading's level from the page outline and its `size` from the type scale. | Skip a level to get a smaller heading, or make a paragraph big and bold to look like one. |
+| Use the type styles (`text-type-body`, `text-type-label`), which carry their own line height. | Set a font size without its line height, or write one in px. |
+| Keep body text at `text-base` or `text-sm`, with lines of 45 to 75 characters. | Set long reading text in `text-xs` or at full page width. |
+
+<DoDontExample
+  doText="A real heading, its level from the outline, its look from `size`."
+  doExample={<div><Heading level={3} size="lg">Billing</Heading><Text>Your plan renews on 1 December.</Text></div>}
+  dontText="A paragraph dressed as a heading. Screen readers can't jump to it."
+  dontExample={<Source language="tsx" dark={false} code={'<p style={{ fontSize: 18, fontWeight: 700 }}>\n  Billing\n</p>'} />}
+/>

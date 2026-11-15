@@ -25,6 +25,10 @@ The frame around an app's pages: a skip link, a sticky Navbar, a Sidebar beside 
 
 <Canvas of={Stories.CollapsedSidebar} />
 
+**Adaptive**, the navigation follows the window's width: a BottomNav below 768px, the Sidebar's icon rail from 768px, and the full Sidebar from 1024px, with the same three places in the same order at every width. Page layout's "Navigation by width" says when to use which.
+
+<Canvas of={Stories.AdaptiveNavigation} />
+
 ## Copying it
 
 Copy the story's `render` into your app's layout, change the imports to `serupa`, and put each page's content in main.
