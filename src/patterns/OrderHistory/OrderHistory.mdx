@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './OrderHistory.stories';
+
+<Meta of={Stories} />
+
+# Order history
+
+Every order you've placed, newest first, found by what was in it or by where it's got to, each with a way to see it and to buy it again.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- An account page listing a shop's past orders.
+- Not for one order's details and where it's got to: that's the Order status pattern, which each order links to.
+- Not for the invoices of a plan: that's the Billing pattern.
+
+## What each part is for
+
+- **The orders are a list, each headed by its number**, with its date, total and items in words: "Linen shirt, Canvas tote and 2 more" (1.3.1).
+- **Where an order has got to is a word in a badge**, "On the way" or "Delivered", never a color alone (1.4.1).
+- **Each link and button names its order**: "View order A-10432", "Buy again: order A-10432" (2.4.4, 2.4.6).
+- **How many orders match is a status**, read out as the search or the filter changes (4.1.3).
+- **No match says so** with the words searched for, and Clear filters brings every order back (3.3.1).
+- **Show more puts focus on the first new order**, so nothing is read twice (2.4.3).
+- **Buy again says what went into the cart**, or that it couldn't, in a toast (4.1.3).
+- **While the orders load**, one placeholder named "Loading orders"; a failed load says so, with Try again.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.NoOrders} />
+
+## What stays your app's job
+
+- **The orders.** Pass them newest first. For many, fetch the next page on the server and keep the search in the address, as the List search pattern does.
+- **Buying again.** `onBuyAgain` gets the order's number: put what can still be bought in the cart, and reject when nothing can.
+- **The words for each state.** `STATES` holds them: say where the order is in the words your customers use.
