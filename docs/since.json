@@ -1,0 +1,2730 @@
+{
+ "Accordion": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "8015cef28e4c",
+  "props": {},
+  "known": [
+   "children",
+   "collapseAll",
+   "collapsible",
+   "defaultValue",
+   "disabled",
+   "expandAll",
+   "headingLevel",
+   "keepMounted",
+   "onValueChange",
+   "showExpandAll",
+   "title",
+   "type",
+   "value",
+   "variant"
+  ]
+ },
+ "Alert": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "4c4e32a0c03f",
+  "props": {},
+  "known": [
+   "actions",
+   "dismissLabel",
+   "icon",
+   "onDismiss",
+   "title",
+   "tone"
+  ]
+ },
+ "Attachment": {
+  "added": "14.2.0",
+  "changed": null,
+  "api": "5d1d1ff255b3",
+  "props": {},
+  "known": [
+   "attachmentArchive",
+   "attachmentAudio",
+   "attachmentCode",
+   "attachmentDoc",
+   "attachmentImage",
+   "attachmentOther",
+   "attachmentPdf",
+   "attachmentSheet",
+   "attachmentSlides",
+   "attachmentVideo",
+   "bytes",
+   "disabled",
+   "download",
+   "error",
+   "href",
+   "kind",
+   "name",
+   "onRemove",
+   "onRetry",
+   "progress",
+   "removeLabel",
+   "type"
+  ]
+ },
+ "Avatar": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "e099ef748c99",
+  "props": {},
+  "known": [
+   "alt",
+   "avatarStatus",
+   "imgProps",
+   "name",
+   "shape",
+   "size",
+   "src",
+   "status",
+   "statusLabel"
+  ]
+ },
+ "AvatarGroup": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "c203d01db2b7",
+  "props": {},
+  "known": [
+   "avatarMore",
+   "children",
+   "label",
+   "max",
+   "moreLabel",
+   "onMore",
+   "showMore",
+   "size",
+   "total"
+  ]
+ },
+ "Badge": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "26e5708501a2",
+  "props": {
+   "loadingLabel": "14.7.0"
+  },
+  "known": [
+   "count",
+   "disabled",
+   "dot",
+   "href",
+   "leftIcon",
+   "loading",
+   "max",
+   "onClick",
+   "onRemove",
+   "ping",
+   "rel",
+   "removeLabel",
+   "showZero",
+   "target",
+   "tone",
+   "type",
+   "variant"
+  ]
+ },
+ "BottomNav": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "3f180a95b83f",
+  "props": {},
+  "known": [
+   "active",
+   "as",
+   "children",
+   "hideFrom",
+   "icon",
+   "label"
+  ]
+ },
+ "Breadcrumb": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "737c0e6d877d",
+  "props": {},
+  "known": [
+   "as",
+   "breadcrumb",
+   "children",
+   "collapse",
+   "current",
+   "expandLabel",
+   "href",
+   "icon",
+   "maxItems",
+   "morePages",
+   "separator",
+   "showHiddenPages"
+  ]
+ },
+ "Button": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "8bb069a7ecbb",
+  "props": {
+   "loadingLabel": "14.7.0"
+  },
+  "known": [
+   "className",
+   "command",
+   "commandfor",
+   "destructive",
+   "disabled",
+   "disabledReason",
+   "href",
+   "iconOnly",
+   "iconPosition",
+   "leftIcon",
+   "loading",
+   "onClick",
+   "popoverTarget",
+   "popoverTargetAction",
+   "rightIcon",
+   "size",
+   "successText",
+   "type",
+   "variant",
+   "wrap"
+  ]
+ },
+ "ButtonGroup": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "0624d476d3e8",
+  "props": {
+   "size": "14.3.0"
+  },
+  "known": [
+   "attached",
+   "children",
+   "orientation"
+  ]
+ },
+ "Calendar": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "eb6cef967a5e",
+  "props": {
+   "inAWeek": "14.3.0",
+   "label": "14.3.0",
+   "presets": "14.3.0",
+   "today": "14.3.0",
+   "tomorrow": "14.3.0"
+  },
+  "known": [
+   "autoFocus",
+   "defaultMonth",
+   "defaultValue",
+   "isDateDisabled",
+   "locale",
+   "max",
+   "min",
+   "month",
+   "monthYearPicker",
+   "nextLabel",
+   "nextMonth",
+   "onMonthChange",
+   "onValueChange",
+   "previousLabel",
+   "previousMonth",
+   "value",
+   "weekStartsOn",
+   "year"
+  ]
+ },
+ "Card": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "93bdb2829bbe",
+  "props": {},
+  "known": [
+   "action",
+   "as",
+   "description",
+   "headingLevel",
+   "href",
+   "justify",
+   "padding",
+   "rel",
+   "target",
+   "title",
+   "variant"
+  ]
+ },
+ "Carousel": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "0ae01ecceac7",
+  "props": {},
+  "known": [
+   "arrows",
+   "base",
+   "carouselRole",
+   "children",
+   "defaultIndex",
+   "dots",
+   "index",
+   "label",
+   "lg",
+   "loop",
+   "md",
+   "nextLabel",
+   "nextSlide",
+   "onIndexChange",
+   "perView",
+   "previousLabel",
+   "previousSlide",
+   "slideLabel",
+   "slideOf",
+   "slideRole",
+   "slidesOf",
+   "sm"
+  ]
+ },
+ "CascadeSelect": {
+  "added": "14.3.0",
+  "changed": "14.6.0",
+  "api": "0684efb0b0ff",
+  "props": {},
+  "known": [
+   "cascadeBack",
+   "cascadeEmpty",
+   "cascadeFailed",
+   "cascadeHasMore",
+   "cascadeLevel",
+   "cascadeLoading",
+   "cascadePath",
+   "cascadePlaceholder",
+   "children",
+   "defaultOpen",
+   "defaultValue",
+   "disabled",
+   "invalid",
+   "isLeaf",
+   "label",
+   "levels",
+   "loadOptions",
+   "name",
+   "onOpenChange",
+   "onValueChange",
+   "open",
+   "options",
+   "placeholder",
+   "readOnly",
+   "reason",
+   "selectParents",
+   "size",
+   "value"
+  ]
+ },
+ "Chart": {
+  "added": "14.1.0",
+  "changed": "14.7.0",
+  "api": "465c715461b8",
+  "props": {
+   "busy": "14.3.0",
+   "chartOther": "14.3.0",
+   "chartShare": "14.3.0",
+   "chartTotal": "14.3.0",
+   "loadingLabel": "14.3.0",
+   "stacked": "14.3.0",
+   "loading": "14.7.0"
+  },
+  "known": [
+   "categories",
+   "categoryLabel",
+   "chartCategory",
+   "chartKind",
+   "chartNoValue",
+   "chartPoint",
+   "chartRange",
+   "chartShowChart",
+   "chartShowTable",
+   "chartSummary",
+   "defaultView",
+   "formatValue",
+   "height",
+   "hideLegend",
+   "name",
+   "onViewChange",
+   "series",
+   "title",
+   "type",
+   "values",
+   "view"
+  ]
+ },
+ "Chat": {
+  "added": "14.2.0",
+  "changed": "14.6.0",
+  "api": "b28d14baa776",
+  "props": {
+   "branch": "14.6.0",
+   "branches": "14.6.0",
+   "chatApprove": "14.6.0",
+   "chatApproved": "14.6.0",
+   "chatDenied": "14.6.0",
+   "chatDeny": "14.6.0",
+   "chatNextResponse": "14.6.0",
+   "chatPreviousResponse": "14.6.0",
+   "chatReasoning": "14.6.0",
+   "chatResponseOf": "14.6.0",
+   "chatStepDone": "14.6.0",
+   "chatStepFailed": "14.6.0",
+   "chatStepRunning": "14.6.0",
+   "chatThinking": "14.6.0",
+   "chatThoughtFor": "14.6.0",
+   "detail": "14.6.0",
+   "href": "14.6.0",
+   "id": "14.6.0",
+   "index": "14.6.0",
+   "label": "14.6.0",
+   "onApprove": "14.6.0",
+   "onBranchChange": "14.6.0",
+   "onDeny": "14.6.0",
+   "reasoning": "14.6.0",
+   "reasoningTime": "14.6.0",
+   "steps": "14.6.0",
+   "thinking": "14.6.0"
+  },
+  "known": [
+   "actions",
+   "attachments",
+   "author",
+   "avatar",
+   "chatLoadOlder",
+   "chatLoadingOlder",
+   "chatMessage",
+   "chatNewMessages",
+   "chatNotSent",
+   "chatRetry",
+   "chatSend",
+   "chatSending",
+   "chatStop",
+   "chatYou",
+   "children",
+   "date",
+   "defaultValue",
+   "disabled",
+   "hasOlder",
+   "hideAuthor",
+   "loadingOlder",
+   "maxRows",
+   "onLoadOlder",
+   "onRetry",
+   "onSend",
+   "onStop",
+   "onValueChange",
+   "own",
+   "placeholder",
+   "status",
+   "streaming",
+   "time",
+   "value"
+  ]
+ },
+ "Checkbox": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "0e90fb72aef4",
+  "props": {
+   "variant": "14.3.0"
+  },
+  "known": [
+   "children",
+   "defaultValue",
+   "description",
+   "disabled",
+   "indeterminate",
+   "invalid",
+   "name",
+   "onCheckedChange",
+   "onValueChange",
+   "orientation",
+   "readOnly",
+   "required",
+   "selectAll",
+   "selectAtLeastOne",
+   "size",
+   "value"
+  ]
+ },
+ "CodeBlock": {
+  "added": "14.0.0",
+  "changed": null,
+  "api": "e0e734e937b9",
+  "props": {},
+  "known": [
+   "code",
+   "codeCopy",
+   "codeName",
+   "copyable",
+   "highlight",
+   "language",
+   "lineNumbers",
+   "startLine",
+   "title",
+   "wrap"
+  ]
+ },
+ "ColorPicker": {
+  "added": "9.1.0",
+  "changed": "14.3.0",
+  "api": "e98ca02a30b4",
+  "props": {
+   "readOnly": "14.3.0"
+  },
+  "known": [
+   "colorName",
+   "contrast",
+   "contrastWith",
+   "custom",
+   "customColor",
+   "defaultValue",
+   "disabled",
+   "form",
+   "hexCode",
+   "invalid",
+   "label",
+   "lowContrast",
+   "minContrast",
+   "name",
+   "onValueChange",
+   "onValueCommit",
+   "required",
+   "size",
+   "swatches",
+   "value"
+  ]
+ },
+ "Combobox": {
+  "added": null,
+  "changed": "14.6.0",
+  "api": "9624481941e9",
+  "props": {
+   "defaultInputValue": "13.0.0",
+   "inputValue": "13.0.0",
+   "createOption": "14.0.0",
+   "defaultOpen": "14.0.0",
+   "onCreate": "14.0.0",
+   "onOpenChange": "14.0.0",
+   "open": "14.0.0",
+   "freeText": "14.6.0",
+   "inlineComplete": "14.6.0",
+   "limit": "14.6.0",
+   "moreResults": "14.6.0"
+  },
+  "known": [
+   "clearLabel",
+   "clearValue",
+   "clearable",
+   "debounce",
+   "defaultValue",
+   "description",
+   "disabled",
+   "emptyText",
+   "filter",
+   "label",
+   "loadFailed",
+   "loadOptions",
+   "loading",
+   "loadingResults",
+   "loadingText",
+   "multiple",
+   "noResults",
+   "onInputChange",
+   "onValueChange",
+   "options",
+   "resultsCount",
+   "showOptions",
+   "signal",
+   "toggleLabel",
+   "value",
+   "valueAdded",
+   "valueRemoved"
+  ]
+ },
+ "CommandPalette": {
+  "added": "13.0.0",
+  "changed": "14.3.0",
+  "api": "f9ac601005cf",
+  "props": {},
+  "known": [
+   "commandPalette",
+   "commands",
+   "commandsCount",
+   "disabled",
+   "emptyText",
+   "group",
+   "hotkey",
+   "href",
+   "icon",
+   "id",
+   "keywords",
+   "label",
+   "limit",
+   "noCommands",
+   "onSelect",
+   "otherCommands",
+   "placeholder",
+   "searchCommands",
+   "shortcut"
+  ]
+ },
+ "Container": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "11ddcc59b6d1",
+  "props": {},
+  "known": [
+   "as",
+   "padded",
+   "size"
+  ]
+ },
+ "ContextualHelp": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "e6673bc06dfd",
+  "props": {},
+  "known": [
+   "children",
+   "contextualHelp",
+   "contextualInfo",
+   "defaultOpen",
+   "headingLevel",
+   "label",
+   "onOpenChange",
+   "open",
+   "placement",
+   "title",
+   "variant"
+  ]
+ },
+ "CopyButton": {
+  "added": "9.1.0",
+  "changed": "14.7.0",
+  "api": "bb7321bfb95e",
+  "props": {},
+  "known": [
+   "children",
+   "copied",
+   "copiedLabel",
+   "copyFailed",
+   "iconOnly",
+   "onCopy",
+   "onCopyError",
+   "timeout",
+   "value"
+  ]
+ },
+ "Countdown": {
+  "added": "14.7.0",
+  "changed": null,
+  "api": "e71a1fb9cda3",
+  "props": {},
+  "known": [
+   "announceAt",
+   "endText",
+   "format",
+   "label",
+   "locale",
+   "onEnd",
+   "seconds",
+   "to"
+  ]
+ },
+ "DataGrid": {
+  "added": "14.3.0",
+  "changed": "15.0.0",
+  "api": "61c7e27ada3b",
+  "props": {
+   "containerProps": "14.5.0",
+   "stickyHeader": "14.5.0",
+   "loading": "14.7.0"
+  },
+  "known": [
+   "align",
+   "changes",
+   "column",
+   "columns",
+   "dataGridCopied",
+   "dataGridEdit",
+   "dataGridHint",
+   "dataGridPasted",
+   "editable",
+   "format",
+   "header",
+   "key",
+   "loadingLabel",
+   "loadingRows",
+   "message",
+   "onRowsChange",
+   "rowId",
+   "rowKey",
+   "rows",
+   "size",
+   "value",
+   "width"
+  ]
+ },
+ "DateField": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "14b703f98fa3",
+  "props": {},
+  "known": [
+   "autoComplete",
+   "dateFieldDay",
+   "dateFieldMonth",
+   "dateFieldYear",
+   "day",
+   "defaultValue",
+   "disabled",
+   "form",
+   "invalid",
+   "max",
+   "min",
+   "month",
+   "name",
+   "onValueChange",
+   "order",
+   "parts",
+   "problem",
+   "readOnly",
+   "reason",
+   "size",
+   "value",
+   "year"
+  ]
+ },
+ "DatePicker": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "42dfd5d43372",
+  "props": {
+   "presets": "14.3.0"
+  },
+  "known": [
+   "buttonLabel",
+   "chooseDate",
+   "defaultValue",
+   "formatHint",
+   "inputNotAccepted",
+   "invalid",
+   "isDateDisabled",
+   "locale",
+   "max",
+   "min",
+   "onInvalidInput",
+   "onValueChange",
+   "size",
+   "value",
+   "weekStartsOn"
+  ]
+ },
+ "DateRangePicker": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "b5ca50b76a04",
+  "props": {
+   "label": "14.3.0",
+   "last30Days": "14.3.0",
+   "last7Days": "14.3.0",
+   "lastMonth": "14.3.0",
+   "presets": "14.3.0",
+   "thisMonth": "14.3.0",
+   "yesterday": "14.3.0"
+  },
+  "known": [
+   "buttonLabel",
+   "chooseDates",
+   "chooseEndDate",
+   "chooseStartDate",
+   "defaultValue",
+   "disabled",
+   "end",
+   "endDate",
+   "endLabel",
+   "endName",
+   "form",
+   "id",
+   "invalid",
+   "isDateDisabled",
+   "locale",
+   "max",
+   "min",
+   "months",
+   "onInvalidInput",
+   "onValueChange",
+   "readOnly",
+   "required",
+   "size",
+   "start",
+   "startDate",
+   "startLabel",
+   "startName",
+   "value",
+   "weekStartsOn"
+  ]
+ },
+ "DescriptionList": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "6d8fb40653d7",
+  "props": {},
+  "known": [
+   "children",
+   "dividers",
+   "emphasis",
+   "layout",
+   "term"
+  ]
+ },
+ "Dialog": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "c4897c078fa4",
+  "props": {
+   "finalFocus": "12.0.0",
+   "discard": "13.0.0",
+   "discardDescription": "13.0.0",
+   "discardTitle": "13.0.0",
+   "keepEditing": "13.0.0",
+   "unsaved": "13.0.0",
+   "confirm": "14.0.0",
+   "dialog": "14.0.0"
+  },
+  "known": [
+   "alert",
+   "closeButton",
+   "closeLabel",
+   "closeOnBackdrop",
+   "defaultOpen",
+   "description",
+   "footer",
+   "fullScreen",
+   "initialFocus",
+   "onOpenChange",
+   "open",
+   "size",
+   "title"
+  ]
+ },
+ "Divider": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "a5d38a26b75c",
+  "props": {},
+  "known": [
+   "decorative",
+   "label",
+   "orientation"
+  ]
+ },
+ "Drawer": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "2daf52114848",
+  "props": {
+   "finalFocus": "12.0.0",
+   "initialFocus": "12.0.0",
+   "unsaved": "13.0.0",
+   "placement": "14.6.0",
+   "defaultSnap": "14.7.0",
+   "drawerCollapse": "14.7.0",
+   "drawerExpand": "14.7.0",
+   "onSnapChange": "14.7.0",
+   "snap": "14.7.0",
+   "snapPoints": "14.7.0"
+  },
+  "known": [
+   "closeButton",
+   "closeLabel",
+   "closeOnBackdrop",
+   "defaultOpen",
+   "description",
+   "footer",
+   "modal",
+   "onOpenChange",
+   "open",
+   "size",
+   "swipeToClose",
+   "title"
+  ]
+ },
+ "EmptyState": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "18dd73c505d4",
+  "props": {},
+  "known": [
+   "actions",
+   "announce",
+   "clearFilters",
+   "description",
+   "didYouMean",
+   "headingLevel",
+   "icon",
+   "onClearFilters",
+   "onSuggestion",
+   "size",
+   "suggestions",
+   "title",
+   "variant"
+  ]
+ },
+ "ErrorBoundary": {
+  "added": "9.2.0",
+  "changed": "14.0.0",
+  "api": "1b2ebc8e90ca",
+  "props": {},
+  "known": [
+   "children",
+   "className",
+   "description",
+   "error",
+   "errorDescription",
+   "errorTitle",
+   "fallback",
+   "onError",
+   "onReset",
+   "reset",
+   "resetKeys",
+   "title",
+   "tryAgain"
+  ]
+ },
+ "ErrorSummary": {
+  "added": "10.0.0",
+  "changed": "14.3.0",
+  "api": "4c2f1e6966d1",
+  "props": {},
+  "known": [
+   "autoFocus",
+   "description",
+   "errorSummaryTitle",
+   "errors",
+   "field",
+   "headingLevel",
+   "message",
+   "title"
+  ]
+ },
+ "EventCalendar": {
+  "added": "14.3.0",
+  "changed": "15.0.0",
+  "api": "e655bc707653",
+  "props": {
+   "dayView": "14.7.0",
+   "nextDay": "14.7.0",
+   "nextWeek": "14.7.0",
+   "previousDay": "14.7.0",
+   "previousWeek": "14.7.0",
+   "weekView": "14.7.0",
+   "eventChanged": "15.0.0",
+   "onEventMove": "15.0.0",
+   "onSlotSelect": "15.0.0"
+  },
+  "known": [
+   "agendaView",
+   "allDay",
+   "calendarView",
+   "defaultMonth",
+   "defaultView",
+   "end",
+   "eventCount",
+   "eventTime",
+   "events",
+   "goToToday",
+   "headingLevel",
+   "id",
+   "locale",
+   "maxPerDay",
+   "month",
+   "monthView",
+   "moreEvents",
+   "noEvents",
+   "onEventClick",
+   "onMonthChange",
+   "onViewChange",
+   "repeating",
+   "repeats",
+   "start",
+   "title",
+   "tone",
+   "view",
+   "weekStartsOn"
+  ]
+ },
+ "Fab": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "07511b5c2ff9",
+  "props": {
+   "placement": "14.3.0"
+  },
+  "known": [
+   "extended",
+   "icon",
+   "label",
+   "size"
+  ]
+ },
+ "Field": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "e7591db55f1a",
+  "props": {
+   "errors": "14.3.0",
+   "name": "14.3.0",
+   "orientation": "14.3.0"
+  },
+  "known": [
+   "children",
+   "disabled",
+   "error",
+   "fieldOptional",
+   "group",
+   "hint",
+   "id",
+   "label",
+   "optional",
+   "required"
+  ]
+ },
+ "FileUpload": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "3bdceff3594f",
+  "props": {
+   "fileError": "14.0.0",
+   "fileStatus": "14.0.0",
+   "onRetry": "14.0.0",
+   "progress": "14.0.0",
+   "state": "14.0.0",
+   "thumbnails": "14.0.0"
+  },
+  "known": [
+   "accept",
+   "buttonLabel",
+   "chooseFile",
+   "chooseFiles",
+   "chosenFile",
+   "chosenFiles",
+   "disabled",
+   "dragFile",
+   "dragFiles",
+   "file",
+   "fileAlreadyAdded",
+   "fileFolder",
+   "fileMissing",
+   "fileOnlyOne",
+   "fileRemoved",
+   "fileTooLarge",
+   "fileTooMany",
+   "fileWrongType",
+   "files",
+   "filesAdded",
+   "form",
+   "hint",
+   "invalid",
+   "maxFiles",
+   "maxSize",
+   "message",
+   "multiple",
+   "name",
+   "onFilesChange",
+   "onReject",
+   "readOnly",
+   "reason",
+   "removeLabel",
+   "required",
+   "title"
+  ]
+ },
+ "FilterBar": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "f48c01d35303",
+  "props": {},
+  "known": [
+   "actions",
+   "defaultValue",
+   "end",
+   "fields",
+   "filterAdd",
+   "filterAny",
+   "filterBar",
+   "filterClear",
+   "filterContains",
+   "filterDone",
+   "filterFrom",
+   "filterIs",
+   "filterRemove",
+   "filterResults",
+   "filterUntil",
+   "id",
+   "label",
+   "multiple",
+   "onValueChange",
+   "options",
+   "placeholder",
+   "resultsCount",
+   "start",
+   "type",
+   "value"
+  ]
+ },
+ "FormattedNumber": {
+  "added": "9.1.0",
+  "changed": "14.3.0",
+  "api": "c499a1befda3",
+  "props": {
+   "animate": "14.3.0"
+  },
+  "known": [
+   "currency",
+   "format",
+   "locale",
+   "options",
+   "unit",
+   "value"
+  ]
+ },
+ "Grid": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "2b855486f0b6",
+  "props": {},
+  "known": [
+   "as",
+   "columns",
+   "fill",
+   "gap",
+   "minColumnWidth"
+  ]
+ },
+ "Heading": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "a735240a0251",
+  "props": {},
+  "known": [
+   "level",
+   "size"
+  ]
+ },
+ "Highlight": {
+  "added": "9.2.0",
+  "changed": "14.0.0",
+  "api": "294eab656953",
+  "props": {},
+  "known": [
+   "children",
+   "query",
+   "words"
+  ]
+ },
+ "HoverCard": {
+  "added": "13.0.0",
+  "changed": "14.0.0",
+  "api": "8f01d3b7541c",
+  "props": {},
+  "known": [
+   "children",
+   "className",
+   "closeDelay",
+   "defaultOpen",
+   "disabled",
+   "onOpenChange",
+   "open",
+   "openDelay",
+   "placement",
+   "style",
+   "trigger"
+  ]
+ },
+ "Icon": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "08e26e725a5e",
+  "props": {
+   "weight": "14.0.0"
+  },
+  "known": [
+   "icon",
+   "mirror",
+   "name",
+   "size"
+  ]
+ },
+ "IconButton": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "58b22da5729c",
+  "props": {
+   "hideTitle": "12.0.0"
+  },
+  "known": [
+   "icon",
+   "label",
+   "shape"
+  ]
+ },
+ "IconTile": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "df78063911a9",
+  "props": {},
+  "known": [
+   "icon",
+   "label",
+   "shape",
+   "size",
+   "tone"
+  ]
+ },
+ "Illustration": {
+  "added": "14.0.0",
+  "changed": null,
+  "api": "10e85030af8d",
+  "props": {},
+  "known": [
+   "label",
+   "name",
+   "size"
+  ]
+ },
+ "Image": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "dcce8c25a77d",
+  "props": {},
+  "known": [
+   "alt",
+   "darkSrc",
+   "dim",
+   "fallback",
+   "fit",
+   "frameProps",
+   "fullSrc",
+   "height",
+   "media",
+   "onRemove",
+   "priority",
+   "ratio",
+   "removeImage",
+   "removeLabel",
+   "rounded",
+   "sizes",
+   "sources",
+   "src",
+   "srcSet",
+   "type",
+   "viewImage",
+   "viewLabel",
+   "viewable",
+   "width"
+  ]
+ },
+ "InlineEdit": {
+  "added": "9.1.0",
+  "changed": "14.0.0",
+  "api": "9d334659a511",
+  "props": {},
+  "known": [
+   "defaultEditing",
+   "defaultValue",
+   "disabled",
+   "edit",
+   "editLabel",
+   "editing",
+   "inputProps",
+   "label",
+   "onCancel",
+   "onEditingChange",
+   "onValueChange",
+   "placeholder",
+   "readOnly",
+   "size",
+   "validate",
+   "value"
+  ]
+ },
+ "Input": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "8783a7b32a06",
+  "props": {
+   "actions": "14.3.0",
+   "icon": "14.3.0",
+   "label": "14.3.0"
+  },
+  "known": [
+   "charactersLeft",
+   "invalid",
+   "invalidValue",
+   "leftIcon",
+   "length",
+   "mask",
+   "max",
+   "maxLength",
+   "min",
+   "minLength",
+   "prefix",
+   "reason",
+   "rightIcon",
+   "showCount",
+   "size",
+   "step",
+   "suffix",
+   "title",
+   "type"
+  ]
+ },
+ "Kanban": {
+  "added": "14.3.0",
+  "changed": "14.7.0",
+  "api": "71a629a55145",
+  "props": {
+   "busy": "14.6.0",
+   "loadingLabel": "14.6.0",
+   "loading": "14.7.0"
+  },
+  "known": [
+   "column",
+   "columns",
+   "disabled",
+   "dragging",
+   "from",
+   "getKey",
+   "getLabel",
+   "headingLevel",
+   "id",
+   "index",
+   "item",
+   "items",
+   "kanbanCancelled",
+   "kanbanCount",
+   "kanbanDropped",
+   "kanbanEmpty",
+   "kanbanGrabbed",
+   "kanbanInstructions",
+   "kanbanMove",
+   "kanbanMoveTo",
+   "kanbanMoved",
+   "kanbanOverLimit",
+   "limit",
+   "onMove",
+   "renderCard",
+   "title",
+   "to"
+  ]
+ },
+ "Kbd": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "97b8013d40b1",
+  "props": {},
+  "known": [
+   "keyName",
+   "keys",
+   "size"
+  ]
+ },
+ "KeyboardShortcuts": {
+  "added": "10.0.0",
+  "changed": "14.3.0",
+  "api": "e2dc3859b3be",
+  "props": {
+   "singleKeyHint": "14.3.0",
+   "singleKeyShortcuts": "14.3.0"
+  },
+  "known": [
+   "description",
+   "enabled",
+   "generalShortcuts",
+   "group",
+   "helpKeys",
+   "inInputs",
+   "keyboardShortcuts",
+   "keys",
+   "shortcuts",
+   "showShortcuts",
+   "title"
+  ]
+ },
+ "Lightbox": {
+  "added": "14.6.0",
+  "changed": null,
+  "api": "3cf3c6528e74",
+  "props": {},
+  "known": [
+   "alt",
+   "caption",
+   "defaultIndex",
+   "defaultOpen",
+   "height",
+   "imageOf",
+   "index",
+   "items",
+   "loop",
+   "nextImage",
+   "onIndexChange",
+   "onOpenChange",
+   "open",
+   "previousImage",
+   "src",
+   "width"
+  ]
+ },
+ "Link": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "ba19dada494c",
+  "props": {},
+  "known": [
+   "as",
+   "external",
+   "opensInNewTab",
+   "tone",
+   "underline"
+  ]
+ },
+ "List": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "e1284484d7d0",
+  "props": {
+   "busy": "14.3.0",
+   "label": "14.3.0",
+   "rows": "14.3.0",
+   "defaultSelected": "14.7.0",
+   "listSelectAll": "14.7.0",
+   "loading": "14.7.0",
+   "onSelectedChange": "14.7.0",
+   "selectionMode": "14.7.0",
+   "value": "14.7.0",
+   "values": "14.7.0"
+  },
+  "known": [
+   "as",
+   "children",
+   "description",
+   "disabled",
+   "divided",
+   "href",
+   "leading",
+   "linkProps",
+   "onClick",
+   "selected",
+   "title",
+   "trailing",
+   "variant"
+  ]
+ },
+ "LoadMore": {
+  "added": "10.0.0",
+  "changed": "14.0.0",
+  "api": "a312eb05832c",
+  "props": {},
+  "known": [
+   "allLoaded",
+   "count",
+   "endText",
+   "hasMore",
+   "infinite",
+   "label",
+   "loadMore",
+   "loadedMore",
+   "loading",
+   "moreLoaded",
+   "onLoadMore",
+   "showingOf",
+   "total"
+  ]
+ },
+ "Loader": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "6e185782cb5b",
+  "props": {},
+  "known": [
+   "delay",
+   "glow",
+   "label",
+   "lines",
+   "loading",
+   "pattern",
+   "shape",
+   "size",
+   "tone",
+   "variant"
+  ]
+ },
+ "Logo": {
+  "added": "14.0.0",
+  "changed": null,
+  "api": "855f6f0527ee",
+  "props": {},
+  "known": [
+   "alt",
+   "collapseBelow",
+   "darkSrc",
+   "markDarkSrc",
+   "markSrc",
+   "size",
+   "src",
+   "variant"
+  ]
+ },
+ "MentionInput": {
+  "added": "14.6.0",
+  "changed": null,
+  "api": "f9afa4e6b440",
+  "props": {},
+  "known": [
+   "avatar",
+   "defaultValue",
+   "description",
+   "disabled",
+   "filter",
+   "id",
+   "label",
+   "maxOptions",
+   "onMention",
+   "onSearch",
+   "onValueChange",
+   "options",
+   "start",
+   "text",
+   "trigger",
+   "value"
+  ]
+ },
+ "Menu": {
+  "added": null,
+  "changed": "14.5.0",
+  "api": "321d23f6f132",
+  "props": {},
+  "known": [
+   "as",
+   "checked",
+   "children",
+   "className",
+   "defaultOpen",
+   "destructive",
+   "disabled",
+   "href",
+   "icon",
+   "label",
+   "onCheckedChange",
+   "onOpenChange",
+   "onSelect",
+   "onValueChange",
+   "open",
+   "placement",
+   "rel",
+   "shortcut",
+   "style",
+   "target",
+   "trigger",
+   "value"
+  ]
+ },
+ "Menubar": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "a761eccc40cb",
+  "props": {},
+  "known": [
+   "children",
+   "defaultOpen",
+   "disabled",
+   "label"
+  ]
+ },
+ "Meter": {
+  "added": "9.0.0",
+  "changed": "14.0.0",
+  "api": "01b2cbc75eea",
+  "props": {},
+  "known": [
+   "formatValue",
+   "high",
+   "label",
+   "low",
+   "max",
+   "meterZone",
+   "min",
+   "optimum",
+   "showValue",
+   "size",
+   "value"
+  ]
+ },
+ "Navbar": {
+  "added": null,
+  "changed": "14.7.0",
+  "api": "9663dc24060a",
+  "props": {
+   "description": "14.3.0",
+   "label": "14.3.0",
+   "title": "14.3.0",
+   "condense": "14.7.0"
+  },
+  "known": [
+   "actions",
+   "active",
+   "as",
+   "brand",
+   "children",
+   "menuLabel",
+   "size",
+   "sticky"
+  ]
+ },
+ "NotificationCenter": {
+  "added": "10.0.0",
+  "changed": "14.5.0",
+  "api": "dee286390117",
+  "props": {
+   "unsaved": "13.0.0",
+   "notificationsUnread": "14.2.0",
+   "clearNotificationsConfirm": "14.3.0",
+   "keepNotifications": "14.3.0",
+   "notificationSettings": "14.5.0",
+   "settingsHref": "14.5.0"
+  },
+  "known": [
+   "children",
+   "clear",
+   "clearNotifications",
+   "description",
+   "empty",
+   "footer",
+   "id",
+   "items",
+   "limit",
+   "markAllRead",
+   "markRead",
+   "noNotifications",
+   "notificationCenter",
+   "onClear",
+   "onMarkAllRead",
+   "onMarkRead",
+   "read",
+   "time",
+   "title",
+   "tone",
+   "unread",
+   "unreadNotification"
+  ]
+ },
+ "NumberInput": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "c15fc648cbd7",
+  "props": {
+   "numberingSystem": "12.0.0"
+  },
+  "known": [
+   "currency",
+   "decrease",
+   "decrementLabel",
+   "defaultValue",
+   "formatOptions",
+   "increase",
+   "incrementLabel",
+   "largeStep",
+   "locale",
+   "max",
+   "min",
+   "minorUnits",
+   "onInvalidInput",
+   "onValueChange",
+   "step",
+   "steppers",
+   "value"
+  ]
+ },
+ "OfflineBanner": {
+  "added": "14.0.0",
+  "changed": "15.0.0",
+  "api": "ff0e69e74df3",
+  "props": {
+   "onOnlineChange": "14.2.0"
+  },
+  "known": [
+   "backOnline",
+   "children",
+   "offline",
+   "online",
+   "placement"
+  ]
+ },
+ "Pagination": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "fc5b14503101",
+  "props": {
+   "itemsOf": "12.0.0",
+   "onPageSizeChange": "12.0.0",
+   "pageSize": "12.0.0",
+   "pageSizeOptions": "12.0.0",
+   "perPage": "12.0.0",
+   "total": "12.0.0",
+   "href": "14.3.0"
+  },
+  "known": [
+   "boundaries",
+   "count",
+   "defaultPage",
+   "getHref",
+   "linkAs",
+   "nextLabel",
+   "nextPage",
+   "onPageChange",
+   "page",
+   "pageLabel",
+   "pagination",
+   "previousLabel",
+   "previousPage",
+   "siblings",
+   "size"
+  ]
+ },
+ "PasswordInput": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "0889b5fd714d",
+  "props": {},
+  "known": [
+   "capsLockHint",
+   "capsLockOn",
+   "defaultVisible",
+   "onVisibleChange",
+   "showPassword",
+   "toggleLabel",
+   "visible"
+  ]
+ },
+ "PeriodPicker": {
+  "added": "14.6.0",
+  "changed": null,
+  "api": "6817321736ae",
+  "props": {},
+  "known": [
+   "defaultOpen",
+   "defaultValue",
+   "end",
+   "invalid",
+   "locale",
+   "max",
+   "min",
+   "name",
+   "onValueChange",
+   "periodNext",
+   "periodPlaceholder",
+   "periodPrevious",
+   "periodQuarter",
+   "placeholder",
+   "readOnly",
+   "size",
+   "start",
+   "unit",
+   "value"
+  ]
+ },
+ "PhoneInput": {
+  "added": "9.1.0",
+  "changed": "14.3.0",
+  "api": "334da99368bb",
+  "props": {},
+  "known": [
+   "areas",
+   "code",
+   "complete",
+   "countries",
+   "country",
+   "countryLabel",
+   "defaultCountry",
+   "defaultValue",
+   "dial",
+   "max",
+   "min",
+   "name",
+   "national",
+   "onCountryChange",
+   "onValueChange",
+   "pattern",
+   "patterns",
+   "trunk",
+   "value"
+  ]
+ },
+ "PinInput": {
+  "added": "9.2.0",
+  "changed": "14.0.0",
+  "api": "16c67a30fc36",
+  "props": {},
+  "known": [
+   "defaultValue",
+   "invalid",
+   "length",
+   "mask",
+   "onComplete",
+   "onValueChange",
+   "size",
+   "type",
+   "value"
+  ]
+ },
+ "Popover": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "f04c2079779f",
+  "props": {
+   "sheet": "14.0.0"
+  },
+  "known": [
+   "children",
+   "className",
+   "defaultOpen",
+   "headingLevel",
+   "initialFocus",
+   "onOpenChange",
+   "open",
+   "placement",
+   "style",
+   "title",
+   "trigger"
+  ]
+ },
+ "Progress": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "00d970e8cf36",
+  "props": {},
+  "known": [
+   "announceComplete",
+   "formatValue",
+   "label",
+   "max",
+   "onComplete",
+   "progressComplete",
+   "showValue",
+   "size",
+   "tone",
+   "value",
+   "variant"
+  ]
+ },
+ "Prose": {
+  "added": "13.0.0",
+  "changed": "14.0.0",
+  "api": "31b65dfb2868",
+  "props": {},
+  "known": [
+   "as",
+   "children"
+  ]
+ },
+ "Quote": {
+  "added": "14.5.0",
+  "changed": null,
+  "api": "0c32f05b5873",
+  "props": {},
+  "known": [
+   "author",
+   "avatar",
+   "children",
+   "cite",
+   "size",
+   "source"
+  ]
+ },
+ "Radio": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "1a70743fa19f",
+  "props": {
+   "readOnly": "14.3.0",
+   "variant": "14.3.0"
+  },
+  "known": [
+   "children",
+   "defaultValue",
+   "description",
+   "disabled",
+   "invalid",
+   "name",
+   "onValueChange",
+   "orientation",
+   "required",
+   "size",
+   "value"
+  ]
+ },
+ "RangeCalendar": {
+  "added": "14.7.0",
+  "changed": null,
+  "api": "c201e2ca2788",
+  "props": {},
+  "known": [
+   "autoFocus",
+   "defaultMonth",
+   "defaultValue",
+   "end",
+   "inRange",
+   "isDateDisabled",
+   "locale",
+   "max",
+   "min",
+   "month",
+   "months",
+   "onMonthChange",
+   "onValueChange",
+   "rangeSelected",
+   "start",
+   "value",
+   "weekStartsOn"
+  ]
+ },
+ "Rating": {
+  "added": "9.7.0",
+  "changed": "14.6.0",
+  "api": "ac2d53dfa295",
+  "props": {},
+  "known": [
+   "allowHalf",
+   "clearable",
+   "defaultValue",
+   "disabled",
+   "form",
+   "invalid",
+   "max",
+   "name",
+   "onValueChange",
+   "ratingStars",
+   "ratingValue",
+   "readOnly",
+   "required",
+   "size",
+   "value"
+  ]
+ },
+ "RelativeTime": {
+  "added": "9.1.0",
+  "changed": "14.0.0",
+  "api": "aa5aaaf64d9a",
+  "props": {
+   "absoluteAfter": "12.0.0",
+   "absoluteFormat": "12.0.0"
+  },
+  "known": [
+   "date",
+   "format",
+   "locale",
+   "numeric",
+   "titleFormat"
+  ]
+ },
+ "SaveStatus": {
+  "added": "10.0.0",
+  "changed": "14.0.0",
+  "api": "a022ddc65464",
+  "props": {},
+  "known": [
+   "errorText",
+   "onRetry",
+   "retrySave",
+   "saveFailed",
+   "saved",
+   "savedAt",
+   "saving",
+   "status"
+  ]
+ },
+ "ScrollArea": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "793e383f8690",
+  "props": {},
+  "known": [
+   "fade",
+   "orientation",
+   "scrollArea"
+  ]
+ },
+ "SearchInput": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "56b7a1a736ad",
+  "props": {},
+  "known": [
+   "clearLabel",
+   "clearSearch",
+   "loading",
+   "loadingLabel",
+   "onClear",
+   "onSearch",
+   "searching"
+  ]
+ },
+ "SegmentedControl": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "381a1688fb8a",
+  "props": {},
+  "known": [
+   "defaultValue",
+   "disabled",
+   "form",
+   "fullWidth",
+   "icon",
+   "invalid",
+   "label",
+   "name",
+   "onValueChange",
+   "options",
+   "readOnly",
+   "required",
+   "size",
+   "value"
+  ]
+ },
+ "Select": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "6ffeeada4991",
+  "props": {
+   "readOnly": "14.3.0"
+  },
+  "known": [
+   "disabled",
+   "invalid",
+   "label",
+   "leftIcon",
+   "options",
+   "placeholder",
+   "size",
+   "value"
+  ]
+ },
+ "ShowMore": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "e0755605df4a",
+  "props": {},
+  "known": [
+   "children",
+   "defaultExpanded",
+   "expanded",
+   "lines",
+   "onExpandedChange",
+   "showLess",
+   "showMore"
+  ]
+ },
+ "Sidebar": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "fa97633ef1ba",
+  "props": {},
+  "known": [
+   "active",
+   "as",
+   "badge",
+   "children",
+   "collapsed",
+   "defaultOpen",
+   "footer",
+   "header",
+   "icon",
+   "label",
+   "onOpenChange",
+   "open",
+   "title"
+  ]
+ },
+ "SignaturePad": {
+  "added": "14.3.0",
+  "changed": null,
+  "api": "eb8881fcfd3a",
+  "props": {},
+  "known": [
+   "defaultMethod",
+   "defaultValue",
+   "disabled",
+   "form",
+   "invalid",
+   "method",
+   "name",
+   "onValueChange",
+   "readOnly",
+   "reason",
+   "signatureClear",
+   "signatureDraw",
+   "signatureDrawHint",
+   "signatureDrawn",
+   "signatureEmpty",
+   "signatureMethod",
+   "signatureName",
+   "signatureType",
+   "signatureTypeHint",
+   "signatureUndo",
+   "svg",
+   "value"
+  ]
+ },
+ "SkipLink": {
+  "added": "13.0.0",
+  "changed": "14.0.0",
+  "api": "56a341d2d712",
+  "props": {},
+  "known": [
+   "children",
+   "skipToContent",
+   "target"
+  ]
+ },
+ "Slider": {
+  "added": null,
+  "changed": "14.7.0",
+  "api": "73da1a325667",
+  "props": {
+   "inputs": "14.7.0"
+  },
+  "known": [
+   "defaultValue",
+   "disabled",
+   "form",
+   "formatValue",
+   "invalid",
+   "label",
+   "largeStep",
+   "marks",
+   "max",
+   "min",
+   "name",
+   "onValueChange",
+   "onValueCommit",
+   "readOnly",
+   "required",
+   "showValue",
+   "size",
+   "sliderMaximum",
+   "sliderMinimum",
+   "step",
+   "thumbLabels",
+   "value"
+  ]
+ },
+ "SortableList": {
+  "added": "9.0.0",
+  "changed": "14.0.0",
+  "api": "9ff99942716f",
+  "props": {
+   "orientation": "12.0.0"
+  },
+  "known": [
+   "disabled",
+   "dragging",
+   "from",
+   "getKey",
+   "getLabel",
+   "index",
+   "items",
+   "onReorder",
+   "renderItem",
+   "reorder",
+   "reorderCancelled",
+   "reorderDropped",
+   "reorderGrabbed",
+   "reorderInstructions",
+   "reorderLabel",
+   "reorderMoved",
+   "to"
+  ]
+ },
+ "Sparkline": {
+  "added": "14.0.0",
+  "changed": null,
+  "api": "2af4256aa89a",
+  "props": {},
+  "known": [
+   "area",
+   "data",
+   "format",
+   "label",
+   "max",
+   "min",
+   "sparklineSummary"
+  ]
+ },
+ "Splitter": {
+  "added": "9.7.0",
+  "changed": "15.0.0",
+  "api": "84556eb62302",
+  "props": {
+   "orientation": "14.3.0"
+  },
+  "known": [
+   "children",
+   "collapsible",
+   "defaultSize",
+   "max",
+   "min",
+   "onSizeChange",
+   "resizePanes",
+   "separatorLabel",
+   "size",
+   "splitterPlace",
+   "step",
+   "storageKey"
+  ]
+ },
+ "Stack": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "8bc26803575b",
+  "props": {},
+  "known": [
+   "align",
+   "as",
+   "direction",
+   "gap",
+   "justify",
+   "wrap"
+  ]
+ },
+ "StatusTracker": {
+  "added": "14.7.0",
+  "changed": null,
+  "api": "2d2677b0e4ce",
+  "props": {},
+  "known": [
+   "date",
+   "days",
+   "label",
+   "legend",
+   "note",
+   "state",
+   "statusDay",
+   "statusDegraded",
+   "statusDown",
+   "statusNone",
+   "statusSummary",
+   "statusUp",
+   "summary"
+  ]
+ },
+ "Stepper": {
+  "added": null,
+  "changed": "14.6.0",
+  "api": "b12a29f12187",
+  "props": {
+   "back": "14.0.0",
+   "defaultStep": "14.0.0",
+   "goTo": "14.0.0",
+   "headingProps": "14.0.0",
+   "hidden": "14.0.0",
+   "id": "14.0.0",
+   "isFirst": "14.0.0",
+   "isLast": "14.0.0",
+   "next": "14.0.0",
+   "onComplete": "14.0.0",
+   "panelProps": "14.0.0",
+   "stepperProps": "14.0.0",
+   "tabIndex": "14.0.0",
+   "validate": "14.0.0",
+   "style": "14.6.0",
+   "transition": "14.6.0"
+  },
+  "known": [
+   "clickable",
+   "completed",
+   "current",
+   "description",
+   "error",
+   "hasError",
+   "hasWarning",
+   "labels",
+   "onStepClick",
+   "optional",
+   "orientation",
+   "size",
+   "status",
+   "stepOf",
+   "steps",
+   "title",
+   "warning"
+  ]
+ },
+ "Switch": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "95b9c47426a2",
+  "props": {
+   "loading": "14.3.0"
+  },
+  "known": [
+   "children",
+   "description",
+   "invalid",
+   "labelPosition",
+   "onCheckedChange",
+   "readOnly",
+   "size"
+  ]
+ },
+ "TabNav": {
+  "added": "14.5.0",
+  "changed": null,
+  "api": "8a45c81eaa17",
+  "props": {},
+  "known": [
+   "as",
+   "current",
+   "icon",
+   "size",
+   "variant"
+  ]
+ },
+ "Table": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "eb28ec536efc",
+  "props": {
+   "hideCaption": "12.0.0",
+   "href": "13.0.0",
+   "link": "13.0.0",
+   "rel": "13.0.0",
+   "target": "13.0.0",
+   "estimatedRowHeight": "14.0.0",
+   "itemKey": "14.0.0",
+   "overscan": "14.0.0",
+   "renderRow": "14.0.0",
+   "busy": "14.3.0",
+   "colSpan": "14.3.0",
+   "columns": "14.3.0",
+   "controls": "14.3.0",
+   "expanded": "14.3.0",
+   "id": "14.3.0",
+   "layout": "14.3.0",
+   "maxWidth": "14.3.0",
+   "minWidth": "14.3.0",
+   "onColumnsChange": "14.3.0",
+   "onExpandedChange": "14.3.0",
+   "onWidthChange": "14.3.0",
+   "open": "14.3.0",
+   "pinEnd": "14.3.0",
+   "pinStart": "14.3.0",
+   "required": "14.3.0",
+   "resizable": "14.3.0",
+   "rows": "14.3.0",
+   "tableColumns": "14.3.0",
+   "tableDetails": "14.3.0",
+   "tableFitColumn": "14.3.0",
+   "tableNarrower": "14.3.0",
+   "tableResizeColumn": "14.3.0",
+   "tableResizeHint": "14.3.0",
+   "tableRowDetails": "14.3.0",
+   "tableWider": "14.3.0",
+   "visible": "14.3.0",
+   "width": "14.3.0",
+   "loading": "14.7.0"
+  },
+  "known": [
+   "align",
+   "caption",
+   "cellProps",
+   "children",
+   "clearLabel",
+   "clearSelection",
+   "containerProps",
+   "count",
+   "header",
+   "label",
+   "onClear",
+   "onSort",
+   "selected",
+   "size",
+   "sort",
+   "stickyHeader",
+   "striped",
+   "table",
+   "tableSelected",
+   "tableSorted"
+  ]
+ },
+ "TableOfContents": {
+  "added": "14.3.0",
+  "changed": "15.0.0",
+  "api": "8af03e4058d9",
+  "props": {
+   "variant": "15.0.0"
+  },
+  "known": [
+   "container",
+   "headings",
+   "id",
+   "items",
+   "label",
+   "level",
+   "offset",
+   "title",
+   "tocTitle"
+  ]
+ },
+ "Tabs": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "a27b90ec1b66",
+  "props": {},
+  "known": [
+   "activation",
+   "defaultValue",
+   "icon",
+   "keepMounted",
+   "onValueChange",
+   "orientation",
+   "size",
+   "value",
+   "variant"
+  ]
+ },
+ "TagGroup": {
+  "added": "14.7.0",
+  "changed": null,
+  "api": "a8a314e3e026",
+  "props": {},
+  "known": [
+   "defaultSelected",
+   "disabled",
+   "empty",
+   "id",
+   "items",
+   "label",
+   "max",
+   "onRemove",
+   "onSelectedChange",
+   "selected",
+   "selectionMode",
+   "tagRemove"
+  ]
+ },
+ "Text": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "81200745272c",
+  "props": {
+   "measure": "12.0.0",
+   "lines": "14.3.0"
+  },
+  "known": [
+   "as",
+   "htmlFor",
+   "size",
+   "tone",
+   "truncate",
+   "weight"
+  ]
+ },
+ "Textarea": {
+  "added": null,
+  "changed": "14.3.0",
+  "api": "f92fe37c9df9",
+  "props": {
+   "actions": "14.3.0"
+  },
+  "known": [
+   "autoResize",
+   "invalid",
+   "maxRows",
+   "resize",
+   "rows",
+   "showCount",
+   "size"
+  ]
+ },
+ "TimePicker": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "0f798ea907a9",
+  "props": {},
+  "known": [
+   "chooseTime",
+   "defaultValue",
+   "hour12",
+   "invalid",
+   "listLabel",
+   "locale",
+   "max",
+   "min",
+   "onInvalidInput",
+   "onValueChange",
+   "size",
+   "step",
+   "value"
+  ]
+ },
+ "TimeZonePicker": {
+  "added": "14.2.0",
+  "changed": null,
+  "api": "892fe7baedf5",
+  "props": {},
+  "known": [
+   "at",
+   "city",
+   "locale",
+   "name",
+   "offset",
+   "offsetText",
+   "timeZoneYours",
+   "zone",
+   "zones"
+  ]
+ },
+ "Timeline": {
+  "added": "9.7.0",
+  "changed": "14.3.0",
+  "api": "fe184aeae177",
+  "props": {
+   "orientation": "14.3.0",
+   "stackWhenNarrow": "14.3.0",
+   "timeline": "14.3.0"
+  },
+  "known": [
+   "align",
+   "children",
+   "dateTime",
+   "icon",
+   "status",
+   "time",
+   "title"
+  ]
+ },
+ "Toast": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "0d08c2657ed5",
+  "props": {
+   "placement": "14.3.0"
+  },
+  "known": [
+   "action",
+   "announcement",
+   "autoDismiss",
+   "commit",
+   "description",
+   "dismiss",
+   "dismissLabel",
+   "duration",
+   "error",
+   "id",
+   "label",
+   "limit",
+   "loading",
+   "moreToasts",
+   "notifications",
+   "onClick",
+   "onUndo",
+   "promise",
+   "success",
+   "title",
+   "toastRepeated",
+   "toastShortcut",
+   "tone",
+   "undo",
+   "undoLabel"
+  ]
+ },
+ "ToggleButton": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "5cdb7736e15e",
+  "props": {
+   "icon": "15.0.0"
+  },
+  "known": [
+   "defaultPressed",
+   "onPressedChange",
+   "pressed",
+   "variant"
+  ]
+ },
+ "ToggleGroup": {
+  "added": "9.3.0",
+  "changed": "14.0.0",
+  "api": "16fd20b9a875",
+  "props": {},
+  "known": [
+   "children",
+   "defaultValue",
+   "disabled",
+   "onValueChange",
+   "required",
+   "size",
+   "type",
+   "value",
+   "variant"
+  ]
+ },
+ "Toolbar": {
+  "added": "9.2.0",
+  "changed": "14.3.0",
+  "api": "022aa8962b81",
+  "props": {
+   "size": "14.3.0"
+  },
+  "known": [
+   "children",
+   "orientation"
+  ]
+ },
+ "Tooltip": {
+  "added": null,
+  "changed": "15.0.0",
+  "api": "571a41f4462d",
+  "props": {
+   "openDelay": "14.3.0"
+  },
+  "known": [
+   "children",
+   "className",
+   "content",
+   "defaultOpen",
+   "disabled",
+   "onOpenChange",
+   "open",
+   "placement",
+   "role",
+   "style"
+  ]
+ },
+ "Tour": {
+  "added": "14.0.0",
+  "changed": null,
+  "api": "78619c7aea4f",
+  "props": {},
+  "known": [
+   "content",
+   "defaultOpen",
+   "defaultStep",
+   "headingLevel",
+   "onFinish",
+   "onOpenChange",
+   "onStepChange",
+   "open",
+   "placement",
+   "step",
+   "steps",
+   "target",
+   "title",
+   "tourBack",
+   "tourDone",
+   "tourNext"
+  ]
+ },
+ "TransferList": {
+  "added": "14.7.0",
+  "changed": null,
+  "api": "2243ea1eba6a",
+  "props": {},
+  "known": [
+   "availableLabel",
+   "chosenLabel",
+   "defaultValue",
+   "description",
+   "disabled",
+   "form",
+   "invalid",
+   "label",
+   "name",
+   "onValueChange",
+   "options",
+   "transferAdd",
+   "transferAddReason",
+   "transferAll",
+   "transferAvailable",
+   "transferChosen",
+   "transferEmpty",
+   "transferMoved",
+   "transferRemove",
+   "transferRemoveReason",
+   "value"
+  ]
+ },
+ "TreeView": {
+  "added": "9.3.0",
+  "changed": "14.0.0",
+  "api": "11e89ef3a505",
+  "props": {},
+  "known": [
+   "children",
+   "defaultExpanded",
+   "defaultValue",
+   "disabled",
+   "expanded",
+   "icon",
+   "id",
+   "items",
+   "label",
+   "onExpandedChange",
+   "onValueChange",
+   "selectionMode",
+   "textValue",
+   "value"
+  ]
+ },
+ "TypeToConfirm": {
+  "added": "10.0.0",
+  "changed": "14.0.0",
+  "api": "b50a841fdef8",
+  "props": {},
+  "known": [
+   "caseSensitive",
+   "confirmLabel",
+   "disabled",
+   "hint",
+   "label",
+   "onConfirm",
+   "onMatch",
+   "phrase",
+   "typePhraseFirst",
+   "typeToConfirm"
+  ]
+ },
+ "VirtualList": {
+  "added": "13.0.0",
+  "changed": "14.0.0",
+  "api": "1c5bf6cc8bf8",
+  "props": {},
+  "known": [
+   "as",
+   "count",
+   "divided",
+   "estimatedItemHeight",
+   "itemKey",
+   "overscan",
+   "renderItem",
+   "variant"
+  ]
+ },
+ "VisuallyHidden": {
+  "added": null,
+  "changed": "14.0.0",
+  "api": "26a3231898de",
+  "props": {},
+  "known": [
+   "as",
+   "focusable"
+  ]
+ }
+}
