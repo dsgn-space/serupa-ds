@@ -314,14 +314,18 @@ jobs:
     # main's pictures and the branch's in the same job since ADR-0016, so any machine compares fairly, and the timing
     # budgets leave room for a CI machine several times slower. On 15 Nov ten pull requests, up to eight x86 jobs each,
     # filled the 28 burst slots: queue jobs waited about 40 minutes to start and nothing merged for an hour.
+    # actions: write lets a failed job stop its own run (the last step).
+    permissions:
+      contents: read
+      actions: write
     runs-on: ${{ fromJSON(github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER || '"ubuntu-24.04"') || needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
     timeout-minutes: 30
     strategy:
-      # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
-      fail-fast: ${{ github.event_name == 'pull_request' }}
+      # On a pull request and in the queue the first failing job cancels the others; main runs every job to the end.
+      fail-fast: ${{ github.event_name != 'push' }}
       # A pull request takes at most eight runners at once, so one doesn't hold all of GitHub's; a queue group 24 of the
       # 28 burst slots.
       max-parallel: ${{ github.event_name == 'pull_request' && 8 || 24 }}
@@ -464,6 +468,17 @@ jobs:
             .test-tmp/
             tools/test/baseline-visual/**/*.actual.png
           if-no-files-found: ignore
+      # The run can't pass any more, so the rest of it only holds runners: in the queue, the groups behind it wait on them.
+      # The stop job below does the same, but only once every job it needs has ended: a group that failed at 20:41 ran on
+      # to 20:57 (15 Nov). The step runs last, after the failure details are uploaded.
+      - name: Stop the run
+        if: failure() && github.event_name != 'push'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node -e 'fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/cancel`, { method: "POST", headers: { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json" } }).then((r) => console.log(`Cancelling run ${process.env.GITHUB_RUN_ID}: ${r.status}`))' \
+            || echo "Couldn't cancel run $GITHUB_RUN_ID: the stop job will."
 
   # The checks and the Storybook checks (axe in every theme, text spacing, 200% text, reflow): no screenshot, no timing
   # budget, so any runner, Arm included.
@@ -471,13 +486,17 @@ jobs:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
     needs: [plan]
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1'
+    # actions: write lets a failed job stop its own run (the last step).
+    permissions:
+      contents: read
+      actions: write
     runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
     timeout-minutes: 30
     strategy:
-      fail-fast: ${{ github.event_name == 'pull_request' }}
+      fail-fast: ${{ github.event_name != 'push' }}
       matrix: ${{ fromJSON(needs.plan.outputs.portable) }}
     steps: *suite-steps
 
