@@ -31,6 +31,16 @@
             "cssVar": "--fab-icon-size"
           }
         }
+      },
+      "label-max": {
+        "$type": "dimension",
+        "$value": "{sizing.container-xs}",
+        "$description": "How wide an extended=\"auto\" FAB's label can open (320px); it folds to 0 while the page scrolls down.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--fab-label-max"
+          }
+        }
       }
     },
     "shadow": {
