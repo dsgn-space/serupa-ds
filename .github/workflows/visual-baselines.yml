@@ -27,7 +27,8 @@ name: Update baselines
 # anything else stops it, since only a person can resolve that. Heal runs none of the branch's code: a run by hand
 # belongs to the default branch, so the branch's code there could write to main's caches.
 # Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone, and the ones
-# whose pictures it made stale (tools/fresh.mjs), when their auto-merge is on and they aren't labelled "hold-visual".
+# whose pictures it made stale (tools/fresh.mjs), when their auto-merge is on (or the queue dropped them) and they
+# aren't labelled "hold-visual".
 # One with a conflict anywhere else is left for its author, with a notice in the run.
 # Every push to main also draws again the components it changed, on main as it now is, and opens a pull request
 # (branch baselines/after-main, queued to merge; one at a time, replaced while it is open) with any picture that
@@ -78,6 +79,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+      issues: read
       pull-requests: read
     outputs:
       prs: ${{ steps.find.outputs.prs }}
@@ -103,11 +105,12 @@ jobs:
               [ "$state" = unknown ] || break
               sleep 10
             done
-            # Only one whose author has it on its way to the queue: auto-merge off (dropped, held for a theme change)
-            # or "hold-visual" waits for a person. Healing one would redraw its pictures on runners nobody asked for,
-            # and the redraw's label made Queue enqueue put it back (#1948, 15 Nov). A queued one reads auto-merge
+            # Only one on its way to the queue: auto-merge on, or dropped by the queue with nothing since
+            # (.github/dropped.sh). "hold-visual", or auto-merge turned off by a person, waits for a person: healing
+            # one would redraw its pictures on runners nobody asked for (#1948, 15 Nov). A queued one reads auto-merge
             # off too: a push would take it out of the queue anyway.
-            jq -e '.auto_merge == null or ([.labels[].name] | index("hold-visual"))' <<< "$pull" > /dev/null && continue
+            jq -e '[.labels[].name] | index("hold-visual")' <<< "$pull" > /dev/null && continue
+            if jq -e '.auto_merge == null' <<< "$pull" > /dev/null; then [ "$(bash .github/dropped.sh "$n")" != - ] || continue; fi
             if [ "$state" = dirty ]; then prs+=("$n"); continue; fi
             jq -e '[.labels[].name] | index("update-visual-baselines")' <<< "$pull" > /dev/null && continue
             # 1 is stale; anything else (GitHub didn't answer) heals nothing.
@@ -542,7 +545,7 @@ jobs:
     needs: [render, render-cross, commit]
     if: always() && (github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines') && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 8
     permissions:
       pull-requests: write
       actions: write
@@ -574,6 +577,14 @@ jobs:
             GH_TOKEN=$BOT_TOKEN gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$LABEL"
             exit 0
           fi
+          # The held run may still be stopping (its plan job cancels it) when this starts: wait for it to finish, or
+          # the loop below finds no completed run and the pull request sits with a cancelled CI (#1928, 15 Nov: 50
+          # minutes armed and out of the queue).
+          for _ in $(seq 1 20); do
+            busy=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=pull_request&head_sha=$head" --jq '[.workflow_runs[] | select(.status != "completed")] | length')
+            [ "$busy" = 0 ] && break
+            sleep 10
+          done
           for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=pull_request&head_sha=$head&status=completed" --jq '.workflow_runs[].id'); do
             held=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs" --jq '[.jobs[] | select(.name == "build" and .conclusion == "skipped")] | length')
             [ "$held" = 0 ] && continue

@@ -207,6 +207,16 @@
             "cssVar": "--calendar-gap"
           }
         }
+      },
+      "row-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space between the weeks (4px), so the rows read apart and a range is a band per week; the month and year grids keep the same height.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-row-gap"
+          }
+        }
       }
     },
     "typography": {

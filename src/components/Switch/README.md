@@ -42,6 +42,7 @@ Drawn from the `LongLabel` story.
 - Label the setting, not the state: "Wi-Fi", not "Turn Wi-Fi on". The switch shows on or off.
 - Don't change the label with the state, and don't add "On" and "Off" text beside it.
 - In a settings list, put the label first and the switch at the end of the row.
+- Add `icon` where color alone may not tell on from off, such as a switch on a busy or tinted surface: a check appears on the thumb while it's on.
 - When a flip saves to a server, set `loading` while the request runs. Flip `checked` in `onChange` (optimistic) or once the save succeeds, and if it fails, put it back and say so in text nearby.
 
 ### Do and don't
@@ -94,6 +95,7 @@ The thumb slides in 100ms (`motion-press`, `ease-move`: feedback for a toggle ta
 | `labelPosition` | `'end'` \| `'start'` | `'end'` | The label after the track, or before it as in a settings list |
 | `invalid` | boolean | `false` | A 2px danger edge on the track (on or off), a danger focus ring, and `aria-invalid` |
 | `readOnly` | boolean | `false` | Focusable and read out (`aria-readonly`), but clicks and Space don't flip it; an on switch is still submitted |
+| `icon` | boolean | `false` | A check on the thumb while on, so on and off differ by shape as well as by color; decorative, the name stays the label |
 | `loading` | boolean | `false` | While a change is saved: a ring on the thumb, `aria-busy`, and clicks and Space don't flip it |
 
 `onCheckedChange(checked, event)` runs after `onChange` with the new state, the same shape as ToggleButton's `onPressedChange`, so you needn't read `event.target.checked`. Not while read-only or loading.
@@ -115,6 +117,7 @@ Each is an optional override: set it on the page, a container or one switch. The
 | `--switch-track-checked-hover` | `primary-hover` | The track while on, on hover |
 | `--switch-thumb` | `field` | The thumb while off |
 | `--switch-thumb-checked` | `on-primary` | The thumb while on |
+| `--switch-icon` | `primary` | The check on the thumb while on, with icon (3:1 on the thumb) |
 | `--switch-label-color` | `text` | The label |
 | `--switch-description-color` | `text-muted` | The description |
 | `--switch-focus-ring` | `focus-ring` | The focus ring |

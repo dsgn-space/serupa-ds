@@ -11,4 +11,11 @@
 .dk-grid--auto { grid-template-columns: repeat(var(--dk-grid-fit), minmax(min(var(--dk-grid-min, var(--grid-min-column, var(--container-3xs))), var(--sizing-full)), 1fr)); }
 .dk-grid--upto { grid-template-columns: repeat(var(--dk-grid-fit), minmax(min(max(var(--dk-grid-min), (var(--sizing-full) + var(--dk-grid-g)) / var(--dk-grid-cols) - var(--dk-grid-g)), var(--sizing-full)), 1fr)); }
 .dk-grid--fill { --dk-grid-fit: auto-fit; }
+/* Per screen width (columns and gap as { base, sm, md, lg }): the value at each width is in --dk-grid-cols-<width>
+   and --dk-grid-gap-<width>; these come after .dk-grid, so they win over its reset. */
+.dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-base); }
+.dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-base); }
+@media (min-width: 640px) { .dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-sm); } .dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-sm); } }
+@media (min-width: 768px) { .dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-md); } .dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-md); } }
+@media (min-width: 1024px) { .dk-grid--cols { --dk-grid-cols: var(--dk-grid-cols-lg); } .dk-grid--gaps { --dk-grid-gap: var(--dk-grid-gap-lg); } }
 }

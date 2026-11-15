@@ -1,4 +1,4 @@
-// exports: Chat, ChatApproval, type ChatApprovalProps, type ChatApprovalStatus, ChatCitation, type ChatCitationProps, ChatComposer, type ChatComposerProps, ChatDivider, type ChatDividerProps, ChatMessage, type ChatMessageProps, type ChatProps, type ChatStep, ChatSteps, type ChatStepsProps, type ChatStepStatus
+// exports: Chat, ChatApproval, type ChatApprovalProps, type ChatApprovalStatus, ChatCitation, type ChatCitationProps, ChatComposer, type ChatComposerProps, ChatDivider, type ChatDividerProps, type ChatFeedback, ChatMessage, type ChatMessageProps, type ChatProps, ChatReplyActions, type ChatReplyActionsProps, type ChatStep, ChatSteps, type ChatStepsProps, type ChatStepStatus
 interface ChatLabels {
     chatNewMessages: (count: number, formatted: string) => string;
     chatLoadOlder: string;
@@ -23,6 +23,12 @@ interface ChatLabels {
     chatResponseOf: (index: number, count: number) => string;
     chatPreviousResponse: string;
     chatNextResponse: string;
+    chatReplyActions: string;
+    chatRegenerate: string;
+    chatHelpful: string;
+    chatNotHelpful: string;
+    chatFeedbackNoted: string;
+    chatFeedbackRemoved: string;
 }
 interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
     children?: React.ReactNode;
@@ -71,6 +77,14 @@ interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> {
     onDeny?: (() => void) | undefined;
 }
 declare const ChatApproval: React.ForwardRefExoticComponent<ChatApprovalProps & React.RefAttributes<HTMLDivElement>>;
+type ChatFeedback = "bad" | "good";
+interface ChatReplyActionsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+    copyText?: (() => Promise<string> | string) | string | undefined;
+    onRegenerate?: (() => void) | undefined;
+    feedback?: ChatFeedback | null | undefined;
+    onFeedback?: ((feedback: ChatFeedback | null) => void) | undefined;
+}
+declare const ChatReplyActions: React.ForwardRefExoticComponent<ChatReplyActionsProps & React.RefAttributes<HTMLDivElement>>;
 interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     href: string;
     index: number;

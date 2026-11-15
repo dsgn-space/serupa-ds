@@ -15,6 +15,9 @@ name: CI
 #   screenshot or a timing budget take SERUPA_X86_RUNNER: the baselines are drawn with Chrome for Testing on x64. A pull
 #   request from a fork always runs on GitHub's runners, so code nobody has merged never runs on the project's machines.
 #   The x86 jobs take SERUPA_X86_RUNNER for the merge queue, main and same-repository pull requests (up to eight at once).
+#   In the merge queue every other job takes the x86 runners too (the plan job's x86runner, which falls back to
+#   GitHub's runners when ours look gone): on 15 Nov GitHub's runners started the queue's build 13 minutes late and
+#   then not at all, while the 28 burst slots sat idle and nothing merged. Pull requests keep SERUPA_RUNNER.
 # - Results are kept: a job that passed on the same tree, against the same base, passes again at once without running.
 # - The nightly jobs are in nightly.yml. No workflow_dispatch: a run started by hand runs in the default branch's
 #   cache scope on any ref, which CodeQL rightly counts as cache poisoning; the nightly runs main whole instead.
@@ -220,25 +223,18 @@ jobs:
           else
             # The main this run tests against: the first parent of the merge commit GitHub made for it.
             node tools/fresh.mjs --base "$(gh api "repos/$GH_REPO/commits/$GITHUB_SHA" --jq '.parents[0].sha')" --head "$PR_HEAD" || exit 1
-            # A baseline this pull request changes that one in the merge queue changes too (a picture, a size or API
-            # baseline) can't merge behind it: the queue would drop this one, and its branch can't take the fix while
-            # it is queued. Fail now, with what to do, instead (#1691 behind #1690 on Kanban's size, 12 Nov).
-            mine=$(gh api --paginate "repos/$GH_REPO/pulls/$PR/files?per_page=100" --jq '.[].filename' | grep '^tools/test/baseline-' || true)
-            [ -n "$mine" ] || exit 0
-            for n in $(gh api "repos/$GH_REPO/git/matching-refs/heads/gh-readonly-queue/main" --jq '.[].ref' | sed -E 's|.*/pr-([0-9]+)-.*|\1|' | sort -u); do
-              [ "$n" = "$PR" ] && continue
-              both=$(gh api --paginate "repos/$GH_REPO/pulls/$n/files?per_page=100" --jq '.[].filename' | grep -Fx -f <(echo "$mine") || true)
-              if [ -n "$both" ]; then
-                echo "::error::#$n, in the merge queue, changes these baselines too: $(echo $both). Wait for it to merge, merge main, draw or update them again, then push."
-                exit 1
-              fi
-            done
+            # A pull request in the merge queue this one can't merge behind: it changes a baseline this one changes too
+            # (a picture, a size or API baseline), or it makes this one's pictures stale (tools/fresh.mjs --queue).
+            # Queued behind it, this one would be dropped as its group built, its auto-merge turned off, and its branch
+            # can't take the fix while it is queued. Failing keeps auto-merge from queueing it: when that one merges,
+            # Update baselines heals this one, or Queue enqueue runs this job again once nothing clashes.
+            node tools/fresh.mjs --queue "$PR"
           fi
 
   build:
     needs: plan
     if: needs.plan.outputs.hold != '1'
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -276,7 +272,7 @@ jobs:
     name: types and lint
     needs: plan
     if: needs.plan.outputs.hold != '1' && (needs.plan.outputs.full == '1' || github.event_name == 'pull_request')
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -310,7 +306,7 @@ jobs:
     name: fix proof
     needs: plan
     if: needs.plan.outputs.hold != '1' && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-repro-test')
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -471,7 +467,7 @@ jobs:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
     needs: [plan]
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -488,7 +484,7 @@ jobs:
   coverage:
     needs: [plan, build, suite-x86]
     if: needs.plan.outputs.tests == '1' && github.event_name != 'merge_group'
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -533,7 +529,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [22, 24]
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: node:${{ matrix.node }}
       options: --cpus 4
@@ -557,7 +553,7 @@ jobs:
   frameworks:
     needs: [plan, build]
     if: needs.plan.outputs.full == '1'
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
