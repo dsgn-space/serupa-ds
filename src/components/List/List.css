@@ -25,8 +25,8 @@
    meta included. A trailing control is positioned, so it paints, and takes the press, above that area. */
 .dk-list__item--interactive .dk-list__main::after { content: ""; position: absolute; inset: var(--spacing-0); }
 .dk-list__item--interactive .dk-list__trailing :is(a, button, input, select, textarea, label, [tabindex]) { position: relative; }
-.dk-list__item--selected { background: var(--list-bg-hover, var(--dk-row-hover, var(--surface-hover))); }
-@media (hover: hover) { .dk-list__item--interactive:hover:not(.dk-list__item--disabled) { background: var(--list-bg-hover, var(--dk-row-hover, var(--surface-hover))); } }
+.dk-list__item--selected { background: var(--list-bg-hover, var(--dk-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); }
+@media (hover: hover) { .dk-list__item--interactive:hover:not(.dk-list__item--disabled) { background: var(--list-bg-hover, var(--dk-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); } }
 .dk-list__item--interactive:not(.dk-list__item--disabled):has(.dk-list__main:active) { background: var(--list-bg-pressed, var(--pressed)); }   /* the row, not its trailing action */
 .dk-list__item--selected { box-shadow: inset var(--list-indicator-width, var(--highlight-indicator-width)) 0 0 var(--list-indicator-selected, var(--highlight-indicator)); }
 .dk-list__item--selected:dir(rtl) { box-shadow: inset calc(var(--spacing-0) - var(--list-indicator-width, var(--highlight-indicator-width))) 0 0 var(--list-indicator-selected, var(--highlight-indicator)); }
@@ -46,7 +46,7 @@
 .dk-list__cell { display: contents; }
 .dk-list--selectable > .dk-list__item:focus-visible { outline: var(--focus-ring-width) solid var(--list-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-list__item--pickable { cursor: var(--cursor-interactive); touch-action: manipulation; }
-@media (hover: hover) { .dk-list__item--pickable:hover:not(.dk-list__item--disabled) { background: var(--list-bg-hover, var(--dk-row-hover, var(--surface-hover))); } }
+@media (hover: hover) { .dk-list__item--pickable:hover:not(.dk-list__item--disabled) { background: var(--list-bg-hover, var(--dk-row-hover, var(--surface-hover))); --text-muted: var(--list-text-muted-shaded, var(--text-muted-shaded)); } }
 .dk-list__item--pickable:not(.dk-list__item--disabled):active { background: var(--list-bg-pressed, var(--pressed)); }
 .dk-list__item--pickable.dk-list__item--disabled { cursor: var(--cursor-disabled); }
 /* Placeholder rows: the text lines fill the row, and the circle is the size of what will lead it. */

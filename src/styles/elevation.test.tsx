@@ -22,13 +22,14 @@ describe('Elevation', () => {
     expect(wrong).toEqual([]);
   });
 
-  test('a row under the pointer shows on the page (surface-hover) and on raised and floating surfaces (surface-hover-raised), with text at 4.5:1, in every theme', () => {
+  test('a row under the pointer shows on the page (surface-hover) and on raised and floating surfaces (surface-hover-raised), with text and the grey text of a shaded row (text-muted-shaded) at 4.5:1, in every theme', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       root.setAttribute('data-theme', th);
       for (const [fill, under] of [['surface-hover', 'surface'], ['surface-hover-raised', 'surface-raised'], ['surface-hover-raised', 'surface-overlay']]) {
         if (contrast(`var(--${fill})`, `var(--${under})`) < 1.04) low.push(`${th} ${fill} on ${under}`);
-        for (const t of ['text', 'text-muted']) {
+        // Grey text in a shaded row reads text-muted-shaded: text-muted on zinc-100 is 4.4:1 in light.
+        for (const t of ['text', 'text-muted-shaded']) {
           const r = contrast(`var(--${t})`, `var(--${fill})`);
           if (r < 4.5) low.push(`${th} ${t} on ${fill} ${r.toFixed(2)}`);
         }
