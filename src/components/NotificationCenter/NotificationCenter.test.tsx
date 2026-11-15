@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, ringCut } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
 import { toast } from '../Toast/Toast';
@@ -29,6 +29,16 @@ function Controlled(props: { log: string[] }) {
 }
 
 describe('NotificationCenter', () => {
+  test('a row\'s focus ring and its Mark as read button\'s show whole: the drawer\'s body scrolls, so it clips', async () => {
+    await render(<NotificationCenter defaultOpen items={list} onMarkRead={() => {}} />);
+    await expect.poll(() => drawer() !== null).toBe(true);
+    for (const el of [button('Mark as read'), rows()[0]!, rows()[1]!]) {
+      el.focus({ focusVisible: true });
+      expect(document.activeElement).toBe(el);
+      expect(ringCut(el)).toBe(0);
+    }
+  });
+
   test('a drawer titled "Notifications" listing each one: unread ones say so and have "Mark as read", read ones neither; the time is relative', async () => {
     // en-US: the relative time below is in the provider's language, not the browser's (which CI also runs in ar, id, th, ja).
     await render(<SerupaProvider locale="en-US"><NotificationCenter defaultOpen items={list} onMarkRead={() => {}} /></SerupaProvider>);

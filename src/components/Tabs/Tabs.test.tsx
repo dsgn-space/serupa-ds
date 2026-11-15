@@ -62,7 +62,7 @@ describe('Tabs', () => {
     const ref = React.createRef<HTMLDivElement>();
     await setup(ref);
     const r = el('un'), l = r.querySelector('[role="tablist"]')!, tab = r.querySelector<HTMLButtonElement>('[role="tab"]')!, pn = document.getElementById(tab.getAttribute('aria-controls')!)!;
-    expect([l.getAttribute('aria-label'), tab.type, pn.getAttribute('role'), pn.getAttribute('aria-labelledby') === tab.id, pn.tabIndex]).toEqual(['Sections', 'button', 'tabpanel', true, 0]);
+    expect([l.getAttribute('aria-label'), tab.type, pn.getAttribute('role'), pn.getAttribute('aria-labelledby') === tab.id, pn.tabIndex]).toEqual(['Sections', 'button', 'tabpanel', true, -1]);   // it starts with a field, which takes the stop
     expect([ref.current === r, r.dataset.component, tab.querySelector(':scope > [aria-hidden]')!.getAttribute('aria-hidden')]).toEqual([true, 'tabs', 'true']);
     expect(r.className).toMatch(/extra/);
     expect(new Set([...document.querySelectorAll('[role="tab"]')].map((x) => x.id)).size).toBe(18);
@@ -337,14 +337,41 @@ describe('Tabs on the server', () => {
   test('only the shown panel is in the Tab order: a kept panel of another tab has no size to land on (CO1)', async () => {
     await setup();
     const panels = [...el('un').querySelectorAll<HTMLElement>('[role="tabpanel"]')];
-    expect(panels.map((p) => p.tabIndex)).toEqual([0, -1, -1]);
+    expect(panels.map((p) => p.tabIndex)).toEqual([-1, -1, -1]);   // the shown one starts with a field, the stop
     (el('un').querySelector('[role="tab"][aria-selected="true"]') as HTMLElement).focus();
     await userEvent.tab();
-    expect(document.activeElement).toBe(panels[0]);
+    expect(document.activeElement!.getAttribute('aria-label')).toBe('kept');
     await userEvent.tab();
-    expect(panels).not.toContain(document.activeElement);
+    expect(panels.some((p) => p.contains(document.activeElement))).toBe(false);
     panels[1]!.dispatchEvent(new Event('beforematch'));
     await expect.poll(() => panels.map((p) => p.tabIndex)).toEqual([-1, 0, -1]);
+  });
+
+  test('a panel is a Tab stop of its own only while its content starts with text: one that starts with a link or a field leaves the stop to that (APG)', async () => {
+    let swap: (on: boolean) => void = () => {};
+    function Late() { const [on, set] = React.useState(false); swap = set; return on ? <button type="button">Retry</button> : <>Loading</>; }
+    await render(<Tabs id="ps">
+      <TabList aria-label="Places"><Tab value="a">Links</Tab><Tab value="b">Words</Tab><Tab value="c">Late</Tab></TabList>
+      <TabPanel value="a"><a href="#first">First link</a> and some words</TabPanel>
+      <TabPanel value="b"><p>Some words first</p><button type="button">Then a button</button></TabPanel>
+      <TabPanel value="c"><Late /></TabPanel>
+    </Tabs>);
+    const panels = [...el('ps').querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    expect(panels.map((p) => p.tabIndex)).toEqual([-1, -1, -1]);
+    selected('ps').focus();
+    await userEvent.tab();
+    expect(document.activeElement!.textContent).toBe('First link');
+    await userEvent.click(el('ps').querySelectorAll<HTMLElement>('[role="tab"]')[1]!);
+    expect(panels.map((p) => p.tabIndex)).toEqual([-1, 0, -1]);
+    await userEvent.tab();
+    expect(document.activeElement).toBe(panels[1]);
+    // What a panel starts with can change after it's shown: the stop follows.
+    await userEvent.click(el('ps').querySelectorAll<HTMLElement>('[role="tab"]')[2]!);
+    expect(panels[2]!.tabIndex).toBe(0);
+    swap(true);
+    await expect.poll(() => panels[2]!.tabIndex).toBe(-1);
+    swap(false);
+    await expect.poll(() => panels[2]!.tabIndex).toBe(0);
   });
 
   test('a tab picked near the edge of a scrolling list stops clear of the fade (32px), not under it', async () => {

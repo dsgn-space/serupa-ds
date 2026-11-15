@@ -75,9 +75,15 @@ export function countdownClock(seconds: number, locale?: string): string {
 
 /** The time left in words, in the locale's language: "4 minutes, 59 seconds", "2 days, 3 hours", "0 seconds". */
 export function countdownWords(seconds: number, locale?: string): string {
+  return wordsOf(seconds, locale, false);
+}
+
+// The words as shown: each unit's number and word held together ("2 days" with a no-break space), so a long one wraps only between units.
+function wordsOf(seconds: number, locale: string | undefined, together: boolean): string {
   const l = loc(locale);
-  const said = parts(seconds).filter(([n]) => n > 0).map(([n, unit]) => new Intl.NumberFormat(l, { style: 'unit', unit, unitDisplay: 'long' }).format(n));
-  return said.length ? new Intl.ListFormat(l, { type: 'unit', style: 'long' }).format(said) : new Intl.NumberFormat(l, { style: 'unit', unit: 'second', unitDisplay: 'long' }).format(0);
+  const unitOf = (n: number, unit: string) => { const s = new Intl.NumberFormat(l, { style: 'unit', unit, unitDisplay: 'long' }).format(n); return together ? s.replace(/ /g, '\u00a0') : s; };
+  const said = parts(seconds).filter(([n]) => n > 0).map(([n, unit]) => unitOf(n, unit));
+  return said.length ? new Intl.ListFormat(l, { type: 'unit', style: 'long' }).format(said) : unitOf(0, 'second');
 }
 
 /* Countdown: a <time role="timer"> that shows the time left until `to`, as a clock or in words, named by its label.
@@ -125,8 +131,10 @@ export const Countdown = /* @__PURE__ */ component<HTMLTimeElement, CountdownPro
     if (crossed.length) announce(`${label}: ${countdownWords(Math.min(...crossed), locale)}`);
   }, [left, valid, label, endText, locale, steps]);
 
-  const text = !valid ? '' : ended && endText ? endText : props.format === 'words' ? words : countdownClock(left, locale);
+  const text = !valid ? '' : ended && endText ? endText : props.format === 'words' ? wordsOf(left, locale, true) : countdownClock(left, locale);
+  // A clock stays on one line; words and an end text wrap like the sentence around them, so a narrow column keeps them.
+  const wraps = valid && ((ended && !!endText) || props.format === 'words');
   return <time lang={lang} {...rest} ref={ref} role="timer" aria-label={valid ? `${label}: ${ended && endText ? endText : words}` : label}
-    dateTime={valid ? `PT${left}S` : undefined} className={cn('dk-countdown', ended && 'dk-countdown--ended', props.className)}
+    dateTime={valid ? `PT${left}S` : undefined} className={cn('dk-countdown', wraps && 'dk-countdown--wraps', ended && 'dk-countdown--ended', props.className)}
     data-component="countdown" suppressHydrationWarning>{text}</time>;
 });

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, safeArea } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, safeArea, ringCut } from '../../../tools/test/vitest/helpers';
 import { Lightbox, type LightboxItem } from './Lightbox';
 
 const pic = (color: string, w = 80, h = 50) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="${color}"/></svg>`);
@@ -169,5 +169,15 @@ describe('Lightbox', () => {
     });
     await page.viewport(1000, 700);
     await screen.unmount();
+  });
+
+  test('the arrows\' focus rings show whole at the bottom of the dialog, whose body scrolls and clips', async () => {
+    await render(<Lightbox items={PHOTOS} defaultOpen defaultIndex={1} />);
+    await expect.element(next()).toBeEnabled();
+    for (const arrow of [next(), prev()]) {
+      const el = arrow.element() as HTMLElement;
+      el.focus({ focusVisible: true });
+      expect(ringCut(el)).toBe(0);
+    }
   });
 });

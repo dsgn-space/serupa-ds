@@ -14,8 +14,8 @@
   --surface-page: var(--white);
   --surface-muted: var(--zinc-50);
   --surface-control: var(--zinc-50);
-  --surface-hover: var(--zinc-50);
-  --surface-hover-raised: var(--zinc-50);
+  --surface-hover: var(--zinc-100);
+  --surface-hover-raised: var(--zinc-100);
   --surface-raised: var(--white);
   --surface-overlay: var(--white);
   --field: var(--white);
@@ -39,6 +39,7 @@
   --surface-inverse: var(--zinc-900);
   --text: var(--zinc-900);
   --text-muted: var(--zinc-500);
+  --text-muted-shaded: var(--zinc-600);
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
@@ -359,6 +360,9 @@
   --text-shadow-md: 0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1), 0px 2px 4px rgb(0 0 0 / 0.1);
   --text-shadow-lg: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1), 0px 4px 8px rgb(0 0 0 / 0.1);
   --text-shadow-none: none;
+  --elevation-modal-up: 0 -20px 25px -5px rgb(0 0 0 / 0.1), 0 -8px 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-left: -20px 0 25px -5px rgb(0 0 0 / 0.1), -8px 0 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-right: 20px 0 25px -5px rgb(0 0 0 / 0.1), 8px 0 10px -6px rgb(0 0 0 / 0.1);
   --dk-more-primary: var(--blue-800);
   --dk-more-primary-hover: var(--blue-900);
   --dk-more-field-action: var(--blue-800);
@@ -373,8 +377,8 @@
   --surface-page: var(--white);
   --surface-muted: var(--zinc-50);
   --surface-control: var(--zinc-50);
-  --surface-hover: var(--zinc-50);
-  --surface-hover-raised: var(--zinc-50);
+  --surface-hover: var(--zinc-100);
+  --surface-hover-raised: var(--zinc-100);
   --surface-raised: var(--white);
   --surface-overlay: var(--white);
   --field: var(--white);
@@ -397,6 +401,7 @@
   --surface-inverse: var(--zinc-900);
   --text: var(--zinc-900);
   --text-muted: var(--zinc-500);
+  --text-muted-shaded: var(--zinc-600);
   --text-inverse: var(--white);
   --border: var(--zinc-200);
   --border-strong: var(--zinc-300);
@@ -487,6 +492,7 @@
   --surface-inverse: var(--zinc-50);
   --text: var(--zinc-50);
   --text-muted: var(--zinc-400);
+  --text-muted-shaded: var(--zinc-400);
   --text-inverse: var(--zinc-900);
   --border: var(--zinc-800);
   --border-strong: var(--zinc-600);
@@ -987,8 +993,8 @@
   --surface-page: light-dark(var(--white), var(--zinc-950));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
   --surface-control: light-dark(var(--zinc-50), var(--zinc-900));
-  --surface-hover: light-dark(var(--zinc-50), var(--zinc-800));
-  --surface-hover-raised: light-dark(var(--zinc-50), #333338);
+  --surface-hover: light-dark(var(--zinc-100), var(--zinc-800));
+  --surface-hover-raised: light-dark(var(--zinc-100), #333338);
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --field: light-dark(var(--white), var(--zinc-800));
@@ -1011,6 +1017,7 @@
   --surface-inverse: light-dark(var(--zinc-900), var(--zinc-50));
   --text: light-dark(var(--zinc-900), var(--zinc-50));
   --text-muted: light-dark(var(--zinc-500), var(--zinc-400));
+  --text-muted-shaded: light-dark(var(--zinc-600), var(--zinc-400));
   --text-inverse: light-dark(var(--white), var(--zinc-900));
   --border: light-dark(var(--zinc-200), var(--zinc-800));
   --border-strong: light-dark(var(--zinc-300), var(--zinc-600));
@@ -2013,6 +2020,7 @@
   --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
   --text: light-dark(var(--zinc-950), var(--white));
   --text-muted: light-dark(var(--zinc-700), var(--zinc-300));
+  --text-muted-shaded: light-dark(var(--zinc-700), var(--zinc-300));
   --border: light-dark(var(--zinc-500), var(--zinc-400));
   --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
   --success: light-dark(var(--green-700), var(--green-300));
@@ -2044,6 +2052,7 @@
   --placeholder: light-dark(var(--zinc-600), var(--zinc-300));
   --text: light-dark(var(--zinc-950), var(--white));
   --text-muted: light-dark(var(--zinc-700), var(--zinc-300));
+  --text-muted-shaded: light-dark(var(--zinc-700), var(--zinc-300));
   --border: light-dark(var(--zinc-500), var(--zinc-400));
   --border-strong: light-dark(var(--zinc-600), var(--zinc-300));
   --success: light-dark(var(--green-700), var(--green-300));
@@ -2083,6 +2092,9 @@
   --shadow-lg: 0 10px 15px -3px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 4px 6px -4px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
   --shadow-xl: 0 20px 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 8px 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
   --shadow-2xl: 0 25px 50px -12px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 25%, transparent);
+  --elevation-modal-up: 0 -20px 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 -8px 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --elevation-modal-left: -20px 0 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), -8px 0 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --elevation-modal-right: 20px 0 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 8px 0 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
   --elevation-rest: var(--shadow-xs);
   --elevation-part: var(--shadow-sm);
   --elevation-raised: var(--shadow-md);
@@ -2097,6 +2109,9 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --elevation-modal-up: 0 -20px 25px -5px rgb(0 0 0 / 0.1), 0 -8px 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-left: -20px 0 25px -5px rgb(0 0 0 / 0.1), -8px 0 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-right: 20px 0 25px -5px rgb(0 0 0 / 0.1), 8px 0 10px -6px rgb(0 0 0 / 0.1);
   --elevation-rest: var(--shadow-xs);
   --elevation-part: var(--shadow-sm);
   --elevation-raised: var(--shadow-md);

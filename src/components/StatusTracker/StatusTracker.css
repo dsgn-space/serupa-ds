@@ -6,7 +6,8 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-status-tracker { --dk-st-h: var(--status-tracker-height, var(--spacing-8)); display: flex; flex-direction: column; gap: var(--spacing-1); min-inline-size: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--status-tracker-text, var(--text)); }
-.dk-status-tracker__days { display: flex; align-items: flex-end; gap: var(--status-tracker-gap, var(--spacing-0\.5)); block-size: var(--dk-st-h); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scrollbar-width: thin; }
+/* The strip scrolls sideways, so it clips: it keeps room for the focused bar's ring (its width and offset) on every side. */
+.dk-status-tracker__days { --dk-st-ring: calc(var(--focus-ring-width) + var(--focus-ring-offset)); display: flex; align-items: flex-end; gap: var(--status-tracker-gap, var(--spacing-0\.5)); block-size: calc(var(--dk-st-h) + var(--dk-st-ring) + var(--dk-st-ring)); margin: var(--spacing-0); padding: var(--dk-st-ring); list-style: none; overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scrollbar-width: thin; }
 .dk-status-tracker__day, .dk-status-tracker__swatch { box-sizing: border-box; border-radius: var(--status-tracker-radius, var(--rounded-xs)); background: var(--dk-st-fill); }
 .dk-status-tracker__day { flex: auto; min-inline-size: var(--spacing-0\.5); block-size: var(--sizing-full); cursor: default; outline: none; }
 .dk-status-tracker__day:focus-visible { outline: var(--focus-ring-width) solid var(--status-tracker-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
