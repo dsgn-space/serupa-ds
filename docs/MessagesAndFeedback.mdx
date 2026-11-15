@@ -37,6 +37,17 @@ Use the tone that matches what happened, and no louder: `success` for something 
 - An Alert stays until what it says is no longer true, or until people dismiss it, if it's dismissible.
 - An error on a field stays until the answer is right.
 
+## Asking for feedback or a rating
+
+Asking "How are we doing?" is a message too, and the one people need least. Ask rarely, at a moment that costs them nothing.
+
+- **Ask after people have got something done**, never on the first visit or during onboarding: a report exported, an order placed, a ticket closed. Before that they have nothing to judge.
+- **Never in the middle of a task.** Wait for a natural stop. Use an [Alert](?path=/docs/components-feedback-alert--docs) or a card on the page that people can pass by, not a [Dialog](?path=/docs/components-overlays-dialog--docs) they must answer before they can go on.
+- **One press answers it, and one press closes it.** A [Rating](?path=/docs/components-forms-rating--docs), or Helpful and Not helpful, with a comment field offered only after the press. Closing it counts as an answer: don't ask again on the next page.
+- **Don't pester.** Leave weeks between requests, ask again only after people have done more, and stop for good once they've answered. Keep the answer with the account, not only in the browser, so a second device doesn't ask again.
+- **Say thanks, and act on a bad rating at once** where you can: offer help or a way to report the problem. Never send only the happy answers on to a public review page.
+- A rating of one reply, article or result (Helpful and Not helpful under an assistant's reply, or "Was this article helpful?") is always there and never asked for, so none of this limits it.
+
 ## Do and don't
 
 | Do | Don't |
@@ -44,4 +55,5 @@ Use the tone that matches what happened, and no louder: `success` for something 
 | A Toast for "Link copied" | An Alert that stays on the page for a confirmation |
 | An Alert by the billing section for a failed payment | A Toast that's gone before people read it |
 | "Couldn't send. Check your connection and try again." | "Error 500" |
+| "How was the export?" on the page, after the export | A rating dialog on the first visit |
 | `danger` for something that failed | `danger` for anything you want people to notice |
