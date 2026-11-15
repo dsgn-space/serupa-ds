@@ -71,6 +71,9 @@
   border: var(--border-width-2) solid color-mix(in srgb, currentColor var(--opacity-20), transparent); border-block-start-color: currentColor; border-radius: var(--rounded-full);
   animation: spin var(--motion-loop-spinner) var(--ease-linear) infinite;
 }
+/* icon: a check on the thumb while on (primary on the on-primary thumb, 3:1 or more), so on differs by shape too. */
+.dk-switch__check { --dk-switch-glyph: calc(var(--dk-switch-thumb) - var(--dk-switch-pad) * 2); display: none; inline-size: var(--dk-switch-glyph); block-size: var(--dk-switch-glyph); color: var(--switch-icon, var(--primary)); }
+.dk-switch__input:checked + .dk-switch__thumb > .dk-switch__check { display: block; }
 @keyframes dk-switch-breathe { 50% { opacity: var(--opacity-50); } }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
 .dk-switch:has(.dk-switch__input:disabled) { opacity: var(--opacity-disabled); cursor: not-allowed; }
@@ -81,6 +84,7 @@
   .dk-switch__input:checked { forced-color-adjust: none; background: Highlight; }
   .dk-switch__input:checked + .dk-switch__thumb { background: HighlightText; }
   .dk-switch__spinner { border-color: Canvas; border-block-start-color: transparent; }
+  .dk-switch__check { color: Highlight; }
   .dk-switch__input:checked + .dk-switch__thumb > .dk-switch__spinner { border-color: Highlight; border-block-start-color: transparent; }
 }
 /* At least 24px to press (WCAG 2.5.8) without moving anything: when the row is shorter or narrower, a box behind

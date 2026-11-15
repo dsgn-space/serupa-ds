@@ -5,6 +5,7 @@ import { component } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { warnOnce } from '../../internal/warn';
+import { Check } from '../../material/builtin';
 
 export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'type' | 'role'> {
   /** 'sm' (28 by 16px track, text-xs), 'md' (36 by 20px, text-sm, default) or 'lg' (44 by 24px, text-base). */
@@ -21,6 +22,8 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
   readOnly?: boolean | undefined;
   /** While a change is being saved: a small Loader turns on the thumb, aria-busy is set, and clicks and Space don't flip it, so it can't be sent twice. It stays focusable. Set checked when the save succeeds. */
   loading?: boolean | undefined;
+  /** A check mark on the thumb while the switch is on, so on and off differ by shape as well as by color. Decorative: the switch still says on or off. */
+  icon?: boolean | undefined;
   /** Called with the new state and the change event, after onChange: the same shape as ToggleButton's onPressedChange. */
   onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }
@@ -30,7 +33,7 @@ export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputEle
    labelPosition "end" (default) or "start"; invalid. Renders <label class="dk-switch">: className and style go
    to the label, every other prop (checked, defaultChecked, onChange, name, disabled, aria-*…) and ref to the
    <input>. */
-const OWN = { size: 1, invalid: 1, loading: 1, onCheckedChange: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
+const OWN = { size: 1, icon: 1, invalid: 1, loading: 1, onCheckedChange: 1, description: 1, labelPosition: 1, children: 1, className: 1, style: 1, type: 1, role: 1 } as const;
 
 // Safari 18 draws <input type="checkbox" switch> as a native switch and, on iOS, gives a haptic tick when it flips.
 // appearance: none keeps our drawn track; the attribute is spelled out as switch="" so React writes it.
@@ -72,7 +75,7 @@ export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>('
     <label className={cn('dk-switch', 'dk-switch--size-' + size, props.labelPosition === 'start' && 'dk-switch--label-start', invalid && 'dk-switch--invalid', rest.disabled && 'dk-switch--disabled', readOnly && 'dk-switch--readonly', pending && 'dk-switch--pending', !hasLabel && !hasDesc && 'dk-switch--bare', props.className)} style={props.style} data-component="switch" data-size={size} data-pending={pending ? '' : undefined}>
       <span className="dk-switch__control" key="control">
         <input {...rest} {...NATIVE_SWITCH} ref={nameRef} type="checkbox" role="switch" className="dk-switch__input" key="input" />
-        <span className="dk-switch__thumb" aria-hidden key="thumb">{pending ? <span className="dk-switch__spinner" key="spin" /> : null}</span>
+        <span className="dk-switch__thumb" aria-hidden key="thumb">{pending ? <span className="dk-switch__spinner" key="spin" /> : props.icon ? <svg className="dk-switch__check" key="check" width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" focusable="false"><path d={Check.d} /></svg> : null}</span>
       </span>
       {hasLabel || hasDesc ? <span className="dk-switch__text" key="text">
         {hasLabel ? <span className="dk-switch__label" id={labelId} key="label">{props.children}</span> : null}
