@@ -124,6 +124,14 @@ const STOP = '(?:from|via|to)-(?:(?:slate|gray|zinc|neutral|stone|red|orange|amb
 const MOVED = new RegExp(`(?<![\\w$./-])(?:[a-z0-9@[\\]-]+:)*-?(?:mask-[a-z0-9]|bg-(?:linear|radial|conic)(?![a-z])|${STOP})[^\\s"'\`{}<>]*(?<!:)(?![\\w-]*\\s*:)`, 'g');
 
 const lineOf = (src, index) => src.slice(0, index).split('\n').length;
+
+/** Whether the word at `at` is inside a class list on its line: class="…", className="…", className={`…`} or
+ * class: '…'. Only there is a bare ease-in-out the utility class rather than the CSS keyword or a word of prose. */
+function inClassList(src, at) {
+  const line = src.slice(src.lastIndexOf('\n', at - 1) + 1, at);
+  const open = /(["'`])[^"'`]*$/.exec(line);
+  return !!open && /\bclass(?:Name)?\s*[=:]\s*\{?\s*$/.test(line.slice(0, open.index));
+}
 const notesFor = (src, re, message) => [...src.matchAll(re)].map((m) => ({ line: lineOf(src, m.index), message }));
 
 // A prop renamed on one component. What's left of the old name in a file that names the component (a props
@@ -172,6 +180,19 @@ export const COMPONENT_TOKENS_REMOVED_16 = [
 ];
 // The three motion roles that only differed in the tactile look, and what each was everywhere else.
 export const MOTION_TOKENS_16 = { '--motion-toggle': '--motion-press', '--ease-toggle': '--ease-move', '--motion-draw': '--duration-0' };
+
+// The raw easing curves 16.0.0 removes, each with the role that has the same curve.
+export const EASINGS_16 = {
+  'ease-out': 'ease-enter', 'ease-out-quart': 'ease-enter', 'ease-in-out': 'ease-move', 'ease-in-out-cubic': 'ease-move',
+  'ease-out-expo': 'ease-settle', 'ease-out-cubic': 'ease-fling', 'ease-out-back': 'ease-pop', 'ease-spring-snappy': 'ease-spring', 'ease-elastic': 'ease-celebrate',
+};
+// …and those no role has the curve of, with the role that does their job (so the curve changes a little).
+export const EASINGS_NEAREST_16 = {
+  'ease-in': 'ease-exit', 'ease-in-cubic': 'ease-exit', 'ease-in-quart': 'ease-exit', 'ease-in-expo': 'ease-exit',
+  'ease-in-out-quart': 'ease-move', 'ease-in-out-expo': 'ease-move', 'ease-spring-soft': 'ease-spring',
+};
+// ease-in, ease-out and ease-in-out are CSS keywords too: written bare in a style file they are the browser's own curve.
+const CSS_KEYWORDS = new Set(['ease-in', 'ease-out', 'ease-in-out']);
 
 /** The package name as written in an import or a path (`serupa-ds`, `serupa-ds/tokens.css`), renamed to `to`. A word
  * that only starts the same (`serupa-ds-extra`) or ends a longer name (`@x/serupa-ds`) is left. */
@@ -336,6 +357,29 @@ export const TRANSFORMS = [
     },
   },
   {
+    // 16.0.0: the easing tokens are the roles. The raw curves behind them (ease-out-quart, ease-spring-snappy, …) are gone.
+    version: '16.0.0', id: 'easing-roles', exts: ALL,
+    title: 'The raw easing curves are removed: `ease-in`, `ease-out`, `ease-in-out`, their `-cubic`, `-quart` and `-expo` forms, `ease-out-back`, `ease-spring-soft`, `ease-spring-snappy` and `ease-elastic` (tokens and utility classes) are the easing role with that curve',
+    run(src, file = '') {
+      const style = /\.(?:css|scss|sass|less)$/i.test(file);
+      const all = { ...EASINGS_16, ...EASINGS_NEAREST_16 };
+      const names = Object.keys(all).sort((a, b) => b.length - a.length).join('|');
+      let count = 0;
+      const notes = [];
+      // A CSS variable (--ease-out-quart), a token reference ({transitions.ease-out-quart}) or a utility class
+      // (ease-out-quart, hover:ease-out-quart). A name that is a whole inline code span is prose about the change, and is
+      // left; so is a bare ease-in / ease-out / ease-in-out in a style file, which is the CSS keyword, not the class.
+      const text = src.replace(new RegExp(`(?<![\\w-])(--|transitions\\.)?(${names})(?![\\w-])`, 'g'), (m, pre = '', name, at) => {
+        if (src[at - 1] === '`' && src[at + m.length] === '`') return m;
+        if (!pre && CSS_KEYWORDS.has(name) && (style || !inClassList(src, at))) return m;
+        count++;
+        if (EASINGS_NEAREST_16[name]) notes.push({ line: lineOf(src, at), message: `${name} has no role with its curve: it is now ${all[name]}, which does its job with a different curve; check the motion still reads right` });
+        return pre + all[name];
+      });
+      return { text, count, notes };
+    },
+  },
+  {
     // 16.0.0: every accent color has a theme, so "emerald" is the emerald ramp and what it was (the teal ramp) is "teal".
     // Both are themes now, so which one a page wants is its own choice: each place is listed, none is rewritten.
     version: '16.0.0', id: 'emerald-is-emerald', exts: ALL,
@@ -358,7 +402,7 @@ export function migrate(src, file, transforms = TRANSFORMS) {
   const counts = {}, notes = [];
   for (const t of transforms) {
     if (!t.exts.includes(ext)) continue;
-    const r = t.run(src);
+    const r = t.run(src, file);
     src = r.text;
     if (r.count) counts[t.id] = r.count;
     for (const n of r.notes) notes.push({ ...n, id: t.id });
