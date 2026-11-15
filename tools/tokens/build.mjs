@@ -91,7 +91,7 @@ export function buildTokensCss(t) {
   css += scripts(t, all);
   for (const s of styles) {
     const f = fluid(s.fontSize) && scaleOf(all, s.fontSize);
-    css += `.${s.name} {\n  font-family: ${fam(s.family)};\n  font-size: ${f ? `var(--text-${f})` : s.fontSize};\n  line-height: ${s.lineHeight};\n  font-weight: ${s.fontWeight};\n  letter-spacing: ${s.letterSpacing};\n`;
+    css += `.${s.name} {\n  font-family: ${fam(s.family)};\n  font-size: ${f ? `var(--text-${f})` : s.fontSize};\n  line-height: ${f ? snap('1em', ratio(s.lineHeight, s.fontSize)) : s.lineHeight};\n  font-weight: ${s.fontWeight};\n  letter-spacing: ${s.letterSpacing};\n`;
     if (s.fontStyle && s.fontStyle !== 'normal') css += `  font-style: ${s.fontStyle};\n`;
     if (s.textTransform) css += `  text-transform: ${s.textTransform};\n`;
     if (s.opticalSize != null) css += `  font-variation-settings: "opsz" ${s.opticalSize};\n`;
@@ -252,13 +252,26 @@ const sizesOf = (all) => all.filter((x) => /^text-[a-z0-9]+$/.test(x.name) && ty
 const scaleOf = (all, v) => sizesOf(all).find((x) => x.value === v)?.name.slice(5);
 function fluidType(all, styles, line) {
   const sizes = sizesOf(all), big = styles.filter((s) => scaleOf(all, s.fontSize));
-  const short = (s) => line(`text-${s.name}`, `${s.fontWeight} var(--text-${scaleOf(all, s.fontSize)})/${s.lineHeight} ${fam(s.family)}`);
+  const lead = (x) => all.find((y) => y.name === `${x.name}--line-height`)?.value;
+  const short = (s, lh) => line(`text-${s.name}`, `${s.fontWeight} var(--text-${scaleOf(all, s.fontSize)})/${lh} ${fam(s.family)}`);
+  // A line height follows its size in the fluid scale, at the ratio it has at full size, snapped up to the 4px grid
+  // (AX9): on a phone a 21px heading had a 36px line (1.71) and a 33.6px display size a 33.6px one, off the grid.
+  const fl = (size, lh) => snap(`var(--text-${size})`, ratio(lh, all.find((x) => x.name === `text-${size}`).value));
   let css = `[data-type-scale="fluid"] {\n${sizes.map((x) => line(x.name, fluidSize(x.value))).join('')}`;
-  css += big.map(short).join('') + '}\n';
+  css += sizes.filter(lead).map((x) => line(`${x.name}--line-height`, fl(x.name.slice(5), lead(x)))).join('');
+  // A style on its step's own line height reads that token; only one with its own (the display style) has a formula.
+  const own = (s) => { const k = scaleOf(all, s.fontSize), t = lead({ name: `text-${k}` }); return t === s.lineHeight ? `var(--text-${k}--line-height)` : fl(k, s.lineHeight); };
+  css += big.map((s) => short(s, own(s))).join('') + '}\n';
   css += `[data-type-scale="fixed"] {\n${sizes.map((x) => line(x.name, x.value)).join('')}`;
-  css += big.map(short).join('') + '}\n';
+  css += sizes.filter(lead).map((x) => line(`${x.name}--line-height`, lead(x))).join('');
+  css += big.map((s) => short(s, s.lineHeight)).join('') + '}\n';
   return css;
 }
+// The line height over the font size: "1.1" stays 1.1, "2.25rem" over "1.875rem" is 1.2.
+const ratio = (lh, size) => r4(rem(lh) != null ? rem(lh) / rem(size) : parseFloat(lh));
+// size × ratio, rounded up to a multiple of 0.25rem (4px at the default size, and it grows with zoom). A hair less
+// first, so a product that is already on the grid (30px × 1.2) isn't pushed up a step by rounding error.
+export const snap = (size, r) => `round(up, calc(${size} * ${r} - 0.01px), 0.25rem)`;
 
 if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
   const css = buildTokensCss(JSON.parse(fs.readFileSync(path.join(P, 'tokens.json'), 'utf8')));

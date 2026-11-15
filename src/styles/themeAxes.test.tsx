@@ -360,6 +360,25 @@ describe('Density axis', () => {
     }
     probe.remove();
   });
+  test('line heights sit on a 4px grid (AX9): the display style is 48px on 52px, and in the fluid scale each line follows its size, on the grid and never under it', async () => {
+    await render(<div>
+      <h1 id="lh-d" className="type-display">Launch</h1>
+      <h1 id="lh-1" className="type-heading-1">Title</h1>
+      <p id="lh-5" style={{ fontSize: 'var(--text-5xl)', lineHeight: 'var(--text-5xl--line-height)' }}>Big</p>
+      <p id="lh-s" style={{ font: 'var(--text-type-display)' }}>Short</p>
+    </div>);
+    const lh = (id: string) => { const c = getComputedStyle(document.getElementById(id)!); return [parseFloat(c.fontSize), Math.round(parseFloat(c.lineHeight) * 100) / 100]; };
+    const ids = ['lh-d', 'lh-1', 'lh-5', 'lh-s'];
+    try {
+      expect(ids.map(lh)).toEqual([[48, 52], [30, 36], [48, 48], [48, 52]]);
+      root.setAttribute('data-type-scale', 'fluid');
+      await page.viewport(1280, 700);
+      expect(ids.map(lh)).toEqual([[48, 52], [30, 36], [48, 48], [48, 52]]);
+      await page.viewport(320, 700);
+      // 21px headings had a 36px line (1.71); the 33.6px sizes a 33.6px one, off the grid.
+      expect(ids.map(lh)).toEqual([[33.6, 40], [21, 28], [33.6, 36], [33.6, 40]]);
+    } finally { root.removeAttribute('data-type-scale'); await page.viewport(900, 700); }
+  });
   test('data-type-scale="fluid" (22): text-2xl and up shrink to 70% on a 320px viewport and reach full size at 1280px; body sizes and fixed sections stay put; browser zoom doubles them by 300% (GR82)', async () => {
     root.setAttribute('data-type-scale', 'fluid');
     await render(<div>
