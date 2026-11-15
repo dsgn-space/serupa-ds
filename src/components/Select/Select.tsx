@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, oneOf, omit, useMergedRef, SIZES } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
 import { warnOnce } from '../../internal/warn';
@@ -48,7 +49,7 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, OWN);
   if (process.env.NODE_ENV !== 'production' && (props as { multiple?: boolean }).multiple) warnOnce('select-multiple', "Serupa.Select: multiple isn't supported (a native multi-select is hard to use); use checkboxes instead. It was ignored.");
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   const hasPh = props.placeholder != null && props.placeholder !== '';
@@ -87,7 +88,7 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
     <span className={cn('dk-select', 'dk-select--size-' + size, invalid && 'dk-select--invalid', rest.disabled && 'dk-select--disabled', readOnly && 'dk-select--readonly', empty && 'dk-select--empty', left != null && left !== false && 'dk-select--has-icon', props.className)} style={props.style} data-component="select" data-size={size}>
       {left == null || left === false ? null : <span className="dk-select__icon dk-select__icon--left" aria-hidden key="left">{left}</span>}
       <select {...rest} ref={setRefs} className="dk-select__field" key="field">
-        {hasPh ? <option value="" disabled key="__placeholder">{props.placeholder}</option> : null}
+        {hasPh ? <option value="" disabled key="__placeholder" className="dk-select__placeholder">{props.placeholder}</option> : null}
         {optionNodes(props.options)}
         {props.children}
       </select>

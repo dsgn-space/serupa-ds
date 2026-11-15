@@ -9,7 +9,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { PROJECT, read, report, done } from './lib.mjs';
 import { parseChangeset } from '../changesets.mjs';
-import { COMPONENT_TOKENS_REMOVED_16, DEPTH_TOKENS_16, migrate, MOTION_TOKENS_16, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
+import { COMPONENT_TOKENS_REMOVED_16, DEPTH_TOKENS_16, EASINGS_16, EASINGS_NEAREST_16, migrate, MOTION_TOKENS_16, packageNameChange, TOKENS_15, TRANSFORMS, transformsAfter } from '../../bin/serupa-migrate.mjs';
 import { majorsIn, nextMajor, upcomingMajor } from '../../docs/upgrades.ts';
 
 const R = [];
@@ -20,7 +20,8 @@ const version = JSON.parse(read('package.json')).version;
 const next = `${Number(version.split('.')[0]) + 1}.0.0`;
 const dir = path.join(PROJECT, '.changeset');
 const changesets = Object.fromEntries(fs.readdirSync(dir).filter((f) => f.endsWith('.md') && f !== 'README.md').map((f) => [f, fs.readFileSync(path.join(dir, f), 'utf8')]));
-const majors = Object.keys(changesets).filter((f) => parseChangeset(changesets[f], 'serupa-ds').bump === 'major');
+const pkgName = JSON.parse(read('package.json')).name;
+const majors = Object.keys(changesets).filter((f) => parseChangeset(changesets[f], pkgName).bump === 'major');
 const rfcFile = path.join(PROJECT, 'docs', 'rfcs', `${next}.md`);
 if (majors.length) {
   const rfc = fs.existsSync(rfcFile) ? fs.readFileSync(rfcFile, 'utf8') : '';
@@ -131,6 +132,21 @@ one('16.0.0: the ease-toggle class and token reference are ease-move; the name i
   const themes = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8')).color.themes.map((x) => x.id);
   const css = fs.readFileSync(path.join(PROJECT, 'tokens.css'), 'utf8');
   t('teal and emerald are both themes, each in its own ramp', 'teal-light teal-dark emerald-light emerald-dark'.split(' ').every((id) => themes.includes(id)) && /\[data-theme="teal-light"\][^}]*--primary: var\(--teal-700\)/.test(css) && /\[data-theme="emerald-light"\][^}]*--primary: var\(--emerald-700\)/.test(css), '');
+}
+// 16.0.0: the easing tokens are the roles. Each raw curve becomes the role with its curve, or the one that does its
+// job (listed, since the curve changes); a bare ease-in-out is the CSS keyword in a style file and prose elsewhere.
+{
+  const css = fix('.a { transition: opacity var(--motion-enter-sm) var(--ease-out-quart), color 1s ease-in-out; }\n.b { animation-timing-function: var(--ease-in); --x: var(--ease-elastic); }\n/* `--ease-out` was here */', 'a.css');
+  t('16.0.0: the raw easing variables become their roles; the CSS keyword and a code span about the change are left', css.text === '.a { transition: opacity var(--motion-enter-sm) var(--ease-enter), color 1s ease-in-out; }\n.b { animation-timing-function: var(--ease-exit); --x: var(--ease-celebrate); }\n/* `--ease-out` was here */' && css.notes.filter((n) => n.id === 'easing-roles').map((n) => n.line).join() === '2', JSON.stringify(css));
+  const tsx = fix('<div className="transition ease-in-out hover:ease-out-back" />\n<p>It eases in and out: ease-in-out.</p>\nconst t = { $value: "{transitions.ease-spring-soft}" };', 'a.tsx');
+  t('16.0.0: the easing utility classes and token references become their roles; a word of prose is left', tsx.text === '<div className="transition ease-move hover:ease-pop" />\n<p>It eases in and out: ease-in-out.</p>\nconst t = { $value: "{transitions.ease-spring}" };' && tsx.notes.filter((n) => n.id === 'easing-roles').map((n) => n.line).join() === '3', JSON.stringify(tsx));
+  const tokens = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'utf8')).transitions.tokens;
+  const names = new Set(tokens.map((x) => x.name));
+  const removed = [...Object.keys(EASINGS_16), ...Object.keys(EASINGS_NEAREST_16)];
+  t(`the ${removed.length} raw easing curves are gone from the tokens, and each one's role is a token`, removed.length === 16 && removed.every((n) => !names.has(n)) && [...Object.values(EASINGS_16), ...Object.values(EASINGS_NEAREST_16)].every((n) => names.has(n)), removed.filter((n) => names.has(n)).join(', '));
+  const value = (n) => tokens.find((x) => x.name === n)?.value;
+  const was = { 'ease-out-quart': 'cubic-bezier(0.25, 1, 0.5, 1)', 'ease-in-out-cubic': 'cubic-bezier(0.65, 0, 0.35, 1)', 'ease-out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)', 'ease-out-cubic': 'cubic-bezier(0.33, 1, 0.68, 1)', 'ease-out-back': 'cubic-bezier(0.34, 1.36, 0.64, 1)' };
+  t('each role keeps the curve of the raw easing it replaces', Object.entries(was).every(([raw, curve]) => value(EASINGS_16[raw]) === curve), JSON.stringify(Object.fromEntries(Object.keys(was).map((r) => [EASINGS_16[r], value(EASINGS_16[r])]))));
 }
 // The package's new name, made only by a serupa-migrate that ships under it.
 {

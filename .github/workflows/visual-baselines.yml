@@ -26,8 +26,9 @@ name: Update baselines
 # pushes the merge and adds the label, whose run then draws the pictures again on the merged tree. A conflict in
 # anything else stops it, since only a person can resolve that. Heal runs none of the branch's code: a run by hand
 # belongs to the default branch, so the branch's code there could write to main's caches.
-# Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone, and the ones
-# whose pictures it made stale (tools/fresh.mjs), when their auto-merge is on and they aren't labelled "hold-visual".
+# Every push to main heals on its own the pull requests it left with a conflict ("dirty") in pictures alone, when their
+# auto-merge is on (or the queue dropped them) and they aren't labelled "hold-visual". A picture that is only stale
+# holds nothing back since ADR-0016: CI compares a pull request with main's pictures drawn on the spot.
 # One with a conflict anywhere else is left for its author, with a notice in the run.
 # Every push to main also draws again the components it changed, on main as it now is, and opens a pull request
 # (branch baselines/after-main, queued to merge; one at a time, replaced while it is open) with any picture that
@@ -68,16 +69,14 @@ permissions: {}
 jobs:
   # After a push to main: the open pull requests from this repository that now conflict with it. GitHub works out
   # whether one merges in the background, so a pull request it hasn't decided yet is asked again for up to a minute.
-  # Also the ones that merge cleanly but whose pictures main made stale (tools/fresh.mjs, the check CI's fresh job runs):
-  # the queue drops those in seconds, and nothing drew them again until someone merged main and added the label by hand
-  # (#1818, after a Calendar change, 13 Nov). A pull request whose pictures are being drawn already is left alone.
-  # fresh.mjs is main's own, and reads the branch only through GitHub's API: none of the branch's code runs here.
+  # dropped.sh is main's own, and reads the branch only through GitHub's API: none of the branch's code runs here.
   dirty:
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
+      issues: read
       pull-requests: read
     outputs:
       prs: ${{ steps.find.outputs.prs }}
@@ -85,9 +84,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .nvmrc
       - id: find
         env:
           GH_TOKEN: ${{ github.token }}
@@ -103,16 +99,13 @@ jobs:
               [ "$state" = unknown ] || break
               sleep 10
             done
-            # Only one whose author has it on its way to the queue: auto-merge off (dropped, held for a theme change)
-            # or "hold-visual" waits for a person. Healing one would redraw its pictures on runners nobody asked for,
-            # and the redraw's label made Queue enqueue put it back (#1948, 15 Nov). A queued one reads auto-merge
+            # Only one on its way to the queue: auto-merge on, or dropped by the queue with nothing since
+            # (.github/dropped.sh). "hold-visual", or auto-merge turned off by a person, waits for a person: healing
+            # one would redraw its pictures on runners nobody asked for (#1948, 15 Nov). A queued one reads auto-merge
             # off too: a push would take it out of the queue anyway.
-            jq -e '.auto_merge == null or ([.labels[].name] | index("hold-visual"))' <<< "$pull" > /dev/null && continue
+            jq -e '[.labels[].name] | index("hold-visual")' <<< "$pull" > /dev/null && continue
+            if jq -e '.auto_merge == null' <<< "$pull" > /dev/null; then [ "$(bash .github/dropped.sh "$n")" != - ] || continue; fi
             if [ "$state" = dirty ]; then prs+=("$n"); continue; fi
-            jq -e '[.labels[].name] | index("update-visual-baselines")' <<< "$pull" > /dev/null && continue
-            # 1 is stale; anything else (GitHub didn't answer) heals nothing.
-            code=0; node tools/fresh.mjs --base "$GITHUB_SHA" --head "$(jq -r .head.sha <<< "$pull")" || code=$?
-            if [ "$code" = 1 ]; then prs+=("$n"); fi
           done
           json=$(printf '%s\n' "${prs[@]}" | jq -R 'select(length > 0) | tonumber' | jq -cs '.[:5]')
           echo "Conflicting or stale: $json"
@@ -200,6 +193,21 @@ jobs:
           LABEL: ${{ inputs.which == 'cross-browser' && 'update-cross-browser-baselines' || 'update-visual-baselines' }}
         run: |
           set -euo pipefail
+          # A queued branch can't take the push (GH006), and its pictures fail the queue's fresh check in seconds
+          # anyway: take it out first, labelled "queue-stale" so it still counts as on its way (.github/dropped.sh) and
+          # Queue enqueue puts it back once the redraw is green. Until 15 Nov the heal failed on every queued one.
+          q=$(GH_TOKEN=$BOT_TOKEN gh api graphql -F n="$NUMBER" -f owner="${GITHUB_REPOSITORY%/*}" -f name="${GITHUB_REPOSITORY#*/}" -f query='
+            query($owner: String!, $name: String!, $n: Int!) { repository(owner: $owner, name: $name) { pullRequest(number: $n) { id mergeQueueEntry { id } } } }' \
+            --jq '.data.repository.pullRequest | "\(.id) \(.mergeQueueEntry != null)"')
+          if [ "${q#* }" = true ]; then
+            echo "::notice::#$NUMBER is in the merge queue with stale pictures: taking it out to heal it."
+            GH_TOKEN=$BOT_TOKEN gh pr edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label queue-stale
+            GH_TOKEN=$BOT_TOKEN gh api graphql -f id="${q% *}" -f query='mutation($id: ID!) { dequeuePullRequest(input: { id: $id }) { clientMutationId } }' >/dev/null
+            for _ in $(seq 12); do
+              [ "$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/timeline?per_page=100" --jq '[.[] | select(.event | test("merge_queue$"))] | last | .event')" = removed_from_merge_queue ] && break
+              sleep 5
+            done
+          fi
           auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
           echo "::add-mask::$auth"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$HEAD_REF"
@@ -487,6 +495,21 @@ jobs:
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
             commit --quiet -m "$msg"
           # The token goes to this one push only. On a pull request the push is refused if the branch moved on since render.
+          # A queued branch can't take the push (GH006), and its pictures fail the queue's fresh check in seconds
+          # anyway: take it out first, labelled "queue-stale" so it still counts as on its way (.github/dropped.sh) and
+          # Queue enqueue puts it back once the redraw is green. Until 15 Nov the heal failed on every queued one.
+          q=$(GH_TOKEN=$BOT_TOKEN gh api graphql -F n="$NUMBER" -f owner="${GITHUB_REPOSITORY%/*}" -f name="${GITHUB_REPOSITORY#*/}" -f query='
+            query($owner: String!, $name: String!, $n: Int!) { repository(owner: $owner, name: $name) { pullRequest(number: $n) { id mergeQueueEntry { id } } } }' \
+            --jq '.data.repository.pullRequest | "\(.id) \(.mergeQueueEntry != null)"')
+          if [ "${q#* }" = true ]; then
+            echo "::notice::#$NUMBER is in the merge queue with stale pictures: taking it out to heal it."
+            GH_TOKEN=$BOT_TOKEN gh pr edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label queue-stale
+            GH_TOKEN=$BOT_TOKEN gh api graphql -f id="${q% *}" -f query='mutation($id: ID!) { dequeuePullRequest(input: { id: $id }) { clientMutationId } }' >/dev/null
+            for _ in $(seq 12); do
+              [ "$(gh api "repos/$GITHUB_REPOSITORY/issues/$NUMBER/timeline?per_page=100" --jq '[.[] | select(.event | test("merge_queue$"))] | last | .event')" = removed_from_merge_queue ] && break
+              sleep 5
+            done
+          fi
           auth=$(printf 'x-access-token:%s' "$BOT_TOKEN" | base64 -w0)
           echo "::add-mask::$auth"
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push ${force:-} origin "HEAD:refs/heads/$HEAD_REF"

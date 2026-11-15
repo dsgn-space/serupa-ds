@@ -8,7 +8,7 @@
 .dk-time-picker__button {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box;
   margin: var(--spacing-0); padding: var(--spacing-1);   /* the icon plus 4px all round: 22, 24 or 28px by size, as Combobox's button */
-  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: pointer; touch-action: manipulation;
+  border: var(--spacing-0); border-radius: var(--radius-inner); background: transparent; color: var(--time-picker-button, var(--text-muted)); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-time-picker__button .dk-icon { font-size: var(--dk-input-icon); }
 @media (hover: hover) { .dk-time-picker__button:hover:not(:disabled) { background: var(--time-picker-button-bg-hover, var(--field-hover)); color: var(--time-picker-button-hover, var(--text)); } }
@@ -16,7 +16,7 @@
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
 .dk-time-picker__button { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
 @media (prefers-reduced-motion: reduce) { .dk-time-picker__button { transition: none; } }
-.dk-time-picker__button:disabled { cursor: not-allowed; }
+.dk-time-picker__button:disabled { cursor: var(--cursor-disabled); }
 .dk-input--readonly .dk-time-picker__button:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
 .dk-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-popover));
@@ -52,8 +52,9 @@
 }
 .dk-time-picker__option {
   display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); box-sizing: border-box;
-  min-height: var(--time-picker-option-height, var(--control-height-md)); padding: var(--spacing-0) var(--spacing-2);
-  border-radius: var(--radius-control); font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  min-height: var(--time-picker-option-height, var(--control-height-md)); padding: var(--spacing-1\.5) var(--spacing-2);   /* Combobox's rows: 6px above and below, so a wrapped label keeps them */
+  /* Its corners nest in the list's, as Combobox's do: the list's radius less the padding and border between them (8 - 4 - 1 = 3px). */
+  border-radius: max(var(--spacing-0), calc(var(--time-picker-list-radius, var(--radius-surface)) - var(--time-picker-list-padding, var(--spacing-1)) - var(--border-width-1))); font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .dk-time-picker__option { --dk-bar: var(--border-width-2); }   /* the bar sits at the start: right in rtl */
 .dk-time-picker__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }

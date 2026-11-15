@@ -11,6 +11,8 @@ import { Loader } from '../../src/components/Loader/Loader';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../src/components/Table/Table';
 import { Tab, TabList, TabPanel, Tabs } from '../../src/components/Tabs/Tabs';
 import { Markdown } from './markdown';
+import since from '../../docs/since.json';
+import { sinceText, type Since } from '../../docs/since';
 import type { ComponentDoc, Page } from './pages';
 import { StoryView, entryOf, parameter, sourceOf, type StoryEntry } from './stories';
 
@@ -45,7 +47,14 @@ export function Title({ children }: { children?: React.ReactNode }) {
       <Heading level={1} className="site-h1">{children ?? page?.name}</Heading>
       {status && <Badge tone={status.tone} title={status.title}>{status.label}</Badge>}
     </div>
+    {page?.component && <SinceLine name={page.component} />}
   </header>;
+}
+
+/** Which release the component came in and last changed its API, and its props new in the latest releases (docs/since.json). */
+function SinceLine({ name }: { name: string }) {
+  const text = sinceText((since as Record<string, Since>)[name]);
+  return text ? <div className="site-since"><Markdown plain>{text}</Markdown></div> : null;
 }
 
 /** What the component is, from its stories' description or the doc comment on its export. */

@@ -17,7 +17,7 @@
 /* stylelint-disable-next-line serupa/no-raw-value -- -1 turns the ring width into an inward offset */
 .dk-chat__log:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-chat__older { display: flex; justify-content: center; }
-.dk-chat__jump { position: absolute; inset-block-end: var(--spacing-3); inset-inline: var(--spacing-0); inline-size: var(--sizing-fit); margin-inline: auto; box-shadow: var(--shadow-md); }
+.dk-chat__jump { position: absolute; inset-block-end: var(--spacing-3); inset-inline: var(--spacing-0); inline-size: var(--sizing-fit); margin-inline: auto; box-shadow: var(--elevation-raised); }
 
 .dk-chat-message { display: flex; align-items: flex-end; gap: var(--spacing-2); max-inline-size: var(--sizing-4-5); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-chat-message--own { flex-direction: row-reverse; align-self: flex-end; }
@@ -52,7 +52,7 @@
 .dk-chat-message__reasoning { --dk-chat-turn: 180deg; max-inline-size: var(--sizing-full); color: var(--chat-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-chat-message__reasoning-toggle {
   display: inline-flex; align-items: center; gap: var(--spacing-1); min-block-size: var(--spacing-6); border-radius: var(--radius-inner);
-  cursor: pointer; touch-action: manipulation; list-style: none; font-weight: var(--font-medium);
+  cursor: var(--cursor-interactive); touch-action: manipulation; list-style: none; font-weight: var(--font-medium);
 }
 .dk-chat-message__reasoning-toggle::-webkit-details-marker { display: none; }
 @media (hover: hover) { .dk-chat-message__reasoning-toggle:hover { color: var(--chat-text, var(--text)); } }

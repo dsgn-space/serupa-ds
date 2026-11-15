@@ -1,7 +1,6 @@
 # DoLabelAbove
 - text: Country
 - combobox "Country":
-  - option "Choose a country" [disabled] [selected]
   - option "Brunei"
   - option "Cambodia"
   - option "Indonesia"
@@ -26,7 +25,6 @@
 
 # DontPlaceholderLabel
 - combobox "Country":
-  - option "Country" [disabled] [selected]
   - option "Brunei"
   - option "Cambodia"
   - option "Indonesia"
@@ -46,19 +44,16 @@
   - option "Pick up"
 
 # Groups
-- combobox "Country":
-  - option "Choose a plan" [disabled] [selected]
+- combobox "Country"
 
 # LongOptions
 - combobox "Country":
-  - option "Choose a country" [disabled]
   - option "The Democratic Republic of São Tomé and Príncipe" [selected]
   - option "Saint Vincent and the Grenadines"
   - option "Donaudampfschifffahrtsgesellschaftskapitänskajüte"
 
 # Playground
 - combobox "Country":
-  - option "Choose a country" [disabled] [selected]
   - option "Indonesia"
   - option "Malaysia"
   - option "Singapore"
@@ -66,7 +61,6 @@
 
 # ReadOnly
 - combobox "Country":
-  - option "Choose a country" [disabled]
   - option "Indonesia" [selected]
   - option "Malaysia"
   - option "Singapore"
@@ -78,14 +72,12 @@
 - combobox "Size large":
   - option "Large" [selected]
 - combobox "Invalid" [invalid]:
-  - option "Required" [disabled] [selected]
   - option "One"
 - combobox "Disabled" [disabled]:
   - option "Disabled" [selected]
 
 # WithIcon
 - combobox "Country":
-  - option "Choose a country" [disabled] [selected]
   - option "Indonesia"
   - option "Malaysia"
   - option "Singapore"

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { useMergedRef, cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
 import { compare, datePattern, formatDate, isoDate, parseDate, sameDay, toDay } from '../../internal/dates';
 import { calendarOf, type CalendarSystem } from '../../internal/calendars';
@@ -103,7 +104,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
   const system = calendarOf(calendar, 'DateRangePicker');
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const describedBy = rest['aria-describedby'], required = rest['aria-required'] ?? (requiredProp || undefined);
   const errorMessage = rest['aria-errormessage'];

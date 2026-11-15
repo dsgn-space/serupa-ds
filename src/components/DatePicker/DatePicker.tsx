@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { pressFocuses } from '../../internal/affix';
 import { useMergedRef, cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
 import { compare, datePattern, formatDate, isoDate, parseDate, toDay } from '../../internal/dates';
@@ -68,7 +69,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   const sds = useSettings(words);
   const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, size: _s, invalid: _i, buttonLabel, presets, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<Date | null>(() => toDay(props.defaultValue, 'DatePicker'));
