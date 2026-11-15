@@ -19,6 +19,9 @@ import { ButtonGroup } from '../components/ButtonGroup/ButtonGroup';
 import { IconButton } from '../components/IconButton/IconButton';
 import { Pagination } from '../components/Pagination/Pagination';
 import { Toolbar } from '../components/Toolbar/Toolbar';
+import { SearchInput } from '../components/SearchInput/SearchInput';
+import { Calendar } from '../components/Calendar/Calendar';
+import { Carousel } from '../components/Carousel/Carousel';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
 // and Material ask for 44 to 48px), the Splitter's 8px handle a 24px-wide one, with nothing moving and no two
@@ -93,10 +96,11 @@ function Fields() {
     <Combobox className="hit-combobox" aria-label="Fruit" options={['Apple', 'Banana']} />
     <DatePicker className="hit-date" aria-label="Due" />
     <TimePicker className="hit-time" aria-label="Start" />
+    <SearchInput className="hit-search" aria-label="Search" defaultValue="maps" />
   </div>;
 }
 /** The fields, by their hit-… class; the button checked is the field's first (the number field's minus stepper). */
-const FIELDS = ['password', 'number', 'combobox', 'date', 'time'];
+const FIELDS = ['password', 'number', 'combobox', 'date', 'time', 'search'];
 /** For each field's button: does a press 6px before its start edge, and one 1px inside the field's top edge, take it? */
 const reach = () => FIELDS.map((name) => {
   const field = $('.hit-' + name), b = field.querySelector('button')!; b.scrollIntoView({ block: 'center' });
@@ -175,6 +179,36 @@ describe('touch-sized buttons', () => {
       const a = pl.getBoundingClientRect(), c = pr.getBoundingClientRect(), py = a.top + a.height / 2, pm = (a.right + c.left) / 2, two = pages[1]!.getBoundingClientRect();
       expect([btn(two.left + two.width / 2, two.top - 5), btn(two.left + two.width / 2, two.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)])
         .toEqual([pages[1]!.textContent, pages[1]!.textContent, pl.textContent, pr.textContent]);
+    });
+  });
+});
+
+// Rows of small targets a phone user taps (EQ1): a month's days and the slide dots. On a touch screen a day is 44px
+// square, and a dot takes a press 20px above or below its middle, 44px high, its width kept so neighbours never
+// overlap; with a mouse a day is 32px and a press 20px off a dot misses.
+function Rows() {
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '64px', padding: '64px', width: '480px' }}>
+    <Calendar locale="en-US" defaultMonth={new Date(2025, 2, 10)} />
+    <Carousel label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
+  </div>;
+}
+const rows = () => {
+  const day = box('.dk-calendar__day');
+  $('.dk-carousel__dot:not([aria-current="true"])').classList.add('hit-dot');
+  return { day: [Math.round(day.width), Math.round(day.height)], dot: around('.hit-dot', '.hit-dot') };
+};
+
+describe('touch-sized days and dots', () => {
+  test('with a mouse: 32px days, and a press 20px off a dot misses', async () => {
+    await render(<Rows />);
+    expect(rows()).toEqual({ day: [32, 32], dot: ['', ''] });
+  });
+
+  test('on a touch screen: 44px days, and a dot takes a press 20px above or below its middle', async () => {
+    await render(<Rows />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      expect(rows()).toEqual({ day: [44, 44], dot: ['dot', 'dot'] });
     });
   });
 });
