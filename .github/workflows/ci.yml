@@ -299,7 +299,8 @@ jobs:
         run: node tools/fix-proof.mjs "$BASE_SHA"
 
   # The suite's groups as parallel jobs (tools/test/run.mjs --group, SERUPA_PART, SERUPA_SHARD). x86: the component tests,
-  # whose timing budgets were measured on x64, and Visual, whose baselines are drawn with Chrome for Testing on x64.
+  # whose timing budgets were measured on x64, and Visual, whose baselines are drawn with Chrome for Testing on x64 (a
+# pull request's take GitHub's x64 runners, below).
   suite-x86:
     name: suite (${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} ${{ matrix.shard }})
     # Not after build: each job builds what it tests itself (about 25 s), where waiting for the build job took 100 s
@@ -309,7 +310,11 @@ jobs:
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
     # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
     # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
-    runs-on: ${{ fromJSON(needs.plan.outputs.x86runner) }}
+    # A pull request's shards take SERUPA_RUNNER instead, so the x86 runners serve the merge queue alone. Visual draws
+    # main's pictures and the branch's in the same job since ADR-0016, so any machine compares fairly, and the timing
+    # budgets leave room for a CI machine several times slower. On 15 Nov ten pull requests, up to eight x86 jobs each,
+    # filled the 28 burst slots: queue jobs waited about 40 minutes to start and nothing merged for an hour.
+    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER || '"ubuntu-24.04"') || needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -317,9 +322,8 @@ jobs:
     strategy:
       # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
       fail-fast: ${{ github.event_name == 'pull_request' }}
-      # A pull request takes at most eight x86 runners at once, a queue group 24 of the 28 burst slots, so pull
-      # requests can't fill them and starve the queue. The queue's other jobs stay on GitHub's runners: with every queue job on the x86
-      # runners (12 Nov), five groups left 27 jobs waiting for them while GitHub's runners stood idle.
+      # A pull request takes at most eight runners at once, so one doesn't hold all of GitHub's; a queue group 24 of the
+      # 28 burst slots.
       max-parallel: ${{ github.event_name == 'pull_request' && 8 || 24 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
