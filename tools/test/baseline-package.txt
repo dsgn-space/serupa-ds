@@ -3,6 +3,7 @@ LICENSE
 README.md
 bin/brand/generate.mjs
 bin/migrate/transforms.mjs
+bin/serupa-add.mjs
 bin/serupa-agents.mjs
 bin/serupa-brand.mjs
 bin/serupa-create.mjs
@@ -164,6 +165,7 @@ dist/serupa.iife.js.map
 dist/starter.json
 dist/stylelint.d.ts
 dist/stylelint.js
+dist/templates.json
 dist/testing.d.ts
 dist/testing.js
 dist/theme.js

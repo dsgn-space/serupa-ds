@@ -43,7 +43,9 @@ Once the script runs, the raised surface under the selected item is the **indica
 
 ## Usage
 
-- Keep labels to one or two words, so the segments stay short and even.
+- Keep labels to one or two words, so the segments stay short and even. Use nouns for what each one shows ("List", "Board"), not verbs.
+- Use words in every segment or icons in every segment, not a mix: segments with words beside icon-only ones look unequal and read unevenly.
+- Every segment picks a value. Don't make one an action ("Add view"): put that in a Button next to the control.
 - When the segments don't all fit, they share the width by content: short labels stay whole and a long one ends in an ellipsis, with its full label as its title on hover. That title isn't there for touch or the keyboard, so keep labels short enough to fit the narrowest screen, or use a [Select](../Select/README.md).
 - Give an icon-only segment an `aria-label`, and use icons alone only when they're widely understood.
 - Icon-only segments are at least 24px wide, so even in `sm` their centers are 24px apart, which meets WCAG 2.2's target size (2.5.8).

@@ -45,6 +45,24 @@ if (any) {
   t('only the brand aliases name the brand shades', !/--(?!acme-|dk-more-|primary|on-primary|focus-ring|link-visited|field-action)[a-z-]+: var\(--acme-/.test(any.css) && BRAND_ALIASES.every((a) => any.css.includes(`--${a}:`)), '');
   t('the CSS names no shipped brand hue for a brand alias', !/--(primary|primary-hover|primary-subtle|on-primary|focus-ring|dk-more-[a-z-]+): [^;]*--(blue|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-/.test(any.css));
 }
+// --motion brisk|calm: every surface and change role one step quicker or calmer, each still a step of the scale and
+// each exit still shorter than its enter; the loops and the press keep their pace.
+const scaleMs = Object.fromEntries(tokens.transitions.tokens.filter((x) => /^duration-\d+$/.test(x.name)).map((x) => [x.name, parseFloat(x.value)]));
+for (const motion of ['brisk', 'calm']) {
+  const r = brandTheme({ name: 'acme', color: '#0f766e', motion, tokens });
+  const set = Object.fromEntries([...r.css.matchAll(/--(motion-[a-z-]+): var\(--(duration-\d+)\);/g)].map((m) => [m[1], m[2]]));
+  const ms = (role) => scaleMs[set[role]];
+  const pairs = ['sm', 'md', 'lg'].map((z) => [ms(`motion-exit-${z}`), ms(`motion-enter-${z}`)]);
+  t(`--motion ${motion} sets the enter, exit and change roles to steps of the duration scale`, ['enter', 'exit', 'change'].every((k) => ['sm', 'md', 'lg'].every((z) => set[`motion-${k}-${z}`] in scaleMs)), JSON.stringify(set));
+  t(`--motion ${motion}: every exit is shorter than its enter`, pairs.every(([exit, enter]) => exit < enter), JSON.stringify(pairs));
+  t(`--motion ${motion} leaves the loops and the press alone`, !/--motion-(loop-[a-z]+|press):/.test(r.css));
+  const shipped = (role) => scaleMs[/^\{(?:transitions\.)?(.+)\}$/.exec(tokens.transitions.tokens.find((x) => x.name === role).value?.['blue-light'] ?? tokens.transitions.tokens.find((x) => x.name === role).value)?.[1]];
+  t(`--motion ${motion} is ${motion === 'brisk' ? 'quicker' : 'calmer'} than the default on every surface`, ['sm', 'md', 'lg'].every((z) => (motion === 'brisk' ? ms(`motion-enter-${z}`) < shipped(`motion-enter-${z}`) : ms(`motion-enter-${z}`) > shipped(`motion-enter-${z}`))), JSON.stringify(set));
+}
+t('the default motion sets no motion roles', !/--motion-/.test(made['#0f766e']?.css ?? ''));
+let wrongMotion = '';
+try { brandTheme({ name: 'acme', color: '#0f766e', motion: 'jumpy', tokens }); } catch (e) { wrongMotion = e.message; }
+t('an unknown motion preset is refused, naming the ones there are', wrongMotion.includes('brisk, calm'), wrongMotion);
 // A violet brand's visited links turn fuchsia, as the violet theme's do, so they stay a hue apart.
 if (made['#7c3aed']) t('a violet brand gets fuchsia visited links', made['#7c3aed'].css.includes('--link-visited: var(--fuchsia-700)'));
 for (const [name, why] of [['blue', 'a theme Serupa ships'], ['red', "a palette color's name"], ['Acme', "can't be a theme name"], ['9a', "can't be a theme name"]]) {
@@ -65,6 +83,7 @@ try {
     ['an unknown option', ['acme', '#0f766e', '--dark'], 'unknown option --dark'],
     ['-o with no file name', ['acme', '#0f766e', '-o'], '-o needs a file name'],
     ['an unknown corners preset', ['acme', '#0f766e', '--corners', 'wavy'], 'corners takes'],
+    ['an unknown motion preset', ['acme', '#0f766e', '--motion', 'jumpy'], 'motion takes'],
     ['a taken name', ['emerald', '#0f766e'], 'a theme Serupa ships'],
   ]) {
     const r = cli(...args);

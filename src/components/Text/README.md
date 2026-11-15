@@ -32,6 +32,7 @@ const { Text } = window.Serupa;
 - Leave `size`, `tone` and `weight` out unless you need them, so the text follows its parent.
 - Use `as="span"` inside other text, and a `p` (the default) for paragraphs.
 - It has no margins: space paragraphs with the layout, such as a [Stack](../Stack/README.md).
+- Leave text people may want to copy selectable (an order number, an address, an error message): don't put `select-none` on it, and don't wrap it in a button.
 - Give running text `measure` on a wide page (an article, a long description, help text), so each line stops near 65 characters: longer lines are hard to follow back to the next one. Lines under 80 characters are WCAG's advice (1.4.8, AAA). It's the same width as `max-w-prose` and Container's `size="prose"`, without the utility classes.
 - Text's tokens (`--text-color`, `--text-color-muted`, `--text-color-primary`, `--text-color-danger`) only change Text's tones. They're separate from the shared theme colors such as `--text` and `--text-muted`, which they default to, and from the type sizes such as `--text-sm`: overriding `--text-color-muted` changes muted Text, not every muted color on the page.
 

@@ -68,7 +68,9 @@ Drawn from the `BottomEnd` story, opened.
 - The trigger is one element that passes its ref and props on to a DOM element: a Button, IconButton or link, or your own component written with `React.forwardRef` (or the `ref` prop in React 19) that spreads what it gets. A text, several elements or a Fragment throws an error that names the component, and a trigger that drops its ref warns once in the console ("Serupa: Menu's trigger doesn't forward its ref to an element.").
 - Start each label with a verb ("Edit", "Duplicate", "Delete") and keep it short.
 - Put the most used actions first, and destructive ones last, after a `MenuSeparator` or in their own `MenuGroup`.
-- Keep `disabled` items in place rather than hiding them, so people learn the action exists.
+- Keep `disabled` items in place rather than hiding them, so people learn the action exists. A `ContextMenu` is the exception: it's a shortcut to what can be done to that thing now, so leave out what can't.
+- Put nothing only in a `ContextMenu`. A right-click or long press is hidden until someone tries it, so each of its actions is also on the page, in a toolbar, a row's menu or the item's own page.
+- For a setting people turn on and off, use one `MenuCheckboxItem` ("Show grid", checked or not) rather than a pair such as "Show grid" and "Hide grid", which leaves people unsure which state they're in.
 - Use a `MenuSub` for a set of related choices that would make the menu long ("Share", "Move to"). Keep it to one level where you can: each level is one more step for keyboard and screen reader users, and harder to reach with a pointer. Never put the only way to do something two levels down.
 - Give a `ContextMenu` target `tabIndex={0}` (or use a focusable element), so keyboard users can reach it and press Shift+F10, and say in its hint or a Tooltip that it has one. Leave the browser's own menu where people expect it, such as on text they edit or links: `disabled` does that.
 - For settings, use `MenuCheckboxItem` (on or off, such as "Show grid") or a `MenuRadioGroup` of `MenuRadioItem`s (one of a set, such as a sort order). Put them in their own `MenuGroup` or `MenuRadioGroup`, to keep settings apart from actions. The menu's items unmount once it has closed, so you hold the state: `checked` with `onCheckedChange`, and `value` with `onValueChange`.
@@ -98,7 +100,7 @@ Drawn from the `BottomEnd` story, opened.
 | ↓ / ↑ | Opens it on the first / last item | The next / previous item, wrapping |
 | Home, End | | The first or last item |
 | Letters | | The next item starting with them. Letters typed within half a second make one word ("de" finds Delete past Duplicate), the same letter again steps through the items starting with it, and accents and case don't matter ("e" finds "Éditer"). A Space within half a second of a letter is part of the word ("save as" finds "Save as…"), so it doesn't choose |
-| Escape | | Closes it; focus goes back to the button |
+| Escape | | Closes it; focus goes back to the button. The phone's Back gesture or button does the same, innermost menu first |
 | Tab | | Closes it and moves on |
 | → (← in rtl), Enter, Space | | On a `MenuSub`: opens its submenu on the first item |
 | ← (→ in rtl), Escape | | In a submenu: closes it, and focus goes back to the item that opened it |

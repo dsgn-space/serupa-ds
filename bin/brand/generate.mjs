@@ -38,6 +38,22 @@ const CORNERS = {
   round: { 'radius-inner': 'rounded-md', 'radius-control': 'rounded-lg', 'radius-surface': 'rounded-xl', 'radius-container': 'rounded-2xl' },
 };
 export const CORNER_PRESETS = ['default', ...Object.keys(CORNERS)];
+// How quickly the brand moves: each surface and change role one step quicker or calmer on the duration scale. The
+// loops (spinner, placeholder), the press and the waits in src/internal/timing.ts keep their pace, and every exit
+// stays shorter than its enter.
+const MOTION = {
+  brisk: {
+    'motion-hover': 'duration-100', 'motion-enter-sm': 'duration-100', 'motion-enter-md': 'duration-150', 'motion-enter-lg': 'duration-200',
+    'motion-exit-sm': 'duration-75', 'motion-exit-md': 'duration-100', 'motion-exit-lg': 'duration-150',
+    'motion-change-sm': 'duration-100', 'motion-change-md': 'duration-150', 'motion-change-lg': 'duration-200',
+  },
+  calm: {
+    'motion-enter-sm': 'duration-200', 'motion-enter-md': 'duration-300', 'motion-enter-lg': 'duration-500',
+    'motion-exit-sm': 'duration-150', 'motion-exit-md': 'duration-200', 'motion-exit-lg': 'duration-300',
+    'motion-change-sm': 'duration-200', 'motion-change-md': 'duration-300', 'motion-change-lg': 'duration-500',
+  },
+};
+export const MOTION_PRESETS = ['default', ...Object.keys(MOTION)];
 
 // --- color math: sRGB hex <-> OKLCH (Björn Ottosson's OKLab), WCAG 2.2 contrast ---
 const toLin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
@@ -110,13 +126,14 @@ const NAME = /^[a-z][a-z0-9]{0,23}$/;
 
 /**
  * A brand's light and dark themes as CSS, to load after tokens.css.
- * @param {{ name: string, color: string, corners?: string, tokens: any }} o
+ * @param {{ name: string, color: string, corners?: string, motion?: string, tokens: any }} o
  * @returns {{ css: string, shades: Record<string,string>, themes: Record<string, Record<string,string>>, picks: object }}
  */
-export function brandTheme({ name, color, corners = 'default', tokens }) {
+export function brandTheme({ name, color, corners = 'default', motion = 'default', tokens }) {
   if (!NAME.test(String(name))) throw new Error(`the name "${name}" can't be a theme name: use lowercase letters and digits, starting with a letter (such as acme)`);
   if (!parseHex(color)) throw new Error(`"${color}" isn't a color: give a hex value, such as #0f766e`);
   if (!CORNER_PRESETS.includes(corners)) throw new Error(`corners takes ${CORNER_PRESETS.join(', ')}, not ${corners}`);
+  if (!MOTION_PRESETS.includes(motion)) throw new Error(`motion takes ${MOTION_PRESETS.join(', ')}, not ${motion}`);
   const { palette, aliases } = readTokens(tokens);
   const shipped = new Set(tokens.$extensions?.['com.serupa']?.themes?.map((t) => t.id.replace(/-(light|dark)$/, '')) ?? ['blue', 'violet', 'emerald']);
   if (shipped.has(name)) throw new Error(`"${name}" is a theme Serupa ships: pick another name`);
@@ -188,8 +205,8 @@ export function brandTheme({ name, color, corners = 'default', tokens }) {
   const L = picks.light.values, D = picks.dark.values;
   const pair = Object.fromEntries(['primary', 'primary-hover', 'primary-subtle', 'on-primary', 'focus-ring', 'link-visited', 'field-action', 'dk-more-primary', 'dk-more-primary-hover', 'dk-more-focus-ring']
     .map((k) => [k, `light-dark(${v(L[k])}, ${v(D[k])})`]));
-  // A corners preset sets the radius roles, the same in light and dark.
-  const roles = Object.fromEntries(Object.entries(CORNERS[corners] ?? {}).map(([k, x]) => [k, `{${x}}`]));
+  // A corners preset sets the radius roles and a motion preset the durations, the same in light and dark.
+  const roles = Object.fromEntries([...Object.entries(CORNERS[corners] ?? {}), ...Object.entries(MOTION[motion] ?? {})].map(([k, x]) => [k, `{${x}}`]));
   const css = [
     `/* ${name}: a Serupa theme from ${hexOf(parseHex(color))} (${name}-${seedStep}), made by serupa-brand. Load it after tokens.css, then\n`,
     `   set data-theme="${name}-light" or "${name}-dark" (or data-brand="${name}" with data-mode). */\n`,

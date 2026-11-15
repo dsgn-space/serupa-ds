@@ -81,6 +81,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
+    "serupa-add": "./bin/serupa-add.mjs",
     "serupa-agents": "./bin/serupa-agents.mjs",
     "serupa-brand": "./bin/serupa-brand.mjs",
     "serupa-create": "./bin/serupa-create.mjs",

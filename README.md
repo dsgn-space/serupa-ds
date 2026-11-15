@@ -143,6 +143,14 @@ To also drop the styles of components your code never names, pass `components: t
 npx serupa-purge src -o public/bundle.min.css --components
 ```
 
+To start a screen from a ready-made one, `serupa-add` writes a pattern (Dashboard, Sign in, Settings form, Team members, …) or a block (Page header, Pricing, Stats row, …) into the app as source to change, with the blocks it builds on and its imports pointed at the package. Each one's Storybook page shows it working. A file the app has already changed is left alone unless you pass `--force`:
+
+```sh
+npx serupa-add                     # every pattern and block, with what it's for
+npx serupa-add Dashboard           # src/serupa/Dashboard.tsx, with PageHeader, StatsRow, ActivityFeed and EmptyStates
+npx serupa-add sign-in --to app/ui # another folder
+```
+
 To see how a product uses Serupa, run `serupa-usage` on its sources. It lists each component it renders, how often, in how many files and with which props, the components it never uses, and the plain elements it writes where a component would do (a `<button>` where Button gives the focus ring, loading state and theme). `--json` prints the same numbers for a dashboard or a comparison between releases:
 
 ```sh
