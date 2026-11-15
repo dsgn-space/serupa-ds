@@ -84,7 +84,7 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 @media (hover: hover) { .dk-calendar__day--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; still semibold */
 .dk-calendar__day--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
 @media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
-.dk-calendar__day--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: var(--cursor-disabled); }
+.dk-calendar__day--disabled { color: var(--calendar-text-disabled, var(--disabled-text)); text-decoration: line-through; cursor: var(--cursor-disabled); }
 /* Two months side by side (RangeCalendar): the first hides its Next button and the second its Previous, so one pair
    turns both; stacked on a narrow screen, each keeps both. */
 @media (min-width: 640px) { .dk-calendar--paired-next .dk-calendar__nav--next, .dk-calendar--paired-previous .dk-calendar__nav--prev { visibility: hidden; } }
@@ -119,7 +119,7 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 .dk-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-calendar__preset[aria-pressed="true"] { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); font-weight: var(--font-medium); }
 @media (hover: hover) { .dk-calendar__preset[aria-pressed="true"]:hover { background: var(--calendar-range-bg, var(--primary-subtle)); } }
-.dk-calendar__preset[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-calendar__preset[aria-disabled="true"] { color: var(--calendar-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 @media (max-width: 639.98px) {
   .dk-calendar--presets { display: inline-flex; }
   .dk-calendar__presets { flex-direction: row; flex-wrap: wrap; padding-inline-start: var(--spacing-0); padding-block-start: var(--spacing-2); border-inline-start: var(--spacing-0); border-block-start: var(--border-width-1) solid var(--calendar-presets-border, var(--border)); }

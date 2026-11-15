@@ -111,6 +111,7 @@ Each is an optional override: set it on the page, a container or one Menubar. Th
 | `--menubar-item-bg-pressed` | `pressed` | Its background while held down, one step past hover. |
 | `--menubar-item-bg-open` | `pressed` | The background of the name whose menu is open. |
 | `--menubar-focus-ring` | `focus-ring` | The focus ring around a menu's name (3:1 on bg). |
+| `--menubar-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--menubar-item-radius` | `radius-control` | A menu name's corners (6px). |
 | `--menubar-padding` | `spacing-1` | Space inside the bar, on every side (4px). |
 | `--menubar-gap` | `spacing-1` | Space between the menus' names (4px). |

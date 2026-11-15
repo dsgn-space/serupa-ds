@@ -200,3 +200,12 @@ export const pasteText = (target: HTMLElement, text: string) => {
   // What the browser does with a paste no handler stopped: the text goes in where the caret is.
   if (target.dispatchEvent(e)) document.execCommand('insertText', false, text);
 };
+
+/**
+ * How a disabled control looks: 'neutral' when it is drawn at full opacity in the disabled text color (the
+ * disabled-text token, as Serupa draws disabled controls), otherwise the opacity and color it has.
+ */
+export function disabledLook(el: Element | null, prop: 'color' | 'backgroundColor' | 'borderTopColor' = 'color', token = '--disabled-text'): string {
+  const s = css(el);
+  return s.opacity === '1' && s[prop] === color(`var(${token})`) ? 'neutral' : `${s.opacity} ${s[prop]}`;
+}

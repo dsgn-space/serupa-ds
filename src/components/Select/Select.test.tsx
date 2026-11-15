@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, forcedColors, lowContrast, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, lowContrast, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { isApple } from '../../internal/keys';
 import { Select } from './Select';
@@ -161,11 +161,11 @@ describe('Select', () => {
     await expect.poll(() => css(box('sm')).borderTopColor).not.toBe(css(box('lg')).borderTopColor);
   });
 
-  test('invalid: aria-invalid and a danger border; disabled: native disabled, 50%, not-allowed', async () => {
+  test('invalid: aria-invalid and a danger border; disabled: native disabled, disabled-text, not-allowed', async () => {
     await render(<Grid><Select id="inv" invalid options={['x']} aria-label="Invalid" /><Select id="dis" disabled options={['x']} aria-label="Disabled" /></Grid>);
     expect(field('inv').getAttribute('aria-invalid')).toBe('true');
     await expect.poll(() => css(box('inv')).borderTopColor).toBe(color('var(--danger)'));
-    expect([field('dis').disabled, css(box('dis')).opacity, css(field('dis')).cursor]).toEqual([true, '0.5', 'not-allowed']);
+    expect([field('dis').disabled, disabledLook(field('dis')), css(field('dis')).cursor]).toEqual([true, 'neutral', 'not-allowed']);
     expect(box('dis').className).toMatch(/disabled/);
   });
 
@@ -251,9 +251,9 @@ describe('Select', () => {
     expect([form.checkValidity(), new FormData(form).get('size')]).toEqual([true, 'M']);
   });
 
-  test('in a disabled fieldset: the select is disabled, looks it (50%, not-allowed), skipped by Tab and left out of the form', async () => {
+  test('in a disabled fieldset: the select is disabled, looks it (disabled-text, not-allowed), skipped by Tab and left out of the form', async () => {
     await render(<form id="fs"><button id="fs-before" type="button">before</button><fieldset disabled><Select id="fs-s" name="role" aria-label="Role" defaultValue="b" options={['a', 'b']} /></fieldset><button id="fs-after" type="button">after</button></form>);
-    expect([field('fs-s').matches(':disabled'), css(box('fs-s')).opacity, css(field('fs-s')).cursor]).toEqual([true, '0.5', 'not-allowed']);
+    expect([field('fs-s').matches(':disabled'), disabledLook(field('fs-s')), css(field('fs-s')).cursor]).toEqual([true, 'neutral', 'not-allowed']);
     document.getElementById('fs-before')!.focus();
     await userEvent.tab();
     expect([document.activeElement!.id, new FormData(document.getElementById('fs') as HTMLFormElement).get('role')]).toEqual(['fs-after', null]);

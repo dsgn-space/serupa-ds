@@ -203,6 +203,7 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | `--menu-danger` | `danger-text` | A destructive item's label and icon. |
 | `--menu-danger-bg-active` | `danger-subtle` | A highlighted destructive item's background. |
 | `--menu-separator` | `border` | The line between groups. |
+| `--menu-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Shadow**
 

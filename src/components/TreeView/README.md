@@ -126,6 +126,7 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-icon-color` | `text-muted` | The chevrons and item icons. |
 | `--tree-view-focus-ring` | `focus-ring` | The ring inside the focused row. |
 | `--tree-view-item-bg-pressed` | `pressed` | A row's fill while it's held down. |
+| `--tree-view-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--tree-view-radius` | `radius-control` | The tree's corners (6px). |
 | `--tree-view-item-radius` | `radius-inner` | A row's corners (4px). |
 | `--tree-view-padding` | `spacing-1` | Space inside the tree (4px). |

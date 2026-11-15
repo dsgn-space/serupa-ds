@@ -39,7 +39,7 @@
   box-shadow: inset var(--dk-bar) 0 0 var(--tree-view-item-indicator, var(--highlight-indicator));
 }
 .dk-tree-view__item:focus-visible > .dk-tree-view__row { outline: var(--focus-ring-width) solid var(--tree-view-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-tree-view__item--disabled > .dk-tree-view__row { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-tree-view__item--disabled > .dk-tree-view__row, .dk-tree-view__item--disabled > .dk-tree-view__row * { color: var(--tree-view-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 .dk-tree-view__toggle { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--spacing-5); height: var(--spacing-5); color: var(--tree-view-icon-color, var(--text-muted)); }
 /* The chevron is the only pointer way to open an item when items can be picked: 20px to see, a 24px target (WCAG 2.5.8,
    GQ6) that fits the 32px row without moving anything. */

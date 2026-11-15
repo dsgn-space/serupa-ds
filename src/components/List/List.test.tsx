@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMoreContrast } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMoreContrast, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Avatar } from '../Avatar/Avatar';
 import { Badge } from '../Badge/Badge';
 import { Card as SurfaceCard } from '../Card/Card';
@@ -186,10 +186,10 @@ describe('List', () => {
     expect([a.hasAttribute('data-router'), a.getAttribute('href'), a.className]).toEqual([true, '#router/team', 'dk-list__main']);
   });
 
-  test('disabled: no href, aria-disabled, out of the tab order, dimmed, clicks do nothing', async () => {
+  test('disabled: no href, aria-disabled, out of the tab order, in disabled-text, clicks do nothing', async () => {
     await render(<Card clicks={[]} />);
     const a = main('idis');
-    expect([a.getAttribute('href'), a.getAttribute('aria-disabled'), a.tabIndex, css(a).opacity]).toEqual([null, 'true', -1, '0.5']);
+    expect([a.getAttribute('href'), a.getAttribute('aria-disabled'), a.tabIndex, disabledLook(a)]).toEqual([null, 'true', -1, 'neutral']);
     await userEvent.click(titleOf('idis'));
     expect(location.hash).toBe('');
   });

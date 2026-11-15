@@ -30,7 +30,6 @@ const BASELINE = floor(P);
 // readme: text the README's "Browser support" section has to contain, for what users should know.
 const KNOWN = {
   // Progressive: without them, a page works and looks the same or near enough.
-  'property animation-range': { why: 'scroll-driven animations are progressive and behind @supports (animation-timeline: scroll()): a sticky Navbar keeps its line and lifts with no shadow' },
   'view-transition-name: match-element': { why: 'view transitions are progressive: the change happens without the animation' },
   'property print-color-adjust': { why: 'Chart keeps its series colors and patterns when printed with background graphics off (Chrome and Edge 136); before, they print as the browser chooses' },
   'print-color-adjust: exact': { why: 'as print-color-adjust' },

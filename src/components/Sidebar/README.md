@@ -70,7 +70,7 @@ It takes its parent's height and scrolls its items when they don't fit, so give 
 
 - It's a `<nav>` landmark with lists of links; section titles name their lists.
 - The current page has `aria-current="page"`, a shaded background and, when more contrast is asked for, a 2px bar at its start. Hover shades an item (`surface-hover`, zinc-100 in light, like the current page) but never draws the bar; the current page itself darkens one step under the pointer. A group holding it is text-colored, so the trail stays visible when it's closed.
-- A group is a button with `aria-expanded` and `aria-controls`.
+- A group is a button with `aria-expanded` and `aria-controls`. A closed group's items are `hidden="until-found"`: find-in-page still finds them, and a match opens the group.
 - Collapsed, each label stays in the page for screen readers and shows as a tooltip on hover and focus, on a group's button too. Use a string `label` so the tooltip can show it.
 - Collapsed, an item's badge is hidden on screen like its label but still read: the tooltip names the item ("Inbox") and the badge describes it ("4"), and an 8px dot on the icon's corner shows there is one. The dot keeps 3:1 in every theme, and is CanvasText in forced-colors mode.
 - In a collapsed rail, a group's menu keeps each item's link component (`as`, such as a router's Link, with its own props) and its link attributes, and marks the current page with `aria-current="page"` in medium weight.
