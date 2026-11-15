@@ -216,3 +216,14 @@ describe('CopyButton', () => {
     expect([low, n]).toEqual([[], 18]);
   });
 });
+
+describe('CopyButton onMedia', () => {
+  test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
+    await render(<div><CopyButton id="om-dark" value="k1" onMedia="dark" /><CopyButton id="om-light" value="k2" onMedia="light" /></div>);
+    const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
+    expect(document.getElementById('om-dark')!.className).toContain('dk-btn--on-dark');
+    expect(inks('om-dark')).toContain('rgb(255, 255, 255)');
+    expect(document.getElementById('om-light')!.className).toContain('dk-btn--on-light');
+    expect(inks('om-light')).toContain('rgb(0, 0, 0)');
+  });
+});

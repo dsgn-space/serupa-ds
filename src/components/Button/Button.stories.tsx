@@ -43,16 +43,16 @@ const Photo = ({ src, scrim, children }: { src: string; scrim: string; children:
 export const OnMedia: Story = {
   render: () => <div style={{ display: 'grid', gap: '16px' }}>
     <Photo src={DUSK} scrim="rgb(0 0 0 / 0.45)"><Row>
-      <Button onMedia="dark">Book now</Button>
-      <Button variant="outline" onMedia="dark">Details</Button>
-      <Button variant="ghost" onMedia="dark">Save</Button>
-      <IconButton icon="share" label="Share" onMedia="dark" />
+      <Button onMedia="dark">Book the tour</Button>
+      <Button variant="outline" onMedia="dark">Tour details</Button>
+      <Button variant="ghost" onMedia="dark">Save the tour</Button>
+      <IconButton icon="share" label="Share the tour" onMedia="dark" />
     </Row></Photo>
     <Photo src={NOON} scrim="rgb(255 255 255 / 0.55)"><Row>
-      <Button onMedia="light">Book now</Button>
-      <Button variant="outline" onMedia="light">Details</Button>
-      <Button variant="ghost" onMedia="light">Save</Button>
-      <IconButton icon="share" label="Share" onMedia="light" />
+      <Button onMedia="light">Book a table</Button>
+      <Button variant="outline" onMedia="light">See the menu</Button>
+      <Button variant="ghost" onMedia="light">Save the place</Button>
+      <IconButton icon="share" label="Share the place" onMedia="light" />
     </Row></Photo>
   </div>,
 };

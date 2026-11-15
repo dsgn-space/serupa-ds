@@ -10,7 +10,9 @@ export function space(step: unknown): string | undefined {
 
 /** A layout prop's value, or one per screen width: { base, sm, md, lg } (from 640, 768 and 1024px up; each holds
  *  until the next one set), as Carousel's perView takes. Drawn by CSS media queries, so server HTML lays out right. */
-export type Responsive<T> = T | { base?: T | undefined; sm?: T | undefined; md?: T | undefined; lg?: T | undefined };
+export type Responsive<T> = T | ByWidth<T>;
+/** One value per screen width, { base, sm, md, lg }: the object half of Responsive. */
+export interface ByWidth<T> { base?: T | undefined; sm?: T | undefined; md?: T | undefined; lg?: T | undefined }
 /** The widths a Responsive value can change at, narrowest first. */
 export const WIDTHS = ['sm', 'md', 'lg'] as const;
 /** A Responsive object's value at each width, each width taking the one before when it's left out; null for a plain

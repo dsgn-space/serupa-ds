@@ -168,3 +168,13 @@ describe('Fab above what shares its edge (GR157)', () => {
   });
 });
 
+describe('Fab onMedia', () => {
+  test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
+    await render(<div><Fab id="om-dark" icon="add" label="New" onMedia="dark" /><Fab id="om-light" icon="add" label="Add" onMedia="light" placement="top-start" /></div>);
+    const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
+    expect(document.getElementById('om-dark')!.className).toContain('dk-btn--on-dark');
+    expect(inks('om-dark')).toContain('rgb(255, 255, 255)');
+    expect(document.getElementById('om-light')!.className).toContain('dk-btn--on-light');
+    expect(inks('om-light')).toContain('rgb(0, 0, 0)');
+  });
+});

@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
-import { atWidths, space, WIDTHS, type Responsive, type Space } from '../../internal/space';
+import { atWidths, space, WIDTHS, type ByWidth, type Space } from '../../internal/space';
 import { component } from '../../internal/component';
 
 export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   /** 'column' (default): items one under another. 'row': side by side. Or one per screen width, such as
       { base: 'column', md: 'row' }: stacked on a phone, side by side from 768px up. */
-  direction?: Responsive<'column' | 'row'> | undefined;
+  direction?: 'column' | 'row' | ByWidth<'column' | 'row'> | undefined;
   /** The space between items, a step of the spacing scale (4 → 16px), or one per screen width ({ base: 3, lg: 6 }). Default: 4. */
-  gap?: Responsive<Space> | undefined;
+  gap?: Space | ByWidth<Space> | undefined;
   /** Cross-axis alignment: 'stretch' (default for columns), 'start', 'center' (default for rows), 'end' or 'baseline'.
       Or one per screen width; a width it leaves out follows that width's direction. */
-  align?: Responsive<'stretch' | 'start' | 'center' | 'end' | 'baseline'> | undefined;
+  align?: 'stretch' | 'start' | 'center' | 'end' | 'baseline' | ByWidth<'stretch' | 'start' | 'center' | 'end' | 'baseline'> | undefined;
   /** Main-axis distribution: 'start' (default), 'center', 'end' or 'between'. */
   justify?: 'start' | 'center' | 'end' | 'between' | undefined;
   /** Lets a row wrap onto more lines. Default: false. */

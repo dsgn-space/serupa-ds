@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
-import { atWidths, space, WIDTHS, type Responsive, type Space } from '../../internal/space';
+import { atWidths, space, WIDTHS, type ByWidth, type Responsive, type Space } from '../../internal/space';
 import { component } from '../../internal/component';
 
 export interface GridProps extends React.HTMLAttributes<HTMLElement> {
@@ -13,7 +13,7 @@ export interface GridProps extends React.HTMLAttributes<HTMLElement> {
   /** With columns="auto" or "up to": a short last row's cells stretch across the empty columns (auto-fit), so two cards on a wide screen share the width. Default: false (empty columns stay, so cells line up with the rows above). */
   fill?: boolean | undefined;
   /** The space between cells, a step of the spacing scale, or one per screen width ({ base: 3, md: 6 }). Default: 4 (16px). */
-  gap?: Responsive<Space> | undefined;
+  gap?: Space | ByWidth<Space> | undefined;
   /** The element. Default: 'div'. */
   as?: 'div' | 'section' | 'ul' | 'ol' | undefined;
 }

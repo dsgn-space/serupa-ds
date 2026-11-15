@@ -3,7 +3,7 @@ interface GridProps extends React.HTMLAttributes<HTMLElement> {
     columns?: "auto" | GridColumns | number | undefined;
     minColumnWidth?: string | undefined;
     fill?: boolean | undefined;
-    gap?: Responsive<Space> | undefined;
+    gap?: ByWidth<Space> | Space | undefined;
     as?: "div" | "ol" | "section" | "ul" | undefined;
 }
 interface GridColumns {

@@ -17,12 +17,12 @@ interface SerupaTheme {
     onChange(fn: (info: ThemeInfo) => void): () => void;
 }
 type Space = 0 | 0.5 | 1 | 1.5 | 10 | 11 | 12 | 14 | 16 | 2 | 2.5 | 20 | 24 | 3 | 3.5 | 4 | 5 | 6 | 7 | 8 | 9;
-type Responsive<T> = {
+interface ByWidth<T> {
     base?: T | undefined;
     sm?: T | undefined;
     md?: T | undefined;
     lg?: T | undefined;
-} | T;
+}
 type Side = "bottom" | "left" | "right" | "top";
 type Placement = `${Side}-${"end" | "start"}` | Side;
 type OpenChangeReason = "api" | "blur" | "close" | "escape" | "focus" | "hover" | "outside" | "select" | "swipe" | "trigger";
