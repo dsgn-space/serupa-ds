@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Navbar, NavbarLink, NavbarMenu, NavbarMenuLink } from '../../components/Navbar/Navbar';
 import { Sidebar, SidebarItem, SidebarSection } from '../../components/Sidebar/Sidebar';
+import { BottomNav, BottomNavLink } from '../../components/BottomNav/BottomNav';
 import { Button } from '../../components/Button/Button';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Heading } from '../../components/Heading/Heading';
@@ -27,12 +28,22 @@ const rows = ['Website redesign', 'Mobile app', 'Billing migration', 'Design tok
    Navbar's "Main navigation". main takes the SkipLink's focus, and the Navbar's scroll-padding keeps
    it below the bar. The signed-in person follows Storybook's Content menu (.storybook/content.ts). */
 const Me = () => <Avatar name={useName('Ada Lovelace')} size="sm" />;
-function Shell({ collapsed = false }: { collapsed?: boolean }) {
+/* Whether the window is at least this wide now, following it as it resizes. */
+function useWide(query: string) {
+  const subscribe = React.useCallback((done: () => void) => { const m = window.matchMedia(query); m.addEventListener('change', done); return () => m.removeEventListener('change', done); }, [query]);
+  return React.useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => true);
+}
+
+function Shell({ collapsed = false, adaptive = false }: { collapsed?: boolean; adaptive?: boolean }) {
+  // Adaptive: the full Sidebar from 1024px, its icon rail from 768px, and a BottomNav below that.
+  const wide = useWide('(min-width: 1024px)');
+  const rail = adaptive ? !wide : collapsed;
+  const phone = adaptive ? '48rem' : '40rem';
   return (
     <div className="min-h-screen bg-surface text-text">
       {/* The Sidebar stays beside main and below the bar while the page scrolls, and gives its room to main on a phone,
           where the Navbar's menu has the same links under "Workspace". */}
-      <style>{'.page-shell__side { position: sticky; top: var(--dk-navbar-offset, 0px); height: calc(100vh - var(--dk-navbar-offset, 0px)); } @media (max-width: 40rem) { .page-shell__side { display: none; } } @media (min-width: 40.01rem) { .page-shell__phone { display: none; } }'}</style>
+      <style>{`.page-shell__side { position: sticky; top: var(--dk-navbar-offset, 0px); height: calc(100vh - var(--dk-navbar-offset, 0px)); } @media (max-width: ${phone}) { .page-shell__side { display: none; } } @media (min-width: calc(${phone} + 0.01rem)) { .page-shell__phone { display: none; } }`}</style>
       <SkipLink />
       <Navbar sticky
         brand={<a href="#home" className="text-base font-semibold text-text no-underline">Acme</a>}
@@ -40,16 +51,16 @@ function Shell({ collapsed = false }: { collapsed?: boolean }) {
         <NavbarLink href="#dashboard" active>Dashboard</NavbarLink>
         <NavbarLink href="#projects">Projects</NavbarLink>
         <NavbarLink href="#reports">Reports</NavbarLink>
-        {/* The Sidebar's links, for a phone, where the Sidebar is gone. */}
-        <NavbarMenu label="Workspace" className="page-shell__phone">
+        {/* The Sidebar's links, for a phone, where the Sidebar is gone (the adaptive shell has a BottomNav instead). */}
+        {adaptive ? null : <NavbarMenu label="Workspace" className="page-shell__phone">
           <NavbarMenuLink href="#home" active>Home</NavbarMenuLink>
           <NavbarMenuLink href="#workspace-projects">Projects</NavbarMenuLink>
           <NavbarMenuLink href="#team">Team</NavbarMenuLink>
-        </NavbarMenu>
+        </NavbarMenu>}
       </Navbar>
       <div className="flex">
         <div className="page-shell__side">
-          <Sidebar aria-label="Workspace" collapsed={collapsed}>
+          <Sidebar aria-label="Workspace" collapsed={rail}>
             <SidebarSection>
               <SidebarItem href="#home" icon="home" label="Home" active />
               <SidebarItem href="#workspace-projects" icon="folder" label="Projects" />
@@ -69,6 +80,13 @@ function Shell({ collapsed = false }: { collapsed?: boolean }) {
         </main>
       </div>
       <footer className="border-t border-border p-6 text-sm text-text-muted">© 2026 Acme</footer>
+      {adaptive ? (
+        <BottomNav label="Workspace">
+          <BottomNavLink href="#home" icon="home" active>Home</BottomNavLink>
+          <BottomNavLink href="#workspace-projects" icon="folder">Projects</BottomNavLink>
+          <BottomNavLink href="#team" icon="group">Team</BottomNavLink>
+        </BottomNav>
+      ) : null}
     </div>
   );
 }
@@ -78,3 +96,8 @@ export const Default: Story = { render: () => <Shell /> };
 /** The Sidebar collapsed to an icon rail, for more room in main: each item keeps its name, read out and shown as a
     tooltip, so the rail is as usable as the full Sidebar. */
 export const CollapsedSidebar: Story = { render: () => <Shell collapsed /> };
+
+/** The navigation follows the window: a BottomNav on a phone (below 768px), the Sidebar's icon rail on a tablet or a
+    narrow window (768 to 1023px), and the full Sidebar from 1024px. The same three places at every width, in the same
+    order. Resize the window to see it switch. */
+export const AdaptiveNavigation: Story = { render: () => <Shell adaptive /> };

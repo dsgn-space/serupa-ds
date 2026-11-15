@@ -1,0 +1,75 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Customizing components" />
+
+# Customizing components
+
+Change a component's look through its props and tokens, from one instance up to the whole app, and only select on what's promised to stay. Each step below is the smallest tool for its reach: go down the list only when the step before can't do it.
+
+| To change | Use | Example |
+| --- | --- | --- |
+| Which kind of component it is | Its props | `variant="outline"`, `size="sm"`, `tone="danger"` |
+| One instance | Its component tokens, on a class of yours | `.signup-cta { --button-radius: var(--rounded-full); }` |
+| Everything in one section | Component or alias tokens on the section, or a setting attribute | `data-density="compact"` on a dashboard |
+| The whole app | Tokens on `:root`, a brand, the page's settings | `npx serupa-brand acme "#0f766e"`, `data-radius="round"` on `<html>` |
+
+## Props first
+
+The variants, sizes and tones are designed and checked together: each passes contrast in all six themes, has every state, and lines up with its neighbours. A look the props can't give is often a sign that another component fits better; [Choose a component](?path=/docs/guides-choose-a-component--docs) helps.
+
+## Component tokens, from one instance to the whole app
+
+Each component reads its own tokens (`--button-*`, `--input-*`, `--card-*`), listed with their defaults under "Component tokens" on its page. Unset, a component token falls back to the shared alias token, so themes keep working. Set one wherever the change should reach, and everything inside follows:
+
+```css
+/* one button */
+.signup-cta { --button-radius: var(--rounded-full); }
+
+/* every card in the sidebar */
+.sidebar { --card-padding: var(--spacing-3); }
+
+/* every input in the app */
+:root { --input-height-md: var(--control-height-lg); }
+```
+
+Point a token at another token, never at a raw value: `var(--spacing-3)`, not `12px`. Then the change follows the theme, density and roundness, and `@diki-stwn/serupa-ds/stylelint` stays quiet.
+
+## Settings for a section or the page
+
+These attributes go on `<html>` or on any element, and reach everything inside:
+
+| Attribute | Values | Does |
+| --- | --- | --- |
+| `data-theme` | `blue-light`, `violet-dark` … | One of the six themes, for that part of the page |
+| `data-brand`, `data-mode` | Your brand; `auto`, `light`, `dark` | A brand from `serupa-brand`, and light or dark (with `theme.js`) |
+| `data-density` | `compact`, `comfortable` | Control heights for data-heavy screens ([Control sizes](?path=/docs/foundations-control-sizes--docs)) |
+| `data-radius` | `sharp`, `round`, `default` | How round every corner is, on any brand ([Corner radius](?path=/docs/foundations-corner-radius--docs)) |
+| `data-contrast` | `more` | The more-contrast colors, as when the system asks for them |
+
+## Your CSS always wins
+
+Serupa's styles sit in cascade layers (`dk.tokens`, `dk.base`, `dk.components`, `dk.utilities`). Your own CSS, outside any layer, beats all of them whatever its specificity, so an override never needs `!important` or a longer selector. If your CSS is in layers of its own, declare them after Serupa's.
+
+## Selectors you can rely on
+
+When a token can't do it, select on what's promised to stay the same between minor releases:
+
+| Rely on | For |
+| --- | --- |
+| `[data-component="button"]` | Every instance of a component, whatever its variant |
+| `[data-state="open"]`, `[data-state="active"]` … | Its state, from the one vocabulary every component shares ([ADR-0012](https://github.com/dsgn-space/serupa-ds/blob/main/docs/adr/0012-data-state.md)) |
+| `[aria-expanded="true"]`, `[aria-invalid="true"]`, `:checked`, `:disabled` | States that native controls and ARIA already say |
+| `.dk-btn`, `.dk-btn--primary` | The component's own class and its variant and size modifiers |
+
+Avoid the classes of a component's inner parts (`.dk-btn__label`, `.dk-card__header`) and selectors that depend on how its markup nests (`.dk-card > div`). They move when a component is fixed or improved; the next major plans to say so in the Versioning rules. If you find yourself reaching for one, a component token or a prop is missing: [open an issue](https://github.com/dsgn-space/serupa-ds/issues) so it gets one.
+
+The [debug overlay](https://github.com/dsgn-space/serupa-ds#whats-in-the-package) (`dist/debug.js`, then `?serupa-debug` on the page) shows, for whatever you point at, its component, variant, state and the component tokens set on it, and checks that the colors you changed still pass contrast.
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| `.promo { --button-primary-bg: var(--emerald-700); }` | `.promo .dk-btn { background: #047857 !important; }` |
+| `data-density="compact"` on the table's section | Shrink each control's height and padding by hand |
+| Select `[data-component="dialog"][data-state="open"]` | Select `.dk-dialog__body > :first-child` |
+| A theme from your brand color with `serupa-brand` | Override the alias tokens one by one for a brand |
