@@ -87,7 +87,7 @@ describe('Timeline', () => {
     expect(rect(q(el('a'), '.dk-timeline__rail')).left > rect(q(el('a'), '.dk-timeline__body')).right).toBe(true);
   });
 
-  test('titles, times and content read 4.5:1 on the page in all six themes', async () => {
+  test('titles, times and content read 4.5:1 on the page in every theme', async () => {
     await render(<Order />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
@@ -96,7 +96,7 @@ describe('Timeline', () => {
     }
   });
 
-  test('an icon reads 3:1 on its circle, for every status in all six themes', async () => {
+  test('an icon reads 3:1 on its circle, for every status in every theme', async () => {
     const all = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'] as const;
     await render(<Timeline>{all.map((st) => <TimelineItem key={st} id={'i-' + st} title={st} icon="check" status={st} />)}</Timeline>);
     for (const th of THEMES) {
@@ -191,7 +191,7 @@ describe('Timeline orientation="horizontal" (RU12)', () => {
     expect(rect(el('h1')).top).toBe(rect(el('h2')).top);
   });
 
-  test('the scrolling box\'s focus ring keeps 3:1 on the page in all six themes', () => {
+  test('the scrolling box\'s focus ring keeps 3:1 on the page in every theme', () => {
     expect(lowContrast([['focus ring', 'var(--focus-ring)', 'var(--surface)', 3]])).toEqual([]);
   });
   // The README's loading recipe: each event's title and time are skeleton lines of their text's size, the list is busy

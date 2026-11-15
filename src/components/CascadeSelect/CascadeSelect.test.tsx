@@ -299,7 +299,7 @@ describe('CascadeSelect', () => {
     await until(() => shown()[0]!.textContent.includes('Jawa Tengah'));
   });
 
-  test('contrast in all six themes: text and placeholder 4.5:1 on the field, chevron 3:1, the soft border 1.3:1; option text, level names and notes 4.5:1 on the panel and on the highlight; the check 3:1', () => {
+  test('contrast in every theme: text and placeholder 4.5:1 on the field, chevron 3:1, the soft border 1.3:1; option text, level names and notes 4.5:1 on the panel and on the highlight; the check 3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
@@ -343,7 +343,7 @@ describe('CascadeSelect held state', () => {
     await render(<CascadeSelect aria-label="Wilayah" options={regions} />);
     await userEvent.click(button());
     const b = page.getByRole('option', { name: 'Bali' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--pressed)'));
       const out: string[] = [];

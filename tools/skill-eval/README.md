@@ -65,7 +65,7 @@ A review can find more than was planted, and that isn't counted against it. The 
 | typecheck | `npm run typecheck` is clean |
 | lint | `npm run lint` is clean |
 | render | the built page shows text in `#root`, with no page error and no console error |
-| axe | axe finds no WCAG 2.2 A or AA violation in any of the six themes |
+| axe | axe finds no WCAG 2.2 A or AA violation in any theme |
 | tab | Tab from the top reaches every visible control. A radio group counts once, and so does a roving-tabindex widget. |
 | task | the agent did the task: `src/App.tsx` is no longer the starter, and it imports at least half the components the task expects from `@diki-stwn/serupa-ds` |
 

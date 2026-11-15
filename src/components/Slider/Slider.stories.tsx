@@ -33,6 +33,8 @@ export const WithInputs: Story = {
   },
 };
 export const SingleWithInput: Story = { args: { 'aria-label': 'Volume', defaultValue: 35, inputs: true } };
+/** origin: a balance from -10 to +10 fills from the middle toward the thumb. */
+export const FromTheMiddle: Story = { name: 'From the middle', args: { 'aria-label': 'Balance', min: -10, max: 10, origin: 0, defaultValue: -4, marks: [{ value: -10, label: 'Left' }, { value: 0, label: 'Center' }, { value: 10, label: 'Right' }] } };
 export const Small: Story = { args: { size: 'sm', defaultValue: 30 } };
 export const Large: Story = { args: { size: 'lg', defaultValue: 60 } };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 70 } };

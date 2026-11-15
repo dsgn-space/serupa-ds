@@ -46,7 +46,6 @@ const tokens = JSON.parse(fs.readFileSync(path.join(PROJECT, 'tokens.json'), 'ut
 const names = new Set(tokens.map((t) => t.name));
 const ROLES = ['motion-press', 'motion-release', 'motion-hover', 'motion-enter-sm', 'motion-enter-md', 'motion-enter-lg', 'motion-exit-sm', 'motion-exit-md', 'motion-exit-lg', 'motion-change-sm', 'motion-change-md', 'motion-change-lg', 'motion-loop-spinner', 'motion-loop-placeholder', 'motion-loop-blink', 'motion-loop-progress', 'motion-ripple', 'motion-ripple-fade', 'motion-stagger', 'motion-stagger-limit', 'motion-sequence', 'ease-enter', 'ease-exit', 'ease-move', 'ease-settle', 'ease-pop', 'ease-spring', 'ease-fling', 'ease-celebrate'];
 const roles = ROLES.map((r) => [r, tokens.find((t) => t.name === r)]);
-// A brand can set its own role (Modern's quicker motion): the value is then one per theme, and each must name the scale.
 const each = (t) => (t && typeof t.value === 'object' ? Object.values(t.value) : [t?.value]);
 const themes = [...new Set(roles.flatMap(([, t]) => (t && typeof t.value === 'object' ? Object.keys(t.value) : [])))];
 const badRoles = roles.filter(([, t]) => !t || each(t).some((v) => !/^\{(?:duration|delay|ease)-[\w-]+\}$/.test(v) || !names.has(v.slice(1, -1)))).map(([r, t]) => `${r}: ${t ? JSON.stringify(t.value) : 'missing'}`);

@@ -52,7 +52,7 @@ Drawn from the `NothingChosen` story.
 
 - **Role and name:** a `role="group"` named by its Field label or `aria-label`, holding two groups of native checkboxes, each named by its title and count, and two buttons.
 - **Keyboard:** Tab reaches each box, then Add and Remove; Space checks a box.
-- **Contrast:** its text and counts read 4.5:1 on the lists' background in all six themes (`TransferList.test.tsx`).
+- **Contrast:** its text and counts read 4.5:1 on the lists' background in every theme (`TransferList.test.tsx`).
 - **What's still yours:** the label, telling people what the order means if it matters, and checking a required count on submit.
 
 ## Props

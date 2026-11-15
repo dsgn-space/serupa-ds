@@ -4,7 +4,7 @@
 // every component, block and pattern folder has a page, and every component's props can be read from its types.
 // Then it builds the site and opens every page in a browser: the page draws its title and its examples with no
 // error, every link to another page of the site leads to one, and no Storybook address is left unanswered. The
-// site's own frame passes axe's WCAG 2.2 AA checks in all six themes and doesn't scroll sideways at 320px (the
+// site's own frame passes axe's WCAG 2.2 AA checks in every theme and doesn't scroll sideways at 320px (the
 // stories inside the pages are Storybook's check's: tools/test/storybook.mjs).
 //   node tools/test/site.mjs
 import fs from 'node:fs';
@@ -77,7 +77,7 @@ const server = http.createServer((req, res) => {
 const base = `http://127.0.0.1:${/** @type {import('node:net').AddressInfo} */ (server.address()).port}`;
 
 const b = await browser();
-// The site's own pages, which no .mdx gives it: the story, the six themes side by side and the patterns as screens.
+// The site's own pages, which no .mdx gives it: the story, the themes side by side and the patterns as screens.
 const OWN = ['/about', '/themes', '/showcase'];
 const known = new Set(['/', ...pages.map((p) => p.path), ...['foundations', 'components', 'patterns', 'blocks', 'guides'].map((s) => '/' + s), ...OWN]);
 const workers = await Promise.all(Array.from({ length: PAGES }, async () => {
@@ -247,7 +247,7 @@ if (t('some page has a story that waits behind its button', !!held, 'no page sho
     const lost = seen.links.filter((h) => h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/'));
     t(`${at}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
   }
-  // The themes page is the six themes at once, whatever the site's own theme is.
+  // The themes page is the themes at once, whatever the site's own theme is.
   await openUrl(w.page, base + '/themes'); await ready(w.page, false);
   const shown = await w.page.evaluate(() => [...document.querySelectorAll('.site-theme')].map((x) => `${x.getAttribute('data-brand')}-${x.getAttribute('data-mode')}`));
   const all = tokens().color.themes.map((x) => x.id);

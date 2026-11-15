@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { datePattern, formatDate, parseDate } from './dates';
+import { addDays, addMonths, compare, datePattern, formatDate, isoDate, parseDate, sameDay, sameMonth, startOfMonth, startOfWeek, toDay } from './dates';
 import { latinDigits } from './digits';
 import { WORLD_LOCALES } from '../../tools/test/vitest/locales';
 
@@ -59,5 +59,31 @@ describe('typed dates', () => {
     expect([day('11222001', 'en-US'), day('112201', 'en-US'), day('22112001', 'de-DE'), day('221101', 'de-DE'), day('20011122', 'en-US'), day('20011122', 'de-DE')]).toEqual([nov22, nov22, nov22, nov22, nov22, nov22]);
     expect([day('20011122', 'ja-JP'), day('٢٢١١٢٠٠١', 'ar-EG')]).toEqual([nov22, nov22]);
     expect([day('13452001', 'en-US'), day('1122001', 'en-US'), day('2211', 'de-DE'), day('112220011', 'en-US')]).toEqual([null, null, null, null]);
+  });
+});
+
+describe('day arithmetic', () => {
+  const D = (y: number, m: number, d: number) => new Date(y, m - 1, d);
+  test('addDays and addMonths step across months and years; a month that\'s too short gives its last day', () => {
+    expect([addDays(D(2026, 12, 31), 1), addDays(D(2026, 3, 1), -1), addDays(D(2026, 5, 10), 0)].map(isoDate)).toEqual(['2027-01-01', '2026-02-28', '2026-05-10']);
+    expect([addMonths(D(2026, 1, 31), 1), addMonths(D(2024, 1, 31), 1), addMonths(D(2026, 12, 15), 1), addMonths(D(2026, 1, 15), -1), addMonths(D(2026, 3, 31), -1), addMonths(D(2026, 5, 30), 12)].map(isoDate))
+      .toEqual(['2026-02-28', '2024-02-29', '2027-01-15', '2025-12-15', '2026-02-28', '2027-05-30']);
+  });
+  test('sameDay and sameMonth: every field has to match; a missing day matches nothing', () => {
+    const a = D(2026, 5, 10);
+    expect([sameDay(a, new Date(2026, 4, 10, 15, 30)), sameDay(a, D(2025, 5, 10)), sameDay(a, D(2026, 6, 10)), sameDay(a, D(2026, 5, 11)), sameDay(a, null), sameDay(undefined, a), sameDay(null, null)])
+      .toEqual([true, false, false, false, false, false, false]);
+    expect([sameMonth(a, D(2026, 5, 31)), sameMonth(a, D(2025, 5, 10)), sameMonth(a, D(2026, 6, 10))]).toEqual([true, false, false]);
+  });
+  test('startOfMonth, startOfWeek for each first weekday, and compare by day, ignoring the time', () => {
+    expect(isoDate(startOfMonth(new Date(2026, 4, 31, 23)))).toBe('2026-05-01');
+    // Wednesday 13 May 2026.
+    const wed = D(2026, 5, 13);
+    expect([0, 1, 3, 4, 6].map((w) => isoDate(startOfWeek(wed, w)))).toEqual(['2026-05-10', '2026-05-11', '2026-05-13', '2026-05-07', '2026-05-09']);
+    expect([compare(new Date(2026, 4, 13, 23), new Date(2026, 4, 13, 1)), Math.sign(compare(D(2026, 5, 12), wed)), Math.sign(compare(D(2026, 5, 14), wed)), compare(D(2026, 5, 14), wed) / 864e5]).toEqual([0, -1, 1, 1]);
+  });
+  test('toDay: a yyyy-mm-dd string as that local day, a date and time as the day it writes, a day not on the calendar or other text as null, a Date as its day', () => {
+    expect([toDay('2026-05-10'), toDay(' 2026-05-10T23:30:00Z '), toDay('2026-05-10 09:30'), toDay('0099-01-02'), toDay(new Date(2026, 4, 10, 18))].map((d) => d && isoDate(d))).toEqual(['2026-05-10', '2026-05-10', '2026-05-10', '0099-01-02', '2026-05-10']);
+    expect([toDay('2026-02-31'), toDay('2026-13-01'), toDay('10/05/2026'), toDay(''), toDay(new Date(NaN)), toDay(42)]).toEqual([null, null, null, null, null, null]);
   });
 });

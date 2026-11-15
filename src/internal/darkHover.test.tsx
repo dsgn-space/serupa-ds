@@ -21,7 +21,7 @@ const settle = (ms = 30) => new Promise((r) => setTimeout(r, ms));
 // The hover fill (at least 1.05:1 against what is under it, as `secondary` on `surface` in light) of a button in a field (the date, clock and country parts) or an item in a popup (a day in
 // DatePicker's calendar, a CascadeSelect option) has to show against what it sits on. It used to be surface-muted,
 // which in every dark theme is the same zinc-800 as the field and the popup, so the pointer left no mark.
-describe('hover fills in fields and popups show in all six themes', () => {
+describe('hover fills in fields and popups show in every theme', () => {
   test('the date, clock and country buttons, a day in the calendar (one of another month too) and a cascade option: the fill differs from what is under it, and the text on it keeps 4.5:1', { timeout: 60000 }, async () => {
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     await render(<div style={{ padding: 40 }}>

@@ -47,6 +47,14 @@ export const PerView: Story = {
   </Carousel>,
 };
 
+/** peek: the edge of the next card shows at the end, so people can tell there's more to swipe to. */
+export const Peek: Story = {
+  args: { label: 'Products', peek: true, arrows: false },
+  render: (args) => <div style={{ maxWidth: 360 }}><Carousel {...args}>
+    {['Desk', 'Chair', 'Lamp', 'Shelf'].map((n) => <Card key={n}><CardBody><strong>{n}</strong><p>Ships in two days.</p></CardBody></Card>)}
+  </Carousel></div>,
+};
+
 export const LongText: Story = {
   render: (args) => (
     <div style={{ width: 240 }}>

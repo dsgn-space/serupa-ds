@@ -20,6 +20,7 @@ interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChang
     nextLabel?: string | undefined;
     slideLabel?: ((index: number, count: number) => string) | undefined;
     perView?: CarouselPerView | number | undefined;
+    peek?: boolean | undefined;
 }
 interface CarouselPerView {
     base?: number;

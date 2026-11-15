@@ -4,7 +4,8 @@ import { cn, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { useSettings } from '../../internal/provider';
-import { Icon } from '../Icon/Icon';
+import { Icon, type IconSource } from '../Icon/Icon';
+import { asIcon } from '../Icon/asIcon';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { en as comboWords } from '../Combobox/labels';
@@ -19,6 +20,11 @@ export interface TagItem {
   label: string;
   /** Shown but not removable or selectable. */
   disabled?: boolean | undefined;
+  /** A small icon before the words, such as a label's kind. Decorative: the words name the tag. A selected tag shows
+   *  its check here instead. */
+  icon?: IconSource | undefined;
+  /** A picture before the words, such as a recipient's <Avatar size="xs" />. Decorative: the words name the tag. */
+  avatar?: React.ReactNode | undefined;
 }
 
 export interface TagGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onSelect'> {
@@ -130,7 +136,9 @@ export const TagGroup = /* @__PURE__ */ component<HTMLDivElement, TagGroupProps>
               aria-selected={mode !== 'none' ? on : undefined} aria-disabled={t.disabled || undefined}
               onFocus={() => setActive(t.id)} onKeyDown={(e) => onKeyDown(e, t, i)} onClick={() => select(t)}>
               <span role="gridcell" className="dk-tag-group__text">
-                {mode !== 'none' && on ? <Icon icon={icons.Check} className="dk-tag-group__check" /> : null}
+                {mode !== 'none' && on ? <Icon icon={icons.Check} className="dk-tag-group__check" />
+                  : t.icon != null ? <span className="dk-tag-group__icon" aria-hidden="true">{asIcon(t.icon)}</span> : null}
+                {t.avatar != null ? <span className="dk-tag-group__avatar" aria-hidden="true">{t.avatar}</span> : null}
                 {t.label}
               </span>
               {props.onRemove && !t.disabled ? (

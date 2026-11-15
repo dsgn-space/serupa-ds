@@ -6,7 +6,7 @@
    Toaster, OfflineBanner and Fab sit above it. It hides from hideFrom up (768px by default), where Navbar shows its
    links. Every value reads one of its own tokens (bottom-nav.tokens.json), which fall back to the shared ones.
    Structure: .dk-bottom-nav__spacer, .dk-bottom-nav (<nav>) > .dk-bottom-nav__list (<ul>) > .dk-bottom-nav__item (<li>)
-   > .dk-bottom-nav__link > .dk-bottom-nav__icon, .dk-bottom-nav__label.
+   > .dk-bottom-nav__link > .dk-bottom-nav__icon (> .dk-bottom-nav__badge), .dk-bottom-nav__label.
    --------------------------------------------------------------- */
 @layer dk.components {
 :root:has(.dk-bottom-nav--always) { --dk-bottom-nav-space: calc(var(--bottom-nav-height, var(--spacing-16)) + env(safe-area-inset-bottom)); scroll-padding-bottom: var(--dk-bottom-nav-space); }
@@ -36,6 +36,10 @@
   text-decoration: none; -webkit-tap-highlight-color: transparent;
 }
 .dk-bottom-nav__icon { display: inline-flex; align-items: center; justify-content: center; inline-size: var(--spacing-14); block-size: var(--spacing-8); border-radius: var(--rounded-full); font-size: var(--spacing-6); transition: background-color var(--motion-hover) var(--ease-move); }
+.dk-bottom-nav__icon:has(> .dk-bottom-nav__badge) { position: relative; }
+/* A count or dot on the icon's top-end corner: it starts 4px past the middle of the 56px pill, and a count grows away
+   from the icon. */
+.dk-bottom-nav__badge { position: absolute; inset-block-start: var(--bottom-nav-badge-offset-y, var(--spacing-0)); inset-inline-start: var(--bottom-nav-badge-offset-x, var(--spacing-8)); display: inline-flex; font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-bottom-nav__label { max-inline-size: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* Not on the current item: under the pointer it keeps its own color and fill, as it does while held (GR414).
    The hover rule used to outrank the current one, so the current item looked like any other item pointed at. */

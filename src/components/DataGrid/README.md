@@ -88,7 +88,7 @@ The grid keeps its header row in every state, so the page doesn't move and peopl
 | Delete, Backspace | Clear the range's editable cells. |
 | Ctrl+C, Ctrl+V | Copy the range as tab-separated text; paste a block. |
 
-- **Contrast:** cell text reads 4.5:1 on the cells, the header and the selected range, and the focus ring 3:1, in all six themes (`DataGrid.test.tsx`). In forced colors the selection is Highlight.
+- **Contrast:** cell text reads 4.5:1 on the cells, the header and the selected range, and the focus ring 3:1, in every theme (`DataGrid.test.tsx`). In forced colors the selection is Highlight.
 - **What's still yours:** checking values and saying what's wrong (in a message near the grid), and an undo where a paste can do damage.
 
 ## Props

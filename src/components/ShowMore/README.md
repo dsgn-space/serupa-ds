@@ -46,7 +46,7 @@ Drawn from the `Expanded` story.
 - **Role and name:** the button is a `<button>` named "Show more", then "Show less" (the `showMore` and `showLess` labels), with `aria-expanded` and `aria-controls` pointing at the text.
 - **Hidden lines:** they are cut for the eye only. Screen readers read the whole text and find-in-page finds it, so nobody who can't see the screen misses any of it.
 - **Keyboard:** Tab reaches the button; Enter or Space opens and closes. Focus stays on the button, which keeps its place under the text.
-- **Contrast:** the button is a link-style [Button](../Button/README.md), 4.5:1 in all six themes; the text keeps the color of where it sits.
+- **Contrast:** the button is a link-style [Button](../Button/README.md), 4.5:1 in every theme; the text keeps the color of where it sits.
 - **What's still yours:** a heading or the author's name before each item, so people know whose text they're reading.
 
 ## Props

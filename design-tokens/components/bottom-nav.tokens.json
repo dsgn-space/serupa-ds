@@ -103,6 +103,26 @@
             "cssVar": "--bottom-nav-height"
           }
         }
+      },
+      "badge-offset-x": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-8}",
+        "$description": "How far from the icon pill's start edge a badge starts: 4px past the middle, so it sits on the icon's top-end corner.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-badge-offset-x"
+          }
+        }
+      },
+      "badge-offset-y": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0}",
+        "$description": "How far below the icon pill's top edge a badge sits.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--bottom-nav-badge-offset-y"
+          }
+        }
       }
     },
     "layout": {
