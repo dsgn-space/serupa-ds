@@ -147,7 +147,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await row.close();
 }
 {
-  // <meta name="theme-color"> follows the page's fill (surface-page) in all six themes, so a phone's bars change with the mode.
+  // <meta name="theme-color"> follows the page's fill (surface-page) in every theme, so a phone's bars change with the mode.
   // Before any stylesheet it is the token value (white, zinc-950); a page's own theme-color meta is left alone.
   const ctx = await b.newContext({ colorScheme: 'light', reducedMotion: 'reduce' });
   const p = await ctx.newPage();
@@ -157,7 +157,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
     const m = document.querySelectorAll('meta[name="theme-color"]');
     return [m.length, m[0] && m[0].getAttribute('content'), getComputedStyle(document.body).backgroundColor].join(' ');
   })));
-  t('theme.js: theme-color is the page\'s fill (surface-page) in all six themes: white, and zinc-950 in dark', tints.every((x, k) => x === (k % 2 ? '1 rgb(9, 9, 11) rgb(9, 9, 11)' : '1 rgb(255, 255, 255) rgb(255, 255, 255)')), tints.join(', '));
+  t('theme.js: theme-color is the page\'s fill (surface-page) in every theme: white, and zinc-950 in dark', tints.every((x, k) => x === (k % 2 ? '1 rgb(9, 9, 11) rgb(9, 9, 11)' : '1 rgb(255, 255, 255) rgb(255, 255, 255)')), tints.join(', '));
   await p.evaluate(() => Serupa.theme.reset());
   await p.goto(writePage('theme-color-bare.html', '<p>x</p>', { theme: true, bundle: 'none.css', htmlAttrs: 'data-mode="dark"', extraHead: '<script>window.__early = document.querySelector(\'meta[name="theme-color"]\').content;</script>' }));
   const early = await p.evaluate(() => window.__early);

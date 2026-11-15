@@ -16,7 +16,7 @@ Match the protection to how hard the action is to reverse. "Are you sure?" on ev
 
 ## Undo, not "Are you sure?"
 
-Take the item out of the page at once, and hand the real work to `toast.undo` as its `commit`: it runs only when the toast closes without Undo. Undo runs `onUndo` instead, which puts the item back, and nothing was lost. It's faster than a dialog for the many times people meant it, and safer for the few times they didn't.
+Take the item out of the page at once, and hand the real work to `toast.undo` as its `commit`: it runs only when the toast closes without Undo. Undo runs `onUndo` instead, which puts the item back, and nothing was lost. Ctrl+Z (⌘Z on Apple devices) chooses it as well, outside a text field, so the keys people already reach for undo work too. It's faster than a dialog for the many times people meant it, and safer for the few times they didn't.
 
 ## The confirmation dialog
 

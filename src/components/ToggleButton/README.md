@@ -60,7 +60,7 @@ const { ToggleButton, ButtonGroup } = window.Serupa;
 | `onPressedChange` | `(pressed) => void` | none | Called with the new state |
 | `variant` | `'outline'` \| `'ghost'` | `'outline'` | Ghost suits toolbars |
 
-Every other Button prop works (`size`, `icon`, `leftIcon`, `rightIcon`, `disabled`, `onClick`…), except `destructive` and `loading`. An `onClick` that calls `preventDefault()` stops the toggle. It renders Button's element, with `data-component="button"` and the class `dk-toggle-button`.
+Every other Button prop works (`size`, `icon`, `leftIcon`, `rightIcon`, `disabled`, `onClick`…), except `destructive` and `loading`. An `onClick` that calls `preventDefault()` stops the toggle. Disabled while on, it is drawn in neutrals (the highlight fill, muted text, the control border), so it still reads as on but not as something to press. It renders Button's element, with `data-component="button"` and the class `dk-toggle-button`.
 
 ## Component tokens
 
@@ -72,5 +72,7 @@ Each is an optional override: set it on the page, a container or one toggle. The
 | `--toggle-button-bg-pressed` | `primary-subtle` | The background while pressed (on). |
 | `--toggle-button-text-pressed` | `primary` | Text and icon while pressed (4.5:1 on bg-pressed). |
 | `--toggle-button-border-pressed` | `primary` | The outline variant's border while pressed (3:1 on surface). |
-| `--toggle-button-depth-pressed` | `depth-control-pressed` | The tactile layers of an on toggle: it stays sunk. None in the flat brands. |
+| `--toggle-button-bg-pressed-disabled` | `highlight` | The background while on and disabled. |
+| `--toggle-button-text-pressed-disabled` | `text-muted` | Text and icon while on and disabled (3.4:1 and up on bg-pressed-disabled, as on a disabled Button). |
+| `--toggle-button-border-pressed-disabled` | `border-control` | The outline variant's border while on and disabled (3:1 on surface). |
 <!-- token-table:end -->

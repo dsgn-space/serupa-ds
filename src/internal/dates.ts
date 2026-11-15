@@ -18,8 +18,8 @@ export const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(),
 export const startOfWeek = (d: Date, weekStartsOn: number) => addDays(d, -((d.getDay() - weekStartsOn + 7) % 7));
 export const compare = (a: Date, b: Date) => day(a).getTime() - day(b).getTime();
 export const isValid = (d: unknown): d is Date => d instanceof Date && !isNaN(d.getTime());
-/** yyyy-mm-dd, for forms and APIs. */
-export const isoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+/** yyyy-mm-dd, for forms and APIs: four digits of year even before 1000, so toDay reads it back. */
+export const isoDate = (d: Date) => `${String(d.getFullYear()).padStart(4, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 /** A day given as a Date or a plain "yyyy-mm-dd" string (read as that local day, not UTC midnight), or null when
  *  it's neither. With who, warns once about a Date at UTC midnight west of Greenwich: new Date("2026-10-24") is
  *  23 Oct there, so pass the string instead. An ISO date and time as an API sends it ("2026-10-24T00:00:00Z",

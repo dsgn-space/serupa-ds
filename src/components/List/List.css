@@ -9,6 +9,10 @@
 /* Set straight in a Card with no padding, the card is the frame: no second border inside its own. */
 .dk-card--padding-none > .dk-list--card { border: var(--spacing-0); border-radius: var(--dk-card-inner-radius); }
 .dk-list--divided > .dk-list__item + .dk-list__item { border-top: var(--list-border-width, var(--border-width-1)) solid var(--list-border, var(--border)); }
+/* divided="inset": the line starts where the row's text starts, after its avatar or icon, and runs to the row's end.
+   It's the text's own ::before, placed at its static start and as wide as the row; the row clips the rest. */
+.dk-list--inset > .dk-list__item { overflow-x: clip; }
+.dk-list--inset > .dk-list__item + .dk-list__item .dk-list__text::before { --dk-list-rule: var(--sizing-full); content: ""; position: absolute; inset-block-start: var(--spacing-0); inline-size: var(--dk-list-rule); border-top: var(--list-border-width, var(--border-width-1)) solid var(--list-border, var(--border)); pointer-events: none; }
 .dk-list__item { position: relative; display: flex; align-items: center; gap: var(--list-gap, var(--spacing-3)); padding-inline-end: var(--dk-list-px); transition: background-color var(--motion-hover) var(--ease-move); }
 .dk-list__main {
   box-sizing: border-box; display: flex; align-items: center; gap: var(--list-gap, var(--spacing-3)); flex: auto; min-width: var(--spacing-0);

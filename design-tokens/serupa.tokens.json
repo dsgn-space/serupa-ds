@@ -4882,7 +4882,7 @@
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px; 32px in Modern.",
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--space-surface"
@@ -5711,105 +5711,6 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--elevation-modal"
-        }
-      }
-    },
-    "depth-control": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added over the shadow of a raised control at rest (the filled, outline and secondary Button, IconButton, ToggleButton, FAB): a short, soft two-layer shadow that lifts it off the page, and in dark mode a faint light along the top edge. Nothing in the flat brands.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-control",
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.08)"
-        }
-      }
-    },
-    "depth-control-hover": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): the layers of `depth-control` when the pointer is over the control: the same edges, lifted a little higher.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-control-hover",
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 3px 8px -1px rgb(0 0 0 / 0.12)"
-        }
-      }
-    },
-    "depth-control-pressed": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): the layers while a control is held down, or a toggle is on: an inner shade along the top, so it sinks into the page.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-control-pressed",
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.35))"
-        }
-      }
-    },
-    "depth-part": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added to a part that sits on a control and moves: the Switch thumb, the Slider thumb, the SegmentedControl indicator. A hairline edge and a soft, short shadow, like a physical knob.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-part",
-          "tactile": "0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 1px 0 rgb(0 0 0 / 0.06), 0 2px 6px 0 rgb(0 0 0 / 0.14)"
-        }
-      }
-    },
-    "depth-field": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): an inner shade along the top of a field (Input, Textarea, Select), so it reads as a well to type into.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-field",
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35))"
-        }
-      }
-    },
-    "depth-well": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): a track or groove sunk into the page, deeper than `depth-field`: the Switch track, the Slider, Progress and Meter tracks, an unticked Checkbox or Radio. A soft shade along the top.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-well",
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4))"
-        }
-      }
-    },
-    "depth-surface": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added inside a surface that floats over the page (menus, popovers, list boxes, date and time pickers, hover cards, tooltips, toasts, dialogs, drawers): a crisp hairline around it and, in dark mode, a faint light along the top edge, so it reads as a raised pane rather than a flat sheet. Over its elevation shadow.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-surface",
-          "tactile": "0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07))"
-        }
-      }
-    },
-    "depth-card": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added under a surface that rests on the page and can be picked up or opened: a Card at rest, a Kanban card, a SortableList item. A short, soft two-layer shadow, and in dark mode a faint light along the top edge.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-card",
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.05)), 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 2px 8px -2px rgb(0 0 0 / 0.06)"
-        }
-      }
-    },
-    "depth-card-lift": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added to a Card with a link while the pointer is over it: a soft, wider shadow, so the card lifts toward the pointer.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--depth-card-lift",
-          "tactile": "0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14)"
         }
       }
     }
@@ -8777,17 +8678,6 @@
       "$extensions": {
         "com.serupa": {
           "cssVar": "--motion-release"
-        }
-      }
-    },
-    "motion-draw": {
-      "$type": "duration",
-      "$value": "{transitions.duration-0}",
-      "$description": "A mark drawing itself on: the Checkbox tick revealed from its start to its end when it is ticked under the pointer or keyboard. 0 (it appears at once) in the flat brands; `duration-150` in a tactile one. None under reduced motion.",
-      "$extensions": {
-        "com.serupa": {
-          "cssVar": "--motion-draw",
-          "tactile": "{transitions.duration-150}"
         }
       }
     },

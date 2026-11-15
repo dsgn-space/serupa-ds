@@ -5,7 +5,7 @@ description: Build React UI with the Serupa design system (serupa-ds). Use when 
 
 # Serupa design system
 
-Serupa is a React 19 component library with design tokens, six themes and utility classes. It is accessible to WCAG 2.2 AA in every theme. Use its components and tokens instead of writing your own. They already handle keyboard use, focus, screen readers, dark mode, right-to-left text and reduced motion.
+Serupa is a React 19 component library with design tokens, a light and a dark theme for each of 17 brand colors, and utility classes. It is accessible to WCAG 2.2 AA in every theme. Use its components and tokens instead of writing your own. They already handle keyboard use, focus, screen readers, dark mode, right-to-left text and reduced motion.
 
 ## Install and load
 
@@ -32,10 +32,10 @@ For production, trim the CSS in the build: `import { serupaPurge } from '@diki-s
 Put the brand and mode on `<html>`, and load `theme.js` first in `<head>` (or paste its text in an inline script) so the page has no flash of the wrong theme:
 
 ```html
-<html lang="en" data-brand="blue" data-mode="auto">   <!-- brand: blue | violet | emerald; mode: auto | light | dark -->
+<html lang="en" data-brand="blue" data-mode="auto">   <!-- brand: blue, violet, emerald… any accent color; mode: auto | light | dark -->
 ```
 
-Pick the brand by the look the app wants: `blue` is plain and flat, `violet` is tactile (controls with a soft lift and sheen), and `emerald` is Modern (calm neutrals, one teal accent, rounder corners and softer motion). Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-depth="tactile"` or `"flat"`, `data-shadow="neutral"`, `data-contrast="more"`.
+Pick the brand by its color: `blue` (the default) or any other accent color of the palette (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `emerald`, `teal`, `cyan`, `sky`, `indigo`, `violet`, `purple`, `fuchsia`, `pink`, `rose`). A brand changes the accent color only; every corner, shadow, space and motion is the same in all of them. Tune the look on `<html>` or any section, never with your own CSS: `data-density="compact"`, `data-radius="sharp"` or `"round"`, `data-shadow="neutral"`, `data-contrast="more"`.
 
 One theme on one element: `data-theme="violet-dark"`. For the app's own brand color, make a theme with `npx serupa-brand acme "#0f766e" -o src/acme-theme.css`, import it after `tokens.css` and use `data-brand="acme"` (plus `data-brands="acme"` on `<html>` for theme.js); never hand-pick shades for `primary`. For locale and the built-in words, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>`; its `size="sm"` (or `"lg"`) sets every form control's default size, so don't repeat `size` on each one. For router links, call `configure({ link: Link })` once at startup.
 

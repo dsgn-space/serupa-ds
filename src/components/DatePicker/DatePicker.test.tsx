@@ -243,7 +243,7 @@ describe('DatePicker', () => {
     await expect.poll(() => getComputedStyle(el('dis').parentElement!).opacity).toBe('0.5');
   });
 
-  test('contrast: day, weekday, outside, today, hover and selected text 4.5:1, the selected fill and calendar icon 3:1, in all six themes', async () => {
+  test('contrast: day, weekday, outside, today, hover and selected text 4.5:1, the selected fill and calendar icon 3:1, in every theme', async () => {
     await render(<><Ctl calls={[]} /><Calendar data-testid="today" /></>);
     await userEvent.click(button('ctl'));
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
@@ -360,7 +360,7 @@ describe('DatePicker held state', () => {
   test('held down: the calendar button fills one step past its hover (--date-picker-button-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<DatePicker aria-label="Start date" buttonLabel="Pick the start date" />);
     const b = page.getByRole('button', { name: 'Pick the start date' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

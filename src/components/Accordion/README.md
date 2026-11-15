@@ -63,7 +63,7 @@ Drawn from the `Playground` story.
 - Closed content is `hidden="until-found"`, so it's out of the tab order and screen readers skip it, but find-in-page still finds it: a match fires `beforematch`, which opens that item (in `single`, closing the open one). It's set once the closing animation ends. A disabled item's content stays `visibility: hidden` and isn't searchable. Before hydration, and in browsers without `until-found`, closed content is `visibility: hidden` as before.
 - The Expand all button is a plain `<button>` that says "Expand all" or, once every enabled item is open, "Collapse all" (the `expandAll` and `collapseAll` labels in `SerupaProvider`). Disabled items stay as they are.
 - With `collapsible={false}` the open item's button has `aria-disabled`, since pressing it does nothing.
-- Titles and content keep 4.5:1, the chevron 3:1, on `surface` in all six themes (`Accordion.test.tsx`). Opening, the panel grows to its content's height while the content unfolds (a fade and an opening clip), so what's below slides down instead of jumping. Closing, it folds back while the height shrinks. A second press mid-way turns back from where it is. With reduced motion it only fades, and the height changes at once.
+- Titles and content keep 4.5:1, the chevron 3:1, on `surface` in every theme (`Accordion.test.tsx`). Opening, the panel grows to its content's height while the content unfolds (a fade and an opening clip), so what's below slides down instead of jumping. Closing, it folds back while the height shrinks. A second press mid-way turns back from where it is. With reduced motion it only fades, and the height changes at once.
 
 ### Keyboard
 

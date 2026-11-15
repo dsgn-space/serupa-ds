@@ -56,7 +56,7 @@ describe('TabNav', () => {
     still.remove();
   });
 
-  test('contrast: labels 4.5:1, the current line and pill 3:1 against surface, in all six themes', async () => {
+  test('contrast: labels 4.5:1, the current line and pill 3:1 against surface, in every theme', async () => {
     await render(<div><Nav id="c" /><Nav id="cp" variant="pill" /></div>);
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;

@@ -160,7 +160,7 @@ describe('Breadcrumb', () => {
     expect([css(q('#btok a')).color, css(q('#btok ol')).columnGap]).toEqual(['rgb(1, 2, 3)', '11px']);
   });
 
-  test('contrast: links, the current page and separators keep 4.5:1 on surface in all six themes', async () => {
+  test('contrast: links, the current page and separators keep 4.5:1 on surface in every theme', async () => {
     await render(<><Home /><Slash /></>);
     // Colors transition: read each theme's own, not a mid-transition blend of the last one.
     const still = document.createElement('style');

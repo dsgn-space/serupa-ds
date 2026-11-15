@@ -39,6 +39,7 @@ Drawn from the `Marks` story.
 - Use `formatValue` whenever the number has a unit or a currency, so screen readers hear "$40", not "40".
 - Update what's on screen in `onValueChange`, and save or fetch in `onValueCommit`, which runs once per change.
 - Set `step` to the precision people need, so values snap to sensible numbers.
+- For a value with a middle, such as a balance or an offset from -10 to +10, set `origin={0}` so the fill starts in the middle and shows which way it leans.
 - Use `marks` when a few values matter, such as `[{ value: 0, label: "Off" }, { value: 100, label: "Max" }]`, or `marks` alone for a tick per step on a short scale. Keep the labels short; they sit on one line under the track.
 - Use `showValue` when people need to see the number while they drag, and there is no label nearby that shows it.
 - Use `inputs` when an exact number matters as much as the rough one, such as a price filter: a number field (`.dk-slider__input`, a [NumberInput](../NumberInput/README.md)) sits beside each thumb, after the track for one and at either end for a range. It brings NumberInput's code with it, so a page that imports Slider and not NumberInput grows by about 6.5 KiB.
@@ -61,12 +62,12 @@ Drawn from the `Marks` story.
 
 - The slider takes a press over at least 24px of height (WCAG 2.5.8), past the 20px thumb, without taking more room, and 44px on a touch screen, as Apple and Material ask.
 - Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
-- The track, the fill and the thumb's ring keep 3:1 on the page in all six themes, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
+- The track, the fill and the thumb's ring keep 3:1 on the page in every theme, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
 - In a [Field](../Field/README.md), the label names the thumb (a range's group) through `aria-labelledby`, and the hint and error describe it. Its own `aria-label` or `aria-labelledby` wins.
-- `invalid` sets `aria-invalid` on each thumb and turns the fill and the thumb's ring danger (3:1 on the page in all six themes). Color alone doesn't say what's wrong, so put the reason in text next to it: inside a [Field](../Field/README.md), its `error` does both.
+- `invalid` sets `aria-invalid` on each thumb and turns the fill and the thumb's ring danger (3:1 on the page in every theme). Color alone doesn't say what's wrong, so put the reason in text next to it: inside a [Field](../Field/README.md), its `error` does both.
 - `readOnly` keeps the thumbs in the Tab order with `aria-readonly`, so people can still hear the value, but keys and presses don't change it. With `name`, the value is still sent with the form, which `disabled` doesn't do.
 - A slider always has a value, so `required` has nothing to check. It's accepted, so Field's `required` doesn't reach the DOM, and has no effect.
-- Marks and the value chip are `aria-hidden`. The thumb's `aria-valuetext` already says the value, and mark labels would be read as stray text. Mark labels keep 4.5:1 on the page, and the chip's text 4.5:1 on the chip, in all six themes (`Slider.test.tsx`).
+- Marks and the value chip are `aria-hidden`. The thumb's `aria-valuetext` already says the value, and mark labels would be read as stray text. Mark labels keep 4.5:1 on the page, and the chip's text 4.5:1 on the chip, in every theme (`Slider.test.tsx`).
 - With `inputs`, each number field is named as its thumb is (the label, or "Minimum" and "Maximum" in a range), so a screen reader hears which value it changes. It's one more Tab stop per thumb.
 - `disabled`, or a disabled `<fieldset>` around it, takes the thumbs out of the Tab order, sets `aria-disabled` and ignores keys and presses, as native inputs do.
 
@@ -102,6 +103,7 @@ Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in i
 | `marks` | `boolean \| { value: number; label?: ReactNode }[]` | | Ticks on the track: `true` for every step, or the listed values with text under them. Visual only. |
 | `showValue` | `boolean` | `false` | The value over the thumb while it's focused, hovered or dragged. Visual only. |
 | `inputs` | `boolean` | `false` | A number field beside each thumb, kept in step with it, for typing an exact value. |
+| `origin` | `number` | `min` | Where a single thumb's fill starts: `0` on a -10 to +10 scale fills from the middle toward the thumb, either way. A range ignores it. |
 | `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
 | `form` | `string` | | The id of a form it sits outside of: its hidden inputs submit, and reset, with that form. |
 | `required` | `boolean` | | Accepted so Field's `required` doesn't reach the page. A slider always has a value, so it has no effect. |
@@ -152,8 +154,6 @@ Each is an optional override: set it on the page, a container or one slider. The
 | Token | Default | Use |
 | --- | --- | --- |
 | `--slider-thumb-shadow` | `elevation-part` | The thumb's shadow. |
-| `--slider-thumb-depth` | `depth-part` | The tactile layers over each thumb's shadow. None in the flat brands. |
-| `--slider-track-depth` | `depth-well` | The track's tactile layers: a groove the thumb slides in. None in the flat brands. |
 
 **Spacing**
 

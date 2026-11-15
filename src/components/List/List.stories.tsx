@@ -47,6 +47,12 @@ export const Links: Story = {
   render: (args) => <div style={{ maxWidth: 480 }}><Members {...args} links /></div>,
 };
 
+export const InsetDividers: Story = {
+  name: 'Inset dividers',
+  args: { divided: 'inset' },
+  render: (args) => <div style={{ maxWidth: 480 }}><Members {...args} /></div>,
+};
+
 export const Files: Story = {
   args: {
     'aria-label': 'Files',

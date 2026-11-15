@@ -64,7 +64,7 @@ Drawn from the `Month` story.
 - **Changes are said:** the month's title is a polite live region, so Previous, Next, Today and paging say the new month. A moved event's new day and time are said through the shared polite region.
 - **Dragging has an alternative (2.5.7):** every move a drag makes, Shift and the arrow keys make too. A press without a drag opens the event, where your form changes its times. A movable event lists its keys in `aria-keyshortcuts`.
 - **Reading order:** the agenda is an ordered list of days, each with a heading one level below the title, so a screen reader can jump by day.
-- **Contrast:** dates, weekday names and event text read 4.5:1 in all six themes (`EventCalendar.test.tsx`).
+- **Contrast:** dates, weekday names and event text read 4.5:1 in every theme (`EventCalendar.test.tsx`).
 - **What's still yours:** the event details, and returning focus to the event when they close.
 
 ### Keyboard

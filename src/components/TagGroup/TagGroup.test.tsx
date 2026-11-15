@@ -178,7 +178,7 @@ describe('TagGroup', () => {
     await expect.element(page.getByRole('button', { name: 'Hapus Design' })).toBeInTheDocument();
   });
 
-  test('a tag reads 4.5:1 and its border 3:1, picked or not, in all six themes', async () => {
+  test('a tag reads 4.5:1 and its border 3:1, picked or not, in every theme', async () => {
     await render(<TagGroup aria-label="Skills" items={tags} selectionMode="multiple" defaultSelected={['bug']} />);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

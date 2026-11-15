@@ -90,7 +90,7 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
   | Escape | Closes the calendar and returns focus to the field. |
 
 - **ARIA states:** the button has `aria-haspopup="dialog"` and `aria-expanded`; the popup is a `role="dialog"` in the top layer holding a Calendar.
-- **Contrast:** the calendar icon keeps 3:1 on the field in all six themes (`DatePicker.test.tsx`).
+- **Contrast:** the calendar icon keeps 3:1 on the field in every theme (`DatePicker.test.tsx`).
 - **What's still yours:** the label, and the format in the hint.
 
 ## Props
@@ -131,7 +131,6 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |
 | `--date-picker-popup-border` | `border-overlay` | Its outline. |
 | `--date-picker-popup-shadow` | `elevation-overlay` | Its shadow. |
-| `--date-picker-popup-depth` | `depth-surface` | The calendar popup's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--date-picker-popup-radius` | `radius-surface` | Its corners (8px). |
 | `--date-picker-popup-padding` | `spacing-3` | Space inside it (12px). |
 | `--date-picker-offset` | `spacing-1` | The gap between the field and the panel (4px). |

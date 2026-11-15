@@ -1,5 +1,5 @@
 {
-  "$description": "Serupa's own tokens: a hex color palette, alias colors in six themes, and the type, spacing, sizing, border, shadow, motion, layout, filter, transform and opacity scales behind every utility class.",
+  "$description": "Serupa's own tokens: a hex color palette, alias colors in a light and a dark theme per brand, and the type, spacing, sizing, border, shadow, motion, layout, filter, transform and opacity scales behind every utility class.",
   "$extensions": {
     "com.serupa": {
       "version": 1,
@@ -14,22 +14,132 @@
           "name": "Blue Dark"
         },
         {
-          "id": "violet-light",
-          "name": "Violet Light",
-          "depth": "tactile"
+          "id": "red-light",
+          "name": "Red Light"
         },
         {
-          "id": "violet-dark",
-          "name": "Violet Dark",
-          "depth": "tactile"
+          "id": "red-dark",
+          "name": "Red Dark"
+        },
+        {
+          "id": "orange-light",
+          "name": "Orange Light"
+        },
+        {
+          "id": "orange-dark",
+          "name": "Orange Dark"
+        },
+        {
+          "id": "amber-light",
+          "name": "Amber Light"
+        },
+        {
+          "id": "amber-dark",
+          "name": "Amber Dark"
+        },
+        {
+          "id": "yellow-light",
+          "name": "Yellow Light"
+        },
+        {
+          "id": "yellow-dark",
+          "name": "Yellow Dark"
+        },
+        {
+          "id": "lime-light",
+          "name": "Lime Light"
+        },
+        {
+          "id": "lime-dark",
+          "name": "Lime Dark"
+        },
+        {
+          "id": "green-light",
+          "name": "Green Light"
+        },
+        {
+          "id": "green-dark",
+          "name": "Green Dark"
         },
         {
           "id": "emerald-light",
-          "name": "Modern Light"
+          "name": "Emerald Light"
         },
         {
           "id": "emerald-dark",
-          "name": "Modern Dark"
+          "name": "Emerald Dark"
+        },
+        {
+          "id": "teal-light",
+          "name": "Teal Light"
+        },
+        {
+          "id": "teal-dark",
+          "name": "Teal Dark"
+        },
+        {
+          "id": "cyan-light",
+          "name": "Cyan Light"
+        },
+        {
+          "id": "cyan-dark",
+          "name": "Cyan Dark"
+        },
+        {
+          "id": "sky-light",
+          "name": "Sky Light"
+        },
+        {
+          "id": "sky-dark",
+          "name": "Sky Dark"
+        },
+        {
+          "id": "indigo-light",
+          "name": "Indigo Light"
+        },
+        {
+          "id": "indigo-dark",
+          "name": "Indigo Dark"
+        },
+        {
+          "id": "violet-light",
+          "name": "Violet Light"
+        },
+        {
+          "id": "violet-dark",
+          "name": "Violet Dark"
+        },
+        {
+          "id": "purple-light",
+          "name": "Purple Light"
+        },
+        {
+          "id": "purple-dark",
+          "name": "Purple Dark"
+        },
+        {
+          "id": "fuchsia-light",
+          "name": "Fuchsia Light"
+        },
+        {
+          "id": "fuchsia-dark",
+          "name": "Fuchsia Dark"
+        },
+        {
+          "id": "pink-light",
+          "name": "Pink Light"
+        },
+        {
+          "id": "pink-dark",
+          "name": "Pink Dark"
+        },
+        {
+          "id": "rose-light",
+          "name": "Rose Light"
+        },
+        {
+          "id": "rose-dark",
+          "name": "Rose Dark"
         }
       ],
       "type": {
@@ -706,18 +816,74 @@
         "com.serupa": {
           "themes": {
             "blue-dark": "{blue-400}",
+            "red-light": "{red-600}",
+            "red-dark": "{red-400}",
+            "orange-light": "{orange-700}",
+            "orange-dark": "{orange-400}",
+            "amber-light": "{amber-700}",
+            "amber-dark": "{amber-400}",
+            "yellow-light": "{yellow-700}",
+            "yellow-dark": "{yellow-400}",
+            "lime-light": "{lime-700}",
+            "lime-dark": "{lime-400}",
+            "green-light": "{green-700}",
+            "green-dark": "{green-400}",
+            "emerald-light": "{emerald-700}",
+            "emerald-dark": "{emerald-400}",
+            "teal-light": "{teal-700}",
+            "teal-dark": "{teal-400}",
+            "cyan-light": "{cyan-700}",
+            "cyan-dark": "{cyan-400}",
+            "sky-light": "{sky-700}",
+            "sky-dark": "{sky-400}",
+            "indigo-light": "{indigo-600}",
+            "indigo-dark": "{indigo-400}",
             "violet-light": "{violet-600}",
             "violet-dark": "{violet-400}",
-            "emerald-light": "{teal-700}",
-            "emerald-dark": "{teal-400}"
+            "purple-light": "{purple-600}",
+            "purple-dark": "{purple-400}",
+            "fuchsia-light": "{fuchsia-600}",
+            "fuchsia-dark": "{fuchsia-400}",
+            "pink-light": "{pink-700}",
+            "pink-dark": "{pink-400}",
+            "rose-light": "{rose-600}",
+            "rose-dark": "{rose-400}"
           },
           "contrastMore": {
             "blue-light": "{blue-800}",
             "blue-dark": "{blue-300}",
+            "red-light": "{red-800}",
+            "red-dark": "{red-300}",
+            "orange-light": "{orange-900}",
+            "orange-dark": "{orange-300}",
+            "amber-light": "{amber-900}",
+            "amber-dark": "{amber-300}",
+            "yellow-light": "{yellow-900}",
+            "yellow-dark": "{yellow-300}",
+            "lime-light": "{lime-900}",
+            "lime-dark": "{lime-300}",
+            "green-light": "{green-900}",
+            "green-dark": "{green-300}",
+            "emerald-light": "{emerald-800}",
+            "emerald-dark": "{emerald-300}",
+            "teal-light": "{teal-800}",
+            "teal-dark": "{teal-300}",
+            "cyan-light": "{cyan-900}",
+            "cyan-dark": "{cyan-300}",
+            "sky-light": "{sky-800}",
+            "sky-dark": "{sky-300}",
+            "indigo-light": "{indigo-700}",
+            "indigo-dark": "{indigo-300}",
             "violet-light": "{violet-800}",
             "violet-dark": "{violet-300}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-300}"
+            "purple-light": "{purple-800}",
+            "purple-dark": "{purple-300}",
+            "fuchsia-light": "{fuchsia-800}",
+            "fuchsia-dark": "{fuchsia-300}",
+            "pink-light": "{pink-800}",
+            "pink-dark": "{pink-300}",
+            "rose-light": "{rose-800}",
+            "rose-dark": "{rose-300}"
           }
         }
       }
@@ -730,18 +896,74 @@
         "com.serupa": {
           "themes": {
             "blue-dark": "{blue-300}",
+            "red-light": "{red-700}",
+            "red-dark": "{red-300}",
+            "orange-light": "{orange-800}",
+            "orange-dark": "{orange-300}",
+            "amber-light": "{amber-800}",
+            "amber-dark": "{amber-300}",
+            "yellow-light": "{yellow-800}",
+            "yellow-dark": "{yellow-300}",
+            "lime-light": "{lime-800}",
+            "lime-dark": "{lime-300}",
+            "green-light": "{green-800}",
+            "green-dark": "{green-300}",
+            "emerald-light": "{emerald-800}",
+            "emerald-dark": "{emerald-300}",
+            "teal-light": "{teal-800}",
+            "teal-dark": "{teal-300}",
+            "cyan-light": "{cyan-800}",
+            "cyan-dark": "{cyan-300}",
+            "sky-light": "{sky-800}",
+            "sky-dark": "{sky-300}",
+            "indigo-light": "{indigo-700}",
+            "indigo-dark": "{indigo-300}",
             "violet-light": "{violet-700}",
             "violet-dark": "{violet-300}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-300}"
+            "purple-light": "{purple-700}",
+            "purple-dark": "{purple-300}",
+            "fuchsia-light": "{violet-700}",
+            "fuchsia-dark": "{violet-300}",
+            "pink-light": "{pink-800}",
+            "pink-dark": "{pink-300}",
+            "rose-light": "{rose-700}",
+            "rose-dark": "{rose-300}"
           },
           "contrastMore": {
             "blue-light": "{blue-900}",
             "blue-dark": "{blue-200}",
+            "red-light": "{red-900}",
+            "red-dark": "{red-200}",
+            "orange-light": "{orange-950}",
+            "orange-dark": "{orange-200}",
+            "amber-light": "{amber-950}",
+            "amber-dark": "{amber-200}",
+            "yellow-light": "{yellow-950}",
+            "yellow-dark": "{yellow-200}",
+            "lime-light": "{lime-950}",
+            "lime-dark": "{lime-200}",
+            "green-light": "{green-950}",
+            "green-dark": "{green-200}",
+            "emerald-light": "{emerald-900}",
+            "emerald-dark": "{emerald-200}",
+            "teal-light": "{teal-900}",
+            "teal-dark": "{teal-200}",
+            "cyan-light": "{cyan-950}",
+            "cyan-dark": "{cyan-200}",
+            "sky-light": "{sky-900}",
+            "sky-dark": "{sky-200}",
+            "indigo-light": "{indigo-800}",
+            "indigo-dark": "{indigo-200}",
             "violet-light": "{violet-900}",
             "violet-dark": "{violet-200}",
-            "emerald-light": "{teal-900}",
-            "emerald-dark": "{teal-200}"
+            "purple-light": "{purple-900}",
+            "purple-dark": "{purple-200}",
+            "fuchsia-light": "{fuchsia-900}",
+            "fuchsia-dark": "{fuchsia-200}",
+            "pink-light": "{pink-900}",
+            "pink-dark": "{pink-200}",
+            "rose-light": "{rose-900}",
+            "rose-dark": "{rose-200}"
           }
         }
       }
@@ -754,10 +976,38 @@
         "com.serupa": {
           "themes": {
             "blue-dark": "{blue-950}",
+            "red-light": "{red-50}",
+            "red-dark": "{red-950}",
+            "orange-light": "{orange-50}",
+            "orange-dark": "{orange-950}",
+            "amber-light": "{amber-50}",
+            "amber-dark": "{amber-950}",
+            "yellow-light": "{yellow-50}",
+            "yellow-dark": "{yellow-950}",
+            "lime-light": "{lime-50}",
+            "lime-dark": "{lime-950}",
+            "green-light": "{green-50}",
+            "green-dark": "{green-950}",
+            "emerald-light": "{emerald-50}",
+            "emerald-dark": "{emerald-950}",
+            "teal-light": "{teal-50}",
+            "teal-dark": "{teal-950}",
+            "cyan-light": "{cyan-50}",
+            "cyan-dark": "{cyan-950}",
+            "sky-light": "{sky-50}",
+            "sky-dark": "{sky-950}",
+            "indigo-light": "{indigo-50}",
+            "indigo-dark": "{indigo-950}",
             "violet-light": "{violet-50}",
             "violet-dark": "{violet-950}",
-            "emerald-light": "{teal-50}",
-            "emerald-dark": "{teal-950}"
+            "purple-light": "{purple-50}",
+            "purple-dark": "{purple-950}",
+            "fuchsia-light": "{fuchsia-50}",
+            "fuchsia-dark": "{fuchsia-950}",
+            "pink-light": "{pink-50}",
+            "pink-dark": "{pink-950}",
+            "rose-light": "{rose-50}",
+            "rose-dark": "{rose-950}"
           }
         }
       }
@@ -770,10 +1020,38 @@
         "com.serupa": {
           "themes": {
             "blue-dark": "{blue-950}",
+            "red-light": "{white}",
+            "red-dark": "{red-950}",
+            "orange-light": "{white}",
+            "orange-dark": "{orange-950}",
+            "amber-light": "{white}",
+            "amber-dark": "{amber-950}",
+            "yellow-light": "{white}",
+            "yellow-dark": "{yellow-950}",
+            "lime-light": "{white}",
+            "lime-dark": "{lime-950}",
+            "green-light": "{white}",
+            "green-dark": "{green-950}",
+            "emerald-light": "{white}",
+            "emerald-dark": "{emerald-950}",
+            "teal-light": "{white}",
+            "teal-dark": "{teal-950}",
+            "cyan-light": "{white}",
+            "cyan-dark": "{cyan-950}",
+            "sky-light": "{white}",
+            "sky-dark": "{sky-950}",
+            "indigo-light": "{white}",
+            "indigo-dark": "{indigo-950}",
             "violet-light": "{white}",
             "violet-dark": "{violet-950}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{teal-950}"
+            "purple-light": "{white}",
+            "purple-dark": "{purple-950}",
+            "fuchsia-light": "{white}",
+            "fuchsia-dark": "{fuchsia-950}",
+            "pink-light": "{white}",
+            "pink-dark": "{pink-950}",
+            "rose-light": "{white}",
+            "rose-dark": "{rose-950}"
           }
         }
       }
@@ -784,13 +1062,7 @@
       "$description": "Alias. Secondary button fill; hover fill for outline and ghost buttons.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{zinc-100}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
-          }
+          "dark": "{zinc-700}"
         }
       }
     },
@@ -800,13 +1072,7 @@
       "$description": "Alias. Hover state of `secondary`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-600}",
-            "violet-light": "{zinc-200}",
-            "violet-dark": "{zinc-600}",
-            "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-700}"
-          }
+          "dark": "{zinc-600}"
         }
       }
     },
@@ -816,13 +1082,7 @@
       "$description": "The keyboard-highlighted item in a list: Menu items, Combobox and TimePicker options, the Sidebar's current page. In light the same zinc-100 as `secondary` (about 1.1:1 on `surface`); in dark it shares `secondary`'s zinc-700 (1.7:1 on `surface`, 1.4:1 on `surface-overlay`), with no bar by default (`highlight-indicator`). Text on it keeps 4.5:1.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{zinc-100}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
-          }
+          "dark": "{zinc-700}"
         }
       }
     },
@@ -832,13 +1092,7 @@
       "$description": "Alias. The fill while a row, tab, day or page button is held down (`:active`): one step past its hover. `text` keeps 7:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-600}",
-            "violet-light": "{zinc-300}",
-            "violet-dark": "{zinc-600}",
-            "emerald-light": "{zinc-300}",
-            "emerald-dark": "{zinc-700}"
-          }
+          "dark": "{zinc-600}"
         }
       }
     },
@@ -848,13 +1102,7 @@
       "$description": "Alias. Card, panel and bar background (white light, zinc-900 dark). The page behind them is `surface-page`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-900}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-900}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-950}"
-          }
+          "dark": "{zinc-900}"
         }
       }
     },
@@ -864,13 +1112,7 @@
       "$description": "Alias. The page itself: the <html> and <body> background, and a data-mode or data-theme section's. White in light, as `surface`; in dark zinc-950, a step below the zinc-900 cards, panels and bars on it, so they and every control (fields, buttons, SegmentedControl's track) sit lighter than the page.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-950}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-950}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-950}"
-          }
+          "dark": "{zinc-950}"
         }
       }
     },
@@ -880,13 +1122,7 @@
       "$description": "Alias. Secondary panels, sidebars, table headers, filled Cards and wells: recessed, so a step below `surface` in both modes (zinc-50 under white in light, zinc-950 under zinc-900 in dark). A recess, so never the fill of something you press: controls use `surface-control`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-950}",
-            "violet-light": "{zinc-50}",
-            "violet-dark": "{zinc-950}",
-            "emerald-light": "{zinc-50}",
-            "emerald-dark": "{black}"
-          }
+          "dark": "{zinc-950}"
         }
       }
     },
@@ -896,45 +1132,27 @@
       "$description": "Alias. The fill of a control that is its own surface rather than a field: SegmentedControl's track, FileUpload's drop zone. zinc-50 in light, as `surface-muted`; in dark a step above the zinc-950 page (zinc-900), so a control is never darker than the surface it sits on.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-900}",
-            "violet-light": "{zinc-50}",
-            "violet-dark": "{zinc-900}",
-            "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-900}"
-          }
+          "dark": "{zinc-900}"
         }
       }
     },
     "surface-hover": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): one quiet step off `surface` in every theme (zinc-50 light, zinc-800 dark, zinc-900 in emerald dark, whose `surface` is zinc-950), and a step under `highlight`, so an item pointed at never looks like the current one.",
+      "$description": "Alias. A row or item on `surface` under the pointer, a selected row, a striped row (List, Table, InlineEdit): one quiet step off `surface` in every theme (zinc-50 light, zinc-800 dark), and a step under `highlight`, so an item pointed at never looks like the current one.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-800}",
-            "violet-light": "{zinc-50}",
-            "violet-dark": "{zinc-800}",
-            "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-900}"
-          }
+          "dark": "{zinc-800}"
         }
       }
     },
     "surface-hover-raised": {
       "$type": "color",
       "$value": "{color.zinc-50}",
-      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-50 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1; in emerald dark, whose raised surfaces are zinc-900 and whose `highlight` is zinc-800, halfway between those two: always a step under the current item's fill.",
+      "$description": "Alias. A List or InlineEdit row under the pointer or selected on a raised or floating surface (an elevated Card, a Popover, Dialog or Drawer): zinc-50 in light; in dark a step above zinc-800, halfway to zinc-700, where muted text keeps 4.5:1: always a step under the current item's fill.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "#333338",
-            "violet-light": "{zinc-50}",
-            "violet-dark": "#333338",
-            "emerald-light": "{zinc-50}",
-            "emerald-dark": "#202023"
-          }
+          "dark": "#333338"
         }
       }
     },
@@ -944,13 +1162,7 @@
       "$description": "Alias. A raised card (Card `elevated`). One step up from `surface` in dark, where a shadow doesn't show.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-800}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-800}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
-          }
+          "dark": "{zinc-800}"
         }
       }
     },
@@ -960,13 +1172,7 @@
       "$description": "Alias. Anything in the top layer: Menu, Popover, Dialog, Drawer, Toast and the Combobox, DatePicker and TimePicker lists.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-800}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-800}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-900}"
-          }
+          "dark": "{zinc-800}"
         }
       }
     },
@@ -976,13 +1182,7 @@
       "$description": "Alias. Background of text inputs, selects and other form fields: white in light, zinc-800 in dark, a fill that sets a field apart from the page and cards around it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-800}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-800}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-800}"
-          }
+          "dark": "{zinc-800}"
         }
       }
     },
@@ -992,13 +1192,7 @@
       "$description": "Alias. Background of a read-only or disabled form field: a step flatter than `field` (zinc-50 in light, zinc-900 in dark), so it reads as not editable while its `field-border` still outlines it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-900}",
-            "violet-light": "{zinc-50}",
-            "violet-dark": "{zinc-900}",
-            "emerald-light": "{zinc-50}",
-            "emerald-dark": "{zinc-900}"
-          }
+          "dark": "{zinc-900}"
         }
       }
     },
@@ -1008,13 +1202,7 @@
       "$description": "The 2px bar at the start of the highlighted item in a dropdown list: Menu items, and Combobox, Select, TimePicker, MentionInput and CommandPalette options. By default it is the same color as `highlight` in every theme (change both together), so no bar shows and the grey fill alone marks the item: under the 3:1 WCAG 1.4.11 asks, a deliberate design choice, as with `field-border`. The item is also the one the screen reader names and the one Enter picks. More contrast (`data-contrast=\"more\"` or the system setting) turns the bar `text`-dark, 3:1+ on `highlight`, and forced colors outline the item in `Highlight`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{zinc-100}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
-          },
+          "dark": "{zinc-700}",
           "contrastMore": {
             "light": "{zinc-950}",
             "dark": "{white}"
@@ -1028,13 +1216,7 @@
       "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput): a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{zinc-300}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-300}",
-            "emerald-dark": "{zinc-700}"
-          },
+          "dark": "{zinc-700}",
           "contrastMore": {
             "light": "{zinc-700}",
             "dark": "{zinc-300}"
@@ -1048,13 +1230,7 @@
       "$description": "Alias. Field border on hover: the resting `field-border` one gray step stronger (zinc-400 in light, zinc-600 in dark), so the field answers the pointer without taking the accent, which stays for focus.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-600}",
-            "violet-light": "{zinc-400}",
-            "violet-dark": "{zinc-600}",
-            "emerald-light": "{zinc-400}",
-            "emerald-dark": "{zinc-600}"
-          },
+          "dark": "{zinc-600}",
           "contrastMore": {
             "light": "{zinc-900}",
             "dark": "{zinc-100}"
@@ -1068,13 +1244,7 @@
       "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, SegmentedControl, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-400}",
-            "violet-light": "{zinc-500}",
-            "violet-dark": "{zinc-400}",
-            "emerald-light": "{zinc-500}",
-            "emerald-dark": "{zinc-400}"
-          },
+          "dark": "{zinc-400}",
           "contrastMore": {
             "light": "{zinc-700}",
             "dark": "{zinc-300}"
@@ -1088,13 +1258,7 @@
       "$description": "Alias. `border-control` on hover, one step stronger (Switch's track).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-300}",
-            "violet-light": "{zinc-600}",
-            "violet-dark": "{zinc-300}",
-            "emerald-light": "{zinc-600}",
-            "emerald-dark": "{zinc-300}"
-          },
+          "dark": "{zinc-300}",
           "contrastMore": {
             "light": "{zinc-900}",
             "dark": "{zinc-100}"
@@ -1108,13 +1272,7 @@
       "$description": "Alias. The fill of a button inside a field under the pointer (a calendar or clock button, Input's icon action, NumberInput's steppers, the country button): `secondary` in light, zinc-700 in dark, a step past the zinc-800 field.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{zinc-100}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-700}"
-          }
+          "dark": "{zinc-700}"
         }
       }
     },
@@ -1124,29 +1282,17 @@
       "$description": "Alias. The fill of a button inside a field while it's held down, one step past `field-hover` (zinc-200 in light, zinc-600 in dark; text keeps 4.5:1 on it).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-600}",
-            "violet-light": "{zinc-200}",
-            "violet-dark": "{zinc-600}",
-            "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-600}"
-          }
+          "dark": "{zinc-600}"
         }
       }
     },
     "field-raised": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. Emerald dark, whose overlays are zinc-900, keeps zinc-800. `field-hover` and `field-pressed` already sit a step past it.",
+      "$description": "Alias. `field` on a raised or floating surface (Dialog, Drawer, Popover, an elevated Card, a bg-surface-raised or bg-surface-overlay panel), which set `--field` to it: white in light; in dark a step above the zinc-800 overlay (#333338, as `surface-hover-raised`), so a field in a dialog still stands out from it instead of matching it. `field-hover` and `field-pressed` already sit a step past it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "#333338",
-            "violet-light": "{white}",
-            "violet-dark": "#333338",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-800}"
-          }
+          "dark": "#333338"
         }
       }
     },
@@ -1156,13 +1302,7 @@
       "$description": "Alias. An invalid field's border: `danger` (red 600), 3:1+ on `field` and `surface`. Its own alias so a theme whose field fill is lighter can take a lighter red.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-600}",
-            "violet-light": "{red-600}",
-            "violet-dark": "{red-600}",
-            "emerald-light": "{red-600}",
-            "emerald-dark": "{red-600}"
-          }
+          "dark": "{red-600}"
         }
       }
     },
@@ -1174,18 +1314,74 @@
         "com.serupa": {
           "themes": {
             "blue-dark": "{blue-400}",
+            "red-light": "{red-600}",
+            "red-dark": "{red-400}",
+            "orange-light": "{orange-700}",
+            "orange-dark": "{orange-400}",
+            "amber-light": "{amber-700}",
+            "amber-dark": "{amber-400}",
+            "yellow-light": "{yellow-700}",
+            "yellow-dark": "{yellow-400}",
+            "lime-light": "{lime-700}",
+            "lime-dark": "{lime-400}",
+            "green-light": "{green-700}",
+            "green-dark": "{green-400}",
+            "emerald-light": "{emerald-700}",
+            "emerald-dark": "{emerald-400}",
+            "teal-light": "{teal-700}",
+            "teal-dark": "{teal-400}",
+            "cyan-light": "{cyan-700}",
+            "cyan-dark": "{cyan-400}",
+            "sky-light": "{sky-700}",
+            "sky-dark": "{sky-400}",
+            "indigo-light": "{indigo-600}",
+            "indigo-dark": "{indigo-400}",
             "violet-light": "{violet-600}",
             "violet-dark": "{violet-400}",
-            "emerald-light": "{teal-700}",
-            "emerald-dark": "{teal-400}"
+            "purple-light": "{purple-600}",
+            "purple-dark": "{purple-400}",
+            "fuchsia-light": "{fuchsia-600}",
+            "fuchsia-dark": "{fuchsia-400}",
+            "pink-light": "{pink-700}",
+            "pink-dark": "{pink-400}",
+            "rose-light": "{rose-600}",
+            "rose-dark": "{rose-400}"
           },
           "contrastMore": {
             "blue-light": "{blue-800}",
             "blue-dark": "{blue-300}",
+            "red-light": "{red-800}",
+            "red-dark": "{red-300}",
+            "orange-light": "{orange-900}",
+            "orange-dark": "{orange-300}",
+            "amber-light": "{amber-900}",
+            "amber-dark": "{amber-300}",
+            "yellow-light": "{yellow-900}",
+            "yellow-dark": "{yellow-300}",
+            "lime-light": "{lime-900}",
+            "lime-dark": "{lime-300}",
+            "green-light": "{green-900}",
+            "green-dark": "{green-300}",
+            "emerald-light": "{emerald-800}",
+            "emerald-dark": "{emerald-300}",
+            "teal-light": "{teal-800}",
+            "teal-dark": "{teal-300}",
+            "cyan-light": "{cyan-900}",
+            "cyan-dark": "{cyan-300}",
+            "sky-light": "{sky-800}",
+            "sky-dark": "{sky-300}",
+            "indigo-light": "{indigo-700}",
+            "indigo-dark": "{indigo-300}",
             "violet-light": "{violet-800}",
             "violet-dark": "{violet-300}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-300}"
+            "purple-light": "{purple-800}",
+            "purple-dark": "{purple-300}",
+            "fuchsia-light": "{fuchsia-800}",
+            "fuchsia-dark": "{fuchsia-300}",
+            "pink-light": "{pink-800}",
+            "pink-dark": "{pink-300}",
+            "rose-light": "{rose-800}",
+            "rose-dark": "{rose-300}"
           }
         }
       }
@@ -1196,13 +1392,7 @@
       "$description": "Alias. Placeholder text in form fields, and the other muted text inside a field: a prefix or suffix, a character count, the Caps Lock hint (4.5:1+ on `field` and `field-readonly`). Placeholders are hints, never labels.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-400}",
-            "violet-light": "{zinc-500}",
-            "violet-dark": "{zinc-400}",
-            "emerald-light": "{zinc-500}",
-            "emerald-dark": "{zinc-400}"
-          },
+          "dark": "{zinc-400}",
           "contrastMore": {
             "light": "{zinc-600}",
             "dark": "{zinc-300}"
@@ -1225,13 +1415,7 @@
       "$description": "Alias. The dimmed backdrop behind dialogs and drawers (zinc-900 at 50% in light themes, zinc-950 at 70% in dark).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "#09090bb3",
-            "violet-light": "#18181b80",
-            "violet-dark": "#09090bb3",
-            "emerald-light": "#18181b80",
-            "emerald-dark": "#09090bb3"
-          }
+          "dark": "#09090bb3"
         }
       }
     },
@@ -1250,13 +1434,7 @@
       "$description": "Alias. A hairline just inside a photo's edge (Image, Avatar), so a picture with a white or black background keeps its shape on a page of the same color: black at 10% in light themes, white at 10% in dark.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "#ffffff1a",
-            "violet-light": "#0000001a",
-            "violet-dark": "#ffffff1a",
-            "emerald-light": "#0000001a",
-            "emerald-dark": "#ffffff1a"
-          }
+          "dark": "#ffffff1a"
         }
       }
     },
@@ -1266,13 +1444,7 @@
       "$description": "Alias. Contrasting blocks: tooltips, inverse banners.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-50}",
-            "violet-light": "{zinc-900}",
-            "violet-dark": "{zinc-50}",
-            "emerald-light": "{zinc-900}",
-            "emerald-dark": "{zinc-50}"
-          }
+          "dark": "{zinc-50}"
         }
       }
     },
@@ -1282,13 +1454,7 @@
       "$description": "Alias. Body text and headings on `surface`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-50}",
-            "violet-light": "{zinc-900}",
-            "violet-dark": "{zinc-50}",
-            "emerald-light": "{zinc-900}",
-            "emerald-dark": "{zinc-50}"
-          },
+          "dark": "{zinc-50}",
           "contrastMore": {
             "light": "{zinc-950}",
             "dark": "{white}"
@@ -1302,13 +1468,7 @@
       "$description": "Alias. Secondary text, captions, placeholders (4.5:1+ on `surface` in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-400}",
-            "violet-light": "{zinc-500}",
-            "violet-dark": "{zinc-400}",
-            "emerald-light": "{zinc-500}",
-            "emerald-dark": "{zinc-400}"
-          },
+          "dark": "{zinc-400}",
           "contrastMore": {
             "light": "{zinc-700}",
             "dark": "{zinc-300}"
@@ -1322,29 +1482,17 @@
       "$description": "Alias. Text on `surface-inverse`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-900}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-900}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-950}"
-          }
+          "dark": "{zinc-900}"
         }
       }
     },
     "border": {
       "$type": "color",
       "$value": "{color.zinc-200}",
-      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines (emerald: 10% ink, 8% white). A quiet line, never a control's boundary: those use `field-border` or `border-control`.",
+      "$description": "Alias. Default borders and dividers: zinc-200 in light; zinc-800 in dark, a step off the zinc-900 cards and bars it outlines. A quiet line, never a control's boundary: those use `field-border` or `border-control`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-800}",
-            "violet-light": "{zinc-200}",
-            "violet-dark": "{zinc-800}",
-            "emerald-light": "#09090b1a",
-            "emerald-dark": "#ffffff14"
-          },
+          "dark": "{zinc-800}",
           "contrastMore": {
             "light": "{zinc-500}",
             "dark": "{zinc-400}"
@@ -1358,13 +1506,7 @@
       "$description": "Alias. Emphasised dividers and outlines. Form fields use `field-border`, which meets the 3:1 a control boundary needs.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-600}",
-            "violet-light": "{zinc-300}",
-            "violet-dark": "{zinc-600}",
-            "emerald-light": "#09090b2e",
-            "emerald-dark": "#ffffff38"
-          },
+          "dark": "{zinc-600}",
           "contrastMore": {
             "light": "{zinc-600}",
             "dark": "{zinc-300}"
@@ -1372,21 +1514,13 @@
         }
       }
     },
-
-
     "border-overlay": {
       "$type": "color",
       "$value": "{color.zinc-200}",
       "$description": "Alias. The edge of a top-layer surface. In dark it is one step stronger than `border`, so a menu stands off the page.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-600}",
-            "violet-light": "{zinc-200}",
-            "violet-dark": "{zinc-600}",
-            "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-700}"
-          }
+          "dark": "{zinc-600}"
         }
       }
     },
@@ -1398,18 +1532,74 @@
         "com.serupa": {
           "themes": {
             "blue-dark": "{blue-400}",
+            "red-light": "{red-500}",
+            "red-dark": "{red-400}",
+            "orange-light": "{orange-600}",
+            "orange-dark": "{orange-400}",
+            "amber-light": "{amber-600}",
+            "amber-dark": "{amber-400}",
+            "yellow-light": "{yellow-700}",
+            "yellow-dark": "{yellow-400}",
+            "lime-light": "{lime-700}",
+            "lime-dark": "{lime-400}",
+            "green-light": "{green-600}",
+            "green-dark": "{green-400}",
+            "emerald-light": "{emerald-600}",
+            "emerald-dark": "{emerald-400}",
+            "teal-light": "{teal-600}",
+            "teal-dark": "{teal-400}",
+            "cyan-light": "{cyan-600}",
+            "cyan-dark": "{cyan-400}",
+            "sky-light": "{sky-600}",
+            "sky-dark": "{sky-400}",
+            "indigo-light": "{indigo-500}",
+            "indigo-dark": "{indigo-400}",
             "violet-light": "{violet-500}",
             "violet-dark": "{violet-400}",
-            "emerald-light": "{teal-600}",
-            "emerald-dark": "{teal-400}"
+            "purple-light": "{purple-500}",
+            "purple-dark": "{purple-400}",
+            "fuchsia-light": "{fuchsia-500}",
+            "fuchsia-dark": "{fuchsia-400}",
+            "pink-light": "{pink-500}",
+            "pink-dark": "{pink-400}",
+            "rose-light": "{rose-500}",
+            "rose-dark": "{rose-400}"
           },
           "contrastMore": {
             "blue-light": "{blue-700}",
             "blue-dark": "{blue-300}",
+            "red-light": "{red-700}",
+            "red-dark": "{red-300}",
+            "orange-light": "{orange-700}",
+            "orange-dark": "{orange-300}",
+            "amber-light": "{amber-700}",
+            "amber-dark": "{amber-300}",
+            "yellow-light": "{yellow-700}",
+            "yellow-dark": "{yellow-300}",
+            "lime-light": "{lime-700}",
+            "lime-dark": "{lime-300}",
+            "green-light": "{green-700}",
+            "green-dark": "{green-300}",
+            "emerald-light": "{emerald-700}",
+            "emerald-dark": "{emerald-300}",
+            "teal-light": "{teal-700}",
+            "teal-dark": "{teal-300}",
+            "cyan-light": "{cyan-700}",
+            "cyan-dark": "{cyan-300}",
+            "sky-light": "{sky-700}",
+            "sky-dark": "{sky-300}",
+            "indigo-light": "{indigo-600}",
+            "indigo-dark": "{indigo-300}",
             "violet-light": "{violet-700}",
             "violet-dark": "{violet-300}",
-            "emerald-light": "{teal-700}",
-            "emerald-dark": "{teal-300}"
+            "purple-light": "{purple-600}",
+            "purple-dark": "{purple-300}",
+            "fuchsia-light": "{violet-700}",
+            "fuchsia-dark": "{violet-300}",
+            "pink-light": "{pink-700}",
+            "pink-dark": "{pink-300}",
+            "rose-light": "{rose-700}",
+            "rose-dark": "{rose-300}"
           }
         }
       }
@@ -1420,13 +1610,7 @@
       "$description": "Alias. Success icons and fills (3:1). For success text use `success-text`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{green-500}",
-            "violet-light": "{green-600}",
-            "violet-dark": "{green-500}",
-            "emerald-light": "{green-600}",
-            "emerald-dark": "{green-500}"
-          },
+          "dark": "{green-500}",
           "contrastMore": {
             "light": "{green-700}",
             "dark": "{green-300}"
@@ -1440,13 +1624,7 @@
       "$description": "Alias. Success alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{green-950}",
-            "violet-light": "{green-50}",
-            "violet-dark": "{green-950}",
-            "emerald-light": "{green-50}",
-            "emerald-dark": "{green-950}"
-          }
+          "dark": "{green-950}"
         }
       }
     },
@@ -1456,13 +1634,7 @@
       "$description": "Alias. Success text on `surface`, `surface-muted` and `success-subtle` (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{green-300}",
-            "violet-light": "{green-700}",
-            "violet-dark": "{green-300}",
-            "emerald-light": "{green-700}",
-            "emerald-dark": "{green-300}"
-          },
+          "dark": "{green-300}",
           "contrastMore": {
             "light": "{green-900}",
             "dark": "{green-200}"
@@ -1476,13 +1648,7 @@
       "$description": "Alias. Hover / pressed state of `success` fills; `on-success` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{green-400}",
-            "violet-light": "{green-500}",
-            "violet-dark": "{green-400}",
-            "emerald-light": "{green-500}",
-            "emerald-dark": "{green-400}"
-          }
+          "dark": "{green-400}"
         }
       }
     },
@@ -1492,13 +1658,7 @@
       "$description": "Alias. Text and icons on `success` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{green-950}",
-            "violet-light": "{green-950}",
-            "violet-dark": "{green-950}",
-            "emerald-light": "{green-950}",
-            "emerald-dark": "{green-950}"
-          },
+          "dark": "{green-950}",
           "contrastMore": {
             "light": "{white}",
             "dark": "{green-950}"
@@ -1512,13 +1672,7 @@
       "$description": "Alias. Hover fill of an interactive `success-subtle` surface; `success-text` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{green-900}",
-            "violet-light": "{green-100}",
-            "violet-dark": "{green-900}",
-            "emerald-light": "{green-100}",
-            "emerald-dark": "{green-900}"
-          }
+          "dark": "{green-900}"
         }
       }
     },
@@ -1528,13 +1682,7 @@
       "$description": "Alias. Border of a success outline control or callout.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{green-800}",
-            "violet-light": "{green-300}",
-            "violet-dark": "{green-800}",
-            "emerald-light": "{green-300}",
-            "emerald-dark": "{green-800}"
-          }
+          "dark": "{green-800}"
         }
       }
     },
@@ -1544,13 +1692,7 @@
       "$description": "Alias. Warning icons and fills; put dark text on it. For warning text use `warning-text`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{amber-500}",
-            "violet-light": "{amber-600}",
-            "violet-dark": "{amber-500}",
-            "emerald-light": "{amber-600}",
-            "emerald-dark": "{amber-500}"
-          },
+          "dark": "{amber-500}",
           "contrastMore": {
             "light": "{amber-700}",
             "dark": "{amber-300}"
@@ -1564,13 +1706,7 @@
       "$description": "Alias. Warning alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{amber-950}",
-            "violet-light": "{amber-50}",
-            "violet-dark": "{amber-950}",
-            "emerald-light": "{amber-50}",
-            "emerald-dark": "{amber-950}"
-          }
+          "dark": "{amber-950}"
         }
       }
     },
@@ -1580,13 +1716,7 @@
       "$description": "Alias. Warning text on `surface`, `surface-muted` and `warning-subtle` (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{amber-300}",
-            "violet-light": "{amber-700}",
-            "violet-dark": "{amber-300}",
-            "emerald-light": "{amber-700}",
-            "emerald-dark": "{amber-300}"
-          },
+          "dark": "{amber-300}",
           "contrastMore": {
             "light": "{amber-900}",
             "dark": "{amber-200}"
@@ -1600,13 +1730,7 @@
       "$description": "Alias. Hover / pressed state of `warning` fills; `on-warning` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{amber-400}",
-            "violet-light": "{amber-500}",
-            "violet-dark": "{amber-400}",
-            "emerald-light": "{amber-500}",
-            "emerald-dark": "{amber-400}"
-          }
+          "dark": "{amber-400}"
         }
       }
     },
@@ -1616,13 +1740,7 @@
       "$description": "Alias. Text and icons on `warning` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{amber-950}",
-            "violet-light": "{amber-950}",
-            "violet-dark": "{amber-950}",
-            "emerald-light": "{amber-950}",
-            "emerald-dark": "{amber-950}"
-          },
+          "dark": "{amber-950}",
           "contrastMore": {
             "light": "{white}",
             "dark": "{amber-950}"
@@ -1636,13 +1754,7 @@
       "$description": "Alias. Hover fill of an interactive `warning-subtle` surface; `warning-text` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{amber-900}",
-            "violet-light": "{amber-100}",
-            "violet-dark": "{amber-900}",
-            "emerald-light": "{amber-100}",
-            "emerald-dark": "{amber-900}"
-          }
+          "dark": "{amber-900}"
         }
       }
     },
@@ -1652,13 +1764,7 @@
       "$description": "Alias. Border of a warning outline control or callout.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{amber-800}",
-            "violet-light": "{amber-300}",
-            "violet-dark": "{amber-800}",
-            "emerald-light": "{amber-300}",
-            "emerald-dark": "{amber-800}"
-          }
+          "dark": "{amber-800}"
         }
       }
     },
@@ -1668,13 +1774,7 @@
       "$description": "Alias. Errors, destructive buttons; white text on it (4.8:1). For error text on dark surfaces use `red-400`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-600}",
-            "violet-light": "{red-600}",
-            "violet-dark": "{red-600}",
-            "emerald-light": "{red-600}",
-            "emerald-dark": "{red-600}"
-          }
+          "dark": "{red-600}"
         }
       }
     },
@@ -1684,13 +1784,7 @@
       "$description": "Alias. Hover / pressed state of `danger`.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-700}",
-            "violet-light": "{red-700}",
-            "violet-dark": "{red-700}",
-            "emerald-light": "{red-700}",
-            "emerald-dark": "{red-700}"
-          }
+          "dark": "{red-700}"
         }
       }
     },
@@ -1700,13 +1794,7 @@
       "$description": "Alias. Text and icons on `danger` fills.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{white}",
-            "violet-light": "{white}",
-            "violet-dark": "{white}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{white}"
-          }
+          "dark": "{white}"
         }
       }
     },
@@ -1716,13 +1804,7 @@
       "$description": "Alias. Error alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-950}",
-            "violet-light": "{red-50}",
-            "violet-dark": "{red-950}",
-            "emerald-light": "{red-50}",
-            "emerald-dark": "{red-950}"
-          }
+          "dark": "{red-950}"
         }
       }
     },
@@ -1732,13 +1814,7 @@
       "$description": "Alias. Destructive text and icons on `surface`, `danger-subtle` and its hover (5.3:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-300}",
-            "violet-light": "{red-700}",
-            "violet-dark": "{red-300}",
-            "emerald-light": "{red-700}",
-            "emerald-dark": "{red-300}"
-          },
+          "dark": "{red-300}",
           "contrastMore": {
             "light": "{red-900}",
             "dark": "{red-200}"
@@ -1752,13 +1828,7 @@
       "$description": "Alias. Hover fill for destructive secondary, outline and ghost buttons.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-900}",
-            "violet-light": "{red-100}",
-            "violet-dark": "{red-900}",
-            "emerald-light": "{red-100}",
-            "emerald-dark": "{red-900}"
-          }
+          "dark": "{red-900}"
         }
       }
     },
@@ -1768,13 +1838,7 @@
       "$description": "Alias. Border of a destructive outline button.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-800}",
-            "violet-light": "{red-300}",
-            "violet-dark": "{red-800}",
-            "emerald-light": "{red-300}",
-            "emerald-dark": "{red-800}"
-          }
+          "dark": "{red-800}"
         }
       }
     },
@@ -1784,13 +1848,7 @@
       "$description": "Alias. Informational icons and text.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{sky-400}",
-            "violet-light": "{sky-700}",
-            "violet-dark": "{sky-400}",
-            "emerald-light": "{sky-700}",
-            "emerald-dark": "{sky-400}"
-          },
+          "dark": "{sky-400}",
           "contrastMore": {
             "light": "{sky-800}",
             "dark": "{sky-300}"
@@ -1804,13 +1862,7 @@
       "$description": "Alias. Info alert / badge background.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{sky-950}",
-            "violet-light": "{sky-50}",
-            "violet-dark": "{sky-950}",
-            "emerald-light": "{sky-50}",
-            "emerald-dark": "{sky-950}"
-          }
+          "dark": "{sky-950}"
         }
       }
     },
@@ -1820,13 +1872,7 @@
       "$description": "Alias. Info text on `surface`, `surface-muted` and `info-subtle` (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{sky-300}",
-            "violet-light": "{sky-700}",
-            "violet-dark": "{sky-300}",
-            "emerald-light": "{sky-700}",
-            "emerald-dark": "{sky-300}"
-          },
+          "dark": "{sky-300}",
           "contrastMore": {
             "light": "{sky-900}",
             "dark": "{sky-200}"
@@ -1840,13 +1886,7 @@
       "$description": "Alias. Hover / pressed state of `info` fills; `on-info` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{sky-300}",
-            "violet-light": "{sky-800}",
-            "violet-dark": "{sky-300}",
-            "emerald-light": "{sky-800}",
-            "emerald-dark": "{sky-300}"
-          }
+          "dark": "{sky-300}"
         }
       }
     },
@@ -1856,13 +1896,7 @@
       "$description": "Alias. Text and icons on `info` fills (4.5:1+ in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{sky-950}",
-            "violet-light": "{white}",
-            "violet-dark": "{sky-950}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{sky-950}"
-          }
+          "dark": "{sky-950}"
         }
       }
     },
@@ -1872,13 +1906,7 @@
       "$description": "Alias. Hover fill of an interactive `info-subtle` surface; `info-text` stays 4.5:1+ on it.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{sky-900}",
-            "violet-light": "{sky-100}",
-            "violet-dark": "{sky-900}",
-            "emerald-light": "{sky-100}",
-            "emerald-dark": "{sky-900}"
-          }
+          "dark": "{sky-900}"
         }
       }
     },
@@ -1888,13 +1916,7 @@
       "$description": "Alias. Border of a info outline control or callout.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{sky-800}",
-            "violet-light": "{sky-300}",
-            "violet-dark": "{sky-800}",
-            "emerald-light": "{sky-300}",
-            "emerald-dark": "{sky-800}"
-          }
+          "dark": "{sky-800}"
         }
       }
     },
@@ -1906,10 +1928,38 @@
         "com.serupa": {
           "themes": {
             "blue-dark": "{violet-300}",
+            "red-light": "{violet-700}",
+            "red-dark": "{violet-300}",
+            "orange-light": "{violet-700}",
+            "orange-dark": "{violet-300}",
+            "amber-light": "{violet-700}",
+            "amber-dark": "{violet-300}",
+            "yellow-light": "{violet-700}",
+            "yellow-dark": "{violet-300}",
+            "lime-light": "{violet-700}",
+            "lime-dark": "{violet-300}",
+            "green-light": "{violet-700}",
+            "green-dark": "{violet-300}",
+            "emerald-light": "{violet-700}",
+            "emerald-dark": "{violet-300}",
+            "teal-light": "{violet-700}",
+            "teal-dark": "{violet-300}",
+            "cyan-light": "{violet-700}",
+            "cyan-dark": "{violet-300}",
+            "sky-light": "{violet-700}",
+            "sky-dark": "{violet-300}",
+            "indigo-light": "{fuchsia-700}",
+            "indigo-dark": "{fuchsia-300}",
             "violet-light": "{fuchsia-700}",
             "violet-dark": "{fuchsia-300}",
-            "emerald-light": "{violet-700}",
-            "emerald-dark": "{violet-300}"
+            "purple-light": "{fuchsia-700}",
+            "purple-dark": "{fuchsia-300}",
+            "fuchsia-light": "{violet-700}",
+            "fuchsia-dark": "{violet-300}",
+            "pink-light": "{violet-700}",
+            "pink-dark": "{violet-300}",
+            "rose-light": "{violet-700}",
+            "rose-dark": "{violet-300}"
           }
         }
       }
@@ -1920,13 +1970,7 @@
       "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-500}",
-            "violet-light": "{blue-800}",
-            "violet-dark": "{blue-500}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-600}"
-          },
+          "dark": "{blue-500}",
           "utilities": false
         }
       }
@@ -1937,13 +1981,7 @@
       "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{orange-500}",
-            "violet-light": "{orange-600}",
-            "violet-dark": "{orange-500}",
-            "emerald-light": "{orange-600}",
-            "emerald-dark": "{orange-500}"
-          },
+          "dark": "{orange-500}",
           "utilities": false
         }
       }
@@ -1954,13 +1992,7 @@
       "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{pink-600}",
-            "violet-light": "{pink-800}",
-            "violet-dark": "{pink-600}",
-            "emerald-light": "{purple-700}",
-            "emerald-dark": "{purple-500}"
-          },
+          "dark": "{pink-600}",
           "utilities": false
         }
       }
@@ -1971,13 +2003,7 @@
       "$description": "Alias. Chart series 4 (cyan): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{cyan-500}",
-            "violet-light": "{cyan-600}",
-            "violet-dark": "{cyan-500}",
-            "emerald-light": "{blue-500}",
-            "emerald-dark": "{blue-400}"
-          },
+          "dark": "{cyan-500}",
           "utilities": false
         }
       }
@@ -1988,13 +2014,7 @@
       "$description": "Alias. Chart series 5 (brown): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{yellow-700}",
-            "violet-light": "{yellow-800}",
-            "violet-dark": "{yellow-700}",
-            "emerald-light": "{yellow-800}",
-            "emerald-dark": "{yellow-700}"
-          },
+          "dark": "{yellow-700}",
           "utilities": false
         }
       }
@@ -2005,13 +2025,7 @@
       "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{teal-600}",
-            "violet-light": "{teal-600}",
-            "violet-dark": "{teal-600}",
-            "emerald-light": "{pink-500}",
-            "emerald-dark": "{pink-500}"
-          },
+          "dark": "{teal-600}",
           "utilities": false
         }
       }
@@ -2022,13 +2036,7 @@
       "$description": "Alias. Chart series 7 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{violet-500}",
-            "violet-light": "{violet-800}",
-            "violet-dark": "{violet-500}",
-            "emerald-light": "{violet-800}",
-            "emerald-dark": "{violet-500}"
-          },
+          "dark": "{violet-500}",
           "utilities": false
         }
       }
@@ -2039,13 +2047,7 @@
       "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-600}",
-            "violet-light": "{red-600}",
-            "violet-dark": "{red-600}",
-            "emerald-light": "{red-500}",
-            "emerald-dark": "{red-600}"
-          },
+          "dark": "{red-600}",
           "utilities": false
         }
       }
@@ -2056,13 +2058,7 @@
       "$description": "Alias. Sequential ramp, step 1 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-800}",
-            "violet-light": "{blue-200}",
-            "violet-dark": "{blue-800}",
-            "emerald-light": "{teal-200}",
-            "emerald-dark": "{teal-800}"
-          },
+          "dark": "{blue-800}",
           "utilities": false
         }
       }
@@ -2073,13 +2069,7 @@
       "$description": "Alias. Sequential ramp, step 2 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-600}",
-            "violet-light": "{blue-400}",
-            "violet-dark": "{blue-600}",
-            "emerald-light": "{teal-400}",
-            "emerald-dark": "{teal-600}"
-          },
+          "dark": "{blue-600}",
           "utilities": false
         }
       }
@@ -2090,13 +2080,7 @@
       "$description": "Alias. Sequential ramp, step 3 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-500}",
-            "violet-light": "{blue-600}",
-            "violet-dark": "{blue-500}",
-            "emerald-light": "{teal-600}",
-            "emerald-dark": "{teal-500}"
-          },
+          "dark": "{blue-500}",
           "utilities": false
         }
       }
@@ -2107,13 +2091,7 @@
       "$description": "Alias. Sequential ramp, step 4 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-300}",
-            "violet-light": "{blue-800}",
-            "violet-dark": "{blue-300}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-300}"
-          },
+          "dark": "{blue-300}",
           "utilities": false
         }
       }
@@ -2124,13 +2102,7 @@
       "$description": "Alias. Sequential ramp, step 5 of 5 (low to high): a heat map or a choropleth. Each step stands out more from `surface` than the one before, and the last is 3:1+.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-100}",
-            "violet-light": "{blue-950}",
-            "violet-dark": "{blue-100}",
-            "emerald-light": "{teal-950}",
-            "emerald-dark": "{teal-100}"
-          },
+          "dark": "{blue-100}",
           "utilities": false
         }
       }
@@ -2141,13 +2113,7 @@
       "$description": "Alias. Diverging ramp, step 1 of 7 (below the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle; the ends are 3:1+.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-300}",
-            "violet-light": "{red-700}",
-            "violet-dark": "{red-300}",
-            "emerald-light": "{red-700}",
-            "emerald-dark": "{red-300}"
-          },
+          "dark": "{red-300}",
           "utilities": false
         }
       }
@@ -2158,13 +2124,7 @@
       "$description": "Alias. Diverging ramp, step 2 of 7 (below the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-500}",
-            "violet-light": "{red-500}",
-            "violet-dark": "{red-500}",
-            "emerald-light": "{red-500}",
-            "emerald-dark": "{red-500}"
-          },
+          "dark": "{red-500}",
           "utilities": false
         }
       }
@@ -2175,13 +2135,7 @@
       "$description": "Alias. Diverging ramp, step 3 of 7 (below the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{red-800}",
-            "violet-light": "{red-200}",
-            "violet-dark": "{red-800}",
-            "emerald-light": "{red-200}",
-            "emerald-dark": "{red-800}"
-          },
+          "dark": "{red-800}",
           "utilities": false
         }
       }
@@ -2192,13 +2146,7 @@
       "$description": "Alias. Diverging ramp, step 4 of 7 (the middle, no change): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{zinc-100}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-100}",
-            "emerald-dark": "{zinc-800}"
-          },
+          "dark": "{zinc-700}",
           "utilities": false
         }
       }
@@ -2209,13 +2157,7 @@
       "$description": "Alias. Diverging ramp, step 5 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-800}",
-            "violet-light": "{blue-200}",
-            "violet-dark": "{blue-800}",
-            "emerald-light": "{teal-300}",
-            "emerald-dark": "{teal-800}"
-          },
+          "dark": "{blue-800}",
           "utilities": false
         }
       }
@@ -2226,13 +2168,7 @@
       "$description": "Alias. Diverging ramp, step 6 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-500}",
-            "violet-light": "{blue-500}",
-            "violet-dark": "{blue-500}",
-            "emerald-light": "{teal-600}",
-            "emerald-dark": "{teal-500}"
-          },
+          "dark": "{blue-500}",
           "utilities": false
         }
       }
@@ -2243,13 +2179,7 @@
       "$description": "Alias. Diverging ramp, step 7 of 7 (above the middle): change from a baseline, red under it and blue over it. Steps stand out more from `surface` the further they are from the middle; the ends are 3:1+.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{blue-300}",
-            "violet-light": "{blue-700}",
-            "violet-dark": "{blue-300}",
-            "emerald-light": "{teal-800}",
-            "emerald-dark": "{teal-300}"
-          },
+          "dark": "{blue-300}",
           "utilities": false
         }
       }
@@ -2260,13 +2190,7 @@
       "$description": "Alias. Chart grid lines: quiet, behind the data.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-700}",
-            "violet-light": "{zinc-200}",
-            "violet-dark": "{zinc-700}",
-            "emerald-light": "{zinc-200}",
-            "emerald-dark": "{zinc-800}"
-          },
+          "dark": "{zinc-700}",
           "utilities": false
         }
       }
@@ -2277,13 +2201,7 @@
       "$description": "Alias. Chart axis lines and ticks (3:1+ on `surface` in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-400}",
-            "violet-light": "{zinc-500}",
-            "violet-dark": "{zinc-400}",
-            "emerald-light": "{zinc-500}",
-            "emerald-dark": "{zinc-400}"
-          },
+          "dark": "{zinc-400}",
           "utilities": false
         }
       }
@@ -2294,13 +2212,7 @@
       "$description": "Alias. Chart axis labels, values and legend text (4.5:1+ on `surface` and `surface-raised` in every theme).",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-400}",
-            "violet-light": "{zinc-600}",
-            "violet-dark": "{zinc-400}",
-            "emerald-light": "{zinc-600}",
-            "emerald-dark": "{zinc-400}"
-          },
+          "dark": "{zinc-400}",
           "utilities": false
         }
       }
@@ -2311,13 +2223,7 @@
       "$description": "Alias. The gap drawn between neighbouring bars, slices and areas, so each one has 3:1+ against what touches it (WCAG 1.4.11). The page color: set it to the card's on a raised surface.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{zinc-900}",
-            "violet-light": "{white}",
-            "violet-dark": "{zinc-900}",
-            "emerald-light": "{white}",
-            "emerald-dark": "{zinc-950}"
-          },
+          "dark": "{zinc-900}",
           "utilities": false
         }
       }
@@ -7035,34 +6941,12 @@
     "space-surface": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px; 32px in Modern.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{spacing-6}",
-            "violet-light": "{spacing-6}",
-            "violet-dark": "{spacing-6}",
-            "emerald-light": "{spacing-8}",
-            "emerald-dark": "{spacing-8}"
-          }
-        }
-      }
+      "$description": "The padding of a dialog, a drawer or a large card (Card padding lg), which read it for theirs; Card's default (md) is 20px. 24px."
     },
     "space-section": {
       "$type": "dimension",
       "$value": "{spacing.spacing-8}",
-      "$description": "Between groups or sections of a page. 32px.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{spacing-8}",
-            "violet-light": "{spacing-8}",
-            "violet-dark": "{spacing-8}",
-            "emerald-light": "{spacing-12}",
-            "emerald-dark": "{spacing-12}"
-          }
-        }
-      }
+      "$description": "Between groups or sections of a page. 32px."
     }
   },
   "radius": {
@@ -7174,13 +7058,6 @@
       "$description": "A control or an item people press or type in: buttons, inputs, selects, tabs, badges, tooltips, and the items of a menu, list box, sidebar or tree. 6px.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{rounded-md}",
-            "violet-light": "{rounded-md}",
-            "violet-dark": "{rounded-md}",
-            "emerald-light": "{rounded-lg}",
-            "emerald-dark": "{rounded-lg}"
-          },
           "roundness": {
             "sharp": "{rounded-xs}",
             "round": "{rounded-xl}"
@@ -7194,13 +7071,6 @@
       "$description": "A surface that holds content or floats over the page: alerts, tables, lists, accordions, drop zones, and menus, popovers, list boxes and toasts. 8px.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{rounded-lg}",
-            "violet-light": "{rounded-lg}",
-            "violet-dark": "{rounded-lg}",
-            "emerald-light": "{rounded-xl}",
-            "emerald-dark": "{rounded-xl}"
-          },
           "roundness": {
             "sharp": "{rounded-sm}",
             "round": "{rounded-2xl}"
@@ -7214,13 +7084,6 @@
       "$description": "A large container: cards, dialogs, drawers and carousels. 12px.",
       "$extensions": {
         "com.serupa": {
-          "themes": {
-            "blue-dark": "{rounded-xl}",
-            "violet-light": "{rounded-xl}",
-            "violet-dark": "{rounded-xl}",
-            "emerald-light": "{rounded-xl}",
-            "emerald-dark": "{rounded-xl}"
-          },
           "roundness": {
             "sharp": "{rounded-sm}",
             "round": "{rounded-3xl}"
@@ -7873,200 +7736,27 @@
     "elevation-rest": {
       "$type": "shadow",
       "$value": "{shadow.shadow-xs}",
-      "$description": "Level 1, resting: something sitting on the page with a hairline lift, such as an outline card.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-xs}",
-            "violet-light": "{shadow-xs}",
-            "violet-dark": "{shadow-xs}",
-            "emerald-light": "{shadow-2xs}",
-            "emerald-dark": "{shadow-2xs}"
-          }
-        }
-      }
+      "$description": "Level 1, resting: something sitting on the page with a hairline lift, such as an outline card."
     },
     "elevation-part": {
       "$type": "shadow",
       "$value": "{shadow.shadow-sm}",
-      "$description": "A part raised over the control or content it sits on: a slider thumb, the indicator of a segmented control, carousel arrows, a table head once the rows scroll under it.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-sm}",
-            "violet-light": "{shadow-sm}",
-            "violet-dark": "{shadow-sm}",
-            "emerald-light": "{shadow-xs}",
-            "emerald-dark": "{shadow-xs}"
-          }
-        }
-      }
+      "$description": "A part raised over the control or content it sits on: a slider thumb, the indicator of a segmented control, carousel arrows, a table head once the rows scroll under it."
     },
     "elevation-raised": {
       "$type": "shadow",
       "$value": "{shadow.shadow-md}",
-      "$description": "Level 2, raised: a card raised by hover or on purpose, an item being dragged, a navbar once the page scrolls under it, a tooltip.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-md}",
-            "violet-light": "{shadow-md}",
-            "violet-dark": "{shadow-md}",
-            "emerald-light": "{shadow-sm}",
-            "emerald-dark": "{shadow-sm}"
-          }
-        }
-      }
+      "$description": "Level 2, raised: a card raised by hover or on purpose, an item being dragged, a navbar once the page scrolls under it, a tooltip."
     },
     "elevation-overlay": {
       "$type": "shadow",
       "$value": "{shadow.shadow-lg}",
-      "$description": "Level 3, floating: menus, popovers, list boxes, date and time pickers, hover cards, toasts, a floating action button.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-lg}",
-            "violet-light": "{shadow-lg}",
-            "violet-dark": "{shadow-lg}",
-            "emerald-light": "{shadow-md}",
-            "emerald-dark": "{shadow-md}"
-          }
-        }
-      }
+      "$description": "Level 3, floating: menus, popovers, list boxes, date and time pickers, hover cards, toasts, a floating action button."
     },
     "elevation-modal": {
       "$type": "shadow",
       "$value": "{shadow.shadow-xl}",
-      "$description": "Level 4, modal: dialogs and drawers, over the overlay backdrop.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{shadow-xl}",
-            "violet-light": "{shadow-xl}",
-            "violet-dark": "{shadow-xl}",
-            "emerald-light": "{shadow-lg}",
-            "emerald-dark": "{shadow-lg}"
-          }
-        }
-      }
-    },
-    "depth-control": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added over the shadow of a raised control at rest (the filled, outline and secondary Button, IconButton, ToggleButton, FAB): a short, soft two-layer shadow that lifts it off the page, and in dark mode a faint light along the top edge. Nothing in the flat brands.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.08)"
-        }
-      }
-    },
-    "depth-control-hover": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): the layers of `depth-control` when the pointer is over the control: the same edges, lifted a little higher.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.06)), 0 1px 1px 0 rgb(0 0 0 / 0.04), 0 3px 8px -1px rgb(0 0 0 / 0.12)"
-        }
-      }
-    },
-    "depth-control-pressed": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): the layers while a control is held down, or a toggle is on: an inner shade along the top, so it sinks into the page.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.12), rgb(0 0 0 / 0.35))"
-        }
-      }
-    },
-    "depth-sheen": {
-      "$value": "none",
-      "$description": "Depth (tactile): a background image over a filled control (the primary and destructive Button, a FAB): a soft light from the top edge that fades out before the middle, clear of the label, so the label keeps its contrast (4.5:1 and up, white on red-600 the lowest). `none` in the flat brands.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "linear-gradient(to bottom, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 40%)"
-        }
-      }
-    },
-    "depth-sheen-pressed": {
-      "$value": "none",
-      "$description": "Depth (tactile): `depth-sheen` while the control is held down: the light at the top goes out and a faint shade comes in, so it looks pushed in.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "linear-gradient(to bottom, rgb(0 0 0 / 0.06), rgb(0 0 0 / 0) 40%)"
-        }
-      }
-    },
-    "depth-part": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added to a part that sits on a control and moves: the Switch thumb, the Slider thumb, the SegmentedControl indicator. A hairline edge and a soft, short shadow, like a physical knob.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 1px 0 rgb(0 0 0 / 0.06), 0 2px 6px 0 rgb(0 0 0 / 0.14)"
-        }
-      }
-    },
-    "depth-field": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): an inner shade along the top of a field (Input, Textarea, Select), so it reads as a well to type into.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.08), rgb(0 0 0 / 0.35))"
-        }
-      }
-    },
-    "depth-well": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): a track or groove sunk into the page, deeper than `depth-field`: the Switch track, the Slider, Progress and Meter tracks, an unticked Checkbox or Radio. A soft shade along the top.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 2px 0 light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.4))"
-        }
-      }
-    },
-    "depth-surface": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added inside a surface that floats over the page (menus, popovers, list boxes, date and time pickers, hover cards, tooltips, toasts, dialogs, drawers): a crisp hairline around it and, in dark mode, a faint light along the top edge, so it reads as a raised pane rather than a flat sheet. Over its elevation shadow.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "0 0 0 0.5px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.5)), inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.07))"
-        }
-      }
-    },
-    "depth-card": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added under a surface that rests on the page and can be picked up or opened: a Card at rest, a Kanban card, a SortableList item. A short, soft two-layer shadow, and in dark mode a faint light along the top edge.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "inset 0 1px 0 0 light-dark(rgb(255 255 255 / 0), rgb(255 255 255 / 0.05)), 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 2px 8px -2px rgb(0 0 0 / 0.06)"
-        }
-      }
-    },
-    "depth-card-lift": {
-      "$type": "shadow",
-      "$value": "{shadow.shadow-none}",
-      "$description": "Depth (tactile): layers added to a Card with a link while the pointer is over it: a soft, wider shadow, so the card lifts toward the pointer.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "0 1px 2px 0 rgb(0 0 0 / 0.04), 0 8px 20px -6px rgb(0 0 0 / 0.14)"
-        }
-      }
-    },
-    "depth-press": {
-      "$type": "dimension",
-      "$value": "{spacing.spacing-0}",
-      "$description": "Depth (tactile): how far a pressed Button or link Card moves down while it is held, on top of its press scale, so it reads as pushed into the page. 0 in the flat brands, 1px in a tactile one; 0 under reduced motion.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{spacing-px}"
-        }
-      }
+      "$description": "Level 4, modal: dialogs and drawers, over the overlay backdrop."
     }
   },
   "borders": {
@@ -10680,48 +10370,7 @@
     "motion-release": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-300}",
-            "violet-light": "{duration-300}",
-            "violet-dark": "{duration-300}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
-    },
-    "motion-draw": {
-      "$type": "duration",
-      "$value": "{transitions.duration-0}",
-      "$description": "A mark drawing itself on: the Checkbox tick revealed from its start to its end when it is ticked under the pointer or keyboard. 0 (it appears at once) in the flat brands; `duration-150` in a tactile one. None under reduced motion.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{duration-150}"
-        }
-      }
-    },
-    "motion-toggle": {
-      "$type": "duration",
-      "$value": "{transitions.motion-press}",
-      "$description": "How long a thumb takes to slide to its other end (Switch), with `ease-toggle`. `motion-press` in the flat brands; `motion-release` in a tactile one, the time the spring needs to settle. The snappy spring reaches the end in under a third of it (about 95ms), so the toggle still answers within 100ms.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{motion-release}"
-        }
-      }
-    },
-    "ease-toggle": {
-      "$type": "cubicBezier",
-      "$value": "{transitions.ease-move}",
-      "$description": "A thumb sliding to its other end (Switch). `ease-move` in the flat brands; `ease-spring-snappy` in a tactile one, so the thumb lands with a small overshoot and settles.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{ease-spring-snappy}"
-        }
-      }
+      "$description": "A press let go: the control springing back to its size with `ease-spring`. Longer than the press, because a spring spends its end settling; it is back in place in about a third of this."
     },
     "motion-hover": {
       "$type": "duration",
@@ -10736,34 +10385,12 @@
     "motion-enter-md": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A medium surface appearing: dialogs and toasts.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-200}",
-            "violet-light": "{duration-200}",
-            "violet-dark": "{duration-200}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
+      "$description": "A medium surface appearing: dialogs and toasts."
     },
     "motion-enter-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "A large surface appearing: drawers and sheets.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-300}",
-            "violet-light": "{duration-300}",
-            "violet-dark": "{duration-300}",
-            "emerald-light": "{duration-200}",
-            "emerald-dark": "{duration-200}"
-          }
-        }
-      }
+      "$description": "A large surface appearing: drawers and sheets."
     },
     "motion-exit-sm": {
       "$type": "duration",
@@ -10773,34 +10400,12 @@
     "motion-exit-md": {
       "$type": "duration",
       "$value": "{transitions.duration-150}",
-      "$description": "A medium surface leaving: dialogs and toasts.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-150}",
-            "violet-light": "{duration-150}",
-            "violet-dark": "{duration-150}",
-            "emerald-light": "{duration-100}",
-            "emerald-dark": "{duration-100}"
-          }
-        }
-      }
+      "$description": "A medium surface leaving: dialogs and toasts."
     },
     "motion-exit-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A large surface leaving: drawers and sheets.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-200}",
-            "violet-light": "{duration-200}",
-            "violet-dark": "{duration-200}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
+      "$description": "A large surface leaving: drawers and sheets."
     },
     "motion-change-sm": {
       "$type": "duration",
@@ -10810,34 +10415,12 @@
     "motion-change-md": {
       "$type": "duration",
       "$value": "{transitions.duration-200}",
-      "$description": "A panel opening or collapsing in place, or an indicator sliding to the selected option: Accordion, Sidebar, SegmentedControl, Tabs.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-200}",
-            "violet-light": "{duration-200}",
-            "violet-dark": "{duration-200}",
-            "emerald-light": "{duration-150}",
-            "emerald-dark": "{duration-150}"
-          }
-        }
-      }
+      "$description": "A panel opening or collapsing in place, or an indicator sliding to the selected option: Accordion, Sidebar, SegmentedControl, Tabs."
     },
     "motion-change-lg": {
       "$type": "duration",
       "$value": "{transitions.duration-300}",
-      "$description": "Something travelling far on screen: a progress or meter fill moving to its value, a carousel slide.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{duration-300}",
-            "violet-light": "{duration-300}",
-            "violet-dark": "{duration-300}",
-            "emerald-light": "{duration-200}",
-            "emerald-dark": "{duration-200}"
-          }
-        }
-      }
+      "$description": "Something travelling far on screen: a progress or meter fill moving to its value, a carousel slide."
     },
     "motion-loop-spinner": {
       "$type": "duration",
@@ -10907,34 +10490,11 @@
     "ease-pop": {
       "$type": "cubicBezier",
       "$value": "{transitions.ease-out-back}",
-      "$description": "Something small popping into place: a check mark, a count, a dot. Overshoots a touch, then settles.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{ease-out-back}",
-            "violet-light": "{ease-out-back}",
-            "violet-dark": "{ease-out-back}",
-            "emerald-light": "{ease-out-quart}",
-            "emerald-dark": "{ease-out-quart}"
-          }
-        }
-      }
+      "$description": "Something small popping into place: a check mark, a count, a dot. Overshoots a touch, then settles."
     },
     "ease-spring": {
       "$value": "{transitions.ease-spring-snappy}",
-      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`). Tactile brands (violet) and Modern use `ease-spring-soft`: a slower, softer settle.",
-      "$extensions": {
-        "com.serupa": {
-          "tactile": "{ease-spring-soft}",
-          "themes": {
-            "blue-dark": "{ease-spring-snappy}",
-            "violet-light": "{ease-spring-snappy}",
-            "violet-dark": "{ease-spring-snappy}",
-            "emerald-light": "{ease-spring-soft}",
-            "emerald-dark": "{ease-spring-soft}"
-          }
-        }
-      }
+      "$description": "A press let go springing back, or a thumb or indicator landing: a real spring that overshoots and settles. Pair it with a duration about twice the motion it answers (a press of `motion-press` springs back over `motion-change-md`)."
     },
     "ease-fling": {
       "$type": "cubicBezier",
@@ -10943,18 +10503,7 @@
     },
     "ease-celebrate": {
       "$value": "{transitions.ease-elastic}",
-      "$description": "A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. Give it about three times the motion it answers (`motion-change-lg` or longer) so the wobble reads, and never use it for menus, dialogs, page moves or repeated actions. Off under reduced motion.",
-      "$extensions": {
-        "com.serupa": {
-          "themes": {
-            "blue-dark": "{ease-elastic}",
-            "violet-light": "{ease-elastic}",
-            "violet-dark": "{ease-elastic}",
-            "emerald-light": "{ease-out-expo}",
-            "emerald-dark": "{ease-out-expo}"
-          }
-        }
-      }
+      "$description": "A small, rare moment worth celebrating: a success check landing, a count bumping, an item snapping into its slot after a drag. Wobbles, then settles. Give it about three times the motion it answers (`motion-change-lg` or longer) so the wobble reads, and never use it for menus, dialogs, page moves or repeated actions. Off under reduced motion."
     },
     "transition": {
       "$value": "opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events",

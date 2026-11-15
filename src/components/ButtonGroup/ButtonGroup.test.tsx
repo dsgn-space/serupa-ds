@@ -100,7 +100,7 @@ describe('ButtonGroup', () => {
     expect([g.classList.contains('dk-button-group--attached'), new Set(kids.map((k) => Math.round(k.getBoundingClientRect().top))).size]).toEqual([true, 1]);
   });
 
-  test('two attached primary buttons have an edge between them, in their text color, in all six themes; outline buttons keep their shared border (EL1)', async () => {
+  test('two attached primary buttons have an edge between them, in their text color, in every theme; outline buttons keep their shared border (EL1)', async () => {
     await render(<ButtonGroup id="gp"><Button id="p1">Save</Button><Button id="p2">Save as</Button><Button id="p3" variant="outline">Cancel</Button></ButtonGroup>);
     const edge = (id: string) => getComputedStyle(el(id)).borderInlineStartColor;
     expect([edge('p1'), edge('p2') === 'rgba(0, 0, 0, 0)']).toEqual(['rgba(0, 0, 0, 0)', false]);

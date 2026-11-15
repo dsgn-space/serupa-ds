@@ -158,7 +158,7 @@ describe('NotificationCenter', () => {
     expect(button('Hapus semua')).toBeTruthy();
   });
 
-  test('descriptions read 4.5:1 and the unread dot 3:1 on the drawer in all six themes', async () => {
+  test('descriptions read 4.5:1 and the unread dot 3:1 on the drawer in every theme', async () => {
     await render(<NotificationCenter defaultOpen items={list} />);
     await expect.poll(() => drawer() !== null).toBe(true);
     const description = rows()[0]!.querySelectorAll('p')[1] as HTMLElement;

@@ -253,7 +253,7 @@ describe('SegmentedControl', () => {
     await expect.poll(() => off('rtl')[0]).toBe(0);
   });
 
-  test('contrast: the outline keeps 3:1 on the page, labels 4.5:1 (the selection\'s outline 2:1), in all six themes', async () => {
+  test('contrast: the outline keeps 3:1 on the page, labels 4.5:1 (the selection\'s outline 2:1), in every theme', async () => {
     await render(<Col><Period /></Col>);
     const e = el('per'), indi = e.querySelector(':scope > span[aria-hidden]')!;
     const low: string[] = [];
@@ -295,7 +295,7 @@ describe('SegmentedControl', () => {
     expect(new FormData(el('ro-form') as HTMLFormElement).get('p')).toBe('week');
   });
 
-  test('invalid and required: aria-invalid and aria-required on the group, and a danger outline that keeps 3:1 on the page in all six themes', async () => {
+  test('invalid and required: aria-invalid and aria-required on the group, and a danger outline that keeps 3:1 on the page in every theme', async () => {
     await render(<SegmentedControl id="bad" aria-label="Period" options={PERIODS} invalid required />);
     expect([el('bad').getAttribute('aria-invalid'), el('bad').getAttribute('aria-required'), el('bad').hasAttribute('invalid'), el('bad').hasAttribute('required')]).toEqual(['true', 'true', false, false]);
     const low: string[] = [];

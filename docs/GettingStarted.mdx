@@ -81,7 +81,7 @@ The stylesheet is `components.css` (about 450 KB), not `bundle.css`, because a p
 
 ## 3. Pick a theme
 
-`data-theme` on any element picks one of the six themes (`blue-light`, `blue-dark`, `violet-light`, `violet-dark`, `emerald-light`, `emerald-dark`). `theme.js` sets it on the page from `data-brand` and `data-mode`, follows the visitor's light or dark setting, and remembers a choice made with `Serupa.theme.set()`. Load it first in `<head>` so the page never flashes the wrong theme. A switch changes every color at once, with no control fading on its own, while motion such as a menu fading out runs on (to switch a section yourself, use `withoutTransitions`). It also keeps `<meta name="theme-color">` on the page's surface, so a phone's status bar and address bar change with the mode; a `theme-color` meta the page writes itself is left as it is. See [Themes](?path=/docs/foundations-themes--docs).
+`data-theme` on any element picks a theme: a brand color and a mode, such as `blue-light`, `violet-dark` or `emerald-light` ([Themes](?path=/docs/foundations-themes--docs) lists the brands). `theme.js` sets it on the page from `data-brand` and `data-mode`, follows the visitor's light or dark setting, and remembers a choice made with `Serupa.theme.set()`. Load it first in `<head>` so the page never flashes the wrong theme. A switch changes every color at once, with no control fading on its own, while motion such as a menu fading out runs on (to switch a section yourself, use `withoutTransitions`). It also keeps `<meta name="theme-color">` on the page's surface, so a phone's status bar and address bar change with the mode; a `theme-color` meta the page writes itself is left as it is. See [Themes](?path=/docs/foundations-themes--docs).
 
 ## 4. Before you ship
 
@@ -133,7 +133,7 @@ These values always pass: anything inside `var()` (including its fallback), `cal
 ```sh
 npm install
 npm run storybook   # these pages, at http://localhost:6006, updating as you edit
-npm test            # builds the package and runs every test, including axe in all six themes
+npm test            # builds the package and runs every test, including axe in every theme
 npx changeset       # describe your change and pick patch, minor or major
 ```
 

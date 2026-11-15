@@ -59,7 +59,7 @@ Drawn from the `ByArea` story.
 - The menu draws its own focus ring inside the box, so it's clear whether the menu or the number has focus.
 - The number is `type="tel"` with `inputmode="tel"` and `autocomplete="tel"`, so phones show the dial pad and browsers fill in the saved number with its country code. The field reads a "+44 …" and moves the country to match. `tel-national` would fill the digits alone under the default country, a wrong number that looks right.
 - Backspace next to a space or dash removes the digit before it, so deleting never gets stuck on the grouping.
-- The calling code keeps 4.5:1 and the chevron 3:1 on the field in all six themes (`PhoneInput.test.tsx`).
+- The calling code keeps 4.5:1 and the chevron 3:1 on the field in every theme (`PhoneInput.test.tsx`).
 
 ### Keyboard
 

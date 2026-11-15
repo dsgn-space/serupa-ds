@@ -197,7 +197,7 @@ describe('DataGrid', () => {
     await expect.element(page.getByRole('grid', { name: 'Stok' })).toHaveAccessibleDescription(idLabels.dataGridHint);
   });
 
-  test('text reads 4.5:1 on the cells, the header and the selection, and the focus ring 3:1, in all six themes', async () => {
+  test('text reads 4.5:1 on the cells, the header and the selection, and the focus ring 3:1, in every theme', async () => {
     await render(<Live />);
     await userEvent.click(cell('Kopi'));
     await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');

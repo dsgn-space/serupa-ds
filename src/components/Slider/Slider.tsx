@@ -63,9 +63,12 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
       thumb, at either end for a range (the low one first). A typed number past the other thumb, min or max waits
       for Enter or leaving the field, which brings it back inside. */
   inputs?: boolean | undefined;
+  /** A single thumb's fill runs from this value to the thumb, not from min: 0 for a -10 to +10 balance or offset,
+      so the fill shows how far and which way from the middle. Ignored for a range. Default: min. */
+  origin?: number | undefined;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, inputs: 1, 'aria-required': 1, 'aria-invalid': 1, 'aria-readonly': 1, autoFocus: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1, 'aria-describedby': 1, 'aria-errormessage': 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, inputs: 1, origin: 1, 'aria-required': 1, 'aria-invalid': 1, 'aria-readonly': 1, autoFocus: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1, 'aria-describedby': 1, 'aria-errormessage': 1 } as const;
 
 // The marks to draw: every step for true (every largeStep steps when that's over 100 ticks), or the listed values on the track.
 function markList(marks: SliderProps['marks'], min: number, max: number, step: number, large: number): SliderMark[] {
@@ -202,7 +205,10 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   // In a Field, its label names the slider (or a range's group) and its hint and error describe the thumb (or the group).
   const fieldLabel = useFieldLabel(props.id);
   const labelledBy = props['aria-labelledby'] ?? (props['aria-label'] ? undefined : fieldLabel);
-  const lo = isRange ? pct(at(vals, 0)) : 0, hi = pct(at(vals, vals.length - 1));
+  // With origin, a single thumb's fill runs between the origin (kept inside min and max) and the thumb, either way.
+  const originAt = !isRange && props.origin != null && isFinite(props.origin) ? pct(Math.min(max, Math.max(min, props.origin))) : null;
+  const thumbAt = pct(at(vals, vals.length - 1));
+  const lo = isRange ? pct(at(vals, 0)) : originAt != null ? Math.min(originAt, thumbAt) : 0, hi = originAt != null ? Math.max(originAt, thumbAt) : thumbAt;
   const marks = markList(props.marks, min, max, step, large);
   const labelled = marks.some((m) => m.label != null && m.label !== false && m.label !== '');
   // The value chip and the mark labels center on their points, but one near an end would hang past the slider and

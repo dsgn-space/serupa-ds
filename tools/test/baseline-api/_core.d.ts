@@ -1,6 +1,6 @@
 // exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, version, withoutTransitions, withViewTransition
 import * as React from "react";
-type ThemeBrand = "blue" | "emerald" | "violet" | (string & {});
+type ThemeBrand = "amber" | "blue" | "cyan" | "emerald" | "fuchsia" | "green" | "indigo" | "lime" | "orange" | "pink" | "purple" | "red" | "rose" | "sky" | "teal" | "violet" | "yellow" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
 interface ThemeInfo {
     brand: ThemeBrand;

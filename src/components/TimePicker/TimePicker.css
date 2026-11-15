@@ -17,6 +17,7 @@
 .dk-time-picker__button { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
 @media (prefers-reduced-motion: reduce) { .dk-time-picker__button { transition: none; } }
 .dk-time-picker__button:disabled { cursor: var(--cursor-disabled); }
+.dk-input--readonly .dk-time-picker__button:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
 .dk-time-picker__list {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--time-picker-z-index, var(--z-popover));
   min-width: var(--time-picker-list-min-width, var(--spacing-40)); max-height: var(--time-picker-list-max-height, var(--spacing-60)); overflow-y: auto; overscroll-behavior: contain;
@@ -25,7 +26,7 @@
   margin: var(--spacing-0); padding: var(--time-picker-list-padding, var(--spacing-1)); list-style: none;
   border: var(--border-width-1) solid var(--time-picker-list-border, var(--border-overlay)); border-radius: var(--time-picker-list-radius, var(--radius-surface));
   background: var(--time-picker-list-bg, var(--surface-overlay)); color: var(--time-picker-option-color, var(--text));
-  box-shadow: var(--time-picker-list-depth, var(--depth-surface)), var(--time-picker-list-shadow, var(--elevation-overlay));
+  box-shadow: var(--time-picker-list-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start; cursor: default;
 }
 .dk-time-picker__list[hidden] { display: none; }

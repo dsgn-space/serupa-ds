@@ -228,7 +228,7 @@ describe('Input', () => {
     expect(css(l).pointerEvents).toBe('none');
   });
 
-  test('contrast in all six themes: text, placeholder, prefix and suffix 4.5:1 on the field; focus ring and invalid border 3:1, the soft border 1.3:1', () => {
+  test('contrast in every theme: text, placeholder, prefix and suffix 4.5:1 on the field; focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['text', 'var(--text)', 'var(--field)', 4.5],
       ['placeholder', 'var(--placeholder)', 'var(--field)', 4.5],
@@ -550,7 +550,7 @@ describe('Input actions (RU15)', () => {
     expect(Math.round(box('h-md').getBoundingClientRect().right - actions('h-md')[0]!.getBoundingClientRect().right)).toBe(3);
   });
 
-  test('contrast in all six themes: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {
+  test('contrast in every theme: a text action 4.5:1 on the field and its hover, an icon action 3:1, its ring 3:1', () => {
     expect(lowContrast([
       ['text action', 'var(--field-action)', 'var(--field)', 4.5],
       ['text action on hover', 'var(--field-action)', 'var(--primary-subtle)', 4.5],
@@ -565,7 +565,7 @@ describe('Input held state', () => {
   test('held down: an icon action fills one step past its hover (--input-action-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<Input aria-label="Invite link" readOnly defaultValue="https://serupa.app/join/7f3k2" actions={<InputAction icon="content_copy" label="Copy invite link" />} />);
     const b = page.getByRole('button', { name: 'Copy invite link' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

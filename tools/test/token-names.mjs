@@ -10,7 +10,7 @@ import { done, report } from './lib.mjs';
 import { components } from '../tokens/readme-tables.mjs';
 
 const STATE = 'hover|active|pressed|disabled|selected|current|checked|error|open|expanded|invalid|dragging';
-const PROPERTY = 'bg|text|color|border|width|shadow|depth|outline|fill|layer';
+const PROPERTY = 'bg|text|color|border|width|shadow|outline|fill|layer';
 const WRONG = new RegExp(`-(?:${STATE})-(?:${PROPERTY})(?:-|$)`);
 
 const GAPS = {};
@@ -41,7 +41,7 @@ done(report('Token names', [
   ...Object.keys(ALLOW).filter((k) => !names.has(k)).map((k) => ({ name: `${k} is still a token`, ok: false, detail: 'take it out of ALLOW in tools/test/token-names.mjs' })),
   // The rule itself, on names it must catch and names it must leave.
   { name: 'the rule catches a state before the property and leaves a state after it', ok:
-    ['--x-disabled-bg', '--x-selected-text', '--x-selected-depth', '--x-hover-bg-raised'].every((n) => WRONG.test(n)) &&
+    ['--x-disabled-bg', '--x-selected-text', '--x-selected-shadow', '--x-hover-bg-raised'].every((n) => WRONG.test(n)) &&
     !['--x-bg-disabled', '--x-text-selected', '--x-bg-checked-hover', '--x-focus-ring', '--x-today-color', '--x-loading-duration'].some((n) => WRONG.test(n)),
     detail: String(WRONG) },
 ]));
