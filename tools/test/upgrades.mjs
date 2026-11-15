@@ -175,6 +175,9 @@ const p14 = fix('import "serupa-ds/bundle.css";\n<SerupaProvider labels={{ moreR
 t('14.0.0: moved mask and gradient classes and the removed moreResults label are listed with their lines', p14.notes.length === 2 && p14.notes.some((n) => n.id === 'utilities-extra' && n.line === 3 && n.message.includes('utilities-extra.css') && n.message.includes('bg-linear-to-r')) && p14.notes.some((n) => n.id === 'combobox-more-results' && n.line === 2) && !Object.keys(p14.counts).length, JSON.stringify(p14.notes));
 t('14.0.0: a file that imports utilities-extra.css, a mask-image property and words like to-do are left', !fix('import "serupa-ds/utilities-extra.css";\n<div className="mask-t-from-0" />', 'a.tsx').notes.length && !fix('<div style="mask-image: url(a.svg)" class="go-to-top">Things to-do from-here</div>', 'a.html').notes.length);
 t('14.0.0: a removed .dk-combobox__more rule is listed in a stylesheet', fix('.dk-combobox__more { color: red }', 'app.css').notes.some((n) => n.id === 'combobox-more-results'));
+const inner = fix('.dk-btn__label { color: red }\n.dk-btn--primary, [data-component="card"] { color: blue }\n.app-dk-btn__x, .dk-card__header .dk-card__title {}', 'app.css', '15.0.0');
+t('16.0.0: each line that selects an inner part\'s class is listed once, and block, modifier and data selectors are left', inner.notes.length === 2 && inner.notes.every((n) => n.id === 'inner-classes-private') && inner.notes[0].line === 1 && inner.notes[1].line === 3 && /dk-card__header/.test(inner.notes[1].message) && inner.text.startsWith('.dk-btn__label'), JSON.stringify(inner.notes));
+t('16.0.0: a querySelector for an inner part in code is listed too', fix("el.querySelector('.dk-tabs__panel')", 'a.ts', '15.0.0').notes.some((n) => n.id === 'inner-classes-private'));
 const twice = fix(fix('<IconButton noTitle /><Table captionHidden />').text);
 t('running it twice changes nothing more', !Object.keys(twice.counts).length);
 
