@@ -488,7 +488,7 @@ describe('Button micro-interactions', () => {
     expect(take()).toEqual(['click']);
   });
 
-  test('press: animates scale only, down at --button-press-duration (100ms) with ease-settle (ease-out-expo), and comes back on release over motion-release (300ms) with ease-enter (ease-out-quart), never past full size', async () => {
+  test('press: animates scale only, down at --button-press-duration (100ms) with ease-settle, and comes back on release over motion-release (300ms) with ease-enter, never past full size', async () => {
     await render(<Motion />);
     const timing = () => { const s = getComputedStyle(el('press')), props = s.transitionProperty.split(', '), i = props.indexOf('scale'); return { i, props, d: s.transitionDuration.split(', ')[i], e: s.transitionTimingFunction.split(/, (?=c|l|e)/)[i] }; };
     const rest = timing(), down = await hold(el('press'), async () => { await expect.poll(() => getComputedStyle(el('press')).scale).toBe('0.97'); return timing(); }, { ms: 1000 });

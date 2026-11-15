@@ -33,7 +33,7 @@ export function nextMajor(current: string, changesets: Record<string, string>): 
   const entries: string[] = [];
   for (const text of Object.values(changesets)) {
     const m = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(text.replace(/\r\n/g, '\n'));
-    if (!m || !/^\s*['"]?serupa-ds['"]?\s*:\s*major\s*$/m.test(m[1])) continue;
+    if (!m || !/^\s*['"]?(?:@[\w-]+\/)?serupa-ds['"]?\s*:\s*major\s*$/m.test(m[1])) continue;
     const body = m[2].trim();
     const list = bullets(body);
     const marked = list.filter((b) => breaking(b, ''));

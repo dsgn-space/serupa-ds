@@ -511,7 +511,7 @@ describe('Badge', () => {
     expect([e.tagName, e.getAttribute('aria-busy'), e.getAttribute('aria-disabled'), (el('ldrm').querySelector(':scope > button') as HTMLButtonElement).disabled]).toEqual(['SPAN', 'true', null, true]);
   });
 
-  test('micro-interactions: no ripple layer on any badge; scale comes back over motion-release (300ms) with ease-enter (ease-out-quart), no spring', async () => {
+  test('micro-interactions: no ripple layer on any badge; scale comes back over motion-release (300ms) with ease-enter, no spring', async () => {
     await show();
     const e = el('mi');
     expect([e.querySelector('[class*="ripple"]'), el('def').querySelector('[class*="ripple"]')]).toEqual([null, null]);

@@ -98,7 +98,9 @@ describe('Patterns/File browser', () => {
     await expect.element(field).toHaveValue('Logo.svg');
     await field.fill('guide.pdf');
     await dialog.getByRole('button', { name: 'Rename' }).click();
-    await expect.element(dialog.getByText('“guide.pdf” is already in this folder. Choose another name.')).toBeVisible();
+    // Read from the field's own description: the same words are copied into the live region while it's being said.
+    await expect.poll(() => (field.element().getAttribute('aria-describedby') ?? '').split(' ').map((id) => document.getElementById(id)?.textContent).join(' ')).toContain('“guide.pdf” is already in this folder. Choose another name.');
+    expect(field.element().getAttribute('aria-invalid')).toBe('true');
     await expect.poll(() => active().id).toBe('file-name');
     expect(onRename).not.toHaveBeenCalled();
     await field.fill(' Mark.svg ');
