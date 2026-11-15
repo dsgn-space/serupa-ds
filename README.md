@@ -47,6 +47,8 @@ npm run dev
 
 Add `--brand violet`, `--brand emerald` or any other accent color for another brand. Then steps 2 and 3 below are done for you.
 
+To start on a whole page instead of the small form, add `--template` and a pattern's name: `--template dashboard`, `--template settings-form`, `--template sign-in`, or any other pattern `--template` alone lists. The pattern and the blocks it builds on go into `src/serupa/` as source the app owns, the way `serupa-add` writes them, and `App.tsx` renders it with its demo data.
+
 ### 2. Load the styles and use the components
 
 In a React app (Vite, Next.js, Remix):
