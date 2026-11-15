@@ -123,7 +123,8 @@ export function exportTokens(t, componentFiles) {
     for (const s of grp.styles) {
       const fs_ = dim(s.fontSize), lhd = dim(s.lineHeight);
       const ratio = lhd && lhd.unit === fs_.unit ? round(lhd.value / fs_.value, 4) : parseFloat(s.lineHeight);
-      const fam = s.family || grp.family || 'sans';
+      // "heading" is the app's own --font-heading before the sans stack, unset by default: in the exported tokens it is sans.
+      const fam = (s.family === 'heading' ? 'sans' : s.family) || grp.family || 'sans';
       setIn(base, 'type')[pathName(s.name)] = {
         $type: 'typography',
         $value: { fontFamily: `{font.${fam}}`, fontSize: fs_, fontWeight: parseInt(s.fontWeight ?? 400, 10),
