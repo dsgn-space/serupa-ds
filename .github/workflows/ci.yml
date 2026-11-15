@@ -63,6 +63,7 @@ jobs:
       x86any: ${{ steps.plan.outputs.x86any }}
       portable: ${{ steps.plan.outputs.portable }}
       tests: ${{ steps.plan.outputs.tests }}
+      visual: ${{ steps.plan.outputs.visual }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -156,7 +157,11 @@ jobs:
           fi
           # Visual in five shards on a pull request: in four, it was the longest group of a full queue run once Storybook
           # went to four (476 to 490 s against 295 to 435 for the rest, 13 Nov).
-          [ -n "$visual" ] && x86="$x86$(shards visual "" "$nv")"
+          # Not in the merge queue (ADR-0016): a pull request's Visual draws main's pictures and its own and the
+          # design-qa label signs the difference off, so no committed picture has to be fresh to merge. The queue
+          # checked the committed pictures, which every merge of another picture pull request made stale (15 Nov: 14
+          # drops in two hours).
+          [ -n "$visual" ] && [ "$EVENT" != merge_group ] && x86="$x86$(shards visual "" "$nv")"
           x86="$x86]}"
           # A narrowed run that leaves a group nothing to test (a change to docs, tools or workflows alone) doesn't
           # start its jobs: each would take a runner, set up and run no test.
@@ -171,6 +176,7 @@ jobs:
             if ! has storybook; then storybook=""; fi
           fi
           x86any=$(echo "$x86" | jq -r 'if (.include | length) > 0 then 1 else "" end')
+          visualrun=$(echo "$x86" | jq -r 'if any(.include[]; .group == "visual") then 1 else "" end')
           portable='{"include":[{"group":"checks","shard":"1/3"},{"group":"checks","shard":"2/3"},{"group":"checks","shard":"3/3"}'
           # Storybook in four shards: in three, a queue run that checks every page took up to 11 minutes in one (13 Nov),
           # the longest job of the run. They go on GitHub's runners, so a fourth costs no x86 runner.
@@ -178,7 +184,7 @@ jobs:
           portable="$portable]}"
           {
             echo "full=$full"; echo "wide=$wide"; echo "since=$since"; echo "tests=$tests"
-            echo "x86=$(echo "$x86" | tr -d ' \n')"; echo "x86any=$x86any"; echo "portable=$(echo "$portable" | tr -d ' \n')"
+            echo "x86=$(echo "$x86" | tr -d ' \n')"; echo "x86any=$x86any"; echo "visual=$visualrun"; echo "portable=$(echo "$portable" | tr -d ' \n')"
           } >> "$GITHUB_OUTPUT"
           echo "full=${full:-no} wide=${wide:-no} since=${since:-none} visual=${visual:-no} tests=${tests:-no}"
           # Size: each pull request costs a CI run, often a redraw and a queue run, so a tiny one belongs in its thread's
@@ -191,46 +197,6 @@ jobs:
           fi
 
   # Builds the package and Storybook once; every test job downloads them instead of building its own.
-  # Fails in seconds when the branch's pictures can't match the tree it merges into: the branch changed a component's
-  # pictures and main changed that component, or the pictures of one it shows (tools/fresh.mjs). Without it the queue
-  # finds out on Visual after 15 minutes and builds every group behind it again. In the queue it compares the newest pull request
-  # with the group before it.
-  fresh:
-    if: (github.event_name == 'pull_request' || github.event_name == 'merge_group') && github.head_ref != 'changeset-release/main'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .nvmrc
-      - shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          EVENT: ${{ github.event_name }}
-          PR_HEAD: ${{ github.event.pull_request.head.sha }}
-          PR: ${{ github.event.pull_request.number }}
-          QUEUE_BASE: ${{ github.event.merge_group.base_sha }}
-          QUEUE_REF: ${{ github.event.merge_group.head_ref }}
-        run: |
-          if [ "$EVENT" = merge_group ]; then
-            # gh-readonly-queue/main/pr-<number>-<sha>: the pull request this group adds.
-            n=$(echo "$QUEUE_REF" | sed -E 's|.*/pr-([0-9]+)-.*|\1|')
-            node tools/fresh.mjs --base "$QUEUE_BASE" --head "$(gh api "repos/$GH_REPO/pulls/$n" --jq .head.sha)"
-          else
-            # The main this run tests against: the first parent of the merge commit GitHub made for it.
-            node tools/fresh.mjs --base "$(gh api "repos/$GH_REPO/commits/$GITHUB_SHA" --jq '.parents[0].sha')" --head "$PR_HEAD" || exit 1
-            # A pull request in the merge queue this one can't merge behind: it changes a baseline this one changes too
-            # (a picture, a size or API baseline), or it makes this one's pictures stale (tools/fresh.mjs --queue).
-            # Queued behind it, this one would be dropped as its group built, its auto-merge turned off, and its branch
-            # can't take the fix while it is queued. Failing keeps auto-merge from queueing it: when that one merges,
-            # Update baselines heals this one, or Queue enqueue runs this job again once nothing clashes.
-            node tools/fresh.mjs --queue "$PR"
-          fi
-
   build:
     needs: plan
     if: needs.plan.outputs.hold != '1'
@@ -391,8 +357,9 @@ jobs:
         run: |
           git config --global --add safe.directory "$PWD"
           echo "key=result-${JOB//\//of}-$(git rev-parse HEAD^{tree})-${SINCE:-full}" >> "$GITHUB_OUTPUT"
+      # Not Visual on a pull request: its pictures are the review (visual-review), so it draws them every time.
       - id: done
-        if: matrix.part != 'base'
+        if: matrix.part != 'base' && !(matrix.group == 'visual' && github.event_name == 'pull_request')
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .result
@@ -407,9 +374,21 @@ jobs:
         shell: bash
         env:
           GROUP: ${{ matrix.group }}
+          EVENT: ${{ github.event_name }}
+          SINCE: ${{ needs.plan.outputs.since }}
         run: |
           npm run build
           if [ "$GROUP" != components ]; then npm run build-storybook; fi
+          # Visual on a pull request draws main's pictures too (ADR-0016): main's Storybook, built from the commit this
+          # run merges into, in a worktree beside this one. Its own dependencies only when its lockfile differs.
+          if [ "$GROUP" = visual ] && [ "$EVENT" = pull_request ] && [ -n "$SINCE" ]; then
+            rm -rf ../main-tree && git worktree prune
+            git worktree add --detach ../main-tree "$SINCE"
+            if cmp -s package-lock.json ../main-tree/package-lock.json; then ln -s "$PWD/node_modules" ../main-tree/node_modules
+            else (cd ../main-tree && npm ci --ignore-scripts --no-audit --no-fund); fi
+            (cd ../main-tree && npm run build && npm run build-storybook)
+            echo "SERUPA_VISUAL_BASE=$(cd ../main-tree && pwd)/storybook-static" >> "$GITHUB_ENV"
+          fi
       - name: Test suite
         if: steps.done.outputs.cache-hit != 'true'
         shell: bash
@@ -430,6 +409,15 @@ jobs:
         with:
           path: .result
           key: ${{ steps.key.outputs.key }}
+      # What Visual found different from main, before and after, for the visual-review job.
+      - if: success() && matrix.group == 'visual' && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: visual-review-${{ strategy.job-index }}
+          path: .visual-review/
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: ignore
       - if: matrix.part == 'base'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -574,27 +562,49 @@ jobs:
           name: build
       - run: node tools/test/frameworks.mjs
 
+  # A pull request's pictures against main's (ADR-0016): the Visual jobs drew both, from this tree and from the commit
+  # it merges into, so nothing committed has to be fresh. This lays what differs out in the summary, before and after
+  # (the pictures on the branch visual-review/pr-<number>), and passes once the design-qa label was added after the
+  # last commit that isn't a merge. Adding the label runs it again (design-qa.yml). Nothing different: it passes.
+  visual-review:
+    name: visual review
+    needs: [plan, suite-x86]
+    if: needs.plan.outputs.hold != '1' && github.event_name == 'pull_request' && needs.plan.outputs.visual == '1' && needs.suite-x86.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: read
+      issues: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The script is main's: the branch's code runs only in the Visual jobs, which have no write token.
+          ref: ${{ github.event.pull_request.base.sha }}
+          sparse-checkout: tools/visual-review.mjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: visual-review-*
+          path: .visual-review
+          merge-multiple: true
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          PUBLISH: ${{ github.event.pull_request.head.repo.full_name == github.repository && '1' || '0' }}
+        run: |
+          if [ ! -f tools/visual-review.mjs ]; then echo "Main has no visual review yet: nothing to check."; exit 0; fi
+          node tools/visual-review.mjs .visual-review
+
   # On a pull request, the first failed job stops the whole run: it can't pass any more, so its runners go to the next.
   # A failed queue run is out of the queue already, so the rest of it (the cross-browser components above all, up to
   # 75 minutes on an x86 runner) only keeps runners from the groups behind it. Main's own run goes on to the end.
-  # stop waits for every job it names, so a stale branch's run used to go on for its full length (#1688's queue group:
-  # fresh failed at 19:08, the run ended at 19:21). This one waits for fresh alone and stops the run in seconds.
-  stop-stale:
-    needs: [fresh]
-    if: failure() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      actions: write
-    steps:
-      - env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.run_id }}
-        run: gh run cancel "$RUN_ID"
-
   stop:
-    needs: [fresh, build, static, fix-proof, suite-x86, suite-portable, coverage]
+    needs: [build, static, fix-proof, suite-x86, suite-portable, coverage]
     if: failure() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -613,7 +623,7 @@ jobs:
   # as a real failure (#1818, 13 Nov). It still never passes, so the pull request can't merge on it; should the cancel
   # not land, the step fails as before. Update baselines starts a cancelled held run again just as a failed one.
   test:
-    needs: [plan, fresh, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks]
+    needs: [plan, build, static, fix-proof, suite-x86, suite-portable, coverage, consumer, frameworks, visual-review]
     # Like always(), except on a held run: GitHub weighs a running job's condition again when the run is cancelled and
     # stops it only when that comes out false. With always() the held job kept running past its own cancel and ended
     # failed, the red X it was meant to replace (#1890, 14 Nov).
