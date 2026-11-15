@@ -19,6 +19,7 @@
 .dk-date-picker__button:focus { outline: none; }
 .dk-date-picker__button:focus-visible { outline: var(--focus-ring-width) solid var(--date-picker-focus-ring, var(--focus-ring)); }
 .dk-date-picker__button:disabled { cursor: not-allowed; }
+.dk-input--readonly .dk-date-picker__button:disabled { cursor: default; }   /* read-only is not disabled: the plain arrow, as on every read-only control */
 .dk-date-picker__popup {
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--date-picker-z-index, var(--z-popover));
   margin: var(--spacing-0); padding: var(--date-picker-popup-padding, var(--spacing-3));

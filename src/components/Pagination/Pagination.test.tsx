@@ -6,6 +6,7 @@ import { userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, press, iconPoints } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { IconButton } from '../IconButton/IconButton';
 import { Pagination, paginationRange } from './Pagination';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
@@ -33,6 +34,14 @@ afterEach(() => {
 beforeEach(() => { errors = vi.spyOn(console, 'error'); });
 
 describe('Pagination', () => {
+  test('the arrows are the icon of an icon-only Button of the same size: 14, 16 and 20px (GR420)', async () => {
+    await render(<>
+      {(['sm', 'md', 'lg'] as const).map((size) => <span key={size} id={'pg' + size}><Pagination size={size} count={5} /><IconButton size={size} icon="chevron_right" label="Next thing" /></span>)}
+    </>);
+    const sizes = (id: string) => [...el(id).querySelectorAll<HTMLElement>('[data-icon]')].map((i) => getComputedStyle(i).fontSize);
+    expect([sizes('pgsm'), sizes('pgmd'), sizes('pglg')]).toEqual([['14px', '14px', '14px'], ['16px', '16px', '16px'], ['20px', '20px', '20px']]);
+  });
+
   test('paginationRange: boundaries, siblings and … keep seven slots; short ranges show every page', () => {
     const f = (a: ReturnType<typeof paginationRange>) => a.map((x) => typeof x === 'number' ? x : '…').join(' ');
     expect([f(paginationRange(1, 10)), f(paginationRange(5, 10)), f(paginationRange(10, 10)), f(paginationRange(4, 10)), f(paginationRange(1, 5)),
