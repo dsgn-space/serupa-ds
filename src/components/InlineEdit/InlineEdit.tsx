@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { cn, domId, omit, oneOf, SIZES } from '../../internal/cn';
 import { component } from '../../internal/component';
@@ -57,7 +58,7 @@ export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditPr
   const rest = omit(props, { label: 1, value: 1, defaultValue: 1, onValueChange: 1, onCancel: 1, validate: 1, placeholder: 1, size: 1, editing: 1, defaultEditing: 1,
     onEditingChange: 1, disabled: 1, readOnly: 1, editLabel: 1, inputProps: 1, className: 1, autoFocus: 1 } as const);
   const sds = useSettings(words);
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState(props.defaultValue ?? '');
   const value = controlled ? (props.value as string) : own;

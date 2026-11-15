@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, useIsoLayoutEffect } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
 import { component } from '../../internal/component';
@@ -110,7 +111,8 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const drag = React.useRef<number | null>(null);
   // A disabled <fieldset> around it disables it too, as it does native inputs.
   const inDisabledFieldset = useFieldsetDisabled(root);
-  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
+  const sized = useControlSize(props.size);
+  const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const disabled = !!props.disabled || inDisabledFieldset;
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const readOnly = !!props.readOnly || props['aria-readonly'] === true || props['aria-readonly'] === 'true';

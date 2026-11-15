@@ -32,7 +32,7 @@
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   min-width: var(--sortable-list-handle-size, var(--spacing-6)); min-height: var(--sortable-list-handle-size, var(--spacing-6));
   margin: var(--spacing-0); padding: var(--spacing-0); border: 0; border-radius: var(--radius-inner);
-  background: transparent; color: var(--sortable-list-handle, var(--text-muted)); cursor: grab; touch-action: none;
+  background: transparent; color: var(--sortable-list-handle, var(--text-muted)); cursor: var(--cursor-grab); touch-action: none;
 }
 .dk-sortable-list__handle .dk-icon { font-size: var(--spacing-5); }
 /* Touch (EQ1): the handle takes a press 44px high, as Apple and Material ask, without moving anything; the width
@@ -41,14 +41,14 @@
   .dk-sortable-list__handle { position: relative; isolation: isolate; }
   .dk-sortable-list__handle::after { --dk-under: calc(var(--z-10) * -1); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); content: ""; position: absolute; z-index: var(--dk-under); inset-block: var(--dk-reach-block); inset-inline: var(--spacing-0); }
 }
-.dk-sortable-list__item--dragging .dk-sortable-list__handle { cursor: grabbing; color: var(--sortable-list-handle-active, var(--text)); }
+.dk-sortable-list__item--dragging .dk-sortable-list__handle { cursor: var(--cursor-grabbing); color: var(--sortable-list-handle-active, var(--text)); }
 @media (hover: hover) { .dk-sortable-list__handle:hover { color: var(--sortable-list-handle-active, var(--text)); background: var(--sortable-list-handle-bg-hover, var(--secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
 .dk-sortable-list__handle { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
 @media (prefers-reduced-motion: reduce) { .dk-sortable-list__handle { transition: none; } }
 .dk-sortable-list__handle:active { background: var(--sortable-list-handle-bg-pressed, var(--secondary-hover)); color: var(--sortable-list-handle-active, var(--text)); }
 .dk-sortable-list__handle:focus-visible { outline: var(--focus-ring-width) solid var(--sortable-list-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-sortable-list--sorting { cursor: grabbing; -webkit-user-select: none; user-select: none; }
+.dk-sortable-list--sorting { cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
 .dk-sortable-list__content { flex: auto; min-width: var(--spacing-0); overflow-wrap: anywhere; }   /* a long word wraps inside its row (RF1) */
 @media (prefers-reduced-motion: reduce) { .dk-sortable-list__item { transition: none; } }
 @media (forced-colors: active) { .dk-sortable-list__item--dragging { outline: var(--outline-width-2) solid Highlight; } }

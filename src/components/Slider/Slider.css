@@ -14,7 +14,7 @@
   position: relative; display: flex; align-items: center; box-sizing: border-box;
   width: var(--sizing-full); height: var(--dk-slider-thumb);
   padding: var(--spacing-0) var(--dk-slider-half);
-  touch-action: none; -webkit-user-select: none; user-select: none; cursor: pointer;
+  touch-action: none; -webkit-user-select: none; user-select: none; cursor: var(--cursor-interactive);
 }
 /* inputs: a number field at each end of the strip (or after it, for one thumb), as tall as a control, so the strip
    grows to fit them; the fields keep the text cursor and let text be selected. */
@@ -31,11 +31,11 @@
   border: var(--slider-thumb-border-width, var(--border-width-2)) solid var(--slider-thumb-border, var(--primary));
   border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-thumb-bg, var(--field));
   box-shadow: var(--slider-thumb-depth, var(--depth-part)), var(--slider-thumb-shadow, var(--elevation-part));   /* the tactile layers (none in the flat brands) over its shadow */
-  cursor: grab; transition: scale var(--motion-change-sm) var(--ease-settle);
+  cursor: var(--cursor-grab); transition: scale var(--motion-change-sm) var(--ease-settle);
 }
 .dk-slider__thumb:focus { outline: none; }
 .dk-slider__thumb:focus-visible { outline: var(--focus-ring-width) solid var(--slider-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
-.dk-slider:not(.dk-slider--disabled, .dk-slider--readonly) .dk-slider__thumb:active { cursor: grabbing; scale: var(--scale-110); }
+.dk-slider:not(.dk-slider--disabled, .dk-slider--readonly) .dk-slider__thumb:active { cursor: var(--cursor-grabbing); scale: var(--scale-110); }
 .dk-slider--mark-labels {
   --dk-slider-labels: calc(var(--spacing-1) + var(--text-xs--line-height));
   height: calc(var(--dk-slider-thumb) + var(--dk-slider-labels)); padding-block-end: var(--dk-slider-labels);
@@ -68,8 +68,8 @@
 .dk-slider--invalid .dk-slider__fill { background: var(--slider-invalid, var(--danger)); }
 .dk-slider--invalid .dk-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
 .dk-slider--readonly, .dk-slider--readonly .dk-slider__thumb { cursor: default; }
-.dk-slider--disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
-.dk-slider--disabled .dk-slider__thumb { cursor: not-allowed; }
+.dk-slider--disabled { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-slider--disabled .dk-slider__thumb { cursor: var(--cursor-disabled); }
 @media (prefers-reduced-motion: reduce) { .dk-slider__thumb, .dk-slider__value { transition: none; } }
 @media (forced-colors: active) {
   .dk-slider__track { background: CanvasText; }

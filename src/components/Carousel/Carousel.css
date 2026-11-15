@@ -54,7 +54,7 @@
   padding: var(--spacing-0) var(--spacing-1);
   border: var(--spacing-0);
   background: transparent;
-  cursor: pointer; touch-action: manipulation;
+  cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-carousel__dot { position: relative; isolation: isolate; }
 /* Touch (EQ1): 44px high to press, as Apple and Material ask; the width stays, so dots in a row never overlap. */

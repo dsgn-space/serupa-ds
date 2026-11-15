@@ -57,5 +57,5 @@
 .dk-pin-input--readonly .dk-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
 .dk-pin-input--disabled { opacity: var(--opacity-disabled); }
 .dk-pin-input--disabled .dk-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
-.dk-pin-input--disabled .dk-pin-input__field { cursor: not-allowed; }
+.dk-pin-input--disabled .dk-pin-input__field { cursor: var(--cursor-disabled); }
 }

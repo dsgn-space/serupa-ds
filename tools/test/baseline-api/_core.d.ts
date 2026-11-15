@@ -54,6 +54,7 @@ interface SerupaProviderProps {
     labels?: Partial<SerupaLabels>;
     icons?: Array<IconData | Readonly<Record<string, IconData>>> | IconData | Readonly<Record<string, IconData>>;
     platform?: "apple" | "other";
+    size?: "lg" | "md" | "sm";
     children?: React.ReactNode;
 }
 interface SerupaSettings {

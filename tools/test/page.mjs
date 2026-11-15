@@ -260,8 +260,21 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   await p.goto(url);
   await p.waitForSelector('#b');
   t('debug.js: it stays on for the tab after the address loses ?serupa-debug', await p.evaluate(() => Serupa.debug.isOn()));
+  const themePanel = await p.evaluate(() => {
+    const g = document.querySelector('#serupa-debug-theme[role="group"]');
+    return g ? { mode: Serupa.theme.get().mode, names: [...g.querySelectorAll('select')].map((x) => x.name + '=' + x.value + ':' + (x.labels[0]?.textContent || '')), text: g.textContent } : null;
+  });
+  t('debug.js: a Theme panel names each theme setting, with the page\'s own picked', themePanel?.names.length === 8 && themePanel.names.includes('mode=' + themePanel.mode + ':mode') && themePanel.names.includes('radius=:radius') && /passes|fail/.test(themePanel.text), JSON.stringify(themePanel));
+  await p.selectOption('#serupa-debug-theme-radius', 'round');
+  await p.selectOption('#serupa-debug-theme-mode', 'dark');
+  await p.waitForFunction(() => /-dark$/.test(document.documentElement.getAttribute('data-theme')), null, { timeout: 3000 }).catch(() => {});
+  const picked = await p.evaluate(() => ({ radius: document.documentElement.getAttribute('data-radius'), theme: document.documentElement.getAttribute('data-theme'), mode: Serupa.theme.get().mode }));
+  t('debug.js: picking a setting applies it to the page live, brand and mode through theme.js', picked.radius === 'round' && /-dark$/.test(picked.theme) && picked.mode === 'dark', JSON.stringify(picked));
+  const tried = await p.evaluate(async () => ({ ...await Serupa.debug.theme({ radius: '', contrast: 'more', density: 'compact' }), attr: document.documentElement.hasAttribute('data-radius'), select: document.getElementById('serupa-debug-theme-density').value }));
+  t('debug.js: theme(o) changes settings, \'\' puts one back, and the pairs are checked again in the new theme', tried.theme.radius === '' && tried.theme.contrast === 'more' && tried.theme.density === 'compact' && tried.lowContrast.length === 0 && !tried.attr && tried.select === 'compact', JSON.stringify(tried));
+  await p.evaluate(() => Serupa.debug.theme({ contrast: '', density: '', mode: 'auto' }));
   await p.keyboard.press('Escape');
-  t('debug.js: Escape turns it off and takes its outline and panel away', await p.evaluate(() => !Serupa.debug.isOn() && !document.getElementById('serupa-debug') && !document.getElementById('serupa-debug-panel') && sessionStorage.getItem('serupa-debug') === null));
+  t('debug.js: Escape turns it off and takes its outline and panels away', await p.evaluate(() => !Serupa.debug.isOn() && !document.getElementById('serupa-debug') && !document.getElementById('serupa-debug-panel') && !document.getElementById('serupa-debug-theme') && sessionStorage.getItem('serupa-debug') === null));
   await p.close();
 }
 

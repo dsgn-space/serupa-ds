@@ -120,6 +120,22 @@
       "css": "auto",
       "description": "Follow the parent stacking context."
     },
+    "cursor-interactive": {
+      "css": "pointer",
+      "description": "Cursor: over anything that acts on a click (buttons, tabs, options, links styled as controls). Set it to `default` for the platform's arrow on buttons, as desktop apps do; links keep the hand."
+    },
+    "cursor-disabled": {
+      "css": "not-allowed",
+      "description": "Cursor: over a disabled control. Set it to `default` to show nothing special."
+    },
+    "cursor-grab": {
+      "css": "grab",
+      "description": "Cursor: over something that can be dragged (a handle, a card, a splitter's thumb)."
+    },
+    "cursor-grabbing": {
+      "css": "grabbing",
+      "description": "Cursor: while something is being dragged."
+    },
     "aspect-auto": {
       "css": "auto",
       "description": "Natural ratio of the content."

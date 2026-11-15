@@ -23,7 +23,7 @@
 .dk-calendar__menu {
   height: var(--control-height-sm); padding-block: var(--spacing-0); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--calendar-menu-border, var(--field-border));
   border-radius: var(--radius-control); background: var(--calendar-menu-bg, var(--field)); color: var(--calendar-title-color, var(--text));
-  font: inherit; font-weight: var(--calendar-title-weight, var(--font-semibold)); cursor: pointer; touch-action: manipulation;
+  font: inherit; font-weight: var(--calendar-title-weight, var(--font-semibold)); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-calendar__menu:focus { outline: none; }
 .dk-calendar__menu:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
@@ -33,7 +33,7 @@
 .dk-calendar__day {
   display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--dk-cal-day); height: var(--dk-cal-day);
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
-  background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation;
+  background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 @media (hover: hover) { .dk-calendar__day:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
 .dk-calendar__day:active:not([aria-disabled="true"], .dk-calendar__day--selected, .dk-calendar__day--in-range) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
@@ -45,7 +45,7 @@
 @media (hover: hover) { .dk-calendar__day--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }   /* primary is under 4.5:1 on the hover fill in two dark brands; still semibold */
 .dk-calendar__day--selected { box-shadow: var(--calendar-depth-selected, var(--depth-part)); background: var(--depth-sheen), var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
 @media (hover: hover) { .dk-calendar__day--selected:hover:not([aria-disabled="true"]) { background: var(--depth-sheen), var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
-.dk-calendar__day--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: not-allowed; }
+.dk-calendar__day--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: var(--cursor-disabled); }
 /* Two months side by side (RangeCalendar): the first hides its Next button and the second its Previous, so one pair
    turns both; stacked on a narrow screen, each keeps both. */
 @media (min-width: 640px) { .dk-calendar--paired-next .dk-calendar__nav--next, .dk-calendar--paired-previous .dk-calendar__nav--prev { visibility: hidden; } }
@@ -64,7 +64,7 @@
 .dk-calendar__preset {
   display: inline-flex; align-items: center; box-sizing: border-box; min-height: var(--dk-cal-day, var(--calendar-day-size, var(--control-height-md)));
   margin: var(--spacing-0); padding: var(--spacing-0) var(--spacing-3); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
-  background: transparent; color: inherit; font: inherit; text-align: start; white-space: nowrap; cursor: pointer; touch-action: manipulation;
+  background: transparent; color: inherit; font: inherit; text-align: start; white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 @media (hover: hover) { .dk-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
@@ -75,7 +75,7 @@
 .dk-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
 .dk-calendar__preset[aria-pressed="true"] { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); font-weight: var(--font-medium); }
 @media (hover: hover) { .dk-calendar__preset[aria-pressed="true"]:hover { background: var(--calendar-range-bg, var(--primary-subtle)); } }
-.dk-calendar__preset[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-calendar__preset[aria-disabled="true"] { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
 @media (max-width: 639.98px) {
   .dk-calendar--presets { display: inline-flex; }
   .dk-calendar__presets { flex-direction: row; flex-wrap: wrap; padding-inline-start: var(--spacing-0); padding-block-start: var(--spacing-2); border-inline-start: var(--spacing-0); border-block-start: var(--border-width-1) solid var(--calendar-presets-border, var(--border)); }
