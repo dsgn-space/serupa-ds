@@ -13,9 +13,11 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
-// A picture's name: Component/Story-theme-state, Component/Story-axes, Component/Story-forced-colors or a
-// Foundations sheet. Anything else in a report is refused: the report comes from a run of the branch's code.
-const NAME = /^[A-Z][A-Za-z0-9]*\/[A-Za-z0-9][\w.-]*$/;
+// A picture's name: Component/Story-theme-state, Component/Story-axes, Component/Story-forced-colors, a Foundations
+// sheet, or a story file's own folder (src/internal's playground.stories.tsx/Element-blue-light-rest). Two parts, each
+// starting with a letter or digit, so neither can be "." or "..". Anything else in a report is refused: the report
+// comes from a run of the branch's code.
+const NAME = /^[A-Za-z0-9][\w.-]*\/[A-Za-z0-9][\w.-]*$/;
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 /** Every change the shards reported, checked and sorted. */
