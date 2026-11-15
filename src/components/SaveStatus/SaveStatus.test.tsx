@@ -112,7 +112,7 @@ describe('SaveStatus', () => {
     expect(el('s').textContent).toBe('Gagal menyimpan' + 'Coba lagi');
   });
 
-  test('its text, and the error, read 4.5:1 on the page in all six themes', async () => {
+  test('its text, and the error, read 4.5:1 on the page in every theme', async () => {
     await render(<div style={{ background: 'var(--surface)' }} id="page"><SaveStatus id="ok" status="saved" /><SaveStatus id="bad" status="error" /></div>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

@@ -92,7 +92,7 @@ describe('CodeBlock', () => {
     expect(css(pre()).direction).toBe('ltr');
   });
 
-  test('its text, the muted words and marked lines read 4.5:1 in all six themes', async () => {
+  test('its text, the muted words and marked lines read 4.5:1 in every theme', async () => {
     await render(<CodeBlock id="c" code={'a\nb'} language="ts" lineNumbers highlight={[2]} />);
     const mark = el('c').querySelector('mark')!, lang = el('c').firstElementChild!.firstElementChild!;   // the header's language
     for (const th of THEMES) {

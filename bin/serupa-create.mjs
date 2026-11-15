@@ -7,7 +7,7 @@
 // its own work and fix until it passes. AGENTS.md (and CLAUDE.md, which imports it) sends that agent to the skill in
 // node_modules/serupa-ds, which matches the installed release.
 //
-// usage:  npx --package=github:dsgn-space/serupa-ds#v<version> serupa-create <folder> [--brand blue|violet|emerald]
+// usage:  npx --package=github:dsgn-space/serupa-ds#v<version> serupa-create <folder> [--brand <color>]
 //
 // The folder must be new or empty. The app installs this same release of serupa-ds (its tag, as the README's install
 // line does), and the React, Vite and TypeScript versions this release was tested with. --serupa <spec> installs
@@ -20,7 +20,7 @@ import { CLAUDE, withSection } from './serupa-agents.mjs';
 // The versions this release was tested with: dist/starter.json, which the build writes from the repository's
 // devDependencies (a release's package.json leaves them out), so a dependency bump moves the starter app with it.
 export const VERSIONS = JSON.parse(fs.readFileSync(fileURLToPath(new URL('../dist/starter.json', import.meta.url)), 'utf8'));
-const BRANDS = ['blue', 'violet', 'emerald'];
+const BRANDS = ['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
 
 /**
  * The app's files, by path.
@@ -213,7 +213,7 @@ To update Serupa, change the tag of \`serupa-ds\` in \`package.json\`, run \`npm
 }
 
 function main(argv) {
-  const USAGE = 'usage: serupa-create <folder> [--brand blue|violet|emerald]';
+  const USAGE = 'usage: serupa-create <folder> [--brand <color>]';
   if (argv.includes('-h') || argv.includes('--help')) { console.log(USAGE); return 0; }
   const opt = (flag) => { const i = argv.indexOf(flag); if (i < 0) return undefined; const v = argv[i + 1]; argv.splice(i, 2); return v; };
   const brand = opt('--brand') ?? 'blue';

@@ -207,26 +207,6 @@
             "cssVar": "--slider-thumb-shadow"
           }
         }
-      },
-      "thumb-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-part}",
-        "$description": "The tactile layers over each thumb's shadow. None in the flat brands.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--slider-thumb-depth"
-          }
-        }
-      },
-      "track-depth": {
-        "$type": "shadow",
-        "$value": "{shadow.depth-well}",
-        "$description": "The track's tactile layers: a groove the thumb slides in. None in the flat brands.",
-        "$extensions": {
-          "com.serupa": {
-            "cssVar": "--slider-track-depth"
-          }
-        }
       }
     },
     "spacing": {

@@ -59,7 +59,7 @@ export function figmaVariables(dir = path.join(P, 'design-tokens')) {
   }
   const alias = new Map();
   for (const th of themes) {
-    // The alias colors: a brand's own sizes and motion (Modern's radii) stay in the CSS for now.
+    // A theme sets the alias colors only.
     for (const [p, tok] of walk({ color: load(path.join('themes', th + '.tokens.json')).color })) {
       const name = p.join('/');
       if (!alias.has(name)) alias.set(name, { collection: COLLECTIONS.themes, name, type: 'COLOR', description: tok.$description || '', css: cssVar(tok, p), values: {} });

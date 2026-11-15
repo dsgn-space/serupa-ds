@@ -27,10 +27,16 @@ Changing the password, turning two-step verification on and off, the devices sig
 - **Signing out is immediate**: a session someone may not recognize shouldn't wait for an Undo. Focus goes to the next device's Sign out, or the list's heading, and a toast says it's done (2.4.3, 4.1.3). Sign out everywhere else shows when two or more other devices are signed in.
 - **The devices can load late or fail on their own.** While they load, their list is busy with placeholder rows, named once ("Loading where you’re signed in"); a failed load says so in their place, with Try again (4.1.3, 3.3.3). The password, two-step and delete parts work meanwhile.
 - **Deleting the account sits apart, at the end**, and says what goes. Download your data comes first, beside it, so nobody has to choose between leaving and keeping their work. The dialog asks for the account's email before Delete my account works (Type to confirm), and pasting it is fine (3.3.4, 3.3.8). Leaving takes no more steps than signing up did: no survey, no hidden link.
+- **Give people time to change their mind.** With `deleteAfter`, Delete my account schedules the delete instead: the dialog says the day ("Your projects, files and settings will be deleted for good on 28 November 2026"), and until then a banner at the top of the page says it again with Keep my account, which takes focus as the dialog closes (3.3.4, 2.4.3). Delete account is gone from its section meanwhile, so there's one way back, not two. Pass `deletionDate` when the person comes back before the day, and the page opens with the banner.
+- **A paid plan says what happens to it.** With `plan`, the section and the dialog say "Your Pro plan stops renewing, so you won’t be charged again", so nobody deletes the account wondering about the next bill.
 - **A delete that fails says so.** The dialog stays open with an alert, "Couldn’t delete your account. Try again." (3.3.1, 4.1.3). After the delete, the page says the account is gone, with its h1 focused (2.4.3).
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.TwoStepOn} />
+
+A delete scheduled for later, on a paid plan:
+
+<Canvas of={Stories.DeletionScheduled} />
 
 ## What stays your app's job
 
@@ -39,4 +45,5 @@ Changing the password, turning two-step verification on and off, the devices sig
 - **The setup key and recovery codes**, as `setupKey` and `recoveryCodes`. Generate them on the server, and add a QR code of the key next to the text if you like.
 - **Telling people by email** when the password changes or two-step is turned off, so someone else's change doesn't go unseen.
 - **The data export** that `dataHref` leads to, and what happens to shared work when someone leaves.
+- **Doing the scheduled delete.** `onDeleteAccount` gets the day as "2026-11-28" when `deleteAfter` is set: delete then, email the person when it's done, and stop the plan's renewal at once. `onKeepAccount` gets Keep my account: return its promise, and reject it if it couldn’t be kept: the banner then says so and stays. Refunds for the rest of a paid period follow your own terms.
 - Rendering a `Toaster` once in the app.

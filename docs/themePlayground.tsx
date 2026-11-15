@@ -12,16 +12,20 @@ import { CopyButton } from '../src/components/CopyButton/CopyButton';
 import { Field } from '../src/components/Field/Field';
 import { Input } from '../src/components/Input/Input';
 import { Progress } from '../src/components/Progress/Progress';
+import tokens from '../tokens.json';
 import { SegmentedControl } from '../src/components/SegmentedControl/SegmentedControl';
 import { Select } from '../src/components/Select/Select';
 import { Switch } from '../src/components/Switch/Switch';
 import { Tab, TabList, TabPanel, Tabs } from '../src/components/Tabs/Tabs';
 
+// Every brand tokens.json has a theme for: one for each accent color of the palette, Blue (the default) first.
+const BRANDS = (tokens as unknown as { color: { themes: Array<{ id: string; name: string }> } }).color.themes.filter((t) => t.id.endsWith('-light')).map((t) => ({ value: t.id.replace(/-light$/, ''), label: t.name.replace(/ Light$/, '') }));
+
 type Axis = { key: string; attr: string; label: string; options: Array<{ value: string; label: string }>; initial: string; omit?: string };
 
 // The first option of each is what a page gets with the attribute left off (omit), so it isn't written out.
 export const AXES: Axis[] = [
-  { key: 'brand', attr: 'data-brand', label: 'Brand', initial: 'blue', options: [{ value: 'blue', label: 'Blue' }, { value: 'violet', label: 'Violet' }, { value: 'emerald', label: 'Emerald' }] },
+  { key: 'brand', attr: 'data-brand', label: 'Brand', initial: 'blue', options: BRANDS },
   { key: 'mode', attr: 'data-mode', label: 'Mode', initial: 'light', options: [{ value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }, { value: 'auto', label: 'Follow the system' }] },
   { key: 'contrast', attr: 'data-contrast', label: 'Contrast', initial: '', omit: '', options: [{ value: '', label: 'Normal' }, { value: 'more', label: 'More contrast' }] },
   { key: 'density', attr: 'data-density', label: 'Density', initial: '', omit: '', options: [{ value: '', label: 'Default' }, { value: 'compact', label: 'Compact' }] },

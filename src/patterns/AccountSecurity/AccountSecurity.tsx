@@ -20,6 +20,7 @@ import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { Loader } from '../../components/Loader/Loader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { useLocale } from '../../internal/provider';
 
 /* Account security: changing the password, turning two-step verification on and off, and the devices signed in, each
    with Sign out. For an app to copy. What it carries (WCAG 2.2):
@@ -38,6 +39,9 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
    - 3.3.4: deleting the account sits apart at the end, offers the data first, says what will be lost, and asks for the
      account's email before its button works; a delete that fails says so in the dialog, which stays open. After it,
      focus goes to the h1 of the page that says it's done.
+   - 3.3.4, 3.3.6: with deleteAfter, the delete is scheduled, not done at once: the dialog says the date, and until then a
+     banner at the top says it again with Keep my account, which takes focus when the delete is scheduled. A paid plan
+     says it stops renewing.
    Checking passwords and codes, ending sessions and deleting the account are the app's job: the on* props get them. */
 
 export interface SignedInDevice {
@@ -74,8 +78,18 @@ export interface AccountSecurityProps {
   email?: string | undefined;
   /** Where "Download your data" leads. Default: "#export". */
   dataHref?: string | undefined;
-  /** The email was typed and Delete pressed. Return its promise: a rejection keeps the dialog open and says so. */
-  onDeleteAccount?: (() => unknown) | undefined;
+  /** The email was typed and Delete pressed, with the day it's scheduled for ("2026-11-28") when deleteAfter is set.
+      Return its promise: a rejection keeps the dialog open and says so. */
+  onDeleteAccount?: ((on?: string) => unknown) | undefined;
+  /** Days before a delete happens, so people can change their mind: the delete is scheduled for that day, with a banner
+      and Keep my account until then. Default: none, the delete happens at once. */
+  deleteAfter?: number | undefined;
+  /** The day a delete already asked for will happen ("2026-11-28"): the page opens with its banner. Default: none. */
+  deletionDate?: string | undefined;
+  /** Keep my account was pressed for a scheduled delete. Return its promise: a rejection says it couldn't be kept. */
+  onKeepAccount?: (() => unknown) | undefined;
+  /** The paid plan's name ("Pro"): the delete says the plan stops renewing. Default: none, a free account. */
+  plan?: string | undefined;
   /** The devices are on their way: placeholder rows, named once ("Loading where you’re signed in"). Default: false. */
   loading?: boolean | undefined;
   /** The devices failed to load: a "Couldn’t load where you’re signed in" message with Try again, which calls onRetry, in their place. Default: false. */
@@ -93,6 +107,20 @@ const demoDevices: SignedInDevice[] = [
 ];
 const demoCodes = ['4f7k-2m9q', 'x8p3-n6tz', 'h2c5-w7rb', 'q9d4-j3vy', 'm6s8-k2fe', 't3g7-r5xa'];
 
+// The day `days` from now as "2026-11-28", in the reader's calendar.
+function isoIn(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+// "28 November 2026" in the reader's locale for "2026-11-28", read as that calendar day wherever the reader is;
+// anything else as it came.
+function day(iso: string, locale: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return iso;
+  try { return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))); } catch { return iso; }
+}
+
 /** What's wrong with a password change, in the order of its fields. */
 export function passwordProblems(current: string, next: string): ErrorSummaryItem[] {
   const found: ErrorSummaryItem[] = [];
@@ -104,7 +132,8 @@ export function passwordProblems(current: string, next: string): ErrorSummaryIte
 
 /** The security page: a skip link, a header with the way back, then main with the h1 and a section per part. */
 export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EHPK 3PXP', recoveryCodes = demoCodes, devices = demoDevices,
-  onChangePassword, onEnableTwoStep, onDisableTwoStep, onSignOut, onSignOutOthers, email = 'ana@example.com', dataHref = '#export', onDeleteAccount, loading = false, loadFailed = false, onRetry }: AccountSecurityProps) {
+  onChangePassword, onEnableTwoStep, onDisableTwoStep, onSignOut, onSignOutOthers, email = 'ana@example.com', dataHref = '#export', onDeleteAccount,
+  deleteAfter, deletionDate, onKeepAccount, plan, loading = false, loadFailed = false, onRetry }: AccountSecurityProps) {
   // Password
   const [current, setCurrent] = React.useState('');
   const [next, setNext] = React.useState('');
@@ -180,8 +209,33 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
   // The promise goes back to the button, which shows it's busy while a slow delete runs.
   const deleteAccount = () => {
     setDeleteFailed(false);
-    return Promise.resolve().then(() => onDeleteAccount?.()).then(() => { setDeleting(false); setDeleted(true); }, () => setDeleteFailed(true));
+    const on = deleteAfter == null ? undefined : isoIn(deleteAfter);
+    return Promise.resolve().then(() => onDeleteAccount?.(on)).then(() => {
+      setDeleting(false);
+      if (on) { setScheduled(on); requestAnimationFrame(() => keepButton.current?.focus()); } else setDeleted(true);
+    }, () => setDeleteFailed(true));
   };
+  // A delete scheduled for later: a banner with Keep my account until then.
+  const locale = useLocale();
+  const [scheduled, setScheduled] = React.useState<string | null>(deletionDate ?? null);
+  const [keeping, setKeeping] = React.useState(false);
+  const [keepFailed, setKeepFailed] = React.useState(false);
+  const keepButton = React.useRef<HTMLButtonElement>(null);
+  const titleRef = React.useRef<HTMLHeadingElement>(null);
+  const keepAccount = () => {
+    setKeeping(true);
+    setKeepFailed(false);
+    void Promise.resolve().then(() => onKeepAccount?.()).then(() => {
+      setScheduled(null);
+      toast({ title: 'Your account won’t be deleted', tone: 'success' });
+      requestAnimationFrame(() => titleRef.current?.focus());
+    }, () => setKeepFailed(true)).finally(() => setKeeping(false));
+  };
+  const when = scheduled ? <time dateTime={scheduled}>{day(scheduled, locale)}</time> : null;
+  const planGoes = plan ? ` Your ${plan} plan stops renewing, so you won’t be charged again.` : '';
+  const deleteSays = deleteAfter == null
+    ? `This deletes your projects, files and settings for good. It can’t be undone.${planGoes}`
+    : `Your projects, files and settings will be deleted for good on ${day(isoIn(deleteAfter), locale)}. Until then you can sign in and keep your account.${planGoes}`;
 
   const part = 'grid grid-cols-1 gap-4 border-b border-border py-6 md:grid-cols-3 md:gap-8';
   return (
@@ -199,7 +253,13 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
             <Link href="#home">Go to the home page</Link>
           </div>
         ) : <>
-        <PageHeader title="Security" />
+        <PageHeader title="Security" headingRef={titleRef} />
+        {scheduled ? (
+          <Alert tone="warning" role="status" className="mt-6" title={<span id="deletion-scheduled">Your account will be deleted on {when}</span>}
+            actions={<Button ref={keepButton} variant="outline" loading={keeping} aria-describedby="deletion-scheduled" onClick={keepAccount}>Keep my account</Button>}>
+            {keepFailed ? 'Couldn’t keep your account. Try again.' : 'Until then you can use it as before. Download your data if you want a copy.'}
+          </Alert>
+        ) : null}
 
         <SettingsSection title="Password" description={`At least ${MIN} characters. A long phrase is easier to remember than symbols.`}
           onSave={save} errors={errors} status={status} savedAt={savedAt} onRetry={save} saveLabel="Change password">
@@ -254,13 +314,16 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
         <section aria-labelledby="delete-account" className={part}>
           <div className="flex flex-col gap-1">
             <Heading level={2} size="lg" id="delete-account">Delete your account</Heading>
-            <p className="m-0 text-sm text-text-muted">This can’t be undone.</p>
+            <p className="m-0 text-sm text-text-muted">{scheduled ? 'You can still keep it.' : deleteAfter == null ? 'This can’t be undone.'
+              : `You have ${deleteAfter} ${deleteAfter === 1 ? 'day' : 'days'} to change your mind.`}</p>
           </div>
           <div className="flex flex-col items-start gap-3 md:col-span-2">
-            <p className="m-0 max-w-prose">Deleting removes your projects, files and settings for good, and signs you out everywhere. Download your data first if you want to keep a copy.</p>
+            {scheduled
+              ? <p className="m-0 max-w-prose">Your account will be deleted on {when}. Keep it from the message at the top of this page.</p>
+              : <p className="m-0 max-w-prose">Deleting removes your projects, files and settings for good, and signs you out everywhere.{planGoes} Download your data first if you want to keep a copy.</p>}
             <div className="flex flex-wrap gap-2">
               <Button href={dataHref} variant="outline">Download your data</Button>
-              <Button variant="outline" destructive onClick={() => askDelete(true)}>Delete account</Button>
+              {scheduled ? null : <Button variant="outline" destructive onClick={() => askDelete(true)}>Delete account</Button>}
             </div>
           </div>
         </section>
@@ -303,7 +366,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
         </Dialog>
 
         <Dialog alert open={deleting} onOpenChange={askDelete} title="Delete your account?"
-          description="This deletes your projects, files and settings for good. It can’t be undone.">
+          description={deleteSays}>
           <div className="flex flex-col gap-4">
             {deleteFailed ? <Alert tone="danger">Couldn’t delete your account. Try again.</Alert> : null}
             <TypeToConfirm phrase={email} confirmLabel="Delete my account" onConfirm={deleteAccount} />

@@ -162,7 +162,7 @@ describe('FilterBar', () => {
     await expect.element(page.getByRole('status').filter({ hasText: /hasil/ })).toHaveTextContent('3 hasil');
   });
 
-  test('chip text 4.5:1 on the chip, its outline 3:1, the count 4.5:1 on the page, in all six themes', () => {
+  test('chip text 4.5:1 on the chip, its outline 3:1, the count 4.5:1 on the page, in every theme', () => {
     expect(lowContrast([
       ['chip text', 'var(--text)', 'var(--surface)', 4.5],
       ['open chip', 'var(--link)', 'var(--surface)', 4.5],

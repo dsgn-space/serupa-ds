@@ -12,10 +12,10 @@ const status = [`M\t${D}Badge/Extras-blue-light-rest.png`, `M\t${D}Badge/Extras-
 const stories = changedStories(status);
 t('pictures grouped by story; files that aren\'t a story\'s shot are left out', [...stories.keys()].join() === 'Badge/Extras,Card/Media' && stories.get('Badge/Extras').size === 4, [...stories.keys()].join());
 const md = sheet({ status, base: 'aaa', head: 'bbb', repo: 'o/r', required: false });
-const rows = md.split('\n').filter((l) => /^\| (blue|violet|emerald)/.test(l));
+const rows = md.split('\n').filter((l) => /^\| (blue|violet|yellow)/.test(l));
 t('each story gets a row per theme, the changed ones marked, with the picture at the base and at the head', rows.length === 2 * THEMES.length
   && rows[0].startsWith('| blue-light (changed) | <img src="https://github.com/o/r/blob/aaa/tools/test/baseline-visual/Badge/Extras-blue-light-rest.png?raw=true"')
-  && rows[0].includes('blob/bbb/') && rows[1].startsWith('| blue-dark |') && rows[3].startsWith('| violet-dark (changed)'), rows.slice(0, 4).join('\n'));
+  && rows[0].includes('blob/bbb/') && rows[1].startsWith('| blue-dark |') && rows[5].startsWith('| violet-dark (changed)'), rows.slice(0, 6).join('\n'));
 t('a new story has no "before"; the other shots that changed are named', /\| blue-light \(changed\) \| new \|/.test(md) && md.includes('Also changed: blue-light-hover, axes.'));
 t('not required: says so; required: asks for the label', md.includes('isn\'t required') && sheet({ status, base: 'a', head: 'b', repo: 'o/r', required: true }).includes('add the **design-qa** label'));
 t('no picture changed: says there is nothing to review', sheet({ status: `M\tsrc/x.ts`, base: 'a', head: 'b', repo: 'o/r', required: false }).includes('nothing to review'));

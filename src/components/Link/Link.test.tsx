@@ -200,7 +200,7 @@ describe('Link', () => {
     expect([document.activeElement === el('ldef'), s.outlineStyle, s.outlineWidth, s.outlineOffset]).toEqual([true, 'solid', '2px', '2px']);
   });
 
-  test('contrast: link text (4.5:1), on hover, and its focus ring (3:1) on surface in all six themes', () => {
+  test('contrast: link text (4.5:1), on hover, and its focus ring (3:1) on surface in every theme', () => {
     expect(lowContrast([
       ['link', 'var(--link-text, var(--primary))', 'var(--surface)', 4.5],
       ['hover', 'var(--link-text-hover, var(--primary-hover))', 'var(--surface)', 4.5],

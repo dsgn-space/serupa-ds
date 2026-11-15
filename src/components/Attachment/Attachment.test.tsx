@@ -160,7 +160,7 @@ describe('Attachment', () => {
     expect(calls).toBe(0);
   });
 
-  test('its name, kind, size, link and error read 4.5:1, and its outline and icon 3:1, in all six themes', async () => {
+  test('its name, kind, size, link and error read 4.5:1, and its outline and icon 3:1, in every theme', async () => {
     await render(<><Attachment id="c" name="a.pdf" bytes={10} /><Attachment id="cl" name="a.pdf" href="#a" /><Attachment id="ce" name="a.pdf" error /></>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);

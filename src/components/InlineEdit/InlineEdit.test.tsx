@@ -281,7 +281,7 @@ describe('InlineEdit', () => {
     expect(out).toEqual(['sm 24 24 0', 'md 32 32 0', 'lg 44 44 0']);
   });
 
-  test('contrast: the text and placeholder keep 4.5:1 on the page and on the hover background, in all six themes', async () => {
+  test('contrast: the text and placeholder keep 4.5:1 on the page and on the hover background, in every theme', async () => {
     await render(<Box><InlineEdit id="c" label="Name" defaultValue="Apollo" /><InlineEdit id="cp" label="Name" placeholder="Add a name" /><div id="hover-bg" style={{ background: 'var(--surface-hover)' }} /></Box>);
     const low: string[] = [];
     for (const th of THEMES) {

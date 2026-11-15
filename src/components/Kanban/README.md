@@ -78,7 +78,7 @@ type Task = { id: string; title: string };
 - **Announcements:** each step is said politely: "Picked up Fix login. To do, position 1 of 3.", "Fix login, Done, position 2 of 5.", "Fix login moved to Done, position 2 of 5.", and "Canceled. Fix login is back in To do, position 1 of 3."
 - **Without dragging:** the keyboard and the "Move to…" menu both move a card without a drag (WCAG 2.5.7), and the menu also works with a screen reader's virtual cursor.
 - **Over limit:** said in words with a warning icon, not by colour alone (WCAG 1.4.1).
-- **Contrast:** titles, counts, "Over limit" and card text read 4.5:1, and the handle 3:1, in all six themes (`Kanban.test.tsx`).
+- **Contrast:** titles, counts, "Over limit" and card text read 4.5:1, and the handle 3:1, in every theme (`Kanban.test.tsx`).
 - **What's still yours:** the content of each card, and saying so if a move fails to save.
 
 ### Keyboard
@@ -128,7 +128,6 @@ Each is an optional override: set it on the page, a container or one Kanban. The
 | `--kanban-column-radius` | `radius-surface` | A column's corners (8px). |
 | `--kanban-card-radius` | `radius-control` | A card's corners (6px). |
 | `--kanban-card-shadow` | `elevation-raised` | The card being dragged: level 2, raised, as in SortableList. |
-| `--kanban-card-depth` | `depth-card` | A card's tactile layers at rest: a short, soft shadow. None in the flat brands. |
 | `--kanban-gap` | `spacing-3` | Space between columns (12px). |
 | `--kanban-padding` | `spacing-3` | Space inside a column (12px). |
 | `--kanban-card-padding` | `spacing-2` | Space inside a card (8px). |
