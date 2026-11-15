@@ -105,14 +105,15 @@ const frames = (n: number) => new Promise<void>((res) => { const f = () => (n-- 
 
 // Draws one combination and returns what went wrong with it.
 // onMedia="dark" or "light" draws for media of that lightness, the same in every theme, so it's tried over a backdrop
-// like that (black or white), as an app puts it over a photo with a scrim.
-const BACKDROP: Record<string, string> = { dark: 'rgb(0, 0, 0)', light: 'rgb(255, 255, 255)' };
+// like that (black or white) with the text around it in the matching ink, as an app puts it over a photo with a scrim.
+const BACKDROP: Record<string, [string, string]> = { dark: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)'], light: ['rgb(255, 255, 255)', 'rgb(0, 0, 0)'] };
 async function attempt(el: React.ReactElement, rtl: boolean, theme: string, onMedia?: unknown): Promise<string[]> {
   const problems: string[] = [];
   const error = vi.spyOn(console, 'error').mockImplementation((...a: unknown[]) => { problems.push(`console.error: ${a.map(String).join(' ').slice(0, 200)}`); });
   const host = document.createElement('div');
   if (rtl) host.dir = 'rtl';
-  if (typeof onMedia === 'string' && BACKDROP[onMedia]) host.style.background = BACKDROP[onMedia]!;
+  const media = typeof onMedia === 'string' ? BACKDROP[onMedia] : undefined;
+  if (media) { host.style.background = media[0]; host.style.setProperty('--text', media[1]); host.style.color = media[1]; }
   document.documentElement.setAttribute('data-theme', theme);
   document.body.appendChild(host);
   const root = createRoot(host, { onUncaughtError: (e) => problems.push(`throws: ${String((e as Error)?.message ?? e).slice(0, 200)}`) });
