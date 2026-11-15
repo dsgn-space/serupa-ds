@@ -77,8 +77,8 @@
 @media (hover: hover) { .dk-textarea:has(.dk-textarea__field:user-invalid):hover:not(:focus-within) { --dk-ta-bd: var(--textarea-invalid, var(--field-border-invalid)); } }
 .dk-textarea--readonly { background: var(--textarea-bg-readonly, var(--field-readonly)); }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native field follows that on its own). */
-.dk-textarea--disabled, .dk-textarea:where(:has(.dk-textarea__field:disabled)) { background: var(--textarea-bg-readonly, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: not-allowed; }
-.dk-textarea--disabled .dk-textarea__field, .dk-textarea__field:where(:disabled) { cursor: not-allowed; }
+.dk-textarea--disabled, .dk-textarea:where(:has(.dk-textarea__field:disabled)) { background: var(--textarea-bg-readonly, var(--field-readonly)); opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
+.dk-textarea--disabled .dk-textarea__field, .dk-textarea__field:where(:disabled) { cursor: var(--cursor-disabled); }
 /* iOS Safari zooms the page into a focused field whose text is under 16px, and stays zoomed. There the field's
    own text is 16px; the box keeps its height. (maximum-scale=1 would stop the zoom but also pinch zoom: WCAG 1.4.4.) */
 @supports (-webkit-touch-callout: none) { .dk-textarea:not(.dk-textarea--size-lg) .dk-textarea__field { font-size: var(--text-base); } }

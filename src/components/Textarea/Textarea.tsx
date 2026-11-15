@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { useValidityMessages } from '../../internal/validity';
 import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
@@ -57,7 +58,7 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
   const nameRef = useNameCheck('Textarea', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   let rest = omit(props, OWN);
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   const rows = (props.rows as number) > 0 ? Math.floor(props.rows as number) : 3;
