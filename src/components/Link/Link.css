@@ -12,6 +12,10 @@
 }
 @media (hover: hover) { .dk-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 .dk-link--neutral { color: inherit; }
+/* onMedia: white (on dark media) or black (on light), whatever the theme, hover and focus ring too. */
+.dk-link--on-dark { --dk-link-ink: var(--link-on-dark, var(--white)); }
+.dk-link--on-light { --dk-link-ink: var(--link-on-light, var(--black)); }
+.dk-link--on-dark, .dk-link--on-light { --link-text: var(--dk-link-ink); --link-text-hover: var(--dk-link-ink); --link-focus-ring: var(--dk-link-ink); }
 @media (hover: hover) { .dk-link--neutral:hover { color: inherit; } }
 /* Hover-only underlines are for links whose place says they are links (a nav bar, a footer). In a paragraph the underline
    stays: there color alone can't tell a link from the text around it (WCAG 1.4.1). */

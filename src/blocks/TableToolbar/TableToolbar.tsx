@@ -52,6 +52,12 @@ export interface TableToolbarProps {
   selectedCount?: number | undefined;
   /** Clears the selection. */
   onClearSelection?: (() => void) | undefined;
+  /** How many rows match the search and filters, across every page. With onSelectAll, the bulk actions offer
+      "Select all 24" while fewer are selected, and say "All 24 selected" once selectedCount reaches it. Leave it
+      out when every row is on one page. */
+  matchingCount?: number | undefined;
+  /** Called by "Select all 24": select every matching row, on every page. */
+  onSelectAll?: (() => void) | undefined;
   /** The actions for the selected rows: small Buttons such as Export or Archive. */
   bulkActions?: React.ReactNode;
   /** Its words, in the page's language. Each one left out stays English. */
@@ -75,7 +81,7 @@ const EN: TableToolbarLabels = {
   clearFilters: 'Clear filters',
 };
 
-export function TableToolbar({ noun, query, onQueryChange, filters = [], filterBar, columns, results, onClearFilters, selectedCount = 0, onClearSelection, bulkActions, labels, children }: TableToolbarProps) {
+export function TableToolbar({ noun, query, onQueryChange, filters = [], filterBar, columns, results, onClearFilters, selectedCount = 0, onClearSelection, matchingCount, onSelectAll, bulkActions, labels, children }: TableToolbarProps) {
   const w = { ...EN, ...labels };
   const search = React.useRef<HTMLInputElement | null>(null);
   const filtered = query !== '' || filters.some((f) => f.value !== '');
@@ -103,7 +109,7 @@ export function TableToolbar({ noun, query, onQueryChange, filters = [], filterB
           {columns}
         </div>
       ) : <p role="status" className="m-0 text-sm text-text-muted">{results}</p>}
-      <TableActionBar count={selectedCount} onClear={onClearSelection}>{bulkActions}</TableActionBar>
+      <TableActionBar count={selectedCount} onClear={onClearSelection} total={matchingCount} onSelectAll={onSelectAll}>{bulkActions}</TableActionBar>
       {children}
     </div>
   );

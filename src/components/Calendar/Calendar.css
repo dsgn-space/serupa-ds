@@ -11,6 +11,8 @@
      seventh of the screen is a fraction (37.14px at 320px), which blurs the day circles' and the range band's edges
      and leaves the columns a hair apart. */
   --dk-cal-day: min(var(--calendar-day-size, var(--control-height-md)), round(down, calc((100vw - var(--spacing-12)) / 7), var(--border-width-1)));   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
+  /* Space between the weeks, so the rows read apart and a range is a band per week. */
+  --dk-cal-row-gap: var(--calendar-row-gap, var(--spacing-1));
   display: inline-flex; flex-direction: column; gap: var(--calendar-gap, var(--spacing-2));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--calendar-day-color, var(--text));
 }
@@ -30,6 +32,43 @@
 .dk-calendar__grid { border-collapse: collapse; border-spacing: var(--spacing-0); }
 .dk-calendar__grid th { width: var(--dk-cal-day); height: var(--dk-cal-day); padding: var(--spacing-0); color: var(--calendar-weekday-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-medium); text-align: center; }
 .dk-calendar__grid td { padding: var(--spacing-0); text-align: center; }
+.dk-calendar__grid tbody tr + tr td { padding-block-start: var(--dk-cal-row-gap); }
+/* The heading (Calendar.tsx): the month and year as a button that opens the year's months, and there the year, which
+   opens twelve years. A ghost button, as tall as the month buttons beside it. */
+.dk-calendar__heading {
+  display: inline-flex; flex: auto; align-items: center; justify-content: center; gap: var(--spacing-1); height: var(--control-height-sm);
+  margin: var(--spacing-0); padding-block: var(--spacing-0); padding-inline: var(--spacing-2); border: var(--spacing-0); border-radius: var(--radius-control);
+  background: transparent; color: var(--calendar-title-color, var(--text)); font: inherit; font-weight: var(--calendar-title-weight, var(--font-semibold));
+  white-space: nowrap; cursor: var(--cursor-interactive); touch-action: manipulation; transition: background-color var(--motion-hover) var(--ease-move);
+}
+.dk-calendar__heading-icon { color: var(--calendar-weekday-color, var(--text-muted)); font-size: var(--spacing-4); }
+@media (hover: hover) { button.dk-calendar__heading:hover { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.dk-calendar__heading--static { cursor: default; }
+.dk-calendar__heading:focus { outline: none; }
+.dk-calendar__heading:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+/* The months or years: three by four, the size of the weekday row and six weeks with their gaps. */
+.dk-calendar__periods {
+  --dk-cal-periods-w: calc(7 * var(--dk-cal-day));   /* stylelint-disable-line serupa/no-raw-value -- a week's seven days: a count, not a length */
+  --dk-cal-periods-h: calc(7 * var(--dk-cal-day) + 5 * var(--dk-cal-row-gap));   /* stylelint-disable-line serupa/no-raw-value -- the weekday row and six weeks, with the five gaps between them: counts */
+  width: var(--dk-cal-periods-w); height: var(--dk-cal-periods-h);
+  border-collapse: separate; border-spacing: var(--spacing-1); table-layout: fixed;
+}
+.dk-calendar__periods td { padding: var(--spacing-0); }
+.dk-calendar__period {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--sizing-full); height: var(--sizing-full); min-height: var(--dk-cal-day);
+  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
+  background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
+}
+@media (hover: hover) { .dk-calendar__period:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
+.dk-calendar__period:active:not([aria-disabled="true"], .dk-calendar__period--selected) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
+.dk-calendar__period:focus { outline: none; }
+.dk-calendar__period:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
+.dk-calendar__period--today { color: var(--calendar-today-color, var(--primary)); font-weight: var(--calendar-today-weight, var(--font-semibold)); }
+@media (hover: hover) { .dk-calendar__period--today:hover:not([aria-disabled="true"]) { color: var(--calendar-today-color-hover, var(--text)); } }
+.dk-calendar__period--selected { box-shadow: var(--calendar-depth-selected, var(--depth-part)); background: var(--depth-sheen), var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
+@media (hover: hover) { .dk-calendar__period--selected:hover:not([aria-disabled="true"]) { box-shadow: var(--calendar-depth-selected, var(--depth-part)); background: var(--depth-sheen), var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
+.dk-calendar__period--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: var(--cursor-disabled); }
 .dk-calendar__day {
   display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--dk-cal-day); height: var(--dk-cal-day);
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));
@@ -50,9 +89,14 @@
    turns both; stacked on a narrow screen, each keeps both. */
 @media (min-width: 640px) { .dk-calendar--paired-next .dk-calendar__nav--next, .dk-calendar--paired-previous .dk-calendar__nav--prev { visibility: hidden; } }
 /* Ranges (DateRangePicker): days between the ends get a subtle fill; the ends are selected days. */
-.dk-calendar__day--in-range { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
+.dk-calendar__day--in-range { border-radius: var(--spacing-0); background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); }
+/* The ends join the band: square on the side it runs to, round on the outer side. A ring in the band sits over its
+   neighbours. */
+.dk-calendar__day--range-start { border-start-end-radius: var(--spacing-0); border-end-end-radius: var(--spacing-0); }
+.dk-calendar__day--range-end { border-start-start-radius: var(--spacing-0); border-end-start-radius: var(--spacing-0); }
+.dk-calendar__day:focus-visible { position: relative; z-index: var(--z-10); }
 @media (hover: hover) { .dk-calendar__day--in-range:hover:not([aria-disabled="true"]) { background: var(--calendar-range-bg, var(--primary-subtle)); color: var(--calendar-range-color, var(--text)); } }
-@media (forced-colors: active) { .dk-calendar__day--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; } .dk-calendar__day--today { text-decoration: underline; } .dk-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
+@media (forced-colors: active) { .dk-calendar__day--selected, .dk-calendar__period--selected { background: Highlight; color: HighlightText; forced-color-adjust: none; } .dk-calendar__day--today { text-decoration: underline; } .dk-calendar__day--in-range { border: var(--border-width-1) dashed Highlight; } }
 /* Presets (RU11): shortcuts in a column after the days, past a divider, each a button as tall as a day. The one the
    value matches is pressed and filled like a range; one that can't be picked is faded. On a narrow screen they wrap
    in rows under the days. */
@@ -69,7 +113,7 @@
 @media (hover: hover) { .dk-calendar__preset:hover:not([aria-disabled="true"]) { background: var(--calendar-day-bg-hover, var(--secondary)); } }
 /* Hover and press fade at motion-hover, as on every control that stays put (foundations.md, Motion). */
 .dk-calendar__preset { transition: background-color var(--motion-hover) var(--ease-move); }
-@media (prefers-reduced-motion: reduce) { .dk-calendar__preset { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .dk-calendar__preset, .dk-calendar__heading { transition: none; } }
 .dk-calendar__preset:active:not([aria-disabled="true"], [aria-pressed="true"]) { background: var(--calendar-day-bg-pressed, var(--pressed)); }
 .dk-calendar__preset:focus { outline: none; }
 .dk-calendar__preset:focus-visible { outline: var(--focus-ring-width) solid var(--calendar-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }

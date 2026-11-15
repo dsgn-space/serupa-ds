@@ -22,6 +22,9 @@ export const Playground: Story = {};
 
 export const ThreeColumns: Story = { args: { columns: 3, gap: 6 } };
 
+// A number of columns per screen width: one on a phone, two from 640px, four from 1024px.
+export const PerScreenWidth: Story = { args: { columns: { base: 1, sm: 2, lg: 4 }, gap: { base: 2, md: 4 }, children: cells(8) } };
+
 export const AutoFit: Story = { args: { minColumnWidth: '10rem', gap: 2, children: cells(9) } };
 
 export const UpToThree: Story = { args: { columns: 3, minColumnWidth: '12rem', gap: 4 } };

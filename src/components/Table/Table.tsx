@@ -108,6 +108,15 @@ export interface TableActionBarProps extends React.HTMLAttributes<HTMLDivElement
   onClear?: (() => void) | undefined;
   /** The clear button's text. Default: "Clear selection" (labels.clearSelection). */
   clearLabel?: string | undefined;
+  /** How many rows match in all, across every page, when the table shows only some of them. With onSelectAll, the
+      bar offers "Select all 1,240" while fewer are selected, and says "All 1,240 selected" once count reaches it.
+      Leave it out when every row is on the page. */
+  total?: number | undefined;
+  /** Called by "Select all 1,240": select every matching row, on every page, then pass count={total}. */
+  onSelectAll?: (() => void) | undefined;
+  /** Stays in view at the top while the page scrolls, so the actions can be reached from the last row of a long
+      table. The offset is the table.action-bar-top token, for a page with a sticky header of its own. Default: false. */
+  sticky?: boolean | undefined;
   /** The actions for the selected rows: Buttons such as Delete or Export. */
   children?: React.ReactNode | undefined;
 }
@@ -516,12 +525,24 @@ export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCe
 /** The bar of actions for a table's selected rows: "3 selected", your buttons, and "Clear selection". */
 export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableActionBarProps>('TableActionBar', function TableActionBar(props, ref) {
   const labels = useSettings(words).labels, locale = useLocale();
-  const rest = omit(props, { count: 1, onClear: 1, clearLabel: 1, className: 1, children: 1 });
+  const rest = omit(props, { count: 1, onClear: 1, clearLabel: 1, total: 1, onSelectAll: 1, sticky: 1, className: 1, children: 1 });
   const count = Math.max(0, Math.floor(props.count) || 0);
+  const total = Math.max(0, Math.floor(props.total || 0) || 0);
+  const all = total > 0 && count >= total;
+  const offer = props.onSelectAll && total > count;
+  const format = (x: number) => new Intl.NumberFormat(locale).format(x);
   const self = React.useRef<HTMLDivElement | null>(null);
   const setRefs = useMergedRef(ref, (e: HTMLDivElement | null) => { self.current = e; });
   const id = domId('dk-tab', React.useId());
-  const said = labels.tableSelected(count, new Intl.NumberFormat(locale).format(count));
+  const said = all ? labels.tableAllSelected(total, format(total)) : labels.tableSelected(count, format(count));
+  // "Select all 1,240" goes once every row is selected: focus it had moves to the bar's next button, not the page.
+  const moveOn = React.useRef(false);
+  useIsoLayoutEffect(() => {
+    if (!all || !moveOn.current) return;
+    moveOn.current = false;
+    const next = self.current && self.current.querySelector<HTMLElement>('.dk-table-action-bar__clear, .dk-table-action-bar__actions button:not(:disabled)');
+    if (next) next.focus();
+  }, [all]);
   // Hidden (not removed) at 0, so focus is still in it here and can go to the table's "Select all" before it's lost.
   useIsoLayoutEffect(() => {
     const bar = self.current;
@@ -538,10 +559,11 @@ export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableAct
     if (count) announce(said);   // not 0: the hidden bar says nothing, and the checkbox that cleared it says its own state
   }, [count, said]);
   return (
-    <div role="group" aria-labelledby={id} {...rest} ref={setRefs} hidden={!count || undefined} data-component="table-action-bar" className={cn('dk-table-action-bar', props.className)}>
+    <div role="group" aria-labelledby={id} {...rest} ref={setRefs} hidden={!count || undefined} data-component="table-action-bar" className={cn('dk-table-action-bar', props.sticky && 'dk-table-action-bar--sticky', props.className)}>
       <span id={id} className="dk-table-action-bar__count">{said}</span>
+      {offer ? <Button variant="ghost" size="sm" className="dk-table-action-bar__all" onClick={() => { moveOn.current = !!self.current && self.current.contains(activeIn(self.current)); props.onSelectAll!(); }}>{labels.tableSelectAll(total, format(total))}</Button> : null}
       <div className="dk-table-action-bar__actions">{props.children}</div>
-      {props.onClear ? <Button variant="ghost" size="sm" onClick={props.onClear}>{props.clearLabel || labels.clearSelection}</Button> : null}
+      {props.onClear ? <Button variant="ghost" size="sm" className="dk-table-action-bar__clear" onClick={props.onClear}>{props.clearLabel || labels.clearSelection}</Button> : null}
     </div>
   );
 });
