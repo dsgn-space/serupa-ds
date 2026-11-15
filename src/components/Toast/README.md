@@ -79,6 +79,7 @@ toast.undo({ title: "Moved to trash", commit: () => deleteFile(file), onUndo: ()
 | --- | --- |
 | F8 | To the newest toast; pressed again in a toast, back to where focus was |
 | Escape | In a toast reached with F8, back to where focus was |
+| Ctrl+Z (⌘Z on Apple devices) | Chooses Undo on the newest `toast.undo` shown, one per press. Not in a text field, where it undoes the typing, and not when your app handled the keys first (`preventDefault`) |
 | Tab | Within a toast, to its action and its close button |
 
 ## Props
@@ -112,7 +113,7 @@ The undo pattern, in place of a confirmation: do the action in the page at once 
 | `onUndo` | `() => void` | Runs instead of `commit` when Undo is chosen: put things back. |
 | `undoLabel` | string | The button's text. Default: "Undo" (`labels.undo`). |
 
-It returns the toast's id. Keep the usual duration or longer, so people have time to notice. The toast's time stops while it's hovered or focused, and F8 reaches its Undo button. With `duration: 0` it stays, and commits only when it's closed or the page is left.
+It returns the toast's id. Keep the usual duration or longer, so people have time to notice. The toast's time stops while it's hovered or focused, and F8 reaches its Undo button. Ctrl+Z (⌘Z on Apple devices) chooses Undo on the newest one too, from anywhere but a text field, since that's where people try undo first. With `duration: 0` it stays, and commits only when it's closed or the page is left.
 
 ### Toaster
 
