@@ -124,3 +124,14 @@ describe('IconButton', () => {
     expect(warns.filter((m) => /aria-label/.test(m))).toEqual([]);
   });
 });
+
+describe('IconButton onMedia', () => {
+  test('takes Button\'s onMedia: white over dark media, black over light, in its fill or its text', async () => {
+    await render(<div><IconButton id="om-dark" icon="share" label="Share" onMedia="dark" /><IconButton id="om-light" icon="share" label="Share" onMedia="light" /></div>);
+    const inks = (id: string) => { const s = getComputedStyle(document.getElementById(id)!); return [s.color, s.backgroundColor]; };
+    expect(document.getElementById('om-dark')!.className).toContain('dk-btn--on-dark');
+    expect(inks('om-dark')).toContain('rgb(255, 255, 255)');
+    expect(document.getElementById('om-light')!.className).toContain('dk-btn--on-light');
+    expect(inks('om-light')).toContain('rgb(0, 0, 0)');
+  });
+});

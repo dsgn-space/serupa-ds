@@ -12,6 +12,9 @@ import * as icons from '../../material/builtin';
 export interface LinkOwnProps {
   /** 'primary' (default): the primary color. 'neutral': the surrounding text's color, still underlined. */
   tone?: 'primary' | 'neutral' | undefined;
+  /** Over a photo or a colored panel: 'dark' draws the link in white for dark media, 'light' in black for light media,
+      the same in every theme. */
+  onMedia?: 'dark' | 'light' | undefined;
   /** 'always' (default): underlined, so it's a link without relying on color. 'hover': only on hover and focus, for links whose place already says they're links (a nav bar, a footer); inside a paragraph it stays underlined. */
   underline?: 'always' | 'hover' | undefined;
   /** Opens in a new tab (target="_blank", rel="noopener noreferrer"), with a new-tab icon and "(opens in a new tab)" for screen readers (the opensInNewTab label). Default: false. */
@@ -29,7 +32,7 @@ export type LinkProps<C extends React.ElementType = 'a'> = LinkOwnProps & {
    tab and says so. `as` renders your router's link instead of an <a>. className and every other prop go to it. */
 /** An inline text link: underlined, primary or the text's color. external opens a new tab and says so. */
 const LinkBase = /* @__PURE__ */ component<HTMLAnchorElement, LinkProps>('Link', function Link(props, ref) {
-  const rest = omit(props, { tone: 1, underline: 1, external: 1, as: 1, className: 1, children: 1, autoFocus: 1 });
+  const rest = omit(props, { tone: 1, onMedia: 1, underline: 1, external: 1, as: 1, className: 1, children: 1, autoFocus: 1 });
   const tone = oneOf(['primary', 'neutral'] as const, props.tone, 'primary');
   const underline = oneOf(['always', 'hover'] as const, props.underline, 'always');
   // In the text's color with no underline at rest, nothing marks it as a link until it's hovered (WCAG 1.4.1).
@@ -40,7 +43,7 @@ const LinkBase = /* @__PURE__ */ component<HTMLAnchorElement, LinkProps>('Link',
   }
   const attrs = Object.assign(rest, {
     'data-component': 'link',
-    className: cn('dk-link', tone === 'neutral' && 'dk-link--neutral', underline === 'hover' && 'dk-link--hover-underline', props.className),
+    className: cn('dk-link', tone === 'neutral' && 'dk-link--neutral', underline === 'hover' && 'dk-link--hover-underline', (props.onMedia === 'dark' || props.onMedia === 'light') && 'dk-link--on-' + props.onMedia, props.className),
   });
   // The new-tab icon goes in a nowrap span with the last letter of a text label, so it never starts a line alone (GF1).
   // Only the last letter: a whole nowrap word longer than the line couldn't break inside, and ran past a narrow

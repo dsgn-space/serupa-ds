@@ -33,6 +33,7 @@ const { Stack, Button } = window.Serupa;
 
 - Use a larger gap between groups and a smaller one inside them, such as `gap={6}` between fields and `gap={2}` between buttons.
 - Set `wrap` on a row that may not fit on narrow screens.
+- To change the layout with the screen's width, give `direction`, `gap` or `align` one value per width: `direction={{ base: 'column', md: 'row' }}` stacks on a phone and sits side by side from 768px. The widths are `sm` (640px), `md` (768px) and `lg` (1024px); each holds until the next one set. Media queries draw it, so server HTML is already laid out.
 - Pick the element with `as`: `ul` or `ol` for a list, `form` or `fieldset` for a form's fields.
 - Nest Stacks for more complex layouts, such as a row of buttons at the end of a column of fields.
 
@@ -52,9 +53,9 @@ const { Stack, Button } = window.Serupa;
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root element (`as`). |
-| `direction` | `'column'` \| `'row'` | `'column'` | One under another, or side by side |
-| `gap` | a spacing step: `0` `0.5` `1` `1.5` `2` `2.5` `3` `3.5` `4` `5` `6` `7` `8` `9` `10` `11` `12` `14` `16` `20` `24` | `4` (16px) | The space between items: `gap={6}` is `spacing-6`, 24px |
-| `align` | `'stretch'` \| `'start'` \| `'center'` \| `'end'` \| `'baseline'` | `'stretch'` in a column, `'center'` in a row | Cross-axis alignment |
+| `direction` | `'column'` \| `'row'`, or one per width: `{ base, sm, md, lg }` | `'column'` | One under another, or side by side |
+| `gap` | a spacing step: `0` `0.5` `1` `1.5` `2` `2.5` `3` `3.5` `4` `5` `6` `7` `8` `9` `10` `11` `12` `14` `16` `20` `24` | `4` (16px) | The space between items: `gap={6}` is `spacing-6`, 24px. Or one per width: `{ base: 2, lg: 6 }` |
+| `align` | `'stretch'` \| `'start'` \| `'center'` \| `'end'` \| `'baseline'` | `'stretch'` in a column, `'center'` in a row | Cross-axis alignment. Or one per width; a width left out follows that width's direction |
 | `justify` | `'start'` \| `'center'` \| `'end'` \| `'between'` | `'start'` | Main-axis distribution |
 | `wrap` | boolean | `false` | Lets a row wrap onto more lines |
 | `as` | `'div'` \| `'section'` \| `'ul'` \| `'ol'` \| `'nav'` \| `'header'` \| `'footer'` \| `'form'` \| `'fieldset'` \| `'span'` | `'div'` | The element. A list loses its bullets, margins and padding |

@@ -141,6 +141,34 @@ export const ActionBar: Story = {
   },
 };
 
+// One page of a long list: after its "Select all", the bar offers every matching row on every page, and says so
+// once they're all selected. sticky keeps it at the top while the page scrolls.
+export const SelectAcrossPages: Story = {
+  render: function Render(args) {
+    const people = usePeople();
+    const [picked, setPicked] = React.useState<string[]>(people.map((p) => p.name));
+    const [everyPage, setEveryPage] = React.useState(false);
+    const all = people.length > 0 && picked.length === people.length;
+    const clear = () => { setPicked([]); setEveryPage(false); };
+    const toggle = (n: string) => { setEveryPage(false); setPicked(picked.includes(n) ? picked.filter((x) => x !== n) : [...picked, n]); };
+    return <>
+      <TableActionBar sticky count={everyPage ? 1240 : picked.length} total={1240} onSelectAll={() => setEveryPage(true)} onClear={clear}>
+        <Button size="sm" variant="outline">Export</Button>
+      </TableActionBar>
+      <Table {...args}>
+        <TableHead><TableRow>
+          <TableSelectCell header label="Select all rows on this page" checked={all} indeterminate={!all && picked.length > 0} onChange={() => (all ? clear() : setPicked(people.map((p) => p.name)))} />
+          <TableHeaderCell>Name</TableHeaderCell><TableHeaderCell>Role</TableHeaderCell>
+        </TableRow></TableHead>
+        <TableBody>{people.map((p) => <TableRow key={p.name} selected={everyPage || picked.includes(p.name)}>
+          <TableSelectCell label={'Select ' + p.name} checked={everyPage || picked.includes(p.name)} onChange={() => toggle(p.name)} />
+          <TableCell>{p.name}</TableCell><TableCell><Text as="span" tone="muted">{p.role || 'No role'}</Text></TableCell>
+        </TableRow>)}</TableBody>
+      </Table>
+    </>;
+  },
+};
+
 export const Sortable: Story = {
   render: function Render(args) {
     const people = usePeople();

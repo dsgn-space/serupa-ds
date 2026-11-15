@@ -14,7 +14,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+/** A date of birth, the date it's for: the Field's label names the three boxes, and the hint gives an example. Type a
+ *  day over 31 or a month over 12 and leave the boxes to see what it says. */
+export const Playground: Story = {
+  args: { 'aria-label': undefined, order: 'dmy', autoComplete: 'bday', max: '2026-11-14' },
+  render: (args) => <Field label="Date of birth" hint="For example, 27 3 2007"><DateField {...args} /></Field>,
+};
+
+/** The month as a menu of its names (`monthInput="select"`), for people who know it by name; the value is the same. */
+export const MonthNames: Story = {
+  name: 'Month by name',
+  render: () => <Field label="Date of birth" hint="For example, 27 March 2007"><DateField monthInput="select" autoComplete="bday" order="dmy" /></Field>,
+};
+
 
 /** In a Field: its label names the three boxes as a group, and the hint gives an example in the boxes' order (set with `order`, since fixed text can't follow the locale). */
 export const InField: Story = {

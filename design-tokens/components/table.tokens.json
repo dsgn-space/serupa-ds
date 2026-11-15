@@ -227,6 +227,16 @@
             "cssVar": "--table-action-bar-padding"
           }
         }
+      },
+      "action-bar-top": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-0}",
+        "$description": "How far below the top of the page a sticky TableActionBar stops: the height of your own sticky header, if the page has one.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--table-action-bar-top"
+          }
+        }
       }
     },
     "border": {
