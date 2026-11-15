@@ -1,0 +1,46 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './TaskBoard.stories';
+
+<Meta of={Stories} />
+
+# Task board
+
+A team's tasks in columns, one per stage: cards move between them and are saved as they move, a move that can't be saved goes back and says so, and a new task is added from a dialog.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Work that moves through stages and is saved on a server: a sprint, a support queue, a hiring pipeline.
+- Not for one list to reorder: that's Sortable list on its own.
+- Not for tasks with many fields to compare or sort: that's the List with search and filters pattern, with a status column.
+
+## What each part is for
+
+- **Every move has a way without dragging.** Kanban moves a card by its handle, by keyboard, or from its "Move to…" menu, and says each move as it happens (2.5.7, 2.1.1, 4.1.3).
+- **A move shows at once and is saved after.** Nobody waits on the network to see the card land.
+- **A move that can't be saved goes back.** The card returns to the column it came from, and a toast names the card and the column: "Couldn’t move “Invoice PDF export”. It’s back in To do. Try again." The board never shows something the server doesn't have (3.3.1, 4.1.3).
+- **A column over its limit says what to do.** Kanban's count says "Over limit" in words, and a line above the board names the column, "In progress has 3 tasks, over its limit of 2.", with the way out: finish or move a task before starting another (1.4.1). The move is still allowed: the limit is the team's rule, and the board's job is to make breaking it visible.
+- **A new task needs only a title.** The column starts as the first one and can be changed. A missing title is said next to the field, which gets focus (3.3.1, 3.3.2). An add that fails says so in the dialog, which stays open with what was typed.
+- **After an add**, the dialog closes, focus goes back to New task, and a toast says where the task went (2.4.3, 4.1.3).
+- **The h1 is the board's name**, with how many tasks under it, and each column is a section with an h2, so a screen reader's headings list is the board's stages (1.3.1).
+- **While the tasks load**, set `loading`: each column keeps its title with placeholder cards, named once ("Loading tasks"), and New task waits. **A load that fails says so**: set `loadFailed` and pass `onRetry`.
+- **A skip link** first, into main, as on every page.
+
+A column over its limit:
+
+<Canvas of={Stories.OverLimit} />
+
+A move that can't be saved. Move any card to try it:
+
+<Canvas of={Stories.MoveFails} />
+
+<Canvas of={Stories.Loading} />
+
+## What stays your app's job
+
+- **Saving each move.** `onMove` gets the card and where it came from and went to: return its promise, and reject it when saving fails. Send moves in order, since a second move of the same card can start before the first is saved.
+- **Making the task.** `onAdd` gets the title and the column: return the new task's id, or a promise of it, and reject it when saving fails.
+- **Other people's changes.** When someone else moves a card, pass new `columns` on a new `key`, or keep the columns in your own state and say what changed in a toast.
+- **Opening a task.** Give the card's title a link to the task's page (the Detail page pattern) in your own `renderCard`.
+- Rendering a `Toaster` once in the app.
