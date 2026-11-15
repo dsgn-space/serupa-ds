@@ -127,7 +127,7 @@ describe('Menubar', () => {
     expect([b.getAttribute('aria-expanded'), focused()]).toEqual(['true', 'One']);
   });
 
-  test('names read 4.5:1 on the bar, under the pointer and open, and the focus ring 3:1, in all six themes', async () => {
+  test('names read 4.5:1 on the bar, under the pointer and open, and the focus ring 3:1, in every theme', async () => {
     await render(<Editor />);
     const bar = page.getByRole('menubar').element() as HTMLElement;
     top('File').focus();

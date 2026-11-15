@@ -58,7 +58,7 @@ Drawn from the `Large` story.
 
 - **Role and name:** a `<figure>` holding a `<blockquote>` and a `<figcaption>`, so the attribution is announced with the quote but isn't part of it.
 - **Keyboard:** none: it isn't focusable. Links inside it are focused as usual.
-- **Contrast:** its words and its source read 4.5:1 on the page's surface in all six themes (`Quote.test.tsx`). The rule is decoration, so it has no minimum; in forced-colors mode it takes the text color.
+- **Contrast:** its words and its source read 4.5:1 on the page's surface in every theme (`Quote.test.tsx`). The rule is decoration, so it has no minimum; in forced-colors mode it takes the text color.
 - **Right to left:** the rule is on the start edge, so it moves to the right in right-to-left text.
 - **What's still yours:** the words and their source, and a translated quote's original language in `lang` when you show it untranslated.
 

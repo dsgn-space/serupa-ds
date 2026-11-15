@@ -606,7 +606,7 @@ describe('Drawer', () => {
     expect([n[0], n[2]]).toEqual([0, 300]);
   });
 
-  test('look: 24px padding, shadow-xl, 16px between parts, a text-lg semibold title, slides in over 300ms; contrast: title, description and body text 4.5:1 on the panel in all six themes; closed again, the page scrolls', async () => {
+  test('look: 24px padding, shadow-xl, 16px between parts, a text-lg semibold title, slides in over 300ms; contrast: title, description and body text 4.5:1 on the panel in every theme; closed again, the page scrolls', async () => {
     const ctl: Partial<Ctl> = {};
     await render(<App asks={[]} ctl={ctl} />);
     await reopen(ctl, () => {});
@@ -1000,7 +1000,7 @@ describe('Drawer: unsaved (13)', () => {
       expect([handleOf(el('r')), handleOf(el('one')), el('r').classList.contains('dk-drawer--snaps')]).toEqual([null, null, false]);
     });
 
-    test('the grip reads 3:1 on the sheet in all six themes', async () => {
+    test('the grip reads 3:1 on the sheet in every theme', async () => {
       await render(sheet());
       await expect.poll(() => (el('bs') as HTMLDialogElement).open).toBe(true);
       const grip = handleOf(el('bs'))!.firstElementChild!;   // the handle's grip, drawn inside it

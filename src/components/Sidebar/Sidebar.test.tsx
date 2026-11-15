@@ -470,7 +470,7 @@ describe('Sidebar', () => {
     await userEvent.keyboard('{Escape}{Escape}');
   });
 
-  test('contrast: items, the current page and hovered items, and section titles keep 4.5:1 in all six themes', async () => {
+  test('contrast: items, the current page and hovered items, and section titles keep 4.5:1 in every theme', async () => {
     await render(<App />);
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;
@@ -484,7 +484,7 @@ describe('Sidebar', () => {
     expect([low, n]).toEqual([[], 18]);
   });
 
-  test('contrast: the collapsed rail\'s badge dot keeps 3:1 on the sidebar and on the current page\'s highlight in all six themes', async () => {
+  test('contrast: the collapsed rail\'s badge dot keeps 3:1 on the sidebar and on the current page\'s highlight in every theme', async () => {
     await render(<App />);
     React.act(() => setCollapsed(true));
     await expect.poll(() => el('iinbox').querySelector(DOT)).not.toBeNull();
@@ -499,7 +499,7 @@ describe('Sidebar', () => {
     expect([low, n]).toEqual([[], 12]);
   });
 
-  test('focus ring on the current page keeps 3:1 against both sides in all six themes: a surface gap inside it, not the highlight fill', async () => {
+  test('focus ring on the current page keeps 3:1 against both sides in every theme: a surface gap inside it, not the highlight fill', async () => {
     await render(<App />);
     const still = document.createElement('style'); still.textContent = '*, *::before, *::after { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     await tabTo(el('ihome'));

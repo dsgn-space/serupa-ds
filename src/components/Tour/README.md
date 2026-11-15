@@ -58,7 +58,7 @@ The element the step points at gets a 2px primary ring (`[data-tour-target]`), s
 
 - **Role and name:** each step is a `dialog` named by its title (a heading, level 2 by default: `headingLevel` fits it to the page) and described by its text.
 - **Focus:** showing a step moves focus to its panel, so a screen reader reads its title and text; when the tour ends, focus goes back to where it was.
-- **Contrast:** its text and its step count read 4.5:1 on its background in all six themes (`Tour.test.tsx`).
+- **Contrast:** its text and its step count read 4.5:1 on its background in every theme (`Tour.test.tsx`).
 - **What's still yours:** the target's own name, and a way to start the tour again. It isn't modal, so don't put anything in a step that must be done before going on.
 
 ### Keyboard
@@ -99,7 +99,6 @@ Each is an optional override: set it on the page, a container or one Tour. The l
 | `--tour-ring` | `primary` | The ring round the element a step points at (3:1 on the page). |
 | `--tour-focus-ring` | `focus-ring` | The panel's focus ring, when the keyboard brings focus to it. |
 | `--tour-shadow` | `shadow-lg` | The panel's shadow. |
-| `--tour-depth` | `depth-surface` | A tactile brand's hairline edge and, in dark mode, a faint top light, as on every floating pane. None in the flat brands. |
 | `--tour-radius` | `radius-surface` | The panel's corners (8px). |
 | `--tour-border-width` | `border-width-1` | The panel's edge (1px). |
 | `--tour-ring-width` | `outline-width-2` | The ring round the element (2px). |

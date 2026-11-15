@@ -1,6 +1,6 @@
 # Textarea
 
-A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three sizes with Input's text sizes and side padding, a height set in `rows`, a resize handle, and optional auto-resize, a character count and a row of actions under the text. Focus, invalid, read-only and disabled states look like Input's, and field colors come from the same alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in all six themes.
+A multi-line text field, Input's sibling: a native `<textarea>` in a box. Three sizes with Input's text sizes and side padding, a height set in `rows`, a resize handle, and optional auto-resize, a character count and a row of actions under the text. Focus, invalid, read-only and disabled states look like Input's, and field colors come from the same alias tokens (`field`, `field-border`, `placeholder`), so text keeps 4.5:1 and the border 3:1 in every theme.
 
 **Also called:** text box, multiline text field.
 
@@ -77,7 +77,7 @@ Drawn from the `Actions` story.
 - The count is linked with `aria-describedby` (after any ids you pass), so screen readers read it when the field gets focus. It isn't announced on every keystroke, which would drown out the typing: with `maxLength` it's read out once when a few characters are left (10, or a fifth of a short limit) and once when the limit is reached, in the `charactersLeft` label's words. A form reset puts it back to the default text's count.
 - `maxLength` stops typing at the limit, counted in characters as people see them, the same way as the count: an emoji such as 👨‍👩‍👧 or 🇮🇩 is one, where the browser's own `maxlength` would count it as up to 8. Textarea applies the limit itself, so once the page is hydrated the `<textarea>` has no `maxlength` attribute. Server-rendered HTML keeps it, so the cap holds before the script runs. Text pasted past the limit is cut at the end of the paste (what comes after it stays), and an input method's text is cut once it's confirmed. Say the limit in the label or hint too ("Bio, up to 280 characters"), since the count only shows it visually.
 - A press anywhere on the box, such as on the count row, focuses the field with the caret at the end, as Input's box does.
-- Text, the placeholder and the count keep 4.5:1 on `field`, and the focus ring and invalid border 3:1, in all six themes (`Textarea.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the stronger border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
+- Text, the placeholder and the count keep 4.5:1 on `field`, and the focus ring and invalid border 3:1, in every theme (`Textarea.test.tsx`). The resting border is soft on purpose (`field-border`: about 1.5:1 in light, 1.4:1 to 1.9:1 in dark), under the 3:1 WCAG 1.4.11 asks of a control's edge: a deliberate design exception. The label above the field, its fill in dark, the stronger border on hover and the 3:1 focus ring mark it, and more contrast (`data-contrast="more"` or the system setting) brings back a 3:1+ border.
 - A native constraint the value fails (`required`, `minLength`) is reported by the browser in its own language. Inside a `SerupaProvider` whose labels set `invalidValue` (`idLabels` does), the message is in the provider's words instead ("Isi kolom ini."). It's set when the browser checks the field and cleared on the next keystroke or value change. A message you set yourself with `setCustomValidity` stays. In English the browser's own message is kept.
 
 ### Keyboard
@@ -108,8 +108,6 @@ Everything else (`value`, `defaultValue`, `onChange`, `placeholder`, `disabled`,
 Each is an optional override: set it on the page, a container or one textarea. The list lives in `src/components/Textarea/textarea.tokens.json` (also in `design-tokens/components/`). The defaults are the same shared tokens Input uses.
 
 <!-- token-table:start (made from textarea.tokens.json by npm run tokens: edit the descriptions there) -->
-**Colors**
-
 | Token | Default | Use |
 | --- | --- | --- |
 | `--textarea-bg` | `field` | Background |
@@ -122,11 +120,6 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-invalid` | `field-border-invalid` | Border and ring when invalid |
 | `--textarea-count` | `placeholder` | The character count |
 | `--textarea-count-full` | `text` | The character count once it reaches `maxLength` |
-
-**Spacing**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--textarea-padding-x-sm` | `spacing-2` | Side padding, sm (8px), like Input sm. |
 | `--textarea-padding-x-md` | `spacing-3` | Side padding, md (12px). |
 | `--textarea-padding-x-lg` | `spacing-4` | Side padding, lg (16px). |
@@ -135,17 +128,6 @@ Each is an optional override: set it on the page, a container or one textarea. T
 | `--textarea-padding-y-lg` | `spacing-2.5` | Top and bottom padding, lg (10px). |
 | `--textarea-actions-gap` | `spacing-1` | The space between the buttons in the actions row (4px). |
 | `--textarea-actions-padding` | `spacing-1.5` | Space around the actions row, at the sides and under it (6px), so its buttons sit evenly in the corner. |
-
-**Border**
-
-| Token | Default | Use |
-| --- | --- | --- |
 | `--textarea-border-width` | `border-width-1` | Border width (1px) |
 | `--textarea-radius` | `radius-control` | Corner radius (6px), like Input and Button |
-
-**Shadow**
-
-| Token | Default | Use |
-| --- | --- | --- |
-| `--textarea-depth` | `depth-field` | The tactile inner shade along the top of the box. None in the flat brands. |
 <!-- token-table:end -->

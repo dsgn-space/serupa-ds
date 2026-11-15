@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-      - name: The changed stories in all six themes
+      - name: The changed stories in every theme
         run: node tools/design-qa.mjs "$BASE_SHA" >> "$GITHUB_STEP_SUMMARY"
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}

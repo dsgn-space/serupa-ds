@@ -45,7 +45,7 @@ Drawn from the `InOptions` story.
 ## Accessibility
 
 - Matches are `<mark>` elements, which assistive tech exposes as highlighted text; the words themselves are unchanged, so the text reads as written.
-- A match isn't marked by color alone: it's also semibold. Inside an option or menu item (`role="option"`, `"menuitem"`, `"menuitemradio"`, `"menuitemcheckbox"`), which is filtered as people type, it keeps the text's weight and is underlined instead, so the letters don't widen on each keystroke and the text and its ellipsis stay put. The text keeps 4.5:1 on the tint in all six themes (`Highlight.test.tsx`).
+- A match isn't marked by color alone: it's also semibold. Inside an option or menu item (`role="option"`, `"menuitem"`, `"menuitemradio"`, `"menuitemcheckbox"`), which is filtered as people type, it keeps the text's weight and is underlined instead, so the letters don't widen on each keystroke and the text and its ellipsis stay put. The text keeps 4.5:1 on the tint in every theme (`Highlight.test.tsx`).
 - In forced-colors mode marks use the system's Mark and MarkText colors.
 - **Keyboard:** none: inline text, not focusable.
 

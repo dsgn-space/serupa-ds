@@ -45,7 +45,7 @@ Drawn from the `Playground` story.
 
 - **Role and name:** the strip is a list named by `label`; each day is an item named with its date, its state in words and its note. State is shown by shape too, not by color alone (WCAG 1.4.1).
 - **Keyboard:** the strip is one tab stop, on the latest day; see the table.
-- **Contrast:** the bars keep 3:1 against the page, the caption 4.5:1, the summary and legend 4.5:1, in all six themes (`StatusTracker.test.tsx`). In forced-colors mode the bars are drawn in the system's text color, the stripes kept.
+- **Contrast:** the bars keep 3:1 against the page, the caption 4.5:1, the summary and legend 4.5:1, in every theme (`StatusTracker.test.tsx`). In forced-colors mode the bars are drawn in the system's text color, the stripes kept.
 - **What's still yours:** a `label` that says what is tracked, and notes that say what happened.
 
 ### Keyboard

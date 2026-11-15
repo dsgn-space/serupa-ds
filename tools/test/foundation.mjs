@@ -30,6 +30,7 @@ import { spawnSync } from 'node:child_process';
 import { HERE, projectArg, report, done } from './lib.mjs';
 import { PAIRS } from '../tokens/contrast-pairs.mjs';
 import { toSource, fromSource } from '../tokens/source.mjs';
+import { THEMES as SHOWN_THEMES } from '../design-qa.mjs';
 import { isDeepStrictEqual } from 'node:util';
 
 const P = projectArg();
@@ -306,16 +307,20 @@ if (!tsType) brandIssues.push('src/theme-types.ts: no ThemeBrand type found');
 else if (!same(listOf(tsType[1]), BRANDS)) brandIssues.push(`src/theme-types.ts: ThemeBrand is ${listOf(tsType[1]).join(' | ')}, tokens.json gives ${BRANDS.map((b) => `'${b}'`).join(' | ')}`);
 if (fs.existsSync(path.join(P, '.storybook', 'preview.tsx')) && !read('.storybook/preview.tsx').includes("from '../tokens.json'"))
   brandIssues.push('.storybook/preview.tsx: the toolbar should take the brands from tokens.json');
-// Theme lists written out in the tests: any array of two or more "<brand>-light|dark" strings must be the whole list.
+// Theme lists written out in the tests: any array of two or more "<brand>-light|dark" strings must be the whole list,
+// or the themes the tests and pictures run in.
 const testFiles = (dir) => fs.readdirSync(path.join(P, dir), { withFileTypes: true }).flatMap((d) =>
   d.isDirectory() ? (d.name.startsWith('baseline') ? [] : testFiles(path.join(dir, d.name))) : /\.(mjs|ts|tsx)$/.test(d.name) ? [path.join(dir, d.name)] : []);
 let lists = 0;
 for (const f of testFiles(path.join('tools', 'test'))) {
   for (const m of read(f).matchAll(/\[\s*((?:['"][a-z0-9]+-(?:light|dark)['"]\s*,\s*)+['"][a-z0-9]+-(?:light|dark)['"])\s*,?\s*\]/g)) {
     lists++;
-    if (!same(listOf(m[1]), THEME_IDS)) brandIssues.push(`${f}: theme list [${listOf(m[1]).join(', ')}] differs from tokens.json`);
+    if (!same(listOf(m[1]), THEME_IDS) && !same(listOf(m[1]), SHOWN_THEMES)) brandIssues.push(`${f}: theme list [${listOf(m[1]).join(', ')}] is neither every theme of tokens.json nor the ones with pictures (tools/design-qa.mjs)`);
   }
 }
+// The themes with pictures (tools/design-qa.mjs) are some of them, in their order, the default first.
+const shown = SHOWN_THEMES.filter((id) => THEME_IDS.includes(id));
+if (shown.length !== SHOWN_THEMES.length || SHOWN_THEMES[0] !== THEME_IDS[0] || !same([...SHOWN_THEMES].sort((x, y) => THEME_IDS.indexOf(x) - THEME_IDS.indexOf(y)), SHOWN_THEMES)) brandIssues.push(`tools/design-qa.mjs: THEMES [${SHOWN_THEMES.join(', ')}] must be themes of tokens.json, in its order, starting with ${THEME_IDS[0]}`);
 check(`one brand list: theme.js, ThemeBrand, Storybook and ${lists} theme lists in the tests follow tokens.json (${BRANDS.length} brands, ${THEME_IDS.length} themes)`, !brandIssues.length, brandIssues.slice(0, 8).join('; '));
 
 // 15. hover only where there is hover: on a touch screen the browser keeps :hover on the last element tapped, so a

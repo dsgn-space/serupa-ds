@@ -49,7 +49,7 @@ Drawn from the `Default` story.
 - **Role and name:** a `<button>` named by `label` (or "Help" / "Information"), with `aria-expanded` and `aria-controls` pointing at the panel. The panel is a non-modal `role="dialog"` named by its title or the button's name.
 - **Keyboard:** Enter or Space opens and closes it. Opening moves focus to the first link inside, or the panel; Escape closes it and returns focus to the button. Tab out of it, or a click outside, closes it.
 - **Target size:** the button is 24×24px, the WCAG 2.2 minimum (2.5.8).
-- **Contrast:** the "?" and "i" read 3:1 on the page in all six themes (`ContextualHelp.test.tsx`).
+- **Contrast:** the "?" and "i" read 3:1 on the page in every theme (`ContextualHelp.test.tsx`).
 - **What's still yours:** a topic in `label` when there are several, and nothing essential hidden in the panel.
 
 ## Props

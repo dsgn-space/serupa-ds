@@ -7,7 +7,7 @@
 //   typecheck  the app's `npm run typecheck`
 //   lint       the app's `npm run lint`: jsx-a11y, serupa-ds/eslint and serupa-ds/stylelint
 //   render     `vite build`, then the page in Chromium: something rendered, and no page error or console error
-//   axe        no WCAG 2.2 A or AA violation from axe-core, in each of the six themes
+//   axe        no WCAG 2.2 A or AA violation from axe-core, in each theme
 //   tab        Tab from the top of the page reaches every visible control
 //   task       the agent did the task: src/App.tsx is no longer the starter's, and it imports at least half of the
 //              components the task expects (tasks.json, "A|B" for either) from serupa-ds
@@ -32,7 +32,7 @@ import { TASKS } from './grade.mjs';
 const HERE = import.meta.dirname;
 const ROOT = path.resolve(HERE, '../..');
 export const CHECKS = ['typecheck', 'lint', 'render', 'axe', 'tab', 'task'];
-const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+const THEMES = ['blue-light', 'blue-dark', 'yellow-light', 'yellow-dark', 'violet-light', 'violet-dark'];   // the themes with pictures (tools/design-qa.mjs)
 const AXE = fs.readFileSync(path.join(ROOT, 'node_modules', 'axe-core', 'axe.min.js'), 'utf8');
 const npm = (args, cwd) => spawnSync('npm', args, { cwd, encoding: 'utf8', timeout: 300_000 });
 const tail = (s, n = 600) => s.trim().split('\n').slice(-8).join('\n').slice(-n);
