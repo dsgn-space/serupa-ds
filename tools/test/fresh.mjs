@@ -1,6 +1,6 @@
 // tools/fresh.mjs: when a branch's pictures can't match main's. No network: the GitHub calls are the CLI's.
 //   node tools/test/fresh.mjs
-import { staleComponents } from '../fresh.mjs';
+import { queueClashes, staleComponents } from '../fresh.mjs';
 import { done, report } from './lib.mjs';
 
 const R = [];
@@ -27,6 +27,14 @@ t('both sides drew one component\'s pictures: stale',
   same(staleComponents([png('Meter')], [png('Meter')], alone), ['Meter']));
 t('main changed a component\'s code with no picture (labels), and the branch redrew one that uses it: fresh',
   same(staleComponents([png('ToggleButton')], ['src/components/Button/Button.tsx'], deps), []));
+t('queue: a queued pull request that redraws a component this branch shows makes it wait',
+  same(queueClashes([png('ToggleButton')], { 1990: [png('Button'), 'src/components/Button/Button.css'], 1991: [png('Tabs')] }, deps),
+    [{ n: 1990, baselines: [], stale: ['ToggleButton'] }]));
+t('queue: the same size baseline on both sides clashes, with no picture',
+  same(queueClashes(['tools/test/baseline-size/Kanban.json'], { 1690: ['tools/test/baseline-size/Kanban.json'] }, alone),
+    [{ n: 1690, baselines: ['tools/test/baseline-size/Kanban.json'], stale: [] }]));
+t('queue: different components, or an empty queue, clash with nothing',
+  same(queueClashes([png('Meter')], { 1990: [png('Tabs')] }, alone), []) && same(queueClashes([png('Meter')], {}, alone), []));
 t('the real dependency walk: Button\'s pictures on main reach ToggleButton\'s on the branch',
   same(staleComponents([png('ToggleButton')], [png('Button')]), ['ToggleButton']));
 t('a theme change on main (tokens.css) makes every picture the branch drew stale',
