@@ -19,11 +19,13 @@
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 .dk-pagination__arrow { padding: var(--spacing-0); }
-.dk-pagination__arrow .dk-icon { font-size: var(--spacing-5); }
+/* The arrows are the icon of an icon-only Button of the same size: 14, 16 or 20px. */
+.dk-pagination__arrow .dk-icon { font-size: var(--pagination-icon-size-md, var(--spacing-4)); }
 /* 2px a side leaves 20px for the number, so the current page's two semibold digits (16.7px in DejaVu Sans, common
    on Linux where Inter isn't installed) still fit the 24px square; 4px made "88" 24.7px wide. */
 .dk-pagination--sm .dk-pagination__item:not(.dk-pagination__arrow) { padding: var(--spacing-0) var(--pagination-padding-x-sm, var(--spacing-0\.5)); }
-.dk-pagination--sm .dk-pagination__arrow .dk-icon { font-size: var(--spacing-4); }
+.dk-pagination--sm .dk-pagination__arrow .dk-icon { font-size: var(--pagination-icon-size-sm, var(--spacing-3\.5)); }
+.dk-pagination--lg .dk-pagination__arrow .dk-icon { font-size: var(--pagination-icon-size-lg, var(--spacing-5)); }
 @media (hover: hover) { .dk-pagination__item:hover:not(:disabled, [aria-disabled="true"], .dk-pagination__item--current) { background: var(--pagination-bg-hover, var(--secondary)); } }
 /* Touch: 44px high to press on a touch screen, with nothing moving; across, each page stops halfway into the gap to the next. */
 @media (pointer: coarse) {
