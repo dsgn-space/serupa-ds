@@ -496,7 +496,7 @@ describe('NumberInput', () => {
     expect([Math.round(box.getBoundingClientRect().height), css(box.querySelector('button[aria-controls] [data-icon]')).fontSize]).toEqual([44, '20px']);
   });
 
-  test('contrast: the − and + keep 3:1 and the number 4.5:1 on the field in all six themes', async () => {
+  test('contrast: the − and + keep 3:1 and the number 4.5:1 on the field in every theme', async () => {
     await render(<NumberInput id="lg" aria-label="Lg" size="lg" defaultValue={1} />);
     const box = field('lg').parentElement!, low: string[] = [];
     for (const th of THEMES) {
@@ -555,7 +555,7 @@ describe('NumberInput held state', () => {
   test('held down: a step button fills one step past its hover (--number-input-stepper-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<NumberInput aria-label="Guests" defaultValue={2} incrementLabel="One more guest" />);
     const b = page.getByRole('button', { name: 'One more guest' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

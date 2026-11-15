@@ -37,7 +37,7 @@ import { SkipLink } from "@diki-stwn/serupa-ds";
 - **Role and name:** a link, named by its text.
 - **Keyboard:** the first Tab on the page shows it at the top start of the viewport, above a sticky Navbar, with the focus ring. Enter moves focus to the target, even when that isn't focusable, such as a `<main>`: it gets `tabindex="-1"` until focus leaves it, so it isn't left as a stray tab stop. The next Tab goes on from inside the main content.
 - **Not covered:** a sticky [Navbar](../Navbar/README.md) keeps the page's `scroll-padding-top` at its height, so the target scrolls into view below the bar, not under it (WCAG 2.4.11).
-- **Contrast:** its text reads 4.5:1 on its background in all six themes (`SkipLink.test.tsx`). In forced colors its border is CanvasText. It isn't printed.
+- **Contrast:** its text reads 4.5:1 on its background in every theme (`SkipLink.test.tsx`). In forced colors its border is CanvasText. It isn't printed.
 - **What's still yours:** one SkipLink, first on the page, and a target that holds the main content.
 
 ## Props

@@ -84,10 +84,10 @@ While the pointer is over a category or a point has focus, a tooltip beside it l
   | Home, End | The series' first or last point |
 
   In a donut, ArrowRight and ArrowDown go to the next slice, clockwise, and ArrowLeft and ArrowUp to the one before (ArrowLeft and ArrowRight swap in a right-to-left page, where the slices go round the other way). Home and End go to the first and last slice. Its summary adds the total and the smallest and largest share.
-- **Not by color alone:** each series has its own marker shape on a line or an area, and its own pattern on a bar or a donut slice after the first, in the legend and tooltip too. A donut's legend also names each slice with its share, in words. The chart colors (chart-1 to chart-8) are 3:1 on the surface, with the chart-gap color between neighbours, in all six themes.
+- **Not by color alone:** each series has its own marker shape on a line or an area, and its own pattern on a bar or a donut slice after the first, in the legend and tooltip too. A donut's legend also names each slice with its share, in words. The chart colors (chart-1 to chart-8) are 3:1 on the surface, with the chart-gap color between neighbours, in every theme.
 - **The numbers as a table:** "Show as table" swaps the chart for a [Table](../Table/README.md) of the same numbers, sortable by any column, with "No value" where one is missing.
 - **Motion:** the line draws in, the bars grow, and areas and slices fade in once, on the first paint; with reduced motion they're drawn at once.
-- **Contrast:** labels and title read 4.5:1 on the surface in all six themes (`Chart.test.tsx`). In forced colors the series take the system's colors and the markers and patterns tell them apart.
+- **Contrast:** labels and title read 4.5:1 on the surface in every theme (`Chart.test.tsx`). In forced colors the series take the system's colors and the markers and patterns tell them apart.
 - **What's still yours:** say in the text around it what the chart shows that matters ("Sign-ups doubled since June"). The summary describes the numbers, not what they mean.
 
 ## Props
@@ -149,7 +149,6 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 | Token | Default | Use |
 | --- | --- | --- |
 | `--chart-tip-shadow` | `shadow-md` | The tooltip's shadow. |
-| `--chart-tip-depth` | `depth-surface` | A tactile brand's hairline edge and, in dark mode, a faint top light, as on every floating pane. None in the flat brands. |
 
 **Border**
 

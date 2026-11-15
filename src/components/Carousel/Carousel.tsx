@@ -41,6 +41,10 @@ export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, '
       and 1024px up; each one holds until the next is set). Default: 1. Previous and next still move one slide,
       and with more than one the dots count pages. */
   perView?: number | CarouselPerView | undefined;
+  /** Shows the edge of the next slide (48px, the carousel-peek token) so people can see there is more. The slide
+      that peeks stays out of the tab order and screen readers' view until it is moved to. On the last slide the
+      previous one peeks instead. Default: false. */
+  peek?: boolean | undefined;
 }
 export interface CarouselPerView { base?: number; sm?: number; md?: number; lg?: number }
 
@@ -71,7 +75,7 @@ function usePerView(per: CarouselProps['perView']): number {
    (at once with reduced motion), and the row runs right to left in RTL. className and every other prop go
    to the <section>. With perView, two or more slides show side by side: index is the first one shown, the
    buttons and swipe still move one slide, and the dots count pages. */
-const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, perView: 1, className: 1, style: 1 } as const;
+const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, perView: 1, peek: 1, className: 1, style: 1 } as const;
 const SWIPE = 40; // px a swipe must travel to change the slide
 const FLICK = 0.3; // px per ms over the last 100ms: a shorter swipe this fast changes the slide too
 
@@ -228,8 +232,8 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
   const prevOff = !loop && index === 0, nextOff = !loop && index >= last;
 
   return (
-    <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('dk-carousel', multi && 'dk-carousel--multi', props.className)} style={style}
-      aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined}>
+    <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('dk-carousel', (multi || props.peek) && 'dk-carousel--multi', props.peek && 'dk-carousel--peek', props.className)} style={style}
+      aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined} data-end={props.peek && !loop && index >= last && index > 0 ? '' : undefined}>
       <div className="dk-carousel__viewport" ref={viewport} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
         onPointerUp={onPointerEnd} onPointerCancel={onPointerCancel} onPointerLeave={onPointerLeave}
         onDragStart={(e) => e.preventDefault()}   // a picture's own drag would end the swipe

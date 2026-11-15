@@ -41,7 +41,7 @@ import { TimeZonePicker } from "@diki-stwn/serupa-ds";
 
 - **Role and name:** a Combobox: an `input` with `role="combobox"` and a `listbox` of `option`s. Each option is named by its city, and its offset and zone name are its `aria-description`, so a screen reader hears both.
 - **Keyboard:** as [Combobox](../Combobox/README.md): type to filter, Up and Down to move, Enter to pick, Escape to close.
-- **Contrast:** as Combobox, which its tests check in all six themes.
+- **Contrast:** as Combobox, which its tests check in every theme.
 - **What's still yours:** label it, and say what the zone is for when it isn't the reader's own ("The meeting's time zone").
 
 ## Props

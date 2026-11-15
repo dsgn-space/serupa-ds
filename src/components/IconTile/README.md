@@ -45,7 +45,7 @@ Drawn from the `InACard` story.
 ## Accessibility
 
 - Decorative by default: the tile is `aria-hidden`, since the title beside it says what the row is. When the icon says something the text doesn't, such as that a row is locked, pass `label`: the tile becomes `role="img"` named by it.
-- Every tone keeps its icon at 3:1 or more on its fill, in all six themes (`IconTile.test.tsx`), and the tones differ by icon as well as color when you choose icons that say the state (a warning sign for warning).
+- Every tone keeps its icon at 3:1 or more on its fill, in every theme (`IconTile.test.tsx`), and the tones differ by icon as well as color when you choose icons that say the state (a warning sign for warning).
 - In forced colors (Windows High Contrast), where fills are dropped, an outline keeps the tile's shape.
 - **Keyboard:** none: it isn't interactive.
 

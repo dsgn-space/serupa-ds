@@ -9,7 +9,7 @@ const root = document.documentElement;
 afterEach(() => root.removeAttribute('data-theme'));
 
 describe('Elevation', () => {
-  test('recessed is darker than the page and raised, floating and fields are not, in all six themes', () => {
+  test('recessed is darker than the page and raised, floating and fields are not, in every theme', () => {
     const wrong: string[] = [];
     for (const th of THEMES) {
       root.setAttribute('data-theme', th);
@@ -22,7 +22,7 @@ describe('Elevation', () => {
     expect(wrong).toEqual([]);
   });
 
-  test('a row under the pointer shows on the page (surface-hover) and on raised and floating surfaces (surface-hover-raised), with text at 4.5:1, in all six themes', () => {
+  test('a row under the pointer shows on the page (surface-hover) and on raised and floating surfaces (surface-hover-raised), with text at 4.5:1, in every theme', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       root.setAttribute('data-theme', th);
@@ -37,7 +37,7 @@ describe('Elevation', () => {
     expect(low).toEqual([]);
   });
 
-  test('a field on a raised or floating surface (field-raised) is never below it and steps up from it in dark, with text at 4.5:1, in all six themes', () => {
+  test('a field on a raised or floating surface (field-raised) is never below it and steps up from it in dark, with text at 4.5:1, in every theme', () => {
     const wrong: string[] = [];
     for (const th of THEMES) {
       root.setAttribute('data-theme', th);

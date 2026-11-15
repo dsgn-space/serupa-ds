@@ -223,7 +223,7 @@ describe('TimePicker', () => {
     await expect.poll(() => getComputedStyle(el('dis').parentElement!).opacity).toBe('0.5');
   });
 
-  test('contrast: times 4.5:1 (also highlighted), the check and clock icon 3:1, in all six themes', async () => {
+  test('contrast: times 4.5:1 (also highlighted), the check and clock icon 3:1, in every theme', async () => {
     await render(<Ctl changes={[]} />);
     el('ctl').focus();
     await userEvent.keyboard('{ArrowDown}');
@@ -353,7 +353,7 @@ describe('TimePicker held state', () => {
   test('held down: the clock button fills one step past its hover (--time-picker-button-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<TimePicker aria-label="Start time" listLabel="Start times" />);
     const b = page.getByRole('button', { name: 'Start times' }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

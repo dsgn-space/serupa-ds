@@ -143,7 +143,7 @@ describe('Lightbox', () => {
     expect(Math.round((r.width / r.height) * 100) / 100).toBeCloseTo(0.63, 1);
   });
 
-  test('the caption and the count read 4.5:1 on the dialog in all six themes', async () => {
+  test('the caption and the count read 4.5:1 on the dialog in every theme', async () => {
     await render(<Lightbox items={PHOTOS} defaultOpen />);
     const caption = page.getByText('First').element() as HTMLElement, count = page.getByText('1 of 3', { exact: true }).last().element() as HTMLElement;
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; animation: none !important; }'; document.head.appendChild(still);

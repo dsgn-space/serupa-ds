@@ -50,7 +50,7 @@ describe('Prose', () => {
     expect([css(el('img')).fontStyle]).toEqual(['italic']);
   });
 
-  test('text, headings, quotes and markers read 4.5:1, and the visited shade 4.5:1 on surface and surface-muted, in all six themes', async () => {
+  test('text, headings, quotes and markers read 4.5:1, and the visited shade 4.5:1 on surface and surface-muted, in every theme', async () => {
     await render(<><Prose dangerouslySetInnerHTML={{ __html: HTML }} /><span id="v" style={{ color: 'var(--prose-link-visited, var(--link-visited))' }}>v</span></>);
     const page = (v: string) => { const d = document.createElement('div'); d.style.background = `var(--${v})`; document.body.appendChild(d); const c = getComputedStyle(d).backgroundColor; d.remove(); return c; };
     for (const th of THEMES) {

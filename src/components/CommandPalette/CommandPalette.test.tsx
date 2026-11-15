@@ -255,7 +255,7 @@ describe('CommandPalette', () => {
     expect(labels().length).toBe(10);
   });
 
-  test('its field, headings, rows and active row, every word in it with the shortcut\'s "+", read 4.5:1 in all six themes', async () => {
+  test('its field, headings, rows and active row, every word in it with the shortcut\'s "+", read 4.5:1 in every theme', async () => {
     await render(<CommandPalette id="p" defaultOpen commands={[{ ...COMMANDS[0]!, shortcut: ['mod', 'shift', 'H'] }, ...COMMANDS.slice(1)]} />);
     const low: string[] = [];
     for (const th of THEMES) {

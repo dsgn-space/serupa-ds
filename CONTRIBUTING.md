@@ -44,7 +44,7 @@ do, say so and stop here.
 1. `npm run new-component -- <Name> --group <Storybook group>` writes `src/components/<Name>/` with every file the contract asks for, already wired to the system: the component through `component()`, its CSS in `@layer dk.components` reading its own tokens, its tokens file, stories, a starting test, the Storybook page, the usage guide with its required headings, the preview page and the server-render case.
 2. Fill in every `TODO(new-component)`. The contract check fails while one is left.
 3. Build it to the standard every component meets, which the checks hold it to:
-   - **Accessibility:** WCAG 2.2 AA in all six themes (contrast in its test, axe on every story), keyboard use as the ARIA pattern describes, a visible focus ring (the outline recipe, `focus-ring-width` and `focus-ring-offset`), a forced-colors fallback for any state shown only by background, and nothing floating over the page when printing.
+   - **Accessibility:** WCAG 2.2 AA in every theme (contrast in its test, axe on every story), keyboard use as the ARIA pattern describes, a visible focus ring (the outline recipe, `focus-ring-width` and `focus-ring-offset`), a forced-colors fallback for any state shown only by background, and nothing floating over the page when printing.
    - **Words** come from its `labels.ts`, in English and Indonesian, never written into the JSX (the `serupa/no-literal-words` lint rule).
    - **Waits** in JavaScript are named in `src/internal/timing.ts`, never a number in a `setTimeout` or `setInterval` (the `serupa/no-literal-delay` lint rule).
    - **Values** read tokens: its own component tokens, falling back to the shared ones (the foundation check).
@@ -109,7 +109,7 @@ Combobox is what "done" looks like: when you build or deepen a component, hold i
 - [ ] **The ARIA pattern, all of it:** roles, states and the keyboard table in the README match the APG pattern, and each row of that table has its test. Keys with Ctrl or ⌘ are left to the system, and keys during an input method's composition are left alone.
 - [ ] **Changes are said:** counts, results, additions and errors go through the shared announcer, once typing pauses, in the locale's digits ("٢ results" in `ar-EG`).
 - [ ] **Its words come from its labels,** in English and Indonesian, including the names of its buttons ("Clear Country").
-- [ ] **Every state shows everywhere:** contrast in all six themes (a test), right to left, and forced colors, both as a test of the state shown only by colour and as pictures (`FORCED` in `tools/test/visual.mjs`).
+- [ ] **Every state shows everywhere:** contrast in every theme (a test), right to left, and forced colors, both as a test of the state shown only by colour and as pictures (`FORCED` in `tools/test/visual.mjs`).
 - [ ] **Motion passes the motion review:** it enters and leaves with a transition that reverses, only fades under reduced motion, and doesn't move at all when the keyboard opened it.
 - [ ] **It scales:** thousands of options open and narrow quickly (only the rows in view are drawn), and the tests use those sizes.
 - [ ] **Async work is safe:** requests wait for a pause, newer ones abort older ones, late answers are dropped, a failure is said, and Enter or leaving before an answer doesn't lose what was typed.

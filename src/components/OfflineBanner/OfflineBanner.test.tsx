@@ -88,7 +88,7 @@ describe('OfflineBanner', () => {
     expect(Math.abs((rb.left + rb.right) / 2 - innerWidth / 2)).toBeLessThan(1);
   });
 
-  test('its words read 4.5:1 and its icons 3:1 on its background in all six themes', async () => {
+  test('its words read 4.5:1 and its icons 3:1 on its background in every theme', async () => {
     const { rerender } = await render(<OfflineBanner id="c" online={false} placement="inline" />);
     const icon = () => q('#c .dk-offline-banner__icon')!;
     for (const th of THEMES) {

@@ -41,6 +41,37 @@ describe('place', () => {
     expect(place(at(20, 46), { width: 200, height: 200 }, 'bottom-start', 4)).toEqual({ x: 20, y: 50, side: 'bottom' });
   });
 
+  test('every side and alignment, to the pixel, against a visual viewport that starts away from the page\'s corner; each limit taken at its exact edge', () => {
+    // On screen: x 10–410, y 20–320 (an 8px margin inside that). The anchor is x 100–180, y 120–150, the gap 4px.
+    Object.defineProperty(window, 'visualViewport', { configurable: true, value: { offsetLeft: 10, offsetTop: 20, width: 400, height: 300 } });
+    try {
+      const a = new DOMRect(100, 120, 80, 30), go = (w: number, h: number, p: string, rtl = false, anchor = a) => place(anchor, { width: w, height: h }, p, 4, 'top', 8, rtl);
+      // Above: 120 - 4 - 8 - 20 = 88 of room; below: 320 - 8 - 150 - 4 = 158; left: 100 - 4 - 8 - 10 = 78; right: 410 - 8 - 180 - 4 = 218.
+      expect([go(60, 40, 'top'), go(60, 40, 'top-start'), go(60, 40, 'top-end'), go(60, 40, 'top-start', true), go(60, 40, 'top-end', true), go(60, 40, 'bottom-end')]).toEqual([
+        { x: 110, y: 76, side: 'top' }, { x: 100, y: 76, side: 'top' }, { x: 120, y: 76, side: 'top' }, { x: 120, y: 76, side: 'top' }, { x: 100, y: 76, side: 'top' }, { x: 120, y: 154, side: 'bottom' },
+      ]);
+      expect([go(50, 20, 'left'), go(50, 20, 'left-start'), go(50, 20, 'left-end'), go(50, 20, 'right')]).toEqual([
+        { x: 46, y: 125, side: 'left' }, { x: 46, y: 120, side: 'left' }, { x: 46, y: 130, side: 'left' }, { x: 184, y: 125, side: 'right' },
+      ]);
+      // Exactly the room stays; a pixel more flips to a side it fits, or takes the room it has when the other is smaller.
+      expect([go(60, 88, 'top'), go(60, 89, 'top'), go(60, 158, 'bottom'), go(60, 159, 'bottom'), go(78, 20, 'left'), go(79, 20, 'left')]).toEqual([
+        { x: 110, y: 28, side: 'top' }, { x: 110, y: 154, side: 'bottom' }, { x: 110, y: 154, side: 'bottom' }, { x: 110, y: 154, side: 'bottom', maxHeight: 158 },
+        { x: 18, y: 125, side: 'left' }, { x: 184, y: 125, side: 'right' },
+      ]);
+      // Kept 8px inside the screen's edges, and given a max size when it can't fit: taller than the screen beside it,
+      // wider than the room on its side.
+      expect([go(100, 20, 'bottom', false, new DOMRect(380, 120, 20, 30)), go(100, 20, 'bottom', false, new DOMRect(10, 120, 20, 30)), go(50, 20, 'right-end', false, new DOMRect(100, 22, 80, 10)), go(50, 20, 'right-start', false, new DOMRect(100, 310, 80, 8)), go(50, 300, 'right'), go(230, 20, 'right')]).toEqual([
+        { x: 302, y: 154, side: 'bottom' }, { x: 18, y: 154, side: 'bottom' }, { x: 184, y: 28, side: 'right' }, { x: 184, y: 292, side: 'right' },
+        { x: 184, y: 28, side: 'right', maxHeight: 284 }, { x: 184, y: 125, side: 'right', maxWidth: 218 },
+      ]);
+      // As much room above as below (123px each) and neither enough: it keeps the side asked for. Wider than the
+      // screen: from the left margin. Exactly the screen's height beside it: no max height; a few pixels more: one.
+      expect([go(60, 200, 'bottom', false, new DOMRect(100, 155, 80, 30)), go(500, 20, 'bottom'), go(50, 284, 'right'), go(50, 290, 'right')]).toEqual([
+        { x: 110, y: 189, side: 'bottom', maxHeight: 123 }, { x: 18, y: 154, side: 'bottom' }, { x: 184, y: 28, side: 'right' }, { x: 184, y: 28, side: 'right', maxHeight: 284 },
+      ]);
+    } finally { delete (window as { visualViewport?: unknown }).visualViewport; }
+  });
+
   test('a side placement taller than the screen: the screen\'s height less the margins, from the top margin', () => {
     expect(place(at(100, 126), { width: 100, height: 500 }, 'right', 4)).toEqual({ x: 124, y: 8, side: 'right', maxHeight: 374 });
   });

@@ -131,7 +131,7 @@ export function TestedBehavior({ name }: { name: string }) {
   if (!count) return null;
   return <section className="sb-tested" aria-labelledby={`tested-${name}`}>
     <h2 id={`tested-${name}`}>What the tests check</h2>
-    <p>{count} {count === 1 ? 'test' : 'tests'} in <code>{name}.test.tsx</code> run in Chromium on every pull request that changes it, and in Firefox and WebKit every night. Besides these, every story is checked with axe in all six themes, at 200% text, with wider text spacing and at 320px wide, and compared with its screenshots.</p>
+    <p>{count} {count === 1 ? 'test' : 'tests'} in <code>{name}.test.tsx</code> run in Chromium on every pull request that changes it, and in Firefox and WebKit every night. Besides these, every story is checked with axe in every theme, at 200% text, with wider text spacing and at 320px wide, and compared with its screenshots.</p>
     <details>
       <summary>Every test, by name</summary>
       {groups.map((g, i) => <React.Fragment key={i}>

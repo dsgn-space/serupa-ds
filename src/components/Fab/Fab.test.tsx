@@ -59,7 +59,13 @@ describe('Fab', () => {
     await render(<div style={{ height: '4000px' }}><Fab id="auto" icon="edit" label="Compose" extended="auto" /></div>);
     const fab = page.getByRole('button', { name: 'Compose' });
     await expect.element(fab).toBeVisible();
-    const wide = el('auto').getBoundingClientRect().width;
+    // The open width once the label's font is in and the width has settled: a fallback font arriving late (Japanese)
+    // moved it 2px between this read and the one after the scroll.
+    await document.fonts.ready;
+    const w = () => el('auto').getBoundingClientRect().width;
+    let last = -1;
+    await expect.poll(() => { const now = w(), same = now === last; last = now; return same; }).toBe(true);
+    const wide = w();
     expect(wide).toBeGreaterThan(80);
     window.scrollTo(0, 400); window.dispatchEvent(new Event('scroll'));
     await expect.poll(() => Math.round(el('auto').getBoundingClientRect().width), { timeout: 3000 }).toBe(56);

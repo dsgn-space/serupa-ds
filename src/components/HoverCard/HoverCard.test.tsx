@@ -178,7 +178,7 @@ describe('HoverCard', () => {
     await expect.poll(() => isOpen('hc')).toBe(false);
   });
 
-  test('its text reads 4.5:1 on its background in all six themes', async () => {
+  test('its text reads 4.5:1 on its background in every theme', async () => {
     await render(<Card open onOpenChange={() => {}} />);
     await expect.poll(() => isOpen('hc')).toBe(true);
     for (const th of THEMES) {

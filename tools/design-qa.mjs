@@ -1,5 +1,5 @@
 // Design QA (96): before a pull request that changes how components look merges, someone looks at each changed
-// story in all six themes. This writes that review sheet, for the Design QA workflow's summary: for every story with
+// story in every theme. This writes that review sheet, for the Design QA workflow's summary: for every story with
 // a changed picture, its six themes at rest, before (the base) and after (this branch), and whether each changed.
 //   node tools/design-qa.mjs <base-sha> [head]       Markdown on stdout; GITHUB_REPOSITORY names the repository
 //   (on GitLab CI_PROJECT_PATH and CI_SERVER_URL, and the pictures link to GitLab's raw files)
@@ -8,14 +8,17 @@ import { execFileSync } from 'node:child_process';
 
 const P = path.resolve(import.meta.dirname, '..');
 const DIR = 'tools/test/baseline-visual/';
-export const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'];
+// The themes drawn and reviewed: a theme is a brand color and a mode and nothing else, so three brands stand for all of
+// them: blue (the default), violet (a dark accent) and yellow (a light one). Every theme's contrast is checked in the
+// token and component tests; these are the ones with pictures (tools/test/visual.mjs) and axe runs (storybook.mjs).
+export const THEMES = ['blue-light', 'blue-dark', 'yellow-light', 'yellow-dark', 'violet-light', 'violet-dark'];
 
 /** The stories whose pictures changed, from git diff --name-status: { "Badge/Extras": Set of the changed files }. */
 export function changedStories(status) {
   const out = new Map();
   for (const [s, f] of status.split('\n').map((l) => l.split('\t'))) {
     if (!s || !f?.startsWith(DIR) || !f.endsWith('.png')) continue;
-    const m = /^([^/]+)\/(.+?)-(?:(?:blue|violet|emerald)-(?:light|dark)-(?:rest|hover|focus)|axes|forced-colors)\.png$/.exec(f.slice(DIR.length));
+    const m = /^([^/]+)\/(.+?)-(?:[a-z]+-(?:light|dark)-(?:rest|hover|focus)|axes|forced-colors)\.png$/.exec(f.slice(DIR.length));
     if (!m) continue;
     const key = `${m[1]}/${m[2]}`;
     if (!out.has(key)) out.set(key, new Map());
@@ -32,7 +35,7 @@ export function sheet({ status, base, head, repo, required, max = 20, gitlab = '
   const url = (ref, f) => gitlab ? `${gitlab}/${repo}/-/raw/${ref}/${f}` : `https://github.com/${repo}/blob/${ref}/${f}?raw=true`;
   const img = (ref, f, alt) => `<img src="${url(ref, f)}" width="240" alt="${alt}">`;
   const out = ['## Design QA', '',
-    `${stories.size} ${stories.size === 1 ? 'story looks' : 'stories look'} different. Look at each in all six themes: it reads in every one, nothing is cut off, overlaps or lost its contrast, and the change is the one meant.`,
+    `${stories.size} ${stories.size === 1 ? 'story looks' : 'stories look'} different. Look at each in every theme: it reads in every one, nothing is cut off, overlaps or lost its contrast, and the change is the one meant.`,
     required ? 'Then add the **design-qa** label. A push that changes pictures again needs the label again.' : 'This step isn\'t required on this repository yet (the DESIGN_QA variable turns it on), so the check passes; the sheet is here to look at.', ''];
   for (const [key, files] of [...stories].slice(0, max)) {
     const [c, story] = key.split('/');

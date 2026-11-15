@@ -223,7 +223,7 @@ describe('Popover', () => {
     await expect.poll(() => [isOpen('ttok'), panel('ttok').offsetWidth, getComputedStyle(panel('ttok')).paddingTop]).toEqual([true, 300, '7px']);
   });
 
-  test('contrast: text and title keep 4.5:1 on the panel in all six themes', async () => {
+  test('contrast: text and title keep 4.5:1 on the panel in every theme', async () => {
     await render(<Popover title="Tok" trigger={<Button id="tc">C</Button>}><p>t</p></Popover>);
     await userEvent.click(el('tc'));
     const low: string[] = [];

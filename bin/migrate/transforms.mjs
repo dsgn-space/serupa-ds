@@ -154,6 +154,25 @@ export const TOKENS_15 = {
   '--stepper-error-bg': '--stepper-bg-error', '--stepper-error-text': '--stepper-text-error',
 };
 
+// 16.0.0: a theme is its colors. The tactile look (the depth-* tokens, data-depth and each component's depth token) is
+// removed with nothing in its place: the layers were empty outside the violet brand. tools/test/upgrades.mjs checks
+// that none of these is a token any more.
+export const DEPTH_TOKENS_16 = ['--depth-control', '--depth-control-hover', '--depth-control-pressed', '--depth-sheen', '--depth-sheen-pressed', '--depth-part',
+  '--depth-field', '--depth-well', '--depth-surface', '--depth-card', '--depth-card-lift', '--depth-press'];
+export const COMPONENT_TOKENS_REMOVED_16 = [
+  '--button-depth', '--button-depth-hover', '--button-depth-pressed', '--calendar-depth-selected', '--card-depth', '--card-depth-hover',
+  '--cascade-select-panel-depth', '--chart-tip-depth', '--checkbox-depth', '--checkbox-depth-checked', '--checkbox-draw-duration',
+  '--combobox-listbox-depth', '--date-picker-popup-depth', '--dialog-depth', '--drawer-depth', '--hover-card-depth', '--input-depth',
+  '--kanban-card-depth', '--kbd-depth', '--menu-depth', '--meter-track-depth', '--navbar-menu-depth', '--offline-banner-depth',
+  '--pagination-depth-current', '--period-picker-depth', '--period-picker-depth-selected', '--period-picker-panel-depth', '--pin-input-depth',
+  '--popover-depth', '--progress-track-depth', '--radio-depth', '--radio-depth-checked', '--segmented-control-indicator-depth', '--select-depth',
+  '--select-picker-depth', '--slider-thumb-depth', '--slider-track-depth', '--sortable-list-item-depth', '--stepper-depth-active',
+  '--switch-thumb-depth', '--switch-track-depth', '--textarea-depth', '--time-picker-list-depth', '--toast-depth', '--toggle-button-depth-pressed',
+  '--tooltip-depth', '--tour-depth',
+];
+// The three motion roles that only differed in the tactile look, and what each was everywhere else.
+export const MOTION_TOKENS_16 = { '--motion-toggle': '--motion-press', '--ease-toggle': '--ease-move', '--motion-draw': '--duration-0' };
+
 /** The package name as written in an import or a path (`serupa-ds`, `serupa-ds/tokens.css`), renamed to `to`. A word
  * that only starts the same (`serupa-ds-extra`) or ends a longer name (`@x/serupa-ds`) is left. */
 export function renamePackage(src, to) {
@@ -297,6 +316,35 @@ export const TRANSFORMS = [
     title: `${component}: \`variant="default"\` is \`variant="plain"\``,
     run: (src) => (new RegExp(`\\b${component}\\b`).test(src) ? { ...renameValue(src, component, 'variant', 'default', 'plain'), notes: [] } : { text: src, count: 0, notes: [] }),
   })),
+  {
+    // 16.0.0: violet and emerald differ from blue in color only, and the tactile look is removed.
+    version: '16.0.0', id: 'theme-looks-removed', exts: ALL,
+    title: 'The tactile look is removed: `data-depth`, the `depth-*` tokens, each component\'s `--…-depth` token, and `motion-toggle`, `ease-toggle` and `motion-draw`',
+    run(src) {
+      let count = 0;
+      let text = src;
+      // Read through var(), a removed motion role takes the token it always was outside the tactile look.
+      for (const [from, to] of Object.entries(MOTION_TOKENS_16)) text = text.replace(new RegExp(`(var\\(\\s*)${from}(?![\\w-])`, 'g'), (_, pre) => { count++; return pre + to; });
+      // The `ease-toggle` utility class and token reference (`hover:ease-toggle`, `{transitions.ease-toggle}`) are `ease-move`.
+      // A name that is a whole inline code span is prose about the change, and is left.
+      text = text.replace(/(?<![\w-])ease-toggle(?![\w-])/g, (m, at) => { if (text[at - 1] === '`' && text[at + m.length] === '`') return m; count++; return 'ease-move'; });
+      const removed = new RegExp(`(?<![\\w-])(?:${[...DEPTH_TOKENS_16, ...COMPONENT_TOKENS_REMOVED_16, ...Object.keys(MOTION_TOKENS_16)].sort((a, b) => b.length - a.length).join('|')})(?![\\w-])`, 'g');
+      return { text, count, notes: [
+        ...notesFor(text, removed, 'this token is removed with the tactile look and nothing reads it: delete the declaration, or the layer it adds to a box-shadow or background'),
+        ...notesFor(text, /\bdata-depth\b/g, '`data-depth` is removed with the tactile look: delete the attribute (every brand is flat)'),
+      ] };
+    },
+  },
+  {
+    // 16.0.0: every accent color has a theme, so "emerald" is the emerald ramp and what it was (the teal ramp) is "teal".
+    // Both are themes now, so which one a page wants is its own choice: each place is listed, none is rewritten.
+    version: '16.0.0', id: 'emerald-is-emerald', exts: ALL,
+    title: 'The `emerald` brand draws in the emerald ramp, and the teal it drew in before is the new `teal` brand',
+    run(src) {
+      const named = /(?<![\w-])emerald-(?:light|dark)(?![\w-])|data-brand["']?\s*[:=]\s*\{?\s*["'`]emerald(?=["'`])|\bbrand\s*[:=]\s*["'`]emerald["'`]|--brand[ =]emerald\b/g;
+      return { text: src, count: 0, notes: notesFor(src, named, 'the `emerald` brand is now the emerald ramp, a greener green: write `teal` here (`teal-light`, `teal-dark`, `data-brand="teal"`) to keep the color it was') };
+    },
+  },
   {
     // 16.0.0 makes the classes of a component's inner parts private: they may change in any release. Nothing is
     // renamed now, so each line that selects one is listed, with the way to style it that keeps working.
