@@ -48,7 +48,7 @@ Drawn from the `Default` story.
 ## Accessibility
 
 - **Role and name:** a text field labelled "To confirm, type" and the phrase, then a button named by `confirmLabel`.
-- **Contrast:** the label and the destructive button read 4.5:1 in all six themes (Field and Button).
+- **Contrast:** the label and the destructive button read 4.5:1 in every theme (Field and Button).
 - **What's still yours:** say what will be lost, and put it in a Dialog or a clearly separated danger zone.
 
 ### Keyboard

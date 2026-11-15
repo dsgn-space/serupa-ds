@@ -48,7 +48,7 @@ describe('Divider', () => {
     expect([e.getAttribute('role'), e.getAttribute('aria-orientation'), r.height, r.width, css(e).borderLeftWidth, e.textContent]).toEqual(['separator', 'vertical', 40, 1, '1px', '']);
   });
 
-  test('contrast: the label keeps 4.5:1 on surface in all six themes', async () => {
+  test('contrast: the label keeps 4.5:1 on surface in every theme', async () => {
     await render(<Divider id="dlabel" label="or" />);
     const low: string[] = [];
     for (const th of THEMES) {

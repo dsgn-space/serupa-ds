@@ -266,7 +266,7 @@ describe('PhoneInput', () => {
     expect([field('dis').disabled, menu('dis').disabled, box('dis').className.includes('dk-input--disabled'), Math.round(box('dis').getBoundingClientRect().height)]).toEqual([true, true, true, 44]);
   });
 
-  test('the menu has its own 2px focus ring inside the box; the tokens override it; contrast of the code and chevron in all six themes', async () => {
+  test('the menu has its own 2px focus ring inside the box; the tokens override it; contrast of the code and chevron in every theme', async () => {
     await render(<Wrap>
       <PhoneInput id="p" aria-label="Phone" defaultCountry="ID" />
       <PhoneInput id="t" aria-label="Tok" style={{ '--phone-input-dial': 'rgb(1, 2, 3)' } as React.CSSProperties} />
@@ -382,7 +382,7 @@ describe('PhoneInput held state', () => {
   test('held down: the country picker fills one step past its hover (--phone-input-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<PhoneInput aria-label="Phone" countryLabel="Dialling code" />);
     const b = (page.getByRole('combobox', { name: 'Dialling code' }).element() as HTMLElement).parentElement as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--field-pressed)'));
       const out: string[] = [];

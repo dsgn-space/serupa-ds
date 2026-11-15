@@ -75,5 +75,4 @@ Each is an optional override: set it on the page, a container or one toggle. The
 | `--toggle-button-bg-pressed-disabled` | `highlight` | The background while on and disabled. |
 | `--toggle-button-text-pressed-disabled` | `text-muted` | Text and icon while on and disabled (3.4:1 and up on bg-pressed-disabled, as on a disabled Button). |
 | `--toggle-button-border-pressed-disabled` | `border-control` | The outline variant's border while on and disabled (3:1 on surface). |
-| `--toggle-button-depth-pressed` | `depth-control-pressed` | The tactile layers of an on toggle: it stays sunk. None in the flat brands. |
 <!-- token-table:end -->

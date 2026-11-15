@@ -92,7 +92,7 @@ describe('Text', () => {
     expect([fits('tflex', 'trow'), fits('tcell', 'tgrid'), css(el('tflex')).overflowWrap]).toEqual([true, true, 'anywhere']);
   });
 
-  test('contrast: every tone keeps 4.5:1 on surface in all six themes', async () => {
+  test('contrast: every tone keeps 4.5:1 on surface in every theme', async () => {
     await render(<>{TONES.map((t) => <Text key={t} id={`t-${t}`} tone={t}>{t}</Text>)}</>);
     const low: string[] = [];
     for (const th of THEMES) {

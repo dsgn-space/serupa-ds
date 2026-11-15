@@ -18,8 +18,10 @@ declare module 'vitest/browser' {
   }
 }
 
-// Helpers for the component tests: resolved colors, WCAG contrast, and the six themes.
-export const THEMES = ['blue-light', 'blue-dark', 'violet-light', 'violet-dark', 'emerald-light', 'emerald-dark'] as const;
+// Helpers for the component tests: resolved colors, WCAG contrast, and the themes the tests run in. A theme is a brand
+// color and a mode and nothing else, so three brands stand for all of them: blue (the default), yellow (a light accent)
+// and violet (a dark one), as in tools/design-qa.mjs. Every theme's own colors are checked in tools/test/foundation.mjs.
+export const THEMES = ['blue-light', 'blue-dark', 'yellow-light', 'yellow-dark', 'violet-light', 'violet-dark'] as const;
 
 /** A CSS color (or var()) as the browser resolves it, "rgb(r, g, b)", in the page's current theme. */
 export function color(value: string): string {

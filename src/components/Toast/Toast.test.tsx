@@ -371,7 +371,7 @@ describe('Toast', () => {
     expect(Math.round(q('.dk-toaster').getBoundingClientRect().left)).toBe(16);
   });
 
-  test('contrast: title and description 4.5:1, icons 3:1, for every tone in all six themes', async () => {
+  test('contrast: title and description 4.5:1, icons 3:1, for every tone in every theme', async () => {
     await render(<Toaster limit={4} />);
     React.act(() => { (['info', 'success', 'warning', 'danger'] as const).forEach((k) => toast({ title: k, description: 'Details', tone: k, duration: 0 })); });
     const still = document.createElement('style'); still.textContent = '* { animation: none !important; }'; document.head.appendChild(still);
@@ -429,7 +429,7 @@ describe('Toast', () => {
     expect([titles(), q('.dk-toaster__more').textContent]).toEqual([['C'], '+2 lainnya']);
   });
 
-  test('contrast: the count and the waiting line 4.5:1 in all six themes', async () => {
+  test('contrast: the count and the waiting line 4.5:1 in every theme', async () => {
     await render(<App />);
     React.act(() => { for (const t of ['B', 'C', 'D']) toast({ title: t, duration: 0 }); toast({ title: 'Same', duration: 0 }); toast({ title: 'Same', duration: 0 }); });
     const low: string[] = [];

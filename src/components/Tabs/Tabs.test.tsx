@@ -237,7 +237,7 @@ describe('Tabs', () => {
     expect(css(a).boxShadow).toMatch(/0px 0px 0px 2px inset|inset 0px 0px 0px 2px/);
   });
 
-  test('contrast: labels 4.5:1, the selected line and pill 3:1 against surface, in all six themes', async () => {
+  test('contrast: labels 4.5:1, the selected line and pill 3:1 against surface, in every theme', async () => {
     await setup();
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;

@@ -77,7 +77,7 @@ describe('DescriptionList', () => {
     expect(css(el('d2').querySelector('dd')).fontWeight).toBe('600');
   });
 
-  test('terms and details read 4.5:1 on the page in all six themes', async () => {
+  test('terms and details read 4.5:1 on the page in every theme', async () => {
     await render(<List />);
     const [dt, dd] = parts('a');
     for (const th of THEMES) {

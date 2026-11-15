@@ -65,7 +65,7 @@ With `variant="rail"` (the `Rail` story), two more parts:
 - **Role and name:** a `nav` landmark named by its title (or `aria-label` with `title={null}`), holding a list of links. The current section's link has `aria-current="location"`, and is marked by a wider line, not by color alone.
 - **The rail:** its dashes are hidden from screen readers; the links are in the panel, so a screen reader reads the same landmark and links as the list, shown or not. A hidden panel takes no presses.
 - **Motion:** the scroll is smooth only when the reader hasn't asked for reduced motion.
-- **Contrast:** links read 4.5:1 on the page and on the rail's panel, the current section's line and dash 3:1, in all six themes (`TableOfContents.test.tsx`).
+- **Contrast:** links read 4.5:1 on the page and on the rail's panel, the current section's line and dash 3:1, in every theme (`TableOfContents.test.tsx`).
 - **What's still yours:** headings that say what each section is about.
 
 ### Keyboard
