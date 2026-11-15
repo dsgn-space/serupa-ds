@@ -112,4 +112,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(${tree});</script>`,
   fs.mkdirSync(path.join(PROJECT, '.test-tmp'), { recursive: true });
   fs.writeFileSync(path.join(PROJECT, '.test-tmp', `screen-reader-${reader}.txt`), said.join('\n') + '\n');
 }
+// What was said, in the job's log too: the artifact is a download away, and a red run starts with reading this.
+console.log(said.join('\n') + '\n');
 done(report(`Screen reader (${reader === 'voiceover' ? 'VoiceOver, WebKit' : 'NVDA, Chromium'})`, R));
