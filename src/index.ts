@@ -18,6 +18,7 @@ import { withViewTransition } from './internal/viewTransition';
 import { prefersReducedMotion, useBreakpoint, useMediaQuery, useReducedMotion } from './internal/media';
 export type { Breakpoint } from './internal/media';
 import { useCopyToClipboard } from './internal/clipboard';
+import { tokenValue, useTokenValue } from './internal/tokenValue';
 export type { CopyToClipboard, CopyToClipboardOptions } from './internal/clipboard';
 export type { SerupaProviderProps, SerupaSettings } from './internal/provider';
 import { customIcons, getIcon, registerIcons } from './icons';
@@ -26,7 +27,7 @@ export type { IconData } from './material/types';
 export type { MaterialIconName } from './material/icons';
 export type { SerupaTheme, ThemeBrand, ThemeInfo, ThemeMode } from './theme-types';
 
-export { announce, announcePage, configure, customIcons, enLabels, getIcon, idLabels, plural, prefersReducedMotion, registerIcons, SerupaProvider, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, withoutTransitions, withViewTransition };
+export { announce, announcePage, configure, customIcons, enLabels, getIcon, idLabels, plural, prefersReducedMotion, registerIcons, SerupaProvider, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useTokenValue, withoutTransitions, withViewTransition };
 // Every component folder's index.ts (generated: tools/build/registry.mjs).
 export * from './generated/components';
 import type { ComponentGlobals } from './generated/globals';
@@ -43,6 +44,7 @@ declare global {
       announce: typeof announce; announcePage: typeof announcePage; configure: typeof configure; customIcons: typeof customIcons; enLabels: typeof enLabels; getIcon: typeof getIcon; idLabels: typeof idLabels; plural: typeof plural; prefersReducedMotion: typeof prefersReducedMotion;
       registerIcons: typeof registerIcons; SerupaProvider: typeof SerupaProvider; useCollator: typeof useCollator; useLocale: typeof useLocale; useSerupa: typeof useSerupa;
       useBreakpoint: typeof useBreakpoint; useCopyToClipboard: typeof useCopyToClipboard; useMediaQuery: typeof useMediaQuery; useReducedMotion: typeof useReducedMotion;
+      tokenValue: typeof tokenValue; useTokenValue: typeof useTokenValue;
       withoutTransitions: typeof withoutTransitions; withViewTransition: typeof withViewTransition;
       /** Present when theme.js is loaded. */ theme?: ThemeApi;
     };

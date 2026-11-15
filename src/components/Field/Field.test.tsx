@@ -191,8 +191,62 @@ describe('Field', () => {
       ['hint', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['error', 'var(--danger-text)', 'var(--surface)', 4.5],
       ['error on muted', 'var(--danger-text)', 'var(--surface-muted)', 4.5],
+      ['warning', 'var(--warning-text)', 'var(--surface)', 4.5],
+      ['warning on muted', 'var(--warning-text)', 'var(--surface-muted)', 4.5],
+      ['checking', 'var(--text-muted)', 'var(--surface)', 4.5],
       ['required', 'var(--danger-text)', 'var(--surface)', 4.5],
     ])).toEqual([]);
+  });
+
+  test('warning: advice under the control in warning-text with its icon, in the control\'s description, but the control stays valid and the form can be sent', async () => {
+    const sent = vi.fn((e: React.FormEvent) => e.preventDefault());
+    await render(<form onSubmit={sent}><Field label="Project name" hint="Shown to the team" warning="A project with this name was archived last year"><Input id="warn" name="n" defaultValue="Atlas" required /></Field><button>Create</button></form>);
+    const f = el('warn').closest('[data-component="field"]') as HTMLElement;
+    const note = f.querySelector('.dk-field__warning') as HTMLElement;
+    expect(described('warn').map((i) => document.getElementById(i)?.textContent)).toEqual(['Shown to the team', 'A project with this name was archived last year']);
+    expect([el('warn').getAttribute('aria-invalid'), el('warn').getAttribute('aria-errormessage'), f.classList.contains('dk-field--warning'), f.classList.contains('dk-field--invalid')]).toEqual([null, null, true, false]);
+    const probe = document.createElement('span'); probe.style.color = 'var(--warning-text)'; document.body.append(probe);
+    expect(css(note).color).toBe(css(probe).color);
+    probe.remove();
+    expect(note.querySelector('svg')).not.toBeNull();
+    await userEvent.click(page.getByRole('button', { name: 'Create' }));
+    expect(sent).toHaveBeenCalledOnce();
+  });
+
+  test('an error takes the warning\'s place, and "checking…" takes it while the answer is checked; one message at a time', async () => {
+    function Form(p: { error?: string; checking?: string }) { return <Field label="Address" error={p.error} checking={p.checking} warning="This address is outside our usual area"><input id="one" /></Field>; }
+    const r = await render(<Form />);
+    const f = () => el('one').closest('[data-component="field"]') as HTMLElement;
+    const msgs = () => [...f().querySelectorAll('.dk-field__error, .dk-field__warning, .dk-field__checking')].map((m) => m.className + ': ' + m.textContent);
+    expect(msgs()).toEqual(['dk-field__warning: This address is outside our usual area']);
+    await r.rerender(<Form checking="Checking the address…" />);
+    expect(msgs()).toEqual(['dk-field__checking: Checking the address…']);
+    await r.rerender(<Form checking="Checking the address…" error="We can't deliver to this address" />);
+    expect(msgs()).toEqual(['dk-field__error: We can\'t deliver to this address']);
+    expect(el('one').getAttribute('aria-invalid')).toBe('true');
+  });
+
+  test('checking: a small spinner and the words under the control, in its description and said politely; the field is aria-busy until it ends', async () => {
+    function Form({ checking }: { checking?: string }) { return <Field label="Username" checking={checking}><Input id="chk" /></Field>; }
+    const r = await render(<Form />);
+    const f = el('chk').closest('[data-component="field"]') as HTMLElement;
+    expect(f.getAttribute('aria-busy')).toBeNull();
+    await r.rerender(<Form checking="Checking the name…" />);
+    expect(f.getAttribute('aria-busy')).toBe('true');
+    expect(f.classList.contains('dk-field--checking')).toBe(true);
+    expect(described('chk').map((i) => document.getElementById(i)?.textContent)).toEqual(['Checking the name…']);
+    expect(f.querySelector('.dk-field__checking [data-component="loader"]')).not.toBeNull();
+    expect(el('chk').getAttribute('aria-invalid')).toBeNull();
+    await expect.poll(() => announcer().textContent).toBe('Checking the name…');
+    await r.rerender(<Form />);
+    expect([f.getAttribute('aria-busy'), described('chk')]).toEqual([null, []]);
+  });
+
+  test('warning and checking work on a group too: the fieldset is described and stays valid', async () => {
+    await render(<Field group label="Plan" warning="The free plan has a 3-project limit" data-testid="g"><Radio name="p" value="free">Free</Radio></Field>);
+    const fs = page.getByTestId('g').element() as HTMLElement;
+    expect((fs.getAttribute('aria-describedby') || '').split(' ').map((i) => document.getElementById(i)?.textContent)).toEqual(['The free plan has a 3-project limit']);
+    expect(fs.querySelector('input')!.getAttribute('aria-invalid')).toBeNull();
   });
 
   // The control can sit inside a Tooltip, your own wrapper or a form library's component: Field still wires it.

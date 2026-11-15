@@ -90,6 +90,34 @@ describe('Combobox', () => {
     await expect.poll(() => el('cwb').value).toBe('Brazil');
   });
 
+  test('multiple: pasting a list picks every option it names (any case and accents, by label or value), says so once, and leaves what matched nothing in the field', async () => {
+    const seen: string[][] = [];
+    await render(<Combobox aria-label="Countries" id="pst" multiple options={COUNTRIES} defaultValue={['Brazil']} onValueChange={(v) => seen.push(v)} />);
+    const paste = (text: string) => {
+      const data = new DataTransfer(); data.setData('text/plain', text);
+      const ev = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true });
+      el('pst').dispatchEvent(ev);
+      return ev.defaultPrevented;
+    };
+    el('pst').focus();
+    expect(paste('argentina; cote d’ivoire\nBrazil, Narnia,\tdk')).toBe(true);
+    // Brazil was picked already; Denmark (dk) is disabled; Narnia matches nothing.
+    expect(seen).toEqual([['Brazil', 'Argentina', 'ci']]);
+    await expect.poll(() => el('pst').value).toBe('Narnia, dk');
+    await expect.poll(() => (document.querySelector('[data-dk-announcer]') as HTMLElement).textContent).toBe('Argentina, Côte d’Ivoire added');
+  });
+
+  test('multiple: a paste with no separator, or one that matches nothing, is pasted as text; a single Combobox never splits', async () => {
+    await render(<><Combobox aria-label="A" id="ps1" multiple options={COUNTRIES} /><Combobox aria-label="B" id="ps2" options={COUNTRIES} /></>);
+    const paste = (id: string, text: string) => {
+      const data = new DataTransfer(); data.setData('text/plain', text);
+      const ev = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true });
+      el(id).dispatchEvent(ev);
+      return ev.defaultPrevented;
+    };
+    expect([paste('ps1', 'Argentina'), paste('ps1', 'Narnia, Atlantis'), paste('ps2', 'Argentina, Brazil')]).toEqual([false, false, false]);
+  });
+
   test('required with multiple: the form submits once a tag is picked and not before; it stays aria-required (L8E18)', async () => {
     const screen = await render(<form id="rq"><Combobox aria-label="Fruit" id="rm" multiple required name="fruit" options={['Apple', 'Banana']} defaultValue={['Apple']} /></form>);
     const f = () => document.getElementById('rq') as HTMLFormElement, field = () => document.getElementById('rm') as HTMLInputElement;

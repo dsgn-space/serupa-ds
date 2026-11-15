@@ -21,6 +21,7 @@ interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     max?: Date | string | undefined;
     isDateDisabled?: ((date: Date) => boolean) | undefined;
     locale?: string | undefined;
+    weekNumbers?: boolean | undefined;
     weekStartsOn?: number | undefined;
     autoFocus?: boolean | undefined;
 }

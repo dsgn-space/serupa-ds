@@ -104,6 +104,7 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 | `min`, `max`, `isDateDisabled` | | | Days that can't be chosen, typed or picked. `min` and `max` take a Date or `"yyyy-mm-dd"`. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. When it differs from the provider's, the field and the calendar carry `lang`, so screen readers read them in that language. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
+| `weekNumbers` | boolean | `false` | Week numbers before the days, as Calendar's `weekNumbers` |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Like Input. |
 | `invalid` | `boolean` | `false` | Like Input. |
 | `name` | `string` | | Adds a hidden input that sends `yyyy-mm-dd`. With `form`, the hidden input belongs to that form too. |

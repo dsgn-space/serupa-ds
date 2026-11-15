@@ -42,6 +42,26 @@
           }
         }
       },
+      "warning-color": {
+        "$type": "color",
+        "$value": "{color.warning-text}",
+        "$description": "A warning message and its icon",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--field-warning-color"
+          }
+        }
+      },
+      "checking-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The \"checking…\" message and its spinner",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--field-checking-color"
+          }
+        }
+      },
       "required-color": {
         "$type": "color",
         "$value": "{color.danger-text}",

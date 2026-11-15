@@ -92,6 +92,7 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 | `isDateDisabled` | `(date: Date) => boolean` | | Days to refuse, such as weekends or holidays. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | Month and weekday names, and the first day of the week. When it differs from the provider's, the month title and the grid carry `lang`, so screen readers read the names in that language; the nav buttons keep the page's. |
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |
+| `weekNumbers` | boolean | `false` | A narrow column of ISO 8601 week numbers before the days (the week holding each row's Thursday), for planning by week. Each number is its row's header, read as "Week 12" with the days; the days take its width off their share of a narrow screen. |
 | `autoFocus` | `boolean` | `false` | Focus the selected day (or today) when it appears. |
 | `previousLabel`, `nextLabel` | `string` | `"Previous month"`, `"Next month"` | The month buttons' names. |
 

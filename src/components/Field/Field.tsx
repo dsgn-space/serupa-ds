@@ -10,6 +10,7 @@ import { useSettings } from '../../internal/provider';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { summarySaysIt } from '../../internal/summaryFocus';
 import { warnOnce } from '../../internal/warn';
+import { LoaderRing } from '../../internal/loaderRing';
 import { en as words } from './labels';
 import { byId } from '../../internal/root';
 import { FormErrorsContext, useFormErrors } from '../../internal/formErrors';
@@ -24,6 +25,14 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   hint?: React.ReactNode | undefined;
   /** An error message under the control (danger-text, with an icon); makes the control invalid and is added to its aria-describedby. */
   error?: React.ReactNode | undefined;
+  /** Advice that doesn't block: a message under the control (warning-text, with an icon), such as "A project with
+   *  this name was archived last year". The control stays valid and the form can be sent. Added to its
+   *  aria-describedby and said politely when it appears. An error takes its place while there is one. */
+  warning?: React.ReactNode | undefined;
+  /** While the answer is being checked, often on the server: the words that say so ("Checking the address…"), with a
+   *  small spinner, under the control. Added to its aria-describedby and said politely; the field has aria-busy. It
+   *  takes the place of a warning, and an error takes its place. */
+  checking?: React.ReactNode | undefined;
   /** A * after the label (hidden from screen readers) and aria-required on the control; with group, "Required" in words in the legend for screen readers. Add the control's own required for the browser's check. */
   required?: boolean | undefined;
   /** "(optional)" after the label, or your own words. Ignored with required. */
@@ -52,7 +61,7 @@ export interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
 /** The props Field reads from and hands to its control (a component like Input, or a DOM element). */
 type ControlProps = { id?: string; name?: string; invalid?: boolean; disabled?: boolean; 'aria-describedby'?: string; 'aria-errormessage'?: string; 'aria-required'?: boolean | 'true' | 'false'; 'aria-invalid'?: boolean };
 
-const OWN = { label: 1, hint: 1, error: 1, name: 1, required: 1, optional: 1, disabled: 1, group: 1, orientation: 1, id: 1, children: 1, className: 1 } as const;
+const OWN = { label: 1, hint: 1, error: 1, warning: 1, checking: 1, name: 1, required: 1, optional: 1, disabled: 1, group: 1, orientation: 1, id: 1, children: 1, className: 1 } as const;
 
 /** A label, an optional hint and an error message around one form control, wired up for screen readers. className, ref and other attributes go to the outer element (a <fieldset> with group). */
 export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field', function Field(props, ref) {
@@ -71,7 +80,11 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
   React.useEffect(() => (place && name ? place(name, controlId) : undefined), [place, name, controlId]);
   // Typing in the field, or any change to it, takes its form message away: it described the value that was sent.
   const edited = form && name && fromForm != null ? () => form.clear(name) : undefined;
+  // One message under the control, the most urgent: an error, then "checking…", then a warning.
+  const shows = (v: React.ReactNode) => v != null && v !== false && v !== '';
+  const kind = hasError ? 'error' : shows(props.checking) ? 'checking' : shows(props.warning) ? 'warning' : null;
   const hintId = props.hint ? base + '-hint' : null, errorId = hasError ? base + '-error' : null;
+  const noteId = kind === 'checking' || kind === 'warning' ? base + '-' + kind : null;
   const group = !!props.group;
   const sds = useSettings(words);
   // An error that appears (or changes) after mount is said politely: it's only a description, which
@@ -113,8 +126,12 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     ? React.createElement('legend', { className: 'dk-field__label', key: 'label' }, ...labelKids)
     : React.createElement('label', { className: 'dk-field__label', htmlFor: controlId, id: base + '-label', key: 'label', onClick: focusControl, ref: labelRef }, ...labelKids);
   const hint = props.hint ? <div className="dk-field__hint" id={hintId as string} key="hint">{props.hint}</div> : null;
-  const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string} ref={errorRef}>{errorText}</span></div> : null;
-  const described = cn(hintId, errorId);
+  const error = hasError ? <div className="dk-field__error" key="error"><Icon icon={icons.Error} className="dk-field__error-icon" /><span id={errorId as string} ref={errorRef}>{errorText}</span></div>
+    // The same slot, and the same polite announcement, for advice and for "checking…": neither makes the control invalid.
+    : kind === 'warning' ? <div className="dk-field__warning" key="warning"><Icon icon={icons.Warning} className="dk-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.warning}</span></div>
+    : kind === 'checking' ? <div className="dk-field__checking" key="checking"><LoaderRing size="sm" className="dk-field__error-icon" /><span id={noteId as string} ref={errorRef}>{props.checking}</span></div>
+    : null;
+  const described = cn(hintId, errorId, noteId);
   const pass = function (el: React.ReactNode, isControl: boolean) {   // the props Field hands a control: components get invalid, DOM elements aria-invalid
     if (!React.isValidElement(el)) return el;
     const p = el.props as ControlProps & { children?: React.ReactNode };
@@ -134,10 +151,11 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     return React.cloneElement(el, add);
   };
   const horizontal = !group && props.orientation === 'horizontal';
-  const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', props.disabled && 'dk-field--disabled', props.className);
+  const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', kind === 'warning' && 'dk-field--warning', kind === 'checking' && 'dk-field--checking', props.disabled && 'dk-field--disabled', props.className);
+  const busy = kind === 'checking' || undefined;
   if (group) {
     return (
-      <fieldset {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLFieldSetElement>} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} data-component="field">
+      <fieldset {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLFieldSetElement>} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} aria-busy={busy} data-component="field">
         {label}
         {hint}
         <FieldContext.Provider value={null}>
@@ -155,9 +173,9 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     </div>
   </FieldContext.Provider>;
   // Horizontal: the label beside a column holding the control, then the hint and the error under it.
-  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
+  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} aria-busy={busy} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
   return (
-    <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} data-component="field">
+    <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} aria-busy={busy} data-component="field">
       {label}
       {hint}
       {body}

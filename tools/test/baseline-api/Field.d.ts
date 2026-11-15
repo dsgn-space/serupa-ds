@@ -6,6 +6,8 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">
     label?: React.ReactNode | undefined;
     hint?: React.ReactNode | undefined;
     error?: React.ReactNode | undefined;
+    warning?: React.ReactNode | undefined;
+    checking?: React.ReactNode | undefined;
     required?: boolean | undefined;
     optional?: boolean | string | undefined;
     disabled?: boolean | undefined;

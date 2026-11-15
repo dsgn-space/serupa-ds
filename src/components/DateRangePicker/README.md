@@ -80,7 +80,7 @@ Drawn from the `Disabled` story.
 | `min`, `max` | `Date \| string` | | Days outside can't be either end. A Date or `"yyyy-mm-dd"`. |
 | `isDateDisabled` | `(date: Date) => boolean` | | Days that can't be an end. They can sit inside a range. |
 | `months` | `1 \| 2` | `2` | Months side by side in the popup (stacked below 640px). |
-| `locale`, `weekStartsOn` | | the browser's | As in DatePicker. The calendars carry `lang` when it differs from the provider's; the two fields keep the page's, as their names do. |
+| `locale`, `weekStartsOn`, `weekNumbers` | | the browser's | As in DatePicker. The calendars carry `lang` when it differs from the provider's; the two fields keep the page's, as their names do. |
 | `size`, `invalid`, `disabled`, `readOnly` | | | Like Input. |
 | `required` | `boolean` | `false` | Both fields are required (and `aria-required`), so a form won't submit until each end has a date. Field's `required` sets `aria-required` on both. |
 | `id` | `string` | | The start field's id, so Field or `<label htmlFor>` focuses it. |

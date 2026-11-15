@@ -21,6 +21,29 @@ function Cal(props: { picks?: string[]; months?: string[]; cref?: React.Ref<HTML
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Calendar', () => {
+  test('weekNumbers: a column of ISO week numbers before the days, each its row\'s header ("Week 9"); arrows still move by day; it fits a 320px screen', async () => {
+    await render(<Cal weekNumbers />);
+    const rows = [...document.querySelectorAll('[data-testid=cal] tbody tr')];
+    const heads = rows.map((tr) => tr.querySelector('th[scope="row"]')!.textContent);
+    // March 2025 in Sunday weeks: Sun Feb 23 starts the first row, whose Thursday (Feb 27) is in ISO week 9.
+    expect(heads).toEqual(['Week 9', 'Week 10', 'Week 11', 'Week 12', 'Week 13', 'Week 14']);
+    expect(rows.map((tr) => tr.querySelectorAll('td').length)).toEqual([7, 7, 7, 7, 7, 7]);
+    const colHead = cal('thead th');
+    expect([colHead.getAttribute('scope'), colHead.textContent, colHead.querySelector('[aria-hidden]')!.textContent]).toEqual(['col', 'WkWeek', 'Wk']);
+    cal('[data-date="2025-03-10"]').focus();
+    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
+    expect(focused()).toBe('2025-03-08');
+    await page.viewport(320, 640);
+    try {
+      expect(cal('.dk-calendar__grid').getBoundingClientRect().width).toBeLessThanOrEqual(320 - 32);
+    } finally { await page.viewport(1280, 800); }
+  });
+
+  test('isoWeek: the week of the year\'s first Thursday is week 1, so 1 Jan can be week 1, 53 or 52', async () => {
+    const { isoWeek } = await import('./Calendar');
+    expect([isoWeek(new Date(2026, 0, 1)), isoWeek(new Date(2021, 0, 1)), isoWeek(new Date(2023, 0, 1)), isoWeek(new Date(2024, 11, 30)), isoWeek(new Date(2026, 5, 15))]).toEqual([1, 53, 52, 1, 25]);
+  });
+
   test('a parent that renders again with the same props doesn\'t draw the 42 days again; a new value draws them', async () => {
     // isDateDisabled is asked once a day drawn: counting the calls counts the days drawn.
     const isDateDisabled = vi.fn((d: Date) => d.getDay() === 0);

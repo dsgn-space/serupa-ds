@@ -37,6 +37,9 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   locale?: string | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
   weekStartsOn?: number | undefined;
+  /** A column of week numbers before the days (ISO 8601: the week holding the row's Thursday), for planning by week.
+      Each is the row's header, so a screen reader says "Week 12" with the days. Default: false. */
+  weekNumbers?: boolean | undefined;
   /** Moves focus to the selected day (or today) when the calendar appears. Default: false. */
   autoFocus?: boolean | undefined;
   /** Names for the month buttons. Default: "Previous month" and "Next month". */
@@ -105,11 +108,18 @@ function formats(locale: string): Formats {
   return f;
 }
 
+/** The ISO 8601 week number of a day: weeks start on Monday, and week 1 holds the year's first Thursday. */
+export function isoWeek(d: Date): number {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));   // the Thursday of its week decides the year
+  return Math.ceil(((t.getTime() - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
+}
+
 interface DayHandlers { pick: (d: Date) => void; focus: (d: Date) => void; hover: (d: Date) => void }
 interface WeeksProps {
   month: number; ws: number; stop: number; value: number | null; marked: number | null; min: number | null; max: number | null; locale: string;
   isDateDisabled: CalendarProps['isDateDisabled']; isDateSelected: CalendarProps['isDateSelected']; dayLabel: CalendarProps['dayLabel']; dayClassName: CalendarProps['dayClassName'];
-  hideOutside: boolean; hover: boolean; on: DayHandlers;
+  hideOutside: boolean; hover: boolean; on: DayHandlers; week: string | null;
 }
 // The grid's weeks of days. Memoized, by times rather than Dates: a parent that renders again with the same props, or
 // a RangeCalendar's other month, doesn't draw the 42 days and their names again.
@@ -120,6 +130,7 @@ const Weeks = /* @__PURE__ */ React.memo(function Weeks(p: WeeksProps) {
   const disabled = (d: Date) => (p.min !== null && d.getTime() < p.min) || (p.max !== null && d.getTime() > p.max) || (p.isDateDisabled ? p.isDateDisabled(d) : false);
   return weeks.map((row, w) => (
     <tr key={w}>
+      {p.week != null ? <th scope="row" className="dk-calendar__week"><span className="dk-visually-hidden">{p.week + ' '}</span>{isoWeek(row.find((d) => d.getDay() === 4) || row[0]!)}</th> : null}
       {row.map((d) => {
         const t = d.getTime(), off = !!disabled(d), sel = p.isDateSelected ? p.isDateSelected(d) : t === p.value, outside = !sameMonth(d, month), now = t === p.marked;
         if (outside && p.hideOutside) return <td key={t} role="gridcell" className="dk-calendar__blank" />;
@@ -138,7 +149,7 @@ const Weeks = /* @__PURE__ */ React.memo(function Weeks(p: WeeksProps) {
   ));
 });
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, onLeaveMonth: 1, className: 1 } as const;
+const OWN = { weekNumbers: 1, value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, onLeaveMonth: 1, className: 1 } as const;
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
 
@@ -278,7 +289,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const on = React.useMemo<DayHandlers>(() => ({ pick: (d) => live.current.pick(d), focus: (d) => live.current.focus(d), hover: (d) => { if (live.current.hover) live.current.hover(d); } }), []);
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   return (
-    <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.pairedNav && 'dk-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">
+    <div {...rest} ref={ref} className={cn('dk-calendar', presets && 'dk-calendar--presets', props.weekNumbers && 'dk-calendar--weeks', props.pairedNav && 'dk-calendar--paired-' + props.pairedNav, props.className)} data-component="calendar">
       <div className="dk-calendar__header">
         <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={props.previousLabel || sds.labels.previousMonth} size="sm" variant="ghost" hideTitle
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(addMonths(month, -1)); }} ref={prevNav} />
@@ -289,11 +300,11 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
       </div>
       <table ref={grid} lang={lang} className="dk-calendar__grid" role="grid" aria-labelledby={titleId} onKeyDown={onKeyDown}>
         <thead>
-          <tr>{Array.from({ length: 7 }, (_, i) => addDays(first, i)).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
+          <tr>{props.weekNumbers ? <th scope="col" className="dk-calendar__week" abbr={sds.labels.week}><span aria-hidden>{sds.labels.weekShort}</span><span className="dk-visually-hidden">{sds.labels.week}</span></th> : null}{Array.from({ length: 7 }, (_, i) => addDays(first, i)).map((d) => <th key={d.getDay()} scope="col" abbr={long.format(d)}><span aria-hidden>{short.format(d)}</span><span className="dk-visually-hidden">{long.format(d)}</span></th>)}</tr>
         </thead>
         <tbody>
           <Weeks month={monthTime} ws={ws} stop={stop.getTime()} value={value ? value.getTime() : null} marked={marked ? marked.getTime() : null} min={min ? min.getTime() : null} max={max ? max.getTime() : null}
-            locale={locale} isDateDisabled={props.isDateDisabled} isDateSelected={props.isDateSelected} dayLabel={props.dayLabel} dayClassName={props.dayClassName} hideOutside={!!props.hideOutside} hover={!!props.onDayHover} on={on} />
+            locale={locale} isDateDisabled={props.isDateDisabled} isDateSelected={props.isDateSelected} dayLabel={props.dayLabel} dayClassName={props.dayClassName} hideOutside={!!props.hideOutside} hover={!!props.onDayHover} on={on} week={props.weekNumbers ? sds.labels.week : null} />
         </tbody>
       </table>
       {presets ? <PresetList label={sds.labels.presets} items={presets} allowed={(d) => !disabled(d)} current={{ start: value, end: null }} onPick={(it) => { if (it.start) pick(it.start); }} /> : null}

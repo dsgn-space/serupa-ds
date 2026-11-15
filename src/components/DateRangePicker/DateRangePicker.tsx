@@ -49,6 +49,8 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
   /** A BCP 47 locale for the typed format, names and first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
+  /** A column of week numbers before the days (ISO 8601), as Calendar's weekNumbers. Default: false. */
+  weekNumbers?: boolean | undefined;
   weekStartsOn?: number | undefined;
   /** 'sm', 'md' (default) or 'lg', like Input. */
   size?: 'sm' | 'md' | 'lg' | undefined;
@@ -95,7 +97,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>('DateRangePicker', function DateRangePicker(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, weekStartsOn, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, weekStartsOn, weekNumbers, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
   const size = oneOf(SIZES, props.size, 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
@@ -211,7 +213,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   };
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => setBase(first ? n : addMonths(n, -1))} value={first ? value.start : value.end}
-      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} autoFocus={first} hideOutside={two}
+      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={first} hideOutside={two}
       isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });

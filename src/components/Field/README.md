@@ -1,6 +1,6 @@
 # Field
 
-A label, an optional hint and an error message around one form control, wired up for screen readers. The label names the control, the hint and error are added to its `aria-describedby`, and an error makes the control invalid. It works with Input, Textarea, Select and any native control, a plain `<select>` with its options included. With `group` it renders a `<fieldset>` and `<legend>` for a set of checkboxes or radios.
+A label, an optional hint and a message (an error, a warning or "checking…") around one form control, wired up for screen readers. The label names the control, the hint and error are added to its `aria-describedby`, and an error makes the control invalid. It works with Input, Textarea, Select and any native control, a plain `<select>` with its options included. With `group` it renders a `<fieldset>` and `<legend>` for a set of checkboxes or radios.
 
 **Also called:** form field, form label, fieldset.
 
@@ -41,7 +41,7 @@ Drawn from the `Horizontal` story.
 2. **Optional** (`.dk-field__optional`): says the field can be left empty, when most are required.
 3. **Control** (`.dk-field__control`): the input, select or other control it wraps.
 4. **Hint** (`.dk-field__hint`): help on what to enter, linked to the control for screen readers.
-5. **Error** (`.dk-field__error`): what's wrong and how to fix it, with an icon, linked to the control too.
+5. **Error** (`.dk-field__error`): what's wrong and how to fix it, with an icon, linked to the control too. A warning (`.dk-field__warning`) or "checking…" (`.dk-field__checking`) sits in the same place.
 
 ## Usage
 
@@ -49,6 +49,10 @@ Drawn from the `Horizontal` story.
 - Show errors after someone leaves the field or submits, not on every keystroke, and on submit move focus to the first field with an error.
 - Stack fields with `gap-5` or `gap-6` between them.
 - For a dense settings page, use `orientation="horizontal"`: the labels line up in a column at the start and the controls beside them. Keep labels short enough for the 192px column (`--field-label-width`). Give fields a full-width parent: a horizontal field stacks again on its own once it's too narrow for both columns. A set of checkboxes or radios (`group`) stays stacked.
+
+- Use `warning` for advice that doesn't stop the form: "A project with this name was archived last year", "This date is a public holiday". The control stays valid and the form sends. If the answer can't be sent, it's an `error`.
+- Use `checking` while an answer is checked on the server (a username, an address, a coupon), with words that say what: "Checking the name…". Set it once the check takes longer than a moment, and replace it with an `error`, a `warning` or nothing when the answer comes. Field shows one message at a time: an error, then "checking…", then a warning.
+- Don't confirm a right answer field by field. People expect it to be right; a green tick on each field is noise.
 
 ### Do and don't
 
@@ -83,7 +87,8 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 - An error that appears or changes after the Field mounts (after a submit, for example) is announced politely, since focus is usually elsewhere and a description is only read on focus. An error already there on first render isn't announced, and neither are errors that appear as an ErrorSummary in the same form takes focus, since the summary reads them all.
 - If nothing on the page has the control's id (a control Field can't reach, with no `id` passed), Field warns once in the console: the label would name nothing.
 - For radios and checkboxes use `group`: screen readers announce the legend when focus enters the set.
-- Label, hint, error and `*` keep 4.5:1 on `surface` in every theme (`Field.test.tsx`).
+- A warning and "checking…" join the control's description like an error, and are announced politely when they appear, but don't make the control invalid. While checking, the Field has `aria-busy`. The warning's icon and the spinner are decorative.
+- Label, hint, error, warning and `*` keep 4.5:1 on `surface` in every theme (`Field.test.tsx`).
 - **Keyboard:** nothing of its own. Tab goes to the control it wraps, and a click on the label focuses that control.
 
 ## Props
@@ -92,6 +97,8 @@ Label, hint, control and error stack with 6px between them (`--field-gap`). With
 | --- | --- | --- | --- |
 | `label` | text or element | | A `<label>` linked to the control; with `group`, the fieldset's `<legend>` |
 | `hint` | text or element | | Help under the label, before the control, in `text-muted`; added to the control's `aria-describedby` |
+| `warning` | text or element | | Advice under the control, in `warning-text` with an icon, that doesn't block sending: the control stays valid. Added to its `aria-describedby` and said politely. An error takes its place |
+| `checking` | text or element | | While the answer is being checked: the words ("Checking the address…") with a small spinner, under the control; `aria-busy` on the Field. Added to the description and said politely. Takes a warning's place; an error takes its place |
 | `error` | text or element | | A message under the control, in `danger-text` with an icon; makes the control invalid (`invalid` on Serupa components, `aria-invalid` on DOM elements) and is added to its `aria-describedby` |
 | `required` | boolean | `false` | A `*` after the label (hidden from screen readers) and `aria-required` on the control; with `group`, "Required" in words in the legend for screen readers. Add the control's own `required` too if you want the browser's check |
 | `optional` | boolean or text | `false` | "(optional)" after the label (the `fieldOptional` label, "(opsional)" in `idLabels`), or your own words. Ignored with `required` |
@@ -121,6 +128,8 @@ Each is an optional override: set it on the page, a container or one field. The 
 | `--field-label-color` | `text` | Label |
 | `--field-hint-color` | `text-muted` | Hint and "(optional)" |
 | `--field-error-color` | `danger-text` | Error message and its icon |
+| `--field-warning-color` | `warning-text` | A warning message and its icon |
+| `--field-checking-color` | `text-muted` | The "checking…" message and its spinner |
 | `--field-required-color` | `danger-text` | The `*` |
 | `--field-label-weight` | `font-medium` | Label weight (500) |
 | `--field-gap` | `spacing-1.5` | Space between label, hint, control and error (6px) |

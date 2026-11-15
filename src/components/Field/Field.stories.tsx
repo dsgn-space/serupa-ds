@@ -19,6 +19,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {};
 export const WithError: Story = { name: 'With an error', args: { error: 'Enter an email address like name@example.com' } };
+export const WithWarning: Story = { name: 'With a warning', args: { label: 'Project name', hint: undefined, required: false, warning: 'A project with this name was archived last year' }, render: (args) => <Field {...args}><Input defaultValue="Atlas" /></Field> };
+export const Checking: Story = { args: { label: 'Username', hint: 'Letters, numbers and dashes', required: false, checking: 'Checking the name…' }, render: (args) => <Field {...args}><Input defaultValue="ada-l" /></Field> };
 export const Optional: Story = { args: { label: 'Company', hint: undefined, required: false, optional: true } };
 export const Disabled: Story = { args: { disabled: true } };
 

@@ -100,6 +100,23 @@ function Navigation() {
 }
 ```
 
+## Tokens in JavaScript
+
+Code that draws without CSS (a canvas, a map, a chart library) can't write `var(--primary)`. `useTokenValue(name, ref?)` gives a token's value as CSS resolves it now, and updates when the theme, mode, contrast, roundness or density changes, on the page or on a section around `ref`, or when the system switches to dark or more contrast. A color comes back as CSS computes it (`rgb(37, 99, 235)`), with light or dark already chosen. `tokenValue(name, element?)` reads it once, in an event handler. Both are `''` in server HTML.
+
+```tsx
+import { useTokenValue } from "@diki-stwn/serupa-ds";
+
+function Sparkline({ points }: { points: number[] }) {
+  const line = useTokenValue("primary");
+  const ref = React.useRef<HTMLCanvasElement>(null);
+  React.useEffect(() => { if (ref.current && line) draw(ref.current, points, line); }, [points, line]);
+  return <canvas ref={ref} width={120} height={32} role="img" aria-label="Sign-ups, rising" />;
+}
+```
+
+Use CSS wherever the thing drawn can take it (an SVG's `stroke="var(--primary)"`, a chart library's CSS colors): it follows the theme without a re-render.
+
 ## Copying
 
 `useCopyToClipboard({ copiedLabel?, announce?, timeout? })` is [CopyButton](?path=/docs/components-actions-copybutton--docs)'s copying for a control that isn't a CopyButton, such as a "Copy link" menu item. `copy(value)` resolves `true` once the value is on the clipboard and `false` when the browser refuses. `copied` stays true for `timeout` ms (2 seconds by default). It says "Copied", or why it couldn't copy, to screen readers unless `announce` is `false`. It works inside a modal Dialog, and where the clipboard API is refused.

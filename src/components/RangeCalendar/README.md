@@ -67,6 +67,7 @@ Drawn from the `Playground` story.
 | `isDateDisabled` | `(date) => boolean` | | Days that can't be an end, struck through |
 | `locale` | `string` | the provider's | Names and the first day of the week |
 | `weekStartsOn` | `0`–`6` | the locale's | |
+| `weekNumbers` | boolean | `false` | Week numbers before the days, as Calendar's `weekNumbers` |
 | `autoFocus` | `boolean` | `false` | Focus the start day (or today) when it appears |
 
 `className`, `ref` and other props go to the outer `<div>`.
