@@ -81,7 +81,7 @@ describe('Accordion', () => {
       <SerupaProvider labels={idLabels}><Accordion id="aid" type="multiple" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion></SerupaProvider>
       <Accordion id="asingle" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion>
     </div>);
-    const all = (id: string) => el(id).querySelector<HTMLButtonElement>('.dk-accordion__all');
+    const all = (id: string) => [...el(id).querySelectorAll('button')].find((b) => !b.closest('h1, h2, h3, h4, h5, h6')) ?? null;   // the one button outside the headings
     expect([all('aall')!.textContent, all('aall')!.type, all('aid')!.textContent, all('asingle')]).toEqual(['Expand all', 'button', 'Buka semua', null]);
     await userEvent.click(all('aall')!);
     expect([state('aall'), onChange.mock.lastCall?.[0], all('aall')!.textContent]).toEqual(['101', ['a', '2'], 'Collapse all']);

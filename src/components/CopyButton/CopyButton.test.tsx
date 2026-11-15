@@ -134,9 +134,9 @@ describe('CopyButton', () => {
     await expect.poll(() => announcerIdle() && shout()).toBe('Couldn’t copy. Select the text and copy it yourself.');
     expect([el('bad').hasAttribute('data-copied'), clicks]).toEqual([false, ['bad']]);
     // Shown, not only said: an error icon (not color alone: its own shape) and "Couldn't copy", for the timeout.
-    const failedIcon = el('bad').querySelector('.dk-copy-btn__icon--failed')!;
+    const [copyIcon, , failedIcon] = [...el('bad').querySelectorAll('svg')].map((s) => s.parentElement);   // copy, done, failed, in that order (each drawn in its own span)
     expect([el('bad').hasAttribute('data-failed'), shown('bad')]).toEqual([true, 'Couldn’t copy']);
-    await expect.poll(() => [getComputedStyle(failedIcon).opacity, getComputedStyle(el('bad').querySelector('.dk-copy-btn__icon--copy')!).opacity]).toEqual(['1', '0']);
+    await expect.poll(() => [getComputedStyle(failedIcon!).opacity, getComputedStyle(copyIcon!).opacity]).toEqual(['1', '0']);
     writeText.mockReset();
     await userEvent.click(el('stop'));
     expect([clicks, writeText.mock.calls.length, el('stop').hasAttribute('data-copied')]).toEqual([['bad', 'stop'], 0, false]);

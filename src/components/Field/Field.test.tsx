@@ -333,21 +333,24 @@ describe('FormErrors', () => {
   });
 });
 
+// The error a control points to with aria-errormessage (null when it has none).
+const errorOf = (input: Element) => { const id = input.getAttribute('aria-errormessage'); return id ? document.getElementById(id) : null; };
+
 describe('Field and the browser\'s own checks', () => {
   describe('a constraint the browser checks is said in words, not only by the red border', () => {
     test('left empty after an edit: the error says so, and the control is invalid and described by it; typing takes it away', async () => {
       await render(<form><Field label="Name" id="nf-name"><Input required /></Field><button>Send</button></form>);
       const input = el('nf-name');
-      expect(input.closest('.dk-field')!.querySelector('.dk-field__error')).toBeNull();   // never on first paint
+      expect(errorOf(input)).toBeNull();   // never on first paint
       await userEvent.type(input, 'a');
       await userEvent.clear(input);
       await userEvent.tab();
       await expect.poll(() => input.getAttribute('aria-invalid')).toBe('true');
-      const error = input.closest('.dk-field')!.querySelector('.dk-field__error')!;
+      const error = errorOf(input)!;
       expect(error.textContent).toBe(input.validationMessage);
-      expect(described('nf-name')).toContain(error.querySelector('[id]')!.id);
+      expect(described('nf-name')).toContain(error.id);
       await userEvent.type(input, 'Ana');
-      await expect.poll(() => input.closest('.dk-field')!.querySelector('.dk-field__error')).toBeNull();
+      await expect.poll(() => errorOf(input)).toBeNull();
       expect(input.hasAttribute('aria-invalid')).toBe(false);
     });
     test('a submit shows every failing field\'s message, in the provider\'s words', async () => {
@@ -355,7 +358,7 @@ describe('Field and the browser\'s own checks', () => {
         <Field label="Email" id="nf-mail"><Input type="email" required /></Field><button id="nf-send">Send</button>
       </form></SerupaProvider>);
       await userEvent.click(el('nf-send'));
-      await expect.poll(() => el('nf-mail').closest('.dk-field')!.querySelector('.dk-field__error')?.textContent).toBe('Isi kolom ini.');
+      await expect.poll(() => errorOf(el('nf-mail'))?.textContent).toBe('Isi kolom ini.');
       expect(el('nf-mail').getAttribute('aria-invalid')).toBe('true');
     });
     test('an error you pass wins over the browser\'s', async () => {
@@ -364,7 +367,7 @@ describe('Field and the browser\'s own checks', () => {
       await userEvent.clear(el('nf-own'));
       await userEvent.tab();
       await new Promise((r) => setTimeout(r, 30));
-      expect(el('nf-own').closest('.dk-field')!.querySelector('.dk-field__error')!.textContent).toBe('Pick a name');
+      expect(errorOf(el('nf-own'))!.textContent).toBe('Pick a name');
     });
   });
 });
