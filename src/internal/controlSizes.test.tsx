@@ -18,6 +18,11 @@ import { SearchInput } from '../components/SearchInput/SearchInput';
 import { SegmentedControl } from '../components/SegmentedControl/SegmentedControl';
 import { Select } from '../components/Select/Select';
 import { TimePicker } from '../components/TimePicker/TimePicker';
+import { Checkbox, CheckboxGroup } from '../components/Checkbox/Checkbox';
+import { Radio, RadioGroup } from '../components/Radio/Radio';
+import { Switch } from '../components/Switch/Switch';
+import { Textarea } from '../components/Textarea/Textarea';
+import { SerupaProvider } from './provider';
 
 type Size = 'sm' | 'md' | 'lg';
 const OPTIONS = [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }];
@@ -69,3 +74,32 @@ describe.each((['comfortable', 'compact'] as const).flatMap((density) => (['sm',
     expect(rows.map((r) => [r.name, r.text]), 'text sizes').toEqual(rows.map((r) => [r.name, rows[0]!.text]));
   });
 });
+
+// size on a SerupaProvider: every control inside that sets none takes it, as a dense admin screen or one form wants,
+// without size="sm" on each. A control's own size still wins.
+describe('size from a SerupaProvider', () => {
+  test('every one-line control inside <SerupaProvider size="sm"> is 24px; one with its own size keeps it', async () => {
+    const screen = await render(<SerupaProvider size="sm"><div id="small">{CONTROLS.map(([name, make]) => <div key={name} data-name={name}>{make(undefined as unknown as Size)}</div>)}</div><Input id="own" size="lg" aria-label="Own" /></SerupaProvider>);
+    const off = [...screen.container.querySelectorAll<HTMLElement>('#small > div')].filter((d) => Math.round(box(d).getBoundingClientRect().height) !== 24).map((d) => d.dataset.name);
+    expect(off).toEqual([]);
+    expect(Math.round(box(document.getElementById('own')!.parentElement!).getBoundingClientRect().height)).toBe(44);
+  });
+
+  test('Checkbox, Radio, Switch and Textarea take it too, alone and in a group; with none, md', async () => {
+    await render(<>
+      <SerupaProvider size="lg"><div id="lg">
+        <Checkbox>Alone</Checkbox>
+        <CheckboxGroup name="g" aria-label="Group"><Checkbox value="a">A</Checkbox></CheckboxGroup>
+        <RadioGroup name="plan" aria-label="Plan"><Radio value="a">A</Radio></RadioGroup>
+        <Switch>On</Switch>
+        <Textarea aria-label="Note" />
+      </div></SerupaProvider>
+      <div id="none"><Checkbox>Plain</Checkbox></div>
+    </>);
+    const sizes = [...document.querySelectorAll('#lg [class*="--size-"]')].map((e) => (e.className.match(/--size-(\w+)/) || [])[1]);
+    expect(sizes.length).toBeGreaterThanOrEqual(5);
+    expect(new Set(sizes)).toEqual(new Set(['lg']));
+    expect(document.querySelector('#none [class*="--size-"]')!.className).toContain('--size-md');
+  });
+});
+
