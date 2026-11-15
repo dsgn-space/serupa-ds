@@ -45,7 +45,7 @@ const { Text } = window.Serupa;
 
 - Every tone keeps 4.5:1 on `surface` in every theme (`Text.test.tsx`). On other backgrounds, check it yourself.
 - Don't use color alone to say something is wrong: say it in the words too.
-- A truncated line hides the rest: put the full text in a `title` or somewhere else on the page.
+- A truncated line hides the rest. To show it on hover, keyboard focus and tap, use [TruncatedText](../TruncatedText/README.md); otherwise put the full text somewhere else on the page.
 - With `lines`, the hidden lines are still read by screen readers and found by find-in-page; only the eye misses them. Give people who see the screen a way to the rest: a link to the full item, or, to open it in place, [ShowMore](../ShowMore/README.md) instead of Text.
 - **Keyboard:** none: inline text, not focusable.
 
