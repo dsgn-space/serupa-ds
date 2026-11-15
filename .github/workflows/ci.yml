@@ -49,8 +49,10 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
+      actions: read
     outputs:
       hold: ${{ steps.hold.outputs.hold }}
+      x86runner: ${{ steps.runner.outputs.x86runner }}
       wide: ${{ steps.plan.outputs.wide }}
       full: ${{ steps.plan.outputs.full }}
       since: ${{ steps.plan.outputs.since }}
@@ -88,6 +90,28 @@ jobs:
             echo "hold=1" >> "$GITHUB_OUTPUT"
             echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
+      # Where the x86 jobs run: SERUPA_X86_RUNNER (the project's machines), or GitHub's runners for a fork's pull request,
+      # when the variable is unset, or when the project's machines look gone: a job of this repository has waited more
+      # than 10 minutes for a self-hosted runner. On 14 Nov the burst runner was off for an hour and a queue run waited
+      # for it the whole time; now the next run goes to GitHub's runners on its own (tools/runner-watch.mjs reports it).
+      - id: runner
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          X86: ${{ vars.SERUPA_X86_RUNNER }}
+          FORK: ${{ github.event.pull_request.head.repo.fork == true }}
+        run: |
+          set -euo pipefail
+          runner="$X86"
+          if [ "$FORK" = true ] || [ -z "$X86" ]; then runner='"ubuntu-24.04"'
+          elif ! stuck=$(node tools/runner-watch.mjs --stuck 10); then
+            echo "::warning title=Runner check::GitHub didn't answer, so the x86 jobs go to $X86 as set."
+          elif [ -n "$stuck" ]; then
+            runner='"ubuntu-24.04"'
+            echo "::warning title=x86 runners look gone::${stuck%%$'\n'*} (and $(( $(wc -l <<< "$stuck") - 1 )) more) has waited over 10 minutes for a self-hosted runner, so this run's x86 jobs go to GitHub's runners."
+          fi
+          echo "x86runner=$(echo "$runner" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
+          echo "x86 jobs run on: $runner"
       - id: plan
         shell: bash
         env:
@@ -118,15 +142,18 @@ jobs:
           # languages in the same base jobs (run.mjs), and Visual when the pictures can change: the
           # failures a pull request meets most, so they are found before the queue, where one failure drops every
           # group behind it.
-          x86='{"include":[
-            {"group":"components","part":"base","shard":"1/3"},{"group":"components","part":"base","shard":"2/3"},{"group":"components","part":"base","shard":"3/3"}'
+          # Shards: a pull request's run takes 3 base and 5 Visual jobs (8, its max-parallel). A queue group has the 28
+          # burst slots behind it and gates every merge, so it splits wider: 5 base, 5 locale and 7 Visual (17 of its 24),
+          # about a third off its longest job (each shard still pays about a minute of setup).
+          shards() { local g=$1 p=$2 n=$3 out="" k; for k in $(seq 1 "$n"); do out="$out,{\"group\":\"$g\"${p:+,\"part\":\"$p\"},\"shard\":\"$k/$n\"}"; done; echo "$out"; }
+          if [ "$EVENT" = merge_group ]; then nb=5; nl=5; nv=7; else nb=3; nl=3; nv=5; fi
+          x86='{"include":['"$(shards components base "$nb" | cut -c2-)"
           if [ "$EVENT" != pull_request ] || [ -z "$since" ]; then
-            x86="$x86"',{"group":"components","part":"locale","shard":"1/3"},{"group":"components","part":"locale","shard":"2/3"},{"group":"components","part":"locale","shard":"3/3"}'
+            x86="$x86$(shards components locale "$nl")"
           fi
-          # Visual in five shards: in four, it was the longest group of a full queue run once Storybook went to four
-          # (476 to 490 s against 295 to 435 for the rest, 13 Nov). A pull request's run then takes 8 x86 runners at most
-          # (3 base and 5 Visual), its max-parallel; a queue group 11 of its 16.
-          [ -n "$visual" ] && x86="$x86"',{"group":"visual","shard":"1/5"},{"group":"visual","shard":"2/5"},{"group":"visual","shard":"3/5"},{"group":"visual","shard":"4/5"},{"group":"visual","shard":"5/5"}'
+          # Visual in five shards on a pull request: in four, it was the longest group of a full queue run once Storybook
+          # went to four (476 to 490 s against 295 to 435 for the rest, 13 Nov).
+          [ -n "$visual" ] && x86="$x86$(shards visual "" "$nv")"
           x86="$x86]}"
           # A narrowed run that leaves a group nothing to test (a change to docs, tools or workflows alone) doesn't
           # start its jobs: each would take a runner, set up and run no test.
@@ -323,7 +350,7 @@ jobs:
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1' && needs.plan.outputs.x86any == '1'
     # The project's x86 runners take these for the queue, main and pull requests from this repository (a fork's run
     # stays on GitHub's runners): with one group in the queue most of the 30 sat idle while pull requests waited.
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
@@ -331,10 +358,10 @@ jobs:
     strategy:
       # On a pull request the first failing job cancels the others; the queue and main run every job to the end.
       fail-fast: ${{ github.event_name == 'pull_request' }}
-      # A pull request takes at most eight x86 runners at once, a queue group sixteen, so pull requests can't fill the
-      # 30 and starve the queue. The queue's other jobs stay on GitHub's runners: with every queue job on the x86
+      # A pull request takes at most eight x86 runners at once, a queue group 24 of the 28 burst slots, so pull
+      # requests can't fill them and starve the queue. The queue's other jobs stay on GitHub's runners: with every queue job on the x86
       # runners (12 Nov), five groups left 27 jobs waiting for them while GitHub's runners stood idle.
-      max-parallel: ${{ github.event_name == 'pull_request' && 8 || 16 }}
+      max-parallel: ${{ github.event_name == 'pull_request' && 8 || 24 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
       # A fetch that stalls has no timeout of its own, and one held a queue group for the job's whole 30 minutes

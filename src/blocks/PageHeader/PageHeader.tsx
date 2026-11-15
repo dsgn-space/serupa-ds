@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { Breadcrumb, BreadcrumbItem } from '../../components/Breadcrumb/Breadcrumb';
 import { Heading } from '../../components/Heading/Heading';
-import { Button, ButtonBase } from '../../components/Button/Button';
+import { Button } from '../../components/Button/Button';
+import { IconButton } from '../../components/IconButton/IconButton';
 import { Menu, MenuItem } from '../../components/Menu/Menu';
 import { TabNav, TabNavLink } from '../../components/TabNav/TabNav';
 
@@ -82,7 +83,7 @@ export function PageHeader({ breadcrumb, title, description, primary, secondary 
               <>
                 <div className="hidden flex-wrap gap-2 sm:flex">{secondary.map((a) => button(a, 'secondary'))}</div>
                 <div className="sm:hidden">
-                  <Menu placement="bottom-end" trigger={<ButtonBase variant="secondary" icon="more_horiz" aria-label={moreLabel} />}>
+                  <Menu placement="bottom-end" trigger={<IconButton variant="secondary" icon="more_horiz" label={moreLabel} hideTitle />}>
                     {secondary.map((a) => <MenuItem key={a.label} href={a.disabled ? undefined : a.href} icon={a.icon} disabled={a.disabled} onSelect={a.onSelect}>{a.label}</MenuItem>)}
                   </Menu>
                 </div>
