@@ -94,8 +94,8 @@ Each is an optional override: set it on the page, a container or one BottomNav. 
 | `--bottom-nav-bg` | `surface` | The bar's background. |
 | `--bottom-nav-border` | `border` | The hairline along its top. |
 | `--bottom-nav-text` | `text-muted` | A link's icon and label (4.5:1 on bg). |
-| `--bottom-nav-text-hover` | `text` | A link under the pointer. |
-| `--bottom-nav-icon-bg-hover` | `secondary` | The pill behind the icon under the pointer. |
+| `--bottom-nav-text-hover` | `text` | A link under the pointer (not the current one, which keeps its own color). |
+| `--bottom-nav-icon-bg-hover` | `secondary` | The pill behind the icon under the pointer (not on the current item, which keeps its own fill). |
 | `--bottom-nav-icon-bg-pressed` | `secondary-hover` | The pill behind an item's icon while the item is held down, one step past hover (not on the current item, which keeps its own fill). |
 | `--bottom-nav-text-active` | `primary` | The current page's icon and label (4.5:1 on bg). |
 | `--bottom-nav-icon-bg-active` | `primary-subtle` | The pill behind the current page's icon. |
