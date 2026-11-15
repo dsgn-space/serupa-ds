@@ -32,6 +32,7 @@ const { Grid, Card } = window.Serupa;
 
 - Prefer `columns="auto"` with a `minColumnWidth` that suits the content, so the grid fits any screen. A fixed number of columns stays the same on a phone.
 - To cap the columns ("never more than three"), give `columns` a number and a `minColumnWidth`: the grid shows that many on a wide screen and fewer as they would get narrower than `minColumnWidth`, with no breakpoints.
+- When the design names the columns at each width, give `columns` (and `gap`) one value per width: `columns={{ base: 1, sm: 2, lg: 4 }}`. The widths are `sm` (640px), `md` (768px) and `lg` (1024px); each holds until the next one set. With `minColumnWidth` too, each is "up to".
 - Use `fill` when a few cells should share the width (two featured cards). Leave it off when cells should line up with fuller rows above or in other grids.
 - Use `as="ul"` when the cells are a list of things.
 - Use the same `gap` as the layout around the grid, so the spacing reads as one system.
@@ -52,10 +53,10 @@ const { Grid, Card } = window.Serupa;
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root element (`as`). |
-| `columns` | `1` to `12` \| `'auto'` | `'auto'` | A number of equal columns, or as many as fit. A number with `minColumnWidth` is "up to": that many, fewer on a narrower grid |
+| `columns` | `1` to `12` \| `'auto'`, or a number per width: `{ base, sm, md, lg }` | `'auto'` | A number of equal columns, or as many as fit. A number with `minColumnWidth` is "up to": that many, fewer on a narrower grid |
 | `minColumnWidth` | a CSS length, or a sizing token name such as `'container-3xs'` | `container-3xs` (256px) with `'auto'`, none with a number | The narrowest a column gets. On a grid narrower than that, the one column takes the whole width |
 | `fill` | boolean | `false` | With `'auto'` or "up to": a short row's cells stretch across the empty columns (`auto-fit`). A fixed number of columns ignores it |
-| `gap` | a spacing step: `0` `0.5` `1` `1.5` `2` `2.5` `3` `3.5` `4` `5` `6` `7` `8` `9` `10` `11` `12` `14` `16` `20` `24` | `4` (16px) | The space between cells |
+| `gap` | a spacing step: `0` `0.5` `1` `1.5` `2` `2.5` `3` `3.5` `4` `5` `6` `7` `8` `9` `10` `11` `12` `14` `16` `20` `24` | `4` (16px) | The space between cells. Or one per width: `{ base: 2, md: 4 }` |
 | `as` | `'div'` \| `'section'` \| `'ul'` \| `'ol'` | `'div'` | The element. A list loses its bullets, margins and padding |
 
 A fixed number of columns doesn't change with the screen: for that, use `'auto'`, or add a `minColumnWidth`. A Grid inside another starts from its own defaults; it doesn't take the outer one's `gap` or `minColumnWidth`. `className`, `style`, `ref` and everything else go to the element, which has `data-component="grid"`.

@@ -12,6 +12,12 @@
   - button "Show options"
 - button "Schedule"
 
+# DateOfBirth
+- text: Date of birth mm/dd/yyyy. In the calendar, click the month for the months and years.
+- textbox "Date of birth":
+  - /placeholder: mm/dd/yyyy
+- button "Choose a date"
+
 # Disabled
 - textbox "Date" [disabled]:
   - /placeholder: mm/dd/yyyy

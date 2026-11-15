@@ -29,6 +29,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
    - 4.1.3, 3.3.3: a failed load says so once, in the table's place, with Try again (EmptyLoadFailed).
    - Changing the search or a filter goes back to page 1, so nobody lands on an empty page 3, and lets go of the
      selected rows it hides, so "2 selected" never counts rows nobody can see, and a bulk action never reaches them.
+   - Past one page, the bulk actions offer "Select all 24": every matching row, on every page, so an action can
+     reach them all without paging through. "All 24 selected" says when it does.
    - 4.1.3: Archive and Export say what they did in a toast. Archive takes the rows away at once, with Undo; it's done
      for good (onArchive) only when the toast closes without Undo. */
 
@@ -168,6 +170,8 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
           onClearFilters={clear}
           selectedCount={picked.length}
           onClearSelection={() => setPicked([])}
+          matchingCount={pages > 1 ? found.length : undefined}
+          onSelectAll={() => setPicked(found.map((p) => p.name))}
           bulkActions={<><Button size="sm" variant="outline" onClick={exportRows}>Export</Button><Button size="sm" variant="outline" onClick={archive}>Archive</Button></>}
         >
           {loadFailed ? (

@@ -370,6 +370,46 @@
             "cssVar": "--button-border-disabled"
           }
         }
+      },
+      "on-dark": {
+        "$type": "color",
+        "$value": "{color.white}",
+        "$description": "onMedia=\"dark\": the ink every variant is drawn in over dark media (a primary button's fill; the others' text, border and ring).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-on-dark"
+          }
+        }
+      },
+      "on-dark-text": {
+        "$type": "color",
+        "$value": "{color.black}",
+        "$description": "onMedia=\"dark\": a primary button's text, on the ink.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-on-dark-text"
+          }
+        }
+      },
+      "on-light": {
+        "$type": "color",
+        "$value": "{color.black}",
+        "$description": "onMedia=\"light\": the ink every variant is drawn in over light media.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-on-light"
+          }
+        }
+      },
+      "on-light-text": {
+        "$type": "color",
+        "$value": "{color.white}",
+        "$description": "onMedia=\"light\": a primary button's text, on the ink.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--button-on-light-text"
+          }
+        }
       }
     },
     "spacing": {

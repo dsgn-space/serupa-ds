@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { color, css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, css, lowContrast } from '../../../tools/test/vitest/helpers';
 import { Link } from './Link';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -206,5 +206,29 @@ describe('Link', () => {
       ['hover', 'var(--link-text-hover, var(--primary-hover))', 'var(--surface)', 4.5],
       ['focus ring', 'var(--link-focus-ring, var(--focus-ring))', 'var(--surface)', 3],
     ])).toEqual([]);
+  });
+});
+
+describe('Link onMedia', () => {
+  test('white on dark media and black on light in every theme, hover and focus ring too; anything else is left out', async () => {
+    await render(<div id="lm">
+      <Link id="lm-dark" href="#a" onMedia="dark">Read the story</Link>
+      <Link id="lm-light" href="#b" onMedia="light">Read the story</Link>
+      <Link id="lm-bad" href="#c" onMedia={'pink' as 'dark'}>Read the story</Link>
+    </div>);
+    const style = document.head.appendChild(document.createElement('style'));
+    style.textContent = '#lm * { transition: none !important; }';
+    const seen = new Set<string>();
+    for (const th of THEMES) {
+      document.getElementById('lm')!.setAttribute('data-theme', th);
+      seen.add(css(document.getElementById('lm-dark')).color + ' / ' + css(document.getElementById('lm-light')).color);
+    }
+    expect([...seen]).toEqual(['rgb(255, 255, 255) / rgb(0, 0, 0)']);
+    await userEvent.hover(document.getElementById('lm-dark')!);
+    expect(css(document.getElementById('lm-dark')).color).toBe('rgb(255, 255, 255)');
+    document.getElementById('lm-light')!.focus();
+    expect(css(document.getElementById('lm-light')).outlineColor).toBe('rgb(0, 0, 0)');
+    expect(document.getElementById('lm-bad')!.className).toBe('dk-link');
+    style.remove();
   });
 });

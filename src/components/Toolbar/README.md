@@ -35,11 +35,19 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
 - One choice out of a few: use [SegmentedControl](../SegmentedControl/README.md) or a [RadioGroup](../Radio/README.md).
 - A site's main links: use [Navbar](../Navbar/README.md) or [Sidebar](../Sidebar/README.md). A toolbar is for controls, not navigation.
 
+## Anatomy
+
+Drawn from the `MoreMenu` story.
+
+1. **Toolbar** (`.dk-toolbar`): the row (or column) of controls, on its own surface, with one Tab stop.
+2. **More** (`.dk-toolbar__more`): with `overflow`, the button at the end of the row that opens the controls with no room; it shows only while one is hidden.
+
 ## Usage
 
 - Put any controls inside, at any depth: Buttons, IconButtons, ToggleButtons, ButtonGroups, a Menu's trigger, a Select or an Input. Set `size` on the toolbar and every button in it takes it, in its ButtonGroups too (a button's own `size` still wins); give a Select or an Input in it the same `size` yourself.
 - Use a vertical [Divider](../Divider/README.md) between groups in a row, or a horizontal one in a column. It takes the row's height.
 - Disabled controls are skipped by the arrow keys. To keep one reachable so people can find it, use `aria-disabled` instead of `disabled`.
+- When a row may not fit (a narrow window, a side panel), set `overflow`: the row stops wrapping, and the controls with no room move into a More menu at the end, which shows only while something is in it. Give the controls that must stay `data-priority` (higher stays longer, default 0); among equals the last moves first. Buttons, IconButtons and ToggleButtons move (a ButtonGroup moves whole, each button its own item, a toggle as a checked item); fields, Selects and Menus stay where they are, and a Divider left with nothing on one side goes with them. Choosing an item presses the control itself. Don't build a More menu by hand for this. (`MoreMenu`)
 - Controls added or removed later join the arrow-key order on their own.
 - Inside a text field, the arrows, Home and End stay the field's. Tab leaves the field.
 - A composite with its own arrow keys, such as a SegmentedControl, keeps them. Prefer ToggleButtons in a ButtonGroup, which the toolbar moves through one by one.
@@ -61,6 +69,8 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
 | Home / End | The first or last control |
 | Tab / Shift+Tab | Out of the toolbar |
 
+With `overflow`, hidden controls leave the arrow-key order and the More button joins it at the end; a control chosen from its menu is pressed as if clicked, and focus returns to More.
+
 Your `onKeyDown` runs before the toolbar's own keys, so `e.preventDefault()` in it keeps the toolbar from moving focus on that key. A Menu opened from the toolbar keeps its own keys, and closing it returns focus to its trigger.
 
 - **Contrast:** it adds no colors to its controls. Text placed straight inside reads 4.5:1 on its background in every theme (`Toolbar.test.tsx`).
@@ -72,6 +82,8 @@ Your `onKeyDown` runs before the toolbar's own keys, so `e.preventDefault()` in 
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div role="toolbar">`. |
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | A wrapping row, moved through with Left and Right, or a column, moved through with Up and Down. |
+| `overflow` | boolean | `false` | In a row, moves the controls with no room into a More menu at the end, instead of wrapping. Lowest `data-priority` first. |
+| `moreLabel` | string | `'More'` | The More button's name (`labels.toolbarMore`). |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | none | The size of every Button, IconButton and ToggleButton in it that doesn't set its own (24, 32 or 44px). |
 | `aria-label` | string | none | What the controls are for ("Text formatting"). |
 | `children` | `ReactNode` | | The controls, at any depth. |

@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { userEvent, page } from 'vitest/browser';
 import { THEMES, contrast, css, forcedColors, settle, withMotion, settled, color, press } from '../../../tools/test/vitest/helpers';
 import { Combobox, type ComboboxOption, type ComboboxOptionGroup } from './Combobox';
+import * as Stories from './Combobox.stories';
 import { Field } from '../Field/Field';
 import { Loader } from '../Loader/Loader';
 import { DEFAULT_LABELS, idLabels } from '../../internal/labels';
@@ -1158,6 +1159,39 @@ describe('Combobox: freeText, the typed text is the value', () => {
     await selectAll();
     await userEvent.keyboard('dung');
     expect(f.value).toBe('dung');
+  });
+});
+
+describe('Combobox: a search box with recent searches (the SearchWithRecent recipe)', () => {
+  const Recipe = Stories.SearchWithRecent.render as unknown as () => React.ReactElement;
+  const optionTexts = () => [...document.querySelectorAll('[role=option]')].map((o) => o.textContent);
+  const groupNames = () => [...document.querySelectorAll('[role=listbox] [role=group]')].map((g) => g.getAttribute('aria-label') || document.getElementById(g.getAttribute('aria-labelledby') || '')?.textContent);
+
+  test('opened empty it lists the recent searches under their heading; typing swaps them for suggestions', async () => {
+    const screen = await render(<Recipe />);
+    const box = screen.getByRole('combobox', { name: 'Search help articles' });
+    await box.click();
+    await expect.poll(optionTexts).toEqual(['invoice', 'password']);
+    expect(groupNames()).toEqual(['Recent searches']);
+    await userEvent.keyboard('refu');
+    await expect.poll(optionTexts).toEqual(['Refunds', 'Refund a card payment']);
+    expect(groupNames()).toEqual(['Suggestions']);
+  });
+
+  test('Enter adds the text to the recent searches, newest first, and Clear recent searches empties them', async () => {
+    const screen = await render(<Recipe />);
+    const box = screen.getByRole('combobox', { name: 'Search help articles' });
+    await box.click();
+    await userEvent.keyboard('{Escape}');
+    await userEvent.keyboard('tax{Enter}');
+    await userEvent.keyboard('{Control>}a{/Control}{Backspace}');
+    await box.click();
+    await expect.poll(optionTexts).toEqual(['tax', 'invoice', 'password']);
+    await userEvent.keyboard('{Escape}');
+    await screen.getByRole('button', { name: 'Clear recent searches' }).click();
+    await box.click();
+    await expect.poll(optionTexts).toEqual([]);
+    expect(screen.getByText('No recent searches').element()).toBeTruthy();
   });
 });
 
