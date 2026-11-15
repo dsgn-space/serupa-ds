@@ -4,7 +4,9 @@
 //      sections (Added, Changed, Deprecated, Removed, Fixed, Security), with what's already there.
 //   2. The changesets are deleted, and tools/release.mjs makes the release: the biggest bump among them
 //      (major, minor or patch), the notes under the new version, and the version in every file.
-//   3. When the new version has an RFC (docs/rfcs/<version>.md), its status line says it is released, as the upgrades
+//   3. docs/since.json gives this version to every component, and every prop, that's new or changed in the API
+//      baselines since the last release (tools/since.mjs), for the "Added in" line on its page.
+//   4. When the new version has an RFC (docs/rfcs/<version>.md), its status line says it is released, as the upgrades
 //      check asks of a shipped version: without it, the Release pull request for 15.0.0 failed in the queue.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -61,6 +63,9 @@ for (const f of files) fs.rmSync(path.join(DIR, f));
 
 execFileSync(process.execPath, [path.join(P, 'tools', 'release.mjs'), bump], { stdio: 'inherit' });
 const { version } = JSON.parse(fs.readFileSync(path.join(P, 'package.json'), 'utf8'));
+// Each component page's "Added in / changed in" line (docs/since.json): what the API baselines gained since the last
+// release belongs to this one.
+execFileSync(process.execPath, [path.join(P, 'tools', 'since.mjs'), '--release', version], { stdio: 'inherit' });
 const rfc = path.join(P, 'docs', 'rfcs', `${version}.md`);
 if (fs.existsSync(rfc)) {
   const day = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });

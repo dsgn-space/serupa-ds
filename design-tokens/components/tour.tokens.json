@@ -66,7 +66,7 @@
     "shadow": {
       "shadow": {
         "$type": "shadow",
-        "$value": "{shadow.shadow-lg}",
+        "$value": "{shadow.elevation-overlay}",
         "$description": "The panel's shadow.",
         "$extensions": {
           "com.serupa": {
