@@ -5713,6 +5713,207 @@
           "cssVar": "--elevation-modal"
         }
       }
+    },
+    "elevation-modal-up": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "hex": "#000000",
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": -20,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 25,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -5,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "hex": "#000000",
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": -8,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 10,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -6,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Level 4 for a panel against the bottom edge (a bottom sheet): `elevation-modal` cast upward, toward the page, from the same light.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-modal-up"
+        }
+      }
+    },
+    "elevation-modal-left": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "hex": "#000000",
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": -20,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 25,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -5,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "hex": "#000000",
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": -8,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 10,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -6,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Level 4 for a panel against the right edge: `elevation-modal` cast to the left, toward the page.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-modal-left"
+        }
+      }
+    },
+    "elevation-modal-right": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "hex": "#000000",
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 20,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 25,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -5,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "hex": "#000000",
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 8,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 10,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -6,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "Level 4 for a panel against the left edge: `elevation-modal` cast to the right, toward the page.",
+      "$extensions": {
+        "com.serupa": {
+          "cssVar": "--elevation-modal-right"
+        }
+      }
     }
   },
   "borders": {

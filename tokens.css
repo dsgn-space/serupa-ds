@@ -356,6 +356,9 @@
   --text-shadow-md: 0px 1px 1px rgb(0 0 0 / 0.1), 0px 1px 2px rgb(0 0 0 / 0.1), 0px 2px 4px rgb(0 0 0 / 0.1);
   --text-shadow-lg: 0px 1px 2px rgb(0 0 0 / 0.1), 0px 3px 2px rgb(0 0 0 / 0.1), 0px 4px 8px rgb(0 0 0 / 0.1);
   --text-shadow-none: none;
+  --elevation-modal-up: 0 -20px 25px -5px rgb(0 0 0 / 0.1), 0 -8px 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-left: -20px 0 25px -5px rgb(0 0 0 / 0.1), -8px 0 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-right: 20px 0 25px -5px rgb(0 0 0 / 0.1), 8px 0 10px -6px rgb(0 0 0 / 0.1);
   --dk-more-primary: var(--blue-800);
   --dk-more-primary-hover: var(--blue-900);
   --dk-more-field-action: var(--blue-800);
@@ -2065,6 +2068,9 @@
   --shadow-lg: 0 10px 15px -3px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 4px 6px -4px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
   --shadow-xl: 0 20px 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 8px 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
   --shadow-2xl: 0 25px 50px -12px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 25%, transparent);
+  --elevation-modal-up: 0 -20px 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 0 -8px 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --elevation-modal-left: -20px 0 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), -8px 0 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
+  --elevation-modal-right: 20px 0 25px -5px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent), 8px 0 10px -6px color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) 10%, transparent);
   --elevation-rest: var(--shadow-xs);
   --elevation-part: var(--shadow-sm);
   --elevation-raised: var(--shadow-md);
@@ -2079,6 +2085,9 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --elevation-modal-up: 0 -20px 25px -5px rgb(0 0 0 / 0.1), 0 -8px 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-left: -20px 0 25px -5px rgb(0 0 0 / 0.1), -8px 0 10px -6px rgb(0 0 0 / 0.1);
+  --elevation-modal-right: 20px 0 25px -5px rgb(0 0 0 / 0.1), 8px 0 10px -6px rgb(0 0 0 / 0.1);
   --elevation-rest: var(--shadow-xs);
   --elevation-part: var(--shadow-sm);
   --elevation-raised: var(--shadow-md);

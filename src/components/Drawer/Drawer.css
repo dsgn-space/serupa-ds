@@ -50,9 +50,16 @@
   background: var(--drawer-bg, var(--surface-overlay));
   --dk-row-hover: var(--drawer-row-bg-hover, var(--surface-hover-raised));   /* a List or InlineEdit row in it, hovered or selected */
   --field: var(--drawer-field-bg, var(--field-raised));   /* its form fields, a step up from it in dark */
-  box-shadow: var(--drawer-shadow, var(--elevation-modal));
+  box-shadow: var(--drawer-shadow, var(--dk-drawer-shadow, var(--elevation-modal)));
   position: relative;
 }
+/* The shadow falls from the panel toward the page, from the one light above (AD8): up from a bottom sheet, sideways
+   from a side panel; a top panel's falls down, as a dialog's does. --drawer-shadow still sets one for every side. */
+.dk-drawer--bottom { --dk-drawer-shadow: var(--elevation-modal-up); }
+.dk-drawer--left, .dk-drawer--start { --dk-drawer-shadow: var(--elevation-modal-right); }
+.dk-drawer--right, .dk-drawer--end { --dk-drawer-shadow: var(--elevation-modal-left); }
+.dk-drawer--start:dir(rtl) { --dk-drawer-shadow: var(--elevation-modal-left); }
+.dk-drawer--end:dir(rtl) { --dk-drawer-shadow: var(--elevation-modal-right); }
 /* Behind the panel's outer edge, a copy of its background while a drag pulls it away from the edge (up to 24px,
    Drawer.tsx INWARD) and while it settles back, so a pull inward never opens a gap at the screen's edge (KW5a). */
 .dk-drawer__panel[data-inward]::after { content: ""; position: absolute; inset: var(--spacing-0); translate: var(--dk-drawer-from); background: inherit; pointer-events: none; }

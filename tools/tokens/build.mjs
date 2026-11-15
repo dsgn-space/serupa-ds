@@ -220,7 +220,8 @@ function roundness(all, line) {
 // (a data-brand section's) as a relative color's origin, so every tinted shadow there was dropped.
 const TINT = (_, a) => `color-mix(in srgb, color-mix(in srgb, var(--primary) 30%, black) ${Math.round(Number(a) * 100)}%, transparent)`;
 function tintedShadows(all, line) {
-  const box = all.filter((x) => /^shadow-(2xs|xs|sm|md|lg|xl|2xl)$/.test(x.name));
+  // The directional modal shadows (elevation-modal-up, -left, -right) are box shadows of their own, tinted alike.
+  const box = all.filter((x) => /^(?:shadow-(2xs|xs|sm|md|lg|xl|2xl)|elevation-modal-(?:up|left|right))$/.test(x.name));
   const at = (x) => (typeof x.value === 'object' ? Object.values(x.value)[0] : x.value);
   // The elevation roles (elevation-overlay → shadow-lg) are set again beside the shadows they name: a custom property's
   // var() is worked out where it's set, so one set only on :root would keep the root's shadow inside data-shadow="brand".
