@@ -24852,7 +24852,7 @@
 "space-y-reverse":"child --dk-space-y-reverse:1",
 "sr-only":"#80896d95abf5",
 "stacked-fractions":"font-variant:stacked-fractions;child font-variant:stacked-fractions;font-variant-numeric:stacked-fractions;child font-variant-numeric:stacked-fractions;--dk-numeric-fraction:stacked-fractions",
-"stagger":"child --dk-stagger-delay:min(calc(50ms * (sibling-index() - 1)), 300ms)",
+"stagger":"(no effect)",
 "start-0":"inset-inline-start:0px;left:0px",
 "start-0.5":"inset-inline-start:2px;left:2px",
 "start-1":"inset-inline-start:4px;left:4px",
