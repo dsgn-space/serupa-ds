@@ -67,6 +67,10 @@ describe('Patterns/Sign-up', () => {
     expect(rules()).toEqual(['At least 12 characters, done', 'Not your email address or its name part, not yet']);
     await userEvent.keyboard('{Control>}a{/Control}blue whales sing');
     expect(rules()).toEqual(['At least 12 characters, done', 'Not your email address or its name part, done']);
+    // A new email checks the password again.
+    await userEvent.click(input('sign-up-email'));
+    await userEvent.keyboard('{Control>}a{/Control}blue@example.com');
+    expect(rules()).toEqual(['At least 12 characters, done', 'Not your email address or its name part, not yet']);
   });
 
   test('Create account with problems: a summary that takes focus and links to each field, and nothing sent', async () => {
