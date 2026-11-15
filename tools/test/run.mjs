@@ -138,6 +138,18 @@ const steps = [
   vitest('Checks (Vitest)', 'checks', 'checks', ...(process.env.SERUPA_SHARD && arg('--group') === 'checks' ? [`--shard=${process.env.SERUPA_SHARD}`] : [])),
   ...Object.entries(GROUPS).flatMap(([g, list]) => list.map(node(g))),
 ];
+// SERUPA_VISUAL_BASE=<main's storybook-static> (CI on a pull request, ADR-0016): Visual draws main's pictures first, from
+// that build, then compares this tree with them and reports what differs, for review, instead of comparing with the
+// committed pictures, which another pull request's merge could have made stale.
+if (process.env.SERUPA_VISUAL_BASE && !update.length) {
+  const main = path.join(PROJECT, '.visual-main'), report = path.join(PROJECT, '.visual-review');
+  fs.rmSync(main, { recursive: true, force: true });
+  fs.rmSync(report, { recursive: true, force: true });
+  const at = steps.findIndex((step) => step[3] === 'visual');
+  if (at >= 0) steps.splice(at, 1,
+    ["Visual snapshots: main's", 'node', [path.join(HERE, 'visual.mjs'), '--update'], 'visual', { SERUPA_STORYBOOK: process.env.SERUPA_VISUAL_BASE, SERUPA_VISUAL_DIR: main }],
+    ['Visual snapshots: this change against main', 'node', [path.join(HERE, 'visual.mjs')], 'visual', { SERUPA_VISUAL_DIR: main, SERUPA_VISUAL_REPORT: report }]);
+}
 if (arg('--group')) {
   const g = arg('--group');
   if (!steps.some((step) => step[3] === g)) { console.error(`Unknown --group "${g}" (checks, components, visual or storybook)`); process.exit(2); }

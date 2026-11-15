@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
 import { Icon } from '../Icon/Icon';
@@ -145,7 +146,8 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
   // Until they have (on the server, and in the first render that hydrates it), the Checkboxes among the children
   // stand in, so select-all is enabled, and checked or mixed, from the first paint.
   const known = boxes.size ? boxes : childBoxes(props.children, !!props.disabled);
-  const state: GroupState = { name: props.name || autoName, values: raw.map(String), size: props.size, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, boxes: known };
+  const around = useControlSize(props.size);   // its own size, else a SerupaProvider's around it
+  const state: GroupState = { name: props.name || autoName, values: raw.map(String), size: around, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, boxes: known };
   const api = {
     register(v: string | number, dis: boolean) { const k = String(v); boxes.set(k, dis); typed.set(k, v); rerender((n) => n + 1); return () => { boxes.delete(k); rerender((n) => n + 1); }; },
     toggle(v: string, on: boolean, e: React.ChangeEvent<HTMLInputElement>) { const next = new Set(latest.current.map(String)); if (on) next.add(v); else next.delete(v); emit(next, e); },
@@ -208,7 +210,8 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
   const fromField = useFieldControl(props);
   if (!group) props = fromField;
   const rest = omit(props, OWN);
-  const size = oneOf(SIZES, props.size, oneOf(SIZES, group && group.size, 'md'));
+  const outer = useControlSize<'sm' | 'md' | 'lg'>(undefined);   // a SerupaProvider's size, for one outside a group
+  const size = oneOf(SIZES, props.size, oneOf(SIZES, group ? group.size : outer, 'md'));
   const card = oneOf(VARIANTS, props.variant, oneOf(VARIANTS, group && group.variant, 'plain')) === 'card';
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   // A group's invalid goes on each box: role="group" can't carry aria-invalid (TF1a).

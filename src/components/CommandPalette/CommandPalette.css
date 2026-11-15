@@ -18,11 +18,11 @@
 .dk-command-palette__option {
   --dk-bar: var(--border-width-2);
   display: flex; align-items: center; gap: var(--spacing-2); min-height: var(--command-palette-option-height, var(--control-height-lg)); padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-control); cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  border-radius: var(--radius-control); cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 .dk-command-palette__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-command-palette__option--active { background: var(--command-palette-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--command-palette-indicator-active, var(--highlight-indicator)); }
-.dk-command-palette__option--disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-command-palette__option--disabled { opacity: var(--opacity-disabled); cursor: var(--cursor-disabled); }
 .dk-command-palette__icon { display: inline-flex; flex: none; color: var(--command-palette-muted, var(--text-muted)); }
 /* 20px beside the 14px label in a 44px row, as Sidebar's items: an Icon's own default is 24px. */
 .dk-command-palette__icon .dk-icon { font-size: var(--command-palette-icon-size, var(--spacing-5)); }

@@ -22,7 +22,7 @@
   margin: var(--spacing-0); padding: var(--spacing-0) var(--dk-ie-px);
   background: transparent; color: var(--inline-edit-text, var(--text));
   border: var(--input-border-width, var(--border-width-1)) solid transparent; border-radius: var(--inline-edit-radius, var(--radius-control));
-  font: inherit; text-align: start; cursor: pointer; touch-action: manipulation;
+  font: inherit; text-align: start; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 .dk-inline-edit__view--static { cursor: auto; }

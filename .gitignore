@@ -26,3 +26,5 @@ docs/generated/
 .bench-history/
 .npm/
 site-static/
+.visual-main/
+.visual-review/
