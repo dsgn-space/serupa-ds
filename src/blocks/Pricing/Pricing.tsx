@@ -134,7 +134,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
                 {shown === 'yearly' && plan.yearly > 0 && <span className="w-full text-sm text-text-muted">{l.billedYearly(money(plan.yearly))}</span>}
               </p>
               <ul role="list" aria-label={l.included(plan.name)} className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
-                {plan.features.map((f) => <li key={f} className="flex items-center gap-2"><Icon name="check" className="shrink-0 text-success" />{f}</li>)}
+                {plan.features.map((f) => <li key={f} className="flex items-center gap-2"><Icon name="check" size="sm" className="shrink-0 text-success" />{f}</li>)}
               </ul>
               <div className="mt-auto">
                 {plan.current
