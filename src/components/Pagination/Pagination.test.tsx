@@ -37,7 +37,7 @@ describe('Pagination', () => {
   test('jump: a "Go to page" field after the pages; Enter goes to the page typed, one past the end to the last, and says it; focus stays in the field', async () => {
     const seen: number[] = [];
     await render(<EnUS><Pagination id="pj" count={400} jump onPageChange={(n) => seen.push(n)} /></EnUS>);
-    const field = q('pj', '.dk-pagination__jump input') as HTMLInputElement;
+    const field = el('pj').querySelector('input')!;
     expect(field.labels![0]!.textContent).toBe('Go to page');
     field.focus();
     await userEvent.keyboard('120{Enter}');
@@ -51,15 +51,15 @@ describe('Pagination', () => {
 
   test('jump: no field for a single page; Indonesian words under an id provider', async () => {
     await render(<><Pagination id="pj1" count={1} jump /><SerupaProvider labels={idLabels}><Pagination id="pj2" count={30} jump /></SerupaProvider></>);
-    expect(el('pj1').querySelector('.dk-pagination__jump')).toBeNull();
-    expect(q('pj2', '.dk-pagination__jump label').textContent).toBe('Ke halaman');
+    expect(el('pj1').querySelector('input')).toBeNull();
+    expect(el('pj2').querySelector('input')!.labels![0]!.textContent).toBe('Ke halaman');
   });
 
   test('jump with getHref and no onPageChange follows the page\'s link', async () => {
     const before = location.hash;
     try {
       await render(<EnUS><Pagination id="pj3" count={50} jump getHref={(n) => '#p' + n} /></EnUS>);
-      (q('pj3', '.dk-pagination__jump input') as HTMLInputElement).focus();
+      el('pj3').querySelector('input')!.focus();
       await userEvent.keyboard('7{Enter}');
       expect(location.hash).toBe('#p7');
     } finally { history.replaceState(null, '', location.pathname + location.search + before); }

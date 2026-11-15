@@ -35,8 +35,8 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     max?: Date | string | undefined;
     isDateDisabled?: ((date: Date) => boolean) | undefined;
     locale?: string | undefined;
-    weekNumbers?: boolean | undefined;
     weekStartsOn?: number | undefined;
+    weekNumbers?: boolean | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
     disabled?: boolean | undefined;

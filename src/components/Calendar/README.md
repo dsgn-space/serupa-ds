@@ -112,6 +112,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-menu-bg` | `field` | The Month and Year menus' fill (`monthYearPicker`). |
 | `--calendar-presets-border` | `border` | The line between the days and the `presets` shortcuts. |
 | `--calendar-weekday-color` | `text-muted` | The weekday names (4.5:1 on surface). |
+| `--calendar-week-color` | `text-muted` | The week numbers, with weekNumbers (4.5:1 on surface). |
 | `--calendar-day-color` | `text` | Days of the shown month. |
 | `--calendar-outside-color` | `text-muted` | Days of the months before and after. |
 | `--calendar-outside-color-hover` | `text` | A day of the months before and after, under the pointer: full text, so it keeps 4.5:1 on the hover fill. |
@@ -130,6 +131,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--calendar-day-size` | `control-height-md` | Each day's square (32px). |
+| `--calendar-week-width` | `spacing-7` | The week number column, with weekNumbers (28px); the days give up its width on a narrow screen. |
 
 **Radius**
 

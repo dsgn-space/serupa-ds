@@ -107,7 +107,7 @@ Code that draws without CSS (a canvas, a map, a chart library) can't write `var(
 ```tsx
 import { useTokenValue } from "@diki-stwn/serupa-ds";
 
-function Sparkline({ points }: { points: number[] }) {
+function SignupLine({ points }: { points: number[] }) {
   const line = useTokenValue("primary");
   const ref = React.useRef<HTMLCanvasElement>(null);
   React.useEffect(() => { if (ref.current && line) draw(ref.current, points, line); }, [points, line]);

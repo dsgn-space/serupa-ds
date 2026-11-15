@@ -13,8 +13,8 @@ interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
     max?: Date | string | undefined;
     isDateDisabled?: ((date: Date) => boolean) | undefined;
     locale?: string | undefined;
-    weekNumbers?: boolean | undefined;
     weekStartsOn?: number | undefined;
+    weekNumbers?: boolean | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
     buttonLabel?: string | undefined;

@@ -37,9 +37,9 @@ export interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivEle
   /** A BCP 47 locale for the names and the first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
+  weekStartsOn?: number | undefined;
   /** A column of week numbers before the days (ISO 8601), as Calendar's weekNumbers. Default: false. */
   weekNumbers?: boolean | undefined;
-  weekStartsOn?: number | undefined;
   /** Moves focus to the start day (or today) when the calendar appears. Default: false. */
   autoFocus?: boolean | undefined;
 }

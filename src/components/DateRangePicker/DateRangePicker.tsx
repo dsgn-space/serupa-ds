@@ -49,9 +49,9 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
   /** A BCP 47 locale for the typed format, names and first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
+  weekStartsOn?: number | undefined;
   /** A column of week numbers before the days (ISO 8601), as Calendar's weekNumbers. Default: false. */
   weekNumbers?: boolean | undefined;
-  weekStartsOn?: number | undefined;
   /** 'sm', 'md' (default) or 'lg', like Input. */
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** Marks both fields invalid (aria-invalid and the error border), as on Input. */

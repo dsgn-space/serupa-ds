@@ -138,6 +138,7 @@ Each is an optional override: set it on the page, a container or one pagination.
 | `--pagination-size` | `control-height-md` | A page's width and height at size md (32px). |
 | `--pagination-size-sm` | `control-height-sm` | At size sm (24px). |
 | `--pagination-size-lg` | `control-height-lg` | At size lg (44px), the touch-target size. |
+| `--pagination-jump-width` | `spacing-16` | The Go to page field, with jump (64px: four digits). |
 
 **Spacing**
 

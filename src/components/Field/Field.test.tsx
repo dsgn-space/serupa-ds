@@ -202,7 +202,7 @@ describe('Field', () => {
     const sent = vi.fn((e: React.FormEvent) => e.preventDefault());
     await render(<form onSubmit={sent}><Field label="Project name" hint="Shown to the team" warning="A project with this name was archived last year"><Input id="warn" name="n" defaultValue="Atlas" required /></Field><button>Create</button></form>);
     const f = el('warn').closest('[data-component="field"]') as HTMLElement;
-    const note = f.querySelector('.dk-field__warning') as HTMLElement;
+    const note = document.getElementById(described('warn')[1]!)!.parentElement!;
     expect(described('warn').map((i) => document.getElementById(i)?.textContent)).toEqual(['Shown to the team', 'A project with this name was archived last year']);
     expect([el('warn').getAttribute('aria-invalid'), el('warn').getAttribute('aria-errormessage'), f.classList.contains('dk-field--warning'), f.classList.contains('dk-field--invalid')]).toEqual([null, null, true, false]);
     const probe = document.createElement('span'); probe.style.color = 'var(--warning-text)'; document.body.append(probe);
@@ -216,8 +216,7 @@ describe('Field', () => {
   test('an error takes the warning\'s place, and "checking…" takes it while the answer is checked; one message at a time', async () => {
     function Form(p: { error?: string; checking?: string }) { return <Field label="Address" error={p.error} checking={p.checking} warning="This address is outside our usual area"><input id="one" /></Field>; }
     const r = await render(<Form />);
-    const f = () => el('one').closest('[data-component="field"]') as HTMLElement;
-    const msgs = () => [...f().querySelectorAll('.dk-field__error, .dk-field__warning, .dk-field__checking')].map((m) => m.className + ': ' + m.textContent);
+    const msgs = () => described('one').map((i) => document.getElementById(i)!.parentElement!).map((m) => m.className + ': ' + m.textContent);
     expect(msgs()).toEqual(['dk-field__warning: This address is outside our usual area']);
     await r.rerender(<Form checking="Checking the address…" />);
     expect(msgs()).toEqual(['dk-field__checking: Checking the address…']);
@@ -235,7 +234,7 @@ describe('Field', () => {
     expect(f.getAttribute('aria-busy')).toBe('true');
     expect(f.classList.contains('dk-field--checking')).toBe(true);
     expect(described('chk').map((i) => document.getElementById(i)?.textContent)).toEqual(['Checking the name…']);
-    expect(f.querySelector('.dk-field__checking [data-component="loader"]')).not.toBeNull();
+    expect(document.getElementById(described('chk')[0]!)!.parentElement!.querySelector('[data-component="loader"]')).not.toBeNull();
     expect(el('chk').getAttribute('aria-invalid')).toBeNull();
     await expect.poll(() => announcer().textContent).toBe('Checking the name…');
     await r.rerender(<Form />);
