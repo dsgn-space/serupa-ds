@@ -15,6 +15,27 @@ A page of rows to search, filter, sort, select and page through, with the view k
 - Use a Table when the rows have columns worth comparing. For a list without columns (messages, notifications), keep the search and filters and use a List.
 - Not for a search across the whole site: that's a results page, with the matches ranked rather than sorted.
 
+## Choosing the layout
+
+| People mostly… | Show the items as |
+| --- | --- |
+| Compare values across items: amounts, dates, statuses | A [Table](?path=/docs/components-content-table--docs), as here |
+| Scan for one item by its name and a line or two about it, or the space is narrow | A [List](?path=/docs/components-content-list--docs) |
+| Browse things known by a picture, in no fixed order | A [Grid](?path=/docs/components-layout-and-type-grid--docs) of [Cards](?path=/docs/components-content-card--docs) |
+
+Opening one item, by how much it holds and how people work through the list:
+
+| The detail… | Open it |
+| --- | --- |
+| Fits in less than a screen, and people glance at it | In place, as a row that expands (Table's `TableExpandCell` and `TableDetailRow`) |
+| Is longer, and people come straight back to the list | In a [Drawer](?path=/docs/components-overlays-drawer--docs), with the list still behind it |
+| Is shared by link, or is long work in itself | On its own page ([Detail page](?path=/docs/patterns-detail-page--docs)) |
+| Is one of many that people go through one after another | Beside the list ([List and detail](?path=/docs/patterns-list-and-detail--docs)) |
+
+- **A new item shows where people look.** After "New project", the item is the first row whatever the sort, and a toast or the count says it was added. The next reload puts it where the sort does.
+- **One page needs no pager.** Leave Pagination out when everything fits on the first page; keep the count.
+- **Coming back keeps the place.** The view is in the address, so Back from a detail returns to the same page, sort and filters. Return focus to the row that was opened.
+
 ## What each part is for
 
 - **The Table toolbar block**: a search landmark ("Search and filter projects") with the search field and a labelled Select for each filter, then the results count in a status region. "8 of 24 projects" is read out as the search or a filter changes, without moving focus (4.1.3).
