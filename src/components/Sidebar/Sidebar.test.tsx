@@ -103,7 +103,7 @@ describe('Sidebar', () => {
     expect([s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft]).toEqual(['14px', '500', '8px', '12px']);
   });
 
-  test('muted items, shaded and text-colored on hover; the current page has no bar (2px at its start with more contrast, which hover never draws), and darkens under the pointer', async () => {
+  test('muted items, shaded (the highlight fill) and text-colored on hover; the current page has no bar (2px at its start with more contrast, which hover never draws), and darkens under the pointer', async () => {
     await render(<App />);
     const keys: Array<keyof CSSStyleDeclaration> = ['color', 'backgroundColor', 'boxShadow'];
     await expect.poll(() => pick(el('iinbox'), keys)[1]).toBe('rgba(0, 0, 0, 0)');
@@ -113,9 +113,9 @@ describe('Sidebar', () => {
     expect(current[2]).toMatch(/\) 0px 0px 0px 0px inset$/);
     await withMoreContrast(() => expect([css(el('ihome')).boxShadow, css(el('iinbox')).boxShadow]).toEqual([expect.stringMatching(/\) 2px 0px 0px 0px inset$/), 'none']));
     await userEvent.hover(el('iinbox'));
-    // Under the pointer an item takes the text color and a fill one step quieter than the current page's (GR415).
-    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], color('var(--surface-hover)'), 'none']);
-    expect(color('var(--surface-hover)')).not.toBe(current[1]);
+    // Under the pointer an item takes the text color and the highlight fill, zinc-100 in light, so the shade shows on
+    // white; the current page's fill is the same, and only the current page draws the bar.
+    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], color('var(--highlight)'), 'none']);
     await userEvent.hover(el('ihome'));
     await expect.poll(() => css(el('ihome')).backgroundColor).not.toBe(current[1]);
     await away();
@@ -514,7 +514,7 @@ describe('Sidebar', () => {
     expect([low, n]).toEqual([[], 12]);
   });
 
-  test('in all six themes the hover fill sits between the surface and the current page\'s fill, on the page and on a raised surface, so an item pointed at never looks like the current one (GR415)', () => {
+  test('in all six themes the row hover fill (surface-hover) sits between the surface and the highlight fill, on the page and on a raised surface, so a List, Table or TreeView row pointed at never looks like a selected one (GR415)', () => {
     const same: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
