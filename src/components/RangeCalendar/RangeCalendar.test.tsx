@@ -95,7 +95,8 @@ describe('RangeCalendar', () => {
     const log: [Got, { start: string; end: string }][] = [];
     await render(<SerupaProvider locale="en-US"><button type="button">Before</button><RangeCalendar defaultMonth={nov} weekStartsOn={0} defaultValue={{ start: '2026-11-11', end: '2026-11-12' }} onValueChange={(r, iso) => log.push([r, iso])} /></SerupaProvider>);
     page.getByRole('button', { name: 'Before' }).element().focus();
-    await userEvent.keyboard('{Tab}{Tab}{Tab}');
+    // Previous month, the heading (it opens the months), Next month, then the days.
+    await userEvent.keyboard('{Tab}{Tab}{Tab}{Tab}');
     expect(document.activeElement).toBe(day('2026-11-11'));
     await userEvent.keyboard('{ArrowUp}');
     expect(document.activeElement).toBe(day('2026-11-04'));

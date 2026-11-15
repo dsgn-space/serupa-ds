@@ -751,3 +751,49 @@ describe('Button token names', () => {
     await expect.poll(() => getComputedStyle(el('tk-both')).backgroundColor).toBe('rgb(1, 2, 3)');
   });
 });
+
+describe('Button onMedia', () => {
+  test('over a scrim, every variant (and IconButton) is white on dark media and black on light, the same in all six themes, text and ring at 4.5:1', async () => {
+    const variants = ['primary', 'secondary', 'outline', 'ghost', 'link'] as const;
+    // The scrims a photo gets under its controls: the darkest and lightest the docs ask for.
+    const scrim = { dark: 'rgb(0, 0, 0)', light: 'rgb(255, 255, 255)' } as const;
+    await render(<div id="media" style={{ transition: 'none' }}>{(['dark', 'light'] as const).map((m) => (
+      <div key={m} style={{ background: scrim[m], padding: '8px' }}>
+        {variants.map((v) => <Button key={v} id={`m-${m}-${v}`} variant={v} onMedia={m}>Book now</Button>)}
+        <IconButton id={`m-${m}-icon`} icon="close" label="Close" onMedia={m} />
+      </div>
+    ))}</div>);
+    const style = document.head.appendChild(document.createElement('style'));
+    style.textContent = '#media * { transition: none !important; }';
+    const low: string[] = [];
+    for (const th of THEMES) {
+      el('media').setAttribute('data-theme', th);
+      for (const m of ['dark', 'light'] as const) {
+        const ink = m === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)';
+        for (const v of [...variants, 'icon'] as const) {
+          const b = el(`m-${m}-${v}`), s = getComputedStyle(b);
+          const fill = v === 'primary' ? s.backgroundColor : scrim[m];
+          const text = v === 'primary' ? (m === 'dark' ? 'rgb(0, 0, 0)' : 'rgb(255, 255, 255)') : ink;
+          if (s.color !== text || contrast(s.color, fill) < 4.5) low.push(`${th} ${m} ${v}: text ${s.color} on ${fill}`);
+          if (v === 'primary' && s.backgroundColor !== ink) low.push(`${th} ${m} primary fill ${s.backgroundColor}`);
+          if ((v === 'outline' || v === 'secondary') && s.borderTopColor !== ink) low.push(`${th} ${m} ${v} border ${s.borderTopColor}`);
+          if (s.boxShadow.replace(/none|rgba\(0, 0, 0, 0\) 0px 0px 0px 0px|[ ,]/g, '')) low.push(`${th} ${m} ${v} shadow ${s.boxShadow}`);
+        }
+      }
+    }
+    el('m-dark-ghost').focus();
+    expect(getComputedStyle(el('m-dark-ghost')).outlineColor).toBe('rgb(255, 255, 255)');
+    style.remove();
+    expect(low).toEqual([]);
+    expect(el('m-light-primary').className).toContain('dk-btn--on-light');
+  });
+
+  test('an onMedia that isn\'t dark or light is left out, and the --button-on-dark token changes the ink', async () => {
+    await render(<div style={{ '--button-on-dark': 'rgb(250, 240, 200)' } as React.CSSProperties}>
+      <Button id="m-bad" onMedia={'pink' as 'dark'}>Go</Button>
+      <Button id="m-tok" variant="outline" onMedia="dark">Go</Button>
+    </div>);
+    expect(el('m-bad').className).not.toContain('on-');
+    expect(getComputedStyle(el('m-tok')).color).toBe('rgb(250, 240, 200)');
+  });
+});
