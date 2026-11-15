@@ -37,6 +37,10 @@ Two or more of a Combobox's options have the same value. Picking the second one 
 
 A CommandPalette command's `href` isn't a web page (http or https), a `mailto:` or a `tel:` link, for example `javascript:…`. Choosing it does nothing, so a link built from user data can't run script. Use `onSelect` to run code.
 
+## controlled-switch
+
+A component's `value`, `open`, `expanded` or `step` was passed on one render and `undefined` on another (or the other way round). With a value, the app owns it (controlled); without one, the component keeps its own (uncontrolled). Switching hands it back without saying so: the component shows its own, often old, state, and the screen disagrees with the app's. A common cause is `value={state.x}` while the state loads or resets. Keep it one or the other: pass a real value (`false` for `open`, `[]` for a list) rather than `undefined`, or pass the `default…` prop and let the component keep it. The component follows the prop as before; the warning only tells you.
+
 ## countdown-to
 
 A Countdown whose `to` isn't a date (a typo, an empty string, a format `Date` can't read), or whose `seconds` isn't a number, shows nothing, with no other sign. Pass `to` as a `Date`, a timestamp in milliseconds or an ISO string such as `"2026-11-14T18:00:00Z"`, or the time left as `seconds`.

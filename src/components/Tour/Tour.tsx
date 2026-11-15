@@ -13,6 +13,7 @@ import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { en as stepper } from '../Stepper/labels';
 import { en as tour } from './labels';
+import { useControllable } from '../../internal/controllable';
 
 // Its words, with Stepper's ("Step 2 of 4"): a property read here would keep this module in every bundle.
 const words = /* @__PURE__ */ Object.assign({}, stepper, tour);
@@ -74,10 +75,10 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour',
   const own = domId('dk-tour', React.useId());
   const id = props.id || own;
   const steps = props.steps || [];
-  const [ownOpen, setOwnOpen] = React.useState(!!props.defaultOpen);
-  const open = steps.length > 0 && (props.open !== undefined ? !!props.open : ownOpen);
-  const [ownStep, setOwnStep] = React.useState(props.defaultStep || 0);
-  const at = Math.max(0, Math.min(steps.length - 1, props.step !== undefined ? props.step : ownStep));
+  const [isOpen, setOwnOpen] = useControllable(props.open, !!props.defaultOpen, 'Tour', 'open');
+  const open = steps.length > 0 && !!isOpen;
+  const [stepAt, setOwnStep] = useControllable(props.step, props.defaultStep || 0, 'Tour', 'step');
+  const at = Math.max(0, Math.min(steps.length - 1, stepAt));
   const step = steps[at];
   // Opened again, an uncontrolled tour starts over at defaultStep rather than carrying on where it was closed.
   const [wasOpen, setWasOpen] = React.useState(open);
