@@ -35,6 +35,9 @@
   border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
+/* A tag's icons (its own, the check of a selected tag, the ×) are 16px beside the 14px label, as a field's icon:
+   an Icon's own default is 24px, which filled the whole 24px tag. */
+.dk-tag-group__tag .dk-icon { font-size: var(--tag-group-icon-size, var(--spacing-4)); }
 @media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
 .dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .dk-tag-group__remove { transition: none; } }
