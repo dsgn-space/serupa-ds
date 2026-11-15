@@ -116,19 +116,23 @@ jobs:
           fi
           echo "x86runner=$(echo "$runner" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
           echo "x86 jobs run on: $runner"
-          # A pull request's x86 jobs (suite-x86) borrow the x86 runners only while the merge queue has no run going or
-          # waiting, so the queue keeps them when it needs them, and otherwise take GitHub's (SERUPA_RUNNER). A run
-          # decides once, at its start: one that started while the queue was idle keeps its up to eight x86 jobs.
+          # A pull request's suite jobs borrow the x86 runners while no merge queue job is waiting for one, so the queue
+          # keeps them when it needs them, and otherwise take GitHub's (SERUPA_RUNNER). Waiting for no queue run at all
+          # left the 28 burst slots mostly idle while twelve pull request runs queued for GitHub's 20 (15 Nov, 21:40: a
+          # run waited 40 minutes). A run decides once, at its start, and holds at most eight x86 jobs (max-parallel).
           if [ "$EVENT" = pull_request ]; then
             pr="$PR_RUNNER"
+            if [ "$FORK" = true ]; then pr='"ubuntu-24.04"'; fi
             if [ "$FORK" != true ] && [ "$runner" = "$X86" ]; then
-              busy=0
+              waiting=0
               for s in queued in_progress; do
-                n=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=merge_group&status=$s&per_page=1" --jq .total_count) || n=1
-                busy=$(( busy + n ))
+                for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=merge_group&status=$s&per_page=20" --jq '.workflow_runs[].id') ; do
+                  n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/jobs?filter=latest&per_page=100" --jq '[.jobs[] | select(.status == "queued" or .status == "waiting")] | length') || n=1
+                  waiting=$(( waiting + n ))
+                done
               done
-              if [ "$busy" = 0 ]; then pr="$X86"; fi
-              echo "The merge queue has $busy run(s) going or waiting."
+              if [ "$waiting" = 0 ]; then pr="$X86"; fi
+              echo "The merge queue has $waiting job(s) waiting for a runner."
             fi
             echo "prrunner=$(echo "$pr" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
             echo "This pull request's x86 jobs run on: $pr"
@@ -504,13 +508,14 @@ jobs:
     name: suite (${{ matrix.group }} ${{ matrix.shard }})
     needs: [plan]
     if: needs.plan.outputs.hold != '1' && needs.plan.outputs.tests == '1'
-    runs-on: ${{ fromJSON(github.event_name == 'merge_group' && needs.plan.outputs.x86runner || (github.event.pull_request.head.repo.fork != true && vars.SERUPA_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && needs.plan.outputs.prrunner || needs.plan.outputs.x86runner) }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
     timeout-minutes: 30
     strategy:
       fail-fast: ${{ github.event_name == 'pull_request' }}
+      max-parallel: ${{ github.event_name == 'pull_request' && 8 || 24 }}
       matrix: ${{ fromJSON(needs.plan.outputs.portable) }}
     steps: *suite-steps
 
