@@ -7,6 +7,8 @@ import { ControlSizes } from '../controlSizes';
 
 Every one-line control takes `size="sm"`, `"md"` (the default) or `"lg"`, and at each size they line up: the same height from `control-height-sm`, `-md` and `-lg` (24, 32 and 44px), the same corner radius and the same text size. A Button beside an Input in a toolbar, or a Select in a form row, needs no adjusting. `sm` is the WCAG 2.2 minimum target and `lg` the comfortable touch target.
 
+For a whole app or a section, `<SerupaProvider size="sm">` (or `"lg"`) gives every control inside that size when it doesn't set its own: Input, Select, Checkbox, Switch, the pickers and the rest of the form controls, and the Buttons in a Toolbar or ButtonGroup. A control's own `size` still wins, so one `lg` call to action can sit in an `sm` app.
+
 `data-density="compact"` on the page or a section makes `md` 28px and `lg` 36px for dashboards and data-heavy screens. `sm` stays 24px.
 
 `src/internal/controlSizes.test.tsx` checks the heights, radii and text sizes of 13 controls at each size and in both densities on every pull request, so a control that drifts by a pixel fails there.

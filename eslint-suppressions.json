@@ -1,17 +1,7 @@
 {
-  "src/blocks/PageHeader/PageHeader.tsx": {
-    "jsx-a11y-x/anchor-is-valid": {
-      "count": 1
-    }
-  },
   "src/components/Accordion/Accordion.tsx": {
     "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    }
-  },
-  "src/components/Breadcrumb/Breadcrumb.stories.tsx": {
-    "jsx-a11y-x/anchor-is-valid": {
-      "count": 12
     }
   },
   "src/components/Carousel/Carousel.tsx": {
@@ -73,14 +63,6 @@
     },
     "jsx-a11y-x/anchor-is-valid": {
       "count": 3
-    }
-  },
-  "src/components/List/List.stories.tsx": {
-    "jsx-a11y-x/click-events-have-key-events": {
-      "count": 2
-    },
-    "jsx-a11y-x/no-noninteractive-element-interactions": {
-      "count": 2
     }
   },
   "src/components/MentionInput/MentionInput.tsx": {
@@ -180,14 +162,6 @@
   },
   "src/components/VisuallyHidden/VisuallyHidden.stories.tsx": {
     "jsx-a11y-x/anchor-is-valid": {
-      "count": 1
-    }
-  },
-  "src/patterns/ListDetail/ListDetail.tsx": {
-    "jsx-a11y-x/click-events-have-key-events": {
-      "count": 1
-    },
-    "jsx-a11y-x/no-noninteractive-element-interactions": {
       "count": 1
     }
   }

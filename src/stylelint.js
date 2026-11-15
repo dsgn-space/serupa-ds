@@ -2,7 +2,7 @@
 // values that drift from the theme (a hex color that ignores dark mode, a 12px gap off the spacing scale).
 //   // stylelint.config.js
 //   export default { extends: ["@diki-stwn/serupa-ds/stylelint"] };
-// Four rules, each with the token family to use in its message:
+// Five rules, each with the token family to use in its message:
 //   serupa/no-raw-color     a color written out (#hex, rgb(), hsl(), oklch(), a named color) instead of a color token.
 //                           A named color counts only in a property that takes a color, so grid-area: tan passes.
 //   serupa/no-raw-spacing   a fixed length in margin, padding, gap or inset instead of a spacing token. A percentage
@@ -13,6 +13,8 @@
 //                           out (cubic-bezier(), linear(), steps(), ease, ease-in …) instead of an easing token, and
 //                           `all`, which animates every property that happens to change. A warning for now, so it
 //                           doesn't fail an app's lint on upgrade; it becomes an error in the next major.
+//   serupa/no-raw-cursor    pointer, not-allowed, grab or grabbing in cursor instead of a cursor token, so an app
+//                           can switch the hand to the platform's arrow in one place. A warning, as no-raw-motion is.
 // A value inside var() is never flagged, its fallback included, and calc() over tokens passes. Turn one off, or
 // write `/* stylelint-disable-next-line serupa/no-raw-color -- why */` above a line that needs a raw value.
 import stylelint from 'stylelint';
@@ -122,9 +124,17 @@ const motion = rule('serupa/no-raw-motion', {
   }
 });
 
+const CURSORS = { pointer: 'interactive', 'not-allowed': 'disabled', grab: 'grab', grabbing: 'grabbing' };
+const cursor = rule('serupa/no-raw-cursor', {
+  rejected: (v, p) => `${v} in ${p} is a cursor written out: use var(--cursor-${CURSORS[v]}), so every cursor follows the one setting`,
+}, function* (decl) {
+  if (decl.prop.toLowerCase() !== 'cursor') return;
+  for (const { word, fn } of outsideVar(decl.value)) if (!fn && Object.hasOwn(CURSORS, word.toLowerCase())) yield word.toLowerCase();
+});
+
 /** @type {import("stylelint").Config} */
 const config = {
-  plugins: [color, spacing, radius, motion],
-  rules: { 'serupa/no-raw-color': true, 'serupa/no-raw-spacing': true, 'serupa/no-raw-radius': true, 'serupa/no-raw-motion': [true, { severity: 'warning' }] },
+  plugins: [color, spacing, radius, motion, cursor],
+  rules: { 'serupa/no-raw-color': true, 'serupa/no-raw-spacing': true, 'serupa/no-raw-radius': true, 'serupa/no-raw-motion': [true, { severity: 'warning' }], 'serupa/no-raw-cursor': [true, { severity: 'warning' }] },
 };
 export default config;

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
@@ -91,7 +92,8 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
   const unit: PeriodUnit = props.unit === 'quarter' || props.unit === 'year' ? props.unit : 'month';
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const base = domId('dk-pp', React.useId());
-  const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
+  const sized = useControlSize(props.size);
+  const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const disabled = !!props.disabled, readOnly = !!props.readOnly;
   const controlled = props.value !== undefined;
