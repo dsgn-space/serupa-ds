@@ -88,6 +88,30 @@ describe('ToggleButton', () => {
     expect([pressed('tprev'), pressed('tdis')]).toEqual(['false', 'false']);
   });
 
+  test('on and disabled, it is drawn in neutrals in every theme: no primary color, a fill and (outline) a border the off ones lack, and text at 3.4:1 or more (GR418)', async () => {
+    await render(<>
+      <ToggleButton id="don" disabled defaultPressed>On</ToggleButton>
+      <ToggleButton id="doff" disabled>Off</ToggleButton>
+      <ToggleButton id="dghost" disabled defaultPressed variant="ghost">Ghost</ToggleButton>
+    </>);
+    for (const theme of THEMES) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const on = getComputedStyle(el('don')), off = getComputedStyle(el('doff')), ghost = getComputedStyle(el('dghost'));
+      expect([theme, on.backgroundColor, on.color, on.borderTopColor]).toEqual([theme, color('var(--highlight)'), color('var(--text-muted)'), color('var(--border-control)')]);
+      expect([theme, on.backgroundColor === off.backgroundColor, on.borderTopColor === off.borderTopColor]).toEqual([theme, false, false]);
+      expect(contrast(on.color, on.backgroundColor), theme).toBeGreaterThanOrEqual(3.4);
+      expect(contrast(on.borderTopColor, color('var(--surface)')), theme).toBeGreaterThanOrEqual(3);
+      expect([theme, ghost.backgroundColor, ghost.color]).toEqual([theme, color('var(--highlight)'), color('var(--text-muted)')]);
+    }
+    document.documentElement.removeAttribute('data-theme');
+  });
+
+  test('tokens: --toggle-button-bg-pressed-disabled, --toggle-button-text-pressed-disabled, --toggle-button-border-pressed-disabled', async () => {
+    await render(<ToggleButton id="tdtok" disabled defaultPressed style={{ '--toggle-button-bg-pressed-disabled': 'rgb(1, 2, 3)', '--toggle-button-text-pressed-disabled': 'rgb(4, 5, 6)', '--toggle-button-border-pressed-disabled': 'rgb(7, 8, 9)' } as React.CSSProperties}>Tok</ToggleButton>);
+    const s = getComputedStyle(el('tdtok'));
+    expect([s.backgroundColor, s.color, s.borderTopColor]).toEqual(['rgb(1, 2, 3)', 'rgb(4, 5, 6)', 'rgb(7, 8, 9)']);
+  });
+
   test('token: --toggle-button-bg-pressed', async () => {
     await render(<ToggleButton id="ttok" defaultPressed style={{ '--toggle-button-bg-pressed': 'rgb(1, 2, 3)' } as React.CSSProperties}>Tok</ToggleButton>);
     expect(getComputedStyle(el('ttok')).backgroundColor).toBe('rgb(1, 2, 3)');
