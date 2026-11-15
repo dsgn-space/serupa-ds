@@ -24,6 +24,8 @@ const KNOWN = new Map<string, string>([
   ['Stepper/DontLongTitles', 'stacks to fit'],
   // Drops page numbers one by one until the row fits.
   ['Pagination/Overflow', 'cuts to fit'],
+  // Opens its months after it mounts, as a click on the heading would, to show them.
+  ['Calendar/MonthsAndYears', 'opens its months'],
 ]);
 // About a fifth of what Core Web Vitals counts as a good page (CLS 0.1) for one story.
 const KNOWN_BUDGET = 0.03;

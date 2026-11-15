@@ -27,7 +27,7 @@ const [day, setDay] = React.useState<Date | null>(null);
 Drawn from the `MonthYearPicker` story.
 
 1. **Header** (`.dk-calendar__header`): the month shown and the ways to change it.
-2. **Month and year** (`.dk-calendar__menus`): menus to jump to another month or year.
+2. **Month and year** (`.dk-calendar__menus`): menus to jump to another month or year. Without them, the heading (`.dk-calendar__heading`) opens a grid of months (`.dk-calendar__periods`).
 3. **Previous and next** (`.dk-calendar__nav`): move one month back or forward.
 4. **Grid** (`.dk-calendar__grid`): the days of the month in weeks, with the weekday names above.
 5. **Selected day** (`.dk-calendar__day--selected`): the chosen date.
@@ -44,8 +44,10 @@ Drawn from the `MonthYearPicker` story.
 ## Behavior
 
 - Always six weeks tall, so the layout doesn't jump between months. Days of the months before and after are muted and can be picked.
-- Today is in primary and semibold. The selected day is filled in primary.
+- Today is in primary and semibold. The selected day is filled in primary. The weeks are 4px apart (`--calendar-row-gap`).
+- In a range (RangeCalendar, DateRangePicker), the days between the ends are one square band per week, and each end is rounded only on its outer side, where it joins the band.
 - With `presets`, a group of shortcut buttons named "Shortcuts" follows the days: beside them, or under them below 640px. The one the value matches is pressed (`aria-pressed`), and one whose day can't be picked is disabled.
+- The heading ("March 2025") is a button: it opens the year's months, three by four, and their heading ("2025") opens twelve years. Pick a year for its months, and a month for its days: a date of birth in 1990 is four clicks from today. The previous and next buttons turn a year, or twelve years, there. Focus keeps its day of the month (the 17th in August to the 17th in the month picked). The months and years keep the days' size, so the calendar doesn't jump. Not in DateRangePicker's two months side by side, which turn together, nor with `monthYearPicker`.
 - With `monthYearPicker`, the header shows a Month and a Year menu in place of the title, so people can jump years at once (a date of birth, an expiry). Years run from `min` to `max`, or from 100 years back to 10 ahead when unset; months outside `min` and `max` are disabled. Off by default.
 - Today follows the clock: a calendar left open past midnight moves today to the new day without needing a re-render.
 - Today is the visitor's day, not the server's. A server-rendered page marks it once it hydrates, since the server's date can differ (a UTC server and a visitor in Jakarta before 7am). Until then, the Tab stop is on the value or on the month's first day. With no value and no `defaultMonth`, the month shown at first is today's on each side. Around a month's turn that differs between the server and the visitor: the page hydrates on the month the server drew (the title carries it as `data-month`), and the visitor's month shows right after, with no mismatch; `onMonthChange` is called with it. A controlled `month` is left as it is.
@@ -58,6 +60,7 @@ Drawn from the `MonthYearPicker` story.
 ## Accessibility
 
 - A `role="grid"` table named by the month title, which is `aria-live` so screen readers hear the new month. The days have one Tab stop.
+- The heading button is named by the month it shows and described by what it does ("Choose a month", in the month grid "Choose a year"). The month and year grids are `role="grid"` too, named by the hidden title, which says "2025" or "2016–2027" as the view changes. Months are shown short and read in full ("March 2025").
 - Each day is named by its full date ("Monday, March 10, 2025"). The selected cell is `aria-selected`, today is `aria-current="date"`, and refused days are `aria-disabled` (faded and struck through).
 - Weekday headers show the short name, and screen readers read the full one ("Monday", from visually hidden text, and in `abbr`), since "Mon" or "M" is read letter by letter or not at all by some.
 - Text keeps 4.5:1 and the selected fill 3:1 in every theme (`Calendar.test.tsx`).
@@ -72,6 +75,9 @@ Drawn from the `MonthYearPicker` story.
 | Home, End | The start or end of the week. |
 | PageUp, PageDown | The same day a month before or after. With Shift, a year. |
 | Enter, Space | Picks the focused day. |
+| Escape | In the months or years: back a level (the years to the months, the months to the days, with focus on the heading). Inside DatePicker's popup it doesn't close the popup. |
+
+In the months and years the same keys move by a month or a year: the arrows one, or a row of three up or down (mirrored right to left); Home and End to the row's ends; PageUp and PageDown a year, or twelve years; Enter or Space picks, a year opening its months and a month its days.
 
 Moving past the shown month shows the next one. No key moves focus past `min` or `max`: a move that would, stops on that day.
 
@@ -144,6 +150,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--calendar-gap` | `spacing-2` | Space between the header and the days (8px). |
+| `--calendar-row-gap` | `spacing-1` | Space between the weeks (4px), so the rows read apart and a range is a band per week; the month and year grids keep the same height. |
 
 **Type**
 

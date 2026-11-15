@@ -31,6 +31,12 @@ export const Row: Story = {
   ),
 };
 
+// One value per screen width: the fields stack on a phone and sit side by side from 768px, with more space on a
+// wide screen. Drawn by media queries, so the server's HTML is already laid out.
+export const PerScreenWidth: Story = {
+  render: () => <Stack direction={{ base: 'column', md: 'row' }} gap={{ base: 2, lg: 6 }}><Box>One</Box><Box>Two</Box><Box>Three</Box></Stack>,
+};
+
 export const Gaps: Story = {
   render: () => <Stack gap={6}>{([1, 2, 4, 8] as const).map((g) => <Stack key={g} direction="row" gap={g}><Box>gap={g}</Box><Box>B</Box><Box>C</Box></Stack>)}</Stack>,
 };

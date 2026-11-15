@@ -182,6 +182,8 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
     const s = value.start;
     if (!s || !to) return undefined;
     if (compare(d, s) > 0 && compare(d, to) < 0) return 'dk-calendar__day--in-range';
+    // The ends join the band between them, so each is square on the band's side (none when they're the same day).
+    if (compare(s, to) < 0) { if (sameDay(d, s)) return 'dk-calendar__day--range-start'; if (sameDay(d, to)) return 'dk-calendar__day--range-end'; }
     return undefined;
   };
   const isSel = (d: Date) => sameDay(d, value.start) || sameDay(d, value.end);

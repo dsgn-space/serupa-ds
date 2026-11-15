@@ -39,7 +39,7 @@
 
 <!-- DontFixedColumns -->
 <div style="max-width:320px">
-<div data-component="grid" class="dk-grid dk-grid--fixed" style="--dk-grid-gap:var(--spacing-2);--dk-grid-cols:4">
+<div data-component="grid" class="dk-grid dk-grid--fixed" style="--dk-grid-cols:4;--dk-grid-gap:var(--spacing-2)">
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->1</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->2</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->3</div>
@@ -55,11 +55,23 @@
 
 <!-- Overflow -->
 <div style="width:240px">
-<div data-component="grid" class="dk-grid dk-grid--fixed" style="--dk-grid-gap:var(--spacing-2);--dk-grid-cols:3">
+<div data-component="grid" class="dk-grid dk-grid--fixed" style="--dk-grid-cols:3;--dk-grid-gap:var(--spacing-2)">
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text wrap-anywhere">Donaudampfschifffahrtsgesellschaftskapitänskajüte</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">A cell with a long sentence that wraps</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Short</div>
 </div>
+</div>
+
+<!-- PerScreenWidth -->
+<div data-component="grid" class="dk-grid dk-grid--fixed dk-grid--cols dk-grid--gaps" style="--dk-grid-cols-base:1;--dk-grid-cols-sm:2;--dk-grid-cols-md:2;--dk-grid-cols-lg:4;--dk-grid-gap-base:var(--spacing-2);--dk-grid-gap-sm:var(--spacing-2);--dk-grid-gap-md:var(--spacing-4);--dk-grid-gap-lg:var(--spacing-4)">
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->1</div>
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->2</div>
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->3</div>
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->4</div>
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->5</div>
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->6</div>
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->7</div>
+<div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->8</div>
 </div>
 
 <!-- Playground -->
@@ -73,7 +85,7 @@
 </div>
 
 <!-- ThreeColumns -->
-<div data-component="grid" class="dk-grid dk-grid--fixed" style="--dk-grid-gap:var(--spacing-6);--dk-grid-cols:3">
+<div data-component="grid" class="dk-grid dk-grid--fixed" style="--dk-grid-cols:3;--dk-grid-gap:var(--spacing-6)">
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->1</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->2</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->3</div>
@@ -83,7 +95,7 @@
 </div>
 
 <!-- UpToThree -->
-<div data-component="grid" class="dk-grid dk-grid--upto" style="--dk-grid-gap:var(--spacing-4);--dk-grid-cols:3;--dk-grid-min:12rem">
+<div data-component="grid" class="dk-grid dk-grid--upto" style="--dk-grid-cols:3;--dk-grid-gap:var(--spacing-4);--dk-grid-min:12rem">
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->1</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->2</div>
 <div class="rounded-md bg-surface-muted p-3 text-sm text-text">Cell <!-- -->3</div>

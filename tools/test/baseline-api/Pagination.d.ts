@@ -7,7 +7,6 @@ interface PaginationLabels {
     perPage: string;
     goToPage: string;
 }
-type Entry = "end-ellipsis" | "start-ellipsis" | number;
 declare function paginationRange(page: number, count: number, siblings?: number, boundaries?: number): Entry[];
 interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
     count: number;

@@ -16,6 +16,15 @@ export const Today: Story = { args: { defaultValue: undefined, defaultMonth: und
 export const MinAndMax: Story = { args: { min: new Date(2025, 2, 5), max: new Date(2025, 2, 25) } };
 export const NoWeekends: Story = { args: { isDateDisabled: (d: Date) => d.getDay() === 0 || d.getDay() === 6 } };
 export const WeekNumbers: Story = { name: 'Week numbers', args: { weekNumbers: true } };
+// The heading opens the year's months, and theirs twelve years: here, the months, as a click on "March 2025" shows them.
+export const MonthsAndYears: Story = {
+  name: 'Jump by month and year',
+  render: function Render(args) {
+    const at = React.useRef<HTMLDivElement | null>(null);
+    React.useEffect(() => { at.current?.querySelector<HTMLButtonElement>('.dk-calendar__heading')?.click(); }, []);
+    return <Calendar {...args} ref={at} />;
+  },
+};
 export const MonthYearPicker: Story = { name: 'Month and year menus', args: { monthYearPicker: true, min: new Date(1950, 0, 1), max: new Date(2030, 11, 31) } };
 export const German: Story = { args: { locale: 'de-DE', previousLabel: 'Vorheriger Monat', nextLabel: 'Nächster Monat' } };
 export const Controlled: Story = {

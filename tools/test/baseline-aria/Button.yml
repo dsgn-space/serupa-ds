@@ -50,6 +50,16 @@
 - button "Save every change to this document"
 - button "Save every change to this document"
 
+# OnMedia
+- button "Book the tour"
+- button "Tour details"
+- button "Save the tour"
+- button "Share the tour"
+- button "Book a table"
+- button "See the menu"
+- button "Save the place"
+- button "Share the place"
+
 # Playground
 - button "Save changes"
 
