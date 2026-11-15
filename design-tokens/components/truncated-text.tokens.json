@@ -1,0 +1,17 @@
+{
+  "truncatedText": {
+    "$description": "TruncatedText's component tokens. Each one is an optional override: set the CSS variable (--truncated-text-<name>) on the page, a container or one TruncatedText, and every TruncatedText inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults.",
+    "color": {
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring inside its edge while cut text has keyboard focus.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--truncated-text-focus-ring"
+          }
+        }
+      }
+    }
+  }
+}

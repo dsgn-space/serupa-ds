@@ -29,6 +29,9 @@ export interface TooltipProps {
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
   /** Never shows it, for example while the element is disabled. */
   disabled?: boolean | undefined;
+  /** @internal Shows text the element already holds (TruncatedText's cut line): nothing points at the tooltip and
+   *  screen readers skip it, so the text isn't read twice. */
+  visual?: boolean | undefined;
   /** Classes on the tooltip. */
   className?: string | undefined;
   /** Styles on the tooltip. */
@@ -46,7 +49,7 @@ const warm: { until: number; owner: object | null; close: (() => void) | null } 
 /** For tests: start cold, as if no tooltip had shown. Not exported from the package. @testseam */
 export function coolTooltips(): void { warm.until = 0; }
 
-const OWN = { content: 1, children: 1, placement: 1, openDelay: 1, delay: 1, role: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, ref: 1 } as const;
+const OWN = { content: 1, children: 1, placement: 1, openDelay: 1, delay: 1, role: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, visual: 1, className: 1, style: 1, ref: 1 } as const;
 
 /* Tooltip: a short hint about an element, shown while it's hovered (after a delay) or focused, and placed next to
    it in the top layer. Escape hides it; the pointer can move onto the tooltip without it closing (WCAG 1.4.13).
@@ -126,13 +129,13 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   const [full, setFull] = React.useState('');
   useIsoLayoutEffect(() => {
     const a = anchorRef.current;
-    if (!open || !a || props.role === 'label') return;
+    if (!open || !a || props.role === 'label' || props.visual) return;
     let cut = '';
     for (const n of [a].concat(Array.prototype.slice.call(a.querySelectorAll('*')))) {
       if (n.scrollWidth > n.clientWidth && getComputedStyle(n).textOverflow === 'ellipsis') cut = n.textContent || '';
     }
     setFull(cut.trim());
-  }, [open, props.role]);
+  }, [open, props.role, props.visual]);
 
   // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes. A press outside hides it.
   useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: 'top', offsetVar: '--dk-tooltip-offset', closeRequest: false, watch: full || props.content, onOutside: () => set(false, 'outside') });
@@ -177,7 +180,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   const trigger = React.cloneElement(child, {
     ...fwd,
     ref: anchorRefs,
-    [aria]: merged,
+    ...(props.visual ? null : { [aria]: merged }),
     ...({ interestfor: id } as Record<string, string>),   // not in React's types yet
     // Pointer events, not mouse events: a tap sends a mouseenter after its pointerdown and never a mouseleave, so the
     // tooltip opened 400ms after a tap and stayed. A touch pointer doesn't hover; focus still shows it from the keyboard.
@@ -190,7 +193,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   return (
     <>
       {trigger}
-      <div ref={tipRef} id={id} role="tooltip" {...{ popover: 'manual' }} hidden={!open || undefined}
+      <div ref={tipRef} id={id} role={props.visual ? undefined : 'tooltip'} aria-hidden={props.visual || undefined} {...{ popover: 'manual' }} hidden={!open || undefined}
         className={cn('dk-tooltip', props.className)} style={props.style} data-component="tooltip" data-state={open ? 'open' : 'closed'} data-warm={(open && instant) || (!open && handed) ? '' : undefined}
         onMouseEnter={() => window.clearTimeout(timer.current)} onMouseLeave={() => later(false, hoverLeave)}>
         {full && props.role !== 'label' ? <span data-full="" aria-hidden="true">{full}</span> : null}
