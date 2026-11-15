@@ -33,7 +33,7 @@
    when it arrives (dk-image--fades); a priority one (a hero) is never hidden, so it paints as soon as it can. */
 .dk-image--fades.dk-image--loading .dk-image__img { opacity: var(--opacity-0); }
 .dk-image--fades.dk-image--loaded .dk-image__img { transition: opacity var(--motion-enter-md) var(--ease-enter); }   /* hides at once, fades in */
-/* While loading, a lighter band sweeps through the placeholder fill every 2s (ease-in-out), like Loader's skeleton: a layer
+/* While loading, a lighter band sweeps through the placeholder fill every 2s (ease-move), like Loader's skeleton: a layer
    three frames wide slides on translate (the compositor) from its last third on the frame to its first. Right to left, it
    sweeps from the right. It's ::before, so the remove button stays above it. */
 .dk-image--loading::before {

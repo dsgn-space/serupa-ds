@@ -23,7 +23,7 @@
 .dk-btn.dk-fab--shrunk { --dk-fab-pad: calc((var(--fab-size, var(--spacing-14)) - var(--fab-icon-size, var(--spacing-6))) / 2 - var(--button-border-width, var(--border-width-1))); padding-inline: var(--dk-fab-pad); gap: var(--spacing-0); }
 .dk-fab--shrunk .dk-fab__label { max-inline-size: var(--spacing-0); opacity: var(--opacity-0); }
 @media (prefers-reduced-motion: reduce) { .dk-fab__label { transition: none; } }
-@media (hover: hover) { .dk-btn.dk-fab:hover:not(:disabled):not([aria-disabled="true"]) { --dk-btn-shadow: var(--fab-shadow-hover, var(--shadow-xl)); } }
+@media (hover: hover) { .dk-btn.dk-fab:hover:not(:disabled):not([aria-disabled="true"]) { --dk-btn-shadow: var(--fab-shadow-hover, var(--elevation-modal)); } }
 .dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start { position: fixed; z-index: var(--fab-z-index, var(--z-30)); }
 /* --fab-offset from the corner of the safe area, so a phone's home bar or notch doesn't cover it (env() is 0 elsewhere). */
 .dk-fab--bottom-end { inset-block-end: max(calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-bottom)), calc(var(--dk-bottom-nav-space, var(--spacing-0)) + var(--fab-offset, var(--spacing-6))), var(--dk-fab-bar, var(--spacing-0)), var(--dk-toaster-space-bottom-end, var(--spacing-0))); inset-inline-end: calc(var(--fab-offset, var(--spacing-6)) + env(safe-area-inset-right)); }

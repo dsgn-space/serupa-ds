@@ -91,7 +91,7 @@ It takes the same sizes, tones and delay as the ring; `primary` and `muted` colo
 
 ### Pixel
 
-`variant="pixel"` is a 3×3 grid of square pixels in one color, the loader's tone: no rounded corners and no gaps, just subtle dividers between them. The dividers are hairlines (half a unit of its 24-unit drawing: 0.5px at 24px, 0.8px at 40px) in the loader's color at 10%, cut through the squares, so a divider looks the same whether the squares beside it are lit or dim, on any surface and in every tone. A wave of light runs along the diagonals from the top-left corner to the bottom-right: each square rises from 15% to full strength, holds, and fades again, 75ms after the diagonal before it, in a 1.2s loop (`--loader-pixel-duration`, `duration-1200`, `ease-in-out`).
+`variant="pixel"` is a 3×3 grid of square pixels in one color, the loader's tone: no rounded corners and no gaps, just subtle dividers between them. The dividers are hairlines (half a unit of its 24-unit drawing: 0.5px at 24px, 0.8px at 40px) in the loader's color at 10%, cut through the squares, so a divider looks the same whether the squares beside it are lit or dim, on any surface and in every tone. A wave of light runs along the diagonals from the top-left corner to the bottom-right: each square rises from 15% to full strength, holds, and fades again, 75ms after the diagonal before it, in a 1.2s loop (`--loader-pixel-duration`, `duration-1200`, `ease-move`).
 
 ```jsx
 <Loader variant="pixel" />
@@ -102,7 +102,7 @@ It takes the same sizes, tones and delay as the ring; `primary` and `muted` colo
 
 #### Patterns
 
-`pattern` sets the order the squares light in. Every pattern moves like the wave: each square rises from 15% to full, holds and fades with the same curve (`ease-in-out`), only in its own order. Wave, sweep, fall and rise loop in 1.2s (`--loader-pixel-duration`); snake and spiral in 1.5s; cross and checker in 1s, with steps `--loader-pixel-stagger` (75ms) apart.
+`pattern` sets the order the squares light in. Every pattern moves like the wave: each square rises from 15% to full, holds and fades with the same curve (`ease-move`), only in its own order. Wave, sweep, fall and rise loop in 1.2s (`--loader-pixel-duration`); snake and spiral in 1.5s; cross and checker in 1s, with steps `--loader-pixel-stagger` (75ms) apart.
 
 | `pattern` | Order | Cycle |
 | --- | --- | --- |
@@ -131,7 +131,7 @@ Under reduced motion every pattern slows to half speed (2.4s; snake and spiral 3
 <Loader variant="text" size="sm" label="Saving…" />
 ```
 
-The words rest at 65% of the text color, and a band of full color sweeps through them from left to right every 2 seconds, easing in and out (`ease-in-out`), a shine that shows it's still working. The resting words keep 4.5:1 contrast on `surface` in every theme (the tests check it), so the text stays in the text color around it: `primary` and `muted` don't apply to it, only `inverse`. Its size is the type size: `text-xs` for `sm`, `text-sm` for `md`, `text-base` for `lg`, in `font-medium`. Screen readers hear the words once, as the loader's name; the visible copy is hidden from them so it isn't read twice. With `label=""` it still shows "Loading" but is decorative. Under reduced motion it's plain text, without the shine.
+The words rest at 65% of the text color, and a band of full color sweeps through them from left to right every 2 seconds, easing in and out (`ease-move`), a shine that shows it's still working. The resting words keep 4.5:1 contrast on `surface` in every theme (the tests check it), so the text stays in the text color around it: `primary` and `muted` don't apply to it, only `inverse`. Its size is the type size: `text-xs` for `sm`, `text-sm` for `md`, `text-base` for `lg`, in `font-medium`. Screen readers hear the words once, as the loader's name; the visible copy is hidden from them so it isn't read twice. With `label=""` it still shows "Loading" but is decorative. Under reduced motion it's plain text, without the shine.
 
 To put words next to a ring, place a Text loader beside a decorative ring, or a ring beside your own text with `label=""`.
 
@@ -280,4 +280,4 @@ Each is an optional override: set it on the page, a container or one loader. Uns
 | `--loader-spokes-duration` | `duration-1000` | One full turn of the spokes, a spoke at a time (a tick every 125ms) |
 <!-- token-table:end -->
 
-The ring is a quarter arc that turns once every `motion-loop-spinner` (700ms) with `ease-linear`, the one spinner speed of the library: Switch's loading ring and the indeterminate circular Progress turn with it. Only the drawing turns, so nothing is repainted on each frame. The text shine and the skeleton shimmer take 2s (`duration-1000` twice) with `ease-in-out`, and both move on `translate`, which the compositor runs without repainting: the skeleton slides a layer three bones wide through each bone, and the text slides a window holding a full-color copy of the words across them. Under reduced motion the ring stands still and breathes over twice that (2s, `ease-in-out`). It fades in over `duration-150` with `ease-out`.
+The ring is a quarter arc that turns once every `motion-loop-spinner` (700ms) with `ease-linear`, the one spinner speed of the library: Switch's loading ring and the indeterminate circular Progress turn with it. Only the drawing turns, so nothing is repainted on each frame. The text shine and the skeleton shimmer take 2s (`duration-1000` twice) with `ease-move`, and both move on `translate`, which the compositor runs without repainting: the skeleton slides a layer three bones wide through each bone, and the text slides a window holding a full-color copy of the words across them. Under reduced motion the ring stands still and breathes over twice that (2s, `ease-move`). It fades in over `duration-150` with `ease-out`.
