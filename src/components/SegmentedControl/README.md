@@ -115,6 +115,8 @@ Each is an optional override: set it on the page, a container or one control. Th
 | `--segmented-control-text-hover` | `text` | A segment's label on hover. |
 | `--segmented-control-focus-ring` | `focus-ring` | A segment's keyboard focus ring. |
 | `--segmented-control-invalid` | `danger` | The outline when invalid (3:1 on the surface). |
+| `--segmented-control-border-disabled` | `disabled-border` | Disabled: the edge. |
+| `--segmented-control-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Shadow**
 

@@ -62,7 +62,12 @@
 /* Read-only: no pointer cursor or hover, since a click won't change it. */
 .dk-checkbox--readonly { cursor: default; }
 /* Disabled, by its own prop or a disabled fieldset (Field group). */
-.dk-checkbox:has(.dk-checkbox__input:disabled) { opacity: var(--opacity-disabled); cursor: not-allowed; }
+.dk-checkbox:has(.dk-checkbox__input:disabled) { color: var(--checkbox-text-disabled, var(--disabled-text)); cursor: not-allowed; }
+.dk-checkbox:has(.dk-checkbox__input:disabled) .dk-checkbox__description { color: var(--checkbox-text-disabled, var(--disabled-text)); }
+/* Neutral, not faded (foundations.md, States): a checked box is a disabled-surface fill in a disabled-border edge, with a disabled-text tick. */
+.dk-checkbox__input:disabled { --dk-checkbox-bd: var(--checkbox-border-disabled, var(--disabled-border)); --dk-checkbox-fill: var(--checkbox-fill-disabled, var(--disabled-surface)); }
+.dk-checkbox__input:disabled:is(:checked, :indeterminate, [data-indeterminate]) { border-color: var(--checkbox-border-disabled, var(--disabled-border)); }
+.dk-checkbox__input:disabled + .dk-checkbox__icon { color: var(--checkbox-text-disabled, var(--disabled-text)); }
 .dk-checkbox__input:disabled:not(:checked, :indeterminate, [data-indeterminate]) { background: var(--checkbox-bg-disabled, var(--surface-muted)); }
 /* Card: the box, label and description in a bordered card, pressed as a whole, a 2px primary border once checked
    (drawn inside, so nothing moves; the tick says it too, so it isn't colour alone), the focus ring around the card.

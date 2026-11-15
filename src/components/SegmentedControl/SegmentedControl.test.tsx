@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, forcedColors, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, press, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { SegmentedControl, type SegmentedControlOption } from './SegmentedControl';
 
@@ -219,14 +219,14 @@ describe('SegmentedControl', () => {
     await expect.poll(() => new Set(widths()).size).toBe(1);
   });
 
-  test('fullWidth: fills its container with equal segments; disabled: every segment disabled and out of the Tab order, faded', async () => {
+  test('fullWidth: fills its container with equal segments; disabled: every segment disabled and out of the Tab order, in disabled-text', async () => {
     await render(<Col>
       <div style={{ width: '300px' }}><SegmentedControl id="full" aria-label="Full" fullWidth options={PERIODS.slice(0, 3)} /></div>
       <SegmentedControl id="dis" aria-label="Dis" disabled options={PERIODS.slice(0, 2)} />
     </Col>);
     expect(el('full').getBoundingClientRect().width).toBe(300);
     expect(new Set(items('full').map((x) => Math.round(x.getBoundingClientRect().width))).size).toBe(1);
-    expect([el('dis').getAttribute('aria-disabled'), items('dis').every((x) => x.disabled && x.tabIndex === -1), css(el('dis')).opacity]).toEqual(['true', true, '0.5']);
+    expect([el('dis').getAttribute('aria-disabled'), items('dis').every((x) => x.disabled && x.tabIndex === -1), disabledLook(items('dis')[0]!)]).toEqual(['true', true, 'neutral']);
   });
 
   test('long labels in 320px: the segments share the width by content, so short labels stay whole and the long one gives way, its full label as its title; the selection still sits on its segment (EU1)', async () => {

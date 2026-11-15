@@ -4,7 +4,7 @@ import { hydrateRoot } from 'react-dom/client';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMotion, settled, disabledLook } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Accordion, AccordionItem } from './Accordion';
@@ -164,7 +164,7 @@ describe('Accordion', () => {
     expect(time(h(2))[0]).toBe(150);
   }));
 
-  test('type="single": opening one closes the other; collapsible (default): the open one closes again; a disabled item doesn\'t open, and fades to 50%', async () => {
+  test('type="single": opening one closes the other; collapsible (default): the open one closes again; a disabled item doesn\'t open, and is drawn in disabled-text', async () => {
     await render(<Faq />);
     await userEvent.click(trigger('adef', 1));
     await userEvent.click(trigger('adef', 2));
@@ -173,7 +173,7 @@ describe('Accordion', () => {
     expect(state('adef')).toBe('0000');
     await userEvent.click(trigger('adef', 3), { force: true });
     expect(state('adef')).toBe('0000');
-    expect([trigger('adef', 3).disabled, css(trigger('adef', 3)).opacity]).toEqual([true, '0.5']);
+    expect([trigger('adef', 3).disabled, disabledLook(trigger('adef', 3))]).toEqual([true, 'neutral']);
   });
 
   test('keyboard: Down and Up move between titles (skipping disabled, wrapping), Home and End go to the ends; Enter and Space toggle the focused item; the focus ring is 2px', async () => {

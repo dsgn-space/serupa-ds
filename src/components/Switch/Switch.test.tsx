@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { cdp, page, server, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Switch } from './Switch';
 
@@ -157,11 +157,11 @@ describe('Switch', () => {
     expect(el('inv').getAttribute('aria-invalid')).toBe('true');
   });
 
-  test('disabled: native disabled, 50%, not-allowed; clicks do nothing', async () => {
+  test('disabled: native disabled, neutral colors, not-allowed; clicks do nothing', async () => {
     await setup();
     await userEvent.click(el('dis'), { force: true });
     const d = box('dis');
-    expect([d.disabled, d.op, d.cur, d.checked]).toEqual([true, '0.5', 'not-allowed', false]);
+    expect([d.disabled, d.op, d.cur, d.checked, disabledLook(el('dis').closest('label'))]).toEqual([true, '1', 'not-allowed', false, 'neutral']);
   });
 
   test('readOnly: focusable with aria-readonly; a click on the label or track and Space leave it as it was, onClick still runs, onChange doesn\'t, and an on switch is submitted', async () => {

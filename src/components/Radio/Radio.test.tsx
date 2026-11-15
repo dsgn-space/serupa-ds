@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, css, lowContrast, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { color, css, lowContrast, press, withMotion, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { Radio, RadioGroup } from './Radio';
 
@@ -188,9 +188,9 @@ describe('Radio', () => {
     await expect.poll(() => css(input('x1')).borderTopColor).toBe(color('var(--field-border-invalid)'));
   });
 
-  test('disabled group: every radio disabled, 50%, not-allowed; the unchecked one on surface-muted; clicks do nothing', async () => {
+  test('disabled group: every radio disabled, disabled-text, not-allowed; the unchecked one on surface-muted; clicks do nothing', async () => {
     await render(<Grid><RadioGroup id="dis" aria-label="Disabled" disabled defaultValue="p"><Radio id="p" value="p">P</Radio><Radio id="q" value="q">Q</Radio></RadioGroup></Grid>);
-    expect([input('p').matches(':disabled'), input('q').matches(':disabled'), css(wrap('q')).opacity, css(wrap('q')).cursor]).toEqual([true, true, '0.5', 'not-allowed']);
+    expect([input('p').matches(':disabled'), input('q').matches(':disabled'), disabledLook(wrap('q')), css(wrap('q')).cursor]).toEqual([true, true, 'neutral', 'not-allowed']);
     await expect.poll(() => css(input('q')).backgroundColor).toBe(color('var(--surface-muted)'));
     await userEvent.click(input('q'), { force: true });
     expect([input('p').checked, input('q').checked, document.getElementById('dis')!.getAttribute('aria-disabled')]).toEqual([true, false, 'true']);
@@ -255,7 +255,7 @@ describe('Radio', () => {
     expect(fs.getAttribute('aria-describedby')!.split(' ').map((id) => document.getElementById(id)!.textContent).join('|')).toBe('You can change it later.|Pick a plan.');
     expect(g.getAttribute('aria-invalid')).toBe('true');
     expect(wrap('f1').className).toMatch(/dk-radio--invalid/);
-    expect([input('o1').matches(':disabled'), css(wrap('o1')).opacity]).toEqual([true, '0.5']);
+    expect([input('o1').matches(':disabled'), disabledLook(wrap('o1'))]).toEqual([true, 'neutral']);
   });
 
   test('contrast in every theme: label and description 4.5:1; checked fill, dot, focus ring and invalid border 3:1, the soft border 1.3:1', () => {

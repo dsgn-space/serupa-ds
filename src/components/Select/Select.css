@@ -51,7 +51,8 @@
 .dk-select:has(.dk-select__field:user-invalid) { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); --dk-select-ring: var(--select-invalid, var(--field-border-invalid)); }
 @media (hover: hover) { .dk-select:has(.dk-select__field:user-invalid):hover:not(:focus-within) { --dk-select-bd: var(--select-invalid, var(--field-border-invalid)); } }
 /* Disabled by the prop, or by a <fieldset disabled> around it (the native select follows that on its own). */
-.dk-select--disabled, .dk-select:where(:has(.dk-select__field:disabled)) { background: var(--select-bg-disabled, var(--field-readonly)); opacity: var(--opacity-disabled); }
+.dk-select--disabled, .dk-select:where(:has(.dk-select__field:disabled)) { --dk-select-bd: var(--select-border-disabled, var(--disabled-border)); background: var(--select-bg-disabled, var(--field-readonly)); color: var(--select-text-disabled, var(--disabled-text)); }
+.dk-select--disabled .dk-select__field, .dk-select__field:disabled { color: var(--select-text-disabled, var(--disabled-text)); }
 .dk-select--disabled .dk-select__field, .dk-select__field:where(:disabled) { cursor: not-allowed; }
 /* Read-only: the read-only field background, as Input, and a default cursor, since it doesn't open. */
 .dk-select--readonly { background: var(--select-bg-disabled, var(--field-readonly)); }

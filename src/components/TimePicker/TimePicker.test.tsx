@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent, page } from 'vitest/browser';
-import { THEMES, contrast, css, withMotion, settled, color, press } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, withMotion, settled, color, press, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 const described = (e: Element) => (e.getAttribute('aria-describedby') || '').split(' ').filter(Boolean).map((i) => document.getElementById(i)!.textContent).join(' | ');
 import { TimePicker } from './TimePicker';
@@ -217,10 +217,10 @@ describe('TimePicker', () => {
     expect(changes.length).toBe(3);
   });
 
-  test('disabled: the field and button are disabled and faded', async () => {
+  test('disabled: the field and button are disabled and in the neutral disabled colors', async () => {
     await render(<TimePicker id="dis" aria-label="Off" disabled defaultValue="10:00" />);
     expect([el('dis').disabled, el('dis').parentElement!.querySelector('button')!.disabled]).toEqual([true, true]);
-    await expect.poll(() => getComputedStyle(el('dis').parentElement!).opacity).toBe('0.5');
+    await expect.poll(() => disabledLook(el('dis').parentElement)).toBe('neutral');
   });
 
   test('contrast: times 4.5:1 (also highlighted), the check and clock icon 3:1, in every theme', async () => {

@@ -54,7 +54,7 @@
 @media (prefers-reduced-motion: reduce) { .dk-pin-input__box--caret::after { animation: none; } }
 .dk-pin-input--invalid { --dk-pin-bd: var(--pin-input-invalid, var(--field-border-invalid)); --dk-pin-ring: var(--pin-input-invalid, var(--field-border-invalid)); }
 .dk-pin-input--readonly .dk-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
-.dk-pin-input--disabled { opacity: var(--opacity-disabled); }
+.dk-pin-input--disabled { --pin-input-text: var(--pin-input-text-disabled, var(--disabled-text)); --pin-input-border: var(--pin-input-border-disabled, var(--disabled-border)); }
 .dk-pin-input--disabled .dk-pin-input__box { background: var(--pin-input-bg-readonly, var(--field-readonly)); }
 .dk-pin-input--disabled .dk-pin-input__field { cursor: not-allowed; }
 }

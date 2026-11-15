@@ -122,6 +122,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-pill-text-selected` | `on-primary` | The selected pill tab's label. |
 | `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
 | `--tabs-focus-gap-color` | `surface` | The gap between the focus ring and the selected pill's fill. |
+| `--tabs-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 
 **Sizing**
 
