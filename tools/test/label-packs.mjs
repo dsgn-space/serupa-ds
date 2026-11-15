@@ -25,6 +25,7 @@ t('@diki-stwn/serupa-ds/labels/en and /id are enLabels and idLabels', packs.en.l
 // Arguments for each function label: every case it has to word (a count of 1 and of several; each value of a union).
 const reasons = ['valueMissing', 'typeMismatch', 'badInput', 'tooShort', 'tooLong', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'patternMismatch'];
 const SAMPLES = {
+  maskedEnding: [['Card number', '1208']], maskedHidden: [['Balance']], showValue: [['Card number']],
   avatarStatus: ['online', 'busy', 'away', 'offline'].map((s) => [s]),
   avatarMore: [[1, '1'], [5, '5']], slideOf: [[2, 5]], imageOf: [[2, 5]], slidesOf: [[1, 3, 9]], sparklineSummary: [['Revenue', '12', '18', '9', '21']],
   colorName: ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'brown', 'gray', 'black', 'white'].flatMap((h) => ['light', 'dark', ''].map((tone) => [h, tone])),
