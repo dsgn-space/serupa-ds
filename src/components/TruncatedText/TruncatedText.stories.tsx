@@ -27,7 +27,7 @@ const FILES = ['quarterly-report-final-version-2-reviewed-by-finance.pdf', 'logo
 /** In a list of files: only the names that are cut take a tab stop. */
 export const FileList: Story = {
   render: (args) => (
-    <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8 }}>
+    <ul role="list" style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8 }}>
       {FILES.map((f) => <li key={f}><TruncatedText {...args}>{f}</TruncatedText></li>)}
     </ul>
   ),
