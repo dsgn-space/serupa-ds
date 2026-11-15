@@ -3052,6 +3052,21 @@
 .scheme-light-dark { color-scheme: light dark; }
 .scheme-only-dark { color-scheme: only dark; }
 .scheme-only-light { color-scheme: only light; }
+/* state-layer: hover, pressed and dragged on a surface the app colors itself (a category tile, a tinted row). The
+   element's own text color is laid over its background at opacity-state-*, under its content; focus keeps the
+   focus ring. Components don't use it: their hover colors are tuned and contrast-checked one by one. */
+.state-layer { position: relative; isolation: isolate; }
+.state-layer::before {
+  --dk-under: calc(var(--z-10) * -1);
+  content: ""; position: absolute; z-index: var(--dk-under); inset: var(--spacing-0); border-radius: inherit;
+  background: currentColor; opacity: var(--opacity-0); pointer-events: none; transition: opacity var(--motion-hover) var(--ease-move);
+}
+@media (hover: hover) { .state-layer:hover::before { opacity: var(--opacity-state-hover); } }
+.state-layer:active::before { opacity: var(--opacity-state-pressed); }
+.state-layer[data-state="dragging"]::before { opacity: var(--opacity-state-dragged); }
+.state-layer:is(:disabled, [aria-disabled="true"])::before { opacity: var(--opacity-0); }
+@media (prefers-reduced-motion: reduce) { .state-layer::before { transition: none; } }
+@media (forced-colors: active) { .state-layer::before { display: none; } }
 /* cursor */
 .cursor-auto { cursor: auto; }
 .cursor-default { cursor: default; }
