@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Quiz.stories';
+
+<Meta of={Stories} />
+
+# Quiz
+
+A few questions to check what was learned, all on one page, then the score and, for each question, whether it was right and why.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The end of a lesson or a training module, to check it went in.
+- Not for asking people what they think: that's the Feedback survey pattern.
+- Not for a test with a time limit or one try: an exam needs more than this, starting with a way to ask for more time.
+
+## What each part is for
+
+- **Each question is a fieldset whose legend is the question**; one with more than one answer says "Choose all that apply" and uses checkboxes, not radios (1.3.1, 3.3.2).
+- **How many are answered is said in a status line** as answers are chosen (4.1.3).
+- **Checking with questions left shows a summary at the top that takes focus**, each a link to its question's first answer (3.3.1, 2.4.3).
+- **Once checked, the score's heading takes focus**; each question says "Right" or "Not quite" in words, with the right answer and why, not by color alone (2.4.3, 1.4.1).
+- **There's no time limit**, and Try again clears the answers and starts at the first question (2.2.1).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Short} />
+
+## What stays your app's job
+
+- **The questions.** Ask about what the lesson taught, with one clearly right answer; say why in `why`, as that's where the learning is.
+- **Keeping the score.** `onCheck` gets the answers and the score. Check them on the server when passing opens something.
+- **When to pass.** `pass` is how many right; the default is 80% of the questions, rounded up.
