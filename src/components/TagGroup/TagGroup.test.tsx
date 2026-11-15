@@ -32,6 +32,12 @@ describe('TagGroup', () => {
     expect(page.getByRole('row').elements().map((r) => r.getAttribute('tabindex'))).toEqual(['0', '-1', '-1', '-1']);
   });
 
+  test('the × is 16px beside the 14px label, not an icon\'s 24px default that filled its button; --tag-group-remove-icon-size sets it (GR421)', async () => {
+    await render(<SerupaProvider locale="en-US"><TagGroup id="xs" label="Labels" items={tags} onRemove={() => {}} /><TagGroup id="xt" label="Labels" items={tags} onRemove={() => {}} style={{ '--tag-group-remove-icon-size': '12px' } as React.CSSProperties} /></SerupaProvider>);
+    const sizes = (id: string) => { const b = document.querySelector<HTMLElement>('#' + id + ' button[aria-label^="Remove"]')!, i = b.querySelector<HTMLElement>('[data-icon]')!.getBoundingClientRect(); return [b.getBoundingClientRect().width, i.width, i.height]; };
+    expect([sizes('xs'), sizes('xt')]).toEqual([[24, 16, 16], [24, 12, 12]]);
+  });
+
   test('icon and avatar: decorative, before the words; the tag keeps its name, its height, and a selected tag shows its check in the icon\'s place', async () => {
     await render(<div>
       <TagGroup label="Plain" items={[{ id: 'p', label: 'Plain' }]} />

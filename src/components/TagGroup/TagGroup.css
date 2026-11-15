@@ -35,6 +35,8 @@
   border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
+/* 16px beside the 14px label, as a field's icon: an Icon's own default is 24px, which filled the whole button. */
+.dk-tag-group__remove .dk-icon { font-size: var(--tag-group-remove-icon-size, var(--spacing-4)); }
 @media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
 .dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .dk-tag-group__remove { transition: none; } }

@@ -101,4 +101,5 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-radius` | `radius-control` | A tag's corners, as other controls'. |
 | `--tag-group-gap` | `spacing-2` | The space between tags, and between the label and the tags (8px). |
 | `--tag-group-avatar-size` | `spacing-6` | The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag. |
+| `--tag-group-remove-icon-size` | `spacing-4` | The × icon (16px), beside the 14px label. |
 <!-- token-table:end -->
