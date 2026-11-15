@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Sidebar: a 256px column (collapsed: a 64px icon rail) with a 1px line on its inner edge, the parent's height:
    header, the scrolling items, then the footer at the bottom. Items are muted text-sm font-medium with a 20px
-   icon, shaded on hover and a step darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
+   icon, shaded on hover (a step quieter than the current page) and darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
 @layer dk.components {
@@ -58,7 +58,7 @@
   text-align: start; text-decoration: none; cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--highlight)); color: var(--sidebar-item-text-hover, var(--text)); } }
+@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
 .dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
 /* The current page: with more contrast, a bar at the start that hover never draws (no width otherwise, GR413), and

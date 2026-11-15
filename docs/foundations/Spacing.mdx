@@ -1,4 +1,8 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { DoDontExample } from '../doDont';
+import { Stack } from '../../src/components/Stack/Stack';
+import { Button } from '../../src/components/Button/Button';
+
 import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../blocks';
 
 <Meta title="Foundations/Spacing" />
@@ -14,3 +18,18 @@ import { ReadmeSections, TokenTable, Palette, Aliases, TypeScale } from '../bloc
 <ReadmeSections headings={["Sizing"]} reserve={["Sizing"]} />
 
 <TokenTable group="sizing" />
+
+## Do and don't
+
+| Do | Don't |
+| --- | --- |
+| Space with a step of the scale: `gap-2`, `p-4`, `<Stack gap={3}>`. | Write a number that's not on it (`margin-top: 13px`). |
+| Put the space between things with `gap` on their parent. | Give each child its own margin, which doubles up and leaks out at the edges. |
+| Keep related things closer together than unrelated ones. | Space everything the same, so groups disappear. |
+
+<DoDontExample
+  doText="A gap from the scale, set once on the parent."
+  doExample={<Stack direction="row" gap={2}><Button variant="outline">Cancel</Button><Button>Save</Button></Stack>}
+  dontText="Margins made up per element."
+  dontExample={<Source language="css" dark={false} code={'.cancel { margin-right: 13px; }\n.save { margin-left: 3px; }'} />}
+/>
