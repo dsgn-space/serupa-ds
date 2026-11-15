@@ -101,6 +101,7 @@ Each is an optional override: set it on the page, a container or one MentionInpu
 | `--mention-input-option-bg-active` | `highlight` | The highlighted option (hover or arrow keys). |
 | `--mention-input-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--mention-input-description-color` | `text-muted` | An option's second line and the no-match message. |
+| `--mention-input-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--mention-input-listbox-shadow` | `elevation-overlay` | The list's shadow. |
 | `--mention-input-listbox-radius` | `radius-surface` | The list's corners (8px). |
 | `--mention-input-option-radius` | `radius-control` | An option's corners. Unset, they nest in the list's: its radius less its padding and border (3px), following the brand and data-radius. |
