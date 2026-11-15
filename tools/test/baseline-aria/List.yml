@@ -14,6 +14,13 @@
   - listitem: Logo.png 320 KB Mar 3
   - listitem: Archive 12 files Feb 18
 
+# InsetDividers
+- list "Members":
+  - listitem: Ada Lovelace ada@example.com Admin
+  - listitem: Grace Hopper grace@example.com Editor
+  - listitem: Linus Torvalds linus@example.com Viewer
+  - listitem: Margaret Hamilton margaret@example.com Editor
+
 # Links
 - list "Members":
   - listitem:

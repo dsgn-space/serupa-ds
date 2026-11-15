@@ -185,7 +185,7 @@ describe('Badge', () => {
     expect([s.borderTopWidth, s.borderTopStyle, s.backgroundColor]).toEqual(['1px', 'solid', 'rgba(0, 0, 0, 0)']);
   });
 
-  test(`contrast: all ${TONES.length} tones × 3 variants keep 4.5:1 text (and 3:1 outline borders) in all six themes`, async () => {
+  test(`contrast: all ${TONES.length} tones × 3 variants keep 4.5:1 text (and 3:1 outline borders) in every theme`, async () => {
     await show();
     const low: string[] = [];
     let n = 0;
@@ -318,7 +318,7 @@ describe('Badge', () => {
     expect(el('tags').querySelectorAll(BADGE).length).toBe(0);
   });
 
-  test('removable solid badges: the remove button\'s focus ring, where it runs over the fill, keeps 3:1 against it in every tone and all six themes', async () => {
+  test('removable solid badges: the remove button\'s focus ring, where it runs over the fill, keeps 3:1 against it in every tone and every theme', async () => {
     await render(<div>{TONES.map((t) => <Badge key={t} variant="solid" tone={t} data-rt={t} onRemove={() => {}}>{t}</Badge>)}</div>);
     const low: string[] = [];
     try {
@@ -416,7 +416,7 @@ describe('Badge', () => {
   });
 
   // One test a style: the 69 hovers and presses together outran a two-minute limit in WebKit (about 20 s in Firefox).
-  test.each(VARIANTS)(`hover and pressed keep 4.5:1 text: ${TONES.length} tones × %s × 2 states in all six themes`, async (v) => {
+  test.each(VARIANTS)(`hover and pressed keep 4.5:1 text: ${TONES.length} tones × %s × 2 states in every theme`, async (v) => {
     await show();
     const off = document.createElement('style');
     off.textContent = '.dk-badge, .dk-badge::before { transition: none !important; }';

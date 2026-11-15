@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { AccountSecurity, passwordProblems } from './AccountSecurity';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
@@ -165,6 +166,47 @@ describe('Patterns/Account security', () => {
     expect(screen.getByRole('button', { name: /^Sign out/ }).elements()).toHaveLength(0);
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalled();
+  });
+
+  test('with deleteAfter the delete is scheduled: the dialog says the day, a banner says it with Keep my account, which takes focus and keeps it', async () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 14);
+    const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const long = new Intl.DateTimeFormat('en-GB', { dateStyle: 'long' }).format(new Date(d.getFullYear(), d.getMonth(), d.getDate()));
+    let fail = true;
+    const onDeleteAccount = vi.fn((_on?: string) => Promise.resolve());
+    const onKeepAccount = vi.fn(() => (fail ? Promise.reject(new Error('offline')) : Promise.resolve()));
+    const screen = await render(<SerupaProvider locale="en-GB"><AccountSecurity deleteAfter={14} plan="Pro" onDeleteAccount={onDeleteAccount} onKeepAccount={onKeepAccount} /></SerupaProvider>);
+    expect(document.body.textContent).toContain('You have 14 days to change your mind.');
+    expect(document.body.textContent).toContain('Your Pro plan stops renewing, so you won’t be charged again.');
+    await screen.getByRole('button', { name: 'Delete account' }).click();
+    expect(inDialog(new RegExp(`will be deleted for good on ${long}\\. Until then you can sign in and keep your account\\. Your Pro plan stops renewing`))).toBe(true);
+    await screen.getByRole('alertdialog').getByRole('textbox').fill('ana@example.com');
+    await screen.getByRole('alertdialog').getByRole('button', { name: 'Delete my account' }).click();
+    await expect.poll(() => active().textContent).toBe('Keep my account');
+    expect(onDeleteAccount.mock.calls).toEqual([[iso]]);
+    await expect.element(screen.getByRole('button', { name: 'Keep my account' })).toHaveAccessibleDescription(`Your account will be deleted on ${long}`);
+    expect(document.querySelector(`time[datetime="${iso}"]`)).not.toBeNull();
+    // The page stays, and Delete account is gone until the account is kept.
+    expect(document.querySelector('h1')?.textContent).toBe('Security');
+    expect(screen.getByRole('button', { name: 'Delete account' }).elements()).toHaveLength(0);
+    await screen.getByRole('button', { name: 'Keep my account' }).click();
+    // A failure says so in the banner, where the button is, and the banner stays.
+    await expect.element(screen.getByRole('status').filter({ hasText: 'Couldn’t keep your account. Try again.' })).toBeVisible();
+    fail = false;
+    await screen.getByRole('button', { name: 'Keep my account' }).click();
+    await expect.poll(() => active().textContent).toBe('Security');
+    await expect.poll(() => toasted('Your account won’t be deleted')).toBe(true);
+    expect(screen.getByRole('button', { name: 'Keep my account' }).elements()).toHaveLength(0);
+    await expect.element(screen.getByRole('button', { name: 'Delete account' })).toBeVisible();
+    expect(onKeepAccount).toHaveBeenCalledTimes(2);
+  });
+
+  test('a delete already asked for opens with its banner, and the delete without deleteAfter still happens at once', async () => {
+    const screen = await render(<SerupaProvider locale="en-GB"><AccountSecurity deletionDate="2026-11-28" /></SerupaProvider>);
+    await expect.element(screen.getByRole('status').filter({ hasText: 'Your account will be deleted on 28 November 2026' })).toBeVisible();
+    expect(document.body.textContent).toContain('You can still keep it.');
+    expect(screen.getByRole('button', { name: 'Delete account' }).elements()).toHaveLength(0);
   });
 
   test('Escape closes the delete dialog and forgets a failure', async () => {

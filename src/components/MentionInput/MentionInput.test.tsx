@@ -218,7 +218,7 @@ describe('MentionInput', () => {
     expect(mentionsIn('@Ayu Lestari and @Ayu', team).map((p) => p.id)).toEqual(['ayul', 'ayu']);
   });
 
-  test('options, their second line and the active option read 4.5:1 on the list in all six themes', async () => {
+  test('options, their second line and the active option read 4.5:1 on the list in every theme', async () => {
     await render(<Box />);
     await userEvent.click(box());
     await userEvent.keyboard('@');

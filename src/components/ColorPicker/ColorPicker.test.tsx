@@ -88,7 +88,7 @@ describe('ColorPicker', () => {
     expect([group().getAttribute('aria-invalid'), group().getAttribute('aria-errormessage') === err.id]).toEqual(['true', true]);
   });
 
-  test('invalid shows on the swatches: their border takes the danger color, 3:1 on the page in all six themes', async () => {
+  test('invalid shows on the swatches: their border takes the danger color, 3:1 on the page in every theme', async () => {
     await render(<><div id="ok"><ColorPicker aria-label="Fine" swatches={SW} /></div><div id="bad"><ColorPicker aria-label="Wrong" swatches={SW} invalid /></div></>);
     const ring = (id: string) => css(document.querySelector(`#${id} [role="radio"]`)).boxShadow.match(/^(\w+\([^)]*\)|#\w+|\w+)/)![1]!;
     const low: string[] = [];
@@ -329,7 +329,7 @@ describe('ColorPicker', () => {
       .toEqual([null, true, 24, '#18181b']);
   });
 
-  test('the check is white or black, whichever stands out on the swatch (3:1 or more); the ring keeps 3:1 and the contrast line 4.5:1 on the page in all six themes', async () => {
+  test('the check is white or black, whichever stands out on the swatch (3:1 or more); the ring keeps 3:1 and the contrast line 4.5:1 on the page in every theme', async () => {
     await render(<div style={{ background: 'var(--surface)', padding: '8px' }}><ColorPicker aria-label="C" swatches={SW} defaultValue="#fde047" contrastWith="#ffffff" /></div>);
     const low: string[] = [];
     for (const v of ['#1D4ED8', '#fde047', '#fff', '#18181b']) {
@@ -352,7 +352,7 @@ describe('ColorPicker', () => {
   });
 
   // DT1: the edge was --border, 1.27:1 on the page, so a white swatch on a white page (a black one on a dark page) had no edge.
-  test('every swatch and the native well have an edge that keeps 3:1 on the page in all six themes, so white and black swatches show', async () => {
+  test('every swatch and the native well have an edge that keeps 3:1 on the page in every theme, so white and black swatches show', async () => {
     await render(<div style={{ background: 'var(--surface)', padding: '8px' }}><ColorPicker aria-label="C" swatches={['#ffffff', '#000000']} /></div>);
     const page = () => css(radios()[0]!.closest('div[style]')).backgroundColor;
     const native = document.querySelector('input[type="color"]') as HTMLElement;

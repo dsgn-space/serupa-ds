@@ -127,7 +127,7 @@ describe('StatusTracker', () => {
     await expect.element(page.getByText('Terganggu')).toBeVisible();
   });
 
-  test('bars 3:1 on the page, the caption, summary and legend 4.5:1, in all six themes', () => {
+  test('bars 3:1 on the page, the caption, summary and legend 4.5:1, in every theme', () => {
     expect(lowContrast([
       ['up', 'var(--success)', 'var(--surface)', 3],
       ['degraded', 'var(--warning)', 'var(--surface)', 3],

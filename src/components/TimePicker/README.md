@@ -55,7 +55,7 @@ Drawn from the `Disabled` story.
 - The field is an ARIA combobox (`aria-haspopup="listbox"`, `aria-expanded`, `aria-activedescendant`) and the list a `role="listbox"` with `aria-selected` on the chosen time. The check is decorative.
 - The placeholder and the format in the field's description ("Format: hh:mm AM/PM", after a Field hint) follow the locale's order, separator and AM/PM words: "hh.mm" in id-ID, "오전/오후 hh:mm" in ko. The words come from the `formatHint` label.
 - The clock button is out of the tab order, since ↓ in the field does the same.
-- Times keep 4.5:1 (also highlighted), and the check and clock icon 3:1, in all six themes (`TimePicker.test.tsx`).
+- Times keep 4.5:1 (also highlighted), and the check and clock icon 3:1, in every theme (`TimePicker.test.tsx`).
 
 ### Keyboard
 
@@ -107,7 +107,6 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--time-picker-option-indicator` | `highlight-indicator` | The 2px bar at the highlighted item's start: none by default (the grey fill marks it), `text`-dark with more contrast. |
 | `--time-picker-check` | `primary` | The check by the chosen time (3:1 on surface). |
 | `--time-picker-list-shadow` | `elevation-overlay` | The list's shadow. |
-| `--time-picker-list-depth` | `depth-surface` | The list's tactile layers, over its shadow: a light along the top edge and a shade along the bottom one. None in the flat brands. |
 | `--time-picker-list-radius` | `radius-surface` | The list's corners (8px). |
 | `--time-picker-list-max-height` | `spacing-60` | The list's tallest before it scrolls (240px). |
 | `--time-picker-list-min-width` | `spacing-40` | The list's least width (160px). |

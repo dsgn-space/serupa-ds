@@ -46,6 +46,7 @@ Drawn from the `Controlled` story.
 - Write a `label` that says what the slides are ("Product photos"). Pass `slideLabel` when "2 of 5" isn't the best name, such as each photo's subject. The default comes from the `slideOf` label, so `SerupaProvider labels` translates it ("2 dari 5" with `idLabels`).
 - Use `loop` for photos with no natural order, and leave it off when the slides have a start and an end.
 - For a row of product cards or testimonials, show two or three at once with `perView`. Set it per screen width, such as `perView={{ base: 1, md: 2, lg: 3 }}`, so phones still get one at a time.
+- On a phone, `peek` shows the edge of the next slide, which tells people they can swipe without them having to find the dots.
 - Turn off `dots` for 2 slides or when the arrows are enough, and `arrows` only when swiping or your own controls (`index` and `onIndexChange`) replace them.
 - The previous and next buttons sit over the slide's sides, 8px in and 32px wide. A picture can run under them, but give a slide with text at least 40px of inline padding while the arrows are on (`padding-inline: var(--spacing-10)`), or the buttons cover the ends of its lines on a phone. With `--carousel-arrow-offset` changed, that's the offset plus 32px.
 
@@ -77,7 +78,7 @@ Drawn from the `Controlled` story.
 
 - **ARIA states:** the current dot has `aria-current="true"` and is the only one in the Tab order. The slides are in a polite live region, so a screen reader reads the new slide after a button press.
 - **Motion:** it never moves on its own, so nothing needs pausing (WCAG 2.2.2), and slides change at once with reduced motion.
-- **Contrast:** the dots and the buttons keep 3:1 in all six themes (`Carousel.test.tsx`).
+- **Contrast:** the dots and the buttons keep 3:1 in every theme (`Carousel.test.tsx`).
 - **What's still yours:** a `label`, and alt text on every picture in the slides.
 
 ## Props
@@ -97,6 +98,7 @@ Drawn from the `Controlled` story.
 | `nextLabel` | `string` | `"Next slide"` | The next button's name. |
 | `slideLabel` | `(index, count) => string` | the `slideOf` label, `"2 of 5"` | Each slide's name, and its dot's. |
 | `perView` | `number \| { base?, sm?, md?, lg? }` | `1` | How many slides show side by side, or one count per screen width (640, 768, 1024px up). |
+| `peek` | `boolean` | `false` | Shows 48px of the next slide at the end (`--carousel-peek`), so people see there's more; on the last slide the previous one shows at the start. The slide that peeks stays out of the tab order. |
 
 `ref`, `className`, `style` and other props go to the outer `<section>`.
 
@@ -117,6 +119,7 @@ Each is an optional override: set it on the page, a container or one carousel. T
 | `--carousel-dot-width-active` | `spacing-6` | The current dot's width (24px). |
 | `--carousel-gap` | `spacing-3` | Space between the slides and the dots (12px). |
 | `--carousel-slide-gap` | `spacing-4` | Space between slides shown side by side, with `perView` (16px). |
+| `--carousel-peek` | `spacing-12` | How much of the next slide shows at the end with peek (48px). |
 | `--carousel-arrow-offset` | `spacing-2` | The previous and next buttons' distance from the sides (8px). |
 | `--carousel-arrow-shadow` | `elevation-part` | The previous and next buttons' shadow, so they stand out on any slide. |
 <!-- token-table:end -->

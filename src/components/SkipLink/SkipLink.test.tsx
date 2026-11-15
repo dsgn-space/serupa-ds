@@ -88,7 +88,7 @@ describe('SkipLink', () => {
     history.replaceState(null, '', location.pathname + location.search);
   });
 
-  test('its text reads 4.5:1 on its background in all six themes', async () => {
+  test('its text reads 4.5:1 on its background in every theme', async () => {
     await render(<Page />);
     el('skip').focus();
     for (const th of THEMES) {

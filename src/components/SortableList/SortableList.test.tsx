@@ -277,7 +277,7 @@ describe('SortableList', () => {
     expect(handle('Apollo').getAttribute('aria-label')).toBe('Move Apollo');
   });
 
-  test('contrast: the handle keeps 3:1 and the text 4.5:1 on the row, in all six themes', async () => {
+  test('contrast: the handle keeps 3:1 and the text 4.5:1 on the row, in every theme', async () => {
     await render(<List />);
     const low: string[] = [];
     for (const th of THEMES) {
@@ -350,7 +350,7 @@ describe('SortableList held state', () => {
   test('held down: a drag handle fills one step past its hover (--sortable-list-handle-bg-pressed), with or without a pointer that hovers', async () => {
     await render(<List />);
     const b = page.getByRole('button', { name: /Apollo/ }).element() as HTMLElement;
-    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in all six themes.
+    // Its icon or text keeps 3:1 (4.5:1 for an option's text) on the held fill in every theme.
     const low = await press(b, async () => {
       await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
       const out: string[] = [];

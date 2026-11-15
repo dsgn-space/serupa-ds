@@ -52,7 +52,7 @@ Drawn from the `VariantsAndSizes` story.
 
 - It's a real `<button>`. "Copied" is announced in the shared polite status region, and a failure in the assertive one.
 - Only the current label is read out: the other is hidden from screen readers. An `iconOnly` button's name changes to "Copied" while it shows the check, and it has a tooltip (`title`).
-- The check keeps 3:1 on the button in all six themes (`CopyButton.test.tsx`). In forced-colors mode it uses the button's text color.
+- The check keeps 3:1 on the button in every theme (`CopyButton.test.tsx`). In forced-colors mode it uses the button's text color.
 
 ### Keyboard
 

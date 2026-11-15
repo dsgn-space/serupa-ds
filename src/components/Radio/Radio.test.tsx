@@ -232,7 +232,7 @@ describe('Radio', () => {
     const ring = color('var(--focus-ring)');
     await expect.poll(() => css(input('s2')).outlineColor).toBe(ring);
     const s = css(input('s2'));
-    expect(`${s.outlineStyle} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow.replace(/(, )?rgba\(0, 0, 0, 0\) 0px 0px 0px 0px/g, '') || 'none'}`).toBe('solid 2px 2px none');   // the empty tactile layer (flat brand) is no ring
+    expect(`${s.outlineStyle} ${s.outlineWidth} ${s.outlineOffset} ${s.boxShadow}`).toBe('solid 2px 2px none');
   });
 
   test('hover: field-border-hover; invalid keeps the danger border', async () => {
@@ -258,7 +258,7 @@ describe('Radio', () => {
     expect([input('o1').matches(':disabled'), css(wrap('o1')).opacity]).toEqual([true, '0.5']);
   });
 
-  test('contrast in all six themes: label and description 4.5:1; checked fill, dot, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
+  test('contrast in every theme: label and description 4.5:1; checked fill, dot, focus ring and invalid border 3:1, the soft border 1.3:1', () => {
     expect(lowContrast([
       ['label', 'var(--text)', 'var(--surface)', 4.5],
       ['description', 'var(--text-muted)', 'var(--surface)', 4.5],
@@ -307,7 +307,7 @@ describe('Radio', () => {
     await expect.element(page.getByRole('radio', { name: 'Express', exact: true })).toHaveAccessibleDescription('Next day');
   });
 
-  test('variant card: a checked card\'s border 3:1 on the card and the page, in all six themes', () => {
+  test('variant card: a checked card\'s border 3:1 on the card and the page, in every theme', () => {
     expect(lowContrast([
       ['checked card border', 'var(--primary)', 'var(--surface)', 3],
     ])).toEqual([]);

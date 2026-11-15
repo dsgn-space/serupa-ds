@@ -148,7 +148,7 @@ describe('Avatar', () => {
     expect([css(el('tok').firstElementChild).backgroundColor, el('tok').getBoundingClientRect().width]).toEqual(['rgb(1, 2, 3)', 50]);
   });
 
-  test('contrast: initials and the icon keep 4.5:1 on their background in all six themes', async () => {
+  test('contrast: initials and the icon keep 4.5:1 on their background in every theme', async () => {
     await render(<Avatar id="ini" name="grace brewster hopper" />);
     const low: string[] = [];
     let n = 0;

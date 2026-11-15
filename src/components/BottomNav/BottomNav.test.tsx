@@ -89,7 +89,7 @@ describe('BottomNav', () => {
     expect(b.getBoundingClientRect().bottom).toBeLessThanOrEqual(nav().getBoundingClientRect().top);
   });
 
-  test('labels and the current page read 4.5:1 on the bar in all six themes', async () => {
+  test('labels and the current page read 4.5:1 on the bar in every theme', async () => {
     await page.viewport(414, 800);
     await render(<Bar />);
     for (const th of THEMES) {
@@ -101,7 +101,7 @@ describe('BottomNav', () => {
 });
 
 describe('BottomNav held state', () => {
-  test('held down: an item\'s icon pill fills one step past its hover (--bottom-nav-icon-bg-pressed), and its text or icon keeps 3:1 on it in all six themes', async () => {
+  test('held down: an item\'s icon pill fills one step past its hover (--bottom-nav-icon-bg-pressed), and its text or icon keeps 3:1 on it in every theme', async () => {
     await page.viewport(414, 800);
     await render(<Bar />);
     const b = links()[0]!;

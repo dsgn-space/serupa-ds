@@ -10,7 +10,7 @@
    Policy), which saves a request: a server-rendered page then never flashes the wrong theme. So this file
    never contains a closing script tag or an HTML comment opener, either of which would end or break it.
 
-   data-brand  blue | violet | emerald         (default: blue)
+   data-brand  blue | red | orange | amber | yellow | lime | green | emerald | teal | cyan | sky | indigo | violet | purple | fuchsia | pink | rose  (default: blue)
    data-brands your own brands (serupa-brand), such as "acme"
    data-mode   auto | light | dark             (default: auto = follow the operating system)
    A page with only data-theme="violet-dark" (no data-brand or data-mode) keeps that theme as its default.
@@ -25,7 +25,7 @@
 (function () {
   // Loaded twice (inline and as a file): the first copy runs the page.
   if (window.Serupa && window.Serupa.theme) return;
-  var BRANDS = ['blue', 'violet', 'emerald'], MODES = ['auto', 'light', 'dark'], KEY = 'serupa-theme';
+  var BRANDS = ['blue', 'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'], MODES = ['auto', 'light', 'dark'], KEY = 'serupa-theme';
   var root = document.documentElement;
   BRANDS = BRANDS.concat((root.getAttribute('data-brands') || '').match(/[a-z][a-z0-9]*/g) || []);
   var own = !root.hasAttribute('data-brand') && !root.hasAttribute('data-mode') && /^([a-z]+)-(light|dark)$/.exec(root.getAttribute('data-theme') || '');

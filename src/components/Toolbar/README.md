@@ -63,7 +63,7 @@ import { Toolbar, ButtonGroup, ToggleButton, IconButton, Divider, Menu, MenuItem
 
 Your `onKeyDown` runs before the toolbar's own keys, so `e.preventDefault()` in it keeps the toolbar from moving focus on that key. A Menu opened from the toolbar keeps its own keys, and closing it returns focus to its trigger.
 
-- **Contrast:** it adds no colors to its controls. Text placed straight inside reads 4.5:1 on its background in all six themes (`Toolbar.test.tsx`).
+- **Contrast:** it adds no colors to its controls. Text placed straight inside reads 4.5:1 on its background in every theme (`Toolbar.test.tsx`).
 - **What's still yours:** a name for each icon-only control, and a name for the toolbar.
 
 ## Props

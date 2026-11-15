@@ -47,6 +47,7 @@ Drawn from the `Settings` story.
 
 - Put actions in `trailing`, never inside the row's link or button, and name them for their row ("More for Ada Lovelace").
 - Use `as="ol"` when the order matters.
+- Use `divided="inset"` when every row leads with an avatar or icon: the lines start at the text, so the pictures read as one column.
 - Use `variant="card"` for a list that stands on its own; inside a Card or a panel that already has a frame, keep it `plain`.
 - With a router, pass its link component as `as` and its props (such as `to`) in `linkProps`.
 
@@ -92,7 +93,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 - A whole row is one link or button, named by its title and description; trailing actions are separate controls, so give them names that say which row they're for ("More for Ada Lovelace").
 - An Avatar beside a written name repeats it, so give it `alt=""`, as in the example above. Otherwise every row reads the name twice ("Ada Lovelace Ada Lovelace ada@example.com"). An icon beside a title that says the same is decorative too.
 - Selected rows have a bar and `aria-current` or `aria-pressed`, not only a background.
-- Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in all six themes (`List.test.tsx`).
+- Titles and descriptions keep 4.5:1 on plain and shaded rows, and the selected bar 3:1, in every theme (`List.test.tsx`).
 - **Keyboard:** an item with `href` or `onClick` has one Tab stop, its main area, where Enter (Space too for a button) acts. A disabled one is skipped. Controls in `trailing` are Tab stops of their own. Plain items add none.
 - **With `selectionMode`:** the list is a grid (`role="grid"`, `aria-multiselectable` when multiple) of rows named by their titles, with `aria-selected`. It's one Tab stop: Up and Down move between rows, Home and End go to the ends, Right and Left reach the row's checkbox, link and actions. Space picks the focused row, Shift with Up or Down picks as it moves, Ctrl or Cmd+A picks every row, and Enter follows the row's link or presses its button. A picked row has a checked box and the primary bar, not only a background.
 
@@ -116,7 +117,7 @@ const [picked, setPicked] = React.useState<string[]>([]);
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<ul>` or `<ol>`. |
 | `variant` | `'plain'` \| `'card'` | `'plain'` | Bare rows, or rows in a bordered, rounded frame |
-| `divided` | boolean | `true` | Lines between rows |
+| `divided` | boolean \| `'inset'` | `true` | Lines between rows; `'inset'` starts each line where the text starts, after the avatar or icon, so a list of people reads as one group per row |
 | `as` | `'ul'` \| `'ol'` | `'ul'` | `ol` when the order matters |
 | `loading` | boolean | `false` | Its rows are loading: sets `aria-busy` on the list. Pair it with `ListLoadingItems` |
 | `selectionMode` | `'none'` \| `'single'` \| `'multiple'` | `'none'` | Rows people pick: a grid with one Tab stop, and a checkbox per row when multiple |

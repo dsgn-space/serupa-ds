@@ -5,7 +5,8 @@
 //
 // tokens.css, in order:
 //   :root, [data-theme="<first theme>"]   every themed token (the colors and the shadows) at its first theme's value
-//   [data-theme="<theme>"]                each other theme: the tokens with a value per theme (the alias colors)
+//   [data-theme$="-light"], [$="-dark"]   the alias colors every brand shares, once per mode
+//   [data-theme="<theme>"]                each other theme: the alias colors its brand changes
 //   theme axes (ADR-0011)                 data-brand / data-mode on an element without data-theme: the colors that
 //                                         differ between themes as light-dark() pairs, so the operating system's
 //                                         light or dark setting applies from the first paint, with no JavaScript
@@ -14,9 +15,6 @@
 //   shadow axis (73)                      data-shadow="brand": the box shadows in a deep shade of the brand color,
 //                                         and the elevation roles again, so they follow
 //   roundness axis                        data-radius="sharp" | "round" | "default": the radius roles' corners
-//   depth axis                            data-depth="tactile" (and the brands whose themes say depth: "tactile",
-//                                         violet): the depth-* tokens get their tactile layers; data-depth="flat"
-//                                         puts the flat ones back. Forced colors drops the sheens.
 //   type scale axis (22)                  data-type-scale="fluid": sizes from 1.5rem up grow with the viewport
 //   :lang() per script (143)              taller lines for Arabic, Devanagari, Thai and CJK; CJK's font by language
 //   .type-*                               one class per complete text style
@@ -28,8 +26,6 @@ import path from 'node:path';
 const P = path.resolve(process.argv.slice(2).find((a) => !a.startsWith('--')) || path.join(import.meta.dirname, '..', '..'));
 const OUT = path.join(P, 'tokens.css');
 // A contrastMore keyed by theme id ({ "blue-light": …, "violet-dark": … }) rather than { light, dark }.
-// A token whose value differs between themes.
-const varies = (x) => !!x.value && typeof x.value === 'object' && new Set(Object.values(x.value)).size > 1;
 const perTheme = (x) => !!x.contrastMore && typeof x.contrastMore === 'object' && !('light' in x.contrastMore);
 
 /** Each token's description from tokens.json, by its property name (--primary → "Main action color…"). */
@@ -52,12 +48,9 @@ export function buildTokensCss(t) {
   // A contrastMore with a value per theme (a brand color: violet's is violet) can't be one light-dark() pair, so it
   // becomes an internal themed token, --dk-more-<name>, that every theme and brand rule below sets like any alias;
   // the contrast rule then points the token at it (contrastAndDensity).
-  // A radius role with a roundness (sharp and round values) that differs between themes keeps the theme's own value in
-  // --dk-own-<name> too, set by the same theme and brand rules, so data-radius="default" can put it back in a section (roundness below).
   const all = [
     ...tokens,
     ...tokens.filter(perTheme).map((x) => ({ name: `dk-more-${x.name}`, value: x.contrastMore })),
-    ...tokens.filter((x) => x.roundness && varies(x)).map((x) => ({ name: `dk-own-${x.name}`, value: x.value })),
   ];
 
   let css = '/* Serupa — generated from tokens.json */\n';
@@ -65,9 +58,21 @@ export function buildTokensCss(t) {
   css += `:root, [data-theme="${themes[0]}"] {\n`;
   for (const x of all.filter(themed)) css += line(x.name, x.value[themes[0]]);
   css += '}\n';
+  // A theme is a brand and a mode. The colors every brand shares (the neutrals, the status colors, the charts) are
+  // written once per mode, for every theme of that mode; each theme then sets only the few its brand changes.
+  const multi = all.filter((x) => themed(x) && Object.keys(x.value).length > 1);
+  const ofMode = (mode) => themes.filter((th) => th.endsWith(`-${mode}`));
+  const byBrand = new Set(multi.filter((x) => ['light', 'dark'].some((mode) => new Set(ofMode(mode).map((th) => x.value[th])).size > 1)));
+  for (const mode of ['light', 'dark']) {
+    const th = ofMode(mode)[0];
+    if (!th) continue;
+    css += `[data-theme$="-${mode}"] {\n`;
+    for (const x of multi.filter((x) => !byBrand.has(x))) css += line(x.name, x.value[th]);
+    css += '}\n';
+  }
   for (const th of themes.slice(1)) {
     css += `[data-theme="${th}"] {\n`;
-    for (const x of all.filter((x) => themed(x) && Object.keys(x.value).length > 1 && x.value[th] != null)) css += line(x.name, x.value[th]);
+    for (const x of multi.filter((x) => byBrand.has(x) && x.value[th] != null)) css += line(x.name, x.value[th]);
     css += '}\n';
   }
 
@@ -81,7 +86,6 @@ export function buildTokensCss(t) {
   css += '}\n';
   css += contrastAndDensity(all, line);   // after :root, so data-density on the root wins over it
   css += tintedShadows(all, line);
-  css += depth(t, all, line);
   css += roundness(all, line);
   css += fluidType(all, styles, line);
   css += scripts(t, all);
@@ -134,8 +138,7 @@ function scripts(t, all) {
 function axes(t, varying, line) {
   const themes = t.color.themes.map((x) => x.id);
   const brands = [...new Set(themes.map((id) => id.split('-')[0]))];
-  // light-dark() takes colors only, so a size, shadow, duration or easing that a brand sets (its radii, elevation and
-  // motion: the Modern brand's 8px controls) is the same in both modes and is written as it is.
+  // A theme sets colors only (src/styles/themeAxes.test.tsx holds the token source to it), so every pair is two colors.
   const pair = (x, b) => {
     const [l, d] = [x.value[b + '-light'], x.value[b + '-dark']];
     return l === d ? l : `light-dark(${l}, ${d})`;
@@ -181,8 +184,8 @@ function contrastAndDensity(all, line) {
   const nested = ':is([data-mode], [data-brand], [data-theme])';
   let css = `[data-theme$="-light"] { color-scheme: light; }\n[data-theme$="-dark"] { color-scheme: dark; }\n`;
   // Also on nested data-mode elements, which redeclare the normal colors.
-  // :not(#dk-more) here too: a brand that sets a neutral of its own (Modern's borders) writes it in its brand rules,
-  // which weigh up to three attributes, and asking for more contrast must still beat them.
+  // :not(#dk-more) here too: a brand's rules weigh up to three attributes, and asking for more contrast must still
+  // beat them.
   css += `[data-contrast="more"]:not(#dk-more), [data-contrast="more"] [data-mode]:not(#dk-more) {\n${pairs}}\n`;
   if (brand) css += `[data-contrast="more"]:not(#dk-more), [data-contrast="more"] ${nested}:not(#dk-more) {\n${brand}}\n`;
   css += `@media (prefers-contrast: more) {\n:root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) [data-mode]:not([data-contrast="normal"] *, #dk-more) {\n${pairs}}\n`;
@@ -195,19 +198,17 @@ function contrastAndDensity(all, line) {
 }
 
 // Roundness: data-radius="sharp" or "round" points each radius role at its roundness value (2 to 4px corners, or
-// 6 to 24px), on any brand; data-radius="default" puts the theme's own back in a section. Like more contrast, it
-// beats the brand rules that set the roles (Modern's 8 and 12px), so it carries :not(#dk-radius), and it's set again
-// on a nested data-brand or data-theme section without a data-radius of its own, which redeclares the brand's roles.
-// The pill stays round. A focus ring is an outline, which follows the corner it's drawn around.
+// 6 to 24px), on any brand; data-radius="default" puts the default back in a section. It beats a brand's own rules (a
+// serupa-brand theme made with --corners sets the roles), so it carries :not(#dk-radius), and it's set again on a nested
+// data-brand or data-theme section without a data-radius of its own. The pill stays round. A focus ring is an outline,
+// which follows the corner it's drawn around.
 function roundness(all, line) {
   const roles = all.filter((x) => x.roundness);
-  // A role every theme sets alike is put back as it is; one that differs (Modern's) reads its --dk-own-* token.
-  const own = (x) => (varies(x) ? `  --${x.name}: var(--dk-own-${x.name});\n` : line(x.name, typeof x.value === 'object' ? Object.values(x.value)[0] : x.value));
   if (!roles.length) return '';
   const at = (v) => `[data-radius="${v}"]:not(#dk-radius), [data-radius="${v}"] :is([data-brand], [data-theme]):not([data-radius], #dk-radius)`;
   let css = '';
   for (const v of ['sharp', 'round']) css += `${at(v)} {\n${roles.map((x) => line(x.name, x.roundness[v])).join('')}}\n`;
-  css += `${at('default')} {\n${roles.map(own).join('')}}\n`;
+  css += `${at('default')} {\n${roles.map((x) => line(x.name, x.value)).join('')}}\n`;
   return css;
 }
 
@@ -227,43 +228,6 @@ function tintedShadows(all, line) {
   const roles = roleTokens.map((x) => line(x.name, at(x))).join('');
   let css = `[data-shadow="brand"] {\n${box.map((x) => line(x.name, at(x).replace(/rgb\(0 0 0 \/ ([\d.]+)\)/g, TINT))).join('')}${roles}}\n`;
   css += `[data-shadow="neutral"] {\n${box.map((x) => line(x.name, at(x))).join('')}${roles}}\n`;
-  // A brand that maps a role to another shadow (Modern's softer elevation) sets it again in its own sections.
-  const brands = [...new Set(Object.keys(roleTokens.find((x) => typeof x.value === 'object')?.value || {}).map((id) => id.split('-')[0]))];
-  for (const b of brands) {
-    const own = roleTokens.filter((x) => typeof x.value === 'object' && x.value[`${b}-light`] !== at(x));
-    if (!own.length) continue;
-    const brand = `:is([data-theme^="${b}-"], [data-brand="${b}"])`;
-    css += `${brand}:is([data-shadow]), ${brand} [data-shadow] {\n${own.map((x) => line(x.name, x.value[`${b}-light`])).join('')}}\n`;
-  }
-  return css;
-}
-
-// Depth: the tactile look. A token with a tactile value (the depth-* layers and sheens) has it in a brand whose themes
-// say depth: "tactile" (violet), and under data-depth="tactile"; its flat value (no layer, no image) is everywhere
-// else. The layers are added to a component's own shadow, never in place of it, so the flat brands look as before
-// and data-shadow still tints the shadow under them. Once any brand is tactile, every brand writes its own depth too,
-// so a blue section inside a violet page is flat again. data-depth comes after the brands: on the same element it
-// wins, and a section can turn the depth on or off whatever its brand. In forced colors the system colors replace
-// backgrounds and shadows go, so the sheens (background images) go too.
-function depth(t, all, line) {
-  const deep = all.filter((x) => x.tactile != null);
-  if (!deep.length) return '';
-  // A token a brand also sets for itself (Modern's soft ease-spring) is flat at that brand's own value.
-  const themed = (x) => !!x.value && typeof x.value === 'object';
-  const tactile = (x) => line(x.name, x.tactile), flat = (x) => line(x.name, x.value);
-  const flatIn = (b) => (x) => (themed(x) ? line(x.name, x.value[`${b}-light`] ?? x.value[Object.keys(x.value)[0]]) : flat(x));
-  const brands = new Map();
-  for (const th of t.color.themes) {
-    const b = th.id.split('-')[0];
-    brands.set(b, brands.get(b) || th.depth === 'tactile');
-  }
-  let css = '';
-  if ([...brands.values()].some(Boolean))
-    for (const [b, on] of brands) css += `[data-theme^="${b}-"], [data-brand="${b}"] {\n${deep.map(on ? tactile : flatIn(b)).join('')}}\n`;
-  css += `[data-depth="tactile"] {\n${deep.map(tactile).join('')}}\n`;
-  css += `[data-depth="flat"] {\n${deep.filter((x) => !themed(x)).map(flat).join('')}}\n`;
-  const images = deep.filter((x) => x.value === 'none');
-  if (images.length) css += `@media (forced-colors: active) {\n:root, [data-theme], [data-brand], [data-depth] {\n${images.map(flat).join('')}}\n}\n`;
   return css;
 }
 
