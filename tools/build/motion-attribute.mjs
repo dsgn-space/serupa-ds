@@ -21,15 +21,29 @@ const ROOTISH = /^(?::where\(html\)|html|:root)(?![\w-])|^::view-transition/;
 /** @param {(root: import('postcss-selector-parser').Root) => void} fn @returns {(sel: string) => string} */
 const parse = (fn) => (sel) => selectorParser(fn).processSync(sel);
 
+// TypeScript 7's nightly finds postcss-selector-parser's types for adding or replacing nodes "infinitely circular"
+// (TS5115, through Container and Diff: a Selector holds every kind of Node but a Selector), so those calls go
+// through this plain type.
+/** @typedef {{ append(child: unknown): unknown, replaceWith(node: unknown): unknown, insertBefore(old: unknown, node: unknown): unknown }} Mutable */
+/** @param {unknown} node */
+const mutable = (node) => /** @type {Mutable} */ (node);
+
+/** A selector holding this text as it is. @param {string} value */
+const raw = (value) => {
+  const sel = selectorParser.selector({ value: '' });
+  mutable(sel).append(selectorParser.string({ value }));
+  return sel;
+};
+
 // Under the attribute: :where([data-motion="reduce"]) before the selector, or the attribute on the root itself.
 const under = parse((sels) => {
   sels.each((s) => {
     const text = String(s).trim();
     if (ROOTISH.test(text)) {
       const rest = text.replace(/^(?::where\(html\)|html|:root)/, '');
-      s.replaceWith(selectorParser.selector({ value: '' }).append(selectorParser.string({ value: `:where(:root${ATTR})${rest}` })));
+      mutable(s).replaceWith(raw(`:where(:root${ATTR})${rest}`));
     } else {
-      s.replaceWith(selectorParser.selector({ value: '' }).append(selectorParser.string({ value: `:where(${ATTR}) ${text}` })));
+      mutable(s).replaceWith(raw(`:where(${ATTR}) ${text}`));
     }
   });
 });
@@ -38,12 +52,13 @@ const under = parse((sels) => {
 const notUnder = parse((sels) => {
   sels.each((s) => {
     const guard = selectorParser.pseudo({ value: ':not' });
-    guard.append(selectorParser.selector({ value: '' }).append(selectorParser.string({ value: `:where(${ATTR}, ${ATTR} *)` })));
-    let i = s.nodes.length;
-    while (i > 0 && s.nodes[i - 1].type !== 'combinator') i--;
-    let at = s.nodes.length;
-    for (let j = i; j < s.nodes.length; j++) if (s.nodes[j].type === 'pseudo' && s.nodes[j].value.startsWith('::')) { at = j; break; }
-    if (at === s.nodes.length) s.append(guard); else s.insertBefore(s.nodes[at], guard);
+    mutable(guard).append(raw(`:where(${ATTR}, ${ATTR} *)`));
+    const nodes = /** @type {{ type: string, value: string }[]} */ (/** @type {{ nodes: unknown }} */ (/** @type {unknown} */ (s)).nodes);
+    let i = nodes.length;
+    while (i > 0 && nodes[i - 1].type !== 'combinator') i--;
+    let at = nodes.length;
+    for (let j = i; j < nodes.length; j++) if (nodes[j].type === 'pseudo' && nodes[j].value.startsWith('::')) { at = j; break; }
+    if (at === nodes.length) mutable(s).append(guard); else mutable(s).insertBefore(nodes[at], guard);
   });
 });
 
