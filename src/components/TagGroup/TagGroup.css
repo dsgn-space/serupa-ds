@@ -23,6 +23,11 @@
 }
 .dk-tag-group__tag[aria-disabled="true"] { opacity: var(--opacity-disabled); }
 .dk-tag-group__text { display: inline-flex; align-items: center; gap: var(--spacing-1); min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
+/* An avatar sits at the tag's start edge, as a recipient's picture does in a To field; an icon takes the check's place. */
+.dk-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-6)); block-size: var(--tag-group-avatar-size, var(--spacing-6)); margin-inline-start: calc(var(--spacing-0) - var(--spacing-1)); border-radius: var(--radius-pill); overflow: hidden; }
+/* Whatever picture is passed (an Avatar of any size, an <img>) is drawn at that size, so the tag keeps its height. */
+.dk-tag-group__avatar > * { inline-size: var(--sizing-full); block-size: var(--sizing-full); min-inline-size: var(--spacing-0); }
+.dk-tag-group__icon { display: inline-flex; flex-shrink: 0; color: var(--tag-group-icon, var(--text-muted)); }
 .dk-tag-group__check { flex: none; }
 .dk-tag-group__cell { display: inline-flex; }
 .dk-tag-group__remove {
