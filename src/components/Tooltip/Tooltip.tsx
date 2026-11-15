@@ -135,7 +135,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
   }, [open, props.role]);
 
   // Place it while open, and keep it placed as the page scrolls or resizes, or its text changes. A press outside hides it.
-  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: 'top', offsetVar: '--dk-tooltip-offset', watch: full || props.content, onOutside: () => set(false, 'outside') });
+  useAnchoredLayer(open, tipRef, anchorRef, { placement: props.placement, fallback: 'top', offsetVar: '--dk-tooltip-offset', closeRequest: false, watch: full || props.content, onOutside: () => set(false, 'outside') });
 
   /* Its content is plain text: the keyboard can't reach a link or button in it (focus leaving the element hides it),
      and on its inverse fill a link's color measures under 4.5:1 in every theme. Warn when one is there, rendered or not. */

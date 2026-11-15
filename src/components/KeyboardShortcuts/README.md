@@ -42,6 +42,8 @@ Drawn from the `LongText` story.
 - Give it a `description` to list it, and a `group` to put it under a heading. Without a description, it works but isn't listed.
 - Put one `<KeyboardShortcuts />` in the app's layout. Also open it from a help menu or button (`open` and `onOpenChange`), since many people don't know <kbd>?</kbd>.
 - List shortcuts you don't set up with `useShortcut`, such as an editor's, with `shortcuts`.
+- Use the shortcuts people already know for what they already do: `mod`+K to search or open a command list, `mod`+Z to undo (a [Toast](../Toast/README.md)'s `toast.undo` answers it), `mod`+, for settings, <kbd>?</kbd> for this list, <kbd>Esc</kbd> to close. Don't give those keys another job, and don't make a new shortcut by adding Shift or Alt to one of them for something unrelated: people expect a modifier to vary the same command.
+- Keep custom shortcuts for what people do most. Everything a shortcut does must also be reachable with a button or a menu item.
 - Prefer shortcuts with `mod`. A single character key (<kbd>?</kbd>, <kbd>N</kbd>) is quick, but speech input or a stray key can set it off, so [WCAG 2.1.4](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html) asks that people can turn it off. The dialog has a **Single-key shortcuts** switch for that whenever one is set up (<kbd>?</kbd> itself, by default): off, every shortcut that is one character key with no mod, ctrl, cmd or alt stops working on every page of the app (kept in `localStorage`), and named keys such as <kbd>F2</kbd> or <kbd>Esc</kbd> keep working. With it off, <kbd>?</kbd> no longer opens the dialog, so keep a help menu item or button that opens it.
 
 ## Behavior
