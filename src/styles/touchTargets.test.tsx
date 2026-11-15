@@ -14,6 +14,14 @@ import { NumberInput } from '../components/NumberInput/NumberInput';
 import { Combobox } from '../components/Combobox/Combobox';
 import { DatePicker } from '../components/DatePicker/DatePicker';
 import { TimePicker } from '../components/TimePicker/TimePicker';
+import { Button } from '../components/Button/Button';
+import { ButtonGroup } from '../components/ButtonGroup/ButtonGroup';
+import { IconButton } from '../components/IconButton/IconButton';
+import { Pagination } from '../components/Pagination/Pagination';
+import { Toolbar } from '../components/Toolbar/Toolbar';
+import { SearchInput } from '../components/SearchInput/SearchInput';
+import { Calendar } from '../components/Calendar/Calendar';
+import { Carousel } from '../components/Carousel/Carousel';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
 // and Material ask for 44 to 48px), the Splitter's 8px handle a 24px-wide one, with nothing moving and no two
@@ -88,10 +96,11 @@ function Fields() {
     <Combobox className="hit-combobox" aria-label="Fruit" options={['Apple', 'Banana']} />
     <DatePicker className="hit-date" aria-label="Due" />
     <TimePicker className="hit-time" aria-label="Start" />
+    <SearchInput className="hit-search" aria-label="Search" defaultValue="maps" />
   </div>;
 }
 /** The fields, by their hit-… class; the button checked is the field's first (the number field's minus stepper). */
-const FIELDS = ['password', 'number', 'combobox', 'date', 'time'];
+const FIELDS = ['password', 'number', 'combobox', 'date', 'time', 'search'];
 /** For each field's button: does a press 6px before its start edge, and one 1px inside the field's top edge, take it? */
 const reach = () => FIELDS.map((name) => {
   const field = $('.hit-' + name), b = field.querySelector('button')!; b.scrollIntoView({ block: 'center' });
@@ -113,6 +122,93 @@ describe('touch-sized buttons inside fields', () => {
       expect(reach()).toEqual(FIELDS.map((s) => [s, true, true]));
       const [minus, plus] = [...$('.hit-number').querySelectorAll('button')], a = minus!.getBoundingClientRect(), b = plus!.getBoundingClientRect(), y = a.top + a.height / 2;
       expect([document.elementFromPoint(a.right - 1, y)?.closest('button'), document.elementFromPoint(b.left + 1, y)?.closest('button')]).toEqual([minus, plus]);
+    });
+  });
+});
+
+// Buttons on a touch screen: an IconButton or a small Button takes a press up to 44px across, as the Design principles
+// promise, with nothing moving. Beside another button it stops halfway into the gap, so a press always goes to the
+// nearer one and never to a neighbour's own face; in an attached group, each keeps exactly its own face.
+function Buttons() {
+  return <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '64px', padding: '64px', width: '480px' }}>
+    <div><IconButton icon="close" label="Close" className="hit-close" /></div>
+    <div><Button size="sm" className="hit-small">Edit</Button></div>
+    <Toolbar aria-label="Format"><IconButton icon="format_bold" label="Bold" className="hit-bold" /><IconButton icon="format_italic" label="Italic" className="hit-italic" /></Toolbar>
+    <ButtonGroup attached aria-label="View"><Button className="hit-day">Day</Button><Button className="hit-week">Week</Button></ButtonGroup>
+    <Pagination count={5} className="hit-pages" />
+  </div>;
+}
+/** Which button (by hit-… class) or page takes a press at (x, y): '' for none. */
+const btn = (x: number, y: number) => { const b = document.elementFromPoint(x, y)?.closest('button, a'); return b ? (/\bhit-(\w+)/.exec(b.className) || ['', b.textContent || '?'])[1] : ''; };
+/** What a press `d` px outside each edge of `sel` takes: above, below, before, after. */
+const outside = (sel: string, d: number) => { $(sel).scrollIntoView({ block: 'center' }); const r = box(sel), cx = r.left + r.width / 2, cy = r.top + r.height / 2; return [btn(cx, r.top - d), btn(cx, r.bottom + d), btn(r.left - d, cy), btn(r.right + d, cy)]; };
+
+describe('touch-sized buttons', () => {
+  test('with a mouse: a press just outside a button misses it', async () => {
+    await render(<Buttons />);
+    expect(outside('.hit-close', 4)).toEqual(['', '', '', '']);
+    expect(outside('.hit-small', 4).slice(0, 2)).toEqual(['', '']);
+  });
+
+  test('on a touch screen: 44px across, split at the middle of the gap between neighbours, and an attached group keeps its own faces', async () => {
+    await render(<Buttons />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      // A 32px IconButton reaches 6px out on every side; a 24px small Button 10px up and down.
+      expect(outside('.hit-close', 5)).toEqual(['close', 'close', 'close', 'close']);
+      expect(outside('.hit-close', 7)).toEqual(['', '', '', '']);
+      expect(outside('.hit-small', 9).slice(0, 2)).toEqual(['small', 'small']);
+      // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap all round (rows of a wrapped toolbar are
+      // 4px apart too), and its own face to the edge.
+      // Measured left to right, so it holds in a right-to-left page too.
+      $('.hit-bold').scrollIntoView({ block: 'center' });
+      const [l, r] = ['.hit-bold', '.hit-italic'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect];
+      const ln = btn(l.left + 1, l.top + 1), rn = btn(r.right - 1, r.top + 1), y = l.top + l.height / 2, mid = (l.right + r.left) / 2;
+      expect([ln, rn].sort()).toEqual(['bold', 'italic']);
+      expect([btn(mid - 1, y), btn(mid + 1, y), btn(l.right - 1, y), btn(r.left + 1, y), btn(l.left + l.width / 2, l.top - 1.5)]).toEqual([ln, rn, ln, rn, ln]);
+      // Attached (one shared border line): no reach into the neighbour's face, from either side.
+      $('.hit-day').scrollIntoView({ block: 'center' });
+      const [dl, dr] = ['.hit-day', '.hit-week'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect], dy = dl.top + dl.height / 2;
+      expect([btn(dl.right - 2, dy), btn(dr.left + 2, dy)]).toEqual([btn(dl.left + 2, dy), btn(dr.right - 2, dy)]);
+      expect([btn(dl.left + 2, dy), btn(dr.right - 2, dy)].sort()).toEqual(['day', 'week']);
+      // Pagination: a page takes a press 5px above and below it, and the gap between two pages splits at its middle.
+      // Pages by their digits in any script (ar-EG writes Arabic-Indic ones).
+      const pages = [...$('.hit-pages').querySelectorAll<HTMLElement>('button, a')].filter((e) => /^\p{Nd}+$/u.test(e.textContent || ''));
+      pages[1]!.scrollIntoView({ block: 'center' });
+      const [pl, pr] = [pages[0]!, pages[1]!].sort((m, n) => m.getBoundingClientRect().left - n.getBoundingClientRect().left) as [HTMLElement, HTMLElement];
+      const a = pl.getBoundingClientRect(), c = pr.getBoundingClientRect(), py = a.top + a.height / 2, pm = (a.right + c.left) / 2, two = pages[1]!.getBoundingClientRect();
+      expect([btn(two.left + two.width / 2, two.top - 5), btn(two.left + two.width / 2, two.bottom + 5), btn(pm - 1, py), btn(pm + 1, py)])
+        .toEqual([pages[1]!.textContent, pages[1]!.textContent, pl.textContent, pr.textContent]);
+    });
+  });
+});
+
+// Rows of small targets a phone user taps (EQ1): a month's days and the slide dots. On a touch screen a day is 44px
+// square, and a dot takes a press 20px above or below its middle, 44px high, its width kept so neighbours never
+// overlap; with a mouse a day is 32px and a press 20px off a dot misses.
+function Rows() {
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '64px', padding: '64px', width: '480px' }}>
+    <Calendar locale="en-US" defaultMonth={new Date(2025, 2, 10)} />
+    <Carousel label="Photos">{[1, 2, 3].map((n) => <div key={n}>Slide {n}</div>)}</Carousel>
+  </div>;
+}
+const rows = () => {
+  const day = box('.dk-calendar__day');
+  $('.dk-carousel__dot:not([aria-current="true"])').classList.add('hit-dot');
+  return { day: [Math.round(day.width), Math.round(day.height)], dot: around('.hit-dot', '.hit-dot') };
+};
+
+describe('touch-sized days and dots', () => {
+  test('with a mouse: 32px days, and a press 20px off a dot misses', async () => {
+    await render(<Rows />);
+    expect(rows()).toEqual({ day: [32, 32], dot: ['', ''] });
+  });
+
+  test('on a touch screen: 44px days, and a dot takes a press 20px above or below its middle', async () => {
+    await render(<Rows />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      expect(rows()).toEqual({ day: [44, 44], dot: ['dot', 'dot'] });
     });
   });
 });

@@ -1,13 +1,13 @@
 /* ---------------------------------------------------------------
    Sidebar: a 256px column (collapsed: a 64px icon rail) with a 1px line on its inner edge, the parent's height:
    header, the scrolling items, then the footer at the bottom. Items are muted text-sm font-medium with a 20px
-   icon, shaded on hover and a step darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
+   icon, shaded on hover (a step quieter than the current page) and darker while pressed; the current page is shaded and text-colored. Nested items line up with their parent's
    label. Section titles are muted text-xs.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-sidebar:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
+.dk-sidebar:dir(rtl) { --dk-bar: calc(var(--highlight-indicator-width) * -1); }
 .dk-sidebar {
-  --dk-bar: var(--border-width-2);
+  --dk-bar: var(--highlight-indicator-width);
   box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0; max-inline-size: var(--sizing-full);
   background: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
   transition: clip-path var(--motion-change-md) var(--ease-move);
@@ -58,10 +58,10 @@
   text-align: start; text-decoration: none; cursor: pointer; touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--highlight)); color: var(--sidebar-item-text-hover, var(--text)); } }
+@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
 .dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
-/* The current page: a bar at the start that hover never draws, so a hovered item never reads as "you are here", and
+/* The current page: with more contrast, a bar at the start that hover never draws (no width otherwise, GR413), and
    one step darker under the pointer, so hovering it answers too. */
 .dk-sidebar__item[aria-current="page"] { background: var(--sidebar-item-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--sidebar-item-indicator, var(--highlight-indicator)); }
 @media (hover: hover) { .dk-sidebar__item[aria-current="page"]:hover { background: var(--sidebar-item-bg-active-hover, var(--pressed)); } }

@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-react';
 import { SerupaProvider } from '../../internal/provider';
 import { config, configure } from '../../internal/config';
 import { cdp, server, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, press, tabTo, withMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press, tabTo, withMotion, settled, withMoreContrast } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { Sidebar, SidebarItem as I, SidebarSection as S } from './Sidebar';
@@ -103,24 +103,27 @@ describe('Sidebar', () => {
     expect([s.fontSize, s.fontWeight, s.paddingTop, s.paddingLeft]).toEqual(['14px', '500', '8px', '12px']);
   });
 
-  test('muted items, shaded and text-colored on hover; the current page also has a 2px primary bar at its start that hover never draws, and darkens under the pointer', async () => {
+  test('muted items, shaded and text-colored on hover; the current page has no bar (2px at its start with more contrast, which hover never draws), and darkens under the pointer', async () => {
     await render(<App />);
     const keys: Array<keyof CSSStyleDeclaration> = ['color', 'backgroundColor', 'boxShadow'];
     await expect.poll(() => pick(el('iinbox'), keys)[1]).toBe('rgba(0, 0, 0, 0)');
     const rest = pick(el('iinbox'), keys), current = pick(el('ihome'), keys);
     expect(current[0]).not.toBe(rest[0]);
     expect(rest[2]).toBe('none');
-    expect(current[2]).toMatch(/\) 2px 0px 0px 0px inset$/);
+    expect(current[2]).toMatch(/\) 0px 0px 0px 0px inset$/);
+    await withMoreContrast(() => expect([css(el('ihome')).boxShadow, css(el('iinbox')).boxShadow]).toEqual([expect.stringMatching(/\) 2px 0px 0px 0px inset$/), 'none']));
     await userEvent.hover(el('iinbox'));
-    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], current[1], 'none']);
+    // Under the pointer an item takes the text color and a fill one step quieter than the current page's (GR415).
+    await expect.poll(() => pick(el('iinbox'), keys)).toEqual([current[0], color('var(--surface-hover)'), 'none']);
+    expect(color('var(--surface-hover)')).not.toBe(current[1]);
     await userEvent.hover(el('ihome'));
     await expect.poll(() => css(el('ihome')).backgroundColor).not.toBe(current[1]);
     await away();
   });
 
-  test('right to left: the current page’s bar is at the right edge', async () => {
+  test('right to left: with more contrast the current page’s bar is at the right edge', async () => {
     await render(<div dir="rtl"><App /></div>);
-    expect(css(el('ihome')).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/);
+    await withMoreContrast(() => expect(css(el('ihome')).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/));
   });
 
   test('a badge sits at the end, 12px in', async () => {
@@ -509,6 +512,18 @@ describe('Sidebar', () => {
     document.documentElement.removeAttribute('data-theme');
     still.remove();
     expect([low, n]).toEqual([[], 12]);
+  });
+
+  test('in all six themes the hover fill sits between the surface and the current page\'s fill, on the page and on a raised surface, so an item pointed at never looks like the current one (GR415)', () => {
+    const same: string[] = [];
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const c = (v: string) => color(`var(--${v})`);
+      if (new Set([c('surface'), c('surface-hover'), c('highlight')]).size < 3) same.push(`${th}: surface ${c('surface')}, surface-hover ${c('surface-hover')}, highlight ${c('highlight')}`);
+      if (new Set([c('surface-overlay'), c('surface-hover-raised'), c('secondary')]).size < 3) same.push(`${th}: surface-overlay ${c('surface-overlay')}, surface-hover-raised ${c('surface-hover-raised')}, secondary ${c('secondary')}`);
+    }
+    document.documentElement.removeAttribute('data-theme');
+    expect(same).toEqual([]);
   });
 
   test('pressed: an item held down fills with pressed, one step past hover', async () => {

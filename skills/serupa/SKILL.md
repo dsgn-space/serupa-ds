@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, six themes and utilit
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v14.7.0
+npm install github:dsgn-space/serupa-ds#v15.0.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -79,7 +79,7 @@ The components meet their part of WCAG 2.2 AA. The page meets the rest only if y
 
 ## Components
 
-Each component's guide covers when to use it, when not to, its props, its keyboard keys and its tokens. It's on the component's Storybook page and in the repository at `src/components/<Name>/README.md` (https://github.com/dsgn-space/serupa-ds).
+Each component's guide covers when to use it, when not to, its props, its keyboard keys and its tokens. Print it from the installed release with `npx serupa-docs <Name>`, or one part with `npx serupa-docs <Name> props` (or `keyboard`, `accessibility`, `when not to use`). `npx serupa-docs search <words>` finds components, topics and tokens. It answers for the version the project pinned, so read it rather than the repository on GitHub, which shows main.
 
 <!-- components:start (written by tools/build/registry.mjs) -->
 

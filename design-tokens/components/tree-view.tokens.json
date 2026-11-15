@@ -24,8 +24,8 @@
       },
       "item-bg-hover": {
         "$type": "color",
-        "$value": "{color.secondary}",
-        "$description": "A row's background on hover.",
+        "$value": "{color.surface-hover}",
+        "$description": "A row's background on hover: a step quieter than the selected row's, so the row pointed at and the selected one never look the same.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tree-view-item-bg-hover"
@@ -45,7 +45,7 @@
       "item-indicator": {
         "$type": "color",
         "$value": "{color.highlight-indicator}",
-        "$description": "The 2px bar at the picked row's start. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item.",
+        "$description": "The 2px bar at the picked row's start. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tree-view-item-indicator"

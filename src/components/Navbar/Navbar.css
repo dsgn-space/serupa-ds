@@ -4,8 +4,8 @@
    behind a menu button and open as a full-width panel under the bar (after the button in the DOM, so Tab goes into them).
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-navbar:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
-.dk-navbar { --dk-bar: var(--border-width-2); position: relative; background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
+.dk-navbar:dir(rtl) { --dk-bar: calc(var(--highlight-indicator-width) * -1); }
+.dk-navbar { --dk-bar: var(--highlight-indicator-width); position: relative; background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
 /* Stuck to the top, the bar's fill runs up under a phone's status bar and notch, its content below them. */
 .dk-navbar--sticky { position: sticky; top: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-top: env(safe-area-inset-top); }
 /* Sticky, the bar lifts once the page scrolls under it (149): a shadow fades in over the first bar height of
@@ -50,11 +50,11 @@
   font-size: var(--navbar-link-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--navbar-link-weight, var(--font-medium)); text-decoration: none; white-space: nowrap;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); color: var(--navbar-link-text-hover, var(--text)); } }
+@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--surface-hover)); color: var(--navbar-link-text-hover, var(--text)); } }
 /* Pressed: one step past hover while held, at once (no fade in); letting go fades back. */
 .dk-navbar__link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); color: var(--navbar-link-text-hover, var(--text)); transition-duration: var(--duration-0); }
-/* The current page: a bar along the bottom that hover never draws, and one step darker under the pointer. */
-.dk-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); box-shadow: inset 0 calc(var(--spacing-0) - var(--border-width-2)) 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
+/* The current page: shaded, and one step darker under the pointer. With more contrast, a bar along the bottom that hover never draws. */
+.dk-navbar__link--active { background: var(--navbar-link-bg-active, var(--secondary)); color: var(--navbar-link-text-active, var(--text)); box-shadow: inset 0 calc(var(--spacing-0) - var(--highlight-indicator-width)) 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
 @media (hover: hover) { .dk-navbar__link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
 /* Forced colors drop the background and color, so the current page gets an outline. */
 @media (forced-colors: active) { .dk-navbar__link--active, .dk-navbar__link[aria-current="page"], .dk-navbar__menu-link--active, .dk-navbar__menu-link[aria-current="page"] { outline: var(--outline-width-2) solid CanvasText; } }
@@ -80,7 +80,8 @@
   color: var(--navbar-menu-link-text, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-decoration: none; overflow-wrap: anywhere;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-link-bg-hover, var(--secondary)); } }
+/* The panel floats, so a link under the pointer takes the raised hover step: still a step under the current link's fill. */
+@media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); } }
 .dk-navbar__menu-link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 .dk-navbar__menu-link--active { background: var(--navbar-link-bg-active, var(--secondary)); box-shadow: inset var(--dk-bar) 0 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
 @media (hover: hover) { .dk-navbar__menu-link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }

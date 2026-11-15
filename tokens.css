@@ -876,8 +876,8 @@
   --surface-page: var(--zinc-950);
   --surface-muted: var(--black);
   --surface-control: var(--zinc-900);
-  --surface-hover: var(--zinc-800);
-  --surface-hover-raised: #333338;
+  --surface-hover: var(--zinc-900);
+  --surface-hover-raised: #202023;
   --surface-raised: var(--zinc-900);
   --surface-overlay: var(--zinc-900);
   --field: var(--zinc-800);
@@ -1107,6 +1107,8 @@
   --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-900));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
+  --surface-hover: light-dark(var(--zinc-50), var(--zinc-800));
+  --surface-hover-raised: light-dark(var(--zinc-50), #333338);
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --highlight-indicator: light-dark(var(--zinc-100), var(--zinc-700));
@@ -1171,6 +1173,8 @@
   --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-900));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
+  --surface-hover: light-dark(var(--zinc-50), var(--zinc-800));
+  --surface-hover-raised: light-dark(var(--zinc-50), #333338);
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --highlight-indicator: light-dark(var(--zinc-100), var(--zinc-700));
@@ -1235,6 +1239,8 @@
   --pressed: light-dark(var(--zinc-300), var(--zinc-700));
   --surface: light-dark(var(--white), var(--zinc-950));
   --surface-muted: light-dark(var(--zinc-50), var(--black));
+  --surface-hover: light-dark(var(--zinc-50), var(--zinc-900));
+  --surface-hover-raised: light-dark(var(--zinc-50), #202023);
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
   --highlight-indicator: light-dark(var(--zinc-100), var(--zinc-800));
@@ -1299,6 +1305,8 @@
   --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-900));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
+  --surface-hover: light-dark(var(--zinc-50), var(--zinc-800));
+  --surface-hover-raised: light-dark(var(--zinc-50), #333338);
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --highlight-indicator: light-dark(var(--zinc-100), var(--zinc-700));
@@ -1363,6 +1371,8 @@
   --pressed: light-dark(var(--zinc-300), var(--zinc-600));
   --surface: light-dark(var(--white), var(--zinc-900));
   --surface-muted: light-dark(var(--zinc-50), var(--zinc-950));
+  --surface-hover: light-dark(var(--zinc-50), var(--zinc-800));
+  --surface-hover-raised: light-dark(var(--zinc-50), #333338);
   --surface-raised: light-dark(var(--white), var(--zinc-800));
   --surface-overlay: light-dark(var(--white), var(--zinc-800));
   --highlight-indicator: light-dark(var(--zinc-100), var(--zinc-700));
@@ -1427,6 +1437,8 @@
   --pressed: light-dark(var(--zinc-300), var(--zinc-700));
   --surface: light-dark(var(--white), var(--zinc-950));
   --surface-muted: light-dark(var(--zinc-50), var(--black));
+  --surface-hover: light-dark(var(--zinc-50), var(--zinc-900));
+  --surface-hover-raised: light-dark(var(--zinc-50), #202023);
   --surface-raised: light-dark(var(--white), var(--zinc-900));
   --surface-overlay: light-dark(var(--white), var(--zinc-900));
   --highlight-indicator: light-dark(var(--zinc-100), var(--zinc-800));
@@ -1563,6 +1575,7 @@
   --outline-offset-4: 4px;
   --outline-offset-8: 8px;
   --focus-ring-width: var(--outline-width-2);
+  --highlight-indicator-width: var(--border-width-0);
   --focus-ring-offset: var(--outline-offset-2);
   --stroke-width-0: 0;
   --stroke-width-1: 1;
@@ -2000,6 +2013,7 @@
   --info: light-dark(var(--sky-800), var(--sky-300));
   --info-text: light-dark(var(--sky-900), var(--sky-200));
   --focus-ring-width: calc(var(--outline-width-2) + var(--outline-width-1));
+  --highlight-indicator-width: var(--border-width-2);
 }
 [data-contrast="more"]:not(#dk-more), [data-contrast="more"] :is([data-mode], [data-brand], [data-theme]):not(#dk-more) {
   --primary: var(--dk-more-primary);
@@ -2029,6 +2043,7 @@
   --info: light-dark(var(--sky-800), var(--sky-300));
   --info-text: light-dark(var(--sky-900), var(--sky-200));
   --focus-ring-width: calc(var(--outline-width-2) + var(--outline-width-1));
+  --highlight-indicator-width: var(--border-width-2);
 }
 :root:not([data-contrast="normal"]):not(#dk-more), :root:not([data-contrast="normal"]) :is([data-mode], [data-brand], [data-theme]):not([data-contrast="normal"], [data-contrast="normal"] *, #dk-more) {
   --primary: var(--dk-more-primary);

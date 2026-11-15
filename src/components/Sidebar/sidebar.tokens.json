@@ -64,8 +64,8 @@
       },
       "item-bg-hover": {
         "$type": "color",
-        "$value": "{color.highlight}",
-        "$description": "An item's background on hover.",
+        "$value": "{color.surface-hover}",
+        "$description": "An item's background on hover: a step quieter than the current page's, so the item pointed at and the current one never look the same.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--sidebar-item-bg-hover"
@@ -105,7 +105,7 @@
       "item-indicator": {
         "$type": "color",
         "$value": "{color.highlight-indicator}",
-        "$description": "The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it is the color of the fill, which alone marks the item.",
+        "$description": "The 2px bar at the start of the current page's item, which hover never draws. Drawn only with more contrast: by default it has no width (`highlight-indicator-width`), and the fill alone marks the item.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--sidebar-item-indicator"

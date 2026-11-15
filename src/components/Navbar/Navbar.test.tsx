@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, css, forcedColors, keepMotion, press, safeArea, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, forcedColors, keepMotion, press, safeArea, withMotion, withMoreContrast } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Menu, MenuItem } from '../Menu/Menu';
 import { Navbar, NavbarLink, NavbarMenu, NavbarMenuGroup, NavbarMenuLink } from './Navbar';
@@ -70,7 +70,7 @@ describe('Navbar', () => {
     expect(vis('#nav .dk-navbar__toggle')).toBe(false);
   });
 
-  test('links: muted text-sm font-medium; hover and the current page (aria-current="page") are shaded and text-colored; only the current page has a 2px primary bar along its bottom, and it darkens under the pointer', async () => {
+  test('links: muted text-sm font-medium; hover and the current page (aria-current="page") are shaded and text-colored; no bar along the bottom of the current page (2px with more contrast), and it darkens under the pointer', async () => {
     await render(<Main />);
     const cur = q('#nav [aria-current]');
     expect([cur.textContent, cur.getAttribute('aria-current')]).toEqual(['Dashboard', 'page']);
@@ -79,9 +79,12 @@ describe('Navbar', () => {
     expect([rest.fontSize, rest.fontWeight, rest.bg]).toEqual(['14px', '500', 'rgba(0, 0, 0, 0)']);
     expect(active.bg).not.toBe(rest.bg);
     expect(active.color).not.toBe(rest.color);
-    expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px -2px 0px 0px inset$/)]);
+    expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px 0px 0px 0px inset$/)]);
+    await withMoreContrast(() => expect([css(el('lp')).boxShadow, css(cur).boxShadow]).toEqual(['none', expect.stringMatching(/\) 0px -2px 0px 0px inset$/)]));
     await userEvent.hover(el('lp'));
-    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color, css(el('lp')).boxShadow]).toEqual([active.bg, active.color, 'none']);
+    // Under the pointer a link takes the text color and a fill one step quieter than the current page's (GR415).
+    await expect.poll(() => [css(el('lp')).backgroundColor, css(el('lp')).color, css(el('lp')).boxShadow]).toEqual([color('var(--surface-hover)'), active.color, 'none']);
+    expect(color('var(--surface-hover)')).not.toBe(active.bg);
     await userEvent.hover(cur);
     await expect.poll(() => css(cur).backgroundColor).not.toBe(active.bg);
     await away();
@@ -551,15 +554,18 @@ describe('NavbarMenu (RU14)', () => {
     expect([button('Products').element().getAttribute('aria-current'), button('Resources').element().hasAttribute('aria-current')]).toEqual(['true', false]);
   });
 
-  test('the current menu link has a 2px bar at its start (the end in right to left) that a hovered link never has', async () => {
+  test('the current menu link has no bar; with more contrast, a 2px bar at its start (the end in right to left) that a hovered link never has', async () => {
     await render(<Mega />);
     await userEvent.click(button('Products').element());
     const alerts = page.getByRole('link', { name: 'Alerts' }).element(), dash = page.getByRole('link', { name: 'Dashboards' }).element();
-    expect(css(alerts).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/);
+    expect(css(alerts).boxShadow).toMatch(/\) 0px 0px 0px 0px inset$/);
+    await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) 2px 0px 0px 0px inset$/));
     await userEvent.hover(dash);
-    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([css(alerts).backgroundColor, 'none']);
+    // The panel floats, so the link pointed at takes the raised hover step: still not the current link's fill (GR415).
+    await expect.poll(() => [css(dash).backgroundColor, css(dash).boxShadow]).toEqual([color('var(--surface-hover-raised)'), 'none']);
+    expect(css(dash).backgroundColor).not.toBe(css(alerts).backgroundColor);
     document.documentElement.dir = 'rtl';
-    try { expect(css(alerts).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/); } finally { document.documentElement.dir = ''; }
+    try { await withMoreContrast(() => expect(css(alerts).boxShadow).toMatch(/\) -2px 0px 0px 0px inset$/)); } finally { document.documentElement.dir = ''; }
     await away();
   });
 
