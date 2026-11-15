@@ -64,6 +64,32 @@ describe('Slider', () => {
     expect(fill('orr')).toEqual([20, 80]);
   });
 
+  test('orientation="vertical": an upright track with min at the bottom; a press near the top sets a high value, Up and Right raise it in either direction, and it says it is vertical', async () => {
+    await render(<div style={{ display: 'flex', gap: '48px', padding: '24px' }}>
+      <Slider id="ver" aria-label="Level" orientation="vertical" defaultValue={20} />
+      <div dir="rtl"><Slider id="vrt" aria-label="Level, right to left" orientation="vertical" defaultValue={20} /></div>
+    </div>);
+    const t = track('ver');
+    expect([Math.round(t.height), t.height > t.width * 10]).toEqual([192 - 20, true]);
+    expect(thumb('ver').getAttribute('aria-orientation')).toBe('vertical');
+    // The thumb sits a fifth of the way up, and the fill runs from the bottom up to it.
+    const c = center(thumb('ver')), f = rect(el('ver').querySelector(':scope > div > div')!);
+    expect(Math.round((t.bottom - c.y) / t.height * 100)).toBe(20);
+    expect([Math.abs(Math.round(f.bottom - t.bottom)), Math.abs(Math.round(f.top - c.y))]).toEqual([0, 0]);
+    // A press a quarter of the way down the track: 75.
+    const r = rect(el('ver'));
+    await userEvent.click(el('ver'), { position: { x: r.width / 2, y: t.top - r.top + t.height * 0.25 } });
+    expect(now('ver')).toBe(75);
+    for (const id of ['ver', 'vrt']) {
+      thumb(id).focus();
+      const before = now(id);
+      await userEvent.keyboard('{ArrowUp}{ArrowRight}');
+      expect(now(id)).toBe(before + 2);
+      await userEvent.keyboard('{ArrowDown}{ArrowLeft}');
+      expect(now(id)).toBe(before);
+    }
+  });
+
   test('size="lg" sits beside lg fields: an 8px track, a 24px thumb, and number fields as tall as an lg Input (GR393)', async () => {
     await render(<div style={{ width: '420px' }}>
       <Slider id="lg" aria-label="Large" size="lg" defaultValue={40} />

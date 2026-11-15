@@ -12,21 +12,21 @@
   --dk-slider-half: calc(var(--dk-slider-thumb) / 2);
   --dk-slider-thumb-top: calc((var(--dk-slider-track) - var(--dk-slider-thumb)) / 2);
   position: relative; display: flex; align-items: center; box-sizing: border-box;
-  width: var(--sizing-full); height: var(--dk-slider-thumb);
-  padding: var(--spacing-0) var(--dk-slider-half);
+  inline-size: var(--sizing-full); block-size: var(--dk-slider-thumb);
+  padding-block: var(--spacing-0); padding-inline: var(--dk-slider-half);
   touch-action: none; -webkit-user-select: none; user-select: none; cursor: var(--cursor-interactive);
 }
 /* inputs: a number field at each end of the strip (or after it, for one thumb), as tall as a control, so the strip
    grows to fit them; the fields keep the text cursor and let text be selected. */
-.dk-slider--inputs { height: auto; gap: var(--slider-input-gap, var(--spacing-3)); padding-inline: var(--spacing-0); }
+.dk-slider--inputs { block-size: auto; gap: var(--slider-input-gap, var(--spacing-3)); padding-inline: var(--spacing-0); }
 .dk-slider--inputs .dk-slider__track { margin-inline: var(--dk-slider-half); }
 .dk-slider__input { flex: none; inline-size: var(--slider-input-width, var(--spacing-20)); cursor: auto; touch-action: auto; -webkit-user-select: auto; user-select: auto; }
 .dk-slider--size-sm { --dk-slider-track: var(--slider-track-height-sm, var(--spacing-1)); --dk-slider-thumb: var(--slider-thumb-size-sm, var(--spacing-4)); }
 .dk-slider--size-lg { --dk-slider-track: var(--slider-track-height-lg, var(--spacing-2)); --dk-slider-thumb: var(--slider-thumb-size-lg, var(--spacing-6)); }
-.dk-slider__track { position: relative; flex: auto; height: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--border-control)); }
+.dk-slider__track { position: relative; flex: auto; block-size: var(--dk-slider-track); border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-track, var(--border-control)); }
 .dk-slider__fill { position: absolute; inset-block: var(--spacing-0); border-radius: inherit; background: var(--slider-fill, var(--primary)); }
 .dk-slider__thumb {
-  position: absolute; inset-block-start: var(--dk-slider-thumb-top); box-sizing: border-box; width: var(--dk-slider-thumb); height: var(--dk-slider-thumb);
+  position: absolute; inset-block-start: var(--dk-slider-thumb-top); box-sizing: border-box; inline-size: var(--dk-slider-thumb); block-size: var(--dk-slider-thumb);
   margin-inline-start: calc(var(--spacing-0) - var(--dk-slider-half));
   border: var(--slider-thumb-border-width, var(--border-width-2)) solid var(--slider-thumb-border, var(--primary));
   border-radius: var(--slider-radius, var(--radius-pill)); background: var(--slider-thumb-bg, var(--field));
@@ -38,7 +38,7 @@
 .dk-slider:not(.dk-slider--disabled, .dk-slider--readonly) .dk-slider__thumb:active { cursor: var(--cursor-grabbing); scale: var(--scale-110); }
 .dk-slider--mark-labels {
   --dk-slider-labels: calc(var(--spacing-1) + var(--text-xs--line-height));
-  height: calc(var(--dk-slider-thumb) + var(--dk-slider-labels)); padding-block-end: var(--dk-slider-labels);
+  block-size: calc(var(--dk-slider-thumb) + var(--dk-slider-labels)); padding-block-end: var(--dk-slider-labels);
 }
 /* Each mark is a zero-wide point on the track; its tick and label center on it in either direction. */
 .dk-slider__mark { position: absolute; inset-block: var(--spacing-0); inline-size: var(--spacing-0); display: flex; justify-content: center; }
@@ -65,6 +65,12 @@
 }
 .dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:focus > .dk-slider__value { opacity: var(--opacity-100); }
 @media (hover: hover) { .dk-slider:not(.dk-slider--disabled) .dk-slider__thumb:hover > .dk-slider__value { opacity: var(--opacity-100); } }
+/* Vertical: the same layout turned a quarter, by writing mode, so every inline (along the track) and block (across
+   it) rule above still holds. The track runs top to bottom; Slider.tsx counts places from the top, so min sits at the
+   bottom. The text (mark labels, the value chip, the number fields) stays upright; the labels sit to the right of the
+   track and the chip to its left. */
+.dk-slider--vertical { writing-mode: vertical-lr; direction: ltr; flex-direction: row-reverse; inline-size: var(--slider-length, var(--spacing-48)); }
+.dk-slider--vertical .dk-slider__mark-label > span, .dk-slider--vertical .dk-slider__value > span, .dk-slider--vertical .dk-slider__input { writing-mode: horizontal-tb; }
 .dk-slider--invalid .dk-slider__fill { background: var(--slider-invalid, var(--danger)); }
 .dk-slider--invalid .dk-slider__thumb { border-color: var(--slider-invalid, var(--danger)); }
 .dk-slider--readonly, .dk-slider--readonly .dk-slider__thumb { cursor: default; }

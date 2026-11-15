@@ -66,9 +66,12 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   /** A single thumb's fill runs from this value to the thumb, not from min: 0 for a -10 to +10 balance or offset,
       so the fill shows how far and which way from the middle. Ignored for a range. Default: min. */
   origin?: number | undefined;
+  /** 'horizontal' (default) or 'vertical': the track runs bottom to top, min at the bottom, as a volume or level
+      control in a narrow column. Up and Right raise it in either direction of text. Its length is --slider-length. */
+  orientation?: 'horizontal' | 'vertical' | undefined;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, inputs: 1, origin: 1, 'aria-required': 1, 'aria-invalid': 1, 'aria-readonly': 1, autoFocus: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1, 'aria-describedby': 1, 'aria-errormessage': 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, onValueCommit: 1, min: 1, max: 1, step: 1, largeStep: 1, size: 1, disabled: 1, formatValue: 1, thumbLabels: 1, name: 1, form: 1, invalid: 1, readOnly: 1, required: 1, marks: 1, showValue: 1, inputs: 1, origin: 1, orientation: 1, 'aria-required': 1, 'aria-invalid': 1, 'aria-readonly': 1, autoFocus: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1, 'aria-describedby': 1, 'aria-errormessage': 1 } as const;
 
 // The marks to draw: every step for true (every largeStep steps when that's over 100 ticks), or the listed values on the track.
 function markList(marks: SliderProps['marks'], min: number, max: number, step: number, large: number): SliderMark[] {
@@ -121,6 +124,10 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const readOnly = !!props.readOnly || props['aria-readonly'] === true || props['aria-readonly'] === 'true';
   const still = disabled || readOnly;   // nothing moves the value
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
+  // Vertical: the track is laid out top to bottom (writing-mode in Slider.css), so a point's place is counted from
+  // the top, and min sits at the bottom.
+  const vertical = props.orientation === 'vertical';
+  const place = (p: number) => (vertical ? 100 - p : p);
   // A thumb's value: vs holds one value, or a range's two, so the fallback is never reached.
   const at = (vs: number[], i: number) => vs[i] ?? min;
   const out = (vs: number[]): SliderValue => (isRange ? [at(vs, 0), at(vs, 1)] : at(vs, 0));
@@ -146,17 +153,18 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   // The values a drag started from: a press on a thumb let go where it was, or a drag back to the start, changed
   // nothing and calls no onValueCommit, as a key at the end doesn't (L8E109).
   const from = React.useRef<number[]>([]);
-  const fromPoint = (x: number) => {
+  const fromPoint = (x: number, y: number) => {
     const r = root.current!.querySelector('.dk-slider__track')!.getBoundingClientRect();
     let share = r.width ? (x - r.left) / r.width : 0;
-    if (getComputedStyle(root.current!).direction === 'rtl') share = 1 - share;
+    if (vertical) share = r.height ? (r.bottom - y) / r.height : 0;
+    else if (getComputedStyle(root.current!).direction === 'rtl') share = 1 - share;
     return min + Math.min(1, Math.max(0, share)) * (max - min);
   };
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (rest.onPointerDown) rest.onPointerDown(e);
     if (disabled || e.button !== 0 || e.defaultPrevented || inField(e.target)) return;
     e.preventDefault();
-    const v = fromPoint(e.clientX), vs = latest.current;
+    const v = fromPoint(e.clientX, e.clientY), vs = latest.current;
     let i = 0;
     if (isRange) { const d0 = Math.abs(v - at(vs, 0)), d1 = Math.abs(v - at(vs, 1)); i = d1 < d0 || (d1 === d0 && v > at(vs, 1)) ? 1 : 0; }
     // Read-only: a press focuses the nearest thumb, as it would a read-only input, and moves nothing.
@@ -168,7 +176,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   };
   // A press in a number field (inputs) is the field's: it places the caret, it doesn't move a thumb.
   const inField = (t: EventTarget) => t instanceof Element && !!t.closest('.dk-slider__input');
-  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX)); };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => { if (rest.onPointerMove) rest.onPointerMove(e); if (drag.current != null) set(drag.current, fromPoint(e.clientX, e.clientY)); };
   const end = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current == null) return; drag.current = null; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); if (latest.current.some((v, k) => v !== from.current[k])) commit(); };
   // Your onKeyDown runs first, on the root as the key goes down to the focused part (the capture phase), so its
   // currentTarget is the root its type names, and preventDefault() in it keeps the control's own handling of that key
@@ -177,7 +185,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLSpanElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
     if (still || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
-    const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
+    const rtl = !vertical && getComputedStyle(e.currentTarget).direction === 'rtl';
     const by = (e.shiftKey ? large : 1) * step, v = at(latest.current, i);
     let n: number;
     switch (e.key) {
@@ -215,7 +223,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   // widen the page (a hidden chip too): each is nudged inward to stay inside the slider's box (GM2).
   const fit = React.useCallback(() => {
     const el = root.current;
-    if (!el) return;
+    if (!el || el.classList.contains('dk-slider--vertical')) return;   // vertical: the text sits beside the track, not past its ends
     const parts = Array.from(el.querySelectorAll<HTMLElement>(FIT));
     if (!parts.length) return;
     for (const p of parts) p.style.removeProperty('--dk-slider-nudge');
@@ -261,23 +269,23 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
     <div {...rest} ref={(n) => { root.current = n; delegateFocus(n, first); restyle(n); }}
       role={isRange ? 'group' : rest.role} aria-label={isRange ? props['aria-label'] : undefined} aria-labelledby={isRange ? labelledBy : undefined}
       aria-describedby={isRange ? props['aria-describedby'] : undefined}
-      className={cn('dk-slider', 'dk-slider--size-' + size, disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.inputs && 'dk-slider--inputs', props.className)}
-      data-component="slider" data-size={size} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
+      className={cn('dk-slider', 'dk-slider--size-' + size, disabled && 'dk-slider--disabled', readOnly && 'dk-slider--readonly', invalid && 'dk-slider--invalid', labelled && 'dk-slider--mark-labels', props.inputs && 'dk-slider--inputs', vertical && 'dk-slider--vertical', props.className)}
+      data-component="slider" data-size={size} data-orientation={vertical ? 'vertical' : undefined} data-disabled={disabled ? '' : undefined} data-readonly={readOnly ? '' : undefined} data-invalid={invalid ? '' : undefined}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={end} onPointerCancel={end}
       onKeyDown={undefined} onKeyDownCapture={onKeyDownCapture} onFocus={onFocus} onBlur={onBlur}>
       {props.inputs && isRange ? field(0) : null}
       <div className="dk-slider__track">
-        <div className="dk-slider__fill" style={{ insetInlineStart: lo + '%', inlineSize: hi - lo + '%' }} />
+        <div className="dk-slider__fill" style={{ insetInlineStart: (vertical ? 100 - hi : lo) + '%', inlineSize: hi - lo + '%' }} />
         {marks.map((m, i) => (
-          <span key={i} className="dk-slider__mark" style={{ insetInlineStart: pct(m.value) + '%' }} aria-hidden="true">
+          <span key={i} className="dk-slider__mark" style={{ insetInlineStart: place(pct(m.value)) + '%' }} aria-hidden="true">
             {m.value > min && m.value < max ? <span className="dk-slider__tick" /> : null}
             {m.label != null && m.label !== false ? <span className="dk-slider__mark-label"><span>{m.label}</span></span> : null}
           </span>
         ))}
         {vals.map((v, i) => (
-          <span key={i} ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="dk-slider__thumb" style={{ insetInlineStart: pct(v) + '%' }}
+          <span key={i} ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="dk-slider__thumb" style={{ insetInlineStart: place(pct(v)) + '%' }}
             role="slider" tabIndex={disabled ? -1 : 0} aria-valuenow={v} aria-valuemin={isRange && i === 1 ? vals[0] : min} aria-valuemax={isRange && i === 0 ? vals[1] : max}
-            aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation="horizontal" aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
+            aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation={vertical ? 'vertical' : 'horizontal'} aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
             // The error goes where aria-invalid is: on the root <div> it pointed nowhere a screen reader looks (L8E87).
             aria-errormessage={invalid ? props['aria-errormessage'] : undefined}
             aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}

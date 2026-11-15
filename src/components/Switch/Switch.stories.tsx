@@ -40,6 +40,12 @@ export const Pending: Story = {
   },
 };
 
+/** icon: a check on the thumb while on, so on and off differ by shape as well as by color. */
+export const WithIcon: Story = {
+  name: 'With a check icon',
+  render: () => <Col><Switch icon defaultChecked>Dark mode</Switch><Switch icon>Reduce motion</Switch><Switch icon size="lg" defaultChecked>Large</Switch></Col>,
+};
+
 export const LongLabel: Story = {
   render: (args) => (
     <div style={{ width: 240 }}>
