@@ -14,7 +14,7 @@
   padding-inline: var(--dk-input-px) var(--phone-input-gap, var(--spacing-1));
   border-inline-end: var(--input-border-width, var(--border-width-1)) solid var(--phone-input-divider, var(--border));
   border-start-start-radius: inherit; border-end-start-radius: inherit;
-  color: var(--phone-input-dial, var(--text)); font-variant-numeric: tabular-nums; cursor: pointer; touch-action: manipulation;
+  color: var(--phone-input-dial, var(--text)); font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 /* The calling code reads left to right in any page: "+62", not "62+" in a right-to-left one (GR49). */
@@ -29,7 +29,7 @@
 @media (hover: hover) { .dk-phone-input__country:hover:not(:has(:disabled)) { background: var(--phone-input-bg-hover, var(--field-hover)); } }
 .dk-phone-input__country:active:not(:has(:disabled)) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
 .dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline: var(--focus-ring-width) solid var(--phone-input-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
-.dk-phone-input__country:has(:disabled) { cursor: not-allowed; }
+.dk-phone-input__country:has(:disabled) { cursor: var(--cursor-disabled); }
 @media (forced-colors: active) { .dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline-color: Highlight; } }
 @media (prefers-reduced-motion: reduce) { .dk-phone-input__country { transition: none; } }
 }
