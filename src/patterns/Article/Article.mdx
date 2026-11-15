@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Article.stories';
+
+<Meta of={Stories} />
+
+# Article
+
+One post of a blog, a changelog or a help article: where it sits, who wrote it and when, its sections, and what to read next.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A post people read from top to bottom: a product update, a blog post, a long help article.
+- Not for a list of posts: link the posts from a page of Cards, as "Read next" does.
+- Not for reference docs with many pages and their own navigation: give those a Sidebar, as the Page shell pattern does.
+
+## What each part is for
+
+- **The breadcrumb** says where the page sits, and leads back to all posts (2.4.8).
+- **One h1 in an `<article>`**, with the summary under it, and each section an h2. The byline's date is a `<time>` with the machine date, written in the page's language (1.3.1, 3.1.1).
+- **"On this page"** lists the sections, and marks the one being read as the page scrolls, so a long post has another way to a part of it (2.4.5). On a wide screen it stays beside the text; on a phone it comes first.
+- **The text is Prose**, which keeps lines to a readable length and spacing the reader sets intact (1.4.8, 1.4.12).
+- **"Read next"** is a card per post, each a link named by the post's title with its summary under it (2.4.4). With nothing to suggest, the section isn't there.
+- **A post in another language than the page** says so with `lang`, so it's read in its own voice (3.1.2).
+- **A skip link** first, into main, and the Footer block last.
+
+<Canvas of={Stories.NothingNext} />
+
+## What stays your app's job
+
+- **The post.** Fetch it and render its Markdown or rich text into `sections`, each with an id for its h2, so a link to `#id` reaches it.
+- **The address and the page title.** Give each post its own URL, and set the document's title to the post's.
+- **Sharing and comments**, if you want them: after the post, before "Read next". The Comment thread block fits there.
