@@ -9,13 +9,10 @@ name: Queue enqueue
 # Auto-merge off means a person decides, unless the queue turned it off by dropping the pull request
 # (.github/dropped.sh): one the queue dropped is queued again once its branch changed since (Update baselines healed
 # it), or once if it didn't, as the queue drops one whose group ahead failed. "hold-visual" or a draft keeps it out.
-# Before queueing, it checks the pull request can't be dropped for stale pictures (tools/fresh.mjs): against main as it
-# is now, and against each pull request already in the queue (--queue). One that clashes waits outside: when the one
-# ahead merges, Update baselines draws its pictures again on the new main and this queues it. Until 15 Nov it was queued
-# behind it and dropped as its group built, which turned auto-merge off (14 drops in two hours).
 # "hold-visual" holds a pull request out of the queue: added to one already in it, this takes it out (the label's own
 # run, or the next one). Turning auto-merge off doesn't: GitHub keeps a queued pull request in the queue (#1949).
 # It runs main's own scripts, and reads every branch only through GitHub's API.
+# Pictures can't hold a pull request back here: since ADR-0016 the queue doesn't check committed pictures at all.
 on:
   pull_request:
     types: [labeled]
@@ -41,7 +38,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
-      actions: write
       contents: read
       issues: read
       pull-requests: read
@@ -50,9 +46,6 @@ jobs:
         with:
           ref: main
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .nvmrc
       - env:
           GH_TOKEN: ${{ github.token }}
           # The queue entry is made with the bot's token, as the baselines' pushes are: what the workflow token does
@@ -86,32 +79,14 @@ jobs:
             why="auto-merge on"
             if [ "$state" = off ]; then
               drops=$(bash .github/dropped.sh "$number" </dev/null)
-              [ "$drops" = - ] || [ "$drops" -gt 1 ] && continue
+              [[ "$drops" =~ ^[01]$ ]] || continue
               why="dropped by the queue ($([ "$drops" = 0 ] && echo "redrawn since" || echo "once at this commit"))"
             elif [ "$state" != on ]; then continue; fi
             pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" </dev/null) || continue
-            head=$(jq -r .head.sha <<< "$pull")
-            merge=$(jq -r .mergeable_state <<< "$pull")
-            # CI's fresh job failed it because a pull request in the queue clashed with it (fresh.mjs --queue), and
-            # that one has left the queue without making this one stale: nothing else runs its CI again. Once per
-            # check, at most twice per run.
-            if [ "$merge" != clean ]; then
-              run=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$head&event=pull_request&per_page=1" \
-                --jq '.workflow_runs[0] | select(.status == "completed" and .conclusion != "success" and .run_attempt < 3) | .id' </dev/null) || continue
-              [ -n "$run" ] || continue
-              gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run/jobs?per_page=100" --jq '.jobs[] | select(.name == "fresh") | .conclusion' </dev/null | grep -qx failure || continue
-              node tools/fresh.mjs --base "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha </dev/null)" --head "$head" </dev/null || continue
-              node tools/fresh.mjs --queue "$number" </dev/null || continue
-              echo "Running #$number's CI again: what failed its fresh job has left the queue."
-              gh api -X POST "repos/$GITHUB_REPOSITORY/actions/runs/$run/rerun-failed-jobs" </dev/null >/dev/null ||
-                echo "::warning::#$number's CI couldn't be run again"
-              continue
-            fi
-            # Stale against main as it is now (Update baselines heals it), or against a pull request already queued
-            # (it waits): queued, it would only be dropped. Anything but a clear 0 (GitHub didn't answer) waits too.
-            node tools/fresh.mjs --base "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha </dev/null)" --head "$head" </dev/null || continue
-            node tools/fresh.mjs --queue "$number" </dev/null || continue
+            [ "$(jq -r .mergeable_state <<< "$pull")" = clean ] || continue
             echo "Queueing #$number: green, $why, not in the queue."
-            GH_TOKEN=$BOT_TOKEN gh api graphql -f id="$id" -f query='mutation($id: ID!) { enqueuePullRequest(input: { pullRequestId: $id }) { clientMutationId } }' </dev/null >/dev/null ||
-              echo "::warning::#$number couldn't be queued"
+            if GH_TOKEN=$BOT_TOKEN gh api graphql -f id="$id" -f query='mutation($id: ID!) { enqueuePullRequest(input: { pullRequestId: $id }) { clientMutationId } }' </dev/null >/dev/null; then
+              # Back in the queue: a later removal by a person is a person's again (.github/dropped.sh).
+              [ "$state" = off ] && GH_TOKEN=$BOT_TOKEN gh api -X DELETE "repos/$GITHUB_REPOSITORY/issues/$number/labels/queue-stale" </dev/null >/dev/null 2>&1
+            else echo "::warning::#$number couldn't be queued"; fi
           done <<< "$prs"

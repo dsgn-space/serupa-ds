@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useFormReset } from '../../internal/useFormReset';
@@ -85,7 +86,8 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
   const root = React.useRef<HTMLDivElement | null>(null);
   const [, rerender] = React.useState(0);
   useFormReset(root, function () { if (!controlled) setPicked(props.defaultValue); rerender(function (n) { return n + 1; }); });
-  const ctx: RadioContextValue = { name: props.name || autoName, value: cur, size: props.size, variant: props.variant, invalid: invalid, disabled: !!props.disabled, required: !!props.required, readOnly: !!props.readOnly,
+  const around = useControlSize(props.size);   // its own size, else a SerupaProvider's around it
+  const ctx: RadioContextValue = { name: props.name || autoName, value: cur, size: around, variant: props.variant, invalid: invalid, disabled: !!props.disabled, required: !!props.required, readOnly: !!props.readOnly,
     select: function (v, e) { if (!controlled) setPicked(v as string | number); if (onValueChange) onValueChange(v as string | number, e); } };
   // The arrows wrap from the last radio to the first and back, as the radio group pattern asks: Chromium and Firefox
   // do that themselves, but WebKit stops at the ends. A radio hidden by CSS isn't one of the ends: wrapping to it checked
@@ -134,7 +136,8 @@ export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>('Ra
   if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Radio: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Radio');
   const ctx = React.useContext(RadioContext);
   const rest = omit(props, OWN);
-  const size = oneOf(SIZES, props.size, oneOf(SIZES, ctx && ctx.size, 'md'));
+  const outer = useControlSize<'sm' | 'md' | 'lg'>(undefined);   // a SerupaProvider's size, for one outside a group
+  const size = oneOf(SIZES, props.size, oneOf(SIZES, ctx ? ctx.size : outer, 'md'));
   const card = oneOf(VARIANTS, props.variant, oneOf(VARIANTS, ctx && ctx.variant, 'plain')) === 'card';
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;   // a group's invalid is on the group

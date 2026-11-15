@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControlSize } from '../../internal/controlSize';
 import { pressFocuses } from '../../internal/affix';
 import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
@@ -75,7 +76,7 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
   const sds = useSettings(words);
   const locale = useLocale();
   const rest = omit(props, own);
-  const size = oneOf(SIZES, props.size, 'md');
+  const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
 

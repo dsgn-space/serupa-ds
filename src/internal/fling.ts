@@ -1,13 +1,13 @@
 // Fling and settle (inertia): what the hand lets go of mid-motion carries on at the hand's speed and slows to rest,
 // instead of jumping to a speed of its own. The speed is the pointer's over the last 100ms, so a slow drag that ends
-// in a flick counts and a pause before letting go doesn't. The settle runs on ease-fling (ease-out-cubic), which
+// in a flick counts and a pause before letting go doesn't. The settle runs on ease-fling (cubic-bezier(0.33, 1, 0.68, 1)), which
 // starts three times faster than its average, so a settle of 3 × distance / speed starts exactly at the hand's speed.
 
 /** Pointer positions over time, for `speed()`: those of the last 100ms, and at least two. */
 export type Samples = { t: number; p: number }[];
 
 const WINDOW = 100;
-/** ease-fling's starting speed over its average (the slope of ease-out-cubic at 0). */
+/** ease-fling's starting speed over its average (the slope of its cubic-bezier at 0). */
 const SLOPE = 3;
 
 /** Adds a position (in px, along the gesture) at time `t` (an event's timeStamp) and drops the samples the window has passed. */

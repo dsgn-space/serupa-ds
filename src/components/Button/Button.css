@@ -21,7 +21,7 @@
   font-weight: var(--font-medium);
   letter-spacing: var(--tracking-normal);
   text-decoration: none;
-  cursor: pointer;              /* default, hover, pressed, focused */
+  cursor: var(--cursor-interactive);              /* default, hover, pressed, focused */
   outline: none;
   -webkit-user-select: none;
   user-select: none;
@@ -106,7 +106,7 @@
 
 /* Elevation: shadow-xs on the buttons that have a surface; ghost and link stay flat */
 .dk-btn.dk-btn--on-dark, .dk-btn.dk-btn--on-light { --dk-btn-shadow: var(--shadow-none); }
-.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--shadow-xs); }
+.dk-btn--primary, .dk-btn--secondary, .dk-btn--outline { --dk-btn-shadow: var(--elevation-rest); }
 .dk-btn:disabled, .dk-btn[aria-disabled="true"]:not(.dk-btn--loading) { --dk-btn-shadow: var(--shadow-none); }
 
 /* Destructive: a modifier on every variant (destructive prop) */
@@ -127,7 +127,7 @@
      contrast axis like every other text. */
   background: var(--button-bg-disabled, var(--surface-muted)); color: var(--button-text-disabled, var(--text-muted));
   border-color: var(--button-border-disabled, var(--border));
-  cursor: not-allowed;          /* no hover change; disabled buttons ignore clicks */
+  cursor: var(--cursor-disabled);          /* no hover change; disabled buttons ignore clicks */
 }
 /* Ghost and link buttons have no box of their own, disabled or not. */
 .dk-btn--ghost:disabled, .dk-btn--link:disabled, .dk-btn--ghost[aria-disabled="true"]:not(.dk-btn--loading), .dk-btn--link[aria-disabled="true"]:not(.dk-btn--loading) { background: transparent; border-color: transparent; }
