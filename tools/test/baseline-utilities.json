@@ -24916,6 +24916,7 @@
 "start-auto":"(no effect)",
 "start-full":"inset-inline-start:100%;left:100%",
 "start-px":"inset-inline-start:1px;left:1px",
+"state-layer":"bottom:0px;inset-block-end:0px;inset-block-start:0px;inset-inline-end:0px;inset-inline-start:0px;isolation:isolate;left:0px;position:relative;right:0px;top:0px",
 "static":"(no effect)",
 "sticky":"position:sticky",
 "stroke-0":"stroke-width:0px;child stroke-width:0px",
