@@ -80,12 +80,36 @@
   - text: Year
   - textbox "Year": "2024"
 
-# Playground
+# MonthNames
+- text: Date of birth For example, 27 March 2007
 - group "Date of birth":
-  - text: Month
-  - textbox "Month"
   - text: Day
   - textbox "Day"
+  - text: Month
+  - combobox "Month":
+    - option "Month" [disabled] [selected]
+    - option "January"
+    - option "February"
+    - option "March"
+    - option "April"
+    - option "May"
+    - option "June"
+    - option "July"
+    - option "August"
+    - option "September"
+    - option "October"
+    - option "November"
+    - option "December"
+  - text: Year
+  - textbox "Year"
+
+# Playground
+- text: Date of birth For example, 27 3 2007
+- group "Date of birth":
+  - text: Day
+  - textbox "Day"
+  - text: Month
+  - textbox "Month"
   - text: Year
   - textbox "Year"
 

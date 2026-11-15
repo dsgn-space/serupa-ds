@@ -16,6 +16,7 @@ const ARGS: Record<string, unknown[]> = {
   clearValue: ['Email'],
   colorName: ['blue', 'dark'],
   contrast: ['4.5'],
+  dateFieldError: ['not-real', 'February 2026', 28],
   statusDay: ['Nov 3, 2026', 'Degraded'],
   statusSummary: ['99.8%', 90, 2],
   fileMissing: [true],
