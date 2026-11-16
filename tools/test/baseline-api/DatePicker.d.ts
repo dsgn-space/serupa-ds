@@ -20,5 +20,8 @@ interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
     invalid?: boolean | undefined;
     buttonLabel?: string | undefined;
     presets?: boolean | DatePreset[] | undefined;
+    open?: boolean | undefined;
+    defaultOpen?: boolean | undefined;
+    onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 declare const DatePicker: React.ForwardRefExoticComponent<DatePickerProps & React.RefAttributes<HTMLInputElement>>;

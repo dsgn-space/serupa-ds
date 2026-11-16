@@ -5,6 +5,7 @@ import { page, userEvent } from 'vitest/browser';
 import { CascadeSelect } from '../components/CascadeSelect/CascadeSelect';
 import { DateField } from '../components/DateField/DateField';
 import { Field } from '../components/Field/Field';
+import { PeriodPicker } from '../components/PeriodPicker/PeriodPicker';
 import { SignaturePad } from '../components/SignaturePad/SignaturePad';
 
 // The fields with no native control of their own take required like Input, Select and ColorPicker do: a form isn't
@@ -56,6 +57,18 @@ describe('required on the fields without a native control', () => {
   test('CascadeSelect: readOnly or disabled doesn\'t stop the form', async () => {
     await render(<Form onSent={() => {}}><CascadeSelect aria-label="Region" options={regions} required readOnly /><CascadeSelect aria-label="Area" options={regions} required disabled /></Form>);
     expect(form().checkValidity()).toBe(true);
+  });
+
+  test('PeriodPicker: no period stops the form, the button is marked and takes focus; a chosen period is valid', async () => {
+    let sent = 0;
+    const { rerender } = await render(<Form onSent={() => sent++}><PeriodPicker aria-label="Month" name="month" required /></Form>);
+    const button = () => page.getByRole('combobox', { name: 'Month' }).element();
+    expect([form().checkValidity(), button().getAttribute('aria-required')]).toEqual([false, 'true']);
+    await send();
+    await expect.poll(() => button().getAttribute('aria-invalid')).toBe('true');
+    expect([sent, document.activeElement === button()]).toEqual([0, true]);
+    await rerender(<Form onSent={() => sent++}><PeriodPicker aria-label="Month" name="month" required value="2026-11" /></Form>);
+    expect([form().checkValidity(), button().getAttribute('aria-invalid')]).toEqual([true, null]);
   });
 
   test('SignaturePad: no signature stops the form, the pad is marked and its method switch takes focus; a typed name clears it', async () => {

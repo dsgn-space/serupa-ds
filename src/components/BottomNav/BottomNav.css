@@ -25,7 +25,7 @@
   padding-block-end: env(safe-area-inset-bottom);
   padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
   border-top: var(--border-width-1) solid var(--bottom-nav-border, var(--border));
-  background: var(--bottom-nav-bg, var(--surface));
+  background: var(--bottom-nav-bg, var(--surface)); --surface-behind: var(--bottom-nav-bg, var(--surface));
 }
 .dk-bottom-nav__list { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; block-size: var(--bottom-nav-height, var(--spacing-16)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-bottom-nav__item { display: flex; min-width: var(--spacing-0); }

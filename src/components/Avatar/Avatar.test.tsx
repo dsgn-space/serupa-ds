@@ -7,6 +7,7 @@ import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/he
 import { Avatar, initials, type AvatarSize, type AvatarStatus } from './Avatar';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
+import { Card } from '../Card/Card';
 
 // A 10×10 red PNG rather than an SVG data URL: WebKit's loaded check failed on the SVG (no 10px natural width).
 const IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAEklEQVR4nGM4w8CAB+GTG8HSAJNGT7H9UgyzAAAAAElFTkSuQmCC';
@@ -118,6 +119,14 @@ describe('Avatar', () => {
     STATUSES.forEach((s, i) => expect({ ...sts[i], bg: undefined }).toEqual({ name: 'Ada Lovelace, ' + s, w: 10, end: 0, bottom: 0, ring: true, hidden: 'true', bg: undefined }));
     expect(new Set(sts.map((s) => s.bg)).size).toBeGreaterThan(1);
     expect(el('stl').getAttribute('aria-label')).toBe('Ada Lovelace, in a meeting');
+  });
+
+  test('dark: the status dot\'s ring is the fill behind it, the page\'s or a Card\'s, not a lighter halo on the page (BUG-R1)', async () => {
+    await render(<div data-theme="blue-dark" id="dark-page"><Avatar id="on-page" status="online" name="Ada Lovelace" /><Card><Avatar id="on-card" status="online" name="Ada Lovelace" /></Card></div>);
+    const ring = (id: string) => css(el(id).querySelector(':scope > span + span')).boxShadow.match(/rgba?\([^)]*\)/)![0];
+    const fill = (e: Element) => css(e).backgroundColor;
+    expect([ring('on-page'), ring('on-card')]).toEqual([fill(el('dark-page')), fill(el('on-card').closest('[data-component=card]')!)]);
+    expect(ring('on-page')).not.toBe(ring('on-card'));   // dark: the page is a step below its cards
   });
 
   // DR1: color alone failed 1.4.1, and forced colors turned all four into the same dot.

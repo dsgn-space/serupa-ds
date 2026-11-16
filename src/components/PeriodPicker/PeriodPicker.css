@@ -7,6 +7,7 @@
    and struck through, as Calendar's days are.
    --------------------------------------------------------------- */
 @layer dk.components {
+.dk-period-picker__validity { position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: var(--spacing-0); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap; border: var(--spacing-0); opacity: var(--opacity-0); }
 .dk-period-picker {
   --dk-pp-h: var(--period-picker-height-md, var(--control-height-md));
   --dk-pp-px: var(--period-picker-padding-x, var(--spacing-3));
@@ -43,7 +44,7 @@
   inline-size: var(--period-picker-panel-width, var(--spacing-64)); max-inline-size: calc(var(--sizing-screen-w) - var(--spacing-4) - var(--spacing-4));
   margin: var(--spacing-0); padding: var(--period-picker-panel-padding, var(--spacing-3));
   border: var(--border-width-1) solid var(--period-picker-panel-border, var(--border-overlay)); border-radius: var(--period-picker-panel-radius, var(--radius-surface));
-  background: var(--period-picker-panel-bg, var(--surface-overlay)); color: var(--period-picker-text, var(--text)); box-shadow: var(--period-picker-panel-shadow, var(--elevation-overlay));
+  background: var(--period-picker-panel-bg, var(--surface-overlay)); --surface-behind: var(--period-picker-panel-bg, var(--surface-overlay)); color: var(--period-picker-text, var(--text)); box-shadow: var(--period-picker-panel-shadow, var(--elevation-overlay));
   cursor: default; transform-origin: var(--dk-layer-origin, top);
 }
 /* Motion, as DatePicker's popup: in from @starting-style, out with a fade kept in the top layer; gone at once when
@@ -69,7 +70,7 @@
   margin: var(--spacing-0); padding: var(--spacing-1); border: var(--spacing-0); border-radius: var(--period-picker-period-radius, var(--radius-control));
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums; cursor: var(--cursor-interactive); touch-action: manipulation; overflow-wrap: anywhere;
 }
-@media (hover: hover) { .dk-period-picker__period:hover:not([aria-disabled="true"], .dk-period-picker__period--selected) { background: var(--period-picker-period-bg-hover, var(--surface-muted)); } }
+@media (hover: hover) { .dk-period-picker__period:hover:not([aria-disabled="true"], .dk-period-picker__period--selected) { background: var(--period-picker-period-bg-hover, var(--surface-muted)); --surface-behind: var(--period-picker-period-bg-hover, var(--surface-muted)); } }
 .dk-period-picker__period:active:not([aria-disabled="true"], .dk-period-picker__period--selected) { background: var(--period-picker-period-bg-pressed, var(--pressed)); }
 .dk-period-picker__period:focus { outline: none; }
 .dk-period-picker__period:focus-visible { outline: var(--focus-ring-width) solid var(--period-picker-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }

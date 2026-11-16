@@ -25,7 +25,7 @@
       "ring": {
         "$type": "color",
         "$value": "{color.surface}",
-        "$description": "The ring that separates the status dot from the picture.",
+        "$description": "The ring that separates the status dot from the picture. Unset, it takes the fill behind the avatar (--surface-behind, which the page and every surface set), else surface.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--avatar-ring"

@@ -14,7 +14,7 @@
   position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--file-upload-gap, var(--spacing-2)); text-align: center;
   padding: var(--file-upload-zone-padding, var(--spacing-6));
   border: var(--border-width-1) dashed var(--file-upload-zone-border, var(--border-control)); border-radius: var(--file-upload-zone-radius, var(--radius-surface));
-  background: var(--file-upload-zone-bg, var(--surface-control)); cursor: var(--cursor-interactive); touch-action: manipulation;
+  background: var(--file-upload-zone-bg, var(--surface-control)); --surface-behind: var(--file-upload-zone-bg, var(--surface-control)); cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), border-color var(--motion-hover) var(--ease-move);
 }
 /* A click on the drop area browses for files, so pointing at it darkens its outline, as a field's does. */
@@ -33,7 +33,7 @@
 .dk-file-upload__list { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-file-upload__item {
   display: flex; align-items: center; gap: var(--spacing-3); padding: var(--file-upload-item-padding, var(--spacing-2)); padding-inline-start: var(--spacing-3);
-  border: var(--border-width-1) solid var(--file-upload-item-border, var(--border)); border-radius: var(--file-upload-item-radius, var(--radius-control)); background: var(--file-upload-item-bg, var(--surface));
+  border: var(--border-width-1) solid var(--file-upload-item-border, var(--border)); border-radius: var(--file-upload-item-radius, var(--radius-control)); background: var(--file-upload-item-bg, var(--surface)); --surface-behind: var(--file-upload-item-bg, var(--surface));
 }
 .dk-file-upload__file-icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-5); }
 .dk-file-upload__file { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); }

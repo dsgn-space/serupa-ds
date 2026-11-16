@@ -20,8 +20,11 @@ interface PeriodPickerProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEl
     placeholder?: string | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
+    required?: boolean | undefined;
     readOnly?: boolean | undefined;
     name?: string | undefined;
+    open?: boolean | undefined;
     defaultOpen?: boolean | undefined;
+    onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 declare const PeriodPicker: React.ForwardRefExoticComponent<PeriodPickerProps & React.RefAttributes<HTMLButtonElement>>;

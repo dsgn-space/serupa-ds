@@ -89,7 +89,7 @@ interface TableColumnOption {
     visible: boolean;
     required?: boolean | undefined;
 }
-interface TableColumnsMenuProps {
+interface TableColumnsMenuProps extends React.HTMLAttributes<HTMLButtonElement> {
     columns: TableColumnOption[];
     onColumnsChange: (columns: TableColumnOption[], details: TableColumnsChangeDetails) => void;
     label?: string | undefined;
@@ -98,7 +98,7 @@ interface TableColumnsChangeDetails {
     id: string;
     visible: boolean;
 }
-declare function TableColumnsMenu(props: TableColumnsMenuProps): React.JSX.Element;
+declare const TableColumnsMenu: React.ForwardRefExoticComponent<TableColumnsMenuProps & React.RefAttributes<HTMLButtonElement>>;
 interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
     expanded?: boolean | undefined;
     onExpandedChange?: ((expanded: boolean) => void) | undefined;

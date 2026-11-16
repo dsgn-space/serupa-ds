@@ -20,6 +20,7 @@ import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { en as words } from './labels';
 import { windowBlur } from '../../internal/focus';
 import { useControllable } from '../../internal/controllable';
+import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'children'> {
   /** The chosen day (controlled), or null. Use with onValueChange. A "yyyy-mm-dd" string is that day, wherever the
@@ -57,6 +58,12 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   /** Shortcuts beside the calendar in the popup: true for "Today", "Tomorrow" and "In a week", or your own, as on
       Calendar. Picking one picks its day and closes the popup. */
   presets?: boolean | DatePreset[] | undefined;
+  /** Whether the calendar popup shows (controlled). Use with onOpenChange. Opened this way, focus stays where it is. */
+  open?: boolean | undefined;
+  /** Shows the calendar popup at first (uncontrolled), without moving focus into it. Default: false. */
+  defaultOpen?: boolean | undefined;
+  /** Called when the popup asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' | 'select' | 'api' }. */
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
 /* DatePicker: a text field for a date with a calendar button. People type a date in the locale's numeric order
@@ -70,7 +77,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   const nameRef = useNameCheck('DatePicker', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, weekNumbers, size: _s, invalid: _i, buttonLabel, presets, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, open: _o, defaultOpen: _do, onOpenChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, weekNumbers, size: _s, invalid: _i, buttonLabel, presets, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
@@ -78,7 +85,12 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   const value = controlled ? toDay(held, 'DatePicker') : (held as Date | null);
   const min = toDay(minIn, 'DatePicker') || undefined, max = toDay(maxIn, 'DatePicker') || undefined;
   const [text, setText] = React.useState(value ? formatDate(value, locale) : '');
-  const [open, setOpen] = React.useState(false);
+  const off = !!disabled || !!readOnly;
+  const [open, setOpen] = useOpenState(props.open, props.defaultOpen, onOpenChange, 'DatePicker', off);
+  // Focus goes into the calendar when the person opens it (the button, Alt+ArrowDown), not when it shows on arrival
+  // (defaultOpen) or because the app set open.
+  const [focusIn, setFocusIn] = React.useState(false);
+  const openByHand = () => { setFocusIn(true); setOpen(true, 'trigger'); };
   const id = domId('dk-dp', React.useId());
   const field = React.useRef<HTMLInputElement | null>(null);
   const button = React.useRef<HTMLButtonElement | null>(null);
@@ -88,7 +100,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   useFormReset(field, () => {
     if (controlled) return;
     const d = toDay(props.defaultValue);
-    shown.current = d ? d.getTime() : null; setOwn(d); setText(d ? formatDate(d, locale) : ''); setOpen(false);
+    shown.current = d ? d.getTime() : null; setOwn(d); setText(d ? formatDate(d, locale) : ''); setOpen(false, 'api');
   });
   // A new value from outside, or a new locale (the browser's, once a server-rendered page hydrates), rewrites the text.
   const shownLocale = React.useRef(locale);
@@ -113,15 +125,14 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
     reject(text, d ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted, setRejected);
     commit(value);
   };
-  const close = (focusField: boolean) => { setOpen(false); if (focusField && field.current) field.current.focus(); };
+  const close = (focusField: boolean, reason: OpenChangeReason) => { setOpen(false, reason); setFocusIn(false); if (focusField && field.current) field.current.focus(); };
 
   // A press outside the calendar and its button, or focus moving past them (Tab), closes it.
   // The calendar stays (inert) while the popup fades out (DZ1).
   const exit = useExit(open, panel);
-  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-dp-offset', onOutside: () => close(false), onFocusOutside: () => close(false), inside: button });
+  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-dp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
   const typed = parseDate(text, locale);
-  const off = !!disabled || !!readOnly;
   const mergedRef = useMergedRef(ref, (n) => { field.current = n; nameRef(n); });
   return (
     <>
@@ -135,19 +146,19 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
           if (onKeyDown) onKeyDown(e);
           if (e.defaultPrevented || isComposing(e)) return;
           if (e.key === 'Enter') read();
-          else if (e.key === 'ArrowDown' && e.altKey && !off) { e.preventDefault(); read(); setOpen(true); }
+          else if (e.key === 'ArrowDown' && e.altKey && !off) { e.preventDefault(); read(); openByHand(); }
         }} />
       <button ref={button} type="button" className="dk-date-picker__button" aria-label={buttonLabel || sds.labels.chooseDate} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
-        disabled={off} onClick={() => { if (!open) read(); setOpen(!open); }}>
+        disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read(); openByHand(); } }}>
         <Icon icon={icons.CalendarToday} />
       </button>
       {/* The format to type, read after the field's name: a placeholder is gone once something is typed, and not every screen reader reads it. */}
       <span id={id + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
       {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ''} disabled={disabled} /> : null}
       <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-date-picker__popup"
-        onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}>
-        {open || exit.leaving ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus
-          onValueChange={(d) => { commit(d); close(true); }} /> : null}
+        onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}>
+        {open || exit.leaving ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus={focusIn}
+          onValueChange={(d) => { commit(d); close(true, 'select'); }} /> : null}
       </div>
     </span>
       {/* Why typed text was put back (GR232): until the text changes; said out loud already, and read with the field. */}

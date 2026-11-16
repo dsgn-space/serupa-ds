@@ -54,4 +54,14 @@ describe('Quote', () => {
       expect(contrast(css(src).color, 'var(--surface)'), th).toBeGreaterThanOrEqual(4.5);
     }
   });
+  test('the words keep a reading measure: about 65 characters a line in a wide column, at both sizes', async () => {
+    const long = 'Every screen we shipped this year started from these parts, and nobody had to ask which shade of grey a border should be again.';
+    await render(<div style={{ width: 1600 }}>
+      <Quote id="md">{long}</Quote><Quote id="lg" size="lg">{long}</Quote>
+    </div>);
+    const words = (id: string) => el(id).querySelector('blockquote')!;
+    // One ch of the words' own face and size: the width of a 0.
+    const ch = (id: string) => { const z = document.createElement('span'); z.textContent = '0'; words(id).append(z); const w = z.getBoundingClientRect().width; z.remove(); return w; };
+    for (const id of ['md', 'lg']) expect(Math.round(words(id).getBoundingClientRect().width / ch(id)), id).toBe(65);
+  });
 });

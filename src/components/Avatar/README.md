@@ -81,7 +81,7 @@ Each is an optional override: set it on the page, a container or one avatar. The
 | --- | --- | --- |
 | `--avatar-bg` | `secondary` | The background behind initials and the fallback icon. |
 | `--avatar-text` | `text` | The initials and the fallback icon (4.5:1 on the background). |
-| `--avatar-ring` | `surface` | The ring that separates the status dot from the picture. |
+| `--avatar-ring` | `surface` | The ring that separates the status dot from the picture. Unset, it takes the fill behind the avatar (--surface-behind, which the page and every surface set), else surface. |
 | `--avatar-status-online` | `success` | The status dot for status="online". |
 | `--avatar-status-busy` | `danger` | The status dot for status="busy". |
 | `--avatar-status-away` | `warning` | The status dot for status="away". |

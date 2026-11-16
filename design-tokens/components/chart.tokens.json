@@ -145,7 +145,7 @@
       "separator": {
         "$type": "color",
         "$value": "{color.chart-gap}",
-        "$description": "The ring around markers and bars and the marks in a bar's pattern: the page color, so each series has 3:1 against it.",
+        "$description": "The ring around markers and bars and the marks in a bar's pattern: the color behind the chart, so each series has 3:1 against it. Unset, it takes the fill behind (--surface-behind, which the page and every surface set), else chart-gap.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--chart-separator"

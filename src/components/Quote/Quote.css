@@ -12,7 +12,9 @@
   color: var(--quote-text, var(--text));
   overflow-wrap: break-word;
 }
-.dk-quote__text { margin: 0; font-size: var(--text-base); line-height: var(--text-base--line-height); }
+/* The words keep a reading measure, about 65 characters a line as Prose and Text measure do, in a wide column too;
+   ch follows the size, so a pull quote's larger words keep the same count. */
+.dk-quote__text { max-inline-size: var(--container-prose); margin: 0; font-size: var(--text-base); line-height: var(--text-base--line-height); }
 .dk-quote__text > * { margin: 0; }
 .dk-quote__text > * + * { margin-block-start: var(--quote-gap, var(--spacing-3)); }
 .dk-quote--lg .dk-quote__text { font-size: var(--quote-size-lg, var(--text-xl)); line-height: var(--quote-line-height-lg, var(--text-xl--line-height)); }
