@@ -380,7 +380,10 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
-    timeout-minutes: 30
+    # A visual shard draws every picture twice (main's and the branch's): about 18 minutes on a burst runner, and 27 on
+    # serupa-runner, the slower machine, where #2023's visual 1/5 ran out of the 30 minutes in its last seconds and had
+    # to run again (16 Nov). The other groups take under 15 anywhere.
+    timeout-minutes: ${{ matrix.group == 'visual' && 40 || 30 }}
     strategy:
       # On a pull request and in the queue the first failing job cancels the others; main runs every job to the end.
       fail-fast: ${{ github.event_name != 'push' }}
