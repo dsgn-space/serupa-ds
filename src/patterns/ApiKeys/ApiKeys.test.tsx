@@ -118,3 +118,16 @@ describe('Patterns/API keys', () => {
     expect(bodyText()).toContain('Keys (٣)');
   });
 });
+
+describe('ApiKeys on a phone', () => {
+  test('on a phone, each Revoke stays in view while the table scrolls', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<ApiKeys />);
+      const frame = document.querySelector('table')!.parentElement!.getBoundingClientRect();
+      const buttons = [...document.querySelectorAll('td button')].filter((b) => /^Revoke/.test(b.getAttribute('aria-label') ?? ''));
+      expect(buttons.length).toBeGreaterThan(0);
+      for (const b of buttons) { const r = b.getBoundingClientRect(); expect(r.right, b.getAttribute('aria-label') ?? '').toBeLessThanOrEqual(frame.right + 1); expect(r.left).toBeGreaterThanOrEqual(frame.left - 1); }
+    } finally { await page.viewport(900, 700); }
+  });
+});

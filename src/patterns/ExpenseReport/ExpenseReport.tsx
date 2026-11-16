@@ -203,7 +203,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
               <section aria-labelledby="expenses" className="flex flex-col gap-4">
                 <h2 id="expenses" className="m-0 text-lg font-semibold">Expenses</h2>
                 {list.length ? (
-                  <Table caption="Expenses in this report, with the total" hideCaption>
+                  <Table caption="Expenses in this report, with the total" hideCaption pinEnd>
                     <TableHead><TableRow>
                       <TableHeaderCell>Date</TableHeaderCell>
                       <TableHeaderCell>What</TableHeaderCell>
@@ -214,7 +214,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                     <TableBody>
                       {list.map((x) => (
                         <TableRow key={x.id}>
-                          <TableCell><time dateTime={x.date}>{date(x.date)}</time></TableCell>
+                          <TableCell className="whitespace-nowrap"><time dateTime={x.date}>{date(x.date)}</time></TableCell>
                           <TableCell className="wrap-break-word">{x.what}<span className="block text-sm text-text-muted">{label(x.category)}</span></TableCell>
                           <TableCell className="text-end tabular-nums">{money(x.amount)}</TableCell>
                           <TableCell>{x.receipt ? <span className="wrap-anywhere">{x.receipt}</span> : x.amount > receiptOver ? <Badge tone="warning">Receipt needed</Badge> : <span className="text-text-muted">Not needed</span>}</TableCell>
@@ -226,7 +226,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                       <TableRow>
                         <TableCell colSpan={2} className="font-semibold">Total</TableCell>
                         <TableCell className="text-end font-semibold tabular-nums">{money(total)}</TableCell>
-                        <TableCell colSpan={2} />
+                        <TableCell /><TableCell />
                       </TableRow>
                     </TableFoot>
                   </Table>
