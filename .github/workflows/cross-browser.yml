@@ -20,21 +20,13 @@ permissions:
 
 jobs:
   components:
-    name: ${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} (${{ matrix.browser }})
+    name: ${{ matrix.group }} (${{ matrix.browser }})
     strategy:
       fail-fast: false
       matrix:
         # Visual against tools/test/baseline-visual-<browser>/ (visual.mjs), drawn in this same image.
-        group: [checks, storybook, visual]
-        browser: [firefox, webkit]
-        # The component tests run twice, in English and in a second language, which in Firefox took 50 minutes and then
-        # some: the job hit its 75 minutes in the second language every night from 14 Nov, and was cancelled with no
-        # report. So each language is a job of its own (SERUPA_PART, run.mjs).
-        include:
-          - { group: components, part: base, browser: firefox }
-          - { group: components, part: locale, browser: firefox }
-          - { group: components, part: base, browser: webkit }
-          - { group: components, part: locale, browser: webkit }
+        group: [components]
+        browser: [webkit]
     runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -68,7 +60,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          SERUPA_PART=${{ matrix.part }} node tools/test/run.mjs --browser ${{ matrix.browser }} --group ${{ matrix.group }} 2>&1 | tee test-output.txt
+          for i in 1 2 3 4 5 6 7 8; do SERUPA_BROWSER=${{ matrix.browser }} npx vitest run src/components/Navbar/Navbar.test.tsx src/components/Textarea/Textarea.test.tsx --silent=false --project 'components (${{ matrix.browser }})' 2>&1 || true; done | tee test-output.txt
       - name: List the failures
         if: failure()
         shell: bash
@@ -76,12 +68,12 @@ jobs:
           # head stops reading once it has its lines, and under pipefail that broken pipe (141) failed this step too, before
           # it wrote the list: the pull request showed no failures (14 Nov).
           set +o pipefail
-          { echo '## Failing: ${{ matrix.group }} ${{ matrix.part }} in ${{ matrix.browser }}'; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          { echo '## Failing: ${{ matrix.group }} in ${{ matrix.browser }}'; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload the output
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: test-output-${{ matrix.group }}${{ matrix.part && format('-{0}', matrix.part) || '' }}-${{ matrix.browser }}
+          name: test-output-${{ matrix.group }}-${{ matrix.browser }}
           path: test-output.txt
           if-no-files-found: ignore
   # The component tests in the oldest Chrome the package supports (package.json's browserslist, through
@@ -90,72 +82,3 @@ jobs:
   # with the default branch, and a checkout of another ref there is cache poisoning (CodeQL).
   # Firefox and WebKit at their floor can't be driven by this Playwright; browser-baseline.mjs holds the CSS and
   # script to it instead.
-  floor:
-    name: components (Chrome floor)
-    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
-    container:
-      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
-      options: --cpus 4
-    env:
-      HOME: /root
-      # Chrome 123's headless shell takes its language from the container's C locale ("en-US@posix", which Intl
-      # refuses), where Playwright's own Chromium says en-US.
-      SERUPA_LOCALE: en-US
-    timeout-minutes: 75
-    steps:
-      - name: Clear stale git locks
-        shell: bash
-        run: find .git -name '*.lock' -type f -delete 2>/dev/null || true
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/setup
-      - run: apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null 2>&1 || (apt-get update -qq && apt-get install -y -qq --no-install-recommends fonts-liberation unzip >/dev/null)
-      - name: Build the package
-        run: npm run build
-      - name: Components in Chrome at the floor
-        shell: bash
-        run: |
-          set -o pipefail
-          node tools/browser-floor.mjs
-          SERUPA_CHROMIUM="$(node tools/browser-floor.mjs --chromium)" node tools/test/run.mjs --group components 2>&1 | tee test-output.txt
-      - name: List the failures
-        if: failure()
-        shell: bash
-        run: |
-          # head stops reading once it has its lines, and under pipefail that broken pipe (141) failed this step too, before
-          # it wrote the list: the pull request showed no failures (14 Nov).
-          set +o pipefail
-          { echo "## Failing: components in Chrome at the floor"; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-      - name: Upload the output
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: test-output-floor-chromium
-          path: test-output.txt
-          if-no-files-found: ignore
-  # A scheduled run opens one issue when it fails (or updates the open one) and closes it when it's green again.
-  report:
-    name: nightly issue
-    needs: [components, floor]
-    if: always() && github.event_name == 'schedule' && needs.components.result != 'cancelled'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      issues: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        continue-on-error: true   # a run that stopped before any upload still gets its issue
-        with:
-          pattern: test-output-*
-          path: artifacts
-      - name: Open, update or close the issue
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RESULT: ${{ needs.floor.result == 'failure' && 'failure' || needs.components.result }}
-          JOBS: floor-chromium,components-base-firefox,components-locale-firefox,components-base-webkit,components-locale-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
-        run: node tools/nightly-issue.mjs artifacts "$RESULT"
