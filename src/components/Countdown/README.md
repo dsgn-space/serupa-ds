@@ -29,6 +29,11 @@ import { Countdown } from "@diki-stwn/serupa-ds";
 - `endText` takes the time's place when it ends ("The offer has ended"), and is said aloud. `onEnd` is called once when it reaches zero, or as it mounts when `to` has already passed.
 - `countdownClock(seconds, locale)` and `countdownWords(seconds, locale)` give the same text outside React.
 
+### Do and don't
+
+- **Do:** Say what it counts down to, in the words beside it: "Offer ends in 4:59". (`DoSayWhatEnds`)
+- **Don't:** The clock alone: "4:59" reads as a time of day, and nobody knows what ends. (`DontBareClock`)
+
 ## Behavior
 
 - Every Countdown on the page runs on one shared clock, twice a second, which stops when none is mounted.

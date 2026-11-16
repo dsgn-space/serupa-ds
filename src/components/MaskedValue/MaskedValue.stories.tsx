@@ -29,3 +29,7 @@ export const Kinds: Story = {
 };
 // The stress story (G14): a long value in a narrow column, revealed, wraps rather than widening it.
 export const LongText: Story = { args: { value: 'GB82WEST12345698765432GB82WEST12345698765432', label: 'Account number', revealable: true }, render: (args) => <div style={{ width: 200 }}><MaskedValue {...args} revealed onRevealedChange={() => {}} /></div> };
+/** Do: keep the end the owner knows the card by. */
+export const DoKeepTheEnd: Story = { name: 'Do: keep the last four' };
+/** Don't: hide it all, so nobody can tell which card it is. */
+export const DontHideAll: Story = { name: "Don't: hide it all", args: { end: 0 } };

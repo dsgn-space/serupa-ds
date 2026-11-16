@@ -43,6 +43,11 @@ Drawn from the `Statuses` story.
 - Keep it dark on light. The `--qr-code-dark` token takes a brand color only when it keeps about 4.5:1 on white, and a light-on-dark code is one many scanners can't read.
 - Don't show a stale code as working: switch to `"expired"` when the server says so, so the person gets a new one before trying.
 
+### Do and don't
+
+- **Do:** A short URL, which makes big modules that scan fast, even from a screen. (`DoShortValue`)
+- **Don't:** A long text in the code: it packs the modules too small to scan. Link to a page that holds the text. (`DontLongValue`)
+
 ## Accessibility
 
 - **Role and name:** the code is an SVG with `role="img"`, named by `label`. Its modules are one path with no text.
