@@ -92,4 +92,15 @@ describe('Patterns/Approvals', () => {
     await screen.getByRole('radio', { name: 'Decided' }).click();
     expect(norm(document.body.textContent)).toContain('You haven’t decided anything yet.');
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Approvals loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading requests']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<Approvals loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your requests' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

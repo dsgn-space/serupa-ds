@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Transactions, findTx, monthsOf, totals, type Transaction } from './Transactions';
@@ -64,5 +64,16 @@ describe('Patterns/Transactions', () => {
     await screen.getByRole('combobox', { name: 'Month' }).selectOptions('2026-10');
     await expect.poll(() => rows().length).toBe(1);
     expect(norm(document.querySelector('main dl')!.textContent)).toMatch(/You kept.*400/);
+  });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Transactions loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading transactions']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<Transactions loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your transactions' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });

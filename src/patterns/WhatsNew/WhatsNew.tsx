@@ -7,6 +7,9 @@ import { Link } from '../../components/Link/Link';
 import { SegmentedControl } from '../../components/SegmentedControl/SegmentedControl';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
+import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* What's new: the product's changes, newest first, by month; what's new since your last visit marked; a filter by kind;
@@ -26,6 +29,12 @@ export interface WhatsNewProps {
   lastSeen?: string | undefined;
   /** How many months show at first. Default: 2. */
   months?: number | undefined;
+  /** Still loading: a placeholder shows instead of the changes. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load what’s new" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demo: Change[] = [
@@ -56,7 +65,7 @@ export function byMonth(changes: Change[]) {
 }
 
 /** The What's new page: a skip link, a header, then main with the h1, the filter, and the changes by month. */
-export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2 }: WhatsNewProps) {
+export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2, loading = false, loadFailed = false, onRetry }: WhatsNewProps) {
   const locale = useLocale();
   const [kind, setKind] = React.useState<'all' | ChangeKind>('all');
   const [shown, setShown] = React.useState(months);
@@ -87,7 +96,9 @@ export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2 }
         <Link href="#help">Help</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
-        <PageHeader title="What’s new" description={unseen ? `${unseen === 1 ? '1 change' : `${formatNumber(unseen, locale)} changes`} since your last visit, marked below.` : 'You’ve seen every change. New ones show here first.'} />
+        <PageHeader title="What’s new" description={loading || loadFailed ? undefined : unseen ? `${unseen === 1 ? '1 change' : `${formatNumber(unseen, locale)} changes`} since your last visit, marked below.` : 'You’ve seen every change. New ones show here first.'} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load what’s new" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading what’s new" /></Card> : (<>
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
           <SegmentedControl aria-label="Show" value={kind} onValueChange={(v) => { setKind(v); setShown(months); }}
             options={[{ value: 'all', label: 'All' }, { value: 'new', label: 'New' }, { value: 'improved', label: 'Improved' }, { value: 'fixed', label: 'Fixed' }]} />
@@ -114,6 +125,7 @@ export function WhatsNew({ changes = demo, lastSeen = '2026-03-03', months = 2 }
           {!visible.length ? <p className="m-0 text-text-muted">No changes of this kind yet.</p> : null}
           {groups.length > shown ? <div><Button variant="secondary" onClick={more}>Show older months</Button></div> : null}
         </div>
+        </>)}
       </main>
     </div>
   );

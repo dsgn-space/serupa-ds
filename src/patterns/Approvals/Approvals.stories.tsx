@@ -16,3 +16,9 @@ export const Default: Story = {};
 
 /** Nothing waiting. */
 export const CaughtUp: Story = { args: { requests: [] } };
+
+/** While the requests load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

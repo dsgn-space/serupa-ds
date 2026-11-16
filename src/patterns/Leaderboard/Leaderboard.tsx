@@ -8,6 +8,9 @@ import { SegmentedControl } from '../../components/SegmentedControl/SegmentedCon
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from '../../components/Table/Table';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
+import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Leaderboard: who's ahead this week, this month or of all time, where you are, and who's moving. For an app to copy.
@@ -29,6 +32,12 @@ export interface LeaderboardProps {
   me?: string | undefined;
   /** How many places show before yours. Default: 5. */
   top?: number | undefined;
+  /** Still loading: a placeholder shows instead of the board. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load the leaderboard" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const P = (id: string, name: string, week: number, month: number, all: number, moved: Partial<Record<Period, number>> = {}): Player => ({ id, name, points: { week, month, all }, moved });
@@ -66,7 +75,7 @@ export function ordinal(n: number) {
 }
 
 /** The leaderboard page: a skip link, a header, then main with the h1, the period, and the board. */
-export function Leaderboard({ players = demo, me = 'ana', top = 5 }: LeaderboardProps) {
+export function Leaderboard({ players = demo, me = 'ana', top = 5, loading = false, loadFailed = false, onRetry }: LeaderboardProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [period, setPeriod] = React.useState<Period>('week');
@@ -103,7 +112,9 @@ export function Leaderboard({ players = demo, me = 'ana', top = 5 }: Leaderboard
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Challenges', href: '#challenges' }, { label: 'Leaderboard' }]} title="Leaderboard"
-          description={mine ? `You’re ${placeWords(mine).toLowerCase()} of ${num(players.length)} ${long}, with ${num(mine.points[period])} points.` : `${num(players.length)} people taking part.`} />
+          description={loading || loadFailed ? undefined : mine ? `You’re ${placeWords(mine).toLowerCase()} of ${num(players.length)} ${long}, with ${num(mine.points[period])} points.` : `${num(players.length)} people taking part.`} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the leaderboard" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the leaderboard" /></Card> : (<>
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
           <SegmentedControl aria-label="Period" value={period} onValueChange={setPeriod} options={PERIODS.map(({ value, label }) => ({ value, label }))} />
           <p role="status" id="board-period" className="m-0 text-sm text-text-muted">Showing points {long}</p>
@@ -131,6 +142,7 @@ export function Leaderboard({ players = demo, me = 'ana', top = 5 }: Leaderboard
             </TableBody>
           </Table>
         </div>
+        </>)}
       </main>
     </div>
   );

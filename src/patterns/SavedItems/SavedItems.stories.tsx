@@ -17,3 +17,9 @@ export const Default: Story = {};
 
 /** Nothing saved yet. */
 export const Empty: Story = { args: { items: [] } };
+
+/** While the saved items load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };
