@@ -7,6 +7,9 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-text { margin: var(--spacing-0); font-family: var(--font-sans); overflow-wrap: anywhere; }
+/* In a table cell the column takes its width from the narrowest the text can go, which anywhere would make one
+   letter: the words stay whole there, as for a Link. */
+:where(td, th) .dk-text { overflow-wrap: break-word; }
 .dk-text--xs { font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
 .dk-text--sm { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-text--base { font-size: var(--text-base); line-height: var(--text-base--line-height); }

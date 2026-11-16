@@ -33,7 +33,7 @@ a.dk-attachment__name:focus-visible { outline: var(--focus-ring-width) solid var
 .dk-attachment__progress { margin-block-start: var(--spacing-1); }
 /* While it uploads, it's at least 192px wide, so a short name still gets a bar long enough to read. */
 .dk-attachment--uploading { min-inline-size: min(var(--sizing-full), var(--spacing-48)); }
-.dk-attachment__error { display: flex; align-items: flex-start; gap: var(--spacing-1); color: var(--attachment-error, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: anywhere; }
+.dk-attachment__error { display: flex; align-items: flex-start; gap: var(--spacing-1); color: var(--attachment-error, var(--danger-text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); overflow-wrap: break-word; }   /* break-word: beside a long retry label the message keeps its words whole, not one letter to a line */
 .dk-attachment__error .dk-icon { flex: none; font-size: var(--spacing-4); }
 .dk-attachment--error { border-color: var(--attachment-border-error, var(--danger)); }
 .dk-attachment__retry, .dk-attachment__remove { flex: none; }
