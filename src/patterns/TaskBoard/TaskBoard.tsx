@@ -98,6 +98,9 @@ export function overLimit(columns: readonly BoardColumn[], locale = 'en-US'): st
 export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, onAdd, loading = false, loadFailed = false, onRetry }: TaskBoardProps) {
   const locale = useLocale();
   const [columns, setColumns] = React.useState<readonly BoardColumn[]>(start);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) setColumns(start); }
   const total = columns.reduce((n, c) => n + c.items.length, 0);
   const over = overLimit(columns);
 

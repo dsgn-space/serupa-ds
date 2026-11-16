@@ -192,4 +192,10 @@ describe('Patterns/Team calendar', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the events that arrive once loading ends are the ones on the calendar', async () => {
+    const screen = await render(<TeamCalendar loading events={[]} defaultMonth={MARCH} />);
+    await screen.rerender(<TeamCalendar events={events()} defaultMonth={MARCH} />);
+    await expect.poll(() => document.querySelectorAll('[data-event-id]').length).toBeGreaterThan(0);
+  });
 });

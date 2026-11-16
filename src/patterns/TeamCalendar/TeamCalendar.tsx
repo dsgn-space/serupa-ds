@@ -113,6 +113,9 @@ export function whenWords(e: Pick<CalendarEvent, 'start' | 'end' | 'allDay'>, lo
 export function TeamCalendar({ title = 'Team calendar', events: start = demo, defaultMonth = new Date(2025, 2, 1), onAdd, onMove, onDelete, loading = false, loadFailed = false, onRetry }: TeamCalendarProps) {
   const locale = useLocale(undefined);
   const [events, setEvents] = React.useState<readonly CalendarEvent[]>(start);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) setEvents(start); }
   const calendar = React.useRef<HTMLDivElement>(null);
   const newButton = React.useRef<HTMLElement | null>(null);
   // Back to the calendar after a dialog closes on something that's gone: its focused day, or the calendar.
