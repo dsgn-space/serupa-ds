@@ -26,7 +26,7 @@ A conversation with an assistant whose replies stream in: suggested prompts to s
 - **Suggested prompts are buttons in a named list**, shown while there are no messages, with a line above them saying what they're for.
 - **Another language**: every word is in `labels`, with English defaults.
 
-## The app's part
+## What stays your app's job
 
 - Add the question and an empty reply with `streaming: true` in `onSend`, then fill the reply's `text` as it arrives and set `streaming: false` when it's done.
 - Write the reply as plain text, or render it from Markdown yourself: the block shows `text` as it is, keeping its line breaks.

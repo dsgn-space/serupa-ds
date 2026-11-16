@@ -25,6 +25,7 @@ An email and a password, then a one-time code, as one page. It meets WCAG 2.2's 
 - **The code step**, a PinInput, which sets `autocomplete="one-time-code"`, so a phone offers the texted code and a pasted code fills every box. "Send a new code" is a button beside it. Pressing it says "We sent a new code" under the button, in a status region that is always on the page, so a screen reader reads it each time without focus leaving the button.
 - **Focus on each new step's heading** (an h1 with `tabIndex={-1}`), so a screen reader says the step changed and the next Tab goes on from there.
 - **No puzzle.** A CAPTCHA that asks someone to read, pick or work something out fails 3.3.8. Use rate limits, or a check that needs nothing from the person.
+- **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.Errors} />
 

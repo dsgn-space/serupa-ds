@@ -39,6 +39,11 @@ When people come back to a page, show it as they left it, so they never retrace 
 
 Wrap every storage read in try/catch, since it can be blocked, and fall back to the default.
 
+## What stays your app's job
+
+- **The navigation.** Pass your own sections and links, and mark the one for the page people are on.
+- **Each page's content**, inside main, with its own h1.
+
 ## Copying it
 
 Copy the story's `render` into your app's layout, change the imports to `serupa`, and put each page's content in main.
