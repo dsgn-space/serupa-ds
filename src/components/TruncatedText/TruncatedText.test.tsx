@@ -137,6 +137,60 @@ describe('TruncatedText', () => {
     } finally { rule.remove(); }
   });
 
+  test('mode="middle" keeps the end in view and cuts the start with an ellipsis; screen readers, copy and the tooltip get the whole text once', async () => {
+    const name = 'quarterly-report-final-version-2026.pdf';
+    await render(narrow(<TruncatedText id="mid" mode="middle">{name}</TruncatedText>));
+    const e = el('mid');
+    await expect.poll(() => e.getAttribute('tabindex')).toBe('0');
+    const start = e.firstElementChild as HTMLElement, end = getComputedStyle(e, '::after');
+    expect([e.children.length, start.textContent, e.dataset.end]).toEqual([1, name, 'n-2026.pdf']);
+    expect(end.content).toMatch(/^"n-2026\.pdf" \/ ""$/);   // drawn with empty alternative text
+    expect([css(start).textOverflow, start.scrollWidth > start.clientWidth]).toEqual(['ellipsis', true]);
+    // The end is drawn whole, after the cut start, inside the box.
+    expect(Math.round(start.getBoundingClientRect().width + parseFloat(end.width))).toBe(160);
+    expect(e.offsetWidth).toBe(160);
+    // Screen readers and a copy get the whole text once: it's all in one run, and the end drawn again is left out.
+    const range = document.createRange();
+    range.selectNodeContents(e);
+    getSelection()!.removeAllRanges();
+    getSelection()!.addRange(range);
+    expect(getSelection()!.toString()).toBe(name);
+    getSelection()!.removeAllRanges();
+    e.focus({ focusVisible: true });
+    await expect.poll(() => tip()?.textContent).toBe(name);
+  });
+
+  test('mode="middle" is plain text while it fits, and goes back to plain text once its box has room', async () => {
+    function Demo() {
+      const [width, setWidth] = React.useState(160);
+      return <><button id="wider" onClick={() => setWidth(900)}>Wide</button><div style={{ width }}><TruncatedText id="mw" mode="middle">{LONG}</TruncatedText></div>
+        <TruncatedText id="ms" mode="middle">a.pdf</TruncatedText></>;
+    }
+    await render(<Demo />);
+    await expect.poll(() => el('mw').children.length).toBe(1);
+    expect([el('ms').children.length, el('ms').textContent, el('ms').hasAttribute('tabindex')]).toEqual([0, 'a.pdf', false]);
+    await userEvent.click(el('wider'));
+    await expect.poll(() => el('mw').children.length).toBe(0);
+    expect([el('mw').textContent, el('mw').hasAttribute('tabindex')]).toEqual([LONG, false]);
+  });
+
+  test('mode="middle" lays the text out in its own direction: a right-to-left name keeps its end on the left', async () => {
+    const name = 'דוח רבעוני סופי לאחר בדיקה של מחלקת הכספים 2026';
+    await render(narrow(<TruncatedText id="rtl" mode="middle">{name}</TruncatedText>));
+    const e = el('rtl');
+    await expect.poll(() => e.children.length).toBe(1);
+    const start = (e.firstElementChild as HTMLElement).getBoundingClientRect(), box = e.getBoundingClientRect();
+    expect([e.dir, getComputedStyle(e).direction, e.dataset.end]).toEqual(['auto', 'rtl', 'ם 2026']);
+    // The start sits on the right, so the end drawn after it is on the left.
+    expect([Math.abs(start.right - box.right) < 0.5, start.left - box.left > 20]).toEqual([true, true]);
+  });
+
+  test('with lines, mode="middle" cuts at the end', async () => {
+    await render(narrow(<TruncatedText id="ml" mode="middle" lines={2}>{LONG + ' ' + LONG}</TruncatedText>));
+    await expect.poll(() => el('ml').hasAttribute('data-truncated')).toBe(true);
+    expect([el('ml').children.length, el('ml').hasAttribute('dir')]).toEqual([0, false]);
+  });
+
   test('your own onPointerDown and onClick still run', async () => {
     const seen: string[] = [];
     await render(narrow(<TruncatedText id="own" onPointerDown={() => seen.push('down')} onClick={() => seen.push('click')}>{LONG}</TruncatedText>));

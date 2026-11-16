@@ -5,6 +5,11 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-truncated-text { display: block; min-inline-size: 0; max-inline-size: var(--sizing-full); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* Cut in the middle: the whole text shrinks to an ellipsis and its last few characters (data-end) are drawn after
+   it, as generated content with empty alternative text: screen readers skip it and a copy leaves it out. */
+.dk-truncated-text--middle { display: flex; text-overflow: clip; white-space: pre; }
+.dk-truncated-text--middle::after { content: attr(data-end); content: attr(data-end) / ""; flex: none; }
+.dk-truncated-text__start { overflow: hidden; min-inline-size: var(--spacing-0); text-overflow: ellipsis; }
 .dk-truncated-text--clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--dk-truncated-text-lines); line-clamp: var(--dk-truncated-text-lines); white-space: normal; overflow-wrap: anywhere; }
 .dk-truncated-text--clamp[data-lines="2"] { --dk-truncated-text-lines: var(--line-clamp-2); }
 .dk-truncated-text--clamp[data-lines="3"] { --dk-truncated-text-lines: var(--line-clamp-3); }
