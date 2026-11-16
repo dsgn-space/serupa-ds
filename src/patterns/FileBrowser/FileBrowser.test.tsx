@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { FileBrowser, countFiles, nameProblem, type BrowserFile } from './FileBrowser';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
@@ -178,5 +179,11 @@ describe('Patterns/File browser', () => {
     await screen.getByRole('main').getByRole('button', { name: 'Upload files' }).last().click();
     await screen.getByRole('main').getByRole('button', { name: 'Upload files' }).first().click();
     expect(onUpload).toHaveBeenCalledTimes(2);
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    expect(countFiles(12, 'ar-EG')).toBe('١٢ files');
+    await render(<SerupaProvider locale="ar-EG"><FileBrowser /></SerupaProvider>);
+    expect(document.body.textContent).toContain('٦ files');
   });
 });

@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Integrations, matchIntegrations, type Integration } from './Integrations';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const count = () => document.querySelector('p[role="status"]')?.textContent;
@@ -105,5 +106,10 @@ describe('Patterns/Integrations', () => {
     await expect.element(screen.getByText('Couldn’t load your integrations')).toBeVisible();
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalled();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Integrations /></SerupaProvider>);
+    expect(document.body.textContent).toContain('٦ apps');
   });
 });

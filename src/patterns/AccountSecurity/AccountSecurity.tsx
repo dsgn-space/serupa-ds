@@ -20,6 +20,7 @@ import { SettingsSection } from '../../blocks/SettingsSection/SettingsSection';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { Loader } from '../../components/Loader/Loader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 
 /* Account security: changing the password, turning two-step verification on and off, and the devices signed in, each
@@ -195,7 +196,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
   const signOutOthers = () => {
     setGone(new Set(others.map((d) => d.id)));
     onSignOutOthers?.();
-    toast({ title: others.length === 1 ? 'Signed out of 1 other device' : `Signed out of ${others.length} other devices` });
+    toast({ title: others.length === 1 ? 'Signed out of 1 other device' : `Signed out of ${formatNumber(others.length, locale)} other devices` });
     requestAnimationFrame(() => devicesHeading.current?.focus());
   };
 

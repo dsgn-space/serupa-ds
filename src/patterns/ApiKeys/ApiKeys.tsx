@@ -17,6 +17,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell, TableLoadingRows } from '../../components/Table/Table';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 
 /* API keys: the keys a workspace's scripts and tools use, making one, and revoking one. For an app to copy. What it
@@ -180,7 +181,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load your API keys" onRetry={() => onRetry?.()} headingLevel={2} /> : (
           <Card className="flex flex-col gap-3">
             <Heading level={2} size="lg" ref={listHeading} tabIndex={-1} className="outline-none">
-              {loading ? 'Keys' : `Keys (${shown.length})`}
+              {loading ? 'Keys' : `Keys (${formatNumber(shown.length, locale)})`}
             </Heading>
             {loading ? (
               <Table caption="API keys" hideCaption loading>{head}<TableLoadingRows columns={7} rows={3} label="Loading API keys" /></Table>

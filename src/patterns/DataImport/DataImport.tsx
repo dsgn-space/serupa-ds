@@ -15,6 +15,8 @@ import { Badge } from '../../components/Badge/Badge';
 import { Alert } from '../../components/Alert/Alert';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../../components/Table/Table';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Data import: a CSV file of customers, its columns matched to the app's fields, every row checked and shown before
@@ -133,10 +135,11 @@ const LTR: Partial<Record<ImportField['key'], true>> = { phone: true, email: tru
 const DEMO_EXISTING = ['ani@example.com', 'budi@example.com'];
 const STEPS = [{ title: 'Choose a file' }, { title: 'Match columns' }, { title: 'Check rows' }, { title: 'Done' }];
 const ORDER: DataImportStep[] = ['upload', 'match', 'check', 'done'];
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
 /** The import page: a skip link, then main with the Stepper and the step's form. */
 export function DataImport({ start = 'upload', file: given, existing = DEMO_EXISTING, onImport }: DataImportProps) {
+  const locale = useLocale();
+  const plural = (n: number, one: string, many: string) => `${formatNumber(n, locale)} ${n === 1 ? one : many}`;
   const [step, setStep] = React.useState<DataImportStep>(given ? start : 'upload');
   const [file, setFile] = React.useState(given);
   const [files, setFiles] = React.useState<File[]>([]);

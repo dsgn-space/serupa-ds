@@ -91,4 +91,9 @@ describe('Patterns/Activity log', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledOnce();
   });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><ActivityLog /></SerupaProvider>);
+    expect(document.body.textContent).toContain('١١ events');
+  });
 });

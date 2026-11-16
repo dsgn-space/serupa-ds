@@ -3,6 +3,7 @@ import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { Faq, type FaqGroup } from './Faq';
+import { SerupaProvider } from '../../internal/provider';
 
 const groups: FaqGroup[] = [
   { id: 'account', title: 'Your account', questions: [
@@ -102,5 +103,10 @@ describe('Blocks/FAQ', () => {
     await expect.poll(count).toBe('0 dari 7 pertanyaan');
     await expect.element(page.getByText('Tidak ada yang cocok dengan “xyz”.')).toBeVisible();
     await expect.element(page.getByRole('heading', { name: 'Masih bingung?' })).toBeVisible();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Faq groups={groups} contact={contact} defaultQuery="shipping" /></SerupaProvider>);
+    expect(count()).toMatch(/^[٠-٩]+ of [٠-٩]+ questions?$/);
   });
 });

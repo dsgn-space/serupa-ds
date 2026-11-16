@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { Heading } from '../../components/Heading/Heading';
 import { page, userEvent } from 'vitest/browser';
 import { Checkout, type CheckoutDetails } from './Checkout';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const said = () => [...document.querySelectorAll('[aria-live="polite"]')].map((e) => e.textContent || '').join(' ');
@@ -446,5 +447,11 @@ describe('Patterns/Checkout: promo code', () => {
       const button = h.parentElement!.parentElement!.querySelector('button, a')!   // the part's card: its text column, then the card;
       expect(sideBySide(h, button), part).toBe(true);
     }
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Checkout /></SerupaProvider>);
+    expect(document.body.textContent).toContain('Step ١ of ٢');
+    expect(document.body.textContent).toMatch(/ × [٠-٩]/);
   });
 });

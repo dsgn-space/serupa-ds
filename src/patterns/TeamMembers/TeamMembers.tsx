@@ -15,6 +15,8 @@ import { Toaster, toast } from '../../components/Toast/Toast';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 
 /* Team members: who is on the team, what each may do, inviting more people, and removing someone. For an app to copy.
@@ -93,6 +95,7 @@ export function inviteProblem(emails: readonly string[], taken: readonly string[
 
 /** The team page: a skip link, a header, then main with the h1 and Invite people, the members, and the open invites. */
 export function TeamMembers({ members = demoMembers, invites = demoInvites, onInvite, onRoleChange, onRemove, onResend, onRevoke, loading = false, loadFailed = false, onRetry }: TeamMembersProps) {
+  const locale = useLocale();
   const [roles, setRoles] = React.useState<Record<string, TeamRole>>({});
   const [gone, setGone] = React.useState<ReadonlySet<string>>(new Set());
   const [sent, setSent] = React.useState<TeamInvite[]>([]);
@@ -143,7 +146,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
       setSent((s) => [...s, ...emails.map((email) => ({ email, role }))]);
       setInviting(false);
       setText('');
-      toast({ title: emails.length === 1 ? `Invited ${emails[0]}` : `Invited ${emails.length} people`, tone: 'success' });
+      toast({ title: emails.length === 1 ? `Invited ${emails[0]}` : `Invited ${formatNumber(emails.length, locale)} people`, tone: 'success' });
     }, () => setFailed(true)).finally(() => setBusy(false));
   };
 
@@ -167,7 +170,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
           </Card>
         ) : <>
         <Card className="flex flex-col gap-3">
-          <Heading level={2} size="lg" ref={membersHeading} tabIndex={-1} className="outline-none">Members ({shown.length})</Heading>
+          <Heading level={2} size="lg" ref={membersHeading} tabIndex={-1} className="outline-none">Members ({formatNumber(shown.length, locale)})</Heading>
           <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
             {shown.map((m) => {
               const r = m.role === 'owner' ? 'owner' : roles[m.id] ?? m.role;
@@ -194,7 +197,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
         </Card>
 
         <Card className="flex flex-col gap-3">
-          <Heading level={2} size="lg" ref={invitesHeading} tabIndex={-1} className="outline-none">Invites ({open.length})</Heading>
+          <Heading level={2} size="lg" ref={invitesHeading} tabIndex={-1} className="outline-none">Invites ({formatNumber(open.length, locale)})</Heading>
           {open.length ? (
             <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
               {open.map((i) => (

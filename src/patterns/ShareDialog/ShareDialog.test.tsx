@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { ShareDialog, shareProblem, sharedWith } from './ShareDialog';
+import { SerupaProvider } from '../../internal/provider';
 
 const said = () => [...document.querySelectorAll('[aria-live]')].map((e) => e.textContent || '').join(' ');
 const active = () => document.activeElement as HTMLElement;
@@ -122,5 +123,11 @@ describe('Patterns/Share dialog', () => {
     } finally {
       if (had) Object.defineProperty(navigator, 'share', had); else delete (navigator as { share?: unknown }).share;
     }
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    expect(sharedWith(3, 'ar-EG')).toBe('Shared with ٣ people');
+    await render(<SerupaProvider locale="ar-EG"><ShareDialog /></SerupaProvider>);
+    expect(document.body.textContent).toContain('Shared with ٢ people');
   });
 });

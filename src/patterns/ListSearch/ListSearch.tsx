@@ -8,6 +8,7 @@ import { TableToolbar } from '../../blocks/TableToolbar/TableToolbar';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
@@ -122,7 +123,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
       setPicked((was) => was.filter((n) => shown.has(n)));
     }
   };
-  const count = (n: number) => (n === 1 ? '1 project' : `${n} projects`);
+  const count = (n: number) => (n === 1 ? '1 project' : `${formatNumber(n, locale)} projects`);
   const archive = () => {
     const names = picked;
     setArchived((was) => new Set([...was, ...names]));
@@ -166,7 +167,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             { label: 'Status', value: view.status, onChange: (value) => change({ status: value }), options: [{ value: '', label: 'All' }, ...STATUSES] },
             { label: 'Owner', value: view.owner, onChange: (value) => change({ owner: value }), options: [{ value: '', label: 'Anyone' }, ...OWNERS] },
           ]}
-          results={loadFailed ? '' : loading ? 'Loading projects' : found.length === live ? `${found.length} projects` : `${found.length} of ${live} projects`}
+          results={loadFailed ? '' : loading ? 'Loading projects' : found.length === live ? count(found.length) : `${formatNumber(found.length, locale)} of ${count(live)}`}
           onClearFilters={clear}
           selectedCount={picked.length}
           onClearSelection={() => setPicked([])}

@@ -139,4 +139,9 @@ describe('Patterns/List and detail', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><ListDetail /></SerupaProvider>);
+    expect(document.body.textContent).toContain('Messages (٤)');
+  });
 });

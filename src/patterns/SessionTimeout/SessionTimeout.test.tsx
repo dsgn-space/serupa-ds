@@ -227,4 +227,9 @@ describe('Patterns/Session time-out', () => {
     get.mockRestore();
     set.mockRestore();
   });
+
+  test('counts follow the locale’s digits', async () => {
+    expect(timeLeft(150, 'ar-EG')).toBe('٢ minutes ٣٠ seconds');
+    expect(timeLeft(60)).toBe('1 minute');
+  });
 });

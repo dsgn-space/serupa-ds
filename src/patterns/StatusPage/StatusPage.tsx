@@ -9,6 +9,7 @@ import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
 import { Link } from '../../components/Link/Link';
 import { StatusTracker, type StatusDay, type StatusState } from '../../components/StatusTracker/StatusTracker';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
@@ -128,7 +129,7 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
         <PageHeader title="Acme status" description="How our services are doing now and over the last 90 days." />
         <div className="flex flex-col gap-8 pt-6">
           <Alert tone={STATE[overall].tone} title={TITLE[overall]}>
-            {open.length ? `${open.length === 1 ? 'An incident is' : `${open.length} incidents are`} open; the latest updates are below.` : 'No open incidents.'}
+            {open.length ? `${open.length === 1 ? 'An incident is' : `${formatNumber(open.length, locale)} incidents are`} open; the latest updates are below.` : 'No open incidents.'}
           </Alert>
           {open.length ? (
             <section aria-labelledby="status-now" className="flex flex-col gap-4">

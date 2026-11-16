@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { ApiKeys, keyNameProblem } from './ApiKeys';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
@@ -108,5 +109,10 @@ describe('Patterns/API keys', () => {
     expect(screen.getByRole('button', { name: 'Create key' }).elements()).toHaveLength(0);
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalled();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><ApiKeys /></SerupaProvider>);
+    expect(document.body.textContent).toContain('Keys (٣)');
   });
 });

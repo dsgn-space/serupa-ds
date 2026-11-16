@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { AddressBook, addressProblems } from './AddressBook';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const alertText = () => [...document.querySelectorAll('[role="alert"]')].map((e) => e.textContent).join(' ');
@@ -123,5 +124,10 @@ describe('Patterns/Address book', () => {
     await screen.getByRole('button', { name: 'Remove Home' }).click();
     await expect.poll(() => active().id).toBe('saved');
     await expect.element(screen.getByRole('heading', { level: 3, name: 'No addresses yet' })).toBeVisible();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><AddressBook /></SerupaProvider>);
+    expect(document.body.textContent).toContain('Saved addresses (٢)');
   });
 });

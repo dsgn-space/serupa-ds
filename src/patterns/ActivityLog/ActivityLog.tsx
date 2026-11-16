@@ -10,6 +10,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell, TableLoadingRows } from '../../components/Table/Table';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 
 /* Activity log: what people did in a workspace, newest first, with a search, a type filter, more on request, and an
@@ -94,7 +95,7 @@ export function ActivityLog({ events = demo, pageSize = 8, onExport, loading = f
     const d = new Date(t);
     try { return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(d); } catch { return d.toISOString(); }
   };
-  const count = loading ? 'Loading activity' : found.length === 1 ? '1 event' : `${found.length} events`;
+  const count = loading ? 'Loading activity' : found.length === 1 ? '1 event' : `${formatNumber(found.length, locale)} events`;
 
   return (
     <div className="min-h-screen bg-surface-muted text-text">

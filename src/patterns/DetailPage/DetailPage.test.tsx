@@ -292,4 +292,9 @@ describe('Patterns/Detail page', () => {
     await render(<DetailPage />);
     expect(page.getByRole('complementary').elements()).toHaveLength(0);
   });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><DetailPage /></SerupaProvider>);
+    expect(document.body.textContent).toContain('Tasks (٤)');
+  });
 });

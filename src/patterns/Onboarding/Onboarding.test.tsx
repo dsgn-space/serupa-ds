@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { Heading } from '../../components/Heading/Heading';
 import { userEvent } from 'vitest/browser';
 import { Onboarding, type SetupStep } from './Onboarding';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const said = () => [...document.querySelectorAll('[aria-live="polite"]')].map((e) => e.textContent || '').join(' ');
@@ -129,5 +130,11 @@ describe('Patterns/Onboarding', () => {
     const card = h.parentElement!   // the card the heading sits in;
     expect(sideBySide(h, screen.getByRole('button', { name: 'Show the checklist' }).element())).toBe(true);
     expect(Math.abs(h.getBoundingClientRect().left - card.getBoundingClientRect().left)).toBeLessThan(24);
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Onboarding /></SerupaProvider>);
+    expect(document.body.textContent).toContain('٠ of ٤ steps done');
+    expect(document.body.textContent).toContain('١. ');
   });
 });

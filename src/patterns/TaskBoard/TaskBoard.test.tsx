@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { TaskBoard, countTasks, overLimit, putBack, type BoardColumn } from './TaskBoard';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
@@ -115,5 +116,12 @@ describe('Patterns/Task board', () => {
     await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the board' })).toBeVisible();
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalled();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    expect(countTasks(12, 'ar-EG')).toBe('١٢ tasks');
+    expect(overLimit([{ id: 'c', title: 'Doing', limit: 1, items: [{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }] }], 'ar-EG')).toEqual(['Doing has ٢ tasks, over its limit of ١.']);
+    await render(<SerupaProvider locale="ar-EG"><TaskBoard /></SerupaProvider>);
+    expect(document.body.textContent).toContain('٧ tasks');
   });
 });

@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { TeamMembers, emailsIn, inviteProblem } from './TeamMembers';
+import { SerupaProvider } from '../../internal/provider';
 
 // A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
 // match getByText, and a locator that finds two fails.
@@ -144,5 +145,15 @@ describe('Patterns/Team members', () => {
     expect(onRetry).toHaveBeenCalledOnce();
     await screen.rerender(<TeamMembers />);
     await expect.element(screen.getByRole('heading', { level: 2, name: 'Members (4)' })).toBeVisible();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    const screen = await render(<SerupaProvider locale="ar-EG"><TeamMembers /></SerupaProvider>);
+    expect(document.body.textContent).toMatch(/Members \([٠-٩]+\)/);
+    expect(document.body.textContent).toMatch(/Invites \([٠-٩]+\)/);
+    await screen.getByRole('button', { name: 'Invite people' }).click();
+    await screen.getByRole('textbox', { name: /^Email addresses/ }).fill('fay@example.com, gus@example.com');
+    await screen.getByRole('button', { name: 'Send invites' }).click();
+    await expect.poll(() => !!toastOf('Invited ٢ people')).toBe(true);
   });
 });

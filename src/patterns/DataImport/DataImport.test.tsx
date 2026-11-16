@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { DataImport, checkRows, guessMapping, mappingProblems, parseCsv } from './DataImport';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const select = (id: string) => document.getElementById(id) as HTMLSelectElement;
@@ -150,5 +151,10 @@ describe('Patterns/Data import', () => {
     await userEvent.click(page.getByRole('button', { name: 'Back' }));
     await expect.poll(() => active().textContent).toBe('Match columns');
     expect(select('import-email').value).toBe('1');
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><DataImport start="check" file={FILE} /></SerupaProvider>);
+    expect(document.body.textContent).toMatch(/[٠-٩] rows? (is|are) ready/);
   });
 });

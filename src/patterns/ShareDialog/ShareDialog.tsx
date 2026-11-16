@@ -12,6 +12,8 @@ import { Field } from '../../components/Field/Field';
 import { Input } from '../../components/Input/Input';
 import { Select } from '../../components/Select/Select';
 import { Alert } from '../../components/Alert/Alert';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 
 /* Share dialog: who can open one document, what each may do, and the link to it. For an app to copy.
@@ -86,13 +88,14 @@ export function shareProblem(emails: readonly string[], taken: readonly string[]
 }
 
 /** How many people it's shared with, in words: the owner doesn't count. */
-export function sharedWith(count: number): string {
-  return count === 0 ? 'Not shared' : count === 1 ? 'Shared with 1 person' : `Shared with ${count} people`;
+export function sharedWith(count: number, locale = 'en-US'): string {
+  return count === 0 ? 'Not shared' : count === 1 ? 'Shared with 1 person' : `Shared with ${formatNumber(count, locale)} people`;
 }
 
 /** A document page with Share in its header, and the dialog it opens: add people, change or remove access, and the link. */
 export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3-plan', people = demoPeople, linkAccess = 'restricted', defaultOpen = false,
   onInvite, onAccessChange, onRemove, onLinkAccessChange, nativeShare }: ShareDialogProps) {
+  const locale = useLocale();
   const [open, setOpen] = React.useState(defaultOpen);
   const [list, setList] = React.useState<readonly SharePerson[]>(people);
   const [removed, setRemoved] = React.useState<ReadonlySet<string>>(new Set());
@@ -150,7 +153,7 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
     void Promise.resolve().then(() => onInvite?.(emails, access)).then(() => {
       setList((l) => [...l, ...emails.map((email) => ({ id: email, name: email, email, access }))]);
       setText('');
-      announce(emails.length === 1 ? `Added ${emails[0]}` : `Added ${emails.length} people`);
+      announce(emails.length === 1 ? `Added ${emails[0]}` : `Added ${formatNumber(emails.length, locale)} people`);
       later(focusId('share-emails'));
     }, () => setFailed(true)).finally(() => setBusy(false));
   };
@@ -161,7 +164,7 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
       <header className="flex flex-wrap items-center gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 flex-1 text-base font-semibold">Acme Docs</p>
         {others.length ? (
-          <AvatarGroup size="sm" max={3} label={sharedWith(others.length)}>
+          <AvatarGroup size="sm" max={3} label={sharedWith(others.length, locale)}>
             {others.map((p) => <Avatar key={p.id} name={p.name} src={p.avatar} />)}
           </AvatarGroup>
         ) : null}
@@ -169,7 +172,7 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
       </header>
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-4 px-4 py-8 outline-none">
         <Heading level={1}>{name}</Heading>
-        <p className="m-0 text-sm text-text-muted">{sharedWith(others.length)} · {LINK[link]}</p>
+        <p className="m-0 text-sm text-text-muted">{sharedWith(others.length, locale)} · {LINK[link]}</p>
         <p className="m-0">Goals for the quarter, who owns each, and what we’ll stop doing to make room.</p>
       </main>
 

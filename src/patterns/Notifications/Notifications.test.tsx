@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { Notifications } from './Notifications';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const status = () => document.querySelector('main [role="status"]')?.textContent;
@@ -143,5 +144,11 @@ describe('Patterns/Notifications', () => {
     expect(status()).toBe('');
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Notifications /></SerupaProvider>);
+    expect(document.body.textContent).toContain('٣ unread');
+    expect(document.querySelector('[aria-label^="Notifications, "]')?.getAttribute('aria-label')).toBe('Notifications, ٣ unread');
   });
 });

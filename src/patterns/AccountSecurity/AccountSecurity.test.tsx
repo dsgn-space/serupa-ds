@@ -219,4 +219,10 @@ describe('Patterns/Account security', () => {
     await screen.getByRole('button', { name: 'Delete account' }).click();
     expect(screen.getByRole('alertdialog').getByRole('alert').elements()).toHaveLength(0);
   });
+
+  test('counts follow the locale’s digits', async () => {
+    const screen = await render(<SerupaProvider locale="ar-EG"><AccountSecurity /></SerupaProvider>);
+    await screen.getByRole('button', { name: 'Sign out everywhere else' }).click();
+    await expect.poll(() => toasted('Signed out of ٢ other devices')).toBe(true);
+  });
 });

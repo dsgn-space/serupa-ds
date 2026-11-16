@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { StatusPage, overallState, serviceDays } from './StatusPage';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const subscribed = () => document.getElementById('status-subscribed')!.textContent;
@@ -58,5 +59,11 @@ describe('Patterns/Status page', () => {
     await screen.getByRole('button', { name: 'Subscribe' }).click();
     await expect.poll(subscribed).toBe('Subscribed. Updates go to ana@example.com.');
     expect(onSubscribe).toHaveBeenLastCalledWith('ana@example.com');
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    const open = (id: string) => ({ id, title: `Incident ${id}`, services: ['api'], resolved: false, updates: [{ at: '2026-11-16T03:00:00Z', status: 'Investigating', text: 'Looking into it.' }] });
+    await render(<SerupaProvider locale="ar-EG"><StatusPage incidents={[open('a'), open('b')]} /></SerupaProvider>);
+    expect(document.body.textContent).toContain('٢ incidents are open');
   });
 });

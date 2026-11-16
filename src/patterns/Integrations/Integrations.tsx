@@ -12,6 +12,8 @@ import { Dialog } from '../../components/Dialog/Dialog';
 import { Alert } from '../../components/Alert/Alert';
 import { Loader } from '../../components/Loader/Loader';
 import { Toaster, toast } from '../../components/Toast/Toast';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed, EmptyNoResults } from '../../blocks/EmptyStates/EmptyStates';
 
@@ -73,6 +75,7 @@ export function matchIntegrations(apps: readonly Integration[], query: string): 
 
 /** The integrations page: a skip link, a header, then main with the h1, a search, and the connected and available apps. */
 export function Integrations({ apps = demo, onConnect, onDisconnect, loading = false, loadFailed = false, onRetry }: IntegrationsProps) {
+  const locale = useLocale();
   const [on, setOn] = React.useState<Record<string, boolean>>({});
   const [query, setQuery] = React.useState('');
   const [busy, setBusy] = React.useState<string | null>(null);
@@ -135,7 +138,7 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
   };
   const list = (title: string, items: Integration[], none: string) => (
     <section aria-labelledby={`integrations-${title.toLowerCase()}`} className="flex flex-col gap-3">
-      <Heading level={2} size="lg" id={`integrations-${title.toLowerCase()}`}>{title} ({items.length})</Heading>
+      <Heading level={2} size="lg" id={`integrations-${title.toLowerCase()}`}>{title} ({formatNumber(items.length, locale)})</Heading>
       {items.length ? <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">{items.map(card)}</ul>
         : <p className="m-0 text-text-muted">{none}</p>}
     </section>
@@ -159,7 +162,7 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
           <Field label="Search integrations" className="max-w-md">
             <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} onClear={() => setQuery('')} clearLabel="Clear the search" />
           </Field>
-          <p role="status" className="m-0 text-sm text-text-muted">{found.length === 1 ? '1 app' : `${found.length} apps`}</p>
+          <p role="status" className="m-0 text-sm text-text-muted">{found.length === 1 ? '1 app' : `${formatNumber(found.length, locale)} apps`}</p>
           {found.length ? <>
             {list('Connected', connected, 'None of these are connected.')}
             {list('Available', available, 'Every one of these is connected.')}
