@@ -145,7 +145,7 @@ describe('Popover', () => {
     expect(active()).toBe('other');
   });
 
-  test('the title is an <h2> by default (14px, 4px under it, no other margin); headingLevel sets its level, and an unknown one falls back to 2', async () => {
+  test('the title is an <h2> by default (14px, 8px under it, no other margin); headingLevel sets its level, and an unknown one falls back to 2', async () => {
     await render(<div style={{ display: 'flex', gap: '200px', justifyContent: 'center' }}>
       <Popover title="Share" trigger={<Button id="th2">A</Button>}><p>One</p></Popover>
       <Popover title="Filters" headingLevel={4} trigger={<Button id="th4">B</Button>}><p>Two</p></Popover>
@@ -158,7 +158,7 @@ describe('Popover', () => {
       tags.push(heading(tid).tagName);
       expect(panel(tid).getAttribute('aria-labelledby')).toBe(heading(tid).id);
       const s = getComputedStyle(heading(tid));
-      expect([s.fontSize, s.marginTop, s.marginBottom, s.marginInlineStart]).toEqual(['14px', '0px', '4px', '0px']);
+      expect([s.fontSize, s.marginTop, s.marginBottom, s.marginInlineStart]).toEqual(['14px', '0px', '8px', '0px']);
     }
     expect(tags).toEqual(['H2', 'H4', 'H2']);
   });

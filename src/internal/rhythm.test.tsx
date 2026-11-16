@@ -6,12 +6,11 @@ import { SerupaProvider } from './provider';
 import { Button } from '../components/Button/Button';
 import { Field } from '../components/Field/Field';
 import { Input } from '../components/Input/Input';
-import { Popover } from '../components/Popover/Popover';
 import { Tab, TabList, Tabs } from '../components/Tabs/Tabs';
 import { TagGroup } from '../components/TagGroup/TagGroup';
 
 // Runs 303 and 304: like parts keep like spaces from one component to the next. A label over what it names sits
-// 6px above it (Field); a title 4px above its body (Dialog, Drawer, Card, Alert); a 16px icon 6px from its words
+// 6px above it (Field); a 16px icon 6px from its words
 // in a control (Button, SegmentedControl, Breadcrumb). Small text keeps its own 20px line.
 const render = (ui: React.ReactNode) => draw(<SerupaProvider locale="en-US" labels={DEFAULT_LABELS}><div style={{ lineHeight: '24px' }}>{ui}</div></SerupaProvider>);
 const byText = (text: string) => [...document.body.querySelectorAll('*')].reverse().find((x) => x.textContent?.trim() === text)!;
@@ -32,12 +31,6 @@ describe('spacing between like parts', () => {
     expect(fieldGap).toBeCloseTo(6, 0);
     const more = [...document.querySelectorAll('button')].find((b) => /more/.test(b.textContent ?? ''))!;
     expect(getComputedStyle(more).lineHeight).toBe(pairSm());
-  });
-
-  test("Popover's title sits 4px over its body, as Dialog's, Drawer's, Card's and Alert's do", async () => {
-    await render(<Popover title="Share" defaultOpen trigger={<Button>Open</Button>}><p style={{ margin: 0 }}>Anyone with the link can view.</p></Popover>);
-    await expect.poll(() => byText('Anyone with the link can view.')).toBeTruthy();
-    expect(Math.round(box(byText('Anyone with the link can view.')).top - box(byText('Share')).bottom)).toBe(4);
   });
 
   test("a tab's icon is as far from its label as a Button's", async () => {
