@@ -155,7 +155,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser }: Store
                     </details>
                     <p className="m-0 flex flex-wrap gap-x-4 gap-y-2">
                       <Link href={`https://www.openstreetmap.org/directions?to=${s.lat}%2C${s.lng}`} aria-label={`Directions: ${s.name}`}>Directions</Link>
-                      <Link href={`tel:${s.phone.replace(/\s/g, '')}`} aria-label={`Call ${s.name}: ${s.phone}`}>Call {s.phone}</Link>
+                      <Link href={`tel:${s.phone.replace(/\s/g, '')}`} aria-label={`Call ${s.phone}: ${s.name}`}>Call {s.phone}</Link>
                     </p>
                   </Card>
                 );
