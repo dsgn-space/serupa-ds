@@ -24,6 +24,9 @@
   line-height: var(--text-xs--line-height);
   font-weight: var(--font-normal);
   text-align: start;
+  /* Its own lines, not the trigger's: a tooltip beside a label in a row that never wraps (a cut Sidebar label, a
+     FilterBar chip) would otherwise run on past its edge. */
+  white-space: normal;
   overflow-wrap: break-word;
   /* Fades in and slides a few pixels away from its trigger (EO1), from @starting-style so a tip closed mid-way never
      restarts; fades and slides back out faster (DZ1, motion-exit-sm), kept shown and in the top layer (display and
