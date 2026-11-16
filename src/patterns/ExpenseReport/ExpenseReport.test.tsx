@@ -56,6 +56,16 @@ describe('Patterns/Expense report', () => {
     expect((document.getElementById('expense-what') as HTMLInputElement).value).toBe('');
   });
 
+  test('a date cleared is named next to it, and today is the date a new expense starts with', async () => {
+    const screen = await render(<ExpenseReport expenses={[]} />);
+    const box = document.querySelector<HTMLInputElement>('#expense-date input')!;
+    expect(box.value).not.toBe('');
+    await userEvent.fill(box, '');
+    await screen.getByRole('button', { name: 'Add expense' }).click();
+    await expect.poll(() => document.body.textContent).toContain('Enter the date you spent it.');
+    await expect.poll(() => active().closest('#expense-date') !== null).toBe(true);
+  });
+
   test('Remove moves focus to the next row\'s Remove, then the form\'s first field', async () => {
     const screen = await render(<ExpenseReport expenses={expenses} today={today} />);
     await screen.getByRole('button', { name: 'Remove: Train' }).click();

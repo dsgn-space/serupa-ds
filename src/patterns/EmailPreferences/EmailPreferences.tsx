@@ -13,7 +13,7 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
    What it carries (WCAG 2.2):
    - 1.3.1, 3.3.2: the address it's about is said first; each kind of email is a switch named by what it is, with how
      often it comes as its description.
-   - Ethical design: stopping every email is one button, as easy to reach as Save, and asks no "Are you sure?"; it
+   - Ethical design: stopping every email is one button, beside Save, and asks no "Are you sure?"; it
      takes effect at once and the answer says how to undo it.
    - 4.1.3, 3.3.4: Save shows it's busy and says what changed once saved; one that fails says so next to the button
      and keeps the switches as set.

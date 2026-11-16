@@ -49,6 +49,18 @@ describe('Patterns/Store locator', () => {
     await expect.poll(() => document.body.textContent).toContain('None that match are open now.');
     await screen.getByRole('switch', { name: 'Open now only' }).click();
     await expect.poll(() => document.body.textContent).toContain('Try a town or a postcode');
+    await screen.getByRole('searchbox').click();
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(names).toEqual(['Kemang', 'Sudirman', 'Bandung']);
+  });
+
+  test('by default, "Use my location" asks the browser', async () => {
+    const ask = vi.spyOn(navigator.geolocation, 'getCurrentPosition').mockImplementation((ok) => ok({ coords: { latitude: -6.2, longitude: 106.82 } } as GeolocationPosition));
+    const screen = await render(<StoreLocator stores={stores} now={wed(12)} />);
+    await screen.getByRole('button', { name: 'Use my location' }).click();
+    await expect.poll(names).toEqual(['Sudirman', 'Kemang', 'Bandung']);
+    expect(ask).toHaveBeenCalledOnce();
+    ask.mockRestore();
   });
 
   test('"Use my location" sorts nearest first with distances; when it can\'t, it says so', async () => {

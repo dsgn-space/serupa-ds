@@ -5,6 +5,7 @@ import { Button } from '../../components/Button/Button';
 import { Alert } from '../../components/Alert/Alert';
 import { Badge } from '../../components/Badge/Badge';
 import { Card } from '../../components/Card/Card';
+import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { Field } from '../../components/Field/Field';
 import { Link } from '../../components/Link/Link';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
@@ -146,14 +147,11 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser }: Store
                     </p>
                     <details className="text-sm">
                       <summary className="cursor-pointer">Opening hours</summary>
-                      <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+                      <DescriptionList layout="split" className="mt-2 max-w-xs">
                         {DAYS.map((d, i) => (
-                          <React.Fragment key={d}>
-                            <dt className={i === at.getDay() ? 'font-semibold' : undefined}>{d}</dt>
-                            <dd className="m-0">{s.hours[i] ? `${s.hours[i][0]} to ${s.hours[i][1]}` : 'Closed'}</dd>
-                          </React.Fragment>
+                          <DescriptionItem key={d} term={d} emphasis={i === at.getDay()}>{s.hours[i] ? `${s.hours[i][0]} to ${s.hours[i][1]}` : 'Closed'}</DescriptionItem>
                         ))}
-                      </dl>
+                      </DescriptionList>
                     </details>
                     <p className="m-0 flex flex-wrap gap-x-4 gap-y-2">
                       <Link href={`https://www.openstreetmap.org/directions?to=${s.lat}%2C${s.lng}`} aria-label={`Directions: ${s.name}`}>Directions</Link>
