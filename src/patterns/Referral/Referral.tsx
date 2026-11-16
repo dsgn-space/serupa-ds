@@ -158,7 +158,7 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
                 <TableBody>{list.map((r) => (
                   <TableRow key={r.email}>
                     <TableCell className="wrap-break-word">{r.email}</TableCell>
-                    <TableCell><time dateTime={r.invited}>{date(r.invited)}</time></TableCell>
+                    <TableCell className="whitespace-nowrap"><time dateTime={r.invited}>{date(r.invited)}</time></TableCell>
                     <TableCell><Badge tone={STATE[r.state].tone}>{r.state === 'rewarded' ? `${STATE.rewarded.label} ${money(reward)}` : STATE[r.state].label}</Badge></TableCell>
                   </TableRow>
                 ))}</TableBody>

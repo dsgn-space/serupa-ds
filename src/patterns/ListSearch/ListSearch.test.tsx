@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { SerupaProvider } from '../../internal/provider';
 import { ListSearch, readView, writeView } from './ListSearch';
 const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
@@ -201,5 +201,18 @@ describe('Patterns/List with search and filters', () => {
     const bodyText = () => document.body.textContent ?? '';
     await render(<SerupaProvider locale="ar-EG"><ListSearch /></SerupaProvider>);
     expect(bodyText()).toContain('٢٤ projects');
+  });
+});
+
+// How many lines an element's text takes on screen.
+const linesOf = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size; };
+
+describe('ListSearch on a phone', () => {
+  test('on a phone, each project’s date stays on one line', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<ListSearch />);
+      for (const t of document.querySelectorAll('td time')) expect(linesOf(t), t.textContent ?? '').toBe(1);
+    } finally { await page.viewport(900, 700); }
   });
 });
