@@ -20,13 +20,21 @@ permissions:
 
 jobs:
   components:
-    name: ${{ matrix.group }} (${{ matrix.browser }})
+    name: ${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} (${{ matrix.browser }})
     strategy:
       fail-fast: false
       matrix:
         # Visual against tools/test/baseline-visual-<browser>/ (visual.mjs), drawn in this same image.
-        group: [components, checks, storybook, visual]
+        group: [checks, storybook, visual]
         browser: [firefox, webkit]
+        # The component tests run twice, in English and in a second language, which in Firefox took 50 minutes and then
+        # some: the job hit its 75 minutes in the second language every night from 14 Nov, and was cancelled with no
+        # report. So each language is a job of its own (SERUPA_PART, run.mjs).
+        include:
+          - { group: components, part: base, browser: firefox }
+          - { group: components, part: locale, browser: firefox }
+          - { group: components, part: base, browser: webkit }
+          - { group: components, part: locale, browser: webkit }
     runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
@@ -60,7 +68,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          node tools/test/run.mjs --browser ${{ matrix.browser }} --group ${{ matrix.group }} 2>&1 | tee test-output.txt
+          SERUPA_PART=${{ matrix.part }} node tools/test/run.mjs --browser ${{ matrix.browser }} --group ${{ matrix.group }} 2>&1 | tee test-output.txt
       - name: List the failures
         if: failure()
         shell: bash
@@ -68,12 +76,12 @@ jobs:
           # head stops reading once it has its lines, and under pipefail that broken pipe (141) failed this step too, before
           # it wrote the list: the pull request showed no failures (14 Nov).
           set +o pipefail
-          { echo '## Failing: ${{ matrix.group }} in ${{ matrix.browser }}'; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          { echo '## Failing: ${{ matrix.group }} ${{ matrix.part }} in ${{ matrix.browser }}'; echo '```'; grep -E -A1 '^\s*FAIL' test-output.txt | grep -v '^--$' | head -150; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: Upload the output
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: test-output-${{ matrix.group }}-${{ matrix.browser }}
+          name: test-output-${{ matrix.group }}${{ matrix.part && format('-{0}', matrix.part) || '' }}-${{ matrix.browser }}
           path: test-output.txt
           if-no-files-found: ignore
   # The component tests in the oldest Chrome the package supports (package.json's browserslist, through
@@ -149,5 +157,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RESULT: ${{ needs.floor.result == 'failure' && 'failure' || needs.components.result }}
-          JOBS: floor-chromium,components-firefox,components-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
+          JOBS: floor-chromium,components-base-firefox,components-locale-firefox,components-base-webkit,components-locale-webkit,checks-firefox,checks-webkit,storybook-firefox,storybook-webkit,visual-firefox,visual-webkit
         run: node tools/nightly-issue.mjs artifacts "$RESULT"
