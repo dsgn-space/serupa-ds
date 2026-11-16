@@ -20,3 +20,9 @@ export const Empty: Story = { args: { defaultHours: {} } };
 
 /** Sending fails: it says so, and every hour stays. */
 export const SendFails: Story = { args: { onSend: () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 600)) } };
+
+/** While the week’s hours load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

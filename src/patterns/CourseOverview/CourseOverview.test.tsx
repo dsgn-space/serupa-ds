@@ -51,4 +51,15 @@ describe('Patterns/Course overview', () => {
     await expect.poll(() => document.body.textContent).toContain('Every lesson done. Your certificate is ready.');
     expect(screen.getByRole('button', { name: /B/ }).element().textContent).toContain('Done');
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<CourseOverview loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading the course']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<CourseOverview loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the course' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

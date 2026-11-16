@@ -20,3 +20,9 @@ export const FirstTime: Story = { args: { exports: [] } };
 
 /** A request that can't be taken says so and keeps the choices. */
 export const RequestFails: Story = { args: { onRequest: () => Promise.reject(new Error('offline')) } };
+
+/** While the exports load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

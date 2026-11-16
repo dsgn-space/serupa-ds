@@ -19,3 +19,9 @@ export const NotStarted: Story = { args: { defaultDone: [] } };
 
 /** Every lesson done: the certificate. */
 export const Finished: Story = { args: { defaultDone: ['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7', 'l8', 'l9', 'l10'] } };
+
+/** While the lessons load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

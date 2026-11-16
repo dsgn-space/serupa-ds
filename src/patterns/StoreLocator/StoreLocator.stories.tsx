@@ -17,3 +17,9 @@ export const Default: Story = {};
 
 /** The browser won't share where you are: it says so, and what to do instead. */
 export const NoLocation: Story = { args: { locate: () => new Promise((_, no) => setTimeout(() => no(new Error('denied')), 300)) } };
+
+/** While the stores load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

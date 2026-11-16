@@ -9,6 +9,9 @@ import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } fro
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
+import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Roles and permissions: what each role in a workspace can do, as a grid of checkboxes, where a permission that needs
@@ -34,6 +37,12 @@ export interface RolePermissionsProps {
   grants?: Grants | undefined;
   /** Saves every role's permissions. Reject when they can't be saved. */
   onSave?: ((grants: Grants) => unknown) | undefined;
+  /** The roles are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** The roles failed to load: a "Couldn’t load the roles" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demoRoles: Role[] = [
@@ -79,7 +88,7 @@ export function countChanges(before: Grants, after: Grants) {
 }
 
 /** The page: a skip link, a header, then main with the h1, the grid, and Save. */
-export function RolePermissions({ roles = demoRoles, permissions = demoPerms, grants = demoGrants, onSave }: RolePermissionsProps) {
+export function RolePermissions({ roles = demoRoles, permissions = demoPerms, grants = demoGrants, onSave, loading = false, loadFailed = false, onRetry }: RolePermissionsProps) {
   const locale = useLocale();
   const [saved, setSaved] = React.useState(grants);
   const [draft, setDraft] = React.useState(grants);
@@ -119,6 +128,8 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Workspace settings', href: '#workspace' }, { label: 'Roles' }]} title="Roles and permissions"
           description="Choose what people in each role can do. Changes apply to everyone in the role once you save." />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the roles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading roles" /></Card> : (<>
         {locked.length ? <p className="m-0 pt-6">{locked.map((r) => r.name).join(', ')} can do everything, and that can’t be changed, so the workspace always has someone who can.</p> : null}
         <div className="pt-4">
           <Table caption="What each role can do" hideCaption>
@@ -158,6 +169,7 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
             </div>
           ) : null}
         </div>
+        </>)}
       </main>
     </div>
   );
