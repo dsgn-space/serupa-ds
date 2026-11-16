@@ -8,6 +8,7 @@ import { announce } from '../../internal/announce';
 import { useFormReset } from '../../internal/useFormReset';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { useRequired } from '../../internal/required';
 import { FieldContext, useFieldControl } from '../../internal/field';
 import { delegateFocus, useAutoFocus } from '../../internal/focus';
 import { Checkbox, CheckboxGroup } from '../Checkbox/Checkbox';
@@ -40,6 +41,12 @@ export interface TransferListProps extends Omit<React.HTMLAttributes<HTMLDivElem
   form?: string | undefined;
   /** Disables both lists and the move buttons. */
   disabled?: boolean | undefined;
+  /** Shows both lists without letting them change: the boxes are read-only (still focusable and read out), Add and
+   *  Remove are left out, and a form still sends the chosen values, unlike disabled. */
+  readOnly?: boolean | undefined;
+  /** At least one value must be chosen: a form isn't sent while Chosen is empty (both lists are marked invalid and
+   *  the first available box takes focus). role="group" can't carry aria-required, so say it in the label too. */
+  required?: boolean | undefined;
   /** Marks it invalid (each box says so). Field sets it from its error. */
   invalid?: boolean | undefined;
   /** The first list's name. Default: "Available" (from SerupaProvider labels). */
@@ -59,8 +66,8 @@ export interface TransferListProps extends Omit<React.HTMLAttributes<HTMLDivElem
 export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferListProps>('TransferList', function TransferList(given, ref) {
   const props = useFieldControl(given);   // a surrounding Field's id, hint, required, invalid and disabled
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // a Field's <label for> can't name a group, so it's aria-labelledby
-  // A Field's required isn't kept: role="group" can't carry aria-required. Say it in the label, and check the count.
-  const rest = omit(props as TransferListProps & { required?: boolean }, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, name: 1, form: 1, disabled: 1, invalid: 1, required: 1, availableLabel: 1, chosenLabel: 1, className: 1, autoFocus: 1 } as const);
+  // A Field's required (aria-required) isn't kept: role="group" can't carry it. Its own required checks the count.
+  const rest = omit(props, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, name: 1, form: 1, disabled: 1, readOnly: 1, invalid: 1, required: 1, 'aria-required': 1, availableLabel: 1, chosenLabel: 1, className: 1, autoFocus: 1 } as const);
   const { options, value: valueIn, defaultValue, onValueChange, name, form, disabled, invalid, availableLabel, chosenLabel, className, autoFocus } = props;
   const nameRef = useNameCheck('TransferList', NAME_HOW.group);
   const sds = useSettings(words), locale = useLocale();
@@ -75,6 +82,9 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
   useFormReset(root, () => { if (!controlled) setOwn(known(defaultValue)); setCheckedLeft([]); setCheckedRight([]); }, form);
   const inDisabledFieldset = useFieldsetDisabled(root);
   const off = !!disabled || inDisabledFieldset;
+  const readOnly = !!props.readOnly && !off, required = !!props.required;
+  const { missing, onInvalid } = useRequired(chosen.length > 0, () => root.current?.querySelector<HTMLElement>('input:enabled')?.focus());
+  const marked = !!invalid || missing;
 
   const left = options.filter((o) => !chosen.includes(o.value));
   const right = chosen.map((v) => options.find((o) => o.value === v) as TransferListOption);
@@ -88,7 +98,7 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
 
   const move = (to: 'left' | 'right') => {
     const moving = to === 'right' ? moveable(left, checkedLeft) : moveable(right, checkedRight);
-    if (!moving.length || off) return;
+    if (!moving.length || off || readOnly) return;
     const vs = moving.map((o) => o.value);
     const next = to === 'right' ? [...chosen, ...vs] : chosen.filter((v) => !vs.includes(v));
     if (!controlled) setOwn(next);
@@ -116,7 +126,7 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
         <p id={titleId} className="dk-transfer-list__title">{names[which]} <span className="dk-transfer-list__count">({displayNumber(list.length, locale)})</span></p>
         {list.length ? (
           <CheckboxGroup className="dk-transfer-list__options" aria-labelledby={titleId} size="sm" value={checked.filter((v) => list.some((o) => o.value === v))}
-            onValueChange={(v) => setChecked(v.map(String))} invalid={invalid} disabled={off}>
+            onValueChange={(v) => setChecked(v.map(String))} invalid={marked} disabled={off} readOnly={readOnly}>
             {list.length > 1 ? <Checkbox selectAll>{sds.labels.transferAll}</Checkbox> : null}
             {list.map(boxOf)}
           </CheckboxGroup>
@@ -131,14 +141,17 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
       aria-disabled={off || undefined}
       className={cn('dk-transfer-list', off && 'dk-transfer-list--disabled', className)} data-component="transfer-list">
       {side('left', left, checkedLeft, setCheckedLeft)}
-      <div className="dk-transfer-list__moves">
+      {readOnly ? null : <div className="dk-transfer-list__moves">
         <Button variant="secondary" size="sm" rightIcon="arrow_forward" disabled={off || !canAdd} disabledReason={off ? undefined : sds.labels.transferAddReason}
           onClick={() => move('right')}>{sds.labels.transferAdd}</Button>
         <Button variant="secondary" size="sm" leftIcon="arrow_back" disabled={off || !canRemove} disabledReason={off ? undefined : sds.labels.transferRemoveReason}
           onClick={() => move('left')}>{sds.labels.transferRemove}</Button>
-      </div>
+      </div>}
       {side('right', right, checkedRight, setCheckedRight)}
       {name ? chosen.map((v) => <input key={v} type="hidden" name={name} form={form} value={v} disabled={off} />) : null}
+      {/* required: a hidden-from-view field the form checks (remade when Chosen fills or empties, so no change handler). */}
+      {required ? <input key={chosen.length ? 'filled' : 'empty'} className="dk-transfer-list__validity" tabIndex={-1} aria-hidden required defaultValue={chosen.length ? 'filled' : ''}
+        disabled={off || readOnly} form={form} onInvalid={onInvalid} /> : null}
     </div>
   );
 });

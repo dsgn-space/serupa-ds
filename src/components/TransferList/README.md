@@ -53,7 +53,7 @@ Drawn from the `NothingChosen` story.
 - **Role and name:** a `role="group"` named by its Field label or `aria-label`, holding two groups of native checkboxes, each named by its title and count, and two buttons.
 - **Keyboard:** Tab reaches each box, then Add and Remove; Space checks a box.
 - **Contrast:** its text and counts read 4.5:1 on the lists' background in every theme (`TransferList.test.tsx`).
-- **What's still yours:** the label, telling people what the order means if it matters, and checking a required count on submit.
+- **What's still yours:** the label (with "required" in it when it is), telling people what the order means if it matters, and checking a count other than "at least one" on submit.
 
 ## Props
 
@@ -67,6 +67,8 @@ Drawn from the `NothingChosen` story.
 | `name` | `string` | | Submits each chosen value as a hidden input. |
 | `form` | `string` | | The id of a form elsewhere that the values belong to. |
 | `disabled` | `boolean` | `false` | Turns off both lists and the buttons. |
+| `readOnly` | `boolean` | `false` | Shows both lists without letting them change: the boxes are read-only but still focusable, Add and Remove are left out, and the form still sends the chosen values, unlike `disabled`. |
+| `required` | `boolean` | `false` | At least one value must be chosen: the form isn't sent while Chosen is empty (both lists are marked invalid and the first available box takes focus). Say it in the label too, since the group can't carry `aria-required`. |
 | `invalid` | `boolean` | `false` | Marks every box invalid. Field sets it from its error. |
 | `availableLabel` | `string` | "Available" | The first list's name. |
 | `chosenLabel` | `string` | "Chosen" | The second list's name. |

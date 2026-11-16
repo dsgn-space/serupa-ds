@@ -61,6 +61,9 @@ export interface CheckboxGroupProps<V extends string | number = string | number>
   disabled?: boolean | undefined;
   /** At least one box must be checked: aria-required on the group, and the browser won't submit the form until one is. */
   required?: boolean | undefined;
+  /** Every box shows its state without letting it change: focusable and read out (aria-readonly), and a form still
+   *  sends the checked ones, unlike disabled. */
+  readOnly?: boolean | undefined;
   /** The Checkbox elements, at any depth. */
   children?: React.ReactNode | undefined;
 }
@@ -73,6 +76,7 @@ interface GroupState {
   invalid: boolean;
   disabled: boolean;
   required: boolean;
+  readOnly: boolean;
   /** The boxes in the group, in the order they mounted, and which are disabled (select-all leaves those as they are). */
   boxes: Map<string, boolean>;
 }
@@ -88,7 +92,7 @@ interface GroupContextValue {
 
 /** What a box draws from the group, as one string: it changes only when that box has to draw again. */
 function boxView(g: GroupState, key: string, all: boolean): string {
-  const head = [g.name, g.size, g.variant, g.invalid, g.disabled, g.required].join('|');
+  const head = [g.name, g.size, g.variant, g.invalid, g.disabled, g.required, g.readOnly].join('|');
   if (all) {
     let enabled = 0, on = 0;
     g.boxes.forEach((dis, k) => { if (!dis) { enabled++; if (g.values.includes(k)) on++; } });
@@ -102,12 +106,12 @@ const noSubscribe = () => () => {};
 const GroupContext = /* @__PURE__ */ React.createContext<GroupContextValue | null>(null);
 
 /* CheckboxGroup: any number of choices from a set of Checkboxes. It names them (name, or a generated one), holds the
-   checked values (value with onValueChange, or defaultValue), and passes size, invalid, disabled and required down.
+   checked values (value with onValueChange, or defaultValue), and passes size, invalid, disabled, required and readOnly down.
    A Checkbox with selectAll checks or clears the rest. Renders <div role="group">: label it with Field group (a
    fieldset and legend), aria-label or aria-labelledby. role="group" supports neither aria-invalid nor
    aria-required, so invalid goes on each box and required is each box's native required while none is checked
    (Field group says "Required" in the legend too). */
-const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, variant: 1, invalid: 1, disabled: 1, required: 1, children: 1, className: 1, autoFocus: 1 } as const;
+const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, variant: 1, invalid: 1, disabled: 1, required: 1, readOnly: 1, children: 1, className: 1, autoFocus: 1 } as const;
 
 /** The value boxes among a group's children (inside plain elements too), with whether each is disabled. */
 function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<string, boolean>()): Map<string, boolean> {
@@ -147,7 +151,7 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
   // stand in, so select-all is enabled, and checked or mixed, from the first paint.
   const known = boxes.size ? boxes : childBoxes(props.children, !!props.disabled);
   const around = useControlSize(props.size);   // its own size, else a SerupaProvider's around it
-  const state: GroupState = { name: props.name || autoName, values: raw.map(String), size: around, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, boxes: known };
+  const state: GroupState = { name: props.name || autoName, values: raw.map(String), size: around, variant: props.variant, invalid, disabled: !!props.disabled, required: !!props.required, readOnly: !!props.readOnly, boxes: known };
   const api = {
     register(v: string | number, dis: boolean) { const k = String(v); boxes.set(k, dis); typed.set(k, v); rerender((n) => n + 1); return () => { boxes.delete(k); rerender((n) => n + 1); }; },
     toggle(v: string, on: boolean, e: React.ChangeEvent<HTMLInputElement>) { const next = new Set(latest.current.map(String)); if (on) next.add(v); else next.delete(v); emit(next, e); },
@@ -226,6 +230,7 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
     const ownChange = rest.onChange;
     delete rest.defaultChecked;
     if (group.disabled) rest.disabled = true;
+    if (group.readOnly) rest.readOnly = true;
     if (all) {
       // Checked when every enabled box is, indeterminate when some are; a click checks them all, or clears them when all are.
       const enabled = [...group.boxes].filter(([, dis]) => !dis).map(([k]) => k), on = enabled.filter((k) => group.values.includes(k)).length;

@@ -24,6 +24,8 @@ interface TransferListProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
     name?: string | undefined;
     form?: string | undefined;
     disabled?: boolean | undefined;
+    readOnly?: boolean | undefined;
+    required?: boolean | undefined;
     invalid?: boolean | undefined;
     availableLabel?: string | undefined;
     chosenLabel?: string | undefined;

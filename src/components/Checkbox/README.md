@@ -144,6 +144,7 @@ Everything else (`checked`, `defaultChecked`, `onChange`, `name`, `value`, `disa
 | `invalid` | boolean | `false` | A danger border on every unchecked box, and `aria-invalid` on each box. Field's `error` sets it |
 | `disabled` | boolean | `false` | Disables every box |
 | `required` | boolean | `false` | At least one box must be checked |
+| `readOnly` | boolean | `false` | Every box shows its state without letting it change: focusable and read out (`aria-readonly`), and the form still sends the checked ones, unlike `disabled` |
 
 Other props (`id`, `aria-label`, `aria-labelledby`, `className`…) and `ref` go to the `<div role="group">`, which has `data-component="checkbox-group"` and `data-orientation`.
 
