@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Leaderboard.stories';
+
+<Meta of={Stories} />
+
+# Leaderboard
+
+Who's ahead this week, this month or of all time, where you are, and who's moving.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A challenge, a game or a sales team where people compare their points.
+- Not for a table of data to sort and filter: that's the List and search pattern or DataGrid.
+
+## What each part is for
+
+- **The board is a table with a caption**; each row's name is its row header, so every cell is read with it (1.3.1).
+- **A tie shares its place**, said as "Joint 3rd", not left to the numbers to show.
+- **Your row says "You" in a badge** as well as being shaded, and a move is said in words, "Up 2", never only an arrow or a color (1.4.1).
+- **Switching the period says which period the board shows**, in a status (4.1.3).
+- **When you're outside the top places**, your row follows them after a row that says how many people are between (1.3.2).
+- **The summary under the title says your place**, of how many, with your points.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.InTheTop} />
+
+## What stays your app's job
+
+- **Scoring.** Pass each person's points for each period, and how many places they moved.
+- **Privacy.** Show only people who agreed to be on the board, and let people hide their name.

@@ -1,0 +1,18 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Reviews } from './Reviews';
+
+/* Reviews: the average and the split, then the reviews, filtered, sorted and marked helpful. Reviews.mdx says why each
+   part is there and what stays the app's job. */
+const meta = {
+  title: 'Patterns/Reviews',
+  component: Reviews,
+  parameters: { layout: 'fullscreen' },
+} satisfies Meta<typeof Reviews>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** Five reviews of a jacket, three at a time. */
+export const Default: Story = {};
+
+/** No reviews yet. */
+export const NoReviews: Story = { args: { reviews: [] } };

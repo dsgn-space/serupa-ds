@@ -1,0 +1,31 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Recipe.stories';
+
+<Meta of={Stories} />
+
+# Recipe
+
+What it is and how long it takes, the ingredients for as many people as you're cooking for, ticked off as you gather them, and the steps in order, ticked off as you go.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A recipe someone will cook from, often on a phone or a tablet in the kitchen.
+- Not for steps through a form: that's the Multi-step form pattern.
+
+## What each part is for
+
+- **The times are a description list**: prep, cook and ready in (1.3.1).
+- **The picture's text alternative says what's in it**, so it's more than "photo" (1.1.1).
+- **Servings says its range**, and changing it rescales every amount and says so (3.3.2, 4.1.3). Amounts round to quarters under 10, whole numbers above.
+- **The ingredients are a list and the steps an ordered list**, each under its heading (1.3.1).
+- **Each ingredient and each step is a checkbox named by its own text**, so a tick is read with what was ticked (4.1.2).
+- **A ticked step is struck through and its heading says "done"**, never only greyed out (1.4.1); the line above the steps counts them.
+- **A skip link** first, into main, as on every page.
+
+## What stays your app's job
+
+- **The recipe.** Pass the times in minutes, the servings it's written for, and each ingredient's amount and unit.
+- **Keeping ticks.** They live while the page is open; save them if people come back mid-recipe.
+- **Keeping the screen on.** Offer the Screen Wake Lock API where it's supported.
