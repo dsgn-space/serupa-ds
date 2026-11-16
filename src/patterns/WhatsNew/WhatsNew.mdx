@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './WhatsNew.stories';
+
+<Meta of={Stories} />
+
+# What's new
+
+The product's changes, newest first, by month: what's new since your last visit marked, a filter by kind, and older months on request.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A changelog for the people who use the product, not for developers.
+- Not for one change you want everyone to see: that's a banner or a Tour.
+- Not for release notes of a library: those list versions, not months.
+
+## What each part is for
+
+- **Each month is a heading and each change an article** named by its own heading, with its date in a `<time>` (1.3.1, 2.4.6).
+- **The kind is a word in a badge**: New, Improved or Fixed. So is "Since your last visit", never a color or a dot alone (1.4.1).
+- **The filter says how many changes it shows**, in a status (4.1.3).
+- **Show older months moves focus to the first change it adds** (2.4.3), and goes once there are none left.
+- **Try it** names the change it opens, "Try it: Dark mode" (2.4.4).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.AllSeen} />
+
+## What stays your app's job
+
+- **The changes.** Pass them with a date, a kind, a title and a sentence or two on what it means for the reader.
+- **When this person last looked.** Pass `lastSeen`, and save today's date once they've seen the page.

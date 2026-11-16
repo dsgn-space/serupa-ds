@@ -175,9 +175,10 @@ if (ui > 0) {
       console.log(`${n}: ${KEYS.map((k) => `${k} ${b[k]} KiB`).join(', ')}`);
       continue;
     }
-    // A raise: only the keys this pull request needs higher than every other file of the folder has them.
+    // A raise: only the keys over the budget every other file of the folder gives them (the check's own test, so a
+    // key still within its budget isn't raised by the 5% a fit adds: #1977's merge raised Field's CSS that way).
     const others = sizeBudgets(sizeFiles().filter((f) => f !== own(n) && SIZE_FILE.exec(f)[1] === n).map(readSize))[n];
-    const raised = Object.fromEntries(KEYS.filter((k) => (!only || k === only) && fit[k] > others[k]).map((k) => [k, fit[k]]));
+    const raised = Object.fromEntries(KEYS.filter((k) => (!only || k === only) && measured[n][k] > others[k] * 1024 + (k === 'share' ? SHARE_NOISE : 0)).map((k) => [k, fit[k]]));
     if (Object.keys(raised).length) {
       write(own(n), raised);
       console.log(`${n}: ${Object.entries(raised).map(([k, v]) => `${k} ${others[k]} → ${v} KiB`).join(', ')} (in ${own(n)})`);
