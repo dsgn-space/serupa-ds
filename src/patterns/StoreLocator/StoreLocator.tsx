@@ -13,6 +13,8 @@ import { Switch } from '../../components/Switch/Switch';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Store locator: find a shop by town or postcode, or by where you are, with each one's distance, whether it's open
@@ -46,6 +48,12 @@ export interface StoreLocatorProps {
   now?: Date | undefined;
   /** Where the person is. Default: the browser's geolocation. Reject when it can't be had. */
   locate?: (() => Promise<{ lat: number; lng: number }>) | undefined;
+  /** The stores are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** The stores failed to load: a "Couldn’t load the stores" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const week = (open: string, close: string, sunday: [string, string] | null = ['11:00', '18:00']) =>
@@ -90,7 +98,7 @@ const fromBrowser = () => new Promise<{ lat: number; lng: number }>((ok, no) => 
 });
 
 /** The store locator: a skip link, a header, then main with the h1, the search, and the shops. */
-export function StoreLocator({ stores = demo, now, locate = fromBrowser }: StoreLocatorProps) {
+export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading = false, loadFailed = false, onRetry }: StoreLocatorProps) {
   const locale = useLocale();
   const at = now ?? new Date();
   const [q, setQ] = React.useState('');
@@ -116,6 +124,8 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser }: Store
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Find a shop" description="Collect an order, return something, or try it on first." />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the stores" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading stores" /></Card> : (<>
         <div className="flex flex-col gap-6 pt-6">
           <div role="search" aria-label="Shops" className="flex flex-col gap-3">
             <div className="flex flex-wrap items-end gap-3">
@@ -166,6 +176,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser }: Store
               description={openOnly ? 'None that match are open now. Turn off “Open now only” to see the rest.' : 'Try a town or a postcode near you, or use your location.'} />
           )}
         </div>
+        </>)}
       </main>
     </div>
   );

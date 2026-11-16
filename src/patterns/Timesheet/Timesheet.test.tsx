@@ -87,4 +87,15 @@ describe('Patterns/Timesheet', () => {
     expect(onSend).toHaveBeenLastCalledWith({ web: [6, 5, null, null, null, null, null], admin: [2, 3, null, null, null, null, null] }, 'Off Friday');
     expect(document.body.textContent).toMatch(/(16|١٦) hours on (2|٢) projects/);
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Timesheet loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading your timesheet']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<Timesheet loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your timesheet' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

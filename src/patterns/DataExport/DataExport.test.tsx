@@ -82,4 +82,15 @@ describe('Patterns/Download your data', () => {
     await screen.getByRole('button', { name: 'Ask for my data' }).click();
     await expect.poll(() => document.querySelectorAll('main section li').length).toBe(1);
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<DataExport loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading your exports']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<DataExport loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your exports' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

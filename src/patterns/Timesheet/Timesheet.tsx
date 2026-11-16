@@ -13,6 +13,9 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
+import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Timesheet: a week's hours by project and day, the totals as you type, and sending it for approval. For an app to
@@ -46,6 +49,12 @@ export interface TimesheetProps {
   approver?: string | undefined;
   /** Sends the week. Reject when it can't be sent. */
   onSend?: ((week: Week, note: string) => unknown) | undefined;
+  /** The week are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** The week failed to load: a "Couldn’t load your timesheet" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demoProjects: Project[] = [
@@ -75,7 +84,7 @@ export function weekProblems(week: Week, dayNames: string[]): Record<string, str
 
 /** The timesheet page: a skip link, a header, then main with the h1, the week's table and Send, or the answer. */
 export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, defaultHours = demoHours, lastWeek = demoLast,
-  expected = 40, approver = 'Maya Chen', onSend }: TimesheetProps) {
+  expected = 40, approver = 'Maya Chen', onSend, loading = false, loadFailed = false, onRetry }: TimesheetProps) {
   const locale = useLocale();
   const [hours, setHours] = React.useState<Week>(defaultHours);
   const [note, setNote] = React.useState('');
@@ -146,6 +155,8 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
       <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Timesheets', href: '#timesheets' }, { label: range }]} title={`Week of ${range}`}
           description={`${hoursWords(expected)} a week are expected. A day holds at most 24.`} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your timesheet" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading your timesheet" /></Card> : (<>
         {sent ? (
           <section aria-labelledby="ts-sent" className="flex flex-col items-start gap-3 pt-6">
             <h2 id="ts-sent" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">Sent to {approver} for approval</h2>
@@ -211,6 +222,7 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
             </div>
           </form>
         )}
+        </>)}
       </main>
     </div>
   );

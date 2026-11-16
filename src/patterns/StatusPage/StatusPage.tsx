@@ -11,6 +11,8 @@ import { Link } from '../../components/Link/Link';
 import { StatusTracker, type StatusDay, type StatusState } from '../../components/StatusTracker/StatusTracker';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Status page: is it working now, each service's last 90 days, what's being done about a problem, and email updates.
@@ -32,6 +34,12 @@ export interface StatusPageProps {
   incidents?: Incident[] | undefined;
   /** Adds an email to the updates list. Reject when it can't be added. */
   onSubscribe?: ((email: string) => unknown) | undefined;
+  /** The services are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** The services failed to load: a "Couldn’t load the status" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 /** `count` days ending on `end` (YYYY-MM-DD), oldest first: up, except the days given by how many days before the end. */
@@ -79,7 +87,7 @@ const TITLE: Record<ServiceState, string> = {
 };
 
 /** The status page: a skip link, a header, then main with the h1, the overall state, incidents, services and updates. */
-export function StatusPage({ services = demoServices, incidents = demoIncidents, onSubscribe }: StatusPageProps) {
+export function StatusPage({ services = demoServices, incidents = demoIncidents, onSubscribe, loading = false, loadFailed = false, onRetry }: StatusPageProps) {
   const locale = useLocale();
   const [email, setEmail] = React.useState('');
   const [problem, setProblem] = React.useState('');
@@ -127,6 +135,8 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Acme status" description="How our services are doing now and over the last 90 days." />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the status" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the status" /></Card> : (<>
         <div className="flex flex-col gap-8 pt-6">
           <Alert tone={STATE[overall].tone} title={TITLE[overall]}>
             {open.length ? `${open.length === 1 ? 'An incident is' : `${formatNumber(open.length, locale)} incidents are`} open; the latest updates are below.` : 'No open incidents.'}
@@ -170,6 +180,7 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
             <p role="status" id="status-subscribed" className="m-0">{done}</p>
           </section>
         </div>
+        </>)}
       </main>
     </div>
   );

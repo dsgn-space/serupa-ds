@@ -78,4 +78,15 @@ describe('Patterns/Roles and permissions', () => {
     await expect.element(screen.getByRole('checkbox', { name: 'Guest: Comment' })).toBeChecked();
     expect(norm(document.getElementById('roles-changes')!.textContent)).toBe('1 change not saved yet.');
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<RolePermissions loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading roles']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<RolePermissions loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the roles' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

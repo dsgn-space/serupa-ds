@@ -16,6 +16,8 @@ import { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, Tabl
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Expense report: add what you spent, one expense at a time, see them in a table with the total, and send the report
@@ -56,6 +58,12 @@ export interface ExpenseReportProps {
   today?: string | undefined;
   /** Sends the report. Reject when it can't be sent. */
   onSubmit?: ((expenses: Expense[]) => unknown) | undefined;
+  /** The expenses are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** The expenses failed to load: a "Couldn’t load your expenses" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const CATEGORIES = [
@@ -88,7 +96,7 @@ export function expenseProblems(d: Draft, today: string, receiptOver: number): P
 export const missingReceipts = (expenses: readonly Expense[], receiptOver: number) => expenses.filter((e) => e.amount > receiptOver && !e.receipt);
 
 /** The report's page: a skip link, a header, then main with the h1, the add form, the expenses and Send. */
-export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = demo, currency = 'USD', receiptOver = 25, today = iso(new Date()), onSubmit }: ExpenseReportProps) {
+export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = demo, currency = 'USD', receiptOver = 25, today = iso(new Date()), onSubmit, loading = false, loadFailed = false, onRetry }: ExpenseReportProps) {
   const locale = useLocale();
   const blank: Draft = { date: today, category: '', what: '', amount: null, receipt: null };
   const [list, setList] = React.useState(expenses);
@@ -148,6 +156,8 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Your reports', href: '#reports' }, { label: title }]} title={title}
           description={`Add each thing you paid for, then send the report to your manager. Receipts are needed over ${money(receiptOver)}.`} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your expenses" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading expenses" /></Card> : (<>
         <div className="flex flex-col gap-8 pt-6">
           {sent ? (
             <section aria-labelledby="report-sent" className="flex flex-col items-start gap-3">
@@ -223,6 +233,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
             </>
           )}
         </div>
+        </>)}
       </main>
     </div>
   );

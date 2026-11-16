@@ -24,3 +24,9 @@ export const ReceiptMissing: Story = {
     ],
   },
 };
+
+/** While the expenses load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

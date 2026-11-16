@@ -11,6 +11,8 @@ import { Progress } from '../../components/Progress/Progress';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Course overview: a course's modules and lessons, how far you are, where to carry on, and marking lessons done.
@@ -36,6 +38,12 @@ export interface CourseOverviewProps {
   defaultDone?: string[] | undefined;
   /** Saves a lesson as done or not. */
   onDoneChange?: ((lessonId: string, done: boolean) => void) | undefined;
+  /** The lessons are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** The lessons failed to load: a "Couldn’t load the course" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demoModules: CourseModule[] = [
@@ -72,7 +80,7 @@ export function durationWords(minutes: number, num: (n: number) => string = Stri
 
 /** The course page: a skip link, a header, then main with the h1, progress, Continue, and the modules. */
 export function CourseOverview({ title = 'Typography for the screen', description = 'Choose, set and pair type so that it reads well on any screen.',
-  teacher = 'Lena Vogel', modules = demoModules, defaultDone = ['l1', 'l2', 'l3', 'l4'], onDoneChange }: CourseOverviewProps) {
+  teacher = 'Lena Vogel', modules = demoModules, defaultDone = ['l1', 'l2', 'l3', 'l4'], onDoneChange, loading = false, loadFailed = false, onRetry }: CourseOverviewProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [done, setDone] = React.useState(defaultDone);
@@ -98,6 +106,8 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Your courses', href: '#courses' }, { label: title }]} title={title} description={description} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the course" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the course" /></Card> : (<>
         <div className="flex flex-col gap-6 pt-6">
           <p className="m-0 flex flex-wrap items-center gap-2 text-text-muted">
             <Avatar name={teacher} alt="" size="sm" />
@@ -142,6 +152,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
             })}
           </Accordion>
         </div>
+        </>)}
       </main>
     </div>
   );

@@ -70,4 +70,15 @@ describe('Patterns/Status page', () => {
     await render(<SerupaProvider locale="ar-EG"><StatusPage incidents={[open('a'), open('b')]} /></SerupaProvider>);
     expect(bodyText()).toContain('٢ incidents are open');
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<StatusPage loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading the status']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<StatusPage loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the status' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

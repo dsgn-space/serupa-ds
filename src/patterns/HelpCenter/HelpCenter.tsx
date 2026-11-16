@@ -10,6 +10,8 @@ import { Select } from '../../components/Select/Select';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Alert } from '../../components/Alert/Alert';
 import { Faq, type FaqGroup } from '../../blocks/Faq/Faq';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Help center: the topics people come for, the common questions with a search, and a way to write to a person that
@@ -43,6 +45,12 @@ export interface HelpCenterProps {
   start?: 'form' | 'sent' | undefined;
   /** Start with what went wrong already said: "empty" names what's missing, "send" says the last send failed. */
   failed?: 'empty' | 'send' | undefined;
+  /** The articles are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** The articles failed to load: a "Couldn’t load the help articles" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demoTopics: HelpTopic[] = [
@@ -73,7 +81,7 @@ export function messageProblems(m: HelpMessage): { field: 'topic' | 'message'; t
 
 /** The help page: a skip link, a header, then main with the h1, the topics, the questions and the message form. */
 export function HelpCenter({ topics = demoTopics, questions = demoQuestions, email = 'ana@example.com', replyTime = 'within one working day', onSend,
-  initial, start = 'form', failed }: HelpCenterProps) {
+  initial, start = 'form', failed, loading = false, loadFailed = false, onRetry }: HelpCenterProps) {
   const [value, setValue] = React.useState<HelpMessage>({ topic: '', message: '', ...initial });
   const [problems, setProblems] = React.useState(() => (failed === 'empty' ? messageProblems(value) : []));
   const [state, setState] = React.useState<'editing' | 'sending' | 'sent' | 'failed'>(start === 'sent' ? 'sent' : failed === 'send' ? 'failed' : 'editing');
@@ -105,6 +113,8 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-10 px-4 py-8 outline-none">
         <PageHeader title="Help" description={<>Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</>} />
+        {loadFailed ? <div><EmptyLoadFailed title="Couldn’t load the help articles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading help articles" /></Card> : (<>
 
         <section aria-labelledby="help-topics" className="flex flex-col gap-4">
           <Heading level={2} size="lg" id="help-topics">Topics</Heading>
@@ -146,6 +156,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
             </>
           )}
         </section>
+        </>)}
       </main>
     </div>
   );
