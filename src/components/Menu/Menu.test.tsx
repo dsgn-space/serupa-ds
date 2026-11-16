@@ -260,7 +260,7 @@ describe('Menu', () => {
   test('the pointer on a disabled item lights nothing up; reached with the keys, it shows the highlight', async () => {
     await render(<Actions chosen={[]} />);
     await userEvent.click(el('mb'));
-    const item = (name: string) => [...openMenu()!.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((m) => m.textContent!.includes(name))!;
+    const item = (name: string) => [...openMenu()!.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((m) => m.textContent.includes(name))!;
     await userEvent.hover(item('Archive'));
     expect([document.activeElement === item('Archive'), getComputedStyle(item('Archive')).backgroundColor]).toEqual([true, 'rgba(0, 0, 0, 0)']);
     await userEvent.hover(item('Duplicate'));
