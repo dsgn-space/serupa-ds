@@ -1,6 +1,6 @@
 {
   "name": "@diki-stwn/serupa-ds",
-  "version": "16.0.0",
+  "version": "16.1.0",
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

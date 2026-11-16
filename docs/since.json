@@ -208,15 +208,18 @@
  },
  "Calendar": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "08ecadcd5077",
+  "changed": "16.1.0",
+  "api": "9a4ffafc3a8f",
   "props": {
    "inAWeek": "14.3.0",
    "label": "14.3.0",
    "presets": "14.3.0",
    "today": "14.3.0",
    "tomorrow": "14.3.0",
-   "calendar": "16.0.0"
+   "calendar": "16.0.0",
+   "week": "16.1.0",
+   "weekNumbers": "16.1.0",
+   "weekShort": "16.1.0"
   },
   "known": [
    "autoFocus",
@@ -292,9 +295,11 @@
  },
  "CascadeSelect": {
   "added": "14.3.0",
-  "changed": "14.6.0",
-  "api": "0684efb0b0ff",
-  "props": {},
+  "changed": "16.1.0",
+  "api": "7e675b3f67d8",
+  "props": {
+   "required": "16.1.0"
+  },
   "known": [
    "cascadeBack",
    "cascadeEmpty",
@@ -444,8 +449,8 @@
  },
  "Checkbox": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "0e90fb72aef4",
+  "changed": "16.1.0",
+  "api": "623321493693",
   "props": {
    "variant": "14.3.0"
   },
@@ -518,8 +523,8 @@
  },
  "Combobox": {
   "added": null,
-  "changed": "14.6.0",
-  "api": "9624481941e9",
+  "changed": "16.1.0",
+  "api": "5dd5d8786c3b",
   "props": {
    "defaultInputValue": "13.0.0",
    "inputValue": "13.0.0",
@@ -531,7 +536,8 @@
    "freeText": "14.6.0",
    "inlineComplete": "14.6.0",
    "limit": "14.6.0",
-   "moreResults": "14.6.0"
+   "moreResults": "14.6.0",
+   "onInputValueChange": "16.1.0"
   },
   "known": [
    "clearLabel",
@@ -622,9 +628,11 @@
  },
  "CopyButton": {
   "added": "9.1.0",
-  "changed": "14.7.0",
-  "api": "bb7321bfb95e",
-  "props": {},
+  "changed": "16.1.0",
+  "api": "e90f170c94f5",
+  "props": {
+   "copyFailedShort": "16.1.0"
+  },
   "known": [
    "children",
    "copied",
@@ -689,11 +697,12 @@
  },
  "DateField": {
   "added": "14.3.0",
-  "changed": "16.0.0",
-  "api": "bad9dadb63a0",
+  "changed": "16.1.0",
+  "api": "ae3143af61b2",
   "props": {
    "dateFieldError": "16.0.0",
-   "monthInput": "16.0.0"
+   "monthInput": "16.0.0",
+   "required": "16.1.0"
   },
   "known": [
    "autoComplete",
@@ -722,11 +731,15 @@
  },
  "DatePicker": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "c79cafaca3f4",
+  "changed": "16.1.0",
+  "api": "ebbc5dc59a9d",
   "props": {
    "presets": "14.3.0",
-   "calendar": "16.0.0"
+   "calendar": "16.0.0",
+   "defaultOpen": "16.1.0",
+   "onOpenChange": "16.1.0",
+   "open": "16.1.0",
+   "weekNumbers": "16.1.0"
   },
   "known": [
    "buttonLabel",
@@ -748,8 +761,8 @@
  },
  "DateRangePicker": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "ac60135c60d3",
+  "changed": "16.1.0",
+  "api": "e4fa1858560b",
   "props": {
    "label": "14.3.0",
    "last30Days": "14.3.0",
@@ -758,7 +771,11 @@
    "presets": "14.3.0",
    "thisMonth": "14.3.0",
    "yesterday": "14.3.0",
-   "calendar": "16.0.0"
+   "calendar": "16.0.0",
+   "defaultOpen": "16.1.0",
+   "onOpenChange": "16.1.0",
+   "open": "16.1.0",
+   "weekNumbers": "16.1.0"
   },
   "known": [
    "buttonLabel",
@@ -999,12 +1016,14 @@
  },
  "Field": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "e7591db55f1a",
+  "changed": "16.1.0",
+  "api": "5f86cfceeee0",
   "props": {
    "errors": "14.3.0",
    "name": "14.3.0",
-   "orientation": "14.3.0"
+   "orientation": "14.3.0",
+   "checking": "16.1.0",
+   "warning": "16.1.0"
   },
   "known": [
    "children",
@@ -1514,9 +1533,22 @@
  },
  "MaskedValue": {
   "added": "16.0.0",
-  "changed": null,
-  "api": "d562af29cfe9",
-  "props": {}
+  "changed": "16.1.0",
+  "api": "104238e7a5be",
+  "props": {
+   "defaultRevealed": "16.1.0",
+   "end": "16.1.0",
+   "label": "16.1.0",
+   "maskedEnding": "16.1.0",
+   "maskedHidden": "16.1.0",
+   "onRevealedChange": "16.1.0",
+   "revealable": "16.1.0",
+   "revealed": "16.1.0",
+   "showValue": "16.1.0",
+   "start": "16.1.0",
+   "value": "16.1.0"
+  },
+  "known": []
  },
  "MentionInput": {
   "added": "14.6.0",
@@ -1705,8 +1737,8 @@
  },
  "Pagination": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "b451104ca62d",
+  "changed": "16.1.0",
+  "api": "058eeabbdfcd",
   "props": {
    "itemsOf": "12.0.0",
    "onPageSizeChange": "12.0.0",
@@ -1714,7 +1746,9 @@
    "pageSizeOptions": "12.0.0",
    "perPage": "12.0.0",
    "total": "12.0.0",
-   "href": "14.3.0"
+   "href": "14.3.0",
+   "goToPage": "16.1.0",
+   "jump": "16.1.0"
   },
   "known": [
    "boundaries",
@@ -1736,9 +1770,13 @@
  },
  "PasswordInput": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "0889b5fd714d",
-  "props": {},
+  "changed": "16.1.0",
+  "api": "f03f3883fab4",
+  "props": {
+   "defaultRevealed": "16.1.0",
+   "onRevealedChange": "16.1.0",
+   "revealed": "16.1.0"
+  },
   "known": [
    "capsLockHint",
    "capsLockOn",
@@ -1751,9 +1789,13 @@
  },
  "PeriodPicker": {
   "added": "14.6.0",
-  "changed": null,
-  "api": "6817321736ae",
-  "props": {},
+  "changed": "16.1.0",
+  "api": "40c1e451c2d9",
+  "props": {
+   "onOpenChange": "16.1.0",
+   "open": "16.1.0",
+   "required": "16.1.0"
+  },
   "known": [
    "defaultOpen",
    "defaultValue",
@@ -1914,10 +1956,11 @@
  },
  "RangeCalendar": {
   "added": "14.7.0",
-  "changed": "16.0.0",
-  "api": "07e2cc067149",
+  "changed": "16.1.0",
+  "api": "c697da9d68f0",
   "props": {
-   "calendar": "16.0.0"
+   "calendar": "16.0.0",
+   "weekNumbers": "16.1.0"
   },
   "known": [
    "autoFocus",
@@ -2098,9 +2141,11 @@
  },
  "SignaturePad": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "eb8881fcfd3a",
-  "props": {},
+  "changed": "16.1.0",
+  "api": "3267150bcee1",
+  "props": {
+   "required": "16.1.0"
+  },
   "known": [
    "defaultMethod",
    "defaultValue",
@@ -2351,8 +2396,8 @@
  },
  "Table": {
   "added": null,
-  "changed": "16.0.0",
-  "api": "97b9c29f406e",
+  "changed": "16.1.0",
+  "api": "e96f0d17f674",
   "props": {
    "hideCaption": "12.0.0",
    "href": "13.0.0",
@@ -2516,9 +2561,13 @@
  },
  "TimePicker": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "0f798ea907a9",
-  "props": {},
+  "changed": "16.1.0",
+  "api": "b126e27f8b4d",
+  "props": {
+   "defaultOpen": "16.1.0",
+   "onOpenChange": "16.1.0",
+   "open": "16.1.0"
+  },
   "known": [
    "chooseTime",
    "defaultValue",
@@ -2556,12 +2605,13 @@
  },
  "Timeline": {
   "added": "9.7.0",
-  "changed": "14.3.0",
-  "api": "fe184aeae177",
+  "changed": "16.1.0",
+  "api": "4886f2b7de94",
   "props": {
    "orientation": "14.3.0",
    "stackWhenNarrow": "14.3.0",
-   "timeline": "14.3.0"
+   "timeline": "14.3.0",
+   "tone": "16.1.0"
   },
   "known": [
    "align",
@@ -2575,8 +2625,8 @@
  },
  "Toast": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "0d08c2657ed5",
+  "changed": "16.1.0",
+  "api": "aa7e7e9de205",
   "props": {
    "placement": "14.3.0"
   },
@@ -2700,9 +2750,12 @@
  },
  "TransferList": {
   "added": "14.7.0",
-  "changed": null,
-  "api": "2243ea1eba6a",
-  "props": {},
+  "changed": "16.1.0",
+  "api": "1e8562e208f1",
+  "props": {
+   "readOnly": "16.1.0",
+   "required": "16.1.0"
+  },
   "known": [
    "availableLabel",
    "chosenLabel",
@@ -2751,9 +2804,16 @@
  },
  "TruncatedText": {
   "added": "16.0.0",
-  "changed": null,
-  "api": "a443e4db0d00",
-  "props": {}
+  "changed": "16.1.0",
+  "api": "931d80f6ec64",
+  "props": {
+   "as": "16.1.0",
+   "children": "16.1.0",
+   "lines": "16.1.0",
+   "mode": "16.1.0",
+   "placement": "16.1.0"
+  },
+  "known": []
  },
  "TypeToConfirm": {
   "added": "10.0.0",
