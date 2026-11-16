@@ -1,0 +1,36 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Timesheet.stories';
+
+<Meta of={Stories} />
+
+# Timesheet
+
+A week's hours by project and day, the totals as you type, and sending it for approval.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Logging the hours you worked on each project, a week at a time, for someone to approve.
+- Not for clocking in and out: that's a timer, not a table.
+- Not for booking time off: that's the Time off pattern.
+
+## What each part is for
+
+- **The week is a table with a caption**: projects are row headers and days column headers, and each hours field is named by both, "Website redesign, Monday 9 February" (1.3.1).
+- **The totals follow every hour**: each project's at the end of its row, each day's and the week's in the foot. The week's total is also said when it changes, and the line under the table says how far it is from what's expected (4.1.3).
+- **It says how many hours are expected**, and that a day holds at most 24 (3.3.2).
+- **Adding a project moves focus to its first day**; removing one moves it to the next row's Remove, or to Add a project (2.4.3).
+- **Copy last week** fills in last week's hours, for a week like the one before.
+- **Sending with problems shows a summary at the top that takes focus**, each problem a link to the day; that day's fields are marked (3.3.1, 2.4.3).
+- **Send shows it's busy**; a week that can't be sent says so and keeps every hour (3.3.4, 4.1.3).
+- **Once sent, the answer's heading takes focus**, and says who approves it (2.4.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Empty} />
+
+## What stays your app's job
+
+- **Saving and approving.** `onSend` gets the hours by project, Monday first, and the note; reject when it can't be sent.
+- **The projects.** Pass the ones this person can log hours to, and last week's hours for Copy last week.
+- **The week.** Pass `weekStart`, the Monday, and how many hours are `expected`.

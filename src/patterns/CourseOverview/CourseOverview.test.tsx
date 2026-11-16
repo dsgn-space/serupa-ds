@@ -1,0 +1,54 @@
+import * as React from 'react';
+import { describe, expect, test, vi } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
+import { CourseOverview, courseProgress, durationWords } from './CourseOverview';
+
+const active = () => document.activeElement as HTMLElement;
+const bar = () => document.querySelector('[role="progressbar"]')!;
+const mods = [{ id: 'a', title: 'A', lessons: [{ id: '1', title: 'One', minutes: 5 }, { id: '2', title: 'Two', minutes: 5 }] }, { id: 'b', title: 'B', lessons: [{ id: '3', title: 'Three', minutes: 70 }] }];
+
+// Course overview: modules as headings that open ordered lists of lessons, progress as a named bar with words,
+// Continue naming the next lesson, Done boxes named by their lesson, and a change in progress said.
+describe('Patterns/Course overview', () => {
+  test('progress, the next lesson, and minutes in words', () => {
+    expect(courseProgress(mods, ['1'])).toMatchObject({ done: 1, total: 3, next: { id: '2' }, nextModule: 'a' });
+    expect(courseProgress(mods, ['1', '2'])).toMatchObject({ next: { id: '3' }, nextModule: 'b' });
+    expect(courseProgress(mods, ['1', '2', '3'])).toMatchObject({ done: 3, next: null, nextModule: null });
+    expect([durationWords(45), durationWords(90), durationWords(120), durationWords(0)]).toEqual(['45 min', '1 h 30 min', '2 h', '0 min']);
+  });
+
+  test('one main and h1, the skip link first, modules as headings, and the next one\'s lessons open', async () => {
+    const screen = await render(<CourseOverview />);
+    await userEvent.tab();
+    expect(active().getAttribute('href')).toBe('#main');
+    expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Typography for the screen']);
+    expect(document.querySelectorAll('h2')).toHaveLength(3);
+    expect(screen.getByRole('button', { name: /Setting text/ }).element().getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByRole('button', { name: /Seeing type/ }).element().getAttribute('aria-expanded')).toBe('false');
+    expect(bar().getAttribute('aria-valuetext')).toMatch(/^(4|٤) of (10|١٠) lessons$/);
+    expect(screen.getByRole('link', { name: 'Continue: Leading' }).element().getAttribute('href')).toBe('#lesson-l5');
+    expect(screen.getByRole('checkbox', { name: 'Done: Kerning and tracking' }).elements()).toHaveLength(1);
+  });
+
+  test('marking a lesson done moves progress and Continue on, and says so', async () => {
+    const onDoneChange = vi.fn();
+    const screen = await render(<CourseOverview onDoneChange={onDoneChange} />);
+    await screen.getByRole('checkbox', { name: 'Done: Leading' }).click();
+    expect(onDoneChange).toHaveBeenLastCalledWith('l5', true);
+    await expect.poll(() => bar().getAttribute('aria-valuetext')).toMatch(/^(5|٥) of /);
+    expect(screen.getByRole('link', { name: 'Continue: Kerning and tracking' }).elements()).toHaveLength(1);
+    await expect.poll(() => document.body.textContent).toMatch(/(5|٥) of (10|١٠) lessons done\./);
+    await screen.getByRole('checkbox', { name: 'Done: Leading' }).click();
+    expect(onDoneChange).toHaveBeenLastCalledWith('l5', false);
+    expect(screen.getByRole('link', { name: 'Continue: Leading' }).elements()).toHaveLength(1);
+  });
+
+  test('the last lesson done: the certificate, and it\'s said', async () => {
+    const screen = await render(<CourseOverview modules={mods} defaultDone={['1', '2']} />);
+    await screen.getByRole('checkbox', { name: 'Done: Three' }).click();
+    expect(screen.getByRole('link', { name: 'Get your certificate' }).elements()).toHaveLength(1);
+    await expect.poll(() => document.body.textContent).toContain('Every lesson done. Your certificate is ready.');
+    expect(screen.getByRole('button', { name: /B/ }).element().textContent).toContain('Done');
+  });
+});
