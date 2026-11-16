@@ -35,3 +35,4 @@ Bringing records in from a spreadsheet: choose a CSV file, match its columns to 
 - **Saving.** `onImport` gets the rows to save; reject its promise when the save fails, and save all of them or none, so a retry doesn't add rows twice.
 - **Large files.** This reads the file in the browser. For files of thousands of rows, read and check them on the server, show the first rows with problems and a count of the rest, and say how long saving will take.
 - **Other formats.** For Excel files, read them with a library or ask people to save as CSV, as the first step's text does here.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

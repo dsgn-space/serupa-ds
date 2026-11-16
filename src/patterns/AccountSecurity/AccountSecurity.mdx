@@ -47,3 +47,4 @@ A delete scheduled for later, on a paid plan:
 - **The data export** that `dataHref` leads to, and what happens to shared work when someone leaves.
 - **Doing the scheduled delete.** `onDeleteAccount` gets the day as "2026-11-28" when `deleteAfter` is set: delete then, email the person when it's done, and stop the plan's renewal at once. `onKeepAccount` gets Keep my account: return its promise, and reject it if it couldn’t be kept: the banner then says so and stays. Refunds for the rest of a paid period follow your own terms.
 - Rendering a `Toaster` once in the app.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

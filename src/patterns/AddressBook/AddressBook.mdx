@@ -32,3 +32,4 @@ The addresses you've saved for delivery, one of them the default, each edited, r
 - **Saving.** `onSave` gets the address, with no `id` when it's new: resolve with its id, or reject when it fails. `onRemove` is called only once Undo has gone; `onDefaultChange` when the default moves.
 - **The fields for each country.** Some countries have no postal code, or a region or a second address line in another place: change the form for the countries you ship to.
 - **Checking addresses.** Suggest a corrected address from the server if you have one, and let people keep theirs.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).
