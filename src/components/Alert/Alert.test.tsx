@@ -235,4 +235,13 @@ describe('Alert inside a shadow root (GR60)', () => {
     expect([r.right <= q.right + 0.5, text.scrollWidth <= text.clientWidth + 1, r.height > 30, b.textContent]).toEqual([true, true, true, label]);
     expect(b.previousElementSibling!.getBoundingClientRect().height).toBe(24);
   });
+  test('across a wide page the title and message keep a reading measure, about 65 characters a line; the box spans the width', async () => {
+    const long = 'Your card ending 4242 expires next month, so add a new one before the 14th to keep the team plan running without a break in service.';
+    await render(<div style={{ width: 1600 }}><Alert id="w" title={long}>{long}</Alert></div>);
+    const lines = [...el('w').querySelectorAll('*')].filter((n) => n.children.length === 0 && n.textContent === long);
+    const ch = (n: Element) => { const z = document.createElement('span'); z.textContent = '0'; n.append(z); const w = z.getBoundingClientRect().width; z.remove(); return w; };
+    expect(lines.length).toBe(2);
+    for (const n of lines) expect(Math.round(n.getBoundingClientRect().width / ch(n))).toBeLessThanOrEqual(65);
+    expect(Math.round(el('w').getBoundingClientRect().width)).toBe(1600);
+  });
 });
