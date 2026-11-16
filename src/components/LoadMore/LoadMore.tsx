@@ -38,7 +38,9 @@ const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeo
 /** The end of a paged list: "Showing 20 of 134", a Load more button (or infinite scroll), and an announcement of what each load added. */
 export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>('LoadMore', function LoadMore(props, ref) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
-  const { onLoadMore, hasMore: more, loading, count, total, infinite, label, endText, className, ...rest } = props;
+  const { onLoadMore, hasMore: more, loading, count: countIn, total: totalIn, infinite, label, endText, className, ...rest } = props;
+  // NaN is no number: a count that never equals itself would load again and again.
+  const count = Number.isNaN(countIn) ? undefined : countIn, total = Number.isNaN(totalIn) ? undefined : totalIn;
   const hasMore = more !== false;
   const [pending, setPending] = React.useState(false);
   const busy = !!loading || pending;

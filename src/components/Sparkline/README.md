@@ -2,6 +2,8 @@
 
 A small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value. Screen readers hear what it measures and its first, last, low and high numbers, since the shape alone doesn't say them.
 
+**Also called:** microchart, trend line, inline chart.
+
 ```tsx
 import { Sparkline } from "@diki-stwn/serupa-ds";
 

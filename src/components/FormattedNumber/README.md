@@ -2,6 +2,8 @@
 
 Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. It also writes short numbers (1.2K), percentages, money, file sizes and units, so a page doesn't mix localized dates with English numbers.
 
+**Also called:** number format, currency display.
+
 ```tsx
 import { FormattedNumber, formatNumber } from "@diki-stwn/serupa-ds";
 

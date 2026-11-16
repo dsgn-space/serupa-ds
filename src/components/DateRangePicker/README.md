@@ -2,6 +2,8 @@
 
 Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both.
 
+**Also called:** range picker, date range input.
+
 ```tsx
 import { DateRangePicker, Field, type DateRange } from "@diki-stwn/serupa-ds";
 

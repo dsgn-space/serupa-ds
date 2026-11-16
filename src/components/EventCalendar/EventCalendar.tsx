@@ -342,7 +342,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const rootRef = useServerStyles(ref);
   const rest = omit(props, { events: 1, onEventClick: 1, onSlotSelect: 1, onEventMove: 1, month: 1, defaultMonth: 1, onMonthChange: 1, view: 1, defaultView: 1, onViewChange: 1, maxPerDay: 1, locale: 1, weekStartsOn: 1, headingLevel: 1, className: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
-  const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
+  const ws = Number.isFinite(props.weekStartsOn) ? ((Math.floor(props.weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const today = day(new Date());
   const controlledMonth = props.month !== undefined;
   const titleId = domId('dk-evc', React.useId()) + '-title';
@@ -367,7 +367,7 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
   const hours = view === 'week' || view === 'day';
   const setView = (v: EventCalendarView) => { if (props.view === undefined) setOwnView(v); if (props.onViewChange) props.onViewChange(v); };
   const list = React.useMemo(() => toShown(props.events), [props.events]);
-  const max = Math.max(1, Math.floor(props.maxPerDay ?? 3));
+  const max = Number.isFinite(props.maxPerDay) ? Math.max(1, Math.floor(props.maxPerDay!)) : 3;
 
   // Today is the reader's, so it's marked only once the page runs in their browser: the server's today may be
   // another day, and the server's HTML would mark it, and put the Tab stop on it, until hydration (GR210).

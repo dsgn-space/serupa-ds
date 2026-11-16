@@ -2,6 +2,8 @@
 
 A small panel next to its trigger for content people interact with: a short form, filters, details with links. It's a non-modal dialog: the rest of the page stays usable, and it closes on Escape, a click outside, or when focus moves elsewhere.
 
+**Also called:** floating panel, dropdown panel.
+
 ```jsx
 const { Popover, Button, Field, Input } = window.Serupa;
 

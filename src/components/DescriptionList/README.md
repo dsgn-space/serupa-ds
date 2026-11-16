@@ -2,6 +2,8 @@
 
 A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. It is a real `<dl>`, so screen readers announce a list and pair each term with its details, and it lays them out three ways, with long values wrapping and every side mirrored in right-to-left.
 
+**Also called:** key-value list, definition list, property list.
+
 ```tsx
 import { DescriptionList, DescriptionItem } from "@diki-stwn/serupa-ds";
 

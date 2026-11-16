@@ -2,6 +2,8 @@
 
 Triggers an action: submitting a form, opening a dialog, confirming or cancelling. With `href` it becomes a link that looks like a button, for navigation. Every variant also has a destructive version; every value comes from this system's tokens.
 
+**Also called:** call to action, CTA.
+
 ```jsx
 const { Button, IconButton, buttonClass } = window.Serupa;
 

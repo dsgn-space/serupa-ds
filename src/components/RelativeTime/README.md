@@ -2,6 +2,8 @@
 
 Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours". It keeps itself up to date, and the exact date is its tooltip.
 
+**Also called:** time ago, relative date.
+
 ```tsx
 import { RelativeTime } from "@diki-stwn/serupa-ds";
 

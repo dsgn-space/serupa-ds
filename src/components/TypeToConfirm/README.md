@@ -2,6 +2,8 @@
 
 A field and a destructive button for an action that can't be undone: the button works only once the person types a phrase, usually the name of what's being deleted. It makes them stop and read what's at stake.
 
+**Also called:** confirmation input, type to delete.
+
 ```tsx
 import { TypeToConfirm } from "@diki-stwn/serupa-ds";
 

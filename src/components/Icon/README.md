@@ -2,6 +2,8 @@
 
 Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Use it on its own or pass an icon straight to Button's `leftIcon` or `rightIcon`, or IconButton's `icon`.
 
+**Also called:** glyph, symbol.
+
 ```jsx
 const { Icon, Button, IconButton } = window.Serupa;
 

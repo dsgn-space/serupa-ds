@@ -2,6 +2,8 @@
 
 Catches an error thrown while rendering anything inside it and shows a message with "Try again" in its place, so one broken widget doesn't blank the whole page.
 
+**Also called:** error fallback, crash screen.
+
 ```tsx
 import { ErrorBoundary } from "@diki-stwn/serupa-ds";
 

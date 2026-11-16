@@ -2,6 +2,8 @@
 
 A [List](../List/README.md) of any length that draws only the rows in view, so ten thousand people, files or log lines scroll as smoothly as ten. The rows are ListItems and look the same as in a List.
 
+**Also called:** virtualized list, windowed list, virtual scroller.
+
 ```tsx
 import { VirtualList, ListItem } from "@diki-stwn/serupa-ds";
 

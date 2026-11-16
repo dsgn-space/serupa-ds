@@ -2,6 +2,8 @@
 
 Avatars in an overlapping row, such as the people on a project or the assignees of a task. Avatars past `max` fold into a "+N" avatar at the end.
 
+**Also called:** avatar stack, facepile.
+
 ```tsx
 import { Avatar, AvatarGroup } from "@diki-stwn/serupa-ds";
 

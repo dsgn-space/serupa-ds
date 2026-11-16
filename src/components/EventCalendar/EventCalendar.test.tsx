@@ -23,6 +23,14 @@ const EVENTS: CalendarEvent[] = [
 ];
 
 describe('EventCalendar', () => {
+  test('a weekStartsOn or maxPerDay that is NaN is none: the locale\'s first day and as many a day as with none, where the grid broke with "Invalid time value"', async () => {
+    const events: CalendarEvent[] = Array.from({ length: 5 }, (_, i) => ({ id: 'e' + i, title: 'Event ' + i, start: '2025-03-04T09:00', end: '2025-03-04T10:00' }));
+    await render(<div><EventCalendar data-testid="nan" events={events} defaultMonth={MARCH} weekStartsOn={NaN} maxPerDay={NaN} /><EventCalendar data-testid="none" events={events} defaultMonth={MARCH} /></div>);
+    const day = (id: string) => { const root = page.getByTestId(id).element(); return [root.querySelector('th[abbr]')?.getAttribute('abbr'), root.querySelector('td[data-date="2025-03-04"]')?.textContent]; };
+    expect(day('nan')).toEqual(day('none'));
+    expect(day('nan')[0]).toBe('Sunday');
+  });
+
   test("in the week, an hour-long event's title in a narrow day ends on a whole line, never through the middle of one", async () => {
     await render(<div style={{ width: 700 }}><EventCalendar defaultMonth={new Date(2025, 2, 18)} defaultView="week" weekStartsOn={0} events={[{ id: 'demo', title: 'Customer demo with the regional partners', start: '2025-03-18T15:00', end: '2025-03-18T16:00' }]} /></div>);
     const t = document.querySelector<HTMLElement>('[data-event-id="demo"] [data-component="truncated-text"]')!;

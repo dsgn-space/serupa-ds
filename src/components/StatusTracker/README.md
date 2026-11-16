@@ -2,6 +2,8 @@
 
 A strip of bars, one a day, for uptime or a job's history: up, degraded, down or no data, told apart by shape as well as color. Each day can be reached by keyboard or pointer and is said in words ("Sep 25, 2026: Down. Outage, 42 minutes"), and a summary line sums it up ("96.5% up over 90 days, 3 incidents").
 
+**Also called:** uptime bar, uptime tracker, status page bar.
+
 ```jsx
 const { StatusTracker } = window.Serupa;
 

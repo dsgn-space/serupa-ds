@@ -2,6 +2,8 @@
 
 One choice made through a hierarchy, such as Provinsi › Kabupaten/Kota › Kecamatan or Category › Subcategory › Item. It looks like a [Select](../Select/README.md); it opens a panel of side-by-side columns, one per level, where picking in one shows its children in the next. The button shows the whole path, and a form gets the last value. Children can be loaded as an option is opened. On a phone it shows one column at a time, with a Back button.
 
+**Also called:** cascader, cascading dropdown, nested select.
+
 ```jsx
 const { CascadeSelect, Field } = window.Serupa;
 

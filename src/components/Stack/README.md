@@ -2,6 +2,8 @@
 
 Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. Use it for most layout inside a page: a form's fields, a card's content, a row of buttons.
 
+**Also called:** flex stack, VStack, HStack.
+
 ```jsx
 const { Stack, Button } = window.Serupa;
 

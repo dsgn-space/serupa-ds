@@ -2,6 +2,8 @@
 
 An icon centered in a tinted rounded square (or a circle), to mark what a card, a settings row or an empty state is about at a glance.
 
+**Also called:** icon container, icon box.
+
 ```tsx
 import { IconTile } from "@diki-stwn/serupa-ds";
 

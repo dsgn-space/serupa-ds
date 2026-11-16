@@ -2,6 +2,8 @@
 
 Cells in equal columns, or as many columns as fit, with the same space between them from the spacing scale. Use it for a set of cards, a gallery, a dashboard's tiles.
 
+**Also called:** layout grid, columns.
+
 ```jsx
 const { Grid, Card } = window.Serupa;
 

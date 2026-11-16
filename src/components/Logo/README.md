@@ -2,6 +2,8 @@
 
 The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. The browser fetches only the version it shows.
 
+**Also called:** brand mark, logotype.
+
 ```tsx
 import { Logo } from "@diki-stwn/serupa-ds";
 
