@@ -24,7 +24,7 @@ Every order you've placed, newest first, found by what was in it or by where it'
 - **No match says so** with the words searched for, and Clear filters brings every order back (3.3.1).
 - **Show more puts focus on the first new order**, so nothing is read twice (2.4.3).
 - **Buy again says what went into the cart**, or that it couldn't, in a toast (4.1.3).
-- **While the orders load**, one placeholder named "Loading orders"; a failed load says so, with Try again.
+- **While the orders load**, set `loading`: one placeholder, named "Loading orders" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.NoOrders} />
