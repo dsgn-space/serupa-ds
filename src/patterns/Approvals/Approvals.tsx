@@ -4,6 +4,7 @@ import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Badge } from '../../components/Badge/Badge';
 import { Button } from '../../components/Button/Button';
 import { Card } from '../../components/Card/Card';
+import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { Field } from '../../components/Field/Field';
 import { Link } from '../../components/Link/Link';
@@ -95,13 +96,13 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide }: Appro
   }, [focusTo]);
 
   const details = (r: ApprovalRequest) => (
-    <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-      <dt className="text-text-muted">Kind</dt><dd className="m-0">{KIND[r.kind]}</dd>
-      {r.amount !== undefined ? <><dt className="text-text-muted">Amount</dt><dd className="m-0">{money(r.amount)}</dd></> : null}
-      {r.days !== undefined ? <><dt className="text-text-muted">Days</dt><dd className="m-0">{r.days === 1 ? '1 working day' : `${formatNumber(r.days, locale)} working days`}</dd></> : null}
-      <dt className="text-text-muted">Asked</dt><dd className="m-0">{day(r.asked)}</dd>
-      {r.note ? <><dt className="text-text-muted">Note</dt><dd className="m-0">{r.note}</dd></> : null}
-    </dl>
+    <DescriptionList className="text-sm">
+      <DescriptionItem term="Kind">{KIND[r.kind]}</DescriptionItem>
+      {r.amount !== undefined ? <DescriptionItem term="Amount">{money(r.amount)}</DescriptionItem> : null}
+      {r.days !== undefined ? <DescriptionItem term="Days">{r.days === 1 ? '1 working day' : `${formatNumber(r.days, locale)} working days`}</DescriptionItem> : null}
+      <DescriptionItem term="Asked">{day(r.asked)}</DescriptionItem>
+      {r.note ? <DescriptionItem term="Note">{r.note}</DescriptionItem> : null}
+    </DescriptionList>
   );
 
   return (

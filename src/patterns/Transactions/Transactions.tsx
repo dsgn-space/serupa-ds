@@ -108,10 +108,12 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
             </DescriptionList>
           </Card>
         </div>
-        <div role="search" aria-label="Transactions" className="grid grid-cols-1 items-end gap-4 pt-6 md:grid-cols-[1fr_auto_auto]">
-          <Field label="Search transactions" id="tx-search">
-            <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
-          </Field>
+        <div role="search" aria-label="Transactions" className="flex flex-wrap items-end gap-4 pt-6">
+          <div className="min-w-0 flex-1 basis-64">
+            <Field label="Search transactions" id="tx-search">
+              <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
+            </Field>
+          </div>
           <Field label="Category" id="tx-category">
             <Select value={category} onChange={(e) => setCategory(e.target.value)} options={[{ value: '', label: 'All categories' }, ...categories]} />
           </Field>
