@@ -16,3 +16,9 @@ export const Default: Story = {};
 
 /** No reviews yet. */
 export const NoReviews: Story = { args: { reviews: [] } };
+
+/** While the reviews load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

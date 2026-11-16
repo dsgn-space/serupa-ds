@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Leaderboard, ordinal, rank, type Player } from './Leaderboard';
@@ -53,5 +53,16 @@ describe('Patterns/Leaderboard', () => {
     document.body.innerHTML = '';
     await render(<Leaderboard me="nobody" />);
     expect(norm(document.body.textContent)).toContain('9 people taking part.');
+  });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Leaderboard loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading the leaderboard']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<Leaderboard loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the leaderboard' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });

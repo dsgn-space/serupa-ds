@@ -12,6 +12,8 @@ import { ToggleButton } from '../../components/ToggleButton/ToggleButton';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Conference agenda: the sessions of each day by time, filtered by track, saved to your own agenda, with clashes said.
@@ -30,6 +32,12 @@ export interface AgendaProps {
   /** The ids saved already. */
   defaultSaved?: string[] | undefined;
   onSavedChange?: ((saved: string[]) => void) | undefined;
+  /** Still loading: a placeholder shows instead of the sessions. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load the agenda" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const S = (id: string, day: string, start: string, end: string, title: string, speakers: string, room: string, track: string): Session => ({ id, day, start, end, title, speakers, room, track });
@@ -57,7 +65,7 @@ export function byStart(sessions: Session[]) {
 }
 
 /** The agenda page: a skip link, a header, then main with the h1, the track filter and a tab for each day and yours. */
-export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange }: AgendaProps) {
+export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, loading = false, loadFailed = false, onRetry }: AgendaProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [saved, setSaved] = React.useState(defaultSaved);
@@ -113,6 +121,8 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange }: Ag
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Agenda" description="Two days of talks in Bandung. Save the sessions you want, and we’ll warn you about clashes." />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the agenda" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the agenda" /></Card> : (<>
         <div className="flex flex-wrap items-end justify-between gap-3 pt-6">
           <Field label="Track">
             <Select value={track} onChange={(e) => setTrack(e.target.value)} options={[{ value: '', label: 'Every track' }, ...tracks.map((t) => ({ value: t, label: t }))]} />
@@ -141,6 +151,7 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange }: Ag
             )) : <p className="m-0 text-text-muted">Nothing saved yet. Press Save on a session to add it here.</p>}
           </TabPanel>
         </Tabs>
+        </>)}
       </main>
     </div>
   );

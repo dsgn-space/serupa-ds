@@ -16,3 +16,9 @@ export const Default: Story = {};
 
 /** In euros. */
 export const InEuros: Story = { args: { currency: 'EUR', account: 'Savings' } };
+
+/** While the transactions load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

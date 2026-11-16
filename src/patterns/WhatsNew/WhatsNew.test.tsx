@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { WhatsNew, byMonth } from './WhatsNew';
@@ -55,5 +55,16 @@ describe('Patterns/What’s new', () => {
     expect(status()).toBe('Showing 1 change');
     await screen.getByRole('radio', { name: 'Fixed' }).click();
     await expect.poll(() => document.body.textContent).toContain('No changes of this kind yet.');
+  });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<WhatsNew loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading what’s new']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<WhatsNew loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load what’s new' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });
