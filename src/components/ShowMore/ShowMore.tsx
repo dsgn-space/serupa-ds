@@ -6,6 +6,7 @@ import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { useSettings } from '../../internal/provider';
 import { Button } from '../Button/Button';
 import { en as words } from './labels';
+import { useControllable } from '../../internal/controllable';
 
 export interface ShowMoreProps extends React.HTMLAttributes<HTMLDivElement> {
   /** How many lines show while it's closed (1 to 6); the last is cut with an ellipsis. Default: 3. */
@@ -34,9 +35,8 @@ export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>
   const L = useSettings(words).labels;
   const base = domId('dk-sm', React.useId());
   const lines = Math.min(6, Math.max(1, Math.floor(Number(props.lines)) || 3));
-  const controlled = props.expanded !== undefined;
-  const [own, setOwn] = React.useState(!!props.defaultExpanded);
-  const open = controlled ? !!props.expanded : own;
+  const [expanded, setOwn, controlled] = useControllable(props.expanded, !!props.defaultExpanded, 'ShowMore', 'expanded');
+  const open = !!expanded;
   const content = React.useRef<HTMLDivElement | null>(null);
   const [cut, setCut] = React.useState(false);
   // Whether the closed text is cut: measured after each render while closed, when its box changes size, and when a

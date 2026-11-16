@@ -9,6 +9,7 @@ import { component } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { cardIntent, cardLeave } from '../../internal/timing';
+import { useControllable } from '../../internal/controllable';
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -52,9 +53,8 @@ const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1
 export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProps>('HoverCard', function HoverCard(props, ref) {
   const own = domId('dk-hcard', React.useId());
   const id = props.id || own;
-  const [inner, setInner] = React.useState(!!props.defaultOpen);
-  const controlled = props.open !== undefined;
-  const open = !props.disabled && (controlled ? !!props.open : inner);
+  const [shown, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'HoverCard', 'open');
+  const open = !props.disabled && !!shown;
   const cardRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const timer = React.useRef<number | undefined>(undefined);
@@ -65,7 +65,7 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
     if (v === openRef.current) return;
     if (!controlled) setInner(v);
     if (ask.current) ask.current(v, { reason });
-  }, [controlled]);
+  }, [controlled, setInner]);
   // Escape during the open delay cancels the open, and the card stays shut until the pointer or focus leaves the
   // trigger and comes back (GR88): it was dismissed before it showed. Nothing is on screen yet, so that Escape
   // goes on to whatever else handles it.

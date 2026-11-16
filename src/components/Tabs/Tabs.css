@@ -67,7 +67,7 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  gap: var(--tabs-icon-gap, var(--spacing-2));
+  gap: var(--tabs-icon-gap, var(--spacing-1\.5));
   height: var(--tabs-height-md, var(--spacing-9));
   padding: var(--spacing-0) var(--tabs-padding-x, var(--spacing-3));
   margin: var(--spacing-0);

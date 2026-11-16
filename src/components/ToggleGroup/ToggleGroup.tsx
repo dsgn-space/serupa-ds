@@ -5,6 +5,7 @@ import { useRowWrap } from '../../internal/useRowWrap';
 import { component } from '../../internal/component';
 import type { ButtonGroupProps } from '../ButtonGroup/ButtonGroup';
 import type { ToggleButtonProps } from '../ToggleButton/ToggleButton';
+import { useControllable } from '../../internal/controllable';
 
 export interface ToggleGroupProps extends Omit<ButtonGroupProps, 'defaultValue' | 'onChange'> {
   /** 'single' (default): turning one on turns the others off, and pressing the one that's on turns it off. 'multiple': each turns on and off by itself. */
@@ -36,8 +37,7 @@ export const ToggleGroup = /* @__PURE__ */ component<HTMLDivElement, ToggleGroup
   const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, required: 1, disabled: 1, size: 1, variant: 1, attached: 1, orientation: 1, className: 1, children: 1 });
   const vertical = oneOf(['horizontal', 'vertical'] as const, props.orientation, 'horizontal') === 'vertical';
   const single = props.type !== 'multiple';
-  const [own, setOwn] = React.useState<string[]>(props.defaultValue || []);
-  const value = props.value !== undefined ? props.value : own;
+  const [value, setOwn] = useControllable<string[]>(props.value, props.defaultValue || [], 'ToggleGroup', 'value');
   const change = (next: string[]) => {
     if (props.value === undefined) setOwn(next);
     if (props.onValueChange) props.onValueChange(next);

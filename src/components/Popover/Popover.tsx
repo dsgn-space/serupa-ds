@@ -13,6 +13,7 @@ import { isComposing } from '../../internal/ime';
 import { warnOnce } from '../../internal/warn';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { activeIn } from '../../internal/root';
+import { useControllable } from '../../internal/controllable';
 
 /** The trigger element's props this component reads and adds to. */
 type TriggerProps = React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement>;
@@ -68,9 +69,8 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>('
   const nameRef = useNameCheck('Popover', NAME_HOW.title);   // warns when it has no accessible name
   const own = domId('dk-pop', React.useId());
   const id = props.id || own;
-  const [inner, setInner] = React.useState(!!props.defaultOpen);
-  const controlled = props.open !== undefined;
-  const open = controlled ? !!props.open : inner;
+  const [isOpen, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Popover', 'open');
+  const open = !!isOpen;
   const panelRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
@@ -80,7 +80,7 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>('
     if (v === shown.current) return;
     if (!controlled) { shown.current = v; setInner(v); }
     if (ask.current) ask.current(v, { reason });
-  }, [controlled]);
+  }, [controlled, setInner]);
   const close = React.useCallback((reason: OpenChangeReason, focusTrigger: boolean) => { set(false, reason); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
   const focusFirst = props.initialFocus !== 'panel';
 

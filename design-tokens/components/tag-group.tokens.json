@@ -169,10 +169,20 @@
       "gap": {
         "$type": "dimension",
         "$value": "{spacing.spacing-2}",
-        "$description": "The space between tags, and between the label and the tags (8px).",
+        "$description": "The space between tags (8px).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tag-group-gap"
+          }
+        }
+      },
+      "label-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "The space between the label and the tags, as between a Field's label and its control (6px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-label-gap"
           }
         }
       },
