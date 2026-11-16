@@ -2,6 +2,8 @@
 
 A place to sign: people draw their signature with a mouse, pen or finger, or type their full name instead. The app gets the signature as SVG (and a PNG from `signatureToPng`), with the typed name.
 
+**Also called:** signature field, e-signature input.
+
 ```tsx
 import { Field, SignaturePad, signatureToPng } from "@diki-stwn/serupa-ds";
 

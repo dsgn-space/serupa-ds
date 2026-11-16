@@ -2,6 +2,8 @@
 
 A picture in a frame: a fixed ratio, rounded corners, a placeholder while it loads and a fallback if it fails. It can open full size in a viewer, and show a remove button.
 
+**Also called:** picture, img.
+
 ```tsx
 import { Image } from "@diki-stwn/serupa-ds";
 

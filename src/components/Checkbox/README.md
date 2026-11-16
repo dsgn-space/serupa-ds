@@ -2,6 +2,8 @@
 
 A native checkbox with its label, for turning one option on or off, or picking any number from a list. The box is drawn from tokens (`appearance: none`) and sits centered on the label's first line; a click anywhere on the label toggles it. `indeterminate` shows a dash for a select-all box when only some items are picked.
 
+**Also called:** check box, tick box.
+
 ```jsx
 const { Checkbox, CheckboxGroup, Field } = window.Serupa;
 

@@ -2,6 +2,8 @@
 
 An "On this page" list of links to the sections of a long page, as a navigation landmark. It reads the page's headings (or takes a list), marks the section being read as the page scrolls, and a click scrolls to that section and moves focus to its heading.
 
+**Also called:** TOC, on this page, page outline.
+
 ```jsx
 const { TableOfContents } = window.Serupa;
 

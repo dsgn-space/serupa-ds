@@ -2,6 +2,8 @@
 
 A conversation: messages in a log that stays at the newest one while the reader is there, day dividers, and a composer where Enter sends. Use it for support chats, comments in real time and AI assistants. `Chat` is the scrolling list, `ChatMessage` one message, `ChatDivider` a day line and `ChatComposer` the field under it.
 
+**Also called:** chat window, assistant panel, message thread.
+
 ```tsx
 import { Chat, ChatMessage, ChatDivider, ChatComposer, Avatar, Attachment } from "@diki-stwn/serupa-ds";
 

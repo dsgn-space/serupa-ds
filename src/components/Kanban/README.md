@@ -2,6 +2,8 @@
 
 A board of columns of cards, such as a sprint or a sales pipeline, that people move by dragging a handle, by keyboard, or from each card's "Move to…" menu. Each move is said out loud, and nothing changes until the card is dropped.
 
+**Also called:** board, task board, kanban board.
+
 ```tsx
 import { Kanban, type KanbanColumn } from "@diki-stwn/serupa-ds";
 

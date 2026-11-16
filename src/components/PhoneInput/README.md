@@ -2,6 +2,8 @@
 
 A phone number field with a country menu at the start. It groups the number the way that country writes it as people type ("812-3456-7890"), and reports it in E.164 ("+6281234567890"), the form to store and send to an SMS service. It's Input's box, so it has the same sizes, states and tokens.
 
+**Also called:** phone number field, telephone input.
+
 ```jsx
 const { PhoneInput, Field, formatPhone } = window.Serupa;
 

@@ -2,6 +2,8 @@
 
 A data table built on native table markup: a header row, body rows and an optional footer, in a bordered frame that scrolls sideways when the table is too wide. Rows shade on hover (or every other one with `striped`), can be selected with a checkbox column (`TableSelectCell`) or opened to show their details (`TableExpandCell`), and columns can be sorted, resized, pinned while the rest scroll, and shown or hidden (`TableColumnsMenu`).
 
+**Also called:** data table.
+
 ```jsx
 const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell, TableSelectCell } = window.Serupa;
 

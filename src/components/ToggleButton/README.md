@@ -2,6 +2,8 @@
 
 A Button that stays on or off, for a setting that applies right away: bold in a text editor, mute, show the grid. It has `aria-pressed`, and when it's on it turns primary-subtle with primary text.
 
+**Also called:** on/off button, state button.
+
 ```jsx
 const { ToggleButton, ButtonGroup } = window.Serupa;
 

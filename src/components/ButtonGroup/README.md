@@ -2,6 +2,8 @@
 
 Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. Use it for two or three actions on the same thing (Copy, Paste), or a split button.
 
+**Also called:** button bar, action group.
+
 ```jsx
 const { ButtonGroup, Button, IconButton, ToggleButton } = window.Serupa;
 

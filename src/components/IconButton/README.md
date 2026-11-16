@@ -2,6 +2,8 @@
 
 A button that shows only an icon: a menu trigger, a close button, a toolbar action. It's a [Button](../Button/README.md) with `icon`, and a `label` you can't leave out, because an icon alone has no name for screen readers.
 
+**Also called:** icon-only button.
+
 ```jsx
 const { IconButton } = window.Serupa;
 

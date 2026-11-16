@@ -2,6 +2,8 @@
 
 A searchable list of time zones, by city, with each one's offset now and its name in the reader's language. People find their zone by typing a city, a zone's name or an offset, and the value is the zone's IANA name, ready for dates and servers.
 
+**Also called:** time zone select, timezone dropdown.
+
 ```tsx
 import { TimeZonePicker } from "@diki-stwn/serupa-ds";
 

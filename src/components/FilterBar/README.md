@@ -2,6 +2,8 @@
 
 The filters on a list or a table, as a row of chips. "Add filter" opens a menu of the fields not yet in use; each chip says its filter in words ("Status is Open or Closed") and opens its editor in a popover; its × removes it, and "Clear all" removes every one. The value is plain data, so the app can keep it in the URL, and an optional results count is announced as it changes.
 
+**Also called:** filters, filter chips, faceted search.
+
 ```tsx
 import { FilterBar, type FilterField } from "@diki-stwn/serupa-ds";
 

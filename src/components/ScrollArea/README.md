@@ -2,6 +2,8 @@
 
 A box whose content scrolls inside it, such as a long activity list in a card or a row of chips in a narrow column. Its scrollbars are thin and in the theme's colors, and while its content overflows it's a Tab stop and a named region, so keyboard and screen reader users can reach and scroll it.
 
+**Also called:** scroll container, scroll box.
+
 ```tsx
 import { ScrollArea } from "@diki-stwn/serupa-ds";
 

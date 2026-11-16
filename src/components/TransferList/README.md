@@ -2,6 +2,8 @@
 
 Two lists, Available and Chosen, with Add and Remove between them, for picking a set out of many: the columns a table shows, the permissions a role has, the people on a team.
 
+**Also called:** dual list, shuttle, list builder, pick list.
+
 ```tsx
 import { TransferList } from "@diki-stwn/serupa-ds";
 
