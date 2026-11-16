@@ -827,4 +827,20 @@ describe('Dialog: a held Enter (GR406)', () => {
     };
     expect(check('Rename')).toBeLessThanOrEqual(0.5);
   });
+  test('a control at the body\'s edge keeps its whole focus ring in Dialog and Drawer, and still lines up with the title', async () => {
+    for (const Panel of [Dialog, Drawer]) {
+      const r = await render(<Panel open title="Filters" onOpenChange={() => {}}><Button>Only mine</Button></Panel>);
+      const d = page.getByRole('dialog', { name: 'Filters' }).element();
+      const btn = [...d.querySelectorAll('button')].find((b) => b.textContent === 'Only mine')!;
+      for (let i = 0; i < 4 && document.activeElement !== btn; i++) await userEvent.tab();
+      expect(document.activeElement).toBe(btn);
+      const s = getComputedStyle(btn), reach = parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset), b = btn.getBoundingClientRect();
+      const body = [...d.firstElementChild!.children].find((c) => c.contains(btn)) as HTMLElement, bb = body.getBoundingClientRect(), bs = getComputedStyle(body);
+      const clip = { top: bb.top + parseFloat(bs.borderTopWidth), left: bb.left + parseFloat(bs.borderLeftWidth), right: bb.left + parseFloat(bs.borderLeftWidth) + body.clientWidth };
+      expect([reach > 0, b.top - reach >= clip.top - 0.5, b.left - reach >= clip.left - 0.5, b.right + reach <= clip.right + 0.5]).toEqual([true, true, true, true]);
+      const title = [...d.querySelectorAll('h2')].find((h) => h.textContent === 'Filters')!;
+      expect(Math.abs(b.left - title.getBoundingClientRect().left)).toBeLessThanOrEqual(0.5);
+      await r.unmount();
+    }
+  });
 });
