@@ -19,11 +19,12 @@ import { delegateFocus, useAutoFocus, windowBlur } from '../../internal/focus';
 import { en as DateRangePickerWords } from './labels';
 import { en as DatePickerWords } from '../DatePicker/labels';
 import { en as CalendarWords } from '../Calendar/labels';
+import { en as RangeCalendarWords } from '../RangeCalendar/labels';
 import { PresetList, rangePresets, type PresetItem } from '../../internal/datePresets';
 import { useControllable } from '../../internal/controllable';
 import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
 // This component's words and the ones it shares with DatePicker and Calendar (the presets' "Today" and their name).
-const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, CalendarWords);
+const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, CalendarWords, RangeCalendarWords);
 
 /** A range of days; either end can be empty while it's being chosen. */
 export interface DateRange { start: Date | null; end: Date | null }
@@ -190,6 +191,8 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const exit = useExit(open, panel);
   useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-drp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
+  // A full range is said, as RangeCalendar says it ("Selected range: Nov 1 – 30, 2026"): the next day picked starts a new one.
+  const rangeText = (a: Date, b: Date) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(a, b).replace(/[\u2009\u202f]/g, ' ');
   const pick = (d: Date) => {
     if (picking === 'start' || !value.start || compare(d, value.start) < 0) { commit({ start: d, end: null }); setPicking('end'); return; }
     commit({ start: value.start, end: d });
@@ -260,7 +263,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
             <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(system.add(base, 1), false) : null}</div>
             <PresetList label={sds.labels.presets} items={presets} allowed={allowed} current={value} onPick={choose} />
           </div> : <div className="dk-date-range-picker__months">{cal(base, true)}{two ? cal(system.add(base, 1), false) : null}</div>}
-          <p className="dk-date-range-picker__status" aria-live="polite">{picking === 'start' ? sds.labels.chooseStartDate : sds.labels.chooseEndDate}</p>
+          <p className="dk-date-range-picker__status" aria-live="polite">{picking === 'end' ? sds.labels.chooseEndDate : value.start && value.end ? sds.labels.rangeSelected(rangeText(value.start, value.end)) : sds.labels.chooseStartDate}</p>
         </> : null}
       </div>
     </span>
