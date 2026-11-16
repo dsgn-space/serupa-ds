@@ -41,6 +41,13 @@ function Controlled({ calls, set }: { calls: Array<number | null>; set?: (f: (v:
 }
 
 describe('NumberInput', () => {
+  test('NaN as the value or the default (Number() of an empty answer) is no number: an empty field, no valuenow, and the form sends nothing', async () => {
+    await mount(<form data-testid="nan-form"><NumberInput aria-label="Own" name="own" defaultValue={NaN} /><NumberInput aria-label="Held" value={NaN} onValueChange={() => {}} /></form>);
+    const [own, held] = [page.getByRole('spinbutton', { name: 'Own' }).element() as HTMLInputElement, page.getByRole('spinbutton', { name: 'Held' }).element() as HTMLInputElement];
+    const form = page.getByTestId('nan-form').element() as HTMLFormElement;
+    expect([own.value, own.hasAttribute('aria-valuenow'), held.value, held.hasAttribute('aria-valuenow'), new FormData(form).get('own')]).toEqual(['', false, '', false, '']);
+  });
+
   test('switching to another window or tab mid-typing keeps the typed text and says nothing (L8E26)', async () => {
     const calls: string[] = [];
     await render(<NumberInput id="nwb" aria-label="Amount" onInvalidInput={(t, r) => calls.push(t + ':' + r)} />);

@@ -155,6 +155,12 @@ describe('FilterBar', () => {
     await expect.element(s).toHaveTextContent('1 result');
   });
 
+  test('a resultsCount that is NaN shows no count, as none does', async () => {
+    await render(<Bar count={NaN} />);
+    await expect.element(page.getByRole('button', { name: /Add filter/ })).toBeVisible();
+    expect(page.getByRole('status').filter({ hasText: /result/ }).elements()).toHaveLength(0);
+  });
+
   test('its words come from the labels', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><FilterBar fields={fields} defaultValue={{ owner: 'Ana' }} resultsCount={3} /></SerupaProvider>);
     await expect.element(page.getByRole('button', { name: 'Owner: Ana' })).toBeVisible();

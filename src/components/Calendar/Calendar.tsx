@@ -177,7 +177,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
   const rest = omit(props, OWN);
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const cal = calendarOf(props.calendar, 'Calendar');
-  const ws = props.weekStartsOn != null ? ((Math.floor(props.weekStartsOn) % 7) + 7) % 7 : firstDayOfWeek(locale);
+  const ws = Number.isFinite(props.weekStartsOn) ? ((Math.floor(props.weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
   const controlledValue = props.value !== undefined;
   const [ownValue, setOwnValue] = React.useState<Date | null>(() => toDay(props.defaultValue, 'Calendar'));
   const value = controlledValue ? toDay(props.value, 'Calendar') : ownValue;
