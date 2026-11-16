@@ -7,6 +7,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { Badge, type BadgeTone, type BadgeVariant } from './Badge';
 import { Loader } from '../Loader/Loader';
 import { Tooltip } from '../Tooltip/Tooltip';
+import { Card } from '../Card/Card';
 
 // The tests that read digits say they mean en-US: with no locale, a count is in the browser's digits ("٣" in ar-EG).
 const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
@@ -563,6 +564,13 @@ describe('Badge', () => {
     await show();
     const ob = [...el('ob').querySelectorAll(BADGE)].map((e) => { const c = css(e); return parseFloat(c.paddingLeft) + '/' + parseFloat(c.paddingRight); });
     expect(ob).toEqual(['6/6', '6/8', '6/8', '8/6', '6/6', '4/4', '8/6']);
+  });
+
+  test('dark: the indicator dot\'s ring is the fill behind it, the page\'s or a Card\'s, not a lighter halo on the page (BUG-R1)', async () => {
+    await render(<div data-theme="blue-dark" id="dark-page"><Badge id="ind-page" dot tone="danger" /><Card><Badge id="ind-card" dot tone="danger" /></Card></div>);
+    const ring = (id: string) => css(el(id)).boxShadow.match(/rgba?\([^)]*\)/)![0];
+    expect([ring('ind-page'), ring('ind-card')]).toEqual([css(el('dark-page')).backgroundColor, css(el('ind-card').closest('[data-component=card]') as HTMLElement).backgroundColor]);
+    expect(ring('ind-page')).not.toBe(ring('ind-card'));
   });
 
   test('indicator: dot with no label is a lone 8px dot in the tone\'s solid fill, any variant, with a 2px surface ring; decorative, or role="img" when named; never clickable or removable (warns)', async () => {

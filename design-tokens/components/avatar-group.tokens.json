@@ -5,7 +5,7 @@
       "ring": {
         "$type": "color",
         "$value": "{color.surface}",
-        "$description": "The ring around each avatar, which keeps the overlapping edges clear. Set it to the background the group sits on.",
+        "$description": "The ring around each avatar, which keeps the overlapping edges clear. Unset, it takes the fill behind the group (--surface-behind, which the page and every surface set), else surface.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--avatar-group-ring"

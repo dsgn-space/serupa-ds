@@ -46,7 +46,7 @@
   padding: var(--toast-padding, var(--spacing-4));
   border: var(--toast-border-width, var(--border-width-1)) solid var(--toast-border, var(--border-overlay));
   border-radius: var(--toast-radius, var(--radius-surface));
-  background: var(--toast-bg, var(--surface-overlay));
+  background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay));
   color: var(--toast-title-color, var(--text));
   box-shadow: var(--toast-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
@@ -97,7 +97,7 @@
 /* "×12": the same message came 12 times. */
 .dk-toast__count { unicode-bidi: isolate; margin-inline-start: var(--spacing-1\.5); color: var(--toast-description-color, var(--text-muted)); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; }
 /* "+2 more": toasts waiting past the Toaster's limit. */
-.dk-toaster__more { align-self: center; font-variant-numeric: tabular-nums; padding: var(--spacing-0\.5) var(--spacing-2); border-radius: var(--rounded-full); background: var(--toast-bg, var(--surface-overlay)); color: var(--toast-description-color, var(--text-muted)); box-shadow: var(--elevation-part); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: auto;
+.dk-toaster__more { align-self: center; font-variant-numeric: tabular-nums; padding: var(--spacing-0\.5) var(--spacing-2); border-radius: var(--rounded-full); background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay)); color: var(--toast-description-color, var(--text-muted)); box-shadow: var(--elevation-part); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height); pointer-events: auto;
   transition: opacity var(--motion-enter-md) var(--ease-enter); }
 /* It fades in as toasts start to wait, and out once none do (FO1); there as the Toaster arrives, it's just there. */
 @starting-style { .dk-toaster__more:not([data-instant]) { opacity: var(--opacity-0); } }

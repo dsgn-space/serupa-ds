@@ -11,7 +11,7 @@
   min-inline-size: var(--spacing-0); max-inline-size: min(var(--sizing-full), var(--attachment-max-width, var(--spacing-80))); inline-size: var(--sizing-max);
   padding: var(--attachment-padding, var(--spacing-2)); padding-inline-start: var(--attachment-padding-start, var(--spacing-3));
   border: var(--border-width-1) solid var(--attachment-border, var(--border)); border-radius: var(--attachment-radius, var(--radius-control));
-  background: var(--attachment-bg, var(--surface)); color: var(--attachment-text, var(--text));
+  background: var(--attachment-bg, var(--surface)); --surface-behind: var(--attachment-bg, var(--surface)); color: var(--attachment-text, var(--text));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); vertical-align: middle;
 }
 .dk-attachment__icon { flex: none; color: var(--attachment-icon, var(--text-muted)); font-size: var(--spacing-5); }

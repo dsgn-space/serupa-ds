@@ -8,7 +8,7 @@
 .dk-event-calendar {
   display: flex; flex-direction: column; gap: var(--spacing-3);
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
-  background: var(--event-calendar-bg, var(--surface)); color: var(--event-calendar-text, var(--text));
+  background: var(--event-calendar-bg, var(--surface)); --surface-behind: var(--event-calendar-bg, var(--surface)); color: var(--event-calendar-text, var(--text));
 }
 .dk-event-calendar__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-2) var(--spacing-4); }
 .dk-event-calendar__nav { display: flex; align-items: center; gap: var(--spacing-1); }
@@ -53,7 +53,7 @@
   border: var(--spacing-0); border-radius: var(--event-calendar-event-radius, var(--radius-inner)); background: transparent;
   color: var(--event-calendar-muted, var(--text-muted)); font: inherit; font-size: var(--text-xs); font-weight: var(--font-medium); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
-@media (hover: hover) { .dk-event-calendar__more:hover { background: var(--event-calendar-more-bg-hover, var(--surface-hover)); color: var(--event-calendar-text, var(--text)); } }
+@media (hover: hover) { .dk-event-calendar__more:hover { background: var(--event-calendar-more-bg-hover, var(--surface-hover)); --surface-behind: var(--event-calendar-more-bg-hover, var(--surface-hover)); color: var(--event-calendar-text, var(--text)); } }
 .dk-event-calendar__more:active { background: var(--event-calendar-more-bg-pressed, var(--pressed)); }
 /* In the "+N more" Popover and the agenda, an event shows its whole time and its whole title. */
 .dk-event-calendar__events--all { min-width: calc(var(--spacing-24) + var(--spacing-24)); }
@@ -82,7 +82,7 @@
 .dk-event-calendar__hours-grid[data-days="7"] { --dk-evc-days: 7; min-width: calc(var(--spacing-16) + var(--spacing-24) * var(--dk-evc-days)); }
 .dk-event-calendar__hours-grid thead th, .dk-event-calendar__zone {
   position: sticky; top: var(--spacing-0); z-index: var(--z-20); box-sizing: border-box; height: var(--dk-evc-head);
-  background: var(--event-calendar-bg, var(--surface)); border-bottom: var(--border-width-1) solid var(--event-calendar-border, var(--border));
+  background: var(--event-calendar-bg, var(--surface)); --surface-behind: var(--event-calendar-bg, var(--surface)); border-bottom: var(--border-width-1) solid var(--event-calendar-border, var(--border));
 }
 .dk-event-calendar__zone { width: var(--spacing-16); padding: var(--spacing-1); color: var(--event-calendar-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); vertical-align: bottom; }
 .dk-event-calendar__head-date { font-variant-numeric: tabular-nums; color: var(--event-calendar-text, var(--text)); font-weight: var(--font-semibold); }
@@ -92,7 +92,7 @@
 /* The all-day row, as tall in every day as the day with the most of them. */
 .dk-event-calendar__pinned {
   position: sticky; top: var(--dk-evc-head); z-index: var(--z-10); box-sizing: border-box; height: var(--dk-evc-pin); padding: var(--spacing-0\.5) var(--spacing-1);
-  background: var(--event-calendar-bg, var(--surface)); border-bottom: var(--border-width-1) solid var(--event-calendar-border, var(--border));
+  background: var(--event-calendar-bg, var(--surface)); --surface-behind: var(--event-calendar-bg, var(--surface)); border-bottom: var(--border-width-1) solid var(--event-calendar-border, var(--border));
 }
 .dk-event-calendar__hours {
   position: relative; height: calc(var(--dk-evc-hour) * var(--dk-evc-hours));
