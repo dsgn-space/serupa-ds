@@ -5,7 +5,7 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-navbar:dir(rtl) { --dk-bar: calc(var(--highlight-indicator-width) * -1); }
-.dk-navbar { --dk-bar: var(--highlight-indicator-width); position: relative; background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
+.dk-navbar { --dk-bar: var(--highlight-indicator-width); position: relative; background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); font-family: var(--font-sans); }
 /* Stuck to the top, the bar's fill runs up under a phone's status bar and notch, its content below them. */
 .dk-navbar--sticky { position: sticky; top: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-top: env(safe-area-inset-top); }
 /* Sticky, the bar lifts once the page scrolls under it (149): a shadow fades in over the first bar height of
@@ -37,7 +37,7 @@
 }
 @keyframes dk-navbar-condense { to { translate: var(--spacing-0) calc(var(--spacing-0) - var(--dk-navbar-cut)); } }
 @keyframes dk-navbar-recenter { to { translate: var(--spacing-0) var(--dk-navbar-half); } }
-@keyframes dk-navbar-lift { to { box-shadow: var(--navbar-shadow-scrolled, var(--elevation-raised)); background-color: var(--navbar-bg-scrolled, var(--surface-raised)); } }
+@keyframes dk-navbar-lift { to { box-shadow: var(--navbar-shadow-scrolled, var(--elevation-raised)); background-color: var(--navbar-bg-scrolled, var(--surface-raised)); --surface-behind: var(--navbar-bg-scrolled, var(--surface-raised)); } }
 /* What the keyboard focuses, or a #link jumps to, scrolls into view below a sticky bar, not under it (WCAG 2.4.11).
    Navbar measures the bar into --dk-navbar-offset; until then, the default bar height. */
 :root:has(.dk-navbar--sticky) { scroll-padding-top: var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16))); }
@@ -51,7 +51,7 @@
   font-size: var(--navbar-link-size, var(--text-sm)); line-height: var(--text-sm--line-height); font-weight: var(--navbar-link-weight, var(--font-medium)); text-decoration: none; white-space: nowrap;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--surface-hover)); color: var(--navbar-link-text-hover, var(--text)); } }
+@media (hover: hover) { .dk-navbar__link:hover { background: var(--navbar-link-bg-hover, var(--surface-hover)); --surface-behind: var(--navbar-link-bg-hover, var(--surface-hover)); color: var(--navbar-link-text-hover, var(--text)); } }
 /* Pressed: one step past hover while held, at once (no fade in); letting go fades back. */
 .dk-navbar__link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); color: var(--navbar-link-text-hover, var(--text)); transition-duration: var(--duration-0); }
 /* The current page: shaded, and one step darker under the pointer. With more contrast, a bar along the bottom that hover never draws. */
@@ -67,7 +67,7 @@
 .dk-navbar__menu[data-state="open"] .dk-navbar__chevron { rotate: var(--dk-navbar-turn); }
 .dk-navbar__menu-panel {
   position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); padding-block: var(--spacing-6);
-  background: var(--navbar-menu-bg, var(--surface-overlay)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-menu-border, var(--border));
+  background: var(--navbar-menu-bg, var(--surface-overlay)); --surface-behind: var(--navbar-menu-bg, var(--surface-overlay)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-menu-border, var(--border));
   box-shadow: var(--navbar-menu-shadow, var(--elevation-overlay));
   opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter);
 }
@@ -82,7 +82,7 @@
   transition: background-color var(--motion-hover) var(--ease-move);
 }
 /* The panel floats, so a link under the pointer takes the raised hover step: still a step under the current link's fill. */
-@media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); } }
+@media (hover: hover) { .dk-navbar__menu-link:hover { background: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); --surface-behind: var(--navbar-menu-link-bg-hover, var(--surface-hover-raised)); } }
 .dk-navbar__menu-link:active { background: var(--navbar-link-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 .dk-navbar__menu-link--active { background: var(--navbar-link-bg-active, var(--secondary)); box-shadow: inset var(--dk-bar) 0 0 var(--navbar-link-indicator, var(--highlight-indicator)); }
 @media (hover: hover) { .dk-navbar__menu-link--active:hover { background: var(--navbar-link-bg-active-hover, var(--pressed)); } }
@@ -91,7 +91,7 @@
 .dk-navbar__actions { display: flex; align-items: center; gap: var(--spacing-2); flex-shrink: 0; margin-inline-start: auto; }
 .dk-navbar__toggle { display: none; }
 @media (max-width: 767.98px) {
-  .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
+  .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
     /* More links than fit below the bar scroll inside the panel, not behind a sticky bar out of reach. */
     max-height: calc(var(--sizing-dvh) - var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
     /* Its last link clears a phone's home bar when the panel reaches the bottom of the screen. */
@@ -130,7 +130,7 @@
 }
 /* Wider than 768px, the same when the links don't fit between the brand and the actions (seven links, long German
    labels): Navbar measures and sets data-fold. The rules are the ones above, with their reasons there. */
-.dk-navbar[data-fold] .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
+.dk-navbar[data-fold] .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); --surface-behind: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
   max-height: calc(var(--sizing-dvh) - var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
   padding-bottom: max(var(--spacing-2), env(safe-area-inset-bottom)); }
 .dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { display: block; }

@@ -12,7 +12,7 @@
 .dk-tag-group__tag {
   display: inline-flex; align-items: center; gap: var(--spacing-0\.5); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full);
   min-block-size: var(--control-height-sm); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--border-control));
-  border-radius: var(--tag-group-radius, var(--radius-control)); background: var(--tag-group-bg, var(--surface)); color: var(--tag-group-text, var(--text));
+  border-radius: var(--tag-group-radius, var(--radius-control)); background: var(--tag-group-bg, var(--surface)); --surface-behind: var(--tag-group-bg, var(--surface)); color: var(--tag-group-text, var(--text));
   font-size: var(--text-sm); cursor: default; touch-action: manipulation;
 }
 .dk-tag-group__tag:has(.dk-tag-group__remove) { padding-inline-end: var(--spacing-0\.5); }
@@ -38,7 +38,7 @@
 /* A tag's icons (its own, the check of a selected tag, the ×) are 16px beside the 14px label, as a field's icon:
    an Icon's own default is 24px, which filled the whole 24px tag. */
 .dk-tag-group__tag .dk-icon { font-size: var(--tag-group-icon-size, var(--spacing-4)); }
-@media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); } }
+@media (hover: hover) { .dk-tag-group__remove:hover { background: var(--tag-group-remove-hover, var(--surface-hover)); --surface-behind: var(--tag-group-remove-hover, var(--surface-hover)); } }
 .dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .dk-tag-group__remove { transition: none; } }
 .dk-tag-group__more {

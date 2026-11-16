@@ -55,9 +55,11 @@ const TV = new Map(all.map((x) => [x.name, String(first(x.value))]));
 const FAM = new Set(Object.keys(t.type.families).map((k) => 'font-' + k));
 for (const g of t.type.groups) for (const s of g.styles) FAM.add('text-' + s.name);
 const isToken = (n) => TV.has(n) || FAM.has(n);
-// Variables an app sets and Serupa leaves unset, always read with a fallback: --font-heading, an app's own heading face
+// Variables an app sets, always read with a fallback: --font-heading, which Serupa leaves unset, an app's own heading face
 // (foundations.md, "Your own heading face"), in front of --font-sans so each language's stack still follows it.
-const HOOKS = new Set(['font-heading']);
+// --surface-behind, the fill behind a ring (foundations.md, "The fill behind a ring"), which the page and every surface
+// set, so Avatar's and Badge's rings match what they sit on; read in front of the ring token's default.
+const HOOKS = new Set(['font-heading', 'surface-behind']);
 
 // 1. tokens.json
 const names = all.map((x) => x.name);
@@ -126,7 +128,7 @@ for (const [n, [, tok]] of COMP) {
   // An internal --dk- variable may stand in front of the default (var(--dk-x, default)): one the component works out
   // from another token, such as a hover color from a background that was set (Button, 176).
   // A renamed token's old name, deprecated, stands there too until it's removed (var(--new, var(--old, default))).
-  const unwrap = (v) => { const m = /^var\(--([\w-]+),\s*([\s\S]*)\)$/.exec(v.trim()); return m && (m[1].startsWith('dk-') || COMP.get(m[1])?.[1].$deprecated) ? m[2] : v; };
+  const unwrap = (v) => { const m = /^var\(--([\w-]+),\s*([\s\S]*)\)$/.exec(v.trim()); return m && (m[1].startsWith('dk-') || HOOKS.has(m[1]) || COMP.get(m[1])?.[1].$deprecated) ? m[2] : v; };
   for (const fb of uses) if (fb == null || norm(unwrap(fb)) !== norm(d)) wrong.push(`${n}: CSS default ${String(fb).trim().slice(0, 50)} ≠ ${d}`);
 }
 if (COMP.size) {

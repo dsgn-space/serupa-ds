@@ -57,7 +57,7 @@
   width: var(--dk-avatar-dot);
   height: var(--dk-avatar-dot);
   border-radius: var(--rounded-full);
-  box-shadow: 0 0 0 var(--avatar-ring-width, var(--border-width-2)) var(--avatar-ring, var(--surface));
+  box-shadow: 0 0 0 var(--avatar-ring-width, var(--border-width-2)) var(--avatar-ring, var(--surface-behind, var(--surface)));
 }
 /* Each status has its own shape, so it isn't told by color alone (and survives forced colors): online is a
    filled dot, busy a dot with a bar across, away a ring with a dot inside, offline an empty ring. */
@@ -65,8 +65,8 @@
 .dk-avatar__status::after { content: ""; position: absolute; inset: 0; margin: auto; border-radius: inherit; }
 .dk-avatar__status--online { background: var(--avatar-status-online, var(--success)); }
 .dk-avatar__status--busy { background: var(--avatar-status-busy, var(--danger)); }
-.dk-avatar__status--busy::after { width: var(--dk-avatar-bar); height: var(--dk-avatar-bar-h); background: var(--avatar-ring, var(--surface)); }
-.dk-avatar__status--away, .dk-avatar__status--offline { background: var(--avatar-ring, var(--surface)); border: var(--avatar-ring-width, var(--border-width-2)) solid var(--dk-avatar-st); }
+.dk-avatar__status--busy::after { width: var(--dk-avatar-bar); height: var(--dk-avatar-bar-h); background: var(--avatar-ring, var(--surface-behind, var(--surface))); }
+.dk-avatar__status--away, .dk-avatar__status--offline { background: var(--avatar-ring, var(--surface-behind, var(--surface))); border: var(--avatar-ring-width, var(--border-width-2)) solid var(--dk-avatar-st); }
 .dk-avatar__status--away { --dk-avatar-st: var(--avatar-status-away, var(--warning)); }
 .dk-avatar__status--away::after { width: var(--dk-avatar-inner); height: var(--dk-avatar-inner); background: var(--dk-avatar-st); }
 .dk-avatar__status--offline { --dk-avatar-st: var(--avatar-status-offline, var(--border-control)); }

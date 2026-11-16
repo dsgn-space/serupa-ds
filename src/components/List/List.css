@@ -5,7 +5,7 @@
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-list { --dk-list-px: var(--list-padding-x, var(--spacing-3)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; font-family: var(--font-sans); }
-.dk-list--card { --dk-list-px: var(--list-padding-x-card, var(--spacing-4)); overflow: hidden; background: var(--list-bg, var(--surface)); border: var(--list-border-width, var(--border-width-1)) solid var(--list-border, var(--border)); border-radius: var(--list-radius, var(--radius-surface)); }
+.dk-list--card { --dk-list-px: var(--list-padding-x-card, var(--spacing-4)); overflow: hidden; background: var(--list-bg, var(--surface)); --surface-behind: var(--list-bg, var(--surface)); border: var(--list-border-width, var(--border-width-1)) solid var(--list-border, var(--border)); border-radius: var(--list-radius, var(--radius-surface)); }
 /* Set straight in a Card with no padding, the card is the frame: no second border inside its own. */
 .dk-card--padding-none > .dk-list--card { border: var(--spacing-0); border-radius: var(--dk-card-inner-radius); }
 .dk-list--divided > .dk-list__item + .dk-list__item { border-top: var(--list-border-width, var(--border-width-1)) solid var(--list-border, var(--border)); }

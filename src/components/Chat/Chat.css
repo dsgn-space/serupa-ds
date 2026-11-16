@@ -31,7 +31,7 @@
 .dk-chat-message__bubble {
   max-inline-size: var(--sizing-full); padding: var(--chat-bubble-padding-y, var(--spacing-2)) var(--chat-bubble-padding-x, var(--spacing-3));
   border: var(--border-width-1) solid transparent; border-radius: var(--chat-bubble-radius, var(--radius-container));
-  background: var(--chat-bubble-bg, var(--surface-muted)); color: var(--chat-text, var(--text)); white-space: pre-wrap; overflow-wrap: anywhere;
+  background: var(--chat-bubble-bg, var(--surface-muted)); --surface-behind: var(--chat-bubble-bg, var(--surface-muted)); color: var(--chat-text, var(--text)); white-space: pre-wrap; overflow-wrap: anywhere;
 }
 .dk-chat-message--own .dk-chat-message__bubble { background: var(--chat-own-bubble-bg, var(--primary-subtle)); }
 .dk-chat-message--failed .dk-chat-message__bubble { border-color: var(--chat-failed-border, var(--danger)); }
@@ -99,7 +99,7 @@
 .dk-chat-citation {
   display: inline-flex; align-items: center; gap: var(--spacing-1); max-inline-size: var(--sizing-full); vertical-align: baseline;
   padding-inline: var(--spacing-1\.5); border: var(--border-width-1) solid var(--chat-divider, var(--border)); border-radius: var(--rounded-full);
-  background: var(--chat-citation-bg, var(--surface)); color: var(--chat-text, var(--text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); text-decoration: none;
+  background: var(--chat-citation-bg, var(--surface)); --surface-behind: var(--chat-citation-bg, var(--surface)); color: var(--chat-text, var(--text)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); text-decoration: none;
 }
 @media (hover: hover) { .dk-chat-citation:hover .dk-chat-citation__source { text-decoration: underline; } }
 .dk-chat-citation:focus-visible { outline: var(--focus-ring-width) solid var(--chat-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }

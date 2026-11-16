@@ -405,7 +405,7 @@
       "indicator-ring-color": {
         "$type": "color",
         "$value": "{color.surface}",
-        "$description": "The indicator's ring color; set it to the color behind",
+        "$description": "The indicator's ring color. Unset, it takes the fill behind the dot (--surface-behind, which the page and every surface set), else surface.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--badge-indicator-ring-color"

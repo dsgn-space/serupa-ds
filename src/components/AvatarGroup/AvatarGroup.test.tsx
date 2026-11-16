@@ -6,6 +6,7 @@ import { THEMES, color, contrast, css, press, withMotion } from '../../../tools/
 import { Avatar, type AvatarSize } from '../Avatar/Avatar';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { AvatarGroup } from './AvatarGroup';
+import { Card } from '../Card/Card';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 
@@ -39,6 +40,14 @@ const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider lo
 const Col = ({ children }: { children: React.ReactNode }) => <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>{children}</div>;
 
 describe('AvatarGroup', () => {
+  test('dark: the ring between avatars is the fill behind the group, the page\'s or a Card\'s, not a lighter halo on the page (BUG-R1)', async () => {
+    const group = (id: string) => <AvatarGroup id={id}><Avatar name="Ada Lovelace" /><Avatar name="Grace Hopper" /></AvatarGroup>;
+    await render(<div data-theme="blue-dark" id="dark-page">{group('g-page')}<Card>{group('g-card')}</Card></div>);
+    const ring = (id: string) => getComputedStyle(el(id).querySelector(FACE)!.querySelector(FRAME)!).boxShadow.match(/rgba?\([^)]*\)/)![0];
+    expect([ring('g-page'), ring('g-card')]).toEqual([css(el('dark-page')).backgroundColor, css(el('g-card').closest('[data-component=card]') as HTMLElement).backgroundColor]);
+    expect(ring('g-page')).not.toBe(ring('g-card'));
+  });
+
   test('"+N" is set in tabular figures, so it keeps its width as the count changes', async () => {
     await render(<SerupaProvider locale="en-US"><AvatarGroup id="tab" max={2}>{av(5)}</AvatarGroup></SerupaProvider>);
     expect(css([...el('tab').querySelectorAll('span')].filter((s) => s.textContent === '+3').pop()!).fontVariantNumeric).toBe('tabular-nums');

@@ -9,7 +9,7 @@
   padding: var(--error-summary-padding, var(--spacing-4));
   border: var(--error-summary-border-width, var(--border-width-2)) solid var(--error-summary-border, var(--danger));
   border-radius: var(--error-summary-radius, var(--radius-control));
-  background: var(--error-summary-bg, var(--surface));
+  background: var(--error-summary-bg, var(--surface)); --surface-behind: var(--error-summary-bg, var(--surface));
   color: var(--error-summary-text, var(--text));
 }
 .dk-error-summary:focus { outline: none; }

@@ -9,7 +9,7 @@
 .dk-sidebar {
   --dk-bar: var(--highlight-indicator-width);
   box-sizing: border-box; display: flex; flex-direction: column; width: var(--sidebar-width, var(--container-3xs)); height: var(--sizing-full); flex-shrink: 0; max-inline-size: var(--sizing-full);
-  background: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
+  background: var(--sidebar-bg, var(--surface)); --surface-behind: var(--sidebar-bg, var(--surface)); border-inline-end: var(--sidebar-border-width, var(--border-width-1)) solid var(--sidebar-border, var(--border)); font-family: var(--font-sans);
   transition: clip-path var(--motion-change-md) var(--ease-move);
 }
 /* Collapsing and expanding (EA1): the width changes once and the clip-path slides between the rail and the full
@@ -58,7 +58,7 @@
   text-align: start; text-decoration: none; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move);
 }
-@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
+@media (hover: hover) { .dk-sidebar__item:hover { background: var(--sidebar-item-bg-hover, var(--surface-hover)); --surface-behind: var(--sidebar-item-bg-hover, var(--surface-hover)); color: var(--sidebar-item-text-hover, var(--text)); } }
 .dk-sidebar__item:active { background: var(--sidebar-item-bg-pressed, var(--pressed)); }
 .dk-sidebar__item--active { color: var(--sidebar-item-text-active, var(--text)); }
 /* The current page: with more contrast, a bar at the start that hover never draws (no width otherwise, GR413), and
