@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { ShareDialog, shareProblem, sharedWith } from './ShareDialog';
 import { SerupaProvider } from '../../internal/provider';
 const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
@@ -133,5 +133,18 @@ describe('Patterns/Share dialog', () => {
     expect(sharedWith(3, 'ar-EG')).toBe('Shared with ٣ people');
     await render(<SerupaProvider locale="ar-EG"><ShareDialog /></SerupaProvider>);
     expect(bodyText()).toContain('Shared with ٢ people');
+  });
+});
+
+// How many lines an element's text takes on screen.
+const linesOf = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size; };
+
+describe('ShareDialog on a phone', () => {
+  test('on a phone, each person’s email stays on one line: the access and Remove go under it', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<ShareDialog defaultOpen nativeShare={null} />);
+      for (const email of ['budi@example.com', 'chen@example.com']) { const e = [...document.querySelectorAll('li span')].find((s) => s.textContent === email)!; expect(linesOf(e), email).toBe(1); }
+    } finally { await page.viewport(900, 700); }
   });
 });

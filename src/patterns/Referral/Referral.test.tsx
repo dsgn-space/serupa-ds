@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { Referral, addressesIn, referralProblem } from './Referral';
 
 const active = () => document.activeElement as HTMLElement;
@@ -78,5 +78,18 @@ describe('Patterns/Referral', () => {
     link.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
     link.focus();
     expect([up(), up()]).toEqual([true, false]);
+  });
+});
+
+// How many lines an element's text takes on screen.
+const linesOf = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size; };
+
+describe('Referral on a phone', () => {
+  test('on a phone, each invite’s date stays on one line', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<Referral />);
+      for (const t of document.querySelectorAll('td time')) expect(linesOf(t), t.textContent ?? '').toBe(1);
+    } finally { await page.viewport(900, 700); }
   });
 });

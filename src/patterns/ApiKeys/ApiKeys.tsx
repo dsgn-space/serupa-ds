@@ -189,7 +189,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
               <EmptyState icon="key" title="No API keys yet" headingLevel={3}
                 description="Create a key when a script or tool needs to use this workspace." />
             ) : (
-              <Table caption="API keys" hideCaption>
+              <Table caption="API keys" hideCaption pinEnd>
                 {head}
                 <TableBody>{shown.map((k) => (
                   <TableRow key={k.id}>

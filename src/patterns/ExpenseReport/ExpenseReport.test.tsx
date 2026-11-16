@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { ExpenseReport, expenseProblems, missingReceipts, type Expense } from './ExpenseReport';
 
 const active = () => document.activeElement as HTMLElement;
@@ -112,5 +112,22 @@ describe('Patterns/Expense report', () => {
     const screen = await render(<ExpenseReport loading expenses={[]} today={today} />);
     await screen.rerender(<ExpenseReport expenses={expenses} today={today} />);
     await expect.poll(rows).toEqual(['Train', 'Dinner']);
+  });
+});
+
+// How many lines an element's text takes on screen.
+const linesOf = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size; };
+
+describe('ExpenseReport on a phone', () => {
+  test('on a phone, dates stay on one line and each Remove stays in view while the table scrolls', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<ExpenseReport />);
+      for (const t of document.querySelectorAll('td time')) expect(linesOf(t), t.textContent ?? '').toBe(1);
+      const frame = document.querySelector('table')!.parentElement!.getBoundingClientRect();
+      const buttons = [...document.querySelectorAll('td button')].filter((b) => /^Remove/.test(b.getAttribute('aria-label') ?? ''));
+      expect(buttons.length).toBeGreaterThan(0);
+      for (const b of buttons) { const r = b.getBoundingClientRect(); expect(r.right, b.getAttribute('aria-label') ?? '').toBeLessThanOrEqual(frame.right + 1); expect(r.left).toBeGreaterThanOrEqual(frame.left - 1); }
+    } finally { await page.viewport(900, 700); }
   });
 });

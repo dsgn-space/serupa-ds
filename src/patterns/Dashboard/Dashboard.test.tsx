@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { SerupaProvider } from '../../internal/provider';
 import { Dashboard, type DashboardData } from './Dashboard';
 
@@ -131,5 +131,18 @@ describe('Patterns/Dashboard', () => {
     expect(screen.getByRole('heading', { name: 'No projects yet' }).elements()).toHaveLength(0);
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+});
+
+// How many lines an element's text takes on screen.
+const linesOf = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size; };
+
+describe('Dashboard on a phone', () => {
+  test('on a phone, each recent project’s date stays on one line', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<Dashboard />);
+      for (const t of document.querySelectorAll('td time')) expect(linesOf(t), t.textContent ?? '').toBe(1);
+    } finally { await page.viewport(900, 700); }
   });
 });

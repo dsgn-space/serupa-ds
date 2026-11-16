@@ -145,3 +145,18 @@ describe('Patterns/Billing', () => {
     expect(sideBySide(plan.querySelector('p')!, [...plan.querySelectorAll('a, button')].find((b) => b.textContent === 'Change plan')!)).toBe(true);
   });
 });
+
+// How many lines an element's text takes on screen.
+const linesOf = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size; };
+
+describe('Billing on a phone', () => {
+  test('on a phone, each invoice’s date and its Download link stay whole, and Download stays in view while the table scrolls', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<Billing />);
+      for (const t of document.querySelectorAll('td time')) expect(linesOf(t), t.textContent ?? '').toBe(1);
+      const frame = document.querySelector('table')!.parentElement!.getBoundingClientRect();
+      for (const a of document.querySelectorAll('td a')) { expect(linesOf(a), a.textContent ?? '').toBe(1); expect(a.getBoundingClientRect().right).toBeLessThanOrEqual(frame.right + 1); }
+    } finally { await page.viewport(900, 700); }
+  });
+});
