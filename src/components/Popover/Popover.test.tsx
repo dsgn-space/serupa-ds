@@ -45,6 +45,25 @@ describe('Popover', () => {
     await userEvent.keyboard('{Escape}');
     expect(isOpen('pt')).toBe(false);
   });
+  test('opened from a pressed Button, it stays put while the Button grows back from its press, where it rode the scale', async () => {
+    await withMotion(async () => {
+      await render(<div style={{ padding: 80 }}><Popover title="Share" placement="bottom-start" trigger={<Button id="tpress">Share</Button>}><input aria-label="Email" /></Popover></div>);
+      const b = document.getElementById('tpress')!;
+      b.focus();
+      await userEvent.keyboard('[Space>]');
+      await expect.poll(() => getComputedStyle(b).scale).toBe('0.97');
+      await userEvent.keyboard('[/Space]');
+      const pop = document.querySelector<HTMLElement>('.dk-popover')!;
+      const seen = new Set<string>();
+      for (let t = performance.now(); performance.now() - t < 400;) {
+        if (!pop.hidden) { const cs = getComputedStyle(pop); seen.add(cs.left + ' ' + cs.top); }
+        await new Promise(requestAnimationFrame);
+      }
+      expect(getComputedStyle(b).scale).toBe('none');
+      expect([...seen]).toHaveLength(1);
+    });
+  });
+
   test('defaultOpen: open on arrival, uncontrolled; Escape closes it by itself and tells onOpenChange(false)', async () => {
     const asks: boolean[] = [];
     await render(<Popover title="Share" defaultOpen onOpenChange={(v) => asks.push(v)} trigger={<Button id="tdef">Share</Button>}><input aria-label="Email" /></Popover>);
