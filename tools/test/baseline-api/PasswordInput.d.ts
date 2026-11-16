@@ -4,6 +4,9 @@ interface PasswordInputLabels {
     capsLockOn: string;
 }
 interface PasswordInputProps extends Omit<InputProps, "actions" | "prefix" | "rightIcon" | "showCount" | "suffix" | "type"> {
+    revealed?: boolean | undefined;
+    defaultRevealed?: boolean | undefined;
+    onRevealedChange?: ((revealed: boolean) => void) | undefined;
     visible?: boolean | undefined;
     defaultVisible?: boolean | undefined;
     onVisibleChange?: ((visible: boolean) => void) | undefined;

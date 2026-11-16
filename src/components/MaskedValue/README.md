@@ -57,6 +57,7 @@ Drawn from the `Revealable` story.
 | `start` | number | `0` | Characters kept at the start, such as an email's first letter or a key's prefix |
 | `revealable` | boolean | `false` | A Show button after it (`aria-pressed`); the value hides again when the page is left |
 | `revealed` | boolean | | Whether the whole value shows (controlled), with `revealable` |
+| `defaultRevealed` | boolean | `false` | Whether the whole value shows at first (uncontrolled), with `revealable` |
 | `onRevealedChange` | (revealed) => void | | Called when Show is pressed, or the value hides because the page was left |
 | `id` | string | none | Goes to the root `<span>`. |
 

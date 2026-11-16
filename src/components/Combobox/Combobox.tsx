@@ -46,12 +46,15 @@ interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 
   loadOptions?: ((text: string, context: { signal: AbortSignal }) => Promise<readonly (ComboboxOption<V> | ComboboxOptionGroup<V>)[]>) | undefined;
   /** With loadOptions, how long typing must pause before loading, in ms. Default: 250. */
   debounce?: number | undefined;
-  /** The text in the field (controlled). Use with onInputChange, which is called with every change to it. */
+  /** The text in the field (controlled). Use with onInputValueChange, which is called with every change to it. */
   inputValue?: string | undefined;
   /** The text in the field at first (uncontrolled). Default: the picked option's label, or "". */
   defaultInputValue?: string | undefined;
   /** Called whenever the field's text changes: as it's typed, and when picking, clearing, Escape or leaving the
       field puts a label back. For loading options from a server (with filter={false} and loading), or with inputValue. */
+  onInputValueChange?: ((text: string) => void) | undefined;
+  /** @deprecated Use onInputValueChange, named for inputValue as every on…Change is named for its prop.
+      Removed in 17.0.0. Called as onInputValueChange is, when onInputValueChange isn't given. */
   onInputChange?: ((text: string) => void) | undefined;
   /** How typing narrows the list. Default: options whose label contains the text, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße"). false shows every option (filter them yourself). */
   filter?: (false | ((option: { value: V; label: string }, text: string) => boolean)) | undefined;
@@ -186,7 +189,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
   const locale = useLocale();
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
   const multi = props.multiple === true;
   const free = !multi && props.freeText === true, inline = free && !!props.inlineComplete;
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
@@ -255,20 +258,21 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const selected = multi ? null : opts.find((o) => (free ? o.label === value : o.value === value)) || null;
   const pickedLabel = free ? value ?? '' : selected ? selected.label : value != null ? seen.current.get(value) ?? '' : '';
   // The field's text: inputValue when given (controlled), else its own. Every change goes through setText, which
-  // tells onInputChange, so a controlled field follows picks, Escape and clearing as well as typing.
+  // tells onInputValueChange, so a controlled field follows picks, Escape and clearing as well as typing.
   const [textHeld, setOwnText] = useControllable<string>(props.inputValue, props.defaultInputValue ?? pickedLabel, 'Combobox', 'inputValue');
   const text = textHeld;
   const textNow = React.useRef(text);
   textNow.current = text;
-  const told = React.useRef(props.onInputChange);
-  told.current = props.onInputChange;
+  if (process.env.NODE_ENV !== 'production' && props.onInputChange) warnOnce('deprecated-prop', 'Combobox: `onInputChange` is deprecated and removed in 17.0.0. Use `onInputValueChange`, named for `inputValue` as every on…Change callback is named for its prop.', 'deprecated-prop:Combobox:onInputChange');
+  const told = React.useRef(props.onInputValueChange ?? props.onInputChange);
+  told.current = props.onInputValueChange ?? props.onInputChange;
   const setText = (t: string) => {
     setOwnText(t);
     if (t === textNow.current) return;
     textNow.current = t;
     if (told.current) told.current(t);
   };
-  // A new value's label replaces the text while rendering (below); onInputChange hears of it after the render.
+  // A new value's label replaces the text while rendering (below); onInputValueChange hears of it after the render.
   const [synced, setSynced] = React.useState<string | null>(null);
   React.useEffect(() => {
     if (synced === null) return;

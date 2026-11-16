@@ -19,7 +19,7 @@ export const InAField: Story = {
   render: () => <div style={{ maxWidth: 320 }}><Field label="New password" hint="At least 12 characters"><PasswordInput autoComplete="new-password" /></Field></div>,
 };
 
-export const Shown: Story = { args: { defaultValue: 'correct horse battery staple', defaultVisible: true } };
+export const Shown: Story = { args: { defaultValue: 'correct horse battery staple', defaultRevealed: true } };
 
 // Disabled: the field and its show/hide button are both off. Read-only: the value can't change, but it can still be shown.
 export const Disabled: Story = { args: { defaultValue: 'correct horse', disabled: true } };
@@ -40,7 +40,7 @@ export const CapsLockOn: Story = {
 };
 
 export const LongValue: Story = {
-  args: { defaultValue: 'correct horse battery staple and a much longer passphrase', defaultVisible: true },
+  args: { defaultValue: 'correct horse battery staple and a much longer passphrase', defaultRevealed: true },
   render: (args) => <div style={{ width: 200 }}><PasswordInput {...args} /></div>,
 };
 

@@ -11,6 +11,7 @@ interface MaskedValueProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, "
     start?: number | undefined;
     revealable?: boolean | undefined;
     revealed?: boolean | undefined;
+    defaultRevealed?: boolean | undefined;
     onRevealedChange?: ((revealed: boolean) => void) | undefined;
 }
 declare const MaskedValue: React.ForwardRefExoticComponent<MaskedValueProps & React.RefAttributes<HTMLSpanElement>>;

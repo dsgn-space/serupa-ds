@@ -516,12 +516,12 @@ describe('Combobox', () => {
     expect(el('ctl').value).toBe('France');
   });
 
-  test('filter={false}: the list shows what the app passes (from onInputChange); loading shows a status row with a loader', async () => {
+  test('filter={false}: the list shows what the app passes (from onInputValueChange); loading shows a status row with a loader', async () => {
     const typed: string[] = [];
     function Async() {
       const [q, setQ] = React.useState(''), [loading, setLoading] = React.useState(false);
       const opts = ['Ada', 'Grace', 'Linus'].filter((n) => n.toLowerCase().startsWith(q.toLowerCase()));
-      return <Combobox id="async" aria-label="Person" options={opts} filter={false} loading={loading} loadingText="Finding people…" onInputChange={(t) => { typed.push(t); setQ(t); setLoading(t === 'zz'); }} />;
+      return <Combobox id="async" aria-label="Person" options={opts} filter={false} loading={loading} loadingText="Finding people…" onInputValueChange={(t) => { typed.push(t); setQ(t); setLoading(t === 'zz'); }} />;
     }
     await render(<Async />);
     await userEvent.click(el('async'));
@@ -532,13 +532,13 @@ describe('Combobox', () => {
     expect([m.textContent, m.getAttribute('role'), !!m.querySelector('[data-component=loader]')]).toEqual(['Finding people…', 'status', true]);
   });
 
-  test('inputValue: the text is the app\'s, and onInputChange hears typing, picking, Escape, clearing and a new value; defaultInputValue starts it (AQ1)', async () => {
+  test('inputValue: the text is the app\'s, and onInputValueChange hears typing, picking, Escape, clearing and a new value; defaultInputValue starts it (AQ1)', async () => {
     const heard: string[] = [];
     let setValue: (v: string | null) => void = () => {};
     function Owned() {
       const [text, setText] = React.useState('Br'), [value, setV] = React.useState<string | null>(null);
       setValue = setV;
-      return <Combobox id="own" aria-label="Country" options={COUNTRIES} clearable value={value} onValueChange={setV} inputValue={text} onInputChange={(t) => { heard.push(t); setText(t.toUpperCase() === 'XX' ? 'yy' : t); }} />;
+      return <Combobox id="own" aria-label="Country" options={COUNTRIES} clearable value={value} onValueChange={setV} inputValue={text} onInputValueChange={(t) => { heard.push(t); setText(t.toUpperCase() === 'XX' ? 'yy' : t); }} />;
     }
     await render(<>
       <Owned />

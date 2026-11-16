@@ -88,8 +88,8 @@ describe('PasswordInput', () => {
     expect([css(toggle('pw')).outlineStyle, css(toggle('pw')).outlineWidth]).toEqual(['solid', '2px']);
   });
 
-  test('defaultVisible starts shown; autoComplete and toggleLabel are yours; size lg is 44px', async () => {
-    await render(<Wrap><PasswordInput id="pnew" aria-label="New" autoComplete="new-password" defaultVisible size="lg" toggleLabel="Show the new password" /></Wrap>);
+  test('defaultRevealed starts shown; autoComplete and toggleLabel are yours; size lg is 44px', async () => {
+    await render(<Wrap><PasswordInput id="pnew" aria-label="New" autoComplete="new-password" defaultRevealed size="lg" toggleLabel="Show the new password" /></Wrap>);
     expect([field('pnew').type, field('pnew').getAttribute('autocomplete'), toggle('pnew').getAttribute('aria-label'), Math.round(box('pnew').getBoundingClientRect().height)])
       .toEqual(['text', 'new-password', 'Show the new password', 44]);
   });
@@ -104,11 +104,11 @@ describe('PasswordInput', () => {
     expect(attrs()).toEqual(['text', 'off', 'off', false]);
   });
 
-  test('controlled: onVisibleChange gets the new state, the parent sets it', async () => {
+  test('controlled: onRevealedChange gets the new state, the parent sets it', async () => {
     const calls: boolean[] = [];
     function Controlled() {
       const [v, setV] = React.useState(true);
-      return <PasswordInput id="pctl" aria-label="Ctl" visible={v} onVisibleChange={(x) => { calls.push(x); setV(x); }} />;
+      return <PasswordInput id="pctl" aria-label="Ctl" revealed={v} onRevealedChange={(x) => { calls.push(x); setV(x); }} />;
     }
     await render(<Wrap><Controlled /></Wrap>);
     await userEvent.click(toggle('pctl'));
@@ -137,7 +137,7 @@ describe('PasswordInput', () => {
   });
 
   test('contrast: the text 4.5:1 and the eye icon 3:1 on the field in every theme', async () => {
-    await render(<Wrap><PasswordInput id="pnew" aria-label="New" defaultVisible size="lg" /></Wrap>);
+    await render(<Wrap><PasswordInput id="pnew" aria-label="New" defaultRevealed size="lg" /></Wrap>);
     const low: string[] = [];
     let n = 0;
     for (const th of THEMES) {

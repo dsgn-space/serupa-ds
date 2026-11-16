@@ -67,11 +67,6 @@ let guides = 0;
 // Callbacks that don't follow the naming yet, each with why. An entry that comes to follow it fails too, so this
 // list only shrinks.
 const NAMING_GAPS = {
-  'ComboboxProps.onInputChange': 'reports the typed text, which has no prop of its own: the input is never controlled',
-  'ComboboxSingleProps.onInputChange': 'reports the typed text, which has no prop of its own: the input is never controlled',
-  'ComboboxMultipleProps.onInputChange': 'reports the typed text, which has no prop of its own: the input is never controlled',
-  'ComboboxFreeTextProps.onInputChange': 'reports the typed text, which has no prop of its own: the input is never controlled',
-  'TimeZonePickerProps.onInputChange': "Combobox's, passed through: the typed text has no prop of its own",
 };
 // A callback's second argument, when it has one, is a details object ({ event?, reason?, iso? … }), never a bare event,
 // string or number, so a project can read one more field without a new signature (TF7). These came before the rule;
@@ -159,7 +154,7 @@ for (const name of fs.readdirSync(DIR).sort()) {
       if (key in NAME_GAPS) { nameGaps.add(key); R.push({ name: `${name}: ${key} is still a known gap (${NAME_GAPS[key]})`, ok: true }); }
       else R.push({ name: `${name}: ${key} uses the API naming table's name`, ok: false, detail: `call it ${NAME_FOR[p.name]} (CONTRIBUTING.md, API naming table)` });
     }
-    for (const p of props.filter((q) => mine(q) && /^on\w*Change$/.test(q.name))) {
+    for (const p of props.filter((q) => mine(q) && !kept(q) && /^on\w*Change$/.test(q.name))) {
       callbacks++;
       const x = p.name.slice(2, -6), key = `${e.name}.${p.name}`;
       // onChange beside the component's own value is a composite's callback: onValueChange. Beside a value from

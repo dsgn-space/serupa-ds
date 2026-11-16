@@ -12,8 +12,8 @@ const q = (root: Element, sel: string) => root.querySelector(sel) as HTMLElement
 
 function Order(p: { align?: 'start' | 'alternate' }) {
   return <Timeline id="tl" aria-label="Order history" align={p.align}>
-    <TimelineItem id="a" title="Order placed" time="12 Mar" dateTime="2026-03-12" status="success" icon="check">Two items.</TimelineItem>
-    <TimelineItem id="b" title="Delivery delayed" time="13 Mar" status="warning" />
+    <TimelineItem id="a" title="Order placed" time="12 Mar" dateTime="2026-03-12" tone="success" icon="check">Two items.</TimelineItem>
+    <TimelineItem id="b" title="Delivery delayed" time="13 Mar" tone="warning" />
     <TimelineItem id="c" title="Out for delivery" time="15 Mar" />
   </Timeline>;
 }
@@ -59,8 +59,8 @@ describe('Timeline', () => {
     expect(Math.round(rect(q(el('a'), '.dk-timeline__rail')).bottom)).toBe(Math.round(rect(el('b')).top));
   });
 
-  test('status colors the dot, or tints an icon\'s circle; unknown values fall back to neutral', async () => {
-    await render(<Timeline><TimelineItem id="s" title="S" status="danger" /><TimelineItem id="n" title="N" status={'bogus' as 'info'} /><TimelineItem id="ic" title="I" icon="check" status="success" /></Timeline>);
+  test('tone colors the dot, or tints an icon\'s circle; unknown values fall back to neutral', async () => {
+    await render(<Timeline><TimelineItem id="s" title="S" tone="danger" /><TimelineItem id="n" title="N" tone={'bogus' as 'info'} /><TimelineItem id="ic" title="I" icon="check" tone="success" /></Timeline>);
     const dot = (id: string) => getComputedStyle(q(el(id), '.dk-timeline__marker'), '::before').backgroundColor;
     expect([el('s').classList.contains('dk-timeline__item--danger'), el('n').classList.contains('dk-timeline__item--neutral')]).toEqual([true, true]);
     expect(dot('s')).not.toBe(dot('n'));
@@ -98,7 +98,7 @@ describe('Timeline', () => {
 
   test('an icon reads 3:1 on its circle, for every status in every theme', async () => {
     const all = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'] as const;
-    await render(<Timeline>{all.map((st) => <TimelineItem key={st} id={'i-' + st} title={st} icon="check" status={st} />)}</Timeline>);
+    await render(<Timeline>{all.map((st) => <TimelineItem key={st} id={'i-' + st} title={st} icon="check" tone={st} />)}</Timeline>);
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       for (const st of all) { const m = q(el('i-' + st), '.dk-timeline__marker'); expect(contrast(css(m).color, css(m).backgroundColor), th + ' ' + st).toBeGreaterThanOrEqual(3); }

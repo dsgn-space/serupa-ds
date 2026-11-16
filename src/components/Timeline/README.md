@@ -8,10 +8,10 @@ An ordered list of events, each with a marker on a line that joins them, a title
 import { Timeline, TimelineItem } from "@diki-stwn/serupa-ds";
 
 <Timeline aria-label="Order history">
-  <TimelineItem title="Order placed" time="12 Mar, 09:14" dateTime="2026-03-12T09:14" status="primary" icon="shopping_cart">
+  <TimelineItem title="Order placed" time="12 Mar, 09:14" dateTime="2026-03-12T09:14" tone="primary" icon="shopping_cart">
     Two items, paid by card.
   </TimelineItem>
-  <TimelineItem title="Payment confirmed" time="12 Mar, 09:15" status="success" icon="check" />
+  <TimelineItem title="Payment confirmed" time="12 Mar, 09:15" tone="success" icon="check" />
   <TimelineItem title="Out for delivery" time="15 Mar, 08:02" />
 </Timeline>
 
@@ -110,7 +110,7 @@ Drawn from the `Alternate` story.
 | `time` | `ReactNode` | | When, as people read it, in a `<time>` |
 | `dateTime` | `string` | | The same moment for machines, on the `<time>` |
 | `icon` | an icon name or element | | An icon in a tinted circle instead of a dot |
-| `status` | `'neutral' \| 'primary' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'neutral'` | The marker's color |
+| `tone` | `'neutral' \| 'primary' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'neutral'` | The marker's color |
 | `children` | `ReactNode` | | More about the event, below the title and time |
 
 `className`, `ref` and other props go to the `<li>`.

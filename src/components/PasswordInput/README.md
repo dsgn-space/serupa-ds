@@ -10,7 +10,7 @@ const { PasswordInput, Field } = window.Serupa;
 // Sign-up: let the password manager suggest one
 <Field label="New password" hint="At least 12 characters"><PasswordInput autoComplete="new-password" /></Field>
 
-<PasswordInput visible={shown} onVisibleChange={setShown} />
+<PasswordInput revealed={shown} onRevealedChange={setShown} />
 ```
 
 ## When to use
@@ -65,9 +65,9 @@ Drawn from the `CapsLockOn` story.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the native `<input>` (not the wrapper), so a `<label htmlFor>` or a Field can point at it. |
-| `visible` | boolean | none | Shows the password as text (controlled) |
-| `defaultVisible` | boolean | `false` | Shows it at first (uncontrolled) |
-| `onVisibleChange` | `(visible) => void` | none | Called when the button is pressed |
+| `revealed` | boolean | none | Shows the password as text (controlled) |
+| `defaultRevealed` | boolean | `false` | Shows it at first (uncontrolled) |
+| `onRevealedChange` | `(revealed) => void` | none | Called when the button is pressed |
 | `toggleLabel` | string | `"Show password"` | The button's name |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24, 32 or 44px, like Input |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid` |
