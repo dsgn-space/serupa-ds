@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './PriceEstimate.stories';
+
+<Meta of={Stories} />
+
+# Price estimate
+
+Choose a plan, how many people and any extras, and see what it costs, line by line, as you go.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A pricing page's "What would it cost?" for prices that depend on how many people and what's added.
+- Not for comparing plans feature by feature: that's the Pricing block or the Product compare pattern.
+- Not for paying: that's the Checkout pattern.
+
+## What each part is for
+
+- **The plans and the extras are groups named by their question**, each saying its price as its description (1.3.1).
+- **How many people says the plan's range** before you type, and the estimate keeps to it (3.3.2).
+- **The estimate is a table**, a line for each thing you pay for and the saving, with the month's total in its foot (1.3.1).
+- **The total is said when it changes**, with how it's billed and what paying yearly saves, in words (4.1.3, 1.4.1).
+- **Start trial carries the choices** in its address, so the trial starts as estimated.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Euros} />
+
+## What stays your app's job
+
+- **The prices.** Pass your `plans`, `extras` and `yearlyOff` in your `currency`; say whether tax is included.
+- **Starting the trial.** `trialHref` gets `plan`, `seats`, `billing` and `extras` as a query.
