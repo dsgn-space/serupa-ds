@@ -39,8 +39,11 @@ describe('TagGroup', () => {
       <TagGroup id="xt" label="Labels" items={items} onRemove={() => {}} style={{ '--tag-group-icon-size': '12px' } as React.CSSProperties} />
     </SerupaProvider>);
     const sizes = (id: string) => [...document.querySelectorAll<HTMLElement>('#' + id + ' [data-icon]')].map((i) => Math.round(i.getBoundingClientRect().height));
-    const button = document.querySelector<HTMLElement>('#xs button[aria-label^="Remove"]')!.getBoundingClientRect();
-    expect([sizes('xs'), sizes('xt'), button.width, button.height]).toEqual([[16, 16, 16, 16], [12, 12, 12, 12], 24, 24]);
+    const x = document.querySelector<HTMLElement>('#xs button[aria-label^="Remove"]')!, button = x.getBoundingClientRect();
+    // The × is drawn 22px, inside the tag's 1px border, so the tag stays 24px; a press 0.5px past any edge still lands on it (24px, WCAG 2.5.8).
+    expect([sizes('xs'), sizes('xt'), button.width, button.height]).toEqual([[16, 16, 16, 16], [12, 12, 12, 12], 22, 22]);
+    const mid = { x: button.left + button.width / 2, y: button.top + button.height / 2 };
+    for (const [px, py] of [[button.left - 0.5, mid.y], [button.right + 0.5, mid.y], [mid.x, button.top - 0.5], [mid.x, button.bottom + 0.5]]) expect(x.contains(document.elementFromPoint(px!, py!))).toBe(true);
   });
 
   test('icon and avatar: decorative, before the words; the tag keeps its name, its height, and a selected tag shows its check in the icon\'s place', async () => {
@@ -52,7 +55,7 @@ describe('TagGroup', () => {
     await expect.element(page.getByRole('row', { name: /^Ana Silva/ })).toBeVisible();
     await expect.element(page.getByRole('row', { name: 'Bug' })).toBeVisible();
     const h = (name: string) => Math.round(page.getByRole('row', { name }).element().getBoundingClientRect().height);
-    expect([Math.round(page.getByRole('row', { name: /^Ana Silva/ }).element().getBoundingClientRect().height), h('Bug')]).toEqual([h('Plain'), h('Plain')]);
+    expect([Math.round(page.getByRole('row', { name: /^Ana Silva/ }).element().getBoundingClientRect().height), h('Bug'), h('Plain')]).toEqual([24, 24, 24]);   // a small control's height, with a × or a picture too
     const docs = page.getByRole('row', { name: 'Docs' }).element(), bug = page.getByRole('row', { name: 'Bug' }).element();
     // A selected tag shows the check in its icon's place.
     expect([!!bug.querySelector('[data-icon="bug_report"]'), !!docs.querySelector('[data-icon="description"]'), !!docs.querySelector('svg, [data-icon="check"]')]).toEqual([true, false, true]);
