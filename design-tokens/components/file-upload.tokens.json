@@ -151,6 +151,16 @@
             "cssVar": "--file-upload-text-disabled"
           }
         }
+      },
+      "focus-ring": {
+        "$type": "color",
+        "$value": "{color.focus-ring}",
+        "$description": "The ring around a file name that takes keyboard focus because it is cut.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--file-upload-focus-ring"
+          }
+        }
       }
     },
     "radius": {
