@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './GiftCard.stories';
+
+<Meta of={Stories} />
+
+# Gift card
+
+Choose an amount and a design, say who it's for and when to send it, see what they'll get, and add it to the bag.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Buying a gift card to send by email, on a day you choose.
+- Not for paying with one: that's a field in the Checkout pattern.
+
+## What each part is for
+
+- **The amounts and the designs are groups of radios named by their question** (1.3.1). Another amount brings a number field right after it, and the hint says the lowest and the highest.
+- **Each field says what it's for** and which are optional; the email says it's where the card goes (3.3.2).
+- **The preview is a named region** that shows the card as they'll get it, in words as well as the picture, and follows every change.
+- **Adding with problems shows a summary at the top that takes focus**, each problem a link to its field (3.3.1, 2.4.3).
+- **Add to bag shows it's busy**; a card that can't be added says so and keeps everything (3.3.4, 4.1.3).
+- **Once added, the answer's heading takes focus** (2.4.3), with the amount, who it's for and when it's sent.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Euros} />
+
+## What stays your app's job
+
+- **Paying and sending.** `onAdd` gets the gift, trimmed, with the day as YYYY-MM-DD; reject when it can't be added. Send it on that day, in the buyer's time zone, and tell the buyer when it's gone.
+- **The amounts and the limits.** Pass `amounts`, `min` and `max` in your `currency`.
+- **Today.** Pass `today` from the server, so the first day matches yours.
