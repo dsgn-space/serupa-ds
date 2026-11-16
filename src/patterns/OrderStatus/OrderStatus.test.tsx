@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { OrderStatus, canCancel, stageWords, subtotal, type OrderInfo } from './OrderStatus';
 
 const active = () => document.activeElement as HTMLElement;
@@ -129,5 +129,19 @@ describe('Patterns/Order status', () => {
     const screen = await render(<OrderStatus loading order={order()} />);
     await screen.rerender(<OrderStatus order={order({ number: '78' })} />);
     await expect.poll(() => document.querySelector('main h1')?.textContent).toContain('78');
+  });
+});
+
+describe('OrderStatus printed', () => {
+  test('printed, the order leaves out Cancel order', async () => {
+    await render(<OrderStatus order={order()} onCancel={() => {}} />);
+    // Found before printing: a role query skips what's hidden.
+    const hidden: Element[] = [page.getByRole('button', { name: 'Cancel order' }).element()];
+    const kept: Element[] = [page.getByRole('heading', { level: 1 }).element()];
+    await commands.printMedia(true);
+    try {
+      for (const e of hidden) expect(e.checkVisibility(), e.textContent ?? '').toBe(false);
+      for (const e of kept) expect(e.checkVisibility(), e.textContent ?? '').toBe(true);
+    } finally { await commands.printMedia(false); }
   });
 });

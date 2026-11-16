@@ -118,7 +118,7 @@ export function Transactions({ transactions = demo, currency = 'USD', account = 
             </DescriptionList>
           </Card>
         </div>
-        <div role="search" aria-label="Transactions" className="flex flex-wrap items-end gap-4 pt-6">
+        <div role="search" aria-label="Transactions" data-print="hide" className="flex flex-wrap items-end gap-4 pt-6">
           <div className="min-w-0 flex-1 basis-64">
             <Field label="Search transactions" id="tx-search">
               <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />

@@ -113,14 +113,14 @@ export function Article({ title = 'Projects now open on what’s due this week',
               ))}
             </Prose>
           </article>
-          <div className="order-first lg:order-none">
+          <div data-print="hide" className="order-first lg:order-none">
             <div className="top-8 lg:sticky">
               <TableOfContents items={sections.map((s) => ({ id: s.id, label: s.title }))} />
             </div>
           </div>
         </div>
         {related.length ? (
-          <section aria-labelledby="article-next" className="flex flex-col gap-4 border-t border-border pt-8">
+          <section aria-labelledby="article-next" data-print="hide" className="flex flex-col gap-4 border-t border-border pt-8">
             <Heading level={2} size="lg" id="article-next">Read next</Heading>
             <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2">
               {related.map((r) => (

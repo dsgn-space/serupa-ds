@@ -443,4 +443,14 @@ describe('Density axis', () => {
     } finally { await commands.printMedia(false); }
   });
 
+  test('printing: data-print="hide" leaves out what is only for the screen, even over a display utility, and only on paper', async () => {
+    await render(<><div data-print="hide" className="flex" id="ph"><Button>Pay</Button></div><p id="pk">Kept</p></>);
+    const shown = (id: string) => getComputedStyle(document.getElementById(id)!).display;
+    expect([shown('ph'), shown('pk')]).toEqual(['flex', 'block']);
+    await commands.printMedia(true);
+    try {
+      expect([shown('ph'), shown('pk')]).toEqual(['none', 'block']);
+    } finally { await commands.printMedia(false); }
+  });
+
 });
