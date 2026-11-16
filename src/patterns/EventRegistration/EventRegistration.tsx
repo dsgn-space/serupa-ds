@@ -175,7 +175,7 @@ export function EventRegistration({ event = demo, currency = 'USD', onRegister }
               {done.waitlist ? null : <Link href={`data:text/calendar;charset=utf-8,${encodeURIComponent(icsFor(event))}`} download="event.ics">Add to your calendar</Link>}
             </section>
           ) : (
-            <form onSubmit={register} noValidate aria-labelledby="register" className="flex flex-col gap-5">
+            <form onSubmit={register} noValidate aria-labelledby="register" className="flex flex-col gap-4">
               <h2 id="register" className="m-0 text-lg font-semibold">{full ? 'Join the waiting list' : 'Get tickets'}</h2>
               {full ? <p className="m-0">It’s full. Leave your name, and we’ll email you if a place comes free.</p> : null}
               <ErrorSummary key={tries} errors={errors} />

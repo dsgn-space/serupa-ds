@@ -124,7 +124,7 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
           ]} />
 
           <Card>
-            <section aria-labelledby="share" className="flex flex-col gap-5">
+            <section aria-labelledby="share" className="flex flex-col gap-4">
               <h2 id="share" className="m-0 text-lg font-semibold">Share your link</h2>
               <div className="flex flex-wrap items-end gap-2">
                 <Field label="Your invite link" id="referral-link" className="min-w-0 flex-1">

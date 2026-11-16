@@ -80,7 +80,7 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
         <PageHeader breadcrumb={[{ label: 'Pricing', href: '#pricing' }, { label: 'Price estimate' }]} title="What would it cost?"
           description="Choose a plan, how many people and any extras. Prices are per month, before tax." />
         <div className="grid grid-cols-1 gap-8 pt-6 md:grid-cols-2">
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             <Field label="Plan" group>
               <RadioGroup name="estimate-plan" variant="card" value={planId} onValueChange={(v: string) => setPlanId(v)}>
                 {plans.map((p) => <Radio key={p.id} value={p.id} description={`${money(p.perSeat)} a person. ${p.about}.`}>{p.name}</Radio>)}

@@ -110,7 +110,7 @@ export function SendMoney({ account = { currency: 'USD', balance: 1240.5 }, reci
           description={`You have ${money(account.balance)} in your account.`} />
         <div className="flex flex-col gap-5 pt-6">
           {step === 'form' ? (
-            <form onSubmit={review} noValidate aria-labelledby="send-form" className="flex flex-col gap-5">
+            <form onSubmit={review} noValidate aria-labelledby="send-form" className="flex flex-col gap-4">
               <h2 id="send-form" ref={heading} tabIndex={-1} className={h2}>Who and how much</h2>
               <ErrorSummary key={tries} errors={errors} />
               <Field label="Send to" group error={problems.to} required>
