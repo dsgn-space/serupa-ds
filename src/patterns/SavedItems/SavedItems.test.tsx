@@ -74,6 +74,12 @@ describe('Patterns/Saved items', () => {
     expect(onMoveToCart).toHaveBeenLastCalledWith('a');
   });
 
+  test('the items that arrive once loading ends are the ones shown', async () => {
+    const screen = await render(<SavedItems loading items={[]} />);
+    await screen.rerender(<SavedItems items={items} />);
+    await expect.poll(names).toEqual(['Linen shirt', 'Tote bag', 'Pour-over set']);
+  });
+
   test('while loading, one placeholder; a failed load says so, with Try again', async () => {
     const onRetry = vi.fn();
     const screen = await render(<SavedItems loading />);

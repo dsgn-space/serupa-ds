@@ -105,6 +105,9 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
   const locale = useLocale();
   const blank: Draft = { date: today, category: '', what: '', amount: null, receipt: null };
   const [list, setList] = React.useState(expenses);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setList(expenses); } }
   const [d, setD] = React.useState<Draft>(blank);
   const [problems, setProblems] = React.useState<Problems>({});
   const [tries, setTries] = React.useState(0);

@@ -124,4 +124,10 @@ describe('Patterns/Order status', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the order that arrives once loading ends is the one shown', async () => {
+    const screen = await render(<OrderStatus loading order={order()} />);
+    await screen.rerender(<OrderStatus order={order({ number: '78' })} />);
+    await expect.poll(() => document.querySelector('main h1')?.textContent).toContain('78');
+  });
 });

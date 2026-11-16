@@ -78,6 +78,9 @@ const PARTS = ['name', 'bio', 'website'] as const;
 export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading = false, loadFailed = false, onRetry }: ProfileProps) {
   const [saved, setSaved] = React.useState(start);
   const [draft, setDraft] = React.useState(start);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setSaved(start); setDraft(start); } }
   const [files, setFiles] = React.useState<File[]>([]);
   const [problems, setProblems] = React.useState<ReturnType<typeof profileProblems>>({});
   const [tries, setTries] = React.useState(0);

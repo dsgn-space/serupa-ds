@@ -101,4 +101,10 @@ describe('Patterns/Profile', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the profile that arrives once loading ends is the one shown and edited', async () => {
+    const screen = await render(<Profile loading profile={me} />);
+    await screen.rerender(<Profile profile={{ ...me, name: 'Budi Santoso' }} />);
+    await expect.element(screen.getByRole('textbox', { name: 'Name' })).toHaveValue('Budi Santoso');
+  });
 });

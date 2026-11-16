@@ -102,6 +102,9 @@ export function savedChange(item: SavedItem): { label: string; tone: 'success' |
 export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRemove, loading = false, loadFailed = false, onRetry }: SavedItemsProps) {
   const locale = useLocale();
   const [list, setList] = React.useState(items);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setList(items); } }
   const [gone, setGone] = React.useState<ReadonlySet<string>>(new Set());
   const [sort, setSort] = React.useState<SavedSort>('newest');
   const [busy, setBusy] = React.useState<string | null>(null);

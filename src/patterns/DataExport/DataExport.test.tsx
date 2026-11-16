@@ -93,4 +93,10 @@ describe('Patterns/Download your data', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the exports that arrive once loading ends are the ones shown', async () => {
+    const screen = await render(<DataExport loading exports={[]} />);
+    await screen.rerender(<DataExport />);
+    await expect.poll(() => document.querySelectorAll('section[aria-labelledby="export-list"] li').length).toBeGreaterThan(0);
+  });
 });
