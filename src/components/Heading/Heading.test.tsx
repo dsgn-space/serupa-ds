@@ -14,7 +14,8 @@ describe('Heading', () => {
       <p id="pen">Body</p>
       <div lang="ja"><Heading id="hja" level={2}>料金プラン</Heading><p className="type-heading-3" id="tja">見出し</p></div>
     </div>);
-    const fam = (id: string) => css(el(id)).fontFamily;
+    // WebKit leaves out the quotes a family name doesn't need (Brand Display, not "Brand Display"); they're put back.
+    const fam = (id: string) => css(el(id)).fontFamily.split(/,\s*/).map((f) => (/^["']/.test(f) || !/\s/.test(f) ? f : `"${f}"`)).join(', ');
     expect(fam('hen')).toMatch(/^"Brand Display", Inter,/);
     expect(fam('pen')).not.toMatch(/Brand Display/);
     for (const id of ['hja', 'tja']) expect(fam(id)).toMatch(/^"Brand Display", Inter, "Inter Fallback", "Noto Sans JP"/);
