@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { announce } from '../../internal/announce';
@@ -60,8 +61,7 @@ export const TagGroup = /* @__PURE__ */ component<HTMLDivElement, TagGroupProps>
   const rest = omit(props, { items: 1, label: 1, onRemove: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1, max: 1, empty: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
   const id = React.useId(), labelId = `${id}-label`;
   const mode = props.selectionMode || 'none';
-  const [own, setOwn] = React.useState<readonly string[]>(props.defaultSelected || []);
-  const picked = props.selected !== undefined ? props.selected : own;
+  const [picked, setOwn] = useControllable<readonly string[]>(props.selected, props.defaultSelected || [], 'TagGroup', 'selected');
   const [all, setAll] = React.useState(false);
   const max = props.max != null && props.max >= 0 ? Math.floor(props.max) : Infinity;
   const shown = all ? props.items : props.items.slice(0, max);
