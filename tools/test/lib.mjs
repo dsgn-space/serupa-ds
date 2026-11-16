@@ -273,11 +273,28 @@ export function scopeFiles(numstat) {
   return numstat.split('\n').filter(Boolean).map((l) => l.split('\t'))
     .filter(([added, removed, f]) => !SHARED_TEST.test(f) && !(ADDITIVE.test(f) && removed === '0' && added !== '-')).map(([, , f]) => f);
 }
+// Size budgets (tools/test/size.mjs): a component's <Name>.json, and a raise file <Name>.<branch>.json for each pull
+// request that raised one of them. A budget is the highest of its files, so two pull requests that raise the same
+// component add two files and never edit the same line (they conflicted on every merge on 15 Nov 2026).
+export const SIZE_FILE = /^([A-Z]\w*)(?:\.([\w-]+))?\.json$/;
+/** Each component's budgets from [file name, its JSON] pairs: the highest value of each key across its files. */
+export function sizeBudgets(files) {
+  const out = {};
+  for (const [f, b] of files) {
+    const m = SIZE_FILE.exec(f);
+    if (!m) continue;
+    const cur = (out[m[1]] ||= {});
+    for (const [k, v] of Object.entries(b)) cur[k] = Math.max(cur[k] ?? -Infinity, v);
+  }
+  return out;
+}
+/** A branch name as a raise file's tag: claude/fix-x is claude-fix-x. */
+export const raiseTag = (branch) => String(branch === 'HEAD' ? '' : branch || '').replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'local';
 // The component, block or pattern a file is one of (its folder, or one of its baselines), or null.
 const ownerOf = (f) => (/^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
   || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
   || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
-  || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f))?.[1] ?? null;
+  || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f))?.[1] ?? null;
 // The components, blocks and patterns a change edits itself, whatever else it changes: unlike affectedComponents,
 // a file outside their folders (a docs page, shared code) doesn't make it null. run.mjs runs these components' own
 // tests in every language even when the change tests everything in one: #1690 changed Kanban and a docs page, its
@@ -291,7 +308,7 @@ export function affectedComponents(files) {
     const m = /^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
       || /^tools\/test\/baseline-visual\/([A-Z]\w*)\//.exec(f)
       || /^tools\/test\/baseline-aria\/([A-Z]\w*)\.yml$/.exec(f) || /^tools\/test\/baseline-server\/([A-Z]\w*)\.html$/.exec(f)
-      || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
+      || /^tools\/test\/baseline-api\/([A-Z]\w*)\.d\.ts$/.exec(f) || /^tools\/test\/baseline-size\/([A-Z]\w*)(?:\.[\w-]+)?\.json$/.exec(f) || /^tools\/test\/ssr\/([A-Z]\w*)\.mjs$/.exec(f);
     // A component's own tokens (design-tokens/components/avatar-group.tokens.json is AvatarGroup's).
     const tokens = /^design-tokens\/components\/([a-z][\w-]*)\.tokens\.json$/.exec(f);
     if (m) names.add(m[1]);
