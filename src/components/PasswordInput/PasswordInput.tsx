@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { announce } from '../../internal/announce';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -48,9 +49,8 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   if (rest.autoComplete === undefined) rest.autoComplete = 'current-password';
-  const [own2, setOwn] = React.useState(!!props.defaultVisible);
-  const controlled = props.visible !== undefined;
-  const shown = controlled ? !!props.visible : own2;
+  const [visible, setOwn, controlled] = useControllable(props.visible, !!props.defaultVisible, 'PasswordInput', 'visible');
+  const shown = !!visible;
   const left = asIcon(props.leftIcon);
   // Caps Lock, read from the key events while the field has focus (there's no event for the key itself).
   const [caps, setCaps] = React.useState(false);

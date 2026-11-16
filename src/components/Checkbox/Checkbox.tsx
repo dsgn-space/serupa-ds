@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
@@ -122,9 +123,8 @@ function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<
 export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxGroupProps>('CheckboxGroup', function CheckboxGroup(props: CheckboxGroupProps, ref) {
   const rest = omit(props, GROUP_OWN);
   const autoName = domId('dk-cbg', React.useId());
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<readonly (string | number)[]>(props.defaultValue || []);
-  const raw = (controlled ? props.value : own) || [];
+  const [chosen, setOwn, controlled] = useControllable<readonly (string | number)[]>(props.value, props.defaultValue || [], 'CheckboxGroup', 'value');
+  const raw = chosen || [];
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   delete rest['aria-invalid'];   // it goes on the boxes
   const orientation = props.orientation === 'horizontal' ? 'horizontal' : 'vertical';

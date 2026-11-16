@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { useMergedRef, cn, domId, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -125,9 +126,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
     const n = parseNumber(show(v), locale);
     return typeof n === 'number' ? n / scale : v;
   };
-  const controlled = props.value !== undefined;
-  const [ownValue, setOwnValue] = React.useState<number | null>(() => asShown(major(props.defaultValue)));
-  const value = controlled ? asShown(major(props.value)) : ownValue;
+  const [held, setOwnValue, controlled] = useControllable<number | null>(props.value, asShown(major(props.defaultValue)), 'NumberInput', 'value');
+  const value = controlled ? asShown(major(held)) : held;
   const shown = show(value);
   const [text, setText] = React.useState(shown);
   const typing = React.useRef(false);

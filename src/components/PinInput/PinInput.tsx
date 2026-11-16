@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -49,9 +50,8 @@ export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProp
   // Digits in any script read as ASCII, and full-width letters as the usual ones: an Arabic or Persian keyboard types
   // ٤٥٦, a Japanese IME ４５６ or ＡＢ, and a code read off the screen is the same code (GR42).
   const clean = (s: string | undefined) => latinDigits((s || '').normalize('NFKC')).replace(KEEP[type], '').slice(0, length);
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState(() => clean(props.defaultValue));
-  const code = controlled ? clean(props.value) : own;
+  const [held, setOwn, controlled] = useControllable<string>(props.value, clean(props.defaultValue), 'PinInput', 'value');
+  const code = controlled ? clean(held) : held;
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   const input = React.useRef<HTMLInputElement | null>(null);
