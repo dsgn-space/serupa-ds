@@ -156,7 +156,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
   const was = React.useRef(!!order.cancelled);
   React.useEffect(() => { if (order.cancelled && !was.current) heading.current?.focus(); was.current = !!order.cancelled; }, [order.cancelled]);
 
-  const section = 'flex flex-col gap-3';
+  const section = 'flex flex-col gap-4';
   const h2 = 'm-0 text-lg font-semibold';
   return (
     <div className="min-h-screen bg-surface text-text">
@@ -188,7 +188,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
                 <h2 id="happened" className={h2}>What’s happened</h2>
                 <Timeline aria-labelledby="happened">
                   {order.events.map((e, i) => (
-                    <TimelineItem key={e.id} title={e.title} time={when(e.at)} dateTime={e.at} status={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
+                    <TimelineItem key={e.id} title={e.title} time={when(e.at)} dateTime={e.at} tone={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
                   ))}
                 </Timeline>
               </section>

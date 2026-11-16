@@ -183,14 +183,14 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your leave" onRetry={() => onRetry?.()} headingLevel={2} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading leave" /></Card> : (
-              <div className="grid items-start gap-8 md:grid-cols-3">
+              <div className="grid items-start gap-6 md:grid-cols-3">
                 <div className="flex flex-col gap-8 md:col-span-2">
                   <Field label="Kind of leave" group>
                     <RadioGroup name="leave-kind" value={kind} onValueChange={(v: LeaveKind) => { setKind(v); setFailed(false); }}>
                       {KINDS.map((k) => <Radio key={k.value} value={k.value} description={k.hint}>{k.label}</Radio>)}
                     </RadioGroup>
                   </Field>
-                  <section aria-labelledby="dates" className="flex flex-col gap-3">
+                  <section aria-labelledby="dates" className="flex flex-col gap-4">
                     <h2 id="dates" className={h2}>Dates</h2>
                     <p className="m-0 text-sm text-text-muted">Choose your first day away, then your last. Weekends and holidays are struck through and aren’t counted.</p>
                     <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'leave-problem' : undefined} months={2}
@@ -221,7 +221,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
                 </div>
                 <div className="flex flex-col gap-6">
                   <Card>
-                    <section aria-labelledby="balance" className="flex flex-col gap-3">
+                    <section aria-labelledby="balance" className="flex flex-col gap-4">
                       <h2 id="balance" className={h2}>Annual leave</h2>
                       <DescriptionList layout="split">
                         <DescriptionItem term="You have">{count(balance)}</DescriptionItem>
@@ -230,7 +230,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
                       </DescriptionList>
                     </section>
                   </Card>
-                  <section aria-labelledby="mine" className="flex flex-col gap-3">
+                  <section aria-labelledby="mine" className="flex flex-col gap-4">
                     <h2 id="mine" className={h2}>Your requests</h2>
                     {requests.length ? (
                       <ul ref={list} aria-labelledby="mine" className="m-0 flex list-none flex-col gap-2 p-0">

@@ -30,6 +30,7 @@ interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 
     debounce?: number | undefined;
     inputValue?: string | undefined;
     defaultInputValue?: string | undefined;
+    onInputValueChange?: ((text: string) => void) | undefined;
     onInputChange?: ((text: string) => void) | undefined;
     filter?: (((option: {
         value: V;

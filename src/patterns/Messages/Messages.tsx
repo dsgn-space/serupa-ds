@@ -139,7 +139,7 @@ export function Messages({ conversations: start = demo, defaultOpen, onOpen, onS
   };
 
   const rows = (
-    <section aria-labelledby="conversations-title" className="flex min-w-0 flex-col gap-3">
+    <section aria-labelledby="conversations-title" className="flex min-w-0 flex-col gap-4">
       <Heading level={2} size="lg" id="conversations-title">Conversations</Heading>
       <List divided>
         {list.map((c) => {

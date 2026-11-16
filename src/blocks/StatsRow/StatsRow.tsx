@@ -86,9 +86,9 @@ export function StatsRow({ title, headingLevel = 2, stats, period, loading = fal
   const id = React.useId();
   const w = { ...EN, ...labels };
   return (
-    <section aria-labelledby={id} className="flex flex-col gap-3">
+    <section aria-labelledby={id} className="flex flex-col gap-4">
       <Heading level={headingLevel} size="lg" id={id}>{title}</Heading>
-      {loadFailed ? <EmptyLoadFailed title={w.loadFailed(title)} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+      {loadFailed ? <EmptyLoadFailed title={w.loadFailed(title)} onRetry={() => onRetry?.()} headingLevel={headingLevel === 2 ? 3 : 4} /> : <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-4">
         {loading
           ? Array.from({ length: loadingCount }, (_, i) => (
             <Card as="li" key={i} padding="md">

@@ -137,9 +137,9 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
     );
   };
   const list = (title: string, items: Integration[], none: string) => (
-    <section aria-labelledby={`integrations-${title.toLowerCase()}`} className="flex flex-col gap-3">
+    <section aria-labelledby={`integrations-${title.toLowerCase()}`} className="flex flex-col gap-4">
       <Heading level={2} size="lg" id={`integrations-${title.toLowerCase()}`}>{title} ({formatNumber(items.length, locale)})</Heading>
-      {items.length ? <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">{items.map(card)}</ul>
+      {items.length ? <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">{items.map(card)}</ul>
         : <p className="m-0 text-text-muted">{none}</p>}
     </section>
   );
@@ -154,7 +154,7 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
         <PageHeader title="Integrations" description="Connect the other apps your team uses. Only admins can connect or disconnect them." />
 
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load your integrations" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
-          <ul role="list" aria-busy="true" className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">
+          <ul role="list" aria-busy="true" className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-2">
             {/* One name for all of them: the first card is named, the others are only pictures. */}
             {[0, 1, 2, 3].map((i) => <li key={i}><Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading integrations' : ''} /></Card></li>)}
           </ul>

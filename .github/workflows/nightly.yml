@@ -115,9 +115,13 @@ jobs:
         run: |
           for i in 1 2; do SERUPA_BENCH=.bench npx vitest run --project components --no-file-parallelism src/internal/mountTime.test.tsx src/internal/inp.test.tsx; done
           if [ -f .bench-history/last.json ]; then PREVIOUS="--previous .bench-history/last.json"; fi
-          node tools/test/bench.mjs .bench --json bench.json $PREVIOUS
-          mkdir -p .bench-history && cp bench.json .bench-history/last.json
-      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+          # Tonight's times are tomorrow's "last night" whether or not tonight passed (see size-trend below).
+          status=0
+          node tools/test/bench.mjs .bench --json bench.json $PREVIOUS || status=$?
+          if [ -f bench.json ]; then mkdir -p .bench-history && cp bench.json .bench-history/last.json; fi
+          exit $status
+      - if: ${{ !cancelled() && hashFiles('bench.json') != '' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .bench-history
           key: bench-history-${{ github.run_id }}
@@ -157,9 +161,15 @@ jobs:
         run: |
           npm run build
           if [ -f .size-history/last.json ]; then PREVIOUS="--previous .size-history/last.json"; fi
-          node tools/test/size.mjs --json size.json $PREVIOUS
-          mkdir -p .size-history && cp size.json .size-history/last.json
-      - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+          # Tonight's sizes are tomorrow's "last night" whether or not tonight passed. Kept only on a pass, one red
+          # night left every later night comparing with the last green one: 14 Nov failed, so 15 Nov compared with
+          # 13 Nov, two nights of growth counted as one, and it failed again, and so on every night after.
+          status=0
+          node tools/test/size.mjs --json size.json $PREVIOUS || status=$?
+          if [ -f size.json ]; then mkdir -p .size-history && cp size.json .size-history/last.json; fi
+          exit $status
+      - if: ${{ !cancelled() && hashFiles('size.json') != '' }}
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .size-history
           key: size-history-${{ github.run_id }}

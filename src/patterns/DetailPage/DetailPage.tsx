@@ -186,7 +186,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
               </TabPanel>
 
               <TabPanel value="tasks" className="pt-4">
-                <Card className="flex flex-col gap-3">
+                <Card className="flex flex-col gap-4">
                   <Heading level={2} size="lg" ref={tasksHeading} tabIndex={-1} className="outline-none">Tasks ({formatNumber(tasks.length, locale)})</Heading>
                   {tasks.length ? (
                     <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
@@ -202,7 +202,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
               </TabPanel>
 
               <TabPanel value="settings" className="pt-4">
-                <section aria-labelledby="danger" className="flex flex-col gap-3 rounded-lg border border-danger bg-surface p-4">
+                <section aria-labelledby="danger" className="flex flex-col gap-4 rounded-lg border border-danger bg-surface p-4">
                   <Heading level={2} size="lg" id="danger">Delete this project</Heading>
                   <p className="m-0 max-w-prose">Deleting removes the project with its tasks and files for everyone. It can’t be undone.</p>
                   <div><Button destructive variant="outline" onClick={() => ask(true)}>Delete project</Button></div>

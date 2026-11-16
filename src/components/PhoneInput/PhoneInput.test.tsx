@@ -248,6 +248,8 @@ describe('PhoneInput', () => {
     await render(<Wrap><PhoneInput id="iv" aria-label="Bad" invalid defaultCountry="ID" /><PhoneInput id="ro" aria-label="Locked" readOnly defaultValue="+6281234567890" />
       <PhoneInput id="same" aria-label="Same" defaultCountry="ID" onValueChange={(v) => { calls.push(v); }} onCountryChange={(c) => { calls.push(c); }} /></Wrap>);
     expect([field('iv').getAttribute('aria-invalid'), box('iv').className.includes('dk-input--invalid'), menu('ro').disabled, menu('iv').disabled]).toEqual(['true', true, true, false]);
+    // Read-only refuses nothing: the country part shows the plain arrow, as Combobox's and Select's do, not not-allowed.
+    expect(getComputedStyle(menu('ro')).cursor).toBe('default');
     menu('same').dispatchEvent(new Event('change', { bubbles: true }));
     expect(calls).toEqual([]);
   });
@@ -264,6 +266,9 @@ describe('PhoneInput', () => {
     expect(new FormData(document.getElementById('f') as HTMLFormElement).get('phone')).toBe('+6591234567');
     expect([menu('id').getAttribute('aria-label'), Math.round(box('id').getBoundingClientRect().height)]).toEqual(['Negara', 24]);
     expect([field('dis').disabled, menu('dis').disabled, box('dis').className.includes('dk-input--disabled'), Math.round(box('dis').getBoundingClientRect().height)]).toEqual([true, true, true, 44]);
+    // The calling code dims with the number, not left in full text color beside a dimmed field.
+    const dial = [...box('dis').querySelectorAll('span')].find((n) => n.children.length === 0 && n.textContent.startsWith('+'))!;
+    expect(getComputedStyle(dial).color).toBe(getComputedStyle(field('dis')).color);
   });
 
   test('the menu has its own 2px focus ring inside the box; the tokens override it; contrast of the code and chevron in every theme', async () => {

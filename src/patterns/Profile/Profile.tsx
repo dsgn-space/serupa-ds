@@ -126,7 +126,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your profile" onRetry={() => onRetry?.()} headingLevel={2} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading profile" /></Card> : (
-              <div className="grid items-start gap-8 md:grid-cols-3">
+              <div className="grid items-start gap-6 md:grid-cols-3">
                 <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-5 md:col-span-2">
                   <h2 id="edit" className="m-0 text-lg font-semibold">Edit {saved.name ? `${saved.name}’s` : 'your'} profile</h2>
                   <ErrorSummary key={tries} errors={errors} headingLevel={3} />
@@ -157,7 +157,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
                   {status === 'error' ? <Alert tone="danger">Couldn’t save your profile. Your changes are still here.</Alert> : null}
                 </form>
                 <Card>
-                  <section aria-labelledby="preview" className="flex flex-col items-start gap-3">
+                  <section aria-labelledby="preview" className="flex flex-col items-start gap-4">
                     <h2 id="preview" className="m-0 text-lg font-semibold">How others see it</h2>
                     <Avatar size="lg" name={draft.name || saved.name} src={photo || undefined} alt="" />
                     <p className="m-0 text-base font-semibold">{draft.name.trim() || 'Your name'}</p>

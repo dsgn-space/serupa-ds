@@ -197,7 +197,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                 </form>
               </Card>
 
-              <section aria-labelledby="expenses" className="flex flex-col gap-3">
+              <section aria-labelledby="expenses" className="flex flex-col gap-4">
                 <h2 id="expenses" className="m-0 text-lg font-semibold">Expenses</h2>
                 {list.length ? (
                   <Table caption="Expenses in this report, with the total" hideCaption>

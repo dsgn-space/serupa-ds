@@ -169,7 +169,7 @@ export function StatusPage({ services = demoServices, incidents = demoIncidents,
               {past.map((i) => incident(i))}
             </section>
           ) : null}
-          <section aria-labelledby="status-updates" className="flex flex-col gap-3">
+          <section aria-labelledby="status-updates" className="flex flex-col gap-4">
             <h2 id="status-updates" className="m-0 text-lg font-semibold">Get updates by email</h2>
             <form onSubmit={subscribe} noValidate className="flex max-w-md flex-col items-start gap-3" aria-labelledby="status-updates">
               <Field label="Email" id="status-email" hint="We email when an incident starts, changes or ends. Unsubscribe from any email." error={problem || undefined} className="w-full">
