@@ -1,0 +1,31 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Transactions.stories';
+
+<Meta of={Stories} />
+
+# Transactions
+
+An account's money in and out by month, found by what it was or its category, with the month's totals first.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A bank, a wallet or a card account where people check what came in and what went out.
+- Not for a business's ledger with many columns to sort: that's DataGrid.
+
+## What each part is for
+
+- **The transactions are a table** with a caption that names the month. Each one's description is its row header, so every amount is read with it (1.3.1).
+- **Money in and money out are their own columns**, never a color or a minus sign alone, and a pending one says "Pending" in a badge (1.4.1).
+- **The month's totals come first**, as a list of terms: in, out, and what you kept or spent beyond it (1.3.1).
+- **Searching or filtering says how many show**, of how many that month, and Clear filters puts both back (4.1.3, 3.3.2).
+- **At narrow widths the table scrolls on its own**, and the page doesn't (1.4.10).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.InEuros} />
+
+## What stays your app's job
+
+- **Fetching the transactions.** Pass them with each one's date, and the amount as negative for money out.
+- **Older months.** Load them as people pick them, and offer a statement to download.

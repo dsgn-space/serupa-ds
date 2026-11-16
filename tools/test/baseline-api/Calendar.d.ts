@@ -8,6 +8,8 @@ interface CalendarLabels {
     today: string;
     tomorrow: string;
     inAWeek: string;
+    week: string;
+    weekShort: string;
 }
 interface DatePreset {
     label: string;
@@ -26,6 +28,7 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defa
     locale?: string | undefined;
     calendar?: CalendarSystem | undefined;
     weekStartsOn?: number | undefined;
+    weekNumbers?: boolean | undefined;
     autoFocus?: boolean | undefined;
     previousLabel?: string | undefined;
     nextLabel?: string | undefined;

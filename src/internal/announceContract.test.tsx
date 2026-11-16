@@ -33,6 +33,7 @@ import { NumberInput } from '../components/NumberInput/NumberInput';
 import { OfflineBanner } from '../components/OfflineBanner/OfflineBanner';
 import { Progress } from '../components/Progress/Progress';
 import { SaveStatus } from '../components/SaveStatus/SaveStatus';
+import { Pagination } from '../components/Pagination/Pagination';
 import { PasswordInput } from '../components/PasswordInput/PasswordInput';
 import { Kanban } from '../components/Kanban/Kanban';
 import { TagGroup } from '../components/TagGroup/TagGroup';
@@ -150,6 +151,9 @@ const SITES: Record<string, Site> = {
   'Chat: an approval answered': {
     ui: (s) => <ChatApproval status={s ? 'approved' : 'pending'}>Reverse refund 2</ChatApproval>,
     act: (next) => next(), says: /Approved: Reverse refund 2/ },
+  'Pagination: Go to page': {
+    ui: () => <Pagination count={50} jump onPageChange={() => {}} />,
+    act: async () => { $('dialog[open] input').focus(); await userEvent.keyboard('7{Enter}'); }, says: /Page [7٧]/ },
   'Chat: the next version of a reply': {
     ui: () => <ChatMessage branch={1} branches={3} onBranchChange={() => {}}>One</ChatMessage>,
     act: async () => { await userEvent.click($('button[aria-label="Next response"]')); }, says: /Response 2 of 3/ },

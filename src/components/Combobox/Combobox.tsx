@@ -392,6 +392,27 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
     }
     commit(o.value); setText(o.label); setOpen(false, reason); setActive(-1); setTyped(false);
   };
+  // With multiple: a pasted list ("ana@x.com, budi@x.com", or a column copied from a sheet) picks every option whose
+  // label or value it names, any case and accents, in one go and said once; what matches nothing stays in the field
+  // to search or fix. Text without a comma, semicolon, tab or new line pastes as usual.
+  const onPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    if (rest.onPaste) rest.onPaste(e);
+    if (!multi || e.defaultPrevented || locked) return;
+    const pasted = e.clipboardData.getData('text');
+    if (!/[,;\t\n]/.test(pasted)) return;
+    const parts = pasted.split(/[,;\t\r\n]+/).map((t) => t.trim()).filter(Boolean);
+    const next = values.slice(), added: string[] = [], left: string[] = [];
+    for (const t of parts) {
+      const f = fold(t), o = opts.find((x) => !x.disabled && x.add == null && (x.folded === f || fold(x.value) === f));
+      if (!o) { left.push(t); continue; }
+      if (next.indexOf(o.value) < 0) { next.push(o.value); added.push(o.label); }
+    }
+    if (!added.length) return;   // nothing matched: the browser pastes the text, to search or fix
+    e.preventDefault();
+    commitMany(next, sds.labels.valueAdded(added.join(', ')));
+    setText(left.join(', '));
+    if (left.length) { setTyped(true); load(left.join(', '), 0); }
+  };
   // The one enabled option whose label is the typed text (any case and accents): leaving the field or Enter picks it.
   const exact = () => {
     const t = fold(text.trim());
@@ -608,7 +629,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
         // With multiple, the text is empty once tags are picked, so a native required blocked the form with tags in
         // it: the browser's check needs a tag or text, and screen readers still hear "required" (L8E18).
         required={multi && values.length ? false : rest.required} aria-required={rest['aria-required'] ?? (rest.required || undefined)}
-        onChange={onChange} onCompositionEnd={onCompositionEnd} onKeyDown={onKeyDown} onBlur={onBlur}
+        onChange={onChange} onCompositionEnd={onCompositionEnd} onKeyDown={onKeyDown} onBlur={onBlur} onPaste={onPaste}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!open) show('selected'); }} />
   );
   return (

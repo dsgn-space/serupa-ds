@@ -37,6 +37,9 @@ export const Summary: Story = {
 };
 
 /** pageSizeOptions: a select of page sizes after the summary. A new size keeps the first item shown in view. */
+/** Jump: 400 pages, with a field to go straight to one. */
+export const Jump: Story = { name: 'Go to page', args: { count: 400, defaultPage: 120, jump: true } };
+
 export const PageSize: Story = {
   args: { total: 245, pageSizeOptions: [10, 25, 50] },
   render: function Render(args) {

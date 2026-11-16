@@ -15,6 +15,7 @@ export const Playground: Story = {};
 export const Today: Story = { args: { defaultValue: undefined, defaultMonth: undefined } };
 export const MinAndMax: Story = { args: { min: new Date(2025, 2, 5), max: new Date(2025, 2, 25) } };
 export const NoWeekends: Story = { args: { isDateDisabled: (d: Date) => d.getDay() === 0 || d.getDay() === 6 } };
+export const WeekNumbers: Story = { name: 'Week numbers', args: { weekNumbers: true } };
 // The heading opens the year's months, and theirs twelve years: here, the months, as a click on "March 2025" shows them.
 export const MonthsAndYears: Story = {
   name: 'Jump by month and year',

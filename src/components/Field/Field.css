@@ -14,7 +14,10 @@
 .dk-field__hint { color: var(--field-hint-color, var(--text-muted)); overflow-wrap: anywhere; }
 .dk-field__control { display: flex; flex-direction: column; gap: var(--spacing-2); min-width: var(--spacing-0); }
 .dk-field__error { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); color: var(--field-error-color, var(--danger-text)); overflow-wrap: anywhere; }
-.dk-field__error .dk-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); line-height: var(--text-sm--line-height); }   /* centered on the first line */
+.dk-field__warning, .dk-field__checking { display: flex; align-items: flex-start; gap: var(--field-error-gap, var(--spacing-1)); overflow-wrap: anywhere; }
+.dk-field__warning { color: var(--field-warning-color, var(--warning-text)); }
+.dk-field__checking { color: var(--field-checking-color, var(--text-muted)); }
+:is(.dk-field__error, .dk-field__warning, .dk-field__checking) .dk-field__error-icon { font-size: var(--field-error-icon-size, var(--spacing-4)); height: var(--text-sm--line-height); line-height: var(--text-sm--line-height); }   /* centered on the first line */
 /* Horizontal: the label in a column of its own on the control's first line (baselines aligned), the control, hint and
    error stacked beside it; once the field is narrower than both columns, the body wraps under the label. */
 .dk-field--horizontal { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: var(--field-column-gap, var(--spacing-4)); }

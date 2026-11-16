@@ -10,14 +10,14 @@
      less a gutter for the page and a popover's padding, never past the day size. It snaps down to a whole pixel (178): a
      seventh of the screen is a fraction (37.14px at 320px), which blurs the day circles' and the range band's edges
      and leaves the columns a hair apart. */
-  --dk-cal-day: min(var(--calendar-day-size, var(--control-height-md)), round(down, calc((100vw - var(--spacing-12)) / 7), var(--border-width-1)));   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
+  --dk-cal-day: min(var(--calendar-day-size, var(--control-height-md)), round(down, calc((100vw - var(--spacing-12) - var(--dk-cal-weeks, var(--spacing-0))) / 7), var(--border-width-1)));   /* stylelint-disable-line serupa/no-raw-value -- the screen's width and a week's seven days: no token measures either */
   /* Space between the weeks, so the rows read apart and a range is a band per week. */
   --dk-cal-row-gap: var(--calendar-row-gap, var(--spacing-1));
   display: inline-flex; flex-direction: column; gap: var(--calendar-gap, var(--spacing-2));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); color: var(--calendar-day-color, var(--text));
 }
 /* Touch (EQ1): at least 44px days, as Apple and Material ask, still shrinking to a seventh of a narrow screen. */
-@media (pointer: coarse) { .dk-calendar { --dk-cal-day: min(max(var(--calendar-day-size, var(--control-height-md)), var(--spacing-11)), round(down, calc((100vw - var(--spacing-12)) / 7), var(--border-width-1))); } }   /* stylelint-disable-line serupa/no-raw-value -- as above */
+@media (pointer: coarse) { .dk-calendar { --dk-cal-day: min(max(var(--calendar-day-size, var(--control-height-md)), var(--spacing-11)), round(down, calc((100vw - var(--spacing-12) - var(--dk-cal-weeks, var(--spacing-0))) / 7), var(--border-width-1))); } }   /* stylelint-disable-line serupa/no-raw-value -- as above */
 .dk-calendar__header { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
 .dk-calendar__title { flex: auto; margin: var(--spacing-0); text-align: center; color: var(--calendar-title-color, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--calendar-title-weight, var(--font-semibold)); }
 /* monthYearPicker: the month and year menus where the title was, native selects with the field's look. */
@@ -69,6 +69,10 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 .dk-calendar__period--selected { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); }
 @media (hover: hover) { .dk-calendar__period--selected:hover:not([aria-disabled="true"]) { background: var(--calendar-bg-selected, var(--primary)); color: var(--calendar-color-selected, var(--on-primary)); } }
 .dk-calendar__period--disabled { opacity: var(--opacity-disabled); text-decoration: line-through; cursor: var(--cursor-disabled); }
+/* weekNumbers: a narrow column of week numbers before the days, which take its width off their share of a narrow screen. */
+.dk-calendar--weeks { --dk-cal-weeks: var(--calendar-week-width, var(--spacing-7)); }
+.dk-calendar__grid .dk-calendar__week { width: var(--dk-cal-weeks); color: var(--calendar-week-color, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-weight: var(--font-normal); font-variant-numeric: tabular-nums; text-align: center; }
+.dk-calendar__grid tbody tr + tr th.dk-calendar__week { padding-block-start: var(--dk-cal-row-gap); }
 .dk-calendar__day {
   display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--dk-cal-day); height: var(--dk-cal-day);
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); border-radius: var(--calendar-day-radius, var(--radius-control));

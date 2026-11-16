@@ -100,6 +100,7 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | Month and weekday names, and the first day of the week. When it differs from the provider's, the month title and the grid carry `lang`, so screen readers read the names in that language; the nav buttons keep the page's. |
 | `calendar` | `'gregory'` `'persian'` `'islamic-umalqura'` `'islamic-civil'` `'islamic-tbla'` `'indian'` `'buddhist'` `'japanese'` `'roc'` | `'gregory'` | The calendar system the months follow. Persian, Hijri and Indian have months of their own; Buddhist, Japanese and ROC share the Gregorian months and count years their way. Values stay `Date`s. |
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |
+| `weekNumbers` | boolean | `false` | A narrow column of ISO 8601 week numbers before the days (the week holding each row's Thursday), for planning by week. Each number is its row's header, read as "Week 12" with the days; the days take its width off their share of a narrow screen. |
 | `autoFocus` | `boolean` | `false` | Focus the selected day (or today) when it appears. |
 | `previousLabel`, `nextLabel` | `string` | `"Previous month"`, `"Next month"` | The month buttons' names. |
 
@@ -119,6 +120,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | `--calendar-menu-bg` | `field` | The Month and Year menus' fill (`monthYearPicker`). |
 | `--calendar-presets-border` | `border` | The line between the days and the `presets` shortcuts. |
 | `--calendar-weekday-color` | `text-muted` | The weekday names (4.5:1 on surface). |
+| `--calendar-week-color` | `text-muted` | The week numbers, with weekNumbers (4.5:1 on surface). |
 | `--calendar-day-color` | `text` | Days of the shown month. |
 | `--calendar-outside-color` | `text-muted` | Days of the months before and after. |
 | `--calendar-outside-color-hover` | `text` | A day of the months before and after, under the pointer: full text, so it keeps 4.5:1 on the hover fill. |
@@ -138,6 +140,7 @@ Each is an optional override: set it on the page, a container or one calendar. T
 | Token | Default | Use |
 | --- | --- | --- |
 | `--calendar-day-size` | `control-height-md` | Each day's square (32px). |
+| `--calendar-week-width` | `spacing-7` | The week number column, with weekNumbers (28px); the days give up its width on a narrow screen. |
 
 **Radius**
 

@@ -63,7 +63,7 @@ const SAME_IN = {
   de: ['periodQuarter', 'tableDetails', 'fieldOptional', 'optional', 'sliderMaximum', 'colorName', 'codeName', 'attachmentCode', 'attachmentAudio', 'attachmentVideo'],
   es: ['generalShortcuts', 'attachmentAudio', 'chartTotal'],
   ms: ['edit', 'attachmentAudio', 'attachmentVideo'],
-  nl: ['weekView', 'tableDetails', 'sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo', 'filterBar'],
+  nl: ['weekView', 'week', 'weekShort', 'tableDetails', 'sliderMaximum', 'codeName', 'attachmentSheet', 'attachmentDoc', 'attachmentCode', 'attachmentAudio', 'attachmentVideo', 'filterBar'],
   sv: ['sliderMaximum', 'colorName', 'attachmentVideo', 'contextualInfo'],
   fr: ['colorName', 'notificationCenter', 'notifications', 'pagination', 'sliderMaximum', 'image', 'page', 'codeName', 'attachmentImage', 'attachmentDoc', 'attachmentArchive', 'attachmentCode', 'attachmentAudio', 'chatMessage'],
   it: ['attachmentAudio', 'attachmentVideo', 'attachmentOther'],
