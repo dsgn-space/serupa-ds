@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/rejectInput.ts"],
+  "sourcesContent": ["import { announce } from './announce';\n\n/* DatePicker, DateRangePicker, TimePicker and NumberInput put back typed text they don't take. This tells the app why\n   (onInvalidInput), says so to screen readers, who would otherwise hear the old value come back without a word, and\n   hands the words to shown, which the component puts under the field until the text changes, so people who see the\n   value jump back also read why (GR232). */\nexport function reject<R extends string>(text: string, reason: R, onInvalidInput: ((text: string, reason: R) => void) | undefined, say: (text: string) => string, shown?: (said: string) => void): void {\n  const t = text.trim();\n  if (onInvalidInput) onInvalidInput(t, reason);\n  const said = say(t);\n  announce(said, { assertive: true });\n  if (shown) shown(said);\n}\n"],
+  "mappings": ";AAAA,SAAS,gBAAgB;AAMlB,SAAS,OAAyB,MAAc,QAAW,gBAAiE,KAA+B,OAAsC;AACtM,QAAM,IAAI,KAAK,KAAK;AACpB,MAAI,eAAgB,gBAAe,GAAG,MAAM;AAC5C,QAAM,OAAO,IAAI,CAAC;AAClB,WAAS,MAAM,EAAE,WAAW,KAAK,CAAC;AAClC,MAAI,MAAO,OAAM,IAAI;AACvB;",
+  "names": []
+}

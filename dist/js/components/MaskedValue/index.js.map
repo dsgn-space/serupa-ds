@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/MaskedValue/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { MaskedValue, maskValue } from './MaskedValue';\nexport type { MaskedValueProps } from './MaskedValue';\n"],
+  "mappings": ";AACA,SAAS,aAAa,iBAAiB;",
+  "names": []
+}

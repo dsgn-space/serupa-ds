@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/ShowMore/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { ShowMore } from './ShowMore';\nexport type { ShowMoreProps } from './ShowMore';\n"],
+  "mappings": ";AACA,SAAS,gBAAgB;",
+  "names": []
+}

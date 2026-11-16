@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/Field/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { Field, FormErrors } from './Field';\nexport type { FieldProps, FormErrorsProps } from './Field';\n"],
+  "mappings": ";AACA,SAAS,OAAO,kBAAkB;",
+  "names": []
+}

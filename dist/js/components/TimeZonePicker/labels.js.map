@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/TimeZonePicker/labels.ts"],
+  "sourcesContent": ["// TimeZonePicker's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface TimeZonePickerLabels {\n  /** TimeZonePicker: after the offset of the reader's own zone, at the top of the list (\"UTC+07:00 \u00B7 Your time zone\"). */\n  timeZoneYours: string;\n  /** TimeZonePicker: in the empty field, until a zone is chosen (a placeholder you pass wins). */\n  timeZonePlaceholder: string;\n}\nexport const en: TimeZonePickerLabels = { timeZoneYours: 'Your time zone', timeZonePlaceholder: 'Search a city or time zone' };\nexport const id: TimeZonePickerLabels = { timeZoneYours: 'Zona waktu Anda', timeZonePlaceholder: 'Cari kota atau zona waktu' };\n"],
+  "mappings": ";AAQO,IAAM,KAA2B,EAAE,eAAe,kBAAkB,qBAAqB,6BAA6B;AACtH,IAAM,KAA2B,EAAE,eAAe,mBAAmB,qBAAqB,4BAA4B;",
+  "names": []
+}

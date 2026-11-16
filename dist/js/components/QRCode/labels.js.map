@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/QRCode/labels.ts"],
+  "sourcesContent": ["// QRCode's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface QRCodeLabels {\n  /** QRCode with status=\"expired\": over the code, and said when it changes. */\n  qrExpired: string;\n  /** QRCode with status=\"expired\" and onRefresh: the button that makes a new code. */\n  qrRefresh: string;\n  /** QRCode with status=\"scanned\": over the code, and said when it changes. */\n  qrScanned: string;\n}\nexport const en: QRCodeLabels = {\n  qrExpired: 'Code expired',\n  qrRefresh: 'Get a new code',\n  qrScanned: 'Scanned',\n};\nexport const id: QRCodeLabels = {\n  qrExpired: 'Kode kedaluwarsa',\n  qrRefresh: 'Minta kode baru',\n  qrScanned: 'Sudah dipindai',\n};\n"],
+  "mappings": ";AAUO,IAAM,KAAmB;AAAA,EAC9B,WAAW;AAAA,EACX,WAAW;AAAA,EACX,WAAW;AACb;AACO,IAAM,KAAmB;AAAA,EAC9B,WAAW;AAAA,EACX,WAAW;AAAA,EACX,WAAW;AACb;",
+  "names": []
+}

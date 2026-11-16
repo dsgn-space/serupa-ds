@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/DataGrid/index.ts"],
+  "sourcesContent": ["// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.\nexport { DataGrid } from './DataGrid';\nexport type { DataGridProps, DataGridRow, DataGridColumn, DataGridCellChange, DataGridRowsChangeDetails } from './DataGrid';\n"],
+  "mappings": ";AACA,SAAS,gBAAgB;",
+  "names": []
+}

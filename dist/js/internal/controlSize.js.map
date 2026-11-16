@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/internal/controlSize.ts"],
+  "sourcesContent": ["import * as React from 'react';\n\n/** The size a group (ButtonGroup) gives the buttons in it that don't set their own: one size on the group, rather\n    than the same size on every button. A button's own size wins. */\nexport const ControlSize = /* @__PURE__ */ React.createContext<'sm' | 'md' | 'lg' | undefined>(undefined);\n\n/** A control's size: its own, else the one a group or a SerupaProvider around it gives (size=\"sm\" on a form's\n    SerupaProvider makes every field in it small), else undefined for the control's default. */\nexport function useControlSize<S extends string>(own: S | undefined): S | 'sm' | 'md' | 'lg' | undefined {\n  const around = React.useContext(ControlSize);\n  return own ?? around;\n}\n"],
+  "mappings": ";AAAA,YAAY,WAAW;AAIhB,IAAM,cAA8B,gBAAM,oBAA8C,MAAS;AAIjG,SAAS,eAAiC,KAAwD;AACvG,QAAM,SAAe,iBAAW,WAAW;AAC3C,SAAO,OAAO;AAChB;",
+  "names": []
+}
