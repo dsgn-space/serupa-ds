@@ -216,3 +216,28 @@
     - checkbox "ID" [disabled]
     - text: ID Always shown
 
+# ReadOnly
+- group "Columns":
+  - paragraph: Available (4)
+  - group "Available (4)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Phone"
+    - text: Phone
+    - checkbox "Company"
+    - text: Company
+    - checkbox "Role"
+    - text: Role
+    - checkbox "Created"
+    - text: Created
+  - paragraph: Chosen (3)
+  - group "Chosen (3)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Name"
+    - text: Name
+    - checkbox "Email"
+    - text: Email
+    - checkbox "ID" [disabled]
+    - text: ID Always shown
+
