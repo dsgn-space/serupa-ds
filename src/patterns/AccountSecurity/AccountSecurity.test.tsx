@@ -4,9 +4,12 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { AccountSecurity, passwordProblems } from './AccountSecurity';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 const active = () => document.activeElement as HTMLElement;
-const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
+const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]'));
 // Text shown in the open dialog itself, not in the page's live region, which can sit inside the dialog and still hold
 // what it last said.
 const inDialog = (text: string | RegExp) => [...document.querySelectorAll('dialog[open] *')]
@@ -31,7 +34,7 @@ describe('Patterns/Account security', () => {
     expect(ruled(document.querySelector('h1'))).toBe(true);
     await expect.element(current()).toHaveAttribute('autocomplete', 'current-password');
     await expect.element(next()).toHaveAttribute('autocomplete', 'new-password');
-    expect(document.body.textContent).toContain('At least 12 characters.');
+    expect(latin(document.body.textContent)).toContain('At least 12 characters.');
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
   });
@@ -42,7 +45,7 @@ describe('Patterns/Account security', () => {
     const screen = await render(<AccountSecurity onChangePassword={onChangePassword} />);
     await screen.getByRole('button', { name: 'Change password' }).click();
     await expect.poll(() => active().textContent).toMatch(/^There are \S+ problems/);
-    expect(screen.getByRole('link', { name: 'Make the new password at least 12 characters' }).elements()).toHaveLength(1);
+    expect(screen.getByRole('link', { name: digits('Make the new password at least 12 characters') }).elements()).toHaveLength(1);
     expect(onChangePassword).not.toHaveBeenCalled();
     await current().fill('old password');
     await next().fill('a much longer phrase');
@@ -116,7 +119,7 @@ describe('Patterns/Account security', () => {
     await expect.poll(() => toasted('Signed out of Safari on an iPhone')).toBe(true);
     expect(screen.getByRole('button', { name: 'Sign out everywhere else' }).elements()).toHaveLength(0);
     await screen.getByRole('button', { name: 'Sign out of Firefox on a Windows PC' }).click();
-    await expect.poll(() => active().textContent).toBe('Where you’re signed in');
+    await expect.poll(() => latin(active().textContent)).toBe('Where you’re signed in');
     expect(onSignOut.mock.calls).toEqual([['d2'], ['d3']]);
   });
 
@@ -127,7 +130,7 @@ describe('Patterns/Account security', () => {
     expect(onSignOutOthers).toHaveBeenCalledOnce();
     expect(screen.getByRole('button', { name: /^Sign out of/ }).elements()).toHaveLength(0);
     await expect.poll(() => toasted('Signed out of 2 other devices')).toBe(true);
-    await expect.poll(() => active().textContent).toBe('Where you’re signed in');
+    await expect.poll(() => latin(active().textContent)).toBe('Where you’re signed in');
   });
 
   test('deleting the account offers the data first, asks for the email, and a failure keeps the dialog open and says so', async () => {
@@ -144,7 +147,7 @@ describe('Patterns/Account security', () => {
     await expect.element(dialog.getByRole('alert')).toHaveTextContent('Couldn’t delete your account. Try again.');
     fail = false;
     await dialog.getByRole('button', { name: 'Delete my account' }).click();
-    await expect.poll(() => active().textContent).toBe('Your account is deleted');
+    await expect.poll(() => latin(active().textContent)).toBe('Your account is deleted');
     expect([document.querySelectorAll('h1').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Your account is deleted']);
     expect(onDeleteAccount).toHaveBeenCalledTimes(2);
     expect(screen.getByRole('button', { name: 'Change password' }).elements()).toHaveLength(0);
@@ -177,13 +180,13 @@ describe('Patterns/Account security', () => {
     const onDeleteAccount = vi.fn((_on?: string) => Promise.resolve());
     const onKeepAccount = vi.fn(() => (fail ? Promise.reject(new Error('offline')) : Promise.resolve()));
     const screen = await render(<SerupaProvider locale="en-GB"><AccountSecurity deleteAfter={14} plan="Pro" onDeleteAccount={onDeleteAccount} onKeepAccount={onKeepAccount} /></SerupaProvider>);
-    expect(document.body.textContent).toContain('You have 14 days to change your mind.');
-    expect(document.body.textContent).toContain('Your Pro plan stops renewing, so you won’t be charged again.');
+    expect(latin(document.body.textContent)).toContain('You have 14 days to change your mind.');
+    expect(latin(document.body.textContent)).toContain('Your Pro plan stops renewing, so you won’t be charged again.');
     await screen.getByRole('button', { name: 'Delete account' }).click();
     expect(inDialog(new RegExp(`will be deleted for good on ${long}\\. Until then you can sign in and keep your account\\. Your Pro plan stops renewing`))).toBe(true);
     await screen.getByRole('alertdialog').getByRole('textbox').fill('ana@example.com');
     await screen.getByRole('alertdialog').getByRole('button', { name: 'Delete my account' }).click();
-    await expect.poll(() => active().textContent).toBe('Keep my account');
+    await expect.poll(() => latin(active().textContent)).toBe('Keep my account');
     expect(onDeleteAccount.mock.calls).toEqual([[iso]]);
     await expect.element(screen.getByRole('button', { name: 'Keep my account' })).toHaveAccessibleDescription(`Your account will be deleted on ${long}`);
     expect(document.querySelector(`time[datetime="${iso}"]`)).not.toBeNull();
@@ -195,7 +198,7 @@ describe('Patterns/Account security', () => {
     await expect.element(screen.getByRole('status').filter({ hasText: 'Couldn’t keep your account. Try again.' })).toBeVisible();
     fail = false;
     await screen.getByRole('button', { name: 'Keep my account' }).click();
-    await expect.poll(() => active().textContent).toBe('Security');
+    await expect.poll(() => latin(active().textContent)).toBe('Security');
     await expect.poll(() => toasted('Your account won’t be deleted')).toBe(true);
     expect(screen.getByRole('button', { name: 'Keep my account' }).elements()).toHaveLength(0);
     await expect.element(screen.getByRole('button', { name: 'Delete account' })).toBeVisible();
@@ -205,7 +208,7 @@ describe('Patterns/Account security', () => {
   test('a delete already asked for opens with its banner, and the delete without deleteAfter still happens at once', async () => {
     const screen = await render(<SerupaProvider locale="en-GB"><AccountSecurity deletionDate="2026-11-28" /></SerupaProvider>);
     await expect.element(screen.getByRole('status').filter({ hasText: 'Your account will be deleted on 28 November 2026' })).toBeVisible();
-    expect(document.body.textContent).toContain('You can still keep it.');
+    expect(latin(document.body.textContent)).toContain('You can still keep it.');
     expect(screen.getByRole('button', { name: 'Delete account' }).elements()).toHaveLength(0);
   });
 
@@ -223,6 +226,6 @@ describe('Patterns/Account security', () => {
   test('counts follow the locale’s digits', async () => {
     const screen = await render(<SerupaProvider locale="ar-EG"><AccountSecurity /></SerupaProvider>);
     await screen.getByRole('button', { name: 'Sign out everywhere else' }).click();
-    await expect.poll(() => toasted('Signed out of ٢ other devices')).toBe(true);
+    await expect.poll(() => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes('Signed out of ٢ other devices'))).toBe(true);
   });
 });

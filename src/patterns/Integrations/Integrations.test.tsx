@@ -4,11 +4,12 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Integrations, matchIntegrations, type Integration } from './Integrations';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
 
 const active = () => document.activeElement as HTMLElement;
-const count = () => document.querySelector('p[role="status"]')?.textContent;
-const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
-const h2s = () => [...document.querySelectorAll('section > h2')].map((h) => h.textContent);
+const count = () => latin(document.querySelector('p[role="status"]')?.textContent);
+const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]'));
+const h2s = () => [...document.querySelectorAll('section > h2')].map((h) => latin(h.textContent));
 
 // Integrations: two lists under their own headings, each button named with its app, a search said as a count, a
 // connect that moves the app and its focus, and a disconnect that asks first and survives a failure.
@@ -109,7 +110,8 @@ describe('Patterns/Integrations', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     await render(<SerupaProvider locale="ar-EG"><Integrations /></SerupaProvider>);
-    expect(document.body.textContent).toContain('٦ apps');
+    expect(bodyText()).toContain('٦ apps');
   });
 });

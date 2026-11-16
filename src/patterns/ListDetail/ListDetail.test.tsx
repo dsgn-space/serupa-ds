@@ -4,11 +4,12 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { ListDetail } from './ListDetail';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
 
 const active = () => document.activeElement as HTMLElement;
 const current = () => document.querySelector('[aria-current="true"]')?.id;
 const regions = () => [...document.querySelectorAll('main section[aria-labelledby]')]
-  .map((s) => document.getElementById(s.getAttribute('aria-labelledby') || '')?.textContent);
+  .map((s) => latin(document.getElementById(s.getAttribute('aria-labelledby') || '')?.textContent));
 
 // List and detail: two named panes on a wide screen with focus kept in the list; one at a time on a phone, with
 // focus on the open message and back on its place in the list.
@@ -55,7 +56,7 @@ describe('Patterns/List and detail', () => {
       expect(current()).toBeUndefined();
       await screen.getByRole('link', { name: /New photos/ }).click();
       await expect.poll(regions).toEqual(['New photos for the home page']);
-      await expect.poll(() => active().textContent).toBe('New photos for the home page');
+      await expect.poll(() => latin(active().textContent)).toBe('New photos for the home page');
       await screen.getByRole('button', { name: 'Back to messages' }).click();
       await expect.poll(regions).toEqual(['Messages (4)']);
       await expect.poll(() => active().id).toBe('message-m3');
@@ -141,7 +142,8 @@ describe('Patterns/List and detail', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     await render(<SerupaProvider locale="ar-EG"><ListDetail /></SerupaProvider>);
-    expect(document.body.textContent).toContain('Messages (٤)');
+    expect(bodyText()).toContain('Messages (٤)');
   });
 });

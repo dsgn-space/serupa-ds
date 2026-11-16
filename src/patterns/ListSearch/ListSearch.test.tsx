@@ -4,12 +4,15 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { SerupaProvider } from '../../internal/provider';
 import { ListSearch, readView, writeView } from './ListSearch';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 const active = () => document.activeElement as HTMLElement;
-const status = () => document.querySelector('main [role="status"]')?.textContent;
+const status = () => latin(document.querySelector('main [role="status"]')?.textContent);
 const names = () => [...document.querySelectorAll('tbody tr')].map((r) => r.querySelectorAll('td')[1]?.textContent);
 // The toast that says text, and its buttons: Undo is named by its words, the close button is "Dismiss".
-const toastOf = (text: string) => [...document.querySelectorAll('li')].filter((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]')).at(-1) as HTMLElement | undefined;
+const toastOf = (text: string) => [...document.querySelectorAll('li')].filter((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]')).at(-1) as HTMLElement | undefined;
 const undoIn = (text: string) => [...toastOf(text)!.querySelectorAll('button')].find((b) => b.textContent === 'Undo') as HTMLElement;
 
 // List with search and filters (PT2): the count said as it changes, sort and selection that say what they are, a
@@ -108,12 +111,12 @@ describe('Patterns/List with search and filters', () => {
     const [a, b] = names();
     await screen.getByRole('checkbox', { name: `Select ${a}` }).click();
     await screen.getByRole('checkbox', { name: `Select ${b}` }).click();
-    await expect.element(screen.getByRole('group', { name: '2 selected' })).toBeVisible();
+    await expect.element(screen.getByRole('group', { name: digits('2 selected') })).toBeVisible();
     await userEvent.fill(screen.getByRole('searchbox'), a!);
-    await expect.element(screen.getByRole('group', { name: '1 selected' })).toBeVisible();
+    await expect.element(screen.getByRole('group', { name: digits('1 selected') })).toBeVisible();
     await userEvent.fill(screen.getByRole('searchbox'), '');
     await vi.waitFor(() => expect(status()).toBe('24 projects'));
-    await expect.element(screen.getByRole('group', { name: '1 selected' })).toBeVisible();
+    await expect.element(screen.getByRole('group', { name: digits('1 selected') })).toBeVisible();
     expect(screen.getByRole('checkbox', { name: `Select ${b}` }).element()).not.toBeChecked();
   });
 
@@ -195,7 +198,8 @@ describe('Patterns/List with search and filters', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     await render(<SerupaProvider locale="ar-EG"><ListSearch /></SerupaProvider>);
-    expect(document.body.textContent).toContain('٢٤ projects');
+    expect(bodyText()).toContain('٢٤ projects');
   });
 });

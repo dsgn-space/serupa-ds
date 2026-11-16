@@ -4,15 +4,18 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { TeamMembers, emailsIn, inviteProblem } from './TeamMembers';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 // A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
 // match getByText, and a locator that finds two fails.
 const own = (text: string) => page.getByText(text).elements().filter((e) => !e.closest('[data-dk-announcer], [data-dk-announcer-assertive]'));
 const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).length;
 const active = () => document.activeElement as HTMLElement;
-const said = () => [...document.querySelectorAll('[aria-live]')].map((e) => e.textContent || '').join(' ');
+const said = () => latin([...document.querySelectorAll('[aria-live]')].map((e) => e.textContent || '').join(' '));
 // The toast that says text: its Undo has no aria-label (its words name it), its close button is "Dismiss".
-const toastOf = (text: string) => [...document.querySelectorAll('li')].filter((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]')).at(-1) as HTMLElement;
+const toastOf = (text: string) => [...document.querySelectorAll('li')].filter((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]')).at(-1) as HTMLElement;
 
 // Team members: role pickers named per member, removals and revokes with Undo that keep focus in the list, and an
 // invite dialog that names each bad address and survives a failed send.
@@ -51,7 +54,7 @@ describe('Patterns/Team members', () => {
     const screen = await render(<TeamMembers onRemove={onRemove} />);
     await screen.getByRole('button', { name: 'Remove Chen Wei' }).click();
     await expect.poll(() => active().getAttribute('aria-label')).toBe('Remove Dewi Lestari');
-    expect(screen.getByRole('heading', { level: 2, name: 'Members (3)' }).elements()).toHaveLength(1);
+    expect(screen.getByRole('heading', { level: 2, name: digits('Members (3)') }).elements()).toHaveLength(1);
     await page.elementLocator(toastOf('Removed Chen Wei')).getByRole('button', { name: 'Undo' }).click();
     await expect.poll(() => active().getAttribute('aria-label')).toBe('Remove Chen Wei');
     expect(onRemove).not.toHaveBeenCalled();
@@ -68,7 +71,7 @@ describe('Patterns/Team members', () => {
     expect(onResend).toHaveBeenCalledWith('eko@example.com');
     await expect.poll(() => !!toastOf('Sent the invite to eko@example.com again')).toBe(true);
     await screen.getByRole('button', { name: 'Revoke the invite to eko@example.com' }).click();
-    await expect.poll(() => active().textContent).toBe('Invites (0)');
+    await expect.poll(() => latin(active().textContent)).toBe('Invites (0)');
     await expect.element(screen.getByText('No invites waiting.')).toBeVisible();
     await page.elementLocator(toastOf('Revoked the invite to eko@example.com')).getByRole('button', { name: 'Dismiss' }).click();
     await expect.poll(() => onRevoke.mock.calls).toEqual([['eko@example.com']]);
@@ -99,7 +102,7 @@ describe('Patterns/Team members', () => {
     await expect.element(screen.getByText('Can only look.')).toBeVisible();
     await screen.getByRole('button', { name: 'Send invites' }).click();
     await expect.poll(() => onInvite.mock.calls).toEqual([[['fay@example.com', 'gus@example.com'], 'viewer']]);
-    await expect.element(screen.getByRole('heading', { level: 2, name: 'Invites (3)' })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { level: 2, name: digits('Invites (3)') })).toBeVisible();
     await expect.poll(() => !!toastOf('Invited 2 people')).toBe(true);
     expect(screen.getByRole('dialog').elements()).toHaveLength(0);
   });
@@ -144,16 +147,17 @@ describe('Patterns/Team members', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledOnce();
     await screen.rerender(<TeamMembers />);
-    await expect.element(screen.getByRole('heading', { level: 2, name: 'Members (4)' })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { level: 2, name: digits('Members (4)') })).toBeVisible();
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     const screen = await render(<SerupaProvider locale="ar-EG"><TeamMembers /></SerupaProvider>);
-    expect(document.body.textContent).toMatch(/Members \([٠-٩]+\)/);
-    expect(document.body.textContent).toMatch(/Invites \([٠-٩]+\)/);
+    expect(bodyText()).toMatch(/Members \([٠-٩]+\)/);
+    expect(bodyText()).toMatch(/Invites \([٠-٩]+\)/);
     await screen.getByRole('button', { name: 'Invite people' }).click();
     await screen.getByRole('textbox', { name: /^Email addresses/ }).fill('fay@example.com, gus@example.com');
     await screen.getByRole('button', { name: 'Send invites' }).click();
-    await expect.poll(() => !!toastOf('Invited ٢ people')).toBe(true);
+    await expect.poll(() => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes('Invited ٢ people'))).toBe(true);
   });
 });

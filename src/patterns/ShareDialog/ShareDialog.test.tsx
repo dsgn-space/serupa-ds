@@ -4,8 +4,11 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { ShareDialog, shareProblem, sharedWith } from './ShareDialog';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
-const said = () => [...document.querySelectorAll('[aria-live]')].map((e) => e.textContent || '').join(' ');
+const said = () => latin([...document.querySelectorAll('[aria-live]')].map((e) => e.textContent || '').join(' '));
 const active = () => document.activeElement as HTMLElement;
 
 // Share dialog: who a document is shared with shows beside Share; in the dialog, pickers named per person, a removal
@@ -23,9 +26,9 @@ describe('Patterns/Share dialog', () => {
   test('the page says who it is shared with beside Share, and Share opens the dialog on Add people', async () => {
     const screen = await render(<ShareDialog nativeShare={null} />);
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Q3 plan']);
-    await expect.element(screen.getByText('Shared with 2 people · Only people added can open')).toBeVisible();
+    await expect.element(screen.getByText(digits('Shared with 2 people · Only people added can open'))).toBeVisible();
     await screen.getByRole('button', { name: 'Share' }).click();
-    await expect.element(screen.getByRole('dialog', { name: 'Share “Q3 plan”' })).toBeVisible();
+    await expect.element(screen.getByRole('dialog', { name: digits('Share “Q3 plan”') })).toBeVisible();
     await expect.poll(() => active().id).toBe('share-emails');
     expect(screen.getByRole('combobox').elements().map((e) => e.getAttribute('aria-label') ?? e.id))
       .toEqual(['Access for the people you add', 'Access for Budi Santoso', 'Access for Chen Wei', 'share-link']);
@@ -126,8 +129,9 @@ describe('Patterns/Share dialog', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     expect(sharedWith(3, 'ar-EG')).toBe('Shared with ٣ people');
     await render(<SerupaProvider locale="ar-EG"><ShareDialog /></SerupaProvider>);
-    expect(document.body.textContent).toContain('Shared with ٢ people');
+    expect(bodyText()).toContain('Shared with ٢ people');
   });
 });

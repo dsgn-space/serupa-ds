@@ -11,7 +11,9 @@ const CSV = 'Full name,E-mail,Mobile,Town\nAni,ani@example.com,0812,Bandung\nCit
 const FILE = { name: 'customers.csv', text: CSV };
 
 // Numbers are written in the reader's digits (Arabic-Indic in ar-EG): read them back as Latin.
-const latin = (t: string | null) => (t || '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+const latin = (t: string | null | undefined) => (t || '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 // Data import: a CSV file, its columns matched, every row checked and shown before anything is saved, then what
 // happened in words; each step's heading takes focus, and every problem is listed with what to do.
@@ -60,7 +62,7 @@ describe('Patterns/Data import', () => {
     await render(<DataImport />);
     await userEvent.upload(document.getElementById('import-file') as HTMLInputElement, [new File([CSV], 'customers.csv', { type: 'text/csv' })]);
     await userEvent.click(page.getByRole('button', { name: 'Continue' }));
-    await expect.poll(() => active().textContent).toBe('Match columns');
+    await expect.poll(() => latin(active().textContent)).toBe('Match columns');
     expect([select('import-name').value, select('import-email').value, select('import-phone').value, select('import-city').value]).toEqual(['0', '1', '2', '3']);
     expect(page.getByRole('navigation').element().textContent).toMatch(/Choose a file/);
   });
@@ -80,37 +82,37 @@ describe('Patterns/Data import', () => {
     await expect.poll(() => latin(active().textContent)).toMatch(/There are 2 problems/);
     await userEvent.click(page.getByRole('button', { name: 'Back' }));
     await userEvent.click(page.getByRole('button', { name: 'Continue' }));
-    await expect.poll(() => active().textContent).toBe('Match columns');
+    await expect.poll(() => latin(active().textContent)).toBe('Match columns');
     expect([select('import-email').value, select('import-city').value]).toEqual(['-1', '0']);
   });
 
   test('checking: rows with problems first, in words; importing them waits for "skip"; then what happened is listed', async () => {
     const onImport = vi.fn();
     await render(<DataImport start="check" file={FILE} existing={['ani@example.com']} onImport={onImport} />);
-    expect(page.getByRole('main').element().textContent).toMatch(/2 rows are ready: 1 new customer and 1 update to customers you have\. 1 row has problems, listed first\. Nothing is saved until you import\./);
+    expect(latin(page.getByRole('main').element().textContent)).toMatch(/2 rows are ready: 1 new customer and 1 update to customers you have\. 1 row has problems, listed first\. Nothing is saved until you import\./);
     const rows = page.getByRole('row').elements().slice(1).map((r) => [...r.querySelectorAll('td')].map((c) => c.textContent));
-    expect(rows.map((r) => [latin(r[0]!), r[1], r[2]])).toEqual([['3', 'Problem', '“citra@example” isn’t an email address'], ['2', 'Update', ''], ['4', 'New', '']]);
-    await userEvent.click(page.getByRole('button', { name: 'Import 2 customers' }));
+    expect(rows.map((r) => [latin(r[0]), r[1], r[2]])).toEqual([['3', 'Problem', '“citra@example” isn’t an email address'], ['2', 'Update', ''], ['4', 'New', '']]);
+    await userEvent.click(page.getByRole('button', { name: digits('Import 2 customers') }));
     await expect.poll(() => active().textContent).toMatch(/There is a problem/);
     expect(onImport).not.toHaveBeenCalled();
-    await userEvent.click(page.getByRole('checkbox', { name: 'Skip the 1 row with problems' }));
-    await userEvent.click(page.getByRole('button', { name: 'Import 2 customers' }));
-    await expect.poll(() => active().textContent).toBe('Import finished');
+    await userEvent.click(page.getByRole('checkbox', { name: digits('Skip the 1 row with problems') }));
+    await userEvent.click(page.getByRole('button', { name: digits('Import 2 customers') }));
+    await expect.poll(() => latin(active().textContent)).toBe('Import finished');
     expect(onImport).toHaveBeenCalledWith([{ name: 'Ani', email: 'ani@example.com', phone: '0812', city: 'Bandung' }, { name: 'Dewi', email: 'dewi@example.com', phone: '', city: 'Yogyakarta' }]);
-    expect(page.getByRole('listitem').elements().filter((l) => !l.closest('nav')).map((l) => l.textContent)).toEqual(['1 customer added', '1 customer updated', '1 row skipped, still in your file to fix']);
+    expect(page.getByRole('listitem').elements().filter((l) => !l.closest('nav')).map((l) => latin(l.textContent))).toEqual(['1 customer added', '1 customer updated', '1 row skipped, still in your file to fix']);
     await userEvent.click(page.getByRole('button', { name: 'Import another file' }));
-    await expect.poll(() => active().textContent).toBe('Choose a file');
+    await expect.poll(() => latin(active().textContent)).toBe('Choose a file');
   });
 
   test('an import that fails says so, saves nothing, and Try again goes on', async () => {
     let fail = true;
     const onImport = vi.fn(() => (fail ? Promise.reject(new Error('503')) : Promise.resolve()));
     await render(<DataImport start="check" file={{ name: 'ok.csv', text: 'Name,Email\nAni,ani@example.com\n' }} onImport={onImport} />);
-    await userEvent.click(page.getByRole('button', { name: 'Import 1 customer' }));
+    await userEvent.click(page.getByRole('button', { name: digits('Import 1 customer') }));
     await expect.element(page.getByText('Nothing was saved. Check your connection and try again.')).toBeVisible();
     fail = false;
     await userEvent.click(page.getByRole('button', { name: 'Try again' }));
-    await expect.poll(() => active().textContent).toBe('Import finished');
+    await expect.poll(() => latin(active().textContent)).toBe('Import finished');
     expect(onImport).toHaveBeenCalledTimes(2);
   });
 
@@ -137,9 +139,9 @@ describe('Patterns/Data import', () => {
       const panel = page.getByRole('heading', { name: 'Match columns' }).element().closest<HTMLElement>('[style]')!;
       expect([panel.style.viewTransitionName, panel.style.getPropertyValue('view-transition-class')]).toEqual(['data-import-step', 'step']);
       await userEvent.click(page.getByRole('button', { name: 'Back' }));
-      await expect.poll(() => active().textContent).toBe('Choose a file');
+      await expect.poll(() => latin(active().textContent)).toBe('Choose a file');
       await userEvent.click(page.getByRole('button', { name: 'Continue' }));
-      await expect.poll(() => active().textContent).toBe('Match columns');
+      await expect.poll(() => latin(active().textContent)).toBe('Match columns');
       expect(types).toEqual([['back'], ['forward']]);
     } finally {
       document.startViewTransition = start;
@@ -149,12 +151,13 @@ describe('Patterns/Data import', () => {
   test('Back from checking goes to the matches, kept', async () => {
     await render(<DataImport start="check" file={FILE} />);
     await userEvent.click(page.getByRole('button', { name: 'Back' }));
-    await expect.poll(() => active().textContent).toBe('Match columns');
+    await expect.poll(() => latin(active().textContent)).toBe('Match columns');
     expect(select('import-email').value).toBe('1');
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     await render(<SerupaProvider locale="ar-EG"><DataImport start="check" file={FILE} /></SerupaProvider>);
-    expect(document.body.textContent).toMatch(/[٠-٩] rows? (is|are) ready/);
+    expect(bodyText()).toMatch(/[٠-٩] rows? (is|are) ready/);
   });
 });

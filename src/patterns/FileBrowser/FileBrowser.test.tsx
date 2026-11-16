@@ -4,9 +4,12 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { FileBrowser, countFiles, nameProblem, type BrowserFile } from './FileBrowser';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 const active = () => document.activeElement as HTMLElement;
-const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
+const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]'));
 const files: BrowserFile[] = [
   { id: 'a', name: 'Logo.svg', kind: 'image', bytes: 18_400, modified: 0 },
   { id: 'b', name: 'Guide.pdf', kind: 'pdf', bytes: 4_820_000, modified: 0 },
@@ -31,7 +34,7 @@ describe('Patterns/File browser', () => {
     await expect.element(screen.getByRole('grid', { name: 'Files in Brand' })).toBeVisible();
     expect(screen.getByRole('row').elements()).toHaveLength(3);
     await expect.element(screen.getByRole('button', { name: 'More for Guide.pdf' })).toBeVisible();
-    expect(document.body.textContent).toContain('3 files');
+    expect(latin(document.body.textContent)).toContain('3 files');
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
   });
@@ -65,7 +68,7 @@ describe('Patterns/File browser', () => {
     await expect.poll(() => toasted('Deleted “Logo.svg”')).toBe(true);
     await expect.element(screen.getByRole('heading', { level: 2, name: 'This folder is empty' })).toBeVisible();
     await expect.poll(() => active().tagName).toBe('H1');
-    expect(document.body.textContent).toContain('0 files');
+    expect(latin(document.body.textContent)).toContain('0 files');
   });
 
   test('Move asks for a folder, says so when none is chosen, keeps the dialog open on a failure, then moves the files out and says where', async () => {
@@ -73,13 +76,13 @@ describe('Patterns/File browser', () => {
     const onMove = vi.fn((_ids: string[], _to: string) => (fail ? Promise.reject(new Error('offline')) : Promise.resolve()));
     const screen = await render(<FileBrowser files={files} folders={folders} onMove={onMove} defaultSelected={['a', 'b']} />);
     await screen.getByRole('group', { name: /selected$/ }).getByRole('button', { name: 'Move' }).click();
-    const dialog = screen.getByRole('dialog', { name: 'Move 2 files' });
+    const dialog = screen.getByRole('dialog', { name: digits('Move 2 files') });
     await dialog.getByRole('button', { name: 'Move' }).click();
     await expect.element(dialog.getByText('Choose a folder.')).toBeVisible();
     expect(onMove).not.toHaveBeenCalled();
     await dialog.getByRole('radio', { name: 'Marketing' }).click();
     await dialog.getByRole('button', { name: 'Move' }).click();
-    await expect.element(dialog.getByRole('alert').filter({ hasText: 'Couldn’t move 2 files. Try again.' })).toBeVisible();
+    await expect.element(dialog.getByRole('alert').filter({ hasText: /Couldn’t move [2٢] files\. Try again\./ })).toBeVisible();
     await expect.element(dialog.getByRole('radio', { name: 'Marketing' })).toBeChecked();
     fail = false;
     await dialog.getByRole('button', { name: 'Move' }).click();
@@ -182,8 +185,9 @@ describe('Patterns/File browser', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     expect(countFiles(12, 'ar-EG')).toBe('١٢ files');
     await render(<SerupaProvider locale="ar-EG"><FileBrowser /></SerupaProvider>);
-    expect(document.body.textContent).toContain('٦ files');
+    expect(bodyText()).toContain('٦ files');
   });
 });

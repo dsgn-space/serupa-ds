@@ -4,6 +4,9 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { DetailPage } from './DetailPage';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 // A field's own error text, not the copy the polite live region may be saying at the same moment (announce.ts): both
 // match getByText, and a locator that finds two fails.
@@ -12,7 +15,7 @@ const shown = (text: string) => own(text).filter((e) => e.checkVisibility()).len
 const active = () => document.activeElement as HTMLElement;
 const h1 = () => document.querySelector('main h1')?.textContent;
 // The toast that says text: its Undo has no aria-label (its words name it), its close button is "Dismiss".
-const toastOf = (text: string) => [...document.querySelectorAll('li')].filter((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]')).at(-1) as HTMLElement;
+const toastOf = (text: string) => [...document.querySelectorAll('li')].filter((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]')).at(-1) as HTMLElement;
 const crumbs = () => [...document.querySelectorAll('nav[aria-label] li')].map((li) => li.textContent?.trim());
 
 // Detail page: where it sits, the name as the h1 and editable in place, tabs, removals with Undo that keep focus in
@@ -96,7 +99,7 @@ describe('Patterns/Detail page', () => {
     await screen.getByRole('button', { name: 'Remove Pick the photos' }).click();
     await expect.poll(() => active().getAttribute('aria-label')).toBe('Remove Review the pricing page');
     expect(screen.getByRole('button', { name: 'Remove Pick the photos' }).elements()).toHaveLength(0);
-    await expect.element(screen.getByRole('heading', { level: 2, name: 'Tasks (3)' })).toBeInTheDocument();
+    await expect.element(screen.getByRole('heading', { level: 2, name: digits('Tasks (3)') })).toBeInTheDocument();
     await userEvent.click(toastOf('Removed “Pick the photos”').querySelector('button:not([aria-label])') as HTMLElement);
     await expect.element(screen.getByRole('button', { name: 'Remove Pick the photos' })).toBeInTheDocument();
     await expect.poll(() => active().getAttribute('aria-label')).toBe('Remove Pick the photos');
@@ -114,7 +117,7 @@ describe('Patterns/Detail page', () => {
     const screen = await render(<DetailPage project={{ name: 'Solo', description: '', owner: 'Ana', created: '2026-11-01', tasks: [{ id: 'a', title: 'Only one' }] }} />);
     await screen.getByRole('tab', { name: 'Tasks' }).click();
     await screen.getByRole('button', { name: 'Remove Only one' }).click();
-    await expect.poll(() => active().textContent).toBe('Tasks (0)');
+    await expect.poll(() => latin(active().textContent)).toBe('Tasks (0)');
     await expect.element(screen.getByText('No tasks left.')).toBeVisible();
   });
 
@@ -126,7 +129,7 @@ describe('Patterns/Detail page', () => {
     await screen.getByRole('button', { name: 'Delete project' }).click();
     const dialog = screen.getByRole('alertdialog', { name: 'Delete Website redesign?' });
     await expect.element(dialog).toBeVisible();
-    expect(dialog.element().textContent).toMatch(/4 tasks and files .*can’t be undone/);
+    expect(latin(dialog.element().textContent)).toMatch(/4 tasks and files .*can’t be undone/);
     // Before the name is typed the button is aria-disabled (focusable, but it does nothing).
     (dialog.getByRole('button', { name: 'Delete this project' }).element() as HTMLElement).click();
     expect(onDelete).not.toHaveBeenCalled();
@@ -153,7 +156,7 @@ describe('Patterns/Detail page', () => {
       await expect.element(dialog.getByRole('alert')).toHaveTextContent('Couldn’t delete Website redesign. Try again.');
       await expect.element(dialog).toBeVisible();
       expect(h1()).toBe('Website redesign');
-      expect(active().textContent).toBe('Delete this project');
+      expect(latin(active().textContent)).toBe('Delete this project');
       await new Promise((r) => setTimeout(r, 50));
       expect(reasons).toEqual([]);
       // Tried again, it goes through.
@@ -253,9 +256,9 @@ describe('Patterns/Detail page', () => {
       await screen.getByRole('tab', { name: 'Tasks' }).click();
       return text;
     };
-    expect(await description()).toMatch(/the project and its 2 tasks and files for everyone/);
+    expect(latin(await description())).toMatch(/the project and its 2 tasks and files for everyone/);
     await screen.getByRole('button', { name: 'Remove One' }).click();
-    expect(await description()).toMatch(/the project and its 1 task and files for everyone/);
+    expect(latin(await description())).toMatch(/the project and its 1 task and files for everyone/);
     await screen.getByRole('button', { name: 'Remove Two' }).click();
     expect(await description()).toMatch(/the project and its files for everyone/);
   });
@@ -294,7 +297,8 @@ describe('Patterns/Detail page', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     await render(<SerupaProvider locale="ar-EG"><DetailPage /></SerupaProvider>);
-    expect(document.body.textContent).toContain('Tasks (٤)');
+    expect(bodyText()).toContain('Tasks (٤)');
   });
 });

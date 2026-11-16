@@ -4,9 +4,10 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { ApiKeys, keyNameProblem } from './ApiKeys';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
 
 const active = () => document.activeElement as HTMLElement;
-const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
+const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]'));
 // Text shown in the open dialog itself, not in the page's live region, which can sit inside the dialog and still hold
 // what it last said.
 const inDialog = (text: string | RegExp) => [...document.querySelectorAll('dialog[open] *')]
@@ -54,7 +55,7 @@ describe('Patterns/API keys', () => {
     await screen.getByRole('button', { name: 'Done' }).click();
     await expect.element(screen.getByText('…WXYZ')).toBeVisible();
     await expect.element(screen.getByRole('button', { name: 'Revoke CI runner' })).toBeVisible();
-    expect(active().textContent).toBe('Create key');
+    expect(latin(active().textContent)).toBe('Create key');
   });
 
   test('a create that fails says so and keeps the name', async () => {
@@ -94,7 +95,7 @@ describe('Patterns/API keys', () => {
     await screen.getByRole('button', { name: 'Revoke Only' }).click();
     await screen.getByRole('button', { name: 'Revoke key' }).click();
     await expect.element(screen.getByText('No API keys yet')).toBeVisible();
-    await expect.poll(() => active().textContent).toBe('Keys (0)');
+    await expect.poll(() => latin(active().textContent)).toBe('Keys (0)');
   });
 
   test('while the keys load, the table is busy', async () => {
@@ -112,7 +113,8 @@ describe('Patterns/API keys', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     await render(<SerupaProvider locale="ar-EG"><ApiKeys /></SerupaProvider>);
-    expect(document.body.textContent).toContain('Keys (٣)');
+    expect(bodyText()).toContain('Keys (٣)');
   });
 });

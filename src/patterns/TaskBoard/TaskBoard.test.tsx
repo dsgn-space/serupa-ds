@@ -4,9 +4,10 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { TaskBoard, countTasks, overLimit, putBack, type BoardColumn } from './TaskBoard';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
 
 const active = () => document.activeElement as HTMLElement;
-const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes(text) && e.querySelector('button[aria-label="Dismiss"]'));
+const toasted = (text: string) => [...document.querySelectorAll('li')].some((e) => latin(e.textContent).includes(latin(text)) && e.querySelector('button[aria-label="Dismiss"]'));
 const a = { id: 'a', title: 'Alpha' }, b = { id: 'b', title: 'Bravo' }, c = { id: 'c', title: 'Charlie' };
 const board = (): BoardColumn[] => [
   { id: 'todo', title: 'To do', items: [a, b] },
@@ -36,7 +37,7 @@ describe('Patterns/Task board', () => {
     const screen = await render(<TaskBoard title="Sprint 7" columns={board()} />);
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Sprint 7']);
     expect(screen.getByRole('heading', { level: 2 }).elements().map((h) => h.textContent)).toEqual(['To do', 'Doing', 'Done']);
-    expect(document.body.textContent).toContain('3 tasks');
+    expect(latin(document.body.textContent)).toContain('3 tasks');
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
   });
@@ -51,7 +52,7 @@ describe('Patterns/Task board', () => {
     expect(onMove).toHaveBeenCalledTimes(1);
     expect((onMove.mock.calls[0] as unknown[])[0]).toMatchObject({ item: { id: 'a' }, from: { column: 'todo', index: 0 }, to: { column: 'doing', index: 1 } });
     await expect.element(screen.getByRole('status').filter({ hasText: 'Doing has 2 tasks, over its limit of 1.' })).toBeVisible();
-    expect(document.body.textContent).toContain('Finish or move a task before starting another.');
+    expect(latin(document.body.textContent)).toContain('Finish or move a task before starting another.');
   });
 
   test('a move that can\'t be saved puts the card back and says which card and where it is', async () => {
@@ -85,8 +86,8 @@ describe('Patterns/Task board', () => {
     await expect.poll(shown).toEqual(['To do: Alpha, Bravo', 'Doing: Charlie', 'Done: Delta']);
     expect(onAdd.mock.calls.at(-1)).toEqual([{ title: 'Delta', column: 'done' }]);
     await expect.poll(() => toasted('Added “Delta” to Done')).toBe(true);
-    await expect.poll(() => active().textContent).toBe('New task');
-    expect(document.body.textContent).toContain('4 tasks');
+    await expect.poll(() => latin(active().textContent)).toBe('New task');
+    expect(latin(document.body.textContent)).toContain('4 tasks');
     // The new card moves like the others.
     await expect.element(screen.getByRole('button', { name: 'Move Delta to…' })).toBeVisible();
   });
@@ -103,7 +104,7 @@ describe('Patterns/Task board', () => {
     await userEvent.keyboard('{Escape}');
     await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
     expect(onAdd).not.toHaveBeenCalled();
-    expect(document.body.textContent).toContain('3 tasks');
+    expect(latin(document.body.textContent)).toContain('3 tasks');
   });
 
   test('while the tasks load the board is busy with no cards and New task waits; a failed load says so with Try again', async () => {
@@ -119,9 +120,10 @@ describe('Patterns/Task board', () => {
   });
 
   test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
     expect(countTasks(12, 'ar-EG')).toBe('١٢ tasks');
     expect(overLimit([{ id: 'c', title: 'Doing', limit: 1, items: [{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }] }], 'ar-EG')).toEqual(['Doing has ٢ tasks, over its limit of ١.']);
     await render(<SerupaProvider locale="ar-EG"><TaskBoard /></SerupaProvider>);
-    expect(document.body.textContent).toContain('٧ tasks');
+    expect(bodyText()).toContain('٧ tasks');
   });
 });
