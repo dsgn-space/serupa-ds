@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { RolePermissions, applyGrant, countChanges, type Grants, type Permission } from './RolePermissions';
 
 const active = () => document.activeElement as HTMLElement;
@@ -99,5 +99,18 @@ describe('Patterns/Roles and permissions', () => {
     const screen = await render(<RolePermissions loading grants={{}} />);
     await screen.rerender(<RolePermissions />);
     await expect.poll(ticked).toBe(all);
+  });
+});
+
+describe('Patterns/Roles and permissions on a phone', () => {
+  test('the permissions wrap, so the first roles’ checkboxes are on screen without scrolling the table', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<RolePermissions />);
+      const frame = document.querySelector('table')!.parentElement!.getBoundingClientRect();
+      const boxes = [...document.querySelectorAll<HTMLElement>('tbody tr')].map((r) => r.querySelector('td input, td [role="checkbox"]')!);
+      expect(boxes.length).toBeGreaterThan(0);
+      for (const b of boxes) expect(b.getBoundingClientRect().right).toBeLessThanOrEqual(frame.right);
+    } finally { await page.viewport(900, 700); }
   });
 });
