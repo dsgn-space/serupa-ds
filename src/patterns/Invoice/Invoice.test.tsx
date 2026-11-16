@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { Invoice, invoiceState, invoiceTotals, type InvoiceInfo } from './Invoice';
 
 const active = () => document.activeElement as HTMLElement;
@@ -90,5 +90,19 @@ describe('Patterns/Invoice', () => {
     const screen = await render(<Invoice loading invoice={inv()} />);
     await screen.rerender(<Invoice invoice={inv({ number: 'INV-8' })} />);
     await expect.poll(() => document.querySelector('main h1')?.textContent).toContain('INV-8');
+  });
+});
+
+describe('Invoice printed', () => {
+  test('printed, the invoice leaves out Pay and Download PDF, which paper can’t press', async () => {
+    await render(<Invoice onPay={() => {}} />);
+    // Found before printing: a role query skips what's hidden.
+    const hidden: Element[] = [page.getByRole('button', { name: /^Pay/ }).element(), page.getByRole('link', { name: /Download PDF/ }).element()];
+    const kept: Element[] = [page.getByRole('heading', { level: 1 }).element()];
+    await commands.printMedia(true);
+    try {
+      for (const e of hidden) expect(e.checkVisibility(), e.textContent ?? '').toBe(false);
+      for (const e of kept) expect(e.checkVisibility(), e.textContent ?? '').toBe(true);
+    } finally { await commands.printMedia(false); }
   });
 });

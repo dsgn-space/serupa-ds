@@ -18,13 +18,14 @@ With `base.css` and the components' own styles:
 | Tables over several pages | The header row repeats on each page, and a row is never cut in two. |
 | Cut text | [ShowMore](?path=/docs/components-content-showmore--docs) prints the whole text without its toggle. A [CodeBlock](?path=/docs/components-content-codeblock--docs) wraps its long lines and leaves out Copy. A Textarea grows to show all it holds. |
 | Cards and charts | A [Card](?path=/docs/components-content-card--docs) and a [Chart](?path=/docs/components-data-display-chart--docs) stay whole on one page where they fit. A chart keeps its colors and drops its tooltip. |
+| What your page has only for the screen | Put `data-print="hide"` on it: actions such as Pay or Download, filters, an add form, a column of row actions, a table of contents, "Read next". It's left out of the printed page, whatever its own `display`. |
 | Links | Put `data-print-urls` on a container and each outside link prints its address after it, since paper can't be clicked. |
 
 ## What the app adds
 
 - **Offer Print where people look for it**: in the page's actions or its More menu, next to Export and Share, named "Print" (or "Print invoice"). It calls `window.print()`, which opens the browser's own dialog with its page range, copies and Save as PDF. Don't build those options again.
 - **Offer it only when there's something to print.** Leave it out of an empty list, and off pages that are only controls, such as settings.
-- **Hide the app's frame.** The sidebar, the top bar, filters and bulk-action bars mean nothing on paper. Hide them in your own `@media print` rule, and let the content take the full width.
+- **Hide the app's frame.** The sidebar, the top bar, filters and bulk-action bars mean nothing on paper. Put `data-print="hide"` on them (or hide them in your own `@media print` rule), and let the content take the full width. The patterns that people print (Invoice, ExpenseReport, Transactions, OrderStatus, Article) already mark their actions, filters and forms.
 - **Say what paper can't show.** A page printed from a filtered or paged list should state the filter and the range ("Invoices, March 2026, 1–50 of 212") near its title, and the date it was printed when the numbers go out of date.
 - **Print everything people expect, not one screenful.** A list that loads as people scroll (LoadMore, a virtual list) prints only the rows it has drawn. For a full report, load every row first, or offer a PDF or CSV export made on the server.
 - **Open what should be read.** An Accordion or Tabs print as they stand: closed sections and the other tabs' panels stay out. When the printed page is the record, such as terms or a full profile, open the sections before `window.print()`, or give the page a print view that shows them all.
@@ -35,6 +36,6 @@ With `base.css` and the components' own styles:
 | Do | Don't |
 | --- | --- |
 | "Print invoice" in the page's actions, calling `window.print()` | A custom dialog asking for copies and page range |
-| Hide the navigation and filters in `@media print` | Print the sidebar on every page |
+| `data-print="hide"` on the navigation, the filters and the Pay button | Print the sidebar on every page, or a Pay button nobody can press |
 | State the filter and the range under the title | A printed list that silently holds 50 of 212 rows |
 | `data-print-urls` on an article, so its sources print as addresses | "Click here" on paper |
