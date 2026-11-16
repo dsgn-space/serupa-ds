@@ -39,7 +39,9 @@
 .dk-tour:focus-visible { outline: var(--focus-ring-width) solid var(--tour-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-tour__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-2); }
 .dk-tour__title { text-wrap: balance; margin: var(--spacing-0); min-width: var(--spacing-0); overflow-wrap: anywhere; font-size: var(--tour-title-size, var(--text-base)); line-height: var(--text-base--line-height); font-weight: var(--tour-title-weight, var(--font-semibold)); }
-.dk-tour__close { flex-shrink: 0; margin-block-start: calc(var(--spacing-0) - var(--spacing-1)); margin-inline-end: calc(var(--spacing-0) - var(--spacing-2)); }
+/* The × sits on the title's line (both 24px) at the padding's corner, as Dialog's and Alert's do: not pulled up and
+   out, which left it 4px above the title's center. */
+.dk-tour__close { flex-shrink: 0; }
 .dk-tour__text { overflow-wrap: anywhere; }
 .dk-tour__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-2); }
 .dk-tour__count { color: var(--tour-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); font-variant-numeric: tabular-nums; }

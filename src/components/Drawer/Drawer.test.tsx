@@ -1025,4 +1025,12 @@ describe('Drawer: unsaved (13)', () => {
       }
     });
   });
+  test('the close button centers on the title\'s first line (a 28px line, a 24px button)', async () => {
+    await render(<Drawer open title="Filters" onOpenChange={() => {}}>Body</Drawer>);
+    const d = page.getByRole('dialog', { name: 'Filters' }).element();
+    const x = [...d.querySelectorAll('button')].find((b) => b.getAttribute('aria-label') === 'Close')!.getBoundingClientRect();
+    const title = [...d.querySelectorAll('h2')].find((h) => h.textContent === 'Filters')!;
+    const range = document.createRange(); range.selectNodeContents(title); const line = range.getClientRects()[0]!;
+    expect(Math.abs((x.top + x.height / 2) - (line.top + line.height / 2))).toBeLessThanOrEqual(0.5);
+  });
 });

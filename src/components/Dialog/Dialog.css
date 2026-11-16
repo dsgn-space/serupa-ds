@@ -83,7 +83,8 @@
 .dk-dialog__heading { display: flex; flex-direction: column; gap: var(--spacing-1); flex: auto; min-width: var(--spacing-0); }
 .dk-dialog__title { text-wrap: balance; margin: var(--spacing-0); font-family: var(--font-heading, var(--font-sans)), var(--font-sans); color: var(--dialog-title-color, var(--text)); font-size: var(--text-lg); line-height: var(--text-lg--line-height); font-weight: var(--dialog-title-weight, var(--font-semibold)); }
 .dk-dialog__description { margin: var(--spacing-0); color: var(--dialog-description-color, var(--text-muted)); }
-.dk-dialog__close { flex-shrink: 0; }
+/* The × centers on the title's first line (28px), not on its top: 2px down, as Tour's and Alert's sit on theirs. */
+.dk-dialog__close { --dk-dialog-close-nudge: calc((var(--text-lg--line-height) - var(--control-height-sm)) / 2); flex-shrink: 0; margin-block-start: var(--dk-dialog-close-nudge); }
 .dk-dialog__body { min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; }
 .dk-dialog__body:focus-visible { outline: var(--focus-ring-width) solid var(--dialog-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-dialog__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); max-inline-size: var(--sizing-full); }

@@ -24,6 +24,16 @@ function Page(props: Partial<React.ComponentProps<typeof Tour>>) {
 const button = (name: string) => [...el('t').querySelectorAll('button')].find((b) => b.textContent === name || b.getAttribute('aria-label') === name) as HTMLButtonElement;
 
 describe('Tour', () => {
+  test('the close button centers on the title line, at the padding corner (top and end insets equal)', async () => {
+    await render(<Page defaultOpen />);
+    const box = el('t').getBoundingClientRect();
+    const x = button('Close').getBoundingClientRect();
+    const title = el('t').querySelector('h2, [role=heading]') ?? el('t').querySelector('[id$="title"]')!;
+    const range = document.createRange(); range.selectNodeContents(title); const line = range.getClientRects()[0]!;
+    expect(Math.abs((x.top + x.height / 2) - (line.top + line.height / 2))).toBeLessThanOrEqual(0.5);
+    expect(Math.round(x.top - box.top)).toBe(Math.round(box.right - x.right));
+  });
+
   test('renders a <div>; ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Page defaultOpen ref={ref} className="extra" data-x="y" />);
