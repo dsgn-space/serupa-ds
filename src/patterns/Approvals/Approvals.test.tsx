@@ -70,11 +70,16 @@ describe('Patterns/Approvals', () => {
     expect(norm(document.querySelector('main article')!.textContent)).toContain('Your reason: We’re short that week.');
   });
 
-  test('Cancel closes without deciding; the last one decided focuses the list, and nothing waiting says so', async () => {
+  test('Cancel and Escape close without deciding; the last one decided focuses the list, and nothing waiting says so', async () => {
     const screen = await render(<Approvals requests={[{ id: 'x', who: 'Ana Lima', kind: 'expense', what: 'Lunch', asked: '2026-11-15' }]} />);
     expect(norm(document.body.textContent)).toContain('1 request is waiting on you.');
     await screen.getByRole('button', { name: /^Decline Ana/ }).click();
     await screen.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    expect(headings()).toHaveLength(1);
+    await screen.getByRole('button', { name: /^Decline Ana/ }).click();
+    await expect.element(screen.getByRole('dialog')).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => screen.getByRole('dialog').elements().length).toBe(0);
     expect(headings()).toHaveLength(1);
     await screen.getByRole('button', { name: /^Approve Ana/ }).click();
     await expect.poll(() => active().id).toBe('approvals-list');
