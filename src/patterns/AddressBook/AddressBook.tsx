@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Button } from '../../components/Button/Button';
+import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { Alert } from '../../components/Alert/Alert';
 import { Badge } from '../../components/Badge/Badge';
 import { Card } from '../../components/Card/Card';
@@ -25,7 +26,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
    - 2.4.6: every button names the address it acts on ("Edit Home", "Remove Office", "Make default: Office", each starting with the words it shows).
    - 1.3.5, 3.3.2: the form's fields say what they are for autofill (name, address lines, city, postal code,
      country, phone) and which are optional.
-   - 3.3.1: a missing field is said next to it when you save, and focus goes to the first.
+   - 3.3.1, 2.4.3: saving with fields missing shows a summary that takes focus, each problem a link to its field, and
+     each field says its own.
    - 3.3.4, 4.1.3: saving shows it's busy and closes the dialog only once the server says so; one that fails says so
      in the dialog and keeps every field. Focus goes back to the button that opened it.
    - 3.3.4: Remove takes the address out at once with Undo; the server hears of it only once the toast goes. The
@@ -94,12 +96,15 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
   const [draft, setDraft] = React.useState<Draft | null>(null);
   const [makeDefault, setMakeDefault] = React.useState(false);
   const [problems, setProblems] = React.useState<ReturnType<typeof addressProblems>>({});
+  const [tries, setTries] = React.useState(0);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const heading = React.useRef<HTMLHeadingElement>(null);
   const shown = list.filter((a) => !gone.has(a.id));
   const later = (f: () => void) => requestAnimationFrame(f);
   const focusId = (id: string) => () => document.getElementById(id)?.focus();
+
+  const errors: ErrorSummaryItem[] = REQUIRED.filter((k) => problems[k]).map((k) => ({ field: `address-${k}`, message: problems[k] }));
 
   const open = (a: Draft) => { setDraft(a); setMakeDefault(false); setProblems({}); setFailed(false); };
   const edit = (patch: Partial<Draft>) => { setDraft((d) => (d ? { ...d, ...patch } : d)); setFailed(false); };
@@ -110,8 +115,8 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
     if (!draft) return;
     const found = addressProblems(draft);
     setProblems(found);
-    const first = REQUIRED.find((k) => found[k]);
-    if (first) { document.getElementById(`address-${first}`)?.focus(); return; }
+    setTries((t) => t + 1);
+    if (REQUIRED.some((k) => found[k])) return;
     const out: Draft = Object.fromEntries(Object.entries(draft).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])) as Draft;
     setBusy(true);
     setFailed(false);
@@ -184,6 +189,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
           description="All fields are needed unless they say they’re optional.">
           {draft ? (
             <form onSubmit={save} noValidate className="flex flex-col gap-4">
+              <ErrorSummary key={tries} errors={errors} headingLevel={3} />
               {failed ? <Alert tone="danger">Couldn’t save the address. Try again; everything you entered is still here.</Alert> : null}
               <Field label="Name for this address" id="address-label" hint="Like Home or Office." error={problems.label} required>
                 <Input autoComplete="off" value={draft.label} onChange={(e) => edit({ label: e.target.value })} />

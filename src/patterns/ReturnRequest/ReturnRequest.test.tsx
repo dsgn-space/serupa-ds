@@ -36,15 +36,20 @@ describe('Patterns/Return request', () => {
     expect(screen.getByRole('combobox').elements()).toHaveLength(0);
   });
 
-  test('Start return with nothing chosen says so and focuses the first item; a missing reason is said next to it, by name', async () => {
+  test('Start return with nothing chosen: a summary takes focus and its link goes to the first item; a missing reason is said next to it, by name', async () => {
     const onSend = vi.fn();
     const screen = await render(<ReturnRequest onSend={onSend} />);
     await screen.getByRole('button', { name: 'Start return' }).click();
+    await expect.poll(() => active().textContent).toMatch(/^There is a problem/);
+    await screen.getByRole('link', { name: 'Choose at least one item to return.' }).click();
     await expect.poll(() => active().getAttribute('type')).toBe('checkbox');
     await expect.poll(() => described(screen.getByRole('group', { name: /What are you returning/ }).element())).toContain('Choose at least one item to return.');
     await screen.getByRole('checkbox', { name: /Linen shirt/ }).click();
     expect(described(screen.getByRole('group', { name: /What are you returning/ }).element())).not.toContain('Choose at least one');
     await screen.getByRole('button', { name: 'Start return' }).click();
+    await expect.poll(() => active().textContent).toMatch(/^There is a problem/);
+    expect(screen.getByRole('link', { name: 'Choose why you’re returning it.' }).element().getAttribute('href')).toBe('#reason-i1');
+    await screen.getByRole('link', { name: 'Choose why you’re returning it.' }).click();
     await expect.poll(() => active().id).toBe('reason-i1');
     expect(screen.getByRole('combobox', { name: /^Why are you returning the Linen shirt/ }).elements()).toHaveLength(1);
     expect(described(active())).toContain('Choose why you’re returning it.');
