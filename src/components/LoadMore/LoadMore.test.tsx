@@ -130,6 +130,13 @@ describe('LoadMore', () => {
     expect(loads).toBe(2);
   });
 
+  test('a count or total that is NaN counts as none: no "Showing NaN", and infinite loads once, not over and over', async () => {
+    let loads = 0;
+    await render(<div><LoadMore id="nan" onLoadMore={() => {}} count={20} total={NaN} /><LoadMore id="nan-inf" infinite count={NaN} onLoadMore={() => { loads++; return wait(10); }} /></div>);
+    await wait(300);
+    expect([el('nan').textContent, loads]).toEqual(['Load more', 1]);
+  });
+
   test('Indonesian labels from the provider', async () => {
     await render(<SerupaProvider labels={idLabels} locale="id-ID"><LoadMore id="id" onLoadMore={() => {}} count={20} total={134} /><LoadMore id="id2" onLoadMore={() => {}} hasMore={false} /></SerupaProvider>);
     expect([el('id').textContent, el('id2').textContent]).toEqual(['Menampilkan 20 dari 134Muat lagi', 'Sudah sampai akhir']);

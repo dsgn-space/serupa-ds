@@ -21,6 +21,12 @@ function Cal(props: { picks?: string[]; months?: string[]; cref?: React.Ref<HTML
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Calendar', () => {
+  test('a weekStartsOn that is NaN or Infinity is none: the locale\'s first day leads, where the grid broke with "Invalid time value"', async () => {
+    await render(<div><Calendar data-testid="nan" locale="en-GB" weekStartsOn={NaN} defaultMonth={new Date(2025, 2, 10)} /><Calendar data-testid="inf" locale="en-US" weekStartsOn={Infinity} defaultMonth={new Date(2025, 2, 10)} /></div>);
+    const first = (id: string) => page.getByTestId(id).element().querySelector('th[abbr]')?.getAttribute('abbr');
+    expect([first('nan'), first('inf')]).toEqual(['Monday', 'Sunday']);
+  });
+
   test('weekNumbers: a column of ISO week numbers before the days, each its row\'s header ("Week 9"); arrows still move by day; it fits a 320px screen', async () => {
     await render(<Cal weekNumbers />);
     const rows = [...document.querySelectorAll('[data-testid=cal] tbody tr')];
