@@ -13,7 +13,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents } from './lib.mjs';
+import { HERE, LOCALES, PROJECT, SHARED_TEST, affectedComponents, visualScope, scopeFiles, folderOf, internalTestsFor, onlyComponents, withDependents, touchedComponents, builtUnchanged, BUILT_CHECKS } from './lib.mjs';
 
 const update = process.argv.includes('--update') ? ['--update'] : [];
 // --browser firefox|webkit runs the Playwright suites in that engine; --compat safari|firefox|webkitgtk adds the
@@ -46,7 +46,8 @@ const GROUPS = {
 // The tests that check every story against a baseline or a rule: a change to one component can break its line in them.
 const STORY_WIDE = ['hydrateStories', 'hydrateStoriesCsp', 'serverHtml', 'ariaStories', 'tabWalk', 'leaks', 'mountTime', 'network', 'strictCsp', 'trustedTypes', 'activity', 'motion', 'listRole', 'digitsStories', 'layoutShift', 'propFuzz'].map((f) => `src/internal/${f}.test.tsx`);
 // --since <ref> (CI on a pull request): when every changed file belongs to a component, block or pattern folder, the component tests,
-// visual snapshots and Storybook checks cover only those components and the ones that use them (SERUPA_ONLY). The checks always run whole.
+// visual snapshots and Storybook checks cover only those components and the ones that use them (SERUPA_ONLY). The checks run whole,
+// but for the built package's when the change builds the same package (BUILT_CHECKS in lib.mjs).
 // The components the change itself touches (without the ones that use them), on a narrowed run.
 let direct = null;
 // The shared tests the change edits: they run on a narrowed run whatever components it covers.
@@ -71,6 +72,11 @@ if (arg('--since')) {
   if (names && diff.stdout.split('\n').some((l) => /^\.changeset\/[\w-]+\.md$/.test(l.split('\t')[2] || ''))) names.add('docs/Upgrading.mdx');
   // A change that tests everything still runs the components it edits itself in every language (touchedComponents).
   direct = changed ?? (diff.status === 0 ? touchedComponents(scopeFiles(diff.stdout)) : null);
+  // A change that builds main's package again leaves the built package's checks to the queue and main (BUILT_CHECKS).
+  if (diff.status === 0 && builtUnchanged(diff.stdout.split('\n').map((l) => l.split('\t')[2]).filter(Boolean))) {
+    process.env.SERUPA_BUILT_AS_BASE = '1';
+    if (!arg('--group') || arg('--group') === 'checks') console.log(`Leaving out ${BUILT_CHECKS.join(', ')}: the change builds the same package as ${arg('--since')}`);
+  }
   if (names) process.env.SERUPA_ONLY = [...names].sort().join(',');
   console.log(names ? `Testing the changed components and the ones that use them: ${[...names].sort().join(', ') || 'none'} (main runs everything)` : 'Testing everything: the change reaches beyond the component folders');
   // --narrowed-only (a pull request's cross-browser jobs): a change that reaches beyond the component folders (shared
