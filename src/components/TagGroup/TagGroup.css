@@ -11,7 +11,7 @@
 .dk-tag-group__tags { display: flex; flex-wrap: wrap; gap: var(--tag-group-gap, var(--spacing-2)); max-inline-size: var(--sizing-full); outline: none; }
 .dk-tag-group__tag {
   display: inline-flex; align-items: center; gap: var(--spacing-0\.5); min-inline-size: var(--spacing-0); max-inline-size: var(--sizing-full);
-  min-block-size: var(--control-height-sm); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--border-control));
+  min-block-size: var(--control-height-sm); padding-block: var(--border-width-1); padding-inline: var(--spacing-2); border: var(--border-width-1) solid var(--tag-group-border, var(--border-control));
   border-radius: var(--tag-group-radius, var(--radius-control)); background: var(--tag-group-bg, var(--surface)); color: var(--tag-group-text, var(--text));
   font-size: var(--text-sm); line-height: var(--text-sm--line-height); cursor: default; touch-action: manipulation;
 }
@@ -24,19 +24,20 @@
 .dk-tag-group__tag[aria-disabled="true"], .dk-tag-group__tag[aria-disabled="true"] * { border-color: var(--tag-group-border-disabled, var(--disabled-border)); color: var(--tag-group-text-disabled, var(--disabled-text)); }
 .dk-tag-group__text { display: inline-flex; align-items: center; gap: var(--spacing-1); min-inline-size: var(--spacing-0); overflow-wrap: anywhere; }
 /* An avatar sits at the tag's start edge, as a recipient's picture does in a To field; an icon takes the check's place. */
-.dk-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-6)); block-size: var(--tag-group-avatar-size, var(--spacing-6)); margin-inline-start: calc(var(--spacing-0) - var(--spacing-1)); margin-block: calc(var(--spacing-0) - var(--border-width-1)); border-radius: var(--radius-pill); overflow: hidden; }   /* 24px over the tag's border, as tall as the tag */
+.dk-tag-group__avatar { display: inline-flex; flex-shrink: 0; inline-size: var(--tag-group-avatar-size, var(--spacing-6)); block-size: var(--tag-group-avatar-size, var(--spacing-6)); margin-inline-start: calc(var(--spacing-0) - var(--spacing-1)); margin-block: calc(var(--spacing-0) - var(--border-width-1) - var(--border-width-1)); border-radius: var(--radius-pill); overflow: hidden; }   /* 24px over the tag's 1px padding and 1px border, as tall as the tag */
 /* Whatever picture is passed (an Avatar of any size, an <img>) is drawn at that size, so the tag keeps its height. */
 .dk-tag-group__avatar > * { inline-size: var(--sizing-full); block-size: var(--sizing-full); min-inline-size: var(--spacing-0); }
 .dk-tag-group__icon { display: inline-flex; flex-shrink: 0; color: var(--tag-group-icon, var(--text-muted)); }
 .dk-tag-group__check { flex: none; }
 .dk-tag-group__cell { display: inline-flex; }
 .dk-tag-group__remove {
-  position: relative; display: inline-grid; place-items: center; inline-size: var(--dk-tag-inner); block-size: var(--dk-tag-inner); margin: var(--spacing-0); padding: var(--spacing-0);
+  position: relative; display: inline-grid; place-items: center; inline-size: var(--dk-tag-inner); block-size: var(--dk-tag-inner); margin: calc(var(--spacing-0) - var(--border-width-1)) var(--spacing-0); padding: var(--spacing-0);
   border: var(--spacing-0); border-radius: var(--tag-group-radius, var(--radius-control)); background: transparent; color: inherit; cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover) var(--ease-move);
 }
-/* Every tag is 24px, as small controls are: the × and a picture fit inside the 1px border (22px), and the × still
-   takes a 24px press (WCAG 2.5.8) through a box 1px past each edge, as SearchInput's small × does. */
+/* Every tag is 24px, as small controls are: 1px border, 1px over and under the 20px line (so a wrapped tag keeps a
+   one-line tag's inset). The × is 22px, inside the border, reaching over the 1px padding, and still takes a 24px
+   press (WCAG 2.5.8) through a box 1px past each edge, as SearchInput's small × does. */
 .dk-tag-group__tag { --dk-tag-inner: calc(var(--spacing-6) - 2 * var(--border-width-1)); }
 .dk-tag-group__remove::after { content: ""; position: absolute; inset: calc(var(--spacing-0) - var(--border-width-1)); }
 /* A tag's icons (its own, the check of a selected tag, the ×) are 16px beside the 14px label, as a field's icon:
