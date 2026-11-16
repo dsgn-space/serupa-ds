@@ -14,6 +14,7 @@ import { flattenChildren } from '../../internal/children';
 import { useSettings } from '../../internal/provider';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import * as icons from '../../material/builtin';
+import { useControllable } from '../../internal/controllable';
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   /** SidebarSections, or SidebarItems directly. */
@@ -186,14 +187,14 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
   const kids = itemsOf(props.children);
   const group = kids.length > 0;
   const childActive = kids.some(activeWithin);
-  const [own, setOwn] = React.useState(props.defaultOpen != null ? !!props.defaultOpen : childActive);
+  const [held, setOwn, controlled] = useControllable(props.open, props.defaultOpen != null ? !!props.defaultOpen : childActive, 'SidebarItem', 'open');
   // The page moving to one of its items (a link elsewhere, the browser's Back) opens it too, as arriving there does,
   // so the current page isn't hidden in a closed group (L8E108). defaultOpen set, or open, leaves that to you.
   const [wasActive, setWasActive] = React.useState(childActive);
-  if (wasActive !== childActive) { setWasActive(childActive); if (childActive && !own && props.defaultOpen == null && props.open === undefined) setOwn(true); }
-  const open = props.open !== undefined ? !!props.open : own;
+  if (wasActive !== childActive) { setWasActive(childActive); if (childActive && !held && props.defaultOpen == null && !controlled) setOwn(true); }
+  const open = !!held;
   const toggle = () => {
-    if (props.open === undefined) setOwn(!open);
+    if (!controlled) setOwn(!open);
     if (props.onOpenChange) props.onOpenChange(!open, { reason: 'trigger' });
   };
   const listId = domId('dk-sbi', React.useId());

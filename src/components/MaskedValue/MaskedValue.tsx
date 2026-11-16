@@ -6,6 +6,7 @@ import { useSettings } from '../../internal/provider';
 import { IconButton } from '../IconButton/IconButton';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { useControllable } from '../../internal/controllable';
 
 export interface MaskedValueProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** The whole value: a card or account number, a phone number, an email address, a key. Only the characters kept
@@ -38,9 +39,8 @@ const DOTS = '••••';
 export const MaskedValue = /* @__PURE__ */ component<HTMLSpanElement, MaskedValueProps>('MaskedValue', function MaskedValue(props, ref) {
   const sds = useSettings(words);
   const rest = omit(props, { value: 1, label: 1, end: 1, start: 1, revealable: 1, revealed: 1, onRevealedChange: 1, className: 1 });
-  const [own, setOwn] = React.useState(false);
-  const controlled = props.revealed !== undefined;
-  const shown = !!props.revealable && (controlled ? !!props.revealed : own);
+  const [revealed, setOwn, controlled] = useControllable(props.revealed, false, 'MaskedValue', 'revealed');
+  const shown = !!props.revealable && !!revealed;
   const set = React.useRef<((v: boolean) => void) | null>(null);
   set.current = (v: boolean) => { if (!controlled) setOwn(v); if (props.onRevealedChange) props.onRevealedChange(v); };
   // Leaving the page hides it again, so a value shown for a moment isn't left on a screen someone walks away from.

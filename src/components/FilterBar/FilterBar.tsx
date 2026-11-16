@@ -18,6 +18,7 @@ import { DateRangePicker } from '../DateRangePicker/DateRangePicker';
 import * as icons from '../../material/builtin';
 import { warnOnce } from '../../internal/warn';
 import { en as words } from './labels';
+import { useControllable } from '../../internal/controllable';
 
 /** One choice in a select filter: a string is both its value and its label. */
 export type FilterOption = string | { value: string; label: string };
@@ -109,9 +110,7 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { fields: 1, value: 1, defaultValue: 1, onValueChange: 1, resultsCount: 1, actions: 1, className: 1 } as const);
   const base = domId('dk-fb', React.useId());
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<FilterValues>(props.defaultValue || {});
-  const raw = controlled ? props.value! : own;
+  const [raw, setOwn, controlled] = useControllable<FilterValues>(props.value, props.defaultValue || {}, 'FilterBar', 'value');
   const value = React.useMemo(() => clean(props.fields, raw), [props.fields, raw]);
   const [editing, setEditing] = React.useState<string | null>(null);
   const root = React.useRef<HTMLDivElement | null>(null);
