@@ -26,6 +26,7 @@ interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "def
     autoComplete?: "bday" | "off" | undefined;
     name?: string | undefined;
     form?: string | undefined;
+    required?: boolean | undefined;
     disabled?: boolean | undefined;
     readOnly?: boolean | undefined;
     invalid?: boolean | undefined;

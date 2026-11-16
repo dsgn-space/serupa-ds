@@ -92,6 +92,7 @@ Keys stop at `min` and `max`.
 | `placeholder` | string | "Choose a month" | Shown with nothing chosen |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24, 32 or 44px, like Select |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid`; set for you in a Field with an error |
+| `required` | boolean | `false` | A period must be chosen: `aria-required` on the button, and the form isn't sent without one (the button is marked invalid and takes focus). A required Field sets only `aria-required`, as it does on an Input |
 | `name` | string | | A form gets the value under it, and a form reset brings back `defaultValue` |
 | `open` | boolean | | Whether the popup shows (controlled), with `onOpenChange`. Opened this way, focus stays where it is |
 | `defaultOpen` | boolean | `false` | Shows the popup open at first, without moving focus into it |

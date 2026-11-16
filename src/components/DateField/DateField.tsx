@@ -63,6 +63,9 @@ export interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement
   name?: string | undefined;
   /** The id of a form elsewhere on the page that the hidden input belongs to. */
   form?: string | undefined;
+  /** A date must be given: aria-required on the boxes, and a form isn't sent while they're empty (they're marked and
+   *  the first takes focus; a Field's error says why). In a required Field, aria-required is set for you. */
+  required?: boolean | undefined;
   /** Turns the three boxes off. */
   disabled?: boolean | undefined;
   /** Shows the date without letting it change: the boxes stay focusable and read out as read-only, and a form still sends the date, unlike disabled. A pasted date changes nothing either. */
@@ -77,7 +80,7 @@ export interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement
   monthInput?: 'number' | 'select' | undefined;
 }
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, order: 1, autoComplete: 1, name: 1, form: 1, disabled: 1, readOnly: 1, invalid: 1, size: 1, 'aria-invalid': 1, 'aria-required': 1, 'aria-errormessage': 1, autoFocus: 1, className: 1, monthInput: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, order: 1, autoComplete: 1, name: 1, form: 1, required: 1, disabled: 1, readOnly: 1, invalid: 1, size: 1, 'aria-invalid': 1, 'aria-required': 1, 'aria-errormessage': 1, autoFocus: 1, className: 1, monthInput: 1 } as const;
 type Parts = Record<DatePart, string>;
 const NONE: Parts = { day: '', month: '', year: '' };
 const ORDERS = { dmy: ['day', 'month', 'year'], mdy: ['month', 'day', 'year'], ymd: ['year', 'month', 'day'] } as const;
@@ -139,6 +142,11 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
   const controlled = props.value !== undefined;
   const [parts, setParts] = React.useState<Parts>(() => partsOf(controlled ? props.value : props.defaultValue));
   const now = read(parts, props.min, props.max);
+  // required: a form sent with all three boxes empty marks them, until something is typed.
+  const required = !!props.required;
+  const [missing, setMissing] = React.useState(false);
+  if (missing && now.problem !== 'empty') setMissing(false);
+  const ariaRequired = props['aria-required'] ?? (required || undefined);
   // What's wrong, in words, under the boxes: once focus has left the date or the form was sent, then as it's fixed.
   // Not while the first entry is typed, and not when the app marks it invalid (a Field's error says it instead).
   const [checked, setChecked] = React.useState(false);
@@ -201,7 +209,7 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
     box(order[order.length - 1] ?? 'year')?.focus();
   };
 
-  const marked = invalid ? (now.parts.length ? now.parts : order) : said ? now.at ?? [] : [];
+  const marked = invalid || missing ? (now.parts.length ? now.parts : order) : said ? now.at ?? [] : [];
   // Each box takes digits only (any script's, read as 0–9), up to 2, 2 and 4: a letter typed or pasted is dropped.
   const digits = (k: DatePart, v: string) => latinDigits(v).replace(/\D/g, '').slice(0, k === 'year' ? 4 : 2);
   // A form isn't sent while the boxes make a wrong date: the first box carries the message as its validity, and the
@@ -225,7 +233,10 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
     window.addEventListener('pointerdown', down, true); window.addEventListener('click', up, true);
     return () => { window.removeEventListener('pointerdown', down, true); window.removeEventListener('click', up, true); };
   }, []);
-  const onInvalid = (e: React.FormEvent) => { e.preventDefault(); setChecked(true); if (firstWrong) box(firstWrong)?.focus(); };
+  const onInvalid = (e: React.FormEvent) => {
+    e.preventDefault(); setChecked(true);
+    if (now.problem === 'empty') { setMissing(true); firstBox()?.focus(); } else if (firstWrong) box(firstWrong)?.focus();
+  };
   const errorId = base + '-error';
   const months = React.useMemo(() => {
     const f = new Intl.DateTimeFormat(locale, { month: 'long' });
@@ -244,14 +255,14 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
             <label className="dk-date-field__label" htmlFor={`${base}-${k}`}>{label[k]}</label>
             {k === 'month' && props.monthInput === 'select'
               ? <Select id={`${base}-${k}`} className="dk-date-field__input dk-date-field__input--select" size={props.size} options={months} placeholder={L.dateFieldMonth}
-                autoComplete={props.autoComplete === 'bday' ? 'bday-month' : 'off'} value={parts.month} disabled={disabled} readOnly={props.readOnly} onInvalid={k === order[0] ? onInvalid : undefined}
-                invalid={marked.includes(k) || undefined} aria-required={props['aria-required']} aria-describedby={marked.includes(k) && said ? errorId : undefined}
+                autoComplete={props.autoComplete === 'bday' ? 'bday-month' : 'off'} value={parts.month} disabled={disabled} readOnly={props.readOnly} required={k === order[0] && required} onInvalid={k === order[0] ? onInvalid : undefined}
+                invalid={marked.includes(k) || undefined} aria-required={ariaRequired} aria-describedby={marked.includes(k) && said ? errorId : undefined}
                 onChange={(e) => change({ ...parts, month: e.target.value }, 'type')} />
               : <Input id={`${base}-${k}`} className="dk-date-field__input" size={props.size} inputMode="numeric" spellCheck={false}
                 autoComplete={props.autoComplete === 'bday' ? `bday-${k}` : 'off'} maxLength={k === 'year' ? 4 : 2}
                 value={parts[k]} disabled={disabled} readOnly={props.readOnly} invalid={marked.includes(k) || undefined}
-                aria-required={props['aria-required']} aria-describedby={marked.includes(k) && said ? errorId : undefined}
-                onInvalid={k === order[0] ? onInvalid : undefined}
+                aria-required={ariaRequired} aria-describedby={marked.includes(k) && said ? errorId : undefined}
+                required={k === order[0] && required} onInvalid={k === order[0] ? onInvalid : undefined}
                 onChange={(e) => change({ ...parts, [k]: digits(k, e.target.value) }, 'type')} onKeyDown={onKeyDown(k)} onPaste={onPaste} />}
           </div>
         ))}

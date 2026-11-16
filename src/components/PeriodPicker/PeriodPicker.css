@@ -7,6 +7,7 @@
    and struck through, as Calendar's days are.
    --------------------------------------------------------------- */
 @layer dk.components {
+.dk-period-picker__validity { position: absolute; width: var(--spacing-px); height: var(--spacing-px); margin: var(--spacing-0); padding: var(--spacing-0); overflow: hidden; clip-path: inset(var(--sizing-1-2)); white-space: nowrap; border: var(--spacing-0); opacity: var(--opacity-0); }
 .dk-period-picker {
   --dk-pp-h: var(--period-picker-height-md, var(--control-height-md));
   --dk-pp-px: var(--period-picker-padding-x, var(--spacing-3));

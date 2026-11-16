@@ -104,6 +104,7 @@ Drawn from the `Open` story.
 | `placeholder` | string | "Choose…" | Shown with nothing chosen |
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24, 32 or 44px, like Select |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid`; set for you in a Field with an error |
+| `required` | boolean | `false` | A path must be chosen: `aria-required` on the button, and the form isn't sent without one (the button is marked invalid and takes focus). A required Field sets only `aria-required`, as it does on an Input |
 | `name` | string | | A form gets the path's last value under it, and a form reset brings back `defaultValue` |
 | `open`, `defaultOpen`, `onOpenChange` | | | The panel's open state, controlled or not; `onOpenChange(open, { reason })` says why: `'trigger'`, `'select'`, `'escape'`, `'outside'` or `'reset'` |
 | `disabled` | boolean | `false` | It can't open, and the form doesn't get its value |
