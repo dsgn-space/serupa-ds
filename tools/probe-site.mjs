@@ -16,6 +16,7 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'content-type': TYPES[path.extname(f)] || 'application/octet-stream' });
   fs.createReadStream(f).pipe(res);
 }).listen(0);
+const base = `http://127.0.0.1:${server.address().port}`;
 const b = await browser();
 const glide = async (label, prep) => {
   const context = await b.newContext({ viewport: { width: 1280, height: 720 } });
