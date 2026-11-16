@@ -120,8 +120,10 @@ describe('Accordion', () => {
     const props = (n: number) => panel('adef', n).getAnimations().map((a) => (a as CSSTransition).transitionProperty ?? a.id).filter((p) => /opacity|clip-path|height/.test(p)).sort();
     await userEvent.click(trigger('adef', 1));
     await settled(el('adef'), { subtree: true });
+    // read the motion as the click lands, not when userEvent hands back: on a slow machine that can be after both have finished
+    const seen = new Promise<string[][]>((resolve) => { window.addEventListener('click', () => setTimeout(() => resolve([props(2), props(1)])), { once: true }); });
     await userEvent.click(trigger('adef', 2));
-    expect([state('adef'), props(2), props(1)]).toEqual(['0100', ['clip-path', 'dk-accordion-height', 'opacity'], ['clip-path', 'dk-accordion-height', 'opacity']]);
+    expect([state('adef'), ...await seen]).toEqual(['0100', ['clip-path', 'dk-accordion-height', 'opacity'], ['clip-path', 'dk-accordion-height', 'opacity']]);
   }));
 
   test('an item opened a second time grows to its height again, as it did the first time, instead of snapping open', () => withMotion(async () => {
