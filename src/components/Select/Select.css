@@ -35,6 +35,9 @@
 .dk-select--empty .dk-select__field { color: var(--select-placeholder, var(--placeholder)); }
 /* Filled in by the browser (a country, a card's month): the box keeps its look, as Input's does (GR411). */
 .dk-select__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--select-text, var(--text)); }
+/* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
+   people edit the text or focus the field, whose ring is the mark then. */
+.dk-select:has(.dk-select__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--select-border-width, var(--border-width-1)) var(--dk-select-bd); }
 .dk-select__icon { position: absolute; inset-block: var(--spacing-0); display: inline-flex; align-items: center; color: var(--select-icon-color, var(--text-muted)); pointer-events: none; }
 .dk-select__icon--left { inset-inline-start: var(--dk-select-px); }
 /* The chevron sits 8px inside the end edge at every size, where Combobox, DatePicker and the other fields put

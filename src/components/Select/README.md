@@ -77,6 +77,7 @@ Drawn from the `WithIcon` story.
 
 ## Accessibility
 
+- A field the browser fills in (a saved address, a login) keeps the field's colours, and its border doubles inward until it's focused, so the fill shows in more than colour.
 - On iOS the field's text is 16px at every size, so Safari doesn't zoom the page when it takes focus; the box keeps its height.
 - It's the browser's own select, so screen readers, the keyboard (arrows, Home/End, type to find) and the phone's picker all work without extra code.
 - `readOnly` is for a value people should see but not change (a review step, a locked setting). The browser has no read-only select, so Select cancels the keys and press that would open or change it, and puts back a value a phone's picker sets. Unlike `disabled`, it stays in the Tab order and keeps its full contrast.

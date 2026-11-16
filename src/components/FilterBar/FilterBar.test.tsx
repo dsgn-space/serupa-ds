@@ -162,6 +162,23 @@ describe('FilterBar', () => {
     await expect.element(page.getByRole('status').filter({ hasText: /hasil/ })).toHaveTextContent('3 hasil');
   });
 
+  test('a chip cut with an ellipsis shows what it says in full on keyboard focus too, not only as a hover title', async () => {
+    const long = 'quarterly revenue by region and product line';
+    const tip = () => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]');
+    await render(<div style={{ width: 240 }}><button id="before">Before</button><Bar start={{ q: long, owner: 'Ana' }} /></div>);
+    const cut = chip(/^Title/).element() as HTMLElement, short = chip(/^Owner/).element() as HTMLElement;
+    await expect.poll(() => !!cut.querySelector('[data-truncated]')).toBe(true);
+    expect([short.querySelector('[data-truncated]'), cut.getAttribute('title'), cut.querySelector('[tabindex]')]).toEqual([null, null, null]);
+    (document.getElementById('before') as HTMLElement).focus();
+    // Owner's chip and its × come first, in the fields' order.
+    await userEvent.keyboard('{Tab}{Tab}{Tab}');
+    expect(document.activeElement).toBe(cut);
+    await expect.poll(() => tip()?.textContent).toBe(cut.querySelector('[data-truncated]')!.textContent);
+    expect(tip()!.textContent).toContain(long);
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    // The × before it has a tooltip of its own, naming it.
+    await expect.poll(() => tip()?.textContent).toBe('Remove filter: Owner');
+  });
   test('chip text 4.5:1 on the chip, its outline 3:1, the count 4.5:1 on the page, in every theme', () => {
     expect(lowContrast([
       ['chip text', 'var(--text)', 'var(--surface)', 4.5],

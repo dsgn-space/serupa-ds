@@ -309,6 +309,24 @@ describe('Input', () => {
     expect([fill('dk-input__field'), fill('dk-textarea__field'), fill('dk-select__field'), fill('dk-pin-input__field')])
       .toEqual([[true, 'var(--input-text, var(--text))'], [true, 'var(--textarea-text, var(--text))'], [true, 'var(--select-text, var(--text))'], [true, 'transparent']]);
   });
+  test('a field the browser filled in says so in more than colour: its border doubles inward (nothing moves) until it is focused, in Input, Textarea and Select', async () => {
+    const rules: CSSStyleRule[] = [];
+    const walk = (list: CSSRuleList) => { for (const r of Array.from(list)) {
+      if (r instanceof CSSStyleRule && r.selectorText.includes(':has(') && r.selectorText.includes(':autofill')) rules.push(r);
+      else if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules);
+    } };
+    for (const sheet of Array.from(document.styleSheets)) { try { walk(sheet.cssRules); } catch { /* another origin */ } }
+    const mark = (box: string) => {
+      const r = rules.find((x) => x.selectorText.startsWith('.' + box + ':has(.' + box + '__field:autofill)'));
+      return r ? [r.selectorText.includes(':not(:focus-within)'), r.style.boxShadow.startsWith('inset ')] : null;
+    };
+    expect([mark('dk-input'), mark('dk-textarea'), mark('dk-select')]).toEqual([[true, true], [true, true], [true, true]]);
+    // The mark drawn on a real box: 2px of border colour inside, the box's size unchanged.
+    await render(<Input id="af" aria-label="Email" />);
+    const box = field('af').parentElement as HTMLElement, before = box.getBoundingClientRect();
+    box.style.boxShadow = rules.find((x) => x.selectorText.startsWith('.dk-input:has('))!.style.boxShadow;
+    expect([getComputedStyle(box).boxShadow, box.getBoundingClientRect().height]).toEqual([`${getComputedStyle(box).borderTopColor} 0px 0px 0px 1px inset`, before.height]);
+  });
   test('iOS: Input, Textarea, Select and PinInput fields get 16px text where Safari would zoom into a smaller one (the rule only applies there)', () => {
     const rules: string[] = [];
     const walk = (list: CSSRuleList) => { for (const r of Array.from(list)) {

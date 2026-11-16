@@ -36,6 +36,9 @@
    yellow, covers only the native field: a rectangle inside the box, short of its padding, icons and corners. Clipped
    to the text it shows nowhere, and the text keeps the field's color, which the browser replaces too (GR411). */
 .dk-input__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--input-text, var(--text)); }
+/* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
+   people edit the text or focus the field, whose ring is the mark then. */
+.dk-input:has(.dk-input__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--input-border-width, var(--border-width-1)) var(--dk-input-bd); }
 /* prefix and suffix: text in the box, muted; a press on it focuses the field (Input's handler). Whole while there's
    room; in a box too narrow for them and the count, they give way with an ellipsis rather than push the count out of
    the box (GR23: in a 156px grid column, or with a wider font before Inter loads). The field shrinks first: it grows

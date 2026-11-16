@@ -57,6 +57,7 @@ Drawn from the `Playground` story.
 
 - **Role and name:** the bar is a `group` named "Filters" (or `aria-label`), with the chips in a list. Each chip is a button that says its filter in full, and opens a dialog named by the field; its × is "Remove filter: Status".
 - **Keyboard:** see the table. After a chip is removed, focus moves to the next chip (or the one before, or "Add filter"); after "Clear all", to "Add filter"; closing an editor returns focus to its chip.
+- **Long chips:** a chip too long for the bar ends in an ellipsis and shows what it says in full in a tooltip on hover and on keyboard focus; its name is still the whole sentence.
 - **Announcements:** the count is a `status`, so a change is read out politely.
 - **Contrast:** chip text reads 4.5:1 on the chip and its outline 3:1, the count 4.5:1 on the page, in every theme (`FilterBar.test.tsx`).
 - **What's still yours:** labels and option names that make sense read aloud in a sentence ("Owner is Ana").

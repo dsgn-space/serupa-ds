@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { useCut } from '../../internal/useCut';
 import { useExit } from '../../internal/useExit';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { Tooltip } from '../Tooltip/Tooltip';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { config } from '../../internal/config';
 import { Menu, MenuItem, MenuSub } from '../Menu/Menu';
 import { component } from '../../internal/component';
@@ -223,17 +223,14 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
   const badgeId = listId + '-badge';
   const described = !!rest['aria-describedby'];
   if (dot) rest['aria-describedby'] = cn(rest['aria-describedby'], badgeId);
-  // A text label cut with an ellipsis shows in full as the item's title on hover, as Button's does (GR117). Not in
-  // the rail, where the tooltip already names it, with a title of its own, or in a Tooltip (its aria-describedby, given
-  // before the rail's badge adds one), which shows the cut label itself.
+  // A text label cut with an ellipsis shows in full on hover and on the item's keyboard focus (TruncatedText), not
+  // only as a title the keyboard never sees. Not in the rail, where the tooltip already names it, with a title of its
+  // own, or in a Tooltip (its aria-describedby, given before the rail's badge adds one), which shows the cut label itself.
   const text = typeof props.label === 'string' || typeof props.label === 'number' ? String(props.label) : '';
   const tipOk = !!text && !rail && rest.title == null && !described;
-  const labelEl = React.useRef<HTMLSpanElement | null>(null);
-  const cut = useCut(tipOk, text, () => labelEl.current);
-  if (cut && tipOk) rest.title = text;
   const inner = (chevron: boolean) => <>
     {props.icon ? <span className="dk-sidebar__icon">{asIcon(props.icon)}{dot ? <span className="dk-sidebar__dot" aria-hidden="true" /> : null}</span> : null}
-    <span className="dk-sidebar__label" ref={labelEl}>{props.label}</span>
+    <span className="dk-sidebar__label">{tipOk ? <TruncatedText>{text}</TruncatedText> : props.label}</span>
     {props.badge != null ? <span className="dk-sidebar__badge" id={dot ? badgeId : undefined}>{props.badge}</span> : null}
     {chevron && !rail ? <Icon icon={icons.ExpandMore} className="dk-sidebar__chevron" /> : null}
   </>;

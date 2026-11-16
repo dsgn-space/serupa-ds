@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { isComposing } from '../../internal/ime';
+import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -208,7 +209,7 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
           <li key={f.id} className={cn('dk-filter-bar__chip', isEmpty(value[f.id]) && 'dk-filter-bar__chip--empty')}>
             <Popover title={f.label} placement="bottom-start" sheet="mobile" open={editing === f.id}
               onOpenChange={(open) => { if (open) setEditing(f.id); else closeEditor(f); }}
-              trigger={<button type="button" className="dk-filter-bar__edit" data-filter={f.id} dir="auto" title={said(f)}>{said(f)}</button>}>
+              trigger={<button type="button" className="dk-filter-bar__edit" data-filter={f.id} dir="auto"><TruncatedText>{said(f)}</TruncatedText></button>}>
               {(close) => (
                 <div className="dk-filter-bar__editor">
                   {editor(f)}
