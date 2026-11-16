@@ -607,6 +607,17 @@ describe('ChatReplyActions', () => {
     expect(onFeedback.mock.calls).toEqual([['good'], ['bad'], [null]]);
   });
 
+  test('Helpful and Not helpful show their names in a tooltip on keyboard focus, not only as a hover title', async () => {
+    const screen = await render(<Rated onFeedback={() => {}} />);
+    for (const name of ['Helpful', 'Not helpful']) {
+      const b = screen.getByRole('button', { name }).element() as HTMLElement;
+      const tip = () => { const t = document.getElementById((b.getAttribute('aria-labelledby') || '').split(' ').pop()!); return t && !t.hidden ? t.textContent : null; };
+      expect(b.hasAttribute('title')).toBe(false);
+      b.focus({ focusVisible: true });
+      await expect.poll(tip).toBe(name);
+    }
+  });
+
   test('Regenerate calls onRegenerate, from the keyboard too', async () => {
     const onRegenerate = vi.fn();
     const screen = await render(<ChatReplyActions onRegenerate={onRegenerate} />);

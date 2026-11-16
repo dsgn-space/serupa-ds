@@ -116,9 +116,22 @@ describe('CopyButton', () => {
   test('iconOnly: just the icon, named by children with a tooltip; the name becomes "Copied" while the check shows', async () => {
     await render(<CopyButton id="io" value="npm i serupa-ds" iconOnly variant="ghost">Copy the command</CopyButton>);
     const b = el('io');
-    expect([b.getAttribute('aria-label'), b.title, labels(b).length, b.hasAttribute('data-icon-only')]).toEqual(['Copy the command', 'Copy the command', 0, true]);
+    expect([b.getAttribute('aria-label'), document.getElementById(b.getAttribute('aria-labelledby')!)?.textContent, labels(b).length, b.hasAttribute('data-icon-only')]).toEqual(['Copy the command', 'Copy the command', 0, true]);
     await userEvent.click(b);
     await expect.poll(() => b.getAttribute('aria-label')).toBe('Copied');
+  });
+
+  test('iconOnly: its name shows in a tooltip on keyboard focus, not only as a hover title, and says "Copied" after Enter', async () => {
+    await render(<CopyButton id="io" value="npm i serupa-ds" iconOnly variant="ghost">Copy the command</CopyButton>);
+    const b = el('io');
+    const tip = () => { const t = document.getElementById((b.getAttribute('aria-labelledby') || '').split(' ').pop()!); return t && !t.hidden ? t.textContent : null; };
+    expect([b.hasAttribute('title'), tip()]).toEqual([false, null]);
+    b.focus({ focusVisible: true });
+    await expect.poll(tip).toBe('Copy the command');
+    await userEvent.keyboard('{Enter}');
+    await expect.poll(tip).toBe('Copied');
+    await render(<CopyButton id="own" value="x" iconOnly title="Mine">Copy</CopyButton>);
+    expect([el('own').title, el('own').hasAttribute('aria-labelledby')]).toEqual(['Mine', false]);
   });
 
   test('when the browser refuses: no check, labels.copyFailed said assertively, onCopyError called; your onClick runs first and preventDefault stops the copy', async () => {
