@@ -51,7 +51,8 @@ button.dk-calendar__heading:active { background: var(--calendar-day-bg-pressed, 
 .dk-calendar__periods {
   --dk-cal-periods-w: calc(7 * var(--dk-cal-day));   /* stylelint-disable-line serupa/no-raw-value -- a week's seven days: a count, not a length */
   --dk-cal-periods-h: calc(7 * var(--dk-cal-day) + 5 * var(--dk-cal-row-gap));   /* stylelint-disable-line serupa/no-raw-value -- the weekday row and six weeks, with the five gaps between them: counts */
-  width: var(--dk-cal-periods-w); height: var(--dk-cal-periods-h);
+  /* min-width too: WebKit sizes the calendar around a fixed-layout table less its border spacing (208px for 224px). */
+  width: var(--dk-cal-periods-w); min-width: var(--dk-cal-periods-w); height: var(--dk-cal-periods-h);
   border-collapse: separate; border-spacing: var(--spacing-1); table-layout: fixed;
 }
 .dk-calendar__periods td { padding: var(--spacing-0); }
