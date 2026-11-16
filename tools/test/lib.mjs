@@ -221,7 +221,7 @@ export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT
 const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
   String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(?!ci\.yml$)[\w-]+\.yml)`, 'licenses/.*',
-  String.raw`tools/test/(?!(lib|run|visual|storybook)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`,
+  String.raw`tools/test/(?!(lib|run|visual|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`,
   // The skill eval's tasks and graded apps, the local-check and release tooling, and the notes no story shows
   // (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
   'tools/skill-eval/.*', String.raw`tools/(ci|setup|tag-release)\.mjs`,
@@ -319,6 +319,8 @@ export function affectedComponents(files) {
   return names;
 }
 // SERUPA_ONLY=Button,Dialog (set by run.mjs --since): the components to test, or null for all of them.
+// The SERUPA_ONLY name a docs site page answers to: its component, block or pattern folder, or the page's own file.
+export const sitePageKey = (file) => /^src\/(?:components|blocks|patterns)\/(\w+)\//.exec(file)?.[1] ?? file;
 export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));
 // Whether a story falls in this shard (SERUPA_SHARD "2/4"), by a hash of its id, not its place in the list: Visual draws
 // main's pictures and the branch's in the same shard, and with places a story added on the branch moved every later

@@ -12,7 +12,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { PROJECT, PAGES, FOLDERS, browser, done, fail, inParallel, openUrl, read, report, tokens } from './lib.mjs';
+import { PROJECT, PAGES, FOLDERS, browser, done, fail, inParallel, onlyComponents, openUrl, sitePageKey, read, report, tokens } from './lib.mjs';
 import { sitePages } from '../site/pages.mjs';
 import { componentProps } from '../site/props.mjs';
 import { components } from '../build/registry.mjs';
@@ -93,7 +93,13 @@ const workers = await Promise.all(Array.from({ length: PAGES }, async () => {
 const ready = (page, doc) => page.waitForFunction((d) => (d ? !!document.querySelector('#article:not([aria-busy]) h1') : !!document.querySelector('main h1')), doc, { timeout: 30000 }).then(() => '', (e) => String(e.message).split('\n')[0]);
 
 let held = '';
-await inParallel(pages, workers, async (p, w) => {
+// SERUPA_ONLY (run.mjs --since, a narrowed pull request or queue group): only the pages of the components, blocks and
+// patterns it covers, as Storybook's check does; a change beyond their folders (site/, this check, shared code) leaves
+// it unset and opens every page. Every page took 6 of the checks' 15 minutes in each run (16 Nov).
+const only = onlyComponents();
+const opened = only ? pages.filter((p) => only.has(sitePageKey(p.file))) : pages;
+if (only) console.log(`Opening the ${opened.length} of ${pages.length} pages SERUPA_ONLY covers`);
+await inParallel(opened, workers, async (p, w) => {
   w.errors.length = 0;
   const failed = await openUrl(w.page, base + p.path) || await ready(w.page, true);
   if (!t(`${p.path} opens (${p.file})`, !failed, failed)) return;
@@ -206,7 +212,8 @@ await inParallel(pages, workers, async (p, w) => {
 }
 
 // A story held back on arrival runs when asked: its button puts the story's dialog, menu or tooltip on top of the page.
-if (t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
+// A narrowed run may open no page with one: it leaves this to the runs that open every page.
+if ((held || !only) && t('some page has a story that waits behind its button', !!held, 'no page shows "Open the example": is anything still held back?')) {
   const w = workers[0];
   await openUrl(w.page, base + held); await ready(w.page, true);
   const button = w.page.locator('.site-demo .site-held button').first();
@@ -262,10 +269,10 @@ if (t('some page has a story that waits behind its button', !!held, 'no page sho
 const axe = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
 const FRAME = ['/', ...OWN, '/components', '/components/button', '/foundations/colors', '/getting-started'];
 const themes = tokens().color.themes.map((x) => x.id);
-const w = workers[0];
-for (const at of FRAME) {
+// A page to each worker: one after the other, the eight pages in every theme took three of the check's six minutes (16 Nov).
+await inParallel(FRAME, workers, async (at, w) => {
   const failed = await openUrl(w.page, base + at) || await ready(w.page, pages.some((p) => p.path === at));
-  if (!t(`${at} opens for the frame's checks`, !failed, failed)) continue;
+  if (!t(`${at} opens for the frame's checks`, !failed, failed)) return;
   // An anatomy picture (docs/anatomy.tsx) turns inert, and so leaves the tab order, once its story has opened what it opens.
   await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x instanceof HTMLElement && x.inert), null, { timeout: 5000 }).catch(() => {});
   // The showcase's screen arrives after the page (its State select is disabled until then).
@@ -285,7 +292,8 @@ for (const at of FRAME) {
     t(`${at} · axe (WCAG 2.2 AA), ${theme}`, !v.length, v.slice(0, 4).join(' | '));
   }
   await w.page.evaluate(() => window.Serupa.theme.reset());
-}
+});
+const w = workers[0];
 await w.page.setViewportSize({ width: 320, height: 640 });
 for (const at of FRAME) {
   const failed = await openUrl(w.page, base + at) || await ready(w.page, pages.some((p) => p.path === at));
