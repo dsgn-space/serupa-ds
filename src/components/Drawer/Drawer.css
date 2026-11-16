@@ -131,7 +131,10 @@
 .dk-drawer__description { margin: var(--spacing-0); color: var(--drawer-description-color, var(--text-muted)); }
 /* The × centers on the title's first line (28px), not on its top: 2px down, as Tour's and Alert's sit on theirs. */
 .dk-drawer__close { --dk-drawer-close-nudge: calc((var(--text-lg--line-height) - var(--control-height-sm)) / 2); flex-shrink: 0; margin-block-start: var(--dk-drawer-close-nudge); }
-.dk-drawer__body { flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; }
+/* Room for a focus ring on every side: the body scrolls, so it clips, and a control at its edge would lose part of
+   its ring. Padding gives the room and an equal negative margin takes it back, so the content stays where it was;
+   scroll-padding keeps the room when focus scrolls a control into view. */
+.dk-drawer__body { --dk-drawer-ring-room: calc(var(--focus-ring-width) + var(--focus-ring-offset)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; padding: var(--dk-drawer-ring-room); margin: calc(var(--spacing-0) - var(--dk-drawer-ring-room)); scroll-padding: var(--dk-drawer-ring-room); }
 .dk-drawer__body:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-drawer__footer {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); flex-shrink: 0;
