@@ -46,7 +46,7 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 ### Do and don't
 
 - **Do:** A word or two in each tag. (`DoShortTags`)
-- **Don't:** Sentences in tags: they wrap, stop reading as tags, and crowd the row. Put a sentence in the text beside them. (`DontSentences`)
+- **Don't:** Sentences in tags: they stop reading as tags, and each takes a row of its own. Put a sentence in the text beside them. (`DontSentences`)
 
 ## Accessibility
 

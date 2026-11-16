@@ -246,19 +246,19 @@
           - button "Friday, November 20, 2026": "20"
         - gridcell "Saturday, November 21, 2026":
           - button "Saturday, November 21, 2026": "21"
-      - row "Sunday, November 22, 2026 Monday, November 23, 2026 Tuesday, November 24, 2026 Wednesday, November 25, 2026 Thursday, November 26, 2026 Friday, November 27, 2026, Start date Saturday, November 28, 2026, in the range":
+      - row "Sunday, November 22, 2026 Monday, November 23, 2026 Tuesday, November 24, 2026, Start date Wednesday, November 25, 2026, in the range Thursday, November 26, 2026, in the range Friday, November 27, 2026, in the range Saturday, November 28, 2026, in the range":
         - gridcell "Sunday, November 22, 2026":
           - button "Sunday, November 22, 2026": "22"
         - gridcell "Monday, November 23, 2026":
           - button "Monday, November 23, 2026": "23"
-        - gridcell "Tuesday, November 24, 2026":
-          - button "Tuesday, November 24, 2026": "24"
-        - gridcell "Wednesday, November 25, 2026":
-          - button "Wednesday, November 25, 2026": "25"
-        - gridcell "Thursday, November 26, 2026":
-          - button "Thursday, November 26, 2026": "26"
-        - gridcell "Friday, November 27, 2026, Start date" [selected]:
-          - button "Friday, November 27, 2026, Start date": "27"
+        - gridcell "Tuesday, November 24, 2026, Start date" [selected]:
+          - button "Tuesday, November 24, 2026, Start date": "24"
+        - gridcell "Wednesday, November 25, 2026, in the range":
+          - button "Wednesday, November 25, 2026, in the range": "25"
+        - gridcell "Thursday, November 26, 2026, in the range":
+          - button "Thursday, November 26, 2026, in the range": "26"
+        - gridcell "Friday, November 27, 2026, in the range":
+          - button "Friday, November 27, 2026, in the range": "27"
         - gridcell "Saturday, November 28, 2026, in the range":
           - button "Saturday, November 28, 2026, in the range": "28"
       - row "Sunday, November 29, 2026, in the range Monday, November 30, 2026, in the range":
@@ -292,7 +292,7 @@
         - columnheader "Friday"
         - columnheader "Saturday"
     - rowgroup:
-      - row "Tuesday, December 1, 2026, in the range Wednesday, December 2, 2026, in the range Thursday, December 3, 2026, in the range Friday, December 4, 2026, End date Saturday, December 5, 2026":
+      - row "Tuesday, December 1, 2026, in the range Wednesday, December 2, 2026, in the range Thursday, December 3, 2026, in the range Friday, December 4, 2026, in the range Saturday, December 5, 2026, in the range":
         - gridcell
         - gridcell
         - gridcell "Tuesday, December 1, 2026, in the range":
@@ -301,32 +301,32 @@
           - button "Wednesday, December 2, 2026, in the range": "2"
         - gridcell "Thursday, December 3, 2026, in the range":
           - button "Thursday, December 3, 2026, in the range": "3"
-        - gridcell "Friday, December 4, 2026, End date" [selected]:
-          - button "Friday, December 4, 2026, End date": "4"
-        - gridcell "Saturday, December 5, 2026":
-          - button "Saturday, December 5, 2026": "5"
-      - row "Sunday, December 6, 2026 Monday, December 7, 2026 Tuesday, December 8, 2026 Wednesday, December 9, 2026 Thursday, December 10, 2026 Friday, December 11, 2026 Saturday, December 12, 2026":
-        - gridcell "Sunday, December 6, 2026":
-          - button "Sunday, December 6, 2026": "6"
-        - gridcell "Monday, December 7, 2026":
-          - button "Monday, December 7, 2026": "7"
-        - gridcell "Tuesday, December 8, 2026":
-          - button "Tuesday, December 8, 2026": "8"
-        - gridcell "Wednesday, December 9, 2026":
-          - button "Wednesday, December 9, 2026": "9"
-        - gridcell "Thursday, December 10, 2026":
-          - button "Thursday, December 10, 2026": "10"
-        - gridcell "Friday, December 11, 2026":
-          - button "Friday, December 11, 2026": "11"
-        - gridcell "Saturday, December 12, 2026":
-          - button "Saturday, December 12, 2026": "12"
-      - row "Sunday, December 13, 2026 Monday, December 14, 2026 Tuesday, December 15, 2026 Wednesday, December 16, 2026 Thursday, December 17, 2026 Friday, December 18, 2026 Saturday, December 19, 2026":
-        - gridcell "Sunday, December 13, 2026":
-          - button "Sunday, December 13, 2026": "13"
-        - gridcell "Monday, December 14, 2026":
-          - button "Monday, December 14, 2026": "14"
-        - gridcell "Tuesday, December 15, 2026":
-          - button "Tuesday, December 15, 2026": "15"
+        - gridcell "Friday, December 4, 2026, in the range":
+          - button "Friday, December 4, 2026, in the range": "4"
+        - gridcell "Saturday, December 5, 2026, in the range":
+          - button "Saturday, December 5, 2026, in the range": "5"
+      - row "Sunday, December 6, 2026, in the range Monday, December 7, 2026, in the range Tuesday, December 8, 2026, in the range Wednesday, December 9, 2026, in the range Thursday, December 10, 2026, in the range Friday, December 11, 2026, in the range Saturday, December 12, 2026, in the range":
+        - gridcell "Sunday, December 6, 2026, in the range":
+          - button "Sunday, December 6, 2026, in the range": "6"
+        - gridcell "Monday, December 7, 2026, in the range":
+          - button "Monday, December 7, 2026, in the range": "7"
+        - gridcell "Tuesday, December 8, 2026, in the range":
+          - button "Tuesday, December 8, 2026, in the range": "8"
+        - gridcell "Wednesday, December 9, 2026, in the range":
+          - button "Wednesday, December 9, 2026, in the range": "9"
+        - gridcell "Thursday, December 10, 2026, in the range":
+          - button "Thursday, December 10, 2026, in the range": "10"
+        - gridcell "Friday, December 11, 2026, in the range":
+          - button "Friday, December 11, 2026, in the range": "11"
+        - gridcell "Saturday, December 12, 2026, in the range":
+          - button "Saturday, December 12, 2026, in the range": "12"
+      - row "Sunday, December 13, 2026, in the range Monday, December 14, 2026, in the range Tuesday, December 15, 2026, End date Wednesday, December 16, 2026 Thursday, December 17, 2026 Friday, December 18, 2026 Saturday, December 19, 2026":
+        - gridcell "Sunday, December 13, 2026, in the range":
+          - button "Sunday, December 13, 2026, in the range": "13"
+        - gridcell "Monday, December 14, 2026, in the range":
+          - button "Monday, December 14, 2026, in the range": "14"
+        - gridcell "Tuesday, December 15, 2026, End date" [selected]:
+          - button "Tuesday, December 15, 2026, End date": "15"
         - gridcell "Wednesday, December 16, 2026":
           - button "Wednesday, December 16, 2026": "16"
         - gridcell "Thursday, December 17, 2026":
@@ -371,7 +371,7 @@
         - gridcell
         - gridcell
         - gridcell
-  - paragraph: "Selected range: Nov 27 – Dec 4, 2026"
+  - paragraph: "Selected range: Nov 24 – Dec 15, 2026"
 
 # DontOneMonth
 - group "Choose dates":
@@ -435,22 +435,22 @@
           - button "Friday, November 20, 2026": "20"
         - gridcell "Saturday, November 21, 2026":
           - button "Saturday, November 21, 2026": "21"
-      - row "Sunday, November 22, 2026 Monday, November 23, 2026 Tuesday, November 24, 2026 Wednesday, November 25, 2026 Thursday, November 26, 2026 Friday, November 27, 2026, Start date Saturday, November 28, 2026, in the range":
+      - row "Sunday, November 22, 2026 Monday, November 23, 2026 Tuesday, November 24, 2026, Start date Wednesday, November 25, 2026, in the range Thursday, November 26, 2026, in the range Friday, November 27, 2026, in the range Saturday, November 28, 2026, in the range":
         - gridcell "Sunday, November 22, 2026":
           - button "Sunday, November 22, 2026": "22"
         - gridcell "Monday, November 23, 2026":
           - button "Monday, November 23, 2026": "23"
-        - gridcell "Tuesday, November 24, 2026":
-          - button "Tuesday, November 24, 2026": "24"
-        - gridcell "Wednesday, November 25, 2026":
-          - button "Wednesday, November 25, 2026": "25"
-        - gridcell "Thursday, November 26, 2026":
-          - button "Thursday, November 26, 2026": "26"
-        - gridcell "Friday, November 27, 2026, Start date" [selected]:
-          - button "Friday, November 27, 2026, Start date": "27"
+        - gridcell "Tuesday, November 24, 2026, Start date" [selected]:
+          - button "Tuesday, November 24, 2026, Start date": "24"
+        - gridcell "Wednesday, November 25, 2026, in the range":
+          - button "Wednesday, November 25, 2026, in the range": "25"
+        - gridcell "Thursday, November 26, 2026, in the range":
+          - button "Thursday, November 26, 2026, in the range": "26"
+        - gridcell "Friday, November 27, 2026, in the range":
+          - button "Friday, November 27, 2026, in the range": "27"
         - gridcell "Saturday, November 28, 2026, in the range":
           - button "Saturday, November 28, 2026, in the range": "28"
-      - row "Sunday, November 29, 2026, in the range Monday, November 30, 2026, in the range Tuesday, December 1, 2026, in the range Wednesday, December 2, 2026, in the range Thursday, December 3, 2026, in the range Friday, December 4, 2026, End date Saturday, December 5, 2026":
+      - row "Sunday, November 29, 2026, in the range Monday, November 30, 2026, in the range Tuesday, December 1, 2026, in the range Wednesday, December 2, 2026, in the range Thursday, December 3, 2026, in the range Friday, December 4, 2026, in the range Saturday, December 5, 2026, in the range":
         - gridcell "Sunday, November 29, 2026, in the range":
           - button "Sunday, November 29, 2026, in the range": "29"
         - gridcell "Monday, November 30, 2026, in the range":
@@ -461,26 +461,26 @@
           - button "Wednesday, December 2, 2026, in the range": "2"
         - gridcell "Thursday, December 3, 2026, in the range":
           - button "Thursday, December 3, 2026, in the range": "3"
-        - gridcell "Friday, December 4, 2026, End date" [selected]:
-          - button "Friday, December 4, 2026, End date": "4"
-        - gridcell "Saturday, December 5, 2026":
-          - button "Saturday, December 5, 2026": "5"
-      - row "Sunday, December 6, 2026 Monday, December 7, 2026 Tuesday, December 8, 2026 Wednesday, December 9, 2026 Thursday, December 10, 2026 Friday, December 11, 2026 Saturday, December 12, 2026":
-        - gridcell "Sunday, December 6, 2026":
-          - button "Sunday, December 6, 2026": "6"
-        - gridcell "Monday, December 7, 2026":
-          - button "Monday, December 7, 2026": "7"
-        - gridcell "Tuesday, December 8, 2026":
-          - button "Tuesday, December 8, 2026": "8"
-        - gridcell "Wednesday, December 9, 2026":
-          - button "Wednesday, December 9, 2026": "9"
-        - gridcell "Thursday, December 10, 2026":
-          - button "Thursday, December 10, 2026": "10"
-        - gridcell "Friday, December 11, 2026":
-          - button "Friday, December 11, 2026": "11"
-        - gridcell "Saturday, December 12, 2026":
-          - button "Saturday, December 12, 2026": "12"
-  - paragraph: "Selected range: Nov 27 – Dec 4, 2026"
+        - gridcell "Friday, December 4, 2026, in the range":
+          - button "Friday, December 4, 2026, in the range": "4"
+        - gridcell "Saturday, December 5, 2026, in the range":
+          - button "Saturday, December 5, 2026, in the range": "5"
+      - row "Sunday, December 6, 2026, in the range Monday, December 7, 2026, in the range Tuesday, December 8, 2026, in the range Wednesday, December 9, 2026, in the range Thursday, December 10, 2026, in the range Friday, December 11, 2026, in the range Saturday, December 12, 2026, in the range":
+        - gridcell "Sunday, December 6, 2026, in the range":
+          - button "Sunday, December 6, 2026, in the range": "6"
+        - gridcell "Monday, December 7, 2026, in the range":
+          - button "Monday, December 7, 2026, in the range": "7"
+        - gridcell "Tuesday, December 8, 2026, in the range":
+          - button "Tuesday, December 8, 2026, in the range": "8"
+        - gridcell "Wednesday, December 9, 2026, in the range":
+          - button "Wednesday, December 9, 2026, in the range": "9"
+        - gridcell "Thursday, December 10, 2026, in the range":
+          - button "Thursday, December 10, 2026, in the range": "10"
+        - gridcell "Friday, December 11, 2026, in the range":
+          - button "Friday, December 11, 2026, in the range": "11"
+        - gridcell "Saturday, December 12, 2026, in the range":
+          - button "Saturday, December 12, 2026, in the range": "12"
+  - paragraph: "Selected range: Nov 24 – Dec 15, 2026"
 
 # Empty
 - group "Choose dates":
