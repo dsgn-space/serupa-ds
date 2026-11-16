@@ -84,6 +84,9 @@ Drawn from the `Disabled` story.
 | `name` | `string` | | Adds a hidden input that sends `"HH:mm"`. With `form`, the hidden input belongs to that form too. |
 | `placeholder` | `string` | the locale's format: `"hh:mm AM/PM"` (en-US), `"hh:mm"` (en-GB), "hh.mm" (id-ID) | |
 | `listLabel` | `string` | `"Choose a time"` | The list's name, and the clock button's. |
+| `open` | `boolean` | | Whether the list of times shows (controlled), with `onOpenChange`. |
+| `defaultOpen` | `boolean` | `false` | Shows the list at first. Focus stays in the field either way. |
+| `onOpenChange` | `(open, { reason }) => void` | | Called when the list asks to open or close, and why. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 

@@ -15,5 +15,8 @@ interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
     listLabel?: string | undefined;
+    open?: boolean | undefined;
+    defaultOpen?: boolean | undefined;
+    onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 declare const TimePicker: React.ForwardRefExoticComponent<TimePickerProps & React.RefAttributes<HTMLInputElement>>;

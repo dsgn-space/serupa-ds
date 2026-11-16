@@ -16,6 +16,7 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { useControllable } from '../../internal/controllable';
+import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
 
 /** What a PeriodPicker chooses: a month, a quarter or a year. */
 export type PeriodUnit = 'month' | 'quarter' | 'year';
@@ -45,8 +46,12 @@ export interface PeriodPickerProps extends Omit<React.ButtonHTMLAttributes<HTMLB
   readOnly?: boolean | undefined;
   /** Submits the value ("2026-11", "2026-Q4" or "2026") with a form, under this name. */
   name?: string | undefined;
+  /** Whether the popup shows (controlled). Use with onOpenChange. Opened this way, focus stays where it is. */
+  open?: boolean | undefined;
   /** Shows the popup open at first, without moving focus into it. Default: false. */
   defaultOpen?: boolean | undefined;
+  /** Called when the popup asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' | 'select' | 'api' }. */
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
 const PER: Record<PeriodUnit, number> = { month: 12, quarter: 4, year: 1 };
@@ -90,7 +95,7 @@ const never = () => () => {}, yes = () => true, no = () => false;
 export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodPickerProps>('PeriodPicker', function PeriodPicker(props, ref) {
   props = useFieldControl(props);
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { unit: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, locale: 1, placeholder: 1, size: 1, invalid: 1, readOnly: 1, name: 1, defaultOpen: 1, className: 1, style: 1, form: 1, disabled: 1 } as const);
+  const rest = omit(props, { unit: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, locale: 1, placeholder: 1, size: 1, invalid: 1, readOnly: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1 } as const);
   const unit: PeriodUnit = props.unit === 'quarter' || props.unit === 'year' ? props.unit : 'month';
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const base = domId('dk-pp', React.useId());
@@ -106,7 +111,7 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
 
   const hydrated = React.useSyncExternalStore(never, yes, no);
   const now = new Date(), current = now.getFullYear() * PER[unit] + Math.floor(now.getMonth() / (12 / PER[unit]));
-  const [open, setOpenState] = React.useState(() => !!props.defaultOpen && !props.disabled && !props.readOnly);
+  const [open, setOpenState] = useOpenState(props.open, props.defaultOpen, props.onOpenChange, 'PeriodPicker', !!props.disabled || !!props.readOnly);
   // The period in focus, kept within min..max when they change while the popup is open.
   const [held, setFocus] = React.useState<number>(() => clamp(value ?? current));
   const focus = clamp(held);
@@ -137,20 +142,20 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
   };
   const title = unit === 'year' ? yearText(page) + '–' + yearText(page + 11) : yearText(page / PER[unit]);
 
-  const close = (toButton: boolean) => { setOpenState(false); if (toButton && button.current) button.current.focus(); };
+  const close = (toButton: boolean, reason: OpenChangeReason) => { setOpenState(false, reason); if (toButton && button.current) button.current.focus(); };
   const show = () => {
     if (disabled || readOnly) return;
-    setFocus(clamp(value ?? current)); wantFocus.current = true; setOpenState(true);
+    setFocus(clamp(value ?? current)); wantFocus.current = true; setOpenState(true, 'trigger');
   };
   const pick = (n: number) => {
     if (off(n)) return;
     if (!controlled) setOwn(n);
     if (n !== value && props.onValueChange) props.onValueChange(periodValue(n, unit), rangeOf(n, unit));
-    close(true);
+    close(true, 'select');
   };
   const move = (n: number) => { setFocus(clamp(n)); wantFocus.current = true; };
   // Escape anywhere in the popup closes it without a change, and focus goes back to the button.
-  const escape = (e: React.KeyboardEvent) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } };
+  const escape = (e: React.KeyboardEvent) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } };
   const onKeyDown = (e: React.KeyboardEvent<HTMLTableElement>) => {
     if (e.key === 'Escape') return escape(e);
     if (e.altKey || e.ctrlKey || e.metaKey || isComposing(e)) return;
@@ -169,9 +174,9 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
     }
     e.preventDefault();
   };
-  useFormReset(hidden, () => { if (!controlled) setOwn(periodIndex(props.defaultValue, unit)); setOpenState(false); }, props.form);
+  useFormReset(hidden, () => { if (!controlled) setOwn(periodIndex(props.defaultValue, unit)); setOpenState(false, 'api'); }, props.form);
   const exit = useExit(open, panel);
-  useAnchoredLayer(open, panel, button, { placement: 'bottom-start', offsetVar: '--dk-pp-offset', onOutside: () => close(false), onFocusOutside: () => close(false), inside: button });
+  useAnchoredLayer(open, panel, button, { placement: 'bottom-start', offsetVar: '--dk-pp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
   // Opening or a key asks for focus, and the period's button is there only after the render (and after
   // useAnchoredLayer has shown the popup: a hidden popover can't take focus).
@@ -192,7 +197,7 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
     <div className={cn('dk-period-picker', 'dk-period-picker--size-' + size, invalid && 'dk-period-picker--invalid', disabled && 'dk-period-picker--disabled', readOnly && 'dk-period-picker--readonly', props.className)} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
       <button {...rest} ref={mergedRef} type="button" role="combobox" className="dk-period-picker__button" lang={rest.lang ?? lang}
         aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || undefined} aria-readonly={readOnly || undefined} disabled={disabled}
-        onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false); else show(); } }}
+        onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
         <TruncatedText className={cn('dk-period-picker__value', value == null && 'dk-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</TruncatedText>
         <Icon icon={icons.CalendarToday} className="dk-period-picker__icon" />

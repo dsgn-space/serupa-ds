@@ -93,7 +93,9 @@ Keys stop at `min` and `max`.
 | `size` | `'sm'` \| `'md'` \| `'lg'` | `'md'` | 24, 32 or 44px, like Select |
 | `invalid` | boolean | `false` | A danger border and `aria-invalid`; set for you in a Field with an error |
 | `name` | string | | A form gets the value under it, and a form reset brings back `defaultValue` |
+| `open` | boolean | | Whether the popup shows (controlled), with `onOpenChange`. Opened this way, focus stays where it is |
 | `defaultOpen` | boolean | `false` | Shows the popup open at first, without moving focus into it |
+| `onOpenChange` | (open, { reason }) => void | | Called when the popup asks to open or close, and why |
 | `disabled` | boolean | `false` | It can't open, and the form doesn't get its value |
 | `readOnly` | boolean | `false` | Shows the period but can't open: focusable and read out (`aria-readonly`), and the form still gets its value, unlike `disabled` |
 

@@ -52,5 +52,8 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     buttonLabel?: string | undefined;
     months?: 1 | 2 | undefined;
     presets?: boolean | DateRangePreset[] | undefined;
+    open?: boolean | undefined;
+    defaultOpen?: boolean | undefined;
+    onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 declare const DateRangePicker: React.ForwardRefExoticComponent<DateRangePickerProps & React.RefAttributes<HTMLSpanElement>>;
