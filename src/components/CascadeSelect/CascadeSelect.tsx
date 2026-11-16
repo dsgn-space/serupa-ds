@@ -256,8 +256,8 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
         <Icon icon={icons.ExpandMore} className="dk-cascade-select__chevron" />
       </button>
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value[value.length - 1] || ''} disabled={disabled} /> : <input ref={hidden} type="hidden" disabled />}
-      {/* required: a hidden-from-view field the form checks; the button is marked and takes focus instead of a bubble. */}
-      {required ? <input className="dk-cascade-select__validity" tabIndex={-1} aria-hidden required value={value[value.length - 1] || ''} onChange={() => {}}
+      {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the button is marked and takes focus instead of a bubble. */}
+      {required ? <input key={value.length ? 'filled' : 'empty'} className="dk-cascade-select__validity" tabIndex={-1} aria-hidden required defaultValue={value.length ? 'filled' : ''}
         disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
       <span id={base + '-more'} hidden>{L.cascadeHasMore(open && rtl())}</span>
       <div ref={panel} id={base + '-panel'} role="dialog" aria-label={dialogName}

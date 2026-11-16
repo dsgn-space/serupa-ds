@@ -257,8 +257,8 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
         )}
       </FieldContext.Provider>
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={value ? value.svg : ''} disabled={disabled} /> : null}
-      {/* required: a hidden-from-view field the form checks; the pad is marked and takes focus instead of a bubble. */}
-      {required ? <input className="dk-signature-pad__validity" tabIndex={-1} aria-hidden required value={value ? value.svg : ''} onChange={() => {}}
+      {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the pad is marked and takes focus instead of a bubble. */}
+      {required ? <input key={value ? 'filled' : 'empty'} className="dk-signature-pad__validity" tabIndex={-1} aria-hidden required defaultValue={value ? 'filled' : ''}
         disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
     </div>
   );
