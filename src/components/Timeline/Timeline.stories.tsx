@@ -81,7 +81,7 @@ function States(args: React.ComponentProps<typeof Timeline>) {
         : state === 'loaded' ? <Timeline {...args} />
         : <Timeline {...args} aria-busy>
             {[0, 1, 2, 3].map((i) => <TimelineItem key={i}
-              title={<Loader variant="skeleton" size="lg" className="w-1/2" label={i === 0 ? 'Loading history' : ''} />}
+              title={<Loader variant="skeleton" size="lg" className="w-40" label={i === 0 ? 'Loading history' : ''} />}
               time={<Loader variant="skeleton" size="md" className="w-24" label="" />} />)}
           </Timeline>}
     </div>

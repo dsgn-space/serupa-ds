@@ -37,6 +37,7 @@ describe('Lightbox', () => {
     expect([d.id, ref.current === d, d.classList.contains('extra'), d.dataset.x, d.open, title(), described()]).toEqual(['x', true, true, 'y', true, 'A green square', '2 of 3']);
     expect(d.querySelector('img')!.getAttribute('alt')).toBe('');   // the title names it; not read twice
     await expect.element(page.getByText('2 of 3', { exact: true }).last()).toBeVisible();
+    expect(d.textContent.split('2 of 3').length - 1).toBe(1);   // shown once, between the arrows, not again under the title
   });
 
   test('the arrows move through the pictures, say each one, and stop at the ends; the caption follows', async () => {
