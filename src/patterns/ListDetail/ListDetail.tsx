@@ -145,7 +145,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 outline-none">
+      <main id="main" className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title="Inbox" />
         {loadFailed ? (
           <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />

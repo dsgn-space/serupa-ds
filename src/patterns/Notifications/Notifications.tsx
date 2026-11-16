@@ -112,7 +112,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
       </Navbar>
       <NotificationCenter items={all.slice(0, 5)} open={open} onOpenChange={setOpen} onMarkRead={(id) => markRead(id)} onMarkAllRead={() => markAll()} />
 
-      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-8 outline-none">
+      <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title="Notifications" headingRef={heading}
           primary={{ label: 'Mark all as read', disabled: loading || loadFailed || !unread, onSelect: () => markAll(true) }}
           secondary={[{ label: 'Notification settings', icon: 'settings', href: settingsHref }]} />

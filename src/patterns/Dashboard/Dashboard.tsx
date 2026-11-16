@@ -121,7 +121,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" aria-busy={loading || undefined} className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 outline-none">
+      <main id="main" aria-busy={loading || undefined} className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
 
         {loadFailed ? (
