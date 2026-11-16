@@ -94,7 +94,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
         <Link href="#help">Help</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-lg flex-col px-4 py-12 outline-none">
-        <Card padding="lg" className="flex flex-col gap-5">
+        <Card padding="lg" className="flex flex-col gap-4">
           {done ? (
             <section aria-labelledby="invite-answer" className="flex flex-col items-start gap-3">
               <h1 id="invite-answer" ref={answer} tabIndex={-1} className="m-0 text-2xl font-semibold outline-none">

@@ -109,7 +109,7 @@ export function ContactForm({ onSend, replyTime = 'within 2 working days' }: Con
               <Link href="#help">Back to the help center</Link>
             </section>
           ) : (
-            <form onSubmit={send} noValidate aria-label="Contact us" className="flex flex-col gap-5">
+            <form onSubmit={send} noValidate aria-label="Contact us" className="flex flex-col gap-4">
               <ErrorSummary key={tries} errors={errors} />
               <Field label="Name" id="contact-name" error={problems.name} required>
                 <Input autoComplete="name" value={m.name} onChange={(e) => edit({ name: e.target.value })} />

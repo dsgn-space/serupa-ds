@@ -193,7 +193,7 @@ export function MultiStepForm({ initial, start = 0, failed: startFailed, sent: s
           </Card>
         ) : (
           <form noValidate onSubmit={submit}>
-            <Card className="flex flex-col gap-5">
+            <Card className="flex flex-col gap-4">
               <section {...s.panelProps(0)} className="flex flex-col gap-4">
                 {h2(0)}
                 {summary(0)}

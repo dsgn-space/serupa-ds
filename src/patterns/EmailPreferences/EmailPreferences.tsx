@@ -117,7 +117,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
               <Button variant="secondary" loading={busy} onClick={turnBack}>Turn them back on</Button>
             </section>
           ) : (
-            <form onSubmit={submit} aria-labelledby="choose" className="flex flex-col gap-5">
+            <form onSubmit={submit} aria-labelledby="choose" className="flex flex-col gap-4">
               <h2 id="choose" className="m-0 text-lg font-semibold">What we send</h2>
               <div className="flex flex-col gap-4">
                 {topics.map((t) => (

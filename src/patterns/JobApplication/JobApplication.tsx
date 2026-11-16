@@ -137,7 +137,7 @@ export function JobApplication({ job = demoJob, onApply }: JobApplicationProps) 
               <Link href="#jobs">See other jobs</Link>
             </section>
           ) : (
-            <form onSubmit={apply} noValidate aria-labelledby="apply" className="flex flex-col gap-5">
+            <form onSubmit={apply} noValidate aria-labelledby="apply" className="flex flex-col gap-4">
               <h2 id="apply" className="m-0 text-lg font-semibold">Apply</h2>
               <ErrorSummary key={tries} errors={errors} />
               <Field label="Full name" id="job-name" error={problems.name} required>

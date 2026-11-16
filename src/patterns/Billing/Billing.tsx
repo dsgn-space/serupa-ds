@@ -187,7 +187,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
 
           <section aria-labelledby="billing-usage" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="billing-usage">Usage</Heading>
-            <Card className="flex flex-col gap-5">
+            <Card className="flex flex-col gap-4">
               <Meter label="Seats" showValue value={usage.seats.used} max={usage.seats.limit} high={usage.seats.limit * 0.8} optimum={0}
                 formatValue={(v, _, max) => `${v} of ${max} seats${full(v, max)}`} />
               <Meter label="Storage" showValue value={usage.storageGb.used} max={usage.storageGb.limit} high={usage.storageGb.limit * 0.8} optimum={0}

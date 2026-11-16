@@ -115,7 +115,8 @@ describe('QRCode', () => {
     await rerender(<QRCode id="a" value="a" label="Code" status="scanned" />);
     await expect.poll(announcer).toContain('Scanned');
     await rerender(<QRCode id="a" value="a" label="Code" status="expired" />);
-    await expect.poll(announcer).toContain('Code expired');
+    // Said once "Scanned" has had its half second (announce's HOLD), which a busy WebKit run took past the second a poll waits.
+    await expect.poll(announcer, { timeout: 3000 }).toContain('Code expired');
   });
 
   test('the status message reads 4.5:1 over the faded code, on its light and its dark modules, in every theme', async () => {
