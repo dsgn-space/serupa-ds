@@ -36,6 +36,9 @@ export const InAField: Story = {
 export const NothingChosen: Story = { args: { defaultValue: [] } };
 /** Disabled: both lists and the buttons. */
 export const Disabled: Story = { args: { disabled: true } };
+
+/** Read-only: the lists show what was chosen, with no Add or Remove. */
+export const ReadOnly: Story = { args: { readOnly: true } };
 // The stress story (G14): long names, a description, and more than fit, so each list scrolls.
 export const LongText: Story = {
   args: {
