@@ -150,8 +150,8 @@ function Sink() {
             <Meter value={92} low={80} high={95} optimum={0} label="Storage" showValue />
             <Divider />
             <Timeline aria-label="Recent activity">
-              <TimelineItem title="Design approved" time="12 Mar, 09:14" status="success" icon="check" />
-              <TimelineItem title="Comment from Ada" time="12 Mar, 10:02" status="primary">Can the header be shorter?</TimelineItem>
+              <TimelineItem title="Design approved" time="12 Mar, 09:14" tone="success" icon="check" />
+              <TimelineItem title="Comment from Ada" time="12 Mar, 10:02" tone="primary">Can the header be shorter?</TimelineItem>
             </Timeline>
           </div>
         </CardBody>
