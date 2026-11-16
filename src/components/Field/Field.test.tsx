@@ -135,10 +135,14 @@ describe('Field', () => {
     expect([s.labels?.[0]!.textContent?.replaceAll('*', ''), s.getAttribute('aria-invalid'), s.getAttribute('aria-required'), (s.getAttribute('aria-describedby') || '').split(' ').length]).toEqual(['Size', 'true', 'true', 2]);
   });
 
-  test('disabled disables the control and dims the label', async () => {
-    await render(<Field label="Locked" disabled><Input id="locked" /></Field>);
+  test('disabled disables the control and dims the label, its required mark too', async () => {
+    await render(<Field label="Locked" disabled required><Input id="locked" /></Field>);
     expect(el('locked').disabled).toBe(true);
-    expect(disabledLook(el('locked').closest('[data-component="field"]')!.querySelector('label'))).toBe('neutral');
+    const label = el('locked').closest('[data-component="field"]')!.querySelector('label')!;
+    expect(disabledLook(label)).toBe('neutral');
+    // A disabled field asks for nothing, so its mark isn't the danger red beside a dimmed label.
+    const mark = [...label.querySelectorAll('*')].find((n) => n.textContent === '*') as HTMLElement;
+    expect(getComputedStyle(mark).color).toBe(getComputedStyle(label).color);
   });
 
   test('group: a <fieldset> whose <legend> lays out like a label; the hint and error describe the fieldset; controls keep their ids; a disabled group disables every control', async () => {

@@ -165,6 +165,11 @@ describe('Rating', () => {
     }
     document.documentElement.removeAttribute('data-theme');
     expect(low).toEqual([]);
+    // Outlines, not solid stars: an empty invalid row must not read as a full red rating.
+    const svg = (id: string) => css(stars(id)[4]!.children[0]!.querySelector('svg'));
+    const path = css(stars('bad')[4]!.children[0]!.querySelector('path'));
+    // 2 screen pixels at every size: without non-scaling-stroke the 2px is 2 of the star's 960 drawing units, a hairline.
+    expect([svg('ok').fill === 'none', svg('bad').fill, path.strokeWidth, path.vectorEffect]).toEqual([false, 'none', '2px', 'non-scaling-stroke']);
   });
 
   test('the filled and empty star colors are 3:1 on the page in every theme; Indonesian names ("2,5 bintang", "4,5 dari 5")', async () => {

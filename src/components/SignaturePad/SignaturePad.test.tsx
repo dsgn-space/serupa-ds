@@ -113,6 +113,8 @@ describe('SignaturePad', () => {
     await userEvent.keyboard('x');
     expect([paths(el('ro')), sw.getAttribute('aria-readonly'), el('ro').querySelectorAll('button:not([role=radio])').length, el('ro').getAttribute('aria-describedby'), css(area(el('ro'))).cursor,
       name.readOnly, name.value, calls, (new FormData(el('rof') as HTMLFormElement).get('sig') as string).includes('M20 100L140 60')]).toEqual([1, 'true', 0, null, 'default', true, 'Dewi', [], true]);
+    // The box is a step flatter, as the read-only field above a typed name is.
+    expect(css(area(el('ro')).parentElement).backgroundColor).toBe(css(name.parentElement).backgroundColor);
   });
 
   test('signing without dragging: a tap on Type, then the name field, signs with one pointer and the keyboard alone (WCAG 2.5.7)', async () => {

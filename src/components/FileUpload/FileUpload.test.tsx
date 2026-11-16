@@ -62,6 +62,8 @@ describe('FileUpload', () => {
       expect(edge(id) !== at, id).toBe(id === 'live');
       await userEvent.unhover(zone(id));
     }
+    // Read-only shows the plain arrow over the area and its button, not not-allowed: nothing is refused.
+    expect([getComputedStyle(zone('ro')).cursor, getComputedStyle(zone('ro').querySelector('button')!).cursor]).toEqual(['default', 'default']);
   });
 
   test('form: a FileUpload outside its form submits with it (the native input carries the form attribute)', async () => {

@@ -81,6 +81,7 @@ Each is an optional override: set it on the page, a container or one SignaturePa
 | Token | Default | Use |
 | --- | --- | --- |
 | `--signature-pad-bg` | `surface` | The drawing box's background. |
+| `--signature-pad-bg-readonly` | `field-readonly` | The drawing box's background while read-only: a step flatter, as a read-only field's, so a saved signature reads as not editable. |
 | `--signature-pad-border` | `border-control` | The drawing box's outline (3:1 on the page). |
 | `--signature-pad-border-invalid` | `danger` | The drawing box's outline while the signature is invalid (3:1). |
 | `--signature-pad-ink` | `text` | The drawn strokes and the typed name (4.5:1 on bg). |
