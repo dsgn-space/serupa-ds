@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, splitWords } from '../../../tools/test/vitest/helpers';
 import { Text, type TextSize, type TextTone, type TextWeight } from './Text';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -103,5 +103,10 @@ describe('Text', () => {
       }
     }
     expect(low).toEqual([]);
+  });
+
+  test('in a table cell, a word stays whole while the table has room for it', async () => {
+    const screen = await render(<table lang="de" style={{ width: 320 }}><tbody><tr><td>Linus Torvalds</td><td><Text tone="muted">Betrachter</Text></td><td>Rechnung für die Abrechnungsmigration vom März 2026, bezahlt</td><td>1.250.000</td></tr></tbody></table>);
+    expect(splitWords(screen.getByText('Betrachter').element(), 200)).toEqual([]);
   });
 });

@@ -2,9 +2,10 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, splitWords } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { labels as deLabels } from '../../labels/de';
 import { Attachment, attachmentKind } from './Attachment';
 
 const root = (id: string) => document.getElementById(id) as HTMLElement;
@@ -195,5 +196,10 @@ describe('Attachment', () => {
       expect(contrast(css(root('ce')).borderTopColor, page), th + ' error outline').toBeGreaterThanOrEqual(3);
     }
     document.documentElement.removeAttribute('data-theme');
+  });
+
+  test('an error keeps its words whole beside the retry button, rather than one letter to a line', async () => {
+    const screen = await render(<SerupaProvider locale="de-DE" labels={deLabels}><div lang="de" style={{ width: 260, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}><Attachment name="🎉 Ulang tahun.jpg" bytes={2_000_000} error="Der Server hat zu lange gebraucht. Prüfe die Verbindung und versuche es noch einmal." onRetry={() => {}} onRemove={() => {}} /></div></SerupaProvider>);
+    expect(splitWords(screen.getByText(/Der Server/).element(), 120)).toEqual([]);
   });
 });
