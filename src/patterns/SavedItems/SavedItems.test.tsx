@@ -73,4 +73,15 @@ describe('Patterns/Saved items', () => {
     expect(document.body.textContent).toContain('Nothing saved yet');
     expect(onMoveToCart).toHaveBeenLastCalledWith('a');
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<SavedItems loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading saved items']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<SavedItems loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your saved items' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

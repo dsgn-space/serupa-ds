@@ -11,6 +11,9 @@ import { Select } from '../../components/Select/Select';
 import { ToggleButton } from '../../components/ToggleButton/ToggleButton';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
+import { Card } from '../../components/Card/Card';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Reviews: the average and how the stars split, then the reviews themselves, filtered by stars and sorted, a few at a
@@ -33,6 +36,12 @@ export interface ReviewsProps {
   pageSize?: number | undefined;
   /** Hears a Helpful press. */
   onHelpful?: ((id: string, pressed: boolean) => void) | undefined;
+  /** Still loading: a placeholder shows instead of the reviews. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load the reviews" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demo: Review[] = [
@@ -63,7 +72,7 @@ export function pickReviews(reviews: Review[], stars: number, sort: Sort) {
 }
 
 /** The reviews page: a skip link, a header, then main with the h1, the summary, the filters and the reviews. */
-export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageSize = 3, onHelpful }: ReviewsProps) {
+export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageSize = 3, onHelpful, loading = false, loadFailed = false, onRetry }: ReviewsProps) {
   const locale = useLocale();
   const num = (n: number) => formatNumber(n, locale);
   const [stars, setStars] = React.useState('0');
@@ -95,6 +104,8 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: product, href: '#product' }, { label: 'Reviews' }]} title={`Reviews of the ${product}`} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the reviews" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading reviews" /></Card> : (<>
         <div className="grid grid-cols-1 gap-8 pt-6 md:grid-cols-3">
           <section aria-labelledby="reviews-summary" className="flex flex-col gap-4">
             <h2 id="reviews-summary" className="m-0 text-lg font-semibold">Overall</h2>
@@ -145,6 +156,7 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
             {list.length > shown ? <div><Button variant="secondary" onClick={more}>Show more reviews</Button></div> : null}
           </section>
         </div>
+        </>)}
       </main>
     </div>
   );

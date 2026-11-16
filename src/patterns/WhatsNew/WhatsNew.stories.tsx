@@ -16,3 +16,9 @@ export const Default: Story = {};
 
 /** Seen everything. */
 export const AllSeen: Story = { args: { lastSeen: '2026-03-31' } };
+
+/** While the changes load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

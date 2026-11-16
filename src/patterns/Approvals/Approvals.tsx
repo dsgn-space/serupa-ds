@@ -14,6 +14,8 @@ import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Approvals: the requests waiting on you (expenses, leave, purchases), each with what you need to decide, approved in
@@ -38,6 +40,12 @@ export interface ApprovalsProps {
   currency?: string | undefined;
   /** Sends a decision, once its Undo time is over. */
   onDecide?: ((decision: Decision) => void) | undefined;
+  /** Still loading: a placeholder shows instead of the requests. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load your requests" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demo: ApprovalRequest[] = [
@@ -56,7 +64,7 @@ export function nextAfter(ids: string[], id: string): string | null {
 }
 
 /** The approvals page: a skip link, a header, then main with the h1, Waiting or Decided, and the requests. */
-export function Approvals({ requests = demo, currency = 'USD', onDecide }: ApprovalsProps) {
+export function Approvals({ requests = demo, currency = 'USD', onDecide, loading = false, loadFailed = false, onRetry }: ApprovalsProps) {
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
   const day = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'long', timeZone: 'UTC' });
@@ -113,7 +121,9 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide }: Appro
         <Link href="#team">Your team</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
-        <PageHeader title="Approvals" description={waiting.length ? `${waiting.length === 1 ? '1 request is' : `${formatNumber(waiting.length, locale)} requests are`} waiting on you.` : 'Nothing is waiting on you.'} />
+        <PageHeader title="Approvals" description={loading || loadFailed ? undefined : waiting.length ? `${waiting.length === 1 ? '1 request is' : `${formatNumber(waiting.length, locale)} requests are`} waiting on you.` : 'Nothing is waiting on you.'} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your requests" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading requests" /></Card> : (<>
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
           <SegmentedControl aria-label="Show" value={show} onValueChange={setShow}
             options={[{ value: 'waiting', label: 'Waiting' }, { value: 'decided', label: 'Decided' }]} />
@@ -160,6 +170,7 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide }: Appro
             </div>
           </div>
         </Dialog>
+        </>)}
       </main>
       <Toaster />
     </div>

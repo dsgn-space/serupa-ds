@@ -16,3 +16,9 @@ export const Default: Story = {};
 
 /** You're in the top five. */
 export const InTheTop: Story = { args: { me: 'sara' } };
+
+/** While the board load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };
