@@ -25,7 +25,7 @@ import { useControllable } from '../../internal/controllable';
 import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
 // This component's words and the ones it shares with DatePicker, Calendar (the presets' "Today" and their name) and
 // RangeCalendar ("Selected range").
-const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, { ...CalendarWords, ...RangeCalendarWords });
+const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, /* @__PURE__ */ Object.assign({}, CalendarWords, RangeCalendarWords));
 
 /** A range of days; either end can be empty while it's being chosen. */
 export interface DateRange { start: Date | null; end: Date | null }
