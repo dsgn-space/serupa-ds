@@ -10,6 +10,7 @@ import { Icon, type IconSource } from '../Icon/Icon';
 import { useServerStyles } from '../../internal/serverStyles';
 import { asIcon } from '../Icon/asIcon';
 import * as icons from '../../material/builtin';
+import { useControllable } from '../../internal/controllable';
 
 export interface TreeViewItem {
   /** Identifies the item in value and expanded. Unique in the whole tree. */
@@ -73,10 +74,8 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   const rest = omit(props, { items: 1, selectionMode: 1, value: 1, defaultValue: 1, onValueChange: 1, expanded: 1, defaultExpanded: 1, onExpandedChange: 1, className: 1, onKeyDown: 1 });
   const mode = props.selectionMode || 'single';
   const multi = mode === 'multiple';
-  const [ownValue, setOwnValue] = React.useState<string[]>(props.defaultValue || []);
-  const value = props.value !== undefined ? props.value : ownValue;
-  const [ownOpen, setOwnOpen] = React.useState<string[]>(props.defaultExpanded || []);
-  const open = props.expanded !== undefined ? props.expanded : ownOpen;
+  const [value, setOwnValue, valueControlled] = useControllable<string[]>(props.value, props.defaultValue || [], 'TreeView', 'value');
+  const [open, setOwnOpen, openControlled] = useControllable<string[]>(props.expanded, props.defaultExpanded || [], 'TreeView', 'expanded');
   const root = React.useRef<HTMLUListElement | null>(null);
   const styled = useServerStyles<HTMLUListElement>();   // each row's level, from server HTML under a strict CSP (GR11)
   const typed = React.useRef<Typed>({ text: '', at: 0 });
@@ -136,7 +135,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   const pick = (next: string[]) => {
     // Ctrl+A or a Shift range over items all picked already changes nothing.
     if (next.length === value.length && next.every((v) => valueSet.has(v))) return;
-    if (props.value === undefined) setOwnValue(next);
+    if (!valueControlled) setOwnValue(next);
     if (props.onValueChange) props.onValueChange(next);
   };
   // Opened or closed by a key, the chevron is turned in the same frame, as focus and selection move (KW1, KW15); a
@@ -145,7 +144,7 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
   useIsoLayoutEffect(listenForInput, []);
   const setOpen = (next: string[]) => {
     setKeyed(lastInputKeyboard());
-    if (props.expanded === undefined) setOwnOpen(next);
+    if (!openControlled) setOwnOpen(next);
     if (props.onExpandedChange) props.onExpandedChange(next);
   };
   const toggleOpen = (item: TreeViewItem) => {

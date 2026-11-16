@@ -19,6 +19,7 @@ import { isComposing } from '../../internal/ime';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { en as words } from './labels';
 import { windowBlur } from '../../internal/focus';
+import { useControllable } from '../../internal/controllable';
 
 export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'children'> {
   /** The chosen day (controlled), or null. Use with onValueChange. A "yyyy-mm-dd" string is that day, wherever the
@@ -73,9 +74,8 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<Date | null>(() => toDay(props.defaultValue, 'DatePicker'));
-  const value = controlled ? toDay(props.value, 'DatePicker') : own;
+  const [held, setOwn, controlled] = useControllable<Date | string | null>(props.value, toDay(props.defaultValue, 'DatePicker'), 'DatePicker', 'value');
+  const value = controlled ? toDay(held, 'DatePicker') : (held as Date | null);
   const min = toDay(minIn, 'DatePicker') || undefined, max = toDay(maxIn, 'DatePicker') || undefined;
   const [text, setText] = React.useState(value ? formatDate(value, locale) : '');
   const [open, setOpen] = React.useState(false);

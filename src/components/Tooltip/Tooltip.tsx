@@ -9,6 +9,7 @@ import { isComposing } from '../../internal/ime';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { hoverIntent, hoverLeave, hoverWarm } from '../../internal/timing';
 import { warnOnce } from '../../internal/warn';
+import { useControllable } from '../../internal/controllable';
 
 export interface TooltipProps {
   /** What the tooltip says: a short line of text. Keep links and buttons out (people can't reach them). */
@@ -57,9 +58,8 @@ const OWN = { content: 1, children: 1, placement: 1, openDelay: 1, delay: 1, rol
 /** A short hint about one element, shown on hover and keyboard focus. */
 export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: TooltipProps): React.ReactElement {
   const id = domId('dk-tip', React.useId());
-  const [inner, setInner] = React.useState(!!props.defaultOpen);
-  const controlled = props.open !== undefined;
-  const open = !props.disabled && (controlled ? !!props.open : inner);
+  const [held, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Tooltip', 'open');
+  const open = !props.disabled && !!held;
   const tipRef = React.useRef<HTMLDivElement | null>(null);
   const anchorRef = React.useRef<HTMLElement | null>(null);
   const timer = React.useRef<number | undefined>(undefined);
@@ -73,7 +73,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     if (v === shown.current || (v && off.current)) return;
     if (!controlled) { shown.current = v; setInner(v); }
     if (onOpenChange.current) onOpenChange.current(v, { reason });
-  }, [controlled]);
+  }, [controlled, setInner]);
   // Escape while a hover is waiting out the delay cancels the show (GR89): it was dismissed before it appeared.
   // Nothing is on screen yet, so that Escape goes on to whatever else handles it.
   const armed = React.useRef<((e: KeyboardEvent) => void) | null>(null);

@@ -9,6 +9,7 @@ import { revealInvalid } from '../../internal/untilFound';
 import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
 import { activeIn } from '../../internal/root';
 import { useTabRow } from './tabRow';
+import { useControllable } from '../../internal/controllable';
 
 export type TabsVariant = 'line' | 'pill';
 
@@ -60,9 +61,7 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, variant: 1, size: 1, activation: 1, orientation: 1, className: 1 });
   const vertical = props.orientation === 'vertical';
   const base = domId('dk-tabs', React.useId());
-  const controlled = props.value !== undefined;
-  const [inner, setInner] = React.useState<string | null>(() => (props.defaultValue != null ? props.defaultValue : firstTab(props.children)));
-  const value = controlled ? (props.value as string) : inner;
+  const [value, setInner, controlled] = useControllable<string | null>(props.value, props.defaultValue != null ? props.defaultValue : firstTab(props.children), 'Tabs', 'value');
   const onChange = React.useRef(props.onValueChange); onChange.current = props.onValueChange;
   // TabList's hook to note where the line or fill is just before the selection changes, so a slide that is still
   // running turns back from where it has got to (EH1).
@@ -82,7 +81,7 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
     if (before.current) before.current();
     if (!controlled) { current.current = v; setInner(v); }
     if (onChange.current) onChange.current(v);
-  }, [controlled]);
+  }, [controlled, setInner]);
   const variant = oneOf(['line', 'pill'] as const, props.variant, 'line');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   // Which values have a TabPanel, so a tab only points (aria-controls) at a panel that exists: a tab row can

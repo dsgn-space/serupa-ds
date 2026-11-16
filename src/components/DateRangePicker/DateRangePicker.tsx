@@ -20,6 +20,7 @@ import { en as DateRangePickerWords } from './labels';
 import { en as DatePickerWords } from '../DatePicker/labels';
 import { en as CalendarWords } from '../Calendar/labels';
 import { PresetList, rangePresets, type PresetItem } from '../../internal/datePresets';
+import { useControllable } from '../../internal/controllable';
 // This component's words and the ones it shares with DatePicker and Calendar (the presets' "Today" and their name).
 const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, CalendarWords);
 
@@ -111,9 +112,8 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   const describedBy = rest['aria-describedby'], required = rest['aria-required'] ?? (requiredProp || undefined);
   const errorMessage = rest['aria-errormessage'];
   delete rest['aria-describedby']; delete rest['aria-required']; delete rest['aria-errormessage'];
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<DateRange>(norm(props.defaultValue));
-  const value = controlled ? norm(props.value) : own;
+  const [held, setOwn, controlled] = useControllable<DateRangeInput>(props.value, norm(props.defaultValue), 'DateRangePicker', 'value');
+  const value = controlled ? norm(held) : (held as DateRange);
   const min = toDay(minIn, 'DateRangePicker') || undefined, max = toDay(maxIn, 'DateRangePicker') || undefined;
   const fmt = (d: Date | null) => (d ? formatDate(d, locale) : '');
   const [text, setText] = React.useState({ start: fmt(value.start), end: fmt(value.end) });
