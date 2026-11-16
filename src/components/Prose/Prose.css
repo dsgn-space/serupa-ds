@@ -29,7 +29,8 @@
   :scope :where(h2) { font-size: var(--text-2xl); line-height: var(--text-2xl--line-height); letter-spacing: var(--tracking-tight); }
   :scope :where(h3) { font-size: var(--text-xl); line-height: var(--text-xl--line-height); }
   :scope :where(h4) { font-size: var(--text-lg); line-height: var(--text-lg--line-height); }
-  :scope :where(h5, h6) { font-size: var(--text-base); line-height: var(--text-base--line-height); }
+  :scope :where(h5) { font-size: var(--text-base); line-height: var(--text-base--line-height); }
+  :scope :where(h6) { font-size: var(--text-sm); line-height: var(--text-sm--line-height); }   /* as Heading level 6 */
 
   :scope :where(ul, ol) { padding-inline-start: var(--prose-list-indent, var(--spacing-6)); }
   :scope :where(ul) { list-style: disc; }
