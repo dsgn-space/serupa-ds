@@ -145,7 +145,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | --- | --- | --- |
 | `--tabs-padding-x` | `spacing-3` | Padding at a tab's sides (12px). |
 | `--tabs-gap` | `spacing-1` | Space between tabs (4px). |
-| `--tabs-icon-gap` | `spacing-2` | Space between a tab's icon and label (8px). |
+| `--tabs-icon-gap` | `spacing-1.5` | Space between a tab's icon and label (6px), as in Button and SegmentedControl. |
 | `--tabs-panel-gap` | `spacing-4` | Space above a panel, or beside it when vertical (16px). |
 | `--tabs-fade-size` | `spacing-8` | How far the row fades out at an edge with more tabs past it (32px). |
 

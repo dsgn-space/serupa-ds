@@ -164,8 +164,8 @@
       },
       "gap": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-2}",
-        "$description": "Space under the title (8px).",
+        "$value": "{spacing.spacing-1}",
+        "$description": "Space under the title (4px), as under Dialog's, Drawer's, Card's and Alert's titles.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--popover-gap"
