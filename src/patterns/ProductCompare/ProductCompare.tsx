@@ -7,10 +7,13 @@ import { Link } from '../../components/Link/Link';
 import { Switch } from '../../components/Switch/Switch';
 import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from '../../components/Table/Table';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { Card } from '../../components/Card/Card';
+import { Loader } from '../../components/Loader/Loader';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Product compare: two to four products side by side, a row for each thing they differ on, and a way to see only the
    differences. For an app to copy. What it carries (WCAG 2.2):
@@ -53,6 +56,12 @@ export interface ProductCompareProps {
   onAddToCart?: ((id: string) => unknown) | undefined;
   /** Told when a product leaves the comparison. */
   onRemove?: ((id: string) => void) | undefined;
+  /** Still loading: a placeholder shows instead of the products. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load the products" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const pic = (band: string, cup: string, bg: string) => 'data:image/svg+xml,' + encodeURIComponent(
@@ -86,9 +95,12 @@ export function valueWords(v: CompareValue | undefined, feature: CompareFeature,
 }
 
 /** The compare page: a skip link, a header, then main with the h1, the switch, and the table, or an empty state. */
-export function ProductCompare({ products = demo, features = demoFeatures, currency = 'USD', onAddToCart, onRemove }: ProductCompareProps) {
+export function ProductCompare({ products = demo, features = demoFeatures, currency = 'USD', onAddToCart, onRemove, loading = false, loadFailed = false, onRetry }: ProductCompareProps) {
   const locale = useLocale();
   const [list, setList] = React.useState(products);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) setList(products); }
   const [onlyDiff, setOnlyDiff] = React.useState(false);
   const heading = React.useRef<HTMLHeadingElement>(null);
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency });
@@ -116,6 +128,8 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Headphones', href: '#shop' }, { label: 'Compare' }]} title="Compare headphones"
           description="Up to four side by side. Add more from any product page." />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the products" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the products" /></Card> : (
         <section aria-labelledby="compare-table" className="flex flex-col gap-4 pt-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 id="compare-table" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">
@@ -172,6 +186,7 @@ export function ProductCompare({ products = demo, features = demoFeatures, curre
               description="Choose Compare on two or more products to see them side by side." actions={<Link href="#shop">Back to headphones</Link>} />
           )}
         </section>
+        )}
       </main>
       <Toaster />
     </div>

@@ -58,4 +58,21 @@ describe('Patterns/Product compare', () => {
     expect(document.body.textContent).toContain('Nothing to compare');
     expect(onRemove.mock.calls).toEqual([['a'], ['b']]);
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<ProductCompare loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading the products']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<ProductCompare loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the products' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  test('the products that arrive once loading ends are the ones compared', async () => {
+    const screen = await render(<ProductCompare loading products={[]} features={features} />);
+    await screen.rerender(<ProductCompare products={products} features={features} />);
+    await expect.poll(() => document.querySelectorAll('thead th[scope="col"]').length).toBe(products.length + 1);
+  });
 });

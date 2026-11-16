@@ -25,3 +25,9 @@ export const Short: Story = {
     ],
   },
 };
+
+/** While the quiz loads: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

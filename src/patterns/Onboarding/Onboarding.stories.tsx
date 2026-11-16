@@ -22,3 +22,9 @@ export const AllDone: Story = { args: { initial: { done: ['profile', 'team', 'pr
 
 /** Folded away: one line with the count, and a button to show the checklist again. */
 export const Hidden: Story = { args: { initial: { done: ['profile'], hidden: true } } };
+
+/** While the saved progress loads: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

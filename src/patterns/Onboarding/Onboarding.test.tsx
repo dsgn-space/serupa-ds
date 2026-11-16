@@ -141,4 +141,21 @@ describe('Patterns/Onboarding', () => {
     expect(bodyText()).toContain('٠ of ٤ steps done');
     expect(bodyText()).toContain('١. ');
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Onboarding loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading your setup checklist']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<Onboarding loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your setup checklist' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  test('the progress that arrives once loading ends is where it starts', async () => {
+    const screen = await render(<Onboarding loading />);
+    await screen.rerender(<Onboarding initial={{ done: ['profile'] }} />);
+    await expect.poll(() => document.querySelectorAll('main input[type="checkbox"]:checked').length).toBe(1);
+  });
 });
