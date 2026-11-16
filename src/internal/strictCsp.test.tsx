@@ -17,7 +17,11 @@ const violations: string[] = [];
 // WebKit's own inner parts of a <select> carry an inline style, which it reports against the <select> as a
 // style-src-attr violation even for plain <select><option>a</option></select> (the page's styles are unaffected).
 // One on a <select> with no style attribute isn't the page's doing, so it's left out; a style attribute still counts.
-const browsers = (e: SecurityPolicyViolationEvent) => e.effectiveDirective === 'style-src-attr' && e.target instanceof HTMLSelectElement && !e.target.hasAttribute('style');
+// When the <select> is already gone by the time the report is sent (a story that shows one only briefly, or unmounts
+// first), WebKit sends it to the document instead, so one there counts as the browser's too while a <select> was
+// shown in the story.
+let selectShown = false;
+const browsers = (e: SecurityPolicyViolationEvent) => e.effectiveDirective === 'style-src-attr' && ((e.target instanceof HTMLSelectElement && !e.target.hasAttribute('style')) || (e.target instanceof Document && !e.sample && selectShown));
 document.addEventListener('securitypolicyviolation', (e) => { if (!browsers(e)) violations.push(`${e.effectiveDirective} blocked ${e.blockedURI || 'inline'}${e.sample ? ` (${e.sample})` : ''}`); });
 const { hydrationToRun } = await import('../../tools/test/vitest/stories');
 
@@ -45,6 +49,9 @@ describe('strict Content Security Policy', () => {
       for (const [exportName, ui] of list) {
         violations.length = 0;
         const host = document.body.appendChild(document.createElement('div'));
+        selectShown = false;
+        const seen = new MutationObserver(() => { if (host.querySelector('select')) selectShown = true; });
+        seen.observe(host, { childList: true, subtree: true });
         const root = createRoot(host);
         flushSync(() => root.render(ui));
         await frame();
@@ -53,6 +60,7 @@ describe('strict Content Security Policy', () => {
         host.remove();
         // Violation events are queued; give them a task to arrive.
         await new Promise((r) => setTimeout(r, 0));
+        seen.disconnect();
         for (const v of violations) problems.push(`${exportName}: ${v}`);
       }
       if (KNOWN.has(name)) return;
