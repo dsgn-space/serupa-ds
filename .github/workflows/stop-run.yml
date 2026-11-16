@@ -2,8 +2,9 @@ name: Stop run
 
 # CI's fail-fast (ci.yml, the "Stop the run" steps): a job that failed asks this workflow to cancel its run, so the
 # rest of the run stops holding runners. The cancel comes from here, a few seconds later, and not from the failing job
-# itself, so that job has ended by then and keeps its failure: cancelled from inside, it showed as cancelled like
-# the jobs it stopped (#2021, 16 Nov). Only pull request and merge queue runs of CI are cancelled, never main's.
+# itself, once that job has ended as failed, so it keeps its failure: cancelled from inside, or before its post
+# steps were done, it showed as cancelled like the jobs it stopped (#2021 and #1977, 16 Nov). Only pull request
+# and merge queue runs of CI are cancelled, never main's.
 on:
   workflow_dispatch:
     inputs:
@@ -31,4 +32,12 @@ jobs:
             echo "Run $RUN is $name on $event: only CI's pull request and merge queue runs are stopped."; exit 0
           fi
           if [ "$status" = completed ]; then echo "Run $RUN has already ended."; exit 0; fi
+          # Wait for the job that asked to end as failed first: its post steps (stopping its container) took 9 s on
+          # #1977 (16 Nov), and a cancel that lands before them marks it cancelled like the rest. Up to 2 minutes.
+          for _ in $(seq 24); do
+            failed=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/jobs?filter=latest&per_page=100" --jq '[.jobs[] | select(.conclusion == "failure")] | length')
+            [ "$failed" -gt 0 ] && break
+            sleep 5
+          done
+          echo "Failed jobs in run $RUN: $failed."
           gh api -X POST "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/cancel" >/dev/null && echo "Cancelled run $RUN."
