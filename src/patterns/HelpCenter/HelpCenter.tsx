@@ -118,7 +118,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
 
         <section aria-labelledby="help-topics" className="flex flex-col gap-4">
           <Heading level={2} size="lg" id="help-topics">Topics</Heading>
-          <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2">
+          <ul className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2">
             {topics.map((t) => (
               <li key={t.id} className="flex">
                 <Card href={t.href} className="w-full">

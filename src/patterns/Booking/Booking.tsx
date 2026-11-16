@@ -171,7 +171,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
                 <Button variant="outline" onClick={() => { setBooked(null); setStay(null); setAsked(false); }}>Book other dates</Button>
               </section>
             ) : (
-              <div className="grid items-start gap-8 md:grid-cols-3">
+              <div className="grid items-start gap-6 md:grid-cols-3">
                 <div className="flex flex-col gap-8 md:col-span-2">
                   <section aria-labelledby="dates" className="flex flex-col gap-4">
                     <h2 id="dates" className={h2}>Your dates</h2>
