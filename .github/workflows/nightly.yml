@@ -28,7 +28,7 @@ jobs:
         group: [components, checks, visual, storybook]
     runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --cpus 4
     timeout-minutes: 90
     steps:
@@ -65,7 +65,7 @@ jobs:
         shard: [1, 2, 3, 4, 5, 6]
     runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --cpus 4
     timeout-minutes: 120
     steps:
@@ -93,7 +93,7 @@ jobs:
   benchmarks:
     runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --cpus 4
     timeout-minutes: 45
     steps:
@@ -137,7 +137,7 @@ jobs:
     name: size trend
     runs-on: ${{ fromJSON(vars.SERUPA_RUNNER || '"ubuntu-24.04"') }}
     container:
-      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --cpus 4
     timeout-minutes: 20
     steps:
@@ -184,7 +184,7 @@ jobs:
   sbom:
     runs-on: ubuntu-24.04
     container:
-      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
