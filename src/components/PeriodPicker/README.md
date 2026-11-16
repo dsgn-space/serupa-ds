@@ -2,6 +2,8 @@
 
 A month, a quarter or a year, picked from a grid: for a report's month, a billing period or a dashboard's quarter. It looks like a [Select](../Select/README.md) and opens a popup with the year between two arrows over 12 months, 4 quarters or 12 years. The button shows the period in words ("November 2026", "Q4 2026", "2026") and a form gets it as `2026-11`, `2026-Q4` or `2026`.
 
+**Also called:** month picker, month and year picker, quarter picker, fiscal period selector.
+
 ```jsx
 const { PeriodPicker, Field } = window.Serupa;
 
@@ -43,6 +45,11 @@ Drawn from the `Months` story.
 - `onValueChange` gets the value and the period's first and last days (local midnight), ready for a query: `{ start: 1 Nov 2026, end: 30 Nov 2026 }`.
 - Months are named in the locale ("November 2026", "Dezember 2025", "Agustus 2025") and years in its digits. A quarter's short name comes from the labels: "Q4" in English, "K4" in Indonesian.
 - Years page twelve at a time, from a year that divides by 12 (2016 to 2027, 2028 to 2039), so the same year is always in the same place.
+
+### Do and don't
+
+- **Do:** Keep it to the periods that have data: a statement from the month the account opened to this one. (`DoBoundToData`)
+- **Don't:** Offer every month: people pick a month with no statement, or one still to come, and get an empty page. (`DontOpenEnded`)
 
 ## States
 
