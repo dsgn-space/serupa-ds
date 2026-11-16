@@ -77,6 +77,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'Hjälp',
   contextualInfo: 'Information',
   copyFailed: 'Det gick inte att kopiera. Markera texten och kopiera den själv.',
+  copyFailedShort: 'Gick inte att kopiera',
   chatNewMessages: (count) => count === 1 ? '1 nytt meddelande' : n(count) + ' nya meddelanden',
   chatLoadOlder: 'Läs in tidigare meddelanden',
   chatLoadingOlder: 'Läser in tidigare meddelanden',

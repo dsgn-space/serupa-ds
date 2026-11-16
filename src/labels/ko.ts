@@ -79,6 +79,7 @@ export const labels: SerupaLabels = {
   contextualHelp: '도움말',
   contextualInfo: '정보',
   copyFailed: '복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요.',
+  copyFailedShort: '복사하지 못함',
   chatNewMessages: (count) => '새 메시지 ' + n(count) + '개',
   chatLoadOlder: '이전 메시지 불러오기',
   chatLoadingOlder: '이전 메시지를 불러오는 중',

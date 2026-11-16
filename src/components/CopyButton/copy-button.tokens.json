@@ -11,6 +11,16 @@
             "cssVar": "--copy-button-done-color"
           }
         }
+      },
+      "failed-color": {
+        "$type": "color",
+        "$value": "{color.danger-text}",
+        "$description": "The error icon when the browser refused to copy (3:1 on the button).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--copy-button-failed-color"
+          }
+        }
       }
     }
   }

@@ -1,0 +1,37 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Poll.stories';
+
+<Meta of={Stories} />
+
+# Poll
+
+One question, a few answers and a vote; then the results so far, with yours marked, and a way to change it while it's open.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A quick question to a team or a community: where to go, which day, which name.
+- Not for many questions, or answers in words: that's the Feedback survey pattern.
+- Not for scoring answers: that's the Quiz pattern.
+
+## What each part is for
+
+- **The answers are a group of radios named by the question** (1.3.1).
+- **It says when it closes and who sees what** before you vote (3.3.2).
+- **Voting without an answer shows a summary that takes focus**, its link landing on the first answer (3.3.1, 2.4.3).
+- **Vote shows it's busy**; a vote that can't be sent says so and keeps your answer (3.3.4, 4.1.3).
+- **Once voted, the results' heading takes focus** (2.4.3). The results are a list; each answer is a meter whose value is in words, "15 votes, 50%", never only a bar's length (1.3.1, 1.4.1). Yours says "Your vote".
+- **The shares add up to 100**: the answers with the largest remainders get the leftover points.
+- **Change your vote** brings back the answers with yours chosen; Keep my vote goes back without sending.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Voted} />
+
+<Canvas of={Stories.Closed} />
+
+## What stays your app's job
+
+- **Counting.** `onVote` gets the answer and the one it replaces, and resolves with the new counts; reject when it can't be sent. Without it, the page counts on its own, for a demo.
+- **One vote each**, and keeping who voted for what private when you say it is.
+- **Closing it** on the day it says, then showing it `closed`.

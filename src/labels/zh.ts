@@ -76,6 +76,7 @@ export const labels: SerupaLabels = {
   contextualHelp: '帮助',
   contextualInfo: '信息',
   copyFailed: '无法复制。请选中文字后自行复制。',
+  copyFailedShort: '无法复制',
   chatNewMessages: (count) => n(count) + ' 条新消息',
   chatLoadOlder: '加载更早的消息',
   chatLoadingOlder: '正在加载更早的消息',

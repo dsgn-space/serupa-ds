@@ -2,6 +2,7 @@
 interface CopyButtonLabels {
     copied: string;
     copyFailed: string;
+    copyFailedShort: string;
 }
 interface CopyButtonProps extends Omit<ButtonAsButtonProps, "icon" | "leftIcon" | "loading" | "loadingLabel" | "loadingText" | "onCopy" | "rightIcon" | "value"> {
     value: (() => Promise<string> | string) | string;

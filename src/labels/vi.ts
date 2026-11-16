@@ -77,6 +77,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'Trợ giúp',
   contextualInfo: 'Thông tin',
   copyFailed: 'Không sao chép được. Hãy chọn văn bản và tự sao chép.',
+  copyFailedShort: 'Không sao chép được',
   chatNewMessages: (count) => n(count) + ' tin nhắn mới',
   chatLoadOlder: 'Tải tin nhắn trước đó',
   chatLoadingOlder: 'Đang tải tin nhắn trước đó',

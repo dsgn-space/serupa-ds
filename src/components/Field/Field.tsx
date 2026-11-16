@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
-import { cn, domId, omit } from '../../internal/cn';
+import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
 import { FieldContext, type FieldControl } from '../../internal/field';
 import * as icons from '../../material/builtin';
 import { FieldLabel } from '../../internal/fieldLabel';
-import { useSettings } from '../../internal/provider';
+import { useLocale, useSettings } from '../../internal/provider';
+import { problemText } from '../../internal/validity';
+import { en as inputWords } from '../Input/labels';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { summarySaysIt } from '../../internal/summaryFocus';
 import { warnOnce } from '../../internal/warn';
@@ -74,7 +76,8 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
   const name = props.name ?? (child ? child.props.name : undefined);
   const given = props.error != null && props.error !== false && props.error !== '';
   const fromForm = !given && form && name ? form.message(name) : null;
-  const errorText = given ? props.error : fromForm;
+  const native = useNativeError(!given && fromForm == null);
+  const errorText = given ? props.error : fromForm != null ? fromForm : native.text || null;
   const hasError = errorText != null && errorText !== false && errorText !== '';
   const place = form ? form.place : null;
   React.useEffect(() => (place && name ? place(name, controlId) : undefined), [place, name, controlId]);
@@ -150,12 +153,13 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     if (props.disabled && !group) add.disabled = true;
     return React.cloneElement(el, add);
   };
+  const rootRef = useRoot(ref, native.root);
   const horizontal = !group && props.orientation === 'horizontal';
   const cls = cn('dk-field', group && 'dk-field--group', horizontal && 'dk-field--horizontal', hasError && 'dk-field--invalid', kind === 'warning' && 'dk-field--warning', kind === 'checking' && 'dk-field--checking', props.disabled && 'dk-field--disabled', props.className);
   const busy = kind === 'checking' || undefined;
   if (group) {
     return (
-      <fieldset {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLFieldSetElement>} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} aria-busy={busy} data-component="field">
+      <fieldset {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} disabled={props.disabled || undefined} aria-describedby={described || undefined} aria-busy={busy} data-component="field">
         {label}
         {hint}
         <FieldContext.Provider value={null}>
@@ -173,9 +177,9 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     </div>
   </FieldContext.Provider>;
   // Horizontal: the label beside a column holding the control, then the hint and the error under it.
-  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} aria-busy={busy} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
+  if (horizontal) return <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} aria-busy={busy} data-component="field" data-layout="horizontal">{label}<div className="dk-field__body">{body}{hint}{error}</div></div>;
   return (
-    <div {...rest} {...listen(rest, edited)} ref={ref as React.Ref<HTMLDivElement>} className={cls} aria-busy={busy} data-component="field">
+    <div {...rest} {...listen(rest, edited)} ref={rootRef} className={cls} aria-busy={busy} data-component="field">
       {label}
       {hint}
       {body}
@@ -183,6 +187,49 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
     </div>
   );
 });
+
+/* The browser's own verdict on the control, shown as the Field's error once people have touched it: when the
+   control matches :user-invalid (changed and left, or a submit was tried), the error slot says which constraint it
+   fails, in the provider's words (invalidValue; "" keeps the browser's, already in its user's language). The red
+   border is then never color alone, and aria-invalid and the description follow it, as they do for an error you pass
+   (modern web guidance, required-field-feedback). It's read again on every edit, so it goes once the value is fine,
+   and on the form's reset. An error you pass, or a FormErrors message, wins. */
+function useNativeError(on: boolean) {
+  const say = useSettings(inputWords).labels.invalidValue, locale = useLocale();
+  const [text, setText] = React.useState('');
+  const root = React.useRef<HTMLElement | null>(null);
+  const words = React.useRef({ say, locale });
+  React.useInsertionEffect(function () { words.current = { say, locale }; });   // every render: the latest words, for the listeners
+  React.useEffect(function () {
+    const el = root.current;
+    if (!on || !el) return;
+    let timer = 0;
+    // After the event has done its work: a submit marks every control touched before :user-invalid is read.
+    const read = function () {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(function () {
+        const bad = el.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(':user-invalid');
+        const msg = !bad ? '' : (!bad.validity.customError && problemText(bad, words.current.say, words.current.locale)) || bad.validationMessage;
+        setText(msg);
+      });
+    };
+    const form = el.closest('form');
+    const types = ['focusout', 'change', 'input'];
+    types.forEach(function (t) { el.addEventListener(t, read); });
+    el.addEventListener('invalid', read, true);   // invalid doesn't bubble
+    if (form) form.addEventListener('reset', read);
+    return function () {
+      window.clearTimeout(timer);
+      types.forEach(function (t) { el.removeEventListener(t, read); });
+      el.removeEventListener('invalid', read, true);
+      if (form) form.removeEventListener('reset', read);
+    };
+  }, [on]);
+  return { text: on ? text : '', root };
+}
+function useRoot(ref: React.Ref<HTMLElement> | undefined, ownRef: React.RefObject<HTMLElement | null>) {
+  return useMergedRef(ref, function (node: HTMLElement | null) { ownRef.current = node; });
+}
 
 // The edit listeners on the Field's own element, after any of yours: input (typing) and change (a checkbox, a select).
 function listen(rest: { onInput?: React.FormEventHandler<HTMLElement>; onChange?: React.FormEventHandler<HTMLElement> }, edited: (() => void) | undefined) {

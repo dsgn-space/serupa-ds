@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { commands } from 'vitest/browser';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
 import { CodeBlock } from './CodeBlock';
@@ -57,7 +58,9 @@ describe('CodeBlock', () => {
   test('line numbers count from startLine, out of the copied text; highlight marks lines and ranges', async () => {
     await render(<CodeBlock code={'a\nb\nc\nd\ne'} lineNumbers startLine={9} highlight={[9, [11, 12], 40]} />);
     const lines = [...pre().querySelector('code')!.children];
-    expect(lines.map((l) => getComputedStyle(l, '::before').content)).toEqual(Array(5).fill('counter(dk-code-line)'));
+    // Drawn, but not read: the counter's alternative text is empty, so a screen reader doesn't say "9 a 10 b…".
+    expect(lines.map((l) => getComputedStyle(l, '::before').content)).toEqual(Array(5).fill('counter(dk-code-line) / ""'));
+    expect(await commands.ariaSnapshot('pre')).not.toMatch(/\b(9|10|11)\b/);
     expect(lines.map((l) => l.tagName)).toEqual(['MARK', 'SPAN', 'MARK', 'MARK', 'SPAN']);
     expect(pre().textContent).toBe('a\nb\nc\nd\ne');
     // The numbers are counters: 9 to 13, the gutter two digits wide.

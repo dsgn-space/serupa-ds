@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './CourseOverview.stories';
+
+<Meta of={Stories} />
+
+# Course overview
+
+A course's modules and lessons, how far you are, where to carry on, and marking lessons done.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The home page of a course you've joined: the first page after Your courses.
+- Not for selling a course: that's a product page.
+- Not for a lesson itself: that's an article or a video page.
+
+## What each part is for
+
+- **Each module is a heading that opens its lessons** and says how many are done; the lessons are an ordered list, each a link with how long it takes (1.3.1, 2.4.6).
+- **Progress is a progress bar named "Course progress"**, its value in words, "4 of 10 lessons", and a change to it is said (1.3.1, 4.1.3).
+- **Continue names the lesson it opens** ("Continue: Leading"); once every lesson is done, it's the certificate instead (2.4.4).
+- **Each lesson's Done box is named by the lesson**, "Done: Leading" (4.1.2).
+- **The module with the next lesson starts open**, so where you left off is a Tab away.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Finished} />
+
+## What stays your app's job
+
+- **Saving progress.** `onDoneChange` gets the lesson and whether it's done. Mark a lesson done on its own page too, when it's watched or read to the end.
+- **The lessons' pages and the certificate.** The links go to `#lesson-<id>` and `#certificate` here; point them at yours.

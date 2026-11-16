@@ -261,7 +261,8 @@ jobs:
         run: npm run build
       # The size budgets take seconds once the package is built, and they are what a pull request that passed on its own
       # most often fails in the queue, once another merged ahead of it (#1995 and #1999 by 13 to 31 bytes, 15 Nov). Here
-      # they fail a run in about two minutes; the checks group runs them again with the rest.
+      # they fail a run in about two minutes. The checks group leaves them out on CI (SERUPA_SIZE_IN_BUILD below), where
+      # they took 44 to 77 s of a checks shard a second time.
       - name: Sizes within their budgets
         run: node tools/test/size.mjs
       - name: Build Storybook
@@ -279,9 +280,10 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          node -e 'fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/cancel`, { method: "POST", headers: { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json" } }).then((r) => console.log(`Cancelling run ${process.env.GITHUB_RUN_ID}: ${r.status}`))' \
-            || echo "Couldn't cancel run $GITHUB_RUN_ID: the stop job will."
+          node -e 'fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/workflows/stop-run.yml/dispatches`, { method: "POST", headers: { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json" }, body: JSON.stringify({ ref: process.env.DEFAULT_BRANCH, inputs: { run: process.env.GITHUB_RUN_ID } }) }).then((r) => console.log(`Asked Stop run to cancel run ${process.env.GITHUB_RUN_ID}: ${r.status}`))' \
+            || echo "Couldn't ask to cancel run $GITHUB_RUN_ID: the stop job will."
 
   # The checks that need neither the build nor a browser, beside the build so they don't wait for it.
   static:
@@ -378,7 +380,10 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
-    timeout-minutes: 30
+    # A visual shard draws every picture twice (main's and the branch's): about 18 minutes on a burst runner, and 27 on
+    # serupa-runner, the slower machine, where #2023's visual 1/5 ran out of the 30 minutes in its last seconds and had
+    # to run again (16 Nov). The other groups take under 15 anywhere.
+    timeout-minutes: ${{ matrix.group == 'visual' && 40 || 30 }}
     strategy:
       # On a pull request and in the queue the first failing job cancels the others; main runs every job to the end.
       fail-fast: ${{ github.event_name != 'push' }}
@@ -528,15 +533,18 @@ jobs:
           if-no-files-found: ignore
       # The run can't pass any more, so the rest of it only holds runners: in the queue, the groups behind it wait on them.
       # The stop job below does the same, but only once every job it needs has ended: a group that failed at 20:41 ran on
-      # to 20:57 (15 Nov). The step runs last, after the failure details are uploaded.
+      # to 20:57 (15 Nov). The step runs last, after the failure details are uploaded. It asks the Stop run workflow to
+      # cancel the run rather than cancelling it here: a run cancelled from inside the failing job cancelled that job too,
+      # so the job that failed showed as cancelled beside the others (storybook on #2021, 16 Nov) and read as a victim.
       - name: Stop the run
         if: failure() && github.event_name != 'push'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          node -e 'fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/cancel`, { method: "POST", headers: { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json" } }).then((r) => console.log(`Cancelling run ${process.env.GITHUB_RUN_ID}: ${r.status}`))' \
-            || echo "Couldn't cancel run $GITHUB_RUN_ID: the stop job will."
+          node -e 'fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/workflows/stop-run.yml/dispatches`, { method: "POST", headers: { authorization: `Bearer ${process.env.GH_TOKEN}`, accept: "application/vnd.github+json" }, body: JSON.stringify({ ref: process.env.DEFAULT_BRANCH, inputs: { run: process.env.GITHUB_RUN_ID } }) }).then((r) => console.log(`Asked Stop run to cancel run ${process.env.GITHUB_RUN_ID}: ${r.status}`))' \
+            || echo "Couldn't ask to cancel run $GITHUB_RUN_ID: the stop job will."
 
   # The checks and the Storybook checks (axe in every theme, text spacing, 200% text, reflow): no screenshot, no timing
   # budget, so any runner, Arm included.
@@ -553,6 +561,9 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --cpus 4
     timeout-minutes: 30
+    # The build job checked the size budgets already, so the checks group doesn't build and measure them again.
+    env:
+      SERUPA_SIZE_IN_BUILD: '1'
     strategy:
       fail-fast: ${{ github.event_name != 'push' }}
       # A pull request on the burst runners takes three slots here and three in the other suite job, six of 28: on

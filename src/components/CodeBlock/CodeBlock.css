@@ -42,7 +42,7 @@
   padding-inline-start: calc(var(--spacing-3) + var(--dk-code-gutter) + var(--spacing-4)); counter-increment: dk-code-line;
 }
 .dk-code-block--numbered .dk-code-block__line::before {
-  content: counter(dk-code-line); display: inline-block; inline-size: var(--dk-code-gutter); text-align: end;
+  content: counter(dk-code-line); content: counter(dk-code-line) / ""; display: inline-block; inline-size: var(--dk-code-gutter); text-align: end;
   margin-inline: calc(var(--spacing-0) - var(--dk-code-gutter) - var(--spacing-4)) var(--spacing-4); color: var(--code-block-muted, var(--text-muted));
   user-select: none; -webkit-user-select: none; font-variant-numeric: tabular-nums;
 }
