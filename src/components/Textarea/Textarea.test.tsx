@@ -46,6 +46,12 @@ function App(props: { tref?: React.Ref<HTMLTextAreaElement> }) {
 const setup = async (tref?: React.Ref<HTMLTextAreaElement>) => { changes = []; await render(<App tref={tref} />, { wrapper: EnUS }); await document.fonts.ready; };
 
 describe('Textarea', () => {
+  test('rows or maxRows that is Infinity is none: 3 rows, and no limit to its growth', async () => {
+    const s = await render(<div><Textarea aria-label="Notes" rows={Infinity} /><Textarea aria-label="Grows" autoResize maxRows={Infinity} /></div>);
+    const [notes, grows] = [...s.container.querySelectorAll('textarea')];
+    expect([notes!.getAttribute('rows'), grows!.getAttribute('style')?.includes('Infinity') ?? false]).toEqual(['3', false]);
+  });
+
   test('a native <textarea> in a .dk-textarea box (data-component="textarea"); md text-sm, 12px side and 6px top padding, 1px border, 6px corners, 3 rows by default', async () => {
     await setup();
     const md = box('md');

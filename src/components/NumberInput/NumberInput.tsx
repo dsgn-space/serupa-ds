@@ -94,8 +94,8 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
   const factor = minor ? 10 ** minorDigits(formatOptions.currency!) : 1;
   // Out as whole minor units for every currency, yen (no minor digits) too: a typed 2.5 is 3, as the field shows (GR154).
   const out = (n: number) => (minor ? Math.round(n * factor) : n);
-  // NaN (Number() of an empty answer) is no number, as null is.
-  const major = (n: number | null | undefined) => (n == null || Number.isNaN(n) ? null : factor === 1 ? n : n / factor);
+  // NaN (Number() of an empty answer) and Infinity (a division by zero) are no number, as null is.
+  const major = (n: number | null | undefined) => (n == null || !Number.isFinite(n) ? null : factor === 1 ? n : n / factor);
   // A percent's value is the fraction (0.15 shows 15%), so without a step it moves one percent, not 100% (GR175).
   const step = Number(props.step) > 0 ? Number(props.step) / factor : formatOptions?.style === 'percent' ? 0.01 : 1;
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;

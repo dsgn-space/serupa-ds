@@ -58,7 +58,7 @@ export const Progress = /* @__PURE__ */ component<HTMLDivElement, ProgressProps>
   const variant = props.variant === 'circle' ? 'circle' : 'bar';
   const size = oneOf(SIZES, props.size, 'md');
   const tone = oneOf(TONES, props.tone, 'primary');
-  const max = Number(props.max) > 0 ? Number(props.max) : 100;
+  const max = Number(props.max) > 0 && Number.isFinite(Number(props.max)) ? Number(props.max) : 100;
   const known = props.value != null && isFinite(Number(props.value));
   const value = known ? Math.min(max, Math.max(0, Number(props.value))) : 0;
   const text = known ? (props.formatValue ? props.formatValue(value, max) : displayNumber(value / max, locale, PERCENT)) : '';

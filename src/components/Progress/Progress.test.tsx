@@ -26,6 +26,11 @@ afterEach(() => { expect(errors).not.toHaveBeenCalled(); errors.mockRestore(); }
 const Wrap = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US"><div style={{ width: '400px', display: 'flex', flexDirection: 'column', gap: '16px' }}>{children}</div></SerupaProvider>;
 
 describe('Progress', () => {
+  test('a max that is Infinity (a division by zero) is none: out of 100, not "Infinity"', async () => {
+    await render(<Progress value={3} max={Infinity} label="Upload" />);
+    expect(page.getByRole('progressbar', { name: 'Upload' }).element().getAttribute('aria-valuemax')).toBe('100');
+  });
+
   test('bar: a progressbar with valuenow 45, min 0, max 100 and valuetext "45%", named by its label; ref and className reach the outer box', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<Wrap><Progress id="p1" value={45} label="Uploading" showValue ref={ref} className="extra" /></Wrap>);

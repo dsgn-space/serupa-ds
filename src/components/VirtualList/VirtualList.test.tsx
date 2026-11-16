@@ -18,6 +18,17 @@ const item = (i: number) => <ListItem title={'Row ' + (i + 1)} />;
 const scrollTo = async (id: string, top: number) => { el(id).scrollTop = top; el(id).dispatchEvent(new Event('scroll')); await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))); };
 
 describe('VirtualList', () => {
+  test('a count that is Infinity is none: an empty list, where it threw "Invalid typed array length"', async () => {
+    const errors: string[] = [];
+    const seen = (e: ErrorEvent) => { errors.push(e.message); e.preventDefault(); };
+    window.addEventListener('error', seen);
+    try {
+      const s = await render(<VirtualList aria-label="Rows" count={Infinity} renderItem={(i) => <li>Row {i}</li>} />);
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      expect([s.container.querySelectorAll('li').length, errors]).toEqual([0, []]);
+    } finally { window.removeEventListener('error', seen); }
+  });
+
   test('a <ul role="list"> that scrolls and takes focus; ref, className and other props reach it', async () => {
     const ref = React.createRef<HTMLUListElement>();
     await render(<VirtualList id="v" ref={ref} className="extra" data-x="y" aria-label="Rows" count={3} renderItem={item} />);

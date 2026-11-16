@@ -11,6 +11,11 @@ const CODE = 'const a = 1;\nconst b = 2;\nconst c = a + b;\n';
 const pre = () => document.querySelector('pre') as HTMLPreElement;
 
 describe('CodeBlock', () => {
+  test('a startLine that is Infinity is none: the lines count from 1', async () => {
+    const s = await render(<CodeBlock code={'a\nb'} lineNumbers startLine={Infinity} />);
+    expect(s.container.innerHTML).not.toContain('Infinity');
+  });
+
   test('renders a <div>; ref, className and other props reach it; the code is in a <pre><code>', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await render(<CodeBlock id="x" ref={ref} className="extra" data-x="y" code={CODE} language="js" />);
