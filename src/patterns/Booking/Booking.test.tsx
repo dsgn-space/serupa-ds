@@ -112,4 +112,11 @@ describe('Patterns/Booking', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('right to left, the taken list keeps its bullets inside, on the right', async () => {
+    await render(<div dir="rtl"><Booking /></div>);
+    const list = document.querySelector<HTMLElement>('ul[aria-labelledby="taken"]')!;
+    expect(getComputedStyle(list).paddingRight).not.toBe('0px');
+    expect(getComputedStyle(list).paddingLeft).toBe('0px');
+  });
 });

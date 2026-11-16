@@ -120,4 +120,11 @@ describe('Patterns/Leave request', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('right to left, the holidays list keeps its bullets inside, on the right', async () => {
+    await render(<div dir="rtl">{page()}</div>);
+    const list = document.querySelector<HTMLElement>('ul[aria-labelledby="holidays"]')!;
+    expect(getComputedStyle(list).paddingRight).not.toBe('0px');
+    expect(getComputedStyle(list).paddingLeft).toBe('0px');
+  });
 });

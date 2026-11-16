@@ -44,6 +44,8 @@ const setup = async (tref?: React.Ref<HTMLDivElement>) => { changes = []; await 
 /** A tab's slides on one pseudo-element: its CSS transitions, or the ones the script runs where the browser starts none
  *  (Safari, tabRow.ts). propsOf names what each moves. */
 const slidesOn = (t: HTMLElement, pseudo: string) => document.getAnimations().filter((a) => { const e = a.effect as KeyframeEffect | null; return !!e && e.target === t && e.pseudoElement === pseudo; });
+// The left side of an inset(), as CSS reads its 1 to 4 sides: WebKit writes inset(0px 0px 0px 0px) back as inset(0px).
+const insetL = (v: string) => { const [t = 0, r = t, , l = r] = (v.split(' round')[0]!.match(/-?[\d.]+/g) || []).map(Number); return l; };
 const propsOf = (a: Animation) => (a instanceof CSSTransition ? [a.transitionProperty] : Object.keys((a.effect as KeyframeEffect).getKeyframes()[0]!).filter((k) => !/^(offset|computedOffset|easing|composite)$/.test(k)).map((k) => (k === 'clipPath' ? 'clip-path' : k)));
 const runsOn = (t: HTMLElement) => [...slidesOn(t, '::after'), ...slidesOn(t, '::before')].flatMap(propsOf).filter((k) => /^(translate|scale|clip-path)$/.test(k)).length;
 
@@ -604,9 +606,9 @@ describe('Tabs indicator when picking a tab moves the tabs', () => {
       await userEvent.click(two);
       expect(two.offsetLeft - twoWas).toBeGreaterThan(20);   // the tabs moved
       const slide = slidesOn(two, '::before')[0]!;
-      const inset = (String((slide.effect as KeyframeEffect).getKeyframes()[0]!.clipPath).match(/-?[\d.]+/g) || []).map(Number);
+      const inset = insetL(String((slide.effect as KeyframeEffect).getKeyframes()[0]!.clipPath));
       const span = parseFloat(two.style.getPropertyValue('--dk-tabs-span-l')) || 0;
-      expect(Math.abs(two.offsetLeft - span + inset[3]! - was)).toBeLessThan(1);
+      expect(Math.abs(two.offsetLeft - span + inset - was)).toBeLessThan(1);
     });
   });
 });
@@ -634,15 +636,15 @@ describe('Tabs indicator turned back mid-slide (GQ8)', () => {
       const held = slides(pills[0]!, '::before');
       halfway(held);
       const span = (t: HTMLElement) => parseFloat(t.style.getPropertyValue('--dk-tabs-span-l')) || 0;
-      const edge = pills[0]!.offsetLeft - span(pills[0]!) + nums(getComputedStyle(pills[0]!, '::before').clipPath.split(' round')[0]!)[3]!;
+      const edge = pills[0]!.offsetLeft - span(pills[0]!) + insetL(getComputedStyle(pills[0]!, '::before').clipPath);
       expect(Math.abs(edge - pills[0]!.offsetLeft)).toBeGreaterThan(8);
       await userEvent.click(pills[1]!);
       const all = slides(pills[1]!, '::before');
       const cut = all[0]!;
-      const first = nums(String((cut.effect as KeyframeEffect).getKeyframes()[0]!.clipPath).split(' round')[0]!);
-      // WebKit started this one 8px off: the message says which slide it read and from what, for the next run.
+      const first = insetL(String((cut.effect as KeyframeEffect).getKeyframes()[0]!.clipPath));
+      // The message says which slide it read and from what.
       const why = JSON.stringify({ edge, left: pills[1]!.offsetLeft, span: span(pills[1]!), first, slides: all.map((a) => [a.constructor.name, (a.effect as KeyframeEffect).getKeyframes().map((k) => k.clipPath)]), from: ['t', 'r', 'b', 'l'].map((k) => pills[1]!.style.getPropertyValue('--dk-tabs-from-' + k)) });
-      expect(Math.abs(pills[1]!.offsetLeft - span(pills[1]!) + first[3]! - edge), why).toBeLessThan(1);
+      expect(Math.abs(pills[1]!.offsetLeft - span(pills[1]!) + first - edge), why).toBeLessThan(1);
     });
   });
 });
