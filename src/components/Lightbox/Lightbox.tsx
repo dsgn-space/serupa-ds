@@ -146,13 +146,15 @@ export const Lightbox = /* @__PURE__ */ component<HTMLDialogElement, LightboxPro
   };
 
   const first = !loop && index === 0, last = !loop && index === count - 1;
+  // The count between the arrows describes the dialog: shown once, not again under the title.
+  const countId = React.useId();
   // The arrow that reaches an end turns off under focus: focus goes to the other one, so it stays in the dialog.
   const handover = useFocusHandover();
   const prevNav = React.useRef<HTMLButtonElement | null>(null), nextNav = React.useRef<HTMLButtonElement | null>(null);
   const prevIcon = dir === 'rtl' ? icons.ChevronRight : icons.ChevronLeft, nextIcon = dir === 'rtl' ? icons.ChevronLeft : icons.ChevronRight;
   return (
     <Dialog {...rest} ref={ref} onKeyDown={onKeyDown} open={open && !!item} onOpenChange={setOpen} size="lg" title={item ? item.alt : undefined}
-      description={count > 1 ? sds.labels.imageOf(index + 1, count) : undefined}
+      aria-describedby={rest['aria-describedby'] || (count > 1 ? countId : undefined)}
       className={cn('dk-lightbox', className)} data-component="lightbox">
       {item ? (
         <div ref={restyle} className="dk-lightbox__body" data-index={index} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => { start.current = null; }}>
@@ -163,7 +165,7 @@ export const Lightbox = /* @__PURE__ */ component<HTMLDialogElement, LightboxPro
           {count > 1 ? (
             <div className="dk-lightbox__nav">
               <IconButton icon={prevIcon} label={sds.labels.previousImage} variant="secondary" shape="round" ref={prevNav} disabled={first} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); go(index - 1); }} />
-              <span className="dk-lightbox__count" aria-hidden="true">{sds.labels.imageOf(index + 1, count)}</span>
+              <span className="dk-lightbox__count" id={countId}>{sds.labels.imageOf(index + 1, count)}</span>
               <IconButton icon={nextIcon} label={sds.labels.nextImage} variant="secondary" shape="round" ref={nextNav} disabled={last} onClick={(e) => { handover(e.currentTarget, () => prevNav.current); go(index + 1); }} />
             </div>
           ) : null}

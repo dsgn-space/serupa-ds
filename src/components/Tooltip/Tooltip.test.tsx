@@ -27,6 +27,28 @@ const near = (a: number, b: number) => Math.abs(a - b) <= 1;
 const away = () => userEvent.hover(document.body, { position: { x: 500, y: 20 } });
 
 describe('Tooltip', () => {
+  test('shown on a Button that is pressed and let go, it holds still: it rode the press\'s scale, shrinking with the Button and growing back', async () => {
+    await withMotion(async () => {
+    // Where the layer sits, each frame for a while, while it shows.
+    const spots = async (layer: () => HTMLElement | null, ms: number) => {
+      const seen = new Set<string>();
+      for (let t = performance.now(); performance.now() - t < ms;) { const l = layer(); if (l?.matches(':popover-open')) { const cs = getComputedStyle(l); seen.add(cs.left + ' ' + cs.top); } await new Promise(requestAnimationFrame); }
+      return [...seen];
+    };
+      await render(<div style={{ padding: '80px' }}><Tooltip content="Save the draft" defaultOpen><Button id="tpress">Save</Button></Tooltip></div>);
+      const b = document.getElementById('tpress')!, tip = () => document.querySelector<HTMLElement>('[role="tooltip"]');
+      b.focus();
+      await expect.poll(() => tip()?.matches(':popover-open')).toBe(true);
+      const before = await spots(tip, 200);
+      await userEvent.keyboard('[Space>]');
+      const held = await spots(tip, 300);
+      const pressed = getComputedStyle(b).scale;
+      await userEvent.keyboard('[/Space]');
+      const after = await spots(tip, 400);
+      expect([pressed, before.length, [...new Set([...before, ...held, ...after])].length]).toEqual(['0.97', 1, 1]);
+    });
+  });
+
   test('defaultOpen: shown on arrival, uncontrolled; Escape hides it by itself and tells onOpenChange(false)', async () => {
     const asks: boolean[] = [];
     await render(<Tooltip content="Edit the file" defaultOpen onOpenChange={(v) => asks.push(v)}><button id="tdef">Edit</button></Tooltip>);

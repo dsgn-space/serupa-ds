@@ -12,6 +12,7 @@
 .dk-chat__log {
   display: flex; flex-direction: column; gap: var(--chat-gap, var(--spacing-3)); flex: auto; min-block-size: var(--spacing-0);
   overflow-y: auto; overscroll-behavior: contain; padding: var(--chat-padding, var(--spacing-4)); border-radius: var(--radius-inner);
+  scroll-padding: calc(var(--focus-ring-width) + var(--focus-ring-offset));   /* focus scrolls a control in with room for its ring */
 }
 /* The ring sits just inside the log, so a parent that clips (a panel, a drawer) doesn't cut it off. */
 /* stylelint-disable-next-line serupa/no-raw-value -- -1 turns the ring width into an inward offset */
