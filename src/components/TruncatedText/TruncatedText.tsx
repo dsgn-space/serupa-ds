@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn, oneOf, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
+import { onFontsLoaded } from '../../internal/fontsLoaded';
 import type { Placement } from '../../internal/position';
 import { Tooltip } from '../Tooltip/Tooltip';
 
@@ -55,13 +56,14 @@ export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTex
       if (!over) setOpen(false);
     };
     measure();
-    const fonts = document.fonts;
-    if (fonts && fonts.addEventListener) fonts.addEventListener('loadingdone', measure);
+    // A web font that swaps in later changes the text's width in a box that keeps its size (WebKit sends no
+    // "loadingdone": onFontsLoaded waits for its fonts another way).
+    const stop = onFontsLoaded(measure);
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
     if (ro) ro.observe(e);
     return () => {
       if (ro) ro.disconnect();
-      if (fonts && fonts.removeEventListener) fonts.removeEventListener('loadingdone', measure);
+      stop();
     };
   }, [children, clamp]);
 
