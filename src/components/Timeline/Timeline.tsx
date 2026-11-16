@@ -13,7 +13,7 @@ export type TimelineAlign = 'start' | 'alternate';
 export type TimelineOrientation = 'vertical' | 'horizontal';
 export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
 /** @deprecated Use TimelineTone, as tone replaces status; removed in 17.0.0. */
-export type TimelineStatus = TimelineTone;
+export type TimelineStatus = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
 const ALIGNS: readonly TimelineAlign[] = ['start', 'alternate'];
 const ORIENTATIONS: readonly TimelineOrientation[] = ['vertical', 'horizontal'];
 const TONES: readonly TimelineTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'];
@@ -44,7 +44,7 @@ export interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIEle
   /** The marker's color: 'neutral' (default), 'primary', 'success', 'warning', 'danger' or 'info'. It's decoration: say the status in the title too. */
   tone?: TimelineTone | undefined;
   /** @deprecated Use tone, the name every component gives what a color means; removed in 17.0.0. Read when tone isn't given. */
-  status?: TimelineTone | undefined;
+  status?: TimelineStatus | undefined;
   /** More about the event, below the title and time. */
   children?: React.ReactNode | undefined;
 }

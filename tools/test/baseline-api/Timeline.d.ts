@@ -5,7 +5,7 @@ interface TimelineLabels {
 type TimelineAlign = "alternate" | "start";
 type TimelineOrientation = "horizontal" | "vertical";
 type TimelineTone = "danger" | "info" | "neutral" | "primary" | "success" | "warning";
-type TimelineStatus = TimelineTone;
+type TimelineStatus = "danger" | "info" | "neutral" | "primary" | "success" | "warning";
 interface TimelineProps extends React.OlHTMLAttributes<HTMLOListElement> {
     align?: TimelineAlign | undefined;
     orientation?: TimelineOrientation | undefined;
@@ -18,7 +18,7 @@ interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIElement>, 
     dateTime?: string | undefined;
     icon?: IconSource | undefined;
     tone?: TimelineTone | undefined;
-    status?: TimelineTone | undefined;
+    status?: TimelineStatus | undefined;
     children?: React.ReactNode | undefined;
 }
 declare const Timeline: React.ForwardRefExoticComponent<TimelineProps & React.RefAttributes<HTMLOListElement>>;
