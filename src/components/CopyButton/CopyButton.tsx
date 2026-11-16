@@ -88,7 +88,7 @@ export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButto
     const said = copied ? done : failed ? failedShort : name;
     const button = <ButtonBase {...common} icon={glyph} aria-label={said} />;
     const own = rest.title != null || rest['aria-describedby'] != null || rest['aria-labelledby'] != null;
-    return own ? button : <Tooltip content={said} role="label" disabled={!!rest.disabled}>{button}</Tooltip>;
+    return own ? button : <Tooltip content={said} role="label">{button}</Tooltip>;
   }
   // Both labels sit in one grid cell, so the button keeps the wider one's width; only the current one is read out.
   return <ButtonBase {...common} leftIcon={glyph}>

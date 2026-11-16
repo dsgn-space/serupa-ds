@@ -35,7 +35,7 @@ describe('CodeBlock', () => {
     await render(<><CodeBlock id="a" code={CODE} copyable={false} /><CodeBlock id="b" code={CODE} language="sh" /></>);
     expect(el('a').querySelector('button')).toBeNull();
     expect(el('a').firstElementChild!.tagName).toBe('PRE');   // no header above the code
-    expect(el('b').firstElementChild!.textContent).toBe('sh');
+    expect((el('b').firstElementChild as HTMLElement).innerText).toBe('sh');   // innerText: the copy button's tooltip is hidden
   });
 
   test('a box that scrolls is a named region in the tab order; one that fits is neither', async () => {
