@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { cn, oneOf, useIsoLayoutEffect } from '../../internal/cn';
+import { cn, oneOf, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
 import { toMs } from '../../internal/cssTime';
 import { announce, ensureAnnouncer } from '../../internal/announce';
@@ -9,7 +9,7 @@ import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
-import { named } from '../../internal/component';
+import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { onModalChange, topModal } from '../../internal/layers';
@@ -242,12 +242,13 @@ const typing = (e: Element | null) => e instanceof HTMLElement && (e.isContentEd
    moves focus to the newest toast, and F8 or Escape takes it back to where it was. Ctrl+Z (⌘Z on Apple devices)
    chooses Undo on the newest toast.undo shown, outside a text field. */
 /** The place toast() messages appear: render one, once, near the root of the app. */
-export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: ToasterProps): React.ReactElement {
+export const Toaster = /* @__PURE__ */ component<HTMLElement, ToasterProps>('Toaster', function Toaster(props, ref): React.ReactElement {
   const sds = useSettings(ownWords);
   const { placement, label, dismissLabel, limit, duration, autoDismiss, className, ...rest } = props;
   // Empty at first, as on a server, where a toast() from another request could be in the queue; the effect reads it.
   const [list, setList] = React.useState<Item[]>([]);
   const self = React.useRef<HTMLElement | null>(null);
+  const mergedRef = useMergedRef(ref, (n) => { self.current = n; });
   // Where each toast was before the list changes, so the ones left glide to their new place (below).
   const before = React.useRef<Map<string, number> | null>(null);
   const snap = () => {
@@ -461,7 +462,7 @@ export const Toaster = /* @__PURE__ */ named('Toaster', function Toaster(props: 
   // "Couldn't save, Retry" toast from inside a dialog can be seen and clicked.
   const modal = React.useSyncExternalStore(onModalChange, topModal, () => null);
   const region = (
-    <section {...rest} ref={self} onFocus={onFocus} onBlur={onBlur} onPointerDown={onPointerDown} aria-label={label || sds.labels.notifications} className={cn('dk-toaster', 'dk-toaster--' + pos, className)} data-component="toaster" data-position={pos}>
+    <section {...rest} ref={mergedRef} onFocus={onFocus} onBlur={onBlur} onPointerDown={onPointerDown} aria-label={label || sds.labels.notifications} className={cn('dk-toaster', 'dk-toaster--' + pos, className)} data-component="toaster" data-position={pos}>
       <ol className="dk-toaster__list" role="list">
         {pos.startsWith('top') ? null : more}
         {rows.map((r) => <ToastView key={r.item.id} item={r.item} leaving={r.leaving} clocks={clocks.current} instant={early.current.has(r.item.id)} onGone={done} dismissLabel={dismissLabel || sds.labels.dismiss} time={(r.item.autoDismiss ?? autoDismiss ?? true) ? Math.max(0, r.item.duration ?? duration ?? 5000) : 0} />)}

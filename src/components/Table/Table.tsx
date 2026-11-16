@@ -579,7 +579,8 @@ export interface TableColumnOption {
   required?: boolean | undefined;
 }
 
-export interface TableColumnsMenuProps {
+/** The rest of the props (className, style, data-*, aria-*, ref) reach the "Columns" button. */
+export interface TableColumnsMenuProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'name' | 'value'> {
   /** Every column that can be shown, in the table's order. */
   columns: TableColumnOption[];
   /** Called when a column is checked or cleared, with the list as it now is (draw the table from it) and which
@@ -595,13 +596,14 @@ export interface TableColumnsChangeDetails { id: string; visible: boolean }
 /* TableColumnsMenu: a "Columns" button that opens a Popover of checkboxes, one per column, to show or hide them. The
    table is yours to draw from the same list. The last column shown can't be cleared, so the table is never empty. */
 /** A "Columns" button with a checkbox for each of a table's columns, to show or hide them. */
-export function TableColumnsMenu(props: TableColumnsMenuProps) {
+export const TableColumnsMenu = /* @__PURE__ */ component<HTMLButtonElement, TableColumnsMenuProps>('TableColumnsMenu', function TableColumnsMenu(props, ref) {
   const labels = useSettings(words).labels;
+  const rest = omit(props, { columns: 1, onColumnsChange: 1, label: 1 });
   const label = props.label || labels.tableColumns;
   const shown = props.columns.filter((c) => c.visible).length;
   return (
     <Popover title={label} placement="bottom-end"
-      trigger={<Button variant="outline" size="sm">{label}</Button>}>
+      trigger={<Button {...rest} ref={ref} variant="outline" size="sm">{label}</Button>}>
       <div className="dk-table-columns">
         {props.columns.map((c) => (
           <Checkbox key={c.id} checked={c.visible || !!c.required} disabled={!!c.required || (c.visible && shown <= 1)}
@@ -610,7 +612,7 @@ export function TableColumnsMenu(props: TableColumnsMenuProps) {
       </div>
     </Popover>
   );
-}
+});
 
 export interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /** The row's details are open. */
