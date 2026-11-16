@@ -60,6 +60,17 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 - **Store the parts, not a local Date.** Keep the day (`"yyyy-mm-dd"`), the time (`"HH:mm"`) and the zone's IANA name, and let the server turn them into an instant. A `Date` built in the browser takes the browser's zone, which is wrong when the zone was chosen.
 - **Keep the order of the locale's sentences:** date first, then time, then zone. On a narrow screen the parts wrap onto separate lines.
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the calendar button in `text-muted` |
+| Hover | `field-border-hover`; the calendar button under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable; the calendar button is off with a plain cursor, so the calendar doesn't open |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the calendar button is off and the calendar doesn't open |
+
 ## Behavior
 
 - With `presets`, a list of shortcuts sits beside the days in the popup, after them in reading order and under them on a narrow screen. Your own take a day or a function that returns one, so "Next Monday" follows today: `presets={[{ label: "Next Monday", value: nextMonday }]}`. A shortcut whose day can't be chosen is disabled.

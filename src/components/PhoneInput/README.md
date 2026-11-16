@@ -52,6 +52,17 @@ Drawn from the `ByArea` story.
 - **Do:** Label it with [Field](../Field/README.md) and say in the hint what the number is for ("We'll text you a code"). (`DoSayWhy`)
 - **Don't:** Ask without saying why: people wonder whether to give a real number. (`DontNoReason`)
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the country and its calling code at the start |
+| Hover | `field-border-hover`; the country picker under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable; the country can't be changed, and its picker keeps a plain cursor |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the calling code is in `disabled-text` too, and the country can't be changed |
+
 ## Accessibility
 
 - The country menu is a native `<select>` named "Country", under the visible calling code. Phones open their own picker, and screen readers announce it as a menu with its value. Each option says the country's name in the locale's words and its calling code ("Indonesia (+62)").

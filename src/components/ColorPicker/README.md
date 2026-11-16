@@ -45,6 +45,17 @@ Drawn from the `ContrastCheck` story.
 - Turn off `custom` when only the swatches are allowed.
 - Colors come out as lowercase `#rrggbb`, whatever case or short form people type.
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | Round swatches, each with a thin inset `border-control` edge (3:1 on the page), so white shows on white and black on black |
+| Picked | A `primary` ring outside the swatch and a check in white or black, whichever stands out on it |
+| Focus | A `focus-ring` outline around the swatch |
+| Invalid | Every swatch's edge turns into a 2px `danger` one, as a field's border does |
+| Read-only | As at rest, with a plain cursor; nothing can be picked |
+| Disabled | The whole picker faded to `opacity-disabled`, with a `not-allowed` cursor |
+
 ## Behavior
 
 - The swatches are one radio group: Tab reaches the picked swatch (or the first), the arrow keys move and pick (wrapping), and Home and End go to the ends.

@@ -37,6 +37,17 @@ Drawn from the `Disabled` story.
 - Leave `hour12` and `locale` unset in most products so times follow the visitor's settings.
 - Use `name` in a plain form: it sends `"HH:mm"`, whatever the display format.
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the clock button in `text-muted` |
+| Hover | `field-border-hover`; the clock button under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable; the clock button is off with a plain cursor, so the list of times doesn't open |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the clock button is off and the list of times doesn't open |
+
 ## Behavior
 
 - People type `2:30 pm`, `2:30p`, `2pm`, `14:30`, `1430` or `9`. Without AM or PM, 13–23 are afternoon and 0–11 morning. The locale's own form is read too, as the field writes it: `오후 2:05` in Korean, `٢:٠٥ م` in Egyptian Arabic, `۱۴:۰۵` in Persian, with digits in any script. The text is read on blur and Enter; text that isn't a time, or a time outside `min`–`max`, puts back the last good value. Switching to another window or browser tab isn't leaving the field: the text waits until people come back.
