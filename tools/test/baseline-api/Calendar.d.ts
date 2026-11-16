@@ -24,6 +24,7 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defa
     max?: Date | string | undefined;
     isDateDisabled?: ((date: Date) => boolean) | undefined;
     locale?: string | undefined;
+    calendar?: CalendarSystem | undefined;
     weekStartsOn?: number | undefined;
     autoFocus?: boolean | undefined;
     previousLabel?: string | undefined;
