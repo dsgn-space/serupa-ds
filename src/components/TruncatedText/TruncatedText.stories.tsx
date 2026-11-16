@@ -33,6 +33,16 @@ export const FileList: Story = {
   ),
 };
 
+const REPORTS = ['quarterly-report-final-version-2025.pdf', 'quarterly-report-final-version-2026.pdf', 'logo.svg'];
+/** mode="middle": names told apart by their ends keep them in view, so the two reports still look different. */
+export const Middle: Story = {
+  render: (args) => (
+    <ul role="list" style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 8 }}>
+      {REPORTS.map((f) => <li key={f}><TruncatedText {...args} mode="middle">{f}</TruncatedText></li>)}
+    </ul>
+  ),
+};
+
 /** In a link: the link keeps the one tab stop, and its keyboard focus shows the full text. */
 export const InLink: Story = {
   render: (args) => <Link href="#file" style={{ display: 'block' }}><TruncatedText {...args} /></Link>,

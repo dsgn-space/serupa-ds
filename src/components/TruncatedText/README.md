@@ -8,6 +8,7 @@ Text that may not fit its space, such as a file name in a narrow column: cut wit
 import { TruncatedText } from "@diki-stwn/serupa-ds";
 
 <TruncatedText>quarterly-report-final-version-2.pdf</TruncatedText>
+<TruncatedText mode="middle">quarterly-report-final-version-2026.pdf</TruncatedText>
 <TruncatedText lines={2}>{comment}</TruncatedText>
 ```
 
@@ -31,6 +32,7 @@ import { TruncatedText } from "@diki-stwn/serupa-ds";
 - `lines` allows 2 to 6 lines before the cut, for a title that may take two lines but not three.
 - Keep it out of a `<p>`: the full text is drawn in an element of its own beside it, which a paragraph can't hold. Use `as="p"` to make it the paragraph.
 - Put what people need in order to tell rows apart at the start of the text, where the cut never reaches.
+- Names told apart by their ends, such as files ("report-2025.pdf", "report-2026.pdf"), ids and addresses, take `mode="middle"`: the start is cut and the last few characters stay, with the extension (up to 10 characters) and the 6 before it. (`Middle`)
 
 ### Do and don't
 
@@ -39,7 +41,7 @@ import { TruncatedText } from "@diki-stwn/serupa-ds";
 
 ## Accessibility
 
-- **Role and name:** plain text with no role. The whole text stays in the element, so screen readers and find-in-page get all of it, cut or not. The text shown on hover repeats it for the eye, so it is hidden from screen readers and nothing points at it.
+- **Role and name:** plain text with no role. The whole text stays in the element, so screen readers, find-in-page and a copy get all of it, cut or not. With `mode="middle"`, the end drawn again after the cut is generated content with empty alternative text, so it isn't read or copied twice. The text shown on hover repeats it for the eye, so it is hidden from screen readers and nothing points at it.
 - **Keyboard:** cut text takes a tab stop, and focus shows the whole text; `Esc` hides it. Text that fits has no tab stop. Inside a link, a button or another element that takes focus, it adds no tab stop of its own: that control's keyboard focus shows the whole text.
 - **Touch:** a tap shows the whole text, and the next tap, or a tap elsewhere, hides it. Inside a link or a button, a tap is the control's: it follows the link or opens the picker, and the whole text stays in the control's name.
 - **Contrast:** it takes the surrounding text's color; its focus ring reads 3:1 on the surface in every theme (`TruncatedText.test.tsx`).
@@ -53,9 +55,10 @@ import { TruncatedText } from "@diki-stwn/serupa-ds";
 | `id` | string | none | Goes to the root element |
 | `lines` | number | `1` | How many lines it may take before the cut: 1 to 6 (more counts as 6). It sets no style attribute, so it holds under a strict Content Security Policy |
 | `as` | `'span'` \| `'p'` \| `'div'` | `'span'` | The element. Whichever it is, it's a block as wide as its container |
+| `mode` | `'end'` \| `'middle'` | `'end'` | Where one line is cut. `'middle'` keeps the end in view ("quarterly-rep…n-2026.pdf"), laid out in the text's own direction (`dir="auto"`), so a right-to-left name keeps its end on the left. With `lines` (2 or more) it's cut at the end |
 | `placement` | `'top'` \| `'bottom'` \| `'left'` \| `'right'`, or with `-start` / `-end` | `'top'` | Where the whole text shows. It flips when there's no room |
 
-`className`, `ref` and other props go to the element, which has `data-component="truncated-text"`, and `data-truncated` while it's cut.
+`className`, `ref` and other props go to the element, which has `data-component="truncated-text"`, and `data-truncated` while it's cut (and `data-end`, the end drawn again, while it's cut in the middle).
 
 ## Component tokens
 
