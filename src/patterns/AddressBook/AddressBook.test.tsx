@@ -43,7 +43,7 @@ describe('Patterns/Address book', () => {
     expect(screen.getByRole('button', { name: 'Remove Home' }).elements()).toHaveLength(1);
   });
 
-  test('Add address: the fields say what they are for autofill; what\'s missing is said and focused; Save adds it', async () => {
+  test('Add address: the fields say what they are for autofill; what\'s missing is in a summary that takes focus and links to each field; Save adds it', async () => {
     const onSave = vi.fn(() => Promise.resolve('a9'));
     const screen = await render(<AddressBook onSave={onSave} />);
     await screen.getByRole('button', { name: 'Add address' }).click();
@@ -53,8 +53,11 @@ describe('Patterns/Address book', () => {
     expect(document.getElementById('address-postalCode')?.getAttribute('autocomplete')).toBe('shipping postal-code');
     await dialog.getByRole('textbox', { name: /^Name for this address/ }).fill('Studio');
     await dialog.getByRole('button', { name: 'Save address' }).click();
+    await expect.poll(() => active().textContent).toMatch(/^There are \S+ problems/);
+    expect(dialog.getByRole('link').elements().map((e) => e.getAttribute('href'))).toEqual(['#address-name', '#address-line1', '#address-city', '#address-postalCode', '#address-country']);
+    expect(document.getElementById('address-name')?.getAttribute('aria-invalid')).toBe('true');
+    await dialog.getByRole('link').first().click();
     await expect.poll(() => active().id).toBe('address-name');
-    expect(active().getAttribute('aria-invalid')).toBe('true');
     expect(onSave).not.toHaveBeenCalled();
     await dialog.getByRole('textbox', { name: /^Full name/ }).fill('Ana Lima');
     await dialog.getByRole('textbox', { name: /^Street and number/ }).fill(' Jl. Dago 3 ');

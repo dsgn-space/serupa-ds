@@ -39,6 +39,16 @@ describe('NotificationCenter', () => {
     }
   });
 
+  test('"Mark as read" shows its name in a tooltip on keyboard focus, not only as a hover title, and is still described by its row', async () => {
+    await render(<SerupaProvider locale="en-US"><NotificationCenter defaultOpen items={list} onMarkRead={() => {}} /></SerupaProvider>);
+    await expect.poll(() => drawer() !== null).toBe(true);
+    const b = button('Mark as read');
+    const tip = () => { const t = document.getElementById((b.getAttribute('aria-labelledby') || '').split(' ').pop()!); return t && !t.hidden ? t.textContent : null; };
+    expect([b.hasAttribute('title'), document.getElementById(b.getAttribute('aria-describedby')!)?.textContent]).toEqual([false, 'Payment failed']);
+    b.focus({ focusVisible: true });
+    await expect.poll(tip).toBe('Mark as read');
+  });
+
   test('a drawer titled "Notifications" listing each one: unread ones say so and have "Mark as read", read ones neither; the time is relative', async () => {
     // en-US: the relative time below is in the provider's language, not the browser's (which CI also runs in ar, id, th, ja).
     await render(<SerupaProvider locale="en-US"><NotificationCenter defaultOpen items={list} onMarkRead={() => {}} /></SerupaProvider>);
@@ -124,7 +134,7 @@ describe('NotificationCenter', () => {
     await render(<NotificationCenter defaultOpen items={two} onMarkRead={() => {}} />);
     await expect.poll(() => drawer() !== null).toBe(true);
     const marks = [...drawer()!.querySelectorAll('button')].filter((b) => b.getAttribute('aria-label') === 'Mark as read');
-    expect(marks.map((b) => [(b.getAttribute('aria-describedby') || '').split(' ').map((id) => document.getElementById(id)?.textContent).join(' '), b.title]))
+    expect(marks.map((b) => [(b.getAttribute('aria-describedby') || '').split(' ').map((id) => document.getElementById(id)?.textContent).join(' '), document.getElementById(b.getAttribute('aria-labelledby')!)?.textContent]))
       .toEqual([['Payment failed', 'Mark as read'], ['Invoice paid', 'Mark as read']]);
   });
 

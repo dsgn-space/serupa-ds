@@ -9,6 +9,7 @@ import { isComposing } from '../../internal/ime';
 import { activeIn } from '../../internal/root';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { ToggleButton } from '../ToggleButton/ToggleButton';
 import { CopyButton } from '../CopyButton/CopyButton';
 import { Loader } from '../Loader/Loader';
@@ -360,8 +361,8 @@ export const ChatReplyActions = /* @__PURE__ */ component<HTMLDivElement, ChatRe
       {props.onRegenerate ? <IconButton icon={icons.Refresh} label={L.chatRegenerate} size="sm" onClick={props.onRegenerate} /> : null}
       {props.onFeedback ? (
         <>
-          <ToggleButton variant="ghost" size="sm" icon={icons.ThumbUp} aria-label={L.chatHelpful} title={L.chatHelpful} pressed={now === 'good'} onClick={rate('good')} />
-          <ToggleButton variant="ghost" size="sm" icon={icons.ThumbDown} aria-label={L.chatNotHelpful} title={L.chatNotHelpful} pressed={now === 'bad'} onClick={rate('bad')} />
+          <Tooltip content={L.chatHelpful} role="label"><ToggleButton variant="ghost" size="sm" icon={icons.ThumbUp} aria-label={L.chatHelpful} pressed={now === 'good'} onClick={rate('good')} /></Tooltip>
+          <Tooltip content={L.chatNotHelpful} role="label"><ToggleButton variant="ghost" size="sm" icon={icons.ThumbDown} aria-label={L.chatNotHelpful} pressed={now === 'bad'} onClick={rate('bad')} /></Tooltip>
         </>
       ) : null}
     </div>

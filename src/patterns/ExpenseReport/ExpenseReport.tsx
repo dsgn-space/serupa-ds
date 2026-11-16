@@ -18,13 +18,15 @@ import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
+import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Expense report: add what you spent, one expense at a time, see them in a table with the total, and send the report
    to be paid back. For an app to copy. What it carries (WCAG 2.2):
    - 3.3.2: each field says what it takes; the amount says its currency; the receipt says when it's needed (over a
      limit) and what files it takes.
-   - 3.3.1: adding with problems names each next to its field, and focus goes to the first.
+   - 3.3.1, 2.4.3: adding with problems shows a summary that takes focus, each problem a link to its field, and each
+     field says its own.
    - 4.1.3: an expense added or removed is said, with the new total.
    - 1.3.1, 1.4.1: the expenses are a table with a caption and the total in its footer; one with no receipt says
      "Receipt needed" in words in a badge, not by color.
@@ -96,12 +98,16 @@ export function expenseProblems(d: Draft, today: string, receiptOver: number): P
 export const missingReceipts = (expenses: readonly Expense[], receiptOver: number) => expenses.filter((e) => e.amount > receiptOver && !e.receipt);
 
 /** The report's page: a skip link, a header, then main with the h1, the add form, the expenses and Send. */
+/** The add form's parts, in the order they show. */
+const PARTS = ['date', 'category', 'what', 'amount', 'receipt'] as const;
+
 export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = demo, currency = 'USD', receiptOver = 25, today = iso(new Date()), onSubmit, loading = false, loadFailed = false, onRetry }: ExpenseReportProps) {
   const locale = useLocale();
   const blank: Draft = { date: today, category: '', what: '', amount: null, receipt: null };
   const [list, setList] = React.useState(expenses);
   const [d, setD] = React.useState<Draft>(blank);
   const [problems, setProblems] = React.useState<Problems>({});
+  const [tries, setTries] = React.useState(0);
   const [reportProblem, setReportProblem] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
@@ -113,16 +119,14 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
   const date = (s: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(`${s}T00:00`));
   const edit = (patch: Partial<Draft>) => setD((now) => ({ ...now, ...patch }));
 
+  const errors: ErrorSummaryItem[] = PARTS.filter((k) => problems[k]).map((k) => ({ field: `expense-${k}`, message: problems[k] }));
+
   const add = (e: React.FormEvent) => {
     e.preventDefault();
     const found = expenseProblems(d, today, receiptOver);
     setProblems(found);
-    const first = (['date', 'category', 'what', 'amount', 'receipt'] as const).find((k) => found[k]);
-    if (first) {
-      const box = first === 'date' ? document.querySelector<HTMLElement>('#expense-date input, #expense-date select') : document.getElementById(`expense-${first}`);
-      box?.focus();
-      return;
-    }
+    setTries((t) => t + 1);
+    if (PARTS.some((k) => found[k])) return;
     const added: Expense = { id: `n${Date.now()}`, date: d.date, category: d.category, what: d.what.trim(), amount: d.amount!, receipt: d.receipt?.name };
     const next = [...list, added];
     setList(next); setD(blank); setReportProblem(null);
@@ -170,6 +174,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
               <Card>
                 <form onSubmit={add} noValidate aria-labelledby="add-expense" className="flex flex-col gap-4">
                   <h2 id="add-expense" className="m-0 text-lg font-semibold">Add an expense</h2>
+                  <ErrorSummary key={tries} errors={errors} headingLevel={3} />
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field label="Date" error={problems.date}>
                       <DateField id="expense-date" value={d.date} max={today} onValueChange={(v) => edit({ date: v })} />
