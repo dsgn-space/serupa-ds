@@ -1,0 +1,33 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Approvals.stories';
+
+<Meta of={Stories} />
+
+# Approvals
+
+The requests waiting on you, such as expenses, leave and purchases, each with what you need to decide. Approve in one press with Undo, or decline with a reason the asker will read.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A manager's inbox of requests from several places, decided one at a time.
+- Not for reviewing one long request: show its own page, as the Expense report pattern does.
+
+## What each part is for
+
+- **Each request is an article** whose heading names who asked and for what; its details are a list of terms (1.3.1).
+- **Approve and Decline start with their visible words** and go on to name the request, so a list of buttons still says which is which (2.4.6, 2.5.3).
+- **Approving can be undone** while its toast is up, and nothing is sent until it closes (3.3.4).
+- **Declining asks for a reason first**, in a dialog that says the asker will read it. Declining without one says what's missing at the field (3.3.1).
+- **Once a request is decided, focus goes to the next one's heading**, or to the list's when none is left, so it isn't lost with the buttons that went (2.4.3).
+- **Switching between Waiting and Decided** says how many each holds, and Undo says the request is back (4.1.3).
+- **A decision is a word**, Approved or Declined, never only a color (1.4.1).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.CaughtUp} />
+
+## What stays your app's job
+
+- **Sending the decision.** `onDecide` gets it once its Undo time is over, with the reason for a decline.
+- **Who can decide what.** Show each person only the requests they may approve, and keep a record of who decided.

@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './DataExport.stories';
+
+<Meta of={Stories} />
+
+# Download your data
+
+Choose what to include and in which format, see how big it will be, ask for it, and download it before its link runs out.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Settings where people take a copy of what they've put in your app, before they leave or to keep it.
+- Not for exporting the rows of a table: put an Export button on the table instead.
+
+## What each part is for
+
+- **What to include is a group of checkboxes** named by its question, with Everything to pick them all. Each says what it holds and how big it is, as its description (1.3.1).
+- **The size of what's chosen is said as it changes**, and each format says what it opens in (3.3.2, 4.1.3).
+- **Asking with nothing chosen** shows a summary at the top that takes focus, linked to the group (3.3.1, 2.4.3).
+- **Ask shows it's busy**; a request that can't be taken says so and keeps the choices (3.3.4).
+- **Once asked, the exports heading takes focus**, and a status says the data is being prepared and that an email will follow (2.4.3, 4.1.3).
+- **Each export's state is a word**, Preparing, Ready or Expired, never only a color. A ready one's Download names its date and size, and the date its link stops working is said (1.4.1, 2.4.6).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.FirstTime} />
+
+## What stays your app's job
+
+- **Making the file.** `onRequest` gets what to include and the format; reject when the request can't be taken. Email people when it's ready.
+- **Keeping it safe.** Ask people to sign in again before they download, and let the link run out after a few days.
