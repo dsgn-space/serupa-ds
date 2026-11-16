@@ -29,6 +29,7 @@ interface CascadeSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
     placeholder?: string | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
+    required?: boolean | undefined;
     readOnly?: boolean | undefined;
     name?: string | undefined;
     open?: boolean | undefined;
