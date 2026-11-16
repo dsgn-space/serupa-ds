@@ -89,4 +89,15 @@ describe('Patterns/Roles and permissions', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the grants that arrive once loading ends are the ones shown', async () => {
+    const ticked = () => document.querySelectorAll('main input[type="checkbox"]:checked').length;
+    const first = await render(<RolePermissions />);
+    const all = ticked();
+    expect(all).toBeGreaterThan(0);
+    await first.unmount();
+    const screen = await render(<RolePermissions loading grants={{}} />);
+    await screen.rerender(<RolePermissions />);
+    await expect.poll(ticked).toBe(all);
+  });
 });

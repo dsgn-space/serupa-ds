@@ -85,4 +85,10 @@ describe('Patterns/Invoice', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the invoice that arrives once loading ends is the one shown', async () => {
+    const screen = await render(<Invoice loading invoice={inv()} />);
+    await screen.rerender(<Invoice invoice={inv({ number: 'INV-8' })} />);
+    await expect.poll(() => document.querySelector('main h1')?.textContent).toContain('INV-8');
+  });
 });
