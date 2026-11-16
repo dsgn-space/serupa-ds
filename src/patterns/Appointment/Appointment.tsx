@@ -182,7 +182,7 @@ export function Appointment({ service = demoService, slots = demoSlots, today = 
                 <Button variant="outline" onClick={() => { setBooked(null); setPicked(null); setTime(null); }}>Book another time</Button>
               </section>
             ) : (
-              <form onSubmit={book} noValidate className="grid items-start gap-8 md:grid-cols-3">
+              <form onSubmit={book} noValidate className="grid items-start gap-6 md:grid-cols-3">
                 <div className="flex flex-col gap-8 md:col-span-2">
                   <section aria-labelledby="day" className="flex flex-col gap-4">
                     <h2 id="day" className={h2}>Day</h2>

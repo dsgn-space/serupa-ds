@@ -12,6 +12,16 @@
           }
         }
       },
+      "bg-readonly": {
+        "$type": "color",
+        "$value": "{color.field-readonly}",
+        "$description": "The drawing box's background while read-only: a step flatter, as a read-only field's, so a saved signature reads as not editable.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--signature-pad-bg-readonly"
+          }
+        }
+      },
       "border": {
         "$type": "color",
         "$value": "{color.border-control}",

@@ -23,5 +23,6 @@
 .dk-field--horizontal { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: var(--field-column-gap, var(--spacing-4)); }
 .dk-field--horizontal > .dk-field__label { flex: none; flex-basis: var(--field-label-width, var(--spacing-48)); max-width: var(--sizing-full); }
 .dk-field__body { display: flex; flex: auto; flex-basis: var(--field-control-min-width, var(--container-3xs)); flex-direction: column; gap: var(--field-gap, var(--spacing-1\.5)); min-width: var(--spacing-0); }
-.dk-field--disabled > .dk-field__label, .dk-field--disabled .dk-field__body > .dk-field__hint, .dk-field--disabled > .dk-field__hint { color: var(--field-text-disabled, var(--disabled-text)); }
+/* The required mark dims with its label: a disabled field asks for nothing, so no red mark there either. */
+.dk-field--disabled > .dk-field__label, .dk-field--disabled .dk-field__required, .dk-field--disabled .dk-field__body > .dk-field__hint, .dk-field--disabled > .dk-field__hint { color: var(--field-text-disabled, var(--disabled-text)); }
 }

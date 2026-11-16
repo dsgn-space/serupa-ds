@@ -117,7 +117,7 @@ export function Pricing({ plans, currency, period, defaultPeriod = 'monthly', on
     <div className="flex flex-col gap-6">
       <SegmentedControl<PricingPeriod> aria-label={l.period} value={shown} onValueChange={change} className="self-center"
         options={[{ value: 'monthly', label: l.monthly }, { value: 'yearly', label: l.yearly(best, saved.some((x) => x !== best)) }]} />
-      <ul role="list" className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-3">
+      <ul role="list" className="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-3">
         {plans.map((plan) => {
           const perMonth = shown === 'yearly' ? plan.yearly / 12 : plan.monthly;
           return (
