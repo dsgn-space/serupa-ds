@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, safeArea, withMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, safeArea, withMotion, settled, flexAlign } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { topModal } from '../../internal/layers';
@@ -385,7 +385,7 @@ describe('Dialog', () => {
     await expect.poll(() => isOpen('dlg')).toBe(true);
     await settled();
     const s = getComputedStyle(panel('dlg')), ti = getComputedStyle(titleOf('dlg'));
-    expect([s.paddingTop, s.borderTopLeftRadius, s.rowGap, ti.fontSize, ti.fontWeight, getComputedStyle(panel('dlg').lastElementChild!).justifyContent]).toEqual(['24px', '12px', '16px', '18px', '600', 'flex-end']);
+    expect([s.paddingTop, s.borderTopLeftRadius, s.rowGap, ti.fontSize, ti.fontWeight, flexAlign(getComputedStyle(panel('dlg').lastElementChild!).justifyContent)]).toEqual(['24px', '12px', '16px', '18px', '600', 'flex-end']);
     expect(s.boxShadow).toMatch(/20px 25px -5px/);
     const still = document.createElement('style'); still.textContent = '* { transition: none !important; animation: none !important; }'; document.head.appendChild(still);
     const low: string[] = []; let n = 0;

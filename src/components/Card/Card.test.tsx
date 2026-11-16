@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, css, press, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, css, press, withMotion, flexAlign } from '../../../tools/test/vitest/helpers';
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
 import { Checkbox } from '../Checkbox/Checkbox';
@@ -187,8 +187,8 @@ describe('Card', () => {
       {/* @ts-expect-error: an unknown justify, as plain JavaScript could pass */}
       <Card id="jst"><CardFooter justify="start">a</CardFooter><CardFooter justify="between">b</CardFooter><CardFooter justify="up">c</CardFooter></Card>
     </Col>);
-    expect([...el('jst').children].map((f) => css(f).justifyContent)).toEqual(['flex-start', 'space-between', 'flex-end']);
-    expect(css(q('#def .dk-card__footer')).justifyContent).toBe('flex-end');
+    expect([...el('jst').children].map((f) => flexAlign(css(f).justifyContent))).toEqual(['flex-start', 'space-between', 'flex-end']);
+    expect(flexAlign(css(q('#def .dk-card__footer')).justifyContent)).toBe('flex-end');
   });
 
   test('href: the card stays a <div> (or as), and its CardHeader title is the link, named by the title only; its area covers the card; target _blank adds rel="noopener noreferrer"; ref is the card', async () => {
@@ -205,12 +205,13 @@ describe('Card', () => {
 
   test('href with buttons inside: no button inside a link (valid HTML), the buttons sit above the link and don\'t follow it; Tab goes to the title link, then the buttons', async () => {
     const saves: number[] = [];
-    await render(<Card id="act" href="#proj"><CardHeader title="Atlas" /><CardBody>Body</CardBody><CardFooter><Button id="save" onClick={() => saves.push(1)}>Save</Button></CardFooter></Card>);
+    await render(<><button id="before">Before</button><Card id="act" href="#proj"><CardHeader title="Atlas" /><CardBody>Body</CardBody><CardFooter><Button id="save" onClick={() => saves.push(1)}>Save</Button></CardFooter></Card></>);
     const b = el('save'), box = b.getBoundingClientRect();
     expect([b.closest('a'), document.elementFromPoint(box.left + 4, box.top + 4)!.closest('button') === b]).toEqual([null, true]);
     await userEvent.click(b);
     expect([saves, location.hash]).toEqual([[1], '']);
-    (document.activeElement as HTMLElement | null)?.blur();
+    // Tab from the control before the card: since Chromium 158 a blur() leaves the starting point on the button.
+    el('before').focus();
     await userEvent.tab();
     expect(document.activeElement!.textContent).toBe('Atlas');
     await userEvent.tab();

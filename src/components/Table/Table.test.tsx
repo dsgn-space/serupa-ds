@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { color, contrast, css, forcedColors, press, settle, settled, THEMES, withMotion, withMoreContrast } from '../../../tools/test/vitest/helpers';
+import { color, contrast, css, forcedColors, press, settle, settled, THEMES, withMotion, withMoreContrast, flexAlign } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { Text } from '../Text/Text';
 import { Button } from '../Button/Button';
@@ -268,7 +268,7 @@ describe('Table', () => {
     const b = q('#hsort button'), s = css(b);
     expect(document.activeElement).toBe(b);
     expect(Math.round(b.getBoundingClientRect().width)).toBe(Math.round(b.parentElement!.getBoundingClientRect().width));
-    expect([s.justifyContent, s.outlineStyle]).toEqual(['flex-end', 'solid']);
+    expect([flexAlign(s.justifyContent), s.outlineStyle]).toEqual(['flex-end', 'solid']);
   });
 
   test('select all next to a sortable header: the checkbox keeps 24px around its center clear of the sort button (2.5.8)', async () => {

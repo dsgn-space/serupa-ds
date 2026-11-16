@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
-import { css } from '../../../tools/test/vitest/helpers';
+import { css, flexAlign } from '../../../tools/test/vitest/helpers';
 import { Stack } from './Stack';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
@@ -82,10 +82,10 @@ describe('Stack', () => {
       await page.viewport(414, 800);
       await render(<Stack id="salign" direction="row" align={{ base: 'start', sm: 'end' }} gap={{ sm: 3 }}>{boxes(2)}</Stack>);
       expect(el('salign').className).toBe('dk-stack dk-stack--row dk-stack--align-start dk-stack--sm-align-end dk-stack--gaps');
-      expect(css(el('salign')).alignItems).toBe('flex-start');
+      expect(flexAlign(css(el('salign')).alignItems)).toBe('flex-start');
       expect(css(el('salign')).columnGap).toBe('16px');   // no base: the default gap
       await page.viewport(700, 800);
-      expect([css(el('salign')).alignItems, css(el('salign')).columnGap]).toEqual(['flex-end', '12px']);
+      expect([flexAlign(css(el('salign')).alignItems), css(el('salign')).columnGap]).toEqual(['flex-end', '12px']);
     });
   });
 });
