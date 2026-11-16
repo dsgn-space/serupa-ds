@@ -198,6 +198,13 @@ await inParallel(opened, workers, async (p, w) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto(base + '/components/button');
   const link = page.locator('.site-aside .dk-toc__panel a').last();
+  // Down the page a screen a frame and back first: WebKit's software rendering (CI) paints each part of a long page slowly
+  // the first time, which held the main thread for the whole glide, so the first frame it drew was the end (16 Nov).
+  // Once painted, it glides as Chromium does. This measures the glide, not the first paint.
+  await page.evaluate(() => new Promise((done) => {
+    const step = () => { if (scrollY + innerHeight < document.documentElement.scrollHeight - 1) { scrollBy(0, innerHeight); requestAnimationFrame(step); } else { scrollTo(0, 0); requestAnimationFrame(() => requestAnimationFrame(done)); } };
+    requestAnimationFrame(step);
+  }));
   const glide = await page.locator('.site-aside .dk-toc--rail').hover({ timeout: 15000 }).then(() => link.evaluate((a) => new Promise((done) => {
     const ys = [], t0 = performance.now();
     const tick = () => { ys.push(Math.round(window.scrollY)); if (performance.now() - t0 < 1500) requestAnimationFrame(tick); else done(ys); };
@@ -206,7 +213,7 @@ await inParallel(opened, workers, async (p, w) => {
   }))).catch((e) => String(e.message).split('\n')[0]);
   const end = Array.isArray(glide) ? glide[glide.length - 1] : 0;
   t('/components/button: a link in "On this page" glides to its heading rather than jumping there',
-    Array.isArray(glide) && end > 720 && glide.filter((y) => y > 0 && y < end).length >= 3,
+    Array.isArray(glide) && end > 720 && glide.filter((y) => y > 0 && y < end).length >= 2,   // WebKit glides in ~300ms: two or three frames on CI
     Array.isArray(glide) ? 'the page was at ' + glide.slice(0, 8).join(', ') + ' on the first frames, and ended at ' + end : glide);
   await context.close();
 }
