@@ -107,7 +107,7 @@ export const FromAServer: Story = {
       const id = setTimeout(() => { setResults(COUNTRIES.filter((c) => c.toLowerCase().startsWith(q.toLowerCase()))); setLoading(false); }, 400);
       return () => clearTimeout(id);
     }, [q]);
-    return <Field label="Country"><Combobox options={results} filter={false} loading={loading} onInputChange={setQ} placeholder="Start typing" emptyText={q ? 'No countries found' : 'Type to search'} /></Field>;
+    return <Field label="Country"><Combobox options={results} filter={false} loading={loading} onInputValueChange={setQ} placeholder="Start typing" emptyText={q ? 'No countries found' : 'Type to search'} /></Field>;
   },
 };
 

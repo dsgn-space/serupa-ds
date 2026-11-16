@@ -92,6 +92,9 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
   const locale = useLocale();
   const [list, setList] = React.useState(start);
   const [def, setDef] = React.useState(defaultId ?? start[0]?.id);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setList(start); setDef(defaultId ?? start[0]?.id); } }
   const [gone, setGone] = React.useState<ReadonlySet<string>>(new Set());
   const [draft, setDraft] = React.useState<Draft | null>(null);
   const [makeDefault, setMakeDefault] = React.useState(false);

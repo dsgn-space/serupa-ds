@@ -127,6 +127,9 @@ const dayWords = (locale: string | undefined, a: string, b?: string, weekday = f
 export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = [0, 6], requests: first = demoRequests, today = '2025-03-10', onSubmit, loading = false, loadFailed = false, onRetry }: LeaveRequestProps) {
   const locale = useLocale(undefined);
   const [requests, setRequests] = React.useState(first);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setRequests(first); } }
   const [kind, setKind] = React.useState<LeaveKind>('annual');
   const [range, setRange] = React.useState<{ start: string; end: string } | null>(null);
   const [note, setNote] = React.useState('');

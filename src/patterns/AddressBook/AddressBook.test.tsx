@@ -133,4 +133,10 @@ describe('Patterns/Address book', () => {
     await render(<SerupaProvider locale="ar-EG"><AddressBook /></SerupaProvider>);
     expect(document.body.textContent).toContain('Saved addresses (٢)');
   });
+
+  test('the addresses that arrive once loading ends are the ones shown', async () => {
+    const screen = await render(<AddressBook loading addresses={[]} />);
+    await screen.rerender(<AddressBook />);
+    await expect.poll(() => document.querySelectorAll('main li h3').length).toBeGreaterThan(0);
+  });
 });

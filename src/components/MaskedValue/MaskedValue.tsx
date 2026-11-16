@@ -24,6 +24,8 @@ export interface MaskedValueProps extends Omit<React.HTMLAttributes<HTMLSpanElem
   revealable?: boolean | undefined;
   /** Whether the whole value shows (controlled). Use with onRevealedChange. */
   revealed?: boolean | undefined;
+  /** Whether the whole value shows at first (uncontrolled), with revealable. Default: false. */
+  defaultRevealed?: boolean | undefined;
   /** Called when the Show button is pressed, or the value hides because the page was left. */
   onRevealedChange?: ((revealed: boolean) => void) | undefined;
 }
@@ -38,8 +40,8 @@ const DOTS = '••••';
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const MaskedValue = /* @__PURE__ */ component<HTMLSpanElement, MaskedValueProps>('MaskedValue', function MaskedValue(props, ref) {
   const sds = useSettings(words);
-  const rest = omit(props, { value: 1, label: 1, end: 1, start: 1, revealable: 1, revealed: 1, onRevealedChange: 1, className: 1 });
-  const [revealed, setOwn, controlled] = useControllable(props.revealed, false, 'MaskedValue', 'revealed');
+  const rest = omit(props, { value: 1, label: 1, end: 1, start: 1, revealable: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, className: 1 });
+  const [revealed, setOwn, controlled] = useControllable(props.revealed, !!props.defaultRevealed, 'MaskedValue', 'revealed');
   const shown = !!props.revealable && !!revealed;
   const set = React.useRef<((v: boolean) => void) | null>(null);
   set.current = (v: boolean) => { if (!controlled) setOwn(v); if (props.onRevealedChange) props.onRevealedChange(v); };

@@ -110,6 +110,9 @@ const BADGE: Record<'paid' | 'due' | 'overdue', { label: string; tone: BadgeTone
 export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025-03-20', onPay, loading = false, loadFailed = false, onRetry }: InvoiceProps) {
   const locale = useLocale(undefined);
   const [inv, setInv] = React.useState(start);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setInv(start); } }
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const heading = React.useRef<HTMLHeadingElement>(null);

@@ -128,6 +128,9 @@ export const subtotal = (items: readonly OrderItem[]): number => items.reduce((n
 export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, loading = false, loadFailed = false, onRetry }: OrderStatusProps) {
   const locale = useLocale(undefined);
   const [order, setOrder] = React.useState(start);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setOrder(start); } }
   const heading = React.useRef<HTMLHeadingElement>(null);
   const money = (n: number) => <FormattedNumber value={n} format="currency" currency={currency} />;
   const when = (iso: string) => {
@@ -188,7 +191,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
                 <h2 id="happened" className={h2}>What’s happened</h2>
                 <Timeline aria-labelledby="happened">
                   {order.events.map((e, i) => (
-                    <TimelineItem key={e.id} title={e.title} time={when(e.at)} dateTime={e.at} status={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
+                    <TimelineItem key={e.id} title={e.title} time={when(e.at)} dateTime={e.at} tone={i === 0 ? (order.cancelled ? 'danger' : 'primary') : 'neutral'}>{e.detail}</TimelineItem>
                   ))}
                 </Timeline>
               </section>

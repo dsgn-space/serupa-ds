@@ -127,4 +127,10 @@ describe('Patterns/Leave request', () => {
     expect(getComputedStyle(list).paddingRight).not.toBe('0px');
     expect(getComputedStyle(list).paddingLeft).toBe('0px');
   });
+
+  test('the requests that arrive once loading ends are the ones shown', async () => {
+    const screen = await render(page({ loading: true, requests: [] }));
+    await screen.rerender(page());
+    await expect.poll(() => document.querySelectorAll('ul[aria-labelledby="mine"] > li').length).toBe(2);
+  });
 });
