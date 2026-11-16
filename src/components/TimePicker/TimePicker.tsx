@@ -19,6 +19,7 @@ import { en as TimePickerWords } from './labels';
 import { en as DatePickerWords } from '../DatePicker/labels';
 import { windowBlur } from '../../internal/focus';
 import { useControllable } from '../../internal/controllable';
+import { useOpenState, type OpenChangeDetails } from '../../internal/openChange';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, TimePickerWords, DatePickerWords);
 
@@ -48,6 +49,12 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   invalid?: boolean | undefined;
   /** The list's name, and the button's. Default: "Choose a time". */
   listLabel?: string | undefined;
+  /** Whether the list of times shows (controlled). Use with onOpenChange. */
+  open?: boolean | undefined;
+  /** Shows the list at first (uncontrolled). Focus stays where it is either way: the list is the field's. Default: false. */
+  defaultOpen?: boolean | undefined;
+  /** Called when the list asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' | 'select' | 'api' }. */
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
 /* TimePicker: a field for a time of day with a list of times. People type a time ("2:30 pm", "14:30", "1430",
@@ -61,7 +68,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const nameRef = useNameCheck('TimePicker', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, open: _o, defaultOpen: _do, onOpenChange, onInvalidInput, min, max, step: _st, locale: localeProp, hour12: _h, size: _s, invalid: _i, listLabel, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
@@ -78,7 +85,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     shown.current = value; shownFmt.current = locale + '|' + h12;
     if (fmt(value) !== text) setText(fmt(value));
   }
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useOpenState(props.open, props.defaultOpen, onOpenChange, 'TimePicker', !!disabled || !!readOnly);
   const [held, setActive] = React.useState(0);
   const id = domId('dk-tp', React.useId());
   const [rejected, setRejected] = React.useState('');   // what was said about typed text put back, shown under the field
@@ -87,7 +94,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   useFormReset(field, () => {
     if (controlled) return;
     const n = toMinutes(props.defaultValue);
-    shown.current = n; setOwn(n); setText(fmt(n)); setOpen(false);
+    shown.current = n; setOwn(n); setText(fmt(n)); setOpen(false, 'api');
   });
   const list = React.useRef<HTMLUListElement | null>(null);
   const typed = React.useRef(false);   // text typed since the list opened or the active time last moved
@@ -115,12 +122,15 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     reject(text, n != null ? 'unavailable' : 'unreadable', onInvalidInput, sds.labels.inputNotAccepted, setRejected);
     commit(value);
   };
-  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text, locale); setActive(nearest(n != null ? n : value)); typed.current = false; setOpen(true); };
+  // Shown another way (defaultOpen, or the app's open), the highlight starts at the chosen (or nearest) time too.
+  const [seenOpen, setSeenOpen] = React.useState(false);
+  if (open !== seenOpen) { setSeenOpen(open); if (open) setActive(nearest(value)); }
+  const show = () => { if (disabled || readOnly || !times.length) return; const n = parseTime(text, locale); setActive(nearest(n != null ? n : value)); typed.current = false; setSeenOpen(true); setOpen(true, 'trigger'); };
   // The list is at least as wide as the field.
   useIsoLayoutEffect(() => { if (open && list.current && box.current) list.current.style.minWidth = box.current.offsetWidth + 'px'; }, [open]);
   // Closing: the times stay (inert) while the list fades out, as Menu's and DatePicker's do (GK1).
   const exit = useExit(open, list);
-  useAnchoredLayer(open, list, box, { placement: 'bottom-start', offsetVar: '--dk-tp-offset', onOutside: () => setOpen(false), inside: box });
+  useAnchoredLayer(open, list, box, { placement: 'bottom-start', offsetVar: '--dk-tp-offset', onOutside: () => setOpen(false, 'outside'), inside: box });
   // On open, the active time sits near the top; after that, moving keeps it in view.
   const wasOpen = React.useRef(false);
   React.useEffect(() => {
@@ -134,7 +144,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
     else if (o.offsetTop + o.offsetHeight > l.scrollTop + l.clientHeight) l.scrollTop = o.offsetTop + o.offsetHeight - l.clientHeight;
   }, [open, active]);
 
-  const pick = (n: number) => { commit(n); setOpen(false); if (field.current) field.current.focus(); };
+  const pick = (n: number) => { commit(n); setOpen(false, 'select'); if (field.current) field.current.focus(); };
   const keys = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onKeyDown) onKeyDown(e);
     if (e.defaultPrevented || isComposing(e)) return;
@@ -155,9 +165,9 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
       case 'PageUp': move(Math.max(0, active - page)); break;
       case 'Home': if (e.altKey || e.ctrlKey) move(0); break;
       case 'End': if (e.altKey || e.ctrlKey) move(last); break;
-      case 'Enter': e.preventDefault(); if (typed.current) { read(); setOpen(false); } else { const t = times[active]; if (t !== undefined) pick(t); } break;   // what was typed wins over the highlight
-      case 'Escape': e.preventDefault(); e.stopPropagation(); setOpen(false); break;
-      case 'Tab': setOpen(false); break;
+      case 'Enter': e.preventDefault(); if (typed.current) { read(); setOpen(false, 'select'); } else { const t = times[active]; if (t !== undefined) pick(t); } break;   // what was typed wins over the highlight
+      case 'Escape': e.preventDefault(); e.stopPropagation(); setOpen(false, 'escape'); break;
+      case 'Tab': setOpen(false, 'blur'); break;
     }
   };
   const label = listLabel || sds.labels.chooseTime;
@@ -174,7 +184,7 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
           if (open) { typed.current = true; const n = parseTime(e.target.value, locale); if (n != null) setActive(nearest(n)); }   // the highlight follows what's typed
         }} onBlur={(e) => { if (!windowBlur(e)) read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
       <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
-        onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false); else show(); if (field.current) field.current.focus(); }}>
+        onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false, 'trigger'); else show(); if (field.current) field.current.focus(); }}>
         <Icon icon={icons.Schedule} />
       </button>
       {/* The format to type, read after the field's name (a placeholder is gone once something is typed). */}
