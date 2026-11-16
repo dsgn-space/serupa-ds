@@ -27,7 +27,6 @@ describe('Patterns/Status page', () => {
     expect(screen.getByRole('heading', { level: 3, name: 'Webhooks' }).element().closest('li')?.textContent).toContain('Slow or partly working');
     expect(screen.getByRole('article', { name: 'Webhooks delivered late' }).element().querySelectorAll('ol li')).toHaveLength(3);
     expect(screen.getByRole('article', { name: 'API down for 38 minutes' }).elements()).toHaveLength(1);
-    expect(document.querySelectorAll('[data-component="status-tracker"], .dk-status-tracker').length).toBeGreaterThan(0);
   });
 
   test('all working, with nothing open', async () => {

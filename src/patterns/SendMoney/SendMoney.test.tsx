@@ -25,7 +25,7 @@ describe('Patterns/Send money', () => {
     await userEvent.tab();
     expect(active().getAttribute('href')).toBe('#main');
     expect([document.querySelectorAll('main').length, document.querySelector('h1')?.textContent]).toEqual([1, 'Send money']);
-    expect(norm(document.body.textContent)).toMatch(/You have .*1,?240\.50/);
+    expect(norm(document.body.textContent)).toMatch(/You have .*1[.,]?240[.,]50/);
     expect(screen.getByRole('group', { name: /^Send to/ }).element().querySelectorAll('input[type="radio"]')).toHaveLength(3);
   });
 

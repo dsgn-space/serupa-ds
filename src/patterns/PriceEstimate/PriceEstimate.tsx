@@ -79,8 +79,8 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
       <main id="main" className="mx-auto flex max-w-5xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Pricing', href: '#pricing' }, { label: 'Price estimate' }]} title="What would it cost?"
           description="Choose a plan, how many people and any extras. Prices are per month, before tax." />
-        <div className="grid gap-8 pt-6 md:grid-cols-2">
-          <form onSubmit={(ev) => ev.preventDefault()} aria-label="Your choices" className="flex flex-col gap-5">
+        <div className="grid grid-cols-1 gap-8 pt-6 md:grid-cols-2">
+          <div className="flex flex-col gap-5">
             <Field label="Plan" group>
               <RadioGroup name="estimate-plan" variant="card" value={planId} onValueChange={(v: string) => setPlanId(v)}>
                 {plans.map((p) => <Radio key={p.id} value={p.id} description={`${money(p.perSeat)} a person. ${p.about}.`}>{p.name}</Radio>)}
@@ -95,7 +95,7 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
               </CheckboxGroup>
             </Field>
             <Switch checked={yearly} onCheckedChange={setYearly} description={`${pct} off when you pay for a year at once.`}>Pay yearly</Switch>
-          </form>
+          </div>
           <section aria-labelledby="estimate-title" className="flex flex-col gap-4 md:self-start">
             <Card className="flex flex-col gap-4">
               <h2 id="estimate-title" className="m-0 text-lg font-semibold">Your estimate</h2>

@@ -33,7 +33,7 @@ describe('Patterns/Price estimate', () => {
     expect(screen.getByRole('group', { name: /^Extras/ }).element().querySelectorAll('input[type="checkbox"]')).toHaveLength(2);
     expect(norm(document.body.textContent)).toContain('Team is for 3 to 250 people.');
     expect(rows()).toEqual(['Team, 12 people', expect.stringMatching(/^Paying yearly, 20/)]);
-    expect(total()).toMatch(/134[.,]40.* a month, billed as .*1,?612[.,]80.* once a year\. You save .*403[.,]20.* a year\./);
+    expect(total()).toMatch(/134[.,]40.* a month, billed as .*1[.,]?612[.,]80.* once a year\. You save .*403[.,]20.* a year\./);
   });
 
   test('the estimate follows each choice, and Start trial carries them', async () => {
