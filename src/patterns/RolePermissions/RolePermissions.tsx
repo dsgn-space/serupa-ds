@@ -135,7 +135,7 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading roles" /></Card> : (<>
         {locked.length ? <p className="m-0 pt-6">{locked.map((r) => r.name).join(', ')} can do everything, and that can’t be changed, so the workspace always has someone who can.</p> : null}
         <div className="pt-4">
-          <Table caption="What each role can do" hideCaption>
+          <Table caption="What each role can do" hideCaption pinStart>
             <TableHead><TableRow>
               <TableHeaderCell>Permission</TableHeaderCell>
               {roles.map((r) => <TableHeaderCell key={r.id} align="center">{r.name}</TableHeaderCell>)}
@@ -143,7 +143,7 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
             <TableBody>
               {permissions.map((p) => (
                 <TableRow key={p.id}>
-                  <TableHeaderCell scope="row" className="font-normal">
+                  <TableHeaderCell scope="row" className="min-w-40 font-normal whitespace-normal">
                     <span className="block font-semibold">{p.label}</span>
                     <span className="block text-sm text-text-muted">{p.allows}{p.needs?.length ? `. Needs ${p.needs.map(label).join(' and ')}` : ''}.</span>
                   </TableHeaderCell>
