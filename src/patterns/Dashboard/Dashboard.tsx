@@ -166,7 +166,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
 
               <section aria-labelledby="dash-usage" className="flex min-w-0 flex-col gap-4">
                 <Heading level={2} size="lg" id="dash-usage">Usage</Heading>
-                <Card className="flex flex-col gap-5">
+                <Card className="flex flex-col gap-4">
                   {loading ? <Loader variant="skeleton" shape="text" lines={4} label="Loading: Usage" /> : (
                     <>
                       <Meter label="Storage" showValue value={used} max={limit} high={limit * 0.8} optimum={0}

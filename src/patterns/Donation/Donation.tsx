@@ -117,7 +117,7 @@ export function Donation({ currency = 'USD', amounts = demoAmounts, min = 2, fee
             <Link href="#about">See what your gift does</Link>
           </section>
         ) : (
-          <form onSubmit={give} noValidate aria-label="Your gift" className="flex flex-col gap-5 pt-6">
+          <form onSubmit={give} noValidate aria-label="Your gift" className="flex flex-col gap-4 pt-6">
             <ErrorSummary key={tries} errors={errors} />
             <Field label="How often?" group>
               <RadioGroup name="donate-often" orientation="horizontal" value={d.monthly} onValueChange={(v: string) => edit({ monthly: v })}>

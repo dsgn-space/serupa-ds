@@ -40,6 +40,11 @@ Drawn from the `NothingChosen` story.
 - With `name`, each chosen value is a hidden input, so a form submits them in order (`formData.getAll(name)`), and resetting the form puts `defaultValue` back.
 - A choice it requires is yours to check: say so in the label, and count the values on submit.
 
+### Do and don't
+
+- **Do:** A list people pick some of and leave the rest, such as the columns a table shows. (`DoLongList`)
+- **Don't:** A handful of options: a [CheckboxGroup](../Checkbox/README.md) shows them at once, with one box each and no moving. (`DontFewOptions`)
+
 ## Behavior
 
 - Each list is a group of checkboxes with an All box first (with two or more in it), named by its title, which counts what's in it: "Available (12)".

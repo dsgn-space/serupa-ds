@@ -126,4 +126,10 @@ describe('Patterns/Task board', () => {
     await render(<SerupaProvider locale="ar-EG"><TaskBoard /></SerupaProvider>);
     expect(bodyText()).toContain('٧ tasks');
   });
+
+  test('the cards that arrive once loading ends are the ones on the board', async () => {
+    const screen = await render(<TaskBoard loading columns={[]} />);
+    await screen.rerender(<TaskBoard columns={board()} />);
+    await expect.poll(shown).toEqual(['To do: Alpha, Bravo', 'Doing: Charlie', 'Done: ']);
+  });
 });

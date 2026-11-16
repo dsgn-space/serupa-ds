@@ -49,7 +49,7 @@ export interface TimesheetProps {
   approver?: string | undefined;
   /** Sends the week. Reject when it can't be sent. */
   onSend?: ((week: Week, note: string) => unknown) | undefined;
-  /** The week are still loading: a placeholder in their place. Default: false. */
+  /** The week's hours are still loading: a placeholder in their place. Default: false. */
   loading?: boolean | undefined;
   /** The week failed to load: a "Couldn’t load your timesheet" message with Try again, which calls onRetry. Default: false. */
   loadFailed?: boolean | undefined;
@@ -87,6 +87,9 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
   expected = 40, approver = 'Maya Chen', onSend, loading = false, loadFailed = false, onRetry }: TimesheetProps) {
   const locale = useLocale();
   const [hours, setHours] = React.useState<Week>(defaultHours);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) setHours(defaultHours); }
   const [note, setNote] = React.useState('');
   const [adding, setAdding] = React.useState('');
   const [problems, setProblems] = React.useState<Record<string, string>>({});
@@ -164,7 +167,7 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
             <Link href="#timesheets">Back to your timesheets</Link>
           </section>
         ) : (
-          <form onSubmit={send} noValidate aria-label="Timesheet" className="flex flex-col gap-5 pt-6">
+          <form onSubmit={send} noValidate aria-label="Timesheet" className="flex flex-col gap-4 pt-6">
             <ErrorSummary key={tries} errors={errors} />
             <div className="flex flex-wrap items-end gap-3">
               <Field label="Add a project" className="min-w-56">

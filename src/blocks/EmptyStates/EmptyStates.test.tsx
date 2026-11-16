@@ -95,4 +95,25 @@ describe('Blocks/Empty states', () => {
     await expect.element(page.getByRole('button', { name: 'Erneut versuchen' })).toBeVisible();
     expect(document.body.textContent).toContain('Referenz: X1');
   });
+
+  test('when Try again works and the message goes, focus moves to the page h1, not to the body', async () => {
+    const Page = ({ failed }: { failed: boolean }) => (
+      <main><h1>Orders</h1>{failed ? <EmptyLoadFailed onRetry={() => {}} /> : <p>Loaded</p>}</main>
+    );
+    const screen = await render(<Page failed />);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    await screen.rerender(<Page failed={false} />);
+    expect(document.activeElement?.tagName).toBe('H1');
+    expect(document.activeElement?.getAttribute('tabindex')).toBe('-1');
+  });
+
+  test('a message that goes while focus is elsewhere moves nothing', async () => {
+    const Page = ({ failed }: { failed: boolean }) => (
+      <main><h1>Orders</h1><input aria-label="Search" />{failed ? <EmptyLoadFailed onRetry={() => {}} /> : null}</main>
+    );
+    const screen = await render(<Page failed />);
+    await screen.getByRole('textbox', { name: 'Search' }).click();
+    await screen.rerender(<Page failed={false} />);
+    expect(document.activeElement?.getAttribute('aria-label')).toBe('Search');
+  });
 });

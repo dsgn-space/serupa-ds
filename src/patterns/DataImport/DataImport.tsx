@@ -202,7 +202,7 @@ export function DataImport({ start = 'upload', file: given, existing = DEMO_EXIS
       <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title="Import customers" />
         <Stepper current={ORDER.indexOf(step) + (step === 'done' ? 1 : 0)} steps={STEPS} size="sm" />
-        <Card className="flex flex-col gap-5" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>
+        <Card className="flex flex-col gap-4" style={{ viewTransitionName: 'data-import-step', viewTransitionClass: 'step' }}>
           {step === 'upload' ? (
             <>
               {h2('Choose a file')}

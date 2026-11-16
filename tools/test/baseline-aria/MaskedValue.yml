@@ -1,6 +1,12 @@
 # Default
 - text: Card number ending in 1208
 
+# DoKeepTheEnd
+- text: Card number ending in 1208
+
+# DontHideAll
+- text: Card number, hidden
+
 # Kinds
 - term: Card
 - definition: Card number ending in 1208

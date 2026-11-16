@@ -114,7 +114,7 @@ export function WriteReview({ product = demo, defaultName = 'Ana L.', onSend }: 
               <Link href="#orders">Back to your orders</Link>
             </section>
           ) : (
-            <form onSubmit={send} noValidate aria-label="Your review" className="flex flex-col gap-5">
+            <form onSubmit={send} noValidate aria-label="Your review" className="flex flex-col gap-4">
               <ErrorSummary key={tries} errors={errors} />
               <Field label="How many stars?" error={problems.stars} required>
                 <Rating id="review-stars" size="lg" value={r.stars} onValueChange={(v) => edit({ stars: v })} />

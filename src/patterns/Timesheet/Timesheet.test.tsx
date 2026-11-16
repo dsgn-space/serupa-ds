@@ -98,4 +98,10 @@ describe('Patterns/Timesheet', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the hours that arrive once loading ends are the ones filled in', async () => {
+    const screen = await render(<Timesheet loading defaultHours={{}} />);
+    await screen.rerender(<Timesheet />);
+    await expect.poll(() => (cell('web', 0)?.value ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660))).toBe('6');
+  });
 });

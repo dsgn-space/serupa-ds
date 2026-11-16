@@ -1,3 +1,15 @@
+# DoDifferenceFirst
+- list:
+  - listitem: March 2026 statement, account 0041 2290 8812
+  - listitem: April 2026 statement, account 0041 2290 8812
+  - listitem: May 2026 statement, account 0041 2290 8812
+
+# DontSameStart
+- list:
+  - listitem: Statement for account 0041 2290 8812, March 2026
+  - listitem: Statement for account 0041 2290 8812, April 2026
+  - listitem: Statement for account 0041 2290 8812, May 2026
+
 # FileList
 - list:
   - listitem: quarterly-report-final-version-2-reviewed-by-finance.pdf

@@ -113,7 +113,7 @@ export function Poll({ question = 'Where should the summer party be?', options =
           description={closed ? 'This poll has closed.' : `Open until ${closeDay}. Others see the totals, not who voted for what.`} />
         <div className="flex flex-col gap-6 pt-6">
           {voting ? (
-            <form onSubmit={send} noValidate aria-label="Your vote" className="flex flex-col gap-5">
+            <form onSubmit={send} noValidate aria-label="Your vote" className="flex flex-col gap-4">
               <ErrorSummary key={tries} errors={missing ? [{ field: 'poll-choice', message: 'Choose an answer.' }] : []} />
               <Field label="Your answer" group error={missing ? 'Choose an answer.' : undefined} required>
                 <RadioGroup id="poll-choice" name="poll-choice" value={choice} onValueChange={(v: string) => { setChoice(v); setMissing(false); setFailed(false); }}>

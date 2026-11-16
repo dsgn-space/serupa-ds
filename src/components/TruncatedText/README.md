@@ -30,6 +30,11 @@ import { TruncatedText } from "@diki-stwn/serupa-ds";
 - Keep it out of a `<p>`: the full text is drawn in an element of its own beside it, which a paragraph can't hold. Use `as="p"` to make it the paragraph.
 - Put what people need in order to tell rows apart at the start of the text, where the cut never reaches.
 
+### Do and don't
+
+- **Do:** Put what tells the rows apart at the start: "March 2026 statement, account…". (`DoDifferenceFirst`)
+- **Don't:** Start every row with the same words: the cut leaves each one the same text, and people open them one by one to find theirs. (`DontSameStart`)
+
 ## Accessibility
 
 - **Role and name:** plain text with no role. The whole text stays in the element, so screen readers and find-in-page get all of it, cut or not. The text shown on hover repeats it for the eye, so it is hidden from screen readers and nothing points at it.

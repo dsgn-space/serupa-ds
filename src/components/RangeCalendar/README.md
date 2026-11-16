@@ -34,6 +34,11 @@ Drawn from the `Playground` story.
 - Use `min`, `max` and `isDateDisabled` for days that can't be an end. A disabled day can sit inside a range; check the whole range yourself when it can't.
 - Escape, or a press outside the days, leaves the value as it was; Escape drops a half-picked range.
 
+### Do and don't
+
+- **Do:** `months={2}` where there's room, so a range that crosses the month shows whole. (`DoTwoMonths`)
+- **Don't:** One month for a range that runs into the next: its end is out of sight, and people page back and forth to check it. (`DontOneMonth`)
+
 ## Accessibility
 
 - **Role and name:** a group named "Choose dates" (or your `aria-label`, or a surrounding Field's label, whose hint then describes it), holding a grid per month named by its month. The ends are selected days named "…, start date" and "…, end date", and the days between "…, in the range", in words as well as the fill.

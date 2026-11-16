@@ -3,6 +3,15 @@
   - text: Offer ends in
   - 'timer "Offer ends in: 4 minutes, 59 seconds"': 4:59
 
+# DoSayWhatEnds
+- paragraph:
+  - text: Offer ends in
+  - 'timer "Offer ends in: 4 minutes, 59 seconds"': 4:59
+
+# DontBareClock
+- paragraph:
+  - 'timer "Offer ends in: 4 minutes, 59 seconds"': 4:59
+
 # Ended
 - paragraph:
   - 'timer "Offer ends in: The offer has ended"': The offer has ended

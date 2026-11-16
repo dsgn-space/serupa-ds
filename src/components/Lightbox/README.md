@@ -49,6 +49,11 @@ Drawn from the `Default` story.
 - Pass the large version as `src`, and a small one to the thumbnails. The pictures on either side load ahead, so moving on is quick.
 - `loop` suits a slideshow people go round; without it, the arrows stop at the ends, which says when the set is done. The arrow that reaches an end turns off, and focus moves to the other one.
 
+### Do and don't
+
+- **Do:** Name each picture by what it shows: "A hillside at dusk". It's the dialog's title, and what a screen reader says on each move. (`DoName`)
+- **Don't:** Name pictures by their file ("IMG_final.jpg"), which tells nobody which one they're on. (`DontFileNames`)
+
 ## Behavior
 
 - It's a [Dialog](../Dialog/README.md) (size lg): Escape, the × or a click on the backdrop close it, and focus comes back to where it was.
