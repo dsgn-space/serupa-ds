@@ -162,8 +162,12 @@ describe('a layer tracks its anchor in CSS (anchor positioning)', () => {
     window.addEventListener('scroll', stop, true);
     vi.stubGlobal('ResizeObserver', class { observe() {} unobserve() {} disconnect() {} });
     try {
-      await render(<div style={{ height: 2000, paddingTop: 100, paddingInlineStart: 300 }}><Menu defaultOpen placement="bottom-start" trigger={<Button>Actions</Button>}><MenuItem>Edit</MenuItem><MenuItem>Delete</MenuItem></Menu></div>);
+      await render(<div style={{ height: 2000, paddingTop: 100, paddingInlineStart: 300 }}><Menu placement="bottom-start" trigger={<Button>Actions</Button>}><MenuItem>Edit</MenuItem><MenuItem>Delete</MenuItem></Menu></div>);
       const menu = document.querySelector<HTMLElement>('[role="menu"]')!, button = document.querySelector<HTMLElement>('button')!;
+      // Opened once the button's font is in: with no ResizeObserver nothing places it again when the button's width
+      // changes, and the layer keeps to the button's centre (which a press's scale leaves put).
+      await document.fonts.ready;
+      button.click();
       await expect.poll(() => menu.matches(':popover-open')).toBe(true);
       const gap = () => [Math.round(menu.getBoundingClientRect().top - button.getBoundingClientRect().bottom), Math.round(menu.getBoundingClientRect().left - button.getBoundingClientRect().left)];
       const before = gap();

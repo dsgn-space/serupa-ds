@@ -68,6 +68,30 @@ export function css(el: Element | null): CSSStyleDeclaration {
   return getComputedStyle(el);
 }
 
+/** The words in el that a line break cuts in two although they'd fit in `room` px ("Storag/e", "zurücksetze/n"): pass
+ * the width the component was given. A word longer than that may still break, so it isn't counted. */
+export function splitWords(el: Element, room: number): string[] {
+  const out: string[] = [];
+  const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  for (let node = walk.nextNode(); node; node = walk.nextNode()) {
+    const text = node.textContent || '';
+    for (const m of text.matchAll(/\S+/g)) {
+      const range = document.createRange();
+      range.setStart(node, m.index!); range.setEnd(node, m.index! + m[0].length);
+      const tops = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top)));
+      if (tops.size < 2) continue;
+      // The word's own width on one line, measured in a copy of its parent's font.
+      const probe = document.createElement('span');
+      probe.textContent = m[0]; probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
+      node.parentElement!.append(probe);
+      const width = probe.getBoundingClientRect().width;
+      probe.remove();
+      if (width <= room) out.push(m[0]);
+    }
+  }
+  return out;
+}
+
 /** How many px of el's focus ring the nearest ancestor that clips (overflow hidden, clip, auto or scroll) cuts off,
  * on its worst side; 0 when the whole ring shows. Measures the outline as drawn now, so focus el first (tabTo). An
  * outline that is none, 0 wide or transparent (a ring drawn inside, as Tabs does) has nothing to cut. */

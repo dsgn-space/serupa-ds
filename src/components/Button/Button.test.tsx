@@ -2,7 +2,7 @@ import * as React from 'react';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, forcedColors, keepMotion, settled } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, forcedColors, keepMotion, settled, splitWords } from '../../../tools/test/vitest/helpers';
 import * as Serupa from '../../index';
 import { config, configure } from '../../internal/config';
 import { Loader } from '../Loader/Loader';
@@ -454,6 +454,11 @@ describe('Button', () => {
       expect([`${s.animationName} ${s.animationDuration}`, getComputedStyle(q('#sub [data-component=loader]').parentElement!).animationName]).toEqual(['dk-loader-breathe 1.4s', 'dk-loader-in']);
     } finally { restore(); }
   });
+  test('wrap: buttons side by side break between words, not inside one, while a word fits (PL-LINKWRAP)', async () => {
+    await render(<div lang="de" style={{ width: 200, display: 'flex', gap: 8 }}><Button wrap>Einstellungen speichern</Button><Button wrap variant="secondary">Änderungen verwerfen</Button></div>);
+    expect(splitWords(document.body.querySelector('div[lang]')!, 150)).toEqual([]);
+  });
+
 });
 
 // Micro-interactions (button-motion.mjs)

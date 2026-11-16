@@ -131,7 +131,10 @@
 .dk-drawer__description { margin: var(--spacing-0); color: var(--drawer-description-color, var(--text-muted)); }
 /* The × centers on the title's first line (28px), not on its top: 2px down, as Tour's and Alert's sit on theirs. */
 .dk-drawer__close { --dk-drawer-close-nudge: calc((var(--text-lg--line-height) - var(--control-height-sm)) / 2); flex-shrink: 0; margin-block-start: var(--dk-drawer-close-nudge); }
-.dk-drawer__body { flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; }
+/* Room for a focus ring on every side: the body scrolls, so it clips, and a control at its edge would lose part of
+   its ring. Padding gives the room and an equal negative margin takes it back, so the content stays where it was;
+   scroll-padding keeps the room when focus scrolls a control into view. */
+.dk-drawer__body { --dk-drawer-ring-room: calc(var(--focus-ring-width) + var(--focus-ring-offset)); flex: auto; min-height: var(--spacing-0); overflow-y: auto; overscroll-behavior: contain; padding: var(--dk-drawer-ring-room); margin: calc(var(--spacing-0) - var(--dk-drawer-ring-room)); scroll-padding: var(--dk-drawer-ring-room); }
 .dk-drawer__body:focus-visible { outline: var(--focus-ring-width) solid var(--drawer-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-drawer__footer {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--spacing-2); flex-shrink: 0;
@@ -141,7 +144,7 @@
 }
 /* A long label wraps onto more lines instead of ending in an ellipsis (GR74): on a phone the footer is narrowest
    and there is no hover to show the rest. The Button keeps its size's height as the least it can be. */
-.dk-drawer__footer > .dk-btn:not(.dk-btn--icon-only) { white-space: normal; overflow-wrap: anywhere; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
+.dk-drawer__footer > .dk-btn:not(.dk-btn--icon-only) { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
 .dk-drawer__footer > .dk-btn--size-sm:not(.dk-btn--icon-only) { min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
 .dk-drawer__footer > .dk-btn--size-lg:not(.dk-btn--icon-only) { min-height: var(--button-height-lg, var(--control-height-lg)); }
 /* Safe areas: on a phone with a notch or a home bar (with viewport-fit=cover), the panel's padding and the

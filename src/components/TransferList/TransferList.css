@@ -13,6 +13,7 @@
   display: flex; flex-direction: column; gap: var(--spacing-2);
   flex: auto; flex-basis: var(--spacing-56); min-width: var(--spacing-0);
   max-height: var(--transfer-list-side-max-height, var(--spacing-60)); overflow: auto; overscroll-behavior: contain;
+  scroll-padding: calc(var(--focus-ring-width) + var(--focus-ring-offset));   /* focus scrolls a checkbox in with room for its ring */
   padding: var(--transfer-list-side-padding, var(--spacing-3));
   border: var(--border-width-1) solid var(--transfer-list-side-border, var(--border));
   border-radius: var(--transfer-list-side-radius, var(--radius-surface));

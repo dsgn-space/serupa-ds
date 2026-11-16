@@ -10,6 +10,9 @@
   transition: color var(--motion-hover) var(--ease-move);
   overflow-wrap: anywhere;
 }
+/* In a table cell the column takes its width from the narrowest the text can go, which anywhere would make one
+   letter: the words stay whole there, and a URL longer than the column widens the table, which scrolls. */
+:where(td, th) .dk-link { overflow-wrap: break-word; }
 @media (hover: hover) { .dk-link:hover { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 .dk-link--neutral { color: inherit; }
 /* onMedia: white (on dark media) or black (on light), whatever the theme, hover and focus ring too. */
