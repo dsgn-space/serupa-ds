@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Agenda.stories';
+
+<Meta of={Stories} />
+
+# Conference agenda
+
+The sessions of each day by time, filtered by track, saved to your own agenda, with clashes said.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A conference's or a festival's programme, where people pick what to go to.
+- Not for booking a time with someone: that's the Appointment pattern.
+- Not for a team's calendar: that's the Team calendar pattern.
+
+## What each part is for
+
+- **Each day is a tab**, and your agenda is the last one, with how many you've saved (1.3.1).
+- **Each start time is a heading** over the sessions that start then; each session is an article named by its title, with who, when, where and its track as a word (1.3.1, 2.4.6).
+- **Save is a toggle button named by its session**, "Save: Forms that forgive", pressed or not; saving says how many are in your agenda (4.1.2, 4.1.3).
+- **A saved session that overlaps another says which**, in words, on both (3.3.1).
+- **The track filter says how many sessions it shows**, in a status (4.1.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.Clash} />
+
+## What stays your app's job
+
+- **The sessions.** Pass each one's day, start and end in the event's time zone, and say which zone it is.
+- **Keeping the agenda.** `onSavedChange` hears every change; save it to the person's account, and offer it as a calendar file.
