@@ -459,6 +459,25 @@ describe('Navbar', () => {
     expect([vis('#nav nav'), location.hash]).toEqual([false, '#projects']);
   });
 
+  test('wider than 768px, links that don\'t fit between the brand and the actions fold behind the menu button, and come back once there is room', async () => {
+    const labels = ['Übersicht', 'Rechnungen', 'Kundenverwaltung', 'Lieferungen', 'Auswertungen', 'Einstellungen', 'Hilfe und Kontakt'];
+    await render(<Navbar id="nav" brand="Firma" actions={<Button>Abmelden</Button>}>{labels.map((l, i) => <NavbarLink key={l} id={'l' + i} href={'#' + i}>{l}</NavbarLink>)}</Navbar>);
+    await resize(800);
+    // Folded: no link runs under the actions, the menu button shows, and it opens the links in the panel.
+    await expect.poll(() => vis('#nav .dk-navbar__toggle')).toBe(true);
+    expect(vis('#nav nav')).toBe(false);
+    await userEvent.click(toggle());
+    await expect.poll(() => vis('#nav nav')).toBe(true);
+    expect(el('l6').getBoundingClientRect().bottom > q('#nav .dk-navbar__inner').getBoundingClientRect().bottom).toBe(true);
+    // With room for them all, back in the bar, the menu closed and its button gone.
+    await resize(1400);
+    await expect.poll(() => [vis('#nav .dk-navbar__toggle'), el('nav').dataset.state]).toEqual([false, 'closed']);
+    expect([vis('#nav nav'), el('l6').getBoundingClientRect().right <= q('#nav .dk-navbar__actions').getBoundingClientRect().left]).toEqual([true, true]);
+    // Narrow again: folded again.
+    await resize(800);
+    await expect.poll(() => vis('#nav .dk-navbar__toggle')).toBe(true);
+  });
+
   test('growing past 768px closes it, so it\'s closed when the screen shrinks again', async () => {
     await render(<Main />);
     await resize(500);

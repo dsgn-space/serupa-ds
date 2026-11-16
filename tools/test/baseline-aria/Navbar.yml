@@ -23,37 +23,9 @@
 - banner:
   - link "Acme":
     - /url: "#"
-  - navigation "Main":
-    - list:
-      - listitem:
-        - link "Dashboard":
-          - /url: "#dashboard"
-      - listitem:
-        - link "Projects":
-          - /url: "#projects"
-      - listitem:
-        - link "Team":
-          - /url: "#team"
-      - listitem:
-        - link "Reports":
-          - /url: "#reports"
-      - listitem:
-        - link "Billing":
-          - /url: "#billing"
-      - listitem:
-        - link "Integrations":
-          - /url: "#integrations"
-      - listitem:
-        - link "Audit log":
-          - /url: "#audit-log"
-      - listitem:
-        - link "Settings":
-          - /url: "#settings"
-      - listitem:
-        - link "Help center":
-          - /url: "#help-center"
   - button "Docs"
   - img "Ada Lovelace"
+  - button "Menu"
 
 # Menus
 - banner:
@@ -78,47 +50,17 @@
 - banner:
   - link "Acme":
     - /url: "#"
-  - navigation "Main":
-    - list:
-      - listitem:
-        - link "Dashboard":
-          - /url: "#m1"
-      - listitem:
-        - button "Products"
-      - listitem:
-        - button "Resources"
-      - listitem:
-        - link "Team":
-          - /url: "#m8"
   - button "Docs"
   - img "Ada Lovelace"
+  - button "Menu"
 
 # Overflow
 - banner:
   - link "Acme Corporation International":
     - /url: "#"
-  - navigation "Main":
-    - list:
-      - listitem:
-        - link "Dashboard":
-          - /url: "#"
-      - listitem:
-        - link "Projects":
-          - /url: "#"
-      - listitem:
-        - link "Team":
-          - /url: "#"
-      - listitem:
-        - link "Reports":
-          - /url: "#"
-      - listitem:
-        - link "Settings and billing":
-          - /url: "#"
-      - listitem:
-        - link "Donaudampfschifffahrtsgesellschaftskapitänskajüte":
-          - /url: "#"
   - button "Docs"
   - img "Ada Lovelace"
+  - button "Menu"
 
 # Playground
 - banner:
@@ -282,20 +224,7 @@
 - banner:
   - link "Acme":
     - /url: "#"
-  - navigation "Main":
-    - list:
-      - listitem:
-        - link "Dashboard":
-          - /url: "#"
-      - listitem:
-        - link "Projects":
-          - /url: "#"
-      - listitem:
-        - link "Team":
-          - /url: "#"
-      - listitem:
-        - link "Reports":
-          - /url: "#"
   - button "Docs"
   - img "Ada Lovelace"
+  - button "Menu"
 

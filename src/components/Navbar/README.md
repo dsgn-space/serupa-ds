@@ -1,6 +1,6 @@
 # Navbar
 
-The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). Below 768px wide the links fold into a menu button that opens them in a panel under the bar. A NavbarMenu in the bar opens a panel of grouped links with a line about each (a mega menu).
+The bar across the top of an app: the brand on the left, the main page links, and actions on the right (search, a user menu, sign in). Below 768px wide, or wider when they don't fit between the brand and the actions, the links fold into a menu button that opens them in a panel under the bar. A NavbarMenu in the bar opens a panel of grouped links with a line about each (a mega menu).
 
 **Also called:** header, top bar, app bar.
 
@@ -42,7 +42,7 @@ Drawn from the `Playground` story.
 ## Usage
 
 - A NavbarMenu's parts (the `Menus` story): its button (`.dk-navbar__menu-button`), with the section's name and a chevron that turns while it's open; the panel (`.dk-navbar__menu-panel`) across the bar under it; its groups (`.dk-navbar__menu-group`), each a title over a list of links; and each link (`.dk-navbar__menu-link`), its name and a muted line about it.
-- Keep the links to the main pages, a few short words each; below 768px they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
+- Keep the links to the main pages, a few short words each; below 768px, or when they don't fit beside the brand and the actions (seven links, long translated labels), they fold into the menu button. More links than fit below the bar scroll inside the panel, and in the panel a long label wraps onto more lines.
 - Mark the current page with `active` on its NavbarLink.
 - Register your router's link component once with `configure({ link })`, or pass it in `as`, so links don't reload the page.
 - Keep `actions` compact below 768px, such as one small button and an Avatar. If they don't fit, the brand shrinks and ends in an ellipsis so the menu button stays on screen (a brand passed as text shows whole on hover and focus; in a link of your own, put the name in a [TruncatedText](../TruncatedText/README.md) to do the same); if they still don't, they scroll sideways within the bar (Tab scrolls each into view), and the page never does.

@@ -14,11 +14,12 @@ import * as icons from '../../material/builtin';
 import { activeIn } from '../../internal/root';
 import { useCloseWatcher } from '../../internal/closeWatcher';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
+import { onFontsLoaded } from '../../internal/fontsLoaded';
 
 export interface NavbarProps extends React.HTMLAttributes<HTMLElement> {
   /** The logo or product name on the left, usually a link home. */
   brand?: React.ReactNode | undefined;
-  /** NavbarLinks: the main pages. Below 768px they fold into a menu button. */
+  /** NavbarLinks: the main pages. Below 768px, or when they don't fit beside the brand and the actions, they fold into a menu button. */
   children?: React.ReactNode | undefined;
   /** Controls on the right: a search, a user menu, a sign-in button. */
   actions?: React.ReactNode | undefined;
@@ -140,9 +141,37 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
     document.addEventListener('focusin', onFocus);
     return () => { if (ro) ro.disconnect(); cancelAnimationFrame(raf); document.removeEventListener('focusin', onFocus); root.style.removeProperty('--dk-navbar-offset'); };
   }, [props.sticky]);
-  // closes when the screen grows past the breakpoint, so it isn't open the next time it shrinks
   const wide = useBreakpoint('md');
-  React.useEffect(() => { if (wide) setOpen(false); }, [wide]);
+  /* Wider than 768px the links still fold behind the menu button when they don't fit between the brand and the
+     actions (seven links, long German labels), rather than run under the actions. Measured: the links' row against
+     the room it has. Folded, it remembers how wide the bar had to be, and unfolds once it is that wide again. A font
+     that loads late measures again from unfolded, before paint. */
+  const [fold, setFold] = React.useState(false);
+  const foldRef = React.useRef(fold); foldRef.current = fold;
+  const need = React.useRef(0);
+  const linkCount = links.length;
+  useIsoLayoutEffect(() => {
+    const h = bar.current, inner = h && h.firstElementChild as HTMLElement | null;
+    if (!wide || !linkCount || !inner) { setFold(false); return; }
+    const nav = inner.querySelector<HTMLElement>(':scope > .dk-navbar__nav');
+    const set = (to: boolean) => { foldRef.current = to; setFold(to); };
+    const check = () => {
+      const row = nav && nav.firstElementChild as HTMLElement | null, over = nav && row ? row.scrollWidth - nav.clientWidth : 0;
+      if (!foldRef.current) { if (over > 0.5) { need.current = inner.clientWidth + over; set(true); } }
+      else if (inner.clientWidth >= need.current) set(false);
+    };
+    check();
+    // The bar's width, and the room the actions leave the links (an avatar that loads, a wider label).
+    const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(check) : null;
+    if (ro) { ro.observe(inner); if (nav) ro.observe(nav); }
+    const stop = onFontsLoaded(() => { if (foldRef.current) set(false); else check(); });
+    return () => { if (ro) ro.disconnect(); stop(); };
+    // Again after each fold and unfold (unfolded, the row is measured on the new layout, before paint), and when the
+    // links move into the open panel and back: that's another element.
+  }, [wide, linkCount, fold, open || leaving]);
+  const folded = !wide || fold;
+  // closes when the links unfold (the screen grows past the breakpoint, or they fit again), so it isn't open the next time they fold
+  React.useEffect(() => { if (!folded) setOpen(false); }, [folded]);
   // Back on a phone closes the open menu, as Escape in it does, with focus back on the menu button unless it had gone
   // somewhere else on the page.
   useCloseWatcher(open, () => {
@@ -188,7 +217,7 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
   const mergedRef = useMergedRef(ref, (n) => { bar.current = n; });
   return (
     <NavbarContext.Provider value={ctx}>
-      <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.sticky && props.condense && 'dk-navbar--condense', props.className)}>
+      <header {...rest} ref={mergedRef} onKeyDown={onKeyDown} onBlur={onBlur} data-component="navbar" data-state={open ? 'open' : 'closed'} data-fold={wide && fold ? '' : undefined} className={cn('dk-navbar', props.sticky && 'dk-navbar--sticky', props.sticky && props.condense && 'dk-navbar--condense', props.className)}>
         <div className={cn('dk-navbar__inner dk-container dk-container--padded', 'dk-container--' + size)}>
           {props.brand != null ? <div className="dk-navbar__brand">{typeof props.brand === 'string' || typeof props.brand === 'number' ? <TruncatedText>{String(props.brand)}</TruncatedText> : props.brand}</div> : null}
           {open || leaving ? null : nav}

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, domId, oneOf, omit } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
 import { toMs } from '../../internal/cssTime';
@@ -59,9 +60,7 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
   const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1, onKeyDown: 1 });
   const labels = useSettings(words).labels;
   const single = props.type !== 'multiple';
-  const controlled = props.value !== undefined;
-  const [inner, setInner] = React.useState<string[]>(() => (props.defaultValue || []).slice(0, single ? 1 : undefined));
-  const open = controlled ? (props.value as string[]) : inner;
+  const [open, setInner, controlled] = useControllable<string[]>(props.value, (props.defaultValue || []).slice(0, single ? 1 : undefined), 'Accordion', 'value');
   if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with type="single", so ${open.length} items show open; pass one value, or type="multiple".`);
   const collapsible = props.collapsible !== false;
   const onChange = React.useRef(props.onValueChange);
@@ -69,7 +68,7 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
   const change = React.useCallback((next: string[]) => {
     if (!controlled) setInner(next);
     if (onChange.current) onChange.current(next);
-  }, [controlled]);
+  }, [controlled, setInner]);
   const toggle = React.useCallback((v: string) => {
     const isOpen = open.indexOf(v) >= 0;
     let next: string[];
