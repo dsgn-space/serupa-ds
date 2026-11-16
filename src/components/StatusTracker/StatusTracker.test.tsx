@@ -50,7 +50,8 @@ describe('StatusTracker', () => {
   });
 
   test('one tab stop, on the last day; arrows, Home and End move between days, and the caption says the focused one', async () => {
-    await render(<><button>before</button><Days /></>);
+    // A button after it too: Firefox keeps focus where it is when Tab leaves the page's last stop for the browser's own.
+    await render(<><button>before</button><Days /><button>after</button></>);
     await userEvent.click(page.getByRole('button', { name: 'before' }));
     await userEvent.tab();
     expect(document.activeElement).toBe(bar(89));
@@ -66,7 +67,7 @@ describe('StatusTracker', () => {
     await userEvent.keyboard('{End}{ArrowRight}');
     expect(document.activeElement).toBe(bar(89));
     await userEvent.tab();
-    expect(bars().includes(document.activeElement as HTMLElement)).toBe(false);
+    expect(document.activeElement?.textContent).toBe('after');
   });
 
   test('days that arrive after it mounts (loaded, or a new day added) keep the tab stop on the last day', async () => {
