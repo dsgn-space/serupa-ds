@@ -579,8 +579,8 @@ export interface TableColumnOption {
   required?: boolean | undefined;
 }
 
-/** The rest of the props (className, style, data-*, aria-*, ref) reach the "Columns" button. */
-export interface TableColumnsMenuProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'name' | 'value'> {
+/** The rest of the props (className, style, data-*, aria-*, ref) reach the "Columns" button; children are ignored, as label names it. */
+export interface TableColumnsMenuProps extends React.HTMLAttributes<HTMLButtonElement> {
   /** Every column that can be shown, in the table's order. */
   columns: TableColumnOption[];
   /** Called when a column is checked or cleared, with the list as it now is (draw the table from it) and which
@@ -598,7 +598,7 @@ export interface TableColumnsChangeDetails { id: string; visible: boolean }
 /** A "Columns" button with a checkbox for each of a table's columns, to show or hide them. */
 export const TableColumnsMenu = /* @__PURE__ */ component<HTMLButtonElement, TableColumnsMenuProps>('TableColumnsMenu', function TableColumnsMenu(props, ref) {
   const labels = useSettings(words).labels;
-  const rest = omit(props, { columns: 1, onColumnsChange: 1, label: 1 });
+  const rest = omit(props, { columns: 1, onColumnsChange: 1, label: 1, children: 1 });
   const label = props.label || labels.tableColumns;
   const shown = props.columns.filter((c) => c.visible).length;
   return (

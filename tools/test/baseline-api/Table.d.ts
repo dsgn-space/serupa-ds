@@ -89,7 +89,7 @@ interface TableColumnOption {
     visible: boolean;
     required?: boolean | undefined;
 }
-interface TableColumnsMenuProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children" | "name" | "value"> {
+interface TableColumnsMenuProps extends React.HTMLAttributes<HTMLButtonElement> {
     columns: TableColumnOption[];
     onColumnsChange: (columns: TableColumnOption[], details: TableColumnsChangeDetails) => void;
     label?: string | undefined;
