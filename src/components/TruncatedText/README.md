@@ -2,6 +2,8 @@
 
 Text that may not fit its space, such as a file name in a narrow column: cut with an ellipsis, with the whole text shown beside it on hover, keyboard focus or a tap. Text that fits stays plain text.
 
+**Also called:** ellipsis, text overflow, line clamp.
+
 ```tsx
 import { TruncatedText } from "@diki-stwn/serupa-ds";
 

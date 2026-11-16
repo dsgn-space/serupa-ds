@@ -2,6 +2,8 @@
 
 Shows the time left until a moment, as a clock ("4:59") or in words ("4 minutes, 59 seconds"), and keeps itself up to date. It says the time aloud at a few steps (5 minutes, 1 minute, 10 seconds…) and when it ends, never every second.
 
+**Also called:** timer, countdown timer.
+
 ```tsx
 import { Countdown } from "@diki-stwn/serupa-ds";
 

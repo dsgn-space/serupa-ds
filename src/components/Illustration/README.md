@@ -2,6 +2,8 @@
 
 A small line drawing for an empty state, an error page or a finished flow. It's drawn in the theme's own colors, so it fits every theme and follows a brand's overrides without new artwork.
 
+**Also called:** spot illustration, artwork.
+
 ```tsx
 import { EmptyState, Illustration } from "@diki-stwn/serupa-ds";
 

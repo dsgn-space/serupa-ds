@@ -2,6 +2,8 @@
 
 A set of [ToggleButton](../ToggleButton/README.md)s that share one value: one on at a time, such as text alignment or a view mode, or any number, such as bold, italic and underline. It looks like a [ButtonGroup](../ButtonGroup/README.md) and reports the buttons that are on as one array.
 
+**Also called:** toggle button group, icon toggle group.
+
 ```tsx
 import { ToggleGroup, ToggleButton } from "@diki-stwn/serupa-ds";
 

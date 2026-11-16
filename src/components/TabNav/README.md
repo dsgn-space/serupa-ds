@@ -2,6 +2,8 @@
 
 Moves between the sub-pages of one thing, such as a project's Overview, Activity and Settings, when each has its own URL. It looks like [Tabs](../Tabs/README.md), but it's a `nav` of links: the current page is marked with `aria-current="page"`, and people move with Tab and follow a link with Enter, as on any link.
 
+**Also called:** navigation tabs, tab links.
+
 ```jsx
 const { TabNav, TabNavLink } = window.Serupa;
 

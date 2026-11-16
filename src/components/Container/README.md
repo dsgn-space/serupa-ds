@@ -2,6 +2,8 @@
 
 Centers a page's content with a maximum width, and side padding that grows with the screen: 16px, 24px from 640px and 32px from 1024px wide.
 
+**Also called:** wrapper, page width.
+
 ```jsx
 const { Container } = window.Serupa;
 

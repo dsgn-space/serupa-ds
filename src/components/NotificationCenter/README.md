@@ -2,6 +2,8 @@
 
 A drawer of past notifications with read states: newest first, unread ones with a dot and a bolder title, and buttons to mark them read or clear the list. `useToastHistory` keeps the toasts already shown for it, so a message missed while it was up can be found again.
 
+**Also called:** inbox, notification panel.
+
 ```tsx
 import { Badge, Button, NotificationCenter, Toaster, useSerupa, useToastHistory } from "@diki-stwn/serupa-ds";
 

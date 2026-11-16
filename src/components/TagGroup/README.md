@@ -2,6 +2,8 @@
 
 Short labels people remove or pick: the labels on a ticket, the recipients of a message, the skills on a profile. The tags are one Tab stop, the arrow keys move between them, and Delete or the × removes one without losing focus.
 
+**Also called:** chip group, tag list.
+
 ```tsx
 import { TagGroup } from "@diki-stwn/serupa-ds";
 

@@ -2,6 +2,8 @@
 
 Says when the connection drops and when it comes back, on screen and to screen readers. Put one in the app's layout: it shows nothing while the app is online.
 
+**Also called:** connection banner, offline indicator.
+
 ```tsx
 import { OfflineBanner } from "@diki-stwn/serupa-ds";
 

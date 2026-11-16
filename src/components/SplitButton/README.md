@@ -2,6 +2,8 @@
 
 A main action joined to an arrow button that opens a menu of other ways to do it: Publish, with Schedule and Save as draft one click away. The common choice stays one click; the others don't take room of their own.
 
+**Also called:** button with dropdown, split dropdown button.
+
 ```tsx
 import { SplitButton, MenuItem } from "@diki-stwn/serupa-ds";
 

@@ -2,6 +2,8 @@
 
 Keyboard shortcuts for an app, in one place: `useShortcut` sets one up where it's used, and `<KeyboardShortcuts>` is the help dialog that lists them all, opened with <kbd>?</kbd>.
 
+**Also called:** shortcut help, hotkeys dialog, cheat sheet.
+
 ```tsx
 import { KeyboardShortcuts, useShortcut } from "@diki-stwn/serupa-ds";
 

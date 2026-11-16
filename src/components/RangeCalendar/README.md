@@ -2,6 +2,8 @@
 
 A calendar on the page that picks a range of days: the check-in and check-out of a booking, a report's period, the first and last day of a leave request. The first day picked is one end and the second the other, with the days between shaded as the pointer or focus moves.
 
+**Also called:** date range calendar.
+
 ```tsx
 import { RangeCalendar } from "@diki-stwn/serupa-ds";
 

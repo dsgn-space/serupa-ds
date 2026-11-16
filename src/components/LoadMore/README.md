@@ -2,6 +2,8 @@
 
 The end of a list that loads in pages: "Showing 20 of 134" over a Load more button, or infinite scroll, and an announcement of what each load added. People keep their place in a long list, and screen reader users hear that new items arrived.
 
+**Also called:** load more button, more results button.
+
 ```tsx
 import { LoadMore } from "@diki-stwn/serupa-ds";
 

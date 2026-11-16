@@ -2,7 +2,7 @@
 
 Quoted words with who said them, for a testimonial, a pull quote, or a quote in a page that isn't [Prose](../Prose/README.md).
 
-**Also called:** Blockquote, Testimonial, Pull quote.
+**Also called:** blockquote, testimonial, pull quote.
 
 ```tsx
 import { Quote, Avatar } from "@diki-stwn/serupa-ds";

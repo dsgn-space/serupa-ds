@@ -2,6 +2,8 @@
 
 An application's menu bar: File, Edit, View along the top of an editor or tool, each opening a menu. The whole bar is one Tab stop, the arrow keys move across it, and with a menu open, ← and → go straight to the next menu, open, as in a desktop app.
 
+**Also called:** menu bar, application menu.
+
 ```tsx
 import { Menubar, MenubarMenu, MenuItem, MenuSub, MenuSeparator } from "@diki-stwn/serupa-ds";
 

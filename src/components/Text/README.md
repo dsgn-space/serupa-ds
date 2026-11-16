@@ -2,6 +2,8 @@
 
 Body text in the system's type: a paragraph, a caption, an error line. `size`, `tone` and `weight` set only what you give them, so anything you leave out follows the parent, and Text can sit inside a card, a cell or a button without fighting it.
 
+**Also called:** paragraph, body text.
+
 ```jsx
 const { Text } = window.Serupa;
 

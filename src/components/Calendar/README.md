@@ -2,6 +2,8 @@
 
 A month of days to pick one from, with full keyboard navigation. DatePicker shows one in a popup; use Calendar on its own for an always-visible picker, such as in a booking page or a side panel.
 
+**Also called:** date grid, month view.
+
 ```tsx
 import { Calendar } from "@diki-stwn/serupa-ds";
 

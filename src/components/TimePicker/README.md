@@ -2,6 +2,8 @@
 
 A time-of-day field: people type a time, or pick one from a list.
 
+**Also called:** time input, time selector.
+
 ```tsx
 import { Field, TimePicker } from "@diki-stwn/serupa-ds";
 

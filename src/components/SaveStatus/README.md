@@ -2,6 +2,8 @@
 
 A small line that says whether autosaved changes are safe: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with a Try again button. People can trust autosave without a Save button, and screen reader users hear when a save lands or fails.
 
+**Also called:** autosave indicator, sync status.
+
 ```tsx
 import { SaveStatus } from "@diki-stwn/serupa-ds";
 
