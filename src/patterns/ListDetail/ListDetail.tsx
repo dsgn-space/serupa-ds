@@ -120,7 +120,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
   const subject = (id: string, text: string) => (!wide && open?.id === id ? <span style={{ viewTransitionName: 'list-detail-subject' }}>{text}</span> : text);
   const pane = wide ? undefined : ({ viewTransitionName: 'list-detail-pane', viewTransitionClass: 'step' } as React.CSSProperties);
   const list = (
-    <section aria-labelledby="messages-title" className="flex h-full min-w-0 flex-col gap-3 p-4">
+    <section aria-labelledby="messages-title" className="flex h-full min-w-0 flex-col gap-4 p-4">
       <Heading level={2} size="lg" id="messages-title">Messages ({formatNumber(messages.length, locale)})</Heading>
       <List divided>
         {messages.map((m) => (
@@ -150,7 +150,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
         {loadFailed ? (
           <EmptyLoadFailed title="Couldn’t load your messages" onRetry={() => onRetry?.()} headingLevel={2} />
         ) : loading ? (
-          <section aria-labelledby="messages-title" className="flex min-w-0 flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+          <section aria-labelledby="messages-title" className="flex min-w-0 flex-col gap-4 rounded-lg border border-border bg-surface p-4">
             <Heading level={2} size="lg" id="messages-title">Messages</Heading>
             <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
               {/* One name for all of them: the first row is named, the others are only pictures. */}

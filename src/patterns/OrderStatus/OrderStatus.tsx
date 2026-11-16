@@ -156,7 +156,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
   const was = React.useRef(!!order.cancelled);
   React.useEffect(() => { if (order.cancelled && !was.current) heading.current?.focus(); was.current = !!order.cancelled; }, [order.cancelled]);
 
-  const section = 'flex flex-col gap-3';
+  const section = 'flex flex-col gap-4';
   const h2 = 'm-0 text-lg font-semibold';
   return (
     <div className="min-h-screen bg-surface text-text">
