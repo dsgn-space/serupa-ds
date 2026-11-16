@@ -200,8 +200,8 @@
       },
       "icon-gap": {
         "$type": "dimension",
-        "$value": "{spacing.spacing-2}",
-        "$description": "Space between a tab's icon and label (8px).",
+        "$value": "{spacing.spacing-1_5}",
+        "$description": "Space between a tab's icon and label (6px), as in Button and SegmentedControl.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tabs-icon-gap"

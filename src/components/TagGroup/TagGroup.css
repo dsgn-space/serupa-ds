@@ -4,7 +4,7 @@
    Every value reads one of its own tokens (tag-group.tokens.json), which fall back to the shared ones.
    --------------------------------------------------------------- */
 @layer dk.components {
-.dk-tag-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tag-group-gap, var(--spacing-2)); min-inline-size: var(--spacing-0); }
+.dk-tag-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--tag-group-label-gap, var(--spacing-1\.5)); min-inline-size: var(--spacing-0); }
 .dk-tag-group__label { color: var(--tag-group-label, var(--text)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-medium); }
 .dk-tag-group__empty { color: var(--tag-group-muted, var(--text-muted)); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-tag-group__empty:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
@@ -42,7 +42,7 @@
 .dk-tag-group__remove:active { background: var(--tag-group-remove-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 @media (prefers-reduced-motion: reduce) { .dk-tag-group__remove { transition: none; } }
 .dk-tag-group__more {
-  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm);
+  margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   text-decoration: underline; cursor: var(--cursor-interactive); touch-action: manipulation;
 }
 .dk-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }

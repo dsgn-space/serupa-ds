@@ -101,7 +101,8 @@ Each is an optional override: set it on the page, a container or one TagGroup. T
 | `--tag-group-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--tag-group-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
 | `--tag-group-radius` | `radius-control` | A tag's corners, as other controls'. |
-| `--tag-group-gap` | `spacing-2` | The space between tags, and between the label and the tags (8px). |
+| `--tag-group-gap` | `spacing-2` | The space between tags (8px). |
+| `--tag-group-label-gap` | `spacing-1.5` | The space between the label and the tags, as between a Field's label and its control (6px). |
 | `--tag-group-avatar-size` | `spacing-6` | The picture before a tag's words (24px, an xs Avatar's own size, so its initials have room), as tall as the tag. |
 | `--tag-group-icon-size` | `spacing-4` | A tag's icon, the check of a selected tag and the × (16px), beside the 14px label. |
 <!-- token-table:end -->
