@@ -22,6 +22,12 @@ const KNOWN = new Map<string, string>([
   ['Stepper/LongLabels', 'stacks to fit'],
   ['Stepper/Narrow', 'stacks to fit'],
   ['Stepper/DontLongTitles', 'stacks to fit'],
+  // A Navbar in a box narrower than its links on a wide screen folds them behind the menu button once it has measured
+  // them: the 768px media query is about the screen, not the box.
+  ['Navbar/SmallScreen', 'folds to fit'],
+  ['Navbar/MenusSmallScreen', 'folds to fit'],
+  ['Navbar/Overflow', 'folds to fit'],
+  ['Navbar/DontEveryPage', 'folds to fit'],
   // Drops page numbers one by one until the row fits.
   ['Pagination/Overflow', 'cuts to fit'],
   // Opens its months after it mounts, as a click on the heading would, to show them.
