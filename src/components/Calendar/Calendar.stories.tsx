@@ -25,6 +25,10 @@ export const MonthsAndYears: Story = {
   },
 };
 export const MonthYearPicker: Story = { name: 'Month and year menus', args: { monthYearPicker: true, min: new Date(1950, 0, 1), max: new Date(2030, 11, 31) } };
+export const CalendarSystems: Story = {
+  name: 'Another calendar (Persian)',
+  args: { calendar: 'persian', defaultValue: new Date(2026, 10, 15), defaultMonth: new Date(2026, 10, 15) },
+};
 export const German: Story = { args: { locale: 'de-DE', previousLabel: 'Vorheriger Monat', nextLabel: 'Nächster Monat' } };
 export const Controlled: Story = {
   render: function Render() {

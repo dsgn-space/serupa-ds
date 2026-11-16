@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { useAutoFocus } from '../../internal/focus';
-import { addMonths, compare, isoDate, sameDay, sameMonth, startOfMonth, toDay } from '../../internal/dates';
+import { compare, isoDate, sameDay, toDay } from '../../internal/dates';
+import { calendarOf, type CalendarSystem } from '../../internal/calendars';
 import { component } from '../../internal/component';
 import { FieldContext } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -36,6 +37,9 @@ export interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivEle
   isDateDisabled?: ((date: Date) => boolean) | undefined;
   /** A BCP 47 locale for the names and the first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string | undefined;
+  /** The calendar system the months follow, as Calendar's calendar: "persian", "islamic-umalqura", "buddhist",
+      "japanese" or "roc". Values stay Dates. Default: "gregory". */
+  calendar?: CalendarSystem | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
   weekStartsOn?: number | undefined;
   /** Moves focus to the start day (or today) when the calendar appears. Default: false. */
@@ -56,12 +60,13 @@ const between = (d: Date, s: Date, e: Date) => compare(d, s) > 0 && compare(d, e
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCalendarProps>('RangeCalendar', function RangeCalendar(props, ref) {
   const L = useSettings(words).labels;
-  const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, months: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, weekStartsOn: 1, autoFocus: 1, className: 1 } as const);
+  const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, months: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, calendar: 1, weekStartsOn: 1, autoFocus: 1, className: 1 } as const);
   const root = React.useRef<HTMLDivElement | null>(null);
   const merged = useMergedRef(ref, (n: HTMLDivElement | null) => { root.current = n; });
   // autoFocus lands on the first month's day that holds the Tab stop: the start, else today.
   useAutoFocus(props.autoFocus, () => root.current && root.current.querySelector<HTMLElement>('.dk-calendar__day[tabindex="0"]'));
   const locale = useLocale(props.locale);
+  const system = calendarOf(props.calendar, 'RangeCalendar');
   const controlled = props.value !== undefined;
   const [own, setOwn] = React.useState<DateRange>(() => norm(props.defaultValue));
   const value = controlled ? norm(props.value) : own;
@@ -77,20 +82,20 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
   // visitor's (GR396).
   const fromServer = React.useRef(false);
   const [ownMonth, setOwnMonth] = React.useState(() => {
-    if (props.defaultMonth || value.start) return startOfMonth(props.defaultMonth || value.start!);
+    if (props.defaultMonth || value.start) return system.start(props.defaultMonth || value.start!);
     const shown = typeof document === 'undefined' ? null : toDay(document.getElementById(monthsId)?.dataset.month, 'RangeCalendar');
     fromServer.current = !!shown;
-    return startOfMonth(shown || home());
+    return system.start(shown || home());
   });
-  const base = props.month ? startOfMonth(props.month) : ownMonth;
-  const showMonth = (m: Date) => { const s = startOfMonth(m); if (!props.month) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
+  const base = props.month ? system.start(props.month) : ownMonth;
+  const showMonth = (m: Date) => { const s = system.start(m); if (!props.month) setOwnMonth(s); if (props.onMonthChange) props.onMonthChange(s); };
   // It acts once, on the first render after hydrating from a server whose month isn't the visitor's.
   // every render: no list, as it reads the month and onMonthChange of that render.
   React.useEffect(() => {
     if (!fromServer.current) return;
     fromServer.current = false;
     const h = home();
-    if (!props.month && !sameMonth(ownMonth, h)) showMonth(h);
+    if (!props.month && !system.same(ownMonth, h)) showMonth(h);
   });
   const two = props.months === 2;
   // In a Field, its label names the group: a <label for> can't name a group, so it's aria-labelledby, as RadioGroup's.
@@ -123,16 +128,16 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
       },
     };
   }, [from, to, L]);
-  // Gregorian with Latin digits, as the grid's days are (Calendar's formats()); thin and narrow spaces as plain ones,
+  // In the grid's calendar with Latin digits, as its days are (Calendar's formats()); thin and narrow spaces as plain ones,
   // since Node's ICU and the browser's put different spaces around the dash, so a server render would not match.
   const range = (r: DateRange) => (r.start && r.end
-    ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', calendar: 'gregory', numberingSystem: 'latn' }).formatRange(r.start, r.end).replace(/[\u2009\u202f]/g, ' ')
+    ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(r.start, r.end).replace(/[\u2009\u202f]/g, ' ')
     : '');
   const status = anchor ? L.chooseEndDate : value.start && value.end ? L.rangeSelected(range(value)) : L.chooseStartDate;
 
   // With two months, a key that crosses into the month the other grid shows moves focus there, and the months stay put.
   const leave = (first: boolean) => (d: Date) => {
-    if (!two || !sameMonth(d, first ? addMonths(base, 1) : base)) return false;
+    if (!two || !system.same(d, first ? system.add(base, 1) : base)) return false;
     const grid = root.current && root.current.querySelectorAll('[role="grid"]')[first ? 1 : 0];
     const b = grid && grid.querySelector<HTMLElement>(`[data-date="${isoDate(d)}"]`);
     if (!b) return false;
@@ -140,8 +145,8 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
     return b.matches(':focus');
   };
   const cal = (m: Date, first: boolean) => (
-    <Calendar month={m} onMonthChange={(n) => showMonth(first ? n : addMonths(n, -1))} value={first ? value.start : value.end}
-      min={min} max={max} isDateDisabled={props.isDateDisabled} locale={locale} weekStartsOn={props.weekStartsOn} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
+    <Calendar month={m} onMonthChange={(n) => showMonth(first ? n : system.add(n, -1))} value={first ? value.start : value.end}
+      min={min} max={max} isDateDisabled={props.isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={props.weekStartsOn} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
       isDateSelected={marks.isEnd} dayClassName={marks.dayClass} dayLabel={marks.dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   return (
@@ -152,7 +157,7 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
       <div className="dk-range-calendar__months" role="presentation" id={monthsId} data-month={isoDate(base)}
         onKeyDown={(e) => { if (e.key === 'Escape' && anchor) { e.preventDefault(); e.stopPropagation(); setAnchor(null); setHover(null); } }}
         onMouseLeave={() => { if (anchor) setHover(anchor); }}>
-        {cal(base, true)}{two ? cal(addMonths(base, 1), false) : null}
+        {cal(base, true)}{two ? cal(system.add(base, 1), false) : null}
       </div>
       <p className="dk-range-calendar__status" aria-live="polite">{status}</p>
     </div>

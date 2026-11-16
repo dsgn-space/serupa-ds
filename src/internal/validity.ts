@@ -22,11 +22,7 @@ export function useValidityMessages<P extends { onInvalid?: React.FormEventHandl
     const el = e.currentTarget;
     clear(el);
     if (e.defaultPrevented || el.validity.customError) return;
-    const reason = REASONS.find((r) => el.validity[r]);
-    if (!reason) return;
-    const text = say({ reason, type: el instanceof HTMLTextAreaElement ? 'textarea' : el.type, length: el.value.length,
-      minLength: el.minLength >= 0 ? el.minLength : undefined, maxLength: el.maxLength >= 0 ? el.maxLength : undefined,
-      min: shown(attr(el, 'min'), el.type, locale), max: shown(attr(el, 'max'), el.type, locale), step: el.type === 'number' || el.type === 'range' ? shown(attr(el, 'step'), el.type, locale) : attr(el, 'step'), title: el.title });
+    const text = problemText(el, say, locale);
     if (text) { el.setCustomValidity(text); ours.current = true; }
   };
   rest.onInput = function (e) { clear(e.currentTarget); if (input) input(e); };
@@ -37,7 +33,17 @@ export function useValidityMessages<P extends { onInvalid?: React.FormEventHandl
   }, [value, own]);
   return rest;
 }
-const attr = (el: Field, name: string) => el.getAttribute(name) || undefined;
+const attr = (el: Field | HTMLSelectElement, name: string) => el.getAttribute(name) || undefined;
+
+/* The provider's words for the constraint a text field fails, or '' when it fails none (or only a custom one). */
+export function problemText(el: Field | HTMLSelectElement, say: (p: ValidityProblem) => string, locale: string): string {
+  const reason = REASONS.find((r) => el.validity[r]);
+  if (!reason) return '';
+  const len = (n: number | undefined) => (n != null && n >= 0 ? n : undefined);
+  return say({ reason, type: el instanceof HTMLTextAreaElement ? 'textarea' : el.type, length: el.value.length,
+    minLength: len((el as Field).minLength), maxLength: len((el as Field).maxLength),
+    min: shown(attr(el, 'min'), el.type, locale), max: shown(attr(el, 'max'), el.type, locale), step: el.type === 'number' || el.type === 'range' ? shown(attr(el, 'step'), el.type, locale) : attr(el, 'step'), title: el.title });
+}
 
 /* A min, max or step as the message's reader writes it, not as the attribute holds it: "1.000" in de-DE, "١٠٠٠" in
    ar-EG, and a date, month or time in the locale's own form ("11 nov. 2026", not "2026-11-11"). A value that isn't

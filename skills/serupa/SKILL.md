@@ -10,7 +10,7 @@ Serupa is a React 19 component library with design tokens, a light and a dark th
 ## Install and load
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v15.1.0
+npm install github:dsgn-space/serupa-ds#v16.0.0
 ```
 
 Pin a release tag, never `#main`. The tag is prebuilt, so nothing runs on install. Then load the CSS once, in this order, before any of your own CSS:
@@ -92,6 +92,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Fab**: A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. Also called: floating action button.
 - **IconButton**: A button that shows only an icon: a menu trigger, a close button, a toolbar action.
 - **Link**: An inline text link: underlined, in the primary color or the surrounding text's. Also called: anchor, hyperlink.
+- **SplitButton** (beta): A main action joined to an arrow button that opens a menu of other ways to do it: Publish, with Schedule and Save as draft one click away.
 - **ToggleButton**: A Button that stays on or off, for a setting that applies right away: bold in a text editor, mute, show the grid.
 - **ToggleGroup**: A set of ToggleButtons that share one value: one on at a time, such as text alignment or a view mode, or any number, such as bold, italic and underline.
 - **Toolbar**: A set of controls, such as an editor's formatting buttons, that takes one Tab stop instead of one per control.
@@ -118,6 +119,8 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Lightbox**: A set of pictures shown full size, one at a time, over the page. Also called: image viewer, media viewer, photo gallery viewer, slideshow.
 - **List**: Rows of related things: people, files, notifications, settings.
 - **Logo** (beta): The product's logo at a set height, with a version for dark themes and a small mark for narrow screens.
+- **MaskedValue** (beta): Shows a sensitive value with most of it hidden behind bullets, keeping just enough for its owner to recognize it: "•••• 1208" for a card, "a••••" for an email. Also called: masked text, redacted value, obfuscated value.
+- **QRCode** (beta): Draws a QR code from a value, such as a payment link, a sign-in link or an authenticator setup string, so a phone can pick it up from the screen. Also called: QR, barcode, 2D code, scan code.
 - **Quote** (beta): Quoted words with who said them, for a testimonial, a pull quote, or a quote in a page that isn't Prose. Also called: Blockquote, Testimonial, Pull quote.
 - **RelativeTime**: Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours".
 - **ShowMore** (beta): Long text cut after a few lines, with a "Show more" button under it that shows the rest. Also called: read more, expandable text.
@@ -197,6 +200,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **Splitter**: Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. Also called: resizable panels, split view, split pane.
 - **Stack**: Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale.
 - **Text**: Body text in the system's type: a paragraph, a caption, an error line.
+- **TruncatedText** (beta): Text that may not fit its space, such as a file name in a narrow column: cut with an ellipsis, with the whole text shown beside it on hover, keyboard focus or a tap.
 - **VisuallyHidden**: Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. Also called: screen-reader only, sr-only.
 
 ### Navigation

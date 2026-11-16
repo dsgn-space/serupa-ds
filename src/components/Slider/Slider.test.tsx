@@ -50,6 +50,21 @@ const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits 
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Slider', () => {
+  test('a swipe across the page that starts on it scrolls the page: the browser cancels the press, the thumb goes back and nothing commits', async () => {
+    await setup();
+    expect(getComputedStyle(el('one')).touchAction).toBe('pan-y');
+    // The mouse's pointer (id 1): a made-up touch pointer can't be captured.
+    const t = track('one'), y = t.top + t.height / 2, opts = { pointerId: 1, pointerType: 'mouse', isPrimary: true, bubbles: true, cancelable: true, button: 0, clientY: y };
+    el('one').dispatchEvent(new PointerEvent('pointerdown', { ...opts, clientX: t.left + t.width * 0.9 }));
+    await expect.poll(() => el('one').querySelector('[role="slider"]')!.getAttribute('aria-valuenow')).toBe('90');
+    el('one').dispatchEvent(new PointerEvent('pointercancel', { ...opts, clientX: t.left + t.width * 0.9 }));
+    await expect.poll(() => el('one').querySelector('[role="slider"]')!.getAttribute('aria-valuenow')).toBe('50');
+    expect(commits).toEqual([]);
+  });
+  test('vertical: a sideways swipe scrolls instead', async () => {
+    await render(<Slider id="vert" aria-label="Level" orientation="vertical" defaultValue={10} />);
+    expect(getComputedStyle(el('vert')).touchAction).toBe('pan-x');
+  });
   test('origin: the fill runs from the origin to the thumb, either way; a range ignores it', async () => {
     await render(<div style={{ width: '420px' }}>
       <Slider id="org" aria-label="Balance" min={-10} max={10} origin={0} defaultValue={5} />

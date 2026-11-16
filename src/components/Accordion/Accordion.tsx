@@ -105,9 +105,11 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
     });
     const allOpen = values.length > 0 && values.every((v) => open.indexOf(v) >= 0);
     const onAll = () => change(allOpen ? open.filter((v) => values.indexOf(v) < 0) : open.concat(values.filter((v) => open.indexOf(v) < 0)));
+    // aria-expanded as well as the words: VoiceOver doesn't reliably say a label that changes on its own. Expanded
+    // only once every item is open (modern web guidance, accordion).
     all = (
       <div className="dk-accordion__toolbar">
-        <button type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'dk-accordion__all' })} onClick={onAll} disabled={!values.length}>
+        <button type="button" className={buttonClass({ variant: 'link', size: 'sm', className: 'dk-accordion__all' })} onClick={onAll} disabled={!values.length} aria-expanded={allOpen}>
           {allOpen ? labels.collapseAll : labels.expandAll}
         </button>
       </div>

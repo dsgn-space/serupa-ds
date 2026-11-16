@@ -44,12 +44,15 @@ function pump(ch: Channel): void {
   // At most HOLD: if the clock went back (a system time change, a test's fake clock), the wait doesn't grow with it.
   const wait = Math.min(HOLD, Math.max(0, ch.since + HOLD - Date.now()));
   ch.timer = setTimeout(function () {
+    const before = el.textContent;
     el.textContent = '';
-    // Cleared first so the same text is announced again.
+    // Cleared first so the same text is announced again. VoiceOver still skips text identical to what it last read
+    // there, even after the clear, so a repeat ("Copied", twice) gets an invisible no-break space (copy-button guide).
     ch.timer = setTimeout(function () {
       ch.timer = null;
       if (!el.isConnected) home().appendChild(el);
-      el.textContent = ch.queue.shift() || '';
+      const next = ch.queue.shift() || '';
+      el.textContent = next && next === before ? next + '\u00a0' : next;
       ch.since = Date.now();
       pump(ch);
     }, 50);
