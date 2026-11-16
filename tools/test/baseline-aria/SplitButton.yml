@@ -9,6 +9,23 @@
   - button "Share"
   - button "More share options"
 
+# DoVariations
+- group:
+  - button "Publish"
+  - button "More publish options" [expanded]
+  - menu "More publish options":
+    - menuitem "Schedule"
+    - menuitem "Save as draft"
+
+# DontUnrelated
+- group:
+  - button "Publish"
+  - button "More publish options" [expanded]
+  - menu "More publish options":
+    - menuitem "Rename"
+    - menuitem "Share"
+    - menuitem "Delete"
+
 # LongText
 - group:
   - button "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column"

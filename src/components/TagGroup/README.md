@@ -43,6 +43,11 @@ Past `max`, a Show more button follows the tags; with none, the `empty` words ta
 - Pass `empty` ("No labels yet") so a list with nothing in it still says so.
 - Keep each tag to a word or two; long ones wrap inside the tag.
 
+### Do and don't
+
+- **Do:** A word or two in each tag. (`DoShortTags`)
+- **Don't:** Sentences in tags: they wrap, stop reading as tags, and crowd the row. Put a sentence in the text beside them. (`DontSentences`)
+
 ## Accessibility
 
 - **Role and name:** a grid (`role="grid"`) named by its label, with a row per tag; the tag's words are its first cell and its × the second, a button named "Remove Design". Picked tags have `aria-selected`, and a multiple-choice group `aria-multiselectable`.

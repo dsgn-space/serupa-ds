@@ -35,6 +35,11 @@ Drawn from the `Default` story.
 - Give both halves one variant (the `variant` prop does). Two primary halves get an edge between them in their text color.
 - Use `loading` while the main action runs: the main button shows a Loader and can't be pressed twice; the menu stays usable.
 
+### Do and don't
+
+- **Do:** Put other ways of doing the main action in the menu: Schedule, Save as draft. (`DoVariations`)
+- **Don't:** Put unrelated actions there: nobody looks for Rename or Delete behind Publish. Use a [Menu](../Menu/README.md) of its own. (`DontUnrelated`)
+
 ## Accessibility
 
 - **Role and name:** a `role="group"` (name it with `aria-label` when the page has several) holding two buttons. The main one is named by its label; the arrow by `menuLabel`, with `aria-haspopup="menu"` and `aria-expanded`, and the same words as a tooltip.

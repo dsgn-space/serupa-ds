@@ -40,3 +40,7 @@ export const LongText: Story = {
   args: { locale: 'pt-BR', months: 2, defaultValue: { start: '2026-09-10', end: '2026-10-02' }, defaultMonth: new Date(2026, 8, 1) },
   render: (args) => <div style={{ width: 280 }}><RangeCalendar {...args} /></div>,
 };
+/** Do: two months where there's room, so a range that crosses the month shows whole. */
+export const DoTwoMonths: Story = { name: 'Do: two months for a stay', args: { months: 2, defaultValue: { start: '2026-11-27', end: '2026-12-04' } } };
+/** Don't: one month for a range that runs into the next: its end is out of sight. */
+export const DontOneMonth: Story = { name: "Don't: one month for a stay", args: { defaultValue: { start: '2026-11-27', end: '2026-12-04' } } };

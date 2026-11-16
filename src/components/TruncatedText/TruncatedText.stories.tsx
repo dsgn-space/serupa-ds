@@ -53,3 +53,14 @@ export const LongText: Story = {
   args: { lines: 2, children: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column' },
   decorators: [(Story) => box(160, <Story />)],
 };
+const statements = ['March', 'April', 'May'];
+/** Do: what tells the rows apart at the start, where the cut never reaches. */
+export const DoDifferenceFirst: Story = {
+  name: 'Do: the difference first',
+  render: () => <ul className="m-0 p-0 list-none flex flex-col gap-1">{statements.map((m) => <li key={m}><TruncatedText>{`${m} 2026 statement, account 0041 2290 8812`}</TruncatedText></li>)}</ul>,
+};
+/** Don't: the same words first: every row is cut to the same text. */
+export const DontSameStart: Story = {
+  name: "Don't: the same start",
+  render: () => <ul className="m-0 p-0 list-none flex flex-col gap-1">{statements.map((m) => <li key={m}><TruncatedText>{`Statement for account 0041 2290 8812, ${m} 2026`}</TruncatedText></li>)}</ul>,
+};

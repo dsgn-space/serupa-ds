@@ -46,3 +46,15 @@ export const States: Story = {
 };
 // The stress story (G14): long words, long labels, more items than fit; the visual baselines show how it copes.
 export const LongText: Story = { args: { children: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column' }, decorators: [(Story) => <div style={{ width: 288 }}><Story /></div>] };
+/** Do: ways of doing the main action in the menu. */
+export const DoVariations: Story = {
+  name: 'Do: other ways to publish',
+  args: { defaultOpen: true, menu: <><MenuItem icon="schedule">Schedule</MenuItem><MenuItem icon="draft">Save as draft</MenuItem></> },
+  decorators: [(Story) => <div style={{ minHeight: 160 }}><Story /></div>],
+};
+/** Don't: unrelated actions in the menu, which nobody looks for behind Publish. */
+export const DontUnrelated: Story = {
+  name: "Don't: unrelated actions",
+  args: { defaultOpen: true, menu: <><MenuItem icon="edit">Rename</MenuItem><MenuItem icon="share">Share</MenuItem><MenuItem icon="delete">Delete</MenuItem></> },
+  decorators: [(Story) => <div style={{ minHeight: 190 }}><Story /></div>],
+};
