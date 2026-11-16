@@ -21,6 +21,8 @@ a.dk-attachment__name { color: var(--attachment-link, var(--primary)); text-deco
 @media (hover: hover) { a.dk-attachment__name:hover { color: var(--attachment-link-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
 a.dk-attachment__name:focus-visible { outline: var(--focus-ring-width) solid var(--attachment-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-attachment__name-text { display: flex; min-inline-size: var(--spacing-0); white-space: pre; text-decoration: inherit; }
+/* Cut and not in a link, the name takes a tab stop of its own, so the keyboard can show it in full: the ring sits inside its edge, which clips. */
+.dk-attachment__name-text:focus-visible { outline: var(--focus-ring-width) solid var(--attachment-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }
 .dk-attachment__name-start { overflow: hidden; text-overflow: ellipsis; min-inline-size: var(--spacing-0); text-decoration: inherit; }
 .dk-attachment__name-end { flex: none; text-decoration: inherit; }
 .dk-attachment__meta { display: flex; flex-wrap: wrap; column-gap: var(--spacing-1); color: var(--attachment-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }

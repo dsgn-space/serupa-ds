@@ -58,7 +58,7 @@ Drawn from the `Upload` story.
 
 ## Behavior
 
-- A long name is cut in the middle, as Finder and Drive do: "Laporan keuangan tri…2026 final.xlsx". The last few characters and the extension stay, so files that differ only by year or version still look different. Hover shows the full name, and it's laid out in its own direction.
+- A long name is cut in the middle, as Finder and Drive do: "Laporan keuangan tri…2026 final.xlsx". The last few characters and the extension stay, so files that differ only by year or version still look different. A cut name shows in full in a tooltip on hover and on keyboard focus: the link's focus, or, without a link, its own tab stop. It's laid out in its own direction.
 - The remove button calls `onRemove`; removing the file is yours. Move focus somewhere sensible afterwards, such as the next file's remove button, since the button goes away with the file.
 - `disabled` turns off the link and both buttons; the name and size stay readable.
 
@@ -114,7 +114,7 @@ Each is an optional override: set it on the page, a container or one Attachment.
 | `--attachment-border` | `border` | The outline. |
 | `--attachment-border-error` | `danger` | The outline of a failed upload (3:1 on the page). |
 | `--attachment-error` | `danger-text` | A failed upload's message (4.5:1 on bg). |
-| `--attachment-focus-ring` | `focus-ring` | The ring around a focused link. |
+| `--attachment-focus-ring` | `focus-ring` | The ring around a focused link, or around a cut name that takes keyboard focus. |
 | `--attachment-radius` | `radius-control` | The corners (6px). |
 | `--attachment-padding` | `spacing-2` | Space inside (8px). |
 | `--attachment-padding-start` | `spacing-3` | Space before the icon (12px). |

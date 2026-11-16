@@ -59,7 +59,7 @@ const [status, setStatus] = useState(new Map<File, FileUploadStatus>());
 - Pasting (Ctrl+V, ⌘V on Apple devices) while focus is on the choose button or a remove button adds the clipboard's files, such as a screenshot, checked like dropped ones. It works from the keyboard alone. A paste with no files in it does nothing. `readOnly` and `disabled` ignore it.
 - Files that don't fit are listed under the area in danger text and passed to `onReject`; the same file picked twice is skipped quietly.
 - Removing a file moves focus to the next file's remove button, or the one before it, so clearing several files stays in the list; with none left, focus goes to the choose button.
-- A long file name is cut in the middle, as Finder and Drive do: "quarterly-report-fi…t-2026.pdf". The last few characters and the extension stay, so files that differ only by year or version still look different. Hover shows the full name, and it's laid out in its own direction. It is cut wherever FileUpload sits, a grid cell or a flex row included, so a long name never widens the page.
+- A long file name is cut in the middle, as Finder and Drive do: "quarterly-report-fi…t-2026.pdf". The last few characters and the extension stay, so files that differ only by year or version still look different. A cut name shows in full in a tooltip on hover and on keyboard focus (it takes a tab stop of its own then). It's laid out in its own direction. It is cut wherever FileUpload sits, a grid cell or a flex row included, so a long name never widens the page.
 - With `fileStatus`, each file shows its upload: while `uploading`, a small bar under its name, filled to `progress` (0 to 100) or moving on its own without one; when `done`, "Complete" with a check after its size; on `error`, a danger outline and the `message` (default "Couldn’t upload") under its name, and with `onRetry` a "Try again" button before the remove button. FileUpload doesn't upload anything itself.
 - Each file's icon shows its kind, the same icon an [Attachment](../Attachment/README.md) shows for it: PDF, image, spreadsheet, document, slides, archive, code, audio, video or other, from its MIME type and then its extension.
 - With `thumbnails`, an image file shows a 40px picture of itself in place of its type icon. The picture is decoded in the browser (`createImageBitmap`) and drawn on a canvas, so no URL made from the file reaches the page. An image the browser can't decode, such as HEIC in most browsers, keeps the icon.
@@ -115,6 +115,8 @@ const [status, setStatus] = useState(new Map<File, FileUploadStatus>());
 Each is an optional override: set it on the page, a container or one upload. The list lives in `src/components/FileUpload/file-upload.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from file-upload.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--file-upload-zone-bg` | `surface-control` | The drop area's background: zinc-50 in light, a step above the page in dark (zinc-900), as it is something to press. |
@@ -132,8 +134,19 @@ Each is an optional override: set it on the page, a container or one upload. The
 | `--file-upload-item-border` | `border` | A file row's outline. |
 | `--file-upload-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--file-upload-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--file-upload-focus-ring` | `focus-ring` | The ring around a file name that takes keyboard focus because it is cut. |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--file-upload-zone-radius` | `radius-surface` | The drop area's corners (8px). |
 | `--file-upload-item-radius` | `radius-control` | A file row's corners (6px). |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--file-upload-zone-padding` | `spacing-6` | Space inside the drop area (24px). |
 | `--file-upload-gap` | `spacing-2` | Space between the drop area's lines, and between file rows (8px). |
 | `--file-upload-item-padding` | `spacing-2` | Space inside a file row (8px). |
