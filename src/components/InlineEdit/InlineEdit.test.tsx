@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
 import { Dialog } from '../Dialog/Dialog';
@@ -24,6 +24,15 @@ function Controlled({ calls }: { calls: string[] }) {
 }
 
 describe('InlineEdit', () => {
+  test('pressed: the text button fills one step past its hover while held, as a List or Sidebar row does', async () => {
+    await render(<InlineEdit label="Project name" value="Atlas" onValueChange={() => {}} />);
+    const view = document.querySelector<HTMLButtonElement>('button')!;
+    await userEvent.hover(view); await expect.poll(() => getComputedStyle(view).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    const hover = getComputedStyle(view).backgroundColor;
+    const probe = document.createElement('span'); probe.style.background = 'var(--pressed)'; document.body.append(probe); const want = getComputedStyle(probe).backgroundColor; probe.remove();
+    await press(view, () => { expect(getComputedStyle(view).backgroundColor).toBe(want); expect(want).not.toBe(hover); });
+  });
+
   test('switching to another window or tab mid-edit keeps the field open and saves nothing; leaving it then saves (L8E25)', async () => {
     const saved: string[] = [];
     await render(<><InlineEdit id="wb" label="Name" defaultValue="Atlas" onValueChange={(v) => saved.push(v)} /><button id="wbn">Next</button></>);

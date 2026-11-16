@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors, disabledLook } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, disabledLook, press } from '../../../tools/test/vitest/helpers';
 import { Field } from '../Field/Field';
 import { FileUpload, formatFileSize } from './FileUpload';
 import { formatNumber } from '../FormattedNumber/formatNumber';
@@ -101,6 +101,15 @@ describe('FileUpload', () => {
     const root = rootOf('fid');
     await userEvent.upload(input(root), [file('catatan.txt', 'text/plain', 10), file('besar.png', 'image/png', 4096), file('a.png', 'image/png', 10), file('b.png', 'image/png', 10)]);
     expect(errs(root)).toBe('alert: catatan.txt bukan gambar atau PDF. / besar.png lebih besar dari 1 kB. / b.png tidak ditambahkan: maksimal 1 file.');
+  });
+
+  test('a click anywhere on the drop area opens the picker once: its padding, icon, title and hint as well as the button; a press fills it while held', async () => {
+    await render(<Many />);
+    const root = q(many), w = watchPicker(root), zone = root.querySelector<HTMLElement>(ZONE)!;
+    for (const part of [zone, zone.querySelector('[data-icon]')!, root.querySelector(TITLE)!, root.querySelector(HINT)!, choose(root)]) await userEvent.click(part, part === zone ? { position: { x: 4, y: 4 } } : { force: true });
+    expect(w.opened).toBe(5);
+    const rest = getComputedStyle(zone).backgroundColor;
+    await press(zone, () => { expect(getComputedStyle(zone).backgroundColor).not.toBe(rest); }, { x: 4, y: 4 });
   });
 
   test('the button opens the file picker (it clicks the native input, which allows several files)', async () => {

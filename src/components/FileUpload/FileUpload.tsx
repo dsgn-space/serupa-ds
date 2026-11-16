@@ -322,10 +322,10 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, choose); });
   return (
     <div {...rest} onPaste={onPaste} ref={mergedRef} aria-disabled={disabled || undefined} className={cn('dk-file-upload', disabled && 'dk-file-upload--disabled', readOnly && 'dk-file-upload--readonly', (invalid || missing) && 'dk-file-upload--invalid', props.className)} data-component="file-upload">
-      {/* A click on the area's padding opens the picker too, for the pointer only: the choose button is how the
+      {/* A click anywhere on the area (its padding, icon, title and hint) opens the picker too, as its hover and press say, for the pointer only (the button opens it itself): the choose button is how the
           keyboard and screen readers reach it, so the area is presentational and carries no state (TF1b); a disabled upload says so on the whole of it. */}
       <div className={cn('dk-file-upload__zone', over && 'dk-file-upload__zone--over')} data-dragging={over ? '' : undefined} role="presentation" {...drag}
-        onClick={(e) => { if (!still && e.target === e.currentTarget && input.current) input.current.click(); }}>
+        onClick={(e) => { if (!still && input.current && !(e.target instanceof Element && e.target.closest('button, input'))) input.current.click(); }}>
         <Icon icon={icons.UploadFile} className="dk-file-upload__icon" />
         <p className="dk-file-upload__title">{props.title ?? (multiple ? sds.labels.dragFiles : sds.labels.dragFile)}</p>
         <Button ref={chooser} variant="outline" size="sm" disabled={disabled} onClick={() => { if (!readOnly && input.current) input.current.click(); }}

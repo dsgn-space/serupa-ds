@@ -323,6 +323,13 @@ describe('ColorPicker', () => {
       new FormData(document.getElementById('f') as HTMLFormElement).get('color')]).toEqual([true, [], 'true', false, true, 'fde047', true, 'true', '#fde047']);
   });
 
+  test('disabled: the swatches and the custom-color well show the disabled cursor, not a pointer', async () => {
+    await render(<ColorPicker aria-label="C" swatches={SW} disabled />);
+    const native = document.querySelector<HTMLInputElement>('input[type="color"]')!, cursor = (x: Element) => getComputedStyle(x).cursor;
+    const probe = document.createElement('span'); probe.style.cursor = 'var(--cursor-disabled)'; document.body.append(probe); const want = cursor(probe); probe.remove();
+    expect([native.disabled, cursor(native), cursor(document.querySelector('[role="radio"]')!)]).toEqual([true, want, want]);
+  });
+
   test('disabled, custom={false}, size sm and name: no field, disabled swatches, a hidden input with the value', async () => {
     await render(<form id="f"><ColorPicker aria-label="C" swatches={SW} defaultValue="#18181b" custom={false} size="sm" name="color" disabled /></form>);
     expect([hex(), radios().every((r) => r.disabled), Math.round(radios()[0]!.getBoundingClientRect().width), (document.querySelector('input[type="hidden"]') as HTMLInputElement).value])
