@@ -23,6 +23,7 @@ The first page a new account sees: a welcome, a checklist of setup steps with ho
 - **Ticking a step says the new count** ("2 of 4 steps done") politely, without moving focus (4.1.3). The last tick says "You’re all set" once, and the page shows the way on to the dashboard.
 - **"Hide the checklist"** folds it to one line with the count. Focus moves to "Show the checklist", which takes its place; showing it again moves focus to the checklist's heading, so focus never drops to the start of the page (2.4.3).
 - **"No projects yet"**: an EmptyState that says what a project is and holds the one action that starts one. An empty page with nothing to do is a dead end.
+- **While the saved progress loads**, set `loading`: one placeholder in place of the checklist, named "Loading your setup checklist" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.Halfway} />

@@ -22,6 +22,7 @@ Two to four products side by side, a row for each thing they could differ on, an
 - **"Only what differs" says how many rows are shown** in a status line (4.1.3).
 - **Each button's name ends with its product**, "Remove: Calm 300"; removing one moves focus to the next product's Remove, or the heading once none are left (2.5.3, 2.4.3).
 - **Add to cart says what was added** in a toast (4.1.3).
+- **While the products load**, set `loading`: one placeholder, named "Loading the products" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.Empty} />
