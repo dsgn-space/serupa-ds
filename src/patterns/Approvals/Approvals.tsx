@@ -131,7 +131,7 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide, loading
             {show === 'waiting' ? `${formatNumber(waiting.length, locale)} waiting` : `${formatNumber(done.length, locale)} decided`}
           </p>
         </div>
-        <section aria-labelledby="approvals-list" className="flex flex-col gap-3 pt-4">
+        <section aria-labelledby="approvals-list" className="flex flex-col gap-4 pt-4">
           <h2 id="approvals-list" ref={listHeading} tabIndex={-1} className="m-0 text-xl font-semibold outline-none">{show === 'waiting' ? 'Waiting' : 'Decided'}</h2>
           {show === 'waiting' ? (
             waiting.length ? waiting.map((r) => (

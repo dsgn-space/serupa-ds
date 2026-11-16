@@ -167,7 +167,7 @@ With Ctrl, ⌘ or Alt held, a resize handle leaves the arrows, Home and End to t
 | `TableDetailRow` | `<tr>` with one `<td>` across | `open` (required: hidden while false), `colSpan` (required: every column); `id`, `className`, `ref` and the rest go to the `<tr>` |
 | `TableLoadingRows` | `<tbody>` of placeholder rows | `columns` (required: every column), `rows` (default 3), `label`: said once as they appear (default "Loading"); the rest goes to the `<tbody>` |
 | `TableMessageRow` | `<tr>` with one `<td>` across | `colSpan` (required: every column); children are the message, such as an EmptyState or an Alert with Retry; the rest goes to the `<tr>` |
-| `TableColumnsMenu` | a Button and a Popover | `columns` (required: `{ id, label, visible, required? }` in the table's order), `onColumnsChange(columns, { id, visible })` (required), `label` (default "Columns") |
+| `TableColumnsMenu` | a Button and a Popover | `columns` (required: `{ id, label, visible, required? }` in the table's order), `onColumnsChange(columns, { id, visible })` (required), `label` (default "Columns"); `ref`, `className`, `style` and other props go to the Columns button |
 | `TableVirtualBody` (beta) | `<tbody>` drawing only the rows in view | `count` (required); `renderRow(index)` (required) returns a `TableRow`; `itemKey(index)`: a stable key per row (default the index); `estimatedRowHeight`: a guess for rows not drawn yet (default 41, 36 at `size="sm"`); `overscan`: rows drawn beyond each edge (default 6); the rest goes to the `<tbody>` |
 
 ## Component tokens

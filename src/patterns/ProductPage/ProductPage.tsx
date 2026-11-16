@@ -249,7 +249,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
       </div>
     </div>
 
-    <section aria-labelledby="about" className="flex flex-col gap-3">
+    <section aria-labelledby="about" className="flex flex-col gap-4">
       <h2 id="about" className="m-0 text-xl font-semibold">About this product</h2>
       <Accordion type="multiple" defaultValue={['details']} headingLevel={3}>
         <AccordionItem value="details" title="Details">
@@ -261,7 +261,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
       </Accordion>
     </section>
 
-    <section aria-labelledby="reviews" className="flex flex-col gap-3">
+    <section aria-labelledby="reviews" className="flex flex-col gap-4">
       <h2 id="reviews" tabIndex={-1} className="m-0 text-xl font-semibold outline-none">Reviews</h2>
       {product.reviews.length ? (
         <ul className="m-0 flex list-none flex-col gap-4 p-0" role="list">
@@ -285,7 +285,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link href="#cart" tone="neutral">Cart, {countItems(inCart, formatNumber(inCart, locale))}</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-8 outline-none">
+      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
         <Breadcrumb>
           {/* The last item, the page itself, has no link. */}
           {[['Shop', '#shop'], ['Shirts', '#shirts'], [loading || loadFailed ? 'Product' : product.name, undefined]].map(([label, href]) => (

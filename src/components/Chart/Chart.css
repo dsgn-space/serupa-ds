@@ -37,17 +37,17 @@
 .dk-chart__line { fill: none; stroke: var(--dk-chart-color); stroke-width: var(--chart-line-width, var(--stroke-width-2)); stroke-linejoin: round; stroke-linecap: round; }
 /* Markers and bars sit on a ring of the gap color, so neighbours never touch (CH1: they're 1.7:1 apart, the gap 3:1). */
 .dk-chart__marker, .dk-chart__bar:not([fill]) { fill: var(--dk-chart-color); }
-.dk-chart__marker, .dk-chart__bar { stroke: var(--chart-separator, var(--chart-gap)); stroke-width: var(--dk-chart-ring); paint-order: stroke; }
+.dk-chart__marker, .dk-chart__bar { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--dk-chart-ring); paint-order: stroke; }
 .dk-chart__bar { stroke-width: var(--stroke-width-1); }
 .dk-chart__pattern-fill { fill: var(--dk-chart-color); }
 /* An area is its series' color, faint, under the line; stacked ones meet without overlapping. */
 .dk-chart__area { fill: var(--dk-chart-color); fill-opacity: var(--opacity-20); stroke: none; pointer-events: none; }
 /* A donut's slices, a gap of the gap color between neighbours, and the total in the middle. */
 .dk-chart__slice:not([fill]) { fill: var(--dk-chart-color); }
-.dk-chart__slice { stroke: var(--chart-separator, var(--chart-gap)); stroke-width: var(--stroke-width-2); stroke-linejoin: round; }
+.dk-chart__slice { stroke: var(--chart-separator, var(--surface-behind, var(--chart-gap))); stroke-width: var(--stroke-width-2); stroke-linejoin: round; }
 .dk-chart__total { fill: var(--chart-text, var(--text)); font-size: var(--text-sm); font-weight: var(--font-semibold); font-variant-numeric: tabular-nums; }
 .dk-chart__key-value { font-variant-numeric: tabular-nums; }
-.dk-chart__pattern-mark { fill: var(--chart-separator, var(--chart-gap)); }
+.dk-chart__pattern-mark { fill: var(--chart-separator, var(--surface-behind, var(--chart-gap))); }
 .dk-chart__point { cursor: default; }
 .dk-chart__marker[data-active] { stroke-width: var(--stroke-width-3); }
 .dk-chart__point:focus { outline: none; }

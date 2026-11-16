@@ -90,7 +90,7 @@ Each is an optional override: set it on the page, a container or one group. The 
 <!-- token-table:start (made from avatar-group.tokens.json by npm run tokens: edit the descriptions there) -->
 | Token | Default | Use |
 | --- | --- | --- |
-| `--avatar-group-ring` | `surface` | The ring around each avatar, which keeps the overlapping edges clear. Set it to the background the group sits on. |
+| `--avatar-group-ring` | `surface` | The ring around each avatar, which keeps the overlapping edges clear. Unset, it takes the fill behind the group (--surface-behind, which the page and every surface set), else surface. |
 | `--avatar-group-more-bg` | `secondary` | The "+N" avatar's background. |
 | `--avatar-group-more-color` | `text` | The "+N" text (4.5:1 on more-bg). |
 | `--avatar-group-more-bg-hover` | `secondary-hover` | The "+N" button's background on hover, with `showMore` or `onMore`. |

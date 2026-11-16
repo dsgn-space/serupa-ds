@@ -385,6 +385,8 @@ Rules of thumb:
 - Use gradients sparingly, for heroes and illustrations, not for UI controls.
 - Images: `bg-cover bg-center bg-no-repeat` fills a box without distortion.
 
+**The fill behind a ring.** Avatar's status dot, the avatars in an AvatarGroup, Badge's indicator dot and Chart's bars, slices and markers are set apart by a ring or gap in the color behind them, so the ring disappears into the surface they're on. `--surface-behind` says what that color is. The page sets it to `surface-page`, and every surface (Card, Menu, Popover, Dialog, Drawer, Table, List, Navbar, Sidebar and the other bars and panels) sets it to its own fill. On a box of your own with a background, set it there as well: `.my-panel { background: var(--primary-subtle); --surface-behind: var(--primary-subtle); }`.
+
 ## Spacing
 
 The spacing scale, named `spacing-<step>`: 1 step = 4px (`spacing-4` = 16px = `p-4`). Steps: `0`, `px` (1px), `0.5`–`3.5` in half steps, `4`–`12`, then `14`, `16`, `20`, `24` … `64`, `72`, `80`, `96` (384px).
@@ -392,7 +394,7 @@ The spacing scale, named `spacing-<step>`: 1 step = 4px (`spacing-4` = 16px = `p
 - Stay on the scale: `1` (4px), `2` (8px), `3` (12px), `4` (16px), `6` (24px), `8` (32px), `12` (48px) and `16` (64px) cover most layouts.
 - Spacing inside a group should be smaller than the spacing between groups.
 
-**Roles.** Five steps have names for what they space, for layouts and your own components: `space-inline` (4px, an icon and its label), `space-related` (8px, the parts of one control, or items that belong together such as a label and its input), `space-content` (16px, the default padding and gap), `space-surface` (24px, the padding of a dialog, a drawer or a large card) and `space-section` (32px, between groups or sections of a page).
+**Roles.** Seven steps have names for what they space, for layouts and your own components: `space-inline` (4px, an icon and its label), `space-related` (8px, the parts of one control, or items that belong together such as a label and its input), `space-content` (16px, the default padding and gap), `space-surface` (24px, the padding of a dialog, a drawer or a large card), `space-section` (32px, between the sections of a long-form page), `space-page` (24px, an app screen's page header, sections and cards) and `space-band` (64px, a long-form or marketing page's bands and its page header). The last three are the page rhythms in [Spacing rhythm](#page-layout).
 
 Dialog, Drawer and Card `padding="lg"` read `space-surface` for their padding, and Popover, HoverCard and Tour read `space-content`, so setting a role on `:root` (or on a part of the page) makes them denser or roomier with it. A component's own token still wins: `--dialog-padding` changes only dialogs. The other roles are names for your own layouts; no component reads them.
 
@@ -697,19 +699,22 @@ Wrap each band of the page (header, main content, footer) in a Container of the 
 
 Use spacing to show what belongs together: the closer two things are, the more related they look. Pick from a few steps of the spacing scale and use them the same way on every page.
 
-| Between | Step | Size |
-| --- | --- | --- |
-| An icon and its label; a label and its control | `1` to `2` | 4–8px |
-| Fields in a form; items in a list; lines of a card | `3` to `4` | 12–16px |
-| Groups inside a section; cards in a grid | `6` | 24px |
-| A section's heading and the groups under it | `4` to `6` | 16–24px |
-| Sections of a page | `8` to `12` | 32–48px |
-| The page header and the content; bands on a marketing page | `12` to `16` | 48–64px |
+Pages come in two rhythms. An app screen (a dashboard, a list and its detail, settings, a form, a sign-in page) is dense: people work in it and scan it, so its page header, sections and cards all sit one step apart, `space-page` (24px). A long-form or marketing page (an article, a landing page, docs) is read top to bottom, so its sections and bands get room to breathe: `space-section` (32px) between sections and `space-band` (64px) between bands and after the page header. Inside a section the two rhythms are the same.
 
-- Space inside a group is always smaller than the space between groups. If two gaps are equal, the groups stop reading as groups.
+| Between | Step | App screen | Long-form and marketing page |
+| --- | --- | --- | --- |
+| An icon and its label; a label and its control | `1` to `2` | 4–8px | 4–8px |
+| Fields in a form; items in a list; lines of a card | `3` to `4` | 12–16px | 12–16px |
+| A section's heading and the groups under it | `4` | 16px (`space-content`) | 16–24px |
+| Groups inside a section; cards in a grid | `6` | 24px | 24px |
+| Sections of a page | `6` / `8` | 24px (`space-page`) | 32–48px (`space-section`) |
+| The page header and the content; bands | `6` / `10` to `16` | 24px (`space-page`) | 40–64px (`space-band`) |
+
+- Space inside a group is always smaller than the space between groups. If two gaps are equal, the groups stop reading as groups. On an app screen, sections and the cards in a grid are both 24px apart: a section's heading, 16px above its content, is what groups it.
 - Pad the container and gap its children: a Card has `p-6`, and its contents sit in a Stack with `gap={3}` or `gap={4}`. Don't add margins to each child.
-- On small screens, step the big gaps down one step: `gap-8 md:gap-12`.
+- On small screens, step a long-form page's big gaps down one step: `gap-8 md:gap-16`. An app screen keeps 24px at every width.
 - Compact density (`data-density="compact"`) shrinks controls, not the page's spacing. For a denser table or list, choose smaller gaps on purpose.
+- The patterns follow this: every app pattern puts 24px between its page header, its sections and its cards; Article, a long-form page, puts 32–40px between its parts.
 
 **A typical app page**
 
@@ -717,7 +722,7 @@ Use spacing to show what belongs together: the closer two things are, the more r
 <div style={{ display: 'flex', minHeight: '100vh' }}>
   <Sidebar header={<Logo src="/logo.svg" alt="Acme" />}>…</Sidebar>
   <Container as="main" size="xl" className="py-8">
-    <Stack gap={8}>
+    <Stack gap={6}>   {/* space-page: an app screen's header, sections and cards sit 24px apart */}
       <Stack gap={2}><Heading level={1}>Projects</Heading><Text tone="muted">12 active</Text></Stack>
       <Grid columns="auto" gap={6}>{cards}</Grid>
     </Stack>

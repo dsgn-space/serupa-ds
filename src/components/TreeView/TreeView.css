@@ -11,7 +11,7 @@
   margin: var(--spacing-0); list-style: none;
   padding: var(--tree-view-padding, var(--spacing-1));
   border-radius: var(--tree-view-radius, var(--radius-control));
-  background: var(--tree-view-bg, var(--surface));
+  background: var(--tree-view-bg, var(--surface)); --surface-behind: var(--tree-view-bg, var(--surface));
   color: var(--tree-view-text, var(--text));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
 }
@@ -31,7 +31,7 @@
   content-visibility: auto;
   contain-intrinsic-block-size: auto calc(var(--tree-view-item-height, var(--control-height-md)) - var(--spacing-2));   /* the padding, above and below */
 }
-@media (hover: hover) { .dk-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--surface-hover)); } }
+@media (hover: hover) { .dk-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--surface-hover)); --surface-behind: var(--tree-view-item-bg-hover, var(--surface-hover)); } }
 /* Pressed: one step past hover while held, at once. Not on the picked row or a disabled one. */
 .dk-tree-view__item:not(.dk-tree-view__item--selected, .dk-tree-view__item--disabled) > .dk-tree-view__row:active { background: var(--tree-view-item-bg-pressed, var(--pressed)); }
 .dk-tree-view__item--selected > .dk-tree-view__row {

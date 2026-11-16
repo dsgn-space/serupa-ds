@@ -8,7 +8,7 @@
 .dk-menubar {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--menubar-gap, var(--spacing-1));
   padding: var(--menubar-padding, var(--spacing-1));
-  background: var(--menubar-bg, var(--surface));
+  background: var(--menubar-bg, var(--surface)); --surface-behind: var(--menubar-bg, var(--surface));
   border-bottom: var(--border-width-1) solid var(--menubar-border, var(--border));
 }
 /* Focusable only from code (tabIndex -1, for the menubar role): a press between names draws no ring. */

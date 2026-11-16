@@ -13,7 +13,7 @@
      centre. --toolbar-radius still sets it outright. */
   --dk-toolbar-concentric: calc(var(--radius-control) + var(--toolbar-padding, var(--spacing-1)));
   border-radius: var(--toolbar-radius, var(--dk-toolbar-concentric, var(--radius-control)));
-  background: var(--toolbar-bg, var(--surface));
+  background: var(--toolbar-bg, var(--surface)); --surface-behind: var(--toolbar-bg, var(--surface));
   color: var(--toolbar-text, var(--text));
 }
 .dk-toolbar--vertical { display: inline-flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; }

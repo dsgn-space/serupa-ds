@@ -13,8 +13,9 @@ const TAGS = {
 // href (a control either way), and a table cell's type is the same for td and th.
 const BY_NAME = { Button: 'button', TableHeaderCell: 'th' };
 // Rendered as an a, but with its own href and words, so <SkipLink /> is complete: read as an a, jsx-a11y would ask an
-// app for both (anchor-has-content, anchor-is-valid). ChatCitation writes its own words too (its number and host).
-const COMPLETE = ['SkipLink', 'ChatCitation'];
+// app for both (anchor-has-content, anchor-is-valid). ChatCitation writes its own words too (its number and host), and
+// TableColumnsMenu's button its own "Columns" (labels.tableColumns, or label).
+const COMPLETE = ['SkipLink', 'ChatCitation', 'TableColumnsMenu'];
 // Rendered as an a only sometimes, so read as one they flag what's right: BreadcrumbItem is text for the current page,
 // with or without href (anchor-is-valid on PageHeader's trail), and a ListItem's click lands on the link it renders
 // when given href, not on the li (click-events-have-key-events on ListDetail's list). Left out, as plain components.
