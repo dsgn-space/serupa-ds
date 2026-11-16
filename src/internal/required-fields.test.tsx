@@ -20,7 +20,7 @@ describe('required on the fields without a native control', () => {
   test('DateField: empty boxes stop the form, all three are marked and the first takes focus; a date clears it', async () => {
     let sent = 0;
     await render(<Form onSent={() => sent++}><DateField aria-label="Date of birth" order="dmy" name="dob" required /></Form>);
-    const boxes = () => Array.from(document.querySelectorAll<HTMLInputElement>('.dk-date-field__part input'));
+    const boxes = () => ['Day', 'Month', 'Year'].map((n) => page.getByRole('textbox', { name: n }).element());
     expect([form().checkValidity(), boxes().map((b) => b.getAttribute('aria-required'))]).toEqual([false, ['true', 'true', 'true']]);
     await send();
     await expect.poll(() => boxes().map((b) => b.getAttribute('aria-invalid'))).toEqual(['true', 'true', 'true']);
@@ -44,7 +44,7 @@ describe('required on the fields without a native control', () => {
   test('CascadeSelect: no path stops the form, the button is marked and takes focus; a chosen path is valid', async () => {
     let sent = 0;
     const { rerender } = await render(<Form onSent={() => sent++}><CascadeSelect aria-label="Region" options={regions} name="region" required /></Form>);
-    const button = () => document.querySelector<HTMLButtonElement>('.dk-cascade-select__button')!;
+    const button = () => page.getByRole('combobox', { name: 'Region' }).element();
     expect([form().checkValidity(), button().getAttribute('aria-required')]).toEqual([false, 'true']);
     await send();
     await expect.poll(() => button().getAttribute('aria-invalid')).toBe('true');
@@ -61,15 +61,15 @@ describe('required on the fields without a native control', () => {
   test('SignaturePad: no signature stops the form, the pad is marked and its method switch takes focus; a typed name clears it', async () => {
     let sent = 0;
     await render(<Form onSent={() => sent++}><SignaturePad aria-label="Signature" name="sig" required /></Form>);
-    const pad = () => document.querySelector<HTMLElement>('[data-component=signature-pad]')!;
+    const method = () => page.getByRole('radiogroup', { name: 'Signature method' }).element();
     expect(form().checkValidity()).toBe(false);
     await send();
-    await expect.poll(() => pad().classList.contains('dk-signature-pad--invalid')).toBe(true);
+    await expect.poll(() => method().getAttribute('aria-invalid')).toBe('true');
     expect([sent, document.activeElement === page.getByRole('radio', { name: 'Draw' }).element()]).toEqual([0, true]);
     await userEvent.click(page.getByRole('radio', { name: 'Type' }));
     const name = page.getByRole('textbox', { name: 'Full name' });
     await expect.element(name).toHaveAttribute('aria-required', 'true');
     await userEvent.fill(name, 'Ada Lovelace');
-    expect([form().checkValidity(), pad().classList.contains('dk-signature-pad--invalid')]).toEqual([true, false]);
+    expect([form().checkValidity(), method().getAttribute('aria-invalid')]).toEqual([true, null]);
   });
 });
