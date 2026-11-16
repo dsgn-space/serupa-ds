@@ -8,6 +8,7 @@ import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { Calendar, type DatePreset } from '../Calendar/Calendar';
+import type { CalendarSystem } from '../../internal/calendars';
 import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
@@ -38,6 +39,10 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   isDateDisabled?: ((date: Date) => boolean) | undefined;
   /** A BCP 47 locale for the typed format, names and first day of the week. Default: the nearest SerupaProvider's locale, else the browser's. */
   locale?: string | undefined;
+  /** The calendar system the popup's months follow, as Calendar's calendar: "persian", "islamic-umalqura",
+      "buddhist", "japanese" or "roc". The typed date stays Gregorian, so it reads back as the same day. Default:
+      "gregory". */
+  calendar?: CalendarSystem | undefined;
   /** 0 Sunday … 6 Saturday. Default: the locale's. */
   weekStartsOn?: number | undefined;
   /** A column of week numbers before the days (ISO 8601), as Calendar's weekNumbers. Default: false. */
@@ -64,7 +69,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
   const nameRef = useNameCheck('DatePicker', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, weekStartsOn, weekNumbers, size: _s, invalid: _i, buttonLabel, presets, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, weekNumbers, size: _s, invalid: _i, buttonLabel, presets, className, style, name, placeholder, disabled, readOnly, onBlur, onKeyDown, ...rest } = props;
   const locale = useLocale(localeProp), lang = useOwnLang(localeProp);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
@@ -141,7 +146,7 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
       {name ? <input type="hidden" name={name} form={rest.form} value={value ? isoDate(value) : ''} disabled={disabled} /> : null}
       <div ref={panel} id={id} role="dialog" aria-label={buttonLabel || sds.labels.chooseDate} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-date-picker__popup"
         onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}>
-        {open || exit.leaving ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus
+        {open || exit.leaving ? <Calendar value={value} defaultMonth={(typed && allowed(typed) ? typed : null) || value || undefined} min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={calendar} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} presets={presets} autoFocus
           onValueChange={(d) => { commit(d); close(true); }} /> : null}
       </div>
     </span>

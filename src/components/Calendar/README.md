@@ -39,6 +39,7 @@ Drawn from the `MonthYearPicker` story.
 - Block days with `min`, `max` and `isDateDisabled` so people see them before they pick, rather than refusing a day afterwards.
 - Set `autoFocus` only when the Calendar appears because people asked for it, such as in a panel they just opened.
 - Leave `locale` and `weekStartsOn` unset in most products so names and the first day follow the visitor's browser.
+- Set `calendar` where people date things in another calendar: `"persian"` in Iran and Afghanistan, `"islamic-umalqura"` for Hijri dates in Saudi Arabia, `"buddhist"` in Thailand, `"japanese"` for era years. The grid then shows that calendar's months, with their own first and last days, and the title, the day names and the month and year grids follow it. Values stay `Date`s, and digits stay Latin. A locale's own calendar (`th`, `fa`, or a `-u-ca-` extension) isn't followed on its own: name it here.
 - The weekday headers use the locale's short names, or its one-letter names where the short name is the full word or two words (Arabic, Persian, Hebrew, Vietnamese), so they fit their 32px columns. Screen readers always hear the full name.
 
 ## Behavior
@@ -97,6 +98,7 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 | `monthYearPicker` | `boolean` | `false` | Shows native Month and Year menus in the header instead of the title. The title stays for screen readers and still names the grid. |
 | `isDateDisabled` | `(date: Date) => boolean` | | Days to refuse, such as weekends or holidays. |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | Month and weekday names, and the first day of the week. When it differs from the provider's, the month title and the grid carry `lang`, so screen readers read the names in that language; the nav buttons keep the page's. |
+| `calendar` | `'gregory'` `'persian'` `'islamic-umalqura'` `'islamic-civil'` `'islamic-tbla'` `'indian'` `'buddhist'` `'japanese'` `'roc'` | `'gregory'` | The calendar system the months follow. Persian, Hijri and Indian have months of their own; Buddhist, Japanese and ROC share the Gregorian months and count years their way. Values stay `Date`s. |
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |
 | `weekNumbers` | boolean | `false` | A narrow column of ISO 8601 week numbers before the days (the week holding each row's Thursday), for planning by week. Each number is its row's header, read as "Week 12" with the days; the days take its width off their share of a narrow screen. |
 | `autoFocus` | `boolean` | `false` | Focus the selected day (or today) when it appears. |

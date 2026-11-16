@@ -222,3 +222,30 @@ describe('RangeCalendar', () => {
     }
   });
 });
+
+describe('RangeCalendar: another calendar system (RX9)', () => {
+  test('calendar="persian" with two months: Aban and Azar side by side, and the range said in the Persian calendar', async () => {
+    const got: string[] = [];
+    await render(<RangeCalendar calendar="persian" months={2} locale="en-US" defaultMonth={new Date(2026, 10, 15)} onValueChange={(_, iso) => got.push(iso.start + '/' + iso.end)} />);
+    const titles = [...document.querySelectorAll('[role=grid]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent);
+    const fmt = (d: Date) => new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(d);
+    expect(titles).toEqual([fmt(new Date(2026, 10, 1)), fmt(new Date(2026, 11, 1))]);
+    // Crossing from Aban's last day into Azar moves focus to the second grid, as in Gregorian.
+    day('2026-11-21').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect((document.activeElement as HTMLElement).dataset.date).toBe('2026-11-22');
+    await userEvent.click(day('2026-11-20'));
+    await userEvent.click(day('2026-11-25'));
+    expect(got).toEqual(['2026-11-20/2026-11-25']);
+    expect(document.querySelector('p[aria-live]')!.textContent).toContain(new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', dateStyle: 'medium' }).formatRange(new Date(2026, 10, 20), new Date(2026, 10, 25)).replace(/[\u2009\u202f]/g, ' '));
+  });
+});
+
+test('RangeCalendar: every calendar system names its month as Intl does, and its first day is the 1st', async () => {
+  for (const calendar of ['gregory', 'buddhist', 'japanese', 'roc', 'persian', 'islamic-umalqura', 'islamic-civil', 'islamic-tbla', 'indian'] as const) {
+    const r = await render(<RangeCalendar calendar={calendar} locale="en-US" defaultMonth={new Date(2026, 10, 15)} />);
+    const grid = document.querySelector('[role=grid]')!;
+    expect([calendar, document.getElementById(grid.getAttribute('aria-labelledby')!)!.textContent]).toEqual([calendar, new Intl.DateTimeFormat('en-US', { calendar, numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(new Date(2026, 10, 15))]);
+    await r.unmount();
+  }
+});

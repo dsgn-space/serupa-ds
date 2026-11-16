@@ -105,6 +105,7 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | The typed format and the calendar's names and first day. When it differs from the provider's, the field and the calendar carry `lang`, so screen readers read them in that language. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
 | `weekNumbers` | boolean | `false` | Week numbers before the days, as Calendar's `weekNumbers` |
+| `calendar` | as Calendar's | `'gregory'` | The calendar system the popup's months follow (`'persian'`, `'islamic-umalqura'`, `'buddhist'` and more, as in Calendar). The typed date stays Gregorian, so what people type reads back as the same day. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Like Input. |
 | `invalid` | `boolean` | `false` | Like Input. |
 | `name` | `string` | | Adds a hidden input that sends `yyyy-mm-dd`. With `form`, the hidden input belongs to that form too. |
