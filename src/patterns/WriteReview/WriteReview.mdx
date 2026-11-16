@@ -1,0 +1,34 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './WriteReview.stories';
+
+<Meta of={Stories} />
+
+# Write a review
+
+Stars, a few words and, if you like, photos, for something you bought; then a thank-you that says when it will show.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- The page a "How was your order?" email links to, or Write a review on an order.
+- Not for a quick rating of a service: that's the Feedback survey pattern.
+- Not for showing reviews: that's the Product page pattern.
+
+## What each part is for
+
+- **What's being reviewed is named first**, with its picture and when it was bought (1.3.1).
+- **The stars are a group of radios named by the question**, each star named by its number (1.3.1).
+- **The review says how long it needs to be and what helps others**, and the name says how it will show (3.3.2).
+- **Sending with problems shows a summary at the top that takes focus**, each problem a link to its field; the stars' link lands on a star (3.3.1, 2.4.3).
+- **Send shows it's busy**; a review that can't be sent says so and keeps everything, the photos too (3.3.4, 4.1.3).
+- **Once sent, the thank-you's heading takes focus**, and says reviews are read before they show, and when (2.4.3).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.SendFails} />
+
+## What stays your app's job
+
+- **Sending.** `onSend` gets the review, trimmed, with the photos as files: reject when it can't be sent.
+- **Reading them.** Check reviews before they show, and say so; never leave out a review only because it's low.
+- **Who can review.** Only people who bought it, once each; say "Bought" so readers know.
