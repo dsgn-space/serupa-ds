@@ -61,9 +61,9 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
-  const rows = (props.rows as number) > 0 ? Math.floor(props.rows as number) : 3;
+  const rows = (props.rows as number) > 0 && Number.isFinite(props.rows) ? Math.floor(props.rows as number) : 3;
   const auto = !!props.autoResize;
-  const maxRows = (props.maxRows as number) > 0 ? Math.max(rows, Math.floor(props.maxRows as number)) : 0;
+  const maxRows = (props.maxRows as number) > 0 && Number.isFinite(props.maxRows) ? Math.max(rows, Math.floor(props.maxRows as number)) : 0;
   const resize = auto || props.resize === 'none' ? 'none' : 'vertical';
   const own = React.useRef<HTMLTextAreaElement | null>(null);
   // The count and maxLength in characters as people see them; near the limit the count is read out (useTextLimit).

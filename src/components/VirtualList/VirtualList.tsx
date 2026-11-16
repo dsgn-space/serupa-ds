@@ -32,7 +32,7 @@ export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListEle
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualListProps>('VirtualList', function VirtualList(props, ref) {
   const rest = omit(props, { count: 1, renderItem: 1, itemKey: 1, estimatedItemHeight: 1, overscan: 1, variant: 1, divided: 1, as: 1, className: 1, style: 1, onFocus: 1, onBlur: 1 } as const);
-  const count = Math.max(0, Math.floor(props.count) || 0);
+  const count = Number.isFinite(props.count) ? Math.max(0, Math.floor(props.count)) : 0;
   const estimate = props.estimatedItemHeight && props.estimatedItemHeight > 0 ? props.estimatedItemHeight : 56;
   const r = useVirtual({ count, estimate, overscan: props.overscan != null && props.overscan >= 0 ? props.overscan : 4 });
   // The row that has focus, kept drawn (in place, absolutely) while it's out of the window.

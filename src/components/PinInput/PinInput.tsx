@@ -44,7 +44,7 @@ export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProp
   const nameRef = useNameCheck('PinInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);
   const rest = omit(props, { length: 1, value: 1, defaultValue: 1, onValueChange: 1, onComplete: 1, type: 1, mask: 1, size: 1, invalid: 1, className: 1, style: 1 } as const);
-  const length = Math.max(1, Math.floor(props.length || 6));
+  const length = Math.max(1, Math.floor(props.length && Number.isFinite(props.length) ? props.length : 6));
   const type = oneOf(['numeric', 'alphanumeric'] as const, props.type, 'numeric');
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   // Digits in any script read as ASCII, and full-width letters as the usual ones: an Arabic or Persian keyboard types

@@ -16,6 +16,11 @@ const filled = (id: string) => stars(id).map((s) => Math.round((s.children[1] as
 const picked = (id: string) => radios(id).filter((r) => r.checked).map((r) => r.value);
 
 describe('Rating', () => {
+  test('a max that is Infinity is none: five stars, where it threw "Invalid array length"', async () => {
+    await render(<Rating aria-label="Score" max={Infinity} />);
+    expect(page.getByRole('radiogroup', { name: 'Score' }).element().querySelectorAll('input[type=radio]')).toHaveLength(5);
+  });
+
   test('a role="radiogroup" of native radios, one per star, named "1 star"…"5 stars"; a click picks; the stars up to it fill; ref, className and other props reach the group', async () => {
     const ref = React.createRef<HTMLDivElement>();
     const calls: (number | null)[] = [];

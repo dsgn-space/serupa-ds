@@ -41,6 +41,12 @@ function Controlled({ calls, set }: { calls: Array<number | null>; set?: (f: (v:
 }
 
 describe('NumberInput', () => {
+  test('Infinity as the default (a division by zero) is no number either: an empty field and no valuenow', async () => {
+    await mount(<NumberInput aria-label="Ratio" defaultValue={Infinity} />);
+    const f = page.getByRole('spinbutton', { name: 'Ratio' }).element() as HTMLInputElement;
+    expect([f.value, f.hasAttribute('aria-valuenow')]).toEqual(['', false]);
+  });
+
   test('NaN as the value or the default (Number() of an empty answer) is no number: an empty field, no valuenow, and the form sends nothing', async () => {
     await mount(<form data-testid="nan-form"><NumberInput aria-label="Own" name="own" defaultValue={NaN} /><NumberInput aria-label="Held" value={NaN} onValueChange={() => {}} /></form>);
     const [own, held] = [page.getByRole('spinbutton', { name: 'Own' }).element() as HTMLInputElement, page.getByRole('spinbutton', { name: 'Held' }).element() as HTMLInputElement];

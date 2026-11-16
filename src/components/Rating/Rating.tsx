@@ -60,7 +60,7 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Ra
   const nameRef = useNameCheck('Rating', NAME_HOW.group);
   const sds = useSettings(words), locale = useLocale();
   const size = oneOf(SIZES, sizeIn, 'md');
-  const max = typeof maxIn === 'number' && maxIn >= 1 ? Math.floor(maxIn) : 5;
+  const max = typeof maxIn === 'number' && maxIn >= 1 && Number.isFinite(maxIn) ? Math.floor(maxIn) : 5;
   const step = allowHalf ? 0.5 : 1;
   const fit = (n: number | null | undefined) => (typeof n === 'number' && isFinite(n) && n > 0 ? Math.min(max, n) : null);
   const [chosen, setOwn, controlled] = useControllable<number | null>(valueIn, fit(defaultValue), 'Rating', 'value');

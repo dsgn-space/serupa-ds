@@ -40,7 +40,7 @@ export const CodeBlock = /* @__PURE__ */ component<HTMLDivElement, CodeBlockProp
   const base = domId('dk-code', React.useId());
   const code = String(props.code ?? '').replace(/\r\n?/g, '\n').replace(/\n$/, '');
   const lines = code.split('\n');
-  const start = Math.round(Number(props.startLine) || 1);
+  const start = Number.isFinite(Number(props.startLine)) ? Math.round(Number(props.startLine) || 1) : 1;
   const marked = new Set<number>();
   for (const h of props.highlight || []) {
     const [a, b] = typeof h === 'number' ? [h, h] : h;

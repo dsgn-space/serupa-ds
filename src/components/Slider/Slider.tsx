@@ -103,7 +103,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const min = isFinite(Number(props.min)) && props.min != null ? Number(props.min) : 0;
   const maxIn = isFinite(Number(props.max)) && props.max != null ? Number(props.max) : 100;
   const max = maxIn > min ? maxIn : min + 1;
-  const step = Number(props.step) > 0 ? Number(props.step) : 1;
+  const step = Number(props.step) > 0 && Number.isFinite(Number(props.step)) ? Number(props.step) : 1;
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
   const snap = (v: number) => snapToGrid(v, min, max, step);
   const [raw, setOwn, controlled] = useControllable<SliderValue>(props.value, props.defaultValue ?? min, 'Slider', 'value');

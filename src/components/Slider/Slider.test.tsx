@@ -50,6 +50,11 @@ const setup = async (sref?: React.Ref<HTMLDivElement>) => { calls = []; commits 
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Slider', () => {
+  test('a step that is Infinity is none: it moves by 1, where the value read NaN', async () => {
+    await render(<Slider aria-label="Volume" defaultValue={40} step={Infinity} />);
+    expect(page.getByRole('slider', { name: 'Volume' }).element().getAttribute('aria-valuenow')).toBe('40');
+  });
+
   test('a swipe across the page that starts on it scrolls the page: the browser cancels the press, the thumb goes back and nothing commits', async () => {
     await setup();
     expect(getComputedStyle(el('one')).touchAction).toBe('pan-y');
