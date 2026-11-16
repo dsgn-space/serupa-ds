@@ -7,6 +7,8 @@ import { Button } from '../../components/Button/Button';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { Progress } from '../../components/Progress/Progress';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
@@ -79,13 +81,14 @@ function save(key: string | undefined, state: OnboardingState) {
 
 /** The first-run page: a skip link, a header, then main with the welcome, the setup checklist and an empty project list. */
 export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, onChange, dashboardHref = '#dashboard' }: OnboardingProps) {
+  const locale = useLocale();
   const [state, setState] = React.useState<OnboardingState>(() => {
     const saved = load(saveKey) ?? initial ?? {};
     const ids = new Set(steps.map((s) => s.id));
     return { done: (saved.done ?? []).filter((id) => ids.has(id)), hidden: saved.hidden ?? false };
   });
   const update = (next: OnboardingState) => { setState(next); save(saveKey, next); onChange?.(next); };
-  const count = (n: number) => `${n} of ${steps.length} steps done`;
+  const count = (n: number) => `${formatNumber(n, locale)} of ${formatNumber(steps.length, locale)} steps done`;
   const finished = state.done.length === steps.length;
 
   const tick = (id: string, on: boolean) => {
@@ -142,7 +145,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
                     <Card as="li" key={s.id} padding="md" className="flex min-w-0 flex-col gap-3 wrap-anywhere" aria-labelledby={`step-${s.id}`}>
                       <div className="flex flex-col gap-1">
                         <Heading level={3} size="base" id={`step-${s.id}`}>
-                          <span className="text-text-muted">{i + 1}. </span>{s.title}
+                          <span className="text-text-muted">{formatNumber(i + 1, locale)}. </span>{s.title}
                         </Heading>
                         <p className="m-0 text-sm text-text-muted">{s.description}</p>
                       </div>

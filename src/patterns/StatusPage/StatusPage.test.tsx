@@ -3,6 +3,10 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { StatusPage, overallState, serviceDays } from './StatusPage';
+import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 const active = () => document.activeElement as HTMLElement;
 const subscribed = () => document.getElementById('status-subscribed')!.textContent;
@@ -26,37 +30,44 @@ describe('Patterns/Status page', () => {
     expect(document.querySelector('main [role="alert"], main [role="status"]')?.textContent).toMatch(/^Some things are slow or partly working/);
     expect(screen.getByRole('heading', { level: 3, name: 'Webhooks' }).element().closest('li')?.textContent).toContain('Slow or partly working');
     expect(screen.getByRole('article', { name: 'Webhooks delivered late' }).element().querySelectorAll('ol li')).toHaveLength(3);
-    expect(screen.getByRole('article', { name: 'API down for 38 minutes' }).elements()).toHaveLength(1);
+    expect(screen.getByRole('article', { name: digits('API down for 38 minutes') }).elements()).toHaveLength(1);
   });
 
   test('all working, with nothing open', async () => {
     await render(<StatusPage incidents={[]} services={[{ id: 'a', name: 'API', state: 'up', days: serviceDays('2026-03-12', 30) }]} />);
-    expect(document.body.textContent).toContain('Everything is working');
-    expect(document.body.textContent).toContain('No open incidents.');
-    expect(document.body.textContent).not.toContain('Past incidents');
+    expect(latin(document.body.textContent)).toContain('Everything is working');
+    expect(latin(document.body.textContent)).toContain('No open incidents.');
+    expect(latin(document.body.textContent)).not.toContain('Past incidents');
   });
 
   test('an outage says so, and two open incidents are counted', async () => {
     const inc = (id: string) => ({ id, title: id, services: ['a'], resolved: false, updates: [{ at: '2026-03-12T10:00', status: 'Investigating', text: 'x' }] });
     await render(<StatusPage incidents={[inc('one'), inc('two')]} services={[{ id: 'a', name: 'API', state: 'down', days: serviceDays('2026-03-12', 30) }]} />);
-    expect(document.body.textContent).toContain('Some things aren’t working');
-    expect(document.body.textContent).toContain('2 incidents are open');
+    expect(latin(document.body.textContent)).toContain('Some things aren’t working');
+    expect(latin(document.body.textContent)).toContain('2 incidents are open');
   });
 
   test('subscribing: a wrong email says so and keeps focus there; a failure says so; then it says it worked', async () => {
     const onSubscribe = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
     const screen = await render(<StatusPage onSubscribe={onSubscribe} />);
     await screen.getByRole('button', { name: 'Subscribe' }).click();
-    expect(document.body.textContent).toContain('Enter your email address.');
+    expect(latin(document.body.textContent)).toContain('Enter your email address.');
     expect(active().id).toBe('status-email');
     await screen.getByRole('textbox', { name: /^Email/ }).fill('ana@');
     await screen.getByRole('button', { name: 'Subscribe' }).click();
-    expect(document.body.textContent).toContain('Enter an email address like name@example.com.');
+    expect(latin(document.body.textContent)).toContain('Enter an email address like name@example.com.');
     await screen.getByRole('textbox', { name: /^Email/ }).fill(' ana@example.com ');
     await screen.getByRole('button', { name: 'Subscribe' }).click();
-    await expect.poll(() => document.body.textContent).toContain('Couldn’t subscribe you.');
+    await expect.poll(() => latin(document.body.textContent)).toContain('Couldn’t subscribe you.');
     await screen.getByRole('button', { name: 'Subscribe' }).click();
     await expect.poll(subscribed).toBe('Subscribed. Updates go to ana@example.com.');
     expect(onSubscribe).toHaveBeenLastCalledWith('ana@example.com');
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
+    const open = (id: string) => ({ id, title: `Incident ${id}`, services: ['api'], resolved: false, updates: [{ at: '2026-11-16T03:00:00Z', status: 'Investigating', text: 'Looking into it.' }] });
+    await render(<SerupaProvider locale="ar-EG"><StatusPage incidents={[open('a'), open('b')]} /></SerupaProvider>);
+    expect(bodyText()).toContain('٢ incidents are open');
   });
 });

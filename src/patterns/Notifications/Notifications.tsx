@@ -11,6 +11,8 @@ import { SegmentedControl } from '../../components/SegmentedControl/SegmentedCon
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Loader } from '../../components/Loader/Loader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Notifications: a bell in the Navbar that opens the recent ones in a drawer, and a full inbox page with a filter,
@@ -60,6 +62,7 @@ type Filter = 'all' | 'unread';
 
 /** The notifications page: a skip link, a Navbar with the bell, then main with the inbox. */
 export function Notifications({ items = demo, onMarkRead, onMarkAllRead, settingsHref = '#settings-notifications', loading = false, loadFailed = false, onRetry }: NotificationsProps) {
+  const locale = useLocale();
   // Marked read here, on top of what the items say, so items that arrive later (after loading) keep their own.
   const [read, setRead] = React.useState<ReadonlySet<string>>(() => new Set());
   const [filter, setFilter] = React.useState<Filter>('all');
@@ -93,7 +96,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
     setRead(new Set(items.map((n) => n.id)));
     onMarkAllRead?.();
   };
-  const bellName = unread ? `Notifications, ${unread} unread` : 'Notifications';
+  const bellName = unread ? `Notifications, ${formatNumber(unread, locale)} unread` : 'Notifications';
 
   return (
     <div className="min-h-screen bg-surface-muted text-text">
@@ -116,7 +119,7 @@ export function Notifications({ items = demo, onMarkRead, onMarkAllRead, setting
         <div className="flex flex-wrap items-center justify-between gap-3">
           <SegmentedControl aria-label="Show" value={filter} onValueChange={setFilter}
             options={[{ value: 'all', label: 'All' }, { value: 'unread', label: 'Unread' }]} />
-          <p role="status" className="m-0 text-sm text-text-muted">{loadFailed ? '' : loading ? 'Loading notifications' : unread ? `${unread} unread` : 'All caught up'}</p>
+          <p role="status" className="m-0 text-sm text-text-muted">{loadFailed ? '' : loading ? 'Loading notifications' : unread ? `${formatNumber(unread, locale)} unread` : 'All caught up'}</p>
         </div>
         {loadFailed ? (
           <EmptyLoadFailed title="Couldn’t load your notifications" onRetry={() => onRetry?.()} headingLevel={2} />

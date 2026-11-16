@@ -13,6 +13,8 @@ import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { Loader } from '../../components/Loader/Loader';
 import { Toaster, toast } from '../../components/Toast/Toast';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
@@ -85,6 +87,7 @@ export function addressProblems(a: Draft): Partial<Record<(typeof REQUIRED)[numb
 
 /** The address book page: a skip link, a header, then main with the h1, the addresses and Add address. */
 export function AddressBook({ addresses: start = demo, defaultId, countries = COUNTRIES, onSave, onRemove, onDefaultChange, loading = false, loadFailed = false, onRetry }: AddressBookProps) {
+  const locale = useLocale();
   const [list, setList] = React.useState(start);
   const [def, setDef] = React.useState(defaultId ?? start[0]?.id);
   const [gone, setGone] = React.useState<ReadonlySet<string>>(new Set());
@@ -143,7 +146,7 @@ export function AddressBook({ addresses: start = demo, defaultId, countries = CO
           description="Where we deliver. The default one is chosen for you at checkout."
           primary={loading || loadFailed ? undefined : { label: 'Add address', onSelect: () => open(blank) }} />
         <section aria-labelledby="saved" className="flex flex-col gap-4 pt-6">
-          <h2 id="saved" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Saved addresses ({shown.length})</h2>
+          <h2 id="saved" ref={heading} tabIndex={-1} className="m-0 text-lg font-semibold outline-none">Saved addresses ({formatNumber(shown.length, locale)})</h2>
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your addresses" onRetry={() => onRetry?.()} headingLevel={3} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={5} label="Loading addresses" /></Card>
             : !shown.length ? <EmptyState title="No addresses yet" description="Add one, and it’s ready at checkout." headingLevel={3} variant="dashed" />

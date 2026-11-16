@@ -17,6 +17,7 @@ import { TableActionBar } from '../../components/Table/Table';
 import { formatFileSize } from '../../components/FileUpload/formatFileSize';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 
 /* File browser: one folder's files as a list people pick from, to move or delete several at once, with rename, move
@@ -98,7 +99,7 @@ const demoFolders: BrowserFolder[] = [{ id: 'd1', name: 'Archive' }, { id: 'd2',
 const ICON: Record<FileKind, string> = { folder: 'folder', image: 'image', pdf: 'picture_as_pdf', doc: 'description', sheet: 'table_chart', other: 'draft' };
 
 /** "1 file" or "3 files": English's rule, since the words are English; an app translating them uses its own. */
-export const countFiles = (n: number): string => (n === 1 ? '1 file' : `${n} files`);
+export const countFiles = (n: number, locale = 'en-US'): string => (n === 1 ? '1 file' : `${formatNumber(n, locale)} files`);
 
 /** What's wrong with a new name, or null: empty, or one another file here already has (whatever its case). */
 export function nameProblem(name: string, id: string, files: readonly BrowserFile[]): string | null {
@@ -128,7 +129,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
   });
   const hide = (ids: string[]) => setHidden((h) => { const n = new Set(h); for (const id of ids) n.add(id); return n; });
   const show = (ids: string[]) => setHidden((h) => { const n = new Set(h); for (const id of ids) n.delete(id); return n; });
-  const said = (ids: string[]) => (ids.length === 1 ? `“${files.find((f) => f.id === ids[0])?.name ?? ''}”` : countFiles(ids.length));
+  const said = (ids: string[]) => (ids.length === 1 ? `“${files.find((f) => f.id === ids[0])?.name ?? ''}”` : countFiles(ids.length, locale));
 
   // Deleting: at once, with Undo. It's final when the toast goes.
   const remove = (ids: string[]) => {
@@ -204,7 +205,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[...path, { label: folder }]} title={folder} headingRef={title} primary={upload}
-          description={loading || loadFailed ? undefined : countFiles(files.length)} />
+          description={loading || loadFailed ? undefined : countFiles(files.length, locale)} />
 
         <div className="flex flex-col gap-3 pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load the files" onRetry={() => onRetry?.()} headingLevel={2} />

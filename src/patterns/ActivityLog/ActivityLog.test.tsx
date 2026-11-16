@@ -4,10 +4,11 @@ import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { ActivityLog, matchEvents, type ActivityEvent } from './ActivityLog';
 import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
 
 const active = () => document.activeElement as HTMLElement;
 const rows = () => page.getByRole('table', { name: 'Events' }).getByRole('row').elements().slice(1);
-const status = () => document.querySelector('main [role="status"]')?.textContent;
+const status = () => latin(document.querySelector('main [role="status"]')?.textContent);
 const ev = (id: string, actor: string, action: string, kind: ActivityEvent['kind']): ActivityEvent => ({ id, actor, action, kind, time: '2026-11-12T08:00:00Z' });
 const few = [ev('a', 'Ana Lima', 'changed Chen Wei’s role to Admin', 'members'), ev('b', 'Budi Santoso', 'changed the plan', 'billing'), ev('c', 'Ana Lima', 'changed her password', 'security')];
 
@@ -90,5 +91,11 @@ describe('Patterns/Activity log', () => {
     expect(screen.getByRole('button', { name: 'Export' }).elements()).toHaveLength(0);
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledOnce();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
+    await render(<SerupaProvider locale="ar-EG"><ActivityLog /></SerupaProvider>);
+    expect(bodyText()).toContain('١١ events');
   });
 });

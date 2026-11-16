@@ -260,7 +260,7 @@ export function Checkout({
     } finally { setBusy(false); }
   };
 
-  const steps: Record<Step, string> = { details: 'Step 1 of 2', review: 'Step 2 of 2', placed: 'Done' };
+  const steps: Record<Step, string> = { details: `Step ${formatNumber(1, locale)} of ${formatNumber(2, locale)}`, review: `Step ${formatNumber(2, locale)} of ${formatNumber(2, locale)}`, placed: 'Done' };
   const titles: Record<Step, string> = { details: 'Delivery and payment', review: 'Check your order', placed: later(method) ? 'Your order is placed: now pay for it' : 'Thank you, your order is placed' };
   const change = (part: Part, label: string) => (
     <Button variant="secondary" size="sm" onClick={() => go('details', FIRST[part])} aria-label={`Change ${label}`} disabled={busy} disabledReason={placing}>Change</Button>
@@ -390,7 +390,7 @@ export function Checkout({
               <ul role="list" className="m-0 flex list-none flex-col gap-2 p-0">
                 {lines.map((l) => (
                   <li key={l.id} className="flex justify-between gap-3 text-sm">
-                    <span className="min-w-0 wrap-anywhere">{l.name} × {l.quantity}</span>{money(l.quantity * l.price)}
+                    <span className="min-w-0 wrap-anywhere">{l.name} × {formatNumber(l.quantity, locale)}</span>{money(l.quantity * l.price)}
                   </li>
                 ))}
               </ul>

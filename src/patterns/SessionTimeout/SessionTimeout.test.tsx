@@ -4,9 +4,10 @@ import { render } from 'vitest-browser-react';
 import { Heading } from '../../components/Heading/Heading';
 import { userEvent } from 'vitest/browser';
 import { SessionTimeout, timeLeft } from './SessionTimeout';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
 
 const active = () => document.activeElement as HTMLElement;
-const said = () => [...document.querySelectorAll('[aria-live="polite"]')].map((e) => e.textContent || '').join(' ');
+const said = () => latin([...document.querySelectorAll('[aria-live="polite"]')].map((e) => e.textContent || '').join(' '));
 const KEY = 'serupa-test-session';
 const WAIT = { timeout: 5000 };
 
@@ -52,7 +53,7 @@ describe('Patterns/Session time-out', () => {
     const onExtend = vi.fn();
     const screen = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
     await screen.getByLabelText('Message').click();
-    await vi.waitFor(() => expect(active().textContent).toBe('Stay signed in'), WAIT);
+    await vi.waitFor(() => expect(latin(active().textContent)).toBe('Stay signed in'), WAIT);
     await expect.element(screen.getByRole('alertdialog', { name: 'You’ll be signed out soon' })).toBeVisible();
     await vi.waitFor(() => expect(said()).toContain('You’ll be signed out in 2 seconds.'));
     await userEvent.keyboard('{Enter}');
@@ -81,7 +82,7 @@ describe('Patterns/Session time-out', () => {
     const screen = await render(<SessionTimeout duration={3} warnBefore={1} saveKey={KEY} onExpire={onExpire} />);
     await userEvent.fill(screen.getByLabelText('Subject'), 'Invoice is wrong');
     await userEvent.fill(screen.getByLabelText('Message'), 'Charged twice in May.');
-    await vi.waitFor(() => expect(active().textContent).toBe('You’ve been signed out'), WAIT);
+    await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve been signed out'), WAIT);
     expect(onExpire).toHaveBeenCalledTimes(1);
     expect(JSON.parse(window.sessionStorage.getItem(KEY)!)).toEqual({ subject: 'Invoice is wrong', message: 'Charged twice in May.' });
     await screen.getByRole('button', { name: 'Sign in again' }).click();
@@ -123,7 +124,7 @@ describe('Patterns/Session time-out', () => {
     const first = await render(<SessionTimeout duration={4} warnBefore={3} saveKey={KEY} onExpire={onExpire} />);
     await userEvent.fill(first.getByLabelText('Subject'), 'Private');
     await first.getByRole('button', { name: 'Sign out' }).click(WAIT);
-    await vi.waitFor(() => expect(active().textContent).toBe('You’ve signed out'));
+    await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve signed out'));
     expect(onExpire).toHaveBeenCalledTimes(1);
     expect(window.sessionStorage.getItem(KEY)).toBeNull();
     await first.getByRole('button', { name: 'Sign in again' }).click();
@@ -132,7 +133,7 @@ describe('Patterns/Session time-out', () => {
     const onExtend = vi.fn(() => Promise.reject(new Error('offline')));
     const second = await render(<SessionTimeout duration={3} warnBefore={2} onExtend={onExtend} />);
     await second.getByRole('button', { name: 'Stay signed in' }).click(WAIT);
-    await vi.waitFor(() => expect(active().textContent).toBe('You’ve been signed out'), WAIT);
+    await vi.waitFor(() => expect(latin(active().textContent)).toBe('You’ve been signed out'), WAIT);
   });
 
   test('"Stay signed in" is busy while the server answers; when it can\'t, the warning stays open and says so, and trying again works', async () => {
@@ -226,5 +227,10 @@ describe('Patterns/Session time-out', () => {
     await expect.element(screen.getByLabelText('Subject')).toHaveValue('Kept in the page');
     get.mockRestore();
     set.mockRestore();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    expect(timeLeft(150, 'ar-EG')).toBe('٢ minutes ٣٠ seconds');
+    expect(timeLeft(60)).toBe('1 minute');
   });
 });

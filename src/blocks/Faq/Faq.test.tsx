@@ -3,6 +3,8 @@ import { afterEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { Faq, type FaqGroup } from './Faq';
+import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
 
 const groups: FaqGroup[] = [
   { id: 'account', title: 'Your account', questions: [
@@ -20,7 +22,7 @@ const groups: FaqGroup[] = [
 const contact = <><p>We answer within one working day.</p><button type="button">Contact support</button></>;
 const question = (name: string) => page.getByRole('button', { name });
 // The count under the search (the page's shared announcer is a status too).
-const count = () => document.querySelector('section p[role="status"]')?.textContent;
+const count = () => latin(document.querySelector('section p[role="status"]')?.textContent);
 const answer = (id: string) => document.querySelector(`[id="${id}"] [hidden]`) as HTMLElement;
 
 afterEach(() => { history.replaceState(null, '', location.pathname + location.search); });
@@ -102,5 +104,10 @@ describe('Blocks/FAQ', () => {
     await expect.poll(count).toBe('0 dari 7 pertanyaan');
     await expect.element(page.getByText('Tidak ada yang cocok dengan “xyz”.')).toBeVisible();
     await expect.element(page.getByRole('heading', { name: 'Masih bingung?' })).toBeVisible();
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    await render(<SerupaProvider locale="ar-EG"><Faq groups={groups} contact={contact} defaultQuery="shipping" /></SerupaProvider>);
+    expect(document.querySelector('section p[role="status"]')?.textContent).toMatch(/^[٠-٩]+ of [٠-٩]+ questions?$/);
   });
 });

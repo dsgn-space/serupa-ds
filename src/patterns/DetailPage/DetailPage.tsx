@@ -12,6 +12,7 @@ import { Tabs, TabList, Tab, TabPanel } from '../../components/Tabs/Tabs';
 import { TypeToConfirm } from '../../components/TypeToConfirm/TypeToConfirm';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { Alert } from '../../components/Alert/Alert';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -133,7 +134,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
   // What the dialog says will be lost: the tasks still there, with the word that fits the number: the words are
   // English, so the rule is too; an app translating them passes its own locale.
   const lost = tasks.length
-    ? `its ${tasks.length} ${english.select(tasks.length) === 'one' ? 'task' : 'tasks'} and files`
+    ? `its ${formatNumber(tasks.length, locale)} ${english.select(tasks.length) === 'one' ? 'task' : 'tasks'} and files`
     : 'its files';
 
   return (
@@ -186,7 +187,7 @@ export function DetailPage({ project = demo, onRename, onRemoveTask, onDelete, d
 
               <TabPanel value="tasks" className="pt-4">
                 <Card className="flex flex-col gap-3">
-                  <Heading level={2} size="lg" ref={tasksHeading} tabIndex={-1} className="outline-none">Tasks ({tasks.length})</Heading>
+                  <Heading level={2} size="lg" ref={tasksHeading} tabIndex={-1} className="outline-none">Tasks ({formatNumber(tasks.length, locale)})</Heading>
                   {tasks.length ? (
                     <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
                       {tasks.map((t) => (

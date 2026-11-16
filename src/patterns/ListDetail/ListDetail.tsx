@@ -9,6 +9,7 @@ import { Splitter } from '../../components/Splitter/Splitter';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 import { Loader } from '../../components/Loader/Loader';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { withViewTransition } from '../../internal/viewTransition';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
@@ -120,7 +121,7 @@ export function ListDetail({ messages = demo, defaultSelected, onSelect, loading
   const pane = wide ? undefined : ({ viewTransitionName: 'list-detail-pane', viewTransitionClass: 'step' } as React.CSSProperties);
   const list = (
     <section aria-labelledby="messages-title" className="flex h-full min-w-0 flex-col gap-3 p-4">
-      <Heading level={2} size="lg" id="messages-title">Messages ({messages.length})</Heading>
+      <Heading level={2} size="lg" id="messages-title">Messages ({formatNumber(messages.length, locale)})</Heading>
       <List divided>
         {messages.map((m) => (
           <ListItem key={m.id} title={subject(m.id, m.subject)} description={<>{m.from} · <time dateTime={m.date}>{day(m.date, locale, 'medium')}</time></>} href={`#${m.id}`}

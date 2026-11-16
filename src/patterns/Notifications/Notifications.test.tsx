@@ -3,9 +3,13 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { Notifications } from './Notifications';
+import { SerupaProvider } from '../../internal/provider';
+const latin = (t: string | null | undefined) => (t ?? '').replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x660));
+// A name with its digits in Latin or Arabic-Indic, for a role query that runs in every locale.
+const digits = (s: string) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\d/g, (d) => `[${d}${String.fromCharCode(0x660 + Number(d))}]`)}$`);
 
 const active = () => document.activeElement as HTMLElement;
-const status = () => document.querySelector('main [role="status"]')?.textContent;
+const status = () => latin(document.querySelector('main [role="status"]')?.textContent);
 const titles = () => [...document.querySelectorAll('main ul > li')];
 
 // Notifications: the bell named with its count, unread said in words, a filter whose count is a status, and focus kept
@@ -14,7 +18,7 @@ describe('Patterns/Notifications', () => {
   test('one main and one h1, the skip link first; the bell is named with its count; unread ones say so in words', async () => {
     const screen = await render(<Notifications />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
-    await expect.element(screen.getByRole('button', { name: 'Notifications, 3 unread' })).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: digits('Notifications, 3 unread') })).toBeInTheDocument();
     expect(status()).toBe('3 unread');
     const unreadWords = [...document.querySelectorAll('main ul > li')].filter((li) => /Unread/.test(li.textContent || '')).length;
     expect(unreadWords).toBe(3);
@@ -34,7 +38,7 @@ describe('Patterns/Notifications', () => {
     expect(document.querySelector('main')!.textContent).not.toContain('No notifications yet');
     await screen.rerender(<Notifications items={items} />);
     await expect.poll(status).toBe('1 unread');   // not 2: "Export finished" came in read
-    await expect.element(screen.getByRole('button', { name: 'Notifications, 1 unread' })).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: digits('Notifications, 1 unread') })).toBeInTheDocument();
   });
 
   test('Mark as read: the count and the bell follow, and onMarkRead hears it; Mark all as read ends at "All caught up"', async () => {
@@ -43,7 +47,7 @@ describe('Patterns/Notifications', () => {
     await screen.getByRole('button', { name: /^Mark as read: Your export is ready/ }).click();
     expect(onMarkRead).toHaveBeenCalledWith('n2');
     expect(status()).toBe('2 unread');
-    await expect.element(screen.getByRole('button', { name: 'Notifications, 2 unread' })).toBeInTheDocument();
+    await expect.element(screen.getByRole('button', { name: digits('Notifications, 2 unread') })).toBeInTheDocument();
     await screen.getByRole('button', { name: 'Mark all as read' }).click();
     expect(onMarkAllRead).toHaveBeenCalledTimes(1);
     expect(status()).toBe('All caught up');
@@ -86,7 +90,7 @@ describe('Patterns/Notifications', () => {
 
   test('the bell opens the drawer with the latest five, and Mark as read there counts on the page too', async () => {
     const screen = await render(<Notifications />);
-    await screen.getByRole('button', { name: 'Notifications, 3 unread' }).click();
+    await screen.getByRole('button', { name: digits('Notifications, 3 unread') }).click();
     const drawer = screen.getByRole('dialog');
     await expect.element(drawer).toBeVisible();
     await drawer.getByRole('button', { name: /Mark all/i }).click();
@@ -143,5 +147,12 @@ describe('Patterns/Notifications', () => {
     expect(status()).toBe('');
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    const bodyText = () => document.body.textContent ?? '';
+    await render(<SerupaProvider locale="ar-EG"><Notifications /></SerupaProvider>);
+    expect(bodyText()).toContain('٣ unread');
+    expect(document.querySelector('[aria-label^="Notifications, "]')?.getAttribute('aria-label')).toBe('Notifications, ٣ unread');
   });
 });

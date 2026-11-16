@@ -10,6 +10,8 @@ import { Select } from '../../components/Select/Select';
 import { Alert } from '../../components/Alert/Alert';
 import { Toaster, toast } from '../../components/Toast/Toast';
 import { Kanban, type KanbanColumn, type KanbanMove } from '../../components/Kanban/Kanban';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
@@ -76,7 +78,7 @@ const demo: BoardColumn[] = [
 ];
 
 /** "1 task" or "3 tasks": English's rule, since the words are English; an app translating them uses its own. */
-export const countTasks = (n: number): string => (n === 1 ? '1 task' : `${n} tasks`);
+export const countTasks = (n: number, locale = 'en-US'): string => (n === 1 ? '1 task' : `${formatNumber(n, locale)} tasks`);
 
 /** The columns with a moved card back where it came from, wherever it is now. */
 export function putBack(columns: readonly BoardColumn[], move: KanbanMove<BoardTask>): BoardColumn[] {
@@ -88,12 +90,13 @@ export function putBack(columns: readonly BoardColumn[], move: KanbanMove<BoardT
 }
 
 /** The columns holding more than their limit, each as a sentence: "In progress has 3 tasks, over its limit of 2." */
-export function overLimit(columns: readonly BoardColumn[]): string[] {
-  return columns.filter((c) => c.limit != null && c.items.length > c.limit).map((c) => `${c.title} has ${countTasks(c.items.length)}, over its limit of ${c.limit}.`);
+export function overLimit(columns: readonly BoardColumn[], locale = 'en-US'): string[] {
+  return columns.filter((c) => c.limit != null && c.items.length > c.limit).map((c) => `${c.title} has ${countTasks(c.items.length, locale)}, over its limit of ${formatNumber(c.limit!, locale)}.`);
 }
 
 /** The task board: a skip link, a header, then main with the board's h1, New task and the columns. */
 export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, onAdd, loading = false, loadFailed = false, onRetry }: TaskBoardProps) {
+  const locale = useLocale();
   const [columns, setColumns] = React.useState<readonly BoardColumn[]>(start);
   const total = columns.reduce((n, c) => n + c.items.length, 0);
   const over = overLimit(columns);
@@ -153,7 +156,7 @@ export function TaskBoard({ title = 'Sprint 42', columns: start = demo, onMove, 
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Boards', href: '#boards' }, { label: title }]} title={title}
-          description={loading || loadFailed ? undefined : countTasks(total)}
+          description={loading || loadFailed ? undefined : countTasks(total, locale)}
           primary={{ label: 'New task', icon: 'add', onSelect: () => ask(true), disabled: loading || loadFailed }} />
 
         <div className="flex flex-col gap-4 pt-6">

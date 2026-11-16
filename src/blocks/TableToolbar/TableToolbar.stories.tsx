@@ -5,6 +5,8 @@ import { Heading } from '../../components/Heading/Heading';
 import { Button } from '../../components/Button/Button';
 import { Table, TableBody, TableCell, TableColumnsMenu, TableHead, TableHeaderCell, TableRow, TableSelectCell, type TableColumnOption } from '../../components/Table/Table';
 import { FilterBar, type FilterValues } from '../../components/FilterBar/FilterBar';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { TableToolbar } from './TableToolbar';
 
 /* Table toolbar (BL3): search, filters, a results count and bulk actions above a table, as a block an app copies.
@@ -21,7 +23,11 @@ const PROJECTS = [
   { name: 'Search ranking', status: 'Active', owner: 'Dewi' },
 ];
 
+// How many show, in the locale's digits: "8 projects", "3 of 8 projects".
+const projectsShown = (n: number, locale: string) => (n === PROJECTS.length ? `${formatNumber(n, locale)} projects` : `${formatNumber(n, locale)} of ${formatNumber(PROJECTS.length, locale)} projects`);
+
 function Projects({ initialQuery = '', initialStatus = '', initialPicked = [] as string[] }) {
+  const locale = useLocale();
   const [query, setQuery] = React.useState(initialQuery);
   const [status, setStatus] = React.useState(initialStatus);
   const [owner, setOwner] = React.useState('');
@@ -39,7 +45,7 @@ function Projects({ initialQuery = '', initialStatus = '', initialPicked = [] as
         { label: 'Status', value: status, onChange: setStatus, options: [{ value: '', label: 'All' }, 'Active', 'Paused', 'Done'] },
         { label: 'Owner', value: owner, onChange: setOwner, options: [{ value: '', label: 'Anyone' }, 'Ana', 'Budi', 'Chen', 'Dewi'] },
       ]}
-      results={rows.length === PROJECTS.length ? `${rows.length} projects` : `${rows.length} of ${PROJECTS.length} projects`}
+      results={projectsShown(rows.length, locale)}
       onClearFilters={() => { setQuery(''); setStatus(''); setOwner(''); }}
       selectedCount={picked.length}
       onClearSelection={() => setPicked([])}
@@ -86,6 +92,7 @@ export const ChipsAndColumns: Story = {
 };
 
 function DataTable() {
+  const locale = useLocale();
   const [query, setQuery] = React.useState('');
   const [filters, setFilters] = React.useState<FilterValues>({ status: ['Active', 'Paused'] });
   const [cols, setCols] = React.useState<TableColumnOption[]>([
@@ -96,7 +103,7 @@ function DataTable() {
   const show = (id: string) => cols.some((c) => c.id === id && c.visible);
   return (
     <TableToolbar noun="projects" query={query} onQueryChange={setQuery} onClearFilters={() => setQuery('')}
-      results={rows.length === PROJECTS.length ? `${rows.length} projects` : `${rows.length} of ${PROJECTS.length} projects`}
+      results={projectsShown(rows.length, locale)}
       filterBar={<FilterBar value={filters} onValueChange={setFilters} fields={[
         { id: 'status', label: 'Status', type: 'select', multiple: true, options: ['Active', 'Paused', 'Done'] },
         { id: 'owner', label: 'Owner', type: 'select', multiple: true, options: ['Ana', 'Budi', 'Chen', 'Dewi'] },

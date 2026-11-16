@@ -9,6 +9,8 @@ import { Input } from '../../components/Input/Input';
 import { Textarea } from '../../components/Textarea/Textarea';
 import { Card } from '../../components/Card/Card';
 import { Alert } from '../../components/Alert/Alert';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
@@ -53,10 +55,10 @@ interface Draft { subject: string; message: string }
 const TICK = 1000;
 
 /** Words for a time left: "2 minutes", "1 minute 30 seconds", "45 seconds". */
-export function timeLeft(seconds: number): string {
+export function timeLeft(seconds: number, locale = 'en-US'): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  const unit = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`;
+  const unit = (n: number, one: string) => `${formatNumber(n, locale)} ${one}${n === 1 ? '' : 's'}`;
   return [m ? unit(m, 'minute') : '', s || !m ? unit(s, 'second') : ''].filter(Boolean).join(' ');
 }
 /** Whether the time left is worth saying: each whole minute, and 30 seconds. */
@@ -84,6 +86,7 @@ function save(key: string | undefined, draft: Draft) {
 
 /** A page with a form, a warning Dialog before the session ends, and a signed-out page that keeps what was typed. */
 export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEvery = 60, onExtend, onExpire, onSend, saveKey }: SessionTimeoutProps) {
+  const locale = useLocale();
   const [deadline, setDeadline] = React.useState(() => Date.now() + duration * 1000);
   const [left, setLeft] = React.useState(duration);
   const [draft, setDraft] = React.useState<Draft>(() => load(saveKey) ?? { subject: '', message: '' });
@@ -106,9 +109,9 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
   const opened = React.useRef(false);
   React.useEffect(() => {
     if (!warning) { opened.current = false; return; }
-    if (!opened.current) { opened.current = true; announce(`You’ll be signed out in ${timeLeft(left)}.`); }
-    else if (worthSaying(left)) announce(`${timeLeft(left)} left.`);
-  }, [warning, left]);
+    if (!opened.current) { opened.current = true; announce(`You’ll be signed out in ${timeLeft(left, locale)}.`); }
+    else if (worthSaying(left)) announce(`${timeLeft(left, locale)} left.`);
+  }, [warning, left, locale]);
 
   React.useEffect(() => { if (expired) signedOut.current?.focus(); }, [expired]);
 
@@ -197,13 +200,13 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
             <Heading level={1} ref={signedOut} tabIndex={-1} className="outline-none">{byChoice ? 'You’ve signed out' : 'You’ve been signed out'}</Heading>
             <p className="m-0">{byChoice
               ? 'What you typed is cleared from this computer, so nobody else finds it.'
-              : `We signed you out because nothing happened for ${timeLeft(duration)}. What you typed is kept: sign in again to carry on where you left off.`}</p>
+              : `We signed you out because nothing happened for ${timeLeft(duration, locale)}. What you typed is kept: sign in again to carry on where you left off.`}</p>
             <div><Button onClick={restart}>Sign in again</Button></div>
           </div>
         ) : (
           <>
             <PageHeader title="Contact support"
-              description={<>For your security, you’re signed out after {timeLeft(duration)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</>} />
+              description={<>For your security, you’re signed out after {timeLeft(duration, locale)} with nothing happening: typing counts. We’ll warn you first, and keep what you’ve typed.</>} />
             <Card as="section" aria-labelledby="message-title">
               <form className="flex flex-col gap-4" noValidate onSubmit={(e) => void send(e)}>
                 <Heading level={2} size="lg" id="message-title">Your message</Heading>
@@ -227,7 +230,7 @@ export function SessionTimeout({ duration = 1200, warnBefore = 120, activityEver
           <Button variant="secondary" onClick={signOut}>Sign out</Button>
           <Button data-autofocus loading={extending} onClick={() => void extend()}>Stay signed in</Button>
         </>}>
-        <p className="m-0">You’ll be signed out in <strong>{timeLeft(left)}</strong> because nothing has happened for a while.</p>
+        <p className="m-0">You’ll be signed out in <strong>{timeLeft(left, locale)}</strong> because nothing has happened for a while.</p>
         <p className="m-0 mt-2 text-sm text-text-muted">If the time runs out, what you’ve typed is kept. Signing out clears it.</p>
         {extendFailed ? <p className="m-0 mt-2 text-sm text-danger-text">Couldn’t keep you signed in. Check your connection and try again.</p> : null}
       </Dialog>

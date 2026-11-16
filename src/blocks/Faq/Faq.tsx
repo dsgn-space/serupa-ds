@@ -5,6 +5,8 @@ import { Field } from '../../components/Field/Field';
 import { Heading } from '../../components/Heading/Heading';
 import { Highlight, highlightRanges } from '../../components/Highlight/Highlight';
 import { SearchInput } from '../../components/SearchInput/SearchInput';
+import { formatNumber } from '../../components/FormattedNumber/formatNumber';
+import { useLocale } from '../../internal/provider';
 
 /* FAQ (RU17): questions and answers in groups, for an app to copy. What it carries (WCAG 2.2):
    - 1.3.1: the FAQ is a region named by its heading; each group has its own heading, and each question is a heading
@@ -41,8 +43,8 @@ export interface FaqLabels {
   title: string;
   /** The search field's label. */
   search: string;
-  /** How many questions match, said and shown while searching: "3 of 12 questions". */
-  results: (shown: number, total: number) => string;
+  /** How many questions match, said and shown while searching: "3 of 12 questions", in the locale's digits. */
+  results: (shown: number, total: number, locale: string) => string;
   /** Shown when nothing matches. */
   noMatch: (query: string) => string;
   /** The heading over the contact part. */
@@ -51,7 +53,7 @@ export interface FaqLabels {
 const EN: FaqLabels = {
   title: 'Frequently asked questions',
   search: 'Search the questions',
-  results: (shown, total) => `${shown} of ${total} ${total === 1 ? 'question' : 'questions'}`,
+  results: (shown, total, locale) => `${formatNumber(shown, locale)} of ${formatNumber(total, locale)} ${total === 1 ? 'question' : 'questions'}`,
   noMatch: (query) => `No questions match “${query}”. Try other words, or ask us.`,
   stuck: 'Still stuck?',
 };
@@ -81,6 +83,7 @@ const matches = (q: FaqQuestion, query: string) => terms(query).every((t) => hig
 /** Questions and answers in groups: find-in-page reaches closed answers, a search filters them, a link opens one,
     and "Still stuck?" is always there. */
 export function Faq({ groups, headingLevel = 2, searchable, contact, defaultOpen, defaultQuery = '', labels }: FaqProps) {
+  const locale = useLocale();
   const w = { ...EN, ...labels };
   const id = React.useId();
   const all = groups.flatMap((g) => g.questions);
@@ -123,7 +126,7 @@ export function Faq({ groups, headingLevel = 2, searchable, contact, defaultOpen
           <Field label={w.search}>
             <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} />
           </Field>
-          <p role="status" className="m-0 text-sm text-text-muted">{q ? w.results(count, all.length) : ''}</p>
+          <p role="status" className="m-0 text-sm text-text-muted">{q ? w.results(count, all.length, locale) : ''}</p>
         </div>
       ) : null}
       {count === 0 ? <p className="m-0">{w.noMatch(q)}</p> : shown.map((g) => (

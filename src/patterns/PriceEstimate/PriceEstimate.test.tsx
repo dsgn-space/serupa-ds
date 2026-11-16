@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { PriceEstimate, estimate } from './PriceEstimate';
+import { SerupaProvider } from '../../internal/provider';
 
 const active = () => document.activeElement as HTMLElement;
 const norm = (t: string | null | undefined) => (t ?? '').replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x660)).replace(/٫/g, '.').replace(/٬/g, ',');
@@ -52,5 +53,12 @@ describe('Patterns/Price estimate', () => {
     await expect.poll(() => rows()[0]).toBe('Business, 40 people');
     const href = screen.getByRole('link', { name: 'Start a 14-day trial' }).element().getAttribute('href')!;
     expect(new URLSearchParams(href.split('?')[1]).toString()).toBe('plan=business&seats=40&billing=monthly&extras=storage%2Csupport');
+  });
+
+  test('counts follow the locale’s digits', async () => {
+    const team = { id: 't', name: 'Team', perSeat: 10, minSeats: 1, maxSeats: 50, about: '' };
+    expect(estimate(team, 12, [], false, 0, 'ar-EG').lines[0]!.name).toBe('Team, ١٢ people');
+    await render(<SerupaProvider locale="ar-EG"><PriceEstimate /></SerupaProvider>);
+    expect(document.body.textContent).toMatch(/Team, [٠-٩]+ people/);
   });
 });

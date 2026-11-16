@@ -47,9 +47,9 @@ const demoExtras: Extra[] = [
 ];
 
 /** The lines of an estimate, a month at a time, and its total. Seats are kept within the plan's range. */
-export function estimate(plan: Plan, seats: number, extras: Extra[], yearly: boolean, yearlyOff: number) {
+export function estimate(plan: Plan, seats: number, extras: Extra[], yearly: boolean, yearlyOff: number, locale = 'en-US') {
   const n = Math.min(plan.maxSeats, Math.max(plan.minSeats, Math.round(seats) || plan.minSeats));
-  const lines = [{ id: plan.id, name: `${plan.name}, ${n === 1 ? '1 person' : `${n} people`}`, amount: plan.perSeat * n },
+  const lines = [{ id: plan.id, name: `${plan.name}, ${n === 1 ? '1 person' : `${formatNumber(n, locale)} people`}`, amount: plan.perSeat * n },
     ...extras.map((e) => ({ id: e.id, name: e.name, amount: e.perSeat ? e.price * n : e.price }))];
   const subtotal = lines.reduce((a, l) => a + l.amount, 0);
   const off = yearly ? Math.round(subtotal * yearlyOff * 100) / 100 : 0;
@@ -65,7 +65,7 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
   const [chosen, setChosen] = React.useState<string[]>([]);
   const [yearly, setYearly] = React.useState(true);
   const plan = plans.find((p) => p.id === planId)!;
-  const e = estimate(plan, seats ?? 0, extras.filter((x) => chosen.includes(x.id)), yearly, yearlyOff);
+  const e = estimate(plan, seats ?? 0, extras.filter((x) => chosen.includes(x.id)), yearly, yearlyOff, locale);
   const pct = formatNumber(yearlyOff, locale, { style: 'percent' });
   const query = new URLSearchParams({ plan: planId, seats: String(e.seats), billing: yearly ? 'yearly' : 'monthly', ...(chosen.length ? { extras: extras.filter((x) => chosen.includes(x.id)).map((x) => x.id).join(',') } : {}) });
 
