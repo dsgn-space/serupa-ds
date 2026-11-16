@@ -14,7 +14,7 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v15.1.0
+npm install github:dsgn-space/serupa-ds#v16.0.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
@@ -32,14 +32,14 @@ npm install @diki-stwn/serupa-ds
 
 Installed either way, the package is `@diki-stwn/serupa-ds` in your imports (`import { Button } from '@diki-stwn/serupa-ds'`). Before 15.0.0 it was `serupa-ds`: `npx serupa-migrate src --from 14 --write` rewrites the imports.
 
-Always pin a tag (`#v15.1.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v16.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v15.1.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v16.0.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -278,6 +278,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Fab](src/components/Fab/README.md) | A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. |
 | [IconButton](src/components/IconButton/README.md) | A button that shows only an icon: a menu trigger, a close button, a toolbar action. |
 | [Link](src/components/Link/README.md) | An inline text link: underlined, in the primary color or the surrounding text's. |
+| [SplitButton](src/components/SplitButton/README.md) (beta) | A main action joined to an arrow button that opens a menu of other ways to do it: Publish, with Schedule and Save as draft one click away. |
 | [ToggleButton](src/components/ToggleButton/README.md) | A Button that stays on or off, for a setting that applies right away: bold in a text editor, mute, show the grid. |
 | [ToggleGroup](src/components/ToggleGroup/README.md) | A set of [ToggleButton](src/components/ToggleButton/README.md)s that share one value: one on at a time, such as text alignment or a view mode, or any number, such as bold, italic and underline. |
 | [Toolbar](src/components/Toolbar/README.md) | A set of controls, such as an editor's formatting buttons, that takes one Tab stop instead of one per control. |
@@ -306,6 +307,8 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Lightbox](src/components/Lightbox/README.md) | A set of pictures shown full size, one at a time, over the page. |
 | [List](src/components/List/README.md) | Rows of related things: people, files, notifications, settings. |
 | [Logo](src/components/Logo/README.md) (beta) | The product's logo at a set height, with a version for dark themes and a small mark for narrow screens. |
+| [MaskedValue](src/components/MaskedValue/README.md) (beta) | Shows a sensitive value with most of it hidden behind bullets, keeping just enough for its owner to recognize it: "•••• 1208" for a card, "a••••" for an email. |
+| [QRCode](src/components/QRCode/README.md) (beta) | Draws a QR code from a value, such as a payment link, a sign-in link or an authenticator setup string, so a phone can pick it up from the screen. |
 | [Quote](src/components/Quote/README.md) (beta) | Quoted words with who said them, for a testimonial, a pull quote, or a quote in a page that isn't [Prose](src/components/Prose/README.md). |
 | [RelativeTime](src/components/RelativeTime/README.md) | Says how long ago, or how far ahead, a moment is, in the reader's language: "3 minutes ago", "yesterday", "in 2 hours". |
 | [ShowMore](src/components/ShowMore/README.md) (beta) | Long text cut after a few lines, with a "Show more" button under it that shows the rest. |
@@ -393,6 +396,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [Splitter](src/components/Splitter/README.md) | Two panes with a handle between them that people drag, or move with the keys, to give one pane more room: a list and its detail, a sidebar and an editor, code and its output. |
 | [Stack](src/components/Stack/README.md) | Lays its children out in a column, or a row, with the same space between each, taken from the spacing scale. |
 | [Text](src/components/Text/README.md) | Body text in the system's type: a paragraph, a caption, an error line. |
+| [TruncatedText](src/components/TruncatedText/README.md) (beta) | Text that may not fit its space, such as a file name in a narrow column: cut with an ellipsis, with the whole text shown beside it on hover, keyboard focus or a tap. |
 | [VisuallyHidden](src/components/VisuallyHidden/README.md) | Content that screen readers announce but nobody sees: "(opens in a new tab)", the label of an icon-only control you build yourself, a heading for a section that's obvious by sight. |
 
 ### Navigation

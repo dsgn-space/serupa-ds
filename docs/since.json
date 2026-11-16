@@ -128,9 +128,11 @@
  },
  "BottomNav": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "3f180a95b83f",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "3d47a8b50a38",
+  "props": {
+   "badge": "16.0.0"
+  },
   "known": [
    "active",
    "as",
@@ -162,10 +164,11 @@
  },
  "Button": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "8bb069a7ecbb",
+  "changed": "16.0.0",
+  "api": "386798001c6f",
   "props": {
-   "loadingLabel": "14.7.0"
+   "loadingLabel": "14.7.0",
+   "onMedia": "16.0.0"
   },
   "known": [
    "className",
@@ -205,14 +208,15 @@
  },
  "Calendar": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "eb6cef967a5e",
+  "changed": "16.0.0",
+  "api": "08ecadcd5077",
   "props": {
    "inAWeek": "14.3.0",
    "label": "14.3.0",
    "presets": "14.3.0",
    "today": "14.3.0",
-   "tomorrow": "14.3.0"
+   "tomorrow": "14.3.0",
+   "calendar": "16.0.0"
   },
   "known": [
    "autoFocus",
@@ -256,9 +260,11 @@
  },
  "Carousel": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "0ae01ecceac7",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "81556a1ce2e5",
+  "props": {
+   "peek": "16.0.0"
+  },
   "known": [
    "arrows",
    "base",
@@ -359,8 +365,8 @@
  },
  "Chat": {
   "added": "14.2.0",
-  "changed": "14.6.0",
-  "api": "b28d14baa776",
+  "changed": "16.0.0",
+  "api": "fc479280168e",
   "props": {
    "branch": "14.6.0",
    "branches": "14.6.0",
@@ -388,7 +394,17 @@
    "reasoning": "14.6.0",
    "reasoningTime": "14.6.0",
    "steps": "14.6.0",
-   "thinking": "14.6.0"
+   "thinking": "14.6.0",
+   "chatFeedbackNoted": "16.0.0",
+   "chatFeedbackRemoved": "16.0.0",
+   "chatHelpful": "16.0.0",
+   "chatNotHelpful": "16.0.0",
+   "chatRegenerate": "16.0.0",
+   "chatReplyActions": "16.0.0",
+   "copyText": "16.0.0",
+   "feedback": "16.0.0",
+   "onFeedback": "16.0.0",
+   "onRegenerate": "16.0.0"
   },
   "known": [
    "actions",
@@ -673,9 +689,12 @@
  },
  "DateField": {
   "added": "14.3.0",
-  "changed": null,
-  "api": "14b703f98fa3",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "bad9dadb63a0",
+  "props": {
+   "dateFieldError": "16.0.0",
+   "monthInput": "16.0.0"
+  },
   "known": [
    "autoComplete",
    "dateFieldDay",
@@ -703,10 +722,11 @@
  },
  "DatePicker": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "42dfd5d43372",
+  "changed": "16.0.0",
+  "api": "c79cafaca3f4",
   "props": {
-   "presets": "14.3.0"
+   "presets": "14.3.0",
+   "calendar": "16.0.0"
   },
   "known": [
    "buttonLabel",
@@ -728,8 +748,8 @@
  },
  "DateRangePicker": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "b5ca50b76a04",
+  "changed": "16.0.0",
+  "api": "ac60135c60d3",
   "props": {
    "label": "14.3.0",
    "last30Days": "14.3.0",
@@ -737,7 +757,8 @@
    "lastMonth": "14.3.0",
    "presets": "14.3.0",
    "thisMonth": "14.3.0",
-   "yesterday": "14.3.0"
+   "yesterday": "14.3.0",
+   "calendar": "16.0.0"
   },
   "known": [
    "buttonLabel",
@@ -816,9 +837,11 @@
  },
  "Divider": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "a5d38a26b75c",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "1925c1a283f2",
+  "props": {
+   "onMedia": "16.0.0"
+  },
   "known": [
    "decorative",
    "label",
@@ -962,8 +985,8 @@
  },
  "Fab": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "07511b5c2ff9",
+  "changed": "16.0.0",
+  "api": "f4bbff4cb9e4",
   "props": {
    "placement": "14.3.0"
   },
@@ -1097,9 +1120,14 @@
  },
  "Grid": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "2b855486f0b6",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "1637050f7918",
+  "props": {
+   "base": "16.0.0",
+   "lg": "16.0.0",
+   "md": "16.0.0",
+   "sm": "16.0.0"
+  },
   "known": [
    "as",
    "columns",
@@ -1384,9 +1412,11 @@
  },
  "Link": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "ba19dada494c",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "65445385c594",
+  "props": {
+   "onMedia": "16.0.0"
+  },
   "known": [
    "as",
    "external",
@@ -1397,8 +1427,8 @@
  },
  "List": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "e1284484d7d0",
+  "changed": "16.0.0",
+  "api": "ea9121c6e54c",
   "props": {
    "busy": "14.3.0",
    "label": "14.3.0",
@@ -1481,6 +1511,12 @@
    "src",
    "variant"
   ]
+ },
+ "MaskedValue": {
+  "added": "16.0.0",
+  "changed": null,
+  "api": "d562af29cfe9",
+  "props": {}
  },
  "MentionInput": {
   "added": "14.6.0",
@@ -1669,8 +1705,8 @@
  },
  "Pagination": {
   "added": null,
-  "changed": "14.3.0",
-  "api": "fc5b14503101",
+  "changed": "16.0.0",
+  "api": "b451104ca62d",
   "props": {
    "itemsOf": "12.0.0",
    "onPageSizeChange": "12.0.0",
@@ -1834,6 +1870,12 @@
    "children"
   ]
  },
+ "QRCode": {
+  "added": "16.0.0",
+  "changed": null,
+  "api": "352fb6f554b7",
+  "props": {}
+ },
  "Quote": {
   "added": "14.5.0",
   "changed": null,
@@ -1872,9 +1914,11 @@
  },
  "RangeCalendar": {
   "added": "14.7.0",
-  "changed": null,
-  "api": "c201e2ca2788",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "07e2cc067149",
+  "props": {
+   "calendar": "16.0.0"
+  },
   "known": [
    "autoFocus",
    "defaultMonth",
@@ -2095,10 +2139,12 @@
  },
  "Slider": {
   "added": null,
-  "changed": "14.7.0",
-  "api": "73da1a325667",
+  "changed": "16.0.0",
+  "api": "f0f567a69eb1",
   "props": {
-   "inputs": "14.7.0"
+   "inputs": "14.7.0",
+   "orientation": "16.0.0",
+   "origin": "16.0.0"
   },
   "known": [
    "defaultValue",
@@ -2167,6 +2213,12 @@
    "sparklineSummary"
   ]
  },
+ "SplitButton": {
+  "added": "16.0.0",
+  "changed": null,
+  "api": "a5d9a06e5406",
+  "props": {}
+ },
  "Splitter": {
   "added": "9.7.0",
   "changed": "15.0.0",
@@ -2191,8 +2243,8 @@
  },
  "Stack": {
   "added": null,
-  "changed": "14.0.0",
-  "api": "8bc26803575b",
+  "changed": "16.0.0",
+  "api": "dc9ba0bf84b7",
   "props": {},
   "known": [
    "align",
@@ -2268,10 +2320,11 @@
  },
  "Switch": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "95b9c47426a2",
+  "changed": "16.0.0",
+  "api": "d4fc473f0aa2",
   "props": {
-   "loading": "14.3.0"
+   "loading": "14.3.0",
+   "icon": "16.0.0"
   },
   "known": [
    "children",
@@ -2298,8 +2351,8 @@
  },
  "Table": {
   "added": null,
-  "changed": "15.0.0",
-  "api": "eb28ec536efc",
+  "changed": "16.0.0",
+  "api": "97b9c29f406e",
   "props": {
    "hideCaption": "12.0.0",
    "href": "13.0.0",
@@ -2338,7 +2391,12 @@
    "tableWider": "14.3.0",
    "visible": "14.3.0",
    "width": "14.3.0",
-   "loading": "14.7.0"
+   "loading": "14.7.0",
+   "onSelectAll": "16.0.0",
+   "sticky": "16.0.0",
+   "tableAllSelected": "16.0.0",
+   "tableSelectAll": "16.0.0",
+   "total": "16.0.0"
   },
   "known": [
    "align",
@@ -2401,9 +2459,12 @@
  },
  "TagGroup": {
   "added": "14.7.0",
-  "changed": null,
-  "api": "a8a314e3e026",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "0654e5b0ee90",
+  "props": {
+   "avatar": "16.0.0",
+   "icon": "16.0.0"
+  },
   "known": [
    "defaultSelected",
    "disabled",
@@ -2476,9 +2537,11 @@
  },
  "TimeZonePicker": {
   "added": "14.2.0",
-  "changed": null,
-  "api": "892fe7baedf5",
-  "props": {},
+  "changed": "16.0.0",
+  "api": "a9c938826329",
+  "props": {
+   "timeZonePlaceholder": "16.0.0"
+  },
   "known": [
    "at",
    "city",
@@ -2578,10 +2641,13 @@
  },
  "Toolbar": {
   "added": "9.2.0",
-  "changed": "14.3.0",
-  "api": "022aa8962b81",
+  "changed": "16.0.0",
+  "api": "b0d15c10ea53",
   "props": {
-   "size": "14.3.0"
+   "size": "14.3.0",
+   "moreLabel": "16.0.0",
+   "overflow": "16.0.0",
+   "toolbarMore": "16.0.0"
   },
   "known": [
    "children",
@@ -2682,6 +2748,12 @@
    "textValue",
    "value"
   ]
+ },
+ "TruncatedText": {
+  "added": "16.0.0",
+  "changed": null,
+  "api": "a443e4db0d00",
+  "props": {}
  },
  "TypeToConfirm": {
   "added": "10.0.0",
