@@ -87,7 +87,8 @@ describe('Patterns/Gift card', () => {
   });
 
   test('sent on a later day says the day', async () => {
-    const screen = await render(<GiftCard today={today} amounts={[30]} />);
+    const onAdd = vi.fn();
+    const screen = await render(<GiftCard today={today} amounts={[30]} onAdd={onAdd} />);
     await screen.getByRole('radio', { name: /30|٣٠/ }).click();
     await screen.getByRole('textbox', { name: /^Who it’s for/ }).fill('Dewi');
     await screen.getByRole('textbox', { name: /^Their email/ }).fill('dewi@example.com');
@@ -97,6 +98,6 @@ describe('Patterns/Gift card', () => {
     await screen.getByRole('button', { name: 'Add to bag' }).click();
     await expect.poll(() => active().textContent).toBe('Gift card added to your bag');
     expect(document.body.textContent).not.toContain('Today, once you’ve paid');
-    expect(document.querySelector('[aria-labelledby="gift-added"]')!.textContent).toMatch(/2027|٢٠٢٧/);
+    expect(onAdd).toHaveBeenLastCalledWith(expect.objectContaining({ send: '2027-03-10' }));
   });
 });
