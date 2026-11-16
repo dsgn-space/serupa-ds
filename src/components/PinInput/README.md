@@ -51,6 +51,17 @@ Drawn from the `Alphanumeric` story.
 - **Do:** Keep the code when it's wrong, and show the error with Field's `error`, so people can fix one character. (`DoKeepCode`)
 - **Don't:** Clear the boxes on an error: people have to type the whole code again. (`DontClearCode`)
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | A row of `field` boxes with a 1px `field-border` and 6px corners |
+| Hover | Every box takes `field-border-hover` |
+| Focus | The box the caret is in takes the `focus-ring` color on its border and a ring hugging it (2px in all), and an empty one shows a caret line, steady under reduced motion; a visible outline in forced-colors mode |
+| Invalid | `danger` borders, and a `danger` ring on the box with the caret |
+| Read-only | `field-readonly` boxes, no hover change; still focusable |
+| Disabled | `field-readonly` boxes, `disabled-border` edges and `disabled-text`, `not-allowed` cursor |
+
 ## Accessibility
 
 - **Role and name:** one `<input>` with a text role (a password field with `mask`). Name it with Field's label, `<label htmlFor>`, `aria-label` or `aria-labelledby`. Screen readers read the code, not the boxes, which are `aria-hidden`.

@@ -41,6 +41,18 @@ Drawn from the `CapsLockOn` story.
 - **Do:** Put the password rules in the hint, so people see them before they type. (`DoRulesUpFront`)
 - **Don't:** Show the rules only in an error: people learn them by failing. (`DontRulesOnlyInError`)
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the eye button in `text-muted` |
+| Hover | `field-border-hover`; the eye under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Caps Lock on | While it has focus, "Caps Lock is on" shows before the eye |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable; the eye still shows and hides the password |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the eye is off |
+
 ## Accessibility
 
 - The show/hide button takes presses over at least 24px (WCAG 2.5.8), even at size `sm` where it's 22px: a box behind it reaches past its edges without moving anything.
