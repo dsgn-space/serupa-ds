@@ -81,9 +81,12 @@ export function placeLayer(layer: HTMLElement, anchor: Element, placement: strin
   const r = place(a, { width: layer.offsetWidth, height: layer.offsetHeight }, placement, offset, fallback, undefined, rtl);
   // The default anchor (position-anchor): the one a scroll moves the layer with; anchor() of any other is fixed where it was.
   if (name) layer.style.setProperty('position-anchor', name);
+  // Against the anchor's centre, not its edges: anchor() reads the box as it's drawn, so a Button's press (a scale about
+  // its centre) moved the edges, and with them the layer, while it shrank and grew back. The centre stays put.
+  const cx = a.left + a.width / 2, cy = a.top + a.height / 2;
   const at = (x: number, y: number) => {
-    layer.style.left = name ? `calc(anchor(${name} left, ${a.left}px) + ${x - a.left}px)` : x + 'px';
-    layer.style.top = name ? `calc(anchor(${name} top, ${a.top}px) + ${y - a.top}px)` : y + 'px';
+    layer.style.left = name ? `calc(anchor(${name} center, ${cx}px) + ${x - cx}px)` : x + 'px';
+    layer.style.top = name ? `calc(anchor(${name} center, ${cy}px) + ${y - cy}px)` : y + 'px';
   };
   at(r.x, r.y); layer.dataset.side = r.side;
   if (r.maxHeight !== undefined) { layer.style.maxHeight = r.maxHeight + 'px'; layer.style.overflowY = 'auto'; }

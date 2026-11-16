@@ -51,6 +51,24 @@ function Nested({ chosen, dir }: { chosen: string[]; dir?: 'rtl' }) {
 const sub = (id: string) => document.getElementById(el(id).getAttribute('aria-controls') || '');
 
 describe('Menu', () => {
+  test('opened by a press on its Button, it holds still as the Button grows back, where it rode the press\'s scale', async () => {
+    await withMotion(async () => {
+    // Where the layer sits, each frame for a while, while it shows.
+    const spots = async (layer: () => HTMLElement | null, ms: number) => {
+      const seen = new Set<string>();
+      for (let t = performance.now(); performance.now() - t < ms;) { const l = layer(); if (l?.matches(':popover-open')) { const cs = getComputedStyle(l); seen.add(cs.left + ' ' + cs.top); } await new Promise(requestAnimationFrame); }
+      return [...seen];
+    };
+      await render(<div style={{ padding: 80 }}><Menu placement="bottom-start" trigger={<Button id="mpress">Actions</Button>}><MenuItem>Edit</MenuItem></Menu></div>);
+      const b = document.getElementById('mpress')!;
+      b.focus();
+      await userEvent.keyboard('[Space>]');
+      await expect.poll(() => getComputedStyle(b).scale).toBe('0.97');
+      await userEvent.keyboard('[/Space]');
+      expect(await spots(() => document.querySelector<HTMLElement>('[role="menu"]'), 400)).toHaveLength(1);
+    });
+  });
+
   test('MenuItem: as is typed (G10), with the props of the element it names, an <a>\'s by default', async () => {
     const r = React.createRef<HTMLElement>();
     await render(<Menu defaultOpen trigger={<Button id="mt-t">More</Button>}>

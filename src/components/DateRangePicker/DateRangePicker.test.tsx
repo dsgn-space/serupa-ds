@@ -145,7 +145,8 @@ describe('DateRangePicker', () => {
     expect([...d.querySelectorAll('[role=grid]')].map((g) => document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent).join()).toBe('March 2025,April 2025');
     expect([d.querySelectorAll('td[role=gridcell]:empty').length > 0, outside('trip').length]).toEqual([true, 0]);
     expect([vis('[data-component=calendar] > div:first-child > button:first-child'), vis('[data-component=calendar] > div:first-child > button:last-child')]).toEqual(['visible,hidden', 'hidden,visible']);
-    expect([focused(), d.querySelector(':scope p[aria-live]')!.textContent]).toEqual(['2025-03-10', 'Choose the start date']);
+    // A full range says so, as RangeCalendar does, not "Choose the start date" as if none were picked.
+    expect([focused(), d.querySelector(':scope p[aria-live]')!.textContent]).toEqual(['2025-03-10', 'Selected range: Mar 10 – 14, 2025']);
     expect([...d.querySelectorAll<HTMLElement>('[aria-selected=true] button')].map((x) => x.dataset.date).join()).toBe('2025-03-10,2025-03-14');
     expect(inRange('trip')).toBe('03-11,03-12,03-13');
   });
