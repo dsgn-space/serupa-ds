@@ -206,7 +206,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                     </TableBody>
                     <TableFoot>
                       <TableRow>
-                        <TableHeaderCell scope="row" colSpan={2}>Total</TableHeaderCell>
+                        <TableCell colSpan={2} className="font-semibold">Total</TableCell>
                         <TableCell className="text-end font-semibold tabular-nums">{money(total)}</TableCell>
                         <TableCell colSpan={2} />
                       </TableRow>

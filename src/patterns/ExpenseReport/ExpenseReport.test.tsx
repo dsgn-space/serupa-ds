@@ -34,7 +34,7 @@ describe('Patterns/Expense report', () => {
     expect(active().getAttribute('href')).toBe('#main');
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
     expect(document.querySelector('caption')?.textContent).toBe('Expenses in this report, with the total');
-    expect(document.querySelector('tfoot th')?.textContent).toBe('Total');
+    expect(document.querySelector('tfoot td')?.textContent).toBe('Total');
     expect(document.querySelector('tfoot')?.textContent).toMatch(/82|٨٢/);
     expect([...document.querySelectorAll('tbody tr')].map((r) => r.querySelectorAll('td')[3]?.textContent)).toEqual(['Not needed', 'Receipt needed']);
   });

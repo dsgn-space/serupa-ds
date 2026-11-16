@@ -121,7 +121,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
               <h2 id="choose" className="m-0 text-lg font-semibold">What we send</h2>
               <div className="flex flex-col gap-4">
                 {topics.map((t) => (
-                  <Switch key={t.id} checked={!!choices[t.id]} description={t.about} labelPosition="start"
+                  <Switch key={t.id} checked={!!choices[t.id]} description={t.about}
                     onCheckedChange={(on) => { setChoices((c) => ({ ...c, [t.id]: on })); setSaid(''); setFailed(false); }}>
                     {t.label}
                   </Switch>
