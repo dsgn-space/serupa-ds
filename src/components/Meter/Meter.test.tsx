@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { THEMES, color, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, withMotion, splitWords } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Meter, meterState } from './Meter';
@@ -153,5 +153,10 @@ describe('Meter', () => {
     });
     const tr = own().parentElement!.getBoundingClientRect(), f = own().getBoundingClientRect();
     expect([share('mv'), Math.round(Math.max(f.left, tr.left) - tr.left)]).toEqual([70, 120]); // the 30% not filled is on the left
+  });
+
+  test('a label keeps its words whole beside a long value: the value goes under it (PL-LINKWRAP)', async () => {
+    const screen = await render(<div lang="de" style={{ width: 200 }}><Meter showValue label="Storage" value={8.6} max={10} formatValue={() => '8.6 GB of 10 GB, almost full'} /></div>);
+    expect(splitWords(screen.getByText('Storage').element().parentElement!, 150)).toEqual([]);
   });
 });

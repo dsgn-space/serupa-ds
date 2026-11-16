@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, splitWords } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { EmptyState } from './EmptyState';
 import { announcerIdle } from '../../internal/announce';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
+import { labels as deLabels } from '../../labels/de';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 // The parts by their place: the hidden icon first, then the text (the heading, the description right under it, the
@@ -177,5 +178,17 @@ describe('EmptyState', () => {
     const b = el('esw').querySelector('button') as HTMLElement;
     const box = el('esw').getBoundingClientRect();
     expect([box.width <= 201, b.getBoundingClientRect().right <= box.right + 1, b.scrollWidth <= b.clientWidth + 1, b.getBoundingClientRect().height > 30]).toEqual([true, true, true, true]);
+  });
+
+  test('an action keeps its words whole on a narrow screen (PL-LINKWRAP)', async () => {
+    await render(<SerupaProvider locale="de-DE" labels={deLabels}><div id="esn" lang="de"><EmptyState title="Keine Treffer für „websit“" description="Prüfe die Schreibweise oder versuche andere Wörter." suggestions={['website']} onSuggestion={() => {}} onClearFilters={() => {}} /></div></SerupaProvider>);
+    const split: string[] = [];
+    for (let w = 300; w >= 180; w -= 10) {
+      el('esn').style.width = `${w}px`;
+      await new Promise((r) => requestAnimationFrame(r));
+      const box = el('esn').firstElementChild!, s = getComputedStyle(box);
+      split.push(...splitWords(box, box.getBoundingClientRect().width - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight) - 30));
+    }
+    expect(split).toEqual([]);
   });
 });

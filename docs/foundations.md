@@ -878,6 +878,7 @@ Rules of thumb:
 - Page content: `max-w-7xl` centered, or `.container`.
 - Use `min-h-dvh` rather than `h-screen` for full-height mobile layouts, so the browser bar doesn't cut the bottom off.
 - Give flex and grid children that hold text `min-w-0`, so long words wrap instead of overflowing.
+- Pick `wrap-break-word` for text that sits in a table cell, a button or a row beside other text. `wrap-anywhere` lets the box shrink below its longest word, so there it breaks words mid-word ("Downlo/ad") while there is still room. Keep `wrap-anywhere` for a box that must fit a narrow column whatever it holds, such as a card with a long URL in a flex row: both break a word too long for a line of its own.
 
 
 **Control heights**: every control at one size is the same height, so buttons, inputs and selects line up in a row. Components read these tokens; in your own markup use `h-control-sm`, `min-h-control-md` or `size-control-lg` (a square, for icon buttons).

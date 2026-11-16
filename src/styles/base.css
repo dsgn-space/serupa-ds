@@ -71,6 +71,7 @@
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
   overflow-wrap: anywhere;
 }
+:where(td, th) :where(a[href]) { overflow-wrap: break-word; }   /* in a table cell the words stay whole, as for <Link> */
 @media (hover: hover) { :where(a[href]:hover) { color: var(--link-text-hover, var(--primary-hover)); text-decoration-thickness: var(--link-thickness-hover, var(--decoration-2)); } }
 :where(a:not([href])) { color: inherit; text-decoration: none; }
 

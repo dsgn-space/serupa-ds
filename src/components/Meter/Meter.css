@@ -15,7 +15,7 @@
 .dk-meter--success { --dk-meter-fill: var(--meter-fill-optimum, var(--success)); }
 .dk-meter--warning { --dk-meter-fill: var(--meter-fill-suboptimal, var(--warning)); }
 .dk-meter--danger { --dk-meter-fill: var(--meter-fill-poor, var(--danger)); }
-.dk-meter__header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--spacing-3); }
+.dk-meter__header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--spacing-3); }   /* a value that doesn't fit beside the label goes under it, rather than squeezing the label mid-word */
 .dk-meter__label { font-weight: var(--meter-label-weight, var(--font-medium)); min-width: var(--spacing-0); overflow-wrap: anywhere; }
 .dk-meter__value { margin-inline-start: auto; color: var(--meter-value-color, var(--text-muted)); font-variant-numeric: tabular-nums; }
 /* The track is the page's surface inside a border-control edge (WCAG 1.4.11): the edge marks the whole scale at 3:1, and every

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
-import { THEMES, contrast, css, forcedColors, withMotion } from '../../../tools/test/vitest/helpers';
+import { THEMES, contrast, css, forcedColors, withMotion, splitWords } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { Progress } from './Progress';
 import { idLabels } from '../../internal/labels';
@@ -144,6 +144,11 @@ describe('Progress', () => {
   test('--progress-fill overrides one bar', async () => {
     await render(<Wrap><Progress id="tok" value={60} aria-label="tok" style={{ '--progress-fill': 'rgb(1, 2, 3)' } as React.CSSProperties} /></Wrap>);
     expect(css(el('tok').querySelector('[role=progressbar] > div')).backgroundColor).toBe('rgb(1, 2, 3)');
+  });
+
+  test('a label keeps its words whole beside a long value: the value goes under it (PL-LINKWRAP)', async () => {
+    const screen = await render(<div lang="de" style={{ width: 200 }}><Progress showValue label="Hochladen" value={42} formatValue={() => '42 von 100 Dateien, 3 übersprungen'} /></div>);
+    expect(splitWords(screen.getByText('Hochladen').element().parentElement!, 150)).toEqual([]);
   });
 });
 

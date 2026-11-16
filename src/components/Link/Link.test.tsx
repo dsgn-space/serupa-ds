@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, css, lowContrast } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, css, lowContrast, splitWords } from '../../../tools/test/vitest/helpers';
 import { Link } from './Link';
 import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
@@ -207,6 +207,11 @@ describe('Link', () => {
       ['focus ring', 'var(--link-focus-ring, var(--focus-ring))', 'var(--surface)', 3],
     ])).toEqual([]);
   });
+  test('in a table cell, a word stays whole while the table has room for it (PL-LINKWRAP)', async () => {
+    const screen = await render(<table lang="de" style={{ width: 320 }}><tbody><tr><td><Link href="#">Herunterladen</Link></td><td>Rechnung für die Abrechnungsmigration vom März 2026, bezahlt</td><td>1.250.000</td></tr></tbody></table>);
+    expect(splitWords(screen.getByRole('link', { name: 'Herunterladen' }).element(), 200)).toEqual([]);
+  });
+
 });
 
 describe('Link onMedia', () => {

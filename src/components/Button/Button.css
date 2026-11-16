@@ -144,7 +144,10 @@
 .dk-btn--wrap { white-space: normal; text-align: center; height: auto; min-height: var(--button-height-md, var(--control-height-md)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
 .dk-btn--wrap.dk-btn--size-sm { height: auto; min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
 .dk-btn--wrap.dk-btn--size-lg { height: auto; min-height: var(--button-height-lg, var(--control-height-lg)); padding-block: var(--button-padding-y-wrap, var(--spacing-1)); }
-.dk-btn--wrap .dk-btn__label { overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+.dk-btn--wrap .dk-btn__label { overflow: visible; text-overflow: clip; overflow-wrap: break-word; }
+/* A wrapping button doesn't shrink below its longest word, so it breaks between words, not inside one; max-inline-size
+   (above) still keeps it inside its container, where a word too long for any line breaks after all. */
+.dk-btn--wrap { min-inline-size: auto; }
 
 /* Icon only: a square at each size's height */
 .dk-btn--icon-only { flex-shrink: 0; padding: var(--spacing-0); width: var(--button-height-md, var(--control-height-md)); }   /* a fixed square: it never shrinks in a row (GR5) */
