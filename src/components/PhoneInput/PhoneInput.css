@@ -30,6 +30,10 @@
 .dk-phone-input__country:active:not(:has(:disabled)) { background: var(--phone-input-bg-pressed, var(--field-pressed)); }
 .dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline: var(--focus-ring-width) solid var(--phone-input-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-phone-input__country:has(:disabled) { cursor: var(--cursor-disabled); }
+/* Disabled, the calling code dims with the number. Read-only, the menu can't open but nothing is refused: the plain
+   arrow, as on every read-only control (Combobox, Select). */
+.dk-input--disabled .dk-phone-input__dial, .dk-input:where(:has(.dk-input__field:disabled)) .dk-phone-input__dial { color: var(--input-text-disabled, var(--disabled-text)); }
+.dk-input--readonly .dk-phone-input__country:has(:disabled) { cursor: default; }
 @media (forced-colors: active) { .dk-phone-input__country:has(.dk-phone-input__select:focus-visible) { outline-color: Highlight; } }
 @media (prefers-reduced-motion: reduce) { .dk-phone-input__country { transition: none; } }
 }
