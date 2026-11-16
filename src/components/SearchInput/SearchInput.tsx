@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -43,9 +44,8 @@ export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInp
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   const el = React.useRef<HTMLInputElement | null>(null);
-  const controlled = props.value !== undefined;
-  const [typed, setTyped] = React.useState(String(props.defaultValue ?? ''));
-  const text = controlled ? String(props.value ?? '') : typed;
+  const [held, setTyped, controlled] = useControllable<string | number | readonly string[]>(props.value, String(props.defaultValue ?? ''), 'SearchInput', 'value');
+  const text = String(held ?? '');
   const locked = !!rest.disabled || !!rest.readOnly;
   // A form reset empties the field (or puts defaultValue back): the × follows it, instead of staying on an empty field.
   useFormReset(el, () => { if (!controlled) setTyped(String(props.defaultValue ?? '')); });

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, oneOf, omit, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
 import { config } from '../../internal/config';
 import type { IconSource } from '../Icon/Icon';
@@ -80,8 +81,7 @@ export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List
   const rest = omit(props, { variant: 1, divided: 1, as: 1, loading: 1, className: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1 });
   const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
   const mode = props.selectionMode === 'single' || props.selectionMode === 'multiple' ? props.selectionMode : null;
-  const [own, setOwn] = React.useState<readonly string[]>(props.defaultSelected || []);
-  const picked = props.selected !== undefined ? props.selected : own;
+  const [picked, setOwn] = useControllable<readonly string[]>(props.selected, props.defaultSelected || [], 'List', 'selected');
   const ul = React.useRef<HTMLUListElement | null>(null);
   const merged = useMergedRef(ref, (n: HTMLUListElement | null) => { ul.current = n; });
   const focused = React.useRef<string | null>(null);   // the row that holds the Tab stop

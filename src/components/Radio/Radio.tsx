@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { component } from '../../internal/component';
@@ -77,8 +78,7 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
   const nameRef = useNameCheck('RadioGroup', NAME_HOW.group);   // warns when it has no accessible name
   const rest = omit(props, GROUP_OWN);
   const autoName = domId('dk-rg', React.useId());
-  const controlled = props.value !== undefined;
-  const [picked, setPicked] = React.useState<string | number | null | undefined>(props.defaultValue), cur = controlled ? props.value : picked;
+  const [cur, setPicked, controlled] = useControllable<string | number | null | undefined>(props.value, props.defaultValue, 'RadioGroup', 'value');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   const orientation = props.orientation === 'horizontal' ? 'horizontal' : 'vertical';
   const onValueChange = props.onValueChange;

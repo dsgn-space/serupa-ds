@@ -12,6 +12,8 @@ import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
+import { Loader } from '../../components/Loader/Loader';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Download your data: choose what to include and in which format, see how big it will be, ask for it, and download
@@ -40,6 +42,12 @@ export interface DataExportProps {
   today?: string | undefined;
   /** Takes the request. Reject when it can't be taken. */
   onRequest?: ((request: ExportRequest) => unknown) | undefined;
+  /** Your past exports are still loading: a placeholder in their place. Default: false. */
+  loading?: boolean | undefined;
+  /** Your past exports failed to load: a "Couldn’t load your exports" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads them again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demoParts: DataPart[] = [
@@ -73,7 +81,7 @@ export function sizeWords(bytes: number, locale?: string) {
 }
 
 /** The page: a skip link, a header, then main with the h1, the choices, and the exports asked for before. */
-export function DataExport({ parts = demoParts, exports = demoExports, today, onRequest }: DataExportProps) {
+export function DataExport({ parts = demoParts, exports = demoExports, today, onRequest, loading = false, loadFailed = false, onRetry }: DataExportProps) {
   const locale = useLocale();
   const day = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   const size = (b: number) => sizeWords(b, locale);
@@ -117,6 +125,8 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Settings', href: '#settings' }, { label: 'Download your data' }]} title="Download your data"
           description="Get a copy of what you’ve put in Acme Projects. We’ll email you when it’s ready, and the link works for 7 days." />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load your exports" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading your exports" /></Card> : (<>
         <form onSubmit={request} noValidate aria-label="What to download" className="flex flex-col gap-5 pt-6">
           <ErrorSummary key={tries} errors={errors} />
           <Field label="What should it include?" group error={problem || undefined} required>
@@ -166,6 +176,7 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
             </ul>
           ) : <p className="m-0 text-text-muted">You haven’t asked for your data yet.</p>}
         </section>
+        </>)}
       </main>
     </div>
   );

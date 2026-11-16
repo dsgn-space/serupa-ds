@@ -91,4 +91,15 @@ describe('Patterns/Expense report', () => {
     await expect.poll(() => active().textContent).toBe('Sent for approval');
     expect(onSubmit).toHaveBeenLastCalledWith([expenses[0]]);
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<ExpenseReport loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading expenses']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<ExpenseReport loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your expenses' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

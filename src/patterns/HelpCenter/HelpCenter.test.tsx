@@ -80,4 +80,15 @@ describe('Patterns/Help center', () => {
     expect(document.querySelector('main')!.textContent).toContain('by email to budi@example.com');
     expect(active().textContent).not.toBe('We got your message');
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<HelpCenter loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading help articles']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<HelpCenter loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the help articles' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

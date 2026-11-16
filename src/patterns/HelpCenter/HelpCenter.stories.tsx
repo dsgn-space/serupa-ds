@@ -25,3 +25,9 @@ export const SendFails: Story = {
 
 /** Sent: the form gives way to what happens next, and where the answer goes. */
 export const Sent: Story = { args: { start: 'sent' } };
+
+/** While the articles load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, omit } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
@@ -85,9 +86,8 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
   });
   const base = domId('dk-cp', React.useId());
   const root = React.useRef<HTMLDivElement | null>(null);
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<string | null>(normalizeHex(props.defaultValue || '') );
-  const value = controlled ? normalizeHex(props.value || '') : own;
+  const [held, setOwn, controlled] = useControllable<string | null>(props.value, normalizeHex(props.defaultValue || ''), 'ColorPicker', 'value');
+  const value = controlled ? normalizeHex(held || '') : held;
   const disabled = !!props.disabled, readOnly = !!props.readOnly, custom = props.custom !== false;
   const truthy = (v: unknown) => v === true || v === 'true';
   const required = !!props.required || truthy(props['aria-required']);

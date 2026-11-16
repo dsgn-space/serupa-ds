@@ -36,3 +36,9 @@ export const Outage: Story = {
     incidents: [{ id: 'x', title: 'API not responding', services: ['api', 'dashboard'], resolved: false, updates: [{ at: '2026-03-12T11:02', status: 'Investigating', text: 'The API returns errors for every request. We’re on it.' }] }],
   },
 };
+
+/** While the services load: one placeholder. */
+export const Loading: Story = { args: { loading: true } };
+
+/** Couldn't load: it says so, with Try again. */
+export const LoadFailed: Story = { args: { loadFailed: true } };
