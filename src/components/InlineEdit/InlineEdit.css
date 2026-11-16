@@ -35,6 +35,8 @@
 }
 .dk-inline-edit__view:focus-visible { outline: var(--focus-ring-width) solid var(--inline-edit-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-inline-edit__view:focus-visible .dk-inline-edit__icon { opacity: var(--opacity-100); }
+/* Pressed: one step past hover while held, as a List or Sidebar row's. */
+.dk-inline-edit__view:not(.dk-inline-edit__view--static, :disabled):active { background: var(--inline-edit-bg-pressed, var(--pressed)); transition-duration: var(--duration-0); }
 /* Touch screens have no hover: the pencil always shows, so people can tell the text is editable. */
 @media (hover: none) { .dk-inline-edit__icon { opacity: var(--opacity-100); } }
 /* An empty value with no placeholder has no text to show: the pencil always shows, or the button would be invisible. */

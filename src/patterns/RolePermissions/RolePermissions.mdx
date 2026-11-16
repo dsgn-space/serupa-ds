@@ -22,7 +22,7 @@ What each role in a workspace can do, as a grid of checkboxes, where a permissio
 - **Nothing is saved as you go.** Save says how many changes it saves, and Discard changes puts them back (3.2.2).
 - **Save shows it's busy**; changes that can't be saved say so and stay, and saved ones are said (3.3.4, 4.1.3).
 - **The owner's column can't change**: its checkboxes are read-only, and the reason is said above the table (4.1.2).
-- **While the roles load**, one placeholder named "Loading roles"; a failed load says so, with Try again (4.1.3).
+- **While the roles load**, set `loading`: one placeholder, named "Loading roles" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.SaveFails} />

@@ -183,7 +183,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
                     {place.taken.length ? (
                       <div className="flex flex-col gap-1">
                         <h3 id="taken" className="m-0 text-base font-semibold">Already booked</h3>
-                        <ul aria-labelledby="taken" className="m-0 flex flex-col gap-1 pl-5">
+                        <ul aria-labelledby="taken" className="m-0 flex flex-col gap-1 ps-5">
                           {bookedStays(place.taken).map((b) => <li key={b.start}>{words(locale, b.start, b.end)}</li>)}
                         </ul>
                         <p className="m-0 text-sm text-text-muted">A stay can end on the day one of these starts, and start on the day one ends.</p>

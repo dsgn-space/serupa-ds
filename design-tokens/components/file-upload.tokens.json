@@ -32,6 +32,16 @@
           }
         }
       },
+      "zone-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.field-hover}",
+        "$description": "The drop area's fill while pressed (a click there browses for files), as a field's buttons fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--file-upload-zone-bg-pressed"
+          }
+        }
+      },
       "zone-bg-active": {
         "$type": "color",
         "$value": "{color.primary-subtle}",

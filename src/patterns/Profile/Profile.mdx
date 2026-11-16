@@ -37,3 +37,4 @@ A new profile, with no photo yet:
 - **Saving.** `onSave` gets the profile and the new photo's file, or null: return its promise, and reject it when it can't be saved. Upload the photo there, and send its new address back as `profile.photo` next time.
 - **Cropping the photo.** Make it square on the server, or before `onSave` sends it.
 - **Who sees what.** Say on the page if some of it is private.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

@@ -22,7 +22,7 @@ Choose what to include and in which format, see how big it will be, ask for it, 
 - **Ask shows it's busy**; a request that can't be taken says so and keeps the choices (3.3.4).
 - **Once asked, the exports heading takes focus**, and a status says the data is being prepared and that an email will follow (2.4.3, 4.1.3).
 - **Each export's state is a word**, Preparing, Ready or Expired, never only a color. A ready one's Download names its date and size, and the date its link stops working is said (1.4.1, 2.4.6).
-- **While the exports load**, one placeholder named "Loading your exports"; a failed load says so, with Try again (4.1.3).
+- **While the exports load**, set `loading`: one placeholder, named "Loading your exports" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.FirstTime} />
@@ -31,3 +31,4 @@ Choose what to include and in which format, see how big it will be, ask for it, 
 
 - **Making the file.** `onRequest` gets what to include and the format; reject when the request can't be taken. Email people when it's ready.
 - **Keeping it safe.** Ask people to sign in again before they download, and let the link run out after a few days.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

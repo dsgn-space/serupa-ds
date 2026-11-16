@@ -23,7 +23,7 @@ Add what you spent, one expense at a time, see them in a table with the total, a
 - **The expenses are a table with a caption and the total in its footer**; one with no receipt says "Receipt needed" in words in a badge (1.3.1, 1.4.1).
 - **Each Remove names its expense**, "Remove: Taxi"; removing moves focus to the next row's Remove, or the form's first field when none are left (2.5.3, 2.4.3).
 - **Send for approval is checked first**: no expenses, or receipts missing, are said next to the button before anything is sent; once sent, the answer's heading takes focus (3.3.4, 2.4.3).
-- **While the expenses load**, one placeholder named "Loading expenses"; a failed load says so, with Try again (4.1.3).
+- **While the expenses load**, set `loading`: one placeholder, named "Loading expenses" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.ReceiptMissing} />
@@ -33,3 +33,4 @@ Add what you spent, one expense at a time, see them in a table with the total, a
 - **Sending.** `onSubmit` gets the expenses: reject when the report can't be sent. Keep each receipt's file with its expense.
 - **The rules.** `receiptOver` is the amount above which a receipt is needed; change the categories to your own.
 - **Saving as you go.** Keep the expenses on the server as they're added, so a report can be finished another day.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

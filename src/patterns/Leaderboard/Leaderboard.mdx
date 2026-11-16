@@ -22,7 +22,7 @@ Who's ahead this week, this month or of all time, where you are, and who's movin
 - **Switching the period says which period the board shows**, in a status (4.1.3).
 - **When you're outside the top places**, your row follows them after a row that says how many people are between (1.3.2).
 - **The summary under the title says your place**, of how many, with your points.
-- **While the board load**, one placeholder named "Loading the leaderboard"; a failed load says so, with Try again (4.1.3).
+- **While the leaderboard loads**, set `loading`: one placeholder, named "Loading the leaderboard" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.InTheTop} />

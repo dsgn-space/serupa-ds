@@ -205,7 +205,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
                     {inView.length ? (
                       <div className="flex flex-col gap-1">
                         <h3 id="holidays" className="m-0 text-base font-semibold">Holidays</h3>
-                        <ul aria-labelledby="holidays" className="m-0 flex flex-col gap-1 pl-5">
+                        <ul aria-labelledby="holidays" className="m-0 flex flex-col gap-1 ps-5">
                           {inView.map((h) => <li key={h.date}><time dateTime={h.date}>{dayWords(locale, h.date, undefined, true)}</time>: {h.name}</li>)}
                         </ul>
                       </div>

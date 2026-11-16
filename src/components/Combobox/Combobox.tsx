@@ -28,6 +28,7 @@ import { en as words } from './labels';
 import { windowBlur } from '../../internal/focus';
 import { announcePause, typingPause } from '../../internal/timing';
 import { useVirtual } from '../../internal/virtual';
+import { useControllable } from '../../internal/controllable';
 
 /** V is the options' values, inferred from options or given, such as Combobox<"red" | "green">. */
 export type ComboboxOption<V extends string = string> = V | { value: V; label: string; description?: React.ReactNode; disabled?: boolean };
@@ -245,19 +246,18 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   React.useEffect(() => () => { const l = loader.current; window.clearTimeout(l.timer); if (l.ctl) l.ctl.abort(); }, []);
   const pause = typeof props.debounce === 'number' && props.debounce >= 0 ? props.debounce : typingPause;
   const loading = !!props.loading || busy;
-  const controlled = props.value !== undefined;
   const one = (v: string | string[] | null | undefined) => (multi || typeof v !== 'string' ? null : v);
-  const [ownValue, setOwnValue] = React.useState<string | null>(() => one(props.defaultValue));
-  const [ownValues, setOwnValues] = React.useState<string[]>(() => (multi ? list(props.defaultValue) : []));
-  const value = multi ? null : controlled ? one(props.value) : ownValue;
-  const values = multi ? (controlled ? list(props.value) : ownValues) : [];
+  // One own copy for both modes: a string or null, or the list with multiple.
+  const [held, setHeld, controlled] = useControllable<string | string[] | null>(props.value, multi ? list(props.defaultValue) : one(props.defaultValue), 'Combobox', 'value');
+  const value = multi ? null : one(held);
+  const values = multi ? list(held) : [];
   const chosen = new Set(values);
   const selected = multi ? null : opts.find((o) => (free ? o.label === value : o.value === value)) || null;
   const pickedLabel = free ? value ?? '' : selected ? selected.label : value != null ? seen.current.get(value) ?? '' : '';
   // The field's text: inputValue when given (controlled), else its own. Every change goes through setText, which
   // tells onInputChange, so a controlled field follows picks, Escape and clearing as well as typing.
-  const [ownText, setOwnText] = React.useState(() => props.defaultInputValue ?? pickedLabel);
-  const text = props.inputValue !== undefined ? props.inputValue : ownText;
+  const [textHeld, setOwnText] = useControllable<string>(props.inputValue, props.defaultInputValue ?? pickedLabel, 'Combobox', 'inputValue');
+  const text = textHeld;
   const textNow = React.useRef(text);
   textNow.current = text;
   const told = React.useRef(props.onInputChange);
@@ -278,8 +278,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const [typed, setTyped] = React.useState(false);   // false: show every option (just opened); true: filter by the text
   // Open: the open prop when given (controlled), else its own. Every change goes through setOpen, which tells
   // onOpenChange why; a disabled or read-only field never shows its list.
-  const [ownOpen, setOwnOpen] = React.useState(!!props.defaultOpen);
-  const open = !(rest.disabled || rest.readOnly) && (props.open !== undefined ? props.open : ownOpen);
+  const [openHeld, setOwnOpen] = useControllable(props.open, !!props.defaultOpen, 'Combobox', 'open');
+  const open = !(rest.disabled || rest.readOnly) && !!openHeld;
   const openNow = React.useRef(open);
   openNow.current = open;
   const askOpen = React.useRef(props.onOpenChange);
@@ -302,7 +302,7 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   useFormReset(input, () => {
     if (controlled) return;
     const v = one(props.defaultValue), o = opts.find((x) => x.value === v);
-    setOwnValue(v); setOwnValues(multi ? list(props.defaultValue) : []); setText(o ? o.label : ''); setTyped(false); setOpen(false, 'api');
+    setHeld(multi ? list(props.defaultValue) : v); setText(o ? o.label : ''); setTyped(false); setOpen(false, 'api');
   });
 
   // A new value (or a new label for it) puts its label in the field, unless the person is typing. Done while
@@ -343,13 +343,13 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
 
   const changed = props.onValueChange as ((v: string | null | string[]) => void) | undefined;
   const commit = (v: string | null) => {
-    if (!controlled) setOwnValue(v);
+    if (!controlled) setHeld(v);
     if (v !== value && changed) changed(v);
   };
   // With multiple: the new list of values, and what a screen reader hears (focus stays in the field, so it says
   // which tag was added or removed).
   const commitMany = (next: string[], said?: string) => {
-    if (!controlled) setOwnValues(next);
+    if (!controlled) setHeld(next);
     if (changed) changed(next);
     if (said) announce(said);
   };

@@ -49,3 +49,4 @@ A whole page for a result is the loudest feedback there is. Use one when a long 
 - **Saving a draft.** For a form that takes more than a few minutes, save the answers as people go (with [SaveStatus](?path=/docs/components-feedback-savestatus--docs) saying so) and pass them back as `initial`, so a closed tab or a timed-out session loses nothing (2.2.6).
 - **Each step in the address.** Put the step in the URL (`?step=2`) and pass it as `start`, so the browser's Back goes back a step and a reload keeps the place, and set `document.title` to the step's name.
 - **Sending.** `onSubmit` gets every answer; reject its promise when sending fails. The reference and what happens next come from your server.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

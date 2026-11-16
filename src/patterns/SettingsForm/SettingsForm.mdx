@@ -43,3 +43,4 @@ A settings page made of sections, each with its own Save, its own errors and its
 - **Storing the settings.** `onSave` gets one section's values; reject its promise when saving fails, and pass any field errors the server finds back into that section.
 - **Moving away inside the app.** Before your router moves, `await confirm()` from `useUnsavedChanges`, as the "Back to the dashboard" link does here.
 - **Which settings there are**, and their words: name each one for what it does, and say in its description what changes when it's on.
+- **"Error: " in the page's `<title>`** while the error summary shows, so a reload says it first (3.3.1).

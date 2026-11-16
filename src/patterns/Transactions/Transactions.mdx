@@ -21,7 +21,7 @@ An account's money in and out by month, found by what it was or its category, wi
 - **The month's totals come first**, as a list of terms: in, out, and what you kept or spent beyond it (1.3.1).
 - **Searching or filtering says how many show**, of how many that month, and Clear filters puts both back (4.1.3, 3.3.2).
 - **At narrow widths the table scrolls on its own**, and the page doesn't (1.4.10).
-- **While the transactions load**, one placeholder named "Loading transactions"; a failed load says so, with Try again (4.1.3).
+- **While the transactions load**, set `loading`: one placeholder, named "Loading transactions" (4.1.3). **A load that fails says so**: set `loadFailed` and pass `onRetry`, for its Try again.
 - **A skip link** first, into main, as on every page.
 
 <Canvas of={Stories.InEuros} />

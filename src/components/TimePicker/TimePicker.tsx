@@ -18,6 +18,7 @@ import { isComposing } from '../../internal/ime';
 import { en as TimePickerWords } from './labels';
 import { en as DatePickerWords } from '../DatePicker/labels';
 import { windowBlur } from '../../internal/focus';
+import { useControllable } from '../../internal/controllable';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, TimePickerWords, DatePickerWords);
 
@@ -67,9 +68,8 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
   const h12 = props.hour12 ?? uses12h(locale);
   const step = props.step && Math.round(props.step) >= 1 ? Math.round(props.step) : 30;
   const lo = toMinutes(min) ?? 0, hi = toMinutes(max) ?? 24 * 60 - 1;
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<number | null>(toMinutes(props.defaultValue));
-  const value = controlled ? toMinutes(props.value) : own;
+  const [chosen, setOwn, controlled] = useControllable<string | number | null>(props.value, toMinutes(props.defaultValue), 'TimePicker', 'value');
+  const value = controlled ? toMinutes(chosen as string | null) : (chosen as number | null);
   const fmt = (n: number | null) => (n == null ? '' : formatTime(n, locale, h12));
   const [text, setText] = React.useState(fmt(value));
   const shown = React.useRef(value);

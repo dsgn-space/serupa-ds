@@ -102,7 +102,10 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
       }
       setBoxes((was) => (JSON.stringify(was) === JSON.stringify(found) ? was : found));
     };
-    const later = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(measure); };
+    // At most one measure a frame, and never put off: a story that changes its markup every frame (a chart that
+    // re-lays out after a resize) pushed a debounced one back each time, and in WebKit the boxes kept the old, wider
+    // size for seconds after the page narrowed, so the docs scrolled sideways at 320px.
+    const later = () => { if (!frame) frame = requestAnimationFrame(() => { frame = 0; measure(); }); };
     const ro = new ResizeObserver(later);
     ro.observe(el);
     const mo = new MutationObserver(later);

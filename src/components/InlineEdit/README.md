@@ -109,6 +109,7 @@ Each is an optional override: set it on the page, a container or one InlineEdit.
 | `--inline-edit-icon` | `text-muted` | The pencil. |
 | `--inline-edit-text-muted-shaded` | `text-muted-shaded` | The placeholder and pencil icon on the hovered button, where `text-muted` would fall under 4.5:1 on the shaded fill. |
 | `--inline-edit-bg-hover` | `surface-hover` | The button's background on hover. |
+| `--inline-edit-bg-pressed` | `pressed` | The button's background while pressed, one step past hover. |
 | `--inline-edit-error` | `danger-text` | The validation message. |
 | `--inline-edit-focus-ring` | `focus-ring` | The button's keyboard focus ring. |
 | `--inline-edit-radius` | `radius-control` | The button's corners (6px). |

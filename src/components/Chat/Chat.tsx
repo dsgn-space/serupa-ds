@@ -18,6 +18,7 @@ import { RelativeTime } from '../RelativeTime/RelativeTime';
 import { Textarea } from '../Textarea/Textarea';
 import * as icons from '../../material/builtin';
 import { en as ownWords } from './labels';
+import { useControllable } from '../../internal/controllable';
 
 const words = /* @__PURE__ */ Object.assign({}, ownWords);
 
@@ -470,9 +471,7 @@ export interface ChatComposerProps extends Omit<React.FormHTMLAttributes<HTMLFor
 export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatComposerProps>('ChatComposer', function ChatComposer(props, ref) {
   const sds = useSettings(words), L = sds.labels;
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, onSend: 1, streaming: 1, onStop: 1, placeholder: 1, disabled: 1, attachments: 1, actions: 1, maxRows: 1, className: 1, 'aria-label': 1 } as const);
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState(props.defaultValue || '');
-  const value = controlled ? props.value! : own;
+  const [value, setOwn, controlled] = useControllable<string>(props.value, props.defaultValue || '', 'ChatComposer', 'value');
   const field = React.useRef<HTMLTextAreaElement | null>(null);
   const disabled = !!props.disabled;
   const set = (v: string) => { if (!controlled) setOwn(v); if (props.onValueChange) props.onValueChange(v); };
