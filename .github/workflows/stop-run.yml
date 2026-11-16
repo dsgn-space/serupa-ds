@@ -1,0 +1,34 @@
+name: Stop run
+
+# CI's fail-fast (ci.yml, the "Stop the run" steps): a job that failed asks this workflow to cancel its run, so the
+# rest of the run stops holding runners. The cancel comes from here, a few seconds later, and not from the failing job
+# itself, so that job has ended by then and keeps its failure: cancelled from inside, it showed as cancelled like
+# the jobs it stopped (#2021, 16 Nov). Only pull request and merge queue runs of CI are cancelled, never main's.
+on:
+  workflow_dispatch:
+    inputs:
+      run:
+        description: The CI run to cancel (its id)
+        required: true
+
+permissions: {}
+
+jobs:
+  stop:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          RUN: ${{ inputs.run }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$RUN" =~ ^[0-9]+$ ]]; then echo "Not a run id: $RUN"; exit 1; fi
+          read -r name event status < <(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN" --jq '"\(.name) \(.event) \(.status)"')
+          if [ "$name" != CI ] || { [ "$event" != pull_request ] && [ "$event" != merge_group ]; }; then
+            echo "Run $RUN is $name on $event: only CI's pull request and merge queue runs are stopped."; exit 0
+          fi
+          if [ "$status" = completed ]; then echo "Run $RUN has already ended."; exit 0; fi
+          gh api -X POST "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/cancel" >/dev/null && echo "Cancelled run $RUN."
