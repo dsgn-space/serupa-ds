@@ -66,6 +66,7 @@ Drawn from the `Playground` story.
 | `min` / `max` | `Date` \| `string` | | The earliest and latest days that can be an end |
 | `isDateDisabled` | `(date) => boolean` | | Days that can't be an end, struck through |
 | `locale` | `string` | the provider's | Names and the first day of the week |
+| `calendar` | as Calendar's | `'gregory'` | The calendar system the months follow (`'persian'`, `'islamic-umalqura'`, `'buddhist'` and more, as in Calendar). The range read out after a pick is in it too. Values stay `Date`s. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
 | `autoFocus` | `boolean` | `false` | Focus the start day (or today) when it appears |
 

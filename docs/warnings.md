@@ -29,6 +29,10 @@ A `useShortcut` on keys the browser keeps for itself: mod (Ctrl, or ⌘ on a Mac
 A Button with only an icon has no text for a screen reader to say. Give it an `aria-label` (or `aria-labelledby`, or a `title`), or use IconButton, whose `label` is required.
 
 
+## calendar-system
+
+A date component (Calendar, RangeCalendar, DatePicker, DateRangePicker) got a `calendar` its grids don't draw, such as `"hebrew"` or `"ethiopic"`, whose years have 13 months, so it draws Gregorian. Use one of `gregory`, `buddhist`, `japanese`, `roc`, `persian`, `islamic-umalqura`, `islamic-civil`, `islamic-tbla` or `indian`.
+
 ## combobox-duplicate-value
 
 Two or more of a Combobox's options have the same value. Picking the second one shows the first one's label in the field, and both are marked as selected. Give every option its own value; an id is a good one when labels repeat.

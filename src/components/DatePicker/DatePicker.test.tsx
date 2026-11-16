@@ -395,3 +395,27 @@ describe('DatePicker held state', () => {
     expect(low).toEqual([]);
   });
 });
+
+describe('DatePicker: another calendar system (RX9)', () => {
+  const gridTitle = () => { const g = document.querySelector('[role=dialog] [role=grid]:not([hidden])')!; return document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent; };
+  test('calendar="persian": the popup shows the Persian month, and the typed date stays Gregorian so it reads back as the same day', async () => {
+    const got: string[] = [];
+    await render(<DatePicker aria-label="Due" calendar="persian" locale="en-US" defaultValue="2026-11-15" onValueChange={(_, iso) => got.push(String(iso))} />);
+    const input = page.getByRole('textbox', { name: 'Due' }).element() as HTMLInputElement;
+    expect(input.value).toBe('11/15/2026');
+    await userEvent.click(page.getByRole('button', { name: 'Choose a date' }));
+    expect(gridTitle()).toBe(new Intl.DateTimeFormat('en-US', { calendar: 'persian', numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(new Date(2026, 10, 15)));
+    await userEvent.click(document.querySelector<HTMLButtonElement>('[data-date="2026-11-21"]')!);
+    expect([got, input.value]).toEqual([['2026-11-21'], '11/21/2026']);
+  });
+
+  test('every calendar system: the popup names its month as Intl does, and the typed date is the same Gregorian one', async () => {
+    for (const calendar of ['gregory', 'buddhist', 'japanese', 'roc', 'persian', 'islamic-umalqura', 'islamic-civil', 'islamic-tbla', 'indian'] as const) {
+      const r = await render(<DatePicker aria-label="Due" calendar={calendar} locale="en-US" defaultValue="2026-11-15" />);
+      await userEvent.click(page.getByRole('button', { name: 'Choose a date' }));
+      expect([calendar, gridTitle(), (page.getByRole('textbox', { name: 'Due' }).element() as HTMLInputElement).value])
+        .toEqual([calendar, new Intl.DateTimeFormat('en-US', { calendar, numberingSystem: 'latn', month: 'long', year: 'numeric' }).format(new Date(2026, 10, 15)), '11/15/2026']);
+      await r.unmount();
+    }
+  });
+});
