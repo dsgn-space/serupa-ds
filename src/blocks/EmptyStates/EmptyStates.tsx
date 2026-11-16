@@ -121,9 +121,20 @@ export interface EmptyLoadFailedProps {
 
 /** Loading failed: what to do, Try again, and a reference for support. Said once. */
 export function EmptyLoadFailed({ title = 'Couldn’t load this', description = 'Check your connection, then try again.', onRetry, retryLabel = 'Try again', reference, referenceLabel = 'Reference', headingLevel }: EmptyLoadFailedProps) {
+  // Once the retry works, this message and its Try again go: focus would fall to the page. The page's h1 takes it
+  // instead, as it does after any action that takes away the button that had focus (2.4.3).
+  const retry = React.useRef<HTMLButtonElement>(null);
+  React.useLayoutEffect(() => () => {
+    const b = retry.current;
+    if (!b || b !== document.activeElement) return;
+    const h = b.closest('main')?.querySelector<HTMLElement>('h1');
+    if (!h) return;
+    if (!h.hasAttribute('tabindex')) { h.tabIndex = -1; h.style.outline = 'none'; }
+    h.focus();
+  }, []);
   return (
     <EmptyState icon="cloud_off" announce title={title} headingLevel={headingLevel}
       description={reference ? <>{description}<br />{referenceLabel}: <span className="font-mono">{reference}</span></> : description}
-      actions={<Button onClick={onRetry}>{retryLabel}</Button>} />
+      actions={<Button ref={retry} onClick={onRetry}>{retryLabel}</Button>} />
   );
 }
