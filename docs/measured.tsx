@@ -57,13 +57,20 @@ const SAMPLES: [string, () => React.ReactElement][] = [
 
 type Scale = [string, number][];
 // Every token of a kind, resolved to px inside the sheet, so a density or theme that changes them is followed.
-const scale = (within: Element, names: string[]): Scale => names.map((n) => {
-  const probe = within.appendChild(document.createElement('div'));
-  probe.style.blockSize = `var(--${CSS.escape(n)})`;
-  const px = probe.getBoundingClientRect().height;
-  probe.remove();
-  return [n, px] as [string, number];
-});
+// Each scale is measured once for the table it's in, not again for every row: every probe forces a layout of the
+// whole page, and 32 of them a row kept the page busy for half a minute in WebKit.
+const scales = new WeakMap<Element, Map<string[], Scale>>();
+const scale = (within: Element, names: string[]): Scale => {
+  const known = scales.get(within) ?? new Map<string[], Scale>();
+  scales.set(within, known);
+  const had = known.get(names);
+  if (had) return had;
+  const probes = names.map((n) => { const p = within.appendChild(document.createElement('div')); p.style.blockSize = `var(--${CSS.escape(n)})`; return p; });
+  const got = names.map((n, i) => [n, probes[i]!.getBoundingClientRect().height] as [string, number]);
+  for (const p of probes) p.remove();
+  known.set(names, got);
+  return got;
+};
 const SPACING = ['0', 'px', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '5', '6', '7', '8', '9', '10', '11', '12', '14', '16'].map((s) => `spacing-${s}`);
 const ROUNDED = ['rounded-none', 'rounded-xs', 'rounded-sm', 'rounded-md', 'rounded-lg', 'rounded-xl', 'rounded-2xl', 'rounded-3xl', 'rounded-4xl'];
 const HEIGHTS = ['control-height-sm', 'control-height-md', 'control-height-lg'];
@@ -92,28 +99,44 @@ function withoutNot(sel: string): string {
 // The focus ring each component declares: its :focus-visible and :focus-within rules in the loaded style sheets (not
 // the forced-colors ones), and any rule that draws in a ring colour, with what they draw with and whether they read
 // the focus-ring tokens or a literal.
-function focusRing(root: Element): string {
-  const classes = new Set([root, ...root.querySelectorAll('*')].flatMap((e) => [...e.classList].filter((c) => c.startsWith('dk-'))));
-  const found: string[] = [];
-  const read = (r: CSSStyleRule) => {
-    const sel = withoutNot(r.selectorText);
-    if (![...classes].some((c) => new RegExp(`\\.${c}(?:--[\\w-]+)?(?![\\w-])`).test(sel))) return;
-    const outline = r.style.getPropertyValue('outline') || r.style.getPropertyValue('outline-width');
-    const shadow = r.style.getPropertyValue('box-shadow');
-    // A focus rule by its selector, or one a script turns on (PinInput's active box) that draws in a ring colour.
-    if (!/:focus-visible|:focus-within/.test(sel) && !/-ring\)/.test(shadow + outline)) return;
-    if (outline && !/transparent/.test(outline)) found.push(/--focus-ring-width/.test(outline) ? 'outline, ring tokens' : `outline, literal ${outline}`);
-    if (shadow) found.push(/var\(--/.test(shadow) ? 'box-shadow, ring colour' : `box-shadow, literal ${shadow}`);
-  };
-  const walk = (list: CSSRuleList) => {
-    for (const r of [...list]) {
+// The style rules a focus ring can come from, read once for every component on the page (read again only when a
+// style sheet is added): each with its selector, :not() taken out, and the dk- classes it names, so a component
+// looks its own up in a set. Read per component, with a pattern built for each class against each rule, the page
+// was part of the 42 s the page took to open in WebKit (16 Nov).
+type FocusRule = { style: CSSStyleDeclaration; sel: string; classes: string[] };
+let focusRules: { sheets: number; list: FocusRule[] } | null = null;
+function readFocusRules(): FocusRule[] {
+  if (focusRules && focusRules.sheets === document.styleSheets.length) return focusRules.list;
+  const list: FocusRule[] = [];
+  const walk = (rules: CSSRuleList) => {
+    for (const r of [...rules]) {
       if (r instanceof CSSMediaRule && /forced-colors/.test(r.conditionText)) continue;
-      if (r instanceof CSSStyleRule) read(r);
+      if (r instanceof CSSStyleRule) {
+        const sel = withoutNot(r.selectorText);
+        // A class, and the block a modifier belongs to (.dk-btn--primary is the button's too).
+        const classes = [...sel.matchAll(/\.(dk-[\w-]+)/g)].flatMap((m) => [m[1]!, m[1]!.split('--')[0]!]);
+        if (classes.length) list.push({ style: r.style, sel, classes });
+      }
       if ('cssRules' in r) walk((r as CSSGroupingRule).cssRules);
     }
   };
   for (const sheet of [...document.styleSheets]) {
     try { walk(sheet.cssRules); } catch { /* a style sheet from another origin can't be read */ }
+  }
+  focusRules = { sheets: document.styleSheets.length, list };
+  return list;
+}
+function focusRing(root: Element): string {
+  const classes = new Set([root, ...root.querySelectorAll('*')].flatMap((e) => [...e.classList].filter((c) => c.startsWith('dk-'))));
+  const found: string[] = [];
+  for (const r of readFocusRules()) {
+    if (!r.classes.some((c) => classes.has(c))) continue;
+    const outline = r.style.getPropertyValue('outline') || r.style.getPropertyValue('outline-width');
+    const shadow = r.style.getPropertyValue('box-shadow');
+    // A focus rule by its selector, or one a script turns on (PinInput's active box) that draws in a ring colour.
+    if (!/:focus-visible|:focus-within/.test(r.sel) && !/-ring\)/.test(shadow + outline)) continue;
+    if (outline && !/transparent/.test(outline)) found.push(/--focus-ring-width/.test(outline) ? 'outline, ring tokens' : `outline, literal ${outline}`);
+    if (shadow) found.push(/var\(--/.test(shadow) ? 'box-shadow, ring colour' : `box-shadow, literal ${shadow}`);
   }
   const unique = [...new Set(found)];
   return unique.length ? unique.join('; ') : 'none of its own';

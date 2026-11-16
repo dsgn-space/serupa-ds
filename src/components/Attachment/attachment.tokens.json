@@ -95,7 +95,7 @@
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",
-        "$description": "The ring around a focused link.",
+        "$description": "The ring around a focused link, or around a cut name that takes keyboard focus.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--attachment-focus-ring"

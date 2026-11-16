@@ -9,10 +9,10 @@ import { Attachment, attachmentKind } from './Attachment';
 
 const root = (id: string) => document.getElementById(id) as HTMLElement;
 // Parts found as people and screen readers meet them: the kind and size are the name's description (an id ending -meta),
-// the message an id ending -error, the name the element titled with it, the icon the first one.
+// the message an id ending -error, the name the element whose parts are hidden from screen readers, the icon the first one.
 const part = (el: HTMLElement, which: 'meta' | 'error') => el.querySelector(`[id$="-${which}"]`) as HTMLElement;
 const meta = (el: HTMLElement) => part(el, 'meta').textContent;
-const nameParts = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[dir="auto"][title] > [aria-hidden]')];
+const nameParts = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[dir="auto"] > [aria-hidden]')];
 const visible = (el: HTMLElement) => nameParts(el).map((x) => x.textContent).join('');
 
 describe('Attachment', () => {
@@ -23,8 +23,8 @@ describe('Attachment', () => {
     expect([e.tagName, ref.current === e, e.className, e.dataset.x, e.dataset.component, e.dataset.kind]).toEqual(['DIV', true, 'dk-attachment extra', 'y', 'attachment', 'pdf']);
     expect([visible(e), meta(e)]).toEqual(['Invoice.pdf', 'PDF1.5 MB']);
     // The name is read once: the two cut parts are hidden and a full copy is there for screen readers.
-    expect(e.querySelector('[title] > :not([aria-hidden])')!.textContent).toBe('Invoice.pdf');
-    expect(e.querySelector('[title]')!.getAttribute('title')).toBe('Invoice.pdf');
+    expect(e.querySelector('[dir="auto"] > :not([aria-hidden])')!.textContent).toBe('Invoice.pdf');
+    expect(e.querySelector('[title]')).toBeNull();
   });
 
   test('the kind comes from the type first, then the extension, else "File"; kind overrides both', () => {
@@ -91,7 +91,7 @@ describe('Attachment', () => {
   test('an emoji or a name in another script isn\'t split inside a character', async () => {
     await render(<><Attachment id="e" name="🎉🎉🎉🎉🎉🎉🎉🎉 Ulang tahun.jpg" /><Attachment id="ar" name="تقرير.pdf" /></>);
     expect(visible(root('e'))).toBe('🎉🎉🎉🎉🎉🎉🎉🎉 Ulang tahun.jpg');
-    expect(root('ar').querySelector('[title]')!.getAttribute('dir')).toBe('auto');
+    expect(root('ar').querySelector('[dir="auto"]:has(> [aria-hidden])')!.getAttribute('dir')).toBe('auto');
   });
 
   test('the size follows the locale\'s digits and units, and the kind word the labels', async () => {
@@ -114,6 +114,28 @@ describe('Attachment', () => {
     const link = page.getByRole('link', { name: 'Q3.xlsx' }).element() as HTMLElement;
     expect(document.activeElement).toBe(link);
     expect(css(link).outlineStyle).toBe('solid');
+  });
+
+  test('a cut name shows in full on keyboard focus too, not only as a hover title: the link\'s focus, or its own tab stop without a link', async () => {
+    const long = 'Quarterly report final version reviewed by finance 2026.pdf';
+    const tip = () => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]');
+    await render(<div style={{ width: '200px' }}><button id="before">Before</button>
+      <Attachment id="lk" name={long} href="#f" /><Attachment id="pl" name={long} /><Attachment id="sh" name="a.pdf" /></div>);
+    const name = (id: string) => root(id).querySelector<HTMLElement>('span[dir="auto"]:has(> [aria-hidden])')!;
+    await expect.poll(() => [name('lk').hasAttribute('data-cut'), name('pl').hasAttribute('data-cut'), name('sh').hasAttribute('data-cut')]).toEqual([true, true, false]);
+    // No title: the tooltip shows the name, and screen readers read it once from the name itself.
+    expect(root('lk').querySelector('[title]')).toBeNull();
+    (document.getElementById('before') as HTMLElement).focus();
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(root('lk').querySelector('a'));
+    await expect.poll(() => tip()?.textContent).toBe(long);
+    // Without a link, the cut name is a tab stop of its own; a name that fits is not.
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(name('pl'));
+    await expect.poll(() => tip()?.textContent).toBe(long);
+    expect(name('sh').hasAttribute('tabindex')).toBe(false);
+    await userEvent.keyboard('{Tab}');
+    await expect.poll(() => tip()).toBeNull();
   });
 
   test('onRemove adds a "Remove <name>" button that calls it; removeLabel renames it', async () => {

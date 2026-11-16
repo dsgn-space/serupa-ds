@@ -15,7 +15,7 @@ const expenses: Expense[] = [
 ];
 const good = { date: '2026-02-05', category: 'travel', what: 'Taxi', amount: 12, receipt: null };
 
-// Expense report: fields that say what they take, problems next to each with focus on the first, a table with the
+// Expense report: fields that say what they take, problems in a summary that takes focus and next to each field, a table with the
 // total in its footer and "Receipt needed" in words, Remove moving focus on, and Send checked before it sends.
 describe('Patterns/Expense report', () => {
   test('what\'s wrong with an expense, and the receipts missing', () => {
@@ -39,9 +39,13 @@ describe('Patterns/Expense report', () => {
     expect([...document.querySelectorAll('tbody tr')].map((r) => r.querySelectorAll('td')[3]?.textContent)).toEqual(['Not needed', 'Receipt needed']);
   });
 
-  test('Add with problems names each next to its field and focuses the first; a good one joins the table', async () => {
+  test('Add with problems: a summary takes focus and links to each field, which says its own problem; a good one joins the table', async () => {
     const screen = await render(<ExpenseReport expenses={[]} today={today} />);
     await screen.getByRole('button', { name: 'Add expense' }).click();
+    await expect.poll(() => active().textContent).toMatch(/^There (are \S+ problems|is a problem)/);
+    const links = screen.getByRole('link', { name: /^Choose|^Say|^Enter|^Add/ });
+    expect(links.elements()[0]?.getAttribute('href')).toBe('#expense-category');
+    await links.first().click();
     await expect.poll(() => active().id).toBe('expense-category');
     expect(described(active())).toContain('Choose what it was for.');
     await screen.getByRole('combobox', { name: /^What for/ }).selectOptions('travel');
@@ -56,13 +60,14 @@ describe('Patterns/Expense report', () => {
     expect((document.getElementById('expense-what') as HTMLInputElement).value).toBe('');
   });
 
-  test('a date cleared is named next to it, and today is the date a new expense starts with', async () => {
+  test('a date cleared is named next to it and in the summary, whose link goes to it, and today is the date a new expense starts with', async () => {
     const screen = await render(<ExpenseReport expenses={[]} />);
     const box = document.querySelector<HTMLInputElement>('#expense-date input')!;
     expect(box.value).not.toBe('');
     await userEvent.fill(box, '');
     await screen.getByRole('button', { name: 'Add expense' }).click();
     await expect.poll(() => document.body.textContent).toContain('Enter the date you spent it.');
+    await screen.getByRole('link', { name: 'Enter the date you spent it.' }).click();
     await expect.poll(() => active().closest('#expense-date') !== null).toBe(true);
   });
 
