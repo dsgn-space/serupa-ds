@@ -127,7 +127,7 @@ It returns the toast's id. Keep the usual duration or longer, so people have tim
 | `autoDismiss` | boolean | `true` | Whether toasts go by themselves; `false` keeps every one until it's closed, unless a toast sets its own |
 | `limit` | number | `3` | The most toasts shown at once. The newest show; older ones wait under a "+2 more" line and come back as others close. One never shown waits with its time not yet started; one already seen keeps its time running while it waits, so toasts still go in the order they came |
 
-`className`, `style` and other props go to the `<section>`, which has `data-component="toaster"` and `data-position`.
+`ref`, `className`, `style` and other props go to the `<section>`, which has `data-component="toaster"` and `data-position`.
 
 ## Component tokens
 
