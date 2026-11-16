@@ -92,6 +92,9 @@ export function DataExport({ parts = demoParts, exports = demoExports, today, on
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const [list, setList] = React.useState(exports);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setList(exports); } }
   const [asked, setAsked] = React.useState(0);
   const listHeading = React.useRef<HTMLHeadingElement>(null);
   const total = exportSize(parts, chosen);

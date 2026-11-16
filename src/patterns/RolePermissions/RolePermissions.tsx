@@ -92,6 +92,9 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
   const locale = useLocale();
   const [saved, setSaved] = React.useState(grants);
   const [draft, setDraft] = React.useState(grants);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setSaved(grants); setDraft(grants); } }
   const [also, setAlso] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);

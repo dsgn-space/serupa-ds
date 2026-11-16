@@ -128,6 +128,9 @@ export const subtotal = (items: readonly OrderItem[]): number => items.reduce((n
 export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, loading = false, loadFailed = false, onRetry }: OrderStatusProps) {
   const locale = useLocale(undefined);
   const [order, setOrder] = React.useState(start);
+  // What the app passes once loading ends replaces what was there, which was empty or the demo.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setOrder(start); } }
   const heading = React.useRef<HTMLHeadingElement>(null);
   const money = (n: number) => <FormattedNumber value={n} format="currency" currency={currency} />;
   const when = (iso: string) => {

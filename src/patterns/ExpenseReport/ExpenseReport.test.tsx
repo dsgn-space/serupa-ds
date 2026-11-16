@@ -107,4 +107,10 @@ describe('Patterns/Expense report', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('the expenses that arrive once loading ends are the ones shown', async () => {
+    const screen = await render(<ExpenseReport loading expenses={[]} today={today} />);
+    await screen.rerender(<ExpenseReport expenses={expenses} today={today} />);
+    await expect.poll(rows).toEqual(['Train', 'Dinner']);
+  });
 });
