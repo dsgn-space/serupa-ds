@@ -367,7 +367,7 @@ describe('Density axis', () => {
       <p id="lh-5" style={{ fontSize: 'var(--text-5xl)', lineHeight: 'var(--text-5xl--line-height)' }}>Big</p>
       <p id="lh-s" style={{ font: 'var(--text-type-display)' }}>Short</p>
     </div>);
-    const lh = (id: string) => { const c = getComputedStyle(document.getElementById(id)!); return [parseFloat(c.fontSize), parseFloat(c.lineHeight)].map((v) => Math.round(v * 100) / 100); };   // WebKit reads 33.6px back as 33.599998
+    const lh = (id: string) => { const c = getComputedStyle(document.getElementById(id)!); return [parseFloat(c.fontSize), parseFloat(c.lineHeight)].map((v) => Math.round(v * 10) / 10); };   // to a tenth: WebKit reads 33.6px back as 33.599998, Firefox as 33.625
     const ids = ['lh-d', 'lh-1', 'lh-5', 'lh-s'];
     try {
       expect(ids.map(lh)).toEqual([[48, 52], [30, 36], [48, 48], [48, 52]]);
