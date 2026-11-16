@@ -133,7 +133,7 @@ Each is an optional override: set it on the page, a container or one Chart. The 
 | `--chart-grid-line` | `chart-grid` | The grid lines. |
 | `--chart-axis-line` | `chart-axis` | The zero line, the baseline and the hover cursor (3:1 on the surface). |
 | `--chart-label-text` | `chart-label` | The axis labels and the legend (4.5:1 on the surface). |
-| `--chart-separator` | `chart-gap` | The ring around markers and bars and the marks in a bar's pattern: the page color, so each series has 3:1 against it. |
+| `--chart-separator` | `chart-gap` | The ring around markers and bars and the marks in a bar's pattern: the color behind the chart, so each series has 3:1 against it. Unset, it takes the fill behind (--surface-behind, which the page and every surface set), else chart-gap. |
 | `--chart-focus-ring` | `focus-ring` | The ring around a focused point or bar. |
 | `--chart-tip-border` | `border-overlay` | The tooltip's border. |
 | `--chart-tip-muted` | `text-muted` | A series' name in the tooltip (4.5:1 on tip-bg). |

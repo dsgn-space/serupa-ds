@@ -385,7 +385,7 @@ Rules of thumb:
 - Use gradients sparingly, for heroes and illustrations, not for UI controls.
 - Images: `bg-cover bg-center bg-no-repeat` fills a box without distortion.
 
-**The fill behind a ring.** Avatar's status dot, the avatars in an AvatarGroup and Badge's indicator dot are set apart by a 2px ring in the color behind them, so the ring disappears into the surface they're on. `--surface-behind` says what that color is. The page sets it to `surface-page`, and every surface (Card, Menu, Popover, Dialog, Drawer, Table, List, Navbar, Sidebar and the other bars and panels) sets it to its own fill. On a box of your own with a background, set it there as well: `.my-panel { background: var(--primary-subtle); --surface-behind: var(--primary-subtle); }`.
+**The fill behind a ring.** Avatar's status dot, the avatars in an AvatarGroup, Badge's indicator dot and Chart's bars, slices and markers are set apart by a ring or gap in the color behind them, so the ring disappears into the surface they're on. `--surface-behind` says what that color is. The page sets it to `surface-page`, and every surface (Card, Menu, Popover, Dialog, Drawer, Table, List, Navbar, Sidebar and the other bars and panels) sets it to its own fill. On a box of your own with a background, set it there as well: `.my-panel { background: var(--primary-subtle); --surface-behind: var(--primary-subtle); }`.
 
 ## Spacing
 
