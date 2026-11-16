@@ -24,6 +24,7 @@ interface CheckboxGroupProps<V extends number | string = number | string> extend
     invalid?: boolean | undefined;
     disabled?: boolean | undefined;
     required?: boolean | undefined;
+    readOnly?: boolean | undefined;
     children?: React.ReactNode | undefined;
 }
 declare const CheckboxGroup: (<V extends number | string = number | string>(props: CheckboxGroupProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
