@@ -5,6 +5,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { page, userEvent } from 'vitest/browser';
 import { THEMES, contrast, css, withMotion } from '../../../tools/test/vitest/helpers';
 import { Chart, markerPath, niceTicks } from './Chart';
+import { Card } from '../Card/Card';
 
 // The tests read the numbers as en-US writes them; the second-language runs (ar-EG's digits) would write them otherwise.
 const EnUS = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
@@ -83,6 +84,14 @@ describe('Chart', () => {
     expect(focused()).toBe('Visitors, Feb: 20');
     await userEvent.keyboard('{ArrowRight}');
     expect(focused()).toBe('Visitors, Jan: 10');
+  });
+
+  test('dark: the gap around bars is the fill behind the chart, the page\'s or a Card\'s, not a lighter outline on the page', async () => {
+    const bars = (id: string) => <Chart id={id} type="bar" title="B" categories={CATS} series={TWO} />;
+    await render(<div data-theme="blue-dark" id="dark-page">{bars('c-page')}<Card>{bars('c-card')}</Card></div>);
+    const gap = (id: string) => css(el(id).querySelector('g[role="group"] > [role="img"]')).stroke;
+    expect([gap('c-page'), gap('c-card')]).toEqual([css(el('dark-page')).backgroundColor, css(el('c-card').closest('[data-component=card]') as HTMLElement).backgroundColor]);
+    expect(gap('c-page')).not.toBe(gap('c-card'));
   });
 
   test('a focused point shows its category\'s values beside it, and the focus ring', async () => {

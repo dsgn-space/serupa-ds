@@ -205,7 +205,7 @@ Each is an optional override: set it on the page, a container or one badge. Unse
 | `--badge-info-outline-text` | `info-text` | Info outline: text and icon |
 | `--badge-info-outline-border` | `info` | Info outline: border |
 | `--badge-info-solid-hover` | `info-hover` | Info solid: the color a clickable badge moves toward on hover and press |
-| `--badge-indicator-ring-color` | `surface` | The indicator's ring color; set it to the color behind |
+| `--badge-indicator-ring-color` | `surface` | The indicator's ring color. Unset, it takes the fill behind the dot (--surface-behind, which the page and every surface set), else surface. |
 | `--badge-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--badge-fill-disabled` | `disabled-surface` | Disabled: the fill, whatever its color when enabled. |
 | `--badge-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |

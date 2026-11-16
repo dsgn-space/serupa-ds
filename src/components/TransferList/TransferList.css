@@ -15,7 +15,7 @@
   padding: var(--transfer-list-side-padding, var(--spacing-3));
   border: var(--border-width-1) solid var(--transfer-list-side-border, var(--border));
   border-radius: var(--transfer-list-side-radius, var(--radius-surface));
-  background: var(--transfer-list-side-bg, var(--surface));
+  background: var(--transfer-list-side-bg, var(--surface)); --surface-behind: var(--transfer-list-side-bg, var(--surface));
 }
 .dk-transfer-list__title { margin: var(--spacing-0); font-weight: var(--font-semibold); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .dk-transfer-list__count, .dk-transfer-list__empty { color: var(--transfer-list-muted-text, var(--text-muted)); font-weight: var(--font-normal); }

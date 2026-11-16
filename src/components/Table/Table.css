@@ -7,7 +7,7 @@
 .dk-table {
   box-sizing: border-box; max-width: var(--sizing-full); overflow: auto; overscroll-behavior-x: contain; position: relative;
   border: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); border-radius: var(--table-radius, var(--radius-surface));
-  background: var(--table-bg, var(--surface));
+  background: var(--table-bg, var(--surface)); --surface-behind: var(--table-bg, var(--surface));
 }
 /* Set straight in a Card with no padding, the card is the frame: a second border and a tighter curve inside the card's
    showed as a doubled edge, worst at the corners. */
@@ -20,7 +20,7 @@
 .dk-table__body > tr:not([hidden]):not(:has(~ tr:not([hidden]))) > .dk-table__cell, .dk-table__body .dk-table__row:last-child .dk-table__cell, .dk-table__foot .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
 .dk-table__foot .dk-table__row:first-child .dk-table__cell { border-top: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); font-weight: var(--font-medium); }
 .dk-table__body:has(+ .dk-table__foot) .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
-.dk-table__header { background: var(--table-header-bg, var(--surface-muted)); color: var(--table-header-text, var(--text-muted)); font-weight: var(--table-header-weight, var(--font-medium)); white-space: nowrap; }
+.dk-table__header { background: var(--table-header-bg, var(--surface-muted)); --surface-behind: var(--table-header-bg, var(--surface-muted)); color: var(--table-header-text, var(--text-muted)); font-weight: var(--table-header-weight, var(--font-medium)); white-space: nowrap; }
 .dk-table__cell--center { text-align: center; }
 .dk-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
 /* The row background eases only while the pointer is over the body, so a row's hover and a click on its own box still
@@ -104,7 +104,7 @@
    shading. Header cells keep the header's. */
 .dk-table--pin-start :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:first-child { position: sticky; inset-inline-start: var(--spacing-0); z-index: var(--z-20); background: var(--dk-table-row, var(--table-bg, var(--surface))); }
 .dk-table--pin-end :is(.dk-table__row, .dk-table__head > tr) > .dk-table__cell:last-child { position: sticky; inset-inline-end: var(--spacing-0); z-index: var(--z-20); background: var(--dk-table-row, var(--table-bg, var(--surface))); }
-.dk-table--pin-start .dk-table__head tr > .dk-table__cell:first-child, .dk-table--pin-end .dk-table__head tr > .dk-table__cell:last-child { background: var(--table-header-bg, var(--surface-muted)); }
+.dk-table--pin-start .dk-table__head tr > .dk-table__cell:first-child, .dk-table--pin-end .dk-table__head tr > .dk-table__cell:last-child { background: var(--table-header-bg, var(--surface-muted)); --surface-behind: var(--table-header-bg, var(--surface-muted)); }
 .dk-table--sticky.dk-table--pin-start .dk-table__head .dk-table__cell:first-child, .dk-table--sticky.dk-table--pin-end .dk-table__head .dk-table__cell:last-child { z-index: var(--z-30); }
 /* While there's more to scroll to under a pinned column, it lifts with a shadow on its inner edge (as the sticky header
    does): a state of the scroll, where scroll-state queries are supported; elsewhere it stays flat. */
