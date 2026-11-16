@@ -130,7 +130,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your profile" onRetry={() => onRetry?.()} headingLevel={2} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading profile" /></Card> : (
               <div className="grid items-start gap-6 md:grid-cols-3">
-                <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-5 md:col-span-2">
+                <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-4 md:col-span-2">
                   <h2 id="edit" className="m-0 text-lg font-semibold">Edit {saved.name ? `${saved.name}’s` : 'your'} profile</h2>
                   <ErrorSummary key={tries} errors={errors} headingLevel={3} />
                   <div className="flex flex-wrap items-center gap-4">

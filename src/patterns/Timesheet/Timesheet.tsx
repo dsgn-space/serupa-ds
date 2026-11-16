@@ -164,7 +164,7 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
             <Link href="#timesheets">Back to your timesheets</Link>
           </section>
         ) : (
-          <form onSubmit={send} noValidate aria-label="Timesheet" className="flex flex-col gap-5 pt-6">
+          <form onSubmit={send} noValidate aria-label="Timesheet" className="flex flex-col gap-4 pt-6">
             <ErrorSummary key={tries} errors={errors} />
             <div className="flex flex-wrap items-end gap-3">
               <Field label="Add a project" className="min-w-56">
