@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
@@ -104,13 +105,12 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
   const initial = React.useRef(props.initialFocus); initial.current = props.initialFocus;
   const final = React.useRef(props.finalFocus); final.current = props.finalFocus;
   const isModal = React.useRef(modal); isModal.current = modal;
-  const [inner, setInner] = React.useState(!!props.defaultOpen);
-  const controlled = props.open !== undefined;
-  const open = controlled ? !!props.open : inner;
+  const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Drawer', 'open');
+  const open = !!openIn;
   // Uncontrolled, each opening starts at defaultSnap.
   const [wasOpen, setWasOpen] = React.useState(open);
   if (open !== wasOpen) { setWasOpen(open); if (open) setOwnSnap(props.defaultSnap ?? 0); }
-  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled]);
+  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled, setInner]);
   // unsaved: a request to close asks "Discard changes?" first (Dialog's question), and remembers why it came.
   const unsaved = React.useRef(props.unsaved); unsaved.current = props.unsaved;
   const [asking, setAsking] = React.useState<OpenChangeReason | null>(null);

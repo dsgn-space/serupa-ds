@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
@@ -72,9 +73,7 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
   const readOnly = !!props.readOnly || truthy(props['aria-readonly']);
   const required = !!props.required || truthy(props['aria-required']);
   const usable = options.filter((o) => !o.disabled && !disabled);
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<string | undefined>(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value);
-  const value = controlled ? props.value : own;
+  const [value, setOwn, controlled] = useControllable<string | undefined>(props.value, props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value, 'SegmentedControl', 'value');
   const root = React.useRef<HTMLDivElement | null>(null);
   useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? (options.find((o) => !o.disabled) || {}).value); }, props.form);
   const buttons = React.useRef<Record<string, HTMLButtonElement | null>>({});

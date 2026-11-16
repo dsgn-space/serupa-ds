@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useMergedRef, cn, domId, oneOf, SIZES } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -62,9 +63,8 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Ra
   const max = typeof maxIn === 'number' && maxIn >= 1 ? Math.floor(maxIn) : 5;
   const step = allowHalf ? 0.5 : 1;
   const fit = (n: number | null | undefined) => (typeof n === 'number' && isFinite(n) && n > 0 ? Math.min(max, n) : null);
-  const controlled = valueIn !== undefined;
-  const [own, setOwn] = React.useState<number | null>(() => fit(defaultValue));
-  const value = controlled ? fit(valueIn) : own;
+  const [chosen, setOwn, controlled] = useControllable<number | null>(valueIn, fit(defaultValue), 'Rating', 'value');
+  const value = controlled ? fit(chosen) : chosen;
   const [hover, setHover] = React.useState<number | null>(null);
   const root = React.useRef<HTMLDivElement | null>(null);
   const auto = domId('dk-rating', React.useId());

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, useIsoLayoutEffect } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
@@ -105,9 +106,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
   const step = Number(props.step) > 0 ? Number(props.step) : 1;
   const large = Number(props.largeStep) > 0 ? Number(props.largeStep) : 10;
   const snap = (v: number) => snapToGrid(v, min, max, step);
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<SliderValue>(props.defaultValue ?? min);
-  const raw = controlled ? (props.value as SliderValue) : own;
+  const [raw, setOwn, controlled] = useControllable<SliderValue>(props.value, props.defaultValue ?? min, 'Slider', 'value');
   const isRange = Array.isArray(raw);
   const vals: number[] = isRange ? [snap(raw[0]), snap(raw[1])].sort((a, b) => a - b) : [snap(raw)];
   const latest = React.useRef(vals); latest.current = vals;

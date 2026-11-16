@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, domId, elementRef, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { oneElement, useTriggerRef } from '../../internal/trigger';
 import { config } from '../../internal/config';
@@ -92,16 +93,15 @@ function menuKeys(menuRef: React.RefObject<HTMLDivElement | null>, typed: React.
 export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>('Menu', function Menu(props, ref) {
   const own = domId('dk-menu', React.useId());
   const id = props.id || own;
-  const [inner, setInner] = React.useState(!!props.defaultOpen);
-  const controlled = props.open !== undefined;
-  const open = controlled ? !!props.open : inner;
+  const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Menu', 'open');
+  const open = !!openIn;
   const menuRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const focusOn = React.useRef<'first' | 'last' | null>(null);
   const pressed = React.useRef(0);
   const typed = React.useRef<Typed>({ text: '', at: 0 });
   const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
-  const set = React.useCallback((v: boolean, reason: OpenChangeReason) => { if (!controlled) setInner(v); if (ask.current) ask.current(v, { reason }); }, [controlled]);
+  const set = React.useCallback((v: boolean, reason: OpenChangeReason) => { if (!controlled) setInner(v); if (ask.current) ask.current(v, { reason }); }, [controlled, setInner]);
   const close = React.useCallback((reason: OpenChangeReason, focusTrigger: boolean) => { set(false, reason); if (focusTrigger && triggerRef.current) triggerRef.current.focus(); }, [set]);
   const ctx = React.useMemo(() => ({ close, open, typed }), [close, open]);
   const items = () => itemsOf(menuRef.current);
@@ -206,9 +206,8 @@ const OWN_CONTEXT = { target: 1, children: 1, 'aria-label': 1, open: 1, onOpenCh
 export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenuProps>('ContextMenu', function ContextMenu(props, ref) {
   const own = domId('dk-ctxmenu', React.useId());
   const id = props.id || own;
-  const [inner, setInner] = React.useState(false);
-  const controlled = props.open !== undefined;
-  const open = controlled ? !!props.open : inner;
+  const [openIn, setInner, controlled] = useControllable(props.open, false, 'ContextMenu', 'open');
+  const open = !!openIn;
   const [at, setAt] = React.useState<{ x: number; y: number } | null>(null);
   const menuRef = React.useRef<HTMLDivElement | null>(null);
   const point = React.useRef<HTMLSpanElement | null>(null);
@@ -216,7 +215,7 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
   const back = React.useRef<HTMLElement | null>(null);
   const typed = React.useRef<Typed>({ text: '', at: 0 });
   const ask = React.useRef(props.onOpenChange); ask.current = props.onOpenChange;
-  const set = React.useCallback((v: boolean, reason: OpenChangeReason) => { if (!controlled) setInner(v); if (ask.current) ask.current(v, { reason }); }, [controlled]);
+  const set = React.useCallback((v: boolean, reason: OpenChangeReason) => { if (!controlled) setInner(v); if (ask.current) ask.current(v, { reason }); }, [controlled, setInner]);
   const close = React.useCallback((reason: OpenChangeReason, focusBack: boolean) => {
     set(false, reason);
     const to = back.current || targetRef.current;
