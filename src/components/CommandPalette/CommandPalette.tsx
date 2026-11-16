@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, domId, omit } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -89,14 +90,14 @@ function score(c: Command, q: string): number {
 export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, CommandPaletteProps>('CommandPalette', function CommandPalette(props, ref) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
   const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
-  const [own, setOwn] = React.useState(!!props.defaultOpen);
-  const controlled = props.open != null;
-  const open = controlled ? !!props.open : own;
+  // null counts as not passed, as it always has here.
+  const [openIn, setOwn, controlled] = useControllable(props.open == null ? undefined : props.open, !!props.defaultOpen, 'CommandPalette', 'open');
+  const open = !!openIn;
   const { onOpenChange } = props;
   const change = React.useCallback((next: boolean, details: OpenChangeDetails) => {
     if (!controlled) setOwn(next);
     if (onOpenChange) onOpenChange(next, details);
-  }, [onOpenChange, controlled]);
+  }, [onOpenChange, controlled, setOwn]);
   const keys = props.hotkey === false ? null : props.hotkey && props.hotkey.length ? props.hotkey : ['mod', 'K'];
   useShortcut(keys || [], () => change(true, { reason: 'trigger' }), { description: labels.commandPalette, enabled: !!keys && !open });
 

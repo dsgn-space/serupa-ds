@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useControllable } from '../../internal/controllable';
 import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
@@ -80,10 +81,9 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
     if (!keep) back.current = null;
     if (b && b.isConnected && typeof b.focus === 'function') b.focus();
   };
-  const [inner, setInner] = React.useState(!!props.defaultOpen);
-  const controlled = props.open !== undefined;
-  const open = controlled ? !!props.open : inner;
-  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled]);
+  const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Dialog', 'open');
+  const open = !!openIn;
+  const close = React.useCallback((reason: OpenChangeReason) => { if (!controlled) setInner(false); if (ask.current) ask.current(false, { reason }); }, [controlled, setInner]);
   // unsaved: a request to close asks "Discard changes?" first, and remembers why it came.
   const unsaved = React.useRef(props.unsaved); unsaved.current = props.unsaved;
   const [asking, setAsking] = React.useState<OpenChangeReason | null>(null);
