@@ -177,18 +177,18 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
               return (
                 <li key={m.id} className="flex flex-wrap items-center gap-3 py-3">
                   <Avatar size="sm" name={m.name} src={m.avatar} alt="" />
-                  <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="flex min-w-0 grow basis-40 flex-col">
                     <span className="font-medium">{m.name}{m.you ? <Badge className="ms-2">You</Badge> : null}</span>
                     <span className="text-sm wrap-break-word text-text-muted">{m.email}</span>
                   </div>
                   {r === 'owner' ? (
                     <span className="text-sm text-text-muted">Owner, can’t be removed</span>
                   ) : (
-                    <>
+                    <div className="flex items-center gap-3">
                       <Select size="sm" aria-label={`Role for ${m.name}`} value={r} options={options}
                         onChange={(e) => change(m, e.target.value as TeamRole)} className="w-32" />
                       <Button id={`remove-${m.id}`} size="sm" variant="ghost" aria-label={`Remove ${m.name}`} onClick={() => remove(m)}>Remove</Button>
-                    </>
+                    </div>
                   )}
                 </li>
               );
@@ -202,12 +202,14 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
             <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
               {open.map((i) => (
                 <li key={i.email} className="flex flex-wrap items-center gap-3 py-3">
-                  <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="flex min-w-0 grow basis-40 flex-col">
                     <span className="wrap-break-word">{i.email}</span>
                     <span className="text-sm text-text-muted">Invited as {roleName(i.role)}, not joined yet</span>
                   </div>
-                  <Button size="sm" variant="outline" aria-label={`Resend the invite to ${i.email}`} onClick={() => resend(i)}>Resend</Button>
-                  <Button id={`revoke-${i.email}`} size="sm" variant="ghost" aria-label={`Revoke the invite to ${i.email}`} onClick={() => revoke(i)}>Revoke</Button>
+                  <div className="flex items-center gap-3">
+                    <Button size="sm" variant="outline" aria-label={`Resend the invite to ${i.email}`} onClick={() => resend(i)}>Resend</Button>
+                    <Button id={`revoke-${i.email}`} size="sm" variant="ghost" aria-label={`Revoke the invite to ${i.email}`} onClick={() => revoke(i)}>Revoke</Button>
+                  </div>
                 </li>
               ))}
             </ul>

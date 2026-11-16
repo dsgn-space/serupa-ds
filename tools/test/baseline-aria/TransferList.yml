@@ -52,6 +52,50 @@
     - checkbox "ID" [disabled]
     - text: ID Always shown
 
+# DoLongList
+- group "Columns":
+  - paragraph: Available (4)
+  - group "Available (4)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Phone"
+    - text: Phone
+    - checkbox "Company"
+    - text: Company
+    - checkbox "Role"
+    - text: Role
+    - checkbox "Created"
+    - text: Created
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (3)
+  - group "Chosen (3)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Name"
+    - text: Name
+    - checkbox "Email"
+    - text: Email
+    - checkbox "ID" [disabled]
+    - text: ID Always shown
+
+# DontFewOptions
+- group "Columns":
+  - paragraph: Available (2)
+  - group "Available (2)":
+    - checkbox "All"
+    - text: All
+    - checkbox "Email"
+    - text: Email
+    - checkbox "Phone"
+    - text: Phone
+  - button "Add" [disabled]
+  - button "Remove" [disabled]
+  - paragraph: Chosen (1)
+  - group "Chosen (1)":
+    - checkbox "Name"
+    - text: Name
+
 # InAField
 - text: Columns The table shows them in this order.
 - group "Columns":

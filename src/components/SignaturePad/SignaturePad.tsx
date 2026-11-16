@@ -6,6 +6,7 @@ import { useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
 import { FieldContext, useFieldControl } from '../../internal/field';
+import { useRequired } from '../../internal/required';
 import { useFieldLabel } from '../../internal/fieldLabel';
 import { delegateFocus, useAutoFocus, useFocusHandover } from '../../internal/focus';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -51,12 +52,15 @@ export interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElem
   readOnly?: boolean | undefined;
   /** Marks the signature invalid (aria-invalid on the group). Field sets it from its error. */
   invalid?: boolean | undefined;
+  /** A signature must be given: a form isn't sent without one (the pad is marked invalid and its first control takes
+   *  focus), and the typed name is aria-required. A required Field's aria-required reaches the typed name too. */
+  required?: boolean | undefined;
 }
 
 type Point = readonly [number, number];
 type Stroke = Point[];
 
-const OWN = { value: 1, defaultValue: 1, onValueChange: 1, defaultMethod: 1, name: 1, form: 1, disabled: 1, readOnly: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
+const OWN = { value: 1, defaultValue: 1, onValueChange: 1, defaultMethod: 1, name: 1, form: 1, required: 1, disabled: 1, readOnly: 1, invalid: 1, 'aria-invalid': 1, 'aria-required': 1, autoFocus: 1, className: 1 } as const;
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const pathOf = (s: Stroke) => s.length === 1 && s[0] ? `M${s[0][0]} ${s[0][1]}h0` : 'M' + s.map((p) => p[0] + ' ' + p[1]).join('L');
 // The strokes back from an SVG this pad made: each <path d="M x yLx y…"> is one stroke ("h0" ends a dot).
@@ -110,7 +114,8 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
   const area = React.useRef<SVGSVGElement | null>(null);
   const inDisabledFieldset = useFieldsetDisabled(root);
   const disabled = !!props.disabled || inDisabledFieldset, readOnly = !!props.readOnly;
-  const invalid = isInvalid(props.invalid, props['aria-invalid']);
+  const own = isInvalid(props.invalid, props['aria-invalid']);
+  const required = !!props.required;
   const first: SignatureMethod = props.defaultMethod === 'type' ? 'type' : 'draw';
   const controlled = props.value !== undefined;
   const start = controlled ? props.value : props.defaultValue;
@@ -209,6 +214,8 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
 
   const shown = live.current ? [...strokes, live.current] : strokes;
   const empty = method === 'draw' ? !shown.length : !typed.trim();
+  const { missing, onInvalid } = useRequired(!!value, () => methodStop()?.focus());
+  const invalid = own || missing;
   const labelledBy = props['aria-labelledby'] || (props['aria-label'] ? undefined : fieldLabel);
   const describedBy = cn(!readOnly && base + '-how', props['aria-describedby']) || undefined;
   const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, methodStop); nameRef(n); });
@@ -238,6 +245,7 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
           <>
             <label className="dk-signature-pad__label" htmlFor={base + '-name'}>{L.signatureName}</label>
             <Input id={base + '-name'} className="dk-signature-pad__input" autoComplete="name" spellCheck={false} disabled={disabled} readOnly={readOnly} invalid={invalid || undefined}
+              aria-required={props['aria-required'] ?? (required || undefined)}
               value={typed} onChange={(e) => { setTyped(e.target.value); tell('type', strokes, e.target.value, 'type'); }} />
             <div className="dk-signature-pad__box" aria-hidden>
               <svg ref={area} className="dk-signature-pad__area dk-signature-pad__area--typed" role="presentation">
@@ -249,6 +257,9 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
         )}
       </FieldContext.Provider>
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={value ? value.svg : ''} disabled={disabled} /> : null}
+      {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the pad is marked and takes focus instead of a bubble. */}
+      {required ? <input key={value ? 'filled' : 'empty'} className="dk-signature-pad__validity" tabIndex={-1} aria-hidden required defaultValue={value ? 'filled' : ''}
+        disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
     </div>
   );
 });

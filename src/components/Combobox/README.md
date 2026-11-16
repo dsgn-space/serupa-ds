@@ -61,6 +61,17 @@ Drawn from the `Multiple` story.
 - Long lists are fine: the options are in the page only while the list is open, each label is prepared for matching once per `options` array, and moving the highlight redraws two rows. Only the rows in view are drawn, plus a few either side, as in [VirtualList](../VirtualList/README.md): scrolling and the arrow and Page keys reach every match, each row's `aria-posinset` and `aria-setsize` count every match, and the highlighted option is always drawn, so screen readers can follow it. Keep `options` the same array between renders (state, a constant or `useMemo`), so that work isn't redone. For tens of thousands of options, load the matches as people type with `loadOptions`.
 - With `loadOptions`, Combobox runs the requests: it waits for typing to pause (`debounce`, 250ms), passes an `AbortSignal` that aborts when newer text is typed (hand it to `fetch`), drops any answer that isn't for the latest text, and shows the loading row while it waits and "Couldn’t load options. Type to try again." (the `loadFailed` label) when the promise rejects. Opening the list loads what `""` finds. The picked option keeps its label when later answers leave it out. Enter or leaving the field before the answer for the typed text arrives doesn't lose it: the request goes at once, and the answer decides as a list that was already there would (an exact label is picked; after Enter, else the first match or the add row). Filter on the server: `filter` is ignored. To run the requests yourself instead, use `filter={false}`, `onInputValueChange` and `loading`.
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the arrow in `text-muted` |
+| Hover | `field-border-hover`; the arrow under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable; the arrow is off with a plain cursor, and the list doesn't open |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the list doesn't open |
+
 ## Behavior
 
 - Opening with a click, the chevron or an arrow shows every option; typing narrows them and highlights the first match.

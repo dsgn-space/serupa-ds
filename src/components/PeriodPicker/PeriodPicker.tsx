@@ -16,6 +16,7 @@ import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { useControllable } from '../../internal/controllable';
+import { useRequired } from '../../internal/required';
 import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
 
 /** What a PeriodPicker chooses: a month, a quarter or a year. */
@@ -42,6 +43,9 @@ export interface PeriodPickerProps extends Omit<React.ButtonHTMLAttributes<HTMLB
   size?: 'sm' | 'md' | 'lg' | undefined;
   /** A danger outline, and aria-invalid. In a Field with an error, it's set for you. */
   invalid?: boolean | undefined;
+  /** A period must be chosen: aria-required on the button, and a form isn't sent without one (the button is marked
+   *  invalid and takes focus). In a required Field, aria-required is set for you. */
+  required?: boolean | undefined;
   /** Shows the period without letting it change: focusable and read out (aria-readonly), and a form still sends it, unlike disabled. It doesn't open. */
   readOnly?: boolean | undefined;
   /** Submits the value ("2026-11", "2026-Q4" or "2026") with a form, under this name. */
@@ -95,7 +99,7 @@ const never = () => () => {}, yes = () => true, no = () => false;
 export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodPickerProps>('PeriodPicker', function PeriodPicker(props, ref) {
   props = useFieldControl(props);
   const sds = useSettings(words), L = sds.labels;
-  const rest = omit(props, { unit: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, locale: 1, placeholder: 1, size: 1, invalid: 1, readOnly: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1 } as const);
+  const rest = omit(props, { unit: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, locale: 1, placeholder: 1, size: 1, invalid: 1, required: 1, readOnly: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1 } as const);
   const unit: PeriodUnit = props.unit === 'quarter' || props.unit === 'year' ? props.unit : 'month';
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const base = domId('dk-pp', React.useId());
@@ -118,6 +122,8 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
   const page = pageOf(focus, unit), count = pageSize(unit), cols = COLS[unit];
 
   const button = React.useRef<HTMLButtonElement | null>(null);
+  const required = !!props.required;
+  const { missing, onInvalid } = useRequired(value != null, () => button.current?.focus());
   const panel = React.useRef<HTMLDivElement | null>(null);
   const grid = React.useRef<HTMLTableElement | null>(null);
   const hidden = React.useRef<HTMLInputElement | null>(null);
@@ -194,15 +200,18 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
   for (let i = 0; i < cells.length; i += cols) rows.push(cells.slice(i, i + cols));
   const mergedRef = useMergedRef(ref, (n) => { button.current = n; });
   return (
-    <div className={cn('dk-period-picker', 'dk-period-picker--size-' + size, invalid && 'dk-period-picker--invalid', disabled && 'dk-period-picker--disabled', readOnly && 'dk-period-picker--readonly', props.className)} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
+    <div className={cn('dk-period-picker', 'dk-period-picker--size-' + size, (invalid || missing) && 'dk-period-picker--invalid', disabled && 'dk-period-picker--disabled', readOnly && 'dk-period-picker--readonly', props.className)} style={props.style} data-component="period-picker" data-state={open ? 'open' : 'closed'} data-unit={unit}>
       <button {...rest} ref={mergedRef} type="button" role="combobox" className="dk-period-picker__button" lang={rest.lang ?? lang}
-        aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || undefined} aria-readonly={readOnly || undefined} disabled={disabled}
+        aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? base + '-panel' : undefined} aria-invalid={invalid || missing || undefined} aria-required={props['aria-required'] ?? (required || undefined)} aria-readonly={readOnly || undefined} disabled={disabled}
         onClick={(e) => { if (rest.onClick) rest.onClick(e); if (!e.defaultPrevented) { if (open) close(false, 'trigger'); else show(); } }}
         onKeyDown={(e) => { if (rest.onKeyDown) rest.onKeyDown(e); if (!e.defaultPrevented && !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isComposing(e)) { e.preventDefault(); show(); } }}>
         <TruncatedText className={cn('dk-period-picker__value', value == null && 'dk-period-picker__value--empty')}>{value == null ? placeholder : name(value)}</TruncatedText>
         <Icon icon={icons.CalendarToday} className="dk-period-picker__icon" />
       </button>
       <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value == null ? '' : periodValue(value, unit)} disabled={disabled || !props.name} />
+      {/* required: a hidden-from-view field the form checks (remade when it fills or empties, so no change handler); the button is marked and takes focus instead of a bubble. */}
+      {required ? <input key={value != null ? 'filled' : 'empty'} className="dk-period-picker__validity" tabIndex={-1} aria-hidden required defaultValue={value != null ? 'filled' : ''}
+        disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
       <div ref={panel} id={base + '-panel'} role="dialog" aria-label={L.periodPlaceholder(unit)} lang={lang}
         {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-period-picker__panel">
         {open || exit.leaving ? <>

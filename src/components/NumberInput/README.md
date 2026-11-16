@@ -43,6 +43,17 @@ Drawn from the `Controlled` story.
 - For money, set `currency` to its ISO 4217 code. The symbol goes where the locale writes it, and the value keeps the currency's decimals however coarse `step` is, so `12.5` stays $12.50. A `value` or `defaultValue` with more decimals than that is taken as shown: `19.995` shows as $20.00, and the form gets 20. With `formatOptions`, it's the same for the decimals they show. A controlled parent that keeps 19.995 isn't told, because nothing was edited.
 - Store money as whole minor units with `minorUnits`: `value`, `defaultValue`, `onValueChange`, `min`, `max` and `step` are then cents (`1999` is $19.99, `step={5}` is five cents), which avoids floating-point sums such as `0.1 + 0.2`. The minor units come from ISO 4217: 2 for most currencies, including IDR, 0 for JPY and KRW, 3 for KWD.
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the − and + buttons in `text-muted` |
+| Hover | `field-border-hover`; the − or + under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable; − and + are off with a plain cursor |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; − and + are off too |
+
 ## Behavior
 
 - On blur the text is parsed in the locale's marks, clamped, rounded to the step's decimals and written back in the locale's form. The locale's group mark counts as grouping only when the digits are grouped in threes, so `1.500` is 1500 in `id-ID` and `de-DE`, and `9.5` or `9,5` is 9.5 in any locale. Spaces, a currency symbol or %, a typographic minus and digits in other scripts are accepted. Text that isn't a number goes back to the last number, and screen readers are told (“abc” wasn’t accepted, so the previous value was kept.). Switching to another window or browser tab isn't leaving the field: the text waits until people come back.

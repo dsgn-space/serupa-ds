@@ -40,6 +40,11 @@ Drawn from the `Revealable` story.
 - Offer `revealable` only to the person the value belongs to. It hides again when they switch tabs or put the app in the background.
 - Control it with `revealed` and `onRevealedChange` to ask for a password before showing, or to log who looked.
 
+### Do and don't
+
+- **Do:** Keep the end the owner knows it by, such as a card's last four. (`DoKeepTheEnd`)
+- **Don't:** Hide it all: with nothing kept, nobody can tell which card it is. (`DontHideAll`)
+
 ## Accessibility
 
 - **Role and name:** inline text. While masked, the bullets are hidden from screen readers (`aria-hidden`), and a hidden text says what it is and the end kept, from the `maskedEnding` and `maskedHidden` labels: "Card number ending in 1208", "Balance, hidden". Shown, the value is plain text.

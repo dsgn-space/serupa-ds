@@ -202,7 +202,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
                 <TableRow key={p.name} selected={picked.includes(p.name)}>
                   <TableSelectCell label={`Select ${p.name}`} checked={picked.includes(p.name)} onChange={() => toggle(p.name)} />
                   <TableCell>{p.name}</TableCell><TableCell>{p.status}</TableCell><TableCell>{p.owner}</TableCell>
-                  <TableCell><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
+                  <TableCell className="whitespace-nowrap"><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
                 </TableRow>
               ))}</TableBody>
             </Table>

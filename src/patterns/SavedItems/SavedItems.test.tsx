@@ -90,4 +90,14 @@ describe('Patterns/Saved items', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('after Try again, focus goes to the page title, not lost with the button', async () => {
+    const screen = await render(<SavedItems loadFailed onRetry={() => {}} items={items} />);
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(active().textContent).toBe('Try again');
+    await screen.rerender(<SavedItems loading items={items} />);
+    await expect.poll(() => active().tagName).toBe('H1');
+    await screen.rerender(<SavedItems items={items} />);
+    expect(active().tagName).toBe('H1');
+  });
 });

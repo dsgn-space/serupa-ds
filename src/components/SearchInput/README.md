@@ -39,6 +39,18 @@ Drawn from the `Invalid` story.
 - Name it with a visible label or `aria-label`, and use the placeholder for what can be searched ("Search projects").
 - Set `loading` while results are on their way, so people know the search is running.
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the search icon in `text-muted` |
+| Hover | `field-border-hover`; the × that clears it takes a `field-hover` fill under the pointer |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Loading | A small Loader in the search icon's place, announced as `loadingLabel` |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor |
+
 ## Behavior
 
 - The × shows only when there's text and the field isn't disabled or read-only. Clicking it clears the field and keeps focus there.

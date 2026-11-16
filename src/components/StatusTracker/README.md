@@ -41,6 +41,11 @@ Drawn from the `Playground` story.
 - The summary counts degraded and down days as incidents, and the share of days up among the days with data. Pass `summary` for your own measure (minutes of downtime, say), or `null` for none.
 - With more days than fit, the strip scrolls sideways in its own box, starting at the latest day.
 
+### Do and don't
+
+- **Do:** Give the days without data `state: "none"`, so they show as unknown. (`DoMarkUnknownDays`)
+- **Don't:** Count them as up: the strip and the share then claim uptime nobody measured. (`DontGuessUp`)
+
 ## Accessibility
 
 - **Role and name:** the strip is a list named by `label`; each day is an item named with its date, its state in words and its note. State is shown by shape too, not by color alone (WCAG 1.4.1).

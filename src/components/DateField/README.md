@@ -81,6 +81,7 @@ Drawn from the `Playground` story.
 | `disabled` | `boolean` | `false` | Turns the boxes off; nothing is sent. |
 | `readOnly` | `boolean` | `false` | The boxes stay focusable and read out as read-only, and the date is still sent, unlike `disabled`; typing and a pasted date change nothing. |
 | `invalid` | `boolean` | `false` | Marks the boxes the problem is in. Field sets it from its error. |
+| `required` | `boolean` | `false` | A date must be given: `aria-required` on the boxes, and the form isn't sent while they're empty (they're marked and the first takes focus; the Field's error says why). A required Field sets only `aria-required`, as it does on an Input. |
 
 `className`, `ref` and other props go to the group's `<div>`; `ref.current.focus()` and `autoFocus` focus the first box.
 

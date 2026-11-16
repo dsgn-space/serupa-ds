@@ -102,6 +102,9 @@
 .dk-menu__item:focus .dk-menu__shortcut { color: var(--menu-item-text, var(--text)); }
 .dk-menu__item--destructive, .dk-menu__item--destructive .dk-menu__icon { color: var(--menu-danger, var(--danger-text)); }
 .dk-menu__item--destructive:focus { background: var(--menu-danger-bg-active, var(--danger-subtle)); }
+/* A disabled item the pointer rests on takes focus, so the keys go on from there, but no highlight: it can't be chosen,
+   so nothing lights up under the pointer, as in the system's menus. Reached with the keys, it shows the highlight. */
+@media (hover: hover) { .dk-menu__item[aria-disabled="true"]:focus:hover { background: transparent; } }
 .dk-menu__item[aria-disabled="true"], .dk-menu__item[aria-disabled="true"] * { color: var(--menu-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
 /* MenuSub: a chevron at the end, pointing where the submenu opens; the submenu overlaps the menu's padding so
    its first item lines up with the item that opened it. */

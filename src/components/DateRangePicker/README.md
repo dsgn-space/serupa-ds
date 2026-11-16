@@ -39,6 +39,17 @@ Drawn from the `Disabled` story.
 - In narrow places, such as a side panel, set `months={1}`. Two months stack below 640px anyway, and the popup is then one month wide, 8px clear of both sides of the screen.
 - In a plain form, use `startName` and `endName`: each end is sent as `yyyy-mm-dd`.
 
+## States
+
+| State | Look |
+| --- | --- |
+| Rest | `field` background, 1px `field-border`, the calendar button in `text-muted` |
+| Hover | `field-border-hover`; the calendar button under the pointer takes a `field-hover` fill, `field-pressed` while pressed |
+| Focus | Like Input: the border and a 1px ring hugging it in `focus-ring` (2px in all), and a visible outline in forced-colors mode |
+| Invalid | `danger` border, and a `danger` focus ring |
+| Read-only | `field-readonly` background, no hover change; still focusable and selectable; the calendar button is off with a plain cursor, so the calendar doesn't open |
+| Disabled | `field-readonly` background, `disabled-border` edge and `disabled-text` at full opacity, `not-allowed` cursor; the calendar button is off and the calendar doesn't open |
+
 ## Behavior
 
 - With `presets`, a list of shortcuts sits beside the months in the popup (under them on a narrow screen). Picking one sets both ends and shows the range in the months, and the popup stays open so people can see what they got or change an end. The one the range matches is pressed. "Last 7 days" and "Last 30 days" end today; "This month" and "Last month" run from the first day to the last. Your own take a range or a function that returns one: `{ label: "This quarter", value: () => quarterOf(new Date()) }`. A shortcut with an end that can't be chosen is disabled.

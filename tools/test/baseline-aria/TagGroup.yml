@@ -22,6 +22,30 @@
     - gridcell "Remove Urgent":
       - button "Remove Urgent"
 
+# DoShortTags
+- text: Labels
+- grid "Labels":
+  - row "Design":
+    - gridcell "Design"
+  - row "Bug":
+    - gridcell "Bug"
+  - row "Checkout":
+    - gridcell "Checkout"
+  - row "Mobile":
+    - gridcell "Mobile"
+  - row "Urgent":
+    - gridcell "Urgent"
+
+# DontSentences
+- text: Labels
+- grid "Labels":
+  - row "Needs a review from the design team":
+    - gridcell "Needs a review from the design team"
+  - row "Only happens at checkout on a phone":
+    - gridcell "Only happens at checkout on a phone"
+  - row "Urgent":
+    - gridcell "Urgent"
+
 # Empty
 - text: Labels No labels yet
 - grid "Labels"

@@ -156,7 +156,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
                         <TableRow key={p.href}>
                           <TableCell><Link href={p.href}>{p.name}</Link></TableCell>
                           <TableCell><Badge dot tone={p.statusTone ?? 'neutral'}>{p.status}</Badge></TableCell>
-                          <TableCell><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
+                          <TableCell className="whitespace-nowrap"><time dateTime={p.updated}>{shortDay(p.updated, locale)}</time></TableCell>
                         </TableRow>
                       ))}</TableBody>
                     </Table>

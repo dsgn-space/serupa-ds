@@ -161,3 +161,16 @@ describe('Patterns/Team members', () => {
     await expect.poll(() => [...document.querySelectorAll('li')].some((e) => e.textContent?.includes('Invited ٢ people'))).toBe(true);
   });
 });
+
+// How many lines an element's text takes on screen.
+const linesOf = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size; };
+
+describe('TeamMembers on a phone', () => {
+  test('on a phone, each member’s email stays on one line: the role and Remove go under it', async () => {
+    await page.viewport(360, 720);
+    try {
+      await render(<TeamMembers />);
+      for (const email of ['budi@example.com', 'chen@example.com', 'dewi@example.com']) { const e = [...document.querySelectorAll('li span')].find((s) => s.textContent === email)!; expect(linesOf(e), email).toBe(1); }
+    } finally { await page.viewport(900, 700); }
+  });
+});

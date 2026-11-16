@@ -208,16 +208,16 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
                   ) : (
                     <>
                       <Avatar size="sm" name={p.name} src={p.avatar} alt="" />
-                      <div className="flex min-w-0 flex-1 flex-col">
+                      <div className="flex min-w-0 grow basis-40 flex-col">
                         <span className="font-medium wrap-break-word">{p.name}{p.you ? <Badge className="ms-2">You</Badge> : null}</span>
                         {p.email !== p.name ? <span className="text-sm wrap-break-word text-text-muted">{p.email}</span> : null}
                       </div>
                       {p.access === 'owner' ? <span className="text-sm text-text-muted">Owner</span> : (
-                        <>
+                        <div className="flex items-center gap-3">
                           <Select size="sm" aria-label={`Access for ${p.name}`} value={p.access} options={ACCESS}
                             onChange={(e) => change(p, e.target.value as ShareAccess)} className="w-32" />
                           <Button id={`remove-${p.id}`} size="sm" variant="ghost" aria-label={`Remove ${p.name}`} onClick={() => remove(p)}>Remove</Button>
-                        </>
+                        </div>
                       )}
                     </>
                   )}
