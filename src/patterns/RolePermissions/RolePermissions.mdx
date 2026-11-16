@@ -1,0 +1,32 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './RolePermissions.stories';
+
+<Meta of={Stories} />
+
+# Roles and permissions
+
+What each role in a workspace can do, as a grid of checkboxes, where a permission that needs another brings it along, and nothing changes until Save.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- Workspace or team settings with a few roles and a list of things they may do.
+- Not for one person's role: pick it from a Select, as the Team members pattern does.
+
+## What each part is for
+
+- **The grid is a table** with a caption. Each permission heads its row, with what it allows; each role heads its column, so every checkbox is read with both. Each checkbox is also named "Role: Permission" (1.3.1, 4.1.2).
+- **A permission that needs another says so** under its name. Turning it on turns that on too, and turning that off turns off what needs it (3.3.2).
+- **What else changed is said** in a status, such as "Also turned on View projects for Guest." (4.1.3).
+- **Nothing is saved as you go.** Save says how many changes it saves, and Discard changes puts them back (3.2.2).
+- **Save shows it's busy**; changes that can't be saved say so and stay, and saved ones are said (3.3.4, 4.1.3).
+- **The owner's column can't change**: its checkboxes are read-only, and the reason is said above the table (4.1.2).
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.SaveFails} />
+
+## What stays your app's job
+
+- **Storing the roles.** `onSave` gets every role's permissions; reject when they can't be saved.
+- **Checking on the server.** The grid only shows what's allowed; your server must check every permission too.
