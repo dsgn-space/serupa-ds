@@ -4902,7 +4902,7 @@
     "space-page": {
       "$type": "dimension",
       "$value": "{spacing.spacing-6}",
-      "$description": "On an app screen (a dashboard, a list, settings, a form): between the page header and the content, and between its sections. Dense screens keep one step; space inside a section stays smaller (space-content). 24px.",
+      "$description": "On an app screen: between the page header, the sections and the cards. 24px.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--space-page"
@@ -4912,7 +4912,7 @@
     "space-band": {
       "$type": "dimension",
       "$value": "{spacing.spacing-16}",
-      "$description": "On a long-form or marketing page: between the page header and the content, and between bands. 64px; step it down to space-section (32px) on small screens.",
+      "$description": "On a long-form or marketing page: after the page header and between bands. 64px.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--space-band"
