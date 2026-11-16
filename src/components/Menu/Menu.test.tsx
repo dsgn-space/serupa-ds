@@ -257,6 +257,20 @@ describe('Menu', () => {
     expect(chosen).toEqual(['saveas']);
   });
 
+  test('the pointer on a disabled item lights nothing up; reached with the keys, it shows the highlight', async () => {
+    await render(<Actions chosen={[]} />);
+    await userEvent.click(el('mb'));
+    const item = (name: string) => [...openMenu()!.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((m) => m.textContent!.includes(name))!;
+    await userEvent.hover(item('Archive'));
+    expect([document.activeElement === item('Archive'), getComputedStyle(item('Archive')).backgroundColor]).toEqual([true, 'rgba(0, 0, 0, 0)']);
+    await userEvent.hover(item('Duplicate'));
+    const lit = getComputedStyle(item('Duplicate')).backgroundColor;
+    expect(lit).not.toBe('rgba(0, 0, 0, 0)');
+    await userEvent.unhover(item('Duplicate'));
+    await userEvent.keyboard('{ArrowDown}');
+    expect([document.activeElement === item('Archive'), getComputedStyle(item('Archive')).backgroundColor]).toEqual([true, lit]);
+  });
+
   test('Enter on a disabled item does nothing; Enter on an item chooses it, closes the menu and returns focus to the button', async () => {
     const chosen: string[] = [];
     await render(<Actions chosen={chosen} />);

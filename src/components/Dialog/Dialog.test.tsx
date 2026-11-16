@@ -816,4 +816,15 @@ describe('Dialog: a held Enter (GR406)', () => {
     await userEvent.keyboard('{Enter>4/}');
     expect(n).toBeGreaterThan(1);
   });
+  test('the close button centers on the title\'s first line in Dialog and Drawer (a 28px line, a 24px button)', async () => {
+    await render(<><Dialog open title="Rename" onOpenChange={() => {}}>Body</Dialog></>);
+    const check = (name: string) => {
+      const d = page.getByRole('dialog', { name }).element();
+      const x = [...d.querySelectorAll('button')].find((b) => b.getAttribute('aria-label') === 'Close')!.getBoundingClientRect();
+      const title = [...d.querySelectorAll('h2')].find((h) => h.textContent === name)!;
+      const range = document.createRange(); range.selectNodeContents(title); const line = range.getClientRects()[0]!;
+      return Math.abs((x.top + x.height / 2) - (line.top + line.height / 2));
+    };
+    expect(check('Rename')).toBeLessThanOrEqual(0.5);
+  });
 });
