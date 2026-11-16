@@ -71,5 +71,12 @@ describe('Patterns/Referral', () => {
     const link = screen.getByRole('textbox', { name: 'Your invite link' }).element() as HTMLInputElement;
     await userEvent.click(link);
     await expect.poll(() => [link.selectionStart, link.selectionEnd]).toEqual([0, link.value.length]);
+    // Safari puts the caret where the press lands on the mouseup after focus, undoing the select-all: the page passes
+    // that one mouseup over, and only that one, so a later click still places the caret.
+    const up = () => { const e = new MouseEvent('mouseup', { bubbles: true, cancelable: true }); link.dispatchEvent(e); return e.defaultPrevented; };
+    link.blur();
+    link.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    link.focus();
+    expect([up(), up()]).toEqual([true, false]);
   });
 });
