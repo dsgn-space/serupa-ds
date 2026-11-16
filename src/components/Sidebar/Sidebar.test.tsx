@@ -564,31 +564,42 @@ describe('Sidebar', () => {
     expect(el('gfix').getAttribute('aria-expanded')).toBe('true');
     expect(calls).toEqual([[true, 'trigger'], [false, 'trigger']]);
   });
-  test('a label cut later, by a font that loads or changes, gets its title then; in a Tooltip, which shows the cut label itself, none', async () => {
+  test('a label cut later, by a font that loads or changes, shows in full then; in a Tooltip, which shows the cut label itself, it adds none', async () => {
     const long = 'Benachrichtigungseinstellungen und Datenschutz';
     await render(<div style={{ height: 600 }}><Sidebar aria-label="Late">
       <S><I id="late" href="#a" icon="settings" label="Notifications" />
         <Tooltip content="Opens in a new tab"><I id="tipped" href="#b" icon="mail" label={long} /></Tooltip></S>
     </Sidebar></div>);
     await settled();
-    expect([el('late').getAttribute('title'), el('tipped').getAttribute('title')]).toEqual([null, null]);
+    const label = (id: string) => [...el(id).querySelectorAll('span')].find((n) => n.textContent === (id === 'late' ? 'Notifications' : long))!;
+    expect([label('late').hasAttribute('data-truncated'), el('tipped').querySelector('[data-component="truncated-text"]')]).toEqual([false, null]);
     // A wider font in the same box: the label's size doesn't change, so only the font event says so.
-    [...el('late').querySelectorAll('span')].find((n) => n.textContent === 'Notifications')!.style.letterSpacing = '12px';
+    label('late').style.letterSpacing = '12px';
     document.fonts.dispatchEvent(new Event('loadingdone'));
-    await expect.poll(() => el('late').title).toBe('Notifications');
+    await expect.poll(() => label('late').hasAttribute('data-truncated')).toBe(true);
   });
-  test('a label cut with an ellipsis shows in full as the item\'s title (GR117); a short one, a title of its own and the rail have none', async () => {
+  test('a label cut with an ellipsis shows in full on the item\'s keyboard focus too, not only as a hover title; a short one, a title of its own and the rail have none', async () => {
     const long = 'Benachrichtigungseinstellungen und Datenschutz';
-    const { rerender } = await render(<div style={{ height: 600 }}><Sidebar aria-label="Cut">
+    const tip = () => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]');
+    const { rerender } = await render(<div style={{ height: 600 }}><button id="before">Before</button><Sidebar aria-label="Cut">
       <S><I id="long" href="#a" icon="settings" label={long} /><I id="short" href="#b" icon="home" label="Home" /><I id="own" href="#c" icon="mail" label={long} title="Mine" />
         <I id="grp" icon="folder" label={long}><I href="#d" label="Child" /></I></S>
     </Sidebar></div>);
     await settled();
-    expect([el('long').title, el('short').getAttribute('title'), el('own').title, el('grp').title]).toEqual([long, null, 'Mine', long]);
+    const cut = (id: string) => !!el(id).querySelector('[data-truncated]');
+    expect([cut('long'), cut('short'), cut('own'), cut('grp')]).toEqual([true, false, false, true]);
+    // The item is the one tab stop: the label adds none of its own, and the item's name is still the whole label.
+    expect([el('long').querySelector('[tabindex]'), el('long').getAttribute('title')]).toEqual([null, null]);
+    el('before').focus();
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(el('long'));
+    await expect.poll(() => tip()?.textContent).toBe(long);
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+    await expect.poll(() => tip()).toBeNull();
     await rerender(<div style={{ height: 600 }}><Sidebar aria-label="Cut" collapsed>
       <S><I id="long" href="#a" icon="settings" label={long} /></S>
     </Sidebar></div>);
     await settled();
-    expect(el('long').getAttribute('title')).toBe(null);
+    expect([cut('long'), el('long').getAttribute('title')]).toEqual([false, null]);
   });
 });

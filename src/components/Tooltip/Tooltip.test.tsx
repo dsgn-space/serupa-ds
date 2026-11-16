@@ -234,6 +234,16 @@ describe('Tooltip', () => {
     expect([s.backgroundColor, s.fontSize, s.borderTopLeftRadius, s.padding, s.maxWidth]).toEqual(['rgb(1, 2, 3)', '12px', '6px', '4px 8px', '240px']);
   });
 
+  test('long text wraps inside the tooltip, even when the trigger sits in a row that never wraps (a cut sidebar label)', async () => {
+    const long = 'Home and recent activity across every project in the workspace';
+    await render(<div style={{ whiteSpace: 'nowrap', width: 160 }}><Tooltip content={long} openDelay={0}><button id="nw">Home</button></Tooltip></div>);
+    await userEvent.hover(el('nw'));
+    await expect.poll(() => isOpen('nw')).toBe(true);
+    const t = tipOf('nw');
+    // All of it inside the 240px box, on more than one line, rather than running out past its edge.
+    expect([t.scrollWidth <= t.clientWidth, t.getBoundingClientRect().width <= 240, t.getBoundingClientRect().height > 30]).toEqual([true, true, true]);
+  });
+
   test('in a Dialog: Escape hides the tooltip and leaves the Dialog open; the next Escape closes the Dialog', async () => {
     function InDialog() {
       const [open, setOpen] = React.useState(false);

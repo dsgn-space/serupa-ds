@@ -120,6 +120,23 @@ describe('TruncatedText', () => {
     await expect.poll(() => tip()).toBeNull();
   });
 
+  test('text a late web font cuts is marked cut and takes its tab stop, in every engine (WebKit sends no "loadingdone")', async () => {
+    // TruncatedText is as wide as its container, so a wider font doesn't change its box and only the font's loading
+    // says so. The rule is added once the text is laid out in the fallback, so nothing loads it sooner, and the font is
+    // drawn half as large again, so it's wider than any engine's fallback serif.
+    const rule = document.createElement('style');
+    rule.textContent = "@font-face { font-family: CutLate; src: url(/fonts/InterVariable-latin.woff2) format('woff2'); size-adjust: 150%; }";
+    try {
+      await render(<div style={{ width: 200, fontFamily: 'CutLate, serif' }}><TruncatedText id="late">Notification settings</TruncatedText></div>);
+      const e = el('late');
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      expect([e.scrollWidth <= e.clientWidth, e.hasAttribute('data-truncated')]).toEqual([true, false]);
+      document.head.append(rule);
+      await expect.poll(() => e.scrollWidth > e.clientWidth, { timeout: 3000 }).toBe(true);   // the font came and cut it
+      await expect.poll(() => [e.hasAttribute('data-truncated'), e.tabIndex], { message: JSON.stringify({ status: document.fonts.status, scroll: e.scrollWidth, client: e.clientWidth }) }).toEqual([true, 0]);
+    } finally { rule.remove(); }
+  });
+
   test('your own onPointerDown and onClick still run', async () => {
     const seen: string[] = [];
     await render(narrow(<TruncatedText id="own" onPointerDown={() => seen.push('down')} onClick={() => seen.push('click')}>{LONG}</TruncatedText>));

@@ -29,6 +29,9 @@
 .dk-textarea__field::placeholder { color: var(--textarea-placeholder, var(--placeholder)); opacity: var(--opacity-100); }
 /* Filled in by the browser (an address): the box keeps its look, as Input's does (GR411). */
 .dk-textarea__field:autofill { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--textarea-text, var(--text)); }
+/* And it says so in more than the browser's colour (WCAG 1.4.1): the border doubles inward, so nothing moves, until
+   people edit the text or focus the field, whose ring is the mark then. */
+.dk-textarea:has(.dk-textarea__field:autofill):not(:focus-within) { box-shadow: inset 0 0 0 var(--textarea-border-width, var(--border-width-1)) var(--dk-ta-bd); }
 .dk-textarea--resize-none .dk-textarea__field, .dk-textarea--disabled .dk-textarea__field, .dk-textarea__field:where(:disabled), .dk-textarea--readonly .dk-textarea__field { resize: none; }
 .dk-textarea--auto .dk-textarea__field { overflow-y: hidden; }
 /* autoResize where the browser sizes a field to its content: rows lines at least, maxRows at most (unset: no limit,
