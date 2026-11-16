@@ -21,6 +21,7 @@ import { en as DatePickerWords } from '../DatePicker/labels';
 import { en as CalendarWords } from '../Calendar/labels';
 import { PresetList, rangePresets, type PresetItem } from '../../internal/datePresets';
 import { useControllable } from '../../internal/controllable';
+import { useOpenState, type OpenChangeDetails, type OpenChangeReason } from '../../internal/openChange';
 // This component's words and the ones it shares with DatePicker and Calendar (the presets' "Today" and their name).
 const words = /* @__PURE__ */ Object.assign({}, DateRangePickerWords, DatePickerWords, CalendarWords);
 
@@ -89,6 +90,12 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
       month" and "Last month", or your own. Picking one sets the range and shows it in the months; the popup stays open
       so it can be checked, and closes as usual. One whose start or end can't be chosen is disabled. */
   presets?: boolean | DateRangePreset[] | undefined;
+  /** Whether the calendar popup shows (controlled). Use with onOpenChange. Opened this way, focus stays where it is. */
+  open?: boolean | undefined;
+  /** Shows the calendar popup at first (uncontrolled), without moving focus into it. Default: false. */
+  defaultOpen?: boolean | undefined;
+  /** Called when the popup asks to open or close, with why: { reason: 'trigger' | 'escape' | 'outside' | 'blur' | 'select' | 'api' }. */
+  onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
 const norm = (r: DateRangeInput | undefined): DateRange => ({ start: r ? toDay(r.start, 'DateRangePicker') : null, end: r ? toDay(r.end, 'DateRangePicker') : null });
@@ -104,7 +111,7 @@ const key = (d: Date | null) => (d ? d.getTime() : null);
 export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>('DateRangePicker', function DateRangePicker(props, ref) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const { value: _v, defaultValue: _d, onValueChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, weekNumbers, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
+  const { value: _v, defaultValue: _d, onValueChange, open: _o, defaultOpen: _do, onOpenChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, weekNumbers, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
   const locale = useLocale(localeProp);
   const system = calendarOf(calendar, 'DateRangePicker');
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
@@ -124,7 +131,10 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
     const t = { start: fmt(value.start), end: fmt(value.end) };
     if (t.start !== text.start || t.end !== text.end) setText(t);
   }
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useOpenState(props.open, props.defaultOpen, onOpenChange, 'DateRangePicker', !!disabled || !!readOnly);
+  // Focus goes into the months when the person opens them (the button, Alt+ArrowDown), not when they show on arrival
+  // (defaultOpen) or because the app set open.
+  const [focusIn, setFocusIn] = React.useState(false);
   const [picking, setPicking] = React.useState<'start' | 'end'>('start');
   const [hover, setHover] = React.useState<Date | null>(null);
   // With no start, today, or min or max when today is outside them, so the popup doesn't open on a month where
@@ -141,7 +151,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   useFormReset(startField, () => {
     if (controlled) return;
     const r = norm(props.defaultValue);
-    shown.current = { start: key(r.start), end: key(r.end) }; setOwn(r); setText({ start: fmt(r.start), end: fmt(r.end) }); setOpen(false); setPicking('start');
+    shown.current = { start: key(r.start), end: key(r.end) }; setOwn(r); setText({ start: fmt(r.start), end: fmt(r.end) }); setOpen(false, 'api'); setPicking('start');
   });
   const button = React.useRef<HTMLButtonElement | null>(null);
   const panel = React.useRef<HTMLDivElement | null>(null);
@@ -168,21 +178,22 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
     }
     commit(r);
   };
-  const close = (focus: boolean) => { setOpen(false); setHover(null); if (focus && startField.current) startField.current.focus(); };
+  const close = (focus: boolean, reason: OpenChangeReason) => { setOpen(false, reason); setFocusIn(false); setHover(null); if (focus && startField.current) startField.current.focus(); };
   const show = () => {
     const typed = parseDate(text.start, locale);
     setBase(system.start((typed && allowed(typed) ? typed : null) || value.start || home()));
     setPicking(value.start && !value.end ? 'end' : 'start');
-    setOpen(true);
+    setFocusIn(true);
+    setOpen(true, 'trigger');
   };
   // The calendar stays (inert) while the popup fades out (DZ1).
   const exit = useExit(open, panel);
-  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-drp-offset', onOutside: () => close(false), onFocusOutside: () => close(false), inside: button });
+  useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-drp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
   const pick = (d: Date) => {
     if (picking === 'start' || !value.start || compare(d, value.start) < 0) { commit({ start: d, end: null }); setPicking('end'); return; }
     commit({ start: value.start, end: d });
-    close(true);
+    close(true, 'select');
   };
   const to = picking === 'end' && value.start && !value.end && hover && compare(hover, value.start) > 0 ? hover : value.end;
   const dayClass = (d: Date) => {
@@ -222,7 +233,7 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
   };
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => setBase(first ? n : system.add(n, -1))} value={first ? value.start : value.end}
-      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={first} hideOutside={two}
+      min={min} max={max} isDateDisabled={isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={weekStartsOn} weekNumbers={weekNumbers} autoFocus={first && focusIn} hideOutside={two}
       isDateSelected={isSel} dayClassName={dayClass} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   const mergedRef = useMergedRef(ref, (n) => { box.current = n; delegateFocus(n, start); });
@@ -236,13 +247,13 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       <span id={popId + '-format'} hidden>{sds.labels.formatHint(datePattern(locale))}</span>
       {field('end')}
       <button ref={button} type="button" className="dk-date-picker__button dk-date-range-picker__button" aria-label={buttonLabel || sds.labels.chooseDates} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? popId : undefined}
-        disabled={off} onClick={() => { if (open) close(false); else { read('start'); show(); } }}>
+        disabled={off} onClick={() => { if (open) close(false, 'trigger'); else { read('start'); show(); } }}>
         <Icon icon={icons.DateRange} />
       </button>
       {startName ? <input type="hidden" name={startName} form={form} value={value.start ? isoDate(value.start) : ''} disabled={disabled} /> : null}
       {endName ? <input type="hidden" name={endName} form={form} value={value.end ? isoDate(value.end) : ''} disabled={disabled} /> : null}
       <div ref={panel} id={popId} role="dialog" aria-label={buttonLabel || sds.labels.chooseDates} {...{ popover: 'manual' }} hidden={!open || undefined} inert={!open || undefined} data-instant={exit.instant ? '' : undefined} className="dk-date-picker__popup dk-date-range-picker__popup"
-        onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true); } }}
+        onKeyDown={(e) => { if (e.key === 'Escape' && !isComposing(e)) { e.preventDefault(); e.stopPropagation(); close(true, 'escape'); } }}
         onMouseLeave={() => setHover(null)}>
         {open || exit.leaving ? <>
           {presets ? <div className="dk-date-range-picker__body">

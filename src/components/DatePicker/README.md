@@ -112,6 +112,9 @@ For "when" (a meeting, a scheduled post, a delivery slot), pair DatePicker with 
 | `placeholder` | `string` | the locale's pattern, such as `mm/dd/yyyy` | |
 | `buttonLabel` | `string` | `"Choose a date"` | The calendar button's name, and the popup's. |
 | `presets` | `boolean \| DatePreset[]` | | Shortcuts beside the calendar: `true` for Today, Tomorrow and In a week, or your own `{ label, value }`. Picking one fills the field and closes the popup. |
+| `open` | `boolean` | | Whether the calendar popup shows (controlled), with `onOpenChange`. Opened this way, focus stays where it is. |
+| `defaultOpen` | `boolean` | `false` | Shows the popup at first, without moving focus into it. |
+| `onOpenChange` | `(open, { reason }) => void` | | Called when the popup asks to open or close, and why. |
 
 `disabled`, `readOnly`, `id`, `aria-*`, `onBlur`, `onKeyDown` and `ref` go to the text field; `className` and `style` to the box.
 

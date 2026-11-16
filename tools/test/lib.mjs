@@ -221,7 +221,7 @@ export const projectArg = () => path.resolve((!vt && process.argv[2]) || PROJECT
 const NEUTRAL = new RegExp('^(' + [
   String.raw`\.changeset/[\w-]+\.md`, String.raw`tools/(publish|version|release|changeset-check)\.mjs`, 'tools/README\\.md', 'CONTRIBUTING\\.md', String.raw`skills/[\w-]+/SKILL\.md`,
   String.raw`\.github/(CODEOWNERS|pull_request_template\.md|dependabot\.yml|workflows/(?!ci\.yml$)[\w-]+\.yml)`, 'licenses/.*',
-  String.raw`tools/test/(?!(lib|run|visual|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`,
+  String.raw`tools/test/(?!(lib|run|visual|storybook|site)\.mjs$)[\w-]+\.mjs`, String.raw`tools/test/baseline-utilities\.json`, String.raw`tools/test/baseline-size-shared/[\w-]+\.json`,
   // The skill eval's tasks and graded apps, the local-check and release tooling, and the notes no story shows
   // (README.md and CHANGELOG.md are shown, in docs/, so they're not here).
   'tools/skill-eval/.*', String.raw`tools/(ci|setup|tag-release)\.mjs`,
@@ -289,6 +289,9 @@ export function sizeBudgets(files) {
   return out;
 }
 /** A branch name as a raise file's tag: claude/fix-x is claude-fix-x. */
+// The KiB the shared size raise files (tools/test/baseline-size-shared/<branch>.json, { line: [KiB, note] }) add to a
+// shared line: their sum, since each file is its own pull request's growth.
+export const sharedRaise = (raises, line) => +raises.reduce((t, r) => t + (Number(r?.[line]?.[0]) || 0), 0).toFixed(1);
 export const raiseTag = (branch) => String(branch === 'HEAD' ? '' : branch || '').replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'local';
 // The component, block or pattern a file is one of (its folder, or one of its baselines), or null.
 const ownerOf = (f) => (/^src\/(?:components|blocks|patterns)\/([A-Z]\w*)\//.exec(f) || /^src\/(?:blocks|patterns)\/(Introduction\.mdx)$/.exec(f)
