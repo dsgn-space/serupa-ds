@@ -6994,7 +6994,17 @@
     "space-section": {
       "$type": "dimension",
       "$value": "{spacing.spacing-8}",
-      "$description": "Between groups or sections of a page. 32px."
+      "$description": "Between the sections of a long-form or marketing page. 32px."
+    },
+    "space-page": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-6}",
+      "$description": "On an app screen: between the page header, the sections and the cards. 24px."
+    },
+    "space-band": {
+      "$type": "dimension",
+      "$value": "{spacing.spacing-16}",
+      "$description": "On a long-form or marketing page: after the page header and between bands. 64px."
     }
   },
   "radius": {
