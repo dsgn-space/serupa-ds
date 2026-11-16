@@ -149,7 +149,7 @@ export function ProductGrid({ products, loading = false, loadingCount = 4, loadF
   const l = { ...english, ...card.labels };
   if (loadFailed) return <EmptyLoadFailed title={l.loadFailed} onRetry={() => onRetry?.()} headingLevel={card.headingLevel ?? 3} />;
   return (
-    <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <ul role="list" aria-busy={loading || undefined} className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {loading
         ? Array.from({ length: loadingCount }, (_, i) => (
           // One name for all of them: the first card's lines are named, the rest are only pictures.

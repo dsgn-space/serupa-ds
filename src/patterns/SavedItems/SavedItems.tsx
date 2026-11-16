@@ -157,7 +157,7 @@ export function SavedItems({ items = demo, currency = 'USD', onMoveToCart, onRem
             {shown.length === 1 ? '1 item' : `${formatNumber(shown.length, locale)} items`}{shown.length > 1 ? `, ${SORTS.find((s) => s.value === sort)!.label.toLowerCase()}` : ''}
           </p>
           {shown.length ? (
-            <ul role="list" className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
+            <ul role="list" className="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
               {shown.map((item) => {
                 const change = savedChange(item);
                 const out = item.left === 0;

@@ -199,7 +199,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
     <h1 className="sr-only">Product</h1>
     <EmptyLoadFailed title="Couldn’t load the product" onRetry={() => onRetry?.()} headingLevel={2} />
   </> : loading ? (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2" aria-busy="true">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2" aria-busy="true">
       <h1 className="sr-only">Product</h1>
       <Loader variant="skeleton" shape="rect" label="Loading product" className="aspect-square h-auto" />
       <div className="flex flex-col gap-4" aria-hidden="true">
@@ -208,7 +208,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
       </div>
     </div>
   ) : (<>
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       <Carousel label={`Pictures of ${product.name}`}>
         {product.pictures.map((p, i) => <Image key={p.src} src={p.src} alt={p.alt} ratio="square" viewable priority={i === 0} />)}
       </Carousel>

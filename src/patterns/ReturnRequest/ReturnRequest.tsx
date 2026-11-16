@@ -146,7 +146,7 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
               <Link href={`#order-${order}`}>Back to order {order}</Link>
             </section>
           ) : (
-            <form onSubmit={send} noValidate aria-label="Return" className="grid items-start gap-8 md:grid-cols-3">
+            <form onSubmit={send} noValidate aria-label="Return" className="grid items-start gap-6 md:grid-cols-3">
               <ErrorSummary key={tries} errors={errors} className="md:col-span-3" />
               <div className="flex flex-col gap-6 md:col-span-2">
                 <Field label="What are you returning?" id="return-items" error={problems['return-items']} group required>

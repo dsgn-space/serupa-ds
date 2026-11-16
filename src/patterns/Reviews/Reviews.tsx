@@ -106,7 +106,7 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
         <PageHeader breadcrumb={[{ label: product, href: '#product' }, { label: 'Reviews' }]} title={`Reviews of the ${product}`} />
         {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the reviews" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading reviews" /></Card> : (<>
-        <div className="grid grid-cols-1 gap-8 pt-6 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-3">
           <section aria-labelledby="reviews-summary" className="flex flex-col gap-4">
             <h2 id="reviews-summary" className="m-0 text-lg font-semibold">Overall</h2>
             <div className="flex flex-wrap items-center gap-3">

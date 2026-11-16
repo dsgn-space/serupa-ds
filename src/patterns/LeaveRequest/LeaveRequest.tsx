@@ -183,7 +183,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
         <div className="pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your leave" onRetry={() => onRetry?.()} headingLevel={2} />
             : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading leave" /></Card> : (
-              <div className="grid items-start gap-8 md:grid-cols-3">
+              <div className="grid items-start gap-6 md:grid-cols-3">
                 <div className="flex flex-col gap-8 md:col-span-2">
                   <Field label="Kind of leave" group>
                     <RadioGroup name="leave-kind" value={kind} onValueChange={(v: LeaveKind) => { setKind(v); setFailed(false); }}>
