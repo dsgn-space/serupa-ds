@@ -13,6 +13,7 @@ import { paginationRange } from './paginationRange';
 import { useFocusHandover } from '../../internal/focus';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { useControllable } from '../../internal/controllable';
 
 export { paginationRange };
 
@@ -71,9 +72,8 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
   const locale = useLocale();
   const rest = omit(props, { count: 1, page: 1, defaultPage: 1, onPageChange: 1, getHref: 1, linkAs: 1, siblings: 1, boundaries: 1, size: 1, previousLabel: 1, nextLabel: 1, pageLabel: 1, total: 1, pageSize: 1, pageSizeOptions: 1, onPageSizeChange: 1, jump: 1, className: 1 });
   const count = int(props.count, 0, 0);
-  const [own, setOwn] = React.useState(() => int(props.defaultPage, 1, 1));
-  const controlled = props.page !== undefined;
-  const page = Math.min(Math.max(int(controlled ? props.page : own, 1, 1), 1), Math.max(count, 1));
+  const [held, setOwn, controlled] = useControllable<number>(props.page, int(props.defaultPage, 1, 1), 'Pagination', 'page');
+  const page = Math.min(Math.max(int(held, 1, 1), 1), Math.max(count, 1));
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
   const label = props.pageLabel || sds.labels.page;
   // The name says the number as the button shows it, "١٠" in ar-EG and "1,000" in en-US, so it holds the visible

@@ -15,6 +15,7 @@ import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
+import { useControllable } from '../../internal/controllable';
 
 /** What a PeriodPicker chooses: a month, a quarter or a year. */
 export type PeriodUnit = 'month' | 'quarter' | 'year';
@@ -97,9 +98,8 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
   const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const disabled = !!props.disabled, readOnly = !!props.readOnly;
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<number | null>(() => periodIndex(props.defaultValue, unit));
-  const value = controlled ? periodIndex(props.value, unit) : own;
+  const [chosen, setOwn, controlled] = useControllable<string | number | null>(props.value, periodIndex(props.defaultValue, unit), 'PeriodPicker', 'value');
+  const value = controlled ? periodIndex(chosen as string | null, unit) : (chosen as number | null);
   const min = periodIndex(props.min, unit), max = periodIndex(props.max, unit);
   const off = (n: number) => (min != null && n < min) || (max != null && n > max);
   const clamp = (n: number) => (min != null && n < min ? min : max != null && n > max ? max : n);

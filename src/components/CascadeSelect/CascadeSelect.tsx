@@ -15,6 +15,7 @@ import { Icon } from '../Icon/Icon';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
+import { useControllable } from '../../internal/controllable';
 
 /** One choice in a CascadeSelect, with the choices under it. */
 export interface CascadeOption {
@@ -83,18 +84,16 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
   const size = (sized === 'sm' || sized === 'lg' ? sized : 'md');
   const invalid = isInvalid(props.invalid, props['aria-invalid']);
   const disabled = !!props.disabled, readOnly = !!props.readOnly;
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<string[]>(props.defaultValue || []);
-  const value = controlled ? props.value! : own;
+  const [value, setOwn, controlled] = useControllable<string[]>(props.value, props.defaultValue || [], 'CascadeSelect', 'value');
   const [loaded, setLoaded] = React.useState<Loaded>(() => new Map());
   // Options chosen before, kept so a path whose children were loaded still reads in words.
   const [known, setKnown] = React.useState<CascadeOption[]>([]);
-  const [ownOpen, setOwnOpen] = React.useState(!!props.defaultOpen);
-  const open = !disabled && !readOnly && (props.open !== undefined ? props.open : ownOpen);
+  const [heldOpen, setOwnOpen, openControlled] = useControllable(props.open, !!props.defaultOpen, 'CascadeSelect', 'open');
+  const open = !disabled && !readOnly && heldOpen;
   type Reason = 'trigger' | 'select' | 'escape' | 'outside' | 'reset';
   const setOpen = (next: boolean, reason: Reason) => {
     if (next === open) return;
-    if (props.open === undefined) setOwnOpen(next);
+    if (!openControlled) setOwnOpen(next);
     if (props.onOpenChange) props.onOpenChange(next, { reason });
   };
   // The path being looked at while open (the highlighted option in each column), and the focused column.
