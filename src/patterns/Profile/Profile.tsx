@@ -157,7 +157,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
                   {status === 'error' ? <Alert tone="danger">Couldn’t save your profile. Your changes are still here.</Alert> : null}
                 </form>
                 <Card>
-                  <section aria-labelledby="preview" className="flex flex-col items-start gap-3">
+                  <section aria-labelledby="preview" className="flex flex-col items-start gap-4">
                     <h2 id="preview" className="m-0 text-lg font-semibold">How others see it</h2>
                     <Avatar size="lg" name={draft.name || saved.name} src={photo || undefined} alt="" />
                     <p className="m-0 text-base font-semibold">{draft.name.trim() || 'Your name'}</p>

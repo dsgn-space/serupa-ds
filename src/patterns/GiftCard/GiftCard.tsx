@@ -177,7 +177,7 @@ export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, 
                 <Button type="submit" loading={busy}>Add to bag</Button>
               </div>
             </form>
-            <section aria-labelledby="gift-preview" className="flex flex-col gap-3 md:self-start">
+            <section aria-labelledby="gift-preview" className="flex flex-col gap-4 md:self-start">
               <h2 id="gift-preview" className="m-0 text-lg font-semibold">What they’ll get</h2>
               <Card padding="none" className="overflow-hidden">
                 <Image src={design.image} alt={`The ${design.label} design`} ratio={1.6} />

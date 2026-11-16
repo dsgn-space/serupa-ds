@@ -173,7 +173,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
             ) : (
               <div className="grid items-start gap-8 md:grid-cols-3">
                 <div className="flex flex-col gap-8 md:col-span-2">
-                  <section aria-labelledby="dates" className="flex flex-col gap-3">
+                  <section aria-labelledby="dates" className="flex flex-col gap-4">
                     <h2 id="dates" className={h2}>Your dates</h2>
                     <p className="m-0 text-sm text-text-muted">Choose the day you arrive, then the day you leave. Stays are {formatNumber(place.minNights, locale)} nights at least.</p>
                     <RangeCalendar ref={calendar} aria-labelledby="dates" aria-describedby={shownProblem ? 'stay-problem' : undefined} months={2}
@@ -190,7 +190,7 @@ export function Booking({ place = demo, currency = 'USD', today = '2026-11-05', 
                       </div>
                     ) : null}
                   </section>
-                  <section aria-labelledby="who" className="flex flex-col gap-3">
+                  <section aria-labelledby="who" className="flex flex-col gap-4">
                     <h2 id="who" className={h2}>Who’s coming</h2>
                     <Field label="Guests" hint={`Up to ${formatNumber(place.maxGuests, locale)}.`} required>
                       <NumberInput value={guests} onValueChange={setGuests} min={1} max={place.maxGuests} />

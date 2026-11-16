@@ -115,7 +115,7 @@ export function JobApplication({ job = demoJob, onApply }: JobApplicationProps) 
           description="Applying takes about 5 minutes. All fields are needed unless they say they’re optional." />
         <div className="flex flex-col gap-8 pt-6">
           <Card>
-            <section aria-labelledby="about-job" className="flex flex-col gap-3">
+            <section aria-labelledby="about-job" className="flex flex-col gap-4">
               <h2 id="about-job" className="m-0 text-lg font-semibold">About the job</h2>
               <DescriptionList>
                 <DescriptionItem term="Team">{job.team}</DescriptionItem>

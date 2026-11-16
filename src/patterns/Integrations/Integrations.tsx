@@ -137,7 +137,7 @@ export function Integrations({ apps = demo, onConnect, onDisconnect, loading = f
     );
   };
   const list = (title: string, items: Integration[], none: string) => (
-    <section aria-labelledby={`integrations-${title.toLowerCase()}`} className="flex flex-col gap-3">
+    <section aria-labelledby={`integrations-${title.toLowerCase()}`} className="flex flex-col gap-4">
       <Heading level={2} size="lg" id={`integrations-${title.toLowerCase()}`}>{title} ({formatNumber(items.length, locale)})</Heading>
       {items.length ? <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">{items.map(card)}</ul>
         : <p className="m-0 text-text-muted">{none}</p>}

@@ -161,7 +161,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
           primary={{ label: 'Invite people', onSelect: () => ask(true) }} />
 
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load your team" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
-          <Card className="flex flex-col gap-3">
+          <Card className="flex flex-col gap-4">
             <Heading level={2} size="lg">Members</Heading>
             <ul role="list" aria-busy="true" className="m-0 flex list-none flex-col gap-4 p-0">
               {/* One name for all of them: the first row is named, the others are only pictures. */}
@@ -169,7 +169,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
             </ul>
           </Card>
         ) : <>
-        <Card className="flex flex-col gap-3">
+        <Card className="flex flex-col gap-4">
           <Heading level={2} size="lg" ref={membersHeading} tabIndex={-1} className="outline-none">Members ({formatNumber(shown.length, locale)})</Heading>
           <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
             {shown.map((m) => {
@@ -196,7 +196,7 @@ export function TeamMembers({ members = demoMembers, invites = demoInvites, onIn
           </ul>
         </Card>
 
-        <Card className="flex flex-col gap-3">
+        <Card className="flex flex-col gap-4">
           <Heading level={2} size="lg" ref={invitesHeading} tabIndex={-1} className="outline-none">Invites ({formatNumber(open.length, locale)})</Heading>
           {open.length ? (
             <ul className="m-0 flex list-none flex-col divide-y divide-border p-0">
