@@ -17,6 +17,17 @@ describe('announce', () => {
     expect(region().textContent).not.toMatch(/\.\./);
   });
 
+  test('the same message twice is said twice: the second differs by an invisible no-break space, the third is plain again (VoiceOver skips an identical repeat)', async () => {
+    ensureAnnouncer();
+    await settle();
+    const seen: string[] = [];
+    const watch = new MutationObserver(() => { if (region().textContent) seen.push(region().textContent); });
+    watch.observe(region(), { childList: true, characterData: true, subtree: true });
+    for (let i = 0; i < 3; i++) { announce('Copied'); await settle(); }
+    watch.disconnect();
+    expect(seen).toEqual(['Copied', 'Copied\u00a0', 'Copied']);
+  });
+
   test('a clock that goes back (a system time change, a fake clock in a test) doesn\'t hold the next message back', async () => {
     ensureAnnouncer();
     await settle();

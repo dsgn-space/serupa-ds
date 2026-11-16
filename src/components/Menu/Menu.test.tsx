@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
-import { THEMES, color, contrast, press, settle, withMotion, iconPoints, settled, disabledLook } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, forcedColors, press, settle, withMotion, iconPoints, settled, disabledLook } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Tooltip } from '../Tooltip/Tooltip';
@@ -189,6 +189,11 @@ describe('Menu', () => {
     expect(document.getElementById(g.getAttribute('aria-labelledby')!)!.textContent).toBe('Danger zone');
     expect([!!m.querySelector('[role="separator"]'), m.querySelectorAll('[aria-disabled="true"]').length, m.querySelector('kbd')!.textContent]).toEqual([true, 1, '⌘E']);
     expect(focus()).toBe('Edit');
+    // The separator still shows in forced colors, which drops backgrounds: it's drawn as a border.
+    await forcedColors(async () => {
+      const sep = getComputedStyle(m.querySelector('[role="separator"]')!);
+      expect([sep.borderTopStyle, sep.borderTopWidth]).toEqual(['solid', '1px']);
+    });
   });
 
   test('a mouse opens it on the press: drag onto an item and let go chooses it; a quick click leaves it open; a press on the open button closes it (GG3)', async () => {

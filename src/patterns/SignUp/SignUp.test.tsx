@@ -26,7 +26,8 @@ describe('Patterns/Sign-up', () => {
     await render(<SignUp />);
     expect([document.querySelectorAll('main').length, document.querySelectorAll('h1').length]).toEqual([1, 1]);
     const ac = (id: string) => input(id).getAttribute('autocomplete');
-    expect([ac('sign-up-name'), ac('sign-up-email'), ac('sign-up-phone'), ac('sign-up-password')]).toEqual(['name', 'email', 'tel', 'new-password']);
+    // The email is the account's username: password managers save it with the new password (autofill-sign-up-form).
+    expect([ac('sign-up-name'), ac('sign-up-email'), ac('sign-up-phone'), ac('sign-up-password')]).toEqual(['name', 'username', 'tel', 'new-password']);
     expect(rules()).toEqual(['At least 12 characters, not yet', 'Not your email address or its name part, not yet']);
     // The rules are part of the password field's description, so a screen reader reads them with it.
     const described = (input('sign-up-password').getAttribute('aria-describedby') || '').split(' ').map((d) => document.getElementById(d)?.textContent || '').join(' ');
@@ -66,6 +67,10 @@ describe('Patterns/Sign-up', () => {
     expect(rules()).toEqual(['At least 12 characters, done', 'Not your email address or its name part, not yet']);
     await userEvent.keyboard('{Control>}a{/Control}blue whales sing');
     expect(rules()).toEqual(['At least 12 characters, done', 'Not your email address or its name part, done']);
+    // A new email checks the password again.
+    await userEvent.click(input('sign-up-email'));
+    await userEvent.keyboard('{Control>}a{/Control}blue@example.com');
+    expect(rules()).toEqual(['At least 12 characters, done', 'Not your email address or its name part, not yet']);
   });
 
   test('Create account with problems: a summary that takes focus and links to each field, and nothing sent', async () => {

@@ -77,6 +77,7 @@ export const labels: SerupaLabels = {
   contextualHelp: 'Bantuan',
   contextualInfo: 'Maklumat',
   copyFailed: 'Tidak dapat menyalin. Pilih teks dan salin sendiri.',
+  copyFailedShort: 'Tidak dapat menyalin',
   chatNewMessages: (count) => n(count) + ' mesej baharu',
   chatLoadOlder: 'Muatkan mesej terdahulu',
   chatLoadingOlder: 'Memuatkan mesej terdahulu',

@@ -47,6 +47,8 @@ Drawn from the `Horizontal` story.
 
 - Keep labels short and specific ("Work email", not "Please enter your email address"). Put format help in the hint, never only in the placeholder.
 - Show errors after someone leaves the field or submits, not on every keystroke, and on submit move focus to the first field with an error.
+- Native constraints (`required`, `type="email"`, `minLength`, `pattern`, `min`…) speak for themselves: once people have changed the control and left it, or tried to send the form (`:user-invalid`), and it fails one, the error slot says which, in the provider's words (`invalidValue`; English keeps the browser's own message), with `aria-invalid` and the description. It goes as soon as the value is fine, and on the form's reset. An `error` you pass, or a FormErrors message, wins. So a red border is never the only sign.
+- With required fields, say once before the form what the `*` means ("Fields marked * are required."): the `*` is hidden from screen readers, which say "required" from the control.
 - Stack fields with `gap-5` or `gap-6` between them.
 - For a dense settings page, use `orientation="horizontal"`: the labels line up in a column at the start and the controls beside them. Keep labels short enough for the 192px column (`--field-label-width`). Give fields a full-width parent: a horizontal field stacks again on its own once it's too narrow for both columns. A set of checkboxes or radios (`group`) stays stacked.
 
