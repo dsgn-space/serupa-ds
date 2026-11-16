@@ -5,12 +5,14 @@ import { Heading } from '../../components/Heading/Heading';
 import { Card } from '../../components/Card/Card';
 import { Button } from '../../components/Button/Button';
 import { Checkbox } from '../../components/Checkbox/Checkbox';
+import { Loader } from '../../components/Loader/Loader';
 import { Progress } from '../../components/Progress/Progress';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Onboarding / first run: the first page a new account sees. A checklist of setup steps with how far along it
    is, an empty state that says what to do first, and progress that's kept between visits. For an app to copy.
@@ -58,6 +60,12 @@ export interface OnboardingProps {
   onChange?: ((state: OnboardingState) => void) | undefined;
   /** Where "Go to your dashboard" goes once every step is done. Default: "#dashboard". */
   dashboardHref?: string | undefined;
+  /** Still loading the saved progress: a placeholder shows instead of the checklist. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load your setup checklist" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demoSteps: SetupStep[] = [
@@ -80,13 +88,17 @@ function save(key: string | undefined, state: OnboardingState) {
 }
 
 /** The first-run page: a skip link, a header, then main with the welcome, the setup checklist and an empty project list. */
-export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, onChange, dashboardHref = '#dashboard' }: OnboardingProps) {
+export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, onChange, dashboardHref = '#dashboard', loading = false, loadFailed = false, onRetry }: OnboardingProps) {
   const locale = useLocale();
-  const [state, setState] = React.useState<OnboardingState>(() => {
+  const start = (): OnboardingState => {
     const saved = load(saveKey) ?? initial ?? {};
     const ids = new Set(steps.map((s) => s.id));
     return { done: (saved.done ?? []).filter((id) => ids.has(id)), hidden: saved.hidden ?? false };
-  });
+  };
+  const [state, setState] = React.useState<OnboardingState>(start);
+  // The saved progress the app passes once loading ends replaces where it started.
+  const [wasLoading, setWasLoading] = React.useState(loading);
+  if (wasLoading !== loading) { setWasLoading(loading); if (!loading) setState(start()); }
   const update = (next: OnboardingState) => { setState(next); save(saveKey, next); onChange?.(next); };
   const count = (n: number) => `${formatNumber(n, locale)} of ${formatNumber(steps.length, locale)} steps done`;
   const finished = state.done.length === steps.length;
@@ -117,6 +129,8 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
       <main id="main" className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title={`Welcome to Acme, ${name}`} description="A few steps get your workspace ready. Do them in any order, now or later: we keep your place." />
 
+        {loadFailed ? <EmptyLoadFailed title="Couldn’t load your setup checklist" onRetry={() => onRetry?.()} headingLevel={2} />
+          : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading your setup checklist" /></Card> : (
         <section aria-labelledby="setup-title" className="flex flex-col gap-4">
           {state.hidden ? (
             <Card padding="sm" className="flex flex-row flex-wrap items-center justify-between gap-3">
@@ -162,6 +176,7 @@ export function Onboarding({ name = 'Ada', steps = demoSteps, initial, saveKey, 
             </>
           )}
         </section>
+        )}
 
         <section aria-labelledby="projects-title" className="flex flex-col gap-4">
           <Heading level={2} size="lg" id="projects-title">Your projects</Heading>

@@ -1,7 +1,7 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, visualScope, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, inShard, sizeBudgets, raiseTag, sitePageKey, report, done } from './lib.mjs';
+import { affectedComponents, visualScope, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, inShard, sizeBudgets, sharedRaise, raiseTag, sitePageKey, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
@@ -12,6 +12,8 @@ t('a size budget is the highest of the component\'s file and its raise files', J
 t('a raise file is named by its branch, and a detached checkout by "local"', raiseTag('claude/fix-x') === 'claude-fix-x' && raiseTag('HEAD') === 'local' && raiseTag('') === 'local', [raiseTag('claude/fix-x'), raiseTag('HEAD')].join(' '));
 t('a site page answers to its folder\'s name, a docs page to its file', sitePageKey('src/patterns/StoreLocator/StoreLocator.mdx') === 'StoreLocator' && sitePageKey('docs/Upgrading.mdx') === 'docs/Upgrading.mdx', sitePageKey('src/patterns/StoreLocator/StoreLocator.mdx'));
 t('a change to the site check itself opens every page', affectedComponents(['tools/test/site.mjs']) === null, list(affectedComponents(['tools/test/site.mjs'])));
+t('the shared raise files add up, and a line no file names gets nothing', sharedRaise([{ STARTER: [0.1, 'a'] }, { STARTER: [0.2, 'b'], LABELS: [0.1, 'c'] }, {}], 'STARTER') === 0.3 && sharedRaise([{ STARTER: [0.1, 'a'] }], 'LABELS') === 0, String(sharedRaise([{ STARTER: [0.1, 'a'] }, { STARTER: [0.2, 'b'] }], 'STARTER')));
+t('a shared size raise file covers no component', affectedComponents(['tools/test/baseline-size-shared/claude-fix-x.json'])?.size === 0, list(affectedComponents(['tools/test/baseline-size-shared/claude-fix-x.json'])));
 const raiseFile = affectedComponents(['tools/test/baseline-size/Meter.claude-fix-x.json']);
 t('a raise file covers its component', list(raiseFile) === 'Meter', list(raiseFile));
 

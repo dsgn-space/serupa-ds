@@ -7,6 +7,8 @@
 //   node tools/test/size.mjs --update Name --exact   set Name.json from what it weighs now, lower too, and remove
 //                                             its raise files
 //   node tools/test/size.mjs --fold           fold every raise file into its Name.json (the Release pull request)
+//   node tools/test/size.mjs --raise-shared "what grew"   raise each shared line that is over (a total, LABELS,
+//                                             STARTER) in tools/test/baseline-size-shared/<branch>.json
 //   node tools/test/size.mjs --json size.json --previous last.json   and compare with last night's (nightly, below)
 // The JavaScript is measured as a project's bundler ships it (minified, React left out, the full icon set left to
 // load on demand). Over budget fails; when a change is worth the bytes, raise the budget in the same pull request,
@@ -34,7 +36,7 @@ import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import * as esbuild from 'esbuild';
-import { HERE, PROJECT, done, report, sizeBudgets, raiseTag, SIZE_FILE } from './lib.mjs';
+import { HERE, PROJECT, done, report, sizeBudgets, sharedRaise, raiseTag, SIZE_FILE } from './lib.mjs';
 import { execFileSync } from 'node:child_process';
 import { purge, unusedComponentClasses, usedClasses } from '../../bin/serupa-purge.mjs';
 
@@ -137,6 +139,16 @@ const kib = (n) => (n / 1024).toFixed(1);
 // How far over: in bytes under 0.1 KiB, where kib() would print "0.0".
 const over = (n) => (n < 102.4 ? `${Math.ceil(n)} B` : `${kib(n)} KiB`);
 const budgetFile = (n) => path.join(DIR, `${n}.json`);
+// The shared lines (TOTALS, LABELS, STARTER) take raises the same way: a pull request that takes one over adds its
+// own tools/test/baseline-size-shared/<branch>.json, { "<line>": [KiB added, "what grew, dated"] }, rather than editing
+// the line every such pull request edited (16 Nov 2026: #2067, #2074, #2078 and #2081 each conflicted on STARTER or
+// serupa.iife.js and waited for a merge of main). The raises add up: each file is its own pull request's growth.
+const SHARED_DIR = path.join(HERE, 'baseline-size-shared');
+const sharedFiles = () => (fs.existsSync(SHARED_DIR) ? fs.readdirSync(SHARED_DIR).filter((f) => /^[\w-]+\.json$/.test(f)) : []);
+const sharedRaises = sharedFiles().map((f) => JSON.parse(fs.readFileSync(path.join(SHARED_DIR, f), 'utf8')));
+const raisedBy = (line) => sharedRaise(sharedRaises, line);
+const STARTER_AT = +(STARTER + raisedBy('STARTER')).toFixed(1);
+const LABELS_AT = +(LABELS[0] + raisedBy('LABELS')).toFixed(1);
 const sizeFiles = () => (fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => SIZE_FILE.test(f)) : []);
 const readSize = (f) => [f, JSON.parse(fs.readFileSync(path.join(DIR, f), 'utf8'))];
 const raisesOf = (n) => sizeFiles().filter((f) => SIZE_FILE.exec(f)[1] === n && SIZE_FILE.exec(f)[2]);
@@ -193,7 +205,7 @@ if (ui > 0) {
 const merged = sizeBudgets(sizeFiles().map(readSize));
 const budgets = Object.fromEntries(folders.map((n) => [n, fs.existsSync(budgetFile(n)) ? merged[n] : null]));
 const sum = (k) => folders.reduce((t, n) => t + (budgets[n]?.[k] || 0), 0);
-const BUDGET = { ...Object.fromEntries(Object.entries(TOTALS).map(([f, [at, was, k]]) => [f, +(Number(at) + sum(String(k)) - Number(was) + (k === 'share' ? LABELS[0] - LABELS[1] : 0)).toFixed(1)])), ...FIXED };
+const BUDGET = { ...Object.fromEntries(Object.entries(TOTALS).map(([f, [at, was, k]]) => [f, +(Number(at) + raisedBy(f) + sum(String(k)) - Number(was) + (k === 'share' ? LABELS_AT - LABELS[1] : 0)).toFixed(1)])), ...FIXED };
 BUDGET['bundle.css'] = +(BUDGET['components.css'] + BUDGET['utilities.css']).toFixed(1);
 const size = { 'All components (index.js)': whole }, brotli = {};
 for (const f of ['components.css', 'utilities.css', 'bundle.css', 'base.css', 'theme.js', 'serupa.iife.js', 'serupa-icons.iife.js']) { size[f] = file(f); brotli[f] = br(fs.readFileSync(path.join(PROJECT, 'dist', f))); }
@@ -221,24 +233,24 @@ const totals = rows.map((r) => ({
   // Under 1 KiB means it wasn't measured (a budget number pasted in place of the measurement), not that it's tiny.
   ok: r.now <= r.budget * 1024 && r.now >= 1024,
   detail: r.now < 1024 ? 'not measured: its line in `size` must measure the build, not repeat the budget'
-    : `${over(r.now - r.budget * 1024)} over; ${r.name in FIXED ? 'if the growth is worth it, raise its budget in tools/test/size.mjs' : 'the shared code grew (each component is held to its own budget): if that is worth it, raise its line in TOTALS in tools/test/size.mjs'}`,
+    : `${over(r.now - r.budget * 1024)} over; ${r.name in FIXED ? 'if the growth is worth it, raise its budget in tools/test/size.mjs' : 'the shared code grew (each component is held to its own budget): if that is worth it, run node tools/test/size.mjs --raise-shared "what grew" and commit its raise file'}`,
 }));
 for (const [f, budget] of Object.entries(FONTS)) {
   const bytes = fs.statSync(path.join(PROJECT, f)).size;
   totals.push({ name: `${f}: ${kib(bytes)} KiB, within ${budget} KiB`, ok: bytes <= budget * 1024,
     detail: `${over(bytes - budget * 1024)} over; a bigger font is a slower first paint for every page: if it's worth it, raise FONTS in tools/test/size.mjs` });
 }
-totals.push({ name: `Starter page (sign-in form: tokens.css, base.css, bundle.css trimmed to it, Button, Field and Input): ${kib(starter)} KiB gzipped, within ${STARTER} KiB`,
+totals.push({ name: `Starter page (sign-in form: tokens.css, base.css, bundle.css trimmed to it, Button, Field and Input): ${kib(starter)} KiB gzipped, within ${STARTER_AT} KiB`,
   // Under 8 KiB means part of it went missing (the trim kept nothing, or the components didn't bundle).
-  ok: starter <= STARTER * 1024 && starter >= 8 * 1024,
-  detail: starter < 8 * 1024 ? 'not measured: the trimmed CSS or the components came out nearly empty' : `${over(starter - STARTER * 1024)} over: a first page got heavier (tokens, base styles, shared code or one of the three); if that's worth it, raise STARTER in tools/test/size.mjs` });
+  ok: starter <= STARTER_AT * 1024 && starter >= 8 * 1024,
+  detail: starter < 8 * 1024 ? 'not measured: the trimmed CSS or the components came out nearly empty' : `${over(starter - STARTER_AT * 1024)} over: a first page got heavier (tokens, base styles, shared code or one of the three); if that's worth it, run node tools/test/size.mjs --raise-shared "what grew" and commit its raise file` });
 const noSplit = gz(await build(pick(['Button']), []));
 totals.push({ name: `Button in a build without code splitting (the icon set comes along): ${kib(noSplit)} KiB gzipped, within ${NO_SPLIT} KiB`,
   ok: noSplit <= NO_SPLIT * 1024 && noSplit > 100 * 1024,
   detail: noSplit <= 100 * 1024 ? 'the icon set no longer comes along: lower NO_SPLIT in tools/test/size.mjs and update Icon\'s README and Getting started'
     : `${over(noSplit - NO_SPLIT * 1024)} over: the icons drawn by name grew; if that's worth it, raise NO_SPLIT in tools/test/size.mjs` });
-totals.push({ name: `Built-in label text (enLabels): ${kib(labels)} KiB gzipped, within ${LABELS[0]} KiB`, ok: labels <= LABELS[0] * 1024 && labels >= 512,
-  detail: labels < 512 ? 'not measured: enLabels should bundle every folder\'s labels.ts' : `${over(labels - LABELS[0] * 1024)} over; if the words are worth it, raise LABELS in tools/test/size.mjs (and its second number to the size now)` });
+totals.push({ name: `Built-in label text (enLabels): ${kib(labels)} KiB gzipped, within ${LABELS_AT} KiB`, ok: labels <= LABELS_AT * 1024 && labels >= 512,
+  detail: labels < 512 ? 'not measured: enLabels should bundle every folder\'s labels.ts' : `${over(labels - LABELS_AT * 1024)} over; if the words are worth it, run node tools/test/size.mjs --raise-shared "what grew" and commit its raise file` });
 const phoneData = gz((await esbuild.build({ stdin: { contents: "export { PHONE_COUNTRIES } from './src/components/PhoneInput/phone.ts';", resolveDir: PROJECT, loader: 'ts' }, bundle: true, minify: true, write: false, format: 'esm', logLevel: 'silent' })).outputFiles[0].contents);
 totals.push({ name: `PhoneInput's country table (PHONE_COUNTRIES): ${kib(phoneData)} KiB gzipped, within ${PHONE_DATA} KiB`, ok: phoneData <= PHONE_DATA * 1024 && phoneData >= 1024,
   detail: phoneData < 1024 ? 'not measured: the table should bundle from src/components/PhoneInput/phone.ts' : `${over(phoneData - PHONE_DATA * 1024)} over; if the countries are worth it, raise PHONE_DATA in tools/test/size.mjs` });
@@ -286,4 +298,27 @@ if (flag('--previous') && fs.existsSync(flag('--previous'))) {
 }
 // A raise file without its component's Name.json is an orphan too: Name.json holds every key.
 const orphans = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => !SIZE_FILE.test(f) || !folders.includes(SIZE_FILE.exec(f)[1]) || !fs.existsSync(budgetFile(SIZE_FILE.exec(f)[1]))) : [];
+// --raise-shared "what grew": each shared line over its budget gets the KiB it is over (rounded up to 0.1, at least
+// 0.1) added to this branch's raise file, with the note dated today.
+if (process.argv.includes('--raise-shared')) {
+  const note = process.argv[process.argv.indexOf('--raise-shared') + 1];
+  if (!note || note.startsWith('-')) { console.log('--raise-shared needs a note: what grew'); process.exit(1); }
+  const overBy = [...rows.filter((r) => !(r.name in FIXED)).map((r) => ({ line: r.name, by: r.now - r.budget * 1024 })),
+    { line: 'STARTER', by: starter - STARTER_AT * 1024 }, { line: 'LABELS', by: labels - LABELS_AT * 1024 }].filter((o) => o.by > 0)
+    // A LABELS raise raises the totals that count shared code too, so it goes alone; run it again for what is left.
+    .filter((o, _, all) => !all.some((x) => x.line === 'LABELS') || o.line === 'LABELS');
+  let branch = process.env.SIZE_TAG;
+  try { branch ||= execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).trim(); } catch { /* not a checkout */ }
+  const file = path.join(SHARED_DIR, `${raiseTag(branch)}.json`);
+  const mine = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
+  const day = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  for (const { line, by } of overBy) {
+    const add = Math.max(0.1, Math.ceil(by / 1024 * 10) / 10);
+    mine[line] = [+((Number(mine[line]?.[0]) || 0) + add).toFixed(1), `+${add} KiB on ${day}: ${note}${mine[line] ? `; ${mine[line][1]}` : ''}`];
+    console.log(`${line}: +${add} KiB (in ${path.relative(PROJECT, file)})`);
+  }
+  if (overBy.length) { fs.mkdirSync(SHARED_DIR, { recursive: true }); fs.writeFileSync(file, JSON.stringify(mine, null, 2) + '\n'); }
+  else console.log('Every shared line is within its budget, nothing to raise');
+  process.exit(0);
+}
 done(report('Size', [...totals, ...own, ...trend, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));

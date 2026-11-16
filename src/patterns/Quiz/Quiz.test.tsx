@@ -68,4 +68,15 @@ describe('Patterns/Quiz', () => {
     await expect.poll(() => active().textContent).toMatch(/^You passed: /);
     expect(screen.getByRole('link', { name: 'Go to the next lesson' }).elements()).toHaveLength(1);
   });
+
+  test('while loading, one placeholder; a failed load says so, with Try again', async () => {
+    const onRetry = vi.fn();
+    const screen = await render(<Quiz loading />);
+    await expect.poll(() => screen.getByRole('progressbar').elements().map((e) => e.getAttribute('aria-label'))).toEqual(['Loading the quiz']);
+    expect(document.querySelectorAll('main h1')).toHaveLength(1);
+    await screen.rerender(<Quiz loadFailed onRetry={onRetry} />);
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load the quiz' })).toBeVisible();
+    await screen.getByRole('button', { name: 'Try again' }).click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+  });
 });

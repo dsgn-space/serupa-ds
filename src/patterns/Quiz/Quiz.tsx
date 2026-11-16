@@ -4,6 +4,8 @@ import { SkipLink } from '../../components/SkipLink/SkipLink';
 import { Button } from '../../components/Button/Button';
 import { Alert } from '../../components/Alert/Alert';
 import { Link } from '../../components/Link/Link';
+import { Card } from '../../components/Card/Card';
+import { Loader } from '../../components/Loader/Loader';
 import { Field } from '../../components/Field/Field';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { CheckboxGroup, Checkbox } from '../../components/Checkbox/Checkbox';
@@ -11,6 +13,7 @@ import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSumma
 import { formatNumber } from '../../components/FormattedNumber/formatNumber';
 import { useLocale } from '../../internal/provider';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
+import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
 /* Quiz: a few questions to check what was learned, all on one page, then the score and, for each question, whether
    it was right and why. For an app to copy. What it carries (WCAG 2.2):
@@ -45,6 +48,12 @@ export interface QuizProps {
   pass?: number | undefined;
   /** Told the answers and the score once checked. */
   onCheck?: ((answers: QuizAnswers, score: number) => void) | undefined;
+  /** Still loading: a placeholder shows instead of the questions. Default: false. */
+  loading?: boolean | undefined;
+  /** Loading failed: a "Couldn’t load the quiz" message with Try again, which calls onRetry. Default: false. */
+  loadFailed?: boolean | undefined;
+  /** Loads again, from Try again. Return a promise: the button shows it's working until it settles. */
+  onRetry?: (() => void | Promise<unknown>) | undefined;
 }
 
 const demo: QuizQuestion[] = [
@@ -69,7 +78,7 @@ export function scoreQuiz(questions: readonly QuizQuestion[], answers: QuizAnswe
 }
 
 /** The quiz page: a skip link, a header, then main with the h1, the questions, and the score once checked. */
-export function Quiz({ title = 'Accessible forms: check what you learned', questions = demo, pass = Math.ceil(questions.length * 0.8), onCheck }: QuizProps) {
+export function Quiz({ title = 'Accessible forms: check what you learned', questions = demo, pass = Math.ceil(questions.length * 0.8), onCheck, loading = false, loadFailed = false, onRetry }: QuizProps) {
   const locale = useLocale();
   const [answers, setAnswers] = React.useState<QuizAnswers>({});
   const [missing, setMissing] = React.useState<string[]>([]);
@@ -105,7 +114,9 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Accessible forms', href: '#course' }, { label: 'Quiz' }]} title={title}
-          description={`${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like.`} />
+          description={loading || loadFailed ? undefined : `${n(questions.length)} questions, no time limit. Get ${n(pass)} right to pass; you can try as many times as you like.`} />
+        {loadFailed ? <div className="pt-6"><EmptyLoadFailed title="Couldn’t load the quiz" onRetry={() => onRetry?.()} headingLevel={2} /></div>
+          : loading ? <Card className="mt-6"><Loader variant="skeleton" shape="text" lines={6} label="Loading the quiz" /></Card> : (
         <div className="flex flex-col gap-6 pt-6">
           {checked ? (
             <section aria-labelledby="quiz-score" className="flex flex-col items-start gap-3">
@@ -155,6 +166,7 @@ export function Quiz({ title = 'Accessible forms: check what you learned', quest
             {checked ? null : <Button type="submit" className="self-start">Check answers</Button>}
           </form>
         </div>
+        )}
       </main>
     </div>
   );
