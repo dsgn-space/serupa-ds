@@ -322,6 +322,15 @@ export function affectedComponents(files) {
   return names;
 }
 // SERUPA_ONLY=Button,Dialog (set by run.mjs --since): the components to test, or null for all of them.
+// The checks of the built package (tree-shake, purge-components, no-css, reproducible) build it from src/, tokens,
+// docs, bin/ and the build scripts, with the Node and packages the setup action installs. A change to nothing but
+// workflows and tools besides those builds the very package its base did, which passed them, so a run narrowed against
+// that base (run.mjs --since: a pull request's, a queue group's) leaves them out; the nightly run checks main whole. They took
+// about 240 s of the checks group's 650 (13 Nov), and 24 of 80 pull requests on 15 and 16 Nov changed nothing they read.
+export const BUILT_CHECKS = ['tree-shake', 'purge-components', 'no-css', 'reproducible'];
+export const builtUnchanged = (files) => files.length > 0 && files.every((f) => /^(\.github|tools)\//.test(f)
+  && !/^(\.github\/actions|tools\/build)\//.test(f) && !/^tools\/test\/baseline-server\//.test(f)
+  && !new RegExp(`^tools/test/(lib|${BUILT_CHECKS.join('|')})\\.mjs$`).test(f));
 // The SERUPA_ONLY name a docs site page answers to: its component, block or pattern folder, or the page's own file.
 export const sitePageKey = (file) => /^src\/(?:components|blocks|patterns)\/(\w+)\//.exec(file)?.[1] ?? file;
 export const onlyComponents = () => (process.env.SERUPA_ONLY === undefined ? null : new Set(process.env.SERUPA_ONLY.split(',').filter(Boolean)));
