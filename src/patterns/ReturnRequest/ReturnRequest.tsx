@@ -11,6 +11,7 @@ import { Checkbox } from '../../components/Checkbox/Checkbox';
 import { RadioGroup, Radio } from '../../components/Radio/Radio';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { FormattedNumber } from '../../components/FormattedNumber/FormattedNumber';
+import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 
 /* Return request: sending back some of an order, with why, how it goes back and where the money goes, and what
@@ -18,7 +19,8 @@ import { PageHeader } from '../../blocks/PageHeader/PageHeader';
    - 1.3.1: the items are a named group of checkboxes; one that can't be returned is disabled and says why next to it.
    - 3.3.2: the reason is asked for only for an item you've chosen, and labelled with its name ("Why are you returning
      the Linen shirt?").
-   - 3.3.1: sending with nothing chosen, or a reason missing, says so next to it, and focus goes to the first.
+   - 3.3.1, 2.4.3: sending with nothing chosen, or a reason missing, shows a summary that takes focus, each problem a
+     link to its item or reason, which says it too.
    - 1.3.1: how it goes back and where the money goes are named radio groups; a cost is said in the choice's words.
    - 4.1.3: the refund is worked out as you choose, in a summary that's read in order, with the cost taken off by name.
    - 3.3.4, 4.1.3: Send shows it's busy; one that fails says so next to the button and keeps every choice.
@@ -94,11 +96,11 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
   const [method, setMethod] = React.useState<ReturnChoice['method']>('dropoff');
   const [refundTo, setRefundTo] = React.useState<ReturnChoice['refund']>('original');
   const [problems, setProblems] = React.useState<Record<string, string>>({});
+  const [tries, setTries] = React.useState(0);
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const [sent, setSent] = React.useState<string | null>(null);
   const next = React.useRef<HTMLHeadingElement>(null);
-  const list = React.useRef<HTMLDivElement>(null);
   const money = (n: number) => <FormattedNumber value={n} format="currency" currency={currency} />;
   const sums = refundOf(items, chosen, reasons, method === 'pickup', pickupFee);
   const clear = (id: string) => setProblems((p) => { const n = { ...p }; delete n[id]; return n; });
@@ -109,16 +111,13 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
     setFailed(false);
     if (ids.length) clear('return-items');
   };
+  const errors: ErrorSummaryItem[] = Object.entries(problems).map(([field, message]) => ({ field, message }));
   const send = (e: React.FormEvent) => {
     e.preventDefault();
     const found = returnProblems(chosen, reasons);
     setProblems(found);
-    const first = Object.keys(found)[0];
-    if (first) {
-      if (first === 'return-items') list.current?.querySelector<HTMLElement>('input:not(:disabled)')?.focus();
-      else document.getElementById(first)?.focus();
-      return;
-    }
+    setTries((t) => t + 1);
+    if (Object.keys(found).length) return;
     setFailed(false);
     setBusy(true);
     const choice: ReturnChoice = { items: chosen.map((id) => ({ id, reason: reasons[id]! })), method, refund: refundTo };
@@ -148,9 +147,10 @@ export function ReturnRequest({ order = 'A-10432', items = demo, currency = 'USD
             </section>
           ) : (
             <form onSubmit={send} noValidate aria-label="Return" className="grid items-start gap-8 md:grid-cols-3">
+              <ErrorSummary key={tries} errors={errors} className="md:col-span-3" />
               <div className="flex flex-col gap-6 md:col-span-2">
                 <Field label="What are you returning?" id="return-items" error={problems['return-items']} group required>
-                  <div ref={list} className="flex flex-col gap-4">
+                  <div id="return-items" className="flex flex-col gap-4">
                     {items.map((i) => (
                       <div key={i.id} className="flex flex-col gap-2">
                         <Checkbox value={i.id} checked={chosen.includes(i.id)} disabled={!!i.notReturnable}

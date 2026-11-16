@@ -143,6 +143,7 @@ jobs:
           EVENT: ${{ github.event_name }}
           QUEUE: ${{ vars.SERUPA_QUEUE }}
           QUEUE_BASE: ${{ github.event.merge_group.base_sha }}
+          PRRUNNER: ${{ steps.runner.outputs.prrunner }}
         run: |
           set -euo pipefail
           # full: every job runs. wide: the suite runs unnarrowed. tests: the suite runs at all.
@@ -167,11 +168,15 @@ jobs:
           # languages in the same base jobs (run.mjs), and Visual when the pictures can change: the
           # failures a pull request meets most, so they are found before the queue, where one failure drops every
           # group behind it.
-          # Shards: a pull request's run takes 3 base and 5 Visual jobs (8, its max-parallel). A queue group has the 28
+          # Shards: a pull request's run takes 3 base and 5 Visual jobs (8, its max-parallel on GitHub's runners). A queue group has the 28
           # burst slots behind it and gates every merge, so it splits wider: 5 base, 5 locale and 7 Visual (17 of its 24),
           # about a third off its longest job (each shard still pays about a minute of setup).
           shards() { local g=$1 p=$2 n=$3 out="" k; for k in $(seq 1 "$n"); do out="$out,{\"group\":\"$g\"${p:+,\"part\":\"$p\"},\"shard\":\"$k/$n\"}"; done; echo "$out"; }
           if [ "$EVENT" = merge_group ]; then nb=5; nl=5; nv=7; else nb=3; nl=3; nv=5; fi
+          # On the burst runners a pull request runs four x86 jobs at once (max-parallel), so Visual takes four shards:
+          # with five, the fifth started after the first wave and a whole run took 47 minutes (#2044, 16 Nov), against
+          # about 31 with four (three base and one Visual shard, then the other three).
+          if [ "$EVENT" = pull_request ] && [[ "$PRRUNNER" == *self-hosted* ]]; then nv=4; fi
           x86='{"include":['"$(shards components base "$nb" | cut -c2-)"
           if [ "$EVENT" != pull_request ] || [ -z "$since" ]; then
             x86="$x86$(shards components locale "$nl")"
@@ -389,9 +394,11 @@ jobs:
       fail-fast: ${{ github.event_name != 'push' }}
       # A pull request takes at most eight runners at once, so one doesn't hold all of GitHub's; a queue group 24 of the
       # 28 burst slots.
-      # A pull request on the burst runners takes three slots here and three in the other suite job, six of 28: on
-      # 15 Nov two pull requests held eight in each, 18 slots, while three queue groups waited 20 minutes for them.
-      max-parallel: ${{ github.event_name == 'pull_request' && (contains(needs.plan.outputs.prrunner, 'self-hosted') && 3 || 8) || 24 }}
+      # A pull request on the burst runners takes four slots here and three in the other suite job, seven of 28: on
+      # 15 Nov two pull requests held eight in each, 18 slots, while three queue groups waited 20 minutes for them. From
+      # 03:00 to 06:00 on 16 Nov the slots averaged 12.5 busy and were all full for 3 minutes, so the fourth costs the
+      # queue little and takes a pull request's Visual from three waves to two.
+      max-parallel: ${{ github.event_name == 'pull_request' && (contains(needs.plan.outputs.prrunner, 'self-hosted') && 4 || 8) || 24 }}
       matrix: ${{ fromJSON(needs.plan.outputs.x86) }}
     steps: &suite-steps
       # A fetch that stalls has no timeout of its own, and one held a queue group for the job's whole 30 minutes

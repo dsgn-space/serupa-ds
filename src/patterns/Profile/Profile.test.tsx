@@ -36,12 +36,15 @@ describe('Patterns/Profile', () => {
     expect(screen.getByRole('img', { name: 'Ana Lima' }).elements().length).toBeGreaterThan(0);
   });
 
-  test('a missing name and a bad link are said next to their fields on save, focus goes to the first, and nothing is sent', async () => {
+  test('a missing name and a bad link are said in a summary that takes focus and next to their fields, and nothing is sent', async () => {
     const onSave = vi.fn();
     const screen = await render(<Profile profile={me} onSave={onSave} />);
     await screen.getByRole('textbox', { name: /^Name/ }).fill('');
     await screen.getByRole('textbox', { name: /^Website/ }).fill('ana dot com');
     await screen.getByRole('button', { name: 'Save profile' }).click();
+    await expect.poll(() => active().textContent).toMatch(/^There are \S+ problems/);
+    expect(screen.getByRole('link').elements().filter((e) => e.closest('[data-component="error-summary"]')).map((e) => e.getAttribute('href'))).toEqual(['#profile-name', '#profile-website']);
+    await screen.getByRole('link', { name: /^Enter your name/ }).click();
     await expect.poll(() => active().id).toBe('profile-name');
     expect(active().getAttribute('aria-invalid')).toBe('true');
     expect(screen.getByRole('textbox', { name: /^Website/ }).element().getAttribute('aria-invalid')).toBe('true');

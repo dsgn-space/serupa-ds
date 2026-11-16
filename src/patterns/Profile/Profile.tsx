@@ -11,6 +11,7 @@ import { Textarea } from '../../components/Textarea/Textarea';
 import { FileUpload } from '../../components/FileUpload/FileUpload';
 import { SaveStatus, type SaveState } from '../../components/SaveStatus/SaveStatus';
 import { Loader } from '../../components/Loader/Loader';
+import { ErrorSummary, type ErrorSummaryItem } from '../../components/ErrorSummary/ErrorSummary';
 import { PageHeader } from '../../blocks/PageHeader/PageHeader';
 import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
 
@@ -19,8 +20,8 @@ import { EmptyLoadFailed } from '../../blocks/EmptyStates/EmptyStates';
    - 1.1.1: the photo's preview says whose it is; without a photo, the avatar shows initials and still names you.
    - 3.3.2, 1.3.5: each field says what it's for and its limits: the bio counts what's left as you type, the photo
      says which files and how big; name and link say what they are for autofill.
-   - 3.3.1: a missing name, or a link that isn't one, is said next to its field when you save, and focus goes to the
-     first. A photo that's too big or not an image is said by the upload itself.
+   - 3.3.1, 2.4.3: a missing name, or a link that isn't one, is said in a summary that takes focus when you save, each
+     a link to its field, which says it too. A photo that's too big or not an image is said by the upload itself.
    - 4.1.3: Save says where it's got to (Saving, Saved, or a failure with Try again) in a status that's read out.
    - 3.3.4: Discard changes is there only once something has changed, and puts back what was saved.
    - 2.4.6: the form's heading says whose profile it is, and its preview shows the result as others will see it.
@@ -71,11 +72,15 @@ export const profileChanged = (a: ProfileInfo, b: ProfileInfo): boolean =>
   a.name !== b.name || a.bio !== b.bio || a.location !== b.location || a.website !== b.website || a.photo !== b.photo;
 
 /** The profile page: a skip link, a header, then main with the h1, the form and a preview. */
+/** The fields that can have a problem, in the order they show. */
+const PARTS = ['name', 'bio', 'website'] as const;
+
 export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading = false, loadFailed = false, onRetry }: ProfileProps) {
   const [saved, setSaved] = React.useState(start);
   const [draft, setDraft] = React.useState(start);
   const [files, setFiles] = React.useState<File[]>([]);
   const [problems, setProblems] = React.useState<ReturnType<typeof profileProblems>>({});
+  const [tries, setTries] = React.useState(0);
   const [status, setStatus] = React.useState<SaveState>('idle');
   const [savedAt, setSavedAt] = React.useState<Date | undefined>(undefined);
   // The new photo's preview: an object URL made once per file, and let go when the file changes or the page goes.
@@ -89,12 +94,13 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
     if (status !== 'saving') setStatus('idle');
   };
   const discard = () => { setDraft(saved); setFiles([]); setProblems({}); setStatus('idle'); };
+  const errors: ErrorSummaryItem[] = PARTS.filter((k) => problems[k]).map((k) => ({ field: `profile-${k}`, message: problems[k] }));
   const save = (e?: React.FormEvent) => {
     e?.preventDefault();
     const found = profileProblems(draft, bioLimit);
     setProblems(found);
-    const first = (['name', 'bio', 'website'] as const).find((k) => found[k]);
-    if (first) { document.getElementById(`profile-${first}`)?.focus(); return; }
+    setTries((t) => t + 1);
+    if (PARTS.some((k) => found[k])) return;
     const sent = { ...draft, name: draft.name.trim(), location: draft.location.trim(), website: draft.website.trim() };
     setStatus('saving');
     void Promise.resolve().then(() => onSave?.(sent, files[0] ?? null)).then(() => {
@@ -123,6 +129,7 @@ export function Profile({ profile: start = demo, bioLimit = 160, onSave, loading
               <div className="grid items-start gap-8 md:grid-cols-3">
                 <form onSubmit={save} noValidate aria-labelledby="edit" className="flex flex-col gap-5 md:col-span-2">
                   <h2 id="edit" className="m-0 text-lg font-semibold">Edit {saved.name ? `${saved.name}’s` : 'your'} profile</h2>
+                  <ErrorSummary key={tries} errors={errors} headingLevel={3} />
                   <div className="flex flex-wrap items-center gap-4">
                     <Avatar size="xl" name={draft.name || saved.name} src={photo || undefined} alt={photo ? `Photo of ${draft.name || saved.name}` : undefined} />
                     {draft.photo && !files.length ? <Button variant="outline" size="sm" onClick={() => edit({ photo: '' })}>Remove photo</Button> : null}

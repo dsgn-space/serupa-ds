@@ -17,11 +17,13 @@ const rootOf = (id: string) => document.getElementById(id)!.closest('[data-compo
 // The drop zone is the presentational box: its icon, the title (its first p), the choose button and the hint (the p
 // with an id). A chosen file is an item: its icon, then a span with the name (which carries the full name as its
 // title) and the size.
-const ZONE = '[role=presentation]', TITLE = `${ZONE} > p:first-of-type`, HINT = `${ZONE} > p[id]`, NAME = 'span[title]', SIZE = `${NAME} + span`;
+const ZONE = '[role=presentation]', TITLE = `${ZONE} > p:first-of-type`, HINT = `${ZONE} > p[id]`, NAME = 'span[dir="auto"]:has(> [aria-hidden])', SIZE = `${NAME} + span`;
 const items = (root: Element) => [...root.querySelectorAll<HTMLElement>('ul[aria-label] > li')];
-const list = (root: Element) => items(root).map((li) => li.querySelector(NAME)!.getAttribute('title') + ' ' + li.querySelector(SIZE)!.textContent + ' ' + li.querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon);
+// The whole name: the name's last part, the one screen readers read (the others are hidden from them).
+const whole = (n: Element) => n.lastElementChild!.textContent;
+const list = (root: Element) => items(root).map((li) => whole(li.querySelector(NAME)!) + ' ' + li.querySelector(SIZE)!.textContent + ' ' + li.querySelector<HTMLElement>(':scope > [data-icon]')!.dataset.icon);
 const errs = (root: Element) => { const e = root.querySelector('[role=alert]'); return e ? e.getAttribute('role') + ': ' + [...e.querySelectorAll(':scope > p')].map((x) => x.textContent.replace(/^error/, '')).join(' / ') : null; };
-const names = (root: Element) => [...root.querySelectorAll(NAME)].map((x) => x.getAttribute('title')).join();
+const names = (root: Element) => [...root.querySelectorAll(NAME)].map(whole).join();
 const input = (root: Element) => root.querySelector('input[type=file]') as HTMLInputElement;
 const choose = (root: Element) => root.querySelector(`${ZONE} > button`) as HTMLButtonElement;
 // The button opens the picker by clicking the native input; count those clicks and stop the picker from opening.
@@ -497,17 +499,17 @@ describe('FileUpload: drops, folders and what is said (FQ1)', () => {
 describe('FileUpload: long file names (GR17)', () => {
   const LONG = 'quarterly-report-final-v2-approved-by-finance-department-';
   const fits = (el: Element) => el.scrollWidth <= el.clientWidth + 0.5;
-  test.each(['ltr', 'rtl'])('a long name is cut in the middle in a %s page: the year and extension stay, the whole name is its title and is read once', async (dir) => {
+  test.each(['ltr', 'rtl'])('a long name is cut in the middle in a %s page: the year and extension stay, the whole name is read once', async (dir) => {
     await render(<div dir={dir} style={{ width: 320 }}><FileUpload id={'gr17-' + dir} readOnly files={[file(LONG + '2025.pdf', 'application/pdf', 10), file(LONG + '2026.pdf', 'application/pdf', 10), file('a b.pdf', 'application/pdf', 10)]} /></div>);
     // A cut name holds the start (cut), the end (kept) and the whole name for screen readers, in that order; one that
     // fits is one run of text, then the whole name.
-    const rows = items(rootOf('gr17-' + dir)).map((li) => li.querySelector('[title]')!);
+    const rows = items(rootOf('gr17-' + dir)).map((li) => li.querySelector(NAME)!);
     await expect.poll(() => rows.map((n) => n.children.length)).toEqual([3, 3, 2]);
     const shown = rows.slice(0, 2).map((n) => { const [start, end] = n.children; return [end!.textContent, fits(end!), fits(start!), css(n).direction]; });
     expect(shown).toEqual([['t-2025.pdf', true, false, 'ltr'], ['t-2026.pdf', true, false, 'ltr']]);
     expect([rows[2]!.children[0]!.textContent, fits(rows[2]!.children[0] as HTMLElement)]).toEqual(['a b.pdf', true]);
     // The start ends where the end begins, with nothing lost or doubled.
-    expect(rows.slice(0, 2).map((n) => { const [start, end, whole] = n.children; return [n.getAttribute('title'), start!.textContent + end!.textContent, whole!.textContent, start!.getAttribute('aria-hidden'), end!.getAttribute('aria-hidden')]; })).toEqual(
+    expect(rows.slice(0, 2).map((n) => { const [start, end, read] = n.children; return [whole(n), start!.textContent + end!.textContent, read!.textContent, start!.getAttribute('aria-hidden'), end!.getAttribute('aria-hidden')]; })).toEqual(
       [LONG + '2025.pdf', LONG + '2026.pdf'].map((n) => [n, n, n, 'true', 'true']));
   });
 
@@ -517,7 +519,7 @@ describe('FileUpload: long file names (GR17)', () => {
     const long = NAMES.map((n) => 'Lampiran panjang sekali untuk rapat bulanan ' + n);
     await render(<><div style={{ width: 460 }}><FileUpload id="gw" readOnly files={NAMES.map((n) => file(n, 'application/pdf', 10))} /></div>
       <div style={{ width: 320 }}><FileUpload id="gc" readOnly files={long.map((n) => file(n, 'application/pdf', 10))} /></div></>);
-    const parts = (id: string) => items(rootOf(id)).map((li) => [...li.querySelector('[title]')!.children].filter((c) => c.getAttribute('aria-hidden') === 'true').map((c) => c.textContent));
+    const parts = (id: string) => items(rootOf(id)).map((li) => [...li.querySelector(NAME)!.children].filter((c) => c.getAttribute('aria-hidden') === 'true').map((c) => c.textContent));
     expect(parts('gw')).toEqual(NAMES.map((n) => [n]));
     await expect.poll(() => parts('gc').map((p) => p.length)).toEqual([2, 2, 2]);
     const seg = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
@@ -536,14 +538,14 @@ describe('FileUpload as a grid or flex item (GR30)', () => {
       <div style={{ display: 'flex' }}><FileUpload id={'f-' + dir} readOnly files={[file(name, 'application/pdf', 10)]} /></div>
     </div>);
     const out = ['g-', 'f-'].map((k) => { const r = rootOf(k + dir).getBoundingClientRect(), p = rootOf(k + dir).parentElement!.getBoundingClientRect(); return [Math.round(r.left - p.left), Math.round(p.right - r.right)]; });
-    const cut = ['g-', 'f-'].map((k) => { const n = items(rootOf(k + dir))[0]!.querySelector('[title]')!; return n.children[0]!.scrollWidth > n.children[0]!.clientWidth; });
+    const cut = ['g-', 'f-'].map((k) => { const n = items(rootOf(k + dir))[0]!.querySelector(NAME)!; return n.children[0]!.scrollWidth > n.children[0]!.clientWidth; });
     expect([out, cut]).toEqual([[[0, 0], [0, 0]], [true, true]]);
   });
 });
 
 describe('FileUpload: sizes in the reader\'s locale (GR20)', () => {
-  // Each row's size: the dir="auto" span that isn't the name (the name has a title).
-  const sizes = (root: Element) => [...root.querySelectorAll<HTMLElement>('li [dir=auto]:not([title])')].map((x) => [x.textContent, x.dir]);
+  // Each row's size: the dir="auto" span that isn't the name (the name has parts hidden from screen readers).
+  const sizes = (root: Element) => [...root.querySelectorAll<HTMLElement>('li [dir=auto]:not(:has(> [aria-hidden]))')].map((x) => [x.textContent, x.dir]);
   test.each([
     ['en-US', ['1.5 MB', '2 kB'], 'larger than 1 kB'],
     ['id-ID', ['1,5 MB', '2 kB'], 'lebih besar dari 1 kB'],

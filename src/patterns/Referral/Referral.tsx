@@ -80,6 +80,7 @@ export function referralProblem(emails: readonly string[], invited: readonly str
 export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10, currency = 'USD', referrals = demo, onInvite }: ReferralProps) {
   const locale = useLocale();
   const [list, setList] = React.useState(referrals);
+  const focusing = React.useRef(false);   // the press that focuses the link field
   const [text, setText] = React.useState('');
   const [problem, setProblem] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
@@ -127,7 +128,11 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
               <h2 id="share" className="m-0 text-lg font-semibold">Share your link</h2>
               <div className="flex flex-wrap items-end gap-2">
                 <Field label="Your invite link" id="referral-link" className="min-w-0 flex-1">
-                  <Input readOnly value={link} onFocus={(e) => e.currentTarget.select()} />
+                  {/* Safari puts the caret where the click lands on the mouseup after focus, which undid the select-all: that
+                      one mouseup is passed over. */}
+                  <Input readOnly value={link} onFocus={(e) => e.currentTarget.select()}
+                    onMouseDown={(e) => { focusing.current = document.activeElement !== e.currentTarget; }}
+                    onMouseUp={(e) => { if (focusing.current) e.preventDefault(); focusing.current = false; }} />
                 </Field>
                 <CopyButton value={link} copiedLabel="Copied">Copy link</CopyButton>
               </div>
