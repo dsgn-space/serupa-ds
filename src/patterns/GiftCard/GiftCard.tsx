@@ -138,7 +138,7 @@ export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, 
             </div>
           </section>
         ) : (
-          <div className="grid gap-8 pt-6 md:grid-cols-2">
+          <div className="grid gap-6 pt-6 md:grid-cols-2">
             <form onSubmit={add} noValidate aria-label="Gift card" className="flex flex-col gap-4">
               <ErrorSummary key={tries} errors={errors} />
               <Field label="Amount" hint={`From ${money(min)} to ${money(max)}.`} group error={problems.amount} required>

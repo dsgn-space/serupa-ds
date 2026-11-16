@@ -7,13 +7,16 @@ import { asIcon } from '../Icon/asIcon';
 import { useSettings } from '../../internal/provider';
 import { useScrolls } from '../../internal/useScrolls';
 import { en as words } from './labels';
+import { warnOnce } from '../../internal/warn';
 
 export type TimelineAlign = 'start' | 'alternate';
 export type TimelineOrientation = 'vertical' | 'horizontal';
+export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
+/** @deprecated Use TimelineTone, as tone replaces status; removed in 17.0.0. */
 export type TimelineStatus = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
 const ALIGNS: readonly TimelineAlign[] = ['start', 'alternate'];
 const ORIENTATIONS: readonly TimelineOrientation[] = ['vertical', 'horizontal'];
-const STATUSES: readonly TimelineStatus[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'];
+const TONES: readonly TimelineTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'];
 
 export interface TimelineProps extends React.OlHTMLAttributes<HTMLOListElement> {
   /** 'start' (default): every event on one side of the line. 'alternate': from 768px up, events take turns on either side of a centered line; narrower, they stay on one side. */
@@ -39,6 +42,8 @@ export interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIEle
   /** An icon in the marker instead of a dot: a Material Symbols or custom name, or an element. */
   icon?: IconSource | undefined;
   /** The marker's color: 'neutral' (default), 'primary', 'success', 'warning', 'danger' or 'info'. It's decoration: say the status in the title too. */
+  tone?: TimelineTone | undefined;
+  /** @deprecated Use tone, the name every component gives what a color means; removed in 17.0.0. Read when tone isn't given. */
   status?: TimelineStatus | undefined;
   /** More about the event, below the title and time. */
   children?: React.ReactNode | undefined;
@@ -75,8 +80,9 @@ export const Timeline = /* @__PURE__ */ component<HTMLOListElement, TimelineProp
    the content. The line runs from its marker to the next item's. */
 /** One event in a Timeline. */
 export const TimelineItem = /* @__PURE__ */ component<HTMLLIElement, TimelineItemProps>('TimelineItem', function TimelineItem(props, ref) {
-  const { className, title, time, dateTime, icon, status, children, ...rest } = props;
-  const s = oneOf(STATUSES, status, 'neutral');
+  const { className, title, time, dateTime, icon, tone, status, children, ...rest } = props;
+  if (process.env.NODE_ENV !== 'production' && status !== undefined) warnOnce('deprecated-prop', 'TimelineItem: `status` is deprecated and removed in 17.0.0. Use `tone`, the name every component gives what a color means.', 'deprecated-prop:TimelineItem:status');
+  const s = oneOf(TONES, tone ?? status, 'neutral');
   return (
     <li {...rest} ref={ref} className={cn('dk-timeline__item', 'dk-timeline__item--' + s, className)}>
       <span className="dk-timeline__rail" aria-hidden="true">
