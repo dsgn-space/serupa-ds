@@ -85,7 +85,12 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const dir = process.argv[2] || '.visual-review';
   const { GITHUB_REPOSITORY: repo, PR: pr, GITHUB_STEP_SUMMARY: summary } = process.env;
   const changes = readChanges(dir);
-  const url = changes.length && process.env.PUBLISH !== '0' ? publish(dir, changes, repo, pr) : null;
+  // A push the token is refused (403 on #2038's reruns, 16 Nov) costs the summary its pictures, not the review: the
+  // pictures stay in this run's visual-review artifacts, and the label is still read below.
+  let url = null;
+  if (changes.length && process.env.PUBLISH !== '0') {
+    try { url = publish(dir, changes, repo, pr); } catch (e) { console.log(`::warning title=Visual review::The pictures couldn't be published on visual-review/pr-${pr} (${String(e.message).split('\n').find((l) => /fatal|denied|error/i.test(l)) ?? e.message}); this run's visual-review artifacts hold them.`); }
+  }
   const text = sheet(changes, url);
   if (summary) fs.appendFileSync(summary, text);
   if (!changes.length) { console.log('Every picture matches main\'s.'); process.exit(0); }
