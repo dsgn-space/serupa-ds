@@ -1,11 +1,17 @@
 // Which components a pull request's CI covers (run.mjs --since): only changes inside component, block and pattern folders narrow it,
 // and a component brings the ones that use it. No browser needed.
 //   node tools/test/affected.mjs
-import { affectedComponents, visualScope, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, inShard, report, done } from './lib.mjs';
+import { affectedComponents, visualScope, touchedComponents, folderForKebab, folderOf, inParallelRetry, RETRY_UP_TO, internalTestsFor, kebab, scopeFiles, withDependents, inShard, sizeBudgets, raiseTag, report, done } from './lib.mjs';
 
 const R = [];
 const t = (name, ok, detail) => R.push({ name, ok: !!ok, detail });
 const list = (s) => (s ? [...s].sort().join(', ') : 'everything');
+
+const raised = sizeBudgets([['Meter.json', { alone: 3.0, share: 0.5, css: 1.0 }], ['Meter.claude-a.json', { alone: 3.2 }], ['Meter.claude-b.json', { alone: 3.1, css: 1.2 }], ['notes.txt', {}]]);
+t('a size budget is the highest of the component\'s file and its raise files', JSON.stringify(raised) === '{"Meter":{"alone":3.2,"share":0.5,"css":1.2}}', JSON.stringify(raised));
+t('a raise file is named by its branch, and a detached checkout by "local"', raiseTag('claude/fix-x') === 'claude-fix-x' && raiseTag('HEAD') === 'local' && raiseTag('') === 'local', [raiseTag('claude/fix-x'), raiseTag('HEAD')].join(' '));
+const raiseFile = affectedComponents(['tools/test/baseline-size/Meter.claude-fix-x.json']);
+t('a raise file covers its component', list(raiseFile) === 'Meter', list(raiseFile));
 
 const one = affectedComponents(['src/components/Meter/Meter.tsx', 'src/components/Meter/Meter.css', 'tools/test/baseline-visual/Meter/Default-blue-light-rest.png', '.changeset/meter.md']);
 t('a change inside one component folder (with its baselines and changeset) covers that component', list(one) === 'Meter', list(one));

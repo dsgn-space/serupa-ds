@@ -1,15 +1,20 @@
 // Size budget: what each file a project loads weighs, gzipped, against its budget. Build first (npm run build).
 //   node tools/test/size.mjs                  check
-//   node tools/test/size.mjs --update Name    set Name's budgets from what it weighs now (5% and 0.1 KiB over); with no
-//                                             name, only the component folders that have no budgets yet
-//   node tools/test/size.mjs --update Name --only alone    set that one budget and keep the others
+//   node tools/test/size.mjs --update Name    raise Name's budgets that what it weighs now (5% and 0.1 KiB over) is
+//                                             past, in Name.<branch>.json; with no name, writes Name.json for the
+//                                             component folders that have no budgets yet
+//   node tools/test/size.mjs --update Name --only alone    raise that one budget only
+//   node tools/test/size.mjs --update Name --exact   set Name.json from what it weighs now, lower too, and remove
+//                                             its raise files
+//   node tools/test/size.mjs --fold           fold every raise file into its Name.json (the Release pull request)
 //   node tools/test/size.mjs --json size.json --previous last.json   and compare with last night's (nightly, below)
 // The JavaScript is measured as a project's bundler ships it (minified, React left out, the full icon set left to
 // load on demand). Over budget fails; when a change is worth the bytes, raise the budget in the same pull request,
 // so the growth is a decision someone reviews.
 //
-// Each component folder has its own budgets, in tools/test/baseline-size/<Name>.json, so a component pull request
-// edits only its own file (no two pull requests edit the same line):
+// Each component folder has its own budgets, in tools/test/baseline-size/<Name>.json. A pull request that raises one
+// adds Name.<branch>.json with the raised keys, and a budget is the highest of its files, so two pull requests that
+// raise the same component (shared code grew under both) add a file each instead of conflicting on the same line:
 //   alone  what a project that imports only this folder's exports ships, its own words (labels.ts) included
 //   share  what the folder adds to the whole package (all of index.js, less the same build without it)
 //   css    its own CSS, gzipped by itself (only its own change moves it)
@@ -29,7 +34,8 @@ import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import * as esbuild from 'esbuild';
-import { HERE, PROJECT, done, report } from './lib.mjs';
+import { HERE, PROJECT, done, report, sizeBudgets, raiseTag, SIZE_FILE } from './lib.mjs';
+import { execFileSync } from 'node:child_process';
 import { purge, unusedComponentClasses, usedClasses } from '../../bin/serupa-purge.mjs';
 
 // A pull request whose shared code (src/internal, labels) grows on purpose may raise its line here itself, by up to
@@ -131,25 +137,60 @@ const kib = (n) => (n / 1024).toFixed(1);
 // How far over: in bytes under 0.1 KiB, where kib() would print "0.0".
 const over = (n) => (n < 102.4 ? `${Math.ceil(n)} B` : `${kib(n)} KiB`);
 const budgetFile = (n) => path.join(DIR, `${n}.json`);
+const sizeFiles = () => (fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => SIZE_FILE.test(f)) : []);
+const readSize = (f) => [f, JSON.parse(fs.readFileSync(path.join(DIR, f), 'utf8'))];
+const raisesOf = (n) => sizeFiles().filter((f) => SIZE_FILE.exec(f)[1] === n && SIZE_FILE.exec(f)[2]);
+const write = (f, b) => fs.writeFileSync(path.join(DIR, f), JSON.stringify(b, null, 2) + '\n');
+if (process.argv.includes('--fold')) {
+  const all = sizeBudgets(sizeFiles().map(readSize));
+  const folded = [...new Set(sizeFiles().filter((f) => SIZE_FILE.exec(f)[2]).map((f) => SIZE_FILE.exec(f)[1]))];
+  for (const n of folded) {
+    const { alone, share, css } = all[n];
+    write(`${n}.json`, { alone, share, css });
+    for (const f of raisesOf(n)) fs.rmSync(path.join(DIR, f));
+  }
+  console.log(folded.length ? `Folded the raises of ${folded.join(', ')}` : 'No raise files');
+  process.exit(0);
+}
 const ui = process.argv.indexOf('--update');
 if (ui > 0) {
   const asked = process.argv.slice(ui + 1).filter((a, i, all) => !a.startsWith('-') && all[i - 1] !== '--only');
   const which = asked.length ? asked : folders.filter((n) => !fs.existsSync(budgetFile(n)));
+  const only = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : null;
+  const exact = process.argv.includes('--exact');
+  let branch = process.env.SIZE_TAG;
+  try { branch ||= execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd: PROJECT, encoding: 'utf8' }).trim(); } catch { /* not a checkout */ }
+  const own = (n) => `${n}.${raiseTag(branch)}.json`;
   fs.mkdirSync(DIR, { recursive: true });
   for (const n of which) {
     if (!measured[n]) { console.log(`No component folder ${n}`); process.exit(1); }
     // 5% over plus 0.1 KiB, rounded up, so a small fix doesn't fail on a few bytes.
-    // --only alone (or share, css) sets that budget alone and keeps the others.
-    const only = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : null;
-    const kept = only && fs.existsSync(budgetFile(n)) ? JSON.parse(fs.readFileSync(budgetFile(n), 'utf8')) : {};
-    const b = Object.fromEntries(KEYS.map((k) => [k, only && k !== only && k in kept ? kept[k] : Math.ceil((Math.max(0, measured[n][k]) / 1024 * 1.05 + 0.1) * 10) / 10]));
-    fs.writeFileSync(budgetFile(n), JSON.stringify(b, null, 2) + '\n');
-    console.log(`${n}: ${KEYS.map((k) => `${k} ${b[k]} KiB`).join(', ')}`);
+    const fit = Object.fromEntries(KEYS.map((k) => [k, Math.ceil((Math.max(0, measured[n][k]) / 1024 * 1.05 + 0.1) * 10) / 10]));
+    if (exact || !fs.existsSync(budgetFile(n))) {
+      // Name.json itself: a new folder, or --exact (which may lower, and so edits the line other pull requests raise).
+      const kept = only && fs.existsSync(budgetFile(n)) ? readSize(`${n}.json`)[1] : {};
+      const b = Object.fromEntries(KEYS.map((k) => [k, only && k !== only && k in kept ? kept[k] : fit[k]]));
+      write(`${n}.json`, b);
+      if (exact) for (const f of raisesOf(n)) fs.rmSync(path.join(DIR, f));
+      console.log(`${n}: ${KEYS.map((k) => `${k} ${b[k]} KiB`).join(', ')}`);
+      continue;
+    }
+    // A raise: only the keys this pull request needs higher than every other file of the folder has them.
+    const others = sizeBudgets(sizeFiles().filter((f) => f !== own(n) && SIZE_FILE.exec(f)[1] === n).map(readSize))[n];
+    const raised = Object.fromEntries(KEYS.filter((k) => (!only || k === only) && fit[k] > others[k]).map((k) => [k, fit[k]]));
+    if (Object.keys(raised).length) {
+      write(own(n), raised);
+      console.log(`${n}: ${Object.entries(raised).map(([k, v]) => `${k} ${others[k]} → ${v} KiB`).join(', ')} (in ${own(n)})`);
+    } else {
+      if (fs.existsSync(path.join(DIR, own(n)))) fs.rmSync(path.join(DIR, own(n)));
+      console.log(`${n}: within its budgets, nothing to raise`);
+    }
   }
   process.exit(0);
 }
 
-const budgets = Object.fromEntries(folders.map((n) => [n, fs.existsSync(budgetFile(n)) ? JSON.parse(fs.readFileSync(budgetFile(n), 'utf8')) : null]));
+const merged = sizeBudgets(sizeFiles().map(readSize));
+const budgets = Object.fromEntries(folders.map((n) => [n, fs.existsSync(budgetFile(n)) ? merged[n] : null]));
 const sum = (k) => folders.reduce((t, n) => t + (budgets[n]?.[k] || 0), 0);
 const BUDGET = { ...Object.fromEntries(Object.entries(TOTALS).map(([f, [at, was, k]]) => [f, +(Number(at) + sum(String(k)) - Number(was) + (k === 'share' ? LABELS[0] - LABELS[1] : 0)).toFixed(1)])), ...FIXED };
 BUDGET['bundle.css'] = +(BUDGET['components.css'] + BUDGET['utilities.css']).toFixed(1);
@@ -224,7 +265,7 @@ const overAlone = new Set(folders.filter((n) => budgets[n] && measured[n].alone 
 const made = Object.fromEntries(await Promise.all([...overAlone].map(async (n) => [n, await inputsOf(pick(names[n]))])));
 const own = folders.flatMap((n) => (budgets[n]
   ? KEYS.map((k) => ({ name: `${n} ${LABEL[k]}: ${kib(measured[n][k])} KiB, within ${budgets[n][k]} KiB`, ok: measured[n][k] <= budgets[n][k] * 1024 + (k === 'share' ? SHARE_NOISE : 0),
-    detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, raise "${k}" in tools/test/baseline-size/${n}.json${k === 'alone' && made[n] ? ` (${made[n]})` : ''}` }))
+    detail: `${over(measured[n][k] - budgets[n][k] * 1024)} over; if the growth is worth it, run node tools/test/size.mjs --update ${n} and commit its raise file${k === 'alone' && made[n] ? ` (${made[n]})` : ''}` }))
   : [{ name: `${n} has size budgets`, ok: false, detail: `run node tools/test/size.mjs --update ${n} and commit tools/test/baseline-size/${n}.json` }]));
 // Size over time (nightly, as the benchmarks are): a budget allows 5% over what a folder weighed when it was set, so a
 // package that grows a little with every merge passes for months. --json writes tonight's sizes; --previous compares
@@ -242,5 +283,6 @@ if (flag('--previous') && fs.existsSync(flag('--previous'))) {
   grew('Starter page', last.starter, starter);
   for (const [n, now] of Object.entries(tonight.alone)) if (last.alone?.[n]) grew(`${n} imported alone`, last.alone[n], now);
 }
-const orphans = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => !folders.includes(f.replace(/\.json$/, ''))) : [];
+// A raise file without its component's Name.json is an orphan too: Name.json holds every key.
+const orphans = fs.existsSync(DIR) ? fs.readdirSync(DIR).filter((f) => !SIZE_FILE.test(f) || !folders.includes(SIZE_FILE.exec(f)[1]) || !fs.existsSync(budgetFile(SIZE_FILE.exec(f)[1]))) : [];
 done(report('Size', [...totals, ...own, ...trend, { name: 'every size budget file belongs to a component folder', ok: !orphans.length, detail: orphans.join(', ') }]));
