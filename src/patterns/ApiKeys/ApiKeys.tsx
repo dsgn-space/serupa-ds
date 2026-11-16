@@ -179,7 +179,7 @@ export function ApiKeys({ keys = demo, onCreate, onRevoke, loading = false, load
           primary={loadFailed ? undefined : { label: 'Create key', onSelect: () => openCreate(true) }} />
 
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load your API keys" onRetry={() => onRetry?.()} headingLevel={2} /> : (
-          <Card className="flex flex-col gap-3">
+          <Card className="flex flex-col gap-4">
             <Heading level={2} size="lg" ref={listHeading} tabIndex={-1} className="outline-none">
               {loading ? 'Keys' : `Keys (${formatNumber(shown.length, locale)})`}
             </Heading>

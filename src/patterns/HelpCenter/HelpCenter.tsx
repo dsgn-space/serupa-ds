@@ -111,7 +111,7 @@ export function HelpCenter({ topics = demoTopics, questions = demoQuestions, ema
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-10 px-4 py-8 outline-none">
+      <main id="main" className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title="Help" description={<>Find an answer, or <Link href="#contact">write to us</Link>. We answer {replyTime}.</>} />
         {loadFailed ? <div><EmptyLoadFailed title="Couldn’t load the help articles" onRetry={() => onRetry?.()} headingLevel={2} /></div>
           : loading ? <Card><Loader variant="skeleton" shape="text" lines={6} label="Loading help articles" /></Card> : (<>

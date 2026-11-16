@@ -153,7 +153,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
         <PageHeader title="Billing" description="Your plan, what it costs, and what you’ve paid." />
         {loadFailed ? <EmptyLoadFailed title="Couldn’t load billing" onRetry={() => onRetry?.()} headingLevel={2} /> : loading ? (
           ['Plan', 'Usage', 'Invoices'].map((t, i) => (
-            <section key={t} aria-labelledby={`billing-loading-${i}`} className="flex flex-col gap-3">
+            <section key={t} aria-labelledby={`billing-loading-${i}`} className="flex flex-col gap-4">
               <Heading level={2} size="lg" id={`billing-loading-${i}`}>{t}</Heading>
               <Card><Loader variant="skeleton" shape="text" lines={3} label={i === 0 ? 'Loading billing' : ''} /></Card>
             </section>
@@ -166,7 +166,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
             </Alert>
           ) : null}
 
-          <section aria-labelledby="billing-plan" className="flex flex-col gap-3">
+          <section aria-labelledby="billing-plan" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="billing-plan">Plan</Heading>
             <Card className="flex flex-row flex-wrap items-start justify-between gap-4">
               <div className="flex flex-col gap-1">
@@ -185,7 +185,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
             </Card>
           </section>
 
-          <section aria-labelledby="billing-usage" className="flex flex-col gap-3">
+          <section aria-labelledby="billing-usage" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="billing-usage">Usage</Heading>
             <Card className="flex flex-col gap-5">
               <Meter label="Seats" showValue value={usage.seats.used} max={usage.seats.limit} high={usage.seats.limit * 0.8} optimum={0}
@@ -195,7 +195,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
             </Card>
           </section>
 
-          <section aria-labelledby="billing-card" className="flex flex-col gap-3">
+          <section aria-labelledby="billing-card" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="billing-card">Payment method</Heading>
             <Card className="flex flex-row flex-wrap items-center justify-between gap-3">
               <div className="flex flex-col gap-1">
@@ -210,7 +210,7 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
             </Card>
           </section>
 
-          <section aria-labelledby="billing-invoices" className="flex flex-col gap-3">
+          <section aria-labelledby="billing-invoices" className="flex flex-col gap-4">
             <Heading level={2} size="lg" id="billing-invoices">Invoices</Heading>
             {invoices.length ? (
               <Table caption="Invoices" hideCaption>

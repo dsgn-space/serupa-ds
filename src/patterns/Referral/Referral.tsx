@@ -146,7 +146,7 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
             </section>
           </Card>
 
-          <section aria-labelledby="invited" className="flex flex-col gap-3">
+          <section aria-labelledby="invited" className="flex flex-col gap-4">
             <h2 id="invited" className="m-0 text-lg font-semibold">Who you’ve invited</h2>
             {list.length ? (
               <Table caption="Friends you’ve invited, newest first" hideCaption>
