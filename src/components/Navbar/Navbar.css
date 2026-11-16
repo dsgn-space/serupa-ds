@@ -128,5 +128,32 @@
   .dk-navbar__menu-inner.dk-container { display: flex; flex-direction: column; gap: var(--spacing-3); padding-inline: var(--spacing-3) var(--spacing-0); }
   .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar__brand + .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar__brand + .dk-navbar__toggle, .dk-navbar__toggle:first-child { margin-inline-start: auto; }
 }
+/* Wider than 768px, the same when the links don't fit between the brand and the actions (seven links, long German
+   labels): Navbar measures and sets data-fold. The rules are the ones above, with their reasons there. */
+.dk-navbar[data-fold] .dk-navbar__nav { display: none; position: absolute; top: var(--sizing-full); inset-inline: 0; z-index: var(--navbar-z-index, var(--z-40)); background: var(--navbar-bg, var(--surface)); border-bottom: var(--navbar-border-width, var(--border-width-1)) solid var(--navbar-border, var(--border)); padding: var(--spacing-2) var(--container-padding-x, var(--spacing-4));
+  max-height: calc(var(--sizing-dvh) - var(--dk-navbar-offset, var(--navbar-height, var(--spacing-16)))); overflow-y: auto; overscroll-behavior: contain;
+  padding-bottom: max(var(--spacing-2), env(safe-area-inset-bottom)); }
+.dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { display: block; }
+.dk-navbar[data-fold] .dk-navbar__nav--leaving { display: block; }
+.dk-navbar[data-fold] .dk-navbar__nav { opacity: var(--opacity-0); transition: opacity var(--motion-exit-sm) var(--ease-exit); }
+.dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { opacity: var(--opacity-100); transition: opacity var(--motion-enter-sm) var(--ease-enter); }
+@starting-style { .dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { opacity: var(--opacity-0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .dk-navbar[data-fold] .dk-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); transition: opacity var(--motion-exit-sm) var(--ease-exit), clip-path var(--motion-exit-sm) var(--ease-exit); }
+  .dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { clip-path: inset(var(--spacing-0)); transition: opacity var(--motion-enter-sm) var(--ease-enter), clip-path var(--motion-enter-sm) var(--ease-enter); }
+  @starting-style { .dk-navbar[data-fold][data-state="open"] .dk-navbar__nav { clip-path: inset(var(--spacing-0) var(--spacing-0) var(--sizing-full) var(--spacing-0)); } }
+}
+.dk-navbar[data-fold] .dk-navbar__links { flex-direction: column; align-items: stretch; }
+.dk-navbar[data-fold] .dk-navbar__link { white-space: normal; overflow-wrap: anywhere; }
+.dk-navbar[data-fold] .dk-navbar__toggle.dk-btn { display: inline-flex; flex-shrink: 0; }
+.dk-navbar[data-fold] .dk-navbar__brand, .dk-navbar[data-fold] .dk-navbar__actions { flex-shrink: initial; min-width: var(--spacing-0); }
+.dk-navbar[data-fold] .dk-navbar__brand > * { min-width: var(--spacing-0); max-width: var(--sizing-full); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-navbar[data-fold] .dk-navbar__actions > * { flex-shrink: 0; }
+.dk-navbar[data-fold] .dk-navbar__actions { overflow-x: auto; overscroll-behavior-inline: contain; padding: var(--spacing-1); }
+.dk-navbar[data-fold] .dk-navbar__menu-button { width: var(--sizing-full); justify-content: space-between; text-align: start; }
+.dk-navbar[data-fold] .dk-navbar__menu-panel { position: static; padding-block: var(--spacing-1); background: transparent; border-bottom: none; box-shadow: none; }
+.dk-navbar[data-fold] .dk-navbar__menu-inner.dk-container { display: flex; flex-direction: column; gap: var(--spacing-3); padding-inline: var(--spacing-3) var(--spacing-0); }
+.dk-navbar[data-fold] .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar[data-fold] .dk-navbar__brand + .dk-navbar__nav + .dk-navbar__toggle, .dk-navbar[data-fold] .dk-navbar__brand + .dk-navbar__toggle, .dk-navbar[data-fold] .dk-navbar__toggle:first-child { margin-inline-start: auto; }
+
 @media (prefers-reduced-motion: reduce) { .dk-navbar__link, .dk-navbar__menu-link, .dk-navbar__chevron.dk-icon, .dk-navbar__menu-panel { transition: none; } }
 }
