@@ -52,7 +52,7 @@ Drawn from the `VariantsAndSizes` story.
 ## Accessibility
 
 - It's a real `<button>`. "Copied" is announced in the shared polite status region, and a failure in the assertive one.
-- Only the current label is read out: the other is hidden from screen readers. An `iconOnly` button's name changes to "Copied" while it shows the check, or "Couldn’t copy" while it shows the error icon, and it has a tooltip (`title`).
+- Only the current label is read out: the other is hidden from screen readers. An `iconOnly` button's name changes to "Copied" while it shows the check, or "Couldn’t copy" while it shows the error icon, and its name shows in a Tooltip on hover and on keyboard focus, saying "Copied" too while the check shows.
 - The check and the error icon keep 3:1 on the button in every theme (`CopyButton.test.tsx`). In forced-colors mode they use the button's text color.
 
 ### Keyboard

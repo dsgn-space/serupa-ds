@@ -6,6 +6,7 @@ import { useSettings } from '../../internal/provider';
 import { Drawer, type DrawerProps } from '../Drawer/Drawer';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { Icon } from '../Icon/Icon';
 import { RelativeTime } from '../RelativeTime/RelativeTime';
 import { watchToasts, type ToastTone } from '../Toast/Toast';
@@ -170,8 +171,8 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
                 </div>
                 {n.read ? null : <span className="dk-notification-center__dot" aria-hidden="true" />}
                 {/* Every unread row has one, so it's described by its row's title: "Mark as read, button, Invoice paid" (TF4).
-                    The title tooltip is kept, which IconButton leaves out when it's described. */}
-                {!n.read && onMarkRead ? <IconButton icon={icons.Check} label={labels.markRead} title={labels.markRead} aria-describedby={titleId} size="sm" onClick={(e) => { e.currentTarget.closest('li')?.focus(); onMarkRead(n.id); }} /> : null}
+                    IconButton leaves its own tooltip out when it's described, so this one shows its name on hover and focus. */}
+                {!n.read && onMarkRead ? <Tooltip content={labels.markRead} role="label"><IconButton icon={icons.Check} label={labels.markRead} hideTitle aria-describedby={titleId} size="sm" onClick={(e) => { e.currentTarget.closest('li')?.focus(); onMarkRead(n.id); }} /></Tooltip> : null}
               </li>
             );
           })}

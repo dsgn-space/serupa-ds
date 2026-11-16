@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { Icon } from '../Icon/Icon';
 import { component } from '../../internal/component';
 import { writeText as write, writeTextLater as writeLater } from '../../internal/clipboard';
@@ -81,7 +82,14 @@ export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButto
     ...rest, ref: ref as React.Ref<HTMLElement>, onClick, variant: variant || 'outline', size: size || 'sm',
     'data-copied': copied ? '' : undefined, 'data-failed': failed ? '' : undefined, className: cn('dk-copy-btn', copied && 'dk-copy-btn--copied', failed && 'dk-copy-btn--failed', className),
   };
-  if (iconOnly) return <ButtonBase {...common} icon={glyph} aria-label={copied ? done : failed ? failedShort : name} title={rest.title ?? name} />;
+  if (iconOnly) {
+    // Its name shows in a Tooltip on hover and on keyboard focus, as IconButton's does: a title shows on hover only.
+    // The tooltip names it, so it says "Copied" too while the check shows. None when you describe or name it yourself.
+    const said = copied ? done : failed ? failedShort : name;
+    const button = <ButtonBase {...common} icon={glyph} aria-label={said} />;
+    const own = rest.title != null || rest['aria-describedby'] != null || rest['aria-labelledby'] != null;
+    return own ? button : <Tooltip content={said} role="label" disabled={!!rest.disabled}>{button}</Tooltip>;
+  }
   // Both labels sit in one grid cell, so the button keeps the wider one's width; only the current one is read out.
   return <ButtonBase {...common} leftIcon={glyph}>
     <span className="dk-copy-btn__labels">
