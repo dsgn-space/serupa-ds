@@ -58,6 +58,12 @@ describe('Patterns/Conference agenda', () => {
     expect(panel().querySelectorAll('article')).toHaveLength(1);
   });
 
+  test('a saved session in its day and in your agenda keeps every id unique', async () => {
+    await render(<Agenda defaultSaved={['k1', 'a1', 'b1']} />);
+    const ids = [...document.querySelectorAll('[id]')].map((e) => e.id);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
   test('nothing saved, and a track with nothing on a day', async () => {
     const screen = await render(<Agenda sessions={[s('a', '2026-05-14', '10:00', '11:00'), { ...s('b', '2026-05-15', '10:00', '11:00'), track: 'x' }]} />);
     await screen.getByRole('combobox', { name: 'Track' }).selectOptions('x');

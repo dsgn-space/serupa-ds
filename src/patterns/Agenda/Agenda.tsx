@@ -77,17 +77,17 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange }: Ag
     announce(`${on ? 'Saved' : 'Removed'}. ${sessionsWords(next.length)} in your agenda.`);
   };
 
-  const list = (items: Session[]) => byStart(items).map((g) => (
-    <section key={`${items[0]?.day}-${g.start}`} aria-labelledby={`slot-${g.sessions[0]!.id}`} className="flex flex-col gap-3">
-      <h3 id={`slot-${g.sessions[0]!.id}`} className="m-0 text-base font-semibold text-text-muted"><time dateTime={`${g.sessions[0]!.day}T${g.start}`}>{time(g.sessions[0]!.day, g.start)}</time></h3>
+  const list = (items: Session[], scope: string) => byStart(items).map((g) => (
+    <section key={`${items[0]?.day}-${g.start}`} aria-labelledby={`${scope}-slot-${g.sessions[0]!.id}`} className="flex flex-col gap-3">
+      <h3 id={`${scope}-slot-${g.sessions[0]!.id}`} className="m-0 text-base font-semibold text-text-muted"><time dateTime={`${g.sessions[0]!.day}T${g.start}`}>{time(g.sessions[0]!.day, g.start)}</time></h3>
       {g.sessions.map((s) => {
         const on = saved.includes(s.id);
         return (
           <Card key={s.id} padding="sm">
-            <article aria-labelledby={`session-${s.id}`} className="flex flex-col gap-2">
+            <article aria-labelledby={`${scope}-session-${s.id}`} className="flex flex-col gap-2">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 flex-col gap-1">
-                  <h4 id={`session-${s.id}`} className="m-0 text-base font-semibold wrap-break-word">{s.title}</h4>
+                  <h4 id={`${scope}-session-${s.id}`} className="m-0 text-base font-semibold wrap-break-word">{s.title}</h4>
                   <p className="m-0 text-sm">{s.speakers}</p>
                   <p className="m-0 flex flex-wrap items-center gap-2 text-sm text-text-muted">
                     <span>{time(s.day, s.start)} to {time(s.day, s.end)} · {s.room}</span><Badge>{s.track}</Badge>
@@ -127,7 +127,7 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange }: Ag
           {days.map((d) => (
             <TabPanel key={d} value={d} className="flex flex-col gap-6 pt-4">
               <h2 className="m-0 text-xl font-semibold">{dayName(d)}</h2>
-              {list(shown.filter((s) => s.day === d))}
+              {list(shown.filter((s) => s.day === d), 'day')}
               {!shown.some((s) => s.day === d) ? <p className="m-0 text-text-muted">No sessions in this track today.</p> : null}
             </TabPanel>
           ))}
@@ -136,7 +136,7 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange }: Ag
             {mine.length ? days.filter((d) => mine.some((s) => s.day === d)).map((d) => (
               <div key={d} className="flex flex-col gap-4">
                 <p className="m-0 font-semibold">{dayName(d)}</p>
-                {list(mine.filter((s) => s.day === d))}
+                {list(mine.filter((s) => s.day === d), 'mine')}
               </div>
             )) : <p className="m-0 text-text-muted">Nothing saved yet. Press Save on a session to add it here.</p>}
           </TabPanel>
