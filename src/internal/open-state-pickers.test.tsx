@@ -42,5 +42,12 @@ describe('a popup field takes open, defaultOpen and onOpenChange, as every overl
       await userEvent.click(box('yes-' + name));
       expect(expanded(name)).toBe('true');
     });
+    test(`${name}: open, a press outside asks to close with reason 'outside'`, async () => {
+      const heard: Array<[boolean, string]> = [];
+      await render(<><p id={'away-' + name}>Elsewhere</p><span id={name}>{ui({ open: true, onOpenChange: (o, d) => heard.push([o, d.reason]) })}</span></>);
+      await new Promise((r) => setTimeout(r, 50));
+      await userEvent.click(box('away-' + name));
+      expect(heard).toContainEqual([false, 'outside']);
+    });
   }
 });
