@@ -3,6 +3,7 @@ import * as React from 'react';
 import type { IconSource } from '../Icon/Icon';
 import { cn, oneOf } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
+import { Tooltip } from '../Tooltip/Tooltip';
 import { component } from '../../internal/component';
 
 export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
@@ -10,7 +11,7 @@ export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start
 export interface FabProps extends Omit<ButtonAsButtonProps, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'variant' | 'size' | 'aria-label'> {
   /** The icon: a custom or Material Symbols name ("add") or any element. */
   icon: IconSource;
-  /** What the button does. Shown next to the icon when extended; otherwise its aria-label and title. */
+  /** What the button does. Shown next to the icon when extended; otherwise its aria-label, and a Tooltip on hover and keyboard focus. */
   label: string;
   /** Shows the label next to the icon (an extended FAB). 'auto': extended, and while the page scrolls down it
    *  shrinks to its icon, so it covers less of what people read; scrolling up, or back to the top, brings the label
@@ -56,7 +57,12 @@ export const Fab = /* @__PURE__ */ component<HTMLButtonElement, FabProps>('Fab',
   const auto = extended === 'auto', shrunk = useShrinkOnScroll(auto);
   const look = { variant: 'primary', size: sm ? 'sm' : 'md', 'data-position': pos,
     className: cn('dk-fab', sm && 'dk-fab--sm', extended && 'dk-fab--extended', auto && 'dk-fab--auto', shrunk && 'dk-fab--shrunk', pos !== 'static' && 'dk-fab--' + pos, className) } as const;
-  return extended
+  const button = extended
     ? <ButtonBase {...(auto ? { 'aria-label': label } : null)} {...rest} {...look} ref={ref} leftIcon={icon}>{auto ? <span className="dk-fab__label">{label}</span> : label}</ButtonBase>
-    : <ButtonBase title={label} {...rest} {...look} ref={ref} icon={icon} aria-label={label} />;
+    : <ButtonBase {...rest} {...look} ref={ref} icon={icon} aria-label={label} />;
+  // Its icon alone (or shrunk to it, with extended="auto"): the label shows in a Tooltip on hover and on keyboard focus,
+  // as IconButton's does, which a native title never does. None while the label shows, or when a Tooltip or a title of
+  // yours already says something. The Tooltip stays around an auto FAB either way, so shrinking doesn't remount it.
+  const own = rest.title != null || rest['aria-describedby'] != null || rest['aria-labelledby'] != null;
+  return own || (extended && !auto) ? button : <Tooltip content={label} role="label" disabled={!!rest.disabled || (auto && !shrunk)}>{button}</Tooltip>;
 });

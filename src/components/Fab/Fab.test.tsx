@@ -35,7 +35,7 @@ describe('Fab', () => {
     const ref = React.createRef<HTMLButtonElement>();
     await render(<Fabs fabRef={ref} />);
     const e = el('fab'), s = css(e);
-    expect([e.getAttribute('aria-label'), e.title, e.dataset.variant, s.position, s.zIndex, css(e.querySelector('[data-icon]')).fontSize]).toEqual(['New project', 'New project', 'primary', 'fixed', '30', '24px']);
+    expect([e.getAttribute('aria-label'), e.getAttribute('title'), e.dataset.variant, s.position, s.zIndex, css(e.querySelector('[data-icon]')).fontSize]).toEqual(['New project', null, 'primary', 'fixed', '30', '24px']);
     expect(parseFloat(s.borderTopLeftRadius)).toBeGreaterThanOrEqual(28);
     expect(s.boxShadow).toMatch(/10px 15px -3px/);
     expect(ref.current).toBe(e);
@@ -72,6 +72,30 @@ describe('Fab', () => {
     await expect.element(page.getByRole('button', { name: 'Compose' })).toBeVisible();
     window.scrollTo(0, 200); window.dispatchEvent(new Event('scroll'));
     await expect.poll(() => Math.round(el('auto').getBoundingClientRect().width), { timeout: 3000 }).toBe(Math.round(wide));
+    window.scrollTo(0, 0);
+  });
+
+  test('its icon alone, or shrunk to it, shows the label in a tooltip on keyboard focus too, not only as a hover title; extended, with the label showing, none', async () => {
+    const tip = () => document.querySelector<HTMLElement>('[data-component="tooltip"][data-state="open"]');
+    await render(<div style={{ height: '4000px' }}><button id="before">Before</button>
+      <Fab id="ic" icon="add" label="New project" placement="static" /><Fab id="ex" icon="edit" label="Compose" extended placement="static" />
+      <Fab id="au" icon="edit" label="Reply" extended="auto" placement="static" /></div>);
+    el('before').focus();
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(el('ic'));
+    await expect.poll(() => tip()?.textContent).toBe('New project');
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(el('ex'));
+    await expect.poll(() => tip()).toBeNull();
+    // extended="auto": open, its label shows and no tooltip; shrunk to its icon, the tooltip says it.
+    await userEvent.keyboard('{Tab}');
+    expect(document.activeElement).toBe(el('au'));
+    expect(tip()).toBeNull();
+    el('before').focus();
+    window.scrollTo(0, 400); window.dispatchEvent(new Event('scroll'));
+    await expect.poll(() => Math.round(el('au').getBoundingClientRect().width), { timeout: 3000 }).toBe(56);
+    el('au').focus({ focusVisible: true });
+    await expect.poll(() => tip()?.textContent).toBe('Reply');
     window.scrollTo(0, 0);
   });
 
