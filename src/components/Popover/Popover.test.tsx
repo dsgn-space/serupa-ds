@@ -53,7 +53,7 @@ describe('Popover', () => {
       await userEvent.keyboard('[Space>]');
       await expect.poll(() => getComputedStyle(b).scale).toBe('0.97');
       await userEvent.keyboard('[/Space]');
-      const pop = document.querySelector<HTMLElement>('.dk-popover')!;
+      const pop = page.getByRole('dialog', { name: 'Share' }).element() as HTMLElement;
       const seen = new Set<string>();
       for (let t = performance.now(); performance.now() - t < 400;) {
         if (!pop.hidden) { const cs = getComputedStyle(pop); seen.add(cs.left + ' ' + cs.top); }
