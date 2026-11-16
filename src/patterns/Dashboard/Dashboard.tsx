@@ -121,7 +121,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" aria-busy={loading || undefined} className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 outline-none">
+      <main id="main" aria-busy={loading || undefined} className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title={`Good morning, ${name}`} primary={firstRun ? undefined : { label: 'New project', onSelect: () => onCreateProject?.() }} />
 
         {loadFailed ? (
@@ -139,7 +139,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
             <StatsRow title="This month" period="vs last month" stats={data.stats} loading={loading} />
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <section aria-labelledby="dash-projects" className="flex min-w-0 flex-col gap-3 lg:col-span-2">
+              <section aria-labelledby="dash-projects" className="flex min-w-0 flex-col gap-4 lg:col-span-2">
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <Heading level={2} size="lg" id="dash-projects">Recent projects</Heading>
                   <Link href="#projects">All projects</Link>
@@ -164,7 +164,7 @@ export function Dashboard({ data = demo, loading = false, loadFailed = false, on
                 </Card>
               </section>
 
-              <section aria-labelledby="dash-usage" className="flex min-w-0 flex-col gap-3">
+              <section aria-labelledby="dash-usage" className="flex min-w-0 flex-col gap-4">
                 <Heading level={2} size="lg" id="dash-usage">Usage</Heading>
                 <Card className="flex flex-col gap-5">
                   {loading ? <Loader variant="skeleton" shape="text" lines={4} label="Loading: Usage" /> : (

@@ -41,7 +41,11 @@
 /* Touch (EQ1): 44px high to press, as Apple and Material ask; across, each star keeps its half of the gap. */
 @media (pointer: coarse) { .dk-rating__choice { --dk-reach-block: min(var(--spacing-0), calc((100% - var(--spacing-11)) / 2)); inset-block: var(--dk-reach-block); } }
 .dk-rating__star:has(.dk-rating__choice:focus-visible) { outline: var(--focus-ring-width) solid var(--rating-focus-ring, var(--focus-ring)); outline-offset: var(--spacing-0); }
-.dk-rating[aria-invalid="true"] .dk-rating__empty { color: var(--rating-invalid, var(--danger)); }   /* the error shows on the stars, as on a field's border */
+/* The error shows on the empty stars' edge, as on a field's border: drawn as outlines, so a row with nothing picked
+   reads as five empty stars to fill, not as five red ones already given. The stroke stays 2px at every size. */
+.dk-rating[aria-invalid="true"] .dk-rating__empty { color: var(--rating-invalid, var(--danger)); }
+.dk-rating[aria-invalid="true"] .dk-rating__empty svg { fill: none; stroke: currentColor; stroke-width: var(--border-width-2); stroke-linejoin: round; }
+.dk-rating[aria-invalid="true"] .dk-rating__empty path { vector-effect: non-scaling-stroke; }   /* not inherited: on the path, or the 2px is 2 of the 960 drawing units */
 .dk-rating--disabled { --rating-fill: var(--rating-text-disabled, var(--disabled-text)); --rating-empty: var(--rating-border-disabled, var(--disabled-border)); }
 .dk-rating--disabled .dk-rating__choice { cursor: var(--cursor-disabled); }
 @media (forced-colors: active) {

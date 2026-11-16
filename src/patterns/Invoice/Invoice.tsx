@@ -178,7 +178,7 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
                 </section>
               </div>
 
-              <section aria-labelledby="lines" className="flex flex-col gap-3">
+              <section aria-labelledby="lines" className="flex flex-col gap-4">
                 <h2 id="lines" className={h2}>What it’s for</h2>
                 <Table caption={`Lines of invoice ${inv.number}`} hideCaption>
                   <TableHead><TableRow>
