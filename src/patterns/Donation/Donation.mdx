@@ -1,0 +1,35 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks';
+import * as Stories from './Donation.stories';
+
+<Meta of={Stories} />
+
+# Donation
+
+Give once or every month, choose an amount that says what it pays for, cover the card fee if you like, and see the total before you give.
+
+<Canvas of={Stories.Default} />
+
+## When to use it
+
+- A charity's or a project's Give page.
+- Not for buying something: that's the Checkout pattern.
+- Not for a tip or a pay-what-you-want price: that's one field in a checkout.
+
+## What each part is for
+
+- **How often and how much are groups of radios named by their question** (1.3.1). Each amount says what it pays for, as its description, so it's read with it.
+- **Another amount brings a number field** right after it, and says the lowest gift before you type (3.3.2).
+- **Covering the fee says how much it adds**, worked out so the charity gets the whole gift.
+- **The total says what you'll give and how often**, and Give names it, "Give $51.81 a month", so there's no surprise (3.3.4).
+- **Giving with problems shows a summary at the top that takes focus**, each problem a link to its field (3.3.1, 2.4.3).
+- **Give shows it's busy**; a gift that can't be taken says nothing was charged and keeps everything (3.3.4, 4.1.3).
+- **Once given, the thank-you's heading takes focus** (2.4.3), and says what was taken and how to stop a monthly gift.
+- **A skip link** first, into main, as on every page.
+
+<Canvas of={Stories.GiveFails} />
+
+## What stays your app's job
+
+- **Paying.** `onGive` gets the amount, the fee and whether it's monthly; reject when it can't be taken. Take the card details in your payment provider's own fields.
+- **The receipt**, and a link in it to change or stop a monthly gift.
+- **The fee.** Pass your provider's `fee`: a share and a fixed part.
