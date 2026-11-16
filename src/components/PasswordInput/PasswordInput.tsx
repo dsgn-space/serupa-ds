@@ -61,7 +61,8 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
       if (props[was] !== undefined) warnOnce('deprecated-prop', `PasswordInput: \`${was}\` is deprecated and removed in 17.0.0. Use \`${now}\`, the name MaskedValue gives showing a hidden value.`, 'deprecated-prop:PasswordInput:' + was);
     }
   }
-  const [revealed, setOwn, controlled] = useControllable(props.revealed ?? props.visible, !!(props.defaultRevealed ?? props.defaultVisible), 'PasswordInput', 'revealed');
+  // A warning names the prop the caller passes, the deprecated `visible` included.
+  const [revealed, setOwn, controlled] = useControllable(props.revealed ?? props.visible, !!(props.defaultRevealed ?? props.defaultVisible), 'PasswordInput', 'visible' in props && !('revealed' in props) ? 'visible' : 'revealed');
   const shown = !!revealed;
   const left = asIcon(props.leftIcon);
   // Caps Lock, read from the key events while the field has focus (there's no event for the key itself).
