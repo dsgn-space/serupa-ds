@@ -9,6 +9,8 @@ export interface PaginationLabels {
   itemsOf: (first: string, last: string, total: string) => string;
   /** The page-size select's label, with pageSizeOptions. */
   perPage: string;
+  /** The page number field, with jump. */
+  goToPage: string;
 }
 export const en: PaginationLabels = {
   pagination: 'Pagination',
@@ -16,6 +18,7 @@ export const en: PaginationLabels = {
   nextPage: 'Next page',
   itemsOf: (first, last, total) => (first === last ? first : first + '–' + last) + ' of ' + total,
   perPage: 'Items per page',
+  goToPage: 'Go to page',
 };
 export const id: PaginationLabels = {
   pagination: 'Halaman',
@@ -23,4 +26,5 @@ export const id: PaginationLabels = {
   nextPage: 'Halaman berikutnya',
   itemsOf: (first, last, total) => (first === last ? first : first + '–' + last) + ' dari ' + total,
   perPage: 'Item per halaman',
+  goToPage: 'Ke halaman',
 };

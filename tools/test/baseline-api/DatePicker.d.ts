@@ -15,6 +15,7 @@ interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
     locale?: string | undefined;
     calendar?: CalendarSystem | undefined;
     weekStartsOn?: number | undefined;
+    weekNumbers?: boolean | undefined;
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
     buttonLabel?: string | undefined;

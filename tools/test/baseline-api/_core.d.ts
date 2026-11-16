@@ -1,4 +1,4 @@
-// exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, version, withoutTransitions, withViewTransition
+// exports: announce, announcePage, type AnnouncePageOptions, type Breakpoint, type CalendarSystem, type ColorHue, type ColorTone, configure, type CopyToClipboard, type CopyToClipboardOptions, type CustomIconName, customIcons, enLabels, getIcon, type IconData, idLabels, type MaterialIconName, type OpenChangeDetails, type OpenChangeReason, type Placement, plural, type PluralForms, prefersReducedMotion, registerIcons, type SerupaConfig, type SerupaLabels, SerupaProvider, type SerupaProviderProps, type SerupaSettings, type SerupaTheme, type Space, type ThemeBrand, type ThemeInfo, type ThemeMode, tokenValue, useBreakpoint, useCollator, useCopyToClipboard, useLocale, useMediaQuery, useReducedMotion, useSerupa, useTokenValue, version, withoutTransitions, withViewTransition
 import * as React from "react";
 type ThemeBrand = "amber" | "blue" | "cyan" | "emerald" | "fuchsia" | "green" | "indigo" | "lime" | "orange" | "pink" | "purple" | "red" | "rose" | "sky" | "teal" | "violet" | "yellow" | (string & {});
 type ThemeMode = "auto" | "dark" | "light";
@@ -126,6 +126,8 @@ interface CopyToClipboard {
     error: unknown;
 }
 declare function useCopyToClipboard(options?: CopyToClipboardOptions): CopyToClipboard;
+declare function tokenValue(name: string, element?: Element | null): string;
+declare function useTokenValue(name: string, ref?: React.RefObject<Element | null>): string;
 type CustomIconName = never;
 declare const customIcons: readonly CustomIconName[];
 declare function registerIcons(...icons: Array<IconData | Readonly<Record<string, IconData>>>): void;
@@ -157,6 +159,8 @@ declare global {
             useCopyToClipboard: typeof useCopyToClipboard;
             useMediaQuery: typeof useMediaQuery;
             useReducedMotion: typeof useReducedMotion;
+            tokenValue: typeof tokenValue;
+            useTokenValue: typeof useTokenValue;
             withoutTransitions: typeof withoutTransitions;
             withViewTransition: typeof withViewTransition;
             theme?: ThemeApi;

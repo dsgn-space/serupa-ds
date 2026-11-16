@@ -14,6 +14,9 @@ export interface CalendarLabels {
   /** Preset shortcuts in Calendar and DatePicker: tomorrow, and the day a week from today. */
   tomorrow: string;
   inAWeek: string;
+  /** Calendar with weekNumbers: the column's name, said before each week's number ("Week 12"), and its short heading. */
+  week: string;
+  weekShort: string;
 }
 export const en: CalendarLabels = {
   previousMonth: 'Previous month',
@@ -24,6 +27,8 @@ export const en: CalendarLabels = {
   today: 'Today',
   tomorrow: 'Tomorrow',
   inAWeek: 'In a week',
+  week: 'Week',
+  weekShort: 'Wk',
 };
 export const id: CalendarLabels = {
   previousMonth: 'Bulan sebelumnya',
@@ -34,4 +39,6 @@ export const id: CalendarLabels = {
   today: 'Hari ini',
   tomorrow: 'Besok',
   inAWeek: 'Seminggu lagi',
+  week: 'Minggu',
+  weekShort: 'Mg',
 };

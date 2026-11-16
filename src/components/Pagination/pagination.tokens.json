@@ -145,6 +145,16 @@
             "cssVar": "--pagination-size-lg"
           }
         }
+      },
+      "jump-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-16}",
+        "$description": "The Go to page field, with jump (64px: four digits).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--pagination-jump-width"
+          }
+        }
       }
     },
     "spacing": {

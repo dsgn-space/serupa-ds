@@ -34,6 +34,37 @@ afterEach(() => {
 beforeEach(() => { errors = vi.spyOn(console, 'error'); });
 
 describe('Pagination', () => {
+  test('jump: a "Go to page" field after the pages; Enter goes to the page typed, one past the end to the last, and says it; focus stays in the field', async () => {
+    const seen: number[] = [];
+    await render(<EnUS><Pagination id="pj" count={400} jump onPageChange={(n) => seen.push(n)} /></EnUS>);
+    const field = el('pj').querySelector('input')!;
+    expect(field.labels![0]!.textContent).toBe('Go to page');
+    field.focus();
+    await userEvent.keyboard('120{Enter}');
+    expect([seen, q('pj', '[aria-current="page"]').textContent, field.value, document.activeElement]).toEqual([[120], '120', '', field]);
+    await expect.poll(() => (document.querySelector('[data-dk-announcer]') as HTMLElement).textContent).toBe('Page 120');
+    await userEvent.keyboard('9999{Enter}');
+    expect(seen).toEqual([120, 400]);
+    await userEvent.keyboard('abc{Enter}');
+    expect(seen).toEqual([120, 400]);
+  });
+
+  test('jump: no field for a single page; Indonesian words under an id provider', async () => {
+    await render(<><Pagination id="pj1" count={1} jump /><SerupaProvider labels={idLabels}><Pagination id="pj2" count={30} jump /></SerupaProvider></>);
+    expect(el('pj1').querySelector('input')).toBeNull();
+    expect(el('pj2').querySelector('input')!.labels![0]!.textContent).toBe('Ke halaman');
+  });
+
+  test('jump with getHref and no onPageChange follows the page\'s link', async () => {
+    const before = location.hash;
+    try {
+      await render(<EnUS><Pagination id="pj3" count={50} jump getHref={(n) => '#p' + n} /></EnUS>);
+      el('pj3').querySelector('input')!.focus();
+      await userEvent.keyboard('7{Enter}');
+      expect(location.hash).toBe('#p7');
+    } finally { history.replaceState(null, '', location.pathname + location.search + before); }
+  });
+
   test('the arrows are the icon of an icon-only Button of the same size: 14, 16 and 20px (GR420)', async () => {
     await render(<>
       {(['sm', 'md', 'lg'] as const).map((size) => <span key={size} id={'pg' + size}><Pagination size={size} count={5} /><IconButton size={size} icon="chevron_right" label="Next thing" /></span>)}

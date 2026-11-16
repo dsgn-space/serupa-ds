@@ -5,6 +5,7 @@ import { config } from '../../internal/config';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { Select } from '../Select/Select';
+import { announce } from '../../internal/announce';
 import { component } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -50,6 +51,10 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   pageSizeOptions?: number[] | undefined;
   /** Called with the size picked in the select, and the page that keeps the first item shown in view (page 5 at 10 a page starts with item 41, which is on page 2 at 25 a page). Set pageSize, and page when controlled; uncontrolled, the page moves by itself. */
   onPageSizeChange?: ((pageSize: number, page: number) => void) | undefined;
+  /** A "Go to page" number field after the pages, for long lists where the numbers shown are no help: Enter goes to
+   *  the page typed (one out of range goes to the nearest end), and the page is said. With getHref and no
+   *  onPageChange, it follows the page's link. Default: false. */
+  jump?: boolean | undefined;
 }
 
 
@@ -64,7 +69,7 @@ function int(v: unknown, min: number, fallback: number): number {
 export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps>('Pagination', function Pagination(props, ref) {
   const sds = useSettings(words);
   const locale = useLocale();
-  const rest = omit(props, { count: 1, page: 1, defaultPage: 1, onPageChange: 1, getHref: 1, linkAs: 1, siblings: 1, boundaries: 1, size: 1, previousLabel: 1, nextLabel: 1, pageLabel: 1, total: 1, pageSize: 1, pageSizeOptions: 1, onPageSizeChange: 1, className: 1 });
+  const rest = omit(props, { count: 1, page: 1, defaultPage: 1, onPageChange: 1, getHref: 1, linkAs: 1, siblings: 1, boundaries: 1, size: 1, previousLabel: 1, nextLabel: 1, pageLabel: 1, total: 1, pageSize: 1, pageSizeOptions: 1, onPageSizeChange: 1, jump: 1, className: 1 });
   const count = int(props.count, 0, 0);
   const [own, setOwn] = React.useState(() => int(props.defaultPage, 1, 1));
   const controlled = props.page !== undefined;
@@ -146,7 +151,27 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
     if (!controlled) setOwn(to);
     if (props.onPageSizeChange) props.onPageSizeChange(next, to);
   };
-  const bar = summary != null || sizes != null;
+  // The jump field: Enter goes to the page typed, clamped to the pages there are, and says where it went, since focus
+  // stays in the field and nothing else would.
+  const jumpId = React.useId();
+  const [typed, setTyped] = React.useState('');
+  const jumpTo = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const n = parseInt(typed.replace(/[^\d]/g, ''), 10);
+    if (!isFinite(n) || count < 1) return;
+    const to = Math.min(Math.max(n, 1), count);
+    setTyped('');
+    announce(said(to));
+    if (to === page) return;
+    if (!controlled) setOwn(to);
+    if (props.onPageChange) props.onPageChange(to);
+    else if (props.getHref && typeof window !== 'undefined') window.location.assign(props.getHref(to));
+  };
+  const jump = props.jump && count > 1 ? <span className="dk-pagination__jump"><label htmlFor={jumpId}>{sds.labels.goToPage}</label>
+    {/* Input's box and field classes, without Input's own code (its masks, count and actions) in Pagination's bundle. */}
+    <span className={cn('dk-input', 'dk-input--size-' + size, 'dk-pagination__jump-field')}><input id={jumpId} className="dk-input__field" type="text" inputMode="numeric" autoComplete="off" enterKeyHint="go" value={typed} onChange={(e) => setTyped(e.currentTarget.value)} onKeyDown={jumpTo} /></span></span> : null;
+  const bar = summary != null || sizes != null || jump != null;
   return (
     <nav aria-label={sds.labels.pagination} {...rest} ref={ref} data-component="pagination" className={cn('dk-pagination', size !== 'md' && 'dk-pagination--' + size, bar && 'dk-pagination--summary', props.className)}>
       {summary != null ? <p className="dk-pagination__summary">{summary}</p> : null}
@@ -159,6 +184,7 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
           : <li key={e} className="dk-pagination__ellipsis" aria-hidden="true">…</li>)}
         {arrow('next')}
       </ul>
+      {jump}
     </nav>
   );
 });

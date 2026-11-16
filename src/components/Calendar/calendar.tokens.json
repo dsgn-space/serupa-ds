@@ -52,6 +52,16 @@
           }
         }
       },
+      "week-color": {
+        "$type": "color",
+        "$value": "{color.text-muted}",
+        "$description": "The week numbers, with weekNumbers (4.5:1 on surface).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-week-color"
+          }
+        }
+      },
       "day-color": {
         "$type": "color",
         "$value": "{color.text}",
@@ -191,6 +201,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--calendar-day-size"
+          }
+        }
+      },
+      "week-width": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-7}",
+        "$description": "The week number column, with weekNumbers (28px); the days give up its width on a narrow screen.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--calendar-week-width"
           }
         }
       }

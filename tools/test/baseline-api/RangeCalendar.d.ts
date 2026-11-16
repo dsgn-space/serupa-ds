@@ -23,6 +23,7 @@ interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     locale?: string | undefined;
     calendar?: CalendarSystem | undefined;
     weekStartsOn?: number | undefined;
+    weekNumbers?: boolean | undefined;
     autoFocus?: boolean | undefined;
 }
 declare const RangeCalendar: React.ForwardRefExoticComponent<RangeCalendarProps & React.RefAttributes<HTMLDivElement>>;

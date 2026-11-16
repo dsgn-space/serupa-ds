@@ -5,6 +5,7 @@ interface PaginationLabels {
     nextPage: string;
     itemsOf: (first: string, last: string, total: string) => string;
     perPage: string;
+    goToPage: string;
 }
 declare function paginationRange(page: number, count: number, siblings?: number, boundaries?: number): Entry[];
 interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onChange"> {
@@ -27,5 +28,6 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onCha
     pageSize?: number | undefined;
     pageSizeOptions?: number[] | undefined;
     onPageSizeChange?: ((pageSize: number, page: number) => void) | undefined;
+    jump?: boolean | undefined;
 }
 declare const Pagination: React.ForwardRefExoticComponent<PaginationProps & React.RefAttributes<HTMLElement>>;
