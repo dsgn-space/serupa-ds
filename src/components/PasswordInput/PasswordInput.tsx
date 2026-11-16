@@ -15,13 +15,20 @@ import { activeIn } from '../../internal/root';
 import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
+import { warnOnce } from '../../internal/warn';
 
 export interface PasswordInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'rightIcon'> {
-  /** Shows the password as text (controlled). Use with onVisibleChange. */
-  visible?: boolean | undefined;
+  /** Shows the password as text (controlled). Use with onRevealedChange. */
+  revealed?: boolean | undefined;
   /** Shows it as text at first (uncontrolled). Default: false. */
-  defaultVisible?: boolean | undefined;
+  defaultRevealed?: boolean | undefined;
   /** Called with the new state when the show/hide button is pressed. */
+  onRevealedChange?: ((revealed: boolean) => void) | undefined;
+  /** @deprecated Use revealed, the name MaskedValue gives showing a hidden value; removed in 17.0.0. Read when revealed isn't given. */
+  visible?: boolean | undefined;
+  /** @deprecated Use defaultRevealed; removed in 17.0.0. Read when defaultRevealed isn't given. */
+  defaultVisible?: boolean | undefined;
+  /** @deprecated Use onRevealedChange; removed in 17.0.0. Called as onRevealedChange is, when onRevealedChange isn't given. */
   onVisibleChange?: ((visible: boolean) => void) | undefined;
   /** The show/hide button's name. Default: "Show password" (its aria-pressed says whether it's shown). */
   toggleLabel?: string | undefined;
@@ -44,13 +51,19 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   const nameRef = useNameCheck('PasswordInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1, capsLockHint: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1, capsLockHint: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   if (rest.autoComplete === undefined) rest.autoComplete = 'current-password';
-  const [visible, setOwn, controlled] = useControllable(props.visible, !!props.defaultVisible, 'PasswordInput', 'visible');
-  const shown = !!visible;
+  if (process.env.NODE_ENV !== 'production') {
+    for (const [was, now] of [['visible', 'revealed'], ['defaultVisible', 'defaultRevealed'], ['onVisibleChange', 'onRevealedChange']] as const) {
+      if (props[was] !== undefined) warnOnce('deprecated-prop', `PasswordInput: \`${was}\` is deprecated and removed in 17.0.0. Use \`${now}\`, the name MaskedValue gives showing a hidden value.`, 'deprecated-prop:PasswordInput:' + was);
+    }
+  }
+  // A warning names the prop the caller passes, the deprecated `visible` included.
+  const [revealed, setOwn, controlled] = useControllable(props.revealed ?? props.visible, !!(props.defaultRevealed ?? props.defaultVisible), 'PasswordInput', 'visible' in props && !('revealed' in props) ? 'visible' : 'revealed');
+  const shown = !!revealed;
   const left = asIcon(props.leftIcon);
   // Caps Lock, read from the key events while the field has focus (there's no event for the key itself).
   const [caps, setCaps] = React.useState(false);
@@ -119,7 +132,8 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   const toggle = () => {
     if (!caret.current || performance.now() - pressed.current > 1000) capture();
     if (!controlled) setOwn(!shown);
-    if (props.onVisibleChange) props.onVisibleChange(!shown);
+    const told = props.onRevealedChange ?? props.onVisibleChange;
+    if (told) told(!shown);
   };
   return (
     <span className={cn('dk-input dk-password-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}

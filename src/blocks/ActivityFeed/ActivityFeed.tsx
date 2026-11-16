@@ -7,7 +7,7 @@ import { Loader } from '../../components/Loader/Loader';
 import { EmptyLoadFailed } from '../EmptyStates/EmptyStates';
 import { LoadMore } from '../../components/LoadMore/LoadMore';
 import { RelativeTime } from '../../components/RelativeTime/RelativeTime';
-import { Timeline, TimelineItem, type TimelineStatus } from '../../components/Timeline/Timeline';
+import { Timeline, TimelineItem, type TimelineTone } from '../../components/Timeline/Timeline';
 
 /* Activity feed (BL7): who did what and when, newest first, for an app to copy. What it carries (WCAG 2.2):
    - 1.3.1: the feed is a region named by its heading, and the events are an ordered list, so a screen reader hears
@@ -43,7 +43,7 @@ export interface ActivityEvent {
   /** More about it, under the line: a comment's first words, what changed. */
   detail?: React.ReactNode | undefined;
   /** The marker's color, from the event's kind; the words still say what happened. */
-  status?: TimelineStatus | undefined;
+  status?: TimelineTone | undefined;
 }
 
 export interface ActivityFeedProps {
@@ -100,7 +100,7 @@ export function ActivityFeed({ events, onLoadMore, hasMore, total, title = 'Acti
           {events.map((e) => (
             // The time and the detail sit in the avatar's text column, so a sentence that wraps, its time and its
             // detail all start at one edge rather than the time and detail falling back under the avatar.
-            <TimelineItem key={e.id} status={e.status}
+            <TimelineItem key={e.id} tone={e.status}
               title={<span className="flex items-start gap-2 font-normal">
                 <Avatar size="xs" name={e.actor.name} src={e.actor.avatar} alt="" />
                 <span className="flex min-w-0 flex-col">

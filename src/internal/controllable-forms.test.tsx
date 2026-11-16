@@ -22,6 +22,7 @@ const CASES: Array<[string, unknown, (v: unknown) => React.ReactElement]> = [
   ['RadioGroup value', 's', (v) => <RadioGroup aria-label="Size" value={v as string | undefined}><Radio value="s">Small</Radio></RadioGroup>],
   ['NumberInput value', 3, (v) => <NumberInput aria-label="Quantity" value={v as number | undefined} />],
   ['SearchInput value', 'ab', (v) => <SearchInput aria-label="Search" value={v as string | undefined} />],
+  ['PasswordInput revealed', false, (v) => <PasswordInput aria-label="Password" revealed={v as boolean | undefined} />],
   ['PasswordInput visible', false, (v) => <PasswordInput aria-label="Password" visible={v as boolean | undefined} />],
   ['PinInput value', '12', (v) => <PinInput aria-label="Code" length={4} value={v as string | undefined} />],
   ['InlineEdit value', 'Atlas', (v) => <InlineEdit label="Project name" value={v as string | undefined} />],
