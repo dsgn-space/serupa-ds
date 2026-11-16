@@ -437,8 +437,9 @@ describe('Badge', () => {
     try {
       for (const t of TONES) {
         const e = q(`[data-it="${t}"][data-v="${v}"]`);
-        // Hovered again until it takes: once in a while Firefox misses one of these moves.
-        await expect.poll(async () => { await userEvent.hover(e); return e.matches(':hover'); }).toBe(true);
+        // Hovered again until it takes: once in a while Firefox misses one of these moves. A hover in WebKit can take
+        // over a second (1.35 s, 16 Nov), past the poll's usual one, so the poll gets five.
+        await expect.poll(async () => { await userEvent.hover(e); return e.matches(':hover'); }, { timeout: 5000 }).toBe(true);
         measure(e, 'hover');
         await press(e, async () => { await expect.poll(() => e.matches(':active')).toBe(true); measure(e, 'pressed'); });
       }
