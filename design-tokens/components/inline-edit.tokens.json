@@ -62,6 +62,16 @@
           }
         }
       },
+      "bg-pressed": {
+        "$type": "color",
+        "$value": "{color.pressed}",
+        "$description": "The button's background while pressed, one step past hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--inline-edit-bg-pressed"
+          }
+        }
+      },
       "error": {
         "$type": "color",
         "$value": "{color.danger-text}",

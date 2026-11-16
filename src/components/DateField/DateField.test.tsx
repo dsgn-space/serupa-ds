@@ -86,7 +86,8 @@ describe('DateField', () => {
     const seen: string[] = [];
     const { rerender } = await render(<SerupaProvider locale="en-GB"><DateField aria-label="Date of birth" monthInput="select" autoComplete="bday" onValueChange={(v) => seen.push(v)} /></SerupaProvider>);
     const menu = page.getByRole('combobox', { name: 'Month' }).element() as HTMLSelectElement;
-    expect([[...menu.options].map((o) => o.text).slice(0, 4), menu.autocomplete]).toEqual([['Month', 'January', 'February', 'March'], 'bday-month']);
+    // The attribute: Firefox's <select> has no autocomplete property to read it back through.
+    expect([[...menu.options].map((o) => o.text).slice(0, 4), menu.getAttribute('autocomplete')]).toEqual([['Month', 'January', 'February', 'March'], 'bday-month']);
     await userEvent.type(box('Day'), '17');
     await userEvent.selectOptions(menu, 'August');
     await userEvent.type(box('Year'), '1990');

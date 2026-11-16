@@ -11,6 +11,7 @@ import { Calendar } from '../Calendar/Calendar';
 import type { DateRange, DateRangeInput } from '../DateRangePicker/DateRangePicker';
 import { en as rangeWords } from './labels';
 import { en as pickerWords } from '../DateRangePicker/labels';
+import { useControllable } from '../../internal/controllable';
 
 const words = /* @__PURE__ */ Object.assign({}, rangeWords, pickerWords);
 
@@ -69,9 +70,8 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
   useAutoFocus(props.autoFocus, () => root.current && root.current.querySelector<HTMLElement>('.dk-calendar__day[tabindex="0"]'));
   const locale = useLocale(props.locale);
   const system = calendarOf(props.calendar, 'RangeCalendar');
-  const controlled = props.value !== undefined;
-  const [own, setOwn] = React.useState<DateRange>(() => norm(props.defaultValue));
-  const value = controlled ? norm(props.value) : own;
+  const [held, setOwn, controlled] = useControllable<DateRangeInput | null>(props.value, norm(props.defaultValue), 'RangeCalendar', 'value');
+  const value = controlled ? norm(held) : (held as DateRange);
   const min = toDay(props.min, 'RangeCalendar') || undefined, max = toDay(props.max, 'RangeCalendar') || undefined;
   // The end picked first, while the other is still to come, and the day under the pointer or focus for the preview.
   const [anchor, setAnchor] = React.useState<Date | null>(null);

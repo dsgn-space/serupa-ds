@@ -53,8 +53,13 @@ describe('Slider', () => {
   test('a swipe across the page that starts on it scrolls the page: the browser cancels the press, the thumb goes back and nothing commits', async () => {
     await setup();
     expect(getComputedStyle(el('one')).touchAction).toBe('pan-y');
-    // The mouse's pointer (id 1): a made-up touch pointer can't be captured.
-    const t = track('one'), y = t.top + t.height / 2, opts = { pointerId: 1, pointerType: 'mouse', isPrimary: true, bubbles: true, cancelable: true, button: 0, clientY: y };
+    // The mouse's own pointer, as a made-up touch pointer can't be captured. Its id is the engine's (1 in Chromium, 0
+    // in Firefox, which won't capture any other), so it's read from a real move first.
+    let mouse = -1;
+    el('one').addEventListener('pointermove', (e) => { mouse = e.pointerId; }, { once: true });
+    await userEvent.hover(el('one'));
+    await expect.poll(() => mouse).not.toBe(-1);
+    const t = track('one'), y = t.top + t.height / 2, opts = { pointerId: mouse, pointerType: 'mouse', isPrimary: true, bubbles: true, cancelable: true, button: 0, clientY: y };
     el('one').dispatchEvent(new PointerEvent('pointerdown', { ...opts, clientX: t.left + t.width * 0.9 }));
     await expect.poll(() => el('one').querySelector('[role="slider"]')!.getAttribute('aria-valuenow')).toBe('90');
     el('one').dispatchEvent(new PointerEvent('pointercancel', { ...opts, clientX: t.left + t.width * 0.9 }));

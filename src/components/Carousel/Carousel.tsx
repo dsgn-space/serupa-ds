@@ -13,6 +13,7 @@ import * as icons from '../../material/builtin';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { en as words } from './labels';
 import { project, rubber, settleTime, speed, track as sample, type Samples } from '../../internal/fling';
+import { useControllable } from '../../internal/controllable';
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   /** The slides, one per child (pictures, cards, anything). */
@@ -96,9 +97,9 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
   const perMap = perAt(props.perView, count);
   const last = Math.max(0, count - per);   // the last index: the first slide of the last full view
   const clamp = (i: number) => Math.min(Math.max(0, Math.floor(i) || 0), last);
-  const [own, setOwn] = React.useState(() => props.defaultIndex || 0);
-  const controlled = props.index != null;
-  const index = clamp(controlled ? props.index! : own);
+  // null counts as not passed, as before.
+  const [held, setOwn, controlled] = useControllable<number>(props.index == null ? undefined : props.index, props.defaultIndex || 0, 'Carousel', 'index');
+  const index = clamp(held);
   const loop = !!props.loop && last > 0;
   // Pages for the dots: with 3 per view and 7 slides, 1–3, 4–6 and 5–7; a dot goes to its page's first slide.
   const pages = Math.ceil(count / per), page = index >= last ? pages - 1 : Math.floor(index / per);
