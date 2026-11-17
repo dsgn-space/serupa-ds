@@ -14,7 +14,7 @@ The documentation is Storybook: run `npm run storybook` in this repo and open ht
 ### 1. Install a released version from GitHub
 
 ```sh
-npm install github:dsgn-space/serupa-ds#v16.0.0
+npm install github:dsgn-space/serupa-ds#v16.1.0
 ```
 
 Each release is a tag on [GitHub](https://github.com/dsgn-space/serupa-ds). From 14.3.0, the Releases page also carries the release file, its SHA-256 and a build attestation, GitHub's signed record that this repository's Release workflow built the file from the tagged commit.
@@ -32,14 +32,14 @@ npm install @diki-stwn/serupa-ds
 
 Installed either way, the package is `@diki-stwn/serupa-ds` in your imports (`import { Button } from '@diki-stwn/serupa-ds'`). Before 15.0.0 it was `serupa-ds`: `npx serupa-migrate src --from 14 --write` rewrites the imports.
 
-Always pin a tag (`#v16.0.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
+Always pin a tag (`#v16.1.0`), never `#main`, so an update only reaches your project when you choose it. Each release tag is prebuilt: it carries `dist/` and nothing runs on install, so npm only copies files. Released versions and what changed in each are in [CHANGELOG.md](CHANGELOG.md) and on the repository's Releases page.
 
 To update later, change the tag in `package.json` (or run the install again with the new tag) and read the changelog entries in between. Major versions come with migration notes, collected in the docs' Upgrading page, and `npx serupa-migrate src --from <your major>` makes the renames a script can make.
 
 **Starting a new app?** `serupa-create` makes one with React, Vite and TypeScript, this release already installed, the stylesheets loaded in order, `theme.js` first in the page, a skip link and main landmark, a theme switch, and the CSS trimmed in `npm run build`:
 
 ```sh
-npx --package=github:dsgn-space/serupa-ds#v16.0.0 serupa-create my-app
+npx --package=github:dsgn-space/serupa-ds#v16.1.0 serupa-create my-app
 cd my-app
 npm install
 npm run dev
@@ -357,7 +357,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [DatePicker](src/components/DatePicker/README.md) | A date field: people type a date, or pick one from a calendar that opens under the field. |
 | [DateRangePicker](src/components/DateRangePicker/README.md) | Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. |
 | [ErrorSummary](src/components/ErrorSummary/README.md) | After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. |
-| [Field](src/components/Field/README.md) | A label, an optional hint and an error message around one form control, wired up for screen readers. |
+| [Field](src/components/Field/README.md) | A label, an optional hint and a message (an error, a warning or "checking…") around one form control, wired up for screen readers. |
 | [FileUpload](src/components/FileUpload/README.md) | A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. |
 | [FilterBar](src/components/FilterBar/README.md) (beta) | The filters on a list or a table, as a row of chips. |
 | [InlineEdit](src/components/InlineEdit/README.md) | Text people can change where it is: a project name, a card title, a slug. |
