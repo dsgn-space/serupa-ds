@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/components/CopyButton/labels.ts"],
+  "sourcesContent": ["// CopyButton's own words, in English and Indonesian. tools/build/registry.mjs adds them to SerupaLabels,\n// enLabels and idLabels, so <SerupaProvider labels> changes them like any other label.\nexport interface CopyButtonLabels {\n  /** CopyButton: its label, what it says once it has copied, and when copying fails: copyFailed is announced,\n      copyFailedShort shows on the button (and names an icon-only one) for the same time \"Copied\" would. */\n  copied: string;\n  copyFailed: string;\n  copyFailedShort: string;\n}\nexport const en: CopyButtonLabels = {\n  copied: 'Copied',\n  copyFailed: 'Couldn\u2019t copy. Select the text and copy it yourself.',\n  copyFailedShort: 'Couldn\u2019t copy',\n};\nexport const id: CopyButtonLabels = {\n  copied: 'Disalin',\n  copyFailed: 'Gagal menyalin. Pilih teksnya lalu salin sendiri.',\n  copyFailedShort: 'Gagal menyalin',\n};\n"],
+  "mappings": ";AASO,IAAM,KAAuB;AAAA,EAClC,QAAQ;AAAA,EACR,YAAY;AAAA,EACZ,iBAAiB;AACnB;AACO,IAAM,KAAuB;AAAA,EAClC,QAAQ;AAAA,EACR,YAAY;AAAA,EACZ,iBAAiB;AACnB;",
+  "names": []
+}
