@@ -88,13 +88,16 @@ export function forAgent(name: string, source: string): string {
 export function Guide({ source }: { source: string }) {
   const name = /^# (\w+)/.exec(source)?.[1];
   const slugify = useSlugify();
+  // The site's Title already prints the since line under the page name (its docs context carries the props, which
+  // Storybook's doesn't), so the guide leaves it out there rather than say it twice.
+  const sinceInTitle = Array.isArray((React.useContext(DocsContext) as { docs?: unknown }).docs);
   return <>
     {name && <div className="sb-copy-guide">
       <CopyButton value={() => forAgent(name, source)} size="sm">Copy for AI</CopyButton>
       <span>The whole guide as Markdown, to paste into a coding agent.</span>
     </div>}
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
-    {name && <ComponentSince name={name} />}
+    {name && !sinceInTitle && <ComponentSince name={name} />}
     {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <DocMarkdown key={i} slugify={slugify}>{relink(part)}</DocMarkdown>
       : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
@@ -378,13 +381,13 @@ export function LabelTable() {
 }
 
 const LEVELS: [string, string, string, string][] = [
-  ['Page', 'surface', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
+  ['Page', 'surface-page', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
   ['Floating', 'surface-overlay', 'border-overlay', 'shadow-lg'], ['Modal', 'surface-overlay', 'border-overlay', 'shadow-xl'],
 ];
 /** The elevation levels drawn with their tokens, on a light and a dark page side by side. */
 export function ElevationLevels() {
   return <div data-token-sheet="elevation-levels" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, margin: '16px 0 24px' }}>
-    {(['light', 'dark'] as const).map((mode) => <div key={mode} data-theme={`blue-${mode}`} style={{ background: 'var(--surface)', color: 'var(--text)', padding: 24, borderRadius: 8, border: '1px solid var(--border)', display: 'grid', gap: 16 }}>
+    {(['light', 'dark'] as const).map((mode) => <div key={mode} data-theme={`blue-${mode}`} style={{ background: 'var(--surface-page)', color: 'var(--text)', padding: 24, borderRadius: 8, border: '1px solid var(--border)', display: 'grid', gap: 16 }}>
       {LEVELS.map(([name, bg, edge, shadow]) => <div key={name} style={{ background: `var(--${bg})`, border: `1px solid ${edge === 'transparent' ? 'transparent' : `var(--${edge})`}`, boxShadow: shadow === 'none' ? 'none' : `var(--${shadow})`, borderRadius: 8, padding: '12px 16px', fontSize: 14 }}>
         <strong>{name}</strong> <span style={{ color: 'var(--text-muted)' }}>{mode}: <code>{bg}</code>{shadow !== 'none' && <>, <code>{shadow}</code></>}</span>
       </div>)}

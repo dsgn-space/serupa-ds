@@ -531,7 +531,8 @@ How things sit above one another: the page, raised cards, floating menus and dia
 
 | Level | What sits there | Surface | Edge | Shadow |
 | --- | --- | --- | --- | --- |
-| 0 · Page | The page, Navbar, Sidebar, tables | `surface` | `border` between regions | none |
+| 0 · Page | The page itself, under everything | `surface-page`: white in light, as `surface`; `zinc-950` in dark, a step below it | none | none |
+| 0 · Surface | Navbar, Sidebar, tables, panels laid on the page | `surface` | `border` between regions | none |
 | 0 · Recessed | Side panels, table headers, filled Cards, wells | `surface-muted`, a step below `surface` in every theme | none | none, or `inset-shadow-xs` for an input well |
 | 1 · Resting | Outline Cards, Buttons, inputs | `surface` (fields: `field`) | `border` (fields: `field-border`) | `shadow-xs` |
 | 2 · Raised | Elevated Cards, a card while it's dragged or hovered | `surface-raised` | `border` | `shadow-md` |
