@@ -168,9 +168,12 @@ export function Story({ of }: { of?: unknown }) {
   return entry ? <Stage entry={entry} /> : null;
 }
 
-/** The first story: the component as it usually looks. */
-export function Primary() {
-  const first = useDocs().componentStories()[0];
+/** The first story: the component as it usually looks. On a component's page the guide draws it under its lead
+ *  (placed, docs/blocks.tsx Guide), so what the component is comes before it; the .mdx page's own Primary is empty. */
+export function Primary({ placed }: { placed?: boolean }) {
+  const { componentStories, page } = useDocs();
+  const first = componentStories()[0];
+  if (page?.component && !placed) return null;
   return first ? <Demo entry={first} /> : null;
 }
 
