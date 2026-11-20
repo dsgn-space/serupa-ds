@@ -7,7 +7,7 @@ import { Kbd } from '../Kbd/Kbd';
 const COMMANDS: Command[] = [
   { id: 'home', label: 'Home', group: 'Pages', icon: 'home' },
   { id: 'projects', label: 'Projects', group: 'Pages', icon: 'folder' },
-  { id: 'settings', label: 'Settings', group: 'Pages', icon: 'settings', keywords: ['preferences', 'account'] },
+  { id: 'settings', label: 'Settings', group: 'Pages', icon: 'settings', description: 'Profile, notifications and appearance', keywords: ['preferences', 'account'] },
   { id: 'new', label: 'New project', group: 'Actions', icon: 'add', shortcut: ['mod', 'N'] },
   { id: 'invite', label: 'Invite people', group: 'Actions', icon: 'person_add' },
   { id: 'theme', label: 'Switch to dark theme', group: 'Actions', icon: 'dark_mode', shortcut: ['mod', 'shift', 'L'] },
