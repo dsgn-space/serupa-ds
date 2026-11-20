@@ -16,6 +16,7 @@ const SKIP = [];
 // Parts a component doesn't need, and why. Keep the reason: an exemption without one is a gap.
 const EXEMPT = {
   FormattedNumber: { tokens: 'inline text in the surrounding font and color; no visual values of its own' },
+  FormattedDate: { tokens: 'inline text in the surrounding font and color; no visual values of its own', css: 'inline text with no styles of its own: it wraps like the sentence around it' },
   Icon: { tokens: 'draws in currentColor at 1em; no visual values of its own', stress: 'one glyph at 1em: no text to grow or wrap' },
   RelativeTime: { tokens: 'inline text in the surrounding font and color; no visual values of its own' },
   Countdown: { tokens: 'inline text in the surrounding font and color; no visual values of its own' },

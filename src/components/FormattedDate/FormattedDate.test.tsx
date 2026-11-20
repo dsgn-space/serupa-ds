@@ -1,0 +1,107 @@
+import * as React from 'react';
+import { describe, expect, test, vi } from 'vitest';
+import { renderToString } from 'react-dom/server';
+import { hydrateRoot } from 'react-dom/client';
+import { render } from 'vitest-browser-react';
+import { SerupaProvider } from '../../internal/provider';
+import { FormattedDate, formatDate } from './FormattedDate';
+
+const el = (id: string) => document.getElementById(id) as HTMLElement;
+const plain = (s: string | null) => (s ?? '').replace(/[\u00a0\u202f\u2009]/g, ' ');
+
+describe('FormattedDate', () => {
+  test('a <time> with the day in datetime and the words as its text; ref, className and other props reach it', async () => {
+    const ref = React.createRef<HTMLElement>();
+    await render(<FormattedDate id="x" ref={ref} value="2026-11-20" locale="en" className="extra" data-x="y" />);
+    const e = el('x');
+    expect([e.tagName, e.getAttribute('datetime'), plain(e.textContent), ref.current === e, e.className, e.dataset.x, e.dataset.component])
+      .toEqual(['TIME', '2026-11-20', 'Nov 20, 2026', true, 'dk-formatted-date extra', 'y', 'formatted-date']);
+  });
+
+  test('each dateStyle, a time with timeStyle, and a time on its own', () => {
+    const at = '2026-11-20T09:30:00Z';
+    expect([undefined, 'full', 'long', 'short'].map((s) => formatDate('2026-11-20', 'en', { dateStyle: s as 'long' })))
+      .toEqual(['Nov 20, 2026', 'Friday, November 20, 2026', 'November 20, 2026', '11/20/26']);
+    expect([formatDate(at, 'en', { dateStyle: 'long', timeStyle: 'short', timeZone: 'UTC' }), formatDate(at, 'en', { dateStyle: false, timeStyle: 'short', timeZone: 'Asia/Jakarta' })].map(plain))
+      .toEqual(['November 20, 2026 at 9:30 AM', '4:30 PM']);
+  });
+
+  test('a "yyyy-mm-dd" day is that day in every time zone, and never gets a time', () => {
+    expect([
+      formatDate('2026-11-20', 'en', { timeZone: 'Pacific/Honolulu' }),
+      formatDate('2026-11-20', 'en', { timeZone: 'Pacific/Kiritimati', timeStyle: 'short' }),
+      formatDate('2026-11-20', 'en', { options: { weekday: 'long', hour: 'numeric' } }),
+      formatDate('0099-01-02', 'en'),
+    ]).toEqual(['Nov 20, 2026', 'Nov 20, 2026', 'Friday', 'Jan 2, 99']);
+  });
+
+  test('a moment in the time zone given: the same instant is the 20th in Jakarta and the 19th in Honolulu', () => {
+    const at = Date.UTC(2026, 10, 20, 3, 0);
+    expect([formatDate(at, 'en', { timeZone: 'Asia/Jakarta' }), formatDate(new Date(at), 'en', { timeZone: 'Pacific/Honolulu' })]).toEqual(['Nov 20, 2026', 'Nov 19, 2026']);
+  });
+
+  test('options with parts write it alone, without the styles', () => {
+    expect([formatDate('2026-11-20', 'en', { options: { month: 'long', year: 'numeric' } }), formatDate('2026-11-20', 'en', { dateStyle: 'full', options: { day: 'numeric', month: 'short' } })])
+      .toEqual(['November 2026', 'Nov 20']);
+  });
+
+  test('a range says what both share once; each end is its own <time>', async () => {
+    expect(plain(formatDate('2026-11-20', 'en', { to: '2026-11-22' }))).toBe('Nov 20 – 22, 2026');
+    await render(<FormattedDate id="r" value="2026-11-20" to={new Date(2026, 11, 2)} locale="en" />);
+    const times = [...el('r').querySelectorAll('time')].map((t) => [t.getAttribute('datetime'), t.textContent]);
+    expect([el('r').tagName, plain(el('r').textContent), times]).toEqual(['SPAN', 'Nov 20 – Dec 2, 2026', [['2026-11-20', 'Nov 20'], ['2026-12-02', 'Dec 2']]]);
+  });
+
+  test('in a right-to-left page, English words keep their own order; a range too', async () => {
+    await render(<div dir="rtl"><FormattedDate id="d" value="2026-11-20" locale="en" /><FormattedDate id="e" value="2026-11-20" to="2026-11-22" locale="en" /></div>);
+    expect([el('d').matches(':dir(ltr)'), el('e').matches(':dir(ltr)')]).toEqual([true, true]);
+  });
+
+  test('a range that ends the same day is one <time>', async () => {
+    await render(<FormattedDate id="s" value="2026-11-20" to="2026-11-20" locale="en" />);
+    expect([el('s').tagName, el('s').getAttribute('datetime'), el('s').textContent]).toEqual(['TIME', '2026-11-20', 'Nov 20, 2026']);
+  });
+
+  test('a moment in the browser is in the reader\'s time zone, with the instant in datetime', async () => {
+    const at = new Date(2026, 10, 20, 23, 30);
+    await render(<FormattedDate id="m" value={at} timeStyle="short" locale="en" />);
+    expect([el('m').getAttribute('datetime'), el('m').textContent]).toEqual([at.toISOString(), new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(at)]);
+  });
+
+  test('in the provider\'s locale, with lang when its own differs: Indonesian words, Arabic digits', async () => {
+    await render(<SerupaProvider locale="id"><FormattedDate id="i" value="2026-11-20" dateStyle="long" /><FormattedDate id="a" value="2026-11-20" dateStyle="long" locale="ar-EG" /></SerupaProvider>);
+    expect([el('i').textContent, el('i').hasAttribute('lang'), el('a').getAttribute('lang'), el('a').textContent]).toEqual(['20 November 2026', false, 'ar-EG', '٢٠ نوفمبر ٢٠٢٦']);
+  });
+
+  test('a value it can\'t read renders an empty element and warns once; a day that isn\'t on the calendar too', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await render(<FormattedDate id="n" value="soon" />);
+    expect([el('n').textContent, el('n').hasAttribute('datetime'), formatDate('2026-02-31', 'en'), formatDate(NaN, 'en')]).toEqual(['', false, '', '']);
+    expect(warn.mock.calls.some(([m]) => String(m).includes('"soon" isn\'t a date'))).toBe(true);
+    warn.mockRestore();
+  });
+
+  test('a time zone Intl doesn\'t know writes a medium date with a warning, rather than throwing', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(formatDate('2026-11-20T09:30:00Z', 'en', { timeZone: 'Mars/Olympus', timeStyle: 'short' })).toMatch(/^Nov 2[01], 2026$/);
+    expect(warn.mock.calls.some(([m]) => String(m).includes('FormattedDate:'))).toBe(true);
+    warn.mockRestore();
+  });
+
+  test('on the server a moment with no time zone is written in UTC; it hydrates without a mismatch and then reads in the reader\'s zone', async () => {
+    const at = '2026-11-20T23:30:00Z';
+    const tree = <FormattedDate id="h" value={at} timeStyle="short" locale="en" />;
+    const host = document.createElement('div');
+    host.innerHTML = renderToString(tree);
+    document.body.append(host);
+    try {
+      expect(plain(el('h').textContent)).toBe(plain(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(at))));
+      const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const root = hydrateRoot(host, tree);
+      await expect.poll(() => el('h').textContent).toBe(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(at)));
+      expect([el('h').getAttribute('datetime'), errors.mock.calls.length]).toEqual(['2026-11-20T23:30:00.000Z', 0]);
+      errors.mockRestore();
+      root.unmount();
+    } finally { host.remove(); }
+  });
+});

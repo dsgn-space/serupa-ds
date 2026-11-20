@@ -50,9 +50,17 @@ A component's `value`, `open`, `expanded` or `step` was passed on one render and
 A Countdown whose `to` isn't a date (a typo, an empty string, a format `Date` can't read), or whose `seconds` isn't a number, shows nothing, with no other sign. Pass `to` as a `Date`, a timestamp in milliseconds or an ISO string such as `"2026-11-14T18:00:00Z"`, or the time left as `seconds`.
 
 
+## date-options
+
+FormattedDate or `formatDate` got options Intl rejects, most often a `timeZone` that isn't an IANA name ("WIB" for "Asia/Jakarta"). Rather than throw and unmount the page, it's written as a medium date. Fix the options; see FormattedDate.
+
 ## date-string
 
 A date component (Calendar, DatePicker, DateRangePicker) got a string it can't read as a day, such as "tomorrow", "2026-13-01" or "2026-02-31", so it shows no date and the app holds a value nobody sees. Pass the day as "yyyy-mm-dd" or as a Date. An empty string is read as no date and doesn't warn. What people type is reported through `onInvalidInput` instead.
+
+## date-value
+
+A FormattedDate whose `value` isn't a date (a typo, an empty string, a format `Date` can't read, a day not on the calendar such as "2026-02-31") shows nothing, with no other sign. Pass a `Date`, a timestamp in milliseconds, an ISO date and time such as `"2026-11-20T09:30:00Z"`, or a `"yyyy-mm-dd"` day.
 
 ## datetime-string
 
