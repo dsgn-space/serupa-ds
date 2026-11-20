@@ -64,6 +64,9 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
       if (!box) return;
       for (const o of el.querySelectorAll<HTMLElement>('dialog, [popover]')) {
         if (box.contains(o) || copied.has(o) || !o.childElementCount) continue;
+        // A picture still loading is copied blank (Lightbox's stage hides it until it says it's loaded): wait for it,
+        // as its arrival changes the markup and measures again.
+        if ([...o.querySelectorAll('img')].some((i) => !i.complete) || o.querySelector('[data-state="loading"]')) continue;
         copied.add(o);
         const c = o.cloneNode(true) as HTMLElement;
         c.removeAttribute('popover');
@@ -75,7 +78,11 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
         box.append(c);
         // The copy is what's numbered, so the live one closes: a menu or popover a story opens on arrival would
         // otherwise stay over the docs page.
-        if (o.matches(':popover-open')) { try { o.hidePopover(); } catch { /* closed already */ } }
+        if (o instanceof HTMLDialogElement) { if (o.open) o.close(); }
+        else if (o.matches(':popover-open')) { try { o.hidePopover(); } catch { /* closed already */ } }
+        // A panel the component keeps drawn while its state says open (Tour's, which also outlines its step's element)
+        // is asked to close as a person would, with Escape, so its state agrees.
+        if (o.getAttribute('role') === 'dialog' && !(o instanceof HTMLDialogElement)) o.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
       }
     };
     // "opened": a menu or popover that only has content while open is opened once the story is there, copied, and
