@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { colorName, contrastRatio, normalizeHex } from '../../internal/color';
@@ -321,6 +321,21 @@ describe('ColorPicker', () => {
     await new Promise((r) => setTimeout(r, 50));
     expect([at, calls, group().getAttribute('aria-readonly'), radios().some((r) => r.disabled), hex().readOnly, hex().value, click.defaultPrevented && enter.defaultPrevented && !tab.defaultPrevented, swatch('Yellow').getAttribute('aria-checked'),
       new FormData(document.getElementById('f') as HTMLFormElement).get('color')]).toEqual([true, [], 'true', false, true, 'fde047', true, 'true', '#fde047']);
+  });
+
+  test('pointed at, a swatch not yet picked shows a 2px ring in border-control (3:1 on the page in every theme), where the picked one\'s ring goes; the picked one keeps its primary ring', async () => {
+    await render(<ColorPicker aria-label="Label color" swatches={SW} defaultValue="#1D4ED8" />);
+    const ring = (b: HTMLElement) => { const c = css(b); return [c.outlineStyle, c.outlineWidth, c.outlineColor]; };
+    expect(ring(swatch('Yellow'))[0]).toBe('none');
+    await userEvent.hover(swatch('Yellow'));
+    await expect.poll(() => ring(swatch('Yellow'))).toEqual(['solid', '2px', color('var(--border-control)')]);
+    const low: string[] = [];
+    for (const th of THEMES) { document.documentElement.setAttribute('data-theme', th); const r = contrast(css(swatch('Yellow')).outlineColor, css(document.body).backgroundColor); if (r < 3) low.push(`${th}: ${r.toFixed(2)}`); }
+    document.documentElement.removeAttribute('data-theme');
+    expect(low).toEqual([]);
+    await userEvent.hover(swatch('Blue'));
+    expect(ring(swatch('Blue'))[2]).toBe(color('var(--primary)'));
+    await userEvent.hover(document.body, { position: { x: 5, y: 600 } });
   });
 
   test('disabled: the swatches and the custom-color well show the disabled cursor, not a pointer', async () => {
