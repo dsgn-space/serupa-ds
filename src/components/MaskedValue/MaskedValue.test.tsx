@@ -7,7 +7,7 @@ import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const visible = (id: string) => el(id).querySelector('span')!.textContent;
+const visible = (id: string) => [...el(id).children].find((c) => c.localName === 'span' && c.textContent)!.textContent;   // the value: the first text after the Show button
 const spoken = (id: string) => el(id).querySelector('span[aria-hidden] + span')?.textContent;
 const toggle = (id: string) => el(id).querySelector('button')!;
 
@@ -73,5 +73,16 @@ describe('MaskedValue', () => {
   test('a long revealed value wraps inside a narrow column rather than widening it', async () => {
     await render(<div style={{ width: 160 }}><MaskedValue id="lw" value="GB82WEST12345698765432GB82WEST12345698765432" label="Account" revealable revealed /></div>);
     expect(el('lw').getBoundingClientRect().width).toBeLessThanOrEqual(160);
+  });
+
+  test('Show stays under the pointer as the value appears, so a second press hides it again', async () => {
+    const screen = await render(<MaskedValue value="sk_live_51Hq8f2KcX9vR" label="API key" start={8} end={0} revealable />);
+    const show = screen.getByRole('button', { name: 'Show API key' });
+    const before = show.element().getBoundingClientRect();
+    await userEvent.click(show);
+    const after = show.element().getBoundingClientRect();
+    expect([after.left - before.left, show.element().getAttribute('aria-pressed')]).toEqual([0, 'true']);
+    await userEvent.click(show);
+    expect(show.element().getAttribute('aria-pressed')).toBe('false');
   });
 });
