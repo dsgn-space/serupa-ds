@@ -150,6 +150,25 @@ describe('ImageCropper', () => {
     expect([pinch.defaultPrevented, last(calls)!.width]).toEqual([true, Math.round(600 / Math.E)]);
   });
 
+  test('defaultCrop starts from a saved crop; crop (controlled) shows the app\'s, and a move the app doesn\'t take goes back', async () => {
+    const a: CropArea[] = [], b: CropArea[] = [];
+    const saved = { x: 300, y: 150, width: 300, height: 300 };
+    await render(<>
+      <ImageCropper aria-label="Saved" src={WIDE} defaultCrop={saved} onCropChange={(v) => a.push(v)} />
+      <ImageCropper aria-label="Held" src={WIDE} crop={saved} onCropChange={(v) => b.push(v)} />
+    </>);
+    await loaded(a); await loaded(b);
+    expect([a[0], b[0]]).toEqual([saved, saved]);
+    await expect.element(page.getByRole('group', { name: 'Saved' }).getByRole('slider', { name: 'Zoom' })).toHaveAttribute('aria-valuetext', '200%');
+    const held = page.getByRole('group', { name: 'Held' }).getByRole('application', { name: 'Crop area' }).element() as HTMLElement;
+    held.focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(last(b)).toEqual({ x: 330, y: 150, width: 300, height: 300 });
+    // the app kept its crop, so the picture stays where crop says
+    const img = held.querySelector('img')!;
+    expect([img.style.left, img.style.top]).toEqual(['-100%', '-50%']);
+  });
+
   test('a new src starts over, centred, and says its crop', async () => {
     const calls: CropArea[] = [];
     const screen = await render(<ImageCropper aria-label="Photo" src={WIDE} onCropChange={(a) => calls.push(a)} />);

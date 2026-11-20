@@ -32,9 +32,9 @@ const photo = area && await cropImage(src, area, { width: 256 });
 
 Drawn from the `Playground` story.
 
-1. **Frame**: the crop's shape (`aspect`), with the picture behind it filling it edge to edge. A round one dims the picture outside a circle and rings it.
-2. **Thirds**: thin lines in thirds while the picture is dragged.
-3. **Zoom row**: Zoom out, a small [Slider](../Slider/README.md) named "Zoom", Zoom in.
+1. **Frame** (`.dk-image-cropper__frame`): the crop's shape (`aspect`), with the picture behind it filling it edge to edge. A round one dims the picture outside a circle and rings it.
+2. **Thirds** (`.dk-image-cropper__grid`): thin lines in thirds while the picture is dragged.
+3. **Zoom row** (`.dk-image-cropper__zoom`): Zoom out, a small [Slider](../Slider/README.md) named "Zoom", Zoom in.
 
 ## Usage
 
@@ -43,6 +43,7 @@ Drawn from the `Playground` story.
 - `onCropChange(area)` fires once the picture loads (centred, as large as fits) and after every move or zoom, with `{ x, y, width, height }` in the picture's own whole pixels. Keep the last one for Save.
 - `cropImage(src, area, { width, type, quality })` resolves to a Blob of the crop, `width` pixels wide (default: the crop's own width). A picture from another site needs CORS: give it `crossOrigin="anonymous"` here and in `cropImage`'s options, or crop on the server.
 - The picture always covers the frame, so a crop never has an empty edge, and zoom 1 is as far out as it goes.
+- To start from a crop saved before, give it as `defaultCrop` (or `crop` with `onCropChange`, controlled): the picture is moved and zoomed to show it.
 - A new `src` starts over: centred at `defaultZoom`.
 
 ### Do and don't
@@ -53,7 +54,15 @@ Drawn from the `Playground` story.
 ## Accessibility
 
 - **Role and name:** a `group` named by its Field label or `aria-label`. In it, the frame is a focusable group named "Crop area" and described by how to use it ("Drag the picture or use the arrow keys to move it, and plus or minus to zoom."). The zoom is a slider named "Zoom", read as a percentage, between the "Zoom out" and "Zoom in" buttons.
-- **Keyboard:** Tab reaches the frame, then the zoom row. On the frame, the arrow keys move the picture the way they point, a tenth of the frame at a time (with Shift, half); + and − zoom a tenth around the middle. The slider takes its usual keys.
+- **Keyboard:** Tab reaches the frame, then the zoom row; the slider takes its usual keys.
+
+| Key | Does |
+| --- | --- |
+| Tab | To the frame, then Zoom out, the slider and Zoom in |
+| ArrowLeft, ArrowRight, ArrowUp, ArrowDown | On the frame: move the picture the way the arrow points, a tenth of the frame |
+| Shift with an arrow | Move it half the frame |
+| + (or =), − | On the frame: zoom in or out a tenth, around the middle |
+
 - **Pointer and touch:** drag the picture, or tap a spot to bring it to the middle (2.5.7: moving needs no drag, and zooming has buttons). Two fingers pinch to zoom, around their middle; a trackpad pinch (Ctrl with the wheel) zooms too. The page doesn't scroll under a finger on the frame (`touch-action: none`); a plain mouse wheel scrolls the page.
 - **Contrast:** the failure text reads 4.5:1 on the frame in every theme (`ImageCropper.test.tsx`). In forced colors, the frame's edge and the ring use the system text color.
 - **What's still yours:** the label, where the picture will be shown, and a text alternative wherever the cropped picture appears.
@@ -65,11 +74,15 @@ Drawn from the `Playground` story.
 | `src` | `string` | | The picture: a URL, or an object URL of a picked file. A new one starts over. |
 | `aspect` | `number` | `1` | The crop's width over its height: `16 / 9`, `3 / 4`. |
 | `shape` | `'rect' \| 'round'` | `'rect'` | `'round'` dims the picture outside a circle (an ellipse with another aspect). |
+| `crop` | `CropArea \| null` | | The crop (controlled), in the picture's pixels; use with `onCropChange`. |
+| `defaultCrop` | `CropArea \| null` | | The crop at first (uncontrolled), such as a saved one; centred when left out. |
 | `defaultZoom` | `number` | `1` | The zoom at first; 1 shows the whole width or height. |
 | `maxZoom` | `number` | `4` | How far in it zooms. |
 | `onCropChange` | `(area: CropArea) => void` | | The crop in the picture's pixels, on load and after each change. |
 | `crossOrigin` | `'' \| 'anonymous' \| 'use-credentials'` | | For another site's picture, so `cropImage` can read it. |
 | `disabled` | `boolean` | | Turns moving and zooming off. |
+
+| `id` | `string` | | Goes to the root `<div role="group">`; inside a Field, the Field's label names it through this id. |
 
 `className`, `ref` and other props go to the root `<div>`.
 

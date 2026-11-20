@@ -35,6 +35,11 @@ export interface ImageCropperProps extends Omit<React.HTMLAttributes<HTMLDivElem
   defaultZoom?: number | undefined;
   /** How far in it zooms. Default: 4. */
   maxZoom?: number | undefined;
+  /** The crop (controlled), in the picture's own pixels: one onCropChange gave, or one saved before. The picture is
+   *  moved and zoomed to show it (kept inside the picture and the zoom range). Use with onCropChange. */
+  crop?: CropArea | null | undefined;
+  /** The crop at first (uncontrolled), such as one saved before, in place of the centred one; a new src drops it. */
+  defaultCrop?: CropArea | null | undefined;
   /** Called with the crop once the picture loads and after every move or zoom, in the picture's own whole pixels.
    *  Give it to cropImage for the cropped picture, or send it with the original for the server to crop. */
   onCropChange?: ((area: CropArea) => void) | undefined;
@@ -53,6 +58,11 @@ function areaOf(nw: number, nh: number, aspect: number, zoom: number, cx: number
   if (h > nh) { h = nh; w = nh * aspect; }
   w /= zoom; h /= zoom;
   return { x: clamp(cx * nw - w / 2, 0, nw - w), y: clamp(cy * nh - h / 2, 0, nh - h), width: w, height: h };
+}
+// The zoom and centre that show `a`: the inverse of areaOf.
+function viewOf(nw: number, nh: number, aspect: number, maxZoom: number, a: CropArea): { zoom: number; center: [number, number] } {
+  const full = areaOf(nw, nh, aspect, 1, 0.5, 0.5);
+  return { zoom: clamp(Math.round(full.width / Math.max(1, a.width) * 1000) / 1000, 1, maxZoom), center: [(a.x + a.width / 2) / nw, (a.y + a.height / 2) / nh] };
 }
 const whole = (a: CropArea): CropArea => ({ x: Math.round(a.x), y: Math.round(a.y), width: Math.round(a.width), height: Math.round(a.height) });
 
@@ -80,7 +90,7 @@ export function cropImage(src: string, area: CropArea, options: { width?: number
   });
 }
 
-const OWN = { src: 1, aspect: 1, shape: 1, defaultZoom: 1, maxZoom: 1, onCropChange: 1, crossOrigin: 1, disabled: 1, className: 1, style: 1 } as const;
+const OWN = { src: 1, crop: 1, defaultCrop: 1, aspect: 1, shape: 1, defaultZoom: 1, maxZoom: 1, onCropChange: 1, crossOrigin: 1, disabled: 1, className: 1, style: 1 } as const;
 const STEP = 0.1;   // zoom by a key or a button
 const TAP = 4;      // px a press may wander and still be a tap
 type Gesture = { x: number; y: number; cx: number; cy: number; moved: boolean };
@@ -111,10 +121,13 @@ export const ImageCropper = /* @__PURE__ */ component<HTMLDivElement, ImageCropp
   const first = clamp(props.defaultZoom || 1, 1, maxZoom);
   const [nat, setNat] = React.useState<[number, number] | null>(null);
   const [failed, setFailed] = React.useState(false);
-  const [zoom, setZoom] = React.useState(first);
-  const [center, setCenter] = React.useState<[number, number]>([0.5, 0.5]);
+  const [ownZoom, setZoom] = React.useState(first);
+  const [ownCenter, setCenter] = React.useState<[number, number]>([0.5, 0.5]);
   const [shown, setShown] = React.useState(props.src);
   if (shown !== props.src) { setShown(props.src); setNat(null); setFailed(false); setZoom(first); setCenter([0.5, 0.5]); }
+  // Controlled, the view follows crop; otherwise it's this cropper's own.
+  const ctl = nat && props.crop ? viewOf(nat[0], nat[1], aspect, maxZoom, props.crop) : null;
+  const zoom = ctl ? ctl.zoom : ownZoom, center = ctl ? ctl.center : ownCenter;
   const area = nat ? areaOf(nat[0], nat[1], aspect, zoom, center[0], center[1]) : null;
 
   // Moves to zoom z around (cx, cy), and says the new crop.
@@ -136,13 +149,16 @@ export const ImageCropper = /* @__PURE__ */ component<HTMLDivElement, ImageCropp
   };
   // The src whose size is known, so a load event after the ref saw it loaded doesn't say the crop twice.
   const read = React.useRef<string | null>(null);
+  const firstSrc = React.useRef(props.src);
   const loaded = (i: HTMLImageElement) => {
     if (read.current === props.src) return;
     read.current = props.src;
     if (!i.naturalWidth || !i.naturalHeight) { setFailed(true); return; }
     const n: [number, number] = [i.naturalWidth, i.naturalHeight];
     setNat(n); setFailed(false);
-    go(n, first, 0.5, 0.5);
+    // The first view: the crop given (controlled, or defaultCrop while it's still the first src), or centred.
+    const at = props.crop || (props.src === firstSrc.current ? props.defaultCrop : null);
+    if (at) { const v = viewOf(n[0], n[1], aspect, maxZoom, at); go(n, v.zoom, v.center[0], v.center[1]); } else go(n, first, 0.5, 0.5);
   };
   // A picture that loaded before hydration fires no load event for React: read it as it's attached.
   const imgRef = (i: HTMLImageElement | null) => { if (i && i.complete && i.naturalWidth) loaded(i); };

@@ -57,7 +57,7 @@ const SAMPLES = {
 // English's own invalidValue says nothing (the browser's message stays); a translation words each reason.
 const SILENT_IN_ENGLISH = new Set(['invalidValue']);
 // Words that are often the same in another language (a brand, an abbreviation, a loanword).
-const SAME_OK = new Set(['menu', 'agendaView', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf', 'cascadePath', 'chartShare', 'statusDay']);
+const SAME_OK = new Set(['menu', 'agendaView', 'formatHint', 'hexCode', 'keyName', 'avatarStatus', 'carouselRole', 'slideRole', 'contrast', 'ratingValue', 'moreToasts', 'sliderMinimum', 'chartPoint', 'attachmentPdf', 'cascadePath', 'chartShare', 'statusDay', 'cropZoom']);   // cropZoom: "Zoom" is the word in de, es, fr, it, nl, pt and sv
 
 // …and in one language only: words that language shares with English.
 const SAME_IN = {

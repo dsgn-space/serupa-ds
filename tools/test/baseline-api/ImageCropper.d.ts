@@ -19,6 +19,8 @@ interface ImageCropperProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
     shape?: "rect" | "round" | undefined;
     defaultZoom?: number | undefined;
     maxZoom?: number | undefined;
+    crop?: CropArea | null | undefined;
+    defaultCrop?: CropArea | null | undefined;
     onCropChange?: ((area: CropArea) => void) | undefined;
     crossOrigin?: "" | "anonymous" | "use-credentials" | undefined;
     disabled?: boolean | undefined;
