@@ -719,17 +719,19 @@ describe('Tabs: tabs people open and close', () => {
       </>
     );
   }
-  const tab = (name: string) => Array.from(el('docs').querySelectorAll<HTMLElement>('[role="tab"]')).find((t) => t.querySelector('.dk-tabs__label')!.textContent === name)!;
-  const names = () => Array.from(el('docs').querySelectorAll('[role="tab"] .dk-tabs__label')).map((t) => t.textContent);
+  // A tab's words: its first span that isn't hidden (the × is aria-hidden, the Delete hint hidden).
+  const words = (t: Element) => t.querySelector(':scope > span:not([aria-hidden]):not([hidden])')!.textContent;
+  const tab = (name: string) => Array.from(el('docs').querySelectorAll<HTMLElement>('[role="tab"]')).find((t) => words(t) === name)!;
+  const names = () => Array.from(el('docs').querySelectorAll('[role="tab"]')).map(words);
 
   test('a closable tab says Delete closes it, and its × is for the pointer only; a tab without onClose has neither', async () => {
     await render(<Docs />);
     const doc = tab('Doc a'), home = tab('Home');
     const hint = document.getElementById(doc.getAttribute('aria-describedby')!)!;
-    expect([hint.textContent, doc.getAttribute('aria-keyshortcuts'), doc.querySelector('.dk-tabs__close')!.getAttribute('aria-hidden')]).toEqual(['Press Delete to close.', 'Delete', 'true']);
-    expect([home.hasAttribute('aria-describedby'), home.hasAttribute('aria-keyshortcuts'), home.querySelector('.dk-tabs__close')]).toEqual([false, false, null]);
+    expect([hint.textContent, doc.getAttribute('aria-keyshortcuts'), doc.querySelector('[data-closes]')!.getAttribute('aria-hidden')]).toEqual(['Press Delete to close.', 'Delete', 'true']);
+    expect([home.hasAttribute('aria-describedby'), home.hasAttribute('aria-keyshortcuts'), home.querySelector('[data-closes]')]).toEqual([false, false, null]);
     // The × is at least 24px square (WCAG 2.5.8).
-    const r = doc.querySelector('.dk-tabs__close')!.getBoundingClientRect();
+    const r = doc.querySelector('[data-closes]')!.getBoundingClientRect();
     expect([r.width >= 24, r.height >= 24]).toEqual([true, true]);
   });
 
@@ -767,7 +769,7 @@ describe('Tabs: tabs people open and close', () => {
   test('a click on the × closes that tab without selecting it first', async () => {
     await render(<Docs />);
     await userEvent.click(tab('Doc a'));
-    await userEvent.click(tab('Doc c').querySelector('.dk-tabs__close') as HTMLElement);
+    await userEvent.click(tab('Doc c').querySelector('[data-closes]') as HTMLElement);
     expect([names(), tab('Doc a').getAttribute('aria-selected')]).toEqual([['Home', 'Doc a', 'Doc b'], 'true']);
   });
 
@@ -781,6 +783,6 @@ describe('Tabs: tabs people open and close', () => {
 
   test('without onAdd, TabList is the tablist itself, as before', async () => {
     await render(<Docs onAdd={false} />);
-    expect([el('docs').querySelector('.dk-tabs__bar'), el('docs').querySelector(':scope > [role="tablist"]') != null]).toEqual([null, true]);
+    expect(el('docs').firstElementChild!.getAttribute('role')).toBe('tablist');
   });
 });
