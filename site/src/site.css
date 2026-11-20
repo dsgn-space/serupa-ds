@@ -100,6 +100,9 @@ ol.site-list { list-style: decimal; }
 /* With room, code in a written table breaks only when one word is wider than its column, so a prop's name in the
    first column (onOpenChange) isn't split to give a long Notes column one more character. */
 @media (min-width: 64rem) { .site-table:not(.site-table--props) .site-code { overflow-wrap: break-word; } }
+/* …and a name in the first column stays on one line: motion-stagger-limit, not motion-stagger- over limit. A hyphen is
+   a break the browser takes on its own, so break-word alone doesn't keep it. */
+@media (min-width: 64rem) { .site-table:not(.site-table--props) td:first-child > .site-code:only-child { white-space: nowrap; } }
 
 /* ── A story in its frame ──────────────────────────────────────────────────────────────────────────────────── */
 .site-demo { margin-block-start: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface); overflow: clip; }
