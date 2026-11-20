@@ -108,6 +108,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
   const locale = useLocale();
   const [view, setView] = React.useState<View>(() => readView(search));
   const [picked, setPicked] = React.useState<string[]>([]);
+  const mainRef = React.useRef<HTMLElement>(null);
   const [archived, setArchived] = React.useState<ReadonlySet<string>>(() => new Set());
   const matches = (v: View) => {
     const q = v.q.trim().toLowerCase();
@@ -157,7 +158,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
       <header className="border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
+      <main ref={mainRef} id="main" className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title="Projects" primary={{ label: 'New project', href: '#new-project' }} />
         <TableToolbar
           noun="projects"
@@ -215,7 +216,7 @@ export function ListSearch({ projects = demo, search = '', onSearchChange, pageS
             <EmptyNoResults query={view.q} title={(text) => (text ? `No projects match “${text}”` : 'No projects match these filters')}
               description="Check the spelling, or clear the filters to see every project." headingLevel={2} onClearFilters={() => {
               clear();
-              document.querySelector<HTMLInputElement>('main form[role="search"] input')?.focus();
+              mainRef.current?.querySelector<HTMLInputElement>('form[role="search"] input')?.focus();
             }} />
           )}
         </TableToolbar>

@@ -72,6 +72,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
   const [said, setSaid] = React.useState('');
   const answer = React.useRef<HTMLHeadingElement>(null);
   const focusFirst = React.useRef(false);
+  const page = React.useRef<HTMLElement>(null);
 
   const save = (next: Record<string, boolean>) => Promise.resolve().then(() => onSave?.(next));
   const submit = (e: React.FormEvent) => {
@@ -96,7 +97,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
   };
   React.useEffect(() => {
     if (stopped) answer.current?.focus();
-    else if (focusFirst.current) { focusFirst.current = false; document.querySelector<HTMLInputElement>('main [role="switch"]')?.focus(); }
+    else if (focusFirst.current) { focusFirst.current = false; page.current?.querySelector<HTMLInputElement>('[role="switch"]')?.focus(); }
   }, [stopped]);
 
   return (
@@ -106,7 +107,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
         <p className="m-0 text-base font-semibold">Acme</p>
         <Link underline="hover" href="#shop">Go to the shop</Link>
       </header>
-      <main id="main" className="mx-auto flex max-w-xl flex-col px-4 py-10 outline-none">
+      <main ref={page} id="main" className="mx-auto flex max-w-xl flex-col px-4 py-10 outline-none">
         <PageHeader title="Emails from Acme" description={`Choose what comes to ${email}. Changes take effect within a day.`} />
         <Card padding="lg" className="mt-6">
           {stopped ? (

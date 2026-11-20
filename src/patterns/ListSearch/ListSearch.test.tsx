@@ -173,6 +173,14 @@ describe('Patterns/List with search and filters', () => {
     expect(active().getAttribute('type')).toBe('search');
   });
 
+  test('two on one page: "Clear filters" focuses the search on its own page', async () => {
+    const screen = await render(<><ListSearch search="" /><ListSearch search="?q=rocket" /></>);
+    await expect.element(screen.getByRole('heading', { name: 'No projects match “rocket”', level: 2 })).toBeVisible();
+    await screen.getByRole('button', { name: 'Clear filters' }).last().click();
+    await expect.poll(() => active().getAttribute('type')).toBe('search');
+    expect(document.querySelectorAll('main')[1]!.contains(active())).toBe(true);
+  });
+
   test('filters that match nothing, with no search, say "these filters"', async () => {
     const screen = await render(<ListSearch search="?status=Done&owner=Ana" projects={[{ name: 'X', status: 'Active', owner: 'Ana', updated: '2026-01-01' }]} />);
     await expect.element(screen.getByRole('heading', { name: 'No projects match these filters' })).toBeVisible();
