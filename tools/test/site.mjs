@@ -176,8 +176,22 @@ await inParallel(opened, workers, async (p, w) => {
   // busy runner (/components/chat, 228px wider once on 14 Nov, fine on the next run).
   await w.page.waitForFunction(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth, null, { timeout: 2000, polling: 100 }).catch(() => {});
   const wide = await w.page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => done(document.documentElement.scrollWidth - document.documentElement.clientWidth)))));
+  // Nor does an example's own box, unless what's wide scrolls by itself (a table, a grid, code): a story that shows a
+  // narrow column gives it a max-width, not a width, so on a phone the column is the screen's.
+  // What's drawn is measured, not the box's scroll width, which a closed popup waiting off to the side adds to.
+  const boxes = await w.page.evaluate(() => [...document.querySelectorAll('#article [data-site-demo]')].filter((d) => {
+    if (getComputedStyle(d).overflowX === 'visible') return false;
+    const box = d.getBoundingClientRect();
+    return [...d.querySelectorAll('*')].some((e) => {
+      const r = e.getBoundingClientRect();
+      if (!r.width || !r.height || (r.left >= box.left - 1 && r.right <= box.right + 1) || getComputedStyle(e).position === 'fixed' || getComputedStyle(e).visibility === 'hidden') return false;
+      for (let a = e.parentElement; a && a !== d; a = a.parentElement) if (getComputedStyle(a).overflowX !== 'visible') return false;
+      return true;
+    });
+  }).map((d) => d.closest('section, [id]')?.querySelector('h2, h3')?.textContent || 'an example'));
   await w.page.setViewportSize({ width: 1280, height: 800 });
   t(`${p.path} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen`);
+  t(`${p.path}: no example scrolls sideways in its box at 320px`, !boxes.length, `wider than their box: ${boxes.join(', ')}`);
   // Storybook's own links have been pointed at the site's pages by now; one that is left has no page here.
   const lost = seen.links.filter((h) => h.startsWith('?path=') || (h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/')));
   t(`${p.path}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
