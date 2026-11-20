@@ -30,9 +30,11 @@ describe('Tooltip', () => {
   test('shown on a Button that is pressed and let go, it holds still: it rode the press\'s scale, shrinking with the Button and growing back', async () => {
     await withMotion(async () => {
     // Where the layer sits, each frame for a while, while it shows.
+    // To a tenth of a px: WebKit lays out in 64ths of a px, and a layer that holds still reads 95.97px one frame and 95.99px the next.
+    const px = (v: string) => Math.round(parseFloat(v) * 10) / 10;
     const spots = async (layer: () => HTMLElement | null, ms: number) => {
       const seen = new Set<string>();
-      for (let t = performance.now(); performance.now() - t < ms;) { const l = layer(); if (l?.matches(':popover-open')) { const cs = getComputedStyle(l); seen.add(cs.left + ' ' + cs.top); } await new Promise(requestAnimationFrame); }
+      for (let t = performance.now(); performance.now() - t < ms;) { const l = layer(); if (l?.matches(':popover-open')) { const cs = getComputedStyle(l); seen.add(px(cs.left) + ' ' + px(cs.top)); } await new Promise(requestAnimationFrame); }
       return [...seen];
     };
       await render(<div style={{ padding: '80px' }}><Tooltip content="Save the draft" defaultOpen><Button id="tpress">Save</Button></Tooltip></div>);

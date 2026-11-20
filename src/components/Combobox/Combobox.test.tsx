@@ -94,9 +94,11 @@ describe('Combobox', () => {
   test('multiple: pasting a list picks every option it names (any case and accents, by label or value), says so once, and leaves what matched nothing in the field', async () => {
     const seen: string[][] = [];
     await render(<Combobox aria-label="Countries" id="pst" multiple options={COUNTRIES} defaultValue={['Brazil']} onValueChange={(v) => seen.push(v)} />);
+    // Firefox gives a ClipboardEvent made in script an empty copy of the clipboardData passed in, so the paste carries it as its own.
     const paste = (text: string) => {
       const data = new DataTransfer(); data.setData('text/plain', text);
-      const ev = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true });
+      const ev = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(ev, 'clipboardData', { value: data });
       el('pst').dispatchEvent(ev);
       return ev.defaultPrevented;
     };
@@ -112,7 +114,8 @@ describe('Combobox', () => {
     await render(<><Combobox aria-label="A" id="ps1" multiple options={COUNTRIES} /><Combobox aria-label="B" id="ps2" options={COUNTRIES} /></>);
     const paste = (id: string, text: string) => {
       const data = new DataTransfer(); data.setData('text/plain', text);
-      const ev = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true });
+      const ev = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+      Object.defineProperty(ev, 'clipboardData', { value: data });
       el(id).dispatchEvent(ev);
       return ev.defaultPrevented;
     };
