@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, oneOf, omit, setRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { announce } from '../../internal/announce';
@@ -80,16 +80,7 @@ const textOf = (col: DataGridColumn, row: DataGridRow) => (col.format ? col.form
 // Clipboard text as rows of cells: tab between cells, a line break between rows (what spreadsheets copy).
 const parseTsv = (text: string) => text.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').map((l) => l.split('\t'));
 
-/* DataGrid: a spreadsheet-like grid of cells, for data people work on in place (a price list, a stock count, a
-   timesheet): native table markup with role="grid" (WAI-ARIA grid pattern). One cell is a Tab stop; the arrow keys,
-   Home and End (with Ctrl, the grid's ends) and Page Up and Page Down move it. Shift with them, or Shift+click,
-   selects a range; Ctrl+A all. Enter or F2 edits an editable cell, typing starts an edit with that character,
-   Enter or Tab saves (moving down or on), Escape cancels; Delete clears the range. Copy gives the range as
-   tab-separated text; paste fills from the cell, so a block copied from a spreadsheet lands as a block. The app
-   keeps the rows: onRowsChange gives the new ones and what changed. Column headers are part of the grid and say their name. */
-/** A grid of cells to move through with the arrow keys, edit in place, select, copy and paste, like a spreadsheet.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProps>('DataGrid', function DataGrid(props, ref) {
+function DataGridRender({ ref, ...props }: DataGridProps & React.RefAttributes<HTMLTableElement>) {
   const rest = omit(props, OWN);
   const L = useSettings(words).labels, locale = useLocale();
   const base = domId('dk-dg', React.useId());
@@ -261,7 +252,18 @@ export const DataGrid = /* @__PURE__ */ component<HTMLTableElement, DataGridProp
       <p hidden id={base + '-hint'}>{L.dataGridHint}</p>
     </div>
   );
-}) as <R extends object = DataGridRow>(props: DataGridProps<R> & { ref?: React.Ref<HTMLTableElement> | undefined }) => React.ReactElement;
+}
+
+/* DataGrid: a spreadsheet-like grid of cells, for data people work on in place (a price list, a stock count, a
+   timesheet): native table markup with role="grid" (WAI-ARIA grid pattern). One cell is a Tab stop; the arrow keys,
+   Home and End (with Ctrl, the grid's ends) and Page Up and Page Down move it. Shift with them, or Shift+click,
+   selects a range; Ctrl+A all. Enter or F2 edits an editable cell, typing starts an edit with that character,
+   Enter or Tab saves (moving down or on), Escape cancels; Delete clears the range. Copy gives the range as
+   tab-separated text; paste fills from the cell, so a block copied from a spreadsheet lands as a block. The app
+   keeps the rows: onRowsChange gives the new ones and what changed. Column headers are part of the grid and say their name. */
+/** A grid of cells to move through with the arrow keys, edit in place, select, copy and paste, like a spreadsheet.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const DataGrid = /* @__PURE__ */ named('DataGrid', DataGridRender) as <R extends object = DataGridRow>(props: DataGridProps<R> & { ref?: React.Ref<HTMLTableElement> | undefined }) => React.ReactElement;
 
 interface RowApi { pick: (p: Pos, e: React.MouseEvent) => void; begin: (p: Pos, text: string) => void; save: (text: string, then: Pos | null) => void; blur: (text: string) => void; cancel: () => void }
 // One body row. Memoised on what it shows: its row, the active column when the active cell is here (else -1), the

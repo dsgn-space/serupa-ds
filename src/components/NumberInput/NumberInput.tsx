@@ -8,7 +8,7 @@ import { pressFocuses, useAffixes } from '../../internal/affix';
 import { Icon } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import type { InputProps } from '../Input/Input';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { isComposing } from '../../internal/ime';
 import { formatNumber, parseNumber } from '../../internal/numbers';
@@ -70,13 +70,7 @@ export interface NumberInputProps extends Omit<InputProps, 'type' | 'actions' | 
 // Format options back from their JSON key, so a memo can depend on the options by value.
 const keyed = (key: string) => (key ? (JSON.parse(key) as Intl.NumberFormatOptions) : undefined);
 
-/* NumberInput: a field for a number, with − and + buttons at the end. role="spinbutton" with aria-valuenow,
-   min and max. ArrowUp and ArrowDown change it by step, PageUp, PageDown and Shift+arrows by largeStep steps,
-   Home and End go to min and max. People can type freely, in the locale's marks ("1.500" is 1500 in id-ID); on blur
-   the text is parsed, clamped to min..max, rounded to the step's decimals and written back in the locale's form. It uses Input's box and tokens: className and style go to the box; ref and
-   every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
-/** A number field with − and + buttons, arrow keys, min, max and step. */
-export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInputProps>('NumberInput', function NumberInput(props, ref) {
+function NumberInputRender({ ref, ...props }: NumberInputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('NumberInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
@@ -299,4 +293,12 @@ export const NumberInput = /* @__PURE__ */ component<HTMLInputElement, NumberInp
       {rejected && <span id={niId + '-rejected'} className="dk-input-rejected">{rejected}</span>}
     </>
   );
-});
+}
+
+/* NumberInput: a field for a number, with − and + buttons at the end. role="spinbutton" with aria-valuenow,
+   min and max. ArrowUp and ArrowDown change it by step, PageUp, PageDown and Shift+arrows by largeStep steps,
+   Home and End go to min and max. People can type freely, in the locale's marks ("1.500" is 1500 in id-ID); on blur
+   the text is parsed, clamped to min..max, rounded to the step's decimals and written back in the locale's form. It uses Input's box and tokens: className and style go to the box; ref and
+   every other prop to the <input> (type="text" with inputMode="decimal", so mobile keyboards show digits). */
+/** A number field with − and + buttons, arrow keys, min, max and step. */
+export const NumberInput = /* @__PURE__ */ named('NumberInput', NumberInputRender);

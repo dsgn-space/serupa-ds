@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isoDate, toDay } from '../../internal/dates';
 import { canonicalLocale } from '../../internal/locale';
 import { useLocale, useOwnLang } from '../../internal/provider';
@@ -95,12 +95,7 @@ export function relativeTime(date: Date | number | string, now: number, locale?:
   return rtf.format(Math.round(secs / unit(i)[1]), unit(i)[0]);
 }
 
-/* RelativeTime: a <time datetime> that says how long ago (or how far ahead) a moment is, in the locale's words:
-   "3 minutes ago", "yesterday", "in 2 hours". It updates on one shared 15-second clock, and the exact date is its
-   tooltip (title). format "long" (default), "short" or "narrow"; numeric "auto" (default) or "always". More than
-   absoluteAfter days away (7 by default) it shows the date instead. */
-/** How long ago a moment was, in words ("3 minutes ago"), kept up to date; the exact date in its tooltip. */
-export const RelativeTime = /* @__PURE__ */ component<HTMLTimeElement, RelativeTimeProps>('RelativeTime', function RelativeTime(props, ref) {
+function RelativeTimeRender({ ref, ...props }: RelativeTimeProps & React.RefAttributes<HTMLTimeElement>) {
   const rest = omit(props, { date: 1, format: 1, numeric: 1, titleFormat: 1, absoluteAfter: 1, absoluteFormat: 1, locale: 1, className: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const current = React.useSyncExternalStore(subscribe, getNow, getServerNow);
@@ -119,4 +114,11 @@ export const RelativeTime = /* @__PURE__ */ component<HTMLTimeElement, RelativeT
   const title = !valid || props.titleFormat === false ? undefined : new Intl.DateTimeFormat(locale, props.titleFormat || { dateStyle: 'long', timeStyle: day ? undefined : 'short' }).format(d);
   return <time lang={lang} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn('dk-relative-time', props.className)}
     data-component="relative-time" suppressHydrationWarning>{text}</time>;
-});
+}
+
+/* RelativeTime: a <time datetime> that says how long ago (or how far ahead) a moment is, in the locale's words:
+   "3 minutes ago", "yesterday", "in 2 hours". It updates on one shared 15-second clock, and the exact date is its
+   tooltip (title). format "long" (default), "short" or "narrow"; numeric "auto" (default) or "always". More than
+   absoluteAfter days away (7 by default) it shows the date instead. */
+/** How long ago a moment was, in words ("3 minutes ago"), kept up to date; the exact date in its tooltip. */
+export const RelativeTime = /* @__PURE__ */ named('RelativeTime', RelativeTimeRender);

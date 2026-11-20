@@ -29,5 +29,5 @@ interface InputActionProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
     icon?: IconSource | undefined;
     label: string;
 }
-declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
-declare const InputAction: React.ForwardRefExoticComponent<InputActionProps & React.RefAttributes<HTMLButtonElement>>;
+declare const Input: React.FC<InputProps & React.RefAttributes<HTMLInputElement>>;
+declare const InputAction: React.FC<InputActionProps & React.RefAttributes<HTMLButtonElement>>;

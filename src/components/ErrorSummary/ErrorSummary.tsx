@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { summaryTookFocus } from '../../internal/summaryFocus';
 import { en as words } from './labels';
@@ -29,13 +29,7 @@ export interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElem
   autoFocus?: boolean | undefined;
 }
 
-/* ErrorSummary: after a submit fails, a box at the top of the form with a heading and a list of what's wrong, each
-   error a link to its field. It renders only with errors. When it appears, and again when a later submit fails with it
-   still showing (its errors change), it takes focus (tabIndex -1, named by its heading), so a screen reader reads it
-   and the page scrolls to it. A link moves focus to its field and scrolls the field's label into view, not just the
-   control, so the question shows above the answer. className and other props go to the box. */
-/** After a failed submit: a heading and a list of the form's errors, each a link that moves focus to its field. */
-export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSummaryProps>('ErrorSummary', function ErrorSummary(props, ref) {
+function ErrorSummaryRender({ ref, ...props }: ErrorSummaryProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   const locale = useLocale();
   const { errors, title, headingLevel, description, autoFocus, className, ...rest } = props;
@@ -74,7 +68,15 @@ export const ErrorSummary = /* @__PURE__ */ component<HTMLDivElement, ErrorSumma
       </ul>
     </div>
   );
-});
+}
+
+/* ErrorSummary: after a submit fails, a box at the top of the form with a heading and a list of what's wrong, each
+   error a link to its field. It renders only with errors. When it appears, and again when a later submit fails with it
+   still showing (its errors change), it takes focus (tabIndex -1, named by its heading), so a screen reader reads it
+   and the page scrolls to it. A link moves focus to its field and scrolls the field's label into view, not just the
+   control, so the question shows above the answer. className and other props go to the box. */
+/** After a failed submit: a heading and a list of the form's errors, each a link that moves focus to its field. */
+export const ErrorSummary = /* @__PURE__ */ named('ErrorSummary', ErrorSummaryRender);
 
 // A link moves focus to its field and shows the field's label at the top, not the bare control: for a radio or checkbox
 // in a fieldset, the group's legend (the question), else its own label.

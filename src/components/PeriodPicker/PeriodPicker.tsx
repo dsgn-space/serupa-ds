@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import { useFieldControl } from '../../internal/field';
 import { useFormReset } from '../../internal/useFormReset';
@@ -89,14 +89,7 @@ const pageSize = (unit: PeriodUnit) => (unit === 'year' ? 12 : PER[unit]);
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
 
-/* PeriodPicker: a button (role="combobox", so a Field's label, error and required reach it) that opens a dialog with
-   a grid of 12 months, 4 quarters or 12 years, paged by year (by twelve years for years). The grid follows the ARIA
-   date grid pattern, as Calendar does: one Tab stop on the periods, arrows move one or a row, Home and End to the
-   row's ends, PageUp and PageDown a page, Enter or Space picks and closes it, Escape closes it without a change,
-   focus going back to the button. Periods outside min..max are aria-disabled; keys stop at them. */
-/** A month, a quarter or a year, picked from a grid in a popup: for reports, billing periods and dashboards.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodPickerProps>('PeriodPicker', function PeriodPicker(props, ref) {
+function PeriodPickerRender({ ref, ...props }: PeriodPickerProps & React.RefAttributes<HTMLButtonElement>) {
   props = useFieldControl(props);
   const sds = useSettings(words), L = sds.labels;
   const rest = omit(props, { unit: 1, value: 1, defaultValue: 1, onValueChange: 1, min: 1, max: 1, locale: 1, placeholder: 1, size: 1, invalid: 1, required: 1, readOnly: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1 } as const);
@@ -247,4 +240,13 @@ export const PeriodPicker = /* @__PURE__ */ component<HTMLButtonElement, PeriodP
       </div>
     </div>
   );
-});
+}
+
+/* PeriodPicker: a button (role="combobox", so a Field's label, error and required reach it) that opens a dialog with
+   a grid of 12 months, 4 quarters or 12 years, paged by year (by twelve years for years). The grid follows the ARIA
+   date grid pattern, as Calendar does: one Tab stop on the periods, arrows move one or a row, Home and End to the
+   row's ends, PageUp and PageDown a page, Enter or Space picks and closes it, Escape closes it without a change,
+   focus going back to the button. Periods outside min..max are aria-disabled; keys stop at them. */
+/** A month, a quarter or a year, picked from a grid in a popup: for reports, billing periods and dashboards.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const PeriodPicker = /* @__PURE__ */ named('PeriodPicker', PeriodPickerRender);

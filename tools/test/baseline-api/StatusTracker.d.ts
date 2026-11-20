@@ -19,4 +19,4 @@ interface StatusTrackerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     summary?: null | React.ReactNode | undefined;
     legend?: boolean | undefined;
 }
-declare const StatusTracker: React.ForwardRefExoticComponent<StatusTrackerProps & React.RefAttributes<HTMLDivElement>>;
+declare const StatusTracker: React.FC<StatusTrackerProps & React.RefAttributes<HTMLDivElement>>;

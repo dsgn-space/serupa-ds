@@ -6,7 +6,7 @@ import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { Select } from '../Select/Select';
 import { announce } from '../../internal/announce';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
 import { paginationRange } from './paginationRange';
@@ -58,16 +58,11 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   jump?: boolean | undefined;
 }
 
-
 function int(v: unknown, min: number, fallback: number): number {
   return typeof v === 'number' && isFinite(v) && v >= min ? Math.floor(v) : fallback;
 }
 
-/* Pagination: previous and next arrows around page numbers, with … where pages are skipped. Pages are buttons
-   (onPageChange) or, with getHref, links. The current page has aria-current="page". className and every other
-   prop go to the <nav>. */
-/** Moves through pages of results: previous, next, and page numbers with … where pages are skipped. */
-export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps>('Pagination', function Pagination(props, ref) {
+function PaginationRender({ ref, ...props }: PaginationProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings(words);
   const locale = useLocale();
   const rest = omit(props, { count: 1, page: 1, defaultPage: 1, onPageChange: 1, getHref: 1, linkAs: 1, siblings: 1, boundaries: 1, size: 1, previousLabel: 1, nextLabel: 1, pageLabel: 1, total: 1, pageSize: 1, pageSizeOptions: 1, onPageSizeChange: 1, jump: 1, className: 1 });
@@ -187,4 +182,10 @@ export const Pagination = /* @__PURE__ */ component<HTMLElement, PaginationProps
       {jump}
     </nav>
   );
-});
+}
+
+/* Pagination: previous and next arrows around page numbers, with … where pages are skipped. Pages are buttons
+   (onPageChange) or, with getHref, links. The current page has aria-current="page". className and every other
+   prop go to the <nav>. */
+/** Moves through pages of results: previous, next, and page numbers with … where pages are skipped. */
+export const Pagination = /* @__PURE__ */ named('Pagination', PaginationRender);

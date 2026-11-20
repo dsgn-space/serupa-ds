@@ -15,4 +15,4 @@ interface TableOfContentsProps extends Omit<React.HTMLAttributes<HTMLElement>, "
     offset?: number | undefined;
     variant?: "list" | "rail" | undefined;
 }
-declare const TableOfContents: React.ForwardRefExoticComponent<TableOfContentsProps & React.RefAttributes<HTMLElement>>;
+declare const TableOfContents: React.FC<TableOfContentsProps & React.RefAttributes<HTMLElement>>;

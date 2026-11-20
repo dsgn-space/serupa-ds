@@ -19,4 +19,4 @@ interface SplitterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chil
     storageKey?: string | undefined;
     separatorLabel?: string | undefined;
 }
-declare const Splitter: React.ForwardRefExoticComponent<SplitterProps & React.RefAttributes<HTMLDivElement>>;
+declare const Splitter: React.FC<SplitterProps & React.RefAttributes<HTMLDivElement>>;

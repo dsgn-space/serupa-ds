@@ -62,12 +62,12 @@ interface TableActionBarProps extends React.HTMLAttributes<HTMLDivElement> {
     sticky?: boolean | undefined;
     children?: React.ReactNode | undefined;
 }
-declare const Table: React.ForwardRefExoticComponent<TableProps & React.RefAttributes<HTMLTableElement>>;
+declare const Table: React.FC<TableProps & React.RefAttributes<HTMLTableElement>>;
 type TableHeadProps = React.HTMLAttributes<HTMLTableSectionElement>;
 type TableBodyProps = React.HTMLAttributes<HTMLTableSectionElement>;
 type TableFootProps = React.HTMLAttributes<HTMLTableSectionElement>;
-declare const TableHead: React.ForwardRefExoticComponent<TableHeadProps & React.RefAttributes<HTMLTableSectionElement>>;
-declare const TableBody: React.ForwardRefExoticComponent<TableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
+declare const TableHead: React.FC<TableHeadProps & React.RefAttributes<HTMLTableSectionElement>>;
+declare const TableBody: React.FC<TableBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
 interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
     children?: never | undefined;
     count: number;
@@ -76,13 +76,13 @@ interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionEle
     estimatedRowHeight?: number | undefined;
     overscan?: number | undefined;
 }
-declare const TableVirtualBody: React.ForwardRefExoticComponent<TableVirtualBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
-declare const TableFoot: React.ForwardRefExoticComponent<TableFootProps & React.RefAttributes<HTMLTableSectionElement>>;
-declare const TableRow: React.ForwardRefExoticComponent<TableRowProps & React.RefAttributes<HTMLTableRowElement>>;
-declare const TableSelectCell: React.ForwardRefExoticComponent<TableSelectCellProps & React.RefAttributes<HTMLInputElement>>;
-declare const TableHeaderCell: React.ForwardRefExoticComponent<TableHeaderCellProps & React.RefAttributes<HTMLTableCellElement>>;
-declare const TableCell: React.ForwardRefExoticComponent<TableCellProps & React.RefAttributes<HTMLTableCellElement>>;
-declare const TableActionBar: React.ForwardRefExoticComponent<TableActionBarProps & React.RefAttributes<HTMLDivElement>>;
+declare const TableVirtualBody: React.FC<TableVirtualBodyProps & React.RefAttributes<HTMLTableSectionElement>>;
+declare const TableFoot: React.FC<TableFootProps & React.RefAttributes<HTMLTableSectionElement>>;
+declare const TableRow: React.FC<TableRowProps & React.RefAttributes<HTMLTableRowElement>>;
+declare const TableSelectCell: React.FC<TableSelectCellProps & React.RefAttributes<HTMLInputElement>>;
+declare const TableHeaderCell: React.FC<TableHeaderCellProps & React.RefAttributes<HTMLTableCellElement>>;
+declare const TableCell: React.FC<TableCellProps & React.RefAttributes<HTMLTableCellElement>>;
+declare const TableActionBar: React.FC<TableActionBarProps & React.RefAttributes<HTMLDivElement>>;
 interface TableColumnOption {
     id: string;
     label: React.ReactNode;
@@ -98,7 +98,7 @@ interface TableColumnsChangeDetails {
     id: string;
     visible: boolean;
 }
-declare const TableColumnsMenu: React.ForwardRefExoticComponent<TableColumnsMenuProps & React.RefAttributes<HTMLButtonElement>>;
+declare const TableColumnsMenu: React.FC<TableColumnsMenuProps & React.RefAttributes<HTMLButtonElement>>;
 interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
     expanded?: boolean | undefined;
     onExpandedChange?: ((expanded: boolean) => void) | undefined;
@@ -106,19 +106,19 @@ interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellEleme
     controls?: string | undefined;
     header?: boolean | undefined;
 }
-declare const TableExpandCell: React.ForwardRefExoticComponent<TableExpandCellProps & React.RefAttributes<HTMLTableCellElement>>;
+declare const TableExpandCell: React.FC<TableExpandCellProps & React.RefAttributes<HTMLTableCellElement>>;
 interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     open: boolean;
     colSpan: number;
 }
-declare const TableDetailRow: React.ForwardRefExoticComponent<TableDetailRowProps & React.RefAttributes<HTMLTableRowElement>>;
+declare const TableDetailRow: React.FC<TableDetailRowProps & React.RefAttributes<HTMLTableRowElement>>;
 interface TableLoadingRowsProps extends React.HTMLAttributes<HTMLTableSectionElement> {
     columns: number;
     rows?: number | undefined;
     label?: string | undefined;
 }
-declare const TableLoadingRows: React.ForwardRefExoticComponent<TableLoadingRowsProps & React.RefAttributes<HTMLTableSectionElement>>;
+declare const TableLoadingRows: React.FC<TableLoadingRowsProps & React.RefAttributes<HTMLTableSectionElement>>;
 interface TableMessageRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     colSpan: number;
 }
-declare const TableMessageRow: React.ForwardRefExoticComponent<TableMessageRowProps & React.RefAttributes<HTMLTableRowElement>>;
+declare const TableMessageRow: React.FC<TableMessageRowProps & React.RefAttributes<HTMLTableRowElement>>;

@@ -27,4 +27,4 @@ interface AttachmentProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ch
     removeLabel?: ((name: string) => string) | undefined;
     disabled?: boolean | undefined;
 }
-declare const Attachment: React.ForwardRefExoticComponent<AttachmentProps & React.RefAttributes<HTMLDivElement>>;
+declare const Attachment: React.FC<AttachmentProps & React.RefAttributes<HTMLDivElement>>;

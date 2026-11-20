@@ -42,4 +42,4 @@ interface ToastHistory {
     clear: () => void;
 }
 declare function useToastHistory(options?: ToastHistoryOptions): ToastHistory;
-declare const NotificationCenter: React.ForwardRefExoticComponent<NotificationCenterProps & React.RefAttributes<HTMLDialogElement>>;
+declare const NotificationCenter: React.FC<NotificationCenterProps & React.RefAttributes<HTMLDialogElement>>;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { isComposing } from '../../internal/ime';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
@@ -99,14 +99,7 @@ function clean(fields: FilterField[], raw: FilterValues): FilterValues {
   return out;
 }
 
-/* FilterBar: the filters on a list or table, as a row of chips. "Add filter" opens a menu of the fields not yet in
-   use; each chip says its filter in words ("Status is Open or Closed") and opens its editor in a Popover (checkboxes
-   or radios, a date range, a switch, a text field); its × removes it, and "Clear all" removes every one. The value is
-   plain data ({ status: ["open"], due: { start, end } }) for the URL. With resultsCount, the count after the chips is
-   a status, so screen readers hear it change. */
-/** A row of removable filter chips, each opening its own editor, with "Add filter", "Clear all" and a results count.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProps>('FilterBar', function FilterBar(props, ref) {
+function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { fields: 1, value: 1, defaultValue: 1, onValueChange: 1, resultsCount: 1, actions: 1, className: 1 } as const);
   const base = domId('dk-fb', React.useId());
@@ -230,4 +223,13 @@ export const FilterBar = /* @__PURE__ */ component<HTMLDivElement, FilterBarProp
       {props.resultsCount != null && !Number.isNaN(props.resultsCount) ? <span className="dk-filter-bar__count" role="status" id={base + '-count'}>{L.filterResults(props.resultsCount, new Intl.NumberFormat(locale).format(props.resultsCount))}</span> : null}
     </div>
   );
-});
+}
+
+/* FilterBar: the filters on a list or table, as a row of chips. "Add filter" opens a menu of the fields not yet in
+   use; each chip says its filter in words ("Status is Open or Closed") and opens its editor in a Popover (checkboxes
+   or radios, a date range, a switch, a text field); its × removes it, and "Clear all" removes every one. The value is
+   plain data ({ status: ["open"], due: { start, end } }) for the URL. With resultsCount, the count after the chips is
+   a status, so screen readers hear it change. */
+/** A row of removable filter chips, each opening its own editor, with "Add filter", "Clear all" and a results count.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const FilterBar = /* @__PURE__ */ named('FilterBar', FilterBarRender);

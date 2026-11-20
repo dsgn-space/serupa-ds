@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { useRowWrap } from '../../internal/useRowWrap';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { ControlSize } from '../../internal/controlSize';
 
 export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,10 +19,7 @@ export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   'aria-label'?: string | undefined;
 }
 
-/* ButtonGroup: related buttons side by side (or stacked) in a role="group": attached into one control, or
-   spaced apart. size sets every button's size that has none of its own; variant stays on each button. className and every other prop go to the wrapper. */
-/** Related buttons in a row or a column, joined into one control or spaced apart. */
-export const ButtonGroup = /* @__PURE__ */ component<HTMLDivElement, ButtonGroupProps>('ButtonGroup', function ButtonGroup(props, ref) {
+function ButtonGroupRender({ ref, ...props }: ButtonGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { attached: 1, orientation: 1, size: 1, className: 1, children: 1 });
   const size = props.size === 'sm' || props.size === 'md' || props.size === 'lg' ? props.size : undefined;
   const vertical = oneOf(['horizontal', 'vertical'] as const, props.orientation, 'horizontal') === 'vertical';
@@ -36,4 +33,9 @@ export const ButtonGroup = /* @__PURE__ */ component<HTMLDivElement, ButtonGroup
     className={cn('dk-button-group', vertical && 'dk-button-group--vertical', attached && !wrapped && 'dk-button-group--attached', props.className)}>
     {size ? <ControlSize.Provider value={size}>{props.children}</ControlSize.Provider> : props.children}
   </div>;
-});
+}
+
+/* ButtonGroup: related buttons side by side (or stacked) in a role="group": attached into one control, or
+   spaced apart. size sets every button's size that has none of its own; variant stays on each button. className and every other prop go to the wrapper. */
+/** Related buttons in a row or a column, joined into one control or spaced apart. */
+export const ButtonGroup = /* @__PURE__ */ named('ButtonGroup', ButtonGroupRender);

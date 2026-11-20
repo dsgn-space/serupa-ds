@@ -23,4 +23,4 @@ type Query = {
 };
 declare function mentionQuery(text: string, caret: number, trigger?: string): null | Query;
 declare function mentionsIn(text: string, options: readonly MentionOption[], trigger?: string): MentionOption[];
-declare const MentionInput: React.ForwardRefExoticComponent<MentionInputProps & React.RefAttributes<HTMLTextAreaElement>>;
+declare const MentionInput: React.FC<MentionInputProps & React.RefAttributes<HTMLTextAreaElement>>;

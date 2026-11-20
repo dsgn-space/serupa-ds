@@ -15,4 +15,4 @@ interface ProgressProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chil
     announceComplete?: boolean | string | undefined;
     onComplete?: (() => void) | undefined;
 }
-declare const Progress: React.ForwardRefExoticComponent<ProgressProps & React.RefAttributes<HTMLDivElement>>;
+declare const Progress: React.FC<ProgressProps & React.RefAttributes<HTMLDivElement>>;

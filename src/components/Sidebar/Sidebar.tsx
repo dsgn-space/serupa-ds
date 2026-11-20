@@ -8,7 +8,7 @@ import { Tooltip } from '../Tooltip/Tooltip';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
 import { config } from '../../internal/config';
 import { Menu, MenuItem, MenuSub } from '../Menu/Menu';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { flattenChildren } from '../../internal/children';
 import { useSettings } from '../../internal/provider';
@@ -74,11 +74,7 @@ function isSection(c: React.ReactNode): boolean {
   return React.isValidElement(c) && c.type === SidebarSection;
 }
 
-/* Sidebar: a vertical <nav> for an app's main pages: an optional header, sections of items (icons, labels,
-   badges, nested groups), and a footer pinned to the bottom. collapsed narrows it to an icon rail. It takes
-   its parent's height; className and every other prop go to the <nav>. */
-/** A vertical nav for an app's pages: sections of items with icons, badges and nested groups; collapses to an icon rail. */
-export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>('Sidebar', function Sidebar(props, ref) {
+function SidebarRender({ ref, ...props }: SidebarProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings();
   const rest = omit(props, { header: 1, footer: 1, collapsed: 1, className: 1, children: 1, 'aria-label': 1 });
   const collapsed = !!props.collapsed;
@@ -145,10 +141,15 @@ export const Sidebar = /* @__PURE__ */ component<HTMLElement, SidebarProps>('Sid
       </nav>
     </SidebarContext.Provider>
   );
-});
+}
 
-/** A group of items in a Sidebar, with an optional small heading. */
-export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarSectionProps>('SidebarSection', function SidebarSection(props, ref) {
+/* Sidebar: a vertical <nav> for an app's main pages: an optional header, sections of items (icons, labels,
+   badges, nested groups), and a footer pinned to the bottom. collapsed narrows it to an icon rail. It takes
+   its parent's height; className and every other prop go to the <nav>. */
+/** A vertical nav for an app's pages: sections of items with icons, badges and nested groups; collapses to an icon rail. */
+export const Sidebar = /* @__PURE__ */ named('Sidebar', SidebarRender);
+
+function SidebarSectionRender({ ref, ...props }: SidebarSectionProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { title: 1, className: 1, children: 1 });
   const id = domId('dk-sbs', React.useId());
   const titled = props.title != null && props.title !== false && props.title !== '';
@@ -158,7 +159,10 @@ export const SidebarSection = /* @__PURE__ */ component<HTMLDivElement, SidebarS
       <ul className="dk-sidebar__list" aria-labelledby={titled ? id : undefined}>{props.children}</ul>
     </div>
   );
-});
+}
+
+/** A group of items in a Sidebar, with an optional small heading. */
+export const SidebarSection = /* @__PURE__ */ named('SidebarSection', SidebarSectionRender);
 
 const ITEM_OWN = { label: 1, icon: 1, active: 1, badge: 1, children: 1, defaultOpen: 1, open: 1, onOpenChange: 1, as: 1, className: 1 } as const;
 type ItemElement = React.ReactElement<ItemProps>;
@@ -178,11 +182,7 @@ function railItems(kids: ItemElement[]): React.ReactNode {
   });
 }
 
-/* SidebarItem: a link (icon, label, badge), or with nested items a button with aria-expanded that shows and
-   hides them. Collapsed: only the icon, with the label as a tooltip; a group opens its items in a Menu. The ref
-   goes to the link or the group's button. */
-/** An item in a Sidebar: a link, or a group of nested items. */
-const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('SidebarItem', function SidebarItem(props, ref) {
+function SidebarItemBaseRender({ ref, ...props }: ItemProps & React.RefAttributes<HTMLElement>) {
   const ctx = React.useContext(SidebarContext);
   const rest = omit(props, ITEM_OWN);
   const kids = itemsOf(props.children);
@@ -270,10 +270,16 @@ const SidebarItemBase = /* @__PURE__ */ component<HTMLElement, ItemProps>('Sideb
       {rail && props.label != null && props.label !== false && props.label !== '' ? <Tooltip content={props.label} placement="right" role="label">{link}</Tooltip> : link}
     </li>
   );
-});
+}
+
+/* SidebarItem: a link (icon, label, badge), or with nested items a button with aria-expanded that shows and
+   hides them. Collapsed: only the icon, with the label as a tooltip; a group opens its items in a Menu. The ref
+   goes to the link or the group's button. */
+/** An item in a Sidebar: a link, or a group of nested items. */
+const SidebarItemBase = /* @__PURE__ */ named('SidebarItem', SidebarItemBaseRender);
 
 /** An item in a Sidebar: a link, or a group of nested items. `as` renders your router's link, typed with its props. */
 export const SidebarItem = SidebarItemBase as {
-  <C extends React.ElementType = 'a'>(props: SidebarItemProps<C> & { ref?: React.Ref<HTMLElement> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: SidebarItemProps<C> & React.RefAttributes<HTMLElement>): React.ReactElement | null;
   displayName?: string | undefined;
 };

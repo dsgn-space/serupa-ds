@@ -11,4 +11,4 @@ interface FabMenuProps extends Omit<FabProps, "onClick"> {
     open?: boolean | undefined;
     onOpenChange?: ((open: boolean) => void) | undefined;
 }
-declare const FabMenu: React.ForwardRefExoticComponent<FabMenuProps & React.RefAttributes<HTMLButtonElement>>;
+declare const FabMenu: React.FC<FabMenuProps & React.RefAttributes<HTMLButtonElement>>;

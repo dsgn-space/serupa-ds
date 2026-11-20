@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import * as icons from '../../material/builtin';
@@ -32,13 +32,7 @@ export interface ContextualHelpProps extends Omit<React.HTMLAttributes<HTMLDivEl
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
-/* ContextualHelp (a toggletip): a 24px round ghost IconButton with an "?" or "i", named "Help" or "Information" (or
-   label), that opens a small non-modal Popover beside it with aria-expanded and aria-controls on the button. Pressing
-   it again, Escape, a click outside or moving focus away closes it; Escape returns focus to the button. The panel
-   takes the ref, className, style and other attributes. */
-/** A small "?" or "i" button beside a label or value that opens a short explanation in a non-modal popover.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const ContextualHelp = /* @__PURE__ */ component<HTMLDivElement, ContextualHelpProps>('ContextualHelp', function ContextualHelp(props, ref) {
+function ContextualHelpRender({ ref, ...props }: ContextualHelpProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   const { children, title, headingLevel = 3, variant = 'help', label, placement = 'bottom-start', className, ...rest } = props;
   const info = variant === 'info';
@@ -53,4 +47,12 @@ export const ContextualHelp = /* @__PURE__ */ component<HTMLDivElement, Contextu
       {children}
     </Popover>
   );
-});
+}
+
+/* ContextualHelp (a toggletip): a 24px round ghost IconButton with an "?" or "i", named "Help" or "Information" (or
+   label), that opens a small non-modal Popover beside it with aria-expanded and aria-controls on the button. Pressing
+   it again, Escape, a click outside or moving focus away closes it; Escape returns focus to the button. The panel
+   takes the ref, className, style and other attributes. */
+/** A small "?" or "i" button beside a label or value that opens a short explanation in a non-modal popover.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const ContextualHelp = /* @__PURE__ */ named('ContextualHelp', ContextualHelpRender);

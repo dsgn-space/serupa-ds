@@ -6,7 +6,7 @@ import { config } from '../../internal/config';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
 import type { ContainerSize } from '../Container/Container';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import { flattenChildren } from '../../internal/children';
 import { useSettings } from '../../internal/provider';
@@ -83,11 +83,7 @@ export type NavbarMenuLinkProps<C extends React.ElementType = 'a'> = NavbarMenuL
 type MenuUpdate = (was: string | null) => string | null;
 const NavbarContext = /* @__PURE__ */ React.createContext<{ close: () => void; menu: string | null; setMenu: (u: MenuUpdate) => void; size: ContainerSize } | null>(null);
 
-/* Navbar: the bar across the top of an app: brand, the main links and actions. Below 768px the links fold
-   into a menu button that opens them in a panel under the bar (Escape or a link closes it). className and
-   every other prop go to the <header>. */
-/** The bar across the top: brand, main links and actions. On small screens the links fold into a menu button. */
-export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navbar', function Navbar(props, ref) {
+function NavbarRender({ ref, ...props }: NavbarProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings();
   const rest = omit(props, { brand: 1, children: 1, actions: 1, sticky: 1, condense: 1, size: 1, menuLabel: 1, className: 1, 'aria-label': 1, onKeyDown: 1, onBlur: 1 });
   const [open, setOpen] = React.useState(false);
@@ -231,10 +227,15 @@ export const Navbar = /* @__PURE__ */ component<HTMLElement, NavbarProps>('Navba
       </header>
     </NavbarContext.Provider>
   );
-});
+}
 
-/** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. */
-const NavbarLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, NavbarLinkProps>('NavbarLink', function NavbarLink(props, ref) {
+/* Navbar: the bar across the top of an app: brand, the main links and actions. Below 768px the links fold
+   into a menu button that opens them in a panel under the bar (Escape or a link closes it). className and
+   every other prop go to the <header>. */
+/** The bar across the top: brand, main links and actions. On small screens the links fold into a menu button. */
+export const Navbar = /* @__PURE__ */ named('Navbar', NavbarRender);
+
+function NavbarLinkBaseRender({ ref, ...props }: NavbarLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const ctx = React.useContext(NavbarContext);
   const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1 });
   return React.createElement(props.as || config.link, Object.assign(rest, {
@@ -242,21 +243,18 @@ const NavbarLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, NavbarLinkPr
     className: cn('dk-navbar__link', props.active && 'dk-navbar__link--active', props.className),
     onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); },
   }));
-});
+}
+
+/** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. */
+const NavbarLinkBase = /* @__PURE__ */ named('NavbarLink', NavbarLinkBaseRender);
 
 /** A main page link in a Navbar. active marks the current page; following one closes the small-screen menu. `as` renders your router's link, typed with its props. */
 export const NavbarLink = NavbarLinkBase as {
-  <C extends React.ElementType = 'a'>(props: NavbarLinkProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: NavbarLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;
 };
 
-/* NavbarMenu: a nav item that opens a panel of links, grouped under titles, each with a line saying what's there
-   (a mega menu). It's a disclosure, not a menu (role=menu is for app commands): a button with aria-expanded, and
-   the panel after it, so Tab goes from the button into its links. Escape closes it and puts focus back on the button;
-   a press outside, focus leaving it, following a link or opening another one closes it too. Wide, the panel spans
-   the bar under it; in the small-screen menu it opens in place, under its button. */
-/** A nav item that opens a panel of grouped links with descriptions (a disclosure, not role=menu). */
-export const NavbarMenu = /* @__PURE__ */ component<HTMLDivElement, NavbarMenuProps>('NavbarMenu', function NavbarMenu(props, ref) {
+function NavbarMenuRender({ ref, ...props }: NavbarMenuProps & React.RefAttributes<HTMLDivElement>) {
   const ctx = React.useContext(NavbarContext);
   const rest = omit(props, { label: 1, children: 1, active: 1, className: 1 });
   const id = domId('dk-navbar-menu', React.useId());
@@ -309,10 +307,17 @@ export const NavbarMenu = /* @__PURE__ */ component<HTMLDivElement, NavbarMenuPr
       </div>
     </div>
   );
-});
+}
 
-/** A titled list of links in a NavbarMenu's panel. */
-export const NavbarMenuGroup = /* @__PURE__ */ component<HTMLDivElement, NavbarMenuGroupProps>('NavbarMenuGroup', function NavbarMenuGroup(props, ref) {
+/* NavbarMenu: a nav item that opens a panel of links, grouped under titles, each with a line saying what's there
+   (a mega menu). It's a disclosure, not a menu (role=menu is for app commands): a button with aria-expanded, and
+   the panel after it, so Tab goes from the button into its links. Escape closes it and puts focus back on the button;
+   a press outside, focus leaving it, following a link or opening another one closes it too. Wide, the panel spans
+   the bar under it; in the small-screen menu it opens in place, under its button. */
+/** A nav item that opens a panel of grouped links with descriptions (a disclosure, not role=menu). */
+export const NavbarMenu = /* @__PURE__ */ named('NavbarMenu', NavbarMenuRender);
+
+function NavbarMenuGroupRender({ ref, ...props }: NavbarMenuGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { title: 1, children: 1, className: 1 });
   const id = domId('dk-navbar-group', React.useId());
   return (
@@ -321,11 +326,12 @@ export const NavbarMenuGroup = /* @__PURE__ */ component<HTMLDivElement, NavbarM
       <ul role="list" className="dk-navbar__menu-list">{flattenChildren(props.children).map((c, i) => <li key={React.isValidElement(c) && c.key != null ? c.key : i}>{c}</li>)}</ul>
     </div>
   );
-});
+}
 
-/* NavbarMenuLink: its text is its name and its description is read after it (aria-describedby), so a screen reader
-   hears "Dashboards, link" and then what's there, not both as one long name. */
-const NavbarMenuLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, NavbarMenuLinkProps>('NavbarMenuLink', function NavbarMenuLink(props, ref) {
+/** A titled list of links in a NavbarMenu's panel. */
+export const NavbarMenuGroup = /* @__PURE__ */ named('NavbarMenuGroup', NavbarMenuGroupRender);
+
+function NavbarMenuLinkBaseRender({ ref, ...props }: NavbarMenuLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const ctx = React.useContext(NavbarContext);
   const rest = omit(props, { active: 1, as: 1, className: 1, onClick: 1, description: 1, children: 1 });
   const id = domId('dk-navbar-link', React.useId());
@@ -336,10 +342,14 @@ const NavbarMenuLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, NavbarMe
     className: cn('dk-navbar__menu-link', props.active && 'dk-navbar__menu-link--active', props.className),
     onClick: (e: React.MouseEvent<HTMLAnchorElement>) => { if (props.onClick) props.onClick(e); if (ctx) ctx.close(); },
   }), <span id={id + '-name'} className="dk-navbar__menu-name">{props.children}</span>, has ? <span id={id + '-desc'} className="dk-navbar__menu-desc">{props.description}</span> : null);
-});
+}
+
+/* NavbarMenuLink: its text is its name and its description is read after it (aria-describedby), so a screen reader
+   hears "Dashboards, link" and then what's there, not both as one long name. */
+const NavbarMenuLinkBase = /* @__PURE__ */ named('NavbarMenuLink', NavbarMenuLinkBaseRender);
 
 /** A link in a NavbarMenu's panel, with an optional line under it saying what's there. `as` renders your router's link, typed with its props. */
 export const NavbarMenuLink = NavbarMenuLinkBase as {
-  <C extends React.ElementType = 'a'>(props: NavbarMenuLinkProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: NavbarMenuLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;
 };

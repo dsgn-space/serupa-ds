@@ -5,7 +5,7 @@ import { useBreakpoint } from '../../internal/media';
 import { useServerStyles } from '../../internal/serverStyles';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { flattenChildren } from '../../internal/children';
 import { useSettings } from '../../internal/provider';
@@ -85,7 +85,7 @@ const FLICK = 0.3; // px per ms over the last 100ms: a shorter drag this fast ch
 const QUIET = 120; // ms without scrolling that counts as settled, where scrollend isn't there
 
 /** One slide at a time, with previous and next buttons, dots and swipe. */
-export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('Carousel', function Carousel(props, ref) {
+function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<HTMLElement>) {
   const nameRef = useNameCheck('Carousel', NAME_HOW.label);   // warns when it has no accessible name
   const restyle = useServerStyles(ref);
   const sds = useSettings(words);
@@ -317,4 +317,6 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
       ) : null}
     </section>
   );
-});
+}
+
+export const Carousel = /* @__PURE__ */ named('Carousel', CarouselRender);

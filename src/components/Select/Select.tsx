@@ -6,7 +6,7 @@ import { useFormReset } from '../../internal/useFormReset';
 import { warnOnce } from '../../internal/warn';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import * as icons from '../../material/builtin';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -43,8 +43,7 @@ function optionNodes(list: Array<SelectOption | SelectOptionGroup> | undefined):
   });
 }
 
-/** A native <select> styled like Input (ref, value, onChange and every select attribute go to it), with a chevron; className and style go to the box. Label it with <label htmlFor>, aria-label or Field. multiple isn't supported. */
-export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>('Select', function Select(props, ref) {
+function SelectRender({ ref, ...props }: SelectProps & React.RefAttributes<HTMLSelectElement>) {
   const nameRef = useNameCheck('Select', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const rest = omit(props, OWN);
@@ -95,4 +94,7 @@ export const Select = /* @__PURE__ */ component<HTMLSelectElement, SelectProps>(
       <span className="dk-select__icon dk-select__icon--chevron" aria-hidden key="chevron"><Icon icon={icons.ExpandMore} /></span>
     </span>
   );
-});
+}
+
+/** A native <select> styled like Input (ref, value, onChange and every select attribute go to it), with a chevron; className and style go to the box. Label it with <label htmlFor>, aria-label or Field. multiple isn't supported. */
+export const Select = /* @__PURE__ */ named('Select', SelectRender);

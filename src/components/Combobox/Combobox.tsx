@@ -10,7 +10,7 @@ import { Icon } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { LoaderRing } from '../../internal/loaderRing';
 import type { InputProps } from '../Input/Input';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { FieldContext, useFieldControl } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
@@ -53,9 +53,6 @@ interface ComboboxBaseProps<V extends string = string> extends Omit<InputProps, 
   /** Called whenever the field's text changes: as it's typed, and when picking, clearing, Escape or leaving the
       field puts a label back. For loading options from a server (with filter={false} and loading), or with inputValue. */
   onInputValueChange?: ((text: string) => void) | undefined;
-  /** @deprecated Use onInputValueChange, named for inputValue as every on…Change is named for its prop.
-      Removed in 17.0.0. Called as onInputValueChange is, when onInputValueChange isn't given. */
-  onInputChange?: ((text: string) => void) | undefined;
   /** How typing narrows the list. Default: options whose label contains the text, ignoring case, accents and width ("lodz" finds "Łódź", "strasse" finds "Straße"). false shows every option (filter them yourself). */
   filter?: (false | ((option: { value: V; label: string }, text: string) => boolean)) | undefined;
   /** Whether the list is open (controlled). Use with onOpenChange. */
@@ -172,24 +169,14 @@ const Row = /* @__PURE__ */ React.memo(function Row(p: { o: Opt; id: string; ind
   );
 });
 
-/* Combobox: a text field with a list of options that narrows as you type: pick a country, an assignee, a
-   project. Follows the ARIA combobox pattern: the field is role="combobox" (aria-expanded, aria-controls,
-   aria-activedescendant) and focus stays in it while ArrowDown and ArrowUp move through a role="listbox" in the
-   top layer. Enter or a click picks, Escape closes and puts back the picked label, and leaving the field does
-   the same (emptying it clears the selection). Text that is exactly one option's label (any case or accents)
-   picks that option on leaving the field. Only listed options can be picked. It uses Input's box and
-   tokens: className and style go to the box; ref and every other prop to the <input>. With multiple, the picked
-   options are tags (Badges with a remove button) before the text, the listbox is aria-multiselectable, and picking
-   toggles an option and keeps the list open; the text is only for searching, so leaving the field empties it. */
-/** A text field with a list of options that narrows as you type; picks one listed option. */
-export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProps>('Combobox', function Combobox(given, ref) {
+function ComboboxRender({ ref, ...given }: ComboboxProps & React.RefAttributes<HTMLInputElement>) {
   let props = given as AnyProps;
   const nameRef = useNameCheck('Combobox', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // names the listbox when a Field's <label for> names the field
   const sds = useSettings(words);
   const locale = useLocale();
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputValueChange: 1, onInputChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, options: 1, value: 1, defaultValue: 1, onValueChange: 1, onInputValueChange: 1, inputValue: 1, defaultInputValue: 1, filter: 1, clearable: 1, loading: 1, emptyText: 1, loadingText: 1, toggleLabel: 1, clearLabel: 1, name: 1, multiple: 1, loadOptions: 1, debounce: 1, open: 1, defaultOpen: 1, onOpenChange: 1, onCreate: 1, limit: 1, freeText: 1, inlineComplete: 1 } as const);
   const multi = props.multiple === true;
   const free = !multi && props.freeText === true, inline = free && !!props.inlineComplete;
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
@@ -263,9 +250,8 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
   const text = textHeld;
   const textNow = React.useRef(text);
   textNow.current = text;
-  if (process.env.NODE_ENV !== 'production' && props.onInputChange) warnOnce('deprecated-prop', 'Combobox: `onInputChange` is deprecated and removed in 17.0.0. Use `onInputValueChange`, named for `inputValue` as every on…Change callback is named for its prop.', 'deprecated-prop:Combobox:onInputChange');
-  const told = React.useRef(props.onInputValueChange ?? props.onInputChange);
-  told.current = props.onInputValueChange ?? props.onInputChange;
+  const told = React.useRef(props.onInputValueChange);
+  told.current = props.onInputValueChange;
   const setText = (t: string) => {
     setOwnText(t);
     if (t === textNow.current) return;
@@ -670,4 +656,16 @@ export const Combobox = /* @__PURE__ */ component<HTMLInputElement, ComboboxProp
       {props.name && !multi ? <input type="hidden" name={props.name} form={rest.form} value={value ?? ''} disabled={rest.disabled} /> : null}
     </span>
   );
-}) as (<V extends string = string>(props: ComboboxProps<V> & React.RefAttributes<HTMLInputElement>) => React.ReactElement | null) & { displayName?: string };
+}
+
+/* Combobox: a text field with a list of options that narrows as you type: pick a country, an assignee, a
+   project. Follows the ARIA combobox pattern: the field is role="combobox" (aria-expanded, aria-controls,
+   aria-activedescendant) and focus stays in it while ArrowDown and ArrowUp move through a role="listbox" in the
+   top layer. Enter or a click picks, Escape closes and puts back the picked label, and leaving the field does
+   the same (emptying it clears the selection). Text that is exactly one option's label (any case or accents)
+   picks that option on leaving the field. Only listed options can be picked. It uses Input's box and
+   tokens: className and style go to the box; ref and every other prop to the <input>. With multiple, the picked
+   options are tags (Badges with a remove button) before the text, the listbox is aria-multiselectable, and picking
+   toggles an option and keeps the list open; the text is only for searching, so leaving the field empties it. */
+/** A text field with a list of options that narrows as you type; picks one listed option. */
+export const Combobox = /* @__PURE__ */ named('Combobox', ComboboxRender) as (<V extends string = string>(props: ComboboxProps<V> & React.RefAttributes<HTMLInputElement>) => React.ReactElement | null) & { displayName?: string };

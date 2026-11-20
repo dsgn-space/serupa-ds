@@ -14,7 +14,7 @@ import type { IconData } from '@diki-stwn/serupa-ds/icons';
 type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2) ? true : false;
 const is = <T extends true>(): T | void => undefined;
 type ParamOf<F> = F extends (value: infer V, ...more: never[]) => unknown ? V : never;
-type RefOf<C> = C extends React.ForwardRefExoticComponent<infer P> ? (P extends React.RefAttributes<infer E> ? E : never) : never;
+type RefOf<C> = C extends React.JSXElementConstructor<infer P> ? (P extends React.RefAttributes<infer E> ? E : never) : never;
 
 // Refs reach the element each component documents.
 is<Equal<RefOf<typeof Input>, HTMLInputElement>>();

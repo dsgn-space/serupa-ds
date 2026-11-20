@@ -21,9 +21,7 @@ type BreadcrumbItemProps<C extends React.ElementType = "a"> = BreadcrumbItemOwnP
     as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, "as" | keyof BreadcrumbItemOwnProps>;
 declare const BreadcrumbItem: {
-    <C extends React.ElementType = "a">(props: BreadcrumbItemProps<C> & {
-        ref?: React.Ref<React.ComponentRef<C>>;
-    }): null | React.ReactElement;
+    <C extends React.ElementType = "a">(props: BreadcrumbItemProps<C> & React.RefAttributes<React.ComponentRef<C>>): null | React.ReactElement;
     displayName?: string | undefined;
 };
-declare const Breadcrumb: React.ForwardRefExoticComponent<BreadcrumbProps & React.RefAttributes<HTMLElement>>;
+declare const Breadcrumb: React.FC<BreadcrumbProps & React.RefAttributes<HTMLElement>>;

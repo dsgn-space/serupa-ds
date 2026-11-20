@@ -4,7 +4,7 @@ import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, useIsoLayoutEffect } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFormReset } from '../../internal/useFormReset';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
 import { snap as snapToGrid } from '../../internal/step';
@@ -131,7 +131,7 @@ function share(el: HTMLElement) {
   if (wrapped) el.style.setProperty('--dk-slider-labels-h', Math.max(...labels.map((p) => p.getBoundingClientRect().height)) + 'px');
 }
 
-export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Slider', function Slider(props, ref) {
+function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('Slider', NAME_HOW.field);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: a Slider in a row with its unit
   // after it (<div><Slider /><span>dB</span></div>) was left unnamed, undescribed and enabled (L8E84).
@@ -357,4 +357,6 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
       {props.inputs ? field(vals.length - 1) : null}
     </div>
   );
-}) as (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
+}
+
+export const Slider = /* @__PURE__ */ named('Slider', SliderRender) as (<V extends SliderValue = SliderValue>(props: SliderProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };

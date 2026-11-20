@@ -1,19 +1,16 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { useSettings } from '../../internal/provider';
 import { useScrolls } from '../../internal/useScrolls';
 import { en as words } from './labels';
-import { warnOnce } from '../../internal/warn';
 
 export type TimelineAlign = 'start' | 'alternate';
 export type TimelineOrientation = 'vertical' | 'horizontal';
 export type TimelineTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
-/** @deprecated Use TimelineTone, as tone replaces status; removed in 17.0.0. */
-export type TimelineStatus = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
 const ALIGNS: readonly TimelineAlign[] = ['start', 'alternate'];
 const ORIENTATIONS: readonly TimelineOrientation[] = ['vertical', 'horizontal'];
 const TONES: readonly TimelineTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'];
@@ -43,16 +40,11 @@ export interface TimelineItemProps extends Omit<React.LiHTMLAttributes<HTMLLIEle
   icon?: IconSource | undefined;
   /** The marker's color: 'neutral' (default), 'primary', 'success', 'warning', 'danger' or 'info'. It's decoration: say the status in the title too. */
   tone?: TimelineTone | undefined;
-  /** @deprecated Use tone, the name every component gives what a color means; removed in 17.0.0. Read when tone isn't given. */
-  status?: TimelineStatus | undefined;
   /** More about the event, below the title and time. */
   children?: React.ReactNode | undefined;
 }
 
-/* Timeline: an <ol> of events, each with a marker (a dot or an icon) on a line that joins them, then a title, a
-   time and optional content. align="alternate" puts events on both sides of a centered line from 768px up. */
-/** An ordered list of events, for activity feeds and order history. */
-export const Timeline = /* @__PURE__ */ component<HTMLOListElement, TimelineProps>('Timeline', function Timeline(props, ref) {
+function TimelineRender({ ref, ...props }: TimelineProps & React.RefAttributes<HTMLOListElement>) {
   const { className, align, orientation, stackWhenNarrow, style, ...rest } = props;
   const a = oneOf(ALIGNS, align, 'start');
   const horizontal = oneOf(ORIENTATIONS, orientation, 'vertical') === 'horizontal';
@@ -74,15 +66,16 @@ export const Timeline = /* @__PURE__ */ component<HTMLOListElement, TimelineProp
       <ol role="list" {...list} aria-label={scrolls ? undefined : label} aria-labelledby={scrolls ? undefined : labelledBy} ref={ref} className="dk-timeline dk-timeline--horizontal" />
     </div>
   );
-});
+}
 
-/* TimelineItem: an <li> with the marker (aria-hidden: the title says what happened), the title, a <time> and
-   the content. The line runs from its marker to the next item's. */
-/** One event in a Timeline. */
-export const TimelineItem = /* @__PURE__ */ component<HTMLLIElement, TimelineItemProps>('TimelineItem', function TimelineItem(props, ref) {
-  const { className, title, time, dateTime, icon, tone, status, children, ...rest } = props;
-  if (process.env.NODE_ENV !== 'production' && status !== undefined) warnOnce('deprecated-prop', 'TimelineItem: `status` is deprecated and removed in 17.0.0. Use `tone`, the name every component gives what a color means.', 'deprecated-prop:TimelineItem:status');
-  const s = oneOf(TONES, tone ?? status, 'neutral');
+/* Timeline: an <ol> of events, each with a marker (a dot or an icon) on a line that joins them, then a title, a
+   time and optional content. align="alternate" puts events on both sides of a centered line from 768px up. */
+/** An ordered list of events, for activity feeds and order history. */
+export const Timeline = /* @__PURE__ */ named('Timeline', TimelineRender);
+
+function TimelineItemRender({ ref, ...props }: TimelineItemProps & React.RefAttributes<HTMLLIElement>) {
+  const { className, title, time, dateTime, icon, tone, children, ...rest } = props;
+  const s = oneOf(TONES, tone, 'neutral');
   return (
     <li {...rest} ref={ref} className={cn('dk-timeline__item', 'dk-timeline__item--' + s, className)}>
       <span className="dk-timeline__rail" aria-hidden="true">
@@ -97,4 +90,9 @@ export const TimelineItem = /* @__PURE__ */ component<HTMLLIElement, TimelineIte
       </div>
     </li>
   );
-});
+}
+
+/* TimelineItem: an <li> with the marker (aria-hidden: the title says what happened), the title, a <time> and
+   the content. The line runs from its marker to the next item's. */
+/** One event in a Timeline. */
+export const TimelineItem = /* @__PURE__ */ named('TimelineItem', TimelineItemRender);

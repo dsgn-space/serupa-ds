@@ -20,4 +20,4 @@ interface TagGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chil
     max?: number | undefined;
     empty?: React.ReactNode;
 }
-declare const TagGroup: React.ForwardRefExoticComponent<TagGroupProps & React.RefAttributes<HTMLDivElement>>;
+declare const TagGroup: React.FC<TagGroupProps & React.RefAttributes<HTMLDivElement>>;

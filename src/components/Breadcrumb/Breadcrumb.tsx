@@ -4,7 +4,7 @@ import { cn, oneOf, omit } from '../../internal/cn';
 import { config } from '../../internal/config';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { flattenChildren } from '../../internal/children';
 import { useSettings } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
@@ -45,9 +45,7 @@ export type BreadcrumbItemProps<C extends React.ElementType = 'a'> = BreadcrumbI
   as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof BreadcrumbItemOwnProps | 'as'>;
 
-/* BreadcrumbItem: one page in the trail, a link (or, as the current page, text with aria-current="page"). */
-/** One page in a Breadcrumb: a link, or the current page when it's the last. */
-const BreadcrumbItemBase = /* @__PURE__ */ component<HTMLAnchorElement, BreadcrumbItemProps>('BreadcrumbItem', function BreadcrumbItem(props, ref) {
+function BreadcrumbItemBaseRender({ ref, ...props }: BreadcrumbItemProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { icon: 1, as: 1, current: 1, className: 1, children: 1 });
   // An icon with no text and no aria-label is a link (or page) a screen reader can only call "link".
   const named = (props.children != null && props.children !== false && props.children !== '') || !!props['aria-label'] || !!props['aria-labelledby'] || !!props.title;
@@ -60,20 +58,19 @@ const BreadcrumbItemBase = /* @__PURE__ */ component<HTMLAnchorElement, Breadcru
     return <span {...rest} ref={ref} aria-current="page" className={cn('dk-breadcrumb__item dk-breadcrumb__item--current', props.className)}>{content}</span>;
   }
   return React.createElement(props.as || config.link, Object.assign(rest, { ref: ref, className: cn('dk-breadcrumb__item dk-breadcrumb__link', props.className) }), content);
-});
+}
+
+/* BreadcrumbItem: one page in the trail, a link (or, as the current page, text with aria-current="page"). */
+/** One page in a Breadcrumb: a link, or the current page when it's the last. */
+const BreadcrumbItemBase = /* @__PURE__ */ named('BreadcrumbItem', BreadcrumbItemBaseRender);
 
 /** One page in a Breadcrumb: a link, or the current page when it's the last. `as` renders your router's link, typed with its props. */
 export const BreadcrumbItem = BreadcrumbItemBase as {
-  <C extends React.ElementType = 'a'>(props: BreadcrumbItemProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: BreadcrumbItemProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;
 };
 
-/* Breadcrumb: a nav with an ordered list of pages from the top level to the current one, a chevron (or slash)
-   between them. Each separator sits inside the item after it, hidden from screen readers, so the list has one
-   <li> per page and is read as "list, 4 items". maxItems collapses the middle into a "…" button that shows them
-   again, or with collapse="menu" opens a Menu of them. className and every other prop go to the <nav>. */
-/** Where the current page sits: links to the pages above it, separated by chevrons. maxItems collapses the middle. */
-export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps>('Breadcrumb', function Breadcrumb(props, ref) {
+function BreadcrumbRender({ ref, ...props }: BreadcrumbProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings(words);
   const rest = omit(props, { separator: 1, maxItems: 1, collapse: 1, expandLabel: 1, className: 1, children: 1 });
   const asMenu = props.collapse === 'menu';
@@ -127,4 +124,11 @@ export const Breadcrumb = /* @__PURE__ */ component<HTMLElement, BreadcrumbProps
       <ol className="dk-breadcrumb__list">{out}</ol>
     </nav>
   );
-});
+}
+
+/* Breadcrumb: a nav with an ordered list of pages from the top level to the current one, a chevron (or slash)
+   between them. Each separator sits inside the item after it, hidden from screen readers, so the list has one
+   <li> per page and is read as "list, 4 items". maxItems collapses the middle into a "…" button that shows them
+   again, or with collapse="menu" opens a Menu of them. className and every other prop go to the <nav>. */
+/** Where the current page sits: links to the pages above it, separated by chevrons. maxItems collapses the middle. */
+export const Breadcrumb = /* @__PURE__ */ named('Breadcrumb', BreadcrumbRender);

@@ -8,4 +8,4 @@ interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title">
     onDismiss?: (() => void) | undefined;
     dismissLabel?: string | undefined;
 }
-declare const Alert: React.ForwardRefExoticComponent<AlertProps & React.RefAttributes<HTMLDivElement>>;
+declare const Alert: React.FC<AlertProps & React.RefAttributes<HTMLDivElement>>;

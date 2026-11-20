@@ -6,4 +6,4 @@ interface KbdProps extends React.HTMLAttributes<HTMLElement> {
     keys?: string[] | undefined;
     size?: "md" | "sm" | undefined;
 }
-declare const Kbd: React.ForwardRefExoticComponent<KbdProps & React.RefAttributes<HTMLElement>>;
+declare const Kbd: React.FC<KbdProps & React.RefAttributes<HTMLElement>>;

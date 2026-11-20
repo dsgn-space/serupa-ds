@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, isInvalid, omit, setRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
@@ -116,16 +116,7 @@ function read(p: Parts, min?: string, max?: string): { value: string; problem: D
   return { value, problem: null, parts: [] };
 }
 
-/* DateField: a date people know by heart or copy from a document (a date of birth, a passport's expiry), as three
-   labelled boxes, Day, Month and Year, in the locale's order, under one name: GOV.UK's date input. Typing is free:
-   nothing is blocked or moved on its own, so a mistake can be read and fixed. A separator (/ . - or a space) typed
-   after a number moves to the next box, and a whole date pasted into any box fills all three. The root is a group
-   named by the Field's label and described by its hint and error; the boxes are numeric text fields (not
-   type="number", which drops leading zeros and takes e and +). The value is YYYY-MM-DD; onValueChange's details say
-   what's wrong (a missing part, not a date, out of range) and in which boxes, for the app's error message. */
-/** A date typed as day, month and year in three boxes, for dates people know: a date of birth, a document's dates.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProps>('DateField', function DateField(given, ref) {
+function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);
   const nameRef = useNameCheck('DateField', NAME_HOW.group);
   const fieldLabel = useFieldLabel(props.id);
@@ -271,4 +262,15 @@ export const DateField = /* @__PURE__ */ component<HTMLDivElement, DateFieldProp
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={now.value} disabled={disabled} /> : null}
     </div>
   );
-});
+}
+
+/* DateField: a date people know by heart or copy from a document (a date of birth, a passport's expiry), as three
+   labelled boxes, Day, Month and Year, in the locale's order, under one name: GOV.UK's date input. Typing is free:
+   nothing is blocked or moved on its own, so a mistake can be read and fixed. A separator (/ . - or a space) typed
+   after a number moves to the next box, and a whole date pasted into any box fills all three. The root is a group
+   named by the Field's label and described by its hint and error; the boxes are numeric text fields (not
+   type="number", which drops leading zeros and takes e and +). The value is YYYY-MM-DD; onValueChange's details say
+   what's wrong (a missing part, not a date, out of range) and in which boxes, for the app's error message. */
+/** A date typed as day, month and year in three boxes, for dates people know: a date of birth, a document's dates.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const DateField = /* @__PURE__ */ named('DateField', DateFieldRender);

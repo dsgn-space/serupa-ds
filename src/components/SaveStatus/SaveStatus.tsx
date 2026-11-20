@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { activeIn } from '../../internal/root';
@@ -29,13 +29,7 @@ const STATES: readonly SaveState[] = ['idle', 'saving', 'saved', 'error'];
 // The faces' fixed order in the page (GR127).
 const ORDER: readonly SaveState[] = ['saving', 'saved', 'error'];
 
-/* SaveStatus: a small line saying whether an autosaving form or document is saved: a ring and "Saving…", a check and
-   "Saved 2 minutes ago" (the time kept current), or an error icon, "Couldn't save" and a Try again button. Screen
-   readers hear "Saved" and the error once, politely, when the status changes to them (an error also on the first render); "Saving…" isn't announced (it
-   comes and goes with every save), and the time ticking isn't either. The wrapper keeps its place when idle, so the
-   layout doesn't jump. className and other props go to the wrapper <div>. */
-/** Whether autosaved changes are saved: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with Try again; announced politely. */
-export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusProps>('SaveStatus', function SaveStatus(props, ref) {
+function SaveStatusRender({ ref, ...props }: SaveStatusProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   const { status: _s, savedAt, onRetry, errorText, className, ...rest } = props;
   const status = oneOf(STATES, props.status, 'idle');
@@ -108,4 +102,12 @@ export const SaveStatus = /* @__PURE__ */ component<HTMLDivElement, SaveStatusPr
       {ORDER.map((st) => (st === status ? face(st, false) : st === gone ? face(st, true) : null))}
     </div>
   );
-});
+}
+
+/* SaveStatus: a small line saying whether an autosaving form or document is saved: a ring and "Saving…", a check and
+   "Saved 2 minutes ago" (the time kept current), or an error icon, "Couldn't save" and a Try again button. Screen
+   readers hear "Saved" and the error once, politely, when the status changes to them (an error also on the first render); "Saving…" isn't announced (it
+   comes and goes with every save), and the time ticking isn't either. The wrapper keeps its place when idle, so the
+   layout doesn't jump. className and other props go to the wrapper <div>. */
+/** Whether autosaved changes are saved: "Saving…", "Saved 2 minutes ago", or "Couldn't save" with Try again; announced politely. */
+export const SaveStatus = /* @__PURE__ */ named('SaveStatus', SaveStatusRender);

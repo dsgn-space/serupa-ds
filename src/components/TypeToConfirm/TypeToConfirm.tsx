@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import { useAutoFocus } from '../../internal/focus';
 import { useSettings } from '../../internal/provider';
@@ -30,13 +30,7 @@ export interface TypeToConfirmProps extends Omit<React.HTMLAttributes<HTMLDivEle
   disabled?: boolean | undefined;
 }
 
-/* TypeToConfirm: a field and a destructive button for an action that can't be undone. The button takes no press until
-   the phrase is typed (it stays focusable, aria-disabled, and says why), so the action needs a deliberate step. Paste
-   is allowed (WCAG 3.3.8): the step is reading what's at stake, not retyping it. The field turns off autocomplete,
-   spellcheck, autocapitalize and autocorrect, which would change what's typed. Enter in the field confirms once it
-   matches. What's typed clears when a Dialog around it closes or its form resets. autoFocus goes to the field (L8E94); className and other props go to the wrapper <div>. */
-/** A field and a destructive button: the button works only once the phrase (a name) is typed, for actions that can't be undone. */
-export const TypeToConfirm = /* @__PURE__ */ component<HTMLDivElement, TypeToConfirmProps>('TypeToConfirm', function TypeToConfirm(props, ref) {
+function TypeToConfirmRender({ ref, ...props }: TypeToConfirmProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   const { phrase, confirmLabel, onConfirm, label, hint, caseSensitive, onMatch, disabled, className, autoFocus, ...rest } = props;
   const [text, setText] = React.useState('');
@@ -81,4 +75,12 @@ export const TypeToConfirm = /* @__PURE__ */ component<HTMLDivElement, TypeToCon
         disabledReason={disabled ? undefined : sds.labels.typePhraseFirst(phrase)} onClick={() => onConfirm()}>{confirmLabel}</Button>
     </div>
   );
-});
+}
+
+/* TypeToConfirm: a field and a destructive button for an action that can't be undone. The button takes no press until
+   the phrase is typed (it stays focusable, aria-disabled, and says why), so the action needs a deliberate step. Paste
+   is allowed (WCAG 3.3.8): the step is reading what's at stake, not retyping it. The field turns off autocomplete,
+   spellcheck, autocapitalize and autocorrect, which would change what's typed. Enter in the field confirms once it
+   matches. What's typed clears when a Dialog around it closes or its form resets. autoFocus goes to the field (L8E94); className and other props go to the wrapper <div>. */
+/** A field and a destructive button: the button works only once the phrase (a name) is typed, for actions that can't be undone. */
+export const TypeToConfirm = /* @__PURE__ */ named('TypeToConfirm', TypeToConfirmRender);

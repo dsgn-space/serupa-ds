@@ -10,4 +10,4 @@ interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>, "forma
     min?: number | undefined;
     max?: number | undefined;
 }
-declare const Sparkline: React.ForwardRefExoticComponent<SparklineProps & React.RefAttributes<SVGSVGElement>>;
+declare const Sparkline: React.FC<SparklineProps & React.RefAttributes<SVGSVGElement>>;

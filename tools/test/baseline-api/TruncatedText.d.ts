@@ -6,4 +6,4 @@ interface TruncatedTextProps extends Omit<React.HTMLAttributes<HTMLElement>, "ch
     placement?: Placement | undefined;
     mode?: "end" | "middle" | undefined;
 }
-declare const TruncatedText: React.ForwardRefExoticComponent<TruncatedTextProps & React.RefAttributes<HTMLElement>>;
+declare const TruncatedText: React.FC<TruncatedTextProps & React.RefAttributes<HTMLElement>>;

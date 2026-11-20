@@ -16,4 +16,4 @@ interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ti
     onSuggestion?: ((suggestion: string) => void) | undefined;
     onClearFilters?: (() => void) | undefined;
 }
-declare const EmptyState: React.ForwardRefExoticComponent<EmptyStateProps & React.RefAttributes<HTMLDivElement>>;
+declare const EmptyState: React.FC<EmptyStateProps & React.RefAttributes<HTMLDivElement>>;

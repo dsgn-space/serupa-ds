@@ -21,4 +21,4 @@ interface NumberInputProps extends Omit<InputProps, "actions" | "defaultValue" |
     currency?: string | undefined;
     minorUnits?: boolean | undefined;
 }
-declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<HTMLInputElement>>;
+declare const NumberInput: React.FC<NumberInputProps & React.RefAttributes<HTMLInputElement>>;

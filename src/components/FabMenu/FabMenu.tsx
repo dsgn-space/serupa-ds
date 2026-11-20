@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { IconSource } from '../Icon/Icon';
 import { oneOf } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { Fab, type FabPosition, type FabProps } from '../Fab/Fab';
 import { Menu, MenuItem } from '../Menu/Menu';
 
@@ -36,9 +36,7 @@ const POSITIONS: readonly FabPosition[] = ['bottom-end', 'bottom-start', 'top-en
    a press outside closes it and puts focus back on the button. The actions open toward the middle of the screen,
    above a Fab at the bottom (or a static one) and under one at the top, lined up with its outer edge. Its own
    component, so a plain Fab doesn't carry Menu. */
-/** A floating action button that opens a few related actions, each with its words shown.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const FabMenu = /* @__PURE__ */ component<HTMLButtonElement, FabMenuProps>('FabMenu', function FabMenu(props, ref) {
+function FabMenuRender({ ref, ...props }: FabMenuProps & React.RefAttributes<HTMLButtonElement>) {
   const { actions, open, onOpenChange, ...fab } = props;
   const pos = oneOf(POSITIONS, fab.placement, 'bottom-end');
   const placement = (pos.startsWith('top') ? 'bottom' : 'top') + (pos.endsWith('start') ? '-start' : '-end') as 'top-end';
@@ -48,4 +46,8 @@ export const FabMenu = /* @__PURE__ */ component<HTMLButtonElement, FabMenuProps
       {actions.map((a, i) => <MenuItem key={i} icon={a.icon} disabled={a.disabled} destructive={a.destructive} onSelect={a.onSelect}>{a.label}</MenuItem>)}
     </Menu>
   );
-});
+}
+
+/** A floating action button that opens a few related actions, each with its words shown.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const FabMenu = /* @__PURE__ */ named('FabMenu', FabMenuRender);

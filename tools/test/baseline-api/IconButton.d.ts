@@ -8,4 +8,4 @@ interface IconButtonOwnProps {
 }
 type IconButtonProps = (Without<ButtonAsButtonProps> & IconButtonOwnProps) | (Without<ButtonAsLinkProps> & IconButtonOwnProps);
 type IconButtonElement = HTMLAnchorElement | HTMLButtonElement;
-declare const IconButton: React.ForwardRefExoticComponent<IconButtonProps & React.RefAttributes<IconButtonElement>>;
+declare const IconButton: React.FC<IconButtonProps & React.RefAttributes<IconButtonElement>>;

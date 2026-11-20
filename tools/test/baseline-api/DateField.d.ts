@@ -33,4 +33,4 @@ interface DateFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "def
     size?: "lg" | "md" | "sm" | undefined;
     monthInput?: "number" | "select" | undefined;
 }
-declare const DateField: React.ForwardRefExoticComponent<DateFieldProps & React.RefAttributes<HTMLDivElement>>;
+declare const DateField: React.FC<DateFieldProps & React.RefAttributes<HTMLDivElement>>;

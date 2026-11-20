@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, oneOf, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { Drawer, type DrawerProps } from '../Drawer/Drawer';
 import { Button } from '../Button/Button';
@@ -93,11 +93,7 @@ export function useToastHistory(options?: ToastHistoryOptions): ToastHistory {
 const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.Info, success: icons.CheckCircle, warning: icons.Warning, danger: icons.Error };
 const TONES: readonly ToastTone[] = ['neutral', 'info', 'success', 'warning', 'danger'];
 
-/* NotificationCenter: a Drawer listing past notifications, newest first: each with its tone icon, title,
-   description and time, and unread ones with a dot, a bolder title and "Mark as read". The footer has "Mark all as
-   read" and "Clear all". Feed it useToastHistory() for the toasts already shown, or your own list. */
-/** A drawer of past notifications with read states: feed it useToastHistory() or your own list. */
-export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, NotificationCenterProps>('NotificationCenter', function NotificationCenter(props, ref) {
+function NotificationCenterRender({ ref, ...props }: NotificationCenterProps & React.RefAttributes<HTMLDialogElement>) {
   const labels = useSettings(words).labels;
   const base = domId('dk-nc', React.useId());
   // The Drawer's own props are named below, so its other attributes (id, aria-*) pass through in rest.
@@ -180,4 +176,10 @@ export const NotificationCenter = /* @__PURE__ */ component<HTMLDialogElement, N
       ) : <p className="dk-notification-center__empty" ref={none} tabIndex={-1}>{props.empty != null ? props.empty : labels.noNotifications}</p>}
     </Drawer>
   );
-});
+}
+
+/* NotificationCenter: a Drawer listing past notifications, newest first: each with its tone icon, title,
+   description and time, and unread ones with a dot, a bolder title and "Mark as read". The footer has "Mark all as
+   read" and "Clear all". Feed it useToastHistory() for the toasts already shown, or your own list. */
+/** A drawer of past notifications with read states: feed it useToastHistory() or your own list. */
+export const NotificationCenter = /* @__PURE__ */ named('NotificationCenter', NotificationCenterRender);

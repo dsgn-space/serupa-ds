@@ -6,4 +6,4 @@ interface SkipLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElemen
     target?: string | undefined;
     children?: React.ReactNode | undefined;
 }
-declare const SkipLink: React.ForwardRefExoticComponent<SkipLinkProps & React.RefAttributes<HTMLAnchorElement>>;
+declare const SkipLink: React.FC<SkipLinkProps & React.RefAttributes<HTMLAnchorElement>>;

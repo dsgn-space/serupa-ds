@@ -4,7 +4,7 @@ import { cn } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
 import { Tooltip } from '../Tooltip/Tooltip';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { writeText as write, writeTextLater as writeLater } from '../../internal/clipboard';
 import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
@@ -29,13 +29,7 @@ export interface CopyButtonProps extends Omit<ButtonAsButtonProps, 'value' | 'on
   onCopyError?: ((error: unknown) => void) | undefined;
 }
 
-/* CopyButton: a Button that copies value to the clipboard, then shows a check and "Copied" for timeout ms and
-   says "Copied" to screen readers (politely). If the browser refuses, it says labels.copyFailed instead and calls
-   onCopyError, and shows an error icon and labels.copyFailedShort for the same time. "Copy" and "Copied" take the
-   same space, so the button doesn't change width as it copies. iconOnly shows just the icon.
-   Variant defaults to "outline" and size to "sm"; every other Button prop and ref go to the <button>. */
-/** A button that copies text to the clipboard, then shows "Copied" with a check and says so to screen readers. */
-export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButtonProps>('CopyButton', function CopyButton(props, ref) {
+function CopyButtonRender({ ref, ...props }: CopyButtonProps & React.RefAttributes<HTMLButtonElement>) {
   const sds = useSettings(words);
   const { value, children, copiedLabel, iconOnly, timeout, onCopy, onCopyError, className, variant, size, ...rest } = props;   // the rest is the Button's
   // What the last press did, shown for timeout ms: 'copied', or 'failed' (the browser refused).
@@ -99,4 +93,12 @@ export const CopyButton = /* @__PURE__ */ component<HTMLButtonElement, CopyButto
       {failed ? <span className="dk-copy-btn__label">{failedShort}</span> : null}
     </span>
   </ButtonBase>;
-});
+}
+
+/* CopyButton: a Button that copies value to the clipboard, then shows a check and "Copied" for timeout ms and
+   says "Copied" to screen readers (politely). If the browser refuses, it says labels.copyFailed instead and calls
+   onCopyError, and shows an error icon and labels.copyFailedShort for the same time. "Copy" and "Copied" take the
+   same space, so the button doesn't change width as it copies. iconOnly shows just the icon.
+   Variant defaults to "outline" and size to "sm"; every other Button prop and ref go to the <button>. */
+/** A button that copies text to the clipboard, then shows "Copied" with a check and says so to screen readers. */
+export const CopyButton = /* @__PURE__ */ named('CopyButton', CopyButtonRender);

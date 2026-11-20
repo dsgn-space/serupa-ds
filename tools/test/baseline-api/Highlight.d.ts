@@ -8,4 +8,4 @@ declare function highlightRanges(text: string, query: ReadonlyArray<string> | st
     number,
     number
 ]>;
-declare const Highlight: React.ForwardRefExoticComponent<HighlightProps & React.RefAttributes<HTMLSpanElement>>;
+declare const Highlight: React.FC<HighlightProps & React.RefAttributes<HTMLSpanElement>>;

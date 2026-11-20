@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { en as words } from './labels';
@@ -26,13 +26,7 @@ export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>,
 const W = 100, H = 30, PAD = 4;
 const at = (x: number) => Math.round(x * 100) / 100;
 
-/* Sparkline: a small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value.
-   It's an image to screen readers, named by label and a summary of the numbers (first, last, low, high), since the
-   shape alone doesn't say them. No axes, no tooltip: when the numbers matter, show them as well. className and every
-   other prop go to the <svg>. */
-/** A small inline trend line, named for screen readers by what it measures and its first, last, low and high values.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Sparkline = /* @__PURE__ */ component<SVGSVGElement, SparklineProps>('Sparkline', function Sparkline(props, ref) {
+function SparklineRender({ ref, ...props }: SparklineProps & React.RefAttributes<SVGSVGElement>) {
   const rest = omit(props, { data: 1, label: 1, format: 1, area: 1, min: 1, max: 1, className: 1 });
   const sds = useSettings(words), locale = useLocale();
   const data = (props.data || []).filter((v) => typeof v === 'number' && isFinite(v));
@@ -54,4 +48,12 @@ export const Sparkline = /* @__PURE__ */ component<SVGSVGElement, SparklineProps
       {data.length ? <path className="dk-sparkline__dot" d={'M' + x(last) + ' ' + y(data[last] ?? 0) + 'Z'} vectorEffect="non-scaling-stroke" /> : null}
     </svg>
   );
-});
+}
+
+/* Sparkline: a small trend line that sits in a sentence, a table cell or a stat card, with a dot on the latest value.
+   It's an image to screen readers, named by label and a summary of the numbers (first, last, low, high), since the
+   shape alone doesn't say them. No axes, no tooltip: when the numbers matter, show them as well. className and every
+   other prop go to the <svg>. */
+/** A small inline trend line, named for screen readers by what it measures and its first, last, low and high values.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Sparkline = /* @__PURE__ */ named('Sparkline', SparklineRender);

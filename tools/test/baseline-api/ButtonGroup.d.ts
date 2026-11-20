@@ -6,4 +6,4 @@ interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     size?: "lg" | "md" | "sm" | undefined;
     "aria-label"?: string | undefined;
 }
-declare const ButtonGroup: React.ForwardRefExoticComponent<ButtonGroupProps & React.RefAttributes<HTMLDivElement>>;
+declare const ButtonGroup: React.FC<ButtonGroupProps & React.RefAttributes<HTMLDivElement>>;

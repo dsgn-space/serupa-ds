@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useVirtual } from '../../internal/virtual';
 
 export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 'children'> {
@@ -23,14 +23,7 @@ export interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListEle
   as?: 'ul' | 'ol' | undefined;
 }
 
-/* VirtualList: a List of any length that draws only the rows in view, plus a few either side (useVirtual in
-   src/internal/virtual.ts). The <ul> is the scroller, up to 384px tall (--virtual-list-height), and keyboard
-   scrollable (tabIndex 0, none while it has no rows: an empty box isn't a stop); an empty ::before and ::after stand in for the rows not drawn. Each drawn row gets aria-posinset and
-   aria-setsize, so screen readers still say "row 5,001 of 10,000". A row with focus stays drawn when it scrolls out
-   of view, so focus is never lost. className and every other prop go to the <ul>. */
-/** A List of thousands of rows that draws only the ones in view: same rows, same look, fast at any length.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualListProps>('VirtualList', function VirtualList(props, ref) {
+function VirtualListRender({ ref, ...props }: VirtualListProps & React.RefAttributes<HTMLUListElement>) {
   const rest = omit(props, { count: 1, renderItem: 1, itemKey: 1, estimatedItemHeight: 1, overscan: 1, variant: 1, divided: 1, as: 1, className: 1, style: 1, onFocus: 1, onBlur: 1 } as const);
   const count = Number.isFinite(props.count) ? Math.max(0, Math.floor(props.count)) : 0;
   const estimate = props.estimatedItemHeight && props.estimatedItemHeight > 0 ? props.estimatedItemHeight : 56;
@@ -73,4 +66,13 @@ export const VirtualList = /* @__PURE__ */ component<HTMLUListElement, VirtualLi
     },
     onBlur: (e: React.FocusEvent<HTMLUListElement>) => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(null); if (props.onBlur) props.onBlur(e); },
   }), rows);
-});
+}
+
+/* VirtualList: a List of any length that draws only the rows in view, plus a few either side (useVirtual in
+   src/internal/virtual.ts). The <ul> is the scroller, up to 384px tall (--virtual-list-height), and keyboard
+   scrollable (tabIndex 0, none while it has no rows: an empty box isn't a stop); an empty ::before and ::after stand in for the rows not drawn. Each drawn row gets aria-posinset and
+   aria-setsize, so screen readers still say "row 5,001 of 10,000". A row with focus stays drawn when it scrolls out
+   of view, so focus is never lost. className and every other prop go to the <ul>. */
+/** A List of thousands of rows that draws only the ones in view: same rows, same look, fast at any length.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const VirtualList = /* @__PURE__ */ named('VirtualList', VirtualListRender);

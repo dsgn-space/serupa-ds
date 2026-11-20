@@ -26,4 +26,4 @@ interface DrawerProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>
     defaultSnap?: number | undefined;
     onSnapChange?: ((snap: number) => void) | undefined;
 }
-declare const Drawer: React.ForwardRefExoticComponent<DrawerProps & React.RefAttributes<HTMLDialogElement>>;
+declare const Drawer: React.FC<DrawerProps & React.RefAttributes<HTMLDialogElement>>;

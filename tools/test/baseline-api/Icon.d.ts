@@ -10,4 +10,4 @@ interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 type IconSize = "lg" | "md" | "sm" | "xl" | "xs";
 type IconWeight = "bold" | "regular" | "semibold";
-declare const Icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<HTMLSpanElement>>;
+declare const Icon: React.FC<IconProps & React.RefAttributes<HTMLSpanElement>>;

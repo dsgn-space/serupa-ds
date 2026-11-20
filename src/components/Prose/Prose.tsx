@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 
 export interface ProseProps extends React.HTMLAttributes<HTMLElement> {
@@ -29,11 +29,7 @@ function syncScrollers(root: HTMLElement) {
   }
 }
 
-/* Prose: a reading column for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor.
-   It spaces each block from the one before (more before a heading), brings back list markers, styles quotes, code,
-   tables and images, and shows visited links in their own shade. className, ref and every other prop go to the element. */
-/** Styles for Markdown and CMS content: spacing between blocks, headings, lists, quotes, code, tables and images. */
-export const Prose = /* @__PURE__ */ component<HTMLElement, ProseProps>('Prose', function Prose(props, ref) {
+function ProseRender({ ref, ...props }: ProseProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, { as: 1, className: 1 });
   const root = React.useRef<HTMLElement | null>(null);
   const rootRefs = useMergedRef(ref, (n) => { root.current = n; });
@@ -55,4 +51,10 @@ export const Prose = /* @__PURE__ */ component<HTMLElement, ProseProps>('Prose',
   return React.createElement(oneOf(TAGS, props.as, 'div'), Object.assign(rest, {
     ref: rootRefs, 'data-component': 'prose', className: cn('dk-prose', props.className),
   }));
-});
+}
+
+/* Prose: a reading column for content nobody wrote in components: HTML from Markdown, a CMS or a rich-text editor.
+   It spaces each block from the one before (more before a heading), brings back list markers, styles quotes, code,
+   tables and images, and shows visited links in their own shade. className, ref and every other prop go to the element. */
+/** Styles for Markdown and CMS content: spacing between blocks, headings, lists, quotes, code, tables and images. */
+export const Prose = /* @__PURE__ */ named('Prose', ProseRender);

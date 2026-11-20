@@ -28,4 +28,4 @@ interface CarouselPerView {
     md?: number;
     lg?: number;
 }
-declare const Carousel: React.ForwardRefExoticComponent<CarouselProps & React.RefAttributes<HTMLElement>>;
+declare const Carousel: React.FC<CarouselProps & React.RefAttributes<HTMLElement>>;
