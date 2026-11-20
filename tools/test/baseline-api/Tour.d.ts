@@ -21,4 +21,4 @@ interface TourProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children
     onFinish?: (() => void) | undefined;
     headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
 }
-declare const Tour: React.ForwardRefExoticComponent<TourProps & React.RefAttributes<HTMLDivElement>>;
+declare const Tour: React.FC<TourProps & React.RefAttributes<HTMLDivElement>>;

@@ -17,7 +17,7 @@ interface FieldProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">
     id?: string | undefined;
     children?: React.ReactNode | undefined;
 }
-declare const Field: React.ForwardRefExoticComponent<FieldProps & React.RefAttributes<HTMLElement>>;
+declare const Field: React.FC<FieldProps & React.RefAttributes<HTMLElement>>;
 interface FormErrorsProps {
     errors?: null | Readonly<Record<string, React.ReactNode>> | undefined;
     children?: React.ReactNode | undefined;

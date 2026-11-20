@@ -26,7 +26,7 @@ interface StepperProps extends React.HTMLAttributes<HTMLElement> {
         stepOf?: (step: number, total: number, stepText: string, totalText: string) => string;
     }) | undefined;
 }
-declare const Stepper: React.ForwardRefExoticComponent<StepperProps & React.RefAttributes<HTMLElement>>;
+declare const Stepper: React.FC<StepperProps & React.RefAttributes<HTMLElement>>;
 interface UseStepsOptions {
     steps: StepperStep[];
     validate?: ((index: number) => boolean | Promise<boolean>) | undefined;

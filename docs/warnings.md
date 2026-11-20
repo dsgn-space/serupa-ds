@@ -60,10 +60,6 @@ A date component got a date and time as a string (`"2026-10-24T00:00:00Z"`, as a
 
 
 
-## deprecated-prop
-
-A prop with an older name, kept for now so nothing breaks: it still works, and the warning names the prop to use instead and the major that removes the old one. Renaming it is all there is to do. The names each idea takes are in CONTRIBUTING.md's API naming table.
-
 ## field-control
 
 A Field's label points at its control by id, and nothing on the page has that id, so the label names nothing. Put the control inside the Field, or pass the control's `id`.

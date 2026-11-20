@@ -22,7 +22,7 @@ interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElement>
     finalFocus?: React.RefObject<HTMLElement | null> | undefined;
     unsaved?: boolean | undefined;
 }
-declare const Dialog: React.ForwardRefExoticComponent<DialogProps & React.RefAttributes<HTMLDialogElement>>;
+declare const Dialog: React.FC<DialogProps & React.RefAttributes<HTMLDialogElement>>;
 declare function useUnsavedChanges(unsaved: boolean): {
     confirm: () => Promise<boolean>;
     dialog: null | React.ReactElement;

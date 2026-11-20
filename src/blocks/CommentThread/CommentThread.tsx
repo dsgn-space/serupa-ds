@@ -250,7 +250,8 @@ export function CommentThread({ comments, onReply, onEdit, onDelete, people, max
                     </form>
                   ) : <p className="whitespace-pre-wrap wrap-break-word">{people ? <Mentions text={c.body} people={people} /> : c.body}</p>}
                   {c.mine && editing !== c.id && (onEdit || onDelete) && (
-                    <div className="flex gap-2">
+                    // Pulled back by a ghost button's padding, so "Edit" lines up with the comment's text above it.
+                    <div className="-ms-2 flex gap-2">
                       {onEdit && <Button variant="ghost" size="sm" id={`${id}${c.id}-edit-button`} onClick={() => startEdit(c)}>{l.edit}</Button>}
                       {onDelete && <Button variant="ghost" size="sm" onClick={() => remove(c)}>{l.delete}</Button>}
                     </div>

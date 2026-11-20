@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useMergedRef, cn, domId, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { announce } from '../../internal/announce';
@@ -55,15 +55,7 @@ export interface TransferListProps extends Omit<React.HTMLAttributes<HTMLDivElem
   chosenLabel?: string | undefined;
 }
 
-/* TransferList: two lists of checkboxes, Available and Chosen, with Add and Remove between them, for picking a set
-   from many: table columns, permissions, a team's members. Each list is a CheckboxGroup named by its title, which
-   counts what's in it, with an "All" box first; Add moves the checked ones from Available to the end of Chosen, and
-   Remove moves them back to their place in Available. Each move is said politely ("Email and Phone moved to Chosen.").
-   Add and Remove stay focusable when there's nothing to move, and say why (Button disabledReason), so focus is never
-   dropped by a move. In a Field, the label names the whole (a role="group"); with name, each chosen value is a hidden
-   input, so a form submits them in order. */
-/** Two lists, Available and Chosen, with Add and Remove between them, to pick a set from many. */
-export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferListProps>('TransferList', function TransferList(given, ref) {
+function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);   // a surrounding Field's id, hint, required, invalid and disabled
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // a Field's <label for> can't name a group, so it's aria-labelledby
   // A Field's required (aria-required) isn't kept: role="group" can't carry it. Its own required checks the count.
@@ -154,4 +146,14 @@ export const TransferList = /* @__PURE__ */ component<HTMLDivElement, TransferLi
         disabled={off || readOnly} form={form} onInvalid={onInvalid} /> : null}
     </div>
   );
-});
+}
+
+/* TransferList: two lists of checkboxes, Available and Chosen, with Add and Remove between them, for picking a set
+   from many: table columns, permissions, a team's members. Each list is a CheckboxGroup named by its title, which
+   counts what's in it, with an "All" box first; Add moves the checked ones from Available to the end of Chosen, and
+   Remove moves them back to their place in Available. Each move is said politely ("Email and Phone moved to Chosen.").
+   Add and Remove stay focusable when there's nothing to move, and say why (Button disabledReason), so focus is never
+   dropped by a move. In a Field, the label names the whole (a role="group"); with name, each chosen value is a hidden
+   input, so a form submits them in order. */
+/** Two lists, Available and Chosen, with Add and Remove between them, to pick a set from many. */
+export const TransferList = /* @__PURE__ */ named('TransferList', TransferListRender);

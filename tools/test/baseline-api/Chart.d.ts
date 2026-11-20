@@ -34,4 +34,4 @@ interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, "children" 
     loading?: boolean | undefined;
     loadingLabel?: string | undefined;
 }
-declare const Chart: React.ForwardRefExoticComponent<ChartProps & React.RefAttributes<HTMLElement>>;
+declare const Chart: React.FC<ChartProps & React.RefAttributes<HTMLElement>>;

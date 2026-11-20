@@ -27,4 +27,4 @@ interface ColorPickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "d
     required?: boolean | undefined;
     invalid?: boolean | undefined;
 }
-declare const ColorPicker: React.ForwardRefExoticComponent<ColorPickerProps & React.RefAttributes<HTMLDivElement>>;
+declare const ColorPicker: React.FC<ColorPickerProps & React.RefAttributes<HTMLDivElement>>;

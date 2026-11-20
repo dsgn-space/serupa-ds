@@ -9,7 +9,7 @@ import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { Calendar } from '../Calendar/Calendar';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
@@ -103,14 +103,7 @@ export interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpan
 const norm = (r: DateRangeInput | undefined): DateRange => ({ start: r ? toDay(r.start, 'DateRangePicker') : null, end: r ? toDay(r.end, 'DateRangePicker') : null });
 const key = (d: Date | null) => (d ? d.getTime() : null);
 
-/* DateRangePicker: two date fields (start – end) in one box with a calendar button, for a stay, a report period
-   or a filter. People type either end in the locale's order (or yyyy-mm-dd), or pick both in a popup with two
-   months side by side: the first pick is the start, the second the end (a day before the start moves the start
-   instead), and the days between preview under the pointer. Typed text is read on blur and Enter; text that
-   can't be used puts back the last good day, and a start after the end clears the end. The popup opens on the
-   button or Alt+ArrowDown, and closes when the range is complete, on Escape, a click outside or focus moving past it. */
-/** Two date fields for a start and end, with a two-month calendar popup to pick the range. */
-export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRangePickerProps>('DateRangePicker', function DateRangePicker(props, ref) {
+function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.RefAttributes<HTMLSpanElement>) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
   const { value: _v, defaultValue: _d, onValueChange, open: _o, defaultOpen: _do, onOpenChange, onInvalidInput, min: minIn, max: maxIn, isDateDisabled, locale: localeProp, calendar, weekStartsOn, weekNumbers, size: _s, invalid: _i, disabled, readOnly, required: requiredProp, id, startLabel, endLabel, startName, endName, form, buttonLabel, months: _m, presets: presetsProp, autoFocus, className, ...rest } = props;
@@ -272,4 +265,13 @@ export const DateRangePicker = /* @__PURE__ */ component<HTMLSpanElement, DateRa
       {rejected && <span id={popId + '-rejected'} className="dk-input-rejected">{rejected}</span>}
     </>
   );
-});
+}
+
+/* DateRangePicker: two date fields (start – end) in one box with a calendar button, for a stay, a report period
+   or a filter. People type either end in the locale's order (or yyyy-mm-dd), or pick both in a popup with two
+   months side by side: the first pick is the start, the second the end (a day before the start moves the start
+   instead), and the days between preview under the pointer. Typed text is read on blur and Enter; text that
+   can't be used puts back the last good day, and a start after the end clears the end. The popup opens on the
+   button or Alt+ArrowDown, and closes when the range is complete, on Escape, a click outside or focus moving past it. */
+/** Two date fields for a start and end, with a two-month calendar popup to pick the range. */
+export const DateRangePicker = /* @__PURE__ */ named('DateRangePicker', DateRangePickerRender);

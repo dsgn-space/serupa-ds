@@ -4,7 +4,7 @@ import { cn, oneOf, omit } from '../../internal/cn';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { ButtonBase } from '../Button/Button';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import type { IconData } from '../../material/types';
@@ -53,8 +53,7 @@ function dismissAndRefocus(e: React.MouseEvent<HTMLElement>, onDismiss: () => vo
   }, 0);
 }
 
-/** A message about the page or a task: a tinted box with an icon, an optional title, actions and a close button. */
-export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>('Alert', function Alert(props, ref) {
+function AlertRender({ ref, ...props }: AlertProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings();
   const rest = omit(props, OWN);
   const tone = oneOf(TONES, props.tone, 'info');
@@ -72,4 +71,7 @@ export const Alert = /* @__PURE__ */ component<HTMLDivElement, AlertProps>('Aler
       {props.onDismiss ? <ButtonBase className="dk-alert__dismiss" variant="ghost" size="sm" icon={icons.Close} aria-label={props.dismissLabel || sds.labels.dismiss} onClick={(e) => dismissAndRefocus(e, props.onDismiss!)} /> : null}
     </div>
   );
-});
+}
+
+/** A message about the page or a task: a tinted box with an icon, an optional title, actions and a close button. */
+export const Alert = /* @__PURE__ */ named('Alert', AlertRender);

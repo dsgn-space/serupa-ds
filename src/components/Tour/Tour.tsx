@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { showLayer, type Placement } from '../../internal/position';
 import { deepActive, rootOf } from '../../internal/root';
@@ -70,7 +70,7 @@ function find(t: TourStep['target'], near: Node | null): HTMLElement | null {
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 const TABBABLE = 'a[href], button:not(:disabled), input:not(:disabled):not([type=hidden]), select:not(:disabled), textarea:not(:disabled), [tabindex], [contenteditable="true"]';
 
-export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour', function Tour(props, ref) {
+function TourRender({ ref, ...props }: TourProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), locale = useLocale();
   const own = domId('dk-tour', React.useId());
   const id = props.id || own;
@@ -186,4 +186,6 @@ export const Tour = /* @__PURE__ */ component<HTMLDivElement, TourProps>('Tour',
       </> : null}
     </div>
   );
-});
+}
+
+export const Tour = /* @__PURE__ */ named('Tour', TourRender);

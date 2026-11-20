@@ -10,7 +10,7 @@ interface MenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children
     className?: string | undefined;
     style?: React.CSSProperties | undefined;
 }
-declare const Menu: React.ForwardRefExoticComponent<MenuProps & React.RefAttributes<HTMLDivElement>>;
+declare const Menu: React.FC<MenuProps & React.RefAttributes<HTMLDivElement>>;
 interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "role"> {
     target: React.ReactElement;
     children: React.ReactNode;
@@ -21,7 +21,7 @@ interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
     className?: string | undefined;
     style?: React.CSSProperties | undefined;
 }
-declare const ContextMenu: React.ForwardRefExoticComponent<ContextMenuProps & React.RefAttributes<HTMLDivElement>>;
+declare const ContextMenu: React.FC<ContextMenuProps & React.RefAttributes<HTMLDivElement>>;
 interface MenuItemOwnProps {
     onSelect?: ((event: React.SyntheticEvent) => void) | undefined;
     icon?: IconSource | undefined;
@@ -36,9 +36,7 @@ interface MenuItemBaseProps extends MenuItemOwnProps, Omit<React.HTMLAttributes<
     rel?: string | undefined;
 }
 declare const MenuItem: {
-    <C extends React.ElementType = "a">(props: MenuItemProps<C> & {
-        ref?: React.Ref<HTMLElement>;
-    }): null | React.ReactElement;
+    <C extends React.ElementType = "a">(props: MenuItemProps<C> & React.RefAttributes<HTMLElement>): null | React.ReactElement;
     displayName?: string | undefined;
 };
 type MenuItemProps<C extends React.ElementType = "a"> = MenuItemOwnProps & {
@@ -49,26 +47,26 @@ interface MenuCheckboxItemProps extends CheckableProps {
     checked: boolean;
     onCheckedChange?: ((checked: boolean) => void) | undefined;
 }
-declare const MenuCheckboxItem: React.ForwardRefExoticComponent<MenuCheckboxItemProps & React.RefAttributes<HTMLElement>>;
+declare const MenuCheckboxItem: React.FC<MenuCheckboxItemProps & React.RefAttributes<HTMLElement>>;
 interface MenuRadioGroupProps extends Omit<MenuGroupProps, "defaultValue" | "onChange"> {
     value: string | undefined;
     onValueChange?: ((value: string) => void) | undefined;
 }
-declare const MenuRadioGroup: React.ForwardRefExoticComponent<MenuRadioGroupProps & React.RefAttributes<HTMLDivElement>>;
+declare const MenuRadioGroup: React.FC<MenuRadioGroupProps & React.RefAttributes<HTMLDivElement>>;
 interface MenuRadioItemProps extends CheckableProps {
     value: string;
 }
-declare const MenuRadioItem: React.ForwardRefExoticComponent<MenuRadioItemProps & React.RefAttributes<HTMLElement>>;
+declare const MenuRadioItem: React.FC<MenuRadioItemProps & React.RefAttributes<HTMLElement>>;
 interface MenuSubProps extends Omit<React.HTMLAttributes<HTMLElement>, "children"> {
     label: React.ReactNode;
     children: React.ReactNode;
     icon?: IconSource | undefined;
     disabled?: boolean | undefined;
 }
-declare const MenuSub: React.ForwardRefExoticComponent<MenuSubProps & React.RefAttributes<HTMLElement>>;
+declare const MenuSub: React.FC<MenuSubProps & React.RefAttributes<HTMLElement>>;
 interface MenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     label?: React.ReactNode | undefined;
 }
-declare const MenuGroup: React.ForwardRefExoticComponent<MenuGroupProps & React.RefAttributes<HTMLDivElement>>;
+declare const MenuGroup: React.FC<MenuGroupProps & React.RefAttributes<HTMLDivElement>>;
 type MenuSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
-declare const MenuSeparator: React.ForwardRefExoticComponent<MenuSeparatorProps & React.RefAttributes<HTMLDivElement>>;
+declare const MenuSeparator: React.FC<MenuSeparatorProps & React.RefAttributes<HTMLDivElement>>;

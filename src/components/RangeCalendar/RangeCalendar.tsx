@@ -4,7 +4,7 @@ import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { useAutoFocus } from '../../internal/focus';
 import { compare, isoDate, sameDay, toDay } from '../../internal/dates';
 import { calendarOf, type CalendarSystem } from '../../internal/calendars';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { FieldContext } from '../../internal/field';
 import { useLocale, useSettings } from '../../internal/provider';
 import { Calendar } from '../Calendar/Calendar';
@@ -55,15 +55,7 @@ const norm = (r: DateRangeInput | null | undefined): DateRange => ({ start: r ? 
 const order = (a: Date, b: Date) => (compare(a, b) <= 0 ? { start: a, end: b } : { start: b, end: a });
 const between = (d: Date, s: Date, e: Date) => compare(d, s) > 0 && compare(d, e) < 0;
 
-/* RangeCalendar: a calendar that stays on the page and picks a start and an end (a booking's dates, a report's period,
-   a leave request), one or two months side by side. The first pick (a press, or Enter on a day) is one end, the second
-   the other, in either order; while one end is picked, the days up to the one under the pointer or focus are shaded
-   as a preview. The value changes only once both are picked, and the range is then said ("Selected range: Nov 3 – 8,
-   2026"). Escape drops a half-picked range. The ends are named "start date" and "end date" and the days between
-   "in the range", in words as well as color. Each month is Calendar's grid, with its keys. */
-/** A calendar on the page that picks a range of days: a start and an end, with one or two months side by side.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCalendarProps>('RangeCalendar', function RangeCalendar(props, ref) {
+function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(words).labels;
   const rest = omit(props, { headingLevel: 1, weekNumbers: 1, value: 1, defaultValue: 1, onValueChange: 1, months: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, calendar: 1, weekStartsOn: 1, autoFocus: 1, className: 1 } as const);
   const root = React.useRef<HTMLDivElement | null>(null);
@@ -166,4 +158,14 @@ export const RangeCalendar = /* @__PURE__ */ component<HTMLDivElement, RangeCale
       <p className="dk-range-calendar__status" aria-live="polite">{status}</p>
     </div>
   );
-});
+}
+
+/* RangeCalendar: a calendar that stays on the page and picks a start and an end (a booking's dates, a report's period,
+   a leave request), one or two months side by side. The first pick (a press, or Enter on a day) is one end, the second
+   the other, in either order; while one end is picked, the days up to the one under the pointer or focus are shaded
+   as a preview. The value changes only once both are picked, and the range is then said ("Selected range: Nov 3 – 8,
+   2026"). Escape drops a half-picked range. The ends are named "start date" and "end date" and the days between
+   "in the range", in words as well as color. Each month is Calendar's grid, with its keys. */
+/** A calendar on the page that picks a range of days: a start and an end, with one or two months side by side.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const RangeCalendar = /* @__PURE__ */ named('RangeCalendar', RangeCalendarRender);

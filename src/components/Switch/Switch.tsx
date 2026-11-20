@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, oneOf, omit, SIZES } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { warnOnce } from '../../internal/warn';
@@ -40,8 +40,7 @@ const OWN = { size: 1, icon: 1, invalid: 1, loading: 1, onCheckedChange: 1, desc
 // appearance: none keeps our drawn track; the attribute is spelled out as switch="" so React writes it.
 const NATIVE_SWITCH = { switch: '' } as React.InputHTMLAttributes<HTMLInputElement>;
 
-/** An on/off setting that applies at once: a native checkbox with role="switch" (ref, checked, onChange and every input attribute go to it), drawn as a track and thumb; className and style go to the <label> around it. */
-export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>('Switch', function Switch(props, ref) {
+function SwitchRender({ ref, ...props }: SwitchProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('Switch', NAME_HOW.label, ref);   // warns when it has no accessible name
   if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Switch: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Switch');
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
@@ -84,4 +83,7 @@ export const Switch = /* @__PURE__ */ component<HTMLInputElement, SwitchProps>('
       </span> : null}
     </label>
   );
-});
+}
+
+/** An on/off setting that applies at once: a native checkbox with role="switch" (ref, checked, onChange and every input attribute go to it), drawn as a track and thumb; className and style go to the <label> around it. */
+export const Switch = /* @__PURE__ */ named('Switch', SwitchRender);

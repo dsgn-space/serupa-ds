@@ -15,4 +15,4 @@ interface LoaderProps extends React.HTMLAttributes<HTMLSpanElement> {
     delay?: number | undefined;
     loading?: boolean | undefined;
 }
-declare const Loader: React.ForwardRefExoticComponent<LoaderProps & React.RefAttributes<HTMLSpanElement>>;
+declare const Loader: React.FC<LoaderProps & React.RefAttributes<HTMLSpanElement>>;

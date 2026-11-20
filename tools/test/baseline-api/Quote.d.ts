@@ -7,4 +7,4 @@ interface QuoteProps extends React.HTMLAttributes<HTMLElement> {
     cite?: string | undefined;
     size?: "lg" | "md" | undefined;
 }
-declare const Quote: React.ForwardRefExoticComponent<QuoteProps & React.RefAttributes<HTMLElement>>;
+declare const Quote: React.FC<QuoteProps & React.RefAttributes<HTMLElement>>;

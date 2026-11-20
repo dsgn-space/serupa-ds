@@ -16,4 +16,4 @@ interface CodeBlockProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chi
     wrap?: boolean | undefined;
     copyable?: boolean | undefined;
 }
-declare const CodeBlock: React.ForwardRefExoticComponent<CodeBlockProps & React.RefAttributes<HTMLDivElement>>;
+declare const CodeBlock: React.FC<CodeBlockProps & React.RefAttributes<HTMLDivElement>>;

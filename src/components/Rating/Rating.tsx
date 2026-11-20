@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { useMergedRef, cn, domId, oneOf, SIZES } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useFormReset } from '../../internal/useFormReset';
@@ -47,13 +47,7 @@ const STAR = 'm233-120 65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 28
 const Star = () => <svg width="1em" height="1em" viewBox="0 -960 960 960" aria-hidden focusable="false"><path d={STAR} /></svg>;
 const round = (n: number, by: number) => Math.round(n / by) * by;
 
-/* Rating: stars to pick a score, or to show one. In a Field, the label names the group (aria-labelledby). Interactive, it's a role="radiogroup" of native radios, one per
-   star (two per star with allowHalf), each named by the ratingStars label ("3 stars") and laid over its star (or
-   half), so the arrow keys, Tab, forms and screen readers work as for any radio group; the stars up to the
-   pointer light up while it hovers. With clearable, picking the current rating again, Backspace or Delete clears
-   it. readOnly draws the stars as one role="img" named by the ratingValue label ("4.5 out of 5"). */
-/** Stars to pick a rating (a radio group) or to show one (readOnly: an image named "4.5 out of 5"). */
-export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Rating', function Rating(given, ref) {
+function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);   // a surrounding Field's id, hint, required, invalid and disabled
   const fieldLabel = React.useContext(FieldContext)?.labelId;   // a Field's <label for> can't name a group, so it's aria-labelledby
   const { invalid, value: valueIn, defaultValue, onValueChange, max: maxIn, allowHalf, clearable, readOnly, disabled, name, form, required, size: sizeIn, className, onKeyDown, onPointerLeave, autoFocus, ...rest } = props;
@@ -145,4 +139,12 @@ export const Rating = /* @__PURE__ */ component<HTMLDivElement, RatingProps>('Ra
       {stars.map((s) => box(radios(s.i), s.i, s.fill))}
     </div>
   );
-});
+}
+
+/* Rating: stars to pick a score, or to show one. In a Field, the label names the group (aria-labelledby). Interactive, it's a role="radiogroup" of native radios, one per
+   star (two per star with allowHalf), each named by the ratingStars label ("3 stars") and laid over its star (or
+   half), so the arrow keys, Tab, forms and screen readers work as for any radio group; the stars up to the
+   pointer light up while it hovers. With clearable, picking the current rating again, Backspace or Delete clears
+   it. readOnly draws the stars as one role="img" named by the ratingValue label ("4.5 out of 5"). */
+/** Stars to pick a rating (a radio group) or to show one (readOnly: an image named "4.5 out of 5"). */
+export const Rating = /* @__PURE__ */ named('Rating', RatingRender);

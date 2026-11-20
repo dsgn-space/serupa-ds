@@ -4,7 +4,7 @@ import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, omit } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { colorName, contrastRatio, normalizeHex } from '../../internal/color';
 import { delegateFocus, useAutoFocus, windowBlur } from '../../internal/focus';
 import { FieldContext } from '../../internal/field';
@@ -63,12 +63,7 @@ type Swatch = ColorSwatch & { named: boolean };
 // The check on a swatch: white or black, whichever stands out more on it.
 const ink = (hex: string) => ((contrastRatio(hex, '#ffffff') || 0) >= (contrastRatio(hex, '#000000') || 0) ? '#ffffff' : '#000000');
 
-/* ColorPicker: a radio group of swatches (one Tab stop; the arrow keys, Home and End move and pick), then, with
-   custom, a hex field and the browser's own color picker for any other color. With contrastWith it shows the WCAG
-   contrast ratio between the picked color and that one, and warns below minContrast, in a polite live region.
-   Colors go in and come out as lowercase #rrggbb. className and other props go to the outer <div>. */
-/** Swatches to pick a color from, a hex field for any other, and a contrast check against a background. */
-export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPickerProps>('ColorPicker', function ColorPicker(props, ref) {
+function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('ColorPicker', NAME_HOW.group);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: one in a row with a note after it
   // (<div><ColorPicker /><span>Brand</span></div>) was left unnamed, undescribed and enabled (L8E86).
@@ -244,4 +239,11 @@ export const ColorPicker = /* @__PURE__ */ component<HTMLDivElement, ColorPicker
       {props.name ? <input ref={hidden} type="hidden" name={props.name} form={props.form} value={value || ''} disabled={disabled} /> : null}
     </div>
   );
-});
+}
+
+/* ColorPicker: a radio group of swatches (one Tab stop; the arrow keys, Home and End move and pick), then, with
+   custom, a hex field and the browser's own color picker for any other color. With contrastWith it shows the WCAG
+   contrast ratio between the picked color and that one, and warns below minContrast, in a polite live region.
+   Colors go in and come out as lowercase #rrggbb. className and other props go to the outer <div>. */
+/** Swatches to pick a color from, a hex field for any other, and a contrast check against a background. */
+export const ColorPicker = /* @__PURE__ */ named('ColorPicker', ColorPickerRender);

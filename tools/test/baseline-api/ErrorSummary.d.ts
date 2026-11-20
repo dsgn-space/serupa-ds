@@ -13,4 +13,4 @@ interface ErrorSummaryProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
     description?: React.ReactNode | undefined;
     autoFocus?: boolean | undefined;
 }
-declare const ErrorSummary: React.ForwardRefExoticComponent<ErrorSummaryProps & React.RefAttributes<HTMLDivElement>>;
+declare const ErrorSummary: React.FC<ErrorSummaryProps & React.RefAttributes<HTMLDivElement>>;

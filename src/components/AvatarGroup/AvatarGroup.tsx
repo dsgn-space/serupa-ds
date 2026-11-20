@@ -4,7 +4,7 @@ import { cn, oneOf, omit } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
 import { AVATAR_SIZES, AvatarGroupSize } from '../Avatar/Avatar';
 import type { AvatarSize } from '../Avatar/Avatar';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { flattenChildren } from '../../internal/children';
@@ -39,8 +39,7 @@ export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 const PLAIN = { useGrouping: false } as const;
 const OWN = { children: 1, max: 1, total: 1, size: 1, moreLabel: 1, label: 1, showMore: 1, onMore: 1, className: 1 } as const;
 
-/** Avatars in an overlapping row, with "+N" for the rest. */
-export const AvatarGroup = /* @__PURE__ */ component<HTMLDivElement, AvatarGroupProps>('AvatarGroup', function AvatarGroup(props, ref) {
+function AvatarGroupRender({ ref, ...props }: AvatarGroupProps & React.RefAttributes<HTMLDivElement>) {
   const restyle = useServerStyles(ref);
   const rest = omit(props, OWN);
   const size = oneOf(AVATAR_SIZES, props.size, 'md');
@@ -89,4 +88,7 @@ export const AvatarGroup = /* @__PURE__ */ component<HTMLDivElement, AvatarGroup
       ) : null}
     </div>
   );
-});
+}
+
+/** Avatars in an overlapping row, with "+N" for the rest. */
+export const AvatarGroup = /* @__PURE__ */ named('AvatarGroup', AvatarGroupRender);

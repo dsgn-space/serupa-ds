@@ -8,4 +8,4 @@ interface IconTileProps extends React.HTMLAttributes<HTMLSpanElement> {
     shape?: "circle" | "square" | undefined;
     label?: string | undefined;
 }
-declare const IconTile: React.ForwardRefExoticComponent<IconTileProps & React.RefAttributes<HTMLSpanElement>>;
+declare const IconTile: React.FC<IconTileProps & React.RefAttributes<HTMLSpanElement>>;

@@ -7,7 +7,7 @@ import { useServerStyles } from '../../internal/serverStyles';
 import { Dialog } from '../Dialog/Dialog';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
 import { schemeOf, useThemeChanges } from '../../internal/scheme';
@@ -134,16 +134,7 @@ function Full({ src, alt, fallback, shape }: { src: string; alt: string; fallbac
   );
 }
 
-/* Image: a picture in a frame. ratio fixes the frame's shape (fit says whether the picture crops or fits), with
-   rounded corners from --image-radius; with ratio "auto", width and height shape the frame before it loads. It
-   loads lazily by default (priority: at once, high priority, for a hero picture); until it arrives the frame shows a muted
-   placeholder, and if it fails, a fallback (a broken-image icon named by the alt text). darkSrc is a version for a
-   dark theme, and dim darkens a photo a shade there. viewable makes the
-   picture a button that opens it full size in a Dialog (Escape, the × or the backdrop close it, focus comes
-   back). onRemove adds a remove button in the corner. alt is required. ref, className and other img props go
-   to the <img>, which stays (hidden) under the fallback if it fails; frameProps to the frame. */
-/** A picture in a frame with a ratio, a loading placeholder and an error fallback; optionally opens full size or can be removed. */
-export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>('Image', function Image(props, ref) {
+function ImageRender({ ref, ...props }: ImageProps & React.RefAttributes<HTMLImageElement>) {
   const frame = React.useRef<HTMLSpanElement | null>(null);
   const restyle = useServerStyles<HTMLSpanElement>(frame);
   const sds = useSettings(words);
@@ -237,4 +228,15 @@ export const Image = /* @__PURE__ */ component<HTMLImageElement, ImageProps>('Im
       ) : null}
     </span>
   );
-});
+}
+
+/* Image: a picture in a frame. ratio fixes the frame's shape (fit says whether the picture crops or fits), with
+   rounded corners from --image-radius; with ratio "auto", width and height shape the frame before it loads. It
+   loads lazily by default (priority: at once, high priority, for a hero picture); until it arrives the frame shows a muted
+   placeholder, and if it fails, a fallback (a broken-image icon named by the alt text). darkSrc is a version for a
+   dark theme, and dim darkens a photo a shade there. viewable makes the
+   picture a button that opens it full size in a Dialog (Escape, the × or the backdrop close it, focus comes
+   back). onRemove adds a remove button in the corner. alt is required. ref, className and other img props go
+   to the <img>, which stays (hidden) under the fallback if it fails; frameProps to the frame. */
+/** A picture in a frame with a ratio, a loading placeholder and an error fallback; optionally opens full size or can be removed. */
+export const Image = /* @__PURE__ */ named('Image', ImageRender);

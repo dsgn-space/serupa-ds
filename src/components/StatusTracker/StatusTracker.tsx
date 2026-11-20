@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit, setRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { en as words } from './labels';
 
@@ -46,13 +46,7 @@ const Bars = /* @__PURE__ */ React.memo(function Bars(p: { days: StatusDay[]; cu
   ));
 });
 
-/* StatusTracker: a strip of bars, one a day, for uptime or job history. Each state differs by shape as well as color:
-   up a solid bar, degraded a striped one, down a short one, no data an outline. The strip is one tab stop: the arrow
-   keys, Home and End move between days, and the caption under it says the focused or pointed day in words ("Nov 3,
-   2026: Degraded. API slow"), as each bar's name does for screen readers. A summary line and a legend follow. */
-/** A strip of day bars for uptime or job history, with each day in words and a summary.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const StatusTracker = /* @__PURE__ */ component<HTMLDivElement, StatusTrackerProps>('StatusTracker', function StatusTracker(props, ref) {
+function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { days: 1, label: 1, summary: 1, legend: 1, className: 1 } as const);
   const days = props.days || [];
@@ -119,4 +113,12 @@ export const StatusTracker = /* @__PURE__ */ component<HTMLDivElement, StatusTra
       ) : null}
     </div>
   );
-});
+}
+
+/* StatusTracker: a strip of bars, one a day, for uptime or job history. Each state differs by shape as well as color:
+   up a solid bar, degraded a striped one, down a short one, no data an outline. The strip is one tab stop: the arrow
+   keys, Home and End move between days, and the caption under it says the focused or pointed day in words ("Nov 3,
+   2026: Degraded. API slow"), as each bar's name does for screen readers. A summary line and a legend follow. */
+/** A strip of day bars for uptime or job history, with each day in words and a summary.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const StatusTracker = /* @__PURE__ */ named('StatusTracker', StatusTrackerRender);

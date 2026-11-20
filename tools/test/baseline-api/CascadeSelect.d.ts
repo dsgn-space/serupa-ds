@@ -38,4 +38,4 @@ interface CascadeSelectProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
         reason: "escape" | "outside" | "reset" | "select" | "trigger";
     }) => void) | undefined;
 }
-declare const CascadeSelect: React.ForwardRefExoticComponent<CascadeSelectProps & React.RefAttributes<HTMLButtonElement>>;
+declare const CascadeSelect: React.FC<CascadeSelectProps & React.RefAttributes<HTMLButtonElement>>;

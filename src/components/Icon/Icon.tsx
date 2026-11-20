@@ -6,7 +6,7 @@ import { warnOnce } from '../../internal/warn';
 import { ICONS, hasIcon, getIcon, getRegisteredIcon, loadIcon, type CustomIconName } from '../../icons';
 import type { MaterialIconName } from '../../material/icons';
 import type { IconData } from '../../material/types';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 
 /** Any Material Symbol's name, a custom icon's name, or a name you registered with registerIcons. */
@@ -49,7 +49,6 @@ function spellings(name: string): string[] {
   return [words, words.replace(/([a-z])(\d)/g, '$1_$2')].filter((n, i, all) => n !== name && all.indexOf(n) === i);
 }
 
-
 /* A custom icon's markup as React elements, so it's never written as HTML: a page with Trusted Types on
    (require-trusted-types-for 'script') needs no policy for it. tools/icons/build.mjs writes the markup: <g> and shape
    tags whose attributes are numbers, path data and keywords, in double quotes, with nothing to unescape. */
@@ -67,10 +66,7 @@ function shapes(markup: string): React.ReactNode[] {
   return all;
 }
 
-/* Icon: an inline SVG in a 1em box, drawn in the text color. Material Symbols Rounded, filled (src/material), or
-   one of your custom icons (tools/icons/build.mjs). */
-/** An icon: Material Symbols Rounded (filled) or one of your custom SVG icons. Sized by font-size, drawn in the text color. Decorative by default (aria-hidden); pass aria-label to make it meaningful. */
-export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>('Icon', function Icon(props, ref) {
+function IconRender({ ref, ...props }: IconProps & React.RefAttributes<HTMLSpanElement>) {
   const restyle = useServerStyles(ref);
   // Counts the loads that came back (or a retry after a failed one), so the box draws what arrived.
   const [tries, again] = React.useReducer((n: number) => n + 1, 0);
@@ -133,4 +129,9 @@ export const Icon = /* @__PURE__ */ component<HTMLSpanElement, IconProps>('Icon'
       {data && <svg width="1em" height="1em" viewBox="0 -960 960 960" fill="currentColor" aria-hidden focusable="false"><path d={data.d} /></svg>}
     </span>
   );
-});
+}
+
+/* Icon: an inline SVG in a 1em box, drawn in the text color. Material Symbols Rounded, filled (src/material), or
+   one of your custom icons (tools/icons/build.mjs). */
+/** An icon: Material Symbols Rounded (filled) or one of your custom SVG icons. Sized by font-size, drawn in the text color. Decorative by default (aria-hidden); pass aria-label to make it meaningful. */
+export const Icon = /* @__PURE__ */ named('Icon', IconRender);

@@ -226,7 +226,7 @@ export function FileBrowser({ folder = 'Brand assets', path = [{ label: 'Files',
                 selected={chosen} onSelectedChange={setPicked}>
                 {loading ? <ListLoadingItems rows={5} description leading="icon" label="Loading files" /> : files.map((f) => (
                   <ListItem key={f.id} value={f.id} href={f.href} leading={ICON[f.kind ?? 'other']} title={f.name}
-                    description={<>{f.kind === 'folder' ? 'Folder' : f.bytes != null ? formatFileSize(f.bytes, locale) : null}{f.kind === 'folder' || f.bytes != null ? ', ' : null}changed <RelativeTime date={f.modified} /></>}
+                    description={<>{f.kind === 'folder' ? 'Folder' : f.bytes != null ? formatFileSize(f.bytes, locale) : null}{f.kind === 'folder' || f.bytes != null ? ', ' : null}<span className="whitespace-nowrap">changed <RelativeTime date={f.modified} /></span></>}
                     trailing={(
                       <Menu placement="bottom-end" trigger={<IconButton id={`more-${f.id}`} icon="more_vert" label={`More for ${f.name}`} size="sm" variant="ghost" hideTitle />}>
                         <MenuItem icon="edit" onSelect={() => askRename(f)}>Rename</MenuItem>

@@ -30,11 +30,9 @@ type ListItemProps<C extends React.ElementType = "a"> = ListItemOwnProps & {
         [data: `data-${string}`]: boolean | number | string | undefined;
     }) | undefined;
 };
-declare const List: React.ForwardRefExoticComponent<ListProps & React.RefAttributes<HTMLUListElement>>;
+declare const List: React.FC<ListProps & React.RefAttributes<HTMLUListElement>>;
 declare const ListItem: {
-    <C extends React.ElementType = "a">(props: ListItemProps<C> & {
-        ref?: React.Ref<HTMLLIElement>;
-    }): null | React.ReactElement;
+    <C extends React.ElementType = "a">(props: ListItemProps<C> & React.RefAttributes<HTMLLIElement>): null | React.ReactElement;
     displayName?: string | undefined;
 };
 interface ListLoadingItemsProps {
@@ -49,5 +47,5 @@ interface ListSelectAllProps extends Omit<CheckboxProps, "checked" | "defaultChe
     onSelectedChange: (values: string[]) => void;
     children?: React.ReactNode;
 }
-declare const ListSelectAll: React.ForwardRefExoticComponent<ListSelectAllProps & React.RefAttributes<HTMLInputElement>>;
+declare const ListSelectAll: React.FC<ListSelectAllProps & React.RefAttributes<HTMLInputElement>>;
 declare function ListLoadingItems(props: ListLoadingItemsProps): React.ReactElement;

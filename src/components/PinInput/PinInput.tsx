@@ -4,7 +4,7 @@ import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useFormReset } from '../../internal/useFormReset';
 import { latinDigits } from '../../internal/digits';
@@ -33,14 +33,7 @@ export interface PinInputProps extends Omit<React.InputHTMLAttributes<HTMLInputE
 
 const KEEP = { numeric: /[^0-9]/g, alphanumeric: /[^0-9A-Za-z]/g } as const;
 
-/* PinInput: a one-time code or PIN, drawn as one box per character but typed into one native <input> that lies
-   over the boxes, unseen. So it's one field to a screen reader, a label, a form and a password manager:
-   autocomplete="one-time-code" lets a phone fill a texted code, a paste fills every box (spaces and dashes
-   dropped), Backspace takes the last character. The caret stays at the end, and the box it's in gets the focus
-   ring. The code reads left to right, also in a right-to-left page. Every prop but className and style, and ref,
-   go to the <input>; its value is what the form submits. */
-/** A one-time code or PIN in one box per character, typed into one native field: paste, autofill and forms work as with an Input. */
-export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProps>('PinInput', function PinInput(props, ref) {
+function PinInputRender({ ref, ...props }: PinInputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('PinInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);
   const rest = omit(props, { length: 1, value: 1, defaultValue: 1, onValueChange: 1, onComplete: 1, type: 1, mask: 1, size: 1, invalid: 1, className: 1, style: 1 } as const);
@@ -103,4 +96,13 @@ export const PinInput = /* @__PURE__ */ component<HTMLInputElement, PinInputProp
         ref={mergedRef} className="dk-pin-input__field" />
     </span>
   );
-});
+}
+
+/* PinInput: a one-time code or PIN, drawn as one box per character but typed into one native <input> that lies
+   over the boxes, unseen. So it's one field to a screen reader, a label, a form and a password manager:
+   autocomplete="one-time-code" lets a phone fill a texted code, a paste fills every box (spaces and dashes
+   dropped), Backspace takes the last character. The caret stays at the end, and the box it's in gets the focus
+   ring. The code reads left to right, also in a right-to-left page. Every prop but className and style, and ref,
+   go to the <input>; its value is what the form submits. */
+/** A one-time code or PIN in one box per character, typed into one native field: paste, autofill and forms work as with an Input. */
+export const PinInput = /* @__PURE__ */ named('PinInput', PinInputRender);

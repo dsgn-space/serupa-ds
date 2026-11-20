@@ -10,4 +10,4 @@ interface LogoProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "alt
     collapseBelow?: "lg" | "md" | "sm" | undefined;
     size?: LogoSize | undefined;
 }
-declare const Logo: React.ForwardRefExoticComponent<LogoProps & React.RefAttributes<HTMLImageElement>>;
+declare const Logo: React.FC<LogoProps & React.RefAttributes<HTMLImageElement>>;

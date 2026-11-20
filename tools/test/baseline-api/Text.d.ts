@@ -12,4 +12,4 @@ interface TextProps extends React.HTMLAttributes<HTMLElement> {
     measure?: boolean | undefined;
     htmlFor?: string | undefined;
 }
-declare const Text: React.ForwardRefExoticComponent<TextProps & React.RefAttributes<HTMLElement>>;
+declare const Text: React.FC<TextProps & React.RefAttributes<HTMLElement>>;

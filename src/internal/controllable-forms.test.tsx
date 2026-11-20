@@ -23,7 +23,6 @@ const CASES: Array<[string, unknown, (v: unknown) => React.ReactElement]> = [
   ['NumberInput value', 3, (v) => <NumberInput aria-label="Quantity" value={v as number | undefined} />],
   ['SearchInput value', 'ab', (v) => <SearchInput aria-label="Search" value={v as string | undefined} />],
   ['PasswordInput revealed', false, (v) => <PasswordInput aria-label="Password" revealed={v as boolean | undefined} />],
-  ['PasswordInput visible', false, (v) => <PasswordInput aria-label="Password" visible={v as boolean | undefined} />],
   ['PinInput value', '12', (v) => <PinInput aria-label="Code" length={4} value={v as string | undefined} />],
   ['InlineEdit value', 'Atlas', (v) => <InlineEdit label="Project name" value={v as string | undefined} />],
   ['ColorPicker value', '#336699', (v) => <ColorPicker aria-label="Label color" swatches={['#336699', '#993366']} value={v as string | undefined} />],

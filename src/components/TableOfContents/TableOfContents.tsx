@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { reducedMotion as reduced } from '../../internal/mediaList';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useServerStyles } from '../../internal/serverStyles';
 import { en as words } from './labels';
@@ -35,14 +35,7 @@ export interface TableOfContentsProps extends Omit<React.HTMLAttributes<HTMLElem
 
 const slug = (text: string) => text.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '') || 'section';
 
-/* TableOfContents: an "On this page" list of links to the page's sections, as a navigation landmark. It reads the
-   headings from the page (giving an id to one that has none) or takes items. As the page scrolls, the link to the
-   section being read is marked aria-current="location" and highlighted: the last heading above the offset line.
-   A click scrolls to the heading (smoothly, unless motion is reduced), puts its id in the address, and moves focus to
-   it, so the next Tab continues from there. */
-/** An "On this page" list of links to the page's sections, marking the one being read.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfContentsProps>('TableOfContents', function TableOfContents(props, ref) {
+function TableOfContentsRender({ ref, ...props }: TableOfContentsProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings(words), L = sds.labels;
   const rest = omit(props, { items: 1, container: 1, headings: 1, title: 1, offset: 1, variant: 1, className: 1 } as const);
   const rail = props.variant === 'rail';
@@ -202,4 +195,13 @@ export const TableOfContents = /* @__PURE__ */ component<HTMLElement, TableOfCon
       </> : <>{head}{list}</>}
     </nav>
   );
-});
+}
+
+/* TableOfContents: an "On this page" list of links to the page's sections, as a navigation landmark. It reads the
+   headings from the page (giving an id to one that has none) or takes items. As the page scrolls, the link to the
+   section being read is marked aria-current="location" and highlighted: the last heading above the offset line.
+   A click scrolls to the heading (smoothly, unless motion is reduced), puts its id in the address, and moves focus to
+   it, so the next Tab continues from there. */
+/** An "On this page" list of links to the page's sections, marking the one being read.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const TableOfContents = /* @__PURE__ */ named('TableOfContents', TableOfContentsRender);

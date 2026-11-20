@@ -14,4 +14,4 @@ interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "child
     className?: string | undefined;
     style?: React.CSSProperties | undefined;
 }
-declare const Popover: React.ForwardRefExoticComponent<PopoverProps & React.RefAttributes<HTMLDivElement>>;
+declare const Popover: React.FC<PopoverProps & React.RefAttributes<HTMLDivElement>>;

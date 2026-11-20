@@ -13,4 +13,4 @@ interface IllustrationProps extends Omit<React.SVGAttributes<SVGSVGElement>, "na
     size?: "lg" | "md" | "sm" | undefined;
     label?: string | undefined;
 }
-declare const Illustration: React.ForwardRefExoticComponent<IllustrationProps & React.RefAttributes<SVGSVGElement>>;
+declare const Illustration: React.FC<IllustrationProps & React.RefAttributes<SVGSVGElement>>;

@@ -21,4 +21,4 @@ interface LightboxProps extends Omit<React.DialogHTMLAttributes<HTMLDialogElemen
     onIndexChange?: ((index: number) => void) | undefined;
     loop?: boolean | undefined;
 }
-declare const Lightbox: React.ForwardRefExoticComponent<LightboxProps & React.RefAttributes<HTMLDialogElement>>;
+declare const Lightbox: React.FC<LightboxProps & React.RefAttributes<HTMLDialogElement>>;

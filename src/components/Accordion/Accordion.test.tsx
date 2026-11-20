@@ -8,7 +8,6 @@ import { THEMES, color, contrast, css, press, withMotion, settled, disabledLook 
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { Accordion, AccordionItem } from './Accordion';
-const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const items = (id: string) => [...el(id).querySelectorAll<HTMLElement>(':scope > [data-state]')];
@@ -21,7 +20,7 @@ const focused = () => (document.activeElement!.matches('button[aria-expanded]') 
 
 function Faq({ r, ir }: { r?: React.Ref<HTMLDivElement>; ir?: React.Ref<HTMLDivElement> }) {
   return <div style={{ width: '480px' }}>
-    <Accordion id="adef" ref={r} className="extra" data-x="y">
+    <Accordion id="adef" type="single" ref={r} className="extra" data-x="y">
       <AccordionItem title="Shipping" ref={ir}><p style={{ margin: 0 }}>We ship in 2 days. <a href="#x" id="inner">Rates</a></p></AccordionItem>
       <AccordionItem title="Returns">Within 30 days.</AccordionItem>
       <AccordionItem title="Locked" disabled>Never</AccordionItem>
@@ -79,7 +78,7 @@ describe('Accordion', () => {
         <AccordionItem title="C">3</AccordionItem>
       </Accordion>
       <SerupaProvider labels={idLabels}><Accordion id="aid" type="multiple" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion></SerupaProvider>
-      <Accordion id="asingle" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion>
+      <Accordion id="asingle" type="single" showExpandAll><AccordionItem title="A">1</AccordionItem></Accordion>
     </div>);
     const all = (id: string) => [...el(id).querySelectorAll('button')].find((b) => !b.closest('h1, h2, h3, h4, h5, h6')) ?? null;   // the one button outside the headings
     expect([all('aall')!.textContent, all('aall')!.type, all('aid')!.textContent, all('asingle')]).toEqual(['Expand all', 'button', 'Buka semua', null]);
@@ -179,17 +178,28 @@ describe('Accordion', () => {
     expect([trigger('adef', 3).disabled, disabledLook(trigger('adef', 3))]).toEqual([true, 'neutral']);
   });
 
-  test('keyboard: Down and Up move between titles (skipping disabled, wrapping), Home and End go to the ends; Enter and Space toggle the focused item; the focus ring is 2px', async () => {
+  test('keyboard: Tab moves between titles (skipping disabled ones); Down, Up, Home and End are left to the page, as on any button; Enter and Space toggle the focused item; the focus ring is 2px', async () => {
     await render(<Faq />);
     trigger('adef', 1).focus();
     const seen: Array<string | undefined> = [];
-    for (const k of ['{ArrowDown}', '{ArrowDown}', '{ArrowDown}', '{Home}', '{End}', '{ArrowUp}']) { await userEvent.keyboard(k); seen.push(focused()); }
-    expect(seen).toEqual(['Returns', 'Warranty', 'Shipping', 'Shipping', 'Warranty', 'Returns']);
+    for (const k of ['{ArrowDown}', '{End}', '{ArrowUp}', '{Home}']) { await userEvent.keyboard(k); seen.push(focused()); }
+    await userEvent.tab();
+    seen.push(focused());
+    await userEvent.tab();
+    seen.push(focused());
+    expect(seen).toEqual(['Shipping', 'Shipping', 'Shipping', 'Shipping', 'Returns', 'Warranty']);
     await userEvent.keyboard('{Enter}');
-    expect(state('adef')).toBe('0100');
-    expect([css(trigger('adef', 2)).outlineStyle, css(trigger('adef', 2)).outlineWidth]).toEqual(['solid', '2px']);
+    expect(state('adef')).toBe('0001');
+    expect([css(trigger('adef', 4)).outlineStyle, css(trigger('adef', 4)).outlineWidth]).toEqual(['solid', '2px']);
     await userEvent.keyboard(' ');
     expect(state('adef')).toBe('0000');
+  });
+
+  test('with no type, any number of items can be open: opening one leaves the others open (17.0.0)', async () => {
+    await render(<Accordion id="anytype"><AccordionItem value="a" title="A">a</AccordionItem><AccordionItem value="b" title="B">b</AccordionItem></Accordion>);
+    await userEvent.click(trigger('anytype', 1));
+    await userEvent.click(trigger('anytype', 2));
+    expect(state('anytype')).toBe('11');
   });
 
   test('Tab goes into open content', async () => {
@@ -215,7 +225,7 @@ describe('Accordion', () => {
   });
 
   test('single with a two-item defaultValue opens only the first; collapsible={false}: the open item stays open (aria-disabled), and opening another replaces it', async () => {
-    await render(<Accordion id="afixed" collapsible={false} defaultValue={['p', 'q']}><AccordionItem value="p" title="P">p</AccordionItem><AccordionItem value="q" title="Q">q</AccordionItem></Accordion>);
+    await render(<Accordion id="afixed" type="single" collapsible={false} defaultValue={['p', 'q']}><AccordionItem value="p" title="P">p</AccordionItem><AccordionItem value="q" title="Q">q</AccordionItem></Accordion>);
     expect(state('afixed')).toBe('10');
     await userEvent.click(trigger('afixed', 1), { force: true });
     expect([state('afixed'), trigger('afixed', 1).getAttribute('aria-disabled')]).toEqual(['10', 'true']);
@@ -313,7 +323,7 @@ describe('Accordion', () => {
     await render(<>
       <Accordion id="dp-few" type="multiple" defaultValue={['v0', 'v2']}>{many(6)}</Accordion>
       <Accordion id="dp-many" type="multiple" defaultValue={['v0', 'v2']}>{many(8)}</Accordion>
-      <Accordion id="dp-one" value={['v0', 'v1']}>{many(3)}</Accordion>
+      <Accordion id="dp-one" type="single" value={['v0', 'v1']}>{many(3)}</Accordion>
     </>);
     const regions = (id: string) => el(id).querySelectorAll('[role="region"]').length;
     expect([regions('dp-few'), regions('dp-many')]).toEqual([2, 0]);
@@ -339,13 +349,6 @@ describe('Accordion', () => {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
   });
 
-  test('with Alt, Ctrl or ⌘ the arrows, Home and End are left to the browser (L8E29)', async () => {
-    await render(<Accordion id="mk"><AccordionItem title="A">1</AccordionItem><AccordionItem title="B">2</AccordionItem></Accordion>);
-    const t = document.querySelector('#mk button[aria-expanded]') as HTMLElement;
-    t.focus();
-    expect([modified(t, 'ArrowDown'), modified(t, 'End'), document.activeElement === t]).toEqual([[false, false, false], [false, false, false], true]);
-  });
-
   test('server markup: closed content is hidden before the stylesheet or script arrives; once hydrated it is until-found, and opens and closes as usual (FEC8a)', async () => {
     const tree = <Accordion id="ssr" defaultValue={['a']}><AccordionItem value="a" title="A">Open text</AccordionItem><AccordionItem value="b" title="B">Closed text</AccordionItem></Accordion>;
     const host = document.createElement('div');
@@ -367,19 +370,6 @@ describe('Accordion', () => {
     } finally { host.remove(); }
   });
 
-  test('L8E83: an item hidden by the hidden attribute or CSS (a filtered FAQ) is skipped by Down, Up, Home and End, so focus never sticks', async () => {
-    await render(<Accordion id="hid">
-      <AccordionItem value="z" title="Gone first" hidden>z</AccordionItem>
-      <AccordionItem value="a" title="One">a</AccordionItem>
-      <AccordionItem value="x" title="Gone" style={{ display: 'none' }}>x</AccordionItem>
-      <AccordionItem value="b" title="Two">b</AccordionItem>
-      <AccordionItem value="y" title="Gone last" hidden>y</AccordionItem>
-    </Accordion>);
-    (page.getByRole('button', { name: 'One' }).element() as HTMLElement).focus();
-    const seen: Array<string | undefined> = [focused()];
-    for (const k of ['{ArrowDown}', '{ArrowDown}', '{ArrowUp}', '{End}', '{Home}']) { await userEvent.keyboard(k); seen.push(focused()); }
-    expect(seen).toEqual(['One', 'Two', 'One', 'Two', 'Two', 'One']);
-  });
 });
 
 describe('Accordion and form validation (L8E99)', () => {

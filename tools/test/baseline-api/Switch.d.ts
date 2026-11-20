@@ -10,4 +10,4 @@ interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
     icon?: boolean | undefined;
     onCheckedChange?: ((checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }
-declare const Switch: React.ForwardRefExoticComponent<SwitchProps & React.RefAttributes<HTMLInputElement>>;
+declare const Switch: React.FC<SwitchProps & React.RefAttributes<HTMLInputElement>>;
