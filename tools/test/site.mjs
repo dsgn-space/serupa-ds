@@ -280,11 +280,14 @@ await inParallel(opened, workers, async (p, w) => {
       // What's drawn, not the stage, which is a page's width and centered.
       wide: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelector('.site-card__stage')?.children ?? []].some((c) => { const s = c.getBoundingClientRect(); return s.width > 0 && (s.left < r.left - 1 || s.right > r.right + 1); }); }).map(name),
       over: [...document.querySelectorAll('dialog[open], :popover-open')].map((e) => e.className),
+      // A bar or button a story pins to the screen's edge is pinned to its picture, and shows whole there.
+      pinned: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelectorAll('.dk-bottom-nav, .dk-fab, .dk-offline-banner')].some((e) => { const s = e.getBoundingClientRect(); return s.top < r.top - 1 || s.bottom > r.bottom + 1 || s.left < r.left - 1 || s.right > r.right + 1; }); }).map(name),
     };
   });
   t('/components: every component card shows a preview', cards.count >= 100 && !cards.empty.length, `${cards.count} previews; none drawn in ${cards.empty.join(', ')}`);
   t('/components: no preview opens a dialog, menu or tooltip over the page', !cards.over.length, cards.over.join(', '));
   t('/components: every preview fits its card\'s width', !cards.wide.length, cards.wide.join(', '));
+  t('/components: a BottomNav, FAB or OfflineBanner shows whole in its picture, not past its edge', !cards.pinned.length, cards.pinned.join(', '));
   t('/components: the previews are pictures, hidden from assistive technology and out of the tab order', !cards.shown.length, cards.shown.join(', '));
   await w.page.evaluate(() => window.scrollTo(0, 0));
   // By where it is: Playwright won't click an inert element, which is the point.
