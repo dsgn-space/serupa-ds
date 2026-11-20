@@ -7,4 +7,4 @@ interface StackProps extends React.HTMLAttributes<HTMLElement> {
     wrap?: boolean | undefined;
     as?: "div" | "fieldset" | "footer" | "form" | "header" | "nav" | "ol" | "section" | "span" | "ul" | undefined;
 }
-declare const Stack: React.ForwardRefExoticComponent<StackProps & React.RefAttributes<HTMLElement>>;
+declare const Stack: React.FC<StackProps & React.RefAttributes<HTMLElement>>;

@@ -31,18 +31,14 @@ interface NavbarMenuLinkOwnProps {
 type NavbarMenuLinkProps<C extends React.ElementType = "a"> = NavbarMenuLinkOwnProps & {
     as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, "as" | keyof NavbarMenuLinkOwnProps>;
-declare const Navbar: React.ForwardRefExoticComponent<NavbarProps & React.RefAttributes<HTMLElement>>;
+declare const Navbar: React.FC<NavbarProps & React.RefAttributes<HTMLElement>>;
 declare const NavbarLink: {
-    <C extends React.ElementType = "a">(props: NavbarLinkProps<C> & {
-        ref?: React.Ref<React.ComponentRef<C>>;
-    }): null | React.ReactElement;
+    <C extends React.ElementType = "a">(props: NavbarLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): null | React.ReactElement;
     displayName?: string | undefined;
 };
-declare const NavbarMenu: React.ForwardRefExoticComponent<NavbarMenuProps & React.RefAttributes<HTMLDivElement>>;
-declare const NavbarMenuGroup: React.ForwardRefExoticComponent<NavbarMenuGroupProps & React.RefAttributes<HTMLDivElement>>;
+declare const NavbarMenu: React.FC<NavbarMenuProps & React.RefAttributes<HTMLDivElement>>;
+declare const NavbarMenuGroup: React.FC<NavbarMenuGroupProps & React.RefAttributes<HTMLDivElement>>;
 declare const NavbarMenuLink: {
-    <C extends React.ElementType = "a">(props: NavbarMenuLinkProps<C> & {
-        ref?: React.Ref<React.ComponentRef<C>>;
-    }): null | React.ReactElement;
+    <C extends React.ElementType = "a">(props: NavbarMenuLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): null | React.ReactElement;
     displayName?: string | undefined;
 };

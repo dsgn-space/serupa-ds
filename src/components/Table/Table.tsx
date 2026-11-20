@@ -10,7 +10,7 @@ import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Popover } from '../Popover/Popover';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { warnOnce } from '../../internal/warn';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -123,11 +123,7 @@ export interface TableActionBarProps extends React.HTMLAttributes<HTMLDivElement
 
 const ALIGN = ['start', 'center', 'end'] as const;
 
-/* Table: a native <table> in a frame that scrolls sideways when it's too wide (and then takes keyboard focus
-   so it can be scrolled with the arrows). size, striped and stickyHeader style the rows; caption names it.
-   className and every other prop go to the <table>; containerProps go to the frame. */
-/** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
-export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Table', function Table(props, ref) {
+function TableRender({ ref, ...props }: TableProps & React.RefAttributes<HTMLTableElement>) {
   // Server HTML's style attributes (a header's width, the frame's own) under a strict CSP: applied again after
   // hydration, for the frame and everything in it.
   const restyle = useServerStyles<HTMLDivElement>();
@@ -153,21 +149,31 @@ export const Table = /* @__PURE__ */ component<HTMLTableElement, TableProps>('Ta
       </table>
     </div>
   );
-});
+}
+
+/* Table: a native <table> in a frame that scrolls sideways when it's too wide (and then takes keyboard focus
+   so it can be scrolled with the arrows). size, striped and stickyHeader style the rows; caption names it.
+   className and every other prop go to the <table>; containerProps go to the frame. */
+/** A data table: native table markup in a scrolling frame, with sizes, stripes, a sticky header and sortable columns. */
+export const Table = /* @__PURE__ */ named('Table', TableRender);
 
 export type TableHeadProps = React.HTMLAttributes<HTMLTableSectionElement>;
 export type TableBodyProps = React.HTMLAttributes<HTMLTableSectionElement>;
 export type TableFootProps = React.HTMLAttributes<HTMLTableSectionElement>;
 
-/** The header rows (<thead>). */
-export const TableHead = /* @__PURE__ */ component<HTMLTableSectionElement, TableHeadProps>('TableHead', function TableHead(props, ref) {
+function TableHeadRender({ ref, ...props }: TableHeadProps & React.RefAttributes<HTMLTableSectionElement>) {
   return <thead {...props} ref={ref} className={cn('dk-table__head', props.className)} />;
-});
+}
+
+/** The header rows (<thead>). */
+export const TableHead = /* @__PURE__ */ named('TableHead', TableHeadRender);
+
+function TableBodyRender({ ref, ...props }: TableBodyProps & React.RefAttributes<HTMLTableSectionElement>) {
+  return <tbody {...props} ref={ref} className={cn('dk-table__body', props.className)} />;
+}
 
 /** The body rows (<tbody>). */
-export const TableBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableBodyProps>('TableBody', function TableBody(props, ref) {
-  return <tbody {...props} ref={ref} className={cn('dk-table__body', props.className)} />;
-});
+export const TableBody = /* @__PURE__ */ named('TableBody', TableBodyRender);
 
 export interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
   /** Not used: renderRow draws the rows. */
@@ -187,15 +193,7 @@ export interface TableVirtualBodyProps extends React.HTMLAttributes<HTMLTableSec
 // The most rows TableVirtualBody draws for print: about 100 pages of one-line rows, drawn in a second or so.
 const PRINT_ROWS = 5000;
 
-/* TableVirtualBody: a <tbody> of any length that draws only the rows in view of the Table's frame, plus a few either
-   side (useVirtual, as VirtualList and Combobox do). Give the frame a height (containerProps style maxHeight, or a
-   stickyHeader table in a sized box) so it scrolls; without one every row is in view. An empty row above and below the
-   drawn ones stands in for the rest, so the columns keep their widths from the drawn rows (use table-layout: fixed or
-   column widths for columns that mustn't shift while scrolling). Each drawn row gets aria-rowindex, and the table
-   aria-rowcount, so screen readers say "row 5,002 of 10,001". A row with focus stays drawn when it scrolls away. */
-/** A table body of thousands of rows that draws only the ones in view of the Table's scrolling frame.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElement, TableVirtualBodyProps>('TableVirtualBody', function TableVirtualBody(props, ref) {
+function TableVirtualBodyRender({ ref, ...props }: TableVirtualBodyProps & React.RefAttributes<HTMLTableSectionElement>) {
   const rest = omit(props, { count: 1, renderRow: 1, itemKey: 1, estimatedRowHeight: 1, overscan: 1, className: 1, onFocus: 1, onBlur: 1 });
   const count = Math.max(0, Math.floor(props.count) || 0);
   const body = React.useRef<HTMLTableSectionElement | null>(null);
@@ -268,21 +266,29 @@ export const TableVirtualBody = /* @__PURE__ */ component<HTMLTableSectionElemen
       {!printing && r.after > 0 ? <tr aria-hidden="true" className="dk-table__spacer" style={{ height: r.after }} /> : null}
     </tbody>
   );
-});
+}
+
+/* TableVirtualBody: a <tbody> of any length that draws only the rows in view of the Table's frame, plus a few either
+   side (useVirtual, as VirtualList and Combobox do). Give the frame a height (containerProps style maxHeight, or a
+   stickyHeader table in a sized box) so it scrolls; without one every row is in view. An empty row above and below the
+   drawn ones stands in for the rest, so the columns keep their widths from the drawn rows (use table-layout: fixed or
+   column widths for columns that mustn't shift while scrolling). Each drawn row gets aria-rowindex, and the table
+   aria-rowcount, so screen readers say "row 5,002 of 10,001". A row with focus stays drawn when it scrolls away. */
+/** A table body of thousands of rows that draws only the ones in view of the Table's scrolling frame.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const TableVirtualBody = /* @__PURE__ */ named('TableVirtualBody', TableVirtualBodyRender);
+
+function TableFootRender({ ref, ...props }: TableFootProps & React.RefAttributes<HTMLTableSectionElement>) {
+  return <tfoot {...props} ref={ref} className={cn('dk-table__foot', props.className)} />;
+}
 
 /** Footer rows such as totals (<tfoot>). */
-export const TableFoot = /* @__PURE__ */ component<HTMLTableSectionElement, TableFootProps>('TableFoot', function TableFoot(props, ref) {
-  return <tfoot {...props} ref={ref} className={cn('dk-table__foot', props.className)} />;
-});
+export const TableFoot = /* @__PURE__ */ named('TableFoot', TableFootRender);
 
 type RowLink = { href: string; target?: string; rel?: string };
 const RowLinkContext = /* @__PURE__ */ React.createContext<RowLink | null>(null);
 
-/* With href, the row is one link: an <a> in its link cell (the TableCell marked link, or else the first direct
-   TableCell child), whose ::after covers the row (Table.css). A real link, so Ctrl/Cmd and middle click, "Copy link"
-   and the status bar work, with nothing re-dispatched. onClick on a row without href reaches the mouse only. */
-/** A row (<tr>). selected shades it, with a bar at its start; a TableSelectCell in it says so to screen readers. With href, the whole row is a link. */
-export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowProps>('TableRow', function TableRow(props, ref) {
+function TableRowRender({ ref, ...props }: TableRowProps & React.RefAttributes<HTMLTableRowElement>) {
   const rest = omit(props, { selected: 1, className: 1, href: 1, target: 1, rel: 1, children: 1 });
   const isLink = props.href != null;
   if (process.env.NODE_ENV !== 'production' && props.onClick && !isLink) warnOnce('table-row-click', "TableRow: onClick on a row reaches mouse users only: the keyboard and screen readers can't press a row. To open something, give the row an href (the whole row becomes a link); for an action, put a button in a cell.");
@@ -301,28 +307,32 @@ export const TableRow = /* @__PURE__ */ component<HTMLTableRowElement, TableRowP
   return <tr {...rest} ref={ref} className={cn('dk-table__row', props.selected && 'dk-table__row--selected', isLink && 'dk-table__row--link', props.className)}>
     {link ? <RowLinkContext.Provider value={link}>{children}</RowLinkContext.Provider> : children}
   </tr>;
-});
+}
+
+/* With href, the row is one link: an <a> in its link cell (the TableCell marked link, or else the first direct
+   TableCell child), whose ::after covers the row (Table.css). A real link, so Ctrl/Cmd and middle click, "Copy link"
+   and the status bar work, with nothing re-dispatched. onClick on a row without href reaches the mouse only. */
+/** A row (<tr>). selected shades it, with a bar at its start; a TableSelectCell in it says so to screen readers. With href, the whole row is a link. */
+export const TableRow = /* @__PURE__ */ named('TableRow', TableRowRender);
+
+function TableSelectCellRender({ ref, ...props }: TableSelectCellProps & React.RefAttributes<HTMLInputElement>) {
+  const { label, header, cellProps, ...rest } = props;   // the rest is the Checkbox's
+  const cp = cellProps || {};
+  const box = <Checkbox {...rest} ref={ref} aria-label={label} />;
+  const cls = cn('dk-table__cell dk-table__select', cp.className);
+  return header ? <th scope="col" {...cp} className={cn(cls, 'dk-table__header')}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
+}
 
 /* TableSelectCell: a narrow cell holding a checkbox named by label, for picking rows ("Select Alpha") or, with
    header, all of them. checked, onChange, indeterminate, disabled, name, value and ref go to the checkbox, and
    cellProps to the cell. A row whose checkbox is checked is shaded like a selected row, so an uncontrolled one
    works too; set the row's selected as well when you keep the selection yourself. */
 /** A cell with a checkbox for selecting its row (or, with header, every row); the checkbox carries the selected state for screen readers. */
-export const TableSelectCell = /* @__PURE__ */ component<HTMLInputElement, TableSelectCellProps>('TableSelectCell', function TableSelectCell(props, ref) {
-  const { label, header, cellProps, ...rest } = props;   // the rest is the Checkbox's
-  const cp = cellProps || {};
-  const box = <Checkbox {...rest} ref={ref} aria-label={label} />;
-  const cls = cn('dk-table__cell dk-table__select', cp.className);
-  return header ? <th scope="col" {...cp} className={cn(cls, 'dk-table__header')}>{box}</th> : <td {...cp} className={cls}>{box}</td>;
-});
+export const TableSelectCell = /* @__PURE__ */ named('TableSelectCell', TableSelectCellRender);
 
 const NEXT_ICON: Record<SortDirection, IconData> = { ascending: icons.ArrowUpward, descending: icons.ArrowDownward, none: icons.UnfoldMore };
 
-const STEP = 16;   // px per arrow key on a resize handle, and per Narrower or Wider
-
-
-/** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. With resizable, a handle at its end changes the column's width. */
-export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, TableHeaderCellProps>('TableHeaderCell', function TableHeaderCell(props, ref) {
+const STEP = 16;   function TableHeaderCellRender({ ref, ...props }: TableHeaderCellProps & React.RefAttributes<HTMLTableCellElement>) {
   const rest = omit(props, { align: 1, sort: 1, onSort: 1, width: 1, resizable: 1, minWidth: 1, maxWidth: 1, onWidthChange: 1, style: 1, className: 1, children: 1 });
   const resizable = !!props.resizable;
   const min = props.minWidth != null && props.minWidth > 0 ? props.minWidth : 48;
@@ -501,12 +511,15 @@ export const TableHeaderCell = /* @__PURE__ */ component<HTMLTableCellElement, T
       ) : null}
     </th>
   );
-});
+}
+
+// px per arrow key on a resize handle, and per Narrower or Wider
+
+/** A header cell (<th>, scope="col" unless you say otherwise). With sort, its text is a button and aria-sort says the order. With resizable, a handle at its end changes the column's width. */
+export const TableHeaderCell = /* @__PURE__ */ named('TableHeaderCell', TableHeaderCellRender);
 
 const PLAIN = { useGrouping: false } as const;
-/** A data cell (<td>). align="end" for numbers. A number as its child is written in the locale's digits (ungrouped,
- *  as given: 1204 stays 1204 in en-US and is ١٢٠٤ in ar-EG); for grouping, currency or units, pass FormattedNumber. */
-export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCellProps>('TableCell', function TableCell(props, ref) {
+function TableCellRender({ ref, ...props }: TableCellProps & React.RefAttributes<HTMLTableCellElement>) {
   const rest = omit(props, { align: 1, className: 1, children: 1, link: 1 });
   const align = oneOf(ALIGN, props.align, 'start');
   const locale = useLocale();
@@ -516,14 +529,13 @@ export const TableCell = /* @__PURE__ */ component<HTMLTableCellElement, TableCe
   return <td {...rest} ref={ref} className={cn('dk-table__cell', align !== 'start' && 'dk-table__cell--' + align, props.className)}>
     {row && props.link ? <a className="dk-table__row-link" href={row.href} target={row.target} rel={row.rel}>{content}</a> : content}
   </td>;
-});
+}
 
-/* TableActionBar: the bar above a table with selectable rows. While rows are selected, it shows "3 selected", your
-   actions and "Clear selection"; with none, it's hidden. It's a group named by the count, and a new count is read out
-   politely. When it hides with focus in it (Clear, or an action that empties the selection), focus moves to the first
-   checkbox of the table after it (the header's "Select all"), so it isn't lost: render it just before the Table. */
-/** The bar of actions for a table's selected rows: "3 selected", your buttons, and "Clear selection". */
-export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableActionBarProps>('TableActionBar', function TableActionBar(props, ref) {
+/** A data cell (<td>). align="end" for numbers. A number as its child is written in the locale's digits (ungrouped,
+ *  as given: 1204 stays 1204 in en-US and is ١٢٠٤ in ar-EG); for grouping, currency or units, pass FormattedNumber. */
+export const TableCell = /* @__PURE__ */ named('TableCell', TableCellRender);
+
+function TableActionBarRender({ ref, ...props }: TableActionBarProps & React.RefAttributes<HTMLDivElement>) {
   const labels = useSettings(words).labels, locale = useLocale();
   const rest = omit(props, { count: 1, onClear: 1, clearLabel: 1, total: 1, onSelectAll: 1, sticky: 1, className: 1, children: 1 });
   const count = Math.max(0, Math.floor(props.count) || 0);
@@ -566,7 +578,14 @@ export const TableActionBar = /* @__PURE__ */ component<HTMLDivElement, TableAct
       {props.onClear ? <Button variant="ghost" size="sm" className="dk-table-action-bar__clear" onClick={props.onClear}>{props.clearLabel || labels.clearSelection}</Button> : null}
     </div>
   );
-});
+}
+
+/* TableActionBar: the bar above a table with selectable rows. While rows are selected, it shows "3 selected", your
+   actions and "Clear selection"; with none, it's hidden. It's a group named by the count, and a new count is read out
+   politely. When it hides with focus in it (Clear, or an action that empties the selection), focus moves to the first
+   checkbox of the table after it (the header's "Select all"), so it isn't lost: render it just before the Table. */
+/** The bar of actions for a table's selected rows: "3 selected", your buttons, and "Clear selection". */
+export const TableActionBar = /* @__PURE__ */ named('TableActionBar', TableActionBarRender);
 
 export interface TableColumnOption {
   /** Your id for the column, passed back in onColumnsChange's details. */
@@ -593,10 +612,7 @@ export interface TableColumnsMenuProps extends React.HTMLAttributes<HTMLButtonEl
 /** onColumnsChange's details: the column that was checked or cleared, and whether it's shown now. */
 export interface TableColumnsChangeDetails { id: string; visible: boolean }
 
-/* TableColumnsMenu: a "Columns" button that opens a Popover of checkboxes, one per column, to show or hide them. The
-   table is yours to draw from the same list. The last column shown can't be cleared, so the table is never empty. */
-/** A "Columns" button with a checkbox for each of a table's columns, to show or hide them. */
-export const TableColumnsMenu = /* @__PURE__ */ component<HTMLButtonElement, TableColumnsMenuProps>('TableColumnsMenu', function TableColumnsMenu(props, ref) {
+function TableColumnsMenuRender({ ref, ...props }: TableColumnsMenuProps & React.RefAttributes<HTMLButtonElement>) {
   const labels = useSettings(words).labels;
   const rest = omit(props, { columns: 1, onColumnsChange: 1, label: 1, children: 1 });
   const label = props.label || labels.tableColumns;
@@ -612,7 +628,12 @@ export const TableColumnsMenu = /* @__PURE__ */ component<HTMLButtonElement, Tab
       </div>
     </Popover>
   );
-});
+}
+
+/* TableColumnsMenu: a "Columns" button that opens a Popover of checkboxes, one per column, to show or hide them. The
+   table is yours to draw from the same list. The last column shown can't be cleared, so the table is never empty. */
+/** A "Columns" button with a checkbox for each of a table's columns, to show or hide them. */
+export const TableColumnsMenu = /* @__PURE__ */ named('TableColumnsMenu', TableColumnsMenuRender);
 
 export interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /** The row's details are open. */
@@ -627,8 +648,7 @@ export interface TableExpandCellProps extends React.TdHTMLAttributes<HTMLTableCe
   header?: boolean | undefined;
 }
 
-/** A cell with a button that shows or hides its row's details (a TableDetailRow after it), or, with header, the heading of that column. */
-export const TableExpandCell = /* @__PURE__ */ component<HTMLTableCellElement, TableExpandCellProps>('TableExpandCell', function TableExpandCell(props, ref) {
+function TableExpandCellRender({ ref, ...props }: TableExpandCellProps & React.RefAttributes<HTMLTableCellElement>) {
   const labels = useSettings(words).labels;
   const rest = omit(props, { expanded: 1, onExpandedChange: 1, label: 1, controls: 1, header: 1, className: 1, children: 1 });
   const cls = cn('dk-table__cell dk-table__expand', props.className);
@@ -641,7 +661,10 @@ export const TableExpandCell = /* @__PURE__ */ component<HTMLTableCellElement, T
         onClick={() => { if (props.onExpandedChange) props.onExpandedChange(!open); }} />
     </td>
   );
-});
+}
+
+/** A cell with a button that shows or hides its row's details (a TableDetailRow after it), or, with header, the heading of that column. */
+export const TableExpandCell = /* @__PURE__ */ named('TableExpandCell', TableExpandCellRender);
 
 export interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   /** Shown. Closed, the row stays in the page, hidden, so its id still answers the button's aria-controls. */
@@ -650,15 +673,17 @@ export interface TableDetailRowProps extends React.HTMLAttributes<HTMLTableRowEl
   colSpan: number;
 }
 
-/** A full-width row under a TableRow with its details, shown while that row's TableExpandCell is expanded. */
-export const TableDetailRow = /* @__PURE__ */ component<HTMLTableRowElement, TableDetailRowProps>('TableDetailRow', function TableDetailRow(props, ref) {
+function TableDetailRowRender({ ref, ...props }: TableDetailRowProps & React.RefAttributes<HTMLTableRowElement>) {
   const rest = omit(props, { open: 1, colSpan: 1, className: 1, children: 1 });
   return (
     <tr {...rest} ref={ref} hidden={!props.open} className={cn('dk-table__detail', props.className)}>
       <td colSpan={props.colSpan} className="dk-table__cell dk-table__detail-cell">{props.children}</td>
     </tr>
   );
-});
+}
+
+/** A full-width row under a TableRow with its details, shown while that row's TableExpandCell is expanded. */
+export const TableDetailRow = /* @__PURE__ */ named('TableDetailRow', TableDetailRowRender);
 
 export interface TableLoadingRowsProps extends React.HTMLAttributes<HTMLTableSectionElement> {
   /** How many columns: all of the table's, so each row has a placeholder in every cell. */
@@ -669,11 +694,7 @@ export interface TableLoadingRowsProps extends React.HTMLAttributes<HTMLTableSec
   label?: string | undefined;
 }
 
-/* TableLoadingRows: a <tbody> of placeholder rows, each cell a one-line skeleton in the table's own text size and
-   padding, so the rows are as tall as the ones that replace them and nothing moves when they arrive. They're
-   decorative: the label is said once, after the loader's delay, and the Table's loading marks it as loading. */
-/** Placeholder rows (a <tbody> of skeletons) the height of real rows, while the table's rows load. Set the Table's loading too. */
-export const TableLoadingRows = /* @__PURE__ */ component<HTMLTableSectionElement, TableLoadingRowsProps>('TableLoadingRows', function TableLoadingRows(props, ref) {
+function TableLoadingRowsRender({ ref, ...props }: TableLoadingRowsProps & React.RefAttributes<HTMLTableSectionElement>) {
   const rest = omit(props, { columns: 1, rows: 1, label: 1, className: 1, children: 1 });
   const rows = Math.min(50, Math.max(1, Math.floor(Number(props.rows)) || 3));
   const columns = Math.min(100, Math.max(1, Math.floor(Number(props.columns)) || 1));
@@ -687,19 +708,27 @@ export const TableLoadingRows = /* @__PURE__ */ component<HTMLTableSectionElemen
     out.push(<tr key={r} className="dk-table__loading-row">{cells}</tr>);
   }
   return <tbody {...rest} ref={ref} className={cn('dk-table__body dk-table__loading', props.className)}>{out}</tbody>;
-});
+}
+
+/* TableLoadingRows: a <tbody> of placeholder rows, each cell a one-line skeleton in the table's own text size and
+   padding, so the rows are as tall as the ones that replace them and nothing moves when they arrive. They're
+   decorative: the label is said once, after the loader's delay, and the Table's loading marks it as loading. */
+/** Placeholder rows (a <tbody> of skeletons) the height of real rows, while the table's rows load. Set the Table's loading too. */
+export const TableLoadingRows = /* @__PURE__ */ named('TableLoadingRows', TableLoadingRowsRender);
 
 export interface TableMessageRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   /** How many columns it spans: all of the table's. */
   colSpan: number;
 }
 
-/** One row across every column for a message in place of the rows: an EmptyState when there are none, or an Alert with Retry when they didn't load. */
-export const TableMessageRow = /* @__PURE__ */ component<HTMLTableRowElement, TableMessageRowProps>('TableMessageRow', function TableMessageRow(props, ref) {
+function TableMessageRowRender({ ref, ...props }: TableMessageRowProps & React.RefAttributes<HTMLTableRowElement>) {
   const rest = omit(props, { colSpan: 1, className: 1, children: 1 });
   return (
     <tr {...rest} ref={ref} className={cn('dk-table__message', props.className)}>
       <td colSpan={props.colSpan} className="dk-table__cell dk-table__message-cell">{props.children}</td>
     </tr>
   );
-});
+}
+
+/** One row across every column for a message in place of the rows: an EmptyState when there are none, or an Alert with Retry when they didn't load. */
+export const TableMessageRow = /* @__PURE__ */ named('TableMessageRow', TableMessageRowRender);

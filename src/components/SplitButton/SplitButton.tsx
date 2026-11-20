@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import type { Placement } from '../../internal/position';
 import * as icons from '../../material/builtin';
@@ -43,13 +43,7 @@ export interface SplitButtonProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 
 const OWN = { children: 1, onClick: 1, menu: 1, menuLabel: 1, variant: 1, size: 1, destructive: 1, leftIcon: 1, disabled: 1, loading: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1 } as const;
 
-/* SplitButton: a main action and an arrow button that opens a menu of other ways to do it, joined into one control
-   (an attached ButtonGroup row in a wrapper <div>, which never comes apart: a long label ends in an ellipsis). The main button runs onClick; the arrow is an IconButton named by
-   menuLabel, with aria-haspopup and aria-expanded from Menu. aria-label and aria-labelledby name the group; className,
-   ref and every other prop go to the wrapper. */
-/** A main action joined to an arrow button that opens a menu of other ways to do it.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const SplitButton = /* @__PURE__ */ component<HTMLDivElement, SplitButtonProps>('SplitButton', function SplitButton(props, ref) {
+function SplitButtonRender({ ref, ...props }: SplitButtonProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, OWN);
   const variant = props.variant === 'secondary' || props.variant === 'outline' ? props.variant : 'primary';
   const size = props.size === 'sm' || props.size === 'lg' ? props.size : 'md';
@@ -68,4 +62,12 @@ export const SplitButton = /* @__PURE__ */ component<HTMLDivElement, SplitButton
     </div>
     </div>
   );
-});
+}
+
+/* SplitButton: a main action and an arrow button that opens a menu of other ways to do it, joined into one control
+   (an attached ButtonGroup row in a wrapper <div>, which never comes apart: a long label ends in an ellipsis). The main button runs onClick; the arrow is an IconButton named by
+   menuLabel, with aria-haspopup and aria-expanded from Menu. aria-label and aria-labelledby name the group; className,
+   ref and every other prop go to the wrapper. */
+/** A main action joined to an arrow button that opens a menu of other ways to do it.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const SplitButton = /* @__PURE__ */ named('SplitButton', SplitButtonRender);

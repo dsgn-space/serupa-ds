@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { announce } from '../../internal/announce';
 import { useMergedRef, cn, domId, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useServerStyles } from '../../internal/serverStyles';
 import { useScrolls } from '../../internal/useScrolls';
@@ -46,14 +46,7 @@ const save = (key: string | undefined, n: number) => {
   try { window.localStorage.setItem(key, String(n)); } catch { /* private mode or full: the size just isn't kept */ }
 };
 
-/* Splitter: two panes with a handle between them that resizes the first, following the WAI-ARIA window splitter
-   pattern. The handle is a focusable role="separator" with aria-valuenow (the first pane's size in percent),
-   aria-valuemin, aria-valuemax and aria-controls (the first pane); the arrow keys along it move it by step, Home
-   and End go to min and max, and with collapsible, Enter collapses the first pane and brings it back. A pointer
-   drags it (captured, so it follows outside the handle). Sizes are percent, so the layout keeps its proportions as
-   the Splitter resizes. A collapsed pane is hidden, so nothing in it can be reached by Tab. */
-/** Two panes with a draggable, keyboard-operable handle between them: list and detail, sidebar and editor. */
-export const Splitter = /* @__PURE__ */ component<HTMLDivElement, SplitterProps>('Splitter', function Splitter(props, ref) {
+function SplitterRender({ ref, ...props }: SplitterProps & React.RefAttributes<HTMLDivElement>) {
   const { children, orientation: oriIn, size: sizeIn, defaultSize, onSizeChange, min: minIn, max: maxIn, step: stepIn, collapsible, storageKey, separatorLabel, className, ...rest } = props;
   const sds = useSettings(words);
   const styled = useServerStyles<HTMLDivElement>();   // the first pane's size, from server HTML under a strict CSP (GR12)
@@ -232,4 +225,13 @@ export const Splitter = /* @__PURE__ */ component<HTMLDivElement, SplitterProps>
         onTransitionEnd={(e) => { if (e.target === e.currentTarget && e.propertyName === 'translate' && slide && slide.run) setSlide(null); }}>{panes[1]}</div>
     </div>
   );
-});
+}
+
+/* Splitter: two panes with a handle between them that resizes the first, following the WAI-ARIA window splitter
+   pattern. The handle is a focusable role="separator" with aria-valuenow (the first pane's size in percent),
+   aria-valuemin, aria-valuemax and aria-controls (the first pane); the arrow keys along it move it by step, Home
+   and End go to min and max, and with collapsible, Enter collapses the first pane and brings it back. A pointer
+   drags it (captured, so it follows outside the handle). Sizes are percent, so the layout keeps its proportions as
+   the Splitter resizes. A collapsed pane is hidden, so nothing in it can be reached by Tab. */
+/** Two panes with a draggable, keyboard-operable handle between them: list and detail, sidebar and editor. */
+export const Splitter = /* @__PURE__ */ named('Splitter', SplitterRender);

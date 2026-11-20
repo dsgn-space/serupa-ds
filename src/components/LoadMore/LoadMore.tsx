@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useMergedRef, cn } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { useLocale, useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
@@ -30,13 +30,7 @@ export interface LoadMoreProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
-/* LoadMore: the end of a list that loads in pages: "Showing 20 of 134" over a Load more button, which gives way to
-   "You've reached the end". What a load added is said politely ("20 more loaded. Showing 40 of 134."), since new
-   items appear in silence otherwise. infinite loads as the button nears the viewport, once per approach and again
-   only when count changes, so a load that adds nothing can't loop. Focus stays on the button, which moves down below
-   the new items; when the last page leaves no button, focus goes to the end text instead of the page. */
-/** The end of a paged list: "Showing 20 of 134", a Load more button (or infinite scroll), and an announcement of what each load added. */
-export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>('LoadMore', function LoadMore(props, ref) {
+function LoadMoreRender({ ref, ...props }: LoadMoreProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
   const { onLoadMore, hasMore: more, loading, count: countIn, total: totalIn, infinite, label, endText, className, ...rest } = props;
   // NaN is no number: a count that never equals itself would load again and again.
@@ -125,4 +119,12 @@ export const LoadMore = /* @__PURE__ */ component<HTMLDivElement, LoadMoreProps>
         : endText !== null ? <p className="dk-load-more__end" ref={end} tabIndex={-1}>{endText !== undefined ? endText : labels.allLoaded}</p> : null}
     </div>
   );
-});
+}
+
+/* LoadMore: the end of a list that loads in pages: "Showing 20 of 134" over a Load more button, which gives way to
+   "You've reached the end". What a load added is said politely ("20 more loaded. Showing 40 of 134."), since new
+   items appear in silence otherwise. infinite loads as the button nears the viewport, once per approach and again
+   only when count changes, so a load that adds nothing can't loop. Focus stays on the button, which moves down below
+   the new items; when the last page leaves no button, focus goes to the end text instead of the page. */
+/** The end of a paged list: "Showing 20 of 134", a Load more button (or infinite scroll), and an announcement of what each load added. */
+export const LoadMore = /* @__PURE__ */ named('LoadMore', LoadMoreRender);

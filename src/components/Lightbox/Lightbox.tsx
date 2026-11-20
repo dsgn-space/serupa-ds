@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { useFocusHandover } from '../../internal/focus';
@@ -71,12 +71,7 @@ function Stage({ item }: { item: LightboxItem }) {
   );
 }
 
-/* Lightbox: a set of pictures shown full size, one at a time, in a modal Dialog titled with the shown picture's alt
-   text. The arrows (and the arrow keys, Home and End, which follow the reading direction, or a sideways swipe) move
-   through them; "2 of 5" says where you are, and a change is announced. The next and previous pictures load ahead,
-   so moving on is quick. Without loop, the arrows stop at the ends. */
-/** A set of pictures shown full size one at a time, with arrows and a count, in a modal dialog. */
-export const Lightbox = /* @__PURE__ */ component<HTMLDialogElement, LightboxProps>('Lightbox', function Lightbox(props, ref) {
+function LightboxRender({ ref, ...props }: LightboxProps & React.RefAttributes<HTMLDialogElement>) {
   const { items, open: openProp, defaultOpen, onOpenChange, index: indexProp, defaultIndex, onIndexChange, loop, className, ...rest } = props;
   const sds = useSettings(words);
   const [ownOpen, setOwnOpen] = React.useState(!!defaultOpen);
@@ -173,4 +168,11 @@ export const Lightbox = /* @__PURE__ */ component<HTMLDialogElement, LightboxPro
       ) : null}
     </Dialog>
   );
-});
+}
+
+/* Lightbox: a set of pictures shown full size, one at a time, in a modal Dialog titled with the shown picture's alt
+   text. The arrows (and the arrow keys, Home and End, which follow the reading direction, or a sideways swipe) move
+   through them; "2 of 5" says where you are, and a change is announced. The next and previous pictures load ahead,
+   so moving on is quick. Without loop, the arrows stop at the ends. */
+/** A set of pictures shown full size one at a time, with arrows and a count, in a modal dialog. */
+export const Lightbox = /* @__PURE__ */ named('Lightbox', LightboxRender);

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, oneOf, omit } from '../../internal/cn';
 import { config } from '../../internal/config';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export type CardVariant = 'outline' | 'elevated' | 'filled';
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
@@ -41,8 +41,7 @@ const VARIANTS: readonly CardVariant[] = ['outline', 'elevated', 'filled'];
 const PADDINGS: readonly CardPadding[] = ['none', 'sm', 'md', 'lg'];
 const TAGS = ['div', 'section', 'article', 'li'] as const;
 
-/** A surface that groups related content and actions: CardHeader, CardBody and CardFooter inside. With href, the whole card is a link. */
-export const Card = /* @__PURE__ */ component<HTMLElement, CardProps>('Card', function Card(props, ref) {
+function CardRender({ ref, ...props }: CardProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, 'outline');
   const padding = oneOf(PADDINGS, props.padding, 'md');
@@ -90,7 +89,10 @@ export const Card = /* @__PURE__ */ component<HTMLElement, CardProps>('Card', fu
   return React.createElement(tag, Object.assign(rest, { id: id, ref: ref, className: cls, 'data-component': 'card', 'data-variant': variant, onClick: onClick, onAuxClick: onAuxClick }),
     titled ? null : React.createElement(config.link, { ...link, className: 'dk-card__link dk-card__link--cover', 'aria-labelledby': link['aria-label'] ? undefined : id, key: 'link' }),
     <CardLinkContext.Provider value={titled ? link : null} key="content">{props.children}</CardLinkContext.Provider>);
-});
+}
+
+/** A surface that groups related content and actions: CardHeader, CardBody and CardFooter inside. With href, the whole card is a link. */
+export const Card = /* @__PURE__ */ named('Card', CardRender);
 
 const hasContent = (n: React.ReactNode) => n != null && n !== false && n !== '';
 
@@ -105,8 +107,7 @@ export interface CardHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
 }
 
-/** The card's title, an optional description and an optional action at the end. Any children come after the description. */
-export const CardHeader = /* @__PURE__ */ component<HTMLDivElement, CardHeaderProps>('CardHeader', function CardHeader(props, ref) {
+function CardHeaderRender({ ref, ...props }: CardHeaderProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { title: 1, description: 1, action: 1, headingLevel: 1, className: 1, children: 1 });
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) < 0 ? 3 : (props.headingLevel as number);
   const has = hasContent;
@@ -121,23 +122,30 @@ export const CardHeader = /* @__PURE__ */ component<HTMLDivElement, CardHeaderPr
       {has(props.action) ? <div className="dk-card__action">{props.action}</div> : null}
     </div>
   );
-});
+}
+
+/** The card's title, an optional description and an optional action at the end. Any children come after the description. */
+export const CardHeader = /* @__PURE__ */ named('CardHeader', CardHeaderRender);
 
 export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
-/** The card's main content. */
-export const CardBody = /* @__PURE__ */ component<HTMLDivElement, CardBodyProps>('CardBody', function CardBody(props, ref) {
+function CardBodyRender({ ref, ...props }: CardBodyProps & React.RefAttributes<HTMLDivElement>) {
   return <div {...props} ref={ref} className={cn('dk-card__body', props.className)} />;
-});
+}
+
+/** The card's main content. */
+export const CardBody = /* @__PURE__ */ named('CardBody', CardBodyRender);
 
 export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Where the actions sit: 'end' (default), 'start' or 'between' (the first at the start, the rest at the end: give them a wrapper). */
   justify?: 'start' | 'end' | 'between' | undefined;
 }
 
-/** The card's actions, in a wrapping row at the end. */
-export const CardFooter = /* @__PURE__ */ component<HTMLDivElement, CardFooterProps>('CardFooter', function CardFooter(props, ref) {
+function CardFooterRender({ ref, ...props }: CardFooterProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { justify: 1, className: 1 });
   const j = oneOf(['start', 'end', 'between'] as const, props.justify, 'end');
   return <div {...rest} ref={ref} className={cn('dk-card__footer', j !== 'end' && 'dk-card__footer--' + j, props.className)} />;
-});
+}
+
+/** The card's actions, in a wrapping row at the end. */
+export const CardFooter = /* @__PURE__ */ named('CardFooter', CardFooterRender);

@@ -9,7 +9,7 @@ import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { onModalChange, topModal } from '../../internal/layers';
@@ -236,13 +236,7 @@ const ICONS: Record<ToastTone, IconData | null> = { neutral: null, info: icons.I
 const typing = (e: Element | null) => e instanceof HTMLElement && (e.isContentEditable || e instanceof HTMLTextAreaElement
   || (e instanceof HTMLInputElement && !/^(button|checkbox|radio|submit|reset|image|color|file|range)$/.test(e.type)));
 
-/* Toaster: where toast() messages appear. Render one, once, near the root. Each toast has a title, an optional
-   description, tone icon, action and close button, and goes after its duration unless autoDismiss is false; the
-   time stops while it's hovered or focused. New toasts are announced through the shared polite live region. F8
-   moves focus to the newest toast, and F8 or Escape takes it back to where it was. Ctrl+Z (⌘Z on Apple devices)
-   chooses Undo on the newest toast.undo shown, outside a text field. */
-/** The place toast() messages appear: render one, once, near the root of the app. */
-export const Toaster = /* @__PURE__ */ component<HTMLElement, ToasterProps>('Toaster', function Toaster(props, ref): React.ReactElement {
+function ToasterRender({ ref, ...props }: ToasterProps & React.RefAttributes<HTMLElement>): React.ReactElement {
   const sds = useSettings(ownWords);
   const { placement, label, dismissLabel, limit, duration, autoDismiss, className, ...rest } = props;
   // Empty at first, as on a server, where a toast() from another request could be in the queue; the effect reads it.
@@ -471,7 +465,15 @@ export const Toaster = /* @__PURE__ */ component<HTMLElement, ToasterProps>('Toa
     </section>
   );
   return modal ? createPortal(region, modal) : region;
-});
+}
+
+/* Toaster: where toast() messages appear. Render one, once, near the root. Each toast has a title, an optional
+   description, tone icon, action and close button, and goes after its duration unless autoDismiss is false; the
+   time stops while it's hovered or focused. New toasts are announced through the shared polite live region. F8
+   moves focus to the newest toast, and F8 or Escape takes it back to where it was. Ctrl+Z (⌘Z on Apple devices)
+   chooses Undo on the newest toast.undo shown, outside a text field. */
+/** The place toast() messages appear: render one, once, near the root of the app. */
+export const Toaster = /* @__PURE__ */ named('Toaster', ToasterRender);
 
 // A seen toast's time: what was left when it last stopped, and since when it has run in the waiting line.
 interface Clock { item: Item; left: number; since: number | null }

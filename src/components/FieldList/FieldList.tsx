@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useControllable } from '../../internal/controllable';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -77,9 +77,7 @@ const shows = (v: React.ReactNode) => v != null && v !== false && v !== '';
    while the rows around it change. Add moves focus to the new row's first field, and Remove to the field of the row
    before, or to Add when the first row goes; each is said politely ("Phone 3 added"). At max, Add stays in the Tab
    order (aria-disabled) and says why; at min, Remove is gone. */
-/** Rows people add and remove in a form, such as phone numbers or invoice lines, each a named group of a few fields.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const FieldList = /* @__PURE__ */ component<HTMLFieldSetElement, FieldListProps<unknown>>('FieldList', function FieldList(props, ref) {
+function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefAttributes<HTMLFieldSetElement>) {
   const rest = omit(props, OWN);
   const L = useSettings(allWords).labels;
   const locale = useLocale();
@@ -177,4 +175,8 @@ export const FieldList = /* @__PURE__ */ component<HTMLFieldSetElement, FieldLis
       </div>
     </fieldset>
   );
-}) as <T>(props: FieldListProps<T> & { ref?: React.Ref<HTMLFieldSetElement> | undefined }) => React.ReactElement;
+}
+
+/** Rows people add and remove in a form, such as phone numbers or invoice lines, each a named group of a few fields.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const FieldList = /* @__PURE__ */ named('FieldList', FieldListRender) as <T>(props: FieldListProps<T> & { ref?: React.Ref<HTMLFieldSetElement> | undefined }) => React.ReactElement;

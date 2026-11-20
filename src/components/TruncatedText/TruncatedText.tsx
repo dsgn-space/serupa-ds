@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { graphemes } from '../../internal/graphemes';
 import { middleCutAt } from '../../internal/middleCut';
@@ -29,15 +29,7 @@ const TAGS = ['span', 'p', 'div'] as const;
 // A control around the text that takes focus itself: the text adds no tab stop of its own inside one.
 const CONTROL = 'a[href], button, summary, [role="button"], [role="link"], [role="tab"], [role="option"], [role="menuitem"], [role="treeitem"], [tabindex="0"]';
 
-/* TruncatedText: text that may not fit its space, cut with an ellipsis, with the full text one hover, focus or tap
-   away, and only while it's cut. It measures itself (and again when its box, its text or the fonts change): text that
-   fits is plain text, with no tab stop and no tooltip. Cut, it takes keyboard focus (tabindex="0"), so what the
-   pointer can reveal the keyboard can too (WCAG 2.1.1), unless a link or button around it already takes focus:
-   then that control's keyboard focus shows the full text. The tooltip repeats what the element holds, so it is
-   hidden from screen readers, which read the whole text from the element. */
-/** Text cut with an ellipsis when it doesn't fit, with the full text on hover, keyboard focus and tap.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTextProps>('TruncatedText', function TruncatedText(props, ref) {
+function TruncatedTextRender({ ref, ...props }: TruncatedTextProps & React.RefAttributes<HTMLElement>) {
   const { children, lines, as, placement, mode, className, onPointerDown, onClick, ...rest } = props;
   const clamp = lines != null && lines >= 2 ? Math.min(6, Math.floor(lines)) : 0;
   const middle = mode === 'middle' && !clamp;
@@ -114,4 +106,14 @@ export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTex
     onClick: (e: React.MouseEvent<HTMLElement>) => { if (onClick) onClick(e); if (cut && !inside && press.current.touch && !press.current.open) setOpen(true); },
   }, content);
   return <Tooltip visual content={children} open={open} onOpenChange={setOpen} disabled={!cut} placement={placement}>{text}</Tooltip>;
-});
+}
+
+/* TruncatedText: text that may not fit its space, cut with an ellipsis, with the full text one hover, focus or tap
+   away, and only while it's cut. It measures itself (and again when its box, its text or the fonts change): text that
+   fits is plain text, with no tab stop and no tooltip. Cut, it takes keyboard focus (tabindex="0"), so what the
+   pointer can reveal the keyboard can too (WCAG 2.1.1), unless a link or button around it already takes focus:
+   then that control's keyboard focus shows the full text. The tooltip repeats what the element holds, so it is
+   hidden from screen readers, which read the whole text from the element. */
+/** Text cut with an ellipsis when it doesn't fit, with the full text on hover, keyboard focus and tap.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const TruncatedText = /* @__PURE__ */ named('TruncatedText', TruncatedTextRender);

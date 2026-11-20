@@ -9,4 +9,4 @@ interface VirtualListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, 
     divided?: boolean | undefined;
     as?: "ol" | "ul" | undefined;
 }
-declare const VirtualList: React.ForwardRefExoticComponent<VirtualListProps & React.RefAttributes<HTMLUListElement>>;
+declare const VirtualList: React.FC<VirtualListProps & React.RefAttributes<HTMLUListElement>>;

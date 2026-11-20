@@ -5,7 +5,7 @@ import { useControlSize } from '../../internal/controlSize';
 import { cn, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFormReset } from '../../internal/useFormReset';
 import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
 import { useFieldLabel } from '../../internal/fieldLabel';
@@ -54,13 +54,7 @@ export interface SegmentedControlProps<V extends string = string> extends Omit<R
 
 const OWN = { options: 1, value: 1, defaultValue: 1, onValueChange: 1, size: 1, fullWidth: 1, disabled: 1, name: 1, form: 1, invalid: 1, required: 1, readOnly: 1, 'aria-invalid': 1, 'aria-required': 1, 'aria-readonly': 1, autoFocus: 1, className: 1 } as const;
 
-/* SegmentedControl: picks one of a few options shown side by side, such as a view (List, Board) or a period
-   (Day, Week, Month). It's a radio group: one Tab stop, arrow keys move and select (Home and End too), and
-   each segment is role="radio" with aria-checked. The selection is a raised surface that slides to the chosen
-   segment. For switching panels of content, use Tabs; for independent on/off buttons, ButtonGroup with
-   ToggleButton. */
-/** Picks one of a few options shown side by side: a radio group drawn as segments. */
-export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, SegmentedControlProps>('SegmentedControl', function SegmentedControl(props, ref) {
+function SegmentedControlRender({ ref, ...props }: SegmentedControlProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('SegmentedControl', NAME_HOW.group);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: one in a row with a note after it
   // (<div><SegmentedControl /><span>UTC</span></div>) was left unnamed, undescribed and enabled (L8E85).
@@ -240,4 +234,12 @@ export const SegmentedControl = /* @__PURE__ */ component<HTMLDivElement, Segmen
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={value ?? ''} disabled={disabled} /> : null}
     </div>
   );
-}) as (<V extends string = string>(props: SegmentedControlProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
+}
+
+/* SegmentedControl: picks one of a few options shown side by side, such as a view (List, Board) or a period
+   (Day, Week, Month). It's a radio group: one Tab stop, arrow keys move and select (Home and End too), and
+   each segment is role="radio" with aria-checked. The selection is a raised surface that slides to the chosen
+   segment. For switching panels of content, use Tabs; for independent on/off buttons, ButtonGroup with
+   ToggleButton. */
+/** Picks one of a few options shown side by side: a radio group drawn as segments. */
+export const SegmentedControl = /* @__PURE__ */ named('SegmentedControl', SegmentedControlRender) as (<V extends string = string>(props: SegmentedControlProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };

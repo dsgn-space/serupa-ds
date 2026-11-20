@@ -1,5 +1,5 @@
 // npm run new-component -- <Name> [--group <Storybook group>]: starts a component folder with every file the
-// contract asks for (tools/test/contract.mjs), already wired to the system: the component through component(), its
+// contract asks for (tools/test/contract.mjs), already wired to the system: the component as a plain function named through named(), its
 // CSS in the dk.components layer reading its own tokens, the tokens file, stories, a test, the Storybook page, the
 // usage guide with its required headings, the preview page, its export list and its server-render case.
 //   node tools/new-component.mjs Rating --group Forms
@@ -68,19 +68,20 @@ const files = {
   [`${name}.tsx`]: `'use client';
 import * as React from 'react';
 import { cn } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export interface ${name}Props extends React.HTMLAttributes<HTMLDivElement> {
   /** ${TODO}: describe each prop here; Storybook and the API baseline read these comments. */
   children?: React.ReactNode;
 }
 
+function ${name}Render({ ref, className, ...rest }: ${name}Props & React.RefAttributes<HTMLDivElement>) {
+  return <div {...rest} ref={ref} className={cn('dk-${kebab}', className)} data-component="${kebab}" />;
+}
+
 /** ${TODO}: one line on what ${name} is for.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const ${name} = /* @__PURE__ */ component<HTMLDivElement, ${name}Props>('${name}', function ${name}(props, ref) {
-  const { className, ...rest } = props;
-  return <div {...rest} ref={ref} className={cn('dk-${kebab}', className)} data-component="${kebab}" />;
-});
+export const ${name} = /* @__PURE__ */ named('${name}', ${name}Render);
 `,
   'index.ts': `// The package exports what this file exports: tools/build/registry.mjs collects every component folder's index.ts.
 export { ${name} } from './${name}';

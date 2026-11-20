@@ -5,7 +5,7 @@ import { cn, domId, oneOf, omit } from '../../internal/cn';
 import { reducedMotion } from '../../internal/mediaList';
 import { toMs } from '../../internal/cssTime';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { flattenChildren } from '../../internal/children';
 import * as icons from '../../material/builtin';
 import { useSettings } from '../../internal/provider';
@@ -15,7 +15,7 @@ import { buttonClass } from '../Button/buttonClass';
 import { en as words } from './labels';
 
 export interface AccordionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue' | 'onChange'> {
-  /** 'single' (default): opening one closes the others. 'multiple': any number can be open. */
+  /** 'multiple' (default): any number can be open, so people can compare them. 'single': opening one closes the others. */
   type?: 'single' | 'multiple' | undefined;
   /** The open items' values (controlled). Use with onValueChange. */
   value?: string[] | undefined;
@@ -48,18 +48,13 @@ export interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
   keepMounted?: boolean | undefined;
 }
 
-
 interface Ctx { open: string[]; toggle: (v: string) => void; level: number; collapsible: boolean; single: boolean; many: boolean; }
 const AccordionContext = /* @__PURE__ */ React.createContext<Ctx | null>(null);
 
-/* Accordion: a stack of items whose content shows and hides under a heading button (the WAI-ARIA accordion
-   pattern). Arrow keys, Home and End move between the titles. className and every other prop go to the
-   wrapper. */
-/** Items that show and hide their content under heading buttons; one open at a time, or several. */
-export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProps>('Accordion', function Accordion(props, ref) {
-  const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1, onKeyDown: 1 });
+function AccordionRender({ ref, ...props }: AccordionProps & React.RefAttributes<HTMLDivElement>) {
+  const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, collapsible: 1, variant: 1, headingLevel: 1, showExpandAll: 1, className: 1, children: 1 });
   const labels = useSettings(words).labels;
-  const single = props.type !== 'multiple';
+  const single = props.type === 'single';
   const [open, setInner, controlled] = useControllable<string[]>(props.value, (props.defaultValue || []).slice(0, single ? 1 : undefined), 'Accordion', 'value');
   if (process.env.NODE_ENV !== 'production' && single && controlled && open.length > 1) warnOnce('accordion-single-value', `Accordion: value has ${open.length} items with type="single", so ${open.length} items show open; pass one value, or type="multiple".`);
   const collapsible = props.collapsible !== false;
@@ -78,17 +73,6 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
   }, [open, single, collapsible, change]);
   const level = [2, 3, 4, 5, 6].indexOf(props.headingLevel as number) >= 0 ? (props.headingLevel as number) : 3;
   const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
-  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (props.onKeyDown) props.onKeyDown(e);
-    const t = e.target as HTMLElement;
-    // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E29).
-    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || !t.classList.contains('dk-accordion__trigger') || t.closest('.dk-accordion') !== e.currentTarget) return;
-    // An item hidden by the hidden attribute or CSS (a filtered FAQ) can't take focus: skip it rather than stick (L8E83).
-    const all = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('.dk-accordion__trigger')).filter((b) => b.closest('.dk-accordion') === e.currentTarget && !b.disabled && b.getClientRects().length > 0);
-    const i = all.indexOf(t as HTMLButtonElement);
-    const to = e.key === 'ArrowDown' ? all[(i + 1) % all.length] : e.key === 'ArrowUp' ? all[(i - 1 + all.length) % all.length] : e.key === 'Home' ? all[0] : e.key === 'End' ? all[all.length - 1] : null;
-    if (to) { e.preventDefault(); to.focus(); }
-  }
   let n = 0;
   const items = flattenChildren(props.children).map((c) => React.isValidElement(c) ? React.cloneElement(c as React.ReactElement<{ 'data-index'?: string }>, { 'data-index': String(n++) }) : c);
   // Each open panel is a region landmark (DP1). Past six that could be open at once, landmarks crowd the list screen
@@ -116,16 +100,19 @@ export const Accordion = /* @__PURE__ */ component<HTMLDivElement, AccordionProp
   }
   return (
     <AccordionContext.Provider value={{ open, toggle, level, collapsible, single, many }}>
-      <div {...rest} ref={ref} onKeyDown={onKeyDown} data-component="accordion" className={cn('dk-accordion', variant === 'card' && 'dk-accordion--card', props.className)}>{all}{items}</div>
+      <div {...rest} ref={ref} data-component="accordion" className={cn('dk-accordion', variant === 'card' && 'dk-accordion--card', props.className)}>{all}{items}</div>
     </AccordionContext.Provider>
   );
-});
+}
 
-/* AccordionItem: a heading holding a button (aria-expanded, aria-controls) and a region (aria-labelledby) that
-   grows to its height as it unfolds (a fade and a clip), and folds back as it shrinks; closed content is hidden from everyone, but find-in-page can still
-   find it (hidden="until-found"), which opens the item. */
-/** One item in an Accordion: a title button and the content it shows and hides. */
-export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, AccordionItemProps>('AccordionItem', function AccordionItem(props, ref) {
+/* Accordion: a stack of items whose content shows and hides under a heading button (the WAI-ARIA accordion
+   pattern). Tab moves between the titles, as it does between any buttons: the pattern's optional arrow keys are
+   left out, so on a title, as on every other button, they scroll the page. className and every other prop go to the
+   wrapper. */
+/** Items that show and hide their content under heading buttons; one open at a time, or several. */
+export const Accordion = /* @__PURE__ */ named('Accordion', AccordionRender);
+
+function AccordionItemRender({ ref, ...props }: AccordionItemProps & React.RefAttributes<HTMLDivElement>) {
   const ctx = React.useContext(AccordionContext);
   const rest = omit(props, { value: 1, title: 1, disabled: 1, keepMounted: 1, className: 1, children: 1 });
   const index = String(rest['data-index'] || '0');
@@ -227,4 +214,10 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
       </div>
     </div>
   );
-});
+}
+
+/* AccordionItem: a heading holding a button (aria-expanded, aria-controls) and a region (aria-labelledby) that
+   grows to its height as it unfolds (a fade and a clip), and folds back as it shrinks; closed content is hidden from everyone, but find-in-page can still
+   find it (hidden="until-found"), which opens the item. */
+/** One item in an Accordion: a title button and the content it shows and hides. */
+export const AccordionItem = /* @__PURE__ */ named('AccordionItem', AccordionItemRender);

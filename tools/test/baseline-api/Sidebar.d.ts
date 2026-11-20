@@ -23,11 +23,9 @@ interface SidebarItemOwnProps {
 type SidebarItemProps<C extends React.ElementType = "a"> = SidebarItemOwnProps & {
     as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, "as" | keyof SidebarItemOwnProps>;
-declare const Sidebar: React.ForwardRefExoticComponent<SidebarProps & React.RefAttributes<HTMLElement>>;
-declare const SidebarSection: React.ForwardRefExoticComponent<SidebarSectionProps & React.RefAttributes<HTMLDivElement>>;
+declare const Sidebar: React.FC<SidebarProps & React.RefAttributes<HTMLElement>>;
+declare const SidebarSection: React.FC<SidebarSectionProps & React.RefAttributes<HTMLDivElement>>;
 declare const SidebarItem: {
-    <C extends React.ElementType = "a">(props: SidebarItemProps<C> & {
-        ref?: React.Ref<HTMLElement>;
-    }): null | React.ReactElement;
+    <C extends React.ElementType = "a">(props: SidebarItemProps<C> & React.RefAttributes<HTMLElement>): null | React.ReactElement;
     displayName?: string | undefined;
 };

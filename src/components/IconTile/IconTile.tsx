@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 
@@ -26,10 +26,7 @@ export interface IconTileProps extends React.HTMLAttributes<HTMLSpanElement> {
 const TONES: readonly IconTileTone[] = ['neutral', 'primary', 'success', 'warning', 'danger', 'info'];
 const SIZES: readonly IconTileSize[] = ['sm', 'md', 'lg', 'xl'];
 
-/* IconTile: an icon centered in a tinted square (or circle), for the start of a Card's header, an EmptyState, a
-   settings row or a feature list. Decorative unless given a label. */
-/** An icon in a tinted rounded square, at the shared sizes and tones. Decorative by default. */
-export const IconTile = /* @__PURE__ */ component<HTMLSpanElement, IconTileProps>('IconTile', function IconTile(props, ref) {
+function IconTileRender({ ref, ...props }: IconTileProps & React.RefAttributes<HTMLSpanElement>) {
   const rest = omit(props, { icon: 1, tone: 1, size: 1, shape: 1, label: 1, className: 1, children: 1 });
   const tone = oneOf(TONES, props.tone, 'neutral');
   const size = oneOf(SIZES, props.size, 'md');
@@ -40,4 +37,9 @@ export const IconTile = /* @__PURE__ */ component<HTMLSpanElement, IconTileProps
       <span className="dk-icon-tile__icon">{asIcon(props.icon)}</span>
     </span>
   );
-});
+}
+
+/* IconTile: an icon centered in a tinted square (or circle), for the start of a Card's header, an EmptyState, a
+   settings row or a feature list. Decorative unless given a label. */
+/** An icon in a tinted rounded square, at the shared sizes and tones. Decorative by default. */
+export const IconTile = /* @__PURE__ */ named('IconTile', IconTileRender);

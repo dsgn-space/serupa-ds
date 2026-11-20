@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
@@ -59,12 +59,7 @@ const WORD = {
 
 const NAME = { root: 'dk-attachment__name-text', start: 'dk-attachment__name-start', end: 'dk-attachment__name-end', hidden: 'dk-visually-hidden' };
 
-/* Attachment: a file as one compact row: an icon for its kind, the name (a link with href), its kind and size in
-   muted text, an upload bar while progress is set, a danger message with error, and a remove button with onRemove.
-   It says nothing by itself as the upload moves: the app that uploads says when one finishes or fails. */
-/** A file as a compact item: its type icon, name, kind and size, with upload progress, an error and a remove button.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Attachment = /* @__PURE__ */ component<HTMLDivElement, AttachmentProps>('Attachment', function Attachment(props, ref) {
+function AttachmentRender({ ref, ...props }: AttachmentProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), locale = useLocale(), L = sds.labels;
   const rest = omit(props, OWN);
   const base = domId('dk-at', React.useId());
@@ -98,4 +93,11 @@ export const Attachment = /* @__PURE__ */ component<HTMLDivElement, AttachmentPr
       {props.onRemove ? <IconButton className="dk-attachment__remove" icon={icons.Close} label={removeLabel(props.name)} size="sm" variant="ghost" disabled={disabled} onClick={props.onRemove} /> : null}
     </div>
   );
-});
+}
+
+/* Attachment: a file as one compact row: an icon for its kind, the name (a link with href), its kind and size in
+   muted text, an upload bar while progress is set, a danger message with error, and a remove button with onRemove.
+   It says nothing by itself as the upload moves: the app that uploads says when one finishes or fails. */
+/** A file as a compact item: its type icon, name, kind and size, with upload progress, an error and a remove button.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Attachment = /* @__PURE__ */ named('Attachment', AttachmentRender);

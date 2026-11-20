@@ -5,7 +5,7 @@ import { pressFocuses } from '../../internal/affix';
 import { useMergedRef, cn, isInvalid, omit, oneOf, SIZES } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
 import type { InputProps } from '../Input/Input';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { useFieldControl } from '../../internal/field';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -65,12 +65,7 @@ const caretAfter = (text: string, n: number): number => {
   return text.length;
 };
 
-/* PhoneInput: Input's box with a country menu at the start (a native <select> under a "+62" label) and a tel field
-   that groups the national number as people type ("812-3456-7890"). onValueChange reports E.164 ("+6281234567890").
-   Pasting or typing "+…" picks the country from the calling code; a typed trunk "0" is dropped. className and
-   style go to the box; ref and the other input props to the tel <input>. */
-/** A phone number field: a country menu and a tel field that groups the number as people type, reporting E.164 ("+6281234567890"). */
-export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInputProps>('PhoneInput', function PhoneInput(props, ref) {
+function PhoneInputRender({ ref, ...props }: PhoneInputProps & React.RefAttributes<HTMLInputElement>) {
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const nameRef = useNameCheck('PhoneInput', NAME_HOW.field);   // warns when it has no accessible name
   const sds = useSettings(words);
@@ -247,4 +242,11 @@ export const PhoneInput = /* @__PURE__ */ component<HTMLInputElement, PhoneInput
       {props.name ? <input type="hidden" name={props.name} form={props.form} value={toE164(shown, country)} disabled={rest.disabled} /> : null}
     </span>
   );
-});
+}
+
+/* PhoneInput: Input's box with a country menu at the start (a native <select> under a "+62" label) and a tel field
+   that groups the national number as people type ("812-3456-7890"). onValueChange reports E.164 ("+6281234567890").
+   Pasting or typing "+…" picks the country from the calling code; a typed trunk "0" is dropped. className and
+   style go to the box; ref and the other input props to the tel <input>. */
+/** A phone number field: a country menu and a tel field that groups the number as people type, reporting E.164 ("+6281234567890"). */
+export const PhoneInput = /* @__PURE__ */ named('PhoneInput', PhoneInputRender);

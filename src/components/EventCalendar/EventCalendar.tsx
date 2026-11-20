@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
 import { useBreakpoint } from '../../internal/media';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { addDays, addMonths, compare, day, firstDayOfWeek, isValid, sameDay, sameMonth, startOfMonth, startOfWeek } from '../../internal/dates';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
@@ -328,15 +328,7 @@ const Body = /* @__PURE__ */ React.memo(function Body(p: BodyProps) {
   );
 });
 
-/* EventCalendar: a month of events, or the same month as an agenda. The month is an ARIA grid like Calendar's:
-   one Tab stop on the days, arrows move a day or a week, Home and End to the week's ends, PageUp and PageDown a
-   month; each day is named by its date and how many events it holds. Tab from a day goes to its events, buttons
-   named by title, time and "Repeats"; Escape on one goes back to its day. A day with more than maxPerDay shows
-   "+N more", which opens a Popover with all of them. Previous, Next and Today change the month, and the month's
-   title is a polite live region, so the change is said. Below 640px the month shows as the agenda. */
-/** A month of events, in a grid or as an agenda, with keyboard navigation by day.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCalendarProps>('EventCalendar', function EventCalendar(props, ref) {
+function EventCalendarRender({ ref, ...props }: EventCalendarProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   // The hours place their events with style attributes, which a strict CSP blocks in server HTML: applied again on hydration.
   const rootRef = useServerStyles(ref);
@@ -586,4 +578,14 @@ export const EventCalendar = /* @__PURE__ */ component<HTMLDivElement, EventCale
         titleId={titleId} labels={sds.labels} level={level} zone={zone} now={now.getTime()} movable={movable} dragging={drag ? drag.id : null} ghost={ghost} grid={grid} scroller={scroller} on={on} />
     </div>
   );
-});
+}
+
+/* EventCalendar: a month of events, or the same month as an agenda. The month is an ARIA grid like Calendar's:
+   one Tab stop on the days, arrows move a day or a week, Home and End to the week's ends, PageUp and PageDown a
+   month; each day is named by its date and how many events it holds. Tab from a day goes to its events, buttons
+   named by title, time and "Repeats"; Escape on one goes back to its day. A day with more than maxPerDay shows
+   "+N more", which opens a Popover with all of them. Previous, Next and Today change the month, and the month's
+   title is a polite live region, so the change is said. Below 640px the month shows as the agenda. */
+/** A month of events, in a grid or as an agenda, with keyboard navigation by day.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const EventCalendar = /* @__PURE__ */ named('EventCalendar', EventCalendarRender);

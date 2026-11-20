@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { Icon } from '../Icon/Icon';
 import { Progress } from '../Progress/Progress';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { formatFileSize } from './formatFileSize';
 import { attachmentKind } from '../Attachment/attachmentKind';
@@ -139,13 +139,7 @@ function Thumbnail({ file, children }: { file: File; children: React.ReactNode }
   return broken === file ? <>{children}</> : <canvas ref={canvas} className="dk-file-upload__thumbnail" aria-hidden />;
 }
 
-/* FileUpload: a drop area with a button to choose files, and the chosen files listed under it with their size
-   and a remove button. accept, maxSize and maxFiles are checked on the way in; files that don't fit are listed
-   in a danger message (role="alert") and passed to onReject. A native file input does the choosing (so name
-   submits the files with a form), and files dropped in are put into it too. Uploading is up to you: read the
-   files from onFilesChange. Files pasted while focus is inside it (a screenshot) are added as if dropped. */
-/** A drop area and a button for choosing files, with the chosen files listed under it. */
-export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadProps>('FileUpload', function FileUpload(props, ref) {
+function FileUploadRender({ ref, ...props }: FileUploadProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), locale = useLocale();
   props = useFieldControl(props);   // invalid, aria-required and disabled from a surrounding Field, at any depth
   const rest = omit(props, OWN);
@@ -379,4 +373,12 @@ export const FileUpload = /* @__PURE__ */ component<HTMLDivElement, FileUploadPr
       ) : null}
     </div>
   );
-});
+}
+
+/* FileUpload: a drop area with a button to choose files, and the chosen files listed under it with their size
+   and a remove button. accept, maxSize and maxFiles are checked on the way in; files that don't fit are listed
+   in a danger message (role="alert") and passed to onReject. A native file input does the choosing (so name
+   submits the files with a form), and files dropped in are put into it too. Uploading is up to you: read the
+   files from onFilesChange. Files pasted while focus is inside it (a screenshot) are added as if dropped. */
+/** A drop area and a button for choosing files, with the chosen files listed under it. */
+export const FileUpload = /* @__PURE__ */ named('FileUpload', FileUploadRender);

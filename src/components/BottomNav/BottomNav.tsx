@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { config } from '../../internal/config';
 import { asIcon } from '../Icon/asIcon';
 import type { IconSource } from '../Icon/Icon';
@@ -17,13 +17,7 @@ export interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
 }
 
-/* BottomNav: a <nav> fixed along the bottom edge on phones, its links side by side in equal columns, an icon over a
-   short label in each. The bar adds env(safe-area-inset-bottom) under its links, leaves the same room at the end of
-   the page with a spacer, and while it shows, puts its height in --dk-bottom-nav-space so a bottom Toaster,
-   OfflineBanner and Fab sit above it and scrolling into view clears it. className and other props go to the <nav>. */
-/** A bar of three to five main destinations along the bottom of a phone screen.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const BottomNav = /* @__PURE__ */ component<HTMLElement, BottomNavProps>('BottomNav', function BottomNav(props, ref) {
+function BottomNavRender({ ref, ...props }: BottomNavProps & React.RefAttributes<HTMLElement>) {
   const { className, label, hideFrom = 'md', children, ...rest } = props;
   const hide = hideFrom ? `dk-bottom-nav--hide-${hideFrom}` : 'dk-bottom-nav--always';
   return (
@@ -34,7 +28,15 @@ export const BottomNav = /* @__PURE__ */ component<HTMLElement, BottomNavProps>(
       </nav>
     </>
   );
-});
+}
+
+/* BottomNav: a <nav> fixed along the bottom edge on phones, its links side by side in equal columns, an icon over a
+   short label in each. The bar adds env(safe-area-inset-bottom) under its links, leaves the same room at the end of
+   the page with a spacer, and while it shows, puts its height in --dk-bottom-nav-space so a bottom Toaster,
+   OfflineBanner and Fab sit above it and scrolling into view clears it. className and other props go to the <nav>. */
+/** A bar of three to five main destinations along the bottom of a phone screen.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const BottomNav = /* @__PURE__ */ named('BottomNav', BottomNavRender);
 
 /** BottomNavLink's own props, beside those of the element it renders. */
 export interface BottomNavLinkOwnProps {
@@ -56,7 +58,7 @@ export type BottomNavLinkProps<C extends React.ElementType = 'a'> = BottomNavLin
   as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof BottomNavLinkOwnProps | 'as'>;
 
-const BottomNavLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, BottomNavLinkProps>('BottomNavLink', function BottomNavLink(props, ref) {
+function BottomNavLinkBaseRender({ ref, ...props }: BottomNavLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { active: 1, as: 1, className: 1, icon: 1, children: 1, badge: 1 });
   // The badge sits in the icon's pill, which is hidden from screen readers with the icon; aria-describedby reads it
   // after the name, as Sidebar's rail does.
@@ -66,10 +68,12 @@ const BottomNavLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, BottomNav
     ref: ref, 'aria-current': props.active ? 'page' : undefined,
     className: cn('dk-bottom-nav__link', props.active && 'dk-bottom-nav__link--active', props.className),
   }), <span className="dk-bottom-nav__icon" aria-hidden="true">{asIcon(props.icon)}{badge ? <span className="dk-bottom-nav__badge" id={badgeId}>{props.badge}</span> : null}</span>, typeof props.children === 'string' ? <TruncatedText className="dk-bottom-nav__label">{props.children}</TruncatedText> : <span className="dk-bottom-nav__label">{props.children}</span>);
-});
+}
+
+const BottomNavLinkBase = /* @__PURE__ */ named('BottomNavLink', BottomNavLinkBaseRender);
 
 /** A destination in a BottomNav: an icon over a short label. active marks the current page. `as` renders your router's link, typed with its props. */
 export const BottomNavLink = BottomNavLinkBase as {
-  <C extends React.ElementType = 'a'>(props: BottomNavLinkProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: BottomNavLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;
 };

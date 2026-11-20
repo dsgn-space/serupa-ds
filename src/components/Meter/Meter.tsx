@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, oneOf, omit, SIZES } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
 import type { MeterZone } from './labels';
@@ -58,13 +58,7 @@ function zone(value: number, min: number, max: number, low?: number, high?: numb
 
 const TONE: Record<MeterState, string | null> = { optimum: 'success', suboptimal: 'warning', poor: 'danger', none: null };
 
-/* Meter: a measurement within a known range, such as storage used, a password's strength or a battery level. It's
-   not Progress, which is how far along a task is. low, high and optimum set zones, as HTML's <meter> does: the
-   bar is success in the best zone, warning in the next and danger in the worst; without low and high it's
-   primary. size sm, md (default) or lg; an optional label above the bar, and the value beside it. Renders
-   role="meter" with aria-valuenow / min / max and aria-valuetext, and data-state with the zone. */
-/** A measurement within a known range (storage used, strength, a level): a bar with role="meter", colored by the low, high and optimum zones. */
-export const Meter = /* @__PURE__ */ component<HTMLDivElement, MeterProps>('Meter', function Meter(props, ref) {
+function MeterRender({ ref, ...props }: MeterProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('Meter', NAME_HOW.label);   // warns when it has no accessible name
   const restyle = useServerStyles(ref);
   const rest = omit(props, OWN);
@@ -100,4 +94,12 @@ export const Meter = /* @__PURE__ */ component<HTMLDivElement, MeterProps>('Mete
       </div>
     </div>
   );
-});
+}
+
+/* Meter: a measurement within a known range, such as storage used, a password's strength or a battery level. It's
+   not Progress, which is how far along a task is. low, high and optimum set zones, as HTML's <meter> does: the
+   bar is success in the best zone, warning in the next and danger in the worst; without low and high it's
+   primary. size sm, md (default) or lg; an optional label above the bar, and the value beside it. Renders
+   role="meter" with aria-valuenow / min / max and aria-valuetext, and data-state with the zone. */
+/** A measurement within a known range (storage used, strength, a level): a bar with role="meter", colored by the low, high and optimum zones. */
+export const Meter = /* @__PURE__ */ named('Meter', MeterRender);

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { isComposing } from '../../internal/ime';
 import { warnOnce } from '../../internal/warn';
@@ -167,12 +167,7 @@ export function useShortcut(keys: string | string[], handler: (event: KeyboardEv
   }, [id, description, group, enabled, inInputs, apple]);
 }
 
-/* KeyboardShortcuts: the help dialog that lists the page's keyboard shortcuts, opened with "?" (helpKeys). It lists
-   every useShortcut with a description, plus shortcuts, by group (in the order they first appear), each with its keys
-   in Kbd. Put one in the app's layout. Open it yourself too (open and onOpenChange), from a help menu, so people who
-   don't know "?" find it. Other props go to the Dialog. */
-/** The help dialog listing the page's keyboard shortcuts in Kbd, opened with "?"; set them up with useShortcut. */
-export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, KeyboardShortcutsProps>('KeyboardShortcuts', function KeyboardShortcuts(props, ref) {
+function KeyboardShortcutsRender({ ref, ...props }: KeyboardShortcutsProps & React.RefAttributes<HTMLDialogElement>) {
   const sds = useSettings(words), labels = sds.labels;
   const rest = omit(props, { title: 1, shortcuts: 1, helpKeys: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1 } as const);
   const [own, setOwn] = React.useState(!!props.defaultOpen);
@@ -215,4 +210,11 @@ export const KeyboardShortcuts = /* @__PURE__ */ component<HTMLDialogElement, Ke
       ))}
     </Dialog>
   );
-});
+}
+
+/* KeyboardShortcuts: the help dialog that lists the page's keyboard shortcuts, opened with "?" (helpKeys). It lists
+   every useShortcut with a description, plus shortcuts, by group (in the order they first appear), each with its keys
+   in Kbd. Put one in the app's layout. Open it yourself too (open and onOpenChange), from a help menu, so people who
+   don't know "?" find it. Other props go to the Dialog. */
+/** The help dialog listing the page's keyboard shortcuts in Kbd, opened with "?"; set them up with useShortcut. */
+export const KeyboardShortcuts = /* @__PURE__ */ named('KeyboardShortcuts', KeyboardShortcutsRender);

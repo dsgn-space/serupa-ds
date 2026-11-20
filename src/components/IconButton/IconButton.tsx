@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { IconSource } from '../Icon/Icon';
 import { cn } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps, type ButtonAsLinkProps } from '../Button/Button';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { Tooltip } from '../Tooltip/Tooltip';
 
 type Without<T> = T extends unknown ? Omit<T, 'icon' | 'leftIcon' | 'rightIcon' | 'children' | 'aria-label'> : never;
@@ -24,11 +24,7 @@ export type IconButtonProps = Without<ButtonAsButtonProps> & IconButtonOwnProps 
 // compiler met them, and index.d.ts then differs from one build to the next (tools/test/reproducible.mjs).
 type IconButtonElement = HTMLButtonElement | HTMLAnchorElement;
 
-/* IconButton: a Button that shows only an icon, with a required label (its accessible name and a title tooltip).
-   Variant defaults to "ghost"; shape "square" (default) or "round". Every other Button prop (size, destructive,
-   loading, href, onClick, ref…) works the same. */
-/** A Button that shows only an icon, with a required label for screen readers. Default variant: ghost. */
-export const IconButton = /* @__PURE__ */ component<IconButtonElement, IconButtonProps>('IconButton', function IconButton(props, ref) {
+function IconButtonRender({ ref, ...props }: IconButtonProps & React.RefAttributes<IconButtonElement>) {
   const { icon, label, shape, hideTitle, className, ...rest } = props;
   const round = shape === 'round';
   // The label shows in a Tooltip on hover and on keyboard focus, which a native title never does. None when a Tooltip
@@ -40,4 +36,10 @@ export const IconButton = /* @__PURE__ */ component<IconButtonElement, IconButto
     ref={ref} icon={icon} className={cn('dk-icon-btn', round && 'dk-icon-btn--round', className)} />;
   // role="label": the tooltip says the button's name, so it isn't read a second time as a description.
   return own || !name ? button : <Tooltip content={name} role="label" disabled={!!rest.disabled}>{button}</Tooltip>;
-});
+}
+
+/* IconButton: a Button that shows only an icon, with a required label (its accessible name and a title tooltip).
+   Variant defaults to "ghost"; shape "square" (default) or "round". Every other Button prop (size, destructive,
+   loading, href, onClick, ref…) works the same. */
+/** A Button that shows only an icon, with a required label for screen readers. Default variant: ghost. */
+export const IconButton = /* @__PURE__ */ named('IconButton', IconButtonRender);

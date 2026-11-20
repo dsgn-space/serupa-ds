@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit, useMergedRef } from '../../internal/cn';
 import { useRowWrap } from '../../internal/useRowWrap';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import type { ButtonGroupProps } from '../ButtonGroup/ButtonGroup';
 import type { ToggleButtonProps } from '../ToggleButton/ToggleButton';
 import { useControllable } from '../../internal/controllable';
@@ -28,12 +28,7 @@ export interface ToggleGroupProps extends Omit<ButtonGroupProps, 'defaultValue' 
   children?: React.ReactNode | undefined;
 }
 
-/* ToggleGroup: a ButtonGroup whose ToggleButtons share one value. With type="single" it works like a set of
-   radios that can all be off (text alignment, a view mode in a toolbar); with type="multiple" each button is its
-   own setting but the group reports them together (bold, italic, underline). Each button keeps aria-pressed and
-   its own Tab stop, as in a ButtonGroup; inside a Toolbar the arrow keys move between them. */
-/** ToggleButtons that share one value: one on at a time, or any number. */
-export const ToggleGroup = /* @__PURE__ */ component<HTMLDivElement, ToggleGroupProps>('ToggleGroup', function ToggleGroup(props, ref) {
+function ToggleGroupRender({ ref, ...props }: ToggleGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { type: 1, value: 1, defaultValue: 1, onValueChange: 1, required: 1, disabled: 1, size: 1, variant: 1, attached: 1, orientation: 1, className: 1, children: 1 });
   const vertical = oneOf(['horizontal', 'vertical'] as const, props.orientation, 'horizontal') === 'vertical';
   const single = props.type !== 'multiple';
@@ -69,4 +64,11 @@ export const ToggleGroup = /* @__PURE__ */ component<HTMLDivElement, ToggleGroup
       {children}
     </div>
   );
-});
+}
+
+/* ToggleGroup: a ButtonGroup whose ToggleButtons share one value. With type="single" it works like a set of
+   radios that can all be off (text alignment, a view mode in a toolbar); with type="multiple" each button is its
+   own setting but the group reports them together (bold, italic, underline). Each button keeps aria-pressed and
+   its own Tab stop, as in a ButtonGroup; inside a Toolbar the arrow keys move between them. */
+/** ToggleButtons that share one value: one on at a time, or any number. */
+export const ToggleGroup = /* @__PURE__ */ named('ToggleGroup', ToggleGroupRender);

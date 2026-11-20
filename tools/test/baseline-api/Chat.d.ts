@@ -36,7 +36,7 @@ interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
     onLoadOlder?: (() => void) | undefined;
     loadingOlder?: boolean | undefined;
 }
-declare const Chat: React.ForwardRefExoticComponent<ChatProps & React.RefAttributes<HTMLDivElement>>;
+declare const Chat: React.FC<ChatProps & React.RefAttributes<HTMLDivElement>>;
 interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     children?: React.ReactNode;
     author?: React.ReactNode | undefined;
@@ -56,7 +56,7 @@ interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
     onBranchChange?: ((branch: number) => void) | undefined;
     steps?: readonly ChatStep[] | undefined;
 }
-declare const ChatMessage: React.ForwardRefExoticComponent<ChatMessageProps & React.RefAttributes<HTMLDivElement>>;
+declare const ChatMessage: React.FC<ChatMessageProps & React.RefAttributes<HTMLDivElement>>;
 type ChatStepStatus = "done" | "failed" | "running";
 interface ChatStep {
     id: string;
@@ -67,7 +67,7 @@ interface ChatStep {
 interface ChatStepsProps extends React.HTMLAttributes<HTMLOListElement> {
     steps: readonly ChatStep[];
 }
-declare const ChatSteps: React.ForwardRefExoticComponent<ChatStepsProps & React.RefAttributes<HTMLOListElement>>;
+declare const ChatSteps: React.FC<ChatStepsProps & React.RefAttributes<HTMLOListElement>>;
 type ChatApprovalStatus = "approved" | "denied" | "pending";
 interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
@@ -76,7 +76,7 @@ interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> {
     onApprove?: (() => void) | undefined;
     onDeny?: (() => void) | undefined;
 }
-declare const ChatApproval: React.ForwardRefExoticComponent<ChatApprovalProps & React.RefAttributes<HTMLDivElement>>;
+declare const ChatApproval: React.FC<ChatApprovalProps & React.RefAttributes<HTMLDivElement>>;
 type ChatFeedback = "bad" | "good";
 interface ChatReplyActionsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     copyText?: (() => Promise<string> | string) | string | undefined;
@@ -84,18 +84,18 @@ interface ChatReplyActionsProps extends Omit<React.HTMLAttributes<HTMLDivElement
     feedback?: ChatFeedback | null | undefined;
     onFeedback?: ((feedback: ChatFeedback | null) => void) | undefined;
 }
-declare const ChatReplyActions: React.ForwardRefExoticComponent<ChatReplyActionsProps & React.RefAttributes<HTMLDivElement>>;
+declare const ChatReplyActions: React.FC<ChatReplyActionsProps & React.RefAttributes<HTMLDivElement>>;
 interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     href: string;
     index: number;
     children?: React.ReactNode;
 }
-declare const ChatCitation: React.ForwardRefExoticComponent<ChatCitationProps & React.RefAttributes<HTMLAnchorElement>>;
+declare const ChatCitation: React.FC<ChatCitationProps & React.RefAttributes<HTMLAnchorElement>>;
 interface ChatDividerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     date?: Date | number | string | undefined;
     children?: React.ReactNode;
 }
-declare const ChatDivider: React.ForwardRefExoticComponent<ChatDividerProps & React.RefAttributes<HTMLDivElement>>;
+declare const ChatDivider: React.FC<ChatDividerProps & React.RefAttributes<HTMLDivElement>>;
 interface ChatComposerProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, "children" | "defaultValue" | "onSubmit"> {
     value?: string | undefined;
     defaultValue?: string | undefined;
@@ -109,4 +109,4 @@ interface ChatComposerProps extends Omit<React.FormHTMLAttributes<HTMLFormElemen
     actions?: React.ReactNode | undefined;
     maxRows?: number | undefined;
 }
-declare const ChatComposer: React.ForwardRefExoticComponent<ChatComposerProps & React.RefAttributes<HTMLFormElement>>;
+declare const ChatComposer: React.FC<ChatComposerProps & React.RefAttributes<HTMLFormElement>>;

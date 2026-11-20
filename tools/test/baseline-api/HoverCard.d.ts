@@ -12,4 +12,4 @@ interface HoverCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chi
     className?: string | undefined;
     style?: React.CSSProperties | undefined;
 }
-declare const HoverCard: React.ForwardRefExoticComponent<HoverCardProps & React.RefAttributes<HTMLDivElement>>;
+declare const HoverCard: React.FC<HoverCardProps & React.RefAttributes<HTMLDivElement>>;

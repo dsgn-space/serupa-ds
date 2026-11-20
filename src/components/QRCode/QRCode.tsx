@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { warnOnce } from '../../internal/warn';
@@ -41,11 +41,7 @@ export interface QRCodeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
    status puts a message over a faded code. */
 const SIZES = ['sm', 'md', 'lg'] as const;
 const STATUSES = ['active', 'loading', 'expired', 'scanned'] as const;
-const QUIET = 4;   // modules of light margin on every side, as the standard asks
-
-/** A QR code from a value, drawn in SVG dark on light in every theme, with a status (loading, expired, scanned) over it.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const QRCode = /* @__PURE__ */ component<HTMLDivElement, QRCodeProps>('QRCode', function QRCode(props, ref) {
+const QUIET = 4;   function QRCodeRender({ ref, ...props }: QRCodeProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   const rest = omit(props, { value: 1, label: 1, size: 1, level: 1, logo: 1, status: 1, onRefresh: 1, className: 1 });
   const size = oneOf(SIZES, props.size, 'md');
@@ -90,7 +86,13 @@ export const QRCode = /* @__PURE__ */ component<HTMLDivElement, QRCodeProps>('QR
       </div> : null}
     </div>
   );
-});
+}
+
+// modules of light margin on every side, as the standard asks
+
+/** A QR code from a value, drawn in SVG dark on light in every theme, with a status (loading, expired, scanned) over it.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const QRCode = /* @__PURE__ */ named('QRCode', QRCodeRender);
 
 // The dark modules as one path, a run of modules on a row as one rectangle, offset by the quiet zone.
 function draw(m: boolean[][]): { d: string; size: number } {

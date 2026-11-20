@@ -49,4 +49,4 @@ interface FilterBarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "chi
     resultsCount?: number | undefined;
     actions?: React.ReactNode | undefined;
 }
-declare const FilterBar: React.ForwardRefExoticComponent<FilterBarProps & React.RefAttributes<HTMLDivElement>>;
+declare const FilterBar: React.FC<FilterBarProps & React.RefAttributes<HTMLDivElement>>;

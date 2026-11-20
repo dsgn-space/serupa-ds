@@ -13,4 +13,4 @@ interface TypeToConfirmProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     onMatch?: ((matched: boolean) => void) | undefined;
     disabled?: boolean | undefined;
 }
-declare const TypeToConfirm: React.ForwardRefExoticComponent<TypeToConfirmProps & React.RefAttributes<HTMLDivElement>>;
+declare const TypeToConfirm: React.FC<TypeToConfirmProps & React.RefAttributes<HTMLDivElement>>;

@@ -5,7 +5,7 @@ import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../
 import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
 import { Discard } from '../Dialog/Dialog';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { modalClosed, modalOpened, modalOpening, wasDismissal } from '../../internal/layers';
 import { listenForInput } from '../../internal/lastInput';
@@ -76,14 +76,7 @@ const FLICK = 0.2;   // px per ms over the last 100ms toward the edge: a let-go 
 const INWARD = 24;   // px at most a drag away from the edge moves the panel, against growing resistance
 const OWN = { open: 1, defaultOpen: 1, onOpenChange: 1, placement: 1, size: 1, title: 1, description: 1, footer: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, modal: 1, swipeToClose: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, snapPoints: 1, snap: 1, defaultSnap: 1, onSnapChange: 1, className: 1, children: 1 } as const;
 
-/* Drawer: a modal panel that slides in from an edge of the screen, for navigation on small screens, filters,
-   or details and edits without leaving the page. It's a native <dialog> (showModal) like Dialog: focus stays
-   inside, the page behind is inert and doesn't scroll, Escape, the × and the backdrop ask to close
-   (onOpenChange(false)), and focus goes back where it was. modal={false} shows it with show() instead: a side
-   panel with no backdrop, beside a page that stays usable. unsaved puts Dialog's "Discard changes?" question between
-   a request to close and onOpenChange(false). */
-/** A modal panel that slides in from an edge: navigation, filters, details. */
-export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>('Drawer', function Drawer(props, ref) {
+function DrawerRender({ ref, ...props }: DrawerProps & React.RefAttributes<HTMLDialogElement>) {
   const nameRef = useNameCheck('Drawer', NAME_HOW.title);   // warns when it has no accessible name
   const sds = useSettings(words);
   const restyle = useServerStyles<HTMLDialogElement>();   // a sheet's height share, under a strict CSP
@@ -386,4 +379,13 @@ export const Drawer = /* @__PURE__ */ component<HTMLDialogElement, DrawerProps>(
       {props.unsaved || asking ? <Discard open={!!asking && open} onKeep={() => setAsking(null)} onDiscard={() => { const why = asking || 'close'; setAsking(null); close(why); }} /> : null}
     </dialog>
   );
-});
+}
+
+/* Drawer: a modal panel that slides in from an edge of the screen, for navigation on small screens, filters,
+   or details and edits without leaving the page. It's a native <dialog> (showModal) like Dialog: focus stays
+   inside, the page behind is inert and doesn't scroll, Escape, the × and the backdrop ask to close
+   (onOpenChange(false)), and focus goes back where it was. modal={false} shows it with show() instead: a side
+   panel with no backdrop, beside a page that stays usable. unsaved puts Dialog's "Discard changes?" question between
+   a request to close and onOpenChange(false). */
+/** A modal panel that slides in from an edge: navigation, filters, details. */
+export const Drawer = /* @__PURE__ */ named('Drawer', DrawerRender);

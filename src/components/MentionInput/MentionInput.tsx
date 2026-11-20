@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { FieldContext } from '../../internal/field';
 import { isComposing } from '../../internal/ime';
@@ -102,17 +102,7 @@ function caretAt(el: HTMLTextAreaElement, index: number): { left: number; top: n
   return out;
 }
 
-/* MentionInput: a Textarea where typing the trigger ("@") opens a list of people to mention, at the caret.
-   - The textarea stays a textbox (role=combobox isn't allowed on <textarea>): aria-autocomplete="list", aria-controls
-     and aria-activedescendant point to the listbox while it's open, and how many match is said politely, after a
-     pause, as Combobox does (4.1.3).
-   - Keys while the list is open: Down and Up move through it, Enter or Tab puts the active one in, Escape closes it
-     until the next mention. Everything else is typing. Nothing is taken while an IME is composing.
-   - Picking writes "@Label " into the text and leaves the caret after it, so typing goes on.
-   - The list is a layer anchored to the caret, in the top layer, so a dialog or a scrolling box doesn't clip it. */
-/** A multi-line text field where typing "@" suggests people to mention, at the caret; picking one writes "@Name" into the text.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, MentionInputProps>('MentionInput', function MentionInput(props, ref) {
+function MentionInputRender({ ref, ...props }: MentionInputProps & React.RefAttributes<HTMLTextAreaElement>) {
   const { options, value, defaultValue, onValueChange, onSearch, onMention, trigger = '@', filter = true, maxOptions = 8, className, style, ...rest } = props;
   const L = useSettings(words).labels, locale = useLocale();
   const field = React.useRef<HTMLTextAreaElement | null>(null);
@@ -257,4 +247,16 @@ export const MentionInput = /* @__PURE__ */ component<HTMLTextAreaElement, Menti
       </div>
     </span>
   );
-});
+}
+
+/* MentionInput: a Textarea where typing the trigger ("@") opens a list of people to mention, at the caret.
+   - The textarea stays a textbox (role=combobox isn't allowed on <textarea>): aria-autocomplete="list", aria-controls
+     and aria-activedescendant point to the listbox while it's open, and how many match is said politely, after a
+     pause, as Combobox does (4.1.3).
+   - Keys while the list is open: Down and Up move through it, Enter or Tab puts the active one in, Escape closes it
+     until the next mention. Everything else is typing. Nothing is taken while an IME is composing.
+   - Picking writes "@Label " into the text and leaves the caret after it, so typing goes on.
+   - The list is a layer anchored to the caret, in the top layer, so a dialog or a scrolling box doesn't clip it. */
+/** A multi-line text field where typing "@" suggests people to mention, at the caret; picking one writes "@Name" into the text.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const MentionInput = /* @__PURE__ */ named('MentionInput', MentionInputRender);

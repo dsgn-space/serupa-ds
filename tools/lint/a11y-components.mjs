@@ -1,6 +1,6 @@
 // What each Serupa component renders, for eslint-plugin-jsx-a11y-x's settings (eslint.config.mjs), so its rules
-// read <Image> as an img, <Link> as an a and <Checkbox> as an input. Read from the component() calls in
-// src/components/: component<HTMLAnchorElement, …>("Link", …) renders an a. A new component is covered with no edit
+// read <Image> as an img, <Link> as an a and <Checkbox> as an input. Read from the components in
+// src/components/: one whose ref is a React.RefAttributes<HTMLAnchorElement> (named('Link', …)) renders an a. A new component is covered with no edit
 // here. Components on a plain div or span, or a section of a table, are left out: the plugin learns nothing from them.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -27,16 +27,18 @@ export function a11yComponents(root) {
   for (const name of fs.readdirSync(dir)) {
     const file = path.join(dir, name, name + '.tsx');
     if (!fs.existsSync(file)) continue;
-    // The first element of a union (HTMLButtonElement | HTMLAnchorElement for IconButton) is the one it renders by default.
-    for (const m of fs.readFileSync(file, 'utf8').matchAll(/component<(?:\w+ \| )*?HTML(\w+)Element\b[^(]*\(\s*["'](\w+)["']/g)) {
-      if (TAGS[m[1]]) map[m[2]] = TAGS[m[1]];
-    }
-    // A local alias: type IconButtonElement = HTMLButtonElement | HTMLAnchorElement.
+    // Each component is function XRender({ ref, … }: … & React.RefAttributes<HTMLAnchorElement>), named as 'Link' by
+    // named('Link', XRender). The first element of a union (HTMLButtonElement | HTMLAnchorElement for IconButton) is the
+    // one it renders by default; a local alias (type IconButtonElement = HTMLButtonElement | …) is read through.
     const src = fs.readFileSync(file, 'utf8');
-    for (const m of src.matchAll(/component<(\w+), \w+>\(\s*["'](\w+)["']/g)) {
-      const alias = new RegExp(`type ${m[1]} = HTML(\\w+)Element`).exec(src);
-      if (alias && TAGS[alias[1]]) map[m[2]] = TAGS[alias[1]];
+    const renders = {};
+    for (const m of src.matchAll(/^function (\w+)\([^\n]*?React\.RefAttributes<((?:\w+ \| )*?\w+)\b[^>]*>\)/gm)) {
+      const first = m[2].split(' | ')[0];
+      const alias = new RegExp(`type ${first} = HTML(\\w+)Element`).exec(src);
+      const tag = /^HTML(\w+)Element$/.exec(first)?.[1] ?? alias?.[1];
+      if (tag && TAGS[tag]) renders[m[1]] = TAGS[tag];
     }
+    for (const m of src.matchAll(/named\(\s*["'](\w+)["'],\s*(\w+)\)/g)) if (renders[m[2]]) map[m[1]] = renders[m[2]];
   }
   for (const name of [...COMPLETE, ...SOMETIMES]) delete map[name];
   return { ...map, ...BY_NAME };

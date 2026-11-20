@@ -19,4 +19,4 @@ interface InlineEditProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "ch
     editLabel?: string | undefined;
     inputProps?: Omit<InputProps, "aria-label" | "defaultValue" | "size" | "value"> | undefined;
 }
-declare const InlineEdit: React.ForwardRefExoticComponent<InlineEditProps & React.RefAttributes<HTMLDivElement>>;
+declare const InlineEdit: React.FC<InlineEditProps & React.RefAttributes<HTMLDivElement>>;

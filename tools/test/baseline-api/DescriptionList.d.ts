@@ -5,10 +5,10 @@ interface DescriptionListProps extends React.HTMLAttributes<HTMLDListElement> {
     dividers?: boolean | undefined;
     children?: React.ReactNode | undefined;
 }
-declare const DescriptionList: React.ForwardRefExoticComponent<DescriptionListProps & React.RefAttributes<HTMLDListElement>>;
+declare const DescriptionList: React.FC<DescriptionListProps & React.RefAttributes<HTMLDListElement>>;
 interface DescriptionItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
     term: React.ReactNode;
     children?: React.ReactNode | undefined;
     emphasis?: boolean | undefined;
 }
-declare const DescriptionItem: React.ForwardRefExoticComponent<DescriptionItemProps & React.RefAttributes<HTMLDivElement>>;
+declare const DescriptionItem: React.FC<DescriptionItemProps & React.RefAttributes<HTMLDivElement>>;

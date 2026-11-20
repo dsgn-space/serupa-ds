@@ -10,4 +10,4 @@ interface SearchInputProps extends Omit<InputProps, "actions" | "leftIcon" | "pr
     loading?: boolean | undefined;
     loadingLabel?: string | undefined;
 }
-declare const SearchInput: React.ForwardRefExoticComponent<SearchInputProps & React.RefAttributes<HTMLInputElement>>;
+declare const SearchInput: React.FC<SearchInputProps & React.RefAttributes<HTMLInputElement>>;

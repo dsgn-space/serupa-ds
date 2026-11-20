@@ -5,7 +5,7 @@ import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { useFormReset } from '../../internal/useFormReset';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
@@ -123,8 +123,7 @@ function childBoxes(children: React.ReactNode, disabled: boolean, out = new Map<
   return out;
 }
 
-/** Any number of choices from a set of Checkboxes: a <div role="group"> that names them, holds the checked values and passes size, invalid, disabled and required down. A Checkbox with selectAll checks or clears the rest. */
-export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxGroupProps>('CheckboxGroup', function CheckboxGroup(props: CheckboxGroupProps, ref) {
+function CheckboxGroupRender({ ref, ...props }: CheckboxGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, GROUP_OWN);
   const autoName = domId('dk-cbg', React.useId());
   const [chosen, setOwn, controlled] = useControllable<readonly (string | number)[]>(props.value, props.defaultValue || [], 'CheckboxGroup', 'value');
@@ -191,7 +190,10 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
       <GroupContext.Provider value={st.ctx}>{props.children}</GroupContext.Provider>
     </div>
   );
-}) as (<V extends string | number = string | number>(props: CheckboxGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
+}
+
+/** Any number of choices from a set of Checkboxes: a <div role="group"> that names them, holds the checked values and passes size, invalid, disabled and required down. A Checkbox with selectAll checks or clears the rest. */
+export const CheckboxGroup = /* @__PURE__ */ named('CheckboxGroup', CheckboxGroupRender) as (<V extends string | number = string | number>(props: CheckboxGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
 
 /* Checkbox: a native checkbox and its label. size "sm", "md" (default) or "lg"; children (the label);
    description (a second, muted line, linked with aria-describedby); indeterminate (the "some" state of a
@@ -200,8 +202,7 @@ export const CheckboxGroup = /* @__PURE__ */ component<HTMLDivElement, CheckboxG
    (checked, defaultChecked, onChange, name, value, disabled, required, aria-*…) and ref to the <input>. */
 const OWN = { size: 1, variant: 1, invalid: 1, indeterminate: 1, selectAll: 1, onCheckedChange: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
 
-/** A native checkbox with its label (ref, checked, onChange and every input attribute go to the <input>); className and style go to the <label> around it. */
-export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProps>('Checkbox', function Checkbox(props, ref) {
+function CheckboxRender({ ref, ...props }: CheckboxProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('Checkbox', NAME_HOW.label);   // warns when it has no accessible name
   if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Checkbox: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Checkbox');
   const store = React.useContext(GroupContext);
@@ -300,4 +301,7 @@ export const Checkbox = /* @__PURE__ */ component<HTMLInputElement, CheckboxProp
       </span> : null}
     </label>
   );
-});
+}
+
+/** A native checkbox with its label (ref, checked, onChange and every input attribute go to the <input>); className and style go to the <label> around it. */
+export const Checkbox = /* @__PURE__ */ named('Checkbox', CheckboxRender);

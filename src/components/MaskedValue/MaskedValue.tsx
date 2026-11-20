@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { IconButton } from '../IconButton/IconButton';
 import * as icons from '../../material/builtin';
@@ -36,9 +36,7 @@ export interface MaskedValueProps extends Omit<React.HTMLAttributes<HTMLSpanElem
 // module state: a fixed string, never changed.
 const DOTS = '••••';
 
-/** A value with most of it hidden behind bullets, keeping its ends ("•••• 1208"), read as "Card number ending in 1208"; optionally a Show button.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const MaskedValue = /* @__PURE__ */ component<HTMLSpanElement, MaskedValueProps>('MaskedValue', function MaskedValue(props, ref) {
+function MaskedValueRender({ ref, ...props }: MaskedValueProps & React.RefAttributes<HTMLSpanElement>) {
   const sds = useSettings(words);
   const rest = omit(props, { value: 1, label: 1, end: 1, start: 1, revealable: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, className: 1 });
   const [revealed, setOwn, controlled] = useControllable(props.revealed, !!props.defaultRevealed, 'MaskedValue', 'revealed');
@@ -66,7 +64,11 @@ export const MaskedValue = /* @__PURE__ */ component<HTMLSpanElement, MaskedValu
         : <><span className="dk-masked-value__text" aria-hidden>{masked}</span><span className="dk-visually-hidden">{said}</span></>}
     </span>
   );
-});
+}
+
+/** A value with most of it hidden behind bullets, keeping its ends ("•••• 1208"), read as "Card number ending in 1208"; optionally a Show button.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const MaskedValue = /* @__PURE__ */ named('MaskedValue', MaskedValueRender);
 
 /** The value as shown while masked: the start kept, a fixed run of bullets (so it doesn't give away the length), and
  *  the end kept, counted in characters people see, not code units. Asking to keep more than half shows nothing but

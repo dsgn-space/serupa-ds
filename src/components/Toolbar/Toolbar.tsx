@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { ControlSize } from '../../internal/controlSize';
 import { useSettings } from '../../internal/provider';
 import { IconButton } from '../IconButton/IconButton';
@@ -53,12 +53,7 @@ interface Entry { el: HTMLElement; label: string; disabled: boolean; checked: bo
 const typing = (e: HTMLElement) => e.isContentEditable || e instanceof HTMLTextAreaElement || e instanceof HTMLSelectElement
   || (e instanceof HTMLInputElement && !/^(button|checkbox|radio|submit|reset|image|color|file|range)$/.test(e.type));
 
-/* Toolbar: a role="toolbar" around a set of controls, with one Tab stop for all of them (the WAI-ARIA toolbar
-   pattern). The arrow keys move focus between the controls (Left and Right in a row, mirrored right to left; Up
-   and Down in a column), Home and End go to the first and last, and they wrap. Tab leaves it, and coming back
-   lands on the control used last. Disabled controls are skipped. In a text field the keys stay the field's. */
-/** A set of controls with one Tab stop, where the arrow keys move between them. */
-export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>('Toolbar', function Toolbar(props, ref) {
+function ToolbarRender({ ref, ...props }: ToolbarProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(words).labels;
   const rest = omit(props, { orientation: 1, size: 1, className: 1, children: 1, overflow: 1, moreLabel: 1 });
   const size = props.size === 'sm' || props.size === 'md' || props.size === 'lg' ? props.size : undefined;
@@ -197,4 +192,11 @@ export const Toolbar = /* @__PURE__ */ component<HTMLDivElement, ToolbarProps>('
       ) : null}
     </div>
   );
-});
+}
+
+/* Toolbar: a role="toolbar" around a set of controls, with one Tab stop for all of them (the WAI-ARIA toolbar
+   pattern). The arrow keys move focus between the controls (Left and Right in a row, mirrored right to left; Up
+   and Down in a column), Home and End go to the first and last, and they wrap. Tab leaves it, and coming back
+   lands on the control used last. Disabled controls are skipped. In a text field the keys stay the field's. */
+/** A set of controls with one Tab stop, where the arrow keys move between them. */
+export const Toolbar = /* @__PURE__ */ named('Toolbar', ToolbarRender);

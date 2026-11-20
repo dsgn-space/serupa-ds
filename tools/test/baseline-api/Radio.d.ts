@@ -23,4 +23,4 @@ interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "
 declare const RadioGroup: (<V extends number | string = number | string>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
 };
-declare const Radio: React.ForwardRefExoticComponent<RadioProps & React.RefAttributes<HTMLInputElement>>;
+declare const Radio: React.FC<RadioProps & React.RefAttributes<HTMLInputElement>>;

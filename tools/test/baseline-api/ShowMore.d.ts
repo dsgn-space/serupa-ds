@@ -10,4 +10,4 @@ interface ShowMoreProps extends React.HTMLAttributes<HTMLDivElement> {
     onExpandedChange?: ((expanded: boolean) => void) | undefined;
     children?: React.ReactNode;
 }
-declare const ShowMore: React.ForwardRefExoticComponent<ShowMoreProps & React.RefAttributes<HTMLDivElement>>;
+declare const ShowMore: React.FC<ShowMoreProps & React.RefAttributes<HTMLDivElement>>;

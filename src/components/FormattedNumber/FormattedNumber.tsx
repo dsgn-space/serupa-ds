@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useOwnLang } from '../../internal/provider';
 import { formatNumber, type NumberFormat } from './formatNumber';
 
@@ -45,11 +45,7 @@ function segments(text: string, mask: boolean[], change: number): React.ReactNod
   return out;
 }
 
-/* FormattedNumber: a <data value> holding the number for machines and the locale's words for people: 1.234,5 in
-   Indonesian, ١٬٢٣٤٫٥ in Egyptian Arabic, "1.2K", "Rp 150.000", "45%", "1.5 MB", "50 km/h". A compact number
-   carries the full one in its tooltip (title). */
-/** A number written the way the reader's locale writes it: plain, compact, a percentage, money, a size or a unit. */
-export const FormattedNumber = /* @__PURE__ */ component<HTMLDataElement, FormattedNumberProps>('FormattedNumber', function FormattedNumber(props, ref) {
+function FormattedNumberRender({ ref, ...props }: FormattedNumberProps & React.RefAttributes<HTMLDataElement>) {
   const rest = omit(props, { value: 1, format: 1, currency: 1, unit: 1, options: 1, locale: 1, className: 1, animate: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const format = props.format || 'decimal';
@@ -66,4 +62,10 @@ export const FormattedNumber = /* @__PURE__ */ component<HTMLDataElement, Format
   React.useEffect(() => { last.current = now; });
   return <data lang={lang} {...rest} ref={ref} value={String(props.value)} title={rest.title ?? title} className={cn('dk-formatted-number', props.className)}
     data-component="formatted-number" data-format={format}>{now.mask ? segments(text, now.mask, now.change) : text}</data>;
-});
+}
+
+/* FormattedNumber: a <data value> holding the number for machines and the locale's words for people: 1.234,5 in
+   Indonesian, ١٬٢٣٤٫٥ in Egyptian Arabic, "1.2K", "Rp 150.000", "45%", "1.5 MB", "50 km/h". A compact number
+   carries the full one in its tooltip (title). */
+/** A number written the way the reader's locale writes it: plain, compact, a percentage, money, a size or a unit. */
+export const FormattedNumber = /* @__PURE__ */ named('FormattedNumber', FormattedNumberRender);

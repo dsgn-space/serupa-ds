@@ -30,4 +30,4 @@ interface CheckboxGroupProps<V extends number | string = number | string> extend
 declare const CheckboxGroup: (<V extends number | string = number | string>(props: CheckboxGroupProps<V> & React.RefAttributes<HTMLDivElement>) => null | React.ReactElement) & {
     displayName?: string;
 };
-declare const Checkbox: React.ForwardRefExoticComponent<CheckboxProps & React.RefAttributes<HTMLInputElement>>;
+declare const Checkbox: React.FC<CheckboxProps & React.RefAttributes<HTMLInputElement>>;

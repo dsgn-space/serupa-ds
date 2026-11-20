@@ -10,4 +10,4 @@ interface PinInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
     size?: "lg" | "md" | "sm" | undefined;
     invalid?: boolean | undefined;
 }
-declare const PinInput: React.ForwardRefExoticComponent<PinInputProps & React.RefAttributes<HTMLInputElement>>;
+declare const PinInput: React.FC<PinInputProps & React.RefAttributes<HTMLInputElement>>;

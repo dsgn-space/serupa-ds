@@ -5,4 +5,4 @@ interface ContainerProps extends React.HTMLAttributes<HTMLElement> {
     padded?: boolean | undefined;
     as?: "article" | "div" | "footer" | "header" | "main" | "section" | undefined;
 }
-declare const Container: React.ForwardRefExoticComponent<ContainerProps & React.RefAttributes<HTMLElement>>;
+declare const Container: React.FC<ContainerProps & React.RefAttributes<HTMLElement>>;
