@@ -40,6 +40,9 @@ export interface HoverCardProps extends Omit<React.HTMLAttributes<HTMLDivElement
   style?: React.CSSProperties | undefined;
 }
 
+// The panel is a <span>, typed as the <div> it lays out as (a popover in the top layer is fixed, so a block): its
+// trigger often sits in a line of text, and a <div> there ends the paragraph when the browser reads the server's HTML.
+const Panel = 'span' as 'div';
 const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onBlur: 1, onFocus: 1, onPointerEnter: 1, onPointerLeave: 1 } as const;
 
 function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes<HTMLDivElement>) {
@@ -140,7 +143,7 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
   return (
     <>
       {trigger}
-      <div {...omit(props, OWN)} ref={mergedRef} id={id} {...{ popover: 'manual' }} hidden={!open || undefined}
+      <Panel {...omit(props, OWN)} ref={mergedRef} id={id} {...{ popover: 'manual' }} hidden={!open || undefined}
         className={cn('dk-hover-card', props.className)} style={props.style} data-component="hover-card" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined}
         onPointerEnter={(e) => { if (props.onPointerEnter) props.onPointerEnter(e); stay(); }}
@@ -148,7 +151,7 @@ function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes
         onFocus={(e) => { if (props.onFocus) props.onFocus(e); stay(); }}
         onBlur={(e) => { if (props.onBlur) props.onBlur(e); blurred(e); }}>
         {open || exit.leaving ? props.children : null}
-      </div>
+      </Panel>
     </>
   );
 }

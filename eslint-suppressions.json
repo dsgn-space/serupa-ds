@@ -327,9 +327,6 @@
     }
   },
   "src/components/Popover/Popover.tsx": {
-    "jsx-a11y-x/no-noninteractive-element-interactions": {
-      "count": 1
-    },
     "react-hooks/refs": {
       "count": 3
     }

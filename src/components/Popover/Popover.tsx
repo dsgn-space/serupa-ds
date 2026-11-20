@@ -48,6 +48,9 @@ export interface PopoverProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   style?: React.CSSProperties | undefined;
 }
 
+// The panel is a <span>, typed as the <div> it lays out as (a popover in the top layer is fixed, so a block): its
+// trigger often sits in a line of text, and a <div> there ends the paragraph when the browser reads the server's HTML.
+const Panel = 'span' as 'div';
 const OWN = { trigger: 1, children: 1, title: 1, 'aria-label': 1, 'aria-labelledby': 1, headingLevel: 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, sheet: 1, initialFocus: 1, className: 1, style: 1, onKeyDown: 1, onBlur: 1 } as const;
 // 'mobile': under the sm breakpoint, as Dialog's fullScreen="mobile" (Dialog.css).
 const NARROW = '(max-width: 639.98px)';
@@ -136,7 +139,7 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
   return (
     <>
       {trigger}
-      <div {...omit(props, OWN)} ref={mergedRef} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
+      <Panel {...omit(props, OWN)} ref={mergedRef} id={id} role="dialog" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
         aria-labelledby={titled ? id + '-title' : props['aria-labelledby']} aria-label={titled ? undefined : props['aria-label']}
         className={cn('dk-popover', sheet && 'dk-popover--sheet', props.className)} style={props.style} data-component="popover" data-state={open ? 'open' : 'closed'} data-instant={exit.instant ? '' : undefined}
         inert={!open || undefined} onKeyDown={onKeyDown} onBlur={onBlur}>
@@ -144,7 +147,7 @@ function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTM
           {titled ? <H id={id + '-title'} className="dk-popover__title">{props.title}</H> : null}
           <div className="dk-popover__body">{content}</div>
         </> : null}
-      </div>
+      </Panel>
     </>
   );
 }

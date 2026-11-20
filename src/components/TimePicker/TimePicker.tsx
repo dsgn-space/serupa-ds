@@ -14,6 +14,7 @@ import { useFieldControl } from '../../internal/field';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
 import * as icons from '../../material/builtin';
+import type { IconData } from '../../material/types';
 import { isComposing } from '../../internal/ime';
 import { en as TimePickerWords } from './labels';
 import { en as DatePickerWords } from '../DatePicker/labels';
@@ -22,6 +23,10 @@ import { useControllable } from '../../internal/controllable';
 import { useOpenState, type OpenChangeDetails } from '../../internal/openChange';
 // This component's words and the ones it shares with DatePicker.
 const words = /* @__PURE__ */ Object.assign({}, TimePickerWords, DatePickerWords);
+
+/* The clock outlined: the filled "schedule" is a solid disc, which reads a weight heavier than DatePicker's calendar
+   beside it ("Date and time"); the outlined one has the same open body as the calendar. */
+const CLOCK: IconData = { name: 'schedule:outlined', d: 'm520-496v-144q0-17-11.5-28.5t-28.5-11.5-28.5 11.5-11.5 28.5v159q0 8 3 15.5t9 13.5l132 132q11 11 28 11t28-11 11-28-11-28zm-40 416q-83 0-156-31.5t-127-85.5-85.5-127-31.5-156 31.5-156 85.5-127 127-85.5 156-31.5 156 31.5 127 85.5 85.5 127 31.5 156-31.5 156-85.5 127-127 85.5-156 31.5zm0-80q-133 0-226.5-93.5t-93.5-226.5 93.5-226.5 226.5-93.5 226.5 93.5 93.5 226.5-93.5 226.5-226.5 93.5zm0 0q133 0 226.5-93.5t93.5-226.5-93.5-226.5-226.5-93.5-226.5 93.5-93.5 226.5 93.5 226.5 226.5 93.5z' };
 
 export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max' | 'step' | 'children'> {
   /** The chosen time as "HH:mm" (24-hour, controlled), or null. Use with onValueChange. */
@@ -178,7 +183,7 @@ function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttribut
         }} onBlur={(e) => { if (!windowBlur(e)) read(); if (onBlur) onBlur(e); }} onKeyDown={keys} />
       <button type="button" tabIndex={-1} className="dk-time-picker__button" aria-label={label} aria-controls={id} aria-expanded={open} disabled={!!disabled || !!readOnly}
         onMouseDown={(e) => e.preventDefault()} onClick={() => { if (open) setOpen(false, 'trigger'); else show(); if (field.current) field.current.focus(); }}>
-        <Icon icon={icons.Schedule} />
+        <Icon icon={CLOCK} />
       </button>
       {/* The format to type, read after the field's name (a placeholder is gone once something is typed). */}
       <span id={id + '-format'} hidden>{sds.labels.formatHint(timePattern(locale, h12))}</span>

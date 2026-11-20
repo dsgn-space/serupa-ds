@@ -176,7 +176,7 @@ export function SignUp({ start = 'form', initial, onSubmit, failed: startFailed,
                 <Button type="submit">Verify email</Button>
               </form>
               <div className="flex flex-wrap gap-3">
-                <Button variant="ghost" loading={resending} onClick={resend}>Send a new code</Button>
+                <Button variant="outline" loading={resending} onClick={resend}>Send a new code</Button>
                 <Button variant="ghost" onClick={() => { setCode(''); setCodeError(''); setSent({ n: 0, ok: true }); go('form'); }}>Change email</Button>
               </div>
               {/* Always there, so a reader is listening before the first ask; empty, it takes no room. */}

@@ -41,6 +41,9 @@ export interface MenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'c
   /** Styles on the menu panel. */
   style?: React.CSSProperties | undefined;
 }
+// The panel is a <span>, typed as the <div> it lays out as (a popover in the top layer is fixed, so a block): its
+// trigger often sits in a line of text, and a <div> there ends the paragraph when the browser reads the server's HTML.
+const Panel = 'span' as 'div';
 const OWN_MENU = { trigger: 1, children: 1, 'aria-label': 1, 'aria-labelledby': 1, placement: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
 interface Ctx { close: (reason: OpenChangeReason, focusTrigger: boolean) => void; open: boolean; typed: React.RefObject<Typed> }
@@ -162,12 +165,12 @@ function MenuRender({ ref, ...props }: MenuProps & React.RefAttributes<HTMLDivEl
   return (
     <MenuContext.Provider value={ctx}>
       {trigger}
-      <div {...omit(props, OWN_MENU)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
+      <Panel {...omit(props, OWN_MENU)} ref={panelRef} id={id} role="menu" tabIndex={-1} {...{ popover: 'manual' }} hidden={!open || undefined}
         aria-label={props['aria-label']} aria-labelledby={props['aria-label'] || props['aria-labelledby'] ? props['aria-labelledby'] : cp.id || (triggerRef.current && triggerRef.current.id) || own + '-button'}
         className={cn('dk-menu', props.className)} style={props.style} data-component="menu" data-state={open ? 'open' : 'closed'} data-instant={exit.instant || swap ? '' : undefined}
         inert={!open || undefined} onKeyDown={onMenuKey}>
         {open || exit.leaving ? props.children : null}
-      </div>
+      </Panel>
     </MenuContext.Provider>
   );
 }

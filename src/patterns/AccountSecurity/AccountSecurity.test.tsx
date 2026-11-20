@@ -81,6 +81,9 @@ describe('Patterns/Account security', () => {
     const codes = screen.getByRole('dialog', { name: 'Save your recovery codes' });
     await expect.element(codes.getByRole('list', { name: 'Recovery codes' })).toHaveTextContent('aaaa-1111bbbb-2222');
     expect(onEnableTwoStep.mock.calls.map((c) => c[0])).toEqual(['654321', '123456']);
+    // Copy and "I’ve saved them" sit in one row at one height.
+    const h = (el: Element) => Math.round(el.getBoundingClientRect().height);
+    expect(h(codes.getByRole('button', { name: /^Copy the codes/ }).element())).toBe(h(codes.getByRole('button', { name: 'I’ve saved them' }).element()));
     await codes.getByRole('button', { name: 'I’ve saved them' }).click();
     await expect.poll(() => toasted('Two-step verification is on')).toBe(true);
     await expect.element(screen.getByRole('button', { name: 'Turn off' })).toBeVisible();

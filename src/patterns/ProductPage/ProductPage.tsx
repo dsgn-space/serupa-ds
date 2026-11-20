@@ -48,6 +48,8 @@ export interface ProductChoice {
   value: string;
   /** "Sand", "M". */
   label: string;
+  /** A CSS color for a color choice: a 16px dot before the name, so people can pick by eye. The name is what's read out. */
+  swatch?: string | undefined;
   /** Out of stock: it stays in the group and says "Sold out", but can't be picked. */
   soldOut?: boolean | undefined;
 }
@@ -124,7 +126,7 @@ const demo: ProductInfo = {
     { src: shirt('#3c5a80', '#d9e0ea', '<path d="M200 108 L200 320" stroke="#00000033" stroke-width="2"/>'), alt: 'The front of the shirt in Navy' },
   ],
   options: [
-    { id: 'color', label: 'Color', choices: [{ value: 'sand', label: 'Sand' }, { value: 'navy', label: 'Navy' }] },
+    { id: 'color', label: 'Color', choices: [{ value: 'sand', label: 'Sand', swatch: '#e9dfc8' }, { value: 'navy', label: 'Navy', swatch: '#3c5a80' }] },
     { id: 'size', label: 'Size', choices: [{ value: 's', label: 'S' }, { value: 'm', label: 'M' }, { value: 'l', label: 'L' }, { value: 'xl', label: 'XL', soldOut: true }] },
   ],
   details: [
@@ -235,7 +237,9 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
             {product.options.map((o) => (
               <Field key={o.id} group label={o.label} required error={missing.includes(o.id) ? `Choose a ${o.label.toLowerCase()}.` : undefined}>
                 <RadioGroup name={`option-${o.id}`} variant="card" orientation="horizontal" value={picked[o.id] ?? null} onValueChange={(v) => pick(o.id, String(v))}>
-                  {o.choices.map((c) => <Radio key={c.value} value={c.value} disabled={!!c.soldOut} description={c.soldOut ? 'Sold out' : undefined}>{c.label}</Radio>)}
+                  {o.choices.map((c) => <Radio key={c.value} value={c.value} disabled={!!c.soldOut} description={c.soldOut ? 'Sold out' : undefined}>
+                    {c.swatch ? <span aria-hidden="true" className="inline-block size-4 me-2 align-text-bottom rounded-full border border-border-strong" style={{ backgroundColor: c.swatch }} /> : null}{c.label}
+                  </Radio>)}
                 </RadioGroup>
               </Field>
             ))}

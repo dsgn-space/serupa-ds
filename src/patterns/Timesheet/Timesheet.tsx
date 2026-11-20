@@ -153,7 +153,7 @@ export function Timesheet({ weekStart = '2026-02-09', projects = demoProjects, d
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#timesheets">Timesheets</Link>
+        <Link underline="hover" href="#timesheets">Timesheets</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-6xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Timesheets', href: '#timesheets' }, { label: range }]} title={`Week of ${range}`}
