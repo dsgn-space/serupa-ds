@@ -10,4 +10,4 @@ interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
     moreLabel?: string | undefined;
     children?: React.ReactNode | undefined;
 }
-declare const Toolbar: React.ForwardRefExoticComponent<ToolbarProps & React.RefAttributes<HTMLDivElement>>;
+declare const Toolbar: React.FC<ToolbarProps & React.RefAttributes<HTMLDivElement>>;

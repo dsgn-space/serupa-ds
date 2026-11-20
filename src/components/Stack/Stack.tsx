@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
 import { atWidths, space, WIDTHS, type ByWidth, type Space } from '../../internal/space';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   /** 'column' (default): items one under another. 'row': side by side. Or one per screen width, such as
@@ -24,10 +24,7 @@ const TAGS = ['div', 'section', 'ul', 'ol', 'nav', 'header', 'footer', 'form', '
 const ALIGNS = ['stretch', 'start', 'center', 'end', 'baseline'] as const;
 const GAP = 'var(--stack-gap, var(--spacing-4))';
 
-/* Stack: lays its children out in a column (or a row) with even space between them, from the spacing scale.
-   className, style and every other prop go to the element. */
-/** Lays children out in a column or a row, with even space from the spacing scale between them. */
-export const Stack = /* @__PURE__ */ component<HTMLElement, StackProps>('Stack', function Stack(props, ref) {
+function StackRender({ ref, ...props }: StackProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, { direction: 1, gap: 1, align: 1, justify: 1, wrap: 1, as: 1, className: 1, style: 1 });
   const dirs = atWidths(props.direction), aligns = atWidths(props.align), gaps = atWidths(props.gap);
   const dirAt = (d: unknown) => (d === 'row' ? 'row' : 'column');
@@ -63,4 +60,9 @@ export const Stack = /* @__PURE__ */ component<HTMLElement, StackProps>('Stack',
     className: cn('dk-stack', row && 'dk-stack--row', 'dk-stack--align-' + align, justify !== 'start' && 'dk-stack--justify-' + justify, props.wrap && 'dk-stack--wrap', widths.join(' '), props.className),
     style: Object.keys(vars).length ? Object.assign(vars, props.style) : props.style,
   }));
-});
+}
+
+/* Stack: lays its children out in a column (or a row) with even space between them, from the spacing scale.
+   className, style and every other prop go to the element. */
+/** Lays children out in a column or a row, with even space from the spacing scale between them. */
+export const Stack = /* @__PURE__ */ named('Stack', StackRender);

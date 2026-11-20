@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { fold } from '../../internal/fold';
 import { useLocale, useSettings } from '../../internal/provider';
 import { Combobox, type ComboboxSingleProps } from '../Combobox/Combobox';
@@ -91,13 +91,7 @@ export function timeZoneInfo(zone: string, locale: string, at: Date = new Date()
   return { zone, city, offset, offsetText, name: /^(GMT|UTC)([+\-−]|$)/.test(name) ? '' : name };
 }
 
-/* TimeZonePicker: a Combobox of time zones. Each option is its city ("Jakarta"), with its offset now and its name in
-   the reader's language under it ("UTC+07:00 · Western Indonesia Time"); they run from the furthest behind UTC to
-   the furthest ahead, and the reader's own zone comes first, marked "Your time zone". Typing finds a city, a zone
-   name, an IANA name or an offset ("+7", "07:00", "utc-5"). The value is the IANA name. */
-/** A searchable list of time zones, by city, with each one's offset now and its name in the reader's language.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZonePickerProps>('TimeZonePicker', function TimeZonePicker(props, ref) {
+function TimeZonePickerRender({ ref, ...props }: TimeZonePickerProps & React.RefAttributes<HTMLInputElement>) {
   // Everything else is Combobox's, which keeps its own props off the DOM.
   const { zones, at, locale: ownLocale, className, value, defaultValue, ...rest } = props;
   // A value under an old or other spelling of a listed zone matches it ("Europe/Kiev", "Asia/Calcutta").
@@ -146,4 +140,12 @@ export const TimeZonePicker = /* @__PURE__ */ component<HTMLInputElement, TimeZo
     onFocus={(e) => { wake(); if (rest.onFocus) rest.onFocus(e); }} onPointerEnter={(e) => { wake(); if (rest.onPointerEnter) rest.onPointerEnter(e); }}
     onOpenChange={(open, details) => { if (open) wake(); if (rest.onOpenChange) rest.onOpenChange(open, details); }}
     {...(value !== undefined ? { value: canon(value) } : null)} {...(defaultValue !== undefined ? { defaultValue: canon(defaultValue) } : null)} />;
-});
+}
+
+/* TimeZonePicker: a Combobox of time zones. Each option is its city ("Jakarta"), with its offset now and its name in
+   the reader's language under it ("UTC+07:00 · Western Indonesia Time"); they run from the furthest behind UTC to
+   the furthest ahead, and the reader's own zone comes first, marked "Your time zone". Typing finds a city, a zone
+   name, an IANA name or an offset ("+7", "07:00", "utc-5"). The value is the IANA name. */
+/** A searchable list of time zones, by city, with each one's offset now and its name in the reader's language.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const TimeZonePicker = /* @__PURE__ */ named('TimeZonePicker', TimeZonePickerRender);

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, oneOf, omit, SIZES } from '../../internal/cn';
 import { announce, ensureAnnouncer } from '../../internal/announce';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useShowAfter } from '../../internal/showAfter';
 import { RingArt } from '../../internal/loaderRing';
@@ -61,8 +61,7 @@ const PIXEL_STEPS: Record<string, number[]> = {
 };
 const OWN = { variant: 1, size: 1, tone: 1, label: 1, delay: 1, loading: 1, shape: 1, lines: 1, pattern: 1, glow: 1, className: 1 } as const;
 
-/** Shows that something is loading when you can't say how far along it is. Mark the area that's loading with aria-busy while it shows. */
-export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>('Loader', function Loader(props, ref) {
+function LoaderRender({ ref, ...props }: LoaderProps & React.RefAttributes<HTMLSpanElement>) {
   const sds = useSettings();
   const rest = omit(props, OWN);
   const variant = oneOf(VARIANTS, props.variant, 'ring');
@@ -140,4 +139,7 @@ export const Loader = /* @__PURE__ */ component<HTMLSpanElement, LoaderProps>('L
       {text}
     </span>
   );
-});
+}
+
+/** Shows that something is loading when you can't say how far along it is. Mark the area that's loading with aria-busy while it shows. */
+export const Loader = /* @__PURE__ */ named('Loader', LoaderRender);

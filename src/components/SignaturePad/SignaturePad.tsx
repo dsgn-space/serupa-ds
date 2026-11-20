@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, isInvalid, omit, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
@@ -94,16 +94,7 @@ export function signatureToPng(svg: string, scale = 2): Promise<Blob | null> {
   });
 }
 
-/* SignaturePad: a signature, drawn or typed. The two methods are a SegmentedControl (Draw, Type) at the top. Draw is
-   a box people draw in with a mouse, pen or finger (pointer events; the page doesn't scroll under a finger there),
-   with a line to sign on, and Undo (the last stroke) and Clear under it. Type is a text field for the full name,
-   shown in a handwriting face: the alternative that keyboard, switch and speech users need (WCAG 2.5.7 dragging
-   movements, 2.1.1 keyboard), and that anyone may prefer. The drawing box isn't focusable: nothing in it works by
-   keyboard, so the group's description points to Type. In a Field, the label names the group. The value is
-   { method, svg, name }; signatureToPng turns the SVG into a PNG. */
-/** A signature drawn with a pointer or typed as a name: the value is its SVG and the typed name.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignaturePadProps>('SignaturePad', function SignaturePad(given, ref) {
+function SignaturePadRender({ ref, ...given }: SignaturePadProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);
   const nameRef = useNameCheck('SignaturePad', NAME_HOW.group);
   const fieldLabel = useFieldLabel(props.id);
@@ -262,4 +253,15 @@ export const SignaturePad = /* @__PURE__ */ component<HTMLDivElement, SignatureP
         disabled={disabled || readOnly} form={props.form} onInvalid={onInvalid} /> : null}
     </div>
   );
-});
+}
+
+/* SignaturePad: a signature, drawn or typed. The two methods are a SegmentedControl (Draw, Type) at the top. Draw is
+   a box people draw in with a mouse, pen or finger (pointer events; the page doesn't scroll under a finger there),
+   with a line to sign on, and Undo (the last stroke) and Clear under it. Type is a text field for the full name,
+   shown in a handwriting face: the alternative that keyboard, switch and speech users need (WCAG 2.5.7 dragging
+   movements, 2.1.1 keyboard), and that anyone may prefer. The drawing box isn't focusable: nothing in it works by
+   keyboard, so the group's description points to Type. In a Field, the label names the group. The value is
+   { method, svg, name }; signatureToPng turns the SVG into a PNG. */
+/** A signature drawn with a pointer or typed as a name: the value is its SVG and the typed name.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const SignaturePad = /* @__PURE__ */ named('SignaturePad', SignaturePadRender);

@@ -30,4 +30,4 @@ interface ImageSource {
     width?: number | undefined;
     height?: number | undefined;
 }
-declare const Image: React.ForwardRefExoticComponent<ImageProps & React.RefAttributes<HTMLImageElement>>;
+declare const Image: React.FC<ImageProps & React.RefAttributes<HTMLImageElement>>;

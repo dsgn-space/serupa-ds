@@ -30,4 +30,4 @@ interface CommandPaletteProps extends Omit<DialogProps, "alert" | "children" | "
     loading?: boolean | undefined;
     loadingText?: string | undefined;
 }
-declare const CommandPalette: React.ForwardRefExoticComponent<CommandPaletteProps & React.RefAttributes<HTMLDialogElement>>;
+declare const CommandPalette: React.FC<CommandPaletteProps & React.RefAttributes<HTMLDialogElement>>;

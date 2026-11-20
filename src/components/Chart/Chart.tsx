@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, oneOf, omit, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
@@ -186,9 +186,7 @@ interface Point { s: number; i: number; v: number }
 type Spot = { s: number; i: number };
 type Focused = Spot & { ring: boolean };
 
-/** A line, bar or area chart of a few series over the same categories, or a donut of one series' shares, drawn as SVG, with a summary, keyboard focus on each point and the same numbers as a table.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart', function Chart(props, ref) {
+function ChartRender({ ref, ...props }: ChartProps & React.RefAttributes<HTMLElement>) {
   const nameRef = useNameCheck<HTMLElement>('Chart', NAME_HOW.title, ref);
   const rest = omit(props, OWN);
   const locale = useLocale();
@@ -554,4 +552,8 @@ export const Chart = /* @__PURE__ */ component<HTMLElement, ChartProps>('Chart',
       )}
     </figure>
   );
-});
+}
+
+/** A line, bar or area chart of a few series over the same categories, or a donut of one series' shares, drawn as SVG, with a summary, keyboard focus on each point and the same numbers as a table.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Chart = /* @__PURE__ */ named('Chart', ChartRender);

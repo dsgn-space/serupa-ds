@@ -18,4 +18,4 @@ interface RatingProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaul
     invalid?: boolean | undefined;
     size?: "lg" | "md" | "sm" | undefined;
 }
-declare const Rating: React.ForwardRefExoticComponent<RatingProps & React.RefAttributes<HTMLDivElement>>;
+declare const Rating: React.FC<RatingProps & React.RefAttributes<HTMLDivElement>>;

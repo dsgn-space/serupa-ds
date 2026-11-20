@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
 import { atWidths, space, WIDTHS, type ByWidth, type Responsive, type Space } from '../../internal/space';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export interface GridProps extends React.HTMLAttributes<HTMLElement> {
   /** A number of equal columns (1 to 12), or 'auto' (default): as many columns as fit, each at least minColumnWidth.
@@ -25,11 +25,7 @@ const TAGS = ['div', 'section', 'ul', 'ol'] as const;
 const GAP = 'var(--grid-gap, var(--spacing-4))';
 const count = (c: unknown) => { const n = typeof c === 'number' ? Math.round(c) : 0; return n >= 1 && n <= 12 ? n : 0; };
 
-/* Grid: equal columns (columns={3}), as many as fit (columns="auto", each at least minColumnWidth), or up to a
-   number (columns={3} with minColumnWidth: three, fewer as they'd get narrower), with gap from the spacing scale. A column never gets wider than the grid. className, style and every other prop go
-   to the element. */
-/** Equal columns, or as many as fit, with even space from the spacing scale between cells. */
-export const Grid = /* @__PURE__ */ component<HTMLElement, GridProps>('Grid', function Grid(props, ref) {
+function GridRender({ ref, ...props }: GridProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, { columns: 1, minColumnWidth: 1, fill: 1, gap: 1, as: 1, className: 1, style: 1 });
   const map = atWidths<number>(props.columns as Responsive<number> | undefined);
   const cols = map ? count(map.base) || 1 : count(props.columns);
@@ -58,4 +54,10 @@ export const Grid = /* @__PURE__ */ component<HTMLElement, GridProps>('Grid', fu
     ref: ref, 'data-component': 'grid', role: rest.role ?? (tag === 'ul' || tag === 'ol' ? 'list' : undefined), className: cn('dk-grid', 'dk-grid--' + kind, props.fill && kind !== 'fixed' && 'dk-grid--fill', widths.join(' '), props.className),
     style: Object.assign(vars, props.style),
   }));
-});
+}
+
+/* Grid: equal columns (columns={3}), as many as fit (columns="auto", each at least minColumnWidth), or up to a
+   number (columns={3} with minColumnWidth: three, fewer as they'd get narrower), with gap from the spacing scale. A column never gets wider than the grid. className, style and every other prop go
+   to the element. */
+/** Equal columns, or as many as fit, with even space from the spacing scale between cells. */
+export const Grid = /* @__PURE__ */ named('Grid', GridRender);

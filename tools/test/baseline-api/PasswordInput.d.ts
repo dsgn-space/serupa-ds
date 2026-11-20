@@ -7,10 +7,7 @@ interface PasswordInputProps extends Omit<InputProps, "actions" | "prefix" | "ri
     revealed?: boolean | undefined;
     defaultRevealed?: boolean | undefined;
     onRevealedChange?: ((revealed: boolean) => void) | undefined;
-    visible?: boolean | undefined;
-    defaultVisible?: boolean | undefined;
-    onVisibleChange?: ((visible: boolean) => void) | undefined;
     toggleLabel?: string | undefined;
     capsLockHint?: boolean | undefined;
 }
-declare const PasswordInput: React.ForwardRefExoticComponent<PasswordInputProps & React.RefAttributes<HTMLInputElement>>;
+declare const PasswordInput: React.FC<PasswordInputProps & React.RefAttributes<HTMLInputElement>>;

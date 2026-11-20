@@ -17,4 +17,4 @@ interface TimeZoneInfo {
 }
 declare function allTimeZones(): string[];
 declare function timeZoneInfo(zone: string, locale: string, at?: Date): null | TimeZoneInfo;
-declare const TimeZonePicker: React.ForwardRefExoticComponent<TimeZonePickerProps & React.RefAttributes<HTMLInputElement>>;
+declare const TimeZonePicker: React.FC<TimeZonePickerProps & React.RefAttributes<HTMLInputElement>>;

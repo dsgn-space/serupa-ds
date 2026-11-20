@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { canonicalLocale } from '../../internal/locale';
 import { useLocale, useOwnLang } from '../../internal/provider';
@@ -86,11 +86,7 @@ function wordsOf(seconds: number, locale: string | undefined, together: boolean)
   return said.length ? new Intl.ListFormat(l, { type: 'unit', style: 'long' }).format(said) : unitOf(0, 'second');
 }
 
-/* Countdown: a <time role="timer"> that shows the time left until `to`, as a clock or in words, named by its label.
-   It isn't a live region (a timer that speaks every second drowns out everything else): it says the time aloud at a
-   few steps (announceAt), and when it ends. */
-/** The time left until a moment, as a clock or in words; said aloud at a few steps, not every second. */
-export const Countdown = /* @__PURE__ */ component<HTMLTimeElement, CountdownProps>('Countdown', function Countdown(props, ref) {
+function CountdownRender({ ref, ...props }: CountdownProps & React.RefAttributes<HTMLTimeElement>) {
   const rest = omit(props, { to: 1, seconds: 1, label: 1, format: 1, announceAt: 1, endText: 1, onEnd: 1, locale: 1, className: 1 });
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   // With seconds, the app keeps the clock: nothing here ticks.
@@ -137,4 +133,10 @@ export const Countdown = /* @__PURE__ */ component<HTMLTimeElement, CountdownPro
   return <time lang={lang} {...rest} ref={ref} role="timer" aria-label={valid ? `${label}: ${ended && endText ? endText : words}` : label}
     dateTime={valid ? `PT${left}S` : undefined} className={cn('dk-countdown', wraps && 'dk-countdown--wraps', ended && 'dk-countdown--ended', props.className)}
     data-component="countdown" suppressHydrationWarning>{text}</time>;
-});
+}
+
+/* Countdown: a <time role="timer"> that shows the time left until `to`, as a clock or in words, named by its label.
+   It isn't a live region (a timer that speaks every second drowns out everything else): it says the time aloud at a
+   few steps (announceAt), and when it ends. */
+/** The time left until a moment, as a clock or in words; said aloud at a few steps, not every second. */
+export const Countdown = /* @__PURE__ */ named('Countdown', CountdownRender);

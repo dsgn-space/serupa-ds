@@ -50,4 +50,4 @@ interface FileUploadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "de
     onRetry?: ((file: File) => void) | undefined;
     thumbnails?: boolean | undefined;
 }
-declare const FileUpload: React.ForwardRefExoticComponent<FileUploadProps & React.RefAttributes<HTMLDivElement>>;
+declare const FileUpload: React.FC<FileUploadProps & React.RefAttributes<HTMLDivElement>>;

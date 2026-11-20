@@ -7,7 +7,7 @@ import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { Icon } from '../Icon/Icon';
 import { Loader } from '../Loader/Loader';
 import type { InputProps } from '../Input/Input';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { isComposing } from '../../internal/ime';
 import { pressFocuses } from '../../internal/affix';
@@ -29,13 +29,7 @@ export interface SearchInputProps extends Omit<InputProps, 'type' | 'actions' | 
   loadingLabel?: string | undefined;
 }
 
-/* SearchInput: an Input for searching: a search icon at the start, type="search", and a × at the end once
-   something is typed, which clears the field and puts focus back in it. Escape clears it too, and Enter calls
-   onSearch. Clearing fires the input's own onChange with an empty value, so controlled and uncontrolled fields
-   both work. It uses Input's box and tokens: className and style go to the box; ref and every other prop to the
-   <input>. */
-/** A search field: a search icon, a clear button once something is typed, Escape to clear and Enter to search. */
-export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInputProps>('SearchInput', function SearchInput(props, ref) {
+function SearchInputRender({ ref, ...props }: SearchInputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('SearchInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
@@ -84,4 +78,12 @@ export const SearchInput = /* @__PURE__ */ component<HTMLInputElement, SearchInp
       ) : null}
     </span>
   );
-});
+}
+
+/* SearchInput: an Input for searching: a search icon at the start, type="search", and a × at the end once
+   something is typed, which clears the field and puts focus back in it. Escape clears it too, and Enter calls
+   onSearch. Clearing fires the input's own onChange with an empty value, so controlled and uncontrolled fields
+   both work. It uses Input's box and tokens: className and style go to the box; ref and every other prop to the
+   <input>. */
+/** A search field: a search icon, a clear button once something is typed, Escape to clear and Enter to search. */
+export const SearchInput = /* @__PURE__ */ named('SearchInput', SearchInputRender);

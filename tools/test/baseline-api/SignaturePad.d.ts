@@ -33,4 +33,4 @@ interface SignaturePadProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
     required?: boolean | undefined;
 }
 declare function signatureToPng(svg: string, scale?: number): Promise<Blob | null>;
-declare const SignaturePad: React.ForwardRefExoticComponent<SignaturePadProps & React.RefAttributes<HTMLDivElement>>;
+declare const SignaturePad: React.FC<SignaturePadProps & React.RefAttributes<HTMLDivElement>>;

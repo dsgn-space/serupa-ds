@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn, domId, oneOf, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { warnOnce } from '../../internal/warn';
 import { hideUntilFound, revealInvalid } from '../../internal/untilFound';
 import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
@@ -56,12 +56,7 @@ function firstTab(children: React.ReactNode): string | null {
   return found;
 }
 
-/* Tabs: switches between panels in one place, following the WAI-ARIA tabs pattern. <Tabs> holds the state
-   (value or defaultValue, onValueChange), <TabList> the row of <Tab value>, and each <TabPanel value> the content.
-   Arrow keys move between tabs (following the text direction; ↑ ↓ with orientation "vertical"), Home and End jump
-   to the ends; with activation "auto" moving also selects. Only the selected tab is in the Tab order, and the selected panel follows it. */
-/** Switches between panels in one place: Tabs > TabList > Tab, and a TabPanel for each tab. */
-export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs', function Tabs(props, ref) {
+function TabsRender({ ref, ...props }: TabsProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, variant: 1, size: 1, activation: 1, orientation: 1, className: 1 });
   const vertical = props.orientation === 'vertical';
   const base = domId('dk-tabs', React.useId());
@@ -169,7 +164,14 @@ export const Tabs = /* @__PURE__ */ component<HTMLDivElement, TabsProps>('Tabs',
         className={cn('dk-tabs', 'dk-tabs--' + variant, size !== 'md' && 'dk-tabs--' + size, vertical && 'dk-tabs--vertical', props.className)} data-component="tabs" data-variant={variant} data-orientation={vertical ? 'vertical' : 'horizontal'} />
     </TabsContext.Provider>
   );
-});
+}
+
+/* Tabs: switches between panels in one place, following the WAI-ARIA tabs pattern. <Tabs> holds the state
+   (value or defaultValue, onValueChange), <TabList> the row of <Tab value>, and each <TabPanel value> the content.
+   Arrow keys move between tabs (following the text direction; ↑ ↓ with orientation "vertical"), Home and End jump
+   to the ends; with activation "auto" moving also selects. Only the selected tab is in the Tab order, and the selected panel follows it. */
+/** Switches between panels in one place: Tabs > TabList > Tab, and a TabPanel for each tab. */
+export const Tabs = /* @__PURE__ */ named('Tabs', TabsRender);
 
 /* TabList: the row (or column) of tabs. When the tabs don't fit, it scrolls with no scrollbar; the edge with more
    tabs past it fades out, so it's plain there's more, and the selected tab is scrolled into view whenever it changes. */
@@ -181,8 +183,7 @@ export type TabListProps = React.HTMLAttributes<HTMLDivElement> & ({
   addLabel: string;
 } | { onAdd?: undefined; addLabel?: undefined });
 
-/** The row of tabs. Give it an aria-label when the page doesn't already say what the tabs are for. */
-export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>('TabList', function TabList(props, ref) {
+function TabListRender({ ref, ...props }: TabListProps & React.RefAttributes<HTMLDivElement>) {
   const ctx = useTabs('TabList');
   const { onAdd, addLabel, ...own } = props;
   const [list, fade, place] = useTabRow<HTMLDivElement>('[role="tab"]', '[role="tab"][aria-selected="true"]', ctx.vertical, ctx.value);
@@ -225,7 +226,10 @@ export const TabList = /* @__PURE__ */ component<HTMLDivElement, TabListProps>('
   // The + sits beside the tab list, not in it: a tablist holds only tabs. It's drawn as a tab, with its words shown, so
   // it needs no tooltip to say what it adds.
   return onAdd ? <div className="dk-tabs__bar">{tablist}<button type="button" className="dk-tabs__tab dk-tabs__add" onClick={onAdd}><span className="dk-tabs__icon" aria-hidden="true"><Icon icon={icons.Add} /></span><span className="dk-tabs__label">{addLabel}</span></button></div> : tablist;
-});
+}
+
+/** The row of tabs. Give it an aria-label when the page doesn't already say what the tabs are for. */
+export const TabList = /* @__PURE__ */ named('TabList', TabListRender);
 
 export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value'> {
   /** Ties the tab to the TabPanel with the same value. */
@@ -237,8 +241,7 @@ export interface TabProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElem
   onClose?: (() => void) | undefined;
 }
 
-/** One tab: a button that selects its panel. */
-export const Tab = /* @__PURE__ */ component<HTMLButtonElement, TabProps>('Tab', function Tab(props, ref) {
+function TabRender({ ref, ...props }: TabProps & React.RefAttributes<HTMLButtonElement>) {
   const ctx = useTabs('Tab');
   const rest = omit(props, { value: 1, icon: 1, className: 1, children: 1, onClose: 1 });
   const L = useSettings(words).labels;
@@ -276,7 +279,10 @@ export const Tab = /* @__PURE__ */ component<HTMLButtonElement, TabProps>('Tab',
       {closes ? <span className="dk-tabs__close-hint" id={hintId} hidden>{L.tabCloseHint}</span> : null}
     </button>
   );
-});
+}
+
+/** One tab: a button that selects its panel. */
+export const Tab = /* @__PURE__ */ named('Tab', TabRender);
 
 export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The value of the Tab that shows this panel. */
@@ -295,8 +301,7 @@ function startsFocusable(el: HTMLElement): boolean {
   return !before.toString().trim();
 }
 
-/** The content for one tab, shown while its tab is selected. */
-export const TabPanel = /* @__PURE__ */ component<HTMLDivElement, TabPanelProps>('TabPanel', function TabPanel(props, ref) {
+function TabPanelRender({ ref, ...props }: TabPanelProps & React.RefAttributes<HTMLDivElement>) {
   const ctx = useTabs('TabPanel');
   const rest = omit(props, { value: 1, keepMounted: 1, className: 1, children: 1 });
   const selected = ctx.value === props.value;
@@ -342,4 +347,7 @@ export const TabPanel = /* @__PURE__ */ component<HTMLDivElement, TabPanelProps>
       {selected || keep ? props.children : null}
     </div>
   );
-});
+}
+
+/** The content for one tab, shown while its tab is selected. */
+export const TabPanel = /* @__PURE__ */ named('TabPanel', TabPanelRender);

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFormReset } from '../../internal/useFormReset';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { warnOnce } from '../../internal/warn';
@@ -73,8 +73,7 @@ const RadioContext = /* @__PURE__ */ React.createContext<RadioContextValue | nul
    with Field group (a fieldset and legend), aria-label or aria-labelledby. */
 const GROUP_OWN = { name: 1, value: 1, defaultValue: 1, onValueChange: 1, orientation: 1, size: 1, variant: 1, invalid: 1, disabled: 1, required: 1, readOnly: 1, children: 1, className: 1, autoFocus: 1 } as const;
 
-/** One choice from a set of Radios: a <div role="radiogroup"> that names them, holds the value and passes size, invalid, disabled and required down. Label it with Field group, aria-label or aria-labelledby. */
-export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupProps>('RadioGroup', function RadioGroup(props: RadioGroupProps, ref) {
+function RadioGroupRender({ ref, ...props }: RadioGroupProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('RadioGroup', NAME_HOW.group);   // warns when it has no accessible name
   const rest = omit(props, GROUP_OWN);
   const autoName = domId('dk-rg', React.useId());
@@ -122,7 +121,10 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
       <RadioContext.Provider value={ctx}>{props.children}</RadioContext.Provider>
     </div>
   );
-}) as (<V extends string | number = string | number>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
+}
+
+/** One choice from a set of Radios: a <div role="radiogroup"> that names them, holds the value and passes size, invalid, disabled and required down. Label it with Field group, aria-label or aria-labelledby. */
+export const RadioGroup = /* @__PURE__ */ named('RadioGroup', RadioGroupRender) as (<V extends string | number = string | number>(props: RadioGroupProps<V> & React.RefAttributes<HTMLDivElement>) => React.ReactElement | null) & { displayName?: string };
 
 /* Radio: a native radio and its label, like Checkbox. In a RadioGroup it takes the group's name, checked state,
    size, invalid, disabled and required; on its own, pass name and checked yourself. size "sm", "md" (default) or
@@ -130,8 +132,7 @@ export const RadioGroup = /* @__PURE__ */ component<HTMLDivElement, RadioGroupPr
    (value, checked, onChange, disabled, aria-*…) and ref to the <input type="radio">. */
 const OWN = { size: 1, variant: 1, invalid: 1, description: 1, children: 1, className: 1, style: 1, type: 1 } as const;
 
-/** A native radio with its label (ref, value and every input attribute go to the <input>); className and style go to the <label> around it. In a RadioGroup, the group sets name and checked. */
-export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>('Radio', function Radio(props, ref) {
+function RadioRender({ ref, ...props }: RadioProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('Radio', NAME_HOW.label, ref);   // warns when it has no accessible name
   if (process.env.NODE_ENV !== 'production' && (props as { label?: unknown }).label != null) warnOnce('label-prop', "Radio: label isn't one of its props, so it lands on the <input> as an attribute and names nothing. Put the text in children.", 'label-prop:Radio');
   const ctx = React.useContext(RadioContext);
@@ -179,4 +180,7 @@ export const Radio = /* @__PURE__ */ component<HTMLInputElement, RadioProps>('Ra
       </span> : null}
     </label>
   );
-});
+}
+
+/** A native radio with its label (ref, value and every input attribute go to the <input>); className and style go to the <label> around it. In a RadioGroup, the group sets name and checked. */
+export const Radio = /* @__PURE__ */ named('Radio', RadioRender);

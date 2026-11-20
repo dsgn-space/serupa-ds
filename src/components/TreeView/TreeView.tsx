@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import { lastInputKeyboard, listenForInput } from '../../internal/lastInput';
 import { typeahead, typing, type Typed } from '../../internal/typeahead';
@@ -88,16 +88,7 @@ function leavesOf(items: TreeViewItem[]): Leaves {
   return { all, usable, order };
 }
 
-/* TreeView: nested items that open and close, such as folders and files or a table of contents. Follows the
-   WAI-ARIA tree pattern: a role="tree" list of role="treeitem"s with one Tab stop (the item used last, or else
-   the first picked or first item). Up and Down move through the items in view, Right opens an item and then
-   goes into it, Left closes it and then goes out to its parent (both mirrored right to left), Home and End go
-   to the ends, * opens every sibling, and typing goes to the next item starting with what was typed. Enter,
-   Space or a click picks; with selectionMode="multiple" they toggle, Shift with the arrows picks as it moves,
-   Shift+Space or Shift+click picks a range, and Ctrl+A picks every item in view. Closed items' children aren't
-   in the page. */
-/** Nested items that open and close, such as folders and files, with one item or many picked. */
-export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProps>('TreeView', function TreeView(props, ref) {
+function TreeViewRender({ ref, ...props }: TreeViewProps & React.RefAttributes<HTMLUListElement>) {
   const nameRef = useNameCheck('TreeView', NAME_HOW.label);   // warns when it has no accessible name
   const rest = omit(props, { cascade: 1, cascadeValue: 1, items: 1, selectionMode: 1, value: 1, defaultValue: 1, onValueChange: 1, expanded: 1, defaultExpanded: 1, onExpandedChange: 1, className: 1, onKeyDown: 1 });
   const mode = props.selectionMode || 'single';
@@ -315,7 +306,18 @@ export const TreeView = /* @__PURE__ */ component<HTMLUListElement, TreeViewProp
       <TreeContext.Provider value={ctx}><Rows list={props.items} level={1} /></TreeContext.Provider>
     </ul>
   );
-});
+}
+
+/* TreeView: nested items that open and close, such as folders and files or a table of contents. Follows the
+   WAI-ARIA tree pattern: a role="tree" list of role="treeitem"s with one Tab stop (the item used last, or else
+   the first picked or first item). Up and Down move through the items in view, Right opens an item and then
+   goes into it, Left closes it and then goes out to its parent (both mirrored right to left), Home and End go
+   to the ends, * opens every sibling, and typing goes to the next item starting with what was typed. Enter,
+   Space or a click picks; with selectionMode="multiple" they toggle, Shift with the arrows picks as it moves,
+   Shift+Space or Shift+click picks a range, and Ctrl+A picks every item in view. Closed items' children aren't
+   in the page. */
+/** Nested items that open and close, such as folders and files, with one item or many picked. */
+export const TreeView = /* @__PURE__ */ named('TreeView', TreeViewRender);
 
 const Rows = /* @__PURE__ */ React.memo(function Rows(props: { list: TreeViewItem[]; level: number }) {
   return <>{props.list.map((item, n) => <TreeRow key={item.id} item={item} level={props.level} pos={n + 1} size={props.list.length} />)}</>;

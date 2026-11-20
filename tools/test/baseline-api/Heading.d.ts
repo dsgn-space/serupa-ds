@@ -5,4 +5,4 @@ interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
     level?: HeadingLevel | undefined;
     size?: HeadingSize | undefined;
 }
-declare const Heading: React.ForwardRefExoticComponent<HeadingProps & React.RefAttributes<HTMLHeadingElement>>;
+declare const Heading: React.FC<HeadingProps & React.RefAttributes<HTMLHeadingElement>>;

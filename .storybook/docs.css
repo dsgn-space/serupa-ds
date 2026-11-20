@@ -15,13 +15,14 @@ html, body { background-color: var(--surface-page); }
 [data-theme$="-dark"] .sbdocs-content a:not(.docs-story *, .sb-unstyled *) { color: var(--primary); }
 [data-theme$="-dark"] .sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) :is(tr, td, th) { background-color: var(--surface); border-color: var(--border); }
 [data-theme$="-dark"] .sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) tr:nth-of-type(2n) :is(td, th) { background-color: var(--surface-muted); }
-[data-theme$="-dark"] .sbdocs-content :not(pre) > code:not(.docs-story *) { background-color: var(--surface-muted); border-color: var(--border); color: var(--text); }
-[data-theme$="-dark"] .sbdocs-content pre, [data-theme$="-dark"] .docblock-source { background-color: var(--surface-muted); border-color: var(--border); }
-/* Code keeps its light-theme syntax colors (dark blue, maroon) on the dark background, so recolor them: names
-   and keywords in primary, the rest in text, each 4.5:1 on surface-muted. */
-[data-theme$="-dark"] :is(.sbdocs-content pre, .docblock-source) :is(code, span) { color: var(--text) !important; }
-[data-theme$="-dark"] :is(.sbdocs-content pre, .docblock-source) .token:is(.keyword, .tag, .attr-name, .class-name, .boolean, .number, .builtin) { color: var(--primary) !important; }
-[data-theme$="-dark"] :is(.sbdocs-content pre, .docblock-source) .token:is(.comment, .prolog, .doctype) { color: var(--text-muted) !important; }
+/* Code, in every mode, as the site's CodeBlock draws it rather than Storybook's own (EV-DOCS): a surface-muted block
+   with a border, names and keywords in primary, comments in text-muted-shaded and the rest in text, each 4.5:1 on
+   surface-muted in light and dark (Storybook's syntax colors, dark blue and maroon, vanish on a dark page). */
+.sbdocs-content :not(pre) > code:not(.docs-story *) { background-color: var(--surface-muted); border-color: var(--border); color: var(--text); }
+.sbdocs-content pre:not(.docs-story *), .docblock-source { background-color: var(--surface-muted) !important; border-color: var(--border) !important; }
+:is(.sbdocs-content pre:not(.docs-story *), .docblock-source) :is(code, span) { color: var(--text) !important; }
+:is(.sbdocs-content pre:not(.docs-story *), .docblock-source) .token:is(.keyword, .tag, .attr-name, .class-name, .boolean, .number, .builtin) { color: var(--primary) !important; }
+:is(.sbdocs-content pre:not(.docs-story *), .docblock-source) .token:is(.comment, .prolog, .doctype) { color: var(--text-muted-shaded, var(--text-muted)) !important; }
 [data-theme$="-dark"] .docblock-argstable :is(tbody, tr, td, th) { background-color: var(--surface) !important; color: var(--text) !important; border-color: var(--border) !important; }
 [data-theme$="-dark"] .docblock-argstable tbody { box-shadow: 0 0 0 1px var(--border) !important; }
 [data-theme$="-dark"] .docblock-argstable :is(input, textarea, select, button) { background-color: var(--field); color: var(--text); border-color: var(--field-border); }

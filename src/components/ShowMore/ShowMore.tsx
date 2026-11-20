@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { useSettings } from '../../internal/provider';
 import { Button } from '../Button/Button';
@@ -28,9 +28,7 @@ export interface ShowMoreProps extends React.HTMLAttributes<HTMLDivElement> {
    holds under a strict Content Security Policy, before any script runs. */
 const OWN = { lines: 1, expanded: 1, defaultExpanded: 1, onExpandedChange: 1, className: 1, children: 1 } as const;
 
-/** Long text cut after a few lines, with a Show more button that shows the rest.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>('ShowMore', function ShowMore(props, ref) {
+function ShowMoreRender({ ref, ...props }: ShowMoreProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, OWN);
   const L = useSettings(words).labels;
   const base = domId('dk-sm', React.useId());
@@ -65,4 +63,8 @@ export const ShowMore = /* @__PURE__ */ component<HTMLDivElement, ShowMoreProps>
       ) : null}
     </div>
   );
-});
+}
+
+/** Long text cut after a few lines, with a Show more button that shows the rest.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const ShowMore = /* @__PURE__ */ named('ShowMore', ShowMoreRender);

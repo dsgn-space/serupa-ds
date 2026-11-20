@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn, oneOf } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
 import type { IconSource } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' | 'destructive' | 'loading' | 'loadingLabel'> {
   /** Whether it's on (controlled). Use with onPressedChange. */
@@ -18,11 +18,7 @@ export interface ToggleButtonProps extends Omit<ButtonAsButtonProps, 'variant' |
   icon?: IconSource | undefined;
 }
 
-/* ToggleButton: a Button that stays on or off (aria-pressed), for a setting that applies right away: bold,
-   mute, show grid. On, it's primary-subtle with primary text. Every Button prop but variant, destructive and
-   loading goes through. */
-/** A Button that turns something on and off, with aria-pressed: bold, mute, show grid. */
-export const ToggleButton = /* @__PURE__ */ component<HTMLButtonElement, ToggleButtonProps>('ToggleButton', function ToggleButton(props, ref) {
+function ToggleButtonRender({ ref, ...props }: ToggleButtonProps & React.RefAttributes<HTMLButtonElement>) {
   const { pressed, defaultPressed, onPressedChange, variant, className, onClick, ...rest } = props;
   const [own, setOwn] = React.useState(!!defaultPressed);
   const controlled = pressed !== undefined;
@@ -38,4 +34,10 @@ export const ToggleButton = /* @__PURE__ */ component<HTMLButtonElement, ToggleB
         if (onPressedChange) onPressedChange(!on);
       }} />
   );
-});
+}
+
+/* ToggleButton: a Button that stays on or off (aria-pressed), for a setting that applies right away: bold,
+   mute, show grid. On, it's primary-subtle with primary text. Every Button prop but variant, destructive and
+   loading goes through. */
+/** A Button that turns something on and off, with aria-pressed: bold, mute, show grid. */
+export const ToggleButton = /* @__PURE__ */ named('ToggleButton', ToggleButtonRender);

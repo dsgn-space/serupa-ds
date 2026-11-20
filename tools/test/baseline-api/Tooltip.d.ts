@@ -12,6 +12,4 @@ interface TooltipProps {
     className?: string | undefined;
     style?: React.CSSProperties | undefined;
 }
-declare const Tooltip: ((props: TooltipProps) => React.ReactElement) & {
-    displayName: string;
-};
+declare const Tooltip: React.FC<TooltipProps>;

@@ -49,4 +49,4 @@ interface ToasterProps extends React.HTMLAttributes<HTMLElement> {
     duration?: number | undefined;
     autoDismiss?: boolean | undefined;
 }
-declare const Toaster: React.ForwardRefExoticComponent<ToasterProps & React.RefAttributes<HTMLElement>>;
+declare const Toaster: React.FC<ToasterProps & React.RefAttributes<HTMLElement>>;

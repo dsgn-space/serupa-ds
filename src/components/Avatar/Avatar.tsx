@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { initials } from './initials';
 import * as icons from '../../material/builtin';
@@ -44,9 +44,7 @@ const SIZES = AVATAR_SIZES;
 export const AvatarGroupSize = /* @__PURE__ */ React.createContext<AvatarSize | null>(null);
 const STATUSES: readonly AvatarStatus[] = ['online', 'busy', 'away', 'offline'];
 
-
-/** A picture of a person, team or project, with initials or an icon when there's no picture. */
-export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>('Avatar', function Avatar(props, ref) {
+function AvatarRender({ ref, ...props }: AvatarProps & React.RefAttributes<HTMLSpanElement>) {
   const rest = omit(props, OWN);
   const size = React.useContext(AvatarGroupSize) || oneOf(SIZES, props.size, 'md');
   const square = props.shape === 'square';
@@ -94,4 +92,7 @@ export const Avatar = /* @__PURE__ */ component<HTMLSpanElement, AvatarProps>('A
       {status ? <span className={'dk-avatar__status dk-avatar__status--' + status} {...(full ? { 'aria-hidden': true } : { role: 'img', 'aria-label': said })} /> : null}
     </span>
   );
-});
+}
+
+/** A picture of a person, team or project, with initials or an icon when there's no picture. */
+export const Avatar = /* @__PURE__ */ named('Avatar', AvatarRender);

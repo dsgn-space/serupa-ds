@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
 import { en as words } from './labels';
@@ -15,13 +15,7 @@ export interface SkipLinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAncho
 
 const FOCUSABLE = 'a[href], area[href], button, input, select, textarea, summary, iframe, [tabindex], [contenteditable]';
 
-/* SkipLink: the first thing in the page, hidden until Tab reaches it, then shown at the top. Following it moves focus
-   to the target (main by default), even when that isn't focusable (it gets tabindex="-1" for as long as it has
-   focus), so the next Tab goes on from there in every browser. The page scrolls it into view below a sticky Navbar,
-   whose scroll-padding keeps it clear of the bar (WCAG 2.4.11). A real link, so it works before the script loads.
-   className, ref and every other prop go to the <a>. */
-/** A "Skip to content" link, shown on keyboard focus, that moves focus to the page's main content. */
-export const SkipLink = /* @__PURE__ */ component<HTMLAnchorElement, SkipLinkProps>('SkipLink', function SkipLink(props, ref) {
+function SkipLinkRender({ ref, ...props }: SkipLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { target: 1, className: 1, children: 1, onClick: 1 });
   const labels = useSettings(words).labels;
   const target = props.target || 'main';
@@ -46,4 +40,12 @@ export const SkipLink = /* @__PURE__ */ component<HTMLAnchorElement, SkipLinkPro
   return <a {...rest} ref={ref} href={'#' + target} onClick={follow} className={cn('dk-skip-link', props.className)} data-component="skip-link">
     {props.children != null ? props.children : labels.skipToContent}
   </a>;
-});
+}
+
+/* SkipLink: the first thing in the page, hidden until Tab reaches it, then shown at the top. Following it moves focus
+   to the target (main by default), even when that isn't focusable (it gets tabindex="-1" for as long as it has
+   focus), so the next Tab goes on from there in every browser. The page scrolls it into view below a sticky Navbar,
+   whose scroll-padding keeps it clear of the bar (WCAG 2.4.11). A real link, so it works before the script loads.
+   className, ref and every other prop go to the <a>. */
+/** A "Skip to content" link, shown on keyboard focus, that moves focus to the page's main content. */
+export const SkipLink = /* @__PURE__ */ named('SkipLink', SkipLinkRender);

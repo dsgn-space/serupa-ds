@@ -36,4 +36,4 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defa
     presets?: boolean | DatePreset[] | undefined;
     headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
 }
-declare const Calendar: React.ForwardRefExoticComponent<CalendarProps & React.RefAttributes<HTMLDivElement>>;
+declare const Calendar: React.FC<CalendarProps & React.RefAttributes<HTMLDivElement>>;

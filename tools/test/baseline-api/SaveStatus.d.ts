@@ -12,4 +12,4 @@ interface SaveStatusProps extends React.HTMLAttributes<HTMLDivElement> {
     onRetry?: (() => void) | undefined;
     errorText?: React.ReactNode | undefined;
 }
-declare const SaveStatus: React.ForwardRefExoticComponent<SaveStatusProps & React.RefAttributes<HTMLDivElement>>;
+declare const SaveStatus: React.FC<SaveStatusProps & React.RefAttributes<HTMLDivElement>>;

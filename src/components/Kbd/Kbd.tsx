@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { en as words } from './labels';
 import { useApple } from '../../internal/keys';
@@ -65,12 +65,7 @@ function Key({ k, apple, say }: { k: string; apple: boolean; say: (name: string)
   return <kbd className="dk-kbd__key" title={shown === name ? undefined : name}>{shown === name ? shown : <><span aria-hidden>{shown}</span><VisuallyHidden>{name}</VisuallyHidden></>}</kbd>;
 }
 
-/* Kbd: a keyboard key or shortcut, drawn as keycaps: <Kbd>Esc</Kbd>, <Kbd keys={["mod", "K"]} />. Named keys
-   (mod, shift, alt, enter, arrows…) show as symbols on Apple devices and as words elsewhere, each with its name
-   for screen readers; "mod" is ⌘ on Apple devices and Ctrl elsewhere. A combination is one <kbd> holding a
-   <kbd> per key, as HTML recommends. */
-/** A keyboard key or shortcut, drawn as keycaps; "mod" follows the platform (⌘ or Ctrl). */
-export const Kbd = /* @__PURE__ */ component<HTMLElement, KbdProps>('Kbd', function Kbd(props, ref) {
+function KbdRender({ ref, ...props }: KbdProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, { keys: 1, size: 1, className: 1, children: 1 } as const);
   const sds = useSettings(words), say = sds.labels.keyName;
   const apple = useApple();
@@ -88,4 +83,11 @@ export const Kbd = /* @__PURE__ */ component<HTMLElement, KbdProps>('Kbd', funct
       ))}
     </kbd>
   );
-});
+}
+
+/* Kbd: a keyboard key or shortcut, drawn as keycaps: <Kbd>Esc</Kbd>, <Kbd keys={["mod", "K"]} />. Named keys
+   (mod, shift, alt, enter, arrows…) show as symbols on Apple devices and as words elsewhere, each with its name
+   for screen readers; "mod" is ⌘ on Apple devices and Ctrl elsewhere. A combination is one <kbd> holding a
+   <kbd> per key, as HTML recommends. */
+/** A keyboard key or shortcut, drawn as keycaps; "mod" follows the platform (⌘ or Ctrl). */
+export const Kbd = /* @__PURE__ */ named('Kbd', KbdRender);

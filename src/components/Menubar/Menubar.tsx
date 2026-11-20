@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import { typeahead, type Typed } from '../../internal/typeahead';
 import { Menu, MenuSwap } from '../Menu/Menu';
@@ -37,15 +37,7 @@ const IndexContext = /* @__PURE__ */ React.createContext(0);
 const OWN = { className: 1, children: 1, onKeyDown: 1 } as const;
 const TOP = ':scope > .dk-menubar__item';
 
-/* Menubar: an application's menu bar (File, Edit, View), following the WAI-ARIA menubar pattern. The bar is one Tab
-   stop; ← → move across its menus (mirrored right to left), Home and End jump, typing goes to the next menu
-   starting with what was typed. ↓, ↑, Enter or Space opens a menu (Menu's own keys). While one is open, ← → close
-   it and open the next one on its first item, and pointing at another menu's name opens that one instead. Escape
-   closes and puts focus back on the menu's name; Tab closes and leaves the bar. Each menu is a Menu, so its items,
-   submenus, shortcuts and type-ahead work as they do there. */
-/** An application's menu bar: File, Edit, View along the top, each opening a menu, with one Tab stop and the arrow keys across.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Menubar = /* @__PURE__ */ component<HTMLDivElement, MenubarProps>('Menubar', function Menubar(props, ref) {
+function MenubarRender({ ref, ...props }: MenubarProps & React.RefAttributes<HTMLDivElement>) {
   const menus = React.Children.toArray(props.children).filter(React.isValidElement);
   const [open, setOpen] = React.useState<number | null>(() => {
     const first = menus.findIndex((m) => !!(m.props as MenubarMenuProps).defaultOpen);
@@ -94,12 +86,19 @@ export const Menubar = /* @__PURE__ */ component<HTMLDivElement, MenubarProps>('
       </div>
     </MenuSwap.Provider></BarContext.Provider>
   );
-});
+}
 
-/* MenubarMenu: one menu in a Menubar, its name a menuitem button in the bar (aria-haspopup, aria-expanded) and its
-   panel a Menu. Outside a Menubar it is a plain Menu behind a button. */
-/** One menu in a Menubar: its name in the bar, and the items it opens. */
-export const MenubarMenu = /* @__PURE__ */ component<HTMLButtonElement, MenubarMenuProps>('MenubarMenu', function MenubarMenu(props, ref) {
+/* Menubar: an application's menu bar (File, Edit, View), following the WAI-ARIA menubar pattern. The bar is one Tab
+   stop; ← → move across its menus (mirrored right to left), Home and End jump, typing goes to the next menu
+   starting with what was typed. ↓, ↑, Enter or Space opens a menu (Menu's own keys). While one is open, ← → close
+   it and open the next one on its first item, and pointing at another menu's name opens that one instead. Escape
+   closes and puts focus back on the menu's name; Tab closes and leaves the bar. Each menu is a Menu, so its items,
+   submenus, shortcuts and type-ahead work as they do there. */
+/** An application's menu bar: File, Edit, View along the top, each opening a menu, with one Tab stop and the arrow keys across.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Menubar = /* @__PURE__ */ named('Menubar', MenubarRender);
+
+function MenubarMenuRender({ ref, ...props }: MenubarMenuProps & React.RefAttributes<HTMLButtonElement>) {
   const bar = React.useContext(BarContext);
   const i = React.useContext(IndexContext);
   const { label, children, disabled, defaultOpen, className, onFocus, onPointerEnter, ...rest } = props;
@@ -124,4 +123,9 @@ export const MenubarMenu = /* @__PURE__ */ component<HTMLButtonElement, MenubarM
     </button>
   );
   return <Menu trigger={trigger} open={open} onOpenChange={onOpenChange} placement="bottom-start">{children}</Menu>;
-});
+}
+
+/* MenubarMenu: one menu in a Menubar, its name a menuitem button in the bar (aria-haspopup, aria-expanded) and its
+   panel a Menu. Outside a Menubar it is a plain Menu behind a button. */
+/** One menu in a Menubar: its name in the bar, and the items it opens. */
+export const MenubarMenu = /* @__PURE__ */ named('MenubarMenu', MenubarMenuRender);

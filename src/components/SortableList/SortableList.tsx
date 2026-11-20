@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useMergedRef, cn, domId, omit, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useAutoFocus } from '../../internal/focus';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
@@ -33,12 +33,7 @@ export interface SortableListProps<T> extends Omit<React.HTMLAttributes<HTMLULis
 
 type Drag = { key: string | number; from: number; to: number; pointer: boolean };
 
-/* SortableList: a list people reorder by dragging a handle, or from the keyboard: Space or Enter on a handle picks
-   the item up, the arrow keys (Home, End) move it, Space or Enter drops it and Escape puts it back. Each step is
-   announced ("Apollo, position 3 of 5"). A drag moves the other items out of the way as it goes and is only
-   reported on drop (onReorder), so a cancelled one changes nothing. A <ul> of <li>; className and props go to the <ul>. */
-/** A list people reorder by dragging a handle or with the keyboard, with every move announced. */
-export const SortableList = /* @__PURE__ */ component<HTMLUListElement, SortableListProps<unknown>>('SortableList', function SortableList(props, ref) {
+function SortableListRender({ ref, ...props }: SortableListProps<unknown> & React.RefAttributes<HTMLUListElement>) {
   const rest = omit(props, { items: 1, getKey: 1, getLabel: 1, renderItem: 1, onReorder: 1, disabled: 1, reorderLabel: 1, orientation: 1, className: 1, autoFocus: 1 } as const);
   const sds = useSettings(words);
   const { getKey, getLabel } = props;
@@ -279,7 +274,14 @@ export const SortableList = /* @__PURE__ */ component<HTMLUListElement, Sortable
     </ul>
     {props.disabled ? null : <span hidden id={hintId}>{sds.labels.reorderInstructions}</span>}
   </>);
-}) as <T>(props: SortableListProps<T> & { ref?: React.Ref<HTMLUListElement> | undefined }) => React.ReactElement;
+}
+
+/* SortableList: a list people reorder by dragging a handle, or from the keyboard: Space or Enter on a handle picks
+   the item up, the arrow keys (Home, End) move it, Space or Enter drops it and Escape puts it back. Each step is
+   announced ("Apollo, position 3 of 5"). A drag moves the other items out of the way as it goes and is only
+   reported on drop (onReorder), so a cancelled one changes nothing. A <ul> of <li>; className and props go to the <ul>. */
+/** A list people reorder by dragging a handle or with the keyboard, with every move announced. */
+export const SortableList = /* @__PURE__ */ named('SortableList', SortableListRender) as <T>(props: SortableListProps<T> & { ref?: React.Ref<HTMLUListElement> | undefined }) => React.ReactElement;
 
 /* What a row calls back into the list with. The list keeps these in a ref and swaps in fresh ones each render, so a
    row's own props say only what it shows. */

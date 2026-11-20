@@ -15,4 +15,4 @@ interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
     statusLabel?: string | undefined;
     imgProps?: React.ImgHTMLAttributes<HTMLImageElement> | undefined;
 }
-declare const Avatar: React.ForwardRefExoticComponent<AvatarProps & React.RefAttributes<HTMLSpanElement>>;
+declare const Avatar: React.FC<AvatarProps & React.RefAttributes<HTMLSpanElement>>;

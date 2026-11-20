@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { activeIn } from '../../internal/root';
 import { useSettings } from '../../internal/provider';
@@ -58,12 +58,7 @@ const setRootSpace = (root: HTMLElement, who: object, space: number | null) => {
 const browserOnline = () => navigator.onLine;
 const serverOnline = () => true;
 
-/* OfflineBanner: nothing while the app is online. When the connection drops, a bar ("You’re offline", and your own
-   words after it) slides in and the shared polite live region says so; when it comes back the bar says "Back
-   online" for feedbackHold, is said too, and slides away. The bar itself isn't a live region, so it's said once. */
-/** Says when the connection drops and when it comes back, on screen and to screen readers.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBannerProps>('OfflineBanner', function OfflineBanner(props, ref) {
+function OfflineBannerRender({ ref, ...props }: OfflineBannerProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { online: 1, placement: 1, children: 1, onOnlineChange: 1, className: 1 });
   const labels = useSettings(words).labels;
   const browser = React.useSyncExternalStore(listen, browserOnline, serverOnline);
@@ -166,4 +161,11 @@ export const OfflineBanner = /* @__PURE__ */ component<HTMLDivElement, OfflineBa
       </span>
     </div>
   );
-});
+}
+
+/* OfflineBanner: nothing while the app is online. When the connection drops, a bar ("You’re offline", and your own
+   words after it) slides in and the shared polite live region says so; when it comes back the bar says "Back
+   online" for feedbackHold, is said too, and slides away. The bar itself isn't a live region, so it's said once. */
+/** Says when the connection drops and when it comes back, on screen and to screen readers.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const OfflineBanner = /* @__PURE__ */ named('OfflineBanner', OfflineBannerRender);

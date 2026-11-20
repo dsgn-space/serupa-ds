@@ -34,4 +34,4 @@ interface PhoneInputProps extends Omit<InputProps, "actions" | "defaultValue" | 
     countryLabel?: string | undefined;
     name?: string | undefined;
 }
-declare const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps & React.RefAttributes<HTMLInputElement>>;
+declare const PhoneInput: React.FC<PhoneInputProps & React.RefAttributes<HTMLInputElement>>;

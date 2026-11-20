@@ -5,7 +5,7 @@ import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { useValidityMessages } from '../../internal/validity';
 import { cn, domId, isInvalid, oneOf, omit, useMergedRef, SIZES, useIsoLayoutEffect } from '../../internal/cn';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale } from '../../internal/provider';
@@ -53,8 +53,7 @@ function sizesInCss(): boolean {
   return cssSizing;
 }
 
-/** A multi-line text field: a native <textarea> (ref, value, onChange and every textarea attribute go to it) in a box that holds the count; className and style go to the box. Label it with <label htmlFor> or aria-label. */
-export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaProps>('Textarea', function Textarea(props, ref) {
+function TextareaRender({ ref, ...props }: TextareaProps & React.RefAttributes<HTMLTextAreaElement>) {
   const nameRef = useNameCheck('Textarea', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   let rest = omit(props, OWN);
@@ -123,4 +122,7 @@ export const Textarea = /* @__PURE__ */ component<HTMLTextAreaElement, TextareaP
       {acts ? <fieldset className="dk-textarea__actions" role="none" disabled={!!rest.disabled} key="actions">{props.showCount ? count : null}{props.actions}</fieldset> : null}
     </span>
   );
-});
+}
+
+/** A multi-line text field: a native <textarea> (ref, value, onChange and every textarea attribute go to it) in a box that holds the count; className and style go to the box. Label it with <label htmlFor> or aria-label. */
+export const Textarea = /* @__PURE__ */ named('Textarea', TextareaRender);

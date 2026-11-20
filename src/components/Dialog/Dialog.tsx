@@ -6,7 +6,7 @@ import { warnOnce } from '../../internal/warn';
 import { IconButton } from '../IconButton/IconButton';
 import { Button } from '../Button/Button';
 import { en as words } from './labels';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { modalClosed, modalOpened, modalOpening, wasDismissal } from '../../internal/layers';
 import { listenForInput } from '../../internal/lastInput';
@@ -57,8 +57,7 @@ export interface DialogProps extends Omit<React.DialogHTMLAttributes<HTMLDialogE
    close and onOpenChange(false). */
 const OWN = { open: 1, defaultOpen: 1, onOpenChange: 1, title: 1, description: 1, footer: 1, size: 1, alert: 1, closeButton: 1, closeLabel: 1, closeOnBackdrop: 1, fullScreen: 1, initialFocus: 1, finalFocus: 1, unsaved: 1, className: 1, children: 1 } as const;
 
-/** A modal dialog on the native <dialog>: a title, content and actions, over a dimmed page. */
-export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>('Dialog', function Dialog(props, ref) {
+function DialogRender({ ref, ...props }: DialogProps & React.RefAttributes<HTMLDialogElement>) {
   const nameRef = useNameCheck('Dialog', NAME_HOW.title);   // warns when it has no accessible name
   const sds = useSettings();
   const rest = omit(props, OWN);
@@ -187,7 +186,10 @@ export const Dialog = /* @__PURE__ */ component<HTMLDialogElement, DialogProps>(
       {props.unsaved || asking ? <Discard open={!!asking && open} onKeep={() => setAsking(null)} onDiscard={() => { const why = asking || 'close'; setAsking(null); close(why); }} /> : null}
     </dialog>
   );
-});
+}
+
+/** A modal dialog on the native <dialog>: a title, content and actions, over a dimmed page. */
+export const Dialog = /* @__PURE__ */ named('Dialog', DialogRender);
 
 // The "Discard changes?" question an unsaved Dialog (or Drawer) asks before it closes: Keep editing (focused, the
 // safe choice) or Discard. Escape keeps editing. Not in the package's exports (index.ts).

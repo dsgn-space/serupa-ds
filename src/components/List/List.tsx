@@ -5,7 +5,7 @@ import { cn, oneOf, omit, useIsoLayoutEffect, useMergedRef } from '../../interna
 import { config } from '../../internal/config';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { SkeletonArt, useSkeletonShown } from '../../internal/loaderSkeleton';
 import { useSettings } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
@@ -73,11 +73,7 @@ export type ListItemProps<C extends React.ElementType = 'a'> = ListItemOwnProps 
   linkProps?: (Partial<React.ComponentPropsWithoutRef<C>> & { [data: `data-${string}`]: string | number | boolean | undefined }) | undefined;
 };
 
-/* List: rows of related things (people, files, settings), each a title with an optional description, leading
-   avatar or icon and trailing meta or actions. A row can be a link or a button; trailing actions stay outside
-   it so controls are never nested. className and every other prop go to the <ul>. */
-/** Rows of related things: title, description, leading avatar or icon, trailing meta or actions; rows can be links. */
-export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List', function List(props, ref) {
+function ListRender({ ref, ...props }: ListProps & React.RefAttributes<HTMLUListElement>) {
   const rest = omit(props, { variant: 1, divided: 1, as: 1, loading: 1, className: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1 });
   const variant = oneOf(['plain', 'card'] as const, props.variant, 'plain');
   const mode = props.selectionMode === 'single' || props.selectionMode === 'multiple' ? props.selectionMode : null;
@@ -158,10 +154,15 @@ export const List = /* @__PURE__ */ component<HTMLUListElement, ListProps>('List
     className: cn('dk-list', variant === 'card' && 'dk-list--card', props.divided === 'inset' ? 'dk-list--inset' : props.divided !== false && 'dk-list--divided', mode && 'dk-list--selectable', props.className),
   }));
   return <PickContext.Provider value={ctx}>{el}</PickContext.Provider>;
-});
+}
 
-// ListItem before its generic signature (below).
-const ListItemBase = /* @__PURE__ */ component<HTMLLIElement, ListItemProps<React.ElementType>>('ListItem', function ListItem(props, ref) {
+/* List: rows of related things (people, files, settings), each a title with an optional description, leading
+   avatar or icon and trailing meta or actions. A row can be a link or a button; trailing actions stay outside
+   it so controls are never nested. className and every other prop go to the <ul>. */
+/** Rows of related things: title, description, leading avatar or icon, trailing meta or actions; rows can be links. */
+export const List = /* @__PURE__ */ named('List', ListRender);
+
+function ListItemBaseRender({ ref, ...props }: ListItemProps<React.ElementType> & React.RefAttributes<HTMLLIElement>) {
   const rest = omit(props, { title: 1, description: 1, leading: 1, trailing: 1, href: 1, onClick: 1, as: 1, linkProps: 1, selected: 1, disabled: 1, className: 1, value: 1 });
   const pick = React.useContext(PickContext);
   const titleId = React.useId();
@@ -208,11 +209,14 @@ const ListItemBase = /* @__PURE__ */ component<HTMLLIElement, ListItemProps<Reac
       {props.trailing != null ? <span className="dk-list__trailing" role={pick ? 'gridcell' : undefined}>{props.trailing}</span> : null}
     </li>
   );
-});
+}
+
+// ListItem before its generic signature (below).
+const ListItemBase = /* @__PURE__ */ named('ListItem', ListItemBaseRender);
 
 /** One row in a List. `as` renders your router's link, and linkProps are typed with its props. */
 export const ListItem = ListItemBase as {
-  <C extends React.ElementType = 'a'>(props: ListItemProps<C> & { ref?: React.Ref<HTMLLIElement> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: ListItemProps<C> & React.RefAttributes<HTMLLIElement>): React.ReactElement | null;
   displayName?: string | undefined;
 };
 
@@ -240,10 +244,7 @@ export interface ListSelectAllProps extends Omit<CheckboxProps, 'checked' | 'def
   children?: React.ReactNode;
 }
 
-/* ListSelectAll: a Checkbox that picks every row of a List with selectionMode="multiple", or clears them: checked
-   when all are picked and indeterminate (a dash, said as mixed) when some are. Picks outside values are kept. */
-/** The "Select all" box for a List with selectionMode="multiple": checked when every row is picked, a dash when some are. */
-export const ListSelectAll = /* @__PURE__ */ component<HTMLInputElement, ListSelectAllProps>('ListSelectAll', function ListSelectAll(props, ref) {
+function ListSelectAllRender({ ref, ...props }: ListSelectAllProps & React.RefAttributes<HTMLInputElement>) {
   const L = useSettings(words).labels;
   const rest = omit(props, { values: 1, selected: 1, onSelectedChange: 1, children: 1 });
   const some = props.values.filter((v) => props.selected.includes(v)).length;
@@ -256,7 +257,12 @@ export const ListSelectAll = /* @__PURE__ */ component<HTMLInputElement, ListSel
       {props.children != null ? props.children : L.listSelectAll}
     </Checkbox>
   );
-});
+}
+
+/* ListSelectAll: a Checkbox that picks every row of a List with selectionMode="multiple", or clears them: checked
+   when all are picked and indeterminate (a dash, said as mixed) when some are. Picks outside values are kept. */
+/** The "Select all" box for a List with selectionMode="multiple": checked when every row is picked, a dash when some are. */
+export const ListSelectAll = /* @__PURE__ */ named('ListSelectAll', ListSelectAllRender);
 
 const LEADS = ['icon', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
 

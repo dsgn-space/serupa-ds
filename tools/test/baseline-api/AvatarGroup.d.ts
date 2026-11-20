@@ -12,4 +12,4 @@ interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     showMore?: boolean | undefined;
     onMore?: ((event: React.MouseEvent<HTMLButtonElement>) => void) | undefined;
 }
-declare const AvatarGroup: React.ForwardRefExoticComponent<AvatarGroupProps & React.RefAttributes<HTMLDivElement>>;
+declare const AvatarGroup: React.FC<AvatarGroupProps & React.RefAttributes<HTMLDivElement>>;

@@ -216,6 +216,22 @@ await inParallel(opened, workers, async (p, w) => {
   t('/components/codeblock: the code\'s focus ring is drawn inside it, where the block doesn\'t clip it', offset < 0, Number.isNaN(offset) ? 'Tab didn\'t reach the code' : `the ring is drawn ${offset}px outside the code`);
 }
 
+// A component's page says what it is before it shows it: the guide's lead comes under the title, then the first
+// example, once (site/src/blocks.tsx Primary, docs/blocks.tsx Guide).
+{
+  const w = workers[0];
+  await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
+  const order = await w.page.evaluate(() => {
+    const lead = [...document.querySelectorAll('#article p')].find((p) => p.textContent.startsWith('Triggers an action'));
+    const demos = [...document.querySelectorAll('#article [data-site-demo]')];
+    const copy = [...document.querySelectorAll('#article button')].find((b) => b.textContent.includes('Copy for AI'));
+    const before = demos.filter((d) => copy && copy.compareDocumentPosition(d) & Node.DOCUMENT_POSITION_PRECEDING);
+    return { lead: !!lead, leadFirst: !!lead && !!demos[0] && !!(lead.compareDocumentPosition(demos[0]) & Node.DOCUMENT_POSITION_FOLLOWING), above: before.length };
+  });
+  t('/components/button: the lead comes before the first example, which shows once above the guide', order.lead && order.leadFirst && order.above === 1,
+    !order.lead ? 'no lead paragraph' : !order.leadFirst ? 'the example comes before the lead' : `${order.above} examples above the guide`);
+}
+
 // "On this page" is the contents' rail (site/src/Doc.tsx): pointing at it opens the list, inside the window even on a
 // page with more headings than the window is tall.
 {

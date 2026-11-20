@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
 import { config } from '../../internal/config';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import type { TabsVariant } from '../Tabs/Tabs';
@@ -28,13 +28,7 @@ function currentHref(children: React.ReactNode): string | null {
   return found;
 }
 
-/* TabNav: moves between the sub-pages of one thing (Overview, Activity, Settings), each at its own URL. It looks like
-   Tabs, from Tabs' classes and tokens, but it's a nav of links: aria-current="page" marks where you are, Tab moves
-   between them, and Enter follows one, as on any link. No tablist roles or arrow keys: those promise panels on this
-   page. When the links don't fit, the row scrolls with the edge fading, as Tabs' does, and the current one is shown. */
-/** Moves between the sub-pages of one thing, each at its own URL: a nav of links that looks like Tabs.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const TabNav = /* @__PURE__ */ component<HTMLElement, TabNavProps>('TabNav', function TabNav(props, ref) {
+function TabNavRender({ ref, ...props }: TabNavProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, { variant: 1, size: 1, className: 1, children: 1 });
   const variant = oneOf(['line', 'pill'] as const, props.variant, 'line');
   const size = oneOf(['sm', 'md', 'lg'] as const, props.size, 'md');
@@ -46,7 +40,15 @@ export const TabNav = /* @__PURE__ */ component<HTMLElement, TabNavProps>('TabNa
       </ul>
     </nav>
   );
-});
+}
+
+/* TabNav: moves between the sub-pages of one thing (Overview, Activity, Settings), each at its own URL. It looks like
+   Tabs, from Tabs' classes and tokens, but it's a nav of links: aria-current="page" marks where you are, Tab moves
+   between them, and Enter follows one, as on any link. No tablist roles or arrow keys: those promise panels on this
+   page. When the links don't fit, the row scrolls with the edge fading, as Tabs' does, and the current one is shown. */
+/** Moves between the sub-pages of one thing, each at its own URL: a nav of links that looks like Tabs.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const TabNav = /* @__PURE__ */ named('TabNav', TabNavRender);
 
 /** TabNavLink's own props, beside those of the element it renders. */
 export interface TabNavLinkOwnProps {
@@ -62,8 +64,7 @@ export type TabNavLinkProps<C extends React.ElementType = 'a'> = TabNavLinkOwnPr
   as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof TabNavLinkOwnProps | 'as'>;
 
-/* One link in a TabNav, in a list item. className and every other prop go to the link. */
-const TabNavLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, TabNavLinkProps>('TabNavLink', function TabNavLink(props, ref) {
+function TabNavLinkBaseRender({ ref, ...props }: TabNavLinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { current: 1, icon: 1, as: 1, className: 1, children: 1 });
   const attrs = Object.assign(rest, {
     ref,
@@ -78,10 +79,13 @@ const TabNavLinkBase = /* @__PURE__ */ component<HTMLAnchorElement, TabNavLinkPr
         <span className="dk-tabs__label">{props.children}</span>)}
     </li>
   );
-});
+}
+
+/* One link in a TabNav, in a list item. className and every other prop go to the link. */
+const TabNavLinkBase = /* @__PURE__ */ named('TabNavLink', TabNavLinkBaseRender);
 
 /** One link in a TabNav. current marks the page you're on. `as` renders your router's link, typed with its props. */
 export const TabNavLink = TabNavLinkBase as {
-  <C extends React.ElementType = 'a'>(props: TabNavLinkProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: TabNavLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;
 };

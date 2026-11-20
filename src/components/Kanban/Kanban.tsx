@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
 import { useLocale, useSettings } from '../../internal/provider';
@@ -120,15 +120,7 @@ const KanbanCard = /* @__PURE__ */ React.memo(function KanbanCard(props: KanbanC
   );
 });
 
-/* Kanban: a board of columns of cards. A card moves by dragging its handle, by keyboard (Space or Enter on the handle
-   picks it up, Up and Down move it within its column, Left and Right to the next column in reading order, Home and
-   End to the top and bottom, Space or Enter drops it and Escape puts it back), or with its "Move to…" menu, the
-   single-pointer way (WCAG 2.5.7). Each step is said ("Fix login, Done, position 2 of 5"). Nothing is reported until
-   a drop (onMove), so a cancelled move changes nothing. The board scrolls sideways in its own box, and a drag near an
-   edge scrolls the board or the column. */
-/** A board of columns of cards that people move by dragging, by keyboard or from a "Move to…" menu, with every move announced.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unknown>>('Kanban', function Kanban(props, ref) {
+function KanbanRender({ ref, ...props }: KanbanProps<unknown> & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { columns: 1, getKey: 1, getLabel: 1, renderCard: 1, onMove: 1, headingLevel: 1, disabled: 1, loading: 1, loadingLabel: 1, className: 1 } as const);
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const { getKey, getLabel } = props;
@@ -388,4 +380,14 @@ export const Kanban = /* @__PURE__ */ component<HTMLDivElement, KanbanProps<unkn
     </div>
     {off ? null : <span hidden id={base + '-hint'}>{L.kanbanInstructions}</span>}
   </>);
-}) as <T>(props: KanbanProps<T> & { ref?: React.Ref<HTMLDivElement> | undefined }) => React.ReactElement;
+}
+
+/* Kanban: a board of columns of cards. A card moves by dragging its handle, by keyboard (Space or Enter on the handle
+   picks it up, Up and Down move it within its column, Left and Right to the next column in reading order, Home and
+   End to the top and bottom, Space or Enter drops it and Escape puts it back), or with its "Move to…" menu, the
+   single-pointer way (WCAG 2.5.7). Each step is said ("Fix login, Done, position 2 of 5"). Nothing is reported until
+   a drop (onMove), so a cancelled move changes nothing. The board scrolls sideways in its own box, and a drag near an
+   edge scrolls the board or the column. */
+/** A board of columns of cards that people move by dragging, by keyboard or from a "Move to…" menu, with every move announced.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Kanban = /* @__PURE__ */ named('Kanban', KanbanRender) as <T>(props: KanbanProps<T> & { ref?: React.Ref<HTMLDivElement> | undefined }) => React.ReactElement;

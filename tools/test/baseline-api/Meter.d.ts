@@ -17,4 +17,4 @@ interface MeterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "childre
     formatValue?: ((value: number, min: number, max: number) => string) | undefined;
 }
 declare function meterState(value: number, min: number, max: number, low?: number, high?: number, optimum?: number): MeterState;
-declare const Meter: React.ForwardRefExoticComponent<MeterProps & React.RefAttributes<HTMLDivElement>>;
+declare const Meter: React.FC<MeterProps & React.RefAttributes<HTMLDivElement>>;

@@ -56,4 +56,4 @@ interface DateRangePickerProps extends Omit<React.HTMLAttributes<HTMLSpanElement
     defaultOpen?: boolean | undefined;
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
-declare const DateRangePicker: React.ForwardRefExoticComponent<DateRangePickerProps & React.RefAttributes<HTMLSpanElement>>;
+declare const DateRangePicker: React.FC<DateRangePickerProps & React.RefAttributes<HTMLSpanElement>>;

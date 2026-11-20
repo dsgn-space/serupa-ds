@@ -10,4 +10,4 @@ interface ToggleGroupProps extends Omit<ButtonGroupProps, "defaultValue" | "onCh
     variant?: ToggleButtonProps["variant"] | undefined;
     children?: React.ReactNode | undefined;
 }
-declare const ToggleGroup: React.ForwardRefExoticComponent<ToggleGroupProps & React.RefAttributes<HTMLDivElement>>;
+declare const ToggleGroup: React.FC<ToggleGroupProps & React.RefAttributes<HTMLDivElement>>;

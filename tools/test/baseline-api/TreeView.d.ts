@@ -20,4 +20,4 @@ interface TreeViewProps extends Omit<React.HTMLAttributes<HTMLUListElement>, "de
     cascadeValue?: "all" | "leaves" | undefined;
     "aria-label"?: string | undefined;
 }
-declare const TreeView: React.ForwardRefExoticComponent<TreeViewProps & React.RefAttributes<HTMLUListElement>>;
+declare const TreeView: React.FC<TreeViewProps & React.RefAttributes<HTMLUListElement>>;

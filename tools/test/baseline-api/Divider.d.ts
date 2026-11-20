@@ -5,4 +5,4 @@ interface DividerProps extends Omit<React.HTMLAttributes<HTMLElement>, "children
     decorative?: boolean | undefined;
     onMedia?: "dark" | "light" | undefined;
 }
-declare const Divider: React.ForwardRefExoticComponent<DividerProps & React.RefAttributes<HTMLElement>>;
+declare const Divider: React.FC<DividerProps & React.RefAttributes<HTMLElement>>;

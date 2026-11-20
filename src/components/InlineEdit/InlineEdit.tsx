@@ -4,7 +4,7 @@ import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
 import { announce, ensureAnnouncer } from '../../internal/announce';
 import { cn, domId, omit, oneOf, SIZES } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { deepActive } from '../../internal/root';
 import { useAutoFocus } from '../../internal/focus';
 import { isComposing } from '../../internal/ime';
@@ -50,12 +50,7 @@ export interface InlineEditProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 
 const isThenable = (v: unknown): v is Promise<React.ReactNode> => !!v && typeof (v as { then?: unknown }).then === 'function';
 
-/* InlineEdit: text that turns into a field in place. It shows the text in a button (with a pencil); a click, Enter or
-   Space opens an Input with the text selected. Enter or leaving the field saves (after validate, which can keep it
-   open with an error), Escape puts the text back. Keyboard saves and cancels return focus to the button. Both modes
-   share Input's height and padding, so the page doesn't move. className and other props go to the outer <div>. */
-/** Text people can click to edit in place: Enter or leaving saves, Escape cancels. */
-export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditProps>('InlineEdit', function InlineEdit(props, ref) {
+function InlineEditRender({ ref, ...props }: InlineEditProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { label: 1, value: 1, defaultValue: 1, onValueChange: 1, onCancel: 1, validate: 1, placeholder: 1, size: 1, editing: 1, defaultEditing: 1,
     onEditingChange: 1, disabled: 1, readOnly: 1, editLabel: 1, inputProps: 1, className: 1, autoFocus: 1 } as const);
   const sds = useSettings(words);
@@ -165,4 +160,11 @@ export const InlineEdit = /* @__PURE__ */ component<HTMLDivElement, InlineEditPr
       {editing && error != null ? <div className="dk-inline-edit__error" id={errorId}><Icon icon={icons.Error} className="dk-inline-edit__error-icon" /><span ref={errorText}>{error}</span></div> : null}
     </div>
   );
-});
+}
+
+/* InlineEdit: text that turns into a field in place. It shows the text in a button (with a pencil); a click, Enter or
+   Space opens an Input with the text selected. Enter or leaving the field saves (after validate, which can keep it
+   open with an error), Escape puts the text back. Keyboard saves and cancels return focus to the button. Both modes
+   share Input's height and padding, so the page doesn't move. className and other props go to the outer <div>. */
+/** Text people can click to edit in place: Enter or leaving saves, Escape cancels. */
+export const InlineEdit = /* @__PURE__ */ named('InlineEdit', InlineEditRender);

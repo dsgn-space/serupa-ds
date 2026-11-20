@@ -10,7 +10,7 @@ import { useExit } from '../../internal/useExit';
 import { Calendar, type DatePreset } from '../Calendar/Calendar';
 import type { CalendarSystem } from '../../internal/calendars';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
@@ -66,14 +66,7 @@ export interface DatePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
-/* DatePicker: a text field for a date with a calendar button. People type a date in the locale's numeric order
-   (mm/dd/yyyy in en-US, dd.mm.yyyy in de-DE, or yyyy-mm-dd anywhere) or pick one in a Calendar in a popover
-   dialog. Typed text is read on blur and on Enter: a date it can't read, or one outside min..max, puts back the
-   last good value. The popover opens on the button (or Alt+ArrowDown in the field) with focus on the chosen day,
-   and closes on a pick, Escape (returning focus to the field), a click outside or focus moving past it. With name, a hidden input sends
-   yyyy-mm-dd. ref goes to the text field. */
-/** A date field: type a date or pick one from a calendar popover. */
-export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePickerProps>('DatePicker', function DatePicker(props, ref) {
+function DatePickerRender({ ref, ...props }: DatePickerProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('DatePicker', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
@@ -165,4 +158,13 @@ export const DatePicker = /* @__PURE__ */ component<HTMLInputElement, DatePicker
       {rejected && <span id={id + '-rejected'} className="dk-input-rejected">{rejected}</span>}
     </>
   );
-});
+}
+
+/* DatePicker: a text field for a date with a calendar button. People type a date in the locale's numeric order
+   (mm/dd/yyyy in en-US, dd.mm.yyyy in de-DE, or yyyy-mm-dd anywhere) or pick one in a Calendar in a popover
+   dialog. Typed text is read on blur and on Enter: a date it can't read, or one outside min..max, puts back the
+   last good value. The popover opens on the button (or Alt+ArrowDown in the field) with focus on the chosen day,
+   and closes on a pick, Escape (returning focus to the field), a click outside or focus moving past it. With name, a hidden input sends
+   yyyy-mm-dd. ref goes to the text field. */
+/** A date field: type a date or pick one from a calendar popover. */
+export const DatePicker = /* @__PURE__ */ named('DatePicker', DatePickerRender);

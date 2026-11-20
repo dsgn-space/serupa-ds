@@ -21,4 +21,4 @@ interface BadgeProps extends Omit<React.HTMLAttributes<HTMLElement>, "onClick"> 
     loading?: boolean | undefined;
     loadingLabel?: string | undefined;
 }
-declare const Badge: React.ForwardRefExoticComponent<BadgeProps & React.RefAttributes<HTMLElement>>;
+declare const Badge: React.FC<BadgeProps & React.RefAttributes<HTMLElement>>;

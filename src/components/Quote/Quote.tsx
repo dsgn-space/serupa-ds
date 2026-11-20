@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export interface QuoteProps extends React.HTMLAttributes<HTMLElement> {
   /** The quoted words. A string becomes one paragraph; pass several <p> for more. */
@@ -23,9 +23,7 @@ export interface QuoteProps extends React.HTMLAttributes<HTMLElement> {
    className, ref and every other prop go to the <figure>. */
 const OWN = { children: 1, author: 1, source: 1, avatar: 1, cite: 1, size: 1, className: 1 } as const;
 
-/** Quoted words with who said them: a testimonial, a pull quote or a quote outside Prose.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Quote = /* @__PURE__ */ component<HTMLElement, QuoteProps>('Quote', function Quote(props, ref) {
+function QuoteRender({ ref, ...props }: QuoteProps & React.RefAttributes<HTMLElement>) {
   const { children, author, source, avatar, cite, size, className } = props;
   const by = author != null && author !== false && author !== '';
   const from = source != null && source !== false && source !== '';
@@ -45,4 +43,8 @@ export const Quote = /* @__PURE__ */ component<HTMLElement, QuoteProps>('Quote',
       ) : null}
     </figure>
   );
-});
+}
+
+/** Quoted words with who said them: a testimonial, a pull quote or a quote outside Prose.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Quote = /* @__PURE__ */ named('Quote', QuoteRender);

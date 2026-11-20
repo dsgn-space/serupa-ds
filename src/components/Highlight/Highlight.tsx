@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { fold } from '../../internal/fold';
 
 export interface HighlightProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
@@ -55,12 +55,7 @@ export function highlightRanges(text: string, query: string | ReadonlyArray<stri
   return out;
 }
 
-/* Highlight: text with the parts that match a query in <mark>, for search results, Combobox options and a
-   command palette. Matching ignores case, accents and width (internal/fold.ts), and maps back to the text as
-   written, so "strasse" marks "Straße". The marks are <mark> (a highlight to assistive tech that announces it),
-   in --highlight-* colors, and Mark/MarkText in forced-colors mode. className and other props go to the <span>. */
-/** Text with the parts that match a search marked, ignoring case and accents. */
-export const Highlight = /* @__PURE__ */ component<HTMLSpanElement, HighlightProps>('Highlight', function Highlight(props, ref) {
+function HighlightRender({ ref, ...props }: HighlightProps & React.RefAttributes<HTMLSpanElement>) {
   const rest = omit(props, { children: 1, query: 1, words: 1, className: 1 } as const);
   const text = typeof props.children === 'string' ? props.children : String(props.children ?? '');
   const ranges = highlightRanges(text, props.query ?? '', props.words);
@@ -73,4 +68,11 @@ export const Highlight = /* @__PURE__ */ component<HTMLSpanElement, HighlightPro
   });
   if (at < text.length) parts.push(text.slice(at));
   return <span {...rest} ref={ref} className={cn('dk-highlight', props.className)} data-component="highlight">{parts}</span>;
-});
+}
+
+/* Highlight: text with the parts that match a query in <mark>, for search results, Combobox options and a
+   command palette. Matching ignores case, accents and width (internal/fold.ts), and maps back to the text as
+   written, so "strasse" marks "Straße". The marks are <mark> (a highlight to assistive tech that announces it),
+   in --highlight-* colors, and Mark/MarkText in forced-colors mode. className and other props go to the <span>. */
+/** Text with the parts that match a search marked, ignoring case and accents. */
+export const Highlight = /* @__PURE__ */ named('Highlight', HighlightRender);

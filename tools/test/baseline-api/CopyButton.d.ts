@@ -13,4 +13,4 @@ interface CopyButtonProps extends Omit<ButtonAsButtonProps, "icon" | "leftIcon" 
     onCopy?: ((text: string) => void) | undefined;
     onCopyError?: ((error: unknown) => void) | undefined;
 }
-declare const CopyButton: React.ForwardRefExoticComponent<CopyButtonProps & React.RefAttributes<HTMLButtonElement>>;
+declare const CopyButton: React.FC<CopyButtonProps & React.RefAttributes<HTMLButtonElement>>;

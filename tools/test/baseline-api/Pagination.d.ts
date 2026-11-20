@@ -30,4 +30,4 @@ interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>, "onCha
     onPageSizeChange?: ((pageSize: number, page: number) => void) | undefined;
     jump?: boolean | undefined;
 }
-declare const Pagination: React.ForwardRefExoticComponent<PaginationProps & React.RefAttributes<HTMLElement>>;
+declare const Pagination: React.FC<PaginationProps & React.RefAttributes<HTMLElement>>;
