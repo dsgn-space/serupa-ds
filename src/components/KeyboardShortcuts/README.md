@@ -29,7 +29,7 @@ function Inbox() {
 
 ## Anatomy
 
-Drawn from the `LongText` story.
+Drawn from the `WithListedShortcuts` story.
 
 1. **Group** (`.dk-keyboard-shortcuts__group`): the shortcuts for one part of the app.
 2. **Heading** (`.dk-keyboard-shortcuts__heading`): names the group.
