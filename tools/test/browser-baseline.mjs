@@ -41,6 +41,8 @@ const KNOWN = {
   ':checkmark': { why: 'Select\'s styled list, inside @supports (appearance: base-select): the browser draws its own list and tick without it' },
   ':picker-icon': { why: 'as :checkmark: the browser\'s own arrow, which the box replaces' },
   ':picker': { why: 'as :checkmark: the styled list\'s surface' },
+  'property overflow-clip-margin': { why: 'as overflow-clip-margin: content-box' },
+  'overflow-clip-margin: content-box': { why: 'Select\'s styled field, inside @supports (appearance: base-select), which only Chromium passes today: a long value stops before the chevron; elsewhere the native select clips its own text' },
   ':open': { why: 'Select\'s styled list, inside @supports (appearance: base-select), which only newer browsers pass: the field keeps its ring and the chevron turns over while it is open' },
   'property overflow-anchor': { why: 'VirtualList turns the browser\'s scroll anchoring off to keep its own (Safari has none): there is nothing to turn off' },
   'overflow-anchor: none': { why: 'as overflow-anchor' },
