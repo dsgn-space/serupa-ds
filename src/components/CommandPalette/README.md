@@ -53,13 +53,15 @@ Drawn from the `Default` story.
 - `shortcut` only shows the keys. Set the shortcut itself up with [useShortcut](../KeyboardShortcuts/README.md), so the palette teaches it.
 - Mount one palette per app, near the root. The ⌘K shortcut is listed in [KeyboardShortcuts](../KeyboardShortcuts/README.md); change it with `hotkey`, or turn it off with `hotkey={false}` and open it yourself.
 - Keep `commands` the same array between renders (state, a constant or `useMemo`). While searching it lists the best 50 matches (`limit`).
+- To search a server (records, documents, people), set `filter={false}` and pass what it finds as `commands`. `onQueryChange` gets what's typed, so wait for a pause in typing, fetch, and set `loading` until the answer comes. The palette lists the commands as given and still marks what was typed in them. It shows a loading row and holds back "No matching commands" until `loading` ends. Keep the commands people need without a search (pages, actions) in the list you pass when nothing is typed.
 
 ## Behavior
 
-- Each opening starts with an empty field and the first command active.
+- Each opening starts with an empty field (unless you hold it with `query`) and the first command active.
 - Matching ignores case and accents. A label that starts with what's typed comes first, then one with a word that does, then one that has it inside, then a keyword match; ties keep the order given. What matched is marked in each label.
 - The list grows to 320px, then scrolls, keeping the active row in view.
 - Escape or a click on the backdrop closes it with nothing chosen.
+- While `loading`, a row with a ring and "Loading…" (`loadingText`, `labels.loading`) sits under what's listed, the list says `aria-busy`, and the number of matches is said once the answer is in.
 
 ### Do and don't
 
@@ -94,6 +96,11 @@ Drawn from the `Default` story.
 | `placeholder` | `string` | `"Search commands and pages"` | The search field's placeholder and name (`labels.searchCommands`). |
 | `emptyText` | `ReactNode` | `"No matching commands"` | Shown when nothing matches (`labels.noCommands`). A string is also said. |
 | `limit` | `number` | `50` | How many it lists at most while searching, the best matches first. |
+| `query` | `string` | | What's in the search field (controlled), with `onQueryChange`. An opening keeps it, so you can open the palette on a search. |
+| `onQueryChange` | `(query: string) => void` | | Called with what's typed as it changes, and with `""` when an opening clears it: fetch the matches from a server. |
+| `filter` | `boolean` | `true` | `false` lists `commands` as given, as the ones your search found, without filtering or sorting them. |
+| `loading` | `boolean` | `false` | Shows a loading row and marks the list busy; "No matching commands" waits until it ends. |
+| `loadingText` | `string` | `"Loading…"` | Shown while loading (`labels.loading`). |
 | `open` | `boolean` | | Controlled: close it yourself in `onOpenChange`. |
 | `defaultOpen` | `boolean` | `false` | Open at first (uncontrolled). |
 | `onOpenChange` | `(open, { reason }) => void` | | Called with `true` on the hotkey (`reason: 'trigger'`) and `false` on Escape, the backdrop or a choice (`reason: 'select'`). |

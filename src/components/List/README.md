@@ -5,7 +5,7 @@ Rows of related things: people, files, notifications, settings. Each row has a t
 **Also called:** list view, item list.
 
 ```jsx
-const { List, ListItem, Avatar, Badge, IconButton } = window.Serupa;
+import { List, ListItem, Avatar, Badge, IconButton } from '@diki-stwn/serupa-ds';
 
 <List variant="card" aria-label="Members">
   {people.map((p) => (

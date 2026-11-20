@@ -218,10 +218,15 @@ function PropsTable({ doc }: { doc: ComponentDoc }) {
   </>;
 }
 
+/** True inside a page's Markdown: there <Controls /> draws nothing, and the page draws the API after the guide and the
+ * examples, so a reader learns what the component is for and sees it at work before the props reference (as Radix and
+ * shadcn order theirs). Storybook keeps its live controls beside the primary story. */
+export const ApiAtEnd = React.createContext(false);
+
 /** The props, read from the TypeScript types: the component's own, and those of the parts it exports beside it. */
 export function Controls() {
   const { docs } = useDocs();
-  if (!docs.length) return null;
+  if (React.useContext(ApiAtEnd) || !docs.length) return null;
   return <section aria-labelledby="api">
     <Heading level={2} id="api" className="site-h site-h2">API</Heading>
     <p className="site-p">Read from the component’s TypeScript types, so it is always what this version takes.</p>

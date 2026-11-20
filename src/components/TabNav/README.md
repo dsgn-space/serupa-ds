@@ -5,7 +5,7 @@ Moves between the sub-pages of one thing, such as a project's Overview, Activity
 **Also called:** navigation tabs, tab links.
 
 ```jsx
-const { TabNav, TabNavLink } = window.Serupa;
+import { TabNav, TabNavLink } from '@diki-stwn/serupa-ds';
 
 <TabNav aria-label="Project">
   <TabNavLink href="/atlas" current>Overview</TabNavLink>

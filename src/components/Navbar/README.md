@@ -5,7 +5,7 @@ The bar across the top of an app: the brand on the left, the main page links, an
 **Also called:** header, top bar, app bar.
 
 ```jsx
-const { Navbar, NavbarLink, Button, Avatar } = window.Serupa;
+import { Navbar, NavbarLink, Button, Avatar } from '@diki-stwn/serupa-ds';
 
 <Navbar
   sticky

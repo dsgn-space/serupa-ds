@@ -5,7 +5,7 @@ A short hint about one element, shown while it's hovered or focused: what an ico
 **Also called:** hint, info tooltip.
 
 ```jsx
-const { Tooltip, IconButton, Button } = window.Serupa;
+import { Tooltip, IconButton, Button } from '@diki-stwn/serupa-ds';
 
 <Tooltip content="Download as PDF">
   <IconButton icon="download" label="Download" />

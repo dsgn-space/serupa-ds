@@ -5,7 +5,7 @@ A vertical nav for an app's pages: an optional header (a logo, a workspace switc
 **Also called:** side navigation, side nav, navigation rail.
 
 ```jsx
-const { Sidebar, SidebarSection, SidebarItem, Badge } = window.Serupa;
+import { Sidebar, SidebarSection, SidebarItem, Badge } from '@diki-stwn/serupa-ds';
 
 <div style={{ display: 'flex', height: '100vh' }}>
   <Sidebar header={<Logo src="/logo.svg" markSrc="/mark.svg" variant={collapsed ? "mark" : "full"} alt="Acme" />} footer={<UserButton />} collapsed={collapsed}>

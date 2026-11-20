@@ -34,7 +34,8 @@ const docs = [path.join(PROJECT, 'README.md'), ...walk(path.join(PROJECT, 'docs'
   // The pattern and block guides (src/patterns/*/*.mdx, src/blocks/*/*.mdx): a reader copies their code as well.
   ...['patterns', 'blocks'].flatMap((d) => walk(path.join(PROJECT, 'src', d)))];
 
-// A block, as a module. The component READMEs open with a sketch: the names taken from window.Serupa, then a few
+// A block, as a module. The component READMEs open with a sketch: the names imported from the package (or, on a plain
+// page, taken from window.Serupa), then a few
 // JSX examples one after another, with // notes between them and … where content goes. The names become imports, the
 // examples JSX expressions (notes as JSX comments, … as any content), and what they leave undeclared (open,
 // setOpen) is declared as any by a second pass, so the props and the values written out are what's checked.

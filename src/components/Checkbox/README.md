@@ -5,7 +5,7 @@ A native checkbox with its label, for turning one option on or off, or picking a
 **Also called:** check box, tick box.
 
 ```jsx
-const { Checkbox, CheckboxGroup, Field } = window.Serupa;
+import { Checkbox, CheckboxGroup, Field } from '@diki-stwn/serupa-ds';
 
 <Checkbox checked={agree} onCheckedChange={setAgree}>I accept the terms</Checkbox>
 

@@ -12,7 +12,7 @@ import { Progress } from '../../src/components/Progress/Progress';
 import { Select } from '../../src/components/Select/Select';
 import { Switch } from '../../src/components/Switch/Switch';
 import { pages, pagesOf, sections } from './pages';
-import { InviteCard, ProjectCard, StatusCard } from './Sample';
+import { InviteCard, ProjectCard, StatusBadges, WaitingAlert } from './Sample';
 import { DEVICES, Screen } from './Screen';
 import { Shell } from './Shell';
 import { BRANDS, brandName, useTheme } from './theme';
@@ -76,8 +76,10 @@ export function Home() {
             <Select aria-labelledby="hero-brand" size="sm" style={{ inlineSize: 'auto' }} value={brand} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => set({ brand: e.target.value })} options={BRANDS.map((b) => ({ value: b, label: brandName(b) }))} />
           </div>
           <div className="site-hero__cards">
-            <div className="site-hero__col"><ProjectCard headingLevel={2} /><StatusCard /></div>
+            <div className="site-hero__col"><ProjectCard headingLevel={2} /><WaitingAlert /></div>
             <div className="site-hero__col"><InviteCard headingLevel={2} /></div>
+            {/* The five tones on one row across both columns: in one column of 16rem, "Overdue" wrapped alone. */}
+            <div className="site-hero__row"><StatusBadges /></div>
           </div>
         </div>
       </header>

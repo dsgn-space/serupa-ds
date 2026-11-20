@@ -5,7 +5,7 @@ Moves through pages of results: previous and next arrows around the page numbers
 **Also called:** pager.
 
 ```jsx
-const { Pagination } = window.Serupa;
+import { Pagination } from '@diki-stwn/serupa-ds';
 
 const [page, setPage] = React.useState(1);
 <Pagination count={totalPages} page={page} onPageChange={setPage} />

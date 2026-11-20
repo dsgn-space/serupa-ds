@@ -5,7 +5,7 @@ An "On this page" list of links to the sections of a long page, as a navigation 
 **Also called:** TOC, on this page, page outline.
 
 ```jsx
-const { TableOfContents } = window.Serupa;
+import { TableOfContents } from '@diki-stwn/serupa-ds';
 
 // from the h2 and h3 headings in <main>
 <aside className="sticky top-4"><TableOfContents /></aside>
