@@ -168,7 +168,10 @@ await inParallel(opened, workers, async (p, w) => {
   w.errors.length = 0;
   const failed = await openUrl(w.page, base + p.path) || await ready(w.page, true);
   if (!t(`${p.path} opens (${p.file})`, !failed, failed)) return;
-  // The stories wake a moment after the page (site/src/blocks.tsx), and a late error is still an error.
+  // The stories wake a moment after the page (site/src/blocks.tsx), and a late error is still an error. The article is
+  // there before the browser takes the page over (it is drawn ahead of time), so the wait starts once every stage has
+  // woken: before that an anatomy diagram may still be opening its story's popover to copy it, for a moment.
+  await w.page.waitForFunction(() => !document.querySelector('[data-site-demo][inert]'), null, { timeout: 15000 }).catch(() => {});
   await w.page.waitForTimeout(500);
   const seen = await w.page.evaluate(() => ({
     h1: [...document.querySelectorAll('#article h1')].filter((h) => !h.closest('[data-site-demo]')).map((h) => h.textContent.trim()),
