@@ -27,7 +27,7 @@
   contain: layout paint;
   border: var(--menu-border-width, var(--border-width-1)) solid var(--menu-border, var(--border-overlay));
   border-radius: var(--menu-radius, var(--radius-surface));
-  background: var(--menu-bg, var(--surface-overlay)); --surface-behind: var(--menu-bg, var(--surface-overlay));
+  background: var(--menu-bg, var(--surface-overlay)); --surface-behind: var(--menu-bg, var(--surface-overlay)); --border: var(--menu-divider, var(--border-overlay));
   color: var(--menu-item-text, var(--text));
   box-shadow: var(--menu-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);

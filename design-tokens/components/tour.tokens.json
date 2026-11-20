@@ -61,6 +61,16 @@
             "cssVar": "--tour-focus-ring"
           }
         }
+      },
+      "divider": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tour-divider"
+          }
+        }
       }
     },
     "shadow": {
