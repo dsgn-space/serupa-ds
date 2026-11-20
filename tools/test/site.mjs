@@ -155,6 +155,9 @@ await inParallel(opened, workers, async (p, w) => {
     h1: [...document.querySelectorAll('#article h1')].filter((h) => !h.closest('[data-site-demo]')).map((h) => h.textContent.trim()),
     broken: document.querySelectorAll('.site-broken').length,
     links: [...new Set([...document.querySelectorAll('#article a[href]')].filter((a) => !a.closest('[data-site-demo]')).map((a) => a.getAttribute('href')))],
+    // A link to a part of this page whose id isn't on it (a section that is on another page now) goes nowhere.
+    noTarget: [...new Set([...document.querySelectorAll('#article a[href^="#"]')].filter((a) => !a.closest('[data-site-demo]') && a.getAttribute('href').length > 1
+      && !document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)))).map((a) => a.getAttribute('href')))],
     demos: document.querySelectorAll('.site-demo').length,
     api: !!document.getElementById('api'),
     // What sits on top of the page: an open modal dialog, or an open menu or panel. A tooltip shown beside its button
@@ -195,6 +198,7 @@ await inParallel(opened, workers, async (p, w) => {
   // Storybook's own links have been pointed at the site's pages by now; one that is left has no page here.
   const lost = seen.links.filter((h) => h.startsWith('?path=') || (h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/')));
   t(`${p.path}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
+  t(`${p.path}: every link to a part of the page finds it`, !seen.noTarget.length, `nothing on the page has the id of ${seen.noTarget.slice(0, 8).join(', ')}`);
   if (p.stories && /<(Primary|Stories|Canvas)\b/.test(read(p.file))) t(`${p.path} shows its stories`, seen.demos > 0, 'the page has no example in a frame');
   if (p.component && read(p.file).includes('<Controls')) t(`${p.path} shows its props`, seen.api, 'the page has no API table');
 });

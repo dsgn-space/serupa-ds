@@ -18,6 +18,6 @@ declare module 'virtual:site-props' {
 }
 
 declare module 'virtual:site-facts' {
-  const facts: { principles: Array<{ name: string; line: string }>; decisions: Array<{ id: string; title: string }>; stories: number; tokens: number };
+  const facts: { principles: Array<{ name: string; line: string }>; decisions: Array<{ id: string; title: string; replacedBy: string | null }>; stories: number; tokens: number };
   export default facts;
 }

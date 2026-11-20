@@ -13,14 +13,17 @@ const walk = (dir, keep, out = []) => {
   return out;
 };
 
-/** @returns {{ principles: Array<{ name: string, line: string }>, decisions: Array<{ id: string, title: string }>, stories: number, tokens: number }} */
+/** @returns {{ principles: Array<{ name: string, line: string }>, decisions: Array<{ id: string, title: string, replacedBy: string | null }>, stories: number, tokens: number }} */
 export function siteFacts(root) {
   const read = (...p) => fs.readFileSync(path.join(root, ...p), 'utf8');
   // Each principle is a "## Name" and the sentence under it.
   const principles = [...read('docs', 'foundations', 'DesignPrinciples.mdx').matchAll(/^## (.+)\n+([^\n<#-][^\n]*)/gm)].map((m) => ({ name: m[1].trim(), line: m[2].trim() }));
   const decisions = fs.readdirSync(path.join(root, 'docs', 'adr')).filter((f) => /^\d{4}-.*\.md$/.test(f)).sort().map((f) => {
-    const title = /^# (?:ADR-\d+:\s*)?(.+)$/m.exec(read('docs', 'adr', f))?.[1]?.trim() ?? f;
-    return { id: f.slice(0, 4), title };
+    const adr = read('docs', 'adr', f);
+    const title = /^# (?:ADR-\d+:\s*)?(.+)$/m.exec(adr)?.[1]?.trim() ?? f;
+    // A decision a later one replaced stays on record, said as such: "**Status:** Superseded by [ADR-0011](…)".
+    const replacedBy = /^\*\*Status:\*\*\s*Superseded by \[?ADR-(\d{4})/m.exec(adr)?.[1] ?? null;
+    return { id: f.slice(0, 4), title, replacedBy };
   });
   const stories = walk(path.join(root, 'src'), (n) => n.endsWith('.stories.tsx')).reduce((n, f) => n + (fs.readFileSync(f, 'utf8').match(/^export const \w+: Story\b/gm)?.length ?? 0), 0);
   const tokens = new Set(read('tokens.css').match(/^\s*--[a-z0-9-]+(?=:)/gm)?.map((t) => t.trim())).size;

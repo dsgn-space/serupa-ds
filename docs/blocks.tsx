@@ -199,6 +199,27 @@ const ROOT = readme;
 export function ReadmeIntro() {
   return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
 }
+const slug = (heading: string) => heading.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+/** The page each `##` section of docs/foundations.md is on, by its id. In the file one section links to another with
+ * `#id`; on a page that doesn't have that section, the link goes to the page that does. */
+const SECTION_PAGE: Record<string, string> = Object.fromEntries(Object.entries({
+  'foundations-colors': ['Color families', 'Naming', 'Using the shades', 'Contrast'],
+  'foundations-themes': ['Themes', 'Alias tokens'],
+  'foundations-typography': ['Typography'],
+  'foundations-icons': ['Iconography'],
+  'foundations-spacing': ['Spacing', 'Sizing'],
+  'foundations-corner-radius': ['Corner radius'],
+  'foundations-effects-and-borders': ['Borders and outlines', 'Effects'],
+  'foundations-elevation-and-layers': ['Elevation and layers'],
+  'foundations-layout': ['Page layout'],
+  'foundations-motion': ['Motion'],
+  'foundations-content-and-voice': ['Content and voice'],
+  'foundations-data-formats': ['Data formats'],
+  'foundations-ethical-design': ['Ethical design'],
+  'foundations-accessibility': ['Accessibility standard'],
+  'foundations-utility-classes': ['Backgrounds', 'Layout', 'Flexbox and grid', 'Filters', 'Tables', 'Transforms', 'SVG', 'Interactivity'],
+}).flatMap(([page, sections]) => sections.map((s) => [slug(s), page])));
+
 /** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
 /** A section whose heading the page writes itself (reserve, such as its title) comes without that heading, so the page
  * doesn't say "Typography" twice, and its subsections step up a level under the title. */
@@ -216,8 +237,12 @@ export function ReadmeSections({ headings, reserve }: { headings: string[]; /** 
       return !code && /^###+ /.test(line) ? line.slice(1) : line;
     }).join('\n');
   }).join('\n\n');
-  return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
+  return <DocMarkdown reserve={reserve}>{relink(md.replace(/\]\(#([\w-]+)\)/g, (link, id: string) => {
+    const page = SECTION_PAGE[id];
+    return page && !headings.some((h) => slug(h) === id) ? `](?path=/docs/${page}--docs)` : link;
+  }))}</DocMarkdown>;
 }
+
 
 /** A table or swatch grid wider than a narrow screen scrolls in its own box instead of pushing the page sideways
  * (WCAG 1.4.10 at 320px). While it does, it's a named region Tab reaches, so the arrow keys scroll it; when it fits,
