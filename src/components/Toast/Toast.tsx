@@ -573,8 +573,10 @@ function ToastView(props: { item: Item; leaving: false | 'closed' | 'queued'; in
   // The repeat count in the locale's digits ("×١٢" in ar-EG), as Badge writes its count (GR25).
   const locale = useLocale();
   const icon = ICONS[t.tone];
+  // An action of more than a word or two goes under the text (Toast.css): beside it, the text was left a narrow column.
+  const actionBelow = !!t.action && t.action.label.length > 12;
   return (
-    <li ref={self} tabIndex={-1} className={cn('dk-toast', 'dk-toast--' + t.tone)} data-tone={t.tone} data-toast={t.id}
+    <li ref={self} tabIndex={-1} className={cn('dk-toast', 'dk-toast--' + t.tone)} data-tone={t.tone} data-toast={t.id} data-action={actionBelow ? 'below' : undefined}
       data-leaving={leaving ? (leaving === 'queued' ? 'queued' : '') : undefined} data-instant={props.instant ? '' : undefined} inert={leaving ? true : undefined} aria-labelledby={titleId} aria-describedby={t.description != null ? descId : undefined}
       onPointerDown={onSwipeDown} onPointerMove={onSwipeMove} onPointerUp={onSwipeEnd} onPointerCancel={onSwipeEnd}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}

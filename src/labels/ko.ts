@@ -395,5 +395,6 @@ export const labels: SerupaLabels = {
   transferRemoveReason: '먼저 제거할 항목을 선택하세요',
   transferEmpty: '없음',
   transferMoved: (items, list) => items + '을(를) ' + list + '(으)로 옮겼습니다.',
+  fieldListLimit: (max) => '최대 개수에 도달했습니다(' + max + ').',
   tabCloseHint: '닫으려면 Delete 키를 누르세요.',
 };
