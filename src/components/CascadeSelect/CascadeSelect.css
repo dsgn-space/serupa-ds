@@ -70,6 +70,7 @@
   display: flex; flex: none; align-items: center; gap: var(--spacing-2); min-block-size: var(--control-height-md); padding: var(--spacing-1) var(--spacing-2); border-radius: var(--radius-inner);
   cursor: var(--cursor-interactive); overflow-wrap: anywhere; touch-action: manipulation;
 }
+@media (pointer: coarse) { .dk-cascade-select__option { min-block-size: var(--spacing-11); } }   /* 44px to pick on a touch screen, as Menu's items */
 @media (hover: hover) { .dk-cascade-select__option:hover:not([aria-disabled="true"]) { background: var(--cascade-select-option-hover, var(--highlight)); } }
 .dk-cascade-select__option:active:not([aria-disabled="true"]) { background: var(--cascade-select-option-bg-pressed, var(--pressed)); }
 /* The chosen path: a tint and a 2px primary bar at the start (right in rtl), at the weight of the others so a long

@@ -64,6 +64,7 @@
 /* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
    off it doesn't land in the text and open the keyboard. */
 @media (pointer: coarse) {
+  .dk-time-picker__option { min-height: max(var(--time-picker-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
   .dk-time-picker__button { position: relative; isolation: isolate; }
   .dk-time-picker__button::after { content: ""; position: absolute; --dk-under: calc(var(--z-10) * -1); z-index: var(--dk-under); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
 }

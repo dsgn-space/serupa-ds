@@ -31,6 +31,8 @@
   content-visibility: auto;
   contain-intrinsic-block-size: auto calc(var(--tree-view-item-height, var(--control-height-md)) - var(--spacing-2));   /* the padding, above and below */
 }
+/* 44px to press on a touch screen, as Menu's items, and held at that height while out of view. */
+@media (pointer: coarse) { .dk-tree-view__row { min-height: max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)); contain-intrinsic-block-size: auto calc(max(var(--tree-view-item-height, var(--control-height-md)), var(--spacing-11)) - var(--spacing-2)); } }
 @media (hover: hover) { .dk-tree-view__row:hover { background: var(--tree-view-item-bg-hover, var(--surface-hover)); --surface-behind: var(--tree-view-item-bg-hover, var(--surface-hover)); } }
 /* Pressed: one step past hover while held, at once. Not on the picked row or a disabled one. */
 .dk-tree-view__item:not(.dk-tree-view__item--selected, .dk-tree-view__item--disabled) > .dk-tree-view__row:active { background: var(--tree-view-item-bg-pressed, var(--pressed)); }
