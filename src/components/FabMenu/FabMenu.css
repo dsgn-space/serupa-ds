@@ -1,0 +1,8 @@
+/* ---------------------------------------------------------------
+   FabMenu: a Fab (its own looks and tokens) and a Menu panel (Menu's looks and tokens) that opens off it, with a
+   little more room between the two than a Menu leaves under a small button, as the Fab is large and raised. Every
+   value reads one of its own tokens (fab-menu.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-menu.dk-fab-menu { --menu-offset: var(--fab-menu-offset, var(--spacing-2)); }
+}
