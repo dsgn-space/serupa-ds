@@ -63,6 +63,9 @@ export function lowContrast(pairs: Array<[string, string, string, number]>): str
 }
 
 /** The computed style of the element a selector finds (fails loudly when nothing matches). */
+/** A computed alignment as Firefox, WebKit and Chromium before 158 write it: Chromium 158 reports `flex-start` and
+ * `flex-end` as `flow-start` and `flow-end` (the boxes sit where they did; only the name changed). */
+export const flexAlign = (v: string) => v.replace(/\bflow-(start|end)\b/g, 'flex-$1');
 export function css(el: Element | null): CSSStyleDeclaration {
   if (!el) throw new Error('No element to measure');
   return getComputedStyle(el);

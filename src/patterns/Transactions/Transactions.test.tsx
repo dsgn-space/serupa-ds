@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { Transactions, findTx, monthsOf, totals, type Transaction } from './Transactions';
 
 const active = () => document.activeElement as HTMLElement;
@@ -75,5 +75,19 @@ describe('Patterns/Transactions', () => {
     await expect.element(screen.getByRole('heading', { level: 2, name: 'Couldn’t load your transactions' })).toBeVisible();
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Transactions printed', () => {
+  test('printed, the list leaves out its search and filters, and keeps the transactions', async () => {
+    await render(<Transactions />);
+    // Found before printing: a role query skips what's hidden.
+    const hidden: Element[] = [page.getByRole('search').element()];
+    const kept: Element[] = [page.getByRole('table').element()];
+    await commands.printMedia(true);
+    try {
+      for (const e of hidden) expect(e.checkVisibility(), e.textContent ?? '').toBe(false);
+      for (const e of kept) expect(e.checkVisibility(), e.textContent ?? '').toBe(true);
+    } finally { await commands.printMedia(false); }
   });
 });

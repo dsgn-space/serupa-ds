@@ -181,7 +181,7 @@ export function OrderStatus({ order: start = demo, currency = 'USD', onCancel, l
                 <div className="flex flex-wrap items-center gap-3">
                   {order.carrier && !order.cancelled && order.stage !== 'placed' && order.stage !== 'packed'
                     ? <Link href={order.carrier.href} external>Track the parcel with {order.carrier.name}</Link> : null}
-                  {onCancel && canCancel(order) ? <Button variant="outline" destructive onClick={() => ask(true)}>Cancel order</Button> : null}
+                  {onCancel && canCancel(order) ? <Button variant="outline" destructive onClick={() => ask(true)} data-print="hide">Cancel order</Button> : null}
                 </div>
                 {!order.cancelled && !canCancel(order) && order.stage === 'shipped'
                   ? <p className="m-0 text-sm text-text-muted">It has shipped, so it can’t be cancelled. You can send it back once it arrives.</p> : null}

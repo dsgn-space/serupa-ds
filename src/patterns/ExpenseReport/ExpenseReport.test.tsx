@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { ExpenseReport, expenseProblems, missingReceipts, type Expense } from './ExpenseReport';
 
 const active = () => document.activeElement as HTMLElement;
@@ -129,5 +129,19 @@ describe('ExpenseReport on a phone', () => {
       expect(buttons.length).toBeGreaterThan(0);
       for (const b of buttons) { const r = b.getBoundingClientRect(); expect(r.right, b.getAttribute('aria-label') ?? '').toBeLessThanOrEqual(frame.right + 1); expect(r.left).toBeGreaterThanOrEqual(frame.left - 1); }
     } finally { await page.viewport(900, 700); }
+  });
+});
+
+describe('ExpenseReport printed', () => {
+  test('printed, the report leaves out the add form, each Remove and Send for approval, and keeps the expenses', async () => {
+    await render(<ExpenseReport />);
+    // Found before printing: a role query skips what's hidden.
+    const hidden: Element[] = [page.getByRole('heading', { name: 'Add an expense' }).element(), page.getByRole('button', { name: /^Remove/ }).first().element(), page.getByRole('button', { name: 'Send for approval' }).element()];
+    const kept: Element[] = [page.getByRole('table').element()];
+    await commands.printMedia(true);
+    try {
+      for (const e of hidden) expect(e.checkVisibility(), e.textContent ?? '').toBe(false);
+      for (const e of kept) expect(e.checkVisibility(), e.textContent ?? '').toBe(true);
+    } finally { await commands.printMedia(false); }
   });
 });

@@ -29,6 +29,12 @@
 # LongText
 - text: Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column
 
+# Middle
+- list:
+  - listitem: quarterly-report-final-version-2025.pdf
+  - listitem: quarterly-report-final-version-2026.pdf
+  - listitem: logo.svg
+
 # Placement
 - text: "top: quarterly-report-final-version-2-reviewed-by-finance.pdf bottom: quarterly-report-final-version-2-reviewed-by-finance.pdf left: quarterly-report-final-version-2-reviewed-by-finance.pdf right: quarterly-report-final-version-2-reviewed-by-finance.pdf top-start: quarterly-report-final-version-2-reviewed-by-finance.pdf top-end: quarterly-report-final-version-2-reviewed-by-finance.pdf bottom-start: quarterly-report-final-version-2-reviewed-by-finance.pdf bottom-end: quarterly-report-final-version-2-reviewed-by-finance.pdf left-start: quarterly-report-final-version-2-reviewed-by-finance.pdf left-end: quarterly-report-final-version-2-reviewed-by-finance.pdf right-start: quarterly-report-final-version-2-reviewed-by-finance.pdf right-end: quarterly-report-final-version-2-reviewed-by-finance.pdf"
 

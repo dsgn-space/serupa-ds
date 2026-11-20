@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { SerupaProvider } from '../../internal/provider';
 import { Article } from './Article';
 
@@ -50,5 +50,19 @@ describe('Patterns/Article', () => {
   test('a post in another language says so', async () => {
     await render(<Article lang="id" />);
     expect(document.querySelector('article')?.getAttribute('lang')).toBe('id');
+  });
+});
+
+describe('Article printed', () => {
+  test('printed, the post leaves out its On this page list and Read next', async () => {
+    await render(<Article />);
+    // Found before printing: a role query skips what's hidden.
+    const hidden: Element[] = [page.getByRole('heading', { name: 'Read next' }).element(), page.getByRole('navigation', { name: 'On this page' }).element()];
+    const kept: Element[] = [page.getByRole('heading', { level: 1 }).element()];
+    await commands.printMedia(true);
+    try {
+      for (const e of hidden) expect(e.checkVisibility(), e.textContent ?? '').toBe(false);
+      for (const e of kept) expect(e.checkVisibility(), e.textContent ?? '').toBe(true);
+    } finally { await commands.printMedia(false); }
   });
 });

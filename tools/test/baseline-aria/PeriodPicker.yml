@@ -4,6 +4,80 @@
 # Disabled
 - combobox "Report month" [disabled]: March 2025
 
+# DoBoundToData
+- combobox "Statement month" [expanded]: March 2025
+- dialog "Choose a month":
+  - button "Previous year"
+  - heading "2025" [level=2]
+  - button "Next year" [disabled]
+  - grid "2025":
+    - rowgroup:
+      - row "January 2025 February 2025 March 2025":
+        - gridcell "January 2025":
+          - button "January 2025"
+        - gridcell "February 2025":
+          - button "February 2025"
+        - gridcell "March 2025" [selected]:
+          - button "March 2025"
+      - row "April 2025 May 2025 June 2025":
+        - gridcell "April 2025":
+          - button "April 2025" [disabled]
+        - gridcell "May 2025":
+          - button "May 2025" [disabled]
+        - gridcell "June 2025":
+          - button "June 2025" [disabled]
+      - row "July 2025 August 2025 September 2025":
+        - gridcell "July 2025":
+          - button "July 2025" [disabled]
+        - gridcell "August 2025":
+          - button "August 2025" [disabled]
+        - gridcell "September 2025":
+          - button "September 2025" [disabled]
+      - row "October 2025 November 2025 December 2025":
+        - gridcell "October 2025":
+          - button "October 2025" [disabled]
+        - gridcell "November 2025":
+          - button "November 2025" [disabled]
+        - gridcell "December 2025":
+          - button "December 2025" [disabled]
+
+# DontOpenEnded
+- combobox "Statement month" [expanded]: March 2025
+- dialog "Choose a month":
+  - button "Previous year"
+  - heading "2025" [level=2]
+  - button "Next year"
+  - grid "2025":
+    - rowgroup:
+      - row "January 2025 February 2025 March 2025":
+        - gridcell "January 2025":
+          - button "January 2025"
+        - gridcell "February 2025":
+          - button "February 2025"
+        - gridcell "March 2025" [selected]:
+          - button "March 2025"
+      - row "April 2025 May 2025 June 2025":
+        - gridcell "April 2025":
+          - button "April 2025"
+        - gridcell "May 2025":
+          - button "May 2025"
+        - gridcell "June 2025":
+          - button "June 2025"
+      - row "July 2025 August 2025 September 2025":
+        - gridcell "July 2025":
+          - button "July 2025"
+        - gridcell "August 2025":
+          - button "August 2025"
+        - gridcell "September 2025":
+          - button "September 2025"
+      - row "October 2025 November 2025 December 2025":
+        - gridcell "October 2025":
+          - button "October 2025"
+        - gridcell "November 2025":
+          - button "November 2025"
+        - gridcell "December 2025":
+          - button "December 2025"
+
 # InAField
 - text: Billing month The invoice covers the whole month.
 - combobox "Billing month" [invalid]: Choose a month

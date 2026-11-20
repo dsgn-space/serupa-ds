@@ -156,7 +156,7 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
                   <Badge tone={BADGE[where.state].tone}>{BADGE[where.state].label}</Badge>
                 </h2>
                 <p className="m-0 text-text-muted">{sentence}</p>
-                <div className="flex flex-wrap items-center gap-3">
+                <div data-print="hide" className="flex flex-wrap items-center gap-3">
                   {onPay && !inv.paid ? <Button loading={busy} onClick={pay}>Pay {money(sums.total)}</Button> : null}
                   <Link href={inv.pdf} download>Download PDF<VisuallyHidden> of invoice {inv.number}</VisuallyHidden></Link>
                 </div>

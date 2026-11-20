@@ -174,7 +174,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
             </section>
           ) : (
             <>
-              <Card>
+              <Card data-print="hide">
                 <form onSubmit={add} noValidate aria-labelledby="add-expense" className="flex flex-col gap-4">
                   <h2 id="add-expense" className="m-0 text-lg font-semibold">Add an expense</h2>
                   <ErrorSummary key={tries} errors={errors} headingLevel={3} />
@@ -209,7 +209,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                       <TableHeaderCell>What</TableHeaderCell>
                       <TableHeaderCell align="end">Amount</TableHeaderCell>
                       <TableHeaderCell>Receipt</TableHeaderCell>
-                      <TableHeaderCell><span className="sr-only">Remove</span></TableHeaderCell>
+                      <TableHeaderCell data-print="hide"><span className="sr-only">Remove</span></TableHeaderCell>
                     </TableRow></TableHead>
                     <TableBody>
                       {list.map((x) => (
@@ -218,7 +218,7 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                           <TableCell className="wrap-break-word">{x.what}<span className="block text-sm text-text-muted">{label(x.category)}</span></TableCell>
                           <TableCell className="text-end tabular-nums">{money(x.amount)}</TableCell>
                           <TableCell>{x.receipt ? <span className="wrap-anywhere">{x.receipt}</span> : x.amount > receiptOver ? <Badge tone="warning">Receipt needed</Badge> : <span className="text-text-muted">Not needed</span>}</TableCell>
-                          <TableCell><Button id={`expense-remove-${x.id}`} size="sm" variant="ghost" onClick={() => remove(x)} aria-label={`Remove: ${x.what}`}>Remove</Button></TableCell>
+                          <TableCell data-print="hide"><Button id={`expense-remove-${x.id}`} size="sm" variant="ghost" onClick={() => remove(x)} aria-label={`Remove: ${x.what}`}>Remove</Button></TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -226,14 +226,14 @@ export function ExpenseReport({ title = 'Trip to Bandung, February', expenses = 
                       <TableRow>
                         <TableCell colSpan={2} className="font-semibold">Total</TableCell>
                         <TableCell className="text-end font-semibold tabular-nums">{money(total)}</TableCell>
-                        <TableCell /><TableCell />
+                        <TableCell /><TableCell data-print="hide" />
                       </TableRow>
                     </TableFoot>
                   </Table>
                 ) : <p className="m-0 text-text-muted">None yet. Each one you add shows here, with the total.</p>}
               </section>
 
-              <div className="flex flex-col items-start gap-3">
+              <div data-print="hide" className="flex flex-col items-start gap-3">
                 {reportProblem ? <Alert tone="danger">{reportProblem}</Alert> : null}
                 {failed ? <Alert tone="danger">Couldn’t send the report. Try again; nothing is lost.</Alert> : null}
                 <Button loading={busy} onClick={send}>Send for approval</Button>

@@ -3,6 +3,8 @@ import * as React from 'react';
 import { cn, oneOf, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
 import { component } from '../../internal/component';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
+import { graphemes } from '../../internal/graphemes';
+import { middleCutAt } from '../../internal/middleCut';
 import type { Placement } from '../../internal/position';
 import { Tooltip } from '../Tooltip/Tooltip';
 
@@ -17,6 +19,10 @@ export interface TruncatedTextProps extends Omit<React.HTMLAttributes<HTMLElemen
   /** Where the full text shows: 'top' (default), 'bottom', 'left', 'right', or with '-start' / '-end'. It flips when
    *  there's no room. */
   placement?: Placement | undefined;
+  /** Where one line is cut: 'end' (default) or 'middle', which keeps the end in view ("quarterly-rep…2026.pdf"), for
+   *  file names, ids and addresses told apart by their ends. Screen readers and copy still get the whole text once.
+   *  With lines (2 or more) it's cut at the end. */
+  mode?: 'end' | 'middle' | undefined;
 }
 
 const TAGS = ['span', 'p', 'div'] as const;
@@ -32,8 +38,9 @@ const CONTROL = 'a[href], button, summary, [role="button"], [role="link"], [role
 /** Text cut with an ellipsis when it doesn't fit, with the full text on hover, keyboard focus and tap.
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTextProps>('TruncatedText', function TruncatedText(props, ref) {
-  const { children, lines, as, placement, className, onPointerDown, onClick, ...rest } = props;
+  const { children, lines, as, placement, mode, className, onPointerDown, onClick, ...rest } = props;
   const clamp = lines != null && lines >= 2 ? Math.min(6, Math.floor(lines)) : 0;
+  const middle = mode === 'middle' && !clamp;
   const el = React.useRef<HTMLElement | null>(null);
   const [cut, setCut] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -65,7 +72,7 @@ export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTex
       if (ro) ro.disconnect();
       stop();
     };
-  }, [children, clamp]);
+  }, [children, clamp, middle]);
 
   // Inside a link, a button or another element that takes focus, that control's keyboard focus shows the full text.
   useIsoLayoutEffect(() => {
@@ -84,6 +91,14 @@ export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTex
   // link followed): the whole text would cover what it opens.
   const press = React.useRef({ touch: false, open: false });
   const refs = useMergedRef(ref, (n) => { el.current = n; });
+  // Cut in the middle: the whole text stays in one run that shrinks to an ellipsis, so screen readers, find-in-page
+  // and a copy get all of it once, and its last few characters are drawn again after it (CSS generated content, which
+  // screen readers skip and a copy leaves out). The run never shows as far as them: it's cut only when the whole text
+  // doesn't fit. The end is cut on grapheme boundaries, and dir="auto" lays it out in the text's own direction, so a
+  // right-to-left name keeps its end on the left.
+  const chars = middle && cut ? graphemes(children) : [];
+  const at = chars.length ? middleCutAt(children, chars) : 0;
+  const content = at > 0 ? <span className="dk-truncated-text__start">{children}</span> : children;
   const text = React.createElement(oneOf(TAGS, as, 'span'), {
     ...rest,
     ref: refs,
@@ -91,10 +106,12 @@ export const TruncatedText = /* @__PURE__ */ component<HTMLElement, TruncatedTex
     'data-truncated': cut ? '' : undefined,
     // The count goes in an attribute the CSS reads, not a style attribute, so it holds under a strict CSP too.
     'data-lines': clamp || undefined,
+    'data-end': at > 0 ? chars.slice(at).join('') : undefined,
+    dir: middle ? rest.dir || 'auto' : rest.dir,
     tabIndex: cut && !inside ? 0 : rest.tabIndex,
-    className: cn('dk-truncated-text', clamp && 'dk-truncated-text--clamp', className),
+    className: cn('dk-truncated-text', clamp && 'dk-truncated-text--clamp', at > 0 && 'dk-truncated-text--middle', className),
     onPointerDown: (e: React.PointerEvent<HTMLElement>) => { press.current = { touch: e.pointerType !== 'mouse', open }; if (onPointerDown) onPointerDown(e); },
     onClick: (e: React.MouseEvent<HTMLElement>) => { if (onClick) onClick(e); if (cut && !inside && press.current.touch && !press.current.open) setOpen(true); },
-  }, children);
+  }, content);
   return <Tooltip visual content={children} open={open} onOpenChange={setOpen} disabled={!cut} placement={placement}>{text}</Tooltip>;
 });
