@@ -147,7 +147,8 @@ jobs:
       # which failed the job (20 Nov). A machine with no history of its own starts one.
       - id: machine
         shell: bash
-        run: echo "id=$(grep -m1 'model name' /proc/cpuinfo | sed 's/.*: //' | tr -c 'A-Za-z0-9' '-' | tr -s '-')$(nproc)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "id=$(grep -m1 'model name' /proc/cpuinfo | sed 's/.*: //' | tr -c 'A-Za-z0-9' '-' | tr -s '-')$(nproc)" >> "$GITHUB_OUTPUT"
       - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .bench-history
