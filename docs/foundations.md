@@ -348,7 +348,7 @@ Text rules of thumb:
 
 Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus custom icons drawn to the same rules. Use no other icon set or style. Each icon is an inline SVG, so there's nothing to load and nothing flashes.
 
-Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations/Icons page in Storybook, which searches all of them and copies the name. You can also pass an icon imported from `@diki-stwn/serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
+Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations › Icons page of the docs, which searches all of them and copies the name. You can also pass an icon imported from `@diki-stwn/serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
 
 - **Sizes:** the `icon-size-*` tokens, `<Icon size="xs">` to `"xl"`: 14px (`sm` buttons, `text-xs`), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows, `text-base`), 24px (default, toolbars and navigation), 40px (empty states).
 - **Weight:** match the text beside the icon: weight 400 as drawn for regular and medium text, `weight="semibold"` or `weight="bold"` (the `icon-weight-*` tokens) next to semibold or bold text and headings.

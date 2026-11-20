@@ -182,7 +182,7 @@ npx serupa-usage src
 
 ### For your own components
 
-The package also exports what the components use themselves, so a component you build follows the same settings. Guides › Hooks and helpers in Storybook gives each one an example (`docs/HooksAndHelpers.mdx`):
+The package also exports what the components use themselves, so a component you build follows the same settings. Guides › Hooks and helpers in the docs gives each one an example (`docs/HooksAndHelpers.mdx`):
 
 | Export | What it gives |
 | --- | --- |
