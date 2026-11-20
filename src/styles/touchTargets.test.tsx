@@ -22,6 +22,10 @@ import { Toolbar } from '../components/Toolbar/Toolbar';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { Calendar } from '../components/Calendar/Calendar';
 import { Carousel } from '../components/Carousel/Carousel';
+import { CascadeSelect } from '../components/CascadeSelect/CascadeSelect';
+import { TreeView } from '../components/TreeView/TreeView';
+import { Menubar, MenubarMenu } from '../components/Menubar/Menubar';
+import { MenuItem } from '../components/Menu/Menu';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
 // and Material ask for 44 to 48px), the Splitter's 8px handle a 24px-wide one, with nothing moving and no two
@@ -215,6 +219,47 @@ describe('touch-sized days and dots', () => {
     await coarsePointer(async (active) => {
       if (!active) return;
       expect(rows()).toEqual({ day: [44, 44], dot: ['dot', 'dot'] });
+    });
+  });
+});
+
+// Rows a phone user picks from (EQ1): on a touch screen the options of a Combobox, TimePicker and CascadeSelect, the
+// rows of a TreeView and the names in a Menubar are 44px high, as Menu's items and Sidebar's are; with a mouse they keep
+// their 32px (24px in the menubar).
+function Lists() {
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '320px', padding: '64px', width: '480px' }}>
+    <Combobox aria-label="Fruit" defaultOpen options={['Apple', 'Banana']} />
+    <TimePicker aria-label="Start" defaultOpen />
+    <CascadeSelect aria-label="Region" defaultOpen options={[{ value: 'id', label: 'Indonesia', children: [{ value: 'jk', label: 'Jakarta' }] }]} />
+    <TreeView aria-label="Files" items={[{ id: 'a', label: 'README.md' }, { id: 'b', label: 'package.json' }]} />
+    <Menubar aria-label="Editor"><MenubarMenu label="File"><MenuItem>New</MenuItem></MenubarMenu></Menubar>
+  </div>;
+}
+/** The height of the first of each kind of row, in px. */
+const heights = () => {
+  const first = (role: string, name: string) => document.querySelector<HTMLElement>(`[role="${role}"]${name ? `[aria-label="${name}"] [role]` : ''}`);
+  const h = (el: Element | null | undefined) => (el ? Math.round(el.getBoundingClientRect().height) : 0);
+  const options = [...document.querySelectorAll('[role="option"]')];
+  return {
+    combobox: h(options.find((o) => o.textContent === 'Apple')),
+    time: h(document.querySelector('[role="listbox"] li[role="option"]')),
+    cascade: h(options.find((o) => o.textContent?.includes('Indonesia'))),
+    tree: h(document.querySelector('[role="treeitem"]')?.firstElementChild),
+    menubar: h(first('menuitem', '')),
+  };
+};
+
+describe('touch-sized rows in lists', () => {
+  test('with a mouse: 32px options and tree rows, 24px menubar names', async () => {
+    await render(<Lists />);
+    expect(heights()).toEqual({ combobox: 32, time: 32, cascade: 32, tree: 32, menubar: 24 });
+  });
+
+  test('on a touch screen: 44px, as Menu\'s items are', async () => {
+    await render(<Lists />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      expect(heights()).toEqual({ combobox: 44, time: 44, cascade: 44, tree: 44, menubar: 44 });
     });
   });
 });

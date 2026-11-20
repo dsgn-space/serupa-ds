@@ -54,6 +54,10 @@ jobs:
     name: ${{ matrix.group }}${{ matrix.part && format(' {0}', matrix.part) || '' }} (${{ matrix.browser }})
     strategy:
       fail-fast: false
+      # Four at a time, so the ten jobs share the self-hosted pool with pull requests and the merge queue instead of
+      # taking it: GitHub has started this 03:00 run around 11:00 since 17 Nov, in the working day, and its ten jobs
+      # (with a manual run's ten) held 21 of the pool's slots while 40 pull request and queue jobs waited (20 Nov).
+      max-parallel: 4
       matrix:
         # Visual against tools/test/baseline-visual-<browser>/ (visual.mjs), drawn in this same image.
         group: [checks, storybook, visual]

@@ -12,6 +12,16 @@
           }
         }
       },
+      "border": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "The edge round the toolbar's surface, so it reads as one in light themes too.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--toolbar-border"
+          }
+        }
+      },
       "text": {
         "$type": "color",
         "$value": "{color.text}",
@@ -27,7 +37,7 @@
       "radius": {
         "$type": "dimension",
         "$value": "{radius.radius-control}",
-        "$description": "The corners. Unset, they are concentric with the controls inside: radius-control plus the padding (10px).",
+        "$description": "The corners. Unset, they are concentric with the controls inside: radius-control plus the padding and the 1px edge (11px).",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--toolbar-radius"

@@ -16,6 +16,8 @@ interface TreeViewProps extends Omit<React.HTMLAttributes<HTMLUListElement>, "de
     expanded?: string[] | undefined;
     defaultExpanded?: string[] | undefined;
     onExpandedChange?: ((expanded: string[]) => void) | undefined;
+    cascade?: boolean | undefined;
+    cascadeValue?: "all" | "leaves" | undefined;
     "aria-label"?: string | undefined;
 }
 declare const TreeView: React.ForwardRefExoticComponent<TreeViewProps & React.RefAttributes<HTMLUListElement>>;

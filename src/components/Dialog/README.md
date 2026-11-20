@@ -162,6 +162,7 @@ Each is an optional override: set it on the page, a container or one dialog. The
 | `--dialog-title-color` | `text` | The title. |
 | `--dialog-description-color` | `text-muted` | The description under the title (4.5:1 on surface). |
 | `--dialog-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
+| `--dialog-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
 | `--dialog-shadow` | `elevation-modal` | The panel's shadow. |
 | `--dialog-radius` | `radius-container` | The panel's corners (12px). |
 | `--dialog-width-sm` | `container-sm` | size="sm" (384px). |

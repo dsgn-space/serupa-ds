@@ -53,9 +53,9 @@ Drawn from the `Controlled` story.
 ## Behavior
 
 - The previous and next buttons move one slide. A click on a dot goes to that slide. On the dots, the arrow keys move to the previous or next slide, and Home and End go to the first and last.
-- A swipe of 40px or more, with touch, pen or mouse, moves one slide; a shorter one springs back. A swipe let go of while pulling back, so that it's heading under 40px, springs back too. With `perView`, a hard flick carries on to the slide it's heading for, a whole view at most. Up and down swipes still scroll the page. Swiping works over pictures, and a swipe that starts on a link doesn't follow it. On a trackpad, a sideways two-finger swipe (or Shift and the mouse wheel) moves one slide per swipe, and doesn't scroll the page sideways or go back a page.
-- Without `loop`, the button for the way you can't go hides; if it had focus, focus moves to the other button.
-- Slides slide in over 300ms, and change at once with reduced motion. With one slide there are no buttons or dots.
+- The slides sit in the browser's own scroll container, which snaps to each slide. A touch swipe, a sideways two-finger swipe on a trackpad and Shift with the mouse wheel scroll it with the platform's momentum, and move one slide per gesture however hard the flick (`scroll-snap-stop`); the index and the dots follow where it settles. At an end it doesn't scroll the page sideways or go back a page. Up and down swipes still scroll the page. A mouse drag of 40px or more (or a flick) moves one slide too, and a shorter one, or one let go of while pulling back, springs back. Swiping works over pictures, and a drag that starts on a link doesn't follow it.
+- Without `loop`, the button for the way you can't go hides; if it had focus, focus moves to the other button. With `loop`, next on the last slide scrolls back to the first, and previous on the first to the last; a swipe stops at the ends, as a scroll does.
+- The buttons and dots scroll smoothly to the slide, and change it at once with reduced motion. With one slide there are no buttons or dots.
 - With `perView`, the slides share the width, 16px apart (`--carousel-slide-gap`). `index` is the first slide shown, the buttons and a swipe still move one slide, and they stop once the last slide is in view. The dots count pages: with 3 per view and 7 slides, three dots for slides 1–3, 4–6 and 5–7, named "1–3 of 7" (the `slidesOf` label). `{ base, sm, md, lg }` follows the screen width (from 640, 768 and 1024px up) as it changes. With as many slides as fit, or fewer, there are no buttons or dots.
 - In RTL (a `dir` attribute or CSS `direction`) the row runs right to left, and the buttons and arrow keys follow it.
 
@@ -66,7 +66,7 @@ Drawn from the `Controlled` story.
 
 ## Accessibility
 
-- **Role and name:** the `<section>` is a region named by `label`, with `aria-roledescription` "carousel" (the `carouselRole` label, "korsel" in Indonesian). Each slide is a group named "2 of 5" (`aria-roledescription` from `slideRole`). The slides not shown are `inert` and hidden, so Tab and screen readers only reach the current one (the ones in view, with `perView`).
+- **Role and name:** the `<section>` is a region named by `label`, with `aria-roledescription` "carousel" (the `carouselRole` label, "korsel" in Indonesian). Each slide is a group named "2 of 5" (`aria-roledescription` from `slideRole`). The slides not shown are `inert` and hidden, so Tab and screen readers only reach the current one (the ones in view, with `perView`). In server HTML, before JavaScript runs, none is: every slide can be scrolled to, read and used. The slides' scroll area is a keyboard stop of its own, a group named by the slides in view ("2 of 5"): focused, the arrow keys scroll it a slide at a time, and the index follows.
 - **Keyboard:**
 
   | Key | Does |

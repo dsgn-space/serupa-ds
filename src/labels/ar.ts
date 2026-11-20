@@ -397,4 +397,5 @@ export const labels: SerupaLabels = {
   transferRemoveReason: 'حدّد ما تريد إزالته أولًا',
   transferEmpty: 'لا شيء',
   transferMoved: (items, list) => items + ' نُقلت إلى ' + list + '.',
+  tabCloseHint: 'اضغط Delete للإغلاق.',
 };

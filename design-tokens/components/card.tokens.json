@@ -141,6 +141,16 @@
             "cssVar": "--card-focus-ring"
           }
         }
+      },
+      "divider-elevated": {
+        "$type": "color",
+        "$value": "{color.border-overlay}",
+        "$description": "What a divider or separator inside an elevated card reads as `border`: the top-layer edge colour, since in dark `border` is the raised surface's own colour and a line in it vanished",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-divider-elevated"
+          }
+        }
       }
     },
     "shadow": {

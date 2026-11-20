@@ -188,10 +188,13 @@ describe('Radio', () => {
     await expect.poll(() => css(input('x1')).borderTopColor).toBe(color('var(--field-border-invalid)'));
   });
 
-  test('disabled group: every radio disabled, disabled-text, not-allowed; the unchecked one on surface-muted; clicks do nothing', async () => {
+  test('disabled group: every radio disabled, disabled-text, not-allowed; the unchecked one on field-readonly (zinc-900 in dark, not the page\'s recess); clicks do nothing', async () => {
     await render(<Grid><RadioGroup id="dis" aria-label="Disabled" disabled defaultValue="p"><Radio id="p" value="p">P</Radio><Radio id="q" value="q">Q</Radio></RadioGroup></Grid>);
     expect([input('p').matches(':disabled'), input('q').matches(':disabled'), disabledLook(wrap('q')), css(wrap('q')).cursor]).toEqual([true, true, 'neutral', 'not-allowed']);
-    await expect.poll(() => css(input('q')).backgroundColor).toBe(color('var(--surface-muted)'));
+    await expect.poll(() => css(input('q')).backgroundColor).toBe(color('var(--field-readonly)'));
+    document.documentElement.setAttribute('data-theme', 'blue-dark');
+    expect(css(input('q')).backgroundColor).toBe(color('var(--zinc-900)'));
+    document.documentElement.setAttribute('data-theme', 'blue-light');
     await userEvent.click(input('q'), { force: true });
     expect([input('p').checked, input('q').checked, document.getElementById('dis')!.getAttribute('aria-disabled')]).toEqual([true, false, 'true']);
   });

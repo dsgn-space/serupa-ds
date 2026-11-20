@@ -396,4 +396,5 @@ export const labels: SerupaLabels = {
   transferRemoveReason: 'Prima seleziona quelli da rimuovere',
   transferEmpty: 'Nessuno',
   transferMoved: (items, list) => items + ' spostati in ' + list + '.',
+  tabCloseHint: 'Premi Canc per chiudere.',
 };

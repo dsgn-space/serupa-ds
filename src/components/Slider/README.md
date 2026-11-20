@@ -62,7 +62,7 @@ Drawn from the `Marks` story.
 ## Accessibility
 
 - The slider takes a press over at least 24px of height (WCAG 2.5.8), past the 20px thumb, without taking more room, and 44px on a touch screen, as Apple and Material ask.
-- Each thumb is `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`. A range's thumbs limit each other, and the pair is a named `group`.
+- Each thumb is a native `<input type="range">` (role `slider`) over the drawn one, unseen, with its value, `min`, `max`, `step` and `aria-orientation`. Screen readers' adjust gestures (VoiceOver's swipe up and down, TalkBack's volume keys) work reliably only on a native range, and they move the thumb by `step` and call `onValueCommit` as a key does. A range's thumbs limit each other, and the pair is a named `group`.
 - The track, the fill and the thumb's ring keep 3:1 on the page in every theme, so the control can be seen (`Slider.test.tsx`). In forced-colors mode it uses system colors.
 - In a [Field](../Field/README.md), the label names the thumb (a range's group) through `aria-labelledby`, and the hint and error describe it. Its own `aria-label` or `aria-labelledby` wins.
 - `invalid` sets `aria-invalid` on each thumb and turns the fill and the thumb's ring danger (3:1 on the page in every theme). Color alone doesn't say what's wrong, so put the reason in text next to it: inside a [Field](../Field/README.md), its `error` does both.
@@ -70,7 +70,7 @@ Drawn from the `Marks` story.
 - A slider always has a value, so `required` has nothing to check. It's accepted, so Field's `required` doesn't reach the DOM, and has no effect.
 - Marks and the value chip are `aria-hidden`. The thumb's `aria-valuetext` already says the value, and mark labels would be read as stray text. Mark labels keep 4.5:1 on the page, and the chip's text 4.5:1 on the chip, in every theme (`Slider.test.tsx`).
 - With `inputs`, each number field is named as its thumb is (the label, or "Minimum" and "Maximum" in a range), so a screen reader hears which value it changes. It's one more Tab stop per thumb.
-- `disabled`, or a disabled `<fieldset>` around it, takes the thumbs out of the Tab order, sets `aria-disabled` and ignores keys and presses, as native inputs do.
+- `disabled`, or a disabled `<fieldset>` around it, disables the thumbs' range inputs: out of the Tab order, ignoring keys and presses, and left out of the form.
 
 ### Keyboard
 
@@ -106,8 +106,8 @@ Your `onKeyDown` runs before the slider's own keys, so `e.preventDefault()` in i
 | `inputs` | `boolean` | `false` | A number field beside each thumb, kept in step with it, for typing an exact value. |
 | `orientation` | `'horizontal'` \| `'vertical'` | `'horizontal'` | `'vertical'` runs the track bottom to top, min at the bottom, `--slider-length` long; Up and Right raise it, in either direction of text, and the thumbs say `aria-orientation="vertical"`. Mark labels sit to the right of the track, the value chip to its left |
 | `origin` | `number` | `min` | Where a single thumb's fill starts: `0` on a -10 to +10 scale fills from the middle toward the thumb, either way. A range ignores it. |
-| `name` | `string` | | Adds hidden inputs (two for a range) so the value is sent with a form. |
-| `form` | `string` | | The id of a form it sits outside of: its hidden inputs submit, and reset, with that form. |
+| `name` | `string` | | The thumbs' range inputs take it (two with the same name for a range), so the value is sent with a form. |
+| `form` | `string` | | The id of a form it sits outside of: its thumbs submit, and reset, with that form. |
 | `required` | `boolean` | | Accepted so Field's `required` doesn't reach the page. A slider always has a value, so it has no effect. |
 
 Name a single slider with `aria-label` or `aria-labelledby`; on a range they name the group. `className`, `ref` and other props go to the root `<div>`. Its `focus()` and `autoFocus` move focus to the first thumb (none when disabled), so a form library that focuses the first invalid field after a failed submit lands on the slider.

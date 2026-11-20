@@ -10,11 +10,11 @@ import { idLabels } from '../../internal/labels';
 import { SerupaProvider } from '../../internal/provider';
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
-const thumb = (id: string, i = 0) => el(id).querySelectorAll<HTMLElement>('[role=slider]')[i]!;
-const now = (id: string, i = 0) => Number(thumb(id, i).getAttribute('aria-valuenow'));
+const thumb = (id: string, i = 0) => el(id).querySelectorAll<HTMLInputElement>('input[type=range]')[i]!;
+const now = (id: string, i = 0) => Number(thumb(id, i).value);
 const rect = (e: Element) => e.getBoundingClientRect();
-// The root holds the track (a div) and the hidden inputs. The track holds the fill (a div), the marks (hidden
-// spans, each an optional empty tick and a label) and the thumbs (role=slider), each with its value chip.
+// The root holds the track (a div), and the number fields with inputs. The track holds the fill (a div), the marks (hidden
+// spans, each an optional empty tick and a label) and the thumbs (spans), each with its native range input and value chip.
 const MARK = ':scope > div > span[aria-hidden]', LABEL = `${MARK} > span:not(:empty)`;
 const track = (id: string) => rect(el(id).querySelector(':scope > div')!);
 const center = (e: Element) => { const r = rect(e); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; };
@@ -52,7 +52,7 @@ const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'meta
 describe('Slider', () => {
   test('a step that is Infinity is none: it moves by 1, where the value read NaN', async () => {
     await render(<Slider aria-label="Volume" defaultValue={40} step={Infinity} />);
-    expect(page.getByRole('slider', { name: 'Volume' }).element().getAttribute('aria-valuenow')).toBe('40');
+    expect((page.getByRole('slider', { name: 'Volume' }).element() as HTMLInputElement).value).toBe('40');
   });
 
   test('a swipe across the page that starts on it scrolls the page: the browser cancels the press, the thumb goes back and nothing commits', async () => {
@@ -66,9 +66,9 @@ describe('Slider', () => {
     await expect.poll(() => mouse).not.toBe(-1);
     const t = track('one'), y = t.top + t.height / 2, opts = { pointerId: mouse, pointerType: 'mouse', isPrimary: true, bubbles: true, cancelable: true, button: 0, clientY: y };
     el('one').dispatchEvent(new PointerEvent('pointerdown', { ...opts, clientX: t.left + t.width * 0.9 }));
-    await expect.poll(() => el('one').querySelector('[role="slider"]')!.getAttribute('aria-valuenow')).toBe('90');
+    await expect.poll(() => el('one').querySelector<HTMLInputElement>('input[type=range]')!.value).toBe('90');
     el('one').dispatchEvent(new PointerEvent('pointercancel', { ...opts, clientX: t.left + t.width * 0.9 }));
-    await expect.poll(() => el('one').querySelector('[role="slider"]')!.getAttribute('aria-valuenow')).toBe('50');
+    await expect.poll(() => el('one').querySelector<HTMLInputElement>('input[type=range]')!.value).toBe('50');
     expect(commits).toEqual([]);
   });
   test('vertical: a sideways swipe scrolls instead', async () => {
@@ -124,17 +124,17 @@ describe('Slider', () => {
     const lg = document.getElementById('lg')!;
     const h = (e: Element | null) => e!.getBoundingClientRect().height;
     // The thumb sits in the track.
-    const thumb = lg.querySelector('[role="slider"]')!;
+    const thumb = lg.querySelector('input[type=range]')!.parentElement!;
     expect([lg.dataset.size, h(thumb.parentElement), h(thumb)]).toEqual(['lg', 8, 24]);
-    expect(h(document.querySelector('#lgi input'))).toBe(h(document.querySelector('#lgf')));
+    expect(h(document.querySelector('#lgi input:not([type=range])'))).toBe(h(document.querySelector('#lgf')));
   });
 
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<Slider id="mk" aria-label="Volume" defaultValue={50} />);
     const t = thumb('mk');
     t.focus();
-    const before = t.getAttribute('aria-valuenow');
-    expect([modified(t), modified(t, 'ArrowLeft'), document.activeElement === t, t.getAttribute('aria-valuenow') === before]).toEqual([[false, false, false], [false, false, false], true, true]);
+    const before = t.value;
+    expect([modified(t), modified(t, 'ArrowLeft'), document.activeElement === t, t.value === before]).toEqual([[false, false, false], [false, false, false], true, true]);
   });
 
   test('showValue without formatValue writes the number in the locale\'s digits and marks: "٤٠" in ar-EG, "1.500" in id-ID, "40" in en-US (GR24)', async () => {
@@ -143,7 +143,7 @@ describe('Slider', () => {
       <SerupaProvider locale="id-ID"><Slider id="v-id" aria-label="Heat" showValue max={5000} defaultValue={1500} /></SerupaProvider>
       <SerupaProvider locale="en-US"><Slider id="v-en" aria-label="Heat" showValue defaultValue={40} /></SerupaProvider>
     </div>);
-    const chip = (id: string) => el(id).querySelector('[role=slider] > [aria-hidden=true]')!.textContent;
+    const chip = (id: string) => el(id).querySelector('input[type=range] ~ [aria-hidden=true]')!.textContent;
     expect([chip('v-ar'), chip('v-id'), chip('v-en')]).toEqual(['٤٠', '1.500', '40']);
   });
 
@@ -171,14 +171,14 @@ describe('Slider', () => {
 
   test('a range\'s thumb names come from the labels: Indonesian under an id-ID provider', async () => {
     await render(<SerupaProvider locale="id-ID" labels={idLabels}><Slider defaultValue={[20, 80]} /></SerupaProvider>);
-    expect([...document.querySelectorAll('[role="slider"]')].map((t) => t.getAttribute('aria-label'))).toEqual(['Minimum', 'Maksimum']);
+    expect([...document.querySelectorAll('input[type=range]')].map((t) => t.getAttribute('aria-label'))).toEqual(['Minimum', 'Maksimum']);
   });
 
-  test('one thumb: a role="slider" at 50 of 0..100, labelled by aria-labelledby, in the Tab order; ref and className reach the root; md is 20px tall', async () => {
+  test('one thumb: a native range input at 50 of 0..100, labelled by aria-labelledby, in the Tab order; ref and className reach the root; md is 20px tall', async () => {
     const ref = React.createRef<HTMLDivElement>();
     await setup(ref);
     const root = el('one'), th = thumb('one');
-    expect([root.querySelectorAll('[role=slider]').length, th.getAttribute('aria-valuenow'), th.getAttribute('aria-valuemin'), th.getAttribute('aria-valuemax')]).toEqual([1, '50', '0', '100']);
+    expect([root.querySelectorAll('input[type=range]').length, th.value, th.min, th.max]).toEqual([1, '50', '0', '100']);
     expect([th.getAttribute('aria-labelledby'), th.tabIndex, th.getAttribute('aria-orientation'), root.getAttribute('role')]).toEqual(['vlab', 0, 'horizontal', null]);
     expect([ref.current === root, root.dataset.component, rect(root).height]).toEqual([true, 'slider', 20]);
     expect(root.className).toMatch(/extra/);
@@ -231,15 +231,15 @@ describe('Slider', () => {
     expect(calls.length).toBeGreaterThanOrEqual(3);
   });
 
-  test('range: a group named "Price" with thumbs "Minimum" (20, 0..80) and "Maximum" (80, 20..100), valuetext "$20"/"$80", and two hidden inputs', async () => {
+  test('range: a group named "Price" with thumbs "Minimum" (20, 0..80) and "Maximum" (80, 20..100), valuetext "$20"/"$80", and two range inputs named for the form', async () => {
     await setup();
-    const root = el('rng'), th = [...root.querySelectorAll('[role=slider]')];
+    const root = el('rng'), th = [...root.querySelectorAll<HTMLInputElement>('input[type=range]')];
     expect([root.getAttribute('role'), root.getAttribute('aria-label')]).toEqual(['group', 'Price']);
     expect(th.map((x) => x.getAttribute('aria-label'))).toEqual(['Minimum', 'Maximum']);
-    expect(th.map((x) => x.getAttribute('aria-valuenow'))).toEqual(['20', '80']);
-    expect(th.map((x) => x.getAttribute('aria-valuemin') + '..' + x.getAttribute('aria-valuemax'))).toEqual(['0..80', '20..100']);
+    expect(th.map((x) => x.value)).toEqual(['20', '80']);
+    expect(th.map((x) => x.min + '..' + x.max)).toEqual(['0..80', '20..100']);
     expect(th.map((x) => x.getAttribute('aria-valuetext'))).toEqual(['$20', '$80']);
-    expect([...root.querySelectorAll<HTMLInputElement>('input[type=hidden]')].map((i) => i.name + '=' + i.value)).toEqual(['price=20', 'price=80']);
+    expect([...root.querySelectorAll<HTMLInputElement>('input[type=range]')].map((i) => i.name + '=' + i.value)).toEqual(['price=20', 'price=80']);
   });
 
   test('range: a press moves the nearest thumb (90 → the high one, 10 → the low one); the low thumb\'s End goes up to the high thumb, and it can\'t pass it', async () => {
@@ -264,15 +264,15 @@ describe('Slider', () => {
     expect(now('stp')).toBe(0.2);
   });
 
-  test('disabled: out of the Tab order, aria-disabled, in the neutral disabled colors, and presses do nothing', async () => {
+  test('disabled: a disabled range input, out of the Tab order, in the neutral disabled colors, and presses do nothing', async () => {
     await setup();
     const th = thumb('dis');
-    expect([th.tabIndex, th.getAttribute('aria-disabled'), css(el('dis')).opacity, disabledLook(el('dis').querySelector(':scope > div > div'), 'backgroundColor')]).toEqual([-1, 'true', '1', 'neutral']);
+    expect([th.disabled, css(el('dis')).opacity, disabledLook(el('dis').querySelector(':scope > div > div'), 'backgroundColor')]).toEqual([true, '1', 'neutral']);
     await press('dis', 0.9);
     expect(now('dis')).toBe(30);
   });
 
-  test('inside a disabled <fieldset>: disabled like a native input (Tab skips it, aria-disabled, keys and presses do nothing, no form value); enabling the fieldset brings it back', async () => {
+  test('inside a disabled <fieldset>: disabled like a native input (Tab skips it, keys and presses do nothing, no form value); enabling the fieldset brings it back', async () => {
     const calls: unknown[] = [];
     function Form() {
       const [off, setOff] = React.useState(true);
@@ -281,16 +281,16 @@ describe('Slider', () => {
     }
     await render(<Form />);
     const th = thumb('fs');
-    expect([th.tabIndex, th.getAttribute('aria-disabled'), el('fs').dataset.disabled, [...new FormData(el('fsf') as HTMLFormElement).keys()].join()]).toEqual([-1, 'true', '', '']);
+    expect([th.disabled, el('fs').dataset.disabled, [...new FormData(el('fsf') as HTMLFormElement).keys()].join()]).toEqual([true, '', '']);
     th.focus();
     await userEvent.keyboard('{ArrowRight}');
     await press('fs', 0.9);
     expect([now('fs'), calls.length]).toEqual([30, 0]);
     await userEvent.click(el('fs-toggle'));
-    await expect.poll(() => thumb('fs').tabIndex).toBe(0);
+    await expect.poll(() => thumb('fs').disabled).toBe(false);
     thumb('fs').focus();
     await userEvent.keyboard('{ArrowRight}');
-    expect([now('fs'), calls, thumb('fs').getAttribute('aria-disabled'), new FormData(el('fsf') as HTMLFormElement).get('vol')]).toEqual([31, [31], null, '31']);
+    expect([now('fs'), calls, thumb('fs').disabled, new FormData(el('fsf') as HTMLFormElement).get('vol')]).toEqual([31, [31], false, '31']);
   });
 
   test('in a Field: the label names the thumb (or a range\'s group) and the hint describes it; its own aria-label still wins', async () => {
@@ -301,11 +301,11 @@ describe('Slider', () => {
     </>);
     const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
     const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
-    const one = root('sf1').querySelector('[role=slider]')!, two = root('sf2');
+    const one = root('sf1').querySelector('input[type=range]')!, two = root('sf2');
     expect([text(one.getAttribute('aria-labelledby')), text(one.getAttribute('aria-describedby')), root('sf1').getAttribute('aria-describedby')])
       .toEqual(['Volume', '0 is muted', null]);
     expect([two.getAttribute('role'), text(two.getAttribute('aria-labelledby')), text(two.getAttribute('aria-describedby'))]).toEqual(['group', 'Price', 'In dollars']);
-    const own = root('sf3').querySelector('[role=slider]')!;
+    const own = root('sf3').querySelector('input[type=range]')!;
     expect([own.getAttribute('aria-label'), own.getAttribute('aria-labelledby')]).toEqual(['Music volume', null]);
   });
 
@@ -353,7 +353,7 @@ describe('Slider', () => {
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor, q = (s: string) => css(el('one').querySelector(s));
-      const parts = { track: q(':scope > div').backgroundColor, fill: q(':scope > div > div').backgroundColor, thumb: q('[role=slider]').borderTopColor };
+      const parts = { track: q(':scope > div').backgroundColor, fill: q(':scope > div > div').backgroundColor, thumb: q('input[type=range]').borderTopColor };
       for (const [k, c] of Object.entries(parts)) { const r = contrast(c, page); n++; if (r < 3) low.push(`${th} ${k}: ${r.toFixed(2)}`); }
     }
     expect([low, n]).toEqual([[], 18]);
@@ -366,7 +366,7 @@ describe('Slider', () => {
 
   test('min with decimals the step doesn\'t have (min 0.5, max 5.5, step 1): the value stays on 0.5, 1.5, 2.5…', async () => {
     await render(<Slider id="half" aria-label="Half" min={0.5} max={5.5} step={1} defaultValue={2.5} />);
-    const t = thumb('half'), now = () => t.getAttribute('aria-valuenow');
+    const t = thumb('half'), now = () => t.value;
     expect(now()).toBe('2.5');
     t.focus();
     await userEvent.keyboard('{ArrowRight}');
@@ -384,7 +384,24 @@ describe('Slider', () => {
     const t = thumb('tiny');
     t.focus();
     await userEvent.keyboard('{ArrowRight}');
-    expect(Number(t.getAttribute('aria-valuenow'))).toBe(4e-7);
+    expect(Number(t.value)).toBe(4e-7);
+  });
+
+  test('each thumb is a native range input, so a screen reader\'s adjust gesture (VoiceOver\'s swipe, TalkBack\'s volume keys) moves it and commits; read-only, it stays', async () => {
+    const changes: unknown[] = [], commits: unknown[] = [];
+    await render(<div style={{ width: '420px' }}>
+      <Slider id="at" aria-label="Volume" defaultValue={40} step={5} onValueChange={(v) => changes.push(v)} onValueCommit={(v) => commits.push(v)} />
+      <Slider id="at-rng" aria-label="Price" defaultValue={[20, 60]} step={10} onValueChange={(v) => changes.push(v)} />
+      <Slider id="at-ro" aria-label="Locked" readOnly defaultValue={30} onValueChange={(v) => changes.push(v)} />
+    </div>);
+    // What an assistive technology does: the browser steps the range's own value and fires input.
+    const adjust = (t: HTMLInputElement, up = true) => { if (up) t.stepUp(); else t.stepDown(); t.dispatchEvent(new Event('input', { bubbles: true })); };
+    expect([thumb('at').type, thumb('at').step, thumb('at-rng', 0).max, thumb('at-rng', 1).min]).toEqual(['range', '5', '60', '20']);
+    adjust(thumb('at'));
+    adjust(thumb('at-rng', 1), false);
+    adjust(thumb('at-ro'));
+    await expect.poll(() => [now('at'), now('at-rng', 1), now('at-ro')]).toEqual([45, 50, 30]);
+    expect([changes, commits]).toEqual([[45, [20, 50]], [45]]);
   });
 
   test('readOnly: the thumb takes focus and says aria-readonly, but keys and presses leave the value, and a form still gets it', async () => {
@@ -401,13 +418,13 @@ describe('Slider', () => {
 
   test('invalid: aria-invalid on each thumb, and a danger fill and ring that keep 3:1 on the page in every theme', async () => {
     await render(<div style={{ width: '420px' }}><Slider id="bad" aria-label="Bad" invalid defaultValue={[20, 60]} /></div>);
-    expect([...el('bad').querySelectorAll('[role=slider]')].map((t) => t.getAttribute('aria-invalid'))).toEqual(['true', 'true']);
+    expect([...el('bad').querySelectorAll('input[type=range]')].map((t) => t.getAttribute('aria-invalid'))).toEqual(['true', 'true']);
     expect(el('bad').hasAttribute('aria-invalid')).toBe(false);
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
       const page = css(document.body).backgroundColor, danger = css(el('bad').querySelector(':scope > div > div')).backgroundColor;
-      expect(css(el('bad').querySelector('[role=slider]')).borderTopColor).toBe(danger);
+      expect(css(el('bad').querySelector('input[type=range]')!.parentElement).borderTopColor).toBe(danger);
       const r = contrast(danger, page); if (r < 3) low.push(`${th}: ${r.toFixed(2)}`);
     }
     document.documentElement.removeAttribute('data-theme');
@@ -465,7 +482,7 @@ describe('Slider', () => {
 
   test('showValue: the formatted value shows over the thumb only while it is focused, and stays out of what is read out', async () => {
     await render(<div style={{ width: '420px', paddingTop: '40px' }}><Slider id="sv" aria-label="Price" showValue formatValue={(v) => '$' + v} defaultValue={40} /><button id="away">Away</button></div>);
-    const chip = () => el('sv').querySelector<HTMLElement>('[role=slider] > [aria-hidden]')!;
+    const chip = () => el('sv').querySelector<HTMLElement>('input[type=range] ~ [aria-hidden]')!;
     expect([chip().textContent, chip().getAttribute('aria-hidden'), thumb('sv').getAttribute('aria-valuetext'), css(chip()).opacity]).toEqual(['$40', 'true', '$40', '0']);
     thumb('sv').focus();
     await userEvent.keyboard('{ArrowRight}');
@@ -482,7 +499,7 @@ describe('Slider', () => {
     const low: string[] = [];
     for (const th of THEMES) {
       document.documentElement.setAttribute('data-theme', th);
-      const page = css(document.body).backgroundColor, chip = css(el('mc').querySelector('[role=slider] > [aria-hidden] > span'));
+      const page = css(document.body).backgroundColor, chip = css(el('mc').querySelector('input[type=range] ~ [aria-hidden] > span'));
       const a = contrast(css(el('mc').querySelector(LABEL)).color, page), b = contrast(chip.color, chip.backgroundColor);
       if (a < 4.5) low.push(`${th} label: ${a.toFixed(2)}`);
       if (b < 4.5) low.push(`${th} chip: ${b.toFixed(2)}`);
@@ -508,12 +525,12 @@ describe('Slider at 320px (GM2)', () => {
     await fontsIn();
     for (const id of ['gm2-l', 'gm2-r']) {
       const box = el(id).getBoundingClientRect();
-      const parts = [...el(id).querySelectorAll<HTMLElement>('[role="slider"] > [aria-hidden] > span, [aria-hidden] > span > span')].map((p) => p.getBoundingClientRect());
+      const parts = [...el(id).querySelectorAll<HTMLElement>('input[type=range] ~ [aria-hidden] > span, [aria-hidden] > span > span')].map((p) => p.getBoundingClientRect());
       expect([parts.length, parts.every((r) => r.left >= box.left - 0.5 && r.right <= box.right + 0.5)]).toEqual([4, true]);
     }
     expect(el('gm2').scrollWidth).toBe(288);
     // The middle label stays centered on its point.
-    const half = [...el('gm2-l').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')][1]!.getBoundingClientRect(), t = el('gm2-l').querySelector('[role="slider"]')!.parentElement!.getBoundingClientRect();
+    const half = [...el('gm2-l').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')][1]!.getBoundingClientRect(), t = el('gm2-l').querySelector(':scope > div')!.getBoundingClientRect();
     expect(Math.round(half.left + half.width / 2)).toBe(Math.round(t.left + t.width / 2));
   });
   test('a label that changes width after the first fit (a web font arriving) is fitted again, with the slider the same size', async () => {
@@ -537,8 +554,8 @@ describe('Slider at 320px (GM2)', () => {
     </>);
     const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
     const text = (ids: string | null) => (ids || '').split(' ').map((i) => document.getElementById(i)?.textContent).join(' / ');
-    const one = root('sd1').querySelector('[role=slider]')!, two = root('sd2');
-    expect([text(one.getAttribute('aria-labelledby')), text(one.getAttribute('aria-describedby')), one.getAttribute('aria-invalid'), one.getAttribute('aria-disabled')])
+    const one = root('sd1').querySelector<HTMLInputElement>('input[type=range]')!, two = root('sd2');
+    expect([text(one.getAttribute('aria-labelledby')), text(one.getAttribute('aria-describedby')), one.getAttribute('aria-invalid'), String(one.disabled)])
       .toEqual(['Volume', '0 is muted / Too loud', 'true', 'true']);
     expect([two.getAttribute('role'), text(two.getAttribute('aria-labelledby')), text(two.getAttribute('aria-describedby'))]).toEqual(['group', 'Price', 'In dollars']);
   });
@@ -548,7 +565,7 @@ describe('Slider at 320px (GM2)', () => {
       <Field label="Price" error="Too wide"><Slider data-testid="se2" defaultValue={[10, 90]} /></Field>
     </>);
     const root = (t: string) => document.querySelector<HTMLElement>(`[data-testid=${t}]`)!;
-    const said = (t: string) => [...root(t).querySelectorAll('[role=slider]')].map((th) => document.getElementById(th.getAttribute('aria-errormessage') || '')?.textContent ?? null);
+    const said = (t: string) => [...root(t).querySelectorAll('input[type=range]')].map((th) => document.getElementById(th.getAttribute('aria-errormessage') || '')?.textContent ?? null);
     expect([said('se1'), said('se2'), root('se1').getAttribute('aria-errormessage'), root('se2').getAttribute('aria-errormessage')]).toEqual([['Too loud'], ['Too wide', 'Too wide'], null, null]);
   });
 });
@@ -560,7 +577,7 @@ test('the value bubble writes its digits at one width, so it keeps its width as 
   await document.fonts.ready;
   for (const v of [11, 18, 41, 88]) {
     await screen.rerender(<Slider aria-label="Volume" showValue value={v} />);
-    const bubble = document.querySelector('[role="slider"] > [aria-hidden] > span') as HTMLElement;
+    const bubble = document.querySelector('input[type=range] ~ [aria-hidden] > span') as HTMLElement;
     widths.push(Math.round(bubble.getBoundingClientRect().width * 10) / 10);
   }
   expect(new Set(widths).size).toBe(1);
@@ -577,11 +594,11 @@ test('a max off the step grid is never reached, as with a native range input: mi
 });
 
 describe('Slider inputs', () => {
-  // The number fields: the slider's inputs other than the hidden ones a form submits.
-  const fields = () => [...document.querySelectorAll<HTMLInputElement>('[data-component="slider"] input:not([type="hidden"])')] as [HTMLInputElement, HTMLInputElement];
+  // The number fields: the slider's inputs other than the thumbs' range inputs.
+  const fields = () => [...document.querySelectorAll<HTMLInputElement>('[data-component="slider"] input:not([type="range"])')] as [HTMLInputElement, HTMLInputElement];
   // The fields write numbers in the locale's digits and the thumb names in its words: these read English ones.
   const En = ({ children }: { children: React.ReactNode }) => <SerupaProvider locale="en-US">{children}</SerupaProvider>;
-  const thumbs = () => [...document.querySelectorAll<HTMLElement>('[role="slider"]')] as [HTMLElement, HTMLElement];
+  const thumbs = () => [...document.querySelectorAll<HTMLInputElement>('input[type=range]')] as [HTMLInputElement, HTMLInputElement];
 
   test('a range gets a field at each end, named as its thumb, in step with it both ways', async () => {
     const commit = vi.fn();
@@ -597,7 +614,7 @@ describe('Slider inputs', () => {
     expect([box.firstElementChild!.contains(lo), !!(lo.compareDocumentPosition(t0) & Node.DOCUMENT_POSITION_FOLLOWING), !!(hi.compareDocumentPosition(t1) & Node.DOCUMENT_POSITION_PRECEDING)]).toEqual([true, true, true]);
     await userEvent.tripleClick(lo);
     await userEvent.keyboard('60');
-    expect(thumbs()[0].getAttribute('aria-valuenow')).toBe('60');
+    expect(thumbs()[0].value).toBe('60');
     expect(commit).not.toHaveBeenCalled();
     await userEvent.keyboard('{Enter}');
     expect(commit).toHaveBeenLastCalledWith([60, 120]);
@@ -611,9 +628,9 @@ describe('Slider inputs', () => {
     const [lo] = fields();
     await userEvent.tripleClick(lo);
     await userEvent.keyboard('150');
-    expect(thumbs()[0].getAttribute('aria-valuenow')).toBe('15');   // 1 and 15 are under 120 and taken; 150 waits
+    expect(thumbs()[0].value).toBe('15');   // 1 and 15 are under 120 and taken; 150 waits
     await userEvent.tab();
-    expect([lo.value, thumbs()[0].getAttribute('aria-valuenow')]).toEqual(['120', '120']);
+    expect([lo.value, thumbs()[0].value]).toEqual(['120', '120']);
   });
 
   test('one thumb gets one field after the track, named by the slider; a press in it moves no thumb', async () => {
@@ -621,7 +638,7 @@ describe('Slider inputs', () => {
     const [f] = fields();
     expect([fields().length, f.getAttribute('aria-label'), f.value]).toEqual([1, 'Volume', '35']);
     await userEvent.click(f);
-    expect([document.activeElement, thumbs()[0].getAttribute('aria-valuenow')]).toEqual([f, '35']);
+    expect([document.activeElement, thumbs()[0].value]).toEqual([f, '35']);
   });
 
   test('in a Field, the fields don\'t take the Field\'s id: no id twice, and a range\'s two fields aren\'t one; the label still names one thumb\'s field', async () => {

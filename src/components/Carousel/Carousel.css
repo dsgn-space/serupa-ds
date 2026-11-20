@@ -1,22 +1,35 @@
 /* ---------------------------------------------------------------
    Carousel: one slide at a time across the full width, with 12px corners. Round secondary previous and next
    buttons sit over the sides, 8px in, with shadow-sm; the dots sit centered 12px below: 8px circles in
-   border-control, the current one primary and 24px wide, each in a 24px target. Slides move in 300ms (at once
-   with reduced motion) and follow a swipe. With perView, the slides share the width, 16px apart. Every value
-   goes through --carousel-* tokens.
+   border-control, the current one primary and 24px wide, each in a 24px target. The slides sit in a native
+   scroll container that snaps to each one, its scroll bar hidden; the buttons and dots scroll it smoothly (at once
+   with reduced motion). With perView, the slides share the width, 16px apart. Every value goes through
+   --carousel-* tokens.
    --------------------------------------------------------------- */
 @layer dk.components {
 .dk-carousel { display: flex; flex-direction: column; gap: var(--carousel-gap, var(--spacing-3)); min-width: var(--spacing-0); }
-.dk-carousel__viewport { position: relative; overflow: hidden; border-radius: var(--carousel-radius, var(--radius-container)); touch-action: pan-y; }
+.dk-carousel__frame { position: relative; }
+/* One slide per gesture (scroll-snap-stop), however hard the flick; a swipe at an end doesn't scroll the page
+   sideways or go back a page (overscroll-behavior). */
+.dk-carousel__viewport {
+  display: flex; overflow-x: auto; overflow-y: hidden; border-radius: var(--carousel-radius, var(--radius-container));
+  scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+}
+.dk-carousel__viewport::-webkit-scrollbar { display: none; }
+.dk-carousel__viewport:focus { outline: none; }
+.dk-carousel__viewport:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media (forced-colors: active) { .dk-carousel__viewport:focus-visible { outline-color: Highlight; } }
+@media (prefers-reduced-motion: no-preference) { .dk-carousel__viewport { scroll-behavior: smooth; } }
+/* A mouse drag scrolls it by hand: no snapping until it lets go. */
+.dk-carousel__viewport[data-dragging] { scroll-snap-type: none; scroll-behavior: auto; cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }
 .dk-carousel {
   --dk-carousel-space: var(--spacing-0);
   --dk-carousel-step: calc((var(--sizing-full) + var(--dk-carousel-space)) / var(--dk-carousel-per, 1));
 }
 .dk-carousel--multi { --dk-carousel-space: var(--carousel-slide-gap, var(--spacing-4)); }
-/* peek: the slides leave the peek length at the end, where the next one shows past the gap; on the last slide the
-   track pulls back by that and the gap, so the previous one shows at the start instead of an empty edge. */
+/* peek: the slides leave the peek length at the end, where the next one shows past the gap; at the last slide the
+   scroll ends with it flush at the end, so the previous one shows at the start instead of an empty edge. */
 .dk-carousel--peek { --dk-carousel-step: calc((var(--sizing-full) - var(--carousel-peek, var(--spacing-12))) / var(--dk-carousel-per, 1)); }
-.dk-carousel--peek[data-end] { --dk-carousel-pull: calc(var(--carousel-peek, var(--spacing-12)) + var(--dk-carousel-space)); }
 /* perView with a breakpoint map: the count at each width comes from these media queries (the same widths as Carousel.tsx's
    matchMedia), so the server HTML is laid out for the screen before JavaScript runs. A dot past the last page at a
    width is hidden there until the dots are counted again. */
@@ -27,20 +40,8 @@
 @media (min-width: 640px) and (max-width: 767.98px) { .dk-carousel__dot[data-past~="sm"] { display: none; } }
 @media (min-width: 768px) and (max-width: 1023.98px) { .dk-carousel__dot[data-past~="md"] { display: none; } }
 @media (min-width: 1024px) { .dk-carousel__dot[data-past~="lg"] { display: none; } }
-.dk-carousel__track {
-  display: flex; gap: var(--dk-carousel-space);
-  transform: translateX(calc(var(--spacing-0) - var(--dk-carousel-index) * var(--dk-carousel-step) + var(--dk-carousel-pull, var(--spacing-0)) + var(--dk-carousel-drag, 0px)));
-  transition: transform var(--dk-carousel-settle, var(--motion-change-lg)) var(--dk-carousel-ease, var(--ease-settle));
-}
-/* A loop carrying on past an end: the slides it wraps to stand in again beyond it (Carousel.tsx), then the track snaps back. */
-.dk-carousel__track[data-snap] { transition: none; }
-.dk-carousel__slide[data-wrap="after"] { translate: calc(var(--dk-carousel-count) * var(--dk-carousel-step)) 0; }
-.dk-carousel__slide[data-wrap="before"] { translate: calc(var(--spacing-0) - var(--dk-carousel-count) * var(--dk-carousel-step)) 0; }
-.dk-carousel[data-dir="rtl"] .dk-carousel__slide[data-wrap="after"] { translate: calc(var(--spacing-0) - var(--dk-carousel-count) * var(--dk-carousel-step)) 0; }
-.dk-carousel[data-dir="rtl"] .dk-carousel__slide[data-wrap="before"] { translate: calc(var(--dk-carousel-count) * var(--dk-carousel-step)) 0; }
-.dk-carousel[data-dir="rtl"] .dk-carousel__track { transform: translateX(calc(var(--dk-carousel-index) * var(--dk-carousel-step) - var(--dk-carousel-pull, var(--spacing-0)) + var(--dk-carousel-drag, 0px))); }
-.dk-carousel__viewport[data-dragging] .dk-carousel__track { transition: none; -webkit-user-select: none; user-select: none; }
-.dk-carousel__slide { flex: 0 0 calc(var(--dk-carousel-step) - var(--dk-carousel-space)); min-width: var(--spacing-0); }
+.dk-carousel__track { display: flex; flex: none; inline-size: var(--sizing-full); gap: var(--dk-carousel-space); }
+.dk-carousel__slide { flex: none; inline-size: calc(var(--dk-carousel-step) - var(--dk-carousel-space)); min-width: var(--spacing-0); scroll-snap-align: start; scroll-snap-stop: always; }
 .dk-carousel__arrow { position: absolute; inset-block-start: var(--sizing-1-2); translate: 0 calc(var(--spacing-0) - var(--sizing-1-2)); box-shadow: var(--carousel-arrow-shadow, var(--elevation-part)); }
 .dk-carousel__arrow--prev { inset-inline-start: var(--carousel-arrow-offset, var(--spacing-2)); }
 .dk-carousel__arrow--next { inset-inline-end: var(--carousel-arrow-offset, var(--spacing-2)); }
@@ -84,6 +85,6 @@
 .dk-carousel__dot:active:not([aria-current="true"])::before { background: var(--carousel-dot-pressed, var(--text)); }   /* held: a step past hover, on touch too */
 .dk-carousel__dot:focus { outline: none; }
 .dk-carousel__dot:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); border-radius: var(--rounded-full); }
-@media (prefers-reduced-motion: reduce) { .dk-carousel__track, .dk-carousel__dot::before { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .dk-carousel__dot::before { transition: none; } }
 @media (forced-colors: active) { .dk-carousel__dot::before { background: CanvasText; } .dk-carousel__dot[aria-current="true"]::before { background: Highlight; } }
 }

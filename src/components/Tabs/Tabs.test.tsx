@@ -700,3 +700,89 @@ describe('Tabs and form validation (L8E100)', () => {
     expect(sent).toBe(0);
   });
 });
+
+describe('Tabs: tabs people open and close', () => {
+  function Docs({ onAdd = true }: { onAdd?: boolean }) {
+    const [tabs, setTabs] = React.useState(['a', 'b', 'c']);
+    const [added, setAdded] = React.useState(0);
+    const bar = onAdd ? { onAdd: () => { setAdded((n) => n + 1); setTabs((all) => [...all, 'n' + all.length]); }, addLabel: 'New document' } : {};
+    return (
+      <>
+        <Tabs id="docs">
+          <TabList aria-label="Documents" {...bar}>
+            <Tab value="home">Home</Tab>
+            {tabs.map((t) => <Tab key={t} value={t} onClose={() => setTabs((all) => all.filter((x) => x !== t))}>{'Doc ' + t}</Tab>)}
+          </TabList>
+          {tabs.map((t) => <TabPanel key={t} value={t}>{t}</TabPanel>)}
+        </Tabs>
+        <output id="added">{added}</output>
+      </>
+    );
+  }
+  // A tab's words: its first span that isn't hidden (the × is aria-hidden, the Delete hint hidden).
+  const words = (t: Element) => t.querySelector(':scope > span:not([aria-hidden]):not([hidden])')!.textContent;
+  const tab = (name: string) => Array.from(el('docs').querySelectorAll<HTMLElement>('[role="tab"]')).find((t) => words(t) === name)!;
+  const names = () => Array.from(el('docs').querySelectorAll('[role="tab"]')).map(words);
+
+  test('a closable tab says Delete closes it, and its × is for the pointer only; a tab without onClose has neither', async () => {
+    await render(<Docs />);
+    const doc = tab('Doc a'), home = tab('Home');
+    const hint = document.getElementById(doc.getAttribute('aria-describedby')!)!;
+    expect([hint.textContent, doc.getAttribute('aria-keyshortcuts'), doc.querySelector('[data-closes]')!.getAttribute('aria-hidden')]).toEqual(['Press Delete to close.', 'Delete', 'true']);
+    expect([home.hasAttribute('aria-describedby'), home.hasAttribute('aria-keyshortcuts'), home.querySelector('[data-closes]')]).toEqual([false, false, null]);
+    // The × is at least 24px square (WCAG 2.5.8).
+    const r = doc.querySelector('[data-closes]')!.getBoundingClientRect();
+    expect([r.width >= 24, r.height >= 24]).toEqual([true, true]);
+  });
+
+  test('Delete on the selected tab closes it; the next tab is selected and takes focus', async () => {
+    await render(<Docs />);
+    await userEvent.click(tab('Doc b'));
+    await userEvent.keyboard('{Delete}');
+    expect(names()).toEqual(['Home', 'Doc a', 'Doc c']);
+    await expect.poll(() => document.activeElement === tab('Doc c') && tab('Doc c').getAttribute('aria-selected')).toBe('true');
+  });
+
+  test('Delete on a focused tab that isn\'t selected (manual activation) closes it, and focus goes to the tab beside it', async () => {
+    function Manual() {
+      const [tabs, setTabs] = React.useState(['a', 'b', 'c']);
+      return <Tabs id="docs" activation="manual" defaultValue="a"><TabList aria-label="Documents">{tabs.map((t) => <Tab key={t} value={t} onClose={() => setTabs((all) => all.filter((x) => x !== t))}>{'Doc ' + t}</Tab>)}</TabList></Tabs>;
+    }
+    await render(<Manual />);
+    tab('Doc a').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(tab('Doc b'));
+    await userEvent.keyboard('{Delete}');
+    expect(names()).toEqual(['Doc a', 'Doc c']);
+    expect([document.activeElement === tab('Doc c'), tab('Doc a').getAttribute('aria-selected')]).toEqual([true, 'true']);
+  });
+
+  test('Delete leaves a tab without onClose, and with a modifier key, alone', async () => {
+    await render(<Docs />);
+    await userEvent.click(tab('Home'));
+    await userEvent.keyboard('{Delete}');
+    await userEvent.click(tab('Doc a'));
+    await userEvent.keyboard('{Shift>}{Delete}{/Shift}');
+    expect(names()).toEqual(['Home', 'Doc a', 'Doc b', 'Doc c']);
+  });
+
+  test('a click on the × closes that tab without selecting it first', async () => {
+    await render(<Docs />);
+    await userEvent.click(tab('Doc a'));
+    await userEvent.click(tab('Doc c').querySelector('[data-closes]') as HTMLElement);
+    expect([names(), tab('Doc a').getAttribute('aria-selected')]).toEqual([['Home', 'Doc a', 'Doc b'], 'true']);
+  });
+
+  test('onAdd shows a + with its words beside the tab list, not in it, and calls it', async () => {
+    await render(<Docs />);
+    const add = Array.from(el('docs').querySelectorAll('button')).find((b) => b.textContent === 'New document')!;
+    expect([!!add, !!add.closest('[role="tablist"]')]).toEqual([true, false]);
+    await userEvent.click(add);
+    expect([el('added').textContent, names().length]).toEqual(['1', 5]);
+  });
+
+  test('without onAdd, TabList is the tablist itself, as before', async () => {
+    await render(<Docs onAdd={false} />);
+    expect(el('docs').firstElementChild!.getAttribute('role')).toBe('tablist');
+  });
+});

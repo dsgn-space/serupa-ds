@@ -43,7 +43,7 @@ describe('form reset puts the default back', () => {
     await typeInto('#dp', '02/10/2026');
     await typeInto('#dr', '01/07/2026');
     await typeInto('#tp', '14:30');
-    q('[role="slider"]').focus();
+    q('input[type=range]').focus();
     await userEvent.keyboard('{ArrowRight}{ArrowRight}');
     await userEvent.click(q('[role="radio"][aria-checked="false"]'));
     await expect.poll(() => sent()).toEqual({ fruit: 'Cherry', day: '2026-02-10', from: '2026-01-07', to: '2026-01-09', at: '14:30', volume: '22', view: 'grid' });
@@ -51,7 +51,7 @@ describe('form reset puts the default back', () => {
     React.act(() => form().reset());
     await expect.poll(() => sent()).toEqual(before);
     // What people see is back too.
-    expect([(q('#cb') as HTMLInputElement).value, (q('#dp') as HTMLInputElement).value, (q('#dr') as HTMLInputElement).value, (q('#tp') as HTMLInputElement).value, q('[role="slider"]').getAttribute('aria-valuenow'), q('[role="radio"][aria-checked="true"]').textContent])
+    expect([(q('#cb') as HTMLInputElement).value, (q('#dp') as HTMLInputElement).value, (q('#dr') as HTMLInputElement).value, (q('#tp') as HTMLInputElement).value, (q('input[type=range]') as HTMLInputElement).value, q('[role="radio"][aria-checked="true"]').textContent])
       .toEqual(['Apple', '01/05/2026', '01/05/2026', '09:00', '20', 'List']);
   });
 

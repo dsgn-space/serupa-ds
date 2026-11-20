@@ -1352,8 +1352,8 @@
    raised or floating surface step up to field-raised the same way, so in dark they don't match the surface. */
 .bg-surface-muted { --dk-row-hover: var(--surface-raised); }
 .bg-surface { --dk-row-hover: var(--surface-hover); }
-.bg-surface-raised { --dk-row-hover: var(--surface-hover-raised); --field: var(--field-raised); }
-.bg-surface-overlay { --dk-row-hover: var(--surface-hover-raised); --field: var(--field-raised); }
+.bg-surface-raised { --dk-row-hover: var(--surface-hover-raised); --field: var(--field-raised); --border: var(--border-overlay); }
+.bg-surface-overlay { --dk-row-hover: var(--surface-hover-raised); --field: var(--field-raised); --border: var(--border-overlay); }
 /* background-image: none and gradients */
 .bg-none { background-image: none; }
 .bg-linear-to-t { --dk-gradient-position: to top in oklab; background-image: linear-gradient(var(--dk-gradient-stops)); }
