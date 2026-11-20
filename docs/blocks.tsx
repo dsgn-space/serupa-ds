@@ -228,6 +228,10 @@ const top: React.CSSProperties = { ...cell, verticalAlign: 'top' };
 // An alias's value reads as the CSS that resolves it (var(--spacing-1)), not the token file's {spacing-1} syntax.
 const val = (v: Token['value']) => { const s = typeof v === 'string' ? v : Object.values(v)[0]; return typeof s === 'string' ? s.replace(/\{([^}]+)\}/g, (_, n: string) => `var(--${n})`) : s; };
 
+// What a token is for keeps a readable measure when the table is wider than a phone (spacing-96's 384px preview):
+// the table scrolls in its box, and the words don't stand two to a line down a row as tall as a screen.
+const use: React.CSSProperties = { ...cell, minWidth: '14rem' };
+
 /** Every token in a group, with its value, what it's for and a live preview. data-token-sheet marks each token block
  * for the visual snapshots (tools/test/visual.mjs), so a changed token value shows as a changed picture. */
 export function TokenTable({ group, preview }: { group: string; preview?: 'space' | 'radius' | 'shadow' | 'duration' | 'none' }) {
@@ -248,7 +252,7 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
       <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th>{preview && preview !== 'none' && <th style={cell}>Preview</th>}<th style={cell}>Use</th></tr></thead>
       <tbody>{g.tokens.map((t) => <tr key={t.name}>
         <td style={{ ...cell, whiteSpace: 'nowrap' }}><code>--{t.name}</code></td><td style={cell}><code>{val(t.value)}</code></td>
-        {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={cell}>{code(t.usage)}</td></tr>)}</tbody>
+        {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={use}>{code(t.usage)}</td></tr>)}</tbody>
     </table></Wide>
   </div>;
 }
