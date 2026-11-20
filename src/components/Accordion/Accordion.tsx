@@ -10,7 +10,7 @@ import { flattenChildren } from '../../internal/children';
 import * as icons from '../../material/builtin';
 import { useSettings } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
-import { revealInvalid } from '../../internal/untilFound';
+import { hideUntilFound, revealInvalid } from '../../internal/untilFound';
 import { buttonClass } from '../Button/buttonClass';
 import { en as words } from './labels';
 
@@ -174,7 +174,7 @@ export const AccordionItem = /* @__PURE__ */ component<HTMLDivElement, Accordion
     // isn't enough: WebKit sometimes drops it, and the panel lost its height at the start of the fold.
     const hold = (on: boolean) => { panel.style.contentVisibility = on ? 'visible' : ''; };
     // The height animation goes with it: one left behind made the next opening start from the open height, a snap.
-    const hide = () => { hold(false); if (grow.current) { grow.current.cancel(); grow.current = null; } if (findable) el.setAttribute('hidden', 'until-found'); if (!keep) setMounted(false); };
+    const hide = () => { hold(false); if (grow.current) { grow.current.cancel(); grow.current = null; } if (findable) hideUntilFound(el); if (!keep) setMounted(false); };
     if (ms) hold(true);
     if (!ms || !el.isConnected || panel.getBoundingClientRect().height === 0) { hide(); return; }
     const t = setTimeout(hide, ms);
