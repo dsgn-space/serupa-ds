@@ -31,6 +31,15 @@ describe('ImageCropper', () => {
     await expect.element(page.getByRole('button', { name: 'Zoom in' })).toBeEnabled();
   });
 
+  test('focus() on the root, as an error summary\'s link or a form library does, moves focus to the crop area', async () => {
+    const ref = React.createRef<HTMLDivElement>();
+    const calls: CropArea[] = [];
+    await render(<ImageCropper ref={ref} src={WIDE} aria-label="Profile photo" onCropChange={(a) => calls.push(a)} />);
+    await loaded(calls);
+    ref.current!.focus();
+    expect(document.activeElement).toBe(frame());
+  });
+
   test('once loaded it says the crop in the picture\'s own pixels: the largest of its shape, centred; aspect and defaultZoom shape it', async () => {
     const a: CropArea[] = [], b: CropArea[] = [], c: CropArea[] = [], d: CropArea[] = [];
     await render(<>
