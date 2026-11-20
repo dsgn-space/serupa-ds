@@ -152,6 +152,9 @@ describe('Patterns/List and detail', () => {
     try {
       const screen = await render(<ListDetail />);
       await screen.getByRole('link', { name: /New photos/ }).click();
+      // The message pane draws after the click: wait for it before measuring.
+      await expect.element(screen.getByRole('button', { name: 'Back to messages' })).toBeVisible();
+      await expect.poll(() => screen.getByRole('heading', { level: 2 }).elements().some((h) => latin(h.textContent) === 'New photos for the home page')).toBe(true);
       const back = screen.getByRole('button', { name: 'Back to messages' }).element() as HTMLElement;
       const icon = back.querySelector('svg, [aria-hidden="true"]')!.getBoundingClientRect();
       const heading = (screen.getByRole('heading', { level: 2 }).elements().find((h) => latin(h.textContent) === 'New photos for the home page'))!.getBoundingClientRect();

@@ -38,7 +38,7 @@ export const Indonesian: Story = { args: { locale: 'id-ID' } };
 export const LongText: Story = {
   name: 'Long month names (Portuguese), narrow',
   args: { locale: 'pt-BR', months: 2, defaultValue: { start: '2026-09-10', end: '2026-10-02' }, defaultMonth: new Date(2026, 8, 1) },
-  render: (args) => <div style={{ width: 280 }}><RangeCalendar {...args} /></div>,
+  render: (args) => <div style={{ maxWidth: 280 }}><RangeCalendar {...args} /></div>,
 };
 /** Do: two months where there's room, so a range that crosses the month shows whole. */
 export const DoTwoMonths: Story = { name: 'Do: two months for a stay', args: { months: 2, defaultValue: { start: '2026-11-24', end: '2026-12-15' } } };

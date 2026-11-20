@@ -176,8 +176,22 @@ await inParallel(opened, workers, async (p, w) => {
   // busy runner (/components/chat, 228px wider once on 14 Nov, fine on the next run).
   await w.page.waitForFunction(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth, null, { timeout: 2000, polling: 100 }).catch(() => {});
   const wide = await w.page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => done(document.documentElement.scrollWidth - document.documentElement.clientWidth)))));
+  // Nor does an example's own box, unless what's wide scrolls by itself (a table, a grid, code): a story that shows a
+  // narrow column gives it a max-width, not a width, so on a phone the column is the screen's.
+  // What's drawn is measured, not the box's scroll width, which a closed popup waiting off to the side adds to.
+  const boxes = await w.page.evaluate(() => [...document.querySelectorAll('#article [data-site-demo]')].filter((d) => {
+    if (getComputedStyle(d).overflowX === 'visible') return false;
+    const box = d.getBoundingClientRect();
+    return [...d.querySelectorAll('*')].some((e) => {
+      const r = e.getBoundingClientRect();
+      if (!r.width || !r.height || (r.left >= box.left - 1 && r.right <= box.right + 1) || getComputedStyle(e).position === 'fixed' || getComputedStyle(e).visibility === 'hidden') return false;
+      for (let a = e.parentElement; a && a !== d; a = a.parentElement) if (getComputedStyle(a).overflowX !== 'visible') return false;
+      return true;
+    });
+  }).map((d) => d.closest('section, [id]')?.querySelector('h2, h3')?.textContent || 'an example'));
   await w.page.setViewportSize({ width: 1280, height: 800 });
   t(`${p.path} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen`);
+  t(`${p.path}: no example scrolls sideways in its box at 320px`, !boxes.length, `wider than their box: ${boxes.join(', ')}`);
   // Storybook's own links have been pointed at the site's pages by now; one that is left has no page here.
   const lost = seen.links.filter((h) => h.startsWith('?path=') || (h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/')));
   t(`${p.path}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
@@ -232,6 +246,20 @@ await inParallel(opened, workers, async (p, w) => {
     !order.lead ? 'no lead paragraph' : !order.leadFirst ? 'the example comes before the lead' : `${order.above} examples above the guide`);
 }
 
+// Printed, a component's page is its guide: the screen's controls (search, the theme switches, the section list,
+// "On this page", each example's Show code and the guide's Copy for AI) are left out, and the bar's links wrap
+// instead of running under each other on the narrower page.
+{
+  const w = workers[0];
+  await w.page.setViewportSize({ width: 1280, height: 900 });
+  await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
+  await w.page.emulateMedia({ media: 'print' });
+  const shown = await w.page.evaluate(() => ['.site-search', '.site-side', '.site-aside', '.site-browse', '.site-demo__bar', '.sb-copy-guide']
+    .filter((s) => [...document.querySelectorAll(s)].some((e) => e.getClientRects().length > 0)));
+  await w.page.emulateMedia({ media: 'screen' });
+  t('/components/button printed leaves out the screen\'s controls', !shown.length, `still printed: ${shown.join(', ')}`);
+}
+
 // Each card on the Components index shows its component, drawn small (site/src/Index.tsx Preview): every card gets
 // one as it comes near the screen, none opens anything over the page, each fits its card's width, is hidden from
 // assistive technology and out of the tab order, and a click on it opens the component's page.
@@ -252,11 +280,14 @@ await inParallel(opened, workers, async (p, w) => {
       // What's drawn, not the stage, which is a page's width and centered.
       wide: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelector('.site-card__stage')?.children ?? []].some((c) => { const s = c.getBoundingClientRect(); return s.width > 0 && (s.left < r.left - 1 || s.right > r.right + 1); }); }).map(name),
       over: [...document.querySelectorAll('dialog[open], :popover-open')].map((e) => e.className),
+      // A bar or button a story pins to the screen's edge is pinned to its picture, and shows whole there.
+      pinned: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelectorAll('.dk-bottom-nav, .dk-fab, .dk-offline-banner')].some((e) => { const s = e.getBoundingClientRect(); return s.top < r.top - 1 || s.bottom > r.bottom + 1 || s.left < r.left - 1 || s.right > r.right + 1; }); }).map(name),
     };
   });
   t('/components: every component card shows a preview', cards.count >= 100 && !cards.empty.length, `${cards.count} previews; none drawn in ${cards.empty.join(', ')}`);
   t('/components: no preview opens a dialog, menu or tooltip over the page', !cards.over.length, cards.over.join(', '));
   t('/components: every preview fits its card\'s width', !cards.wide.length, cards.wide.join(', '));
+  t('/components: a BottomNav, FAB or OfflineBanner shows whole in its picture, not past its edge', !cards.pinned.length, cards.pinned.join(', '));
   t('/components: the previews are pictures, hidden from assistive technology and out of the tab order', !cards.shown.length, cards.shown.join(', '));
   await w.page.evaluate(() => window.scrollTo(0, 0));
   // By where it is: Playwright won't click an inert element, which is the point.
@@ -421,10 +452,20 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   await context.close();
 }
 
-// A page that shows no changes and no test list doesn't download the changelog or the tests' names, the heaviest data
-// in the docs: they load when a section that reads them is drawn (docs/blocks.tsx), not with every page.
+// A page that shows no changes, no test list and no token explorer doesn't download the changelog, the tests' names
+// or every component's tokens, the heaviest data in the docs: they load when a section that reads them is drawn
+// (docs/blocks.tsx), not with every page.
 {
-  const marker = (/[A-Za-z][A-Za-z ,]{40,}/.exec(fs.readFileSync(path.join(PROJECT, 'CHANGELOG.md'), 'utf8').split('\n').find((l) => /^- .{80,}/.test(l)) ?? '')?.[0] ?? '').slice(0, 40);
+  const changelog = (/[A-Za-z][A-Za-z ,]{40,}/.exec(fs.readFileSync(path.join(PROJECT, 'CHANGELOG.md'), 'utf8').split('\n').find((l) => /^- .{80,}/.test(l)) ?? '')?.[0] ?? '').slice(0, 40);
+  // The longest description of a component token (<Name>.tokens.json), which only the token explorer shows.
+  const said = [];
+  for (const n of fs.readdirSync(path.join(PROJECT, 'src', 'components'))) {
+    const dir = path.join(PROJECT, 'src', 'components', n);
+    for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.tokens.json'))) {
+      JSON.stringify(JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), (k, v) => { if (k === '$description' && typeof v === 'string') said.push(v); return v; });
+    }
+  }
+  const tokens = said.map((d) => /[A-Za-z][A-Za-z ,]{40,}/.exec(d)?.[0] ?? '').sort((a, c) => c.length - a.length)[0]?.slice(0, 40) ?? '';
   const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
   /** @type {Promise<string>[]} */
@@ -432,9 +473,12 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   page.on('response', (r) => { if (r.url().endsWith('.js')) scripts.push(r.text().catch(() => '')); });
   const failed = await openUrl(page, base + '/foundations/colors') || await ready(page, true);
   await page.waitForTimeout(1000);
-  const carried = (await Promise.all(scripts)).some((js) => js.includes(marker));
-  t('/foundations/colors doesn\'t download the changelog', !failed && marker.length === 40 && !carried,
-    failed || (marker.length < 40 ? 'no line of CHANGELOG.md to look for' : `a script it loads carries the changelog ("${marker}")`));
+  const loaded = await Promise.all(scripts);
+  for (const [what, marker] of [['the changelog', changelog], ['every component\'s tokens', tokens]]) {
+    const carried = loaded.some((js) => js.includes(marker));
+    t(`/foundations/colors doesn't download ${what}`, !failed && marker.length === 40 && !carried,
+      failed || (marker.length < 40 ? `nothing of ${what} to look for` : `a script it loads carries ${what} ("${marker}")`));
+  }
   await context.close();
 }
 

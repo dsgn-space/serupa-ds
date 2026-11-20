@@ -45,7 +45,7 @@ export const Split: Story = {
   ),
 };
 /** In a narrow container the inline layout stacks. */
-export const Narrow: Story = { render: (args) => <div style={{ width: 300 }}><Record {...args} /></div> };
+export const Narrow: Story = { render: (args) => <div style={{ maxWidth: 300 }}><Record {...args} /></div> };
 // The stress story (G14): long words, long labels, more items than fit; the visual baselines show how it copes.
 export const LongText: Story = {
   render: (args) => (
