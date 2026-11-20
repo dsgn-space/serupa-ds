@@ -12,16 +12,17 @@ import { Select } from '../../src/components/Select/Select';
 
 # Design principles
 
-Six principles guide how Serupa's components, tokens and docs are made, and how the screens built with them should behave. Use them to decide cases a guide doesn't cover, and to settle design reviews.
+Five principles guide how Serupa's components, tokens and docs are made, and how the screens built with them should behave. Use them to decide cases a guide doesn't cover, and to settle design reviews.
 
 They are for weighing choices, not a checklist to tick. When they conflict, accessibility comes first.
 
 ## Purposeful
 
-Every screen exists to help someone get one thing done. Know what that is before you design, and keep only what serves it.
+Each screen has one clear job. Show what serves that job, in a clear order, and leave the rest out.
 
-Clutter is a cost people pay on every visit: each extra button, option or sentence is one more thing to read and skip. A screen with a clear job and a clear order lets people act without thinking about the interface.
+Every extra button, option or sentence is one more thing to read and skip. A focused screen can be understood at a glance.
 
+- Open on the task or the content, not on a welcome screen, a tour or a banner.
 - Start from who the screen is for and what they came to do, before choosing a single component.
 - One primary action per view. A second job waits until the first is done well.
 - Simple is not bare. Show the few things people use most, and the rest one step away, in an order that says where people are and what comes next.
@@ -41,16 +42,17 @@ Clutter is a cost people pay on every visit: each extra button, option or senten
   dontExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">No</Button><Button destructive>Yes</Button></div>}
 />
 
-## In control
+## Trustworthy
 
-People decide how to reach their goal, and they can always go back, skip ahead or change their mind without losing their work.
+Tell people what is really happening, never waste their time or work, and handle their data as if it were your own.
 
-An interface that forces one route, or punishes a wrong click, makes people careful and slow. When every step can be left and every mistake undone, people explore with confidence and learn the product by using it.
+Trust builds slowly and breaks at once. A progress bar that lies, a flow with no way out, a mistake that can't be undone, or a cancel button hidden five screens deep teaches people to doubt everything else the product says.
 
-- Open on the task or the content, not on a welcome screen, a tour or a banner.
-- Never trap people in a flow. A tour, an onboarding checklist or a multi-step form can be left, skipped or finished later, and keeps what was done.
+- Show what is really happening: respond to input at once, report progress that reflects real work, and never say "Saved" before the save finishes.
 - Make mistakes cheap. Act at once and offer Undo rather than asking "Are you sure?"; confirm only what can't be undone. See [Destructive actions](?path=/docs/guides-destructive-actions--docs).
-- Back, Cancel and Escape return people to where they were, with their work intact.
+- Never trap people in a flow. A tour, an onboarding checklist or a multi-step form can be left, skipped or finished later, and Back, Cancel and Escape return people to where they were with their work intact.
+- Ask only for what the task needs, and say why before you ask: next to a field that isn't obvious, and before the browser's prompt for the camera, location or notifications. See [Permission request](?path=/docs/patterns-permission-request--docs).
+- Make the private choice the default, and leaving as easy as joining: cancelling, unsubscribing and deleting an account take no more steps than signing up.
 
 <DoDontExample
   doText="Act at once, and offer Undo."
@@ -58,16 +60,6 @@ An interface that forces one route, or punishes a wrong click, makes people care
   dontText="Ask first for something that can be undone."
   dontExample={<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>Archive this project? <Button variant="outline" size="sm">Cancel</Button><Button size="sm">Archive</Button></div>}
 />
-
-## Trustworthy
-
-Tell people what is really happening, ask only for what you need, and handle their time and data as if it were your own.
-
-Trust builds slowly and breaks at once. A progress bar that lies, a field that asks for more than the task needs, or a cancel flow that hides behind five screens teaches people to doubt everything else the product says.
-
-- Show what is really happening: respond to input at once, report progress that reflects real work, and never say "Saved" before the save finishes.
-- Ask only for what the task needs, and say why before you ask: next to a field that isn't obvious, and before the browser's prompt for the camera, location or notifications. See [Permission request](?path=/docs/patterns-permission-request--docs).
-- Make the private choice the default, and leaving as easy as joining: cancelling, unsubscribing and deleting an account take no more steps than signing up.
 
 <DoDontExample
   doText="Report real progress."
