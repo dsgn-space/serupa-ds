@@ -63,7 +63,7 @@ Drawn from the `FooterLayouts` story.
 
 | State | Look |
 | --- | --- |
-| Rest | `surface` with a `border` border and `shadow-xs` (outline); `surface-raised` with `shadow-md` and a `border-raised` edge (elevated: the edge only shows in dark); `surface-muted` (filled) |
+| Rest | `surface` with a `border` border and `shadow-xs` (outline); `surface-raised` with `shadow-md` and a `border-raised` edge (elevated: the edge only shows in dark); `surface-muted` (filled), with a `border` edge in dark only, where that fill is the page's own |
 | Hover (a linked card) | A `border-strong` border |
 | Focus (a linked card) | From the keyboard: a 2px `focus-ring` outline, 2px outside the card |
 
@@ -93,7 +93,7 @@ The hover border fades in 150ms (`duration-150`, `ease-move`), at once with `pre
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root element (`as`). |
-| `variant` | `'outline'` \| `'elevated'` \| `'filled'` | `'outline'` | A border and a hairline shadow; a raised shadow (for content over the page); or `surface-muted` and flat (a panel inside another surface) |
+| `variant` | `'outline'` \| `'elevated'` \| `'filled'` | `'outline'` | A border and a hairline shadow; a raised shadow (for content over the page); or `surface-muted` and flat (a panel inside another surface; in dark it keeps a `border` edge, so it still shows on the page) |
 | `padding` | `'none'` \| `'sm'` \| `'md'` \| `'lg'` | `'md'` | 0, 12px, 20px or 24px inside, and the parts sit 16px apart |
 | `as` | `'div'` \| `'section'` \| `'article'` \| `'li'` | `'div'` | The element. Use `article` for a self-contained item, `li` inside a list |
 | `href` | string | | Makes the whole card clickable through one link around the `CardHeader` title (the link component set with `configure({ link })`, `<a>` by default) |
@@ -129,6 +129,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-field-bg-elevated` | `field-raised` | The fill of a form field on an elevated card: a step up from the card in dark, so the field stands out from it |
 | `--card-bg` | `surface` | The background of an outline card |
 | `--card-bg-filled` | `surface-muted` | The background of a filled card |
+| `--card-border-filled` | `border` | A filled card's edge in dark, where its fill is the page's own; in light it has none. |
 | `--card-row-bg-hover` | `surface-hover` | A List or InlineEdit row on the card, hovered or selected |
 | `--card-row-bg-hover-filled` | `surface-raised` | A List or InlineEdit row on a filled card, hovered or selected: a step up, since surface-hover matches the filled card in light |
 | `--card-bg-elevated` | `surface-raised` | The background of an elevated card (one step up from the page in dark). |

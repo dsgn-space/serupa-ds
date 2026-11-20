@@ -1,8 +1,8 @@
 # Bottom
-- button "Open filters"
+- button "Share"
 
 # BottomSheet
-- button "Open filters"
+- button "Cafés nearby"
 
 # DoFooterActions
 - button "Open filters"
@@ -33,10 +33,10 @@
   - button "Reset"
 
 # Large
-- button "Open filters"
+- button "Project details"
 
 # Left
-- button "Open filters"
+- button "Menu"
 
 # LongText
 - button "Release notes"
@@ -54,7 +54,7 @@
 - button "Open filters"
 
 # Top
-- button "Open filters"
+- button "What’s new"
 
 # UnsavedChanges
 - button "Edit Atlas"

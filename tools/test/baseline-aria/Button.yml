@@ -72,7 +72,7 @@
 - button "Default"
 - button "Disabled" [disabled]
 - button "Saving" [disabled]
-- button "Export" [disabled]
+- button "Export"
 - button "Refresh" [disabled]
 
 # Variants

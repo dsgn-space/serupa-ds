@@ -25,8 +25,12 @@ const idPart = (exportName: string) => exportName.replace(/([a-z0-9])([A-Z])/g, 
 type Box = { n: number; x: number; y: number; w: number; h: number };
 
 /** Where an element is drawn: its own box, or the boxes of what's in it when it has no size of its own (a mark that
- * only places its label), or nothing when it isn't drawn. */
+ * only places its label), or nothing when it isn't drawn or can't be seen. */
 function drawnBox(e: Element): { left: number; top: number; right: number; bottom: number } | null {
+  // A part laid out but not shown (a loading button's icon, faded out under its spinner) isn't pointed at: the next
+  // one that shows is.
+  const cs = getComputedStyle(e);
+  if (cs.visibility === 'hidden' || cs.opacity === '0') return null;
   const own = e.getBoundingClientRect();
   if (own.width > 0 && own.height > 0) return own;
   const rs = [...e.querySelectorAll('*')].map((x) => x.getBoundingClientRect()).filter((r) => r.width > 0 && r.height > 0);
@@ -64,11 +68,14 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
         const c = o.cloneNode(true) as HTMLElement;
         c.removeAttribute('popover');
         c.removeAttribute('hidden');
-        for (const k of ['left', 'top', 'right', 'bottom', 'inset', 'position-anchor']) c.style.removeProperty(k);   // where it was placed
+        for (const k of ['left', 'top', 'right', 'bottom', 'inset', 'position-anchor', 'visibility']) c.style.removeProperty(k);   // where it was placed, and the hiding it does while it measures where to go
         if (c.dataset.state === 'closed') c.dataset.state = 'open';
         for (const x of [c, ...c.querySelectorAll('[id]')]) x.removeAttribute('id');
         if (c instanceof HTMLDialogElement) c.setAttribute('open', '');
         box.append(c);
+        // The copy is what's numbered, so the live one closes: a menu or popover a story opens on arrival would
+        // otherwise stay over the docs page.
+        if (o.matches(':popover-open')) { try { o.hidePopover(); } catch { /* closed already */ } }
       }
     };
     // "opened": a menu or popover that only has content while open is opened once the story is there, copied, and
@@ -114,14 +121,26 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
     later();
     return () => { ro.disconnect(); mo.disconnect(); cancelAnimationFrame(frame); clearTimeout(t); clearTimeout(open); };
   }, [parts, chosen?.id, opened]);
+  // Each number outside its outline's top-left corner; one that would sit on an earlier number (parts nested or side
+  // by side: an alert's icon and title, an accordion's header and title) moves along the top edge until it's clear.
+  const placed: { mx: number; my: number }[] = [];
+  const marks = [...boxes].sort((a, b) => a.n - b.n).map((b) => {
+    let mx = b.x - 17;
+    const my = b.y - 17;
+    while (placed.some((p) => Math.abs(p.mx - mx) < 22 && Math.abs(p.my - my) < 22)) mx += 22;
+    placed.push({ mx, my });
+    return { ...b, mx, my };
+  });
   if (!chosen) return null;
   return <figure className="sb-anatomy sb-unstyled" role="img" aria-label={`Anatomy: ${parts.length} parts, numbered as in the list that follows`}>
     <div className="sb-anatomy__stage" ref={stage} inert={still} aria-hidden="true">
       <Story of={chosen.moduleExport} />
       <div className="sb-anatomy__frozen" ref={frozen} />
-      {boxes.map((b) => <React.Fragment key={b.n}>
-        <span className="sb-anatomy__box" style={{ transform: `translate(${b.x}px, ${b.y}px)`, width: b.w, height: b.h }} />
-        <span className="sb-anatomy__n" style={{ transform: `translate(${b.x - 10}px, ${b.y - 10}px)` }}>{b.n}</span>
+      {marks.map((b) => <React.Fragment key={b.n}>
+        {/* The outline stands 3px off the part, so it shows on a part filled in the brand color (a primary button)
+            and doesn't cover its edge; the number sits outside the outline's corner, off the part's text. */}
+        <span className="sb-anatomy__box" style={{ transform: `translate(${b.x - 3}px, ${b.y - 3}px)`, width: b.w + 6, height: b.h + 6 }} />
+        <span className="sb-anatomy__n" style={{ transform: `translate(${b.mx}px, ${b.my}px)` }}>{b.n}</span>
       </React.Fragment>)}
     </div>
   </figure>;

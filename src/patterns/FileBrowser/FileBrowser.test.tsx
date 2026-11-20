@@ -190,4 +190,11 @@ describe('Patterns/File browser', () => {
     await render(<SerupaProvider locale="ar-EG"><FileBrowser /></SerupaProvider>);
     expect(bodyText()).toContain('٦ files');
   });
+
+  test('"changed 3 hours ago" stays together: the line under a name breaks before "changed", never after it', async () => {
+    await render(<FileBrowser files={files} folders={folders} />);
+    const whens = [...document.querySelectorAll('#file-list time')].map((t) => t.parentElement!);
+    expect(whens.length).toBeGreaterThan(0);
+    expect(whens.map((w) => [w.textContent.startsWith('changed'), getComputedStyle(w).whiteSpace])).toEqual(whens.map(() => [true, 'nowrap']));
+  });
 });
