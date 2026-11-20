@@ -10433,15 +10433,7 @@
         "value": 0,
         "unit": "ms"
       },
-      "$description": "`delay-0`."
-    },
-    "delay-75": {
-      "$type": "duration",
-      "$value": {
-        "value": 75,
-        "unit": "ms"
-      },
-      "$description": "`delay-75`."
+      "$description": "No wait: `delay-0` cancels a delay set elsewhere."
     },
     "delay-50": {
       "$type": "duration",
@@ -10451,13 +10443,21 @@
       },
       "$description": "One step of a stagger: the gap between list items arriving (`motion-stagger`)."
     },
+    "delay-75": {
+      "$type": "duration",
+      "$value": {
+        "value": 75,
+        "unit": "ms"
+      },
+      "$description": "One step of the pixel Loader's wave (`--loader-pixel-stagger`)."
+    },
     "delay-100": {
       "$type": "duration",
       "$value": {
         "value": 100,
         "unit": "ms"
       },
-      "$description": "`delay-100`."
+      "$description": "Short: a tooltip waits this long to close once the pointer leaves it."
     },
     "delay-150": {
       "$type": "duration",
@@ -10465,7 +10465,7 @@
         "value": 150,
         "unit": "ms"
       },
-      "$description": "`delay-150`."
+      "$description": "The gap between the dots Loader's dots (`--loader-dots-stagger`)."
     },
     "delay-200": {
       "$type": "duration",
@@ -10473,7 +10473,7 @@
         "value": 200,
         "unit": "ms"
       },
-      "$description": "`delay-200`."
+      "$description": "Offsets one square of the random pixel Loader."
     },
     "delay-300": {
       "$type": "duration",
@@ -10481,7 +10481,7 @@
         "value": 300,
         "unit": "ms"
       },
-      "$description": "Tooltips: wait before showing."
+      "$description": "A loading indicator waits this long before it shows, so a quick wait doesn't flash one."
     },
     "delay-500": {
       "$type": "duration",
@@ -10489,7 +10489,7 @@
         "value": 500,
         "unit": "ms"
       },
-      "$description": "Tooltips: wait before showing."
+      "$description": "A HoverCard waits this long before it opens; a loading indicator, once shown, stays at least this long."
     },
     "delay-700": {
       "$type": "duration",
@@ -10497,7 +10497,7 @@
         "value": 700,
         "unit": "ms"
       },
-      "$description": "`delay-700`."
+      "$description": "Offsets one square of the random pixel Loader."
     },
     "delay-1000": {
       "$type": "duration",
@@ -10505,7 +10505,7 @@
         "value": 1000,
         "unit": "ms"
       },
-      "$description": "`delay-1000`."
+      "$description": "Offsets one square of the random pixel Loader; the longest wait."
     },
     "ease-linear": {
       "$type": "cubicBezier",
