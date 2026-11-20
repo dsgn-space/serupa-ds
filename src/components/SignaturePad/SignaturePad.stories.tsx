@@ -17,7 +17,7 @@ export const Playground: Story = {};
 /** In a Field: its label names the group, and its hint and error describe it. */
 export const InField: Story = {
   render: () => (
-    <Field label="Sign to accept the terms" hint="Draw or type your name." error="Please sign before you continue." required>
+    <Field label="Sign to accept the terms" hint="Draw or type your name." error="Sign before you continue." required>
       <SignaturePad name="signature" />
     </Field>
   ),
