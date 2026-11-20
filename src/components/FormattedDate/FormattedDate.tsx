@@ -74,6 +74,7 @@ function formatter(locale: string | undefined, options: Intl.DateTimeFormatOptio
 
 // A time and its AM or PM stay on one line ("11:45 AM", "오후 3:00"): where Intl puts a breaking space between them
 // (older ICU does; newer writes a narrow no-break space), it becomes a no-break space. Found by part type, so it holds in every locale.
+// module state: a fixed list of Intl part types, never written to, so every request reads the same one.
 const CLOCK = new Set(['hour', 'minute', 'second', 'fractionalSecond']);
 function keepTimeTogether<T extends { type: string; value: string }>(parts: T[]): T[] {
   return parts.map((p, i) => {
