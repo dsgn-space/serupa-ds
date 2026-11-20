@@ -40,7 +40,7 @@ export const Animated: Story = {
     return (
       <div style={{ display: 'grid', gap: 'var(--spacing-3)', justifyItems: 'start' }}>
         <p style={{ margin: 0 }}>Total: <FormattedNumber value={total} format="currency" currency="IDR" animate /></p>
-        <div style={{ display: 'flex', gap: 'var(--spacing-2)' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-2)' }}>
           <Button variant="secondary" onClick={() => setTotal((t) => t + 15_000)}>Add <FormattedNumber value={15_000} format="currency" currency="IDR" /></Button>
           <Button variant="secondary" onClick={() => setTotal((t) => t + 1_000_000)}>Add <FormattedNumber value={1_000_000} format="currency" currency="IDR" /></Button>
         </div>
