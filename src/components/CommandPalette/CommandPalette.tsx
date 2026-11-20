@@ -64,6 +64,8 @@ export interface CommandPaletteProps extends Omit<DialogProps, 'title' | 'descri
   emptyText?: React.ReactNode | undefined;
   /** How many it lists at most while searching, the best matches first. Default: 50. */
   limit?: number | undefined;
+  /** What's in the search field (controlled): an opening then keeps it, so you can open the palette on a search. Use with onQueryChange. */
+  query?: string | undefined;
   /** Called with what's typed, as it changes (and with "" when an opening clears it): to fetch the commands that match
    *  from a server, with filter={false} and loading. */
   onQueryChange?: ((query: string) => void) | undefined;
@@ -100,7 +102,7 @@ function score(c: Command, q: string): number {
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, CommandPaletteProps>('CommandPalette', function CommandPalette(props, ref) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
-  const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, onQueryChange: 1, filter: 1, loading: 1, loadingText: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
+  const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, query: 1, onQueryChange: 1, filter: 1, loading: 1, loadingText: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
   // null counts as not passed, as it always has here.
   const [openIn, setOwn, controlled] = useControllable(props.open == null ? undefined : props.open, !!props.defaultOpen, 'CommandPalette', 'open');
   const open = !!openIn;
@@ -112,20 +114,26 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
   const keys = props.hotkey === false ? null : props.hotkey && props.hotkey.length ? props.hotkey : ['mod', 'K'];
   useShortcut(keys || [], () => change(true, { reason: 'trigger' }), { description: labels.commandPalette, enabled: !!keys && !open });
 
-  const [query, setQuery] = React.useState('');
+  const [query, setOwnQuery, queryControlled] = useControllable(props.query ?? undefined, '', 'CommandPalette', 'query');
   const [active, setActive] = React.useState(0);
-  // Each opening starts from an empty field, at the top of the list.
+  // Each opening starts at the top of the list, from an empty field unless the app holds what's in it (query).
   const [was, setWas] = React.useState(open);
-  if (was !== open) { setWas(open); if (open) { setQuery(''); setActive(0); } }
+  if (was !== open) { setWas(open); if (open) { if (!queryControlled) setOwnQuery(''); setActive(0); } }
 
-  // What's typed goes to onQueryChange once it has changed, the clearing of a new opening included.
+  // What's typed goes to onQueryChange: at once when the app holds the query, else once it has changed here (the
+  // clearing of a new opening included).
   const told = React.useRef(query);
   const onQuery = React.useRef(props.onQueryChange); onQuery.current = props.onQueryChange;
   React.useEffect(() => {
     if (told.current === query) return;
     told.current = query;
-    if (onQuery.current) onQuery.current(query);
-  }, [query]);
+    if (!queryControlled && onQuery.current) onQuery.current(query);
+  }, [query, queryControlled]);
+  const setQuery = (v: string) => {
+    if (!queryControlled) { setOwnQuery(v); return; }
+    told.current = v;
+    if (onQuery.current) onQuery.current(v);
+  };
 
   const q = fold(query.trim());
   const { commands, limit } = props;

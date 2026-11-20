@@ -330,4 +330,25 @@ describe('CommandPalette', () => {
     await r.rerender(<SerupaProvider labels={idLabels}><CommandPalette id="ld" defaultOpen commands={[]} loading /></SerupaProvider>);
     await expect.poll(() => [...document.querySelectorAll('dialog [role="status"]')].find((x) => x.querySelector('[data-component="loader"]'))?.textContent).toBe('Memuat…');
   });
+  test('query held by the app: it opens on that search, typing goes to onQueryChange at once, and reopening keeps it', async () => {
+    const asked: string[] = [];
+    function Held() {
+      const [open, setOpen] = React.useState(true);
+      const [q, setQ] = React.useState('proj');
+      return <>
+        <button id="reopen" onClick={() => setOpen(true)}>Open</button>
+        <CommandPalette id="hq" open={open} onOpenChange={setOpen} commands={COMMANDS} query={q} onQueryChange={(x) => { asked.push(x); setQ(x); }} />
+      </>;
+    }
+    await render(<Held />);
+    await expect.poll(() => document.activeElement).toBe(field());
+    expect([field().value, labels()]).toEqual(['proj', ['New project', 'Archive project']]);
+    await userEvent.keyboard('{Backspace}');
+    expect(asked).toEqual(['pro']);
+    await userEvent.keyboard('{Escape}');
+    await expect.poll(() => isOpen('hq')).toBe(false);
+    await userEvent.click(el('reopen'));
+    await expect.poll(() => isOpen('hq')).toBe(true);
+    expect([field().value, asked]).toEqual(['pro', ['pro']]);
+  });
 });

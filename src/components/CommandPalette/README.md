@@ -57,7 +57,7 @@ Drawn from the `Default` story.
 
 ## Behavior
 
-- Each opening starts with an empty field and the first command active.
+- Each opening starts with an empty field (unless you hold it with `query`) and the first command active.
 - Matching ignores case and accents. A label that starts with what's typed comes first, then one with a word that does, then one that has it inside, then a keyword match; ties keep the order given. What matched is marked in each label.
 - The list grows to 320px, then scrolls, keeping the active row in view.
 - Escape or a click on the backdrop closes it with nothing chosen.
@@ -96,6 +96,7 @@ Drawn from the `Default` story.
 | `placeholder` | `string` | `"Search commands and pages"` | The search field's placeholder and name (`labels.searchCommands`). |
 | `emptyText` | `ReactNode` | `"No matching commands"` | Shown when nothing matches (`labels.noCommands`). A string is also said. |
 | `limit` | `number` | `50` | How many it lists at most while searching, the best matches first. |
+| `query` | `string` | | What's in the search field (controlled), with `onQueryChange`. An opening keeps it, so you can open the palette on a search. |
 | `onQueryChange` | `(query: string) => void` | | Called with what's typed as it changes, and with `""` when an opening clears it: fetch the matches from a server. |
 | `filter` | `boolean` | `true` | `false` lists `commands` as given, as the ones your search found, without filtering or sorting them. |
 | `loading` | `boolean` | `false` | Shows a loading row and marks the list busy; "No matching commands" waits until it ends. |
