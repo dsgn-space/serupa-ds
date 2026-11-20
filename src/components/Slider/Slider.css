@@ -46,7 +46,7 @@
 .dk-slider__thumb:has(> .dk-slider__range:focus-visible) { outline: var(--focus-ring-width) solid var(--slider-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-slider:not(.dk-slider--disabled, .dk-slider--readonly) .dk-slider__thumb:active { cursor: var(--cursor-grabbing); scale: var(--scale-110); }
 .dk-slider--mark-labels {
-  --dk-slider-labels: calc(var(--spacing-1) + var(--text-xs--line-height));
+  --dk-slider-labels: calc(var(--spacing-1) + var(--dk-slider-labels-h, var(--text-xs--line-height)));
   block-size: calc(var(--dk-slider-thumb) + var(--dk-slider-labels)); padding-block-end: var(--dk-slider-labels);
 }
 /* Each mark is a zero-wide point on the track; its tick and label center on it in either direction. */
@@ -55,11 +55,14 @@
 .dk-slider__mark-label {
   --dk-slider-under: calc(var(--sizing-full) + var(--dk-slider-half) - var(--dk-slider-track) / 2 + var(--spacing-1));
   position: absolute; inset-block-start: var(--dk-slider-under);
-  inset-inline: var(--spacing-0); display: flex; justify-content: center; white-space: nowrap;
+  inset-inline: var(--spacing-0); display: flex; justify-content: center; white-space: nowrap; column-gap: var(--slider-mark-label-gap, var(--spacing-2));
   color: var(--slider-mark-label, var(--text-muted)); font-family: var(--font-sans); font-size: var(--text-xs); line-height: var(--text-xs--line-height);
 }
 /* Near an end, a label or the value chip moves inward by --dk-slider-nudge, so it stays inside the slider (GM2). */
 .dk-slider__mark-label > span, .dk-slider__value > span { flex: none; translate: var(--dk-slider-nudge, none); }
+/* A label too long for its room between the marks wraps within it (the slider sets the width, and grows for the lines).
+   column-gap above is the space kept between two labels; the label itself is one flex item, so it lays out nothing. */
+.dk-slider__mark-label > [data-wrap] { white-space: normal; text-align: center; inline-size: max-content; max-inline-size: var(--dk-slider-share); overflow-wrap: anywhere; }
 .dk-slider__value {
   position: absolute; inset-block-end: calc(var(--sizing-full) + var(--spacing-1\.5)); inset-inline: var(--spacing-0);
   display: flex; justify-content: center; pointer-events: none; opacity: var(--opacity-0);

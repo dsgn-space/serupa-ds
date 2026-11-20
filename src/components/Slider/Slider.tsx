@@ -92,6 +92,29 @@ function markList(marks: SliderProps['marks'], min: number, max: number, step: n
 // The text a slider nudges inward to keep inside its box (GM2).
 const FIT = '.dk-slider__mark-label > span, .dk-slider__value > span';
 
+/** Mark labels too long for the room between their points wrap: each gets the track up to halfway to its neighbours,
+ *  less the gap between labels (a label at an end can also use the room its nudge inward gives it), and the slider
+ *  grows to hold the tallest one's lines. Labels with room keep their one line. */
+function share(el: HTMLElement) {
+  const labels = Array.from(el.querySelectorAll<HTMLElement>('.dk-slider__mark-label > span'));
+  for (const p of labels) { p.removeAttribute('data-wrap'); p.style.removeProperty('--dk-slider-share'); }
+  el.style.removeProperty('--dk-slider-labels-h');
+  if (labels.length < 2) return;
+  const box = el.getBoundingClientRect(), gap = parseFloat(getComputedStyle(labels[0]!.parentElement!).columnGap) || 0;
+  const at = labels.map((p) => ({ p, c: p.parentElement!.getBoundingClientRect().left, w: p.getBoundingClientRect().width })).sort((a, b) => a.c - b.c);
+  let wrapped = false;
+  at.forEach(({ p, c, w }, i) => {
+    const first = i === 0, last = i === at.length - 1;
+    const left = first ? c - box.left : (c - at[i - 1]!.c) / 2, right = last ? box.right - c : (at[i + 1]!.c - c) / 2;
+    const room = first ? Math.min(left, right - gap / 2) + right - gap / 2 : last ? Math.min(right, left - gap / 2) + left - gap / 2 : 2 * Math.min(left, right) - gap;
+    if (w <= room) return;
+    p.setAttribute('data-wrap', '');
+    p.style.setProperty('--dk-slider-share', Math.max(0, room) + 'px');
+    wrapped = true;
+  });
+  if (wrapped) el.style.setProperty('--dk-slider-labels-h', Math.max(...labels.map((p) => p.getBoundingClientRect().height)) + 'px');
+}
+
 export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Slider', function Slider(props, ref) {
   const nameRef = useNameCheck('Slider', NAME_HOW.field);   // warns when it has no accessible name
   // A surrounding Field's id, hint, error, required and disabled, at any depth: a Slider in a row with its unit
@@ -238,6 +261,7 @@ export const Slider = /* @__PURE__ */ component<HTMLDivElement, SliderProps>('Sl
     const parts = Array.from(el.querySelectorAll<HTMLElement>(FIT));
     if (!parts.length) return;
     for (const p of parts) p.style.removeProperty('--dk-slider-nudge');
+    share(el);
     const box = el.getBoundingClientRect();
     const by = parts.map((p) => { const r = p.getBoundingClientRect(); return r.width >= box.width ? 0 : Math.max(0, box.left - r.left) - Math.max(0, r.right - box.right); });
     parts.forEach((p, i) => { if (by[i]) p.style.setProperty('--dk-slider-nudge', by[i] + 'px'); });

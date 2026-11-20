@@ -547,6 +547,30 @@ describe('Slider at 320px (GM2)', () => {
     await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
     expect([el('gm2-f').getBoundingClientRect().width, inside()]).toEqual([size, true]);
   });
+  test('long mark labels that would run into each other wrap within their share of the track, and the slider grows to hold their lines', async () => {
+    const marks = [{ value: 0, label: 'Completely silent' }, { value: 50, label: 'Halfway there' }, { value: 100, label: 'As loud as it goes' }];
+    await render(<div style={{ width: '200px' }}>
+      <Slider id="lm-l" aria-label="Volume" defaultValue={50} marks={marks} />
+      <div dir="rtl"><Slider id="lm-r" aria-label="Volume" defaultValue={50} marks={marks} /></div>
+      <p id="lm-after">After</p>
+    </div>);
+    await fontsIn();
+    for (const id of ['lm-l', 'lm-r']) {
+      const box = rect(el(id));
+      const r = [...el(id).querySelectorAll<HTMLElement>('[aria-hidden] > span > span')].map(rect).sort((a, b) => a.left - b.left);
+      const clear = r.slice(1).every((x, i) => x.left >= r[i]!.right + 4);
+      expect([r.length, clear, r.every((x) => x.left >= box.left - 0.5 && x.right <= box.right + 0.5), r.every((x) => x.bottom <= box.bottom + 0.5)]).toEqual([3, true, true, true]);
+    }
+    // The text after it starts below the wrapped labels, not over them.
+    const low = Math.max(...[...el('lm-r').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')].map((p) => rect(p).bottom));
+    expect(rect(el('lm-after')).top).toBeGreaterThanOrEqual(low);
+    // Labels with room stay on one line, as before.
+    await render(<div style={{ width: '600px' }}><Slider id="lm-w" aria-label="Volume" defaultValue={50} marks={marks} /></div>);
+    await fontsIn();
+    const one = rect(el('lm-w').querySelector('[aria-hidden] > span > span')!).height;
+    expect([...el('lm-w').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')].every((p) => rect(p).height === one)).toBe(true);
+    expect(rect(el('lm-w')).height).toBeLessThan(rect(el('lm-l')).height);
+  });
   test('L8E84 in a Field, a level down (a row with a unit after it): the label, hint, error and disabled still reach it', async () => {
     await render(<>
       <Field label="Volume" hint="0 is muted" error="Too loud" disabled><div><Slider data-testid="sd1" defaultValue={90} /><span>dB</span></div></Field>
