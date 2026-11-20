@@ -9,6 +9,12 @@ import { PRINCIPLES } from './Home';
 import { Markdown } from './markdown';
 import { Shell } from './Shell';
 
+// A decision's number as the list shows it: "0011" is 11, "0003" is 03.
+const n = (id: string) => id.replace(/^0+/, '').padStart(2, '0');
+const replaced = facts.decisions.filter((d) => d.replacedBy).length;
+// The numbers are hidden from screen readers (the list is read as titles), so the decision that replaced one is named.
+const title = (id: string) => facts.decisions.find((d) => d.id === id)?.title.replace(/`/g, '') ?? id;
+
 export function About() {
   React.useEffect(() => { document.title = 'The story · Serupa'; window.scrollTo(0, 0); }, []);
   return <Shell>
@@ -32,11 +38,12 @@ export function About() {
       <p className="site-more"><Button href="/foundations/design-principles" variant="outline" rightIcon="arrow_forward">Each principle, with examples</Button></p>
 
       <Heading level={2} id="decisions" className="site-h site-h2">Decisions on record</Heading>
-      <p className="site-p">The choices that shape the system are written down with the options that were weighed, so a later change starts from the reasons and not from a guess. There are {facts.decisions.length} so far.</p>
+      <p className="site-p">The choices that shape the system are written down with the options that were weighed, so a later change starts from the reasons and not from a guess. There are {facts.decisions.length} so far{replaced ? `, ${replaced} of them since replaced by a later one` : ''}.</p>
       <ol className="site-decisions" role="list">
         {facts.decisions.map((d) => <li key={d.id} className="site-decision">
-          <span className="site-decision__n" aria-hidden="true">{d.id.replace(/^0+/, '').padStart(2, '0')}</span>
+          <span className="site-decision__n" aria-hidden="true">{n(d.id)}</span>
           <Markdown plain>{d.title}</Markdown>
+          {d.replacedBy && <span className="site-decision__note">Replaced by <span aria-hidden="true">{n(d.replacedBy)}</span><span className="sr-only">{title(d.replacedBy)}</span></span>}
         </li>)}
       </ol>
 
