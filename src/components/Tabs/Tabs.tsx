@@ -245,13 +245,15 @@ export const Tab = /* @__PURE__ */ component<HTMLButtonElement, TabProps>('Tab',
   const own = React.useRef<HTMLButtonElement | null>(null);
   const close = React.useRef(props.onClose); close.current = props.onClose;
   const closes = !!props.onClose;
-  const shut = () => { ctx.closed.current = props.value; if (close.current) close.current(); };
+  const closed = ctx.closed, value = props.value;
+  const shut = React.useCallback(() => { closed.current = value; if (close.current) close.current(); }, [closed, value]);
+  // TabList's Delete key reaches the focused tab through this event, so the tab's own onClose runs.
   React.useEffect(() => {
     const el = own.current;
     if (!el || !closes) return;
     el.addEventListener('dk-tab-close', shut);
     return () => el.removeEventListener('dk-tab-close', shut);
-  });
+  }, [closes, shut]);
   const hintId = closes ? ctx.base + '-close-' + safe(props.value) : undefined;
   const refs = useMergedRef(ref, (n) => { own.current = n; });
   const selected = ctx.value === props.value;
