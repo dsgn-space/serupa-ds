@@ -104,6 +104,8 @@ describe('FormattedDate', () => {
       expect(plain(el('h').textContent)).toBe(plain(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(at))));
       const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
       const root = hydrateRoot(host, tree);
+      // Hydrated once React has taken the element over; the text may already match when the browser's zone is UTC.
+      await expect.poll(() => Object.keys(el('h')).some((k) => k.startsWith('__reactFiber'))).toBe(true);
       await expect.poll(() => plain(el('h').textContent)).toBe(plain(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(at))));
       expect([el('h').getAttribute('datetime'), errors.mock.calls.length]).toEqual(['2026-11-20T23:30:00.000Z', 0]);
       errors.mockRestore();
