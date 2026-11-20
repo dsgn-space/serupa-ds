@@ -163,7 +163,7 @@ export const ImageCropper = /* @__PURE__ */ component<HTMLDivElement, ImageCropp
   // A picture that loaded before hydration fires no load event for React: read it as it's attached.
   const imgRef = (i: HTMLImageElement | null) => { if (i && i.complete && i.naturalWidth) loaded(i); };
 
-  const live = !disabled && !!area;
+  const live = !disabled && !!area, off = disabled || failed;
   const pointers = React.useRef(new Map<number, { x: number; y: number }>());
   const start = React.useRef<Gesture | null>(null);
   const pinch = React.useRef<{ d: number; z: number } | null>(null);
@@ -257,11 +257,12 @@ export const ImageCropper = /* @__PURE__ */ component<HTMLDivElement, ImageCropp
           <span className="dk-image-cropper__grid" aria-hidden="true" />
         </div>
         <span id={base + '-how'} hidden>{L.cropHint}</span>
+        {/* While the picture loads the zoom row is on but does nothing yet, so it doesn't flash from off to on. */}
         <div className="dk-image-cropper__zoom">
-          <IconButton icon={icons.Remove} label={L.cropZoomOut} size="sm" disabled={!live || zoom <= 1} onClick={() => zoomTo(zoom - STEP)} />
+          <IconButton icon={icons.Remove} label={L.cropZoomOut} size="sm" disabled={off || zoom <= 1} onClick={() => zoomTo(zoom - STEP)} />
           <Slider className="dk-image-cropper__slider" size="sm" aria-label={L.cropZoom} min={1} max={maxZoom} step={0.01} largeStep={10}
-            value={zoom} disabled={!live} formatValue={percent} onValueChange={(z) => zoomTo(z)} />
-          <IconButton icon={icons.Add} label={L.cropZoomIn} size="sm" disabled={!live || zoom >= maxZoom} onClick={() => zoomTo(zoom + STEP)} />
+            value={zoom} disabled={off} formatValue={percent} onValueChange={(z) => zoomTo(z)} />
+          <IconButton icon={icons.Add} label={L.cropZoomIn} size="sm" disabled={off || zoom >= maxZoom} onClick={() => zoomTo(zoom + STEP)} />
         </div>
       </FieldContext.Provider>
     </div>

@@ -1,0 +1,57 @@
+# Cover
+- group "Cover picture":
+  - application "Crop area"
+  - button "Zoom out"
+  - slider "Zoom": "1.25"
+  - button "Zoom in"
+
+# Disabled
+- group "Profile photo":
+  - button "Zoom out" [disabled]
+  - slider "Zoom" [disabled]: "1"
+  - button "Zoom in" [disabled]
+
+# Failed
+- group "Profile photo":
+  - text: The picture couldn’t be loaded.
+  - button "Zoom out" [disabled]
+  - slider "Zoom" [disabled]: "1"
+  - button "Zoom in" [disabled]
+
+# Playground
+- group "Profile photo":
+  - application "Crop area"
+  - button "Zoom out" [disabled]
+  - slider "Zoom": "1"
+  - button "Zoom in"
+
+# Portrait
+- group "Card picture":
+  - application "Crop area"
+  - button "Zoom out" [disabled]
+  - slider "Zoom": "1"
+  - button "Zoom in"
+
+# ProfilePhoto
+- text: Profile photo Shown round, beside your name.
+- group "Profile photo":
+  - application "Crop area"
+  - button "Zoom out" [disabled]
+  - slider "Zoom": "1"
+  - button "Zoom in"
+- button "Save"
+
+# StressNarrowStrip
+- group "Banner":
+  - application "Crop area"
+  - button "Zoom out" [disabled]
+  - slider "Zoom": "1"
+  - button "Zoom in"
+
+# Zoomed
+- group "Profile photo":
+  - application "Crop area"
+  - button "Zoom out"
+  - slider "Zoom": "2.5"
+  - button "Zoom in"
+

@@ -13,6 +13,8 @@ const meta = {
   title: 'Components/Forms/ImageCropper',
   component: ImageCropper,
   args: { src: PHOTO, shape: 'round', 'aria-label': 'Profile photo' },
+  // '' (the same as 'anonymous') would be a radio with no name in the controls.
+  argTypes: { crossOrigin: { control: 'inline-radio', options: ['anonymous', 'use-credentials'] } },
 } satisfies Meta<typeof ImageCropper>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -26,7 +28,8 @@ export const Zoomed: Story = { args: { defaultZoom: 2.5 } };
 export const Disabled: Story = { args: { disabled: true } };
 export const Failed: Story = { args: { src: 'data:image/png;base64,broken' } };
 
-// In a Field, with the cropped picture made on Save (cropImage) and shown beside it.
+// In a Field, with the cropped picture made on Save (cropImage) and shown beside it. Save is always on: the crop
+// arrives as the picture loads, and a button turning on just after mount would flash.
 function ProfilePhotoDemo(args: React.ComponentProps<typeof ImageCropper>) {
   const [area, setArea] = React.useState<CropArea | null>(null);
   const [out, setOut] = React.useState<string | null>(null);
@@ -36,7 +39,7 @@ function ProfilePhotoDemo(args: React.ComponentProps<typeof ImageCropper>) {
         <ImageCropper {...args} aria-label={undefined} onCropChange={setArea} />
       </Field>
       <div style={{ display: 'grid', gap: 8, justifyItems: 'start' }}>
-        <Button size="sm" disabled={!area} onClick={async () => { if (!area) return; const b = await cropImage(args.src, area, { width: 160 }); if (b) setOut(URL.createObjectURL(b)); }}>Save</Button>
+        <Button size="sm" onClick={async () => { if (!area) return; const b = await cropImage(args.src, area, { width: 160 }); if (b) setOut(URL.createObjectURL(b)); }}>Save</Button>
         {out ? <img src={out} alt="Your new avatar, cropped" width={80} height={80} style={{ borderRadius: '50%' }} /> : null}
       </div>
     </div>
