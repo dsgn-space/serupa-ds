@@ -41,7 +41,7 @@ Drawn from the `Marks` story.
 - Set `step` to the precision people need, so values snap to sensible numbers.
 - In a narrow column, such as a mixer or a level beside a picture, set `orientation="vertical"`. Keep it horizontal everywhere else: a horizontal track is easier to read and to label.
 - For a value with a middle, such as a balance or an offset from -10 to +10, set `origin={0}` so the fill starts in the middle and shows which way it leans.
-- Use `marks` when a few values matter, such as `[{ value: 0, label: "Off" }, { value: 100, label: "Max" }]`, or `marks` alone for a tick per step on a short scale. Keep the labels short; they sit on one line under the track.
+- Use `marks` when a few values matter, such as `[{ value: 0, label: "Off" }, { value: 100, label: "Max" }]`, or `marks` alone for a tick per step on a short scale. Keep the labels short: they sit on one line under the track while there's room, and wrap when it's narrow.
 - Use `showValue` when people need to see the number while they drag, and there is no label nearby that shows it.
 - Use `inputs` when an exact number matters as much as the rough one, such as a price filter: a number field (`.dk-slider__input`, a [NumberInput](../NumberInput/README.md)) sits beside each thumb, after the track for one and at either end for a range. It brings NumberInput's code with it, so a page that imports Slider and not NumberInput grows by about 6.5 KiB.
 
@@ -50,7 +50,7 @@ Drawn from the `Marks` story.
 - A press anywhere on the track moves the nearest thumb there, and dragging follows the pointer even off the slider. On a touch screen, a swipe across the page that starts on the slider scrolls the page instead (`touch-action: pan-y`, `pan-x` when vertical): the thumb goes back and nothing commits.
 - Range thumbs can't cross.
 - The thumb grows a little while pressed; it doesn't with `prefers-reduced-motion`.
-- `marks` draws a tick for each mark between the ends, and its label centered under it. With labels, the slider is taller by one line of small text, so nothing overlaps what follows. `true` draws a mark per step, or one per `largeStep` steps past 100 marks. Marks off the track are left out. A press on a label moves the nearest thumb there.
+- `marks` draws a tick for each mark between the ends, and its label centered under it. With labels, the slider is taller by one line of small text, so nothing overlaps what follows. A label longer than its room (the track up to halfway to the next mark, less 8px, `--slider-mark-label-gap`) wraps within it, and the slider grows to hold the extra lines. `true` draws a mark per step, or one per `largeStep` steps past 100 marks. Marks off the track are left out. A press on a label moves the nearest thumb there.
 - With `inputs`, a number typed in a field moves its thumb at once, and a thumb that moves rewrites its field. A field takes numbers between `min` and `max` (for a range, up to the other thumb); one past them waits for Enter or for the field to be left, then comes back inside. `onValueCommit` runs when the field is left or Enter pressed after a change, as at the end of a drag. The fields show the number itself in the locale's digits, not `formatValue`'s words.
 - `showValue` shows the value, as `formatValue` writes it (without one, the number in the locale's digits: "٤٠" in `ar-EG`), in a small chip over a thumb while it's focused, hovered or dragged. The chip floats and takes no room, so leave space above the slider. Near an end, the chip and the end mark labels move inward, so they stay inside the slider's box.
 
@@ -146,6 +146,7 @@ Each is an optional override: set it on the page, a container or one slider. The
 | `--slider-thumb-size-lg` | `spacing-6` | The thumb, size="lg" (24px). |
 | `--slider-input-width` | `spacing-20` | With inputs, each number field's width (80px). |
 | `--slider-length` | `spacing-48` | A vertical slider's length, along the track (192px). |
+| `--slider-mark-label-gap` | `spacing-2` | The least space between two mark labels; a label that would come closer wraps within its room (8px). |
 
 **Border**
 

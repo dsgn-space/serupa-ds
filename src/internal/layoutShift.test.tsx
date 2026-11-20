@@ -20,6 +20,8 @@ const KNOWN = new Map<string, string>([
   ['ButtonGroup/Narrow', 'wraps to fit'],
   ['ToggleGroup/LongLabels', 'wraps to fit'],
   ['Stepper/LongLabels', 'stacks to fit'],
+  // Wraps a mark label longer than its room between the marks, and grows to hold its lines, once it has measured them.
+  ['Slider/LongMarks', 'wraps to fit'],
   ['Stepper/Narrow', 'stacks to fit'],
   ['Stepper/DontLongTitles', 'stacks to fit'],
   // A Navbar in a box narrower than its links on a wide screen folds them behind the menu button once it has measured
