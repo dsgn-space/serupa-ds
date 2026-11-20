@@ -118,16 +118,26 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
     later();
     return () => { ro.disconnect(); mo.disconnect(); cancelAnimationFrame(frame); clearTimeout(t); clearTimeout(open); };
   }, [parts, chosen?.id, opened]);
+  // Each number outside its outline's top-left corner; one that would sit on an earlier number (parts nested or side
+  // by side: an alert's icon and title, an accordion's header and title) moves along the top edge until it's clear.
+  const placed: { mx: number; my: number }[] = [];
+  const marks = [...boxes].sort((a, b) => a.n - b.n).map((b) => {
+    let mx = b.x - 17;
+    const my = b.y - 17;
+    while (placed.some((p) => Math.abs(p.mx - mx) < 22 && Math.abs(p.my - my) < 22)) mx += 22;
+    placed.push({ mx, my });
+    return { ...b, mx, my };
+  });
   if (!chosen) return null;
   return <figure className="sb-anatomy sb-unstyled" role="img" aria-label={`Anatomy: ${parts.length} parts, numbered as in the list that follows`}>
     <div className="sb-anatomy__stage" ref={stage} inert={still} aria-hidden="true">
       <Story of={chosen.moduleExport} />
       <div className="sb-anatomy__frozen" ref={frozen} />
-      {boxes.map((b) => <React.Fragment key={b.n}>
+      {marks.map((b) => <React.Fragment key={b.n}>
         {/* The outline stands 3px off the part, so it shows on a part filled in the brand color (a primary button)
             and doesn't cover its edge; the number sits outside the outline's corner, off the part's text. */}
         <span className="sb-anatomy__box" style={{ transform: `translate(${b.x - 3}px, ${b.y - 3}px)`, width: b.w + 6, height: b.h + 6 }} />
-        <span className="sb-anatomy__n" style={{ transform: `translate(${b.x - 17}px, ${b.y - 17}px)` }}>{b.n}</span>
+        <span className="sb-anatomy__n" style={{ transform: `translate(${b.mx}px, ${b.my}px)` }}>{b.n}</span>
       </React.Fragment>)}
     </div>
   </figure>;
