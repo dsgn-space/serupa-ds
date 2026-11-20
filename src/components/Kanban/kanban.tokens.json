@@ -92,6 +92,26 @@
           }
         }
       },
+      "handle-bg-hover": {
+        "$type": "color",
+        "$value": "{color.secondary}",
+        "$description": "The drag handle's background on hover, as SortableList's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-handle-bg-hover"
+          }
+        }
+      },
+      "handle-bg-pressed": {
+        "$type": "color",
+        "$value": "{color.secondary-hover}",
+        "$description": "The drag handle's background while held down, a step past its hover.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--kanban-handle-bg-pressed"
+          }
+        }
+      },
       "focus-ring": {
         "$type": "color",
         "$value": "{color.focus-ring}",

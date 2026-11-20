@@ -195,10 +195,41 @@ export function ComponentSince({ name }: { name: string }) {
 }
 
 const ROOT = readme;
-/** The README's introduction, before its first section. */
+// True on the docs site, whose build defines it (tools/site/vite.config.mjs); Storybook leaves it undefined.
+declare const __SITE__: boolean | undefined;
+const onSite = typeof __SITE__ !== 'undefined' && __SITE__;
+
+/** The README's introduction, before its first section. On the site it leaves out the paragraph on running the docs
+ * from the repo (Storybook and the site at localhost), which is for someone with the repo open, not a visitor. */
 export function ReadmeIntro() {
-  return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
+  const intro = ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, '');
+  return <Markdown>{relink(onSite ? intro.replace(/^The documentation is Storybook\b.*\n?/m, '') : intro)}</Markdown>;
 }
+/** What is said in Storybook only, such as its toolbar's tabs. */
+export function InStorybook({ children }: { children: React.ReactNode }) {
+  return onSite ? null : <>{children}</>;
+}
+const slug = (heading: string) => heading.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+/** The page each `##` section of docs/foundations.md is on, by its id. In the file one section links to another with
+ * `#id`; on a page that doesn't have that section, the link goes to the page that does. */
+const SECTION_PAGE: Record<string, string> = Object.fromEntries(Object.entries({
+  'foundations-colors': ['Color families', 'Naming', 'Using the shades', 'Contrast'],
+  'foundations-themes': ['Themes', 'Alias tokens'],
+  'foundations-typography': ['Typography'],
+  'foundations-icons': ['Iconography'],
+  'foundations-spacing': ['Spacing', 'Sizing'],
+  'foundations-corner-radius': ['Corner radius'],
+  'foundations-effects-and-borders': ['Borders and outlines', 'Effects'],
+  'foundations-elevation-and-layers': ['Elevation and layers'],
+  'foundations-layout': ['Page layout'],
+  'foundations-motion': ['Motion'],
+  'foundations-content-and-voice': ['Content and voice'],
+  'foundations-data-formats': ['Data formats'],
+  'foundations-ethical-design': ['Ethical design'],
+  'foundations-accessibility': ['Accessibility standard'],
+  'foundations-utility-classes': ['Backgrounds', 'Layout', 'Flexbox and grid', 'Filters', 'Tables', 'Transforms', 'SVG', 'Interactivity'],
+}).flatMap(([page, sections]) => sections.map((s) => [slug(s), page])));
+
 /** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
 /** A section whose heading the page writes itself (reserve, such as its title) comes without that heading, so the page
  * doesn't say "Typography" twice, and its subsections step up a level under the title. */
@@ -216,8 +247,12 @@ export function ReadmeSections({ headings, reserve }: { headings: string[]; /** 
       return !code && /^###+ /.test(line) ? line.slice(1) : line;
     }).join('\n');
   }).join('\n\n');
-  return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
+  return <DocMarkdown reserve={reserve}>{relink(md.replace(/\]\(#([\w-]+)\)/g, (link, id: string) => {
+    const page = SECTION_PAGE[id];
+    return page && !headings.some((h) => slug(h) === id) ? `](?path=/docs/${page}--docs)` : link;
+  }))}</DocMarkdown>;
 }
+
 
 /** A table or swatch grid wider than a narrow screen scrolls in its own box instead of pushing the page sideways
  * (WCAG 1.4.10 at 320px). While it does, it's a named region Tab reaches, so the arrow keys scroll it; when it fits,
@@ -245,6 +280,10 @@ const top: React.CSSProperties = { ...cell, verticalAlign: 'top' };
 // An alias's value reads as the CSS that resolves it (var(--spacing-1)), not the token file's {spacing-1} syntax.
 const val = (v: Token['value']) => { const s = typeof v === 'string' ? v : Object.values(v)[0]; return typeof s === 'string' ? s.replace(/\{([^}]+)\}/g, (_, n: string) => `var(--${n})`) : s; };
 
+// What a token is for keeps a readable measure when the table is wider than a phone (spacing-96's 384px preview):
+// the table scrolls in its box, and the words don't stand two to a line down a row as tall as a screen.
+const use: React.CSSProperties = { ...cell, minWidth: '14rem' };
+
 /** Every token in a group, with its value, what it's for and a live preview. data-token-sheet marks each token block
  * for the visual snapshots (tools/test/visual.mjs), so a changed token value shows as a changed picture. */
 export function TokenTable({ group, preview }: { group: string; preview?: 'space' | 'radius' | 'shadow' | 'duration' | 'none' }) {
@@ -265,7 +304,7 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
       <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th>{preview && preview !== 'none' && <th style={cell}>Preview</th>}<th style={cell}>Use</th></tr></thead>
       <tbody>{g.tokens.map((t) => <tr key={t.name}>
         <td style={{ ...cell, whiteSpace: 'nowrap' }}><code>--{t.name}</code></td><td style={cell}><code>{val(t.value)}</code></td>
-        {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={cell}>{code(t.usage)}</td></tr>)}</tbody>
+        {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={use}>{code(t.usage)}</td></tr>)}</tbody>
     </table></Wide>
   </div>;
 }
@@ -330,7 +369,8 @@ export function TypeScale() {
 
 // The whole icon set (3 MB) is fetched when the gallery is on the page, not with every page that uses these blocks.
 const materialIcons = (): Promise<IconData[]> => import('../src/material/icons')
-  .then((m) => (Object.values(m) as unknown[]).filter(isIconData).sort((x, y) => x.name.localeCompare(y.name)));
+    // A to Z, with the names that start with a number (10k, 3d_rotation) after them, so the gallery opens on words.
+  .then((m) => (Object.values(m) as unknown[]).filter(isIconData).sort((x, y) => Number(/^\d/.test(x.name)) - Number(/^\d/.test(y.name)) || x.name.localeCompare(y.name)));
 
 /** Every Material Symbol, plus your custom icons: search by name, and a click copies an icon's name. */
 export function IconGallery() {
@@ -353,7 +393,8 @@ export function IconGallery() {
   const heading = { margin: '0 0 8px', fontSize: 16, fontWeight: 600 } as const;
   const tileFor = (n: string, icon: React.ReactNode) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`} style={tile}>
     {icon}
-    <span style={label}>{n}</span>
+    {/* A long name wraps after an underscore (1x_mobiledata_ / badge), not inside a word. */}
+    <span style={label}>{n.split('_').flatMap((part, i, all) => i < all.length - 1 ? [`${part}_`, <wbr key={i} />] : [part])}</span>
   </button>;
   // sb-unstyled: keeps Storybook's docs styles off the buttons.
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -396,9 +437,11 @@ export function OtherNames() {
 /** Icons at the system's sizes, with what each is for. */
 export function IconSizes() {
   const sizes: ['xs' | 'sm' | 'md' | 'lg' | 'xl', number, string][] = [['xs', 14, '`sm` buttons, `text-xs`'], ['sm', 16, '`md` buttons, inline with `text-sm`'], ['md', 20, '`lg` buttons, list rows, `text-base`'], ['lg', 24, 'The default: toolbars, navigation'], ['xl', 40, 'Empty states']];
-  return <div className="sb-unstyled" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' }}>
-    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
-      <Icon name="favorite" size={step} /><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
+  // In even columns, each icon on the same line in a box as tall as the largest, so the sizes and their names line up
+  // across a row however many lines a use takes.
+  return <div className="sb-unstyled" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(8rem, 1fr))', gap: 24, alignItems: 'start' }}>
+    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center', fontSize: 12 }}>
+      <span style={{ display: 'flex', alignItems: 'flex-end', height: 40 }}><Icon name="favorite" size={step} /></span><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use).map((x) => typeof x === 'string' ? x : React.cloneElement(x, { style: { whiteSpace: 'nowrap' } }))}</span>
     </div>)}
   </div>;
 }
@@ -417,18 +460,20 @@ const word = (v: SerupaLabels[keyof SerupaLabels]) => {
   if (typeof v !== 'function') return v;
   try { return v('n' as unknown as number); } catch { return '(built from its arguments)'; }
 };
+/* eslint-disable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role -- on a phone CSS draws this table as blocks (site.css), and a browser that then drops its table semantics gets them back from the roles */
 /** Every word the components say on their own, in English and Indonesian, with where it's used. */
 export function LabelTable() {
   const facts = useLoaded(loadFacts);
   if (!facts) return null;
   // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
   const labelUse = { ...sharedLabelUse, ...facts.componentLabelUse };
-  return <table className="sb-doc-table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
-    <thead><tr><th style={cell}>Key</th><th style={cell}>English</th><th style={cell}>Indonesian (<code>idLabels</code>)</th><th style={cell}>Where</th></tr></thead>
-    <tbody>{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k}>
-      <td style={cell}><code>{k}</code></td><td style={cell}>{word(DEFAULT_LABELS[k])}</td><td style={cell}>{word(idLabels[k])}</td><td style={cell}>{labelUse[k]}</td></tr>)}</tbody>
+  return <table className="sb-doc-table sb-doc-table--stack" role="table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <thead role="rowgroup"><tr role="row"><th style={cell} role="columnheader">Key</th><th style={cell} role="columnheader">English</th><th style={cell} role="columnheader">Indonesian (<code>idLabels</code>)</th><th style={cell} role="columnheader">Where</th></tr></thead>
+    <tbody role="rowgroup">{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k} role="row">
+      <td style={cell} role="cell"><code>{k}</code></td><td style={cell} role="cell" data-label="English">{word(DEFAULT_LABELS[k])}</td><td style={cell} role="cell" data-label="Indonesian (idLabels)">{word(idLabels[k])}</td><td style={cell} role="cell" data-label="Where">{labelUse[k]}</td></tr>)}</tbody>
   </table>;
 }
+/* eslint-enable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role */
 
 const LEVELS: [string, string, string, string][] = [
   ['Page', 'surface-page', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
@@ -556,15 +601,17 @@ export function ConformanceSummary() {
     {partial.length > 0 && <ul>{partial.map((x) => <li key={x.id}><strong>{x.id} {x.name}</strong>: {code(x.remarks)}</li>)}</ul>}
   </>;
 }
+/* eslint-disable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role -- on a phone CSS draws this table as blocks (site.css), and a browser that then drops its table semantics gets them back from the roles */
 /** The Accessibility Conformance Report (18): every WCAG criterion at A and AA, as VPAT 2.5's table has it. */
 export function ConformanceReport() {
-  return <table className="sb-doc-table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+  return <table className="sb-doc-table sb-doc-table--stack" role="table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
     <caption style={{ textAlign: 'start', fontWeight: 600, paddingBlock: 8 }}>{ACR.standard} Level A and AA: {ACR.product}, version {ACR.reviewed.version}</caption>
-    <thead><tr><th style={cell} scope="col">Criteria</th><th style={cell} scope="col">Conformance level</th><th style={cell} scope="col">Remarks and explanations</th></tr></thead>
-    <tbody>{ACR.criteria.map((x) => <tr key={x.id}>
-      <th style={{ ...cell, fontWeight: 'normal' }} scope="row">{x.id} {x.name} (Level {x.level})</th>
-      <td style={cell}>{x.conformance}</td>
-      <td style={cell}>{code(x.remarks)}</td>
+    <thead role="rowgroup"><tr role="row"><th style={cell} scope="col" role="columnheader">Criteria</th><th style={cell} scope="col" role="columnheader">Conformance level</th><th style={cell} scope="col" role="columnheader">Remarks and explanations</th></tr></thead>
+    <tbody role="rowgroup">{ACR.criteria.map((x) => <tr key={x.id} role="row">
+      <th style={{ ...cell, fontWeight: 'normal' }} scope="row" role="rowheader">{x.id} {x.name} (Level {x.level})</th>
+      <td style={cell} role="cell" data-label="Conformance level">{x.conformance}</td>
+      <td style={cell} role="cell" data-label="Remarks and explanations">{code(x.remarks)}</td>
     </tr>)}</tbody>
   </table>;
 }
+/* eslint-enable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role */

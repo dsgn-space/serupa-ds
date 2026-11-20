@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { cn, domId, omit } from '../../internal/cn';
@@ -37,7 +38,7 @@ export interface Command {
   label: string;
   /** The heading it's listed under ("Pages", "Actions"), in the order groups first appear. Default: "Commands". */
   group?: string | undefined;
-  /** A line under the label saying more ("Colour scheme, density and language"). Shown muted, read after the label and matched like keywords. */
+  /** A line under the label saying more ("Color scheme, density and language"). Shown muted, read after the label and matched like keywords. */
   description?: string | undefined;
   /** More words that find it, not shown ("preferences" for Settings). */
   keywords?: string[] | undefined;
@@ -160,7 +161,7 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
 
   // How many match, said once typing stops (the rows change in silence otherwise).
   const empty = typeof props.emptyText === 'string' ? props.emptyText : labels.noCommands;
-  const said = !query.trim() || loading ? '' : usable.length ? labels.commandsCount(usable.length, new Intl.NumberFormat(locale).format(usable.length)) : empty;
+  const said = !query.trim() || loading ? '' : usable.length ? labels.commandsCount(usable.length, numberFormat(locale).format(usable.length)) : empty;
   React.useEffect(() => {
     if (!open || !said) return;
     const t = setTimeout(() => announce(said), announcePause);

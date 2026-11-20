@@ -77,7 +77,7 @@ Drawn from the `WithIcon` story.
 
 ## Accessibility
 
-- A field the browser fills in (a saved address, a login) keeps the field's colours, and its border doubles inward until it's focused, so the fill shows in more than colour.
+- A field the browser fills in (a saved address, a login) keeps the field's colors, and its border doubles inward until it's focused, so the fill shows in more than color.
 - On iOS the field's text is 16px at every size, so Safari doesn't zoom the page when it takes focus; the box keeps its height.
 - It's the browser's own select, so screen readers, the keyboard (arrows, Home/End, type to find) and the phone's picker all work without extra code.
 - `readOnly` is for a value people should see but not change (a review step, a locked setting). The browser has no read-only select, so Select cancels the keys and press that would open or change it, and puts back a value a phone's picker sets. Unlike `disabled`, it stays in the Tab order and keeps its full contrast.
@@ -137,7 +137,7 @@ Each is an optional override: set it on the page, a container or one select. The
 | `--select-group-label` | `text-muted` | A group's name over its options. |
 | `--select-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--select-picker-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
+| `--select-picker-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Sizing**
 

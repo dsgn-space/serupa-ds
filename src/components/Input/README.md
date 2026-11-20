@@ -78,7 +78,7 @@ Drawn from the `Icons` story.
 
 ## Accessibility
 
-- A field the browser fills in (a saved address, a login) keeps the field's colours, and its border doubles inward until it's focused, so the fill shows in more than colour.
+- A field the browser fills in (a saved address, a login) keeps the field's colors, and its border doubles inward until it's focused, so the fill shows in more than color.
 - On iOS the field's text is 16px at every size, so Safari doesn't zoom the page when it takes focus; the box keeps its height.
 - A `prefix` or `suffix` is added to the field's `aria-describedby` (after your own), so screen readers say "https://" or "kg" too. A press on it focuses the field. Its `text-muted` keeps 4.5:1 on the field in every theme (`Input.test.tsx`).
 - Every input needs a name: a visible `<label htmlFor>` (best) or `aria-label`. A placeholder isn't a label: it disappears as soon as someone types.

@@ -77,7 +77,7 @@ Each is an optional override: set it on the page, a container or one HoverCard. 
 | `--hover-card-bg` | `surface-overlay` | The card's background. |
 | `--hover-card-text` | `text` | The card's text (4.5:1 on bg). |
 | `--hover-card-border` | `border-overlay` | The card's border. |
-| `--hover-card-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
+| `--hover-card-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--hover-card-shadow` | `elevation-overlay` | The card's shadow. |
 | `--hover-card-radius` | `radius-surface` | The corners (8px). |
 | `--hover-card-border-width` | `border-width-1` | The border's width (1px). |

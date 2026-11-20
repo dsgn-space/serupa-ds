@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { useControlSize } from '../../internal/controlSize';
@@ -184,7 +185,7 @@ function ColorPickerRender({ ref, ...props }: ColorPickerProps & React.RefAttrib
   const ratio = props.contrastWith && value ? contrastRatio(value, props.contrastWith) : null;
   const min = props.minContrast && props.minContrast > 1 ? props.minContrast : 4.5;
   // Rounded down, so 4.49 never shows as 4.5 and passes by eye.
-  const fmt = (n: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(Math.floor(n * 10) / 10);
+  const fmt = (n: number) => numberFormat(locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(Math.floor(n * 10) / 10);
   const low = ratio != null && ratio < min;
   useAutoFocus(props.autoFocus, () => root.current && root.current.querySelectorAll<HTMLButtonElement>('.dk-color-picker__swatch')[tabStop]);
   return (

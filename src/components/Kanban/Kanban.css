@@ -40,6 +40,11 @@
 }
 .dk-kanban__handle:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-kanban:focus-visible { outline: var(--focus-ring-width) solid var(--kanban-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+/* The handle answers a pointer as SortableList's does: the secondary fill on hover, a step darker while held. A picked-up handle keeps its own fill. */
+@media (hover: hover) { .dk-kanban__handle:hover:not([aria-pressed="true"]) { color: var(--kanban-text, var(--text)); background: var(--kanban-handle-bg-hover, var(--secondary)); } }
+.dk-kanban__handle:active:not([aria-pressed="true"]) { color: var(--kanban-text, var(--text)); background: var(--kanban-handle-bg-pressed, var(--secondary-hover)); transition-duration: var(--duration-0); }
+.dk-kanban__handle { transition: background-color var(--motion-hover) var(--ease-move), color var(--motion-hover) var(--ease-move); }
+@media (prefers-reduced-motion: reduce) { .dk-kanban__handle { transition: none; } }
 .dk-kanban__handle[aria-pressed="true"] { background: var(--kanban-handle-active, var(--primary-subtle)); color: var(--kanban-text, var(--text)); }
 .dk-kanban--moving .dk-kanban__handle { cursor: var(--cursor-grabbing); }
 .dk-kanban__menu { flex: none; }

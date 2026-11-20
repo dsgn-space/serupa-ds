@@ -140,7 +140,7 @@ Each is an optional override: set it on the page, a container or one card. The l
 | `--card-text` | `text` | Text in the body and footer |
 | `--card-border-hover` | `border-strong` | A linked card's border on hover |
 | `--card-focus-ring` | `focus-ring` | A linked card's keyboard focus ring |
-| `--card-divider-elevated` | `border-overlay` | What a divider or separator inside an elevated card reads as `border`: the top-layer edge colour, since in dark `border` is the raised surface's own colour and a line in it vanished |
+| `--card-divider-elevated` | `border-overlay` | What a divider or separator inside an elevated card reads as `border`: the top-layer edge color, since in dark `border` is the raised surface's own color and a line in it vanished |
 
 **Shadow**
 

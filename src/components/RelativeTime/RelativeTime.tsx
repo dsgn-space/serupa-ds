@@ -1,4 +1,5 @@
 'use client';
+import { dateFormat, relativeFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -75,7 +76,7 @@ export function relativeTime(date: Date | number | string, now: number, locale?:
   const t = (day || new Date(date)).getTime();
   if (!isFinite(t)) return '';
   const secs = (t - now) / 1000, abs = Math.abs(secs);
-  const rtf = new Intl.RelativeTimeFormat(locale ? canonicalLocale(locale) : undefined, { style: options?.format || 'long', numeric: options?.numeric || 'auto' });
+  const rtf = relativeFormat(locale ? canonicalLocale(locale) : undefined, { style: options?.format || 'long', numeric: options?.numeric || 'auto' });
   let i = UNITS.findIndex(([, , under]) => abs < under);
   if (day) i = Math.max(i, 3);
   // Under 45 seconds is "now" ("0 seconds ago" with numeric always): a timer every 15s can't keep seconds honest.
@@ -108,10 +109,10 @@ function RelativeTimeRender({ ref, ...props }: RelativeTimeProps & React.RefAttr
   // over 7 days, so it showed the date a day earlier than "in 7 days" did (L8E97).
   const gap = (d.getTime() - (day ? new Date(current).setHours(0, 0, 0, 0) : current)) / 864e5;   // in days (rounded for a day: DST)
   const after = props.absoluteAfter ?? 7, far = valid && after !== false && Math.abs(day ? Math.round(gap) : gap) > after;
-  const text = !valid ? '' : far ? new Intl.DateTimeFormat(locale, props.absoluteFormat || { dateStyle: 'medium' }).format(d)
+  const text = !valid ? '' : far ? dateFormat(locale, props.absoluteFormat || { dateStyle: 'medium' }).format(d)
     : relativeTime(day ? props.date : d, current, locale, { format: props.format, numeric: props.numeric });
   // A day has no time of day to show, and its datetime is the day itself.
-  const title = !valid || props.titleFormat === false ? undefined : new Intl.DateTimeFormat(locale, props.titleFormat || { dateStyle: 'long', timeStyle: day ? undefined : 'short' }).format(d);
+  const title = !valid || props.titleFormat === false ? undefined : dateFormat(locale, props.titleFormat || { dateStyle: 'long', timeStyle: day ? undefined : 'short' }).format(d);
   // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
   return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn('dk-relative-time', props.className)}
     data-component="relative-time" suppressHydrationWarning>{text}</time>;

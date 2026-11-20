@@ -108,10 +108,11 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
     if (next.state !== undefined) setState(next.state);
     setShown(pageSize);
   };
+  const mainRef = React.useRef<HTMLElement>(null);
   const more = () => {
     const first = page.length;
     setShown((s) => s + pageSize);
-    requestAnimationFrame(() => document.querySelectorAll<HTMLElement>('[data-order-heading]')[first]?.focus());
+    requestAnimationFrame(() => mainRef.current?.querySelectorAll<HTMLElement>('[data-order-heading]')[first]?.focus());
   };
   const buyAgain = (o: PastOrder) => {
     setBuying(o.number);
@@ -127,7 +128,7 @@ export function OrderHistory({ orders = demo, currency = 'USD', pageSize = 5, on
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
       </header>
-      <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
+      <main ref={mainRef} id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Account', href: '#account' }, { label: 'Orders' }]} title="Orders" description="Every order you’ve placed, newest first." />
         <div className="flex flex-col gap-5 pt-6">
           {loadFailed ? <EmptyLoadFailed title="Couldn’t load your orders" onRetry={() => onRetry?.()} headingLevel={2} />

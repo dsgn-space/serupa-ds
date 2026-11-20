@@ -131,7 +131,7 @@ Each is an optional override: set it on the page, a container or one drawer. The
 | `--drawer-border` | `border` | The line above the footer. |
 | `--drawer-focus-ring` | `focus-ring` | The keyboard focus ring of a body that scrolls. |
 | `--drawer-grip` | `text-muted` | A sheet's grip, at the top of a drawer with snapPoints (3:1 on bg). |
-| `--drawer-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
+| `--drawer-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Shadow**
 

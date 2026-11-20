@@ -17,6 +17,7 @@
     "src/**/*.test.{ts,tsx}",
     ".storybook/*.{ts,tsx}",
     "site/src/main.tsx",
+    "site/src/server.tsx",
     "site/src/blocks.tsx",
     "site/src/stories.tsx",
     "site/src/icon-arg.ts"

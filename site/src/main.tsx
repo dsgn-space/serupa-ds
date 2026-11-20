@@ -1,29 +1,14 @@
 // The docs site's entry (npm run site): the system's own styles, then the page for the address.
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import '../../tokens.css';
 import '../../src/styles/base.css';
 import '../../src/styles/index.css';
 import '../../.storybook/docs.css';
 import './site.css';
-import { configure } from '../../src/internal/config';
-import { Button } from '../../src/components/Button/Button';
-import { EmptyState } from '../../src/components/EmptyState/EmptyState';
-import { Heading } from '../../src/components/Heading/Heading';
-import { ErrorBoundary } from '../../src/components/ErrorBoundary/ErrorBoundary';
-import { About } from './About';
-import { Doc } from './Doc';
-import { Frame } from './Frame';
-import { Home } from './Home';
-import { Index } from './Index';
-import { pageAt, sections } from './pages';
-import { RouterLink, usePath } from './router';
-import { Shell } from './Shell';
-import { Showcase } from './Showcase';
-import { Themes } from './Themes';
-
-// Every Serupa component with an href (Navbar, Sidebar, Card, Button, Link) goes through the site's router.
-configure({ link: RouterLink });
+import { App, preload } from './App';
+import { takeOver } from './drawn';
+import { current } from './router';
 
 // A tab opened before a new version went live asks for files the host no longer has (each version's are named by their
 // content) once it moves to another page. It loads the address again, the new version's, rather than saying "Something
@@ -38,24 +23,9 @@ window.addEventListener('vite:preloadError', (event) => {
   window.location.reload();
 });
 
-function NotFound() {
-  React.useEffect(() => { document.title = 'Page not found · Serupa'; }, []);
-  return <Shell>
-    <Heading level={1} className="sr-only">Page not found</Heading>
-    <EmptyState icon="explore_off" title="There’s no page here" description="The address may be old, or mistyped." headingLevel={2}
-      actions={<><Button href="/">Go to the front page</Button><Button href="/components" variant="outline">Browse the components</Button></>} />
-  </Shell>;
-}
-
-function App() {
-  const path = usePath();
-  const page = pageAt(path);
-  const section = sections.find((s) => s.lead && s.path === path);
-  return <ErrorBoundary resetKeys={[path]}>
-    {path === '/' ? <Home /> : page ? <Doc page={page} /> : section ? <Index section={section} />
-      : path === '/about' ? <About /> : path === '/themes' ? <Themes /> : path === '/showcase' ? <Showcase />
-      : path.startsWith('/frame/') ? <Frame id={path.slice(7)} /> : <NotFound />}
-  </ErrorBoundary>;
-}
-
-createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
+// Each page's HTML already holds the page, drawn when the site was built (tools/site/prerender.mjs), so it shows before
+// any script has run. React takes it over once the page's own content has loaded, rather than drawing it again.
+const root = document.getElementById('root')!;
+const app = (initial: Awaited<ReturnType<typeof preload>>) => <React.StrictMode><App initial={initial} /></React.StrictMode>;
+if (root.hasChildNodes()) void preload(current()).then((initial) => { takeOver(true); hydrateRoot(root, app(initial)); });
+else createRoot(root).render(app(null));

@@ -32,14 +32,29 @@ const byStory = new WeakMap<object, StoryEntry>();
 const idOf = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const slugOf = (exportName: string) => exportName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z])([A-Z][a-z])/g, '$1-$2').toLowerCase();
 const words = (exportName: string) => exportName.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/([A-Z])([A-Z][a-z])/g, '$1 $2').replace(/_/g, ' ');
+/** A story's name from its export, in the sentence case the docs write every heading in ("LongOptions" is "Long
+ * options"): the first word keeps its capital, and so do an acronym (RTL), a key's name (Ctrl) and the names of the
+ * file's own components ("WithIconButton" is "With IconButton"). A Do or Don't export reads as the named ones do:
+ * "DontHardcodeCtrl" is "Don't: hardcode Ctrl". */
+const KEEP = new Set(['Ctrl', 'Cmd', 'Alt', 'Shift', 'Esc']);
+export function storyName(exportName: string, own: readonly string[] = []): string {
+  const names = [...own].filter(Boolean).sort((a, b) => b.length - a.length);
+  const parts = (names.length ? exportName.split(new RegExp(`(${names.join('|')})(?=[A-Z0-9_]|$)`)) : [exportName]).filter(Boolean);
+  const list = parts.flatMap((part) => (names.includes(part) ? [part] : words(part).split(' ').filter(Boolean)));
+  const cased = list.map((w, i) => (i === 0 || names.includes(w) || KEEP.has(w) || /^[A-Z0-9]{2,}$/.test(w) ? w : w.toLowerCase()));
+  const verdict = cased.length > 1 && (cased[0] === 'Do' || cased[0] === 'Dont') ? (cased[0] === 'Do' ? 'Do:' : "Don't:") : null;
+  return verdict ? `${verdict} ${cased.slice(1).join(' ')}` : cased.join(' ');
+}
 
 /** Called by each stories file as it loads (tools/site/vite.config.mjs adds the call). */
 export function registerStories(file: string, meta: Meta, list: Array<[string, Story | undefined, string]>): void {
   const entries: StoryEntry[] = [];
+  // The file's own components, whose names keep their capitals in a story's name.
+  const own = [meta.component?.displayName ?? meta.component?.name, meta.title?.split('/').pop(), ...Object.keys((meta as { subcomponents?: object }).subcomponents ?? {})].filter((n): n is string => !!n && /^[A-Z]\w*$/.test(n));
   for (const [exportName, story, description] of list) {
     if (!story || typeof story !== 'object') continue;
     const slug = slugOf(exportName);
-    const entry = { file, meta, exportName, name: story.name ?? words(exportName), id: `${idOf(meta.title ?? file)}--${slug}`, slug, moduleExport: story, description };
+    const entry = { file, meta, exportName, name: story.name ?? storyName(exportName, own), id: `${idOf(meta.title ?? file)}--${slug}`, slug, moduleExport: story, description };
     entries.push(entry);
     byStory.set(story, entry);
   }

@@ -79,7 +79,7 @@ type Task = { id: string; title: string };
 - **Handle:** a button named "Move Fix login", described by the keyboard instructions, and `aria-pressed` while the card is picked up.
 - **Announcements:** each step is said politely: "Picked up Fix login. To do, position 1 of 3.", "Fix login, Done, position 2 of 5.", "Fix login moved to Done, position 2 of 5.", and "Canceled. Fix login is back in To do, position 1 of 3."
 - **Without dragging:** the keyboard and the "Move to…" menu both move a card without a drag (WCAG 2.5.7), and the menu also works with a screen reader's virtual cursor.
-- **Over limit:** said in words with a warning icon, not by colour alone (WCAG 1.4.1).
+- **Over limit:** said in words with a warning icon, not by color alone (WCAG 1.4.1).
 - **Contrast:** titles, counts, "Over limit" and card text read 4.5:1, and the handle 3:1, in every theme (`Kanban.test.tsx`).
 - **What's still yours:** the content of each card, and saying so if a move fails to save.
 
@@ -126,6 +126,8 @@ Each is an optional override: set it on the page, a container or one Kanban. The
 | `--kanban-target-border` | `primary` | The outline of the column a moving card would land in (3:1). |
 | `--kanban-over` | `danger-text` | A count over its column's limit (4.5:1 on the column). |
 | `--kanban-handle-active` | `primary-subtle` | A picked-up card's handle. |
+| `--kanban-handle-bg-hover` | `secondary` | The drag handle's background on hover, as SortableList's. |
+| `--kanban-handle-bg-pressed` | `secondary-hover` | The drag handle's background while held down, a step past its hover. |
 | `--kanban-focus-ring` | `focus-ring` | The ring around a focused handle. |
 | `--kanban-column-radius` | `radius-surface` | A column's corners (8px). |
 | `--kanban-card-radius` | `radius-control` | A card's corners (6px). |
