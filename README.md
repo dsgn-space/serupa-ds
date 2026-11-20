@@ -276,6 +276,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [ButtonGroup](src/components/ButtonGroup/README.md) | Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. |
 | [CopyButton](src/components/CopyButton/README.md) | A button that copies text to the clipboard: an API key, an invite link, a command. |
 | [Fab](src/components/Fab/README.md) | A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. |
+| [FabMenu](src/components/FabMenu/README.md) (beta) | A floating action button that opens a few related actions, such as "New document", "New folder" and "Upload a file", when a screen's main action comes in kinds. |
 | [IconButton](src/components/IconButton/README.md) | A button that shows only an icon: a menu trigger, a close button, a toolbar action. |
 | [Link](src/components/Link/README.md) | An inline text link: underlined, in the primary color or the surrounding text's. |
 | [SplitButton](src/components/SplitButton/README.md) (beta) | A main action joined to an arrow button that opens a menu of other ways to do it: Publish, with Schedule and Save as draft one click away. |
@@ -297,6 +298,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [CodeBlock](src/components/CodeBlock/README.md) (beta) | Code for people to read and copy: an install command, a config file, an example. |
 | [DataGrid](src/components/DataGrid/README.md) (beta) | A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. |
 | [DescriptionList](src/components/DescriptionList/README.md) (beta) | A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. |
+| [Duration](src/components/Duration/README.md) | How long something takes or took, written the way the reader's locale writes it: "1 hr, 30 min", "1 jam, 30 menit", "1 hour, 30 minutes", "1h 30m" or "1:30:00". |
 | [FormattedNumber](src/components/FormattedNumber/README.md) | Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. |
 | [Highlight](src/components/Highlight/README.md) | Shows text with the parts that match a search marked, ignoring case and accents, for search results, [Combobox](src/components/Combobox/README.md) options and a command palette. |
 | [Icon](src/components/Icon/README.md) | Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. |
@@ -358,6 +360,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [DateRangePicker](src/components/DateRangePicker/README.md) | Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. |
 | [ErrorSummary](src/components/ErrorSummary/README.md) | After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. |
 | [Field](src/components/Field/README.md) | A label, an optional hint and a message (an error, a warning or "checking…") around one form control, wired up for screen readers. |
+| [FieldList](src/components/FieldList/README.md) (beta) | Rows people add and remove in a form, such as phone numbers, emergency contacts or the lines of an invoice. |
 | [FileUpload](src/components/FileUpload/README.md) | A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. |
 | [FilterBar](src/components/FilterBar/README.md) (beta) | The filters on a list or a table, as a row of chips. |
 | [InlineEdit](src/components/InlineEdit/README.md) | Text people can change where it is: a project name, a card title, a slug. |
