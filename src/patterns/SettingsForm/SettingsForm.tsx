@@ -111,7 +111,7 @@ function Loading({ failed, onRetry }: { failed: boolean; onRetry: SettingsFormPr
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#dashboard">Back to the dashboard</Link>
+        <Link underline="hover" href="#dashboard">Back to the dashboard</Link>
       </header>
       <main id="main" aria-busy={failed ? undefined : true} className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-8 outline-none">
         <PageHeader title="Settings" />
@@ -144,7 +144,7 @@ function Loaded({ initial = demo, onSave, onLeave }: Omit<SettingsFormProps, 'lo
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#dashboard" onClick={(e) => void leave(e)}>Back to the dashboard</Link>
+        <Link underline="hover" href="#dashboard" onClick={(e) => void leave(e)}>Back to the dashboard</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Settings" />

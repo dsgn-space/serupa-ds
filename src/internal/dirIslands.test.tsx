@@ -71,7 +71,8 @@ describe('direction islands (EX1)', () => {
       trigger.click();
       await expect.poll(() => document.querySelector(`#${id} [role="dialog"]`)?.getBoundingClientRect().width || 0).toBeGreaterThan(0);
       const t = trigger.getBoundingClientRect(), p = document.querySelector(`#${id} [role="dialog"]`)!.getBoundingClientRect();
-      return { left: Math.round(p.left - t.left), right: Math.round(t.right - p.right) };
+      // || 0: Firefox and WebKit round a hair under 0 to -0, which toBe(0) tells apart.
+      return { left: Math.round(p.left - t.left) || 0, right: Math.round(t.right - p.right) || 0 };
     };
     const Block = ({ id, dir }: { id: string; dir?: 'rtl' | 'ltr' }) => (
       <div id={id} dir={dir} style={{ padding: '0 300px' }}><Popover placement="bottom-start" title="Filters" trigger={<Button>Open</Button>}>Text</Popover></div>

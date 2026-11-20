@@ -104,7 +104,7 @@ export function EmailPreferences({ email = 'ana@example.com', topics = demo, onS
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#shop">Go to the shop</Link>
+        <Link underline="hover" href="#shop">Go to the shop</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-xl flex-col px-4 py-10 outline-none">
         <PageHeader title="Emails from Acme" description={`Choose what comes to ${email}. Changes take effect within a day.`} />

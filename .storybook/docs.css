@@ -36,6 +36,15 @@ html, body { background-color: var(--surface-page); }
 [data-theme$="-dark"] .docblock-argstable td:first-child, [data-theme$="-dark"] .docblock-argstable td:first-child * { color: var(--text) !important; }
 [data-theme$="-dark"] .sbdocs-content .sb-unstyled { color: var(--text); }
 
+/* The Docs pages read in the system's own type: the sans stack (Inter) for prose, headings and tables, the mono
+   stack for code, as the components and the site do, not Storybook's Nunito Sans and its own monospace. Stories
+   keep whatever their components set, and so does anything marked font-mono. */
+.sbdocs-wrapper :is(.sbdocs, .sbdocs *):not(.docs-story *, code, pre, pre *, kbd, samp, .font-mono, .font-mono *) { font-family: var(--font-sans); }
+.sbdocs-wrapper :is(code, pre, pre *, kbd, samp):not(.docs-story *) { font-family: var(--font-mono); }
+
+/* A table's column headers start where their cells do, as the system's Table does, not centred over left-aligned text. */
+.sbdocs-content table:not(.dk-table, .docs-story *, .sb-unstyled *) th { text-align: start; }
+
 /* Running text on the Docs pages stops near 65 characters a line (container-prose, KW14), like Text's measure:
    a page is 1000px wide, about 120 characters of body text. Tables, code, story frames and the docs' own blocks
    keep the page's width. */

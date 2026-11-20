@@ -119,7 +119,7 @@ export function GiftCard({ currency = 'USD', amounts = [25, 50, 100], min = 10, 
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#bag">Bag</Link>
+        <Link underline="hover" href="#bag">Bag</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Shop', href: '#shop' }, { label: 'Gift cards' }]} title="Send a gift card"

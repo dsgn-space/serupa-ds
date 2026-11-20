@@ -118,7 +118,7 @@ export function Approvals({ requests = demo, currency = 'USD', onDecide, loading
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme People</p>
-        <Link href="#team">Your team</Link>
+        <Link underline="hover" href="#team">Your team</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Approvals" description={loading || loadFailed ? undefined : waiting.length ? `${waiting.length === 1 ? '1 request is' : `${formatNumber(waiting.length, locale)} requests are`} waiting on you.` : 'Nothing is waiting on you.'} />

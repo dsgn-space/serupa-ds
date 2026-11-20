@@ -16,6 +16,16 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 /** Under an hour: minutes and seconds, "4:59". */
 export const Default: Story = {};
+/** Live: `to` gives the end time, and the Countdown keeps its own clock and ticks, five minutes from when it's shown.
+ *  Left out of the pictures, which would differ every second. */
+export const Live: Story = {
+  tags: ['!visual'],
+  args: { seconds: undefined },
+  render: function Render(args) {
+    const [to] = React.useState(() => Date.now() + 5 * 60 * 1000);
+    return <p className="m-0">Offer ends in <Countdown {...args} to={to} /></p>;
+  },
+};
 /** An hour or more: hours too, "1:04:59". */
 export const Hours: Story = { args: { seconds: 3600 + 4 * 60 + 59 } };
 /** In words, "4 minutes, 59 seconds", where a clock could be misread or there's room. */
