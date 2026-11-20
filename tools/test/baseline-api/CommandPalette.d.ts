@@ -10,6 +10,7 @@ interface Command {
     id: string;
     label: string;
     group?: string | undefined;
+    description?: string | undefined;
     keywords?: string[] | undefined;
     icon?: IconData | React.ReactNode | undefined;
     shortcut?: string[] | undefined;

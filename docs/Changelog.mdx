@@ -6,4 +6,5 @@ import changelog from '../CHANGELOG.md?raw';
 
 {/* description: Every Serupa release, newest first: what was added, changed and fixed in each version. */}
 
-<DocMarkdown>{changelog}</DocMarkdown>
+{/* Unreleased stays in the file for the release tool; on the page it's an empty heading until there's something in it. */}
+<DocMarkdown>{changelog.replace(/^## \[Unreleased\]\n+(?=## )/m, '')}</DocMarkdown>

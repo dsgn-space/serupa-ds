@@ -24,8 +24,8 @@
       },
       "bubble-bg": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "Others' message bubbles.",
+        "$value": "{color.surface-hover}",
+        "$description": "Others' message bubbles: a step above the card or page they sit on, in light and dark.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--chat-bubble-bg"
