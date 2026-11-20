@@ -93,7 +93,10 @@ ol.site-list { list-style: decimal; }
 :is(.sb-tested, .sb-changes) summary { cursor: pointer; font-weight: var(--font-semibold); }
 .sb-tested li { margin-block: var(--spacing-1); }
 .site-doc [role="region"][tabindex="0"]:not([class*="dk-"]):focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
-@media (max-width: 39.99rem) { .site-doc :is(td, th):not(.site-table--props *) { overflow-wrap: anywhere; } }
+/* On a phone a written table's cells (and the labels' and conformance tables') may break anywhere, so it fits the column. Not the docs'
+   own wide tables (the contrast matrix, the token explorer): they scroll in their frame, and broken there a pair's name
+   stood one letter a line. */
+@media (max-width: 39.99rem) { :is(.site-table:not(.site-table--props), .sb-doc-table) :is(td, th) { overflow-wrap: anywhere; } }
 /* With room, code in a written table breaks only when one word is wider than its column, so a prop's name in the
    first column (onOpenChange) isn't split to give a long Notes column one more character. */
 @media (min-width: 64rem) { .site-table:not(.site-table--props) .site-code { overflow-wrap: break-word; } }

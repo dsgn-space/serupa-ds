@@ -215,6 +215,8 @@ function Wide({ label, children }: { label: string; children: React.ReactNode })
 
 const code = (s?: string) => (s || '').split(/`([^`]+)`/).map((x, i) => (i % 2 ? <code key={i}>{x}</code> : x));
 const cell: React.CSSProperties = { padding: '6px 10px', borderBottom: '1px solid var(--border)', verticalAlign: 'middle', textAlign: 'left' };
+// A row that runs to many lines (a token's value in 34 themes) starts each cell at its top, so its name isn't halfway down.
+const top: React.CSSProperties = { ...cell, verticalAlign: 'top' };
 // An alias's value reads as the CSS that resolves it (var(--spacing-1)), not the token file's {spacing-1} syntax.
 const val = (v: Token['value']) => { const s = typeof v === 'string' ? v : Object.values(v)[0]; return typeof s === 'string' ? s.replace(/\{([^}]+)\}/g, (_, n: string) => `var(--${n})`) : s; };
 
@@ -391,7 +393,7 @@ const word = (v: SerupaLabels[keyof SerupaLabels]) => {
 };
 /** Every word the components say on their own, in English and Indonesian, with where it's used. */
 export function LabelTable() {
-  return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+  return <table className="sb-doc-table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
     <thead><tr><th style={cell}>Key</th><th style={cell}>English</th><th style={cell}>Indonesian (<code>idLabels</code>)</th><th style={cell}>Where</th></tr></thead>
     <tbody>{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k}>
       <td style={cell}><code>{k}</code></td><td style={cell}>{word(DEFAULT_LABELS[k])}</td><td style={cell}>{word(idLabels[k])}</td><td style={cell}>{labelUse[k]}</td></tr>)}</tbody>
@@ -459,17 +461,18 @@ export function TokenExplorer() {
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
     <div style={{ maxWidth: 360 }}><SearchInput aria-label="Find a token" placeholder="Find a token, such as primary or Button" value={q} onChange={(e) => setQ(e.target.value)} /></div>
     <p role="status" style={{ margin: 0, color: 'var(--text-muted)' }}>{hits.length === all.length ? `${all.length} tokens.` : `${hits.length} of ${all.length} tokens match.`}</p>
-    {hits.length ? <div style={{ overflowX: 'auto' }}>
+    {/* eslint-disable-next-line jsx-a11y-x/no-noninteractive-tabindex -- a region that scrolls sideways must take focus so a keyboard can scroll it (WCAG 2.1.1) */}
+    {hits.length ? <div role="region" aria-label="Tokens found" tabIndex={0} style={{ overflowX: 'auto' }}>
       <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
         <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th><th style={cell}>Used by</th><th style={cell}>Use</th></tr></thead>
         <tbody>{hits.slice(0, limit).map((t) => <tr key={t.css}>
-          <td style={cell}><div style={{ display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}><code>{t.css}</code><CopyButton value={asVar(t.css)} iconOnly size="sm" variant="ghost">{`Copy ${asVar(t.css)}`}</CopyButton></div><div style={{ color: 'var(--text-muted)', fontSize: 12 }}>{t.group}</div></td>
-          <td style={cell}>{t.values.map((v, i) => <div key={i} style={{ whiteSpace: 'nowrap' }}>
+          <td style={top}><div style={{ display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}><code>{t.css}</code><CopyButton value={asVar(t.css)} iconOnly size="sm" variant="ghost">{`Copy ${asVar(t.css)}`}</CopyButton></div><div style={{ color: 'var(--text-muted)', fontSize: 12 }}>{t.group}</div></td>
+          <td style={top}>{t.values.map((v, i) => <div key={i} style={{ whiteSpace: 'nowrap' }}>
             {v.theme && <span style={{ color: 'var(--text-muted)' }}>{v.theme}: </span>}
             {swatch(v.value)}{v.ref && v.ref !== v.value ? <><code>{v.ref}</code> </> : null}<code>{v.value}</code>
           </div>)}</td>
-          <td style={cell}>{t.usedBy.length ? t.usedBy.map((n, i) => <React.Fragment key={n}>{i ? ', ' : ''}<a href={`?path=/docs/${docsId[n] || `components-${n.toLowerCase()}`}--docs`} target="_top">{n}</a></React.Fragment>) : <span style={{ color: 'var(--text-muted)' }}>No component</span>}</td>
-          <td style={cell}>{code(t.usage)}</td>
+          <td style={top}>{t.usedBy.length ? t.usedBy.map((n, i) => <React.Fragment key={n}>{i ? ', ' : ''}<a href={`?path=/docs/${docsId[n] || `components-${n.toLowerCase()}`}--docs`} target="_top">{n}</a></React.Fragment>) : <span style={{ color: 'var(--text-muted)' }}>No component</span>}</td>
+          <td style={top}>{code(t.usage)}</td>
         </tr>)}</tbody>
       </table>
     </div> : <p style={{ margin: 0 }}>No token matches.</p>}
@@ -519,7 +522,7 @@ export function ConformanceSummary() {
 }
 /** The Accessibility Conformance Report (18): every WCAG criterion at A and AA, as VPAT 2.5's table has it. */
 export function ConformanceReport() {
-  return <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+  return <table className="sb-doc-table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
     <caption style={{ textAlign: 'start', fontWeight: 600, paddingBlock: 8 }}>{ACR.standard} Level A and AA: {ACR.product}, version {ACR.reviewed.version}</caption>
     <thead><tr><th style={cell} scope="col">Criteria</th><th style={cell} scope="col">Conformance level</th><th style={cell} scope="col">Remarks and explanations</th></tr></thead>
     <tbody>{ACR.criteria.map((x) => <tr key={x.id}>
