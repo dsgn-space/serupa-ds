@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { IconTile } from './IconTile';
-import * as icons from '../../material/builtin';
+import * as icons from '../../material/icons';
 import { Card } from '../Card/Card';
 import { Text } from '../Text/Text';
 
