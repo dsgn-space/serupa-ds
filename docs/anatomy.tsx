@@ -68,11 +68,14 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
         const c = o.cloneNode(true) as HTMLElement;
         c.removeAttribute('popover');
         c.removeAttribute('hidden');
-        for (const k of ['left', 'top', 'right', 'bottom', 'inset', 'position-anchor']) c.style.removeProperty(k);   // where it was placed
+        for (const k of ['left', 'top', 'right', 'bottom', 'inset', 'position-anchor', 'visibility']) c.style.removeProperty(k);   // where it was placed, and the hiding it does while it measures where to go
         if (c.dataset.state === 'closed') c.dataset.state = 'open';
         for (const x of [c, ...c.querySelectorAll('[id]')]) x.removeAttribute('id');
         if (c instanceof HTMLDialogElement) c.setAttribute('open', '');
         box.append(c);
+        // The copy is what's numbered, so the live one closes: a menu or popover a story opens on arrival would
+        // otherwise stay over the docs page.
+        if (o.matches(':popover-open')) { try { o.hidePopover(); } catch { /* closed already */ } }
       }
     };
     // "opened": a menu or popover that only has content while open is opened once the story is there, copied, and
