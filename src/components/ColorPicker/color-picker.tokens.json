@@ -32,6 +32,16 @@
           }
         }
       },
+      "ring-hover": {
+        "$type": "color",
+        "$value": "{color.border-control}",
+        "$description": "The ring round a swatch the pointer is on, before it is picked (3:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--color-picker-ring-hover"
+          }
+        }
+      },
       "invalid": {
         "$type": "color",
         "$value": "{color.danger}",
