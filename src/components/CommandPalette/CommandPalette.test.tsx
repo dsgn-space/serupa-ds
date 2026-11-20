@@ -274,7 +274,7 @@ describe('CommandPalette', () => {
       check('field', field());
       check('heading', document.getElementById(document.querySelector('[role="group"]')!.getAttribute('aria-labelledby')!)!);
       check('row', options()[1]!);
-      check('description', options()[1]!.querySelector('.dk-command-palette__description')!);
+      check('description', document.getElementById(options()[1]!.getAttribute('aria-describedby')!)!);
       const act = document.querySelector('[role="option"][aria-selected="true"]')!;
       const actBg = css(act).backgroundColor;
       check('active', act, actBg === 'rgba(0, 0, 0, 0)' ? bg : actBg);
@@ -290,8 +290,8 @@ describe('CommandPalette', () => {
     const row = options()[0]!;
     const d = document.getElementById(row.getAttribute('aria-describedby')!)!;
     expect([d.textContent, row.contains(d), options()[1]!.hasAttribute('aria-describedby')]).toEqual(['Profile, notifications and appearance', true, false]);
-    expect(css(d).fontSize).not.toBe(css(row.querySelector('.dk-command-palette__label')).fontSize);
+    expect(parseFloat(css(d).fontSize)).toBeLessThan(parseFloat(css(row).fontSize));
     await userEvent.type(field(), 'notif');
-    expect(options().map((o) => o.querySelector('.dk-command-palette__label')!.textContent)).toEqual(['Settings']);
+    expect(labels()).toEqual(['SettingsProfile, notifications and appearance']);
   });
 });
