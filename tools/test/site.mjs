@@ -14,6 +14,7 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { PROJECT, PAGES, FOLDERS, browser, done, fail, inParallel, onlyComponents, openUrl, sitePageKey, read, report, tokens } from './lib.mjs';
 import { sitePages } from '../site/pages.mjs';
+import { siteRoutes } from '../site/head.mjs';
 import { componentProps } from '../site/props.mjs';
 import { components } from '../build/registry.mjs';
 
@@ -56,25 +57,61 @@ t('each component page with a props table has props the site can read from the t
 // Into the check's own folder, so a site someone built stays as it is, and as a development build either way the check
 // runs (alone or under Vitest), so React reports invalid markup and unknown tags as errors the pages are held to.
 const out = fs.mkdtempSync(path.join(PROJECT, '.test-tmp-site-'));
+// The address it's built for, as SERUPA_SITE_URL gives it where the site goes live: in its canonical links and sitemap.
+const SITE_URL = 'https://serupa.test';
 const clear = () => fs.rmSync(out, { recursive: true, force: true });
 process.on('exit', clear);
 const built = spawnSync(process.execPath, [path.join(PROJECT, 'node_modules', 'vite', 'bin', 'vite.js'), 'build', '--config', path.join(PROJECT, 'tools', 'site', 'vite.config.mjs'), '--outDir', out, '--emptyOutDir', '--logLevel', 'error'],
-  { cwd: PROJECT, encoding: 'utf8', env: { ...process.env, NODE_ENV: 'development' } });
+  { cwd: PROJECT, encoding: 'utf8', env: { ...process.env, NODE_ENV: 'development', SERUPA_SITE_URL: SITE_URL } });
 if (!t('the site builds (npm run build-site)', built.status === 0, (built.stderr || built.stdout || '').trim().split('\n').slice(0, 12).join('\n')) || !fs.existsSync(path.join(out, 'index.html'))) {
   clear();
   done(report('Docs site', R));
   fail('The site did not build, so its pages can\'t be opened.');
 }
 
-// Every address is the one page; the router picks what to show, as a host set up for a single-page site would serve it.
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png' };
+// Served as Cloudflare Pages serves it (tools/site/host.mjs): /a/b from a/b.html, the rewrites in _redirects (a
+// story's frame is index.html), 404.html with a 404 for any other address, and the headers in _headers, the
+// Content-Security-Policy among them, so a script or style the policy would block on the live site fails here.
+const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png', '.xml': 'application/xml', '.txt': 'text/plain', '.webmanifest': 'application/manifest+json' };
+const glob = (pattern) => new RegExp('^' + pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$');
+/** @type {{ match: RegExp, headers: [string, string][] }[]} */
+const headerRules = [];
+for (const line of (fs.existsSync(path.join(out, '_headers')) ? fs.readFileSync(path.join(out, '_headers'), 'utf8') : '').split('\n')) {
+  if (/^\S/.test(line)) headerRules.push({ match: glob(line.trim()), headers: [] });
+  else if (line.trim() && headerRules.length) { const i = line.indexOf(':'); headerRules.at(-1).headers.push([line.slice(0, i).trim(), line.slice(i + 1).trim()]); }
+}
+const rewrites = (fs.existsSync(path.join(out, '_redirects')) ? fs.readFileSync(path.join(out, '_redirects'), 'utf8') : '').split('\n')
+  .map((l) => l.trim().split(/\s+/)).filter((l) => l[2] === '200').map(([from, to]) => ({ match: glob(from), to }));
+const isFile = (f) => f.startsWith(out) && fs.existsSync(f) && fs.statSync(f).isFile();
 const server = http.createServer((req, res) => {
-  let f = path.join(out, decodeURIComponent(new URL(req.url, 'http://x').pathname));
-  if (!f.startsWith(out) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) f = path.join(out, 'index.html');
-  res.writeHead(200, { 'content-type': TYPES[path.extname(f)] || 'application/octet-stream' });
-  fs.createReadStream(f).pipe(res);
+  const at = decodeURIComponent(new URL(req.url, 'http://x').pathname).replace(/(.)\/$/, '$1');
+  const rewrite = rewrites.find((r) => r.match.test(at));
+  const asked = rewrite ? rewrite.to : at;
+  const f = [path.join(out, asked), path.join(out, asked + '.html'), path.join(out, asked, 'index.html')].find(isFile);
+  const headers = { 'content-type': f ? TYPES[path.extname(f)] || 'application/octet-stream' : 'text/html' };
+  for (const rule of headerRules) if (rule.match.test(at)) for (const [k, v] of rule.headers) headers[k] = v;
+  res.writeHead(f ? 200 : 404, headers);
+  fs.createReadStream(f ?? path.join(out, '404.html')).pipe(res);
 }).listen(0);
 const base = `http://127.0.0.1:${/** @type {import('node:net').AddressInfo} */ (server.address()).port}`;
+
+// Each address has a page of its own, with the head a crawler or a link preview reads before any script runs.
+const routes = siteRoutes(PROJECT);
+const titles = new Map(routes.map((r) => [r.path, r.title]));
+const esc = (x) => x.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const headless = routes.filter((r) => {
+  const f = path.join(out, r.path === '/' ? 'index.html' : r.path.slice(1) + '.html');
+  const html = fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '';
+  return !html.includes(`<title>${esc(r.title)}</title>`) || !html.includes(`<meta name="description" content="${esc(r.description)}"`)
+    || !html.includes(`<link rel="canonical" href="${SITE_URL}${r.path}"`) || !html.includes(`<meta property="og:image" content="${SITE_URL}/og.png"`);
+}).map((r) => r.path);
+t(`each of the ${routes.length} addresses has a page with its own title, description, canonical address and preview picture`, !headless.length,
+  `missing or not its own for ${headless.slice(0, 8).join(', ')}`);
+const sitemap = fs.existsSync(path.join(out, 'sitemap.xml')) ? fs.readFileSync(path.join(out, 'sitemap.xml'), 'utf8') : '';
+const unmapped = routes.filter((r) => !sitemap.includes(`<loc>${SITE_URL}${r.path}</loc>`)).map((r) => r.path);
+const robots = fs.existsSync(path.join(out, 'robots.txt')) ? fs.readFileSync(path.join(out, 'robots.txt'), 'utf8') : '';
+t('the sitemap lists every address, and robots.txt points to it', !unmapped.length && robots.includes(`Sitemap: ${SITE_URL}/sitemap.xml`),
+  unmapped.length ? `not in sitemap.xml: ${unmapped.slice(0, 8).join(', ')}` : 'robots.txt has no Sitemap line');
 
 const b = await browser();
 // The site's own pages, which no .mdx gives it: the story, the themes side by side and the patterns as screens.
@@ -121,6 +158,8 @@ await inParallel(opened, workers, async (p, w) => {
   if (seen.heldInFrame && !held) held = p.path;
   t(`${p.path} draws with no error`, !w.errors.length && !seen.broken, [...w.errors.slice(0, 3), seen.broken ? `${seen.broken} part(s) of the page show an error instead of their content` : ''].filter(Boolean).join(' | '));
   t(`${p.path} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
+  const title = await w.page.title();
+  t(`${p.path} keeps the title its address serves`, title === titles.get(p.path), `it sets "${title}", its page says "${titles.get(p.path)}" (tools/site/head.mjs)`);
   // On a 320px phone the page doesn't scroll sideways (WCAG 1.4.10); a wide example scrolls in its own box.
   await w.page.setViewportSize({ width: 320, height: 640 });
   // The frame swaps its sidebar for a drawer on the next render, and the examples lay out again after it: the page has
@@ -258,6 +297,8 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
     const inScreen = await screens.count() ? await screens.first().contentFrame().locator('.site-broken').count() : 0;
     t(`${at} draws with no error`, !w.errors.length && !seen.broken && !inScreen, [...w.errors.slice(0, 3), seen.broken || inScreen ? 'part of the page shows an error instead of its content' : ''].filter(Boolean).join(' | '));
     t(`${at} has one title`, seen.h1.length === 1, `its h1s: ${JSON.stringify(seen.h1)}`);
+    const title = await w.page.title();
+    t(`${at} keeps the title its address serves`, title === titles.get(at), `it sets "${title}", its page says "${titles.get(at)}" (tools/site/head.mjs)`);
     const lost = seen.links.filter((h) => h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/'));
     t(`${at}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
   }
@@ -269,6 +310,30 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   // A story's own page that names no story says so, rather than staying blank.
   const none = await openUrl(w.page, base + '/frame/patterns-nothing--default') || await ready(w.page, false);
   t('/frame/… with no such story says there is none', !none, none);
+  // An address with no page is a real 404, and still shows the site's own "no page here".
+  const response = await w.page.goto(base + '/components/no-such-component');
+  const missing = await ready(w.page, false);
+  const said = await w.page.evaluate(() => document.querySelector('main h1')?.textContent?.trim() ?? '');
+  t('an address with no page answers 404 and says there is no page', response?.status() === 404 && !missing && said === 'Page not found',
+    `status ${response?.status()}, heading "${said}"${missing ? `, ${missing}` : ''}`);
+}
+
+// On a phone, a page doesn't jump as it arrives: the footer once showed under the loading page, then jumped away when
+// the page came (a layout shift of 0.11; under 0.1 is good, by Core Web Vitals). The CPU runs four times slower, as on
+// a mid-range phone, so the loading page shows for long enough to be measured.
+{
+  const context = await b.newContext({ viewport: { width: 412, height: 915 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await context.newCDPSession(page).then((cdp) => cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 })).catch(() => {});
+  await page.addInitScript(() => {
+    /** @type {any} */ (window).__shift = 0;
+    new PerformanceObserver((list) => { for (const e of /** @type {any[]} */ (list.getEntries())) if (!e.hadRecentInput) /** @type {any} */ (window).__shift += e.value; }).observe({ type: 'layout-shift', buffered: true });
+  });
+  const failed = await openUrl(page, base + '/components/button') || await ready(page, true);
+  await page.waitForTimeout(1000);
+  const shift = await page.evaluate(() => /** @type {any} */ (window).__shift);
+  t('/components/button doesn\'t jump as it arrives on a phone (layout shift under 0.1)', !failed && shift < 0.1, failed || `layout shift ${shift.toFixed(3)}`);
+  await context.close();
 }
 
 // The site's own frame: the front page, the site's own pages, an index and a page of each kind, in every theme and on
@@ -284,7 +349,8 @@ await inParallel(FRAME, workers, async (at, w) => {
   await w.page.waitForFunction(() => [...document.querySelectorAll('.sb-anatomy__stage')].every((x) => x instanceof HTMLElement && x.inert), null, { timeout: 5000 }).catch(() => {});
   // The showcase's screen arrives after the page (its State select is disabled until then).
   if (at === '/showcase') await w.page.waitForSelector('.site-screen__page', { timeout: 10000 }).catch(() => {});
-  await w.page.addScriptTag({ content: axe });
+  // Run in the page from outside rather than added as a <script>, which the site's Content-Security-Policy blocks.
+  await w.page.evaluate(axe);
   for (const theme of themes) {
     await w.page.evaluate((th) => { const [brand, mode] = th.split('-'); window.Serupa.theme.set({ brand, mode }); }, theme);
     // A color still fading (a control that just woke, the theme's own change) is read mid-way and fails by chance:

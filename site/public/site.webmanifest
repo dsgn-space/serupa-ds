@@ -1,0 +1,13 @@
+{
+  "name": "Serupa design system",
+  "short_name": "Serupa",
+  "description": "Design tokens, a theme for every accent color and accessible React components, with the guides for using them.",
+  "start_url": "./",
+  "display": "browser",
+  "background_color": "#fafafa",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
