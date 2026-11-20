@@ -5,7 +5,10 @@ name: Nightly
 # readers have their own workflows. A red run here is something to look at, not a broken main.
 on:
   schedule:
-    - cron: '0 19 * * *'
+    # GitHub starts a scheduled run hours late when it falls on the hour (cron '0 3' began near 11:00, during the
+    # working day, 17 to 20 Nov). An odd minute in the quiet evening hours (UTC) keeps it clear of pull requests
+    # even when it is late.
+    - cron: '23 17 * * *'
   workflow_dispatch:
 
 # A newer run of this workflow on the same branch cancels the one before it.

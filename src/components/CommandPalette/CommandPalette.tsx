@@ -37,6 +37,8 @@ export interface Command {
   label: string;
   /** The heading it's listed under ("Pages", "Actions"), in the order groups first appear. Default: "Commands". */
   group?: string | undefined;
+  /** A line under the label saying more ("Colour scheme, density and language"). Shown muted, read after the label and matched like keywords. */
+  description?: string | undefined;
   /** More words that find it, not shown ("preferences" for Settings). */
   keywords?: string[] | undefined;
   /** An icon before the label: a name or an icon from serupa-ds/icons. */
@@ -89,7 +91,7 @@ function score(c: Command, q: string): number {
   const at = label.indexOf(q);
   if (at > 0 && /[\s\-_/.:]/.test(label.charAt(at - 1))) return 3;
   if (at > 0) return 2;
-  return (c.keywords || []).some((k) => fold(k).includes(q)) ? 1 : 0;
+  return (c.keywords || []).concat(c.description || []).some((k) => fold(k).includes(q)) ? 1 : 0;
 }
 
 function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.RefAttributes<HTMLDialogElement>) {
@@ -239,12 +241,17 @@ const Option = /* @__PURE__ */ React.memo(function Option({ r, id, on, query, ac
   return (
     // Focus stays in the field (a press doesn't take it); an option focused some other way, as a screen reader can, is
     // chosen with Enter or Space.
-    <div id={id} role="option" tabIndex={-1} aria-selected={on} aria-disabled={r.c.disabled || undefined}
+    <div id={id} role="option" tabIndex={-1} aria-selected={on} aria-disabled={r.c.disabled || undefined} aria-describedby={r.c.description ? `${id}-d` : undefined}
       className={cn('dk-command-palette__option', on && 'dk-command-palette__option--active', r.c.disabled && 'dk-command-palette__option--disabled')}
       onMouseDown={(e) => e.preventDefault()} onMouseMove={() => act.hover(r)} onClick={() => act.choose(r)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act.choose(r); } }}>
       {r.c.icon != null ? <span className="dk-command-palette__icon" aria-hidden>{asIcon(r.c.icon)}</span> : null}
-      <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>
+      {r.c.description ? (
+        <span className="dk-command-palette__text">
+          <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>
+          <span id={`${id}-d`} className="dk-command-palette__description">{r.c.description}</span>
+        </span>
+      ) : <Highlight className="dk-command-palette__label" query={query}>{r.c.label}</Highlight>}
       {r.c.shortcut && r.c.shortcut.length ? <Kbd className="dk-command-palette__keys" keys={r.c.shortcut} size="sm" /> : null}
     </div>
   );

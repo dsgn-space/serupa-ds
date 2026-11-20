@@ -233,7 +233,7 @@ Each is an optional override: set it on the page, a container or one Chat. The l
 | --- | --- | --- |
 | `--chat-text` | `text` | Message text and authors (4.5:1 on both bubbles). |
 | `--chat-muted` | `text-muted` | Times, day dividers and "Sending…" (4.5:1 on the page). |
-| `--chat-bubble-bg` | `surface-muted` | Others' message bubbles. |
+| `--chat-bubble-bg` | `surface-hover` | Others' message bubbles: a step above the card or page they sit on, in light and dark. |
 | `--chat-own-bubble-bg` | `primary-subtle` | The reader's own message bubbles. |
 | `--chat-failed-border` | `danger` | The outline of a message that didn't go. |
 | `--chat-error` | `danger-text` | "Not sent" (4.5:1 on the page). |

@@ -5,7 +5,10 @@ name: Canary
 # before it ships. It also runs on demand from the Actions tab.
 on:
   schedule:
-    - cron: '0 4 * * *'
+    # GitHub starts a scheduled run hours late when it falls on the hour (cron '0 3' began near 11:00, during the
+    # working day, 17 to 20 Nov). An odd minute in the quiet evening hours (UTC) keeps it clear of pull requests
+    # even when it is late.
+    - cron: '47 20 * * *'
   workflow_dispatch:
 
 # A newer run of this workflow on the same branch cancels the one before it.
