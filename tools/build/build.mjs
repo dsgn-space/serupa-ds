@@ -24,6 +24,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 import { build } from 'esbuild';
+import { compileReact, compiles } from './react-compiler.mjs';
 import { buildUtilities } from '../utilities/build.mjs';
 import { compactCss } from './compact-css.mjs';
 import { withMotionAttribute } from './motion-attribute.mjs';
@@ -230,9 +231,18 @@ async function buildModules() {
       return { path: rel.startsWith('.') ? rel : './' + rel, external: true };
     });
   } };
+  /** @type {import('esbuild').Plugin} */
+  const reactCompiler = { name: 'react-compiler', setup(b) {
+    b.onLoad({ filter: /\.tsx$/ }, async (a) => {
+      const code = fs.readFileSync(a.path, 'utf8');
+      if (!compiles(a.path, code)) return undefined;
+      const out = await compileReact(a.path, code);
+      return { contents: out.code + '\n//# sourceMappingURL=data:application/json;base64,' + Buffer.from(JSON.stringify(out.map)).toString('base64'), loader: 'tsx' };
+    });
+  } };
   for (const f of fs.readdirSync(D)) if (/^(chunk|icons)-[A-Z0-9]+\.js(\.map)?$|^(index|icons|icons-outlined)\.js\.map$/.test(f) || f === 'js') fs.rmSync(path.join(D, f), { recursive: true });
   await build({
-    entryPoints: entries, outdir: path.join(D, 'js'), outbase: SRC, bundle: true, plugins: [keepImports],
+    entryPoints: entries, outdir: path.join(D, 'js'), outbase: SRC, bundle: true, plugins: [reactCompiler, keepImports],
     format: 'esm', target: 'es2022', platform: 'neutral', sourcemap: true, jsx: 'transform', logLevel: 'warning',
     define: { __VERSION__: JSON.stringify(version) },
   });

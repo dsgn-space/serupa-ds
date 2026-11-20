@@ -12,6 +12,7 @@ import { buildUtilities } from './tools/utilities/build.mjs';
 import { buildRegistry } from './tools/build/registry.mjs';
 import { TOUCH } from './tools/test/vitest/touch.ts';
 import { TimedSequencer } from './tools/test/vitest/shard.ts';
+import { compileReact, compiles } from './tools/build/react-compiler.mjs';
 import { ariaMode, ariaSnapshot, coarsePointer, forcedColors, pointerDown, pointerDrag, pointerUp, printMedia, recordBench, safeArea, writeAriaBaseline } from './tools/test/vitest/commands.ts';
 
 const { version } = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
@@ -28,12 +29,16 @@ export default defineConfig({
   // make React 19 warn "outdated JSX transform" in dev, which the tests that fail on a console warning catch.
   oxc: { jsx: { runtime: 'automatic' } },
   // Bundled up front: found mid-run, Vite re-optimizes and reloads, failing the test files already loading.
-  optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime', 'axe-core'] },
+  optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime', 'react/compiler-runtime', 'axe-core'] },
   // No file watcher in CI: a run never re-runs on a change, and the watcher walks the whole checkout, npm's cache
   // (.npm/) included. With 28 jobs on one runner it ran the host out of inotify handles: EMFILE on every file, 4 MB of
   // log, and a failed shard on main (pipeline 3053377020, 11 Nov 2026).
   server: { watch: process.env.CI ? null : { ignored: ['**/.npm/**'] } },
   plugins: [{
+    // The components compiled as they ship (tools/build/react-compiler.mjs), so a memoized one is what's tested.
+    name: 'react-compiler', enforce: 'pre',
+    transform: (code, id) => (compiles(id, code) ? compileReact(id, code) : null),
+  }, {
     // /__slow-picture__.svg answers after a second, so a test can see a picture while it loads in every engine
     // (lazy loading below the fold can't do that: each engine starts lazy pictures at its own distance). With
     // ?broken it answers with something that isn't a picture, so the picture fails a second late.
