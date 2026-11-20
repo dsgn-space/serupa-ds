@@ -110,6 +110,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **CodeBlock** (beta): Code for people to read and copy: an install command, a config file, an example. Also called: code snippet, syntax highlighter.
 - **DataGrid** (beta): A grid of cells people work on in place, like a spreadsheet: move with the arrow keys, edit a cell where it is, select a range, and copy or paste a block to and from a spreadsheet. Also called: spreadsheet, editable data table.
 - **DescriptionList** (beta): A list of terms and their details: a record's fields on a detail page, an order's subtotal and total, a dialog of keyboard shortcuts. Also called: key-value list, definition list, property list.
+- **Duration**: How long something takes or took, written the way the reader's locale writes it: "1 hr, 30 min", "1 jam, 30 menit", "1 hour, 30 minutes", "1h 30m" or "1:30:00". Also called: formatted duration, time span, elapsed time.
 - **FormattedNumber**: Writes a number the way the reader's language does: `1.234,5` in Indonesian, `1,234.5` in English, `١٬٢٣٤٫٥` in Egyptian Arabic. Also called: number format, currency display.
 - **Highlight**: Shows text with the parts that match a search marked, ignoring case and accents, for search results, Combobox options and a command palette. Also called: mark, match highlighting.
 - **Icon**: Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded** style with **Fill** on, or one of your own custom icons. Also called: glyph, symbol.

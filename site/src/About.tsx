@@ -21,7 +21,7 @@ export function About() {
       <Markdown>{story}</Markdown>
 
       <Heading level={2} id="principles" className="site-h site-h2">The principles</Heading>
-      <p className="site-p">Eight principles guide how the components, the tokens and the docs are made. When two of them pull apart, accessibility comes first.</p>
+      <p className="site-p">These principles guide how the components, the tokens and the docs are made. When two of them pull apart, accessibility comes first.</p>
       <ol className="site-principles site-principles--two" role="list">
         {PRINCIPLES.map((p, i) => <li key={p.name} className="site-principle">
           <span className="site-principle__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>

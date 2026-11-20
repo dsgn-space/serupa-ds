@@ -1,0 +1,53 @@
+# Digital
+- list:
+  - listitem:
+    - time: 45 seconds
+  - listitem:
+    - time: 12 minutes, 4 seconds
+  - listitem:
+    - time: 1 hour, 2 minutes, 5 seconds
+  - listitem:
+    - time: 11 seconds
+
+# Displays
+- term: short
+- definition:
+  - time: 1 hr, 15 min
+- term: long
+- definition:
+  - time: 1 hour, 15 minutes
+- term: narrow
+- definition:
+  - time: 1h 15m
+- term: digital
+- definition:
+  - time: 1 hour, 15 minutes
+
+# LargestHour
+- time: 38 hours, 30 minutes
+
+# Locales
+- paragraph:
+  - text: Persiapan
+  - time: 1 j, 15 mnt
+  - text: ·
+  - time: 1 jam, 15 menit
+- paragraph:
+  - time: ١ س و١٥ د
+  - text: ·
+  - time: ساعة، و١٥ دقيقة، و٣٠ ثانية
+
+# LongWordsNarrow
+- paragraph:
+  - text: Ran for
+  - time: 2 days, 3 hours, 4 minutes, 5 seconds
+
+# Milliseconds
+- time: 1 min, 34 sec
+
+# Playground
+- time: 1 hr, 30 min
+
+# Zero
+- time: 0 min
+

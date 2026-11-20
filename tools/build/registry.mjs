@@ -8,8 +8,10 @@
 //                    export), for the docs pages
 //   tested.ts        each component's test names, grouped as its <Name>.test.tsx groups them, for the "What the
 //                    tests check" part of its docs page (docs/blocks.tsx)
-//   facts.ts         in docs/generated/ too: each component's docs page id, other names, label uses and tokens, and the
-//                    waiting changesets, for the docs blocks (docs/blocks.tsx)
+//   pages.ts         in docs/generated/ too: each component's docs page id, which every docs page reads to link
+//                    component names (docs/blocks.tsx)
+//   facts.ts         in docs/generated/ too: each component's other names, label uses and tokens, and the waiting
+//                    changesets, which only a few docs sections read, so the blocks load it when one is drawn
 //   labels.ts        each component's own words (src/components/<Name>/labels.ts: <Name>Labels, en, id), merged into one English and
 //                    one Indonesian set (src/internal/labels.ts adds the shared ones)
 // The build, Storybook, Vitest, typecheck and lint run it first: node tools/build/registry.mjs.
@@ -87,9 +89,10 @@ export function testNames(n, root = ROOT) {
   return groups.filter((g) => g.tests.length);
 }
 
-/** docs/generated/facts.ts: what the docs blocks need from every component folder at once, read here rather than by
- *  the page. A page that imported each README, story file, stylesheet and token file to draw one link asked a
- *  development server for some 650 files before its first paint. */
+/** docs/generated/pages.ts and facts.ts: what the docs blocks need from every component folder at once, read here
+ *  rather than by the page. A page that imported each README, story file, stylesheet and token file to draw one link
+ *  asked a development server for some 650 files before its first paint. pages.ts is the small part every page needs;
+ *  facts.ts (some 480 KB) is loaded only by the sections that show it, so a phone doesn't download it for every page. */
 export function docsFacts(root = ROOT) {
   const all = components(root);
   const read = (n, f) => { const file = path.join(root, 'src', 'components', n, f); return fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : ''; };
@@ -138,9 +141,9 @@ export function docsFacts(root = ROOT) {
   const dir = path.join(root, '.changeset');
   const pending = Object.fromEntries((fs.existsSync(dir) ? fs.readdirSync(dir) : []).filter((f) => f.endsWith('.md')).sort().map((f) => [f, fs.readFileSync(path.join(dir, f), 'utf8')]));
   const json = (v) => JSON.stringify(v, null, 1);
-  return '/** Each component\'s docs page id (components-forms-input), by its folder. */\n'
-    + `export const componentDocs: Record<string, string> = ${json(docs)};\n`
-    + '/** The other names components are known by, A to Z. */\n'
+  const pages = '/** Each component\'s docs page id (components-forms-input), by its folder. */\n'
+    + `export const componentDocs: Record<string, string> = ${json(docs)};\n`;
+  return { pages, facts: '/** The other names components are known by, A to Z. */\n'
     + `export const otherNames: { other: string; name: string }[] = ${json(names)};\n`
     + '/** Where each component label is used, by its key. */\n'
     + `export const componentLabelUse: Record<string, string> = ${json(use)};\n`
@@ -149,7 +152,7 @@ export function docsFacts(root = ROOT) {
     + '/** Every component token. */\n'
     + `export const componentTokens: { css: string; component: string; value: string; usage: string }[] = ${json(own)};\n`
     + '/** The changesets waiting for a release, by file name. */\n'
-    + `export const pendingChangesets: Record<string, string> = ${json(pending)};\n`;
+    + `export const pendingChangesets: Record<string, string> = ${json(pending)};\n` };
 }
 
 export function buildRegistry(root = ROOT) {
@@ -186,7 +189,9 @@ export function buildRegistry(root = ROOT) {
   write(path.join(root, 'docs', 'generated', 'status.ts'), BANNER
     + '/** Each component that isn\'t stable, by name: alpha, beta or deprecated, from the doc comment on its export. */\n'
     + `export const componentStatus: Record<string, 'alpha' | 'beta' | 'deprecated'> = {${unstable.map(([n, st]) => ` ${n}: '${st}'`).join(',')}${unstable.length ? ' ' : ''}};\n`);
-  write(path.join(root, 'docs', 'generated', 'facts.ts'), BANNER + docsFacts(root));
+  const { pages, facts } = docsFacts(root);
+  write(path.join(root, 'docs', 'generated', 'pages.ts'), BANNER + pages);
+  write(path.join(root, 'docs', 'generated', 'facts.ts'), BANNER + facts);
 }
 
 const START = '<!-- components:start (written by tools/build/registry.mjs) -->';
