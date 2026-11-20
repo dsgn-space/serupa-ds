@@ -156,7 +156,8 @@ export function Messages({ conversations: start = demo, defaultOpen, onOpen, onS
   );
   const thread = open ? (
     <section aria-labelledby="thread-title" className="flex min-h-0 min-w-0 flex-col gap-3 md:col-span-2">
-      {wide ? null : <div><Button variant="ghost" leftIcon="arrow_back" onClick={back}>Back to conversations</Button></div>}
+      {/* Pulled back by a ghost button's padding, so its arrow lines up with the name under it. */}
+      {wide ? null : <div className="-ms-3"><Button variant="ghost" leftIcon="arrow_back" onClick={back}>Back to conversations</Button></div>}
       <Heading level={2} size="lg" id="thread-title" ref={heading} tabIndex={-1} className="outline-none">{open.name}</Heading>
       <Chat aria-labelledby="thread-title" className="min-h-64 flex-1">
         {open.messages.map((m) => (
