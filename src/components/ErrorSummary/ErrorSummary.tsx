@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, useMergedRef } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -57,7 +58,7 @@ function ErrorSummaryRender({ ref, ...props }: ErrorSummaryProps & React.RefAttr
   const level = [2, 3, 4, 5, 6].indexOf(headingLevel as number) < 0 ? 2 : (headingLevel as number);
   return (
     <div tabIndex={-1} aria-labelledby={heading} {...rest} ref={mergedRef} className={cn('dk-error-summary', className)} data-component="error-summary">
-      {React.createElement('h' + level, { id: heading, className: 'dk-error-summary__title' }, title != null ? title : sds.labels.errorSummaryTitle(list.length, new Intl.NumberFormat(locale).format(list.length)))}
+      {React.createElement('h' + level, { id: heading, className: 'dk-error-summary__title' }, title != null ? title : sds.labels.errorSummaryTitle(list.length, numberFormat(locale).format(list.length)))}
       {description != null ? <div className="dk-error-summary__description">{description}</div> : null}
       <ul className="dk-error-summary__list" role="list">
         {list.map((e, k) => (

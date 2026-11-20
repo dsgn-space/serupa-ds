@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat, dateFormat, listFormat } from '../../internal/intl';
 import * as React from 'react';
 import { isComposing } from '../../internal/ime';
 import { TruncatedText } from '../TruncatedText/TruncatedText';
@@ -145,7 +146,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
   };
 
   const list = (vs: string[]) => {
-    try { return new Intl.ListFormat(locale, { type: 'disjunction' }).format(vs); } catch { return vs.join(', '); }
+    try { return listFormat(locale, { type: 'disjunction' }).format(vs); } catch { return vs.join(', '); }
   };
   const said = (f: FilterField): string => {
     const v = value[f.id];
@@ -154,7 +155,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
     if (f.type === 'text') return L.filterContains(f.label, typeof v === 'string' ? v.trim() : '');
     if (f.type === 'date-range') {
       const r = v as { start: string | null; end: string | null };
-      const fmt = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
+      const fmt = dateFormat(locale, { dateStyle: 'medium' });
       // Thin and narrow spaces as plain ones: Node's ICU and the browser's put different spaces around the range's dash,
       // so a server render wouldn't match the browser's.
       const plain = (t: string) => t.replace(/[\u2009\u202f]/g, ' ');
@@ -220,7 +221,7 @@ function FilterBarRender({ ref, ...props }: FilterBarProps & React.RefAttributes
       </ul>
       {active.length ? <Button variant="link" size="sm" className="dk-filter-bar__clear" onClick={() => { focusNext.current = 'add'; setEditing(null); set({}); }}>{L.filterClear}</Button> : null}
       {props.actions != null ? <div className="dk-filter-bar__actions">{props.actions}</div> : null}
-      {props.resultsCount != null && !Number.isNaN(props.resultsCount) ? <span className="dk-filter-bar__count" role="status" id={base + '-count'}>{L.filterResults(props.resultsCount, new Intl.NumberFormat(locale).format(props.resultsCount))}</span> : null}
+      {props.resultsCount != null && !Number.isNaN(props.resultsCount) ? <span className="dk-filter-bar__count" role="status" id={base + '-count'}>{L.filterResults(props.resultsCount, numberFormat(locale).format(props.resultsCount))}</span> : null}
     </div>
   );
 }

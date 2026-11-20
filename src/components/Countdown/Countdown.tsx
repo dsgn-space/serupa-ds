@@ -1,4 +1,5 @@
 'use client';
+import { listFormat, numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -68,7 +69,7 @@ const loc = (locale?: string) => (locale ? canonicalLocale(locale) : undefined);
 /** The time left as a clock, in the locale's digits: "4:59", "1:04:59", "50:00:00" (hours past a day keep counting). */
 export function countdownClock(seconds: number, locale?: string): string {
   const s = Math.max(0, Math.round(seconds)), l = loc(locale);
-  const one = new Intl.NumberFormat(l, { useGrouping: false }), two = new Intl.NumberFormat(l, { minimumIntegerDigits: 2, useGrouping: false });
+  const one = numberFormat(l, { useGrouping: false }), two = numberFormat(l, { minimumIntegerDigits: 2, useGrouping: false });
   const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, sec = s % 60;
   return h ? `${one.format(h)}:${two.format(m)}:${two.format(sec)}` : `${one.format(m)}:${two.format(sec)}`;
 }
@@ -81,9 +82,9 @@ export function countdownWords(seconds: number, locale?: string): string {
 // The words as shown: each unit's number and word held together ("2 days" with a no-break space), so a long one wraps only between units.
 function wordsOf(seconds: number, locale: string | undefined, together: boolean): string {
   const l = loc(locale);
-  const unitOf = (n: number, unit: string) => { const s = new Intl.NumberFormat(l, { style: 'unit', unit, unitDisplay: 'long' }).format(n); return together ? s.replace(/ /g, '\u00a0') : s; };
+  const unitOf = (n: number, unit: string) => { const s = numberFormat(l, { style: 'unit', unit, unitDisplay: 'long' }).format(n); return together ? s.replace(/ /g, '\u00a0') : s; };
   const said = parts(seconds).filter(([n]) => n > 0).map(([n, unit]) => unitOf(n, unit));
-  return said.length ? new Intl.ListFormat(l, { type: 'unit', style: 'long' }).format(said) : unitOf(0, 'second');
+  return said.length ? listFormat(l, { type: 'unit', style: 'long' }).format(said) : unitOf(0, 'second');
 }
 
 function CountdownRender({ ref, ...props }: CountdownProps & React.RefAttributes<HTMLTimeElement>) {

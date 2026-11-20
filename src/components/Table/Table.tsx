@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useScrolls } from '../../internal/useScrolls';
 import { useStickyHead } from '../../internal/stickyHead';
@@ -542,7 +543,7 @@ function TableActionBarRender({ ref, ...props }: TableActionBarProps & React.Ref
   const total = Math.max(0, Math.floor(props.total || 0) || 0);
   const all = total > 0 && count >= total;
   const offer = props.onSelectAll && total > count;
-  const format = (x: number) => new Intl.NumberFormat(locale).format(x);
+  const format = (x: number) => numberFormat(locale).format(x);
   const self = React.useRef<HTMLDivElement | null>(null);
   const setRefs = useMergedRef(ref, (e: HTMLDivElement | null) => { self.current = e; });
   const id = domId('dk-tab', React.useId());
