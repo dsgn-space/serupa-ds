@@ -318,7 +318,10 @@ function TabPanelRender({ ref, ...props }: TabPanelProps & React.RefAttributes<H
   // every render: the panel's tab can be enabled or disabled in any render of the tab list; nothing is measured.
   useIsoLayoutEffect(() => {
     const el = own.current, t = tabOf();
-    if (el && !selected && keep && t && !t.hasAttribute('disabled')) hideUntilFound(el);
+    if (!el || selected || !keep || !t) return;
+    if (!t.hasAttribute('disabled')) hideUntilFound(el);
+    // Its tab disabled since: plainly hidden again, or find-in-page (or a form's invalid field) still showed it.
+    else if (el.hasAttribute('data-findable')) { el.removeAttribute('data-findable'); el.setAttribute('hidden', ''); }
   });
   React.useEffect(() => {
     const el = own.current;

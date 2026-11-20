@@ -279,4 +279,8 @@ describe('Rating in forced colors (GR270)', () => {
       expect(r.off).toBe(r.grayText);
     }
   });
+  test('max is at most 20 stars: a count gone wrong (1000) draws 20, not a thousand', async () => {
+    await render(<Rating aria-label="Score" max={1000} />);
+    expect(page.getByRole('radio').elements().length).toBe(20);
+  });
 });

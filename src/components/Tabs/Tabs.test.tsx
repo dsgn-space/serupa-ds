@@ -336,6 +336,16 @@ describe('Tabs on the server', () => {
     expect(dis.map((p) => p.getAttribute('hidden'))).toEqual([null, '', '']);
   });
 
+  test('a tab disabled later: its kept panel goes from hidden="until-found" to plainly hidden, so find-in-page or a form\'s invalid field can\'t show it', async () => {
+    const ui = (off: boolean) => <Tabs aria-label="Steps" defaultValue="one"><TabList><Tab value="one">One</Tab><Tab value="two" disabled={off}>Two</Tab></TabList>
+      <TabPanel value="one">First</TabPanel><TabPanel value="two">Second</TabPanel></Tabs>;
+    const screen = await render(ui(false));
+    const panel = () => [...document.querySelectorAll<HTMLElement>('[role="tabpanel"]')][1]!;
+    await expect.poll(() => panel().getAttribute('hidden')).toBe('until-found');
+    await screen.rerender(ui(true));
+    await expect.poll(() => [panel().getAttribute('hidden'), panel().hasAttribute('data-findable')]).toEqual(['', false]);
+  });
+
   test('in a browser without until-found (Safari), a kept panel of another tab is plainly hidden: not shown, and not a second copy of its buttons for a screen reader', async () => {
     const had = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'onbeforematch');
     delete (HTMLElement.prototype as { onbeforematch?: unknown }).onbeforematch;
