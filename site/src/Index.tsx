@@ -40,7 +40,7 @@ export function Index({ section }: { section: NavSection }) {
         {g.title && <Heading level={2} className="site-h site-h2">{g.title}</Heading>}
         <ul className="site-grid" role="list">{g.pages.map((p) => <PageCard key={p.path} page={p} headingLevel={g.title ? 3 : 2} />)}</ul>
       </section>)}
-      {!groups.length && <EmptyState announce icon="search_off" title={`Nothing matches “${query}”`} description="Try a shorter word, or what the component does." />}
+      {!groups.length && <EmptyState announce icon="search_off" title={`Nothing matches “${query}”`} description={`Try a shorter word, or what ${section.label === 'Components' ? 'the component does' : 'it’s for'}.`} />}
     </div>
   </Shell>;
 }

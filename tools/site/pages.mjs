@@ -24,7 +24,7 @@ const walk = (dir, out = []) => {
 
 /** The first sentence of a guide (README.md), without its Markdown links, code ticks or emphasis: what the component is for. */
 export function summaryOf(guide) {
-  const intro = (/^# .*\n+([^\n#`|<-][^\n]*)/m.exec(guide) || [])[1] ?? '';
+  const intro = (/^# .*\n+([^\n#`|<{-][^\n]*)/m.exec(guide) || [])[1] ?? '';
   return (/^.*?[.!?](?=\s|$)/.exec(intro) || [intro])[0].replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/`/g, '').replace(/\*\*([^*]+)\*\*|\*([^*\s][^*]*)\*/g, '$1$2');
 }
 
