@@ -44,7 +44,9 @@ function Preview({ file }: { file: string }) {
     const inline = (e: Element): boolean => getComputedStyle(e).display.startsWith('inline') || (e.children.length === 1 && inline(e.children[0]!));
     const field = 'textarea, select, input:not([type="checkbox"], [type="radio"], [type="hidden"], [type="range"], [type="color"])';
     inner.style.display = 'block';
-    const blocks = [...inner.children].filter((child) => !inline(child) || child.matches(field) || !!child.querySelector(field) || (child as HTMLElement).offsetWidth > inner.clientWidth);
+    // A field laid over boxes of its own (PinInput's one input over its six boxes) isn't a text field's box to widen.
+    const drawnField = (e: Element) => [...e.querySelectorAll(field)].some((f) => getComputedStyle(f).position !== 'absolute');
+    const blocks = [...inner.children].filter((child) => !inline(child) || child.matches(field) || drawnField(child) || (child as HTMLElement).offsetWidth > inner.clientWidth);
     inner.style.display = '';
     // As wide as the stage up to its own max-width, centered; one the story gave a width keeps it.
     // A picture keeps its own size.
@@ -52,6 +54,7 @@ function Preview({ file }: { file: string }) {
     const fit = () => {
       // A story wider than the stage (a board, a grid) widens it, and is shrunk to fit like the rest.
       inner.style.inlineSize = '';
+      inner.style.maxBlockSize = '';
       if (inner.scrollWidth > inner.offsetWidth) inner.style.inlineSize = `${inner.scrollWidth}px`;
       // Shrunk to the card's width, and to its height down to 60%: a taller story (a list, or room it keeps for a
       // menu to open into) shows its top, which is where its point is.
@@ -60,7 +63,12 @@ function Preview({ file }: { file: string }) {
       const w = Math.max(...[...inner.children].map((c) => Math.max((c as HTMLElement).offsetWidth, c.scrollWidth)), 1);
       const scale = Math.min(1, (el.clientWidth - 32) / w, Math.max((el.clientHeight - 24) / h, 0.6));
       inner.style.setProperty('--site-preview-scale', String(scale));
-      inner.toggleAttribute('data-tall', h * scale > el.clientHeight - 24);
+      const tall = h * scale > el.clientHeight - 24;
+      inner.toggleAttribute('data-tall', tall);
+      // A tall stage ends where the picture does, so a bar or button the story pins to the screen's edge (a BottomNav
+      // under a page of messages) shows at the picture's edge, as on a screen, not past it. (The stage is what
+      // they're pinned to: its scale makes it their containing block.)
+      if (tall) inner.style.maxBlockSize = `${(el.clientHeight - 12) / scale}px`;
     };
     const ro = new ResizeObserver(fit);
     ro.observe(el);
