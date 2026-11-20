@@ -232,6 +232,40 @@ await inParallel(opened, workers, async (p, w) => {
     !order.lead ? 'no lead paragraph' : !order.leadFirst ? 'the example comes before the lead' : `${order.above} examples above the guide`);
 }
 
+// Each card on the Components index shows its component, drawn small (site/src/Index.tsx Preview): every card gets
+// one as it comes near the screen, none opens anything over the page, each fits its card's width, is hidden from
+// assistive technology and out of the tab order, and a click on it opens the component's page.
+{
+  const w = workers[0];
+  await w.page.setViewportSize({ width: 1280, height: 900 });
+  await openUrl(w.page, base + '/components'); await ready(w.page, true);
+  const height = await w.page.evaluate(() => document.documentElement.scrollHeight);
+  for (let y = 0; y < height; y += 800) { await w.page.evaluate((top) => window.scrollTo(0, top), y); await w.page.waitForTimeout(300); }
+  await w.page.waitForTimeout(800);
+  const cards = await w.page.evaluate(() => {
+    const boxes = [...document.querySelectorAll('.site-card__preview')];
+    const name = (b) => b.closest('li')?.querySelector('h2, h3')?.textContent;
+    return {
+      count: boxes.length,
+      empty: boxes.filter((b) => !b.querySelector('.site-card__stage')?.childElementCount).map(name),
+      shown: boxes.filter((b) => b.getAttribute('aria-hidden') !== 'true' || !(b instanceof HTMLElement && b.inert)).map(name),
+      // What's drawn, not the stage, which is a page's width and centered.
+      wide: boxes.filter((b) => { const r = b.getBoundingClientRect(); return [...b.querySelector('.site-card__stage')?.children ?? []].some((c) => { const s = c.getBoundingClientRect(); return s.width > 0 && (s.left < r.left - 1 || s.right > r.right + 1); }); }).map(name),
+      over: [...document.querySelectorAll('dialog[open], :popover-open')].map((e) => e.className),
+    };
+  });
+  t('/components: every component card shows a preview', cards.count >= 100 && !cards.empty.length, `${cards.count} previews; none drawn in ${cards.empty.join(', ')}`);
+  t('/components: no preview opens a dialog, menu or tooltip over the page', !cards.over.length, cards.over.join(', '));
+  t('/components: every preview fits its card\'s width', !cards.wide.length, cards.wide.join(', '));
+  t('/components: the previews are pictures, hidden from assistive technology and out of the tab order', !cards.shown.length, cards.shown.join(', '));
+  await w.page.evaluate(() => window.scrollTo(0, 0));
+  // By where it is: Playwright won't click an inert element, which is the point.
+  const at = await w.page.locator('.site-card__preview').first().boundingBox();
+  if (at) await w.page.mouse.click(at.x + at.width / 2, at.y + at.height / 2);
+  await w.page.waitForURL(/\/components\/[a-z]/, { timeout: 5000 }).catch(() => {});
+  t('/components: a click on a preview opens its component\'s page', /\/components\/[a-z]/.test(w.page.url()), w.page.url());
+}
+
 // "On this page" is the contents' rail (site/src/Doc.tsx): pointing at it opens the list, inside the window even on a
 // page with more headings than the window is tall.
 {

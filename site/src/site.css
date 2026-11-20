@@ -135,6 +135,13 @@ ol.site-list { list-style: decimal; }
 .site-card .dk-card__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--spacing-3); row-gap: var(--spacing-1); }
 .site-card .dk-card__heading { display: contents; }
 .site-card .dk-card__description { grid-column: 1 / -1; }
+.site-card__preview { position: relative; block-size: var(--spacing-36); margin: calc(var(--card-padding-md, var(--spacing-5)) * -1) calc(var(--card-padding-md, var(--spacing-5)) * -1) 0; overflow: hidden; border-block-end: 1px solid var(--border); border-start-start-radius: inherit; border-start-end-radius: inherit; background: var(--surface-muted); pointer-events: none; user-select: none; }
+.site-card__stage { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; display: flex; flex-direction: column; align-items: safe center; inline-size: 22rem; translate: -50% -50%; scale: var(--site-preview-scale, 1); }
+[dir="rtl"] .site-card__stage { translate: 50% -50%; }
+.site-card__stage[data-tall] { inset-block-start: var(--spacing-3); translate: -50% 0; transform-origin: 50% 0; }
+[dir="rtl"] .site-card__stage[data-tall] { translate: 50% 0; }
+/* A floating action button pinned to the screen's corner sits in its card's picture instead. */
+.site-card__stage :is(.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start) { position: static; }
 .site-card__count { margin-block-start: var(--spacing-3); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 
 .site-hero { padding-block: var(--spacing-12) var(--spacing-16); }
