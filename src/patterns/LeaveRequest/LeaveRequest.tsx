@@ -127,6 +127,8 @@ const dayWords = (locale: string | undefined, a: string, b?: string, weekday = f
 export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = [0, 6], requests: first = demoRequests, today = '2025-03-10', onSubmit, loading = false, loadFailed = false, onRetry }: LeaveRequestProps) {
   const locale = useLocale(undefined);
   const [requests, setRequests] = React.useState(first);
+  // The kind radios' name is this form's own, so two leave requests on a page don't share one group.
+  const kindName = React.useId();
   // What the app passes once loading ends replaces what was there, which was empty or the demo.
   const [wasLoading, setWasLoading] = React.useState(loading);
   if (wasLoading !== loading) { setWasLoading(loading); if (!loading) { setRequests(first); } }
@@ -189,7 +191,7 @@ export function LeaveRequest({ balance = 12, holidays = demoHolidays, weekend = 
               <div className="grid items-start gap-6 md:grid-cols-3">
                 <div className="flex flex-col gap-8 md:col-span-2">
                   <Field label="Kind of leave" group>
-                    <RadioGroup name="leave-kind" value={kind} onValueChange={(v: LeaveKind) => { setKind(v); setFailed(false); }}>
+                    <RadioGroup name={kindName} value={kind} onValueChange={(v: LeaveKind) => { setKind(v); setFailed(false); }}>
                       {KINDS.map((k) => <Radio key={k.value} value={k.value} description={k.hint}>{k.label}</Radio>)}
                     </RadioGroup>
                   </Field>

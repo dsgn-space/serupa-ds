@@ -62,3 +62,11 @@ describe('Patterns/Price estimate', () => {
     expect(document.body.textContent).toMatch(/Team, [٠-٩]+ people/);
   });
 });
+
+describe('PriceEstimate: two on one page', () => {
+  test('each keeps its own plan chosen: their radios are not one group (a docs page shows several)', async () => {
+    await render(<><PriceEstimate /><PriceEstimate /></>);
+    const checked = () => [...document.querySelectorAll<HTMLInputElement>('input[type="radio"]')].filter((r) => r.checked).map((r) => r.value);
+    await expect.poll(checked).toEqual(['team', 'team']);
+  });
+});
