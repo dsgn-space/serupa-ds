@@ -68,7 +68,7 @@
 .dk-checkbox__input:disabled { --dk-checkbox-bd: var(--checkbox-border-disabled, var(--disabled-border)); --dk-checkbox-fill: var(--checkbox-fill-disabled, var(--disabled-surface)); }
 .dk-checkbox__input:disabled:is(:checked, :indeterminate, [data-indeterminate]) { border-color: var(--checkbox-border-disabled, var(--disabled-border)); }
 .dk-checkbox__input:disabled + .dk-checkbox__icon { color: var(--checkbox-text-disabled, var(--disabled-text)); }
-.dk-checkbox__input:disabled:not(:checked, :indeterminate, [data-indeterminate]) { background: var(--checkbox-bg-disabled, var(--surface-muted)); }
+.dk-checkbox__input:disabled:not(:checked, :indeterminate, [data-indeterminate]) { background: var(--checkbox-bg-disabled, var(--field-readonly)); }   /* a disabled field's fill: surface-muted is a recess, a black hole in dark */
 /* Card: the box, label and description in a bordered card, pressed as a whole, a 2px primary border once checked
    (drawn inside, so nothing moves; the tick says it too, so it isn't colour alone), the focus ring around the card.
    In a group the cards fill the column, or share a wrapping row. */

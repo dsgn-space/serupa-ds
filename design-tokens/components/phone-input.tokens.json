@@ -24,8 +24,8 @@
       },
       "divider": {
         "$type": "color",
-        "$value": "{color.border}",
-        "$description": "The line between the country part and the number.",
+        "$value": "{color.field-border}",
+        "$description": "The line between the country part and the number: the field's own edge colour.",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--phone-input-divider"

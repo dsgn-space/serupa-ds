@@ -70,7 +70,7 @@
 }
 @media (hover: hover) { .dk-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-hover, var(--dk-btn-hover, var(--primary-hover))); } }
 
-.dk-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border)); }
+.dk-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border-overlay)); }   /* border-overlay: zinc-200 like border in light; in dark a step above the raised fill (border would match it and vanish) */
 @media (hover: hover) { .dk-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-hover, var(--secondary)); } }
 
 .dk-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--primary)); border-color: var(--button-secondary-border, var(--primary)); }   /* an outline in the brand color */

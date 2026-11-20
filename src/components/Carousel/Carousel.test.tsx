@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { renderToString } from 'react-dom/server';
 import { page, userEvent } from 'vitest/browser';
-import { color, contrast, keepMotion, press, settled, THEMES } from '../../../tools/test/vitest/helpers';
+import { color, contrast, keepMotion, press, THEMES } from '../../../tools/test/vitest/helpers';
 import { idLabels } from '../../internal/labels';
 import { resetWarnings } from '../../internal/warn';
 import { SerupaProvider } from '../../internal/provider';
@@ -14,9 +14,9 @@ keepMotion();
 
 const el = (id: string) => document.getElementById(id) as HTMLElement;
 const q = (sel: string) => document.querySelector(sel) as HTMLElement;
-// The section holds the viewport (its first div: the track, marked aria-live, then the two arrows) and, when
-// there are dots, a second div of dot buttons.
-const VIEW = ':scope > div:first-child', TRACK = `${VIEW} > [aria-live]`, ARROWS = `${VIEW} > button`, DOTS = ':scope > div + div > button';
+// The section holds a frame (its first div: the scrolling viewport, which holds the track, marked aria-live, then
+// the two arrows) and, when there are dots, a second div of dot buttons.
+const VIEW = ':scope > div:first-child', SCROLLER = `${VIEW} > div`, TRACK = `${SCROLLER} > [aria-live]`, ARROWS = `${VIEW} > button`, DOTS = ':scope > div + div > button';
 const part = (id: string, sel: string) => el(id).querySelector(sel) as HTMLElement;
 const focused = () => document.activeElement!.getAttribute('aria-label');
 
@@ -102,21 +102,32 @@ async function swipe(id: string, dx: number, from?: HTMLElement) {
 const modified = (t: Element, key = 'ArrowRight') => ['altKey', 'ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 describe('Carousel', () => {
-  test('a sideways trackpad swipe (or Shift and the wheel) moves one slide per swipe, its momentum counting once; up and down scroll the page as before', async () => {
-    await render(<Carousel id="wh" label="Wheel">{slides(4, 'w')}</Carousel>);
-    const v = part('wh', VIEW), at = () => el('wh').dataset.index;
-    const wheel = (init: WheelEventInit) => { const e = new WheelEvent('wheel', { bubbles: true, cancelable: true, ...init }); v.dispatchEvent(e); return e.defaultPrevented; };
-    expect(wheel({ deltaY: 120 })).toBe(false);   // the page's scroll
-    expect(at()).toBe('0');
-    expect([wheel({ deltaX: 20 }), at()]).toEqual([true, '0']);   // not far enough yet, but not the page's either
-    wheel({ deltaX: 30 });
-    await expect.poll(at).toBe('1');
-    for (let i = 0; i < 5; i++) wheel({ deltaX: 80 });   // the same swipe's momentum
-    expect(at()).toBe('1');
-    await new Promise((r) => setTimeout(r, 250));
-    wheel({ deltaY: -60, shiftKey: true });   // Shift and the wheel, back
+  test('the slides scroll natively and snap, one per gesture: where a scroll settles (a touch swipe, a trackpad, Shift and the wheel, find-in-page) becomes the index, and the dots follow', async () => {
+    await render(<div style={{ width: '400px' }}><Carousel id="wh" label="Wheel" onIndexChange={(n) => { changes.push(n); }}>{slides(4, 'w')}</Carousel></div>);
+    const v = part('wh', SCROLLER), sl = slidesOf(el('wh')), at = () => el('wh').dataset.index;
+    expect([getComputedStyle(v).overflowX, getComputedStyle(v).scrollSnapType, getComputedStyle(v).overscrollBehaviorX, getComputedStyle(sl[1]!).scrollSnapAlign, getComputedStyle(sl[1]!).scrollSnapStop])
+      .toEqual(['auto', 'x mandatory', 'contain', 'start', 'always']);
+    changes.length = 0;
+    v.scrollTo({ left: sl[2]!.offsetLeft - sl[0]!.offsetLeft, behavior: 'instant' });
+    await expect.poll(at).toBe('2');
+    expect([changes, state('wh').dots, state('wh').inert]).toEqual([[2], '--1 --1 C0 --1', '1101']);
+    v.scrollTo({ left: 0, behavior: 'instant' });
     await expect.poll(at).toBe('0');
+    // A keyboard stop of its own, named by the slide in view: the arrow keys scroll it a slide at a time.
+    expect([v.tabIndex, v.getAttribute('role'), v.getAttribute('aria-label')]).toEqual([0, 'group', '1 of 4']);
+    v.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.poll(at).toBe('1');
+    expect(v.getAttribute('aria-label')).toBe('2 of 4');
+    // A controlled parent that keeps its index: the scroll goes back to that slide.
+    await render(<div style={{ width: '400px' }}><Carousel id="kept" label="Kept" index={0} onIndexChange={() => {}}>{slides(3, 'k')}</Carousel></div>);
+    const k = part('kept', SCROLLER);
+    k.scrollTo({ left: slidesOf(el('kept'))[1]!.offsetLeft - slidesOf(el('kept'))[0]!.offsetLeft, behavior: 'instant' });
+    await expect.poll(() => k.scrollLeft).toBeGreaterThan(100);
+    await expect.poll(() => k.scrollLeft).toBe(0);
+    expect(el('kept').dataset.index).toBe('0');
   });
+
   test('with Alt, Ctrl or ⌘ the arrow keys are left to the browser (Alt+← goes back a page) (L8E28)', async () => {
     await render(<Carousel id="mk" label="Photos"><div>A</div><div>B</div><div>C</div></Carousel>);
     const t = document.querySelector('#mk button[aria-current="true"]') as HTMLElement;
@@ -244,7 +255,7 @@ describe('Carousel', () => {
   /** A mouse drag across the viewport through `path`: [dx from the start, ms after the move before]. Each event carries
    *  the path's time as its timeStamp, which the drag speed is read from, so a busy runner's late timer can't slow it. */
   const trace = async (id: string, path: [number, number][], up = true) => {
-    const v = part(id, VIEW);
+    const v = part(id, SCROLLER);
     v.scrollIntoView({ block: 'center' });
     const r = v.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + 40;
     let t = performance.now();
@@ -267,61 +278,35 @@ describe('Carousel', () => {
     expect(state('car').index).toBe(1);
   });
 
-  test('momentum (KW11): a swipe let go of while pulling back springs back; with perView a hard flick carries on to the slide it heads for, a view at most, and a slow drag as far moves one', async () => {
+  test('momentum (KW11): a mouse drag let go of while pulling back springs back; with perView a hard flick moves one slide, as a touch swipe does (one per gesture)', async () => {
     await render(<App />);
     await trace('car', [[-30, 50], [-60, 50], [-70, 100], [-50, 30]]);
     await new Promise((f) => setTimeout(f, 100));
     expect(state('car').index).toBe(0);
+    await expect.poll(() => part('car', SCROLLER).scrollLeft).toBe(0);
     await render(<div style={{ width: '432px' }}><Carousel id="mv" label="Products" perView={3}>{slides(9, 'm')}</Carousel></div>);
-    await trace('mv', [[-40, 100], [-80, 100], [-120, 100], [-160, 100]]);
-    await expect.poll(() => state('mv').index).toBe(1);
     await trace('mv', [[-10, 100], [-20, 100], [-160, 10]]);
-    await expect.poll(() => state('mv').index).toBe(4);
+    await expect.poll(() => state('mv').index).toBe(1);
   });
 
-  test('past the first slide without loop the drag meets resistance (EN1): 200px moves the track less than 120px', async () => {
+  test('past the first slide without loop a drag goes nowhere: the scroll stops at its start, and the index stays', async () => {
     await render(<App />);
-    await trace('car', [[40, 50], [120, 50], [200, 50]], false);
-    const moved = parseFloat(el('car').style.getPropertyValue('--dk-carousel-drag'));
-    part('car', VIEW).dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 9 }));
-    expect([moved > 0, moved < 120]).toEqual([true, true]);
+    await trace('car', [[40, 50], [120, 50], [200, 50]]);
+    await new Promise((f) => setTimeout(f, 100));
+    expect([part('car', SCROLLER).scrollLeft, state('car').index]).toEqual([0, 0]);
   });
 
-  test('loop with motion: next from the last slide carries on forward to the first, and previous from the first back to the last, instead of rewinding (EN1)', async () => {
-    motion();
-    try {
-      await render(<App />);
-      const c = el('loop'), t = part('loop', TRACK), x = () => new DOMMatrix(getComputedStyle(t).transform).m41;
-      for (let i = 0; i < 2; i++) { await userEvent.click(arrow('loop', 'next')); await settled(t); }
-      expect(state('loop').index).toBe(2);
-      const from = x();
-      await userEvent.click(arrow('loop', 'next'));
-      await new Promise((f) => requestAnimationFrame(() => requestAnimationFrame(f)));
-      // Moving on (further left), with the first slide standing in after the last.
-      expect([x() < from, slidesOf(c)[0]!.dataset.wrap, state('loop').index]).toEqual([true, 'after', 0]);
-      await settled(t);
-      await expect.poll(() => slidesOf(c)[0]!.dataset.wrap).toBe(undefined);
-      await expect.poll(() => t.hasAttribute('data-snap')).toBe(false);
-      expect([state('loop').shown, Math.round(x())]).toEqual([0, 0]);
-      await userEvent.click(arrow('loop', 'prev'));
-      await new Promise((f) => requestAnimationFrame(() => requestAnimationFrame(f)));
-      expect([x() > 0, slidesOf(c)[2]!.dataset.wrap, state('loop').index]).toEqual([true, 'before', 2]);
-      await settled(t);
-      await expect.poll(() => slidesOf(c)[2]!.dataset.wrap).toBe(undefined);
-      await expect.poll(() => state('loop').shown).toBe(2);
-    } finally { motion = emulate(REDUCE, NO_PREF); }
-  });
 
-  test('reduced motion: slides change at once; without it they move in 300ms', async () => {
+  test('reduced motion: slides change at once; without it they scroll smoothly', async () => {
     await render(<App />);
-    expect(getComputedStyle(part('car', TRACK)).transitionDuration).toBe('0s');
+    expect(getComputedStyle(part('car', SCROLLER)).scrollBehavior).toBe('auto');
     motion();
-    try { expect(getComputedStyle(part('car', TRACK)).transitionDuration).toBe('0.3s'); } finally { motion = emulate(REDUCE, NO_PREF); }
+    try { expect(getComputedStyle(part('car', SCROLLER)).scrollBehavior).toBe('smooth'); } finally { motion = emulate(REDUCE, NO_PREF); }
   });
 
   test('component tokens (--carousel-dot-active, --carousel-radius) override one carousel; dots are 8px, the current one 24px wide, each in a 24px target', async () => {
     await render(<App />);
-    expect([getComputedStyle(part('tok', `${DOTS}[aria-current="true"]`), '::before').backgroundColor, getComputedStyle(part('tok', VIEW)).borderTopLeftRadius]).toEqual(['rgb(1, 2, 3)', '3px']);
+    expect([getComputedStyle(part('tok', `${DOTS}[aria-current="true"]`), '::before').backgroundColor, getComputedStyle(part('tok', SCROLLER)).borderTopLeftRadius]).toEqual(['rgb(1, 2, 3)', '3px']);
     const d = part('car', `${DOTS}:not([aria-current])`), r = d.getBoundingClientRect(), a = getComputedStyle(d, '::before'), cur = getComputedStyle(part('car', `${DOTS}[aria-current="true"]`), '::before');
     // Each dot is drawn 24px wide and clipped 8px in from both sides to an 8px circle; the current one isn't clipped.
     const cr = q('#car button[aria-current="true"]').getBoundingClientRect();
@@ -374,15 +359,18 @@ describe('Carousel', () => {
     expect(location.hash).toBe(h0);
   });
 
-  test('a cancelled touch (the browser scrolls instead) puts the slide back and doesn\'t change it', async () => {
+  test('a cancelled mouse drag goes back to its slide and doesn\'t change it; a touch is left to the browser\'s own scroll', async () => {
     await render(<App />);
-    const i0 = state('car').index, v = part('car', VIEW), o = { bubbles: true, pointerId: 7, pointerType: 'touch', isPrimary: true, clientY: v.getBoundingClientRect().top + 40 };
+    const i0 = state('car').index, v = part('car', SCROLLER);
+    await trace('car', [[-20, 30], [-90, 30]], false);
+    expect(v.scrollLeft).toBeGreaterThan(50);
+    v.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 9 }));
+    await expect.poll(() => v.scrollLeft).toBe(0);
+    const o = { bubbles: true, pointerId: 7, pointerType: 'touch', isPrimary: true, clientY: v.getBoundingClientRect().top + 40 };
     v.dispatchEvent(new PointerEvent('pointerdown', { ...o, clientX: 300 }));
-    v.dispatchEvent(new PointerEvent('pointermove', { ...o, clientX: 250 }));
     v.dispatchEvent(new PointerEvent('pointermove', { ...o, clientX: 180 }));
-    v.dispatchEvent(new PointerEvent('pointercancel', { ...o, clientX: 180 }));
-    await expect.poll(() => el('car').style.getPropertyValue('--dk-carousel-drag')).toBe('0px');
-    expect(state('car').index).toBe(i0);
+    v.dispatchEvent(new PointerEvent('pointerup', { ...o, clientX: 180 }));
+    expect([v.scrollLeft, state('car').index]).toEqual([0, i0]);
   });
 
   test('without loop, reaching the last slide moves focus to Previous (and the first, to Next), so focus isn\'t lost; when a controlled parent keeps the index, focus stays on the current dot', async () => {
@@ -471,7 +459,7 @@ describe('Carousel', () => {
     const w = window.innerWidth, h = window.innerHeight;
     const host = document.createElement('div');
     const width = (e: Element) => e.getBoundingClientRect().width;
-    const slide = () => host.querySelector('[role=group]')!, region = () => host.querySelector('section')!;
+    const slide = () => host.querySelector('[role=group][aria-roledescription]')!, region = () => host.querySelector('section')!;
     const dots = () => [...host.querySelectorAll('button')].filter((b) => /of 5$/.test(b.getAttribute('aria-label') || '') && getComputedStyle(b).display !== 'none');
     try {
       await page.viewport(900, 700);

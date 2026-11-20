@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>FieldList — preview</title>
+<style>
+  body { margin: 0; padding: 16px; background: var(--surface); color: var(--text); font-family: var(--font-sans); }
+</style>
+</head>
+<body>
+<div id="root" style="max-width: 560px"></div>
+<script>
+  var T = window.Serupa, h = React.createElement;
+  function Phones() {
+    return h(T.FieldList, {
+      label: 'Phone numbers', itemLabel: function (i) { return 'Phone ' + (i + 1); }, addLabel: 'Add phone', name: 'phones',
+      newItem: function () { return ''; }, defaultValue: ['0812 3456 7890'], min: 1, max: 4,
+    }, function (row, s) {
+      return h(T.Field, { label: 'Number' }, h(T.Input, { name: s.name('number'), type: 'tel', value: row, onChange: function (e) { s.update(e.target.value); } }));
+    });
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(h(Phones));
+</script>
+</body>
+</html>

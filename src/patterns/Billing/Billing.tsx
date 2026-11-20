@@ -215,15 +215,15 @@ export function Billing({ plan = demoPlan, usage = demoUsage, card = demoCard, p
             {invoices.length ? (
               <Table caption="Invoices" hideCaption pinEnd>
                 <TableHead><TableRow>
-                  <TableHeaderCell>Date</TableHeaderCell><TableHeaderCell>Amount</TableHeaderCell>
-                  <TableHeaderCell>Status</TableHeaderCell><TableHeaderCell><span className="sr-only">Download</span></TableHeaderCell>
+                  <TableHeaderCell>Date</TableHeaderCell><TableHeaderCell align="end">Amount</TableHeaderCell>
+                  <TableHeaderCell>Status</TableHeaderCell><TableHeaderCell align="end"><span className="sr-only">Download</span></TableHeaderCell>
                 </TableRow></TableHead>
                 <TableBody>{invoices.map((i) => (
                   <TableRow key={i.id}>
                     <TableCell className="whitespace-nowrap"><time dateTime={i.date}>{date(i.date)}</time></TableCell>
-                    <TableCell>{money(i.amount, plan.currency, locale)}</TableCell>
+                    <TableCell align="end">{money(i.amount, plan.currency, locale)}</TableCell>
                     <TableCell><Badge tone={STATUS[i.status][1]}>{STATUS[i.status][0]}</Badge></TableCell>
-                    <TableCell className="whitespace-nowrap"><Link href={i.href} aria-label={`Download the invoice of ${date(i.date)}`}>Download</Link></TableCell>
+                    <TableCell align="end" className="whitespace-nowrap"><Link href={i.href} aria-label={`Download the invoice of ${date(i.date)}`}>Download</Link></TableCell>
                   </TableRow>
                 ))}</TableBody>
               </Table>

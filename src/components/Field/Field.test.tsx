@@ -289,7 +289,7 @@ describe('Field', () => {
     </>);
     const label = (t: string) => [...document.querySelectorAll('label')].find((l) => l.textContent === t)!;
     await userEvent.click(label('Volume'));
-    expect(document.activeElement?.getAttribute('role')).toBe('slider');
+    expect((document.activeElement as HTMLInputElement | null)?.type).toBe('range');
     await userEvent.click(label('View'));
     expect([document.activeElement?.getAttribute('role'), document.activeElement?.textContent]).toEqual(['radio', 'Week']);
     await userEvent.click(label('Tag color'));
@@ -352,7 +352,7 @@ describe('Field inside a shadow root (GR60)', () => {
       await render(<Field label="Shadow volume"><Slider defaultValue={30} /></Field>, { container: inner });
       const root = host.shadowRoot!;
       await userEvent.click(root.querySelector<HTMLElement>('label')!);
-      expect([root.activeElement?.getAttribute('role'), warn.mock.calls.map((c) => String(c[0])).filter((m) => /names nothing|no accessible name/.test(m))]).toEqual(['slider', []]);
+      expect([(root.activeElement as HTMLInputElement | null)?.type, warn.mock.calls.map((c) => String(c[0])).filter((m) => /names nothing|no accessible name/.test(m))]).toEqual(['range', []]);
     } finally { host.remove(); warn.mockRestore(); }
   });
 });

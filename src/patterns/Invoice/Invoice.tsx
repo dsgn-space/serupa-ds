@@ -199,8 +199,11 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
                     </TableRow>
                   ))}</TableBody>
                 </Table>
-                <div className="flex justify-end">
-                  <DescriptionList layout="split" className="w-full max-w-sm">
+                {/* The totals are in the table's text size, and their figures end where the Amount column's do: in by
+                    the table's cell padding (pe-3) and its 1px frame (me-px). Classes, not a style attribute, so a
+                    strict CSP lays it out the same. */}
+                <div className="flex justify-end pe-3">
+                  <DescriptionList layout="split" className="w-full max-w-sm me-px text-sm">
                     <DescriptionItem term="Subtotal">{money(sums.subtotal)}</DescriptionItem>
                     <DescriptionItem term={`Tax (${formatNumber(inv.taxRate, locale, { style: 'percent', maximumFractionDigits: 2 })})`}>{money(sums.tax)}</DescriptionItem>
                     <DescriptionItem term="Total">{money(sums.total)}</DescriptionItem>

@@ -35,8 +35,8 @@ describe('form attribute on controls with hidden inputs', () => {
     </>);
     const f = document.getElementById('outside-r') as HTMLFormElement;
     (document.querySelector('[role="radio"][aria-checked="false"]') as HTMLElement).click();
-    (document.querySelector('[role="slider"]') as HTMLElement).focus();
-    (document.querySelector('[role="slider"]') as HTMLElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    (document.querySelector('input[type=range]') as HTMLElement).focus();
+    (document.querySelector('input[type=range]') as HTMLElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
     await expect.poll(() => Object.fromEntries(new FormData(f))).toEqual({ period: 'day', volume: '100' });
     f.reset();
     await expect.poll(() => Object.fromEntries(new FormData(f))).toEqual({ period: 'week', volume: '30' });

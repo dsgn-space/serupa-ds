@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { commands, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { Badge } from '../components/Badge/Badge';
 import { Button } from '../components/Button/Button';
 import { Combobox } from '../components/Combobox/Combobox';
@@ -39,6 +39,7 @@ import { Kanban } from '../components/Kanban/Kanban';
 import { TagGroup } from '../components/TagGroup/TagGroup';
 import { SortableList } from '../components/SortableList/SortableList';
 import { TransferList } from '../components/TransferList/TransferList';
+import { FieldList } from '../components/FieldList/FieldList';
 import { Splitter } from '../components/Splitter/Splitter';
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '../components/Table/Table';
 import { toast, Toaster } from '../components/Toast/Toast';
@@ -73,6 +74,9 @@ const SITES: Record<string, Site> = {
   'Toast: a danger toast interrupts': {
     ui: () => <span />,
     act: async () => { React.act(() => { toast({ title: 'Upload failed', tone: 'danger', duration: 0 }); }); }, says: /Upload failed/, assertive: true },
+  'FieldList: a row added': {
+    ui: () => <FieldList label="Guests" itemLabel={(i) => `Guest ${i + 1}`} newItem={() => ''} addLabel="Add guest">{(_row, { label }) => <input aria-label={label} />}</FieldList>,
+    act: async () => { await userEvent.click(page.getByRole('button', { name: 'Add guest' })); }, says: /Guest/ },
   'Combobox: how many options match once typing stops': {
     ui: () => <Combobox aria-label="Planet" options={['Mars', 'Mercury', 'Venus']} />,
     act: async () => { await userEvent.click($('input[role="combobox"]')); await userEvent.keyboard('M'); }, says: /[2٢] results/ },
