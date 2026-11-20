@@ -54,7 +54,7 @@ html, body { background-color: var(--surface-page); }
 .sb-anatomy__frozen * { transition: none !important; animation: none !important; }
 .sb-anatomy__stage .docs-story, .sb-anatomy__stage .sbdocs-preview { margin: 0; border: 0; box-shadow: none; }
 .sb-anatomy__box, .sb-anatomy__n { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }
-.sb-anatomy__box { box-sizing: border-box; border: 2px solid var(--primary); border-radius: 4px; }
+.sb-anatomy__box { box-sizing: border-box; border: 2px solid var(--primary); border-radius: 6px; box-shadow: 0 0 0 1px var(--surface), inset 0 0 0 1px var(--surface); }   /* a hairline of the card each side, so the outline reads on a brand fill and on the card */
 .sb-anatomy__n { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 10px; background: var(--primary); color: var(--on-primary); font: 600 12px/1 var(--font-sans); }
 @media (forced-colors: active) { .sb-anatomy__box { border-color: Highlight; } .sb-anatomy__n { background: Highlight; color: HighlightText; forced-color-adjust: none; } }
 

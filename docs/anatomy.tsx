@@ -25,8 +25,12 @@ const idPart = (exportName: string) => exportName.replace(/([a-z0-9])([A-Z])/g, 
 type Box = { n: number; x: number; y: number; w: number; h: number };
 
 /** Where an element is drawn: its own box, or the boxes of what's in it when it has no size of its own (a mark that
- * only places its label), or nothing when it isn't drawn. */
+ * only places its label), or nothing when it isn't drawn or can't be seen. */
 function drawnBox(e: Element): { left: number; top: number; right: number; bottom: number } | null {
+  // A part laid out but not shown (a loading button's icon, faded out under its spinner) isn't pointed at: the next
+  // one that shows is.
+  const cs = getComputedStyle(e);
+  if (cs.visibility === 'hidden' || cs.opacity === '0') return null;
   const own = e.getBoundingClientRect();
   if (own.width > 0 && own.height > 0) return own;
   const rs = [...e.querySelectorAll('*')].map((x) => x.getBoundingClientRect()).filter((r) => r.width > 0 && r.height > 0);
@@ -120,8 +124,10 @@ export function AnatomyDiagram({ parts, story, opened }: Anatomy) {
       <Story of={chosen.moduleExport} />
       <div className="sb-anatomy__frozen" ref={frozen} />
       {boxes.map((b) => <React.Fragment key={b.n}>
-        <span className="sb-anatomy__box" style={{ transform: `translate(${b.x}px, ${b.y}px)`, width: b.w, height: b.h }} />
-        <span className="sb-anatomy__n" style={{ transform: `translate(${b.x - 10}px, ${b.y - 10}px)` }}>{b.n}</span>
+        {/* The outline stands 3px off the part, so it shows on a part filled in the brand color (a primary button)
+            and doesn't cover its edge; the number sits outside the outline's corner, off the part's text. */}
+        <span className="sb-anatomy__box" style={{ transform: `translate(${b.x - 3}px, ${b.y - 3}px)`, width: b.w + 6, height: b.h + 6 }} />
+        <span className="sb-anatomy__n" style={{ transform: `translate(${b.x - 17}px, ${b.y - 17}px)` }}>{b.n}</span>
       </React.Fragment>)}
     </div>
   </figure>;
