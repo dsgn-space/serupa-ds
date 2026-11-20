@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
+import { localeDir } from '../../internal/locale';
 import { useLocale, useOwnLang } from '../../internal/provider';
 import { formatNumber, type NumberFormat } from './formatNumber';
 
@@ -60,7 +61,8 @@ function FormattedNumberRender({ ref, ...props }: FormattedNumberProps & React.R
     : seen.text === text ? seen : { text, mask: changedChars(seen.text, text), change: seen.change + 1 };
   // every render: it keeps what was shown last, which a re-render with a new value must compare against.
   React.useEffect(() => { last.current = now; });
-  return <data lang={lang} {...rest} ref={ref} value={String(props.value)} title={rest.title ?? title} className={cn('dk-formatted-number', props.className)}
+  // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
+  return <data lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} value={String(props.value)} title={rest.title ?? title} className={cn('dk-formatted-number', props.className)}
     data-component="formatted-number" data-format={format}>{now.mask ? segments(text, now.mask, now.change) : text}</data>;
 }
 

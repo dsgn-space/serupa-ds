@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
 import { isoDate, toDay } from '../../internal/dates';
-import { canonicalLocale } from '../../internal/locale';
+import { canonicalLocale, localeDir } from '../../internal/locale';
 import { useLocale, useOwnLang } from '../../internal/provider';
 import { warnOnce } from '../../internal/warn';
 import { relativeTick } from '../../internal/timing';
@@ -112,7 +112,8 @@ function RelativeTimeRender({ ref, ...props }: RelativeTimeProps & React.RefAttr
     : relativeTime(day ? props.date : d, current, locale, { format: props.format, numeric: props.numeric });
   // A day has no time of day to show, and its datetime is the day itself.
   const title = !valid || props.titleFormat === false ? undefined : new Intl.DateTimeFormat(locale, props.titleFormat || { dateStyle: 'long', timeStyle: day ? undefined : 'short' }).format(d);
-  return <time lang={lang} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn('dk-relative-time', props.className)}
+  // A locale of its own brings its direction with its lang, so English words in a right-to-left page keep their order.
+  return <time lang={lang} dir={props.locale ? localeDir(props.locale) : undefined} {...rest} ref={ref} dateTime={valid ? (day ? isoDate(d) : d.toISOString()) : undefined} title={rest.title ?? title} className={cn('dk-relative-time', props.className)}
     data-component="relative-time" suppressHydrationWarning>{text}</time>;
 }
 

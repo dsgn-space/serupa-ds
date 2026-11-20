@@ -7,6 +7,16 @@ import { SerupaProvider } from '../../internal/provider';
 import { FormattedNumber, formatNumber } from './FormattedNumber';
 
 const el = (id: string) => document.getElementById(id) as HTMLDataElement;
+
+// In a right-to-left page the first character should still sit left of the last: the words keep their own order.
+const readsLeftToRight = (e: HTMLElement) => {
+  const walker = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+  const nodes: Text[] = [];
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) if (n.textContent) nodes.push(n as Text);
+  const at = (t: Text, i: number) => { const r = document.createRange(); r.setStart(t, i); r.setEnd(t, i + 1); return r.getBoundingClientRect().left; };
+  const first = nodes[0]!, last = nodes[nodes.length - 1]!;
+  return at(first, 0) < at(last, last.length - 1);
+};
 const nf = (l: string, o: Intl.NumberFormatOptions, v: number) => new Intl.NumberFormat(l, o).format(v);
 
 describe('FormattedNumber', () => {
@@ -155,5 +165,15 @@ describe('FormattedNumber: animate', () => {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const [display, name] = withMotion(() => { const s = getComputedStyle(span); return [s.display, s.animationName]; });
     expect([display, name]).toEqual(['inline', reduced ? 'none' : 'dk-formatted-number-change']);
+  });
+
+  test('in a right-to-left page, English units keep their own order: "50 km/h", not "km/h 50"', async () => {
+    await render(<div dir="rtl"><FormattedNumber id="rtl" value={50} format="unit" unit="kilometer-per-hour" locale="en" /></div>);
+    expect([el('rtl').textContent, readsLeftToRight(el('rtl'))]).toEqual(['50 km/h', true]);
+  });
+
+  test('with a right-to-left locale of its own in a left-to-right page it runs right to left; with none it takes the page\'s', async () => {
+    await render(<p><FormattedNumber id="ar" value={50} format="unit" unit="kilometer-per-hour" locale="ar-EG" /><FormattedNumber id="none" value={50} /><FormattedNumber id="bad" value={50} locale="not a locale" /></p>);
+    expect([el('ar').getAttribute('dir'), el('ar').matches(':dir(rtl)'), el('none').hasAttribute('dir'), el('bad').hasAttribute('dir')]).toEqual(['rtl', true, false, false]);
   });
 });
