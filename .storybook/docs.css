@@ -72,9 +72,11 @@ html, body { background-color: var(--surface-page); }
    (✓ Do, ✗ Don't) above the rule, with a success or danger bar along the top. */
 .sb-dodont { display: grid; gap: 24px; margin: 16px 0 24px; }
 .sb-dodont__pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
-.sb-dodont__item { display: flex; flex-direction: column; margin: 0; border: 1px solid var(--border); border-top: 4px solid var(--success); border-radius: 8px; background: var(--surface); overflow: hidden; }
+/* Each example takes two of its pair's rows (subgrid), so side by side the two stages are one height and the two
+   captions start on one line, whichever has the longer story or caption. */
+.sb-dodont__item { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; margin: 0; border: 1px solid var(--border); border-top: 4px solid var(--success); border-radius: 8px; background: var(--surface); overflow: hidden; }
 .sb-dodont__item--dont { border-top-color: var(--danger); }
-.sb-dodont__stage { flex: auto; display: grid; place-items: safe center; padding: 24px 16px; overflow-x: auto; }   /* safe: a story wider than a narrow column (at 320px) starts at the left and scrolls, not cut on both sides */
+.sb-dodont__stage { display: grid; place-items: safe center; padding: 24px 16px; overflow-x: auto; }   /* safe: a story wider than a narrow column (at 320px) starts at the left and scrolls, not cut on both sides */
 .sb-dodont__stage .docs-story, .sb-dodont__stage .sbdocs-preview { margin: 0; border: 0; box-shadow: none; background: transparent; }
 .sb-dodont__caption { padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface-muted); color: var(--text); font: 400 14px/20px var(--font-sans); }
 .sb-dodont__caption p { margin: 4px 0 0; }
