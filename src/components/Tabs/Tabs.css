@@ -97,6 +97,7 @@
 .dk-tabs__close { display: inline-flex; flex: none; align-items: center; justify-content: center; inline-size: var(--spacing-6); block-size: var(--spacing-6); margin-inline-end: calc(var(--spacing-0) - var(--spacing-1\.5)); border-radius: var(--tabs-close-radius, var(--radius-inner)); color: inherit; cursor: var(--cursor-interactive); }
 .dk-tabs__close .dk-icon { font-size: var(--spacing-4); }
 @media (hover: hover) { .dk-tabs__close:hover { background: var(--tabs-close-bg-hover, var(--secondary)); color: var(--tabs-text-hover, var(--text)); } }
+.dk-tabs__tab:not(:disabled) .dk-tabs__close:active { background: var(--tabs-close-bg-pressed, var(--pressed)); color: var(--tabs-text-hover, var(--text)); }
 .dk-tabs__tab:disabled .dk-tabs__close { cursor: var(--cursor-disabled); }
 /* The tab list and its + side by side: the list scrolls, the + stays. */
 .dk-tabs__bar { display: flex; align-items: center; gap: var(--tabs-gap, var(--spacing-1)); min-inline-size: var(--spacing-0); }
