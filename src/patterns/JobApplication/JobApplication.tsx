@@ -108,7 +108,7 @@ export function JobApplication({ job = demoJob, onApply }: JobApplicationProps) 
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme careers</p>
-        <Link href="#jobs">All jobs</Link>
+        <Link underline="hover" href="#jobs">All jobs</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Jobs', href: '#jobs' }, { label: job.title }]} title={job.title}

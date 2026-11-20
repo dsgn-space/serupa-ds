@@ -56,6 +56,13 @@ describe('Blocks/Stats row', () => {
     expect([lefts.size, document.documentElement.scrollWidth <= 360]).toEqual([1, true]);
   });
 
+  test('three numbers share one row from sm, so the third doesn\u2019t sit alone under two; four go two then four across', async () => {
+    await page.viewport(800, 720);
+    await render(<StatsRow title="So far" stats={STATS.slice(0, 3)} />);
+    const tops = (n: number) => new Set(cards().slice(0, n).map((li) => Math.round(li.getBoundingClientRect().top))).size;
+    expect(tops(3)).toBe(1);
+  });
+
   test('in another language every word comes from labels, and the title keeps its case (GR133)', async () => {
     const de = { up: (a: string) => `Gestiegen um ${a}`, down: (a: string) => `Gesunken um ${a}`, flat: 'Unverändert', loading: (t: string) => `${t} wird geladen`, trend: (l: string, n: number) => `${l}, letzte ${n} Zeiträume` };
     const screen = await render(<StatsRow title="Dieser Monat" stats={STATS} labels={de} />);

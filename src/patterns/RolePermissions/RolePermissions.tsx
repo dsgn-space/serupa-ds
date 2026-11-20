@@ -126,7 +126,7 @@ export function RolePermissions({ roles = demoRoles, permissions = demoPerms, gr
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme Projects</p>
-        <Link href="#workspace">Workspace settings</Link>
+        <Link underline="hover" href="#workspace">Workspace settings</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Workspace settings', href: '#workspace' }, { label: 'Roles' }]} title="Roles and permissions"

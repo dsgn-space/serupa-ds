@@ -103,7 +103,7 @@ export function Donation({ currency = 'USD', amounts = demoAmounts, min = 2, fee
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme Schools</p>
-        <Link href="#about">About us</Link>
+        <Link underline="hover" href="#about">About us</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Give to Acme Schools" description="Every gift goes to schools in the villages we work in. We’re a registered charity; your gift may be tax-deductible." />
