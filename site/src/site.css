@@ -162,10 +162,19 @@ ol.site-list { list-style: decimal; }
 .site-card__preview { position: relative; block-size: var(--spacing-36); margin: calc(var(--card-padding-md, var(--spacing-5)) * -1) calc(var(--card-padding-md, var(--spacing-5)) * -1) 0; overflow: hidden; border-block-end: 1px solid var(--border); border-start-start-radius: inherit; border-start-end-radius: inherit; background: var(--surface-muted); pointer-events: none; user-select: none; }
 .site-card__stage { position: absolute; inset-block-start: 50%; inset-inline-start: 50%; display: flex; flex-direction: column; align-items: safe center; inline-size: 22rem; translate: -50% -50%; scale: var(--site-preview-scale, 1); }
 [dir="rtl"] .site-card__stage { translate: 50% -50%; }
-.site-card__stage[data-tall] { inset-block-start: var(--spacing-3); translate: -50% 0; transform-origin: 50% 0; }
+.site-card__stage[data-tall] { inset-block-start: var(--spacing-3); overflow: hidden; translate: -50% 0; transform-origin: 50% 0; }
 [dir="rtl"] .site-card__stage[data-tall] { translate: 50% 0; }
-/* A floating action button pinned to the screen's corner sits in its card's picture instead. */
-.site-card__stage :is(.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start) { position: static; }
+/* The room a story keeps around a field or a button for its menu, card, tooltip or tour step to open into (an inline
+   min-height, or padding on the plain frame around it) holds nothing in a picture, where nothing opens: what's drawn
+   keeps its size, not shrunk to fit the room. A frame that's only room fits what it holds, so that's centered like
+   every other picture (Index.tsx keeps an inline one its own size); one that also sets a width keeps it. These have to
+   beat the story's own style attribute. */
+.site-card__stage [style*="min-height"] { min-height: 0 !important; }
+.site-card__stage > div:not([class]):is([style*="min-height"], [style*="padding"]):not([style*="width"]) { display: inline-block !important; padding: 0 !important; }
+/* A floating action button pinned to the screen's corner, or an OfflineBanner to its edge, sits in its card's picture
+   instead; over a story taller than the picture it keeps to the picture's corner, as a BottomNav does (Index.tsx). */
+.site-card__stage:not([data-tall]) :is(.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start),
+.site-card__stage :is(.dk-offline-banner--bottom, .dk-offline-banner--top) { position: static; }
 .site-card__count { margin-block-start: var(--spacing-3); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 
 .site-hero { padding-block: var(--spacing-12) var(--spacing-16); }
