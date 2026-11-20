@@ -69,6 +69,16 @@ if (!t('the site builds (npm run build-site)', built.status === 0, (built.stderr
   fail('The site did not build, so its pages can\'t be opened.');
 }
 
+// The site keeps only the utility classes its sources name (tools/site/vite.config.mjs): every page is checked for a
+// class utilities.css has that the built stylesheet lost, which would leave that part of the page unstyled.
+const classesIn = (css) => new Set([...css.matchAll(/\.((?:\\.|[\w-])+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')));
+const UTILITIES = classesIn(fs.readFileSync(path.join(PROJECT, 'src', 'styles', 'utilities.css'), 'utf8'));
+const SHEETS = fs.readdirSync(path.join(out, 'assets')).filter((f) => f.endsWith('.css')).map((f) => fs.readFileSync(path.join(out, 'assets', f), 'utf8'));
+const STYLED = classesIn(SHEETS.join('\n'));
+// Every page downloads the main stylesheet before it shows anything: with every utility class it was 2.4 MB.
+const sheet = Math.max(...SHEETS.map((css) => Buffer.byteLength(css)));
+t('the site\'s stylesheet is under 1 MB', sheet < 1024 * 1024, `it is ${(sheet / 1024 / 1024).toFixed(2)} MB`);
+
 // Served as Cloudflare Pages serves it (tools/site/host.mjs): /a/b from a/b.html, the rewrites in _redirects (a
 // story's frame is index.html), 404.html with a 404 for any other address, and the headers in _headers, the
 // Content-Security-Policy among them, so a script or style the policy would block on the live site fails here.
@@ -122,6 +132,15 @@ const robots = fs.existsSync(path.join(out, 'robots.txt')) ? fs.readFileSync(pat
 t('the sitemap lists every address, and robots.txt points to it', !unmapped.length && robots.includes(`Sitemap: ${SITE_URL}/sitemap.xml`),
   unmapped.length ? `not in sitemap.xml: ${unmapped.slice(0, 8).join(', ')}` : 'robots.txt has no Sitemap line');
 
+// Each page's HTML holds the page itself (tools/site/prerender.mjs), so a visitor reads it before any script has run,
+// and the browser takes it over rather than drawing it again (any mismatch is an error on the page, checked below).
+const undrawn = routes.filter((r) => {
+  const f = path.join(out, r.path === '/' ? 'index.html' : r.path.slice(1) + '.html');
+  const html = fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '';
+  return !/<div id="root"><div class="site/.test(html) || !/<h1[\s>]/.test(html);
+}).map((r) => r.path);
+t(`each of the ${routes.length} addresses has its page drawn in its HTML, with its title`, !undrawn.length, `empty or without an h1: ${undrawn.slice(0, 8).join(', ')}`);
+
 const b = await browser();
 // The site's own pages, which no .mdx gives it: the story, the themes side by side and the patterns as screens.
 const OWN = ['/about', '/themes', '/showcase'];
@@ -155,13 +174,19 @@ await inParallel(opened, workers, async (p, w) => {
     h1: [...document.querySelectorAll('#article h1')].filter((h) => !h.closest('[data-site-demo]')).map((h) => h.textContent.trim()),
     broken: document.querySelectorAll('.site-broken').length,
     links: [...new Set([...document.querySelectorAll('#article a[href]')].filter((a) => !a.closest('[data-site-demo]')).map((a) => a.getAttribute('href')))],
+    // A link to a part of this page whose id isn't on it (a section that is on another page now) goes nowhere.
+    noTarget: [...new Set([...document.querySelectorAll('#article a[href^="#"]')].filter((a) => !a.closest('[data-site-demo]') && a.getAttribute('href').length > 1
+      && !document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)))).map((a) => a.getAttribute('href')))],
     demos: document.querySelectorAll('.site-demo').length,
     api: !!document.getElementById('api'),
     // What sits on top of the page: an open modal dialog, or an open menu or panel. A tooltip shown beside its button
     // is left: it is a line of text that takes no focus.
     over: [...document.querySelectorAll('dialog, [popover]')].filter((e) => e.matches(':modal, :popover-open') && e.getAttribute('role') !== 'tooltip').map((e) => String(e.className || e.localName).split(' ')[0]),
     heldInFrame: document.querySelectorAll('.site-demo .site-held').length,
+    classes: [...new Set([...document.querySelectorAll('[class]')].flatMap((e) => [...e.classList]))],
   }));
+  const unstyled = seen.classes.filter((c) => UTILITIES.has(c) && !STYLED.has(c));
+  t(`${p.path} has the utility classes it uses`, !unstyled.length, `the site's stylesheet left out ${unstyled.slice(0, 8).join(', ')}`);
   // A story that opens something as it arrives waits behind a button (site/src/blocks.tsx): the page itself comes first.
   t(`${p.path} opens nothing over the page on arrival`, !seen.over.length, `open on top of the page: ${[...new Set(seen.over)].join(', ')}`);
   if (seen.heldInFrame && !held) held = p.path;
@@ -195,9 +220,44 @@ await inParallel(opened, workers, async (p, w) => {
   // Storybook's own links have been pointed at the site's pages by now; one that is left has no page here.
   const lost = seen.links.filter((h) => h.startsWith('?path=') || (h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/')));
   t(`${p.path}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
+  t(`${p.path}: every link to a part of the page finds it`, !seen.noTarget.length, `nothing on the page has the id of ${seen.noTarget.slice(0, 8).join(', ')}`);
   if (p.stories && /<(Primary|Stories|Canvas)\b/.test(read(p.file))) t(`${p.path} shows its stories`, seen.demos > 0, 'the page has no example in a frame');
   if (p.component && read(p.file).includes('<Controls')) t(`${p.path} shows its props`, seen.api, 'the page has no API table');
 });
+
+// With no script at all, a component page shows its text and its examples.
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 }, javaScriptEnabled: false });
+  const page = await context.newPage();
+  const failed = await openUrl(page, base + '/components/button');
+  const seen = failed ? null : await page.evaluate(() => ({ h1: document.querySelector('#article h1')?.textContent?.trim() ?? '', demos: document.querySelectorAll('.site-demo [data-component="button"]').length }));
+  t('/components/button shows its title and its examples with no script', !failed && seen?.h1 === 'Button' && seen.demos > 0, failed || `its h1 is "${seen?.h1}", with ${seen?.demos} buttons in its examples`);
+  await context.close();
+}
+
+// A page scrolled before its scripts arrive stays where the reader is once the browser takes it over.
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  /** @type {() => void} */
+  let go = () => {};
+  const held = new Promise((resolve) => { go = () => resolve(undefined); });
+  await page.route(/\/assets\/index-[^/]*\.js$/, async (route) => { await held; await route.continue(); });
+  // Not to "domcontentloaded": that waits for the scripts, which are held.
+  const failed = await page.goto(base + '/components/button', { waitUntil: 'commit' }).then(() => page.waitForSelector('#article h1')).then(() => '', (e) => String(e.message).split('\n')[0]);
+  let before = 0, after = 0;
+  if (!failed) {
+    await page.evaluate(() => window.scrollTo(0, 900));
+    before = await page.evaluate(() => window.scrollY);
+    go();
+    await ready(page, true);
+    await page.waitForTimeout(500);
+    after = await page.evaluate(() => window.scrollY);
+  }
+  go();
+  t('/components/button stays where it was scrolled to as its scripts arrive', !failed && before > 0 && after === before, failed || `scrolled to ${before}, then moved to ${after}`);
+  await context.close();
+}
 
 // A press inside an example leaves the page where it is. The main region once took focus on any press that landed on
 // nothing focusable (closing a calendar with a press beside it, say), and the browser scrolled its top into view.

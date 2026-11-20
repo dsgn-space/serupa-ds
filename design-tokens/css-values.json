@@ -169,7 +169,7 @@
     },
     "icon-cap-align": {
       "css": "-0.125em",
-      "description": "The vertical-align that centres a 1em icon in running text on the capitals beside it rather than on the x-height (`middle`) or the text's bottom: Link's new-tab icon."
+      "description": "The vertical-align that centers a 1em icon in running text on the capitals beside it rather than on the x-height (`middle`) or the text's bottom: Link's new-tab icon."
     },
     "sizing-1-2": {
       "css": "50%",

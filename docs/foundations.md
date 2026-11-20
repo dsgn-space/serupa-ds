@@ -105,7 +105,7 @@ After the first paint, where the browser has View Transitions, a switch crossfad
 
 ## Alias tokens
 
-Alias tokens give a colour a **job** instead of a hue. Each one points to a palette colour rather than holding its own value, and that pointer can differ per theme: `primary` is `{blue-600}` in Blue Light and `{violet-400}` in Violet Dark.
+Alias tokens give a color a **job** instead of a hue. Each one points to a palette color rather than holding its own value, and that pointer can differ per theme: `primary` is `{blue-600}` in Blue Light and `{violet-400}` in Violet Dark.
 
 **Use aliases in your UI, the palette for the aliases.** Build screens with `primary`, `text`, `border`… and only reach for a palette color like `blue-600` directly when no alias fits; a palette color looks the same in every theme.
 
@@ -194,16 +194,16 @@ Alias tokens give a colour a **job** instead of a hue. Each one points to a pale
 
 ### Naming
 
-- `<role>`: the main colour for that job (`primary`, `surface`, `text`, `border`).
+- `<role>`: the main color for that job (`primary`, `surface`, `text`, `border`).
 - `<role>-hover`, `-muted`, `-strong`, `-subtle`: variants of the same job. `-subtle` is a light tint for backgrounds.
-- `on-<role>` / `<role>-inverse`: the colour that goes **on top of** that role (`on-primary` text on a `primary` button).
+- `on-<role>` / `<role>-inverse`: the color that goes **on top of** that role (`on-primary` text on a `primary` button).
 
 ### Adding an alias
 
-1. Name it after its job, not its colour (`danger`, not `red`).
+1. Name it after its job, not its color (`danger`, not `red`).
 2. Set its value to `{palette-token}`. The target must exist; an alias of a missing token, or of itself, is dropped.
 3. Check contrast: text aliases need 4.5:1 on the surface they sit on (3:1 for icons, borders and focus rings). The palette tokens' usage notes give the ratios.
-4. Only colours can be aliases: spacing, radius, shadow and type tokens hold their own values.
+4. Only colors can be aliases: spacing, radius, shadow and type tokens hold their own values.
 
 ### A theme from your brand color
 
@@ -625,7 +625,7 @@ Transform utilities, as classes in `bundle.css`. Perspective, rotation, scale, s
 | translate | `translate-<step>`, `translate-x-<step>`, `translate-y-<step>`, `translate-z-<step>` for every spacing step; fractions `-1/2` … `-11/12` and `-full` (of the element's own size); negatives; `translate-3d`, `translate-none` | `spacing-*` |
 | zoom | `zoom-50` `-75` `-90` `-95` `-100` `-105` `-110` `-125` `-150` `-200` | `zoom-*` |
 
-Transforms move how an element is drawn, not where it sits in the layout, so neighbours don't shift. `zoom` is the exception: it changes the element's layout size too.
+Transforms move how an element is drawn, not where it sits in the layout, so neighbors don't shift. `zoom` is the exception: it changes the element's layout size too.
 
 3D needs three things: a `perspective-*` on the parent, `transform-3d` where children should keep their depth, and `rotate-x-*` or `rotate-y-*` on the element. Add `backface-hidden` to the faces of a flipping card.
 
@@ -638,7 +638,7 @@ Rules of thumb:
   .pressable:active { scale: var(--scale-95); }
   ```
 - Menus and dialogs enter from `scale-95 opacity-0` to `scale-100 opacity-100`, with `origin-top` for menus that drop down.
-- Centre an absolutely positioned element with `left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`.
+- Center an absolutely positioned element with `left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`.
 - Rotate disclosure chevrons with `rotate-180` (or `-rotate-90`) instead of swapping icons.
 - Animate `translate` and `scale`, not `top` or `width`: they don't trigger layout. Don't use `zoom` for animation.
 - Respect reduced motion: drop large movements and 3D flips when the viewer prefers reduced motion.
@@ -1158,6 +1158,7 @@ One word for one act, so a form reads in one voice and someone using voice contr
 - No full stop on a label, button, heading or single-line hint. Use one when a message has more than one sentence, and on Alert and Toast bodies.
 - The ellipsis character (…), not three dots. Use it for something in progress ("Loading…", "Saving…") and on a menu item or button that asks for more before it acts ("Rename…").
 - Avoid ampersands, slashes and abbreviations people have to decode: "and", "or", "for example".
+- American spelling, as the tokens, props and CSS already spell it: color, center, behavior, organization, neighbor. One spelling keeps the docs in one voice, and a search for "color" finds every page about it.
 
 **Buttons and links**
 
@@ -1345,7 +1346,7 @@ The target is **WCAG 2.2 level AA**, in every theme, at any zoom up to 400%, wit
 - **Focus.** Focus is always visible: a 2px ring in the brand color, plus an outline that survives forced colors. Inside a strong fill (`bg-primary`, `bg-danger`, `bg-surface-inverse`) the ring takes the fill's text color, so it still stands out at 3:1; a light surface nested inside such a fill should set `--focus-ring` back itself. Dialogs and drawers move focus in, keep it there, and return it to the button that opened them. Menus and lists return focus to their button when they close.
 - **Names, roles and states.** Each component renders the right element or ARIA role and keeps `aria-expanded`, `aria-selected`, `aria-invalid`, `aria-current` and the rest in step. Built-in buttons have names (the words in Content and voice), and Field ties a control to its label, hint and error.
 - **Announcements.** Loading, toasts and other status changes are announced through live regions that work inside an open Dialog too.
-- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. On a touch screen, buttons, pages in Pagination, and checkbox, radio, switch and slider rows take a press 44px across whatever their size, without moving anything; between two neighbours side by side the press goes to the nearer one. Buttons in a row keep their full 44px above and below, so where a row wraps, a press between its lines goes to the line below. The items of a menu or menubar, the options of a Combobox, TimePicker, CascadeSelect or MentionInput, and the rows of a TreeView or Sidebar are 44px high on a touch screen. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
+- **Target size.** Buttons, fields and other sized controls are at least 24px tall (2.5.8), including `sm` and compact density; `lg` is 44px for touch-first screens. On a touch screen, buttons, pages in Pagination, and checkbox, radio, switch and slider rows take a press 44px across whatever their size, without moving anything; between two neighbors side by side the press goes to the nearer one. Buttons in a row keep their full 44px above and below, so where a row wraps, a press between its lines goes to the line below. The items of a menu or menubar, the options of a Combobox, TimePicker, CascadeSelect or MentionInput, and the rows of a TreeView or Sidebar are 44px high on a touch screen. A checkbox, radio or switch takes clicks on its label too; one without a visible label is smaller than 24px, so leave space around it (the spacing exception in 2.5.8).
 - **Reflow and zoom.** Components fit a 320px-wide screen and wrap instead of clipping, and sizes are in `rem`, so text zoom works.
 - **Fields on iOS.** Safari on iPhone and iPad zooms into a focused field whose text is under 16px. There, Input, Textarea and Select (and the components built on them) draw their own text at 16px at every size, keeping the box height. Don't stop the zoom with `maximum-scale=1` in the viewport tag: it also stops pinch zoom, which WCAG 1.4.4 needs.
 - **Motion.** Under `prefers-reduced-motion`, components stop their animations and keep at most a short fade, and `base.css` makes every other transition on the page near-instant. Nothing flashes.

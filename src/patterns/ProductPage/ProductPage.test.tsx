@@ -83,6 +83,14 @@ describe('Patterns/Product page', () => {
     expect(screen.getByRole('group', { name: /Size/ }).element().textContent).not.toContain('Choose a size.');
   });
 
+  test('two on one page: a missing choice focuses the radio in the form that was sent', async () => {
+    const screen = await render(<><ProductPage product={mug} /><ProductPage product={mug} /></>);
+    const second = screen.getByRole('button', { name: 'Add to cart' }).nth(1);
+    await second.click();
+    await expect.element(screen.getByText('Choose a color.').first()).toBeVisible();
+    expect(active().closest('form')).toBe(second.element().closest('form'));
+  });
+
   test('adding sends the choices and the quantity, says what was added, and the cart link carries the new count', async () => {
     const onAdd = vi.fn(() => Promise.resolve());
     const screen = await render(<ProductPage product={mug} cartCount={1} onAddToCart={onAdd} />);

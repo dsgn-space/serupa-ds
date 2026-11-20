@@ -199,6 +199,27 @@ const ROOT = readme;
 export function ReadmeIntro() {
   return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
 }
+const slug = (heading: string) => heading.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+/** The page each `##` section of docs/foundations.md is on, by its id. In the file one section links to another with
+ * `#id`; on a page that doesn't have that section, the link goes to the page that does. */
+const SECTION_PAGE: Record<string, string> = Object.fromEntries(Object.entries({
+  'foundations-colors': ['Color families', 'Naming', 'Using the shades', 'Contrast'],
+  'foundations-themes': ['Themes', 'Alias tokens'],
+  'foundations-typography': ['Typography'],
+  'foundations-icons': ['Iconography'],
+  'foundations-spacing': ['Spacing', 'Sizing'],
+  'foundations-corner-radius': ['Corner radius'],
+  'foundations-effects-and-borders': ['Borders and outlines', 'Effects'],
+  'foundations-elevation-and-layers': ['Elevation and layers'],
+  'foundations-layout': ['Page layout'],
+  'foundations-motion': ['Motion'],
+  'foundations-content-and-voice': ['Content and voice'],
+  'foundations-data-formats': ['Data formats'],
+  'foundations-ethical-design': ['Ethical design'],
+  'foundations-accessibility': ['Accessibility standard'],
+  'foundations-utility-classes': ['Backgrounds', 'Layout', 'Flexbox and grid', 'Filters', 'Tables', 'Transforms', 'SVG', 'Interactivity'],
+}).flatMap(([page, sections]) => sections.map((s) => [slug(s), page])));
+
 /** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
 /** A section whose heading the page writes itself (reserve, such as its title) comes without that heading, so the page
  * doesn't say "Typography" twice, and its subsections step up a level under the title. */
@@ -216,8 +237,12 @@ export function ReadmeSections({ headings, reserve }: { headings: string[]; /** 
       return !code && /^###+ /.test(line) ? line.slice(1) : line;
     }).join('\n');
   }).join('\n\n');
-  return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
+  return <DocMarkdown reserve={reserve}>{relink(md.replace(/\]\(#([\w-]+)\)/g, (link, id: string) => {
+    const page = SECTION_PAGE[id];
+    return page && !headings.some((h) => slug(h) === id) ? `](?path=/docs/${page}--docs)` : link;
+  }))}</DocMarkdown>;
 }
+
 
 /** A table or swatch grid wider than a narrow screen scrolls in its own box instead of pushing the page sideways
  * (WCAG 1.4.10 at 320px). While it does, it's a named region Tab reaches, so the arrow keys scroll it; when it fits,
@@ -245,6 +270,10 @@ const top: React.CSSProperties = { ...cell, verticalAlign: 'top' };
 // An alias's value reads as the CSS that resolves it (var(--spacing-1)), not the token file's {spacing-1} syntax.
 const val = (v: Token['value']) => { const s = typeof v === 'string' ? v : Object.values(v)[0]; return typeof s === 'string' ? s.replace(/\{([^}]+)\}/g, (_, n: string) => `var(--${n})`) : s; };
 
+// What a token is for keeps a readable measure when the table is wider than a phone (spacing-96's 384px preview):
+// the table scrolls in its box, and the words don't stand two to a line down a row as tall as a screen.
+const use: React.CSSProperties = { ...cell, minWidth: '14rem' };
+
 /** Every token in a group, with its value, what it's for and a live preview. data-token-sheet marks each token block
  * for the visual snapshots (tools/test/visual.mjs), so a changed token value shows as a changed picture. */
 export function TokenTable({ group, preview }: { group: string; preview?: 'space' | 'radius' | 'shadow' | 'duration' | 'none' }) {
@@ -265,7 +294,7 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
       <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th>{preview && preview !== 'none' && <th style={cell}>Preview</th>}<th style={cell}>Use</th></tr></thead>
       <tbody>{g.tokens.map((t) => <tr key={t.name}>
         <td style={{ ...cell, whiteSpace: 'nowrap' }}><code>--{t.name}</code></td><td style={cell}><code>{val(t.value)}</code></td>
-        {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={cell}>{code(t.usage)}</td></tr>)}</tbody>
+        {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={use}>{code(t.usage)}</td></tr>)}</tbody>
     </table></Wide>
   </div>;
 }
@@ -330,7 +359,8 @@ export function TypeScale() {
 
 // The whole icon set (3 MB) is fetched when the gallery is on the page, not with every page that uses these blocks.
 const materialIcons = (): Promise<IconData[]> => import('../src/material/icons')
-  .then((m) => (Object.values(m) as unknown[]).filter(isIconData).sort((x, y) => x.name.localeCompare(y.name)));
+    // A to Z, with the names that start with a number (10k, 3d_rotation) after them, so the gallery opens on words.
+  .then((m) => (Object.values(m) as unknown[]).filter(isIconData).sort((x, y) => Number(/^\d/.test(x.name)) - Number(/^\d/.test(y.name)) || x.name.localeCompare(y.name)));
 
 /** Every Material Symbol, plus your custom icons: search by name, and a click copies an icon's name. */
 export function IconGallery() {
@@ -353,7 +383,8 @@ export function IconGallery() {
   const heading = { margin: '0 0 8px', fontSize: 16, fontWeight: 600 } as const;
   const tileFor = (n: string, icon: React.ReactNode) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`} style={tile}>
     {icon}
-    <span style={label}>{n}</span>
+    {/* A long name wraps after an underscore (1x_mobiledata_ / badge), not inside a word. */}
+    <span style={label}>{n.split('_').flatMap((part, i, all) => i < all.length - 1 ? [`${part}_`, <wbr key={i} />] : [part])}</span>
   </button>;
   // sb-unstyled: keeps Storybook's docs styles off the buttons.
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -396,9 +427,11 @@ export function OtherNames() {
 /** Icons at the system's sizes, with what each is for. */
 export function IconSizes() {
   const sizes: ['xs' | 'sm' | 'md' | 'lg' | 'xl', number, string][] = [['xs', 14, '`sm` buttons, `text-xs`'], ['sm', 16, '`md` buttons, inline with `text-sm`'], ['md', 20, '`lg` buttons, list rows, `text-base`'], ['lg', 24, 'The default: toolbars, navigation'], ['xl', 40, 'Empty states']];
-  return <div className="sb-unstyled" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' }}>
-    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
-      <Icon name="favorite" size={step} /><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
+  // In even columns, each icon on the same line in a box as tall as the largest, so the sizes and their names line up
+  // across a row however many lines a use takes.
+  return <div className="sb-unstyled" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(8rem, 1fr))', gap: 24, alignItems: 'start' }}>
+    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center', fontSize: 12 }}>
+      <span style={{ display: 'flex', alignItems: 'flex-end', height: 40 }}><Icon name="favorite" size={step} /></span><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use).map((x) => typeof x === 'string' ? x : React.cloneElement(x, { style: { whiteSpace: 'nowrap' } }))}</span>
     </div>)}
   </div>;
 }

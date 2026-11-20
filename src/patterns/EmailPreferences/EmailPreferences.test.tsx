@@ -57,6 +57,16 @@ describe('Patterns/Email preferences', () => {
     expect((screen.getByRole('switch', { name: 'News' }).element() as HTMLInputElement).checked).toBe(true);
   });
 
+  test('two on one page: "Turn them back on" focuses a switch on its own page', async () => {
+    const onSave = vi.fn(() => Promise.resolve());
+    const screen = await render(<><EmailPreferences topics={topics} onSave={onSave} /><EmailPreferences topics={topics} onSave={onSave} /></>);
+    const second = document.querySelectorAll('main')[1]!;
+    await screen.getByRole('button', { name: 'Stop all emails' }).nth(1).click();
+    await screen.getByRole('button', { name: 'Turn them back on' }).click();
+    await expect.poll(() => active().getAttribute('role')).toBe('switch');
+    expect(second.contains(active())).toBe(true);
+  });
+
   test('a stop or a turn back on that fails says so', async () => {
     const onSave = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('offline'));
     const screen = await render(<EmailPreferences topics={topics} onSave={onSave} />);

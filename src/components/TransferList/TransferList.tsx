@@ -1,4 +1,5 @@
 'use client';
+import { listFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useMergedRef, cn, domId, omit } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -96,7 +97,7 @@ function TransferListRender({ ref, ...given }: TransferListProps & React.RefAttr
     if (!controlled) setOwn(next);
     if (onValueChange) onValueChange(next);
     (to === 'right' ? setCheckedLeft : setCheckedRight)([]);
-    const list = new Intl.ListFormat(locale, { type: 'conjunction' }).format(moving.map((o) => o.label));
+    const list = listFormat(locale, { type: 'conjunction' }).format(moving.map((o) => o.label));
     announce(sds.labels.transferMoved(list, to === 'right' ? names.right : names.left));
   };
 

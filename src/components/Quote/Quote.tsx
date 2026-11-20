@@ -6,7 +6,7 @@ import { named } from '../../internal/component';
 export interface QuoteProps extends React.HTMLAttributes<HTMLElement> {
   /** The quoted words. A string becomes one paragraph; pass several <p> for more. */
   children?: React.ReactNode;
-  /** Who said it: a person's name, or an organisation's. */
+  /** Who said it: a person's name, or an organization's. */
   author?: React.ReactNode;
   /** Where or in what role they said it: a job title and company, a book, a talk. */
   source?: React.ReactNode;

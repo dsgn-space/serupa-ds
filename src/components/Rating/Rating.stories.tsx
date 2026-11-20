@@ -35,7 +35,7 @@ export const Sizes: Story = {
 export const Invalid: Story = {
   args: { 'aria-label': undefined, defaultValue: undefined },
   render: (args) => <Field label="How was your stay?" error="Choose a rating to send your review." required>
-    <Rating {...args} name="stay" />
+    <Rating {...args} name="stay-required" />
   </Field>,
 };
 export const Disabled: Story = { args: { disabled: true, defaultValue: 2 } };

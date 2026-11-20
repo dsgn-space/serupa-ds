@@ -98,7 +98,7 @@ Hover fills use `danger-hover`, `danger-subtle-hover` and `danger-subtle`; keybo
 | `md` *(default)* | 32px (`control-height-md`) | 12px | `text-sm` (14px) | 16px | 6px |
 | `lg` | 44px (`control-height-lg`) | 20px | `text-base` (16px) | 20px | 8px |
 
-All sizes use `font-medium` and `radius-control` (6px; a brand can change it). `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars. On a touch screen every size takes a press 44px across anyway, with nothing moving: an invisible box reaches past the button's edges. With other buttons in the same row it stops halfway into the gap (ButtonGroup and Toolbar tell it their gap; elsewhere it assumes 4px), so a press goes to the nearer button and never to a neighbour's face.
+All sizes use `font-medium` and `radius-control` (6px; a brand can change it). `primary`, `secondary` and `outline` buttons (and their destructive versions) carry `shadow-xs` (a 1px, 5% black shadow); `ghost` and `link` stay flat, and disabled buttons drop the shadow. A disabled button is drawn in muted colors (`surface-muted` with a `text-muted` label and a `border`; ghost and link keep no box), not faded: its label stays at least 3:1 in every theme, like a disabled field's, and 4.5:1 with more contrast, so a disabled button with a `disabledReason` can still be read. Use `lg` where touch matters: 44px is the minimum comfortable tap target. `sm` belongs in dense desktop UI like tables and toolbars. On a touch screen every size takes a press 44px across anyway, with nothing moving: an invisible box reaches past the button's edges. With other buttons in the same row it stops halfway into the gap (ButtonGroup and Toolbar tell it their gap; elsewhere it assumes 4px), so a press goes to the nearer button and never to a neighbor's face.
 
 ### Content
 
@@ -188,7 +188,7 @@ Small motion that confirms what happened, all built in:
 | Icon nudge (off by default) | When turned on, a right icon slides in its direction on hover (on devices that hover), mirrored in right-to-left text. Left icons stay still. It suits forward arrows ("Continue →"), not chevrons or other icons, so it's off unless you turn it on | On: `--button-icon-nudge: var(--spacing-0\.5)` (2px) |
 | Loading | The label and icons fade out while the spinner fades and grows in, in 150ms; both blur a little (`blur-xs`) as they cross, so it reads as one change; they fade back when done | `--button-loading-duration: 0ms` |
 
-- They animate only `scale`, `translate`, `opacity` and the loading blur (`filter`), so nothing around the button reflows, and they never change its size, name or behaviour: clicks, keys, forms and your own `onPointerDown`, `onKeyDown` and `onKeyUp` work as before.
+- They animate only `scale`, `translate`, `opacity` and the loading blur (`filter`), so nothing around the button reflows, and they never change its size, name or behavior: clicks, keys, forms and your own `onPointerDown`, `onKeyDown` and `onKeyUp` work as before.
 - No press on disabled, loading or `link`-variant buttons (the link variant reads as text).
 - Hover colors apply only on devices that hover (a mouse or trackpad). A phone keeps hover on the last button tapped, so on touch screens a tapped button goes straight back to its resting color, and the press is the feedback. This holds for every component's hover styles (`tools/test/touch-hover.mjs`).
 - With reduced motion turned on (an operating-system setting), there's no press or nudge, and loading only fades (no blur).
@@ -216,9 +216,9 @@ Small motion that confirms what happened, all built in:
 
 ## Accessibility
 
-Button's behaviour follows web standards; its look comes only from this design system's tokens.
+Button's behavior follows web standards; its look comes only from this design system's tokens.
 
-| Behaviour | Source |
+| Behavior | Source |
 | --- | --- |
 | Renders a real `<button>` (Space and Enter press it, it's in the tab order, `disabled` works); `type` defaults to `"button"` because a `<button>` in a form otherwise submits it | [HTML Standard: the button element](https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element), [MDN: `<button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button) |
 | Actions use `<button>`; navigation uses a real link (`href`), never an `onClick` that changes the URL | [WAI-ARIA APG: Button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/), [MDN: button role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role) |
