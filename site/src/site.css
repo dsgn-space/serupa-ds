@@ -45,6 +45,8 @@
 .site-title { margin-block-end: var(--spacing-8); }
 .site-eyebrow { margin-block-end: var(--spacing-2); color: var(--primary); font-size: var(--text-sm); line-height: var(--text-sm--line-height); font-weight: var(--font-semibold); }
 .site-since { margin-block-start: var(--spacing-2); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+/* The guide (docs/blocks.tsx Guide) opens with the same line for Storybook, whose title block has none; here the title says it. */
+.sb-since { display: none; }
 .site-h1 { font-size: var(--text-4xl); line-height: var(--text-4xl--line-height); letter-spacing: var(--tracking-tight); }
 .site-lead { max-inline-size: var(--container-prose); margin-block-start: var(--spacing-3); color: var(--text-muted); font-size: var(--text-lg); line-height: var(--leading-relaxed); }
 .site-lead > .site-p { max-inline-size: none; margin: 0; }
@@ -121,10 +123,15 @@ ol.site-list { list-style: decimal; }
 .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: var(--spacing-4); margin-block-start: var(--spacing-6); padding: 0; list-style: none; }
 .site-card { block-size: 100%; transition: var(--transition-colors); }
 .site-card:hover { border-color: var(--border-strong); }
+/* The status badge sits beside the name only: the summary runs the card's full width under both, so a Beta card's
+   text wraps like its neighbours'. */
+.site-card .dk-card__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--spacing-3); row-gap: var(--spacing-1); }
+.site-card .dk-card__heading { display: contents; }
+.site-card .dk-card__description { grid-column: 1 / -1; }
 .site-card__count { margin-block-start: var(--spacing-3); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 
 .site-hero { padding-block: var(--spacing-12) var(--spacing-16); }
-.site-hero__title { font-size: var(--text-6xl); line-height: var(--text-6xl--line-height); letter-spacing: var(--tracking-tighter); }
+.site-hero__title { font-size: var(--text-6xl); line-height: var(--text-6xl--line-height); letter-spacing: var(--tracking-tight); }   /* tight, as Heading sets its largest sizes: tighter made the letters touch */
 .site-hero__lead { max-inline-size: var(--container-2xl); margin-block: var(--spacing-4) var(--spacing-8); color: var(--text-muted); font-size: var(--text-xl); line-height: var(--leading-relaxed); }
 @media (min-width: 64rem) { .site-hero { padding-block: var(--spacing-20) var(--spacing-24); } .site-hero__title { font-size: var(--text-8xl); line-height: var(--text-8xl--line-height); } }
 .site-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-6); max-inline-size: var(--container-2xl); margin-block-start: var(--spacing-12); }
