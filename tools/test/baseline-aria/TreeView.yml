@@ -1,3 +1,21 @@
+# Cascade
+- tree "Files":
+  - treeitem "src" [checked=mixed] [expanded] [level=1]:
+    - text: src
+    - group:
+      - treeitem "components" [checked] [expanded] [level=2]:
+        - text: components
+        - group:
+          - treeitem "Button.tsx" [checked] [level=3]
+          - treeitem "Menu.tsx" [checked] [level=3]
+      - treeitem "index.ts" [level=2]
+  - treeitem "docs" [checked=mixed] [expanded] [level=1]:
+    - text: docs
+    - group:
+      - treeitem "Introduction.mdx" [checked] [level=2]
+      - treeitem "Archive (read only)" [disabled] [level=2]
+  - treeitem "README.md" [level=1]
+
 # DoOpenToSelection
 - tree "Files":
   - treeitem "src" [expanded] [level=1]:
