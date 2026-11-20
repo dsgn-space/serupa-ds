@@ -28,6 +28,7 @@
   padding: var(--spacing-1\.5) var(--mention-input-option-padding-x, var(--spacing-2));
   border-radius: var(--mention-input-option-radius, var(--dk-mention-input-nest, var(--radius-control))); cursor: var(--cursor-interactive); touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
+@media (pointer: coarse) { .dk-mention-input__option { min-height: max(var(--mention-input-option-height, var(--control-height-md)), var(--spacing-11)); } }   /* 44px to pick on a touch screen, as Menu's items */
 .dk-mention-input__option:dir(rtl) { --dk-bar: calc(var(--border-width-2) * -1); }
 .dk-mention-input__option--active { background: var(--mention-input-option-bg-active, var(--highlight)); box-shadow: inset var(--dk-bar) 0 0 var(--mention-input-option-indicator, var(--highlight-indicator)); }
 .dk-mention-input__option[aria-disabled="true"], .dk-mention-input__option[aria-disabled="true"] * { color: var(--mention-input-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }

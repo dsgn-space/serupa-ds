@@ -23,6 +23,7 @@
   cursor: var(--cursor-interactive); touch-action: manipulation;
   transition: background-color var(--motion-hover);
 }
+@media (pointer: coarse) { .dk-menubar__item { min-height: max(var(--menubar-item-height, var(--control-height-sm)), var(--spacing-11)); } }   /* 44px to press on a touch screen, as Menu's items */
 @media (hover: hover) { .dk-menubar__item:hover:not([aria-disabled="true"]) { background: var(--menubar-item-bg-hover, var(--highlight)); } }
 .dk-menubar__item:active:not([aria-disabled="true"]) { background: var(--menubar-item-bg-pressed, var(--pressed)); }   /* held down: one step past hover */
 .dk-menubar__item[aria-expanded="true"] { background: var(--menubar-item-bg-open, var(--pressed)); }
