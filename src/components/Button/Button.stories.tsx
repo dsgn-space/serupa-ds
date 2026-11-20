@@ -90,7 +90,7 @@ export const States: Story = {
     <Button>Default</Button>
     <Button disabled>Disabled</Button>
     <Button loading>Saving</Button>
-    <Button variant="outline" leftIcon="download" loading>Export</Button>
+    <Button variant="outline" leftIcon="download">Export</Button>
     <IconButton icon="refresh" label="Refresh" loading />
   </Row>,
 };
