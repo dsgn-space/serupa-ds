@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -177,7 +178,7 @@ function TourRender({ ref, ...props }: TourProps & React.RefAttributes<HTMLDivEl
         </div>
         {step.content != null ? <div id={id + '-text'} className="dk-tour__text">{step.content}</div> : null}
         <div className="dk-tour__foot">
-          {steps.length > 1 ? <span className="dk-tour__count">{sds.labels.stepOf(at + 1, steps.length, new Intl.NumberFormat(locale).format(at + 1), new Intl.NumberFormat(locale).format(steps.length))}</span> : null}
+          {steps.length > 1 ? <span className="dk-tour__count">{sds.labels.stepOf(at + 1, steps.length, numberFormat(locale).format(at + 1), numberFormat(locale).format(steps.length))}</span> : null}
           <span className="dk-tour__actions">
             {at > 0 ? <Button size="sm" variant="secondary" onClick={() => go(at - 1)}>{sds.labels.tourBack}</Button> : null}
             <Button size="sm" onClick={next}>{last ? sds.labels.tourDone : sds.labels.tourNext}</Button>

@@ -1,4 +1,5 @@
 'use client';
+import { dateFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, domId, isInvalid, omit, setRef } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -148,11 +149,11 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
     const g = { calendar: 'gregory', numberingSystem: 'latn' } as const;
     if (why === 'not-real') {
       const m = new Date(2000, 0, 1); m.setFullYear(+latinDigits(parts.year), +latinDigits(parts.month) - 1, 1);
-      return L.dateFieldError(why, new Intl.DateTimeFormat(locale, { ...g, month: 'long', year: 'numeric' }).format(m), new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate());
+      return L.dateFieldError(why, dateFormat(locale, { ...g, month: 'long', year: 'numeric' }).format(m), new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate());
     }
     if (why === 'before-min' || why === 'after-max') {
       const at = toDay(why === 'before-min' ? props.min : props.max);
-      return L.dateFieldError(why, at ? new Intl.DateTimeFormat(locale, { ...g, day: 'numeric', month: 'long', year: 'numeric' }).format(at) : undefined);
+      return L.dateFieldError(why, at ? dateFormat(locale, { ...g, day: 'numeric', month: 'long', year: 'numeric' }).format(at) : undefined);
     }
     return L.dateFieldError(why);
   }, [now.why, parts.year, parts.month, props.min, props.max, locale, L]);
@@ -230,7 +231,7 @@ function DateFieldRender({ ref, ...given }: DateFieldProps & React.RefAttributes
   };
   const errorId = base + '-error';
   const months = React.useMemo(() => {
-    const f = new Intl.DateTimeFormat(locale, { month: 'long' });
+    const f = dateFormat(locale, { month: 'long' });
     return Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: f.format(new Date(2000, i, 1)) }));
   }, [locale]);
   const labelledBy = props['aria-labelledby'] || (props['aria-label'] ? undefined : fieldLabel);

@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { cn, domId, omit } from '../../internal/cn';
@@ -160,7 +161,7 @@ function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.Ref
 
   // How many match, said once typing stops (the rows change in silence otherwise).
   const empty = typeof props.emptyText === 'string' ? props.emptyText : labels.noCommands;
-  const said = !query.trim() || loading ? '' : usable.length ? labels.commandsCount(usable.length, new Intl.NumberFormat(locale).format(usable.length)) : empty;
+  const said = !query.trim() || loading ? '' : usable.length ? labels.commandsCount(usable.length, numberFormat(locale).format(usable.length)) : empty;
   React.useEffect(() => {
     if (!open || !said) return;
     const t = setTimeout(() => announce(said), announcePause);

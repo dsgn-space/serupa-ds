@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
@@ -139,7 +140,7 @@ function StepperRender({ ref, ...props }: StepperProps & React.RefAttributes<HTM
           );
         })}
       </ol>
-      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, new Intl.NumberFormat(locale).format(shown + 1), new Intl.NumberFormat(locale).format(steps.length)) + ': '}<span className="dk-stepper__title">{steps[shown]?.title}</span></p> : null}
+      {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, numberFormat(locale).format(shown + 1), numberFormat(locale).format(steps.length)) + ': '}<span className="dk-stepper__title">{steps[shown]?.title}</span></p> : null}
     </nav>
   );
 }

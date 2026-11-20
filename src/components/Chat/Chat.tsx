@@ -1,4 +1,5 @@
 'use client';
+import { dateFormat, numberFormat, relativeFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { announce } from '../../internal/announce';
@@ -189,7 +190,7 @@ function ChatMessageRender({ ref, ...props }: ChatMessageProps & React.RefAttrib
   const time = Number(props.reasoningTime);
   const showAuthor = !props.hideAuthor && (props.author != null || own);
   const count = Math.floor(Number(props.branches)) || 0, at = Math.min(Math.max(Math.floor(Number(props.branch)) || 1, 1), count);
-  const num = new Intl.NumberFormat(useLocale());
+  const num = numberFormat(useLocale());
   const go = (to: number) => {
     if (to < 1 || to > count || !props.onBranchChange) return;
     props.onBranchChange(to);
@@ -395,7 +396,7 @@ export interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchor
 
 function ChatCitationRender({ ref, ...props }: ChatCitationProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { index: 1, children: 1, className: 1 } as const);
-  const num = new Intl.NumberFormat(useLocale());
+  const num = numberFormat(useLocale());
   let host = '';
   try { host = new URL(props.href, 'https://localhost').host.replace(/^www\./, ''); } catch { host = props.href; }
   return (
@@ -440,12 +441,12 @@ function ChatDividerRender({ ref, ...props }: ChatDividerProps & React.RefAttrib
   if (text == null && props.date != null) {
     const d = new Date(props.date), days = today == null ? NaN : Math.round((dayStart(d) - today) / DAY);
     if (!isFinite(d.getTime())) text = '';
-    else if (today == null) text = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(d);
+    else if (today == null) text = dateFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(d);
     else if (Math.abs(days) <= 1) {
       // "today", "yesterday", "tomorrow" in the locale's words, starting with a capital as a heading does
-      const word = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(days, 'day');
+      const word = relativeFormat(locale, { numeric: 'auto' }).format(days, 'day');
       text = word.charAt(0).toLocaleUpperCase(locale) + word.slice(1);
-    } else text = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d);
+    } else text = dateFormat(locale, { dateStyle: 'medium' }).format(d);
   }
   return (
     <div {...rest} ref={ref} className={cn('dk-chat-divider', props.className)} data-component="chat-divider">
