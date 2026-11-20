@@ -5,6 +5,7 @@ import { Button } from '../../components/Button/Button';
 import { Alert } from '../../components/Alert/Alert';
 import { Badge } from '../../components/Badge/Badge';
 import { Card } from '../../components/Card/Card';
+import { Accordion, AccordionItem } from '../../components/Accordion/Accordion';
 import { DescriptionList, DescriptionItem } from '../../components/DescriptionList/DescriptionList';
 import { Field } from '../../components/Field/Field';
 import { Link } from '../../components/Link/Link';
@@ -120,7 +121,7 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#help">Help</Link>
+        <Link underline="hover" href="#help">Help</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Find a shop" description="Collect an order, return something, or try it on first." />
@@ -155,14 +156,18 @@ export function StoreLocator({ stores = demo, now, locate = fromBrowser, loading
                       <Badge tone={st.open ? 'success' : 'neutral'}>{st.open ? 'Open now' : 'Closed now'}</Badge>
                       <span className="text-text-muted">{st.words}</span>
                     </p>
-                    <details className="text-sm">
-                      <summary className="cursor-pointer">Opening hours</summary>
-                      <DescriptionList layout="split" className="mt-2 max-w-xs">
-                        {DAYS.map((d, i) => (
-                          <DescriptionItem key={d} term={d} emphasis={i === at.getDay()}>{s.hours[i] ? `${s.hours[i][0]} to ${s.hours[i][1]}` : 'Closed'}</DescriptionItem>
-                        ))}
-                      </DescriptionList>
-                    </details>
+                    {/* The week's hours fold away under the system's disclosure (its chevron, focus ring and motion), not the
+                        browser's own triangle. Today is in bold at the list's size: emphasis is for a total, and its larger
+                        text would make one day stand out of the column. */}
+                    <Accordion headingLevel={3}>
+                      <AccordionItem title="Opening hours">
+                        <DescriptionList layout="split" className="max-w-xs text-sm">
+                          {DAYS.map((d, i) => (
+                            <DescriptionItem key={d} term={d} className={i === at.getDay() ? 'font-semibold' : undefined}>{s.hours[i] ? `${s.hours[i][0]} to ${s.hours[i][1]}` : 'Closed'}</DescriptionItem>
+                          ))}
+                        </DescriptionList>
+                      </AccordionItem>
+                    </Accordion>
                     <p className="m-0 flex flex-wrap gap-x-4 gap-y-2">
                       <Link href={`https://www.openstreetmap.org/directions?to=${s.lat}%2C${s.lng}`} aria-label={`Directions: ${s.name}`}>Directions</Link>
                       <Link href={`tel:${s.phone.replace(/\s/g, '')}`} aria-label={`Call ${s.phone}: ${s.name}`}>Call {s.phone}</Link>

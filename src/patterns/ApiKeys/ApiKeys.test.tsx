@@ -52,6 +52,9 @@ describe('Patterns/API keys', () => {
     expect(onCreate).toHaveBeenCalledWith({ name: 'CI runner', access: 'write', expiresInDays: null });
     await expect.poll(() => inDialog('acme_test_abcdefghWXYZ')).toBe(true);
     await expect.poll(() => active().id).toBe('key-copy');
+    // Copy and Done sit in one row at one height.
+    const h = (el: Element) => Math.round(el.getBoundingClientRect().height);
+    expect(h(active())).toBe(h(screen.getByRole('button', { name: 'Done' }).element()));
     await screen.getByRole('button', { name: 'Done' }).click();
     await expect.element(screen.getByText('…WXYZ')).toBeVisible();
     await expect.element(screen.getByRole('button', { name: 'Revoke CI runner' })).toBeVisible();

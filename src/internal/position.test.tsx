@@ -169,7 +169,8 @@ describe('a layer tracks its anchor in CSS (anchor positioning)', () => {
       await document.fonts.ready;
       button.click();
       await expect.poll(() => menu.matches(':popover-open')).toBe(true);
-      const gap = () => [Math.round(menu.getBoundingClientRect().top - button.getBoundingClientRect().bottom), Math.round(menu.getBoundingClientRect().left - button.getBoundingClientRect().left)];
+      // || 0: WebKit rounds a hair under 0 to -0, which toEqual tells apart from 0.
+      const gap = () => [Math.round(menu.getBoundingClientRect().top - button.getBoundingClientRect().bottom) || 0, Math.round(menu.getBoundingClientRect().left - button.getBoundingClientRect().left) || 0];
       const before = gap();
       document.documentElement.scrollTop = 60;
       await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));

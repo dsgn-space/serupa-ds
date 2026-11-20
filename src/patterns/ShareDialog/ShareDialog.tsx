@@ -178,7 +178,7 @@ export function ShareDialog({ name = 'Q3 plan', url = 'https://acme.example/d/q3
 
       <Dialog open={open} onOpenChange={close} title={`Share “${name}”`}
         footer={<>
-          <CopyButton value={url} variant="secondary">Copy link</CopyButton>
+          <CopyButton value={url} variant="secondary" size="md">Copy link</CopyButton>
           {sheet ? <Button variant="secondary" onClick={() => { void Promise.resolve(sheet({ title: name, url })).catch(() => {}); }}>Share via…</Button> : null}
           <Button onClick={() => close(false)}>Done</Button>
         </>}>

@@ -55,6 +55,18 @@ describe('Patterns/Product page', () => {
     expect(size.getByRole('radio', { checked: true }).elements()).toHaveLength(0);
   });
 
+  test('a color choice with a swatch shows a 16px dot before its name, centred on the text and hidden from the name', async () => {
+    const screen = await render(<ProductPage product={{ ...mug, options: [{ id: 'color', label: 'Color', choices: [{ value: 'sand', label: 'Sand', swatch: '#e9dfc8' }, { value: 'navy', label: 'Navy' }] }] }} />);
+    const sand = screen.getByRole('radio', { name: 'Sand', exact: true }).element();
+    const dot = sand.closest('label')!.querySelector('span[style]') as HTMLElement;
+    const words = document.createRange();
+    words.selectNodeContents(dot.nextSibling!);
+    const d = dot.getBoundingClientRect(), text = words.getBoundingClientRect();
+    expect([getComputedStyle(dot).backgroundColor, d.width, d.height]).toEqual(['rgb(233, 223, 200)', 16, 16]);
+    expect(Math.abs((d.top + d.bottom) / 2 - (text.top + text.bottom) / 2)).toBeLessThanOrEqual(1);
+    expect(screen.getByRole('radio', { name: 'Navy', exact: true }).element().closest('label')!.querySelector('span[style]')).toBeNull();
+  });
+
   test('Add to cart with a choice missing says which next to its group, focuses its first radio, and sends nothing', async () => {
     const onAdd = vi.fn();
     const screen = await render(<ProductPage product={mug} onAddToCart={onAdd} />);

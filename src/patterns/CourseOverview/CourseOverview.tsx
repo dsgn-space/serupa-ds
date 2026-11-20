@@ -102,7 +102,7 @@ export function CourseOverview({ title = 'Typography for the screen', descriptio
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#courses">Your courses</Link>
+        <Link underline="hover" href="#courses">Your courses</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Your courses', href: '#courses' }, { label: title }]} title={title} description={description} />
