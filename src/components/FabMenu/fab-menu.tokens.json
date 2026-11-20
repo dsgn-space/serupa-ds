@@ -1,0 +1,17 @@
+{
+  "fabMenu": {
+    "$description": "FabMenu's component tokens. Each one is an optional override: set the CSS variable (--fab-menu-<name>) on the page, a container or one FabMenu, and every FabMenu inside follows. Unset, it uses the shared token it references here; tools/test/foundation.mjs checks that bundle.css uses exactly these defaults. The button takes the Fab tokens and the panel the Menu tokens.",
+    "spacing": {
+      "offset": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The space between the Fab and its menu (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--fab-menu-offset"
+          }
+        }
+      }
+    }
+  }
+}

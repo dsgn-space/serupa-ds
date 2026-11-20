@@ -18,7 +18,7 @@ import { rollup } from 'rollup';
 import { rolldown } from 'rolldown';
 import webpack from 'webpack';
 import { fileURLToPath } from 'node:url';
-import { PROJECT, done, report } from './lib.mjs';
+import { PROJECT, done, onlyComponents, report } from './lib.mjs';
 
 const JS = path.join(PROJECT, 'dist', 'js');
 const ENTRY = path.join(JS, 'index.js');
@@ -57,6 +57,14 @@ function reach(f, seen = new Set()) {
 const exported = Object.keys(await import(ENTRY)).sort();
 const via = {};
 const where = Object.fromEntries(exported.map((x) => [x, declaredIn(ENTRY, x, via[x] = [])]));
+// A run narrowed to some components (SERUPA_ONLY, run.mjs --since: a pull request that changes only component folders,
+// with the components that use them) builds the exports whose modules reach one of those folders, and the bare import,
+// which keeps any module a change gave a top-level effect. An export that reaches none of them builds from code its
+// base built the same way; the queue and main build every export. Rollup's one build per export was most of this
+// check's 111 s (13 Nov).
+const only = onlyComponents();
+const changedDirs = only && [...only].map((n) => path.join(JS, 'components', n) + path.sep).filter((d) => fs.existsSync(d));
+const tested = changedDirs ? exported.filter((x) => where[x] && [...reach(where[x])].some((f) => changedDirs.some((d) => f.startsWith(d)))) : exported;
 
 // The package's "sideEffects", as a bundler reads it.
 const effects = JSON.parse(fs.readFileSync(path.join(PROJECT, 'package.json'), 'utf8')).sideEffects;
@@ -144,7 +152,7 @@ const BUNDLERS = {
 const CLAUSE = 64;
 
 const short = (f) => path.relative(JS, f);
-const groups = [[], ...exported.map((x) => [x])];
+const groups = [[], ...tested.map((x) => [x])];
 const part = /^([\w-]+):(\d+)\/(\d+)$/.exec(process.env.SERUPA_TREE_SHAKE_PART || '');
 if (part) {
   const [, variant, k, n] = part;
@@ -161,12 +169,12 @@ for (const [name, run] of Object.entries(BUNDLERS)) {
   const [none, ...each] = await run(groups);
   results.push({ name: `${name}: import "@diki-stwn/serupa-ds" alone ships nothing`, ok: !none.length, detail: `ships ${none.map(([f]) => short(f)).join(', ')}` });
   const extra = [];
-  exported.forEach((x, i) => {
+  tested.forEach((x, i) => {
     const ok = reach(where[x]);
     const kept = each[i].filter(([f, n]) => !ok.has(f) && !(via[x].includes(f) && n <= CLAUSE));
     if (kept.length) extra.push(`${x} (${short(where[x])}) also ships ${kept.map(([f, n]) => n === Infinity ? short(f) : `${short(f)} (${n} B)`).join(', ')}`);
   });
-  results.push({ name: `${name}: each of the ${exported.length} exports ships only the modules it imports`, ok: !extra.length, detail: extra.join('\n      ') });
+  results.push({ name: `${name}: each of the ${tested.length === exported.length ? exported.length : `${tested.length} (of ${exported.length}) changed`} exports ships only the modules it imports`, ok: !extra.length, detail: extra.join('\n      ') });
   if (warned[name]) {
     const seen = [...new Set(warned[name].map((w) => `${w.location ? path.relative(PROJECT, path.resolve(PROJECT, w.location.file)) + ':' + w.location.line + ': ' : ''}${w.text}`))];
     results.push({ name: `${name}: bundling the package prints no warnings`, ok: !seen.length, detail: seen.join('\n      ') });

@@ -6,6 +6,38 @@ import { Input } from '../Input/Input';
 import { Field } from '../Field/Field';
 import { Checkbox } from '../Checkbox/Checkbox';
 
+const stack = { display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' } as const;
+const CONTENT: Record<string, { trigger: string; body: React.ReactNode; footer?: (close: () => void) => React.ReactNode }> = {
+  Filters: {
+    trigger: 'Open filters',
+    body: <div style={stack}><Field label="Name"><Input placeholder="Search projects" /></Field><Checkbox>Only mine</Checkbox><Checkbox>Include archived</Checkbox></div>,
+    footer: (close) => <><Button variant="secondary" onClick={close}>Reset</Button><Button onClick={close}>Apply</Button></>,
+  },
+  Menu: {
+    trigger: 'Menu',
+    body: <nav aria-label="Main"><ul style={{ ...stack, margin: 0, padding: 0, listStyle: 'none' }}><li><a href="#home">Home</a></li><li><a href="#projects">Projects</a></li><li><a href="#settings">Settings</a></li></ul></nav>,
+  },
+  Share: {
+    trigger: 'Share',
+    body: <Field label="Link"><Input readOnly defaultValue="https://acme.example/d/atlas" /></Field>,
+    footer: (close) => <Button onClick={close}>Done</Button>,
+  },
+  Nearby: {
+    trigger: 'Cafés nearby',
+    body: <div style={stack}><p style={{ margin: 0 }}>Kopi Kenangan, 3 minutes</p><p style={{ margin: 0 }}>Tanamera, 6 minutes</p><p style={{ margin: 0 }}>Anomali, 9 minutes</p></div>,
+  },
+  Announcements: {
+    trigger: 'What’s new',
+    body: <div style={stack}><p style={{ margin: 0 }}>Search now finds archived projects.</p><p style={{ margin: 0 }}>Exports include comments.</p></div>,
+  },
+  'Project details': {
+    trigger: 'Project details',
+    body: <div style={stack}><p style={{ margin: 0 }}>Atlas is the new customer portal, due on 28 November.</p><p style={{ margin: 0 }}>Owner: Dewi Lestari. 12 people, 48 tasks, 9 open.</p></div>,
+    footer: (close) => <Button onClick={close}>Close</Button>,
+  },
+};
+CONTENT['Unsaved filters'] = CONTENT.Filters!;
+
 const meta = {
   title: 'Components/Overlays/Drawer',
   component: Drawer,
@@ -13,16 +45,13 @@ const meta = {
   argTypes: { placement: { control: 'inline-radio', options: ['right', 'left', 'top', 'bottom', 'start', 'end'] }, size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] } },
   render: function Render(args: DrawerProps) {
     const [open, setOpen] = React.useState(false);
+    // Each placement's story opens a drawer that fits its title, from a button that says what it opens: a share
+    // sheet with a link, not the filters under "Share".
+    const { trigger, body, footer } = (typeof args.title === 'string' && CONTENT[args.title]) || CONTENT.Filters!;
+    const close = () => setOpen(false);
     return <>
-      <Button onClick={() => setOpen(true)}>Open filters</Button>
-      <Drawer {...args} open={open} onOpenChange={setOpen}
-        footer={<><Button variant="secondary" onClick={() => setOpen(false)}>Reset</Button><Button onClick={() => setOpen(false)}>Apply</Button></>}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
-          <Field label="Name"><Input placeholder="Search projects" /></Field>
-          <Checkbox>Only mine</Checkbox>
-          <Checkbox>Include archived</Checkbox>
-        </div>
-      </Drawer>
+      <Button onClick={() => setOpen(true)}>{trigger}</Button>
+      <Drawer {...args} open={open} onOpenChange={setOpen} footer={footer?.(close)}>{body}</Drawer>
     </>;
   },
 } satisfies Meta<typeof Drawer>;
