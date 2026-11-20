@@ -18,7 +18,9 @@ They are for weighing choices, not a checklist to tick. When they conflict, acce
 
 ## Purposeful
 
-Know what each screen is for, and keep only what serves it.
+Every screen exists to help someone get one thing done. Know what that is before you design, and keep only what serves it.
+
+Clutter is a cost people pay on every visit: each extra button, option or sentence is one more thing to read and skip. A screen with a clear job and a clear order lets people act without thinking about the interface.
 
 - Start from who the screen is for and what they came to do, before choosing a single component.
 - One primary action per view. A second job waits until the first is done well.
@@ -41,7 +43,9 @@ Know what each screen is for, and keep only what serves it.
 
 ## In control
 
-People choose their own path, and can always change their mind.
+People decide how to reach their goal, and they can always go back, skip ahead or change their mind without losing their work.
+
+An interface that forces one route, or punishes a wrong click, makes people careful and slow. When every step can be left and every mistake undone, people explore with confidence and learn the product by using it.
 
 - Open on the task or the content, not on a welcome screen, a tour or a banner.
 - Never trap people in a flow. A tour, an onboarding checklist or a multi-step form can be left, skipped or finished later, and keeps what was done.
@@ -57,7 +61,9 @@ People choose their own path, and can always change their mind.
 
 ## Trustworthy
 
-Tell the truth, and treat people's time and data with care.
+Tell people what is really happening, ask only for what you need, and handle their time and data as if it were your own.
+
+Trust builds slowly and breaks at once. A progress bar that lies, a field that asks for more than the task needs, or a cancel flow that hides behind five screens teaches people to doubt everything else the product says.
 
 - Show what is really happening: respond to input at once, report progress that reflects real work, and never say "Saved" before the save finishes.
 - Ask only for what the task needs, and say why before you ask: next to a field that isn't obvious, and before the browser's prompt for the camera, location or notifications. See [Permission request](?path=/docs/patterns-permission-request--docs).
@@ -79,7 +85,9 @@ Tell the truth, and treat people's time and data with care.
 
 ## Predictable
 
-Work the way people expect, the same way every time.
+Build on what people already know from the web and from their devices, and solve the same problem the same way everywhere.
+
+Every new pattern is something people have to learn. Familiar controls and conventions let them use a screen they have never seen, and a control that looks and behaves the same in every place lets what they learn once carry everywhere.
 
 - Use native elements first: `<select>`, `<dialog>`, `<input>`. They bring the phone's picker, autofill and screen-reader support with them.
 - Follow the conventions people know: × closes, Escape cancels, Mod+Z undoes, the main action comes last. A familiar pattern beats a clever one.
@@ -95,7 +103,9 @@ Work the way people expect, the same way every time.
 
 ## Inclusive
 
-Everyone can use it, whatever their device, input or ability.
+Everyone can use it, whatever their device, screen size, connection, input method or ability.
+
+People use products with a mouse, a finger, a keyboard, a voice or a screen reader, on a large monitor or an old phone on a slow network. Designing for that range from the start makes the product better for everyone, and it is far cheaper than fixing it later.
 
 - Every component meets WCAG 2.2 AA in every theme, and tests check it. Plan for it from the first sketch.
 - Color is never the only signal. A status has a word; a chart series has a shape.
@@ -112,7 +122,9 @@ Everyone can use it, whatever their device, input or ability.
 
 ## Crafted
 
-Care in every detail and every state, so people leave feeling capable.
+Care about every detail and every state, so the product feels solid and people leave feeling capable rather than processed.
+
+People rarely name the details, but they feel them: a field that lines up, an error that helps, an empty screen that shows the way. Quality in the small moments is what makes a product feel trustworthy and pleasant, and it is never finished at release.
 
 - Each component covers rest, hover, focus, pressed, invalid, read-only, disabled, loading and empty, at every size and in every theme.
 - Sizes line up across components: a 32px input sits next to a 32px button. Corners nest, numbers don't jump, motion is short and stops for `prefers-reduced-motion`.
