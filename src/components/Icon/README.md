@@ -5,7 +5,7 @@ Shows one icon as an inline SVG: from Material Symbols, always in the **Rounded*
 **Also called:** glyph, symbol.
 
 ```jsx
-const { Icon, Button, IconButton } = window.Serupa;
+import { Icon, Button, IconButton } from '@diki-stwn/serupa-ds';
 
 <Icon name="home" />                       // 24px, decorative
 <Icon name="warning" size={20} style={{ color: 'var(--warning)' }} />

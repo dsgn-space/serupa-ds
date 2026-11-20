@@ -5,7 +5,7 @@ A phone number field with a country menu at the start. It groups the number the 
 **Also called:** phone number field, telephone input.
 
 ```jsx
-const { PhoneInput, Field, formatPhone } = window.Serupa;
+import { PhoneInput, Field, formatPhone } from '@diki-stwn/serupa-ds';
 
 <Field label="Mobile number"><PhoneInput defaultCountry="ID" name="phone" /></Field>
 

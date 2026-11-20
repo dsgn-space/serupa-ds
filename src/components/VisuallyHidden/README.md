@@ -5,7 +5,7 @@ Content that screen readers announce but nobody sees: "(opens in a new tab)", th
 **Also called:** screen-reader only, sr-only.
 
 ```jsx
-const { VisuallyHidden } = window.Serupa;
+import { VisuallyHidden } from '@diki-stwn/serupa-ds';
 
 <span>3 <VisuallyHidden>unread messages</VisuallyHidden></span>
 <VisuallyHidden as="h2">Filters</VisuallyHidden>

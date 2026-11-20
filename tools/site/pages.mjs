@@ -22,10 +22,10 @@ const walk = (dir, out = []) => {
   return out;
 };
 
-/** The first sentence of a guide (README.md), without its Markdown links: what the component is for. */
+/** The first sentence of a guide (README.md), without its Markdown links, code ticks or emphasis: what the component is for. */
 export function summaryOf(guide) {
   const intro = (/^# .*\n+([^\n#`|<-][^\n]*)/m.exec(guide) || [])[1] ?? '';
-  return (/^.*?[.!?](?=\s|$)/.exec(intro) || [intro])[0].replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/`/g, '');
+  return (/^.*?[.!?](?=\s|$)/.exec(intro) || [intro])[0].replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/`/g, '').replace(/\*\*([^*]+)\*\*|\*([^*\s][^*]*)\*/g, '$1$2');
 }
 
 /** A component's status from the doc comment on its export (as tools/build/registry.mjs reads it). */

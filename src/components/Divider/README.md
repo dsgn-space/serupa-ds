@@ -5,7 +5,7 @@ A 1px line between content, horizontal or vertical, with an optional label in th
 **Also called:** separator, horizontal rule, vertical rule.
 
 ```jsx
-const { Divider, Stack } = window.Serupa;
+import { Divider, Stack } from '@diki-stwn/serupa-ds';
 
 <Divider />
 <Divider label="or" />

@@ -5,7 +5,7 @@ A single-line text field: a native `<input>` in a box that can hold icons. Three
 **Also called:** text input, text field.
 
 ```jsx
-const { Input, InputAction } = window.Serupa;
+import { Input, InputAction } from '@diki-stwn/serupa-ds';
 
 <label htmlFor="name">Name</label>
 <Input id="name" placeholder="Dana Kim" />

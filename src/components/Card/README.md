@@ -5,7 +5,7 @@ A surface that groups related content and its actions: a summary, a settings pan
 **Also called:** tile.
 
 ```jsx
-const { Card, CardHeader, CardBody, CardFooter, Button, Badge } = window.Serupa;
+import { Card, CardHeader, CardBody, CardFooter, Button, Badge } from '@diki-stwn/serupa-ds';
 
 <Card>
   <CardHeader title="Team plan" description="Up to 10 members" action={<Badge tone="success">Active</Badge>} />

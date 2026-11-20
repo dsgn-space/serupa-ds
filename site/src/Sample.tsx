@@ -18,7 +18,7 @@ const TEAM = ['Dewi Lestari', 'Budi Santoso', 'Sari Wijaya', 'Agus Pratama'];
 /** A project's card: who is on it, how far along it is, and what state it is in. */
 export function ProjectCard({ headingLevel = 3 }: { headingLevel?: 2 | 3 | 4 }) {
   return <Card>
-    <CardHeader headingLevel={headingLevel} title="Website refresh" description="Due on 28 November" action={<Badge tone="success" dot>On track</Badge>} />
+    <CardHeader headingLevel={headingLevel} title="Website refresh" description="Due 28 November" action={<Badge tone="success" dot>On track</Badge>} />
     <CardBody className="flex flex-col gap-4">
       <Progress value={68} label="Tasks done" showValue />
       <AvatarGroup label="Team" size="lg" max={3} total={7}>{TEAM.map((n) => <Avatar key={n} name={n} />)}</AvatarGroup>
@@ -42,18 +42,25 @@ export function InviteCard({ headingLevel = 3 }: { headingLevel?: 2 | 3 | 4 }) {
   </Card>;
 }
 
-/** The statuses side by side: each tone with its word, and a message in the same voice. */
-export function StatusCard() {
-  return <div className="flex flex-col gap-4">
-    <div className="flex flex-wrap gap-2">
-      <Badge>Draft</Badge>
-      <Badge tone="info">In review</Badge>
-      <Badge tone="success">Active</Badge>
-      <Badge tone="warning">Due soon</Badge>
-      <Badge tone="danger">Overdue</Badge>
-    </div>
-    <Alert tone="info" title="Two invites are waiting">Dewi and Budi haven’t joined yet.</Alert>
+/** Each status tone with its word. */
+export function StatusBadges() {
+  return <div className="flex flex-wrap gap-2">
+    <Badge>Draft</Badge>
+    <Badge tone="info">In review</Badge>
+    <Badge tone="success">Active</Badge>
+    <Badge tone="warning">Due soon</Badge>
+    <Badge tone="danger">Overdue</Badge>
   </div>;
+}
+
+/** A message in the same voice as the badges. */
+export function WaitingAlert() {
+  return <Alert tone="info" title="Two invites are waiting">Dewi and Budi haven’t joined yet.</Alert>;
+}
+
+/** The statuses side by side, and a message in the same voice. */
+export function StatusCard() {
+  return <div className="flex flex-col gap-4"><StatusBadges /><WaitingAlert /></div>;
 }
 
 /** All three, as one theme's panel shows them. */

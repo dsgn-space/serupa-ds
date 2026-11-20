@@ -150,6 +150,7 @@ ol.site-list { list-style: decimal; }
 .site-hero__switch { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--spacing-3); margin-block-end: var(--spacing-4); }
 .site-hero__hint { color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 .site-hero__cards { display: grid; gap: var(--spacing-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); align-items: start; }
+.site-hero__row { grid-column: 1 / -1; }
 .site-hero__col { display: flex; flex-direction: column; gap: var(--spacing-4); min-inline-size: 0; }
 @media (min-width: 40rem) { .site-hero__art { padding: var(--spacing-6); } }
 @media (min-width: 80rem) {

@@ -5,7 +5,7 @@ A data table built on native table markup: a header row, body rows and an option
 **Also called:** data table.
 
 ```jsx
-const { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell, TableSelectCell } = window.Serupa;
+import { Table, TableHead, TableBody, TableFoot, TableRow, TableHeaderCell, TableCell, TableSelectCell } from '@diki-stwn/serupa-ds';
 
 <Table caption="Team members">
   <TableHead>
