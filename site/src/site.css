@@ -37,7 +37,9 @@
 .site-sidebar { inline-size: 100%; border: 0; background: transparent; }
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--spacing-3) var(--spacing-6); padding: var(--spacing-6) var(--spacing-4); border-block-start: var(--border-width-1) solid var(--border); color: var(--text-muted); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
 @media (min-width: 40rem) { .site-footer { padding-inline: var(--spacing-8); } }
-.site-loading { display: grid; place-items: center; min-block-size: 50dvh; }
+/* A page that is still loading fills the screen, so the footer waits below it rather than showing and then jumping
+   away as the page arrives (a layout shift, CLS 0.11 on a phone before). */
+.site-loading { display: grid; place-items: center; min-block-size: 100dvh; }
 
 /* ── A page's text ─────────────────────────────────────────────────────────────────────────────────────────── */
 .site-doc, .site-prevnext { max-inline-size: var(--container-4xl); margin-inline: auto; }
