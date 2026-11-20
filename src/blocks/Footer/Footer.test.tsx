@@ -14,6 +14,12 @@ const languages = [{ value: 'en', label: 'English' }, { value: 'id', label: 'Bah
 // Footer (BL10): the contentinfo landmark, each link group a navigation landmark named by its heading, a language
 // picker that waits for Change, a theme picker that applies at once, and the legal line.
 describe('Blocks/Footer', () => {
+  test('the link lists underline on hover only, since a footer\'s place already says they\'re links', async () => {
+    const screen = await render(<Footer groups={groups} legal="© 2026 Acme, Inc." />);
+    const link = screen.getByRole('navigation').first().getByRole('link').first().element();
+    expect(getComputedStyle(link).textDecorationLine).toBe('none');
+  });
+
   test('a group heading is Heading at size sm, with its spacing, not a text class over an h2\'s', async () => {
     await render(<Footer groups={groups} legal="© 2026 Acme, Inc." />);
     await render(<div id="probe"><Heading level={2} size="sm">Probe</Heading></div>);

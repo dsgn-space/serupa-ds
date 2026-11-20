@@ -244,7 +244,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#settings">Back to settings</Link>
+        <Link underline="hover" href="#settings">Back to settings</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         {deleted ? (
@@ -340,7 +340,7 @@ export function AccountSecurity({ twoStep: on0 = false, setupKey = 'JBSW Y3DP EH
                 {recoveryCodes.map((c) => <li key={c}>{c}</li>)}
               </ul>
               <div className="flex flex-wrap gap-2">
-                <CopyButton value={recoveryCodes.join('\n')} copiedLabel="Copied">Copy the codes</CopyButton>
+                <CopyButton value={recoveryCodes.join('\n')} copiedLabel="Copied" size="md">Copy the codes</CopyButton>
                 <Button onClick={() => openSetup(false)}>I’ve saved them</Button>
               </div>
             </div>
