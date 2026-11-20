@@ -313,7 +313,8 @@ export function TypeScale() {
 
 // The whole icon set (3 MB) is fetched when the gallery is on the page, not with every page that uses these blocks.
 const materialIcons = (): Promise<IconData[]> => import('../src/material/icons')
-  .then((m) => (Object.values(m) as unknown[]).filter(isIconData).sort((x, y) => x.name.localeCompare(y.name)));
+    // A to Z, with the names that start with a number (10k, 3d_rotation) after them, so the gallery opens on words.
+  .then((m) => (Object.values(m) as unknown[]).filter(isIconData).sort((x, y) => Number(/^\d/.test(x.name)) - Number(/^\d/.test(y.name)) || x.name.localeCompare(y.name)));
 
 /** Every Material Symbol, plus your custom icons: search by name, and a click copies an icon's name. */
 export function IconGallery() {
@@ -336,7 +337,8 @@ export function IconGallery() {
   const heading = { margin: '0 0 8px', fontSize: 16, fontWeight: 600 } as const;
   const tileFor = (n: string, icon: React.ReactNode) => <button key={n} type="button" onClick={() => copy(n)} title={`<Icon name="${n}" />`} style={tile}>
     {icon}
-    <span style={label}>{n}</span>
+    {/* A long name wraps after an underscore (1x_mobiledata_ / badge), not inside a word. */}
+    <span style={label}>{n.split('_').flatMap((part, i, all) => i < all.length - 1 ? [`${part}_`, <wbr key={i} />] : [part])}</span>
   </button>;
   // sb-unstyled: keeps Storybook's docs styles off the buttons.
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -376,9 +378,11 @@ export function OtherNames() {
 /** Icons at the system's sizes, with what each is for. */
 export function IconSizes() {
   const sizes: ['xs' | 'sm' | 'md' | 'lg' | 'xl', number, string][] = [['xs', 14, '`sm` buttons, `text-xs`'], ['sm', 16, '`md` buttons, inline with `text-sm`'], ['md', 20, '`lg` buttons, list rows, `text-base`'], ['lg', 24, 'The default: toolbars, navigation'], ['xl', 40, 'Empty states']];
-  return <div className="sb-unstyled" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'flex-end' }}>
-    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, maxWidth: 140, textAlign: 'center', fontSize: 12 }}>
-      <Icon name="favorite" size={step} /><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use)}</span>
+  // In even columns, each icon on the same line in a box as tall as the largest, so the sizes and their names line up
+  // across a row however many lines a use takes.
+  return <div className="sb-unstyled" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(8rem, 1fr))', gap: 24, alignItems: 'start' }}>
+    {sizes.map(([step, s, use]) => <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center', fontSize: 12 }}>
+      <span style={{ display: 'flex', alignItems: 'flex-end', height: 40 }}><Icon name="favorite" size={step} /></span><strong>{code(`\`${step}\``)} {s}px</strong><span style={{ color: 'var(--text-muted)' }}>{code(use).map((x) => typeof x === 'string' ? x : React.cloneElement(x, { style: { whiteSpace: 'nowrap' } }))}</span>
     </div>)}
   </div>;
 }
