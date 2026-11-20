@@ -45,7 +45,7 @@ export const States: Story = {
   </div>,
 };
 // The stress story (G14): long words, long labels, more items than fit; the visual baselines show how it copes.
-export const LongText: Story = { args: { children: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column' }, decorators: [(Story) => <div style={{ width: 288 }}><Story /></div>] };
+export const LongText: Story = { args: { children: 'Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung and a label long enough to wrap twice in a narrow column' }, decorators: [(Story) => <div style={{ maxWidth: 288 }}><Story /></div>] };
 /** Do: ways of doing the main action in the menu. */
 export const DoVariations: Story = {
   name: 'Do: other ways to publish',

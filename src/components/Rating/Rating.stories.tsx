@@ -48,7 +48,7 @@ export const Overflow: Story = {
 export const InAGrid: Story = {
   name: 'In a grid',
   args: { max: 10, size: 'lg', defaultValue: 7 },
-  render: (args) => <div style={{ display: 'grid', width: 288 }}><div><Rating {...args} /></div></div>,
+  render: (args) => <div style={{ display: 'grid', maxWidth: 288 }}><div><Rating {...args} /></div></div>,
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").

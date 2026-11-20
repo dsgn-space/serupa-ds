@@ -233,4 +233,9 @@ describe('PinInput', () => {
     const composing = (key: string) => { const ev = new KeyboardEvent('keydown', { key, isComposing: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; };
     expect([composing('ArrowLeft'), composing('ArrowDown'), composing('Home')]).toEqual([false, false, false]);
   });
+  test('length is at most 32: a length gone wrong (1000) takes a 32-character code in 32 boxes, not a thousand', async () => {
+    await render(<PinInput aria-label="Code" length={1000} defaultValue={'1'.repeat(40)} />);
+    const f = document.querySelector<HTMLInputElement>('input[aria-label="Code"]')!;
+    expect([f.value.length, f.parentElement!.parentElement!.querySelectorAll('[aria-hidden] > *').length]).toEqual([32, 32]);
+  });
 });

@@ -6,6 +6,7 @@ import { THEMES, color, css, press, withMotion, flexAlign } from '../../../tools
 import { Badge } from '../Badge/Badge';
 import { Button } from '../Button/Button';
 import { Checkbox } from '../Checkbox/Checkbox';
+import { PinInput } from '../PinInput/PinInput';
 import { Accordion, AccordionItem } from '../Accordion/Accordion';
 import { CodeBlock } from '../CodeBlock/CodeBlock';
 import { DataGrid } from '../DataGrid/DataGrid';
@@ -406,5 +407,19 @@ describe('Card href: a ticked checkbox inside (GR408)', () => {
     const input = s.container.querySelector('input')!;
     expect(getComputedStyle(input).zIndex).toBe('auto');
     expect(getComputedStyle(input.closest('label')!).zIndex).toBe('10');
+  });
+});
+
+describe('Card href: a control that places its own parts', () => {
+  test('a PinInput in a linked card keeps its six boxes on one row: its input stays laid over them, still above the link', async () => {
+    const s = await render(<Card id="pin" href="#pin" style={{ width: 400 }}><CardBody><PinInput aria-label="Code" /></CardBody></Card>);
+    const input = s.container.querySelector('input')!;
+    expect(getComputedStyle(input).position).toBe('absolute');
+    expect(getComputedStyle(input).zIndex).toBe('10');
+    const tops = new Set([...input.parentElement!.querySelector('[aria-hidden]')!.children].map((b) => Math.round(b.getBoundingClientRect().top)));
+    expect(tops.size).toBe(1);
+    // A plain control still rises above the link, positioned so its z-index takes.
+    const b = await render(<Card id="btn" href="#btn"><CardBody><Button>Edit</Button></CardBody></Card>);
+    expect(getComputedStyle(b.container.querySelector('button')!).position).toBe('relative');
   });
 });
