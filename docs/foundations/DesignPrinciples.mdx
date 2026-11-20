@@ -16,11 +16,9 @@ Five principles guide how Serupa's components, tokens and docs are made, and how
 
 They are for weighing choices, not a checklist to tick. Each one gives the idea, then what it means in practice. When they conflict, accessibility comes first.
 
-## Purpose
+## Give everything a reason to exist
 
-Give everything a reason to exist.
-
-Know what people came to do, and make that the clearest thing on the screen.
+Know what people came to do, and let everything on the screen serve that.
 
 **In practice**
 
@@ -42,9 +40,7 @@ Know what people came to do, and make that the clearest thing on the screen.
   dontExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">No</Button><Button destructive>Yes</Button></div>}
 />
 
-## Trust
-
-Earn trust in every interaction.
+## Earn trust in every interaction
 
 People give a product their time, their effort and their data, so treat all three with honesty and care.
 
@@ -77,9 +73,7 @@ People give a product their time, their effort and their data, so treat all thre
   dontExample={<div style={{ inlineSize: 260 }}><Field label="Phone" required><Input type="tel" /></Field></div>}
 />
 
-## Familiarity
-
-Build on what people already know.
+## Build on what people already know
 
 Use the patterns people already trust, and solve the same problem the same way everywhere.
 
@@ -97,9 +91,7 @@ Use the patterns people already trust, and solve the same problem the same way e
   dontExample={<Source language="tsx" dark={false} code={'<div className="dropdown" onClick={toggle}>\n  {open && options.map((o) => (\n    <div onClick={() => pick(o)}>{o}</div>\n  ))}\n</div>'} />}
 />
 
-## Inclusion
-
-Design for everyone from the start.
+## Design for everyone from the start
 
 People use different devices, inputs and abilities. Treat accessibility as a requirement, not an afterthought.
 
@@ -118,11 +110,9 @@ People use different devices, inputs and abilities. Treat accessibility as a req
   dontExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <span aria-hidden="true" style={{ display: 'inline-block', inlineSize: 8, blockSize: 8, borderRadius: 4, background: 'var(--danger)' }} /></span>}
 />
 
-## Craft
+## Care about every detail
 
-Care about every detail.
-
-People may never name the details, but they feel them. Delight comes from things working well, not from decoration.
+People may never name the details, but they feel them. Let every detail add delight, never distraction.
 
 **In practice**
 
