@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
-import { THEMES, contrast, css } from '../../../tools/test/vitest/helpers';
+import { THEMES, color, contrast, css, press } from '../../../tools/test/vitest/helpers';
 import { SerupaProvider } from '../../internal/provider';
 import { idLabels } from '../../internal/labels';
 import { SortableList } from '../SortableList/SortableList';
@@ -57,6 +57,22 @@ describe('Kanban', () => {
       <SortableList id="sh" aria-label="Order" items={['a', 'b']} getKey={(x) => x} getLabel={(x) => x} renderItem={(x) => x} onReorder={() => {}} /></>);
     const sizes = (id: string) => { const b = document.querySelector<HTMLElement>('#' + id + ' button[aria-pressed]')!, i = b.querySelector<HTMLElement>('[data-icon]')!.getBoundingClientRect(); return [b.getBoundingClientRect().width, i.width, i.height]; };
     expect([sizes('kh'), sizes('sh')]).toEqual([[24, 20, 20], [24, 20, 20]]);
+  });
+
+  test('the drag handle answers a pointer as SortableList\'s does: the secondary fill on hover, a step darker while held, its icon 3:1 on both in every theme', async () => {
+    await render(<Kanban aria-label="Sprint" columns={START()} getKey={(x) => x.id} getLabel={(x) => x.t} renderCard={(x) => x.t} onMove={() => {}} />);
+    const h = handle('Alpha'), b = h.element() as HTMLElement;
+    expect(css(b).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    const low: string[] = [];
+    const check = (state: string) => { for (const th of THEMES) { document.documentElement.setAttribute('data-theme', th); const r = contrast(css(b).color, css(b).backgroundColor); if (r < 3) low.push(`${state} ${th}: ${r.toFixed(2)}`); } document.documentElement.removeAttribute('data-theme'); };
+    await h.hover();
+    await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary)'));
+    check('hover');
+    await press(b, async () => {
+      await expect.poll(() => css(b).backgroundColor).toBe(color('var(--secondary-hover)'));
+      check('held');
+    });
+    expect(low).toEqual([]);
   });
 
   test('a named group of columns, each a section headed by its title with a list of its cards; ref, className and props reach the board', async () => {
