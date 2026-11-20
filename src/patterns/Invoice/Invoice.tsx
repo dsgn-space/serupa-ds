@@ -199,8 +199,10 @@ export function Invoice({ invoice: start = demo, currency = 'USD', today = '2025
                     </TableRow>
                   ))}</TableBody>
                 </Table>
-                <div className="flex justify-end">
-                  <DescriptionList layout="split" className="w-full max-w-sm">
+                {/* The totals are in the table's text size, and their figures end where the Amount column's do: in by
+                    the table's cell padding and its 1px frame. */}
+                <div className="flex justify-end" style={{ paddingInlineEnd: 'calc(var(--table-padding-x, var(--spacing-3)) + var(--table-border-width, var(--border-width-1)))' }}>
+                  <DescriptionList layout="split" className="w-full max-w-sm text-sm">
                     <DescriptionItem term="Subtotal">{money(sums.subtotal)}</DescriptionItem>
                     <DescriptionItem term={`Tax (${formatNumber(inv.taxRate, locale, { style: 'percent', maximumFractionDigits: 2 })})`}>{money(sums.tax)}</DescriptionItem>
                     <DescriptionItem term="Total">{money(sums.total)}</DescriptionItem>
