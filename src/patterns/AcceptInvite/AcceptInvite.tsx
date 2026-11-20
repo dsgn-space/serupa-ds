@@ -91,7 +91,7 @@ export function AcceptInvite({ invite = demo, signedInAs = invite.email, now, on
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#help">Help</Link>
+        <Link underline="hover" href="#help">Help</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-lg flex-col px-4 py-12 outline-none">
         <Card padding="lg" className="flex flex-col gap-4">

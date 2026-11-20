@@ -54,6 +54,7 @@
 .dk-chat-message__reasoning-toggle {
   display: inline-flex; align-items: center; gap: var(--spacing-1); min-block-size: var(--spacing-6); border-radius: var(--radius-inner);
   cursor: var(--cursor-interactive); touch-action: manipulation; list-style: none; font-weight: var(--font-medium);
+  -webkit-user-select: none; user-select: none;   /* opened and closed again, no word highlights */
 }
 .dk-chat-message__reasoning-toggle::-webkit-details-marker { display: none; }
 @media (hover: hover) { .dk-chat-message__reasoning-toggle:hover { color: var(--chat-text, var(--text)); } }

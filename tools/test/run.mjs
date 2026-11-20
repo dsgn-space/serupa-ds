@@ -131,7 +131,12 @@ const steps = [
     // A narrowed pull request runs no locale jobs, so its base jobs take the changed components' own tests in all four
     // languages: a test that failed only in one of them was found in the queue, where it drops every group behind it.
     // The queue does the same in seconds, so it costs about a minute (SERUPA_OWN keeps the steps in the base part).
-    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since')) return own.length ? LOCALES.map((l) => ownIn(l, { SERUPA_OWN: '1' })) : [];
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since') && only) return own.length ? LOCALES.map((l) => ownIn(l, { SERUPA_OWN: '1' })) : [];
+    // A pull request that tests everything (a change past the component folders) has no locale jobs either, and its
+    // own tests are then every component's: in all four languages that was five whole passes in each base job, and
+    // ES1's (20 Nov) ran past the job's 30 minutes. It takes the commit's language over everything instead, and the
+    // queue's locale jobs the other three.
+    if (process.env.GITHUB_EVENT_NAME === 'pull_request' && arg('--since')) return [[...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard), { SERUPA_LOCALE: locale, SERUPA_OWN: '1' }]];
     return [
       [...vitest(`Component tests in ${locale} (Vitest)`, 'components', 'components', ...shard, ...covered), { SERUPA_LOCALE: locale }],
       ...(own.length ? LOCALES.filter((l) => l !== locale).map((l) => ownIn(l)) : []),

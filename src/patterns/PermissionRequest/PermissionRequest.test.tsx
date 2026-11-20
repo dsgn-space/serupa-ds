@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Heading } from '../../components/Heading/Heading';
 import { PermissionRequest, type PermissionAnswer } from './PermissionRequest';
+import { SerupaProvider } from '../../internal/provider';
 
 const said = () => [...document.querySelectorAll('[aria-live="polite"]')].map((e) => e.textContent || '').join(' ');
 const card = () => document.querySelector('section[aria-labelledby="camera-title"]') as HTMLElement;
@@ -18,6 +19,12 @@ describe('Patterns/Permission request', () => {
     const h2s = [...document.querySelectorAll('h2')].filter((h) => !h.closest('#probe-lg'));
     expect(h2s.length).toBeGreaterThan(0);
     expect(h2s.map(look)).toEqual(h2s.map(() => want));
+  });
+
+  test('the call\u2019s time is in the reader\u2019s clock: 3:00 – 3:30 PM in en-US, 15:00–15:30 in en-GB', async () => {
+    await render(<><div id="us"><SerupaProvider locale="en-US"><PermissionRequest /></SerupaProvider></div><div id="gb"><SerupaProvider locale="en-GB"><PermissionRequest /></SerupaProvider></div></>);
+    expect([document.getElementById('us')!.textContent, document.getElementById('gb')!.textContent]).toEqual([
+      expect.stringContaining('Today, 3:00 – 3:30 PM · 6 people invited'), expect.stringContaining('Today, 15:00–15:30 · 6 people invited')]);
   });
 
   test('nothing is asked on load, the card says why, and the page works without the camera', async () => {

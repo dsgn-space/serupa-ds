@@ -117,7 +117,7 @@ export function Agenda({ sessions = demo, defaultSaved = [], onSavedChange, load
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme Design Days</p>
-        <Link href="#tickets">Tickets</Link>
+        <Link underline="hover" href="#tickets">Tickets</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader title="Agenda" description="Two days of talks in Bandung. Save the sessions you want, and we’ll warn you about clashes." />
