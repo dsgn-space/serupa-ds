@@ -3,6 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page, userEvent } from 'vitest/browser';
 import { FabMenu, type FabMenuAction } from './FabMenu';
+import { Fab } from '../Fab/Fab';
 
 const picked: string[] = [];
 const ACTIONS: FabMenuAction[] = [
@@ -65,9 +66,29 @@ describe('FabMenu', () => {
     await expect.poll(() => menu().getBoundingClientRect().height).toBeGreaterThan(0);
     let f = fab().getBoundingClientRect(), m = menu().getBoundingClientRect();
     expect([Math.round(f.top - m.bottom), Math.round(f.right - m.right)]).toEqual([8, 0]);
-    await rerender(<FabMenu icon="add" label="Create" placement="top-start" actions={ACTIONS} open onOpenChange={vi.fn()} />);
-    await expect.poll(() => Math.round(menu().getBoundingClientRect().top - fab().getBoundingClientRect().bottom)).toBe(8);
-    f = fab().getBoundingClientRect(); m = menu().getBoundingClientRect();
-    expect(Math.round(m.left - f.left)).toBe(0);
+    for (const placement of ['top-start', 'top-end', 'bottom-start', 'bottom-end'] as const) {
+      await rerender(<FabMenu icon="add" label="Create" placement={placement} actions={ACTIONS} open onOpenChange={vi.fn()} />);
+      const top = placement.startsWith('top'), start = placement.endsWith('start');
+      await expect.poll(() => { const a = fab().getBoundingClientRect(), b = menu().getBoundingClientRect(); return Math.round(top ? b.top - a.bottom : a.top - b.bottom); }, { message: placement }).toBe(8);
+      f = fab().getBoundingClientRect(); m = menu().getBoundingClientRect();
+      expect(Math.round(start ? m.left - f.left : f.right - m.right), placement).toBe(0);
+    }
+  });
+  test('size and onMedia reach the Fab: 40px with size="sm", 56px with "md", and the same colors as a Fab on a light or dark picture', async () => {
+    for (const [size, px] of [['sm', 40], ['md', 56]] as const) {
+      const { unmount } = await render(<FabMenu icon="add" label="Create" size={size} placement="static" actions={ACTIONS} />);
+      expect(Math.round(fab().getBoundingClientRect().height), size).toBe(px);
+      await unmount();
+    }
+    for (const onMedia of ['light', 'dark'] as const) {
+      const { unmount } = await render(<div style={{ background: 'black' }}>
+        <FabMenu icon="add" label="Create" onMedia={onMedia} placement="static" actions={ACTIONS} />
+        <Fab icon="add" label="Plain" onMedia={onMedia} placement="static" />
+      </div>);
+      const plain = page.getByRole('button', { name: 'Plain' }).element();
+      const look = (e: Element) => { const c = getComputedStyle(e); return [c.backgroundColor, c.color, c.borderColor]; };
+      expect(look(fab()), onMedia).toEqual(look(plain));
+      await unmount();
+    }
   });
 });
