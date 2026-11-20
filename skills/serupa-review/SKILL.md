@@ -34,6 +34,7 @@ This skill reviews a change to an app built with Serupa. It checks what lint and
 - **A wrapper or a second kit**: a `ui/Button.tsx` that only sets defaults on Button, another component, icon, animation or CSS-in-JS library beside Serupa.
 - **The wrong feedback for how long it stays.** A toast for a message that must stay until it's dealt with (an error, a warning that blocks), where an `Alert` belongs. An `Alert` for "Saved", where `toast("Saved")` belongs. A second `Toaster`. A status change said only by a visual change, where `announce()` belongs. Autosave without `SaveStatus`.
 - **Words** (Content and voice): a button that doesn't start with a verb ("OK", "Submit", "Yes"), a dialog title and button that use different verbs, Title Case, an exclamation mark, emoji or "Oops", "Something went wrong" with nothing more, "Invalid input" or "This field is required", an empty state that doesn't say what goes there or offer to add the first one.
+- **Work or data handled carelessly.** An "Are you sure?" dialog for an action that can be undone, where `toast.undo()` belongs. Progress on a timer, or "Saved" before the save finishes. A required field the task doesn't need. A multi-step form, tour or dialog that loses what was typed when it's left, or that can't be left.
 - **Motion** not from the motion tokens, or movement that `prefers-reduced-motion` would want still.
 
 ### Nice to have: worth doing, not now
