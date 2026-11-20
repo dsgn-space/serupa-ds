@@ -105,4 +105,19 @@ describe('Patterns/Messages', () => {
     await screen.getByRole('button', { name: 'Try again' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
+
+  test('on a phone the Back button\'s arrow lines up with the conversation\'s name under it', async () => {
+    await page.viewport(380, 800);
+    const screen = await render(<Messages conversations={talks()} />);
+    await screen.getByRole('link', { name: /Budi Santoso/ }).click();
+    // The conversation pane draws after the click: wait for it before measuring.
+    await expect.element(screen.getByRole('button', { name: 'Back to conversations' })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Budi Santoso' })).toBeVisible();
+    const back = screen.getByRole('button', { name: 'Back to conversations' }).element() as HTMLElement;
+    const icon = back.querySelector('svg, [aria-hidden="true"]')!;
+    const name = screen.getByRole('heading', { level: 2, name: 'Budi Santoso' }).element();
+    const rtl = getComputedStyle(back).direction === 'rtl';
+    const a = icon.getBoundingClientRect(), b = name.getBoundingClientRect();
+    expect(Math.abs(rtl ? a.right - b.right : a.left - b.left)).toBeLessThan(3);
+  });
 });

@@ -103,7 +103,14 @@
   - paragraph: Storage goes from 10 GB to 100 GB, guests can comment on any project they’re invited to, and owners get a log of who changed what. You can switch back at any time from Billing.
 
 # Playground
-- button "Share"
+- button "Share" [expanded]
+- dialog "Share":
+  - heading "Share" [level=2]
+  - text: Email
+  - textbox "Email":
+    - /placeholder: name@example.com
+  - button "Cancel"
+  - button "Invite"
 
 # Right
 - button "Share" [expanded]

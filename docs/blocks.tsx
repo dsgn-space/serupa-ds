@@ -14,12 +14,10 @@ import type { IconData } from '../src/material/types';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
 import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
-import changelogSource from '../CHANGELOG.md?raw';
 import pkg from '../package.json';
 import { majorsIn, upcomingMajor, type Major } from './upgrades';
 import { transformsAfter } from '../bin/migrate/transforms.mjs';
 import acr from './acr.json';
-import { componentTests } from './generated/tested';
 import { changesFor } from './changes';
 import since from './since.json';
 import { sinceText, type Since } from './since';
@@ -28,7 +26,7 @@ import { DoDont, doDontAt } from './doDont';
 // What the blocks need from every component folder at once (each one's docs page id, other names, label uses, tokens)
 // is read once by tools/build/registry.mjs, not here: a glob of every README, story file and stylesheet made each
 // page ask a development server for some 650 files.
-import { componentDocs as docsId, componentLabelUse, componentTokens, otherNames, pendingChangesets, tokenUsers } from './generated/facts';
+import { componentDocs as docsId } from './generated/pages';
 
 type Token = { name: string; value: string | Record<string, string>; usage?: string };
 type Group = { note?: string; tokens: Token[] };
@@ -100,7 +98,7 @@ export function Guide({ source }: { source: string }) {
   return <>
     {cut ? <DocMarkdown slugify={slugify}>{relink(body.slice(0, cut))}</DocMarkdown> : null}
     {cut ? <Primary placed /> : null}
-    {name && <div className="sb-copy-guide">
+    {name && <div className="sb-copy-guide" data-print="hide">
       <CopyButton value={() => forAgent(name, source)} size="sm">Copy for AI</CopyButton>
       <span>The whole guide as Markdown, to paste into a coding agent.</span>
     </div>}
@@ -115,10 +113,28 @@ export function Guide({ source }: { source: string }) {
   </>;
 }
 
+/** Data a block loads when it's drawn, not with every page: the changelog and the tests' names weigh as much as the
+ * rest of the docs together, and only the sections at a page's foot and the upgrade guide read them. Null until it
+ * arrives. */
+function useLoaded<T>(load: () => Promise<T>): T | null {
+  const [data, setData] = React.useState<T | null>(null);
+  React.useEffect(() => {
+    let live = true;
+    void load().then((d) => { if (live) setData(() => d); });
+    return () => { live = false; };
+  }, [load]);
+  return data;
+}
+const loadChangelog = () => import('../CHANGELOG.md?raw').then((m) => m.default);
+const loadTests = () => import('./generated/tested').then((m) => m.componentTests);
+// Other names, label uses, component tokens and waiting changesets: some 480 KB only a few sections show.
+const loadFacts = () => import('./generated/facts');
+
 /** What changed in a component, release by release (134): the CHANGELOG.md entries that name it, newest first, the
  * latest few open and the rest folded away. */
 export function ComponentChanges({ name }: { name: string }) {
-  const all = changesFor(name, changelogSource);
+  const changelog = useLoaded(loadChangelog);
+  const all = changelog ? changesFor(name, changelog) : [];
   if (!all.length) return null;
   const SHOWN = 5;
   const md = (list: typeof all) => list.map((c) => `- **${c.version}**${c.kind ? ` (${c.kind.toLowerCase()})` : ''}: ${c.text}`).join('\n');
@@ -140,7 +156,8 @@ const plainName = (t: string) => t.replace(/\s*\((?:[A-Z]{0,3}\d+[a-z]?(?:,\s*)?
 /** What a component's tests check (131), by their names, read from its <Name>.test.tsx when the docs are built, so
  * the list is the suite and can't promise more than it runs. Closed by default: it's long, and for the curious. */
 export function TestedBehavior({ name }: { name: string }) {
-  const groups = componentTests[name] || [];
+  const tests = useLoaded(loadTests);
+  const groups = tests?.[name] || [];
   const count = groups.reduce((n, g) => n + g.tests.length, 0);
   if (!count) return null;
   return <section className="sb-tested" aria-labelledby={`tested-${name}`}>
@@ -182,6 +199,27 @@ const ROOT = readme;
 export function ReadmeIntro() {
   return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
 }
+const slug = (heading: string) => heading.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+/** The page each `##` section of docs/foundations.md is on, by its id. In the file one section links to another with
+ * `#id`; on a page that doesn't have that section, the link goes to the page that does. */
+const SECTION_PAGE: Record<string, string> = Object.fromEntries(Object.entries({
+  'foundations-colors': ['Color families', 'Naming', 'Using the shades', 'Contrast'],
+  'foundations-themes': ['Themes', 'Alias tokens'],
+  'foundations-typography': ['Typography'],
+  'foundations-icons': ['Iconography'],
+  'foundations-spacing': ['Spacing', 'Sizing'],
+  'foundations-corner-radius': ['Corner radius'],
+  'foundations-effects-and-borders': ['Borders and outlines', 'Effects'],
+  'foundations-elevation-and-layers': ['Elevation and layers'],
+  'foundations-layout': ['Page layout'],
+  'foundations-motion': ['Motion'],
+  'foundations-content-and-voice': ['Content and voice'],
+  'foundations-data-formats': ['Data formats'],
+  'foundations-ethical-design': ['Ethical design'],
+  'foundations-accessibility': ['Accessibility standard'],
+  'foundations-utility-classes': ['Backgrounds', 'Layout', 'Flexbox and grid', 'Filters', 'Tables', 'Transforms', 'SVG', 'Interactivity'],
+}).flatMap(([page, sections]) => sections.map((s) => [slug(s), page])));
+
 /** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
 /** A section whose heading the page writes itself (reserve, such as its title) comes without that heading, so the page
  * doesn't say "Typography" twice, and its subsections step up a level under the title. */
@@ -199,8 +237,12 @@ export function ReadmeSections({ headings, reserve }: { headings: string[]; /** 
       return !code && /^###+ /.test(line) ? line.slice(1) : line;
     }).join('\n');
   }).join('\n\n');
-  return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
+  return <DocMarkdown reserve={reserve}>{relink(md.replace(/\]\(#([\w-]+)\)/g, (link, id: string) => {
+    const page = SECTION_PAGE[id];
+    return page && !headings.some((h) => slug(h) === id) ? `](?path=/docs/${page}--docs)` : link;
+  }))}</DocMarkdown>;
 }
+
 
 /** A table or swatch grid wider than a narrow screen scrolls in its own box instead of pushing the page sideways
  * (WCAG 1.4.10 at 320px). While it does, it's a named region Tab reaches, so the arrow keys scroll it; when it fits,
@@ -357,8 +399,11 @@ export function IconGallery() {
 /** "Know it by another name?": every other name a component is known by (snackbar, dropzone, modal), filtered as you
  * type, each linked to the Serupa component that does the job. */
 export function OtherNames() {
+  const facts = useLoaded(loadFacts);
   const [q, setQ] = React.useState('');
   const term = q.trim().toLowerCase();
+  if (!facts) return null;
+  const { otherNames } = facts;
   const rows = otherNames.filter((r) => !term || r.other.toLowerCase().includes(term) || r.name.toLowerCase().includes(term));
   return <div className="sb-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
     <div style={{ maxWidth: 320 }}><SearchInput aria-label="Find a name" placeholder="Find a name, such as snackbar" value={q} onChange={(e) => setQ(e.target.value)} /></div>
@@ -384,15 +429,13 @@ export function IconSizes() {
 }
 
 // Which components say each label: the doc comment above its key (or group of keys) in SerupaLabels.
-const labelUse: Record<string, string> = {};
+const sharedLabelUse: Record<string, string> = {};
 {
   let use = '';
   for (const line of labelsSource.slice(labelsSource.indexOf('export interface '), labelsSource.indexOf('\n}\n')).split('\n').slice(1)) {
     const doc = /^\s*\/\*\*\s*(.*?)\s*\*\/$/.exec(line), key = /^\s*(\w+):/.exec(line);
-    if (doc) use = doc[1]; else if (key) labelUse[key[1]] = use;
+    if (doc) use = doc[1]; else if (key) sharedLabelUse[key[1]] = use;
   }
-  // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
-  Object.assign(labelUse, componentLabelUse);
 }
 // A function label is shown with "n" for its first argument; one that takes a list (cascadePath) can't, so it says so.
 const word = (v: SerupaLabels[keyof SerupaLabels]) => {
@@ -401,6 +444,10 @@ const word = (v: SerupaLabels[keyof SerupaLabels]) => {
 };
 /** Every word the components say on their own, in English and Indonesian, with where it's used. */
 export function LabelTable() {
+  const facts = useLoaded(loadFacts);
+  if (!facts) return null;
+  // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
+  const labelUse = { ...sharedLabelUse, ...facts.componentLabelUse };
   return <table className="sb-doc-table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
     <thead><tr><th style={cell}>Key</th><th style={cell}>English</th><th style={cell}>Indonesian (<code>idLabels</code>)</th><th style={cell}>Where</th></tr></thead>
     <tbody>{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k}>
@@ -433,8 +480,9 @@ function resolve(value: Token['value'], theme: string, depth = 0): string {
   const ref = /^\{([^}]+)\}$/.exec(v)?.[1];
   return ref && COLOR.has(ref) && depth < 8 ? resolve(COLOR.get(ref)!, theme, depth + 1) : v;
 }
+type Facts = Awaited<ReturnType<typeof loadFacts>>;
 let INDEX: Found[] | undefined;
-function tokenIndex(): Found[] {
+function tokenIndex({ componentTokens, tokenUsers }: Facts): Found[] {
   if (INDEX) return INDEX;
   const users = (css: string, own?: string) => [...new Set([...(tokenUsers[css] ?? []), ...(own ? [own] : [])])].sort();
   const out: Found[] = [];
@@ -458,11 +506,13 @@ const isColor = (v: string) => /^(#|rgb|hsl|oklch|oklab|color\(|transparent$)/.t
 /** Every token, shared and component: search by name, value, use or component, see its value in each theme and
  * which components read it, and copy it as var(--name). */
 export function TokenExplorer() {
-  const all = tokenIndex();
+  const facts = useLoaded(loadFacts);
   const [q, setQ] = React.useState('');
   const [limit, setLimit] = React.useState(60);
   const term = q.trim().toLowerCase().replace(/^var\(|\)$/g, '');
   React.useEffect(() => setLimit(60), [term]);
+  if (!facts) return null;
+  const all = tokenIndex(facts);
   const hits = term ? all.filter((t) => [t.css, t.group, t.usage, ...t.usedBy, ...t.values.flatMap((v) => [v.value, v.ref ?? ''])].some((s) => s.toLowerCase().includes(term))) : all;
   const swatch = (v: string) => isColor(v) ? <span aria-hidden="true" style={{ display: 'inline-block', width: 14, height: 14, marginInlineEnd: 6, verticalAlign: 'middle', borderRadius: 3, border: '1px solid var(--border)', background: v }} /> : null;
   // sb-unstyled: keeps Storybook's docs styles off the controls.
@@ -493,9 +543,12 @@ type Transform = { version: string; id: string; title: string };
 /** The upgrade guide (40): each major's breaking changes, the next one first while its changesets wait for a release,
  * and what `npx serupa-migrate` changes for it. */
 export function UpgradeGuide() {
+  const changelog = useLoaded(loadChangelog);
+  const facts = useLoaded(loadFacts);
+  if (changelog === null || facts === null) return null;
   const auto = transformsAfter(null) as Transform[];
-  const next = upcomingMajor(pkg.version, pendingChangesets, auto.map((t) => t.version));
-  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelogSource)];
+  const next = upcomingMajor(pkg.version, facts.pendingChangesets, auto.map((t) => t.version));
+  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelog)];
   return <>{majors.map((m) => {
     const prev = Number(m.version.split('.')[0]) - 1;
     const mine = auto.filter((t) => t.version === m.version);

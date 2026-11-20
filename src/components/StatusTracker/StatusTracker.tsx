@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat, dateFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, omit, setRef } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -55,13 +56,13 @@ function StatusTrackerRender({ ref, ...props }: StatusTrackerProps & React.RefAt
   const setAt = (i: number) => setAtIndex(i === days.length - 1 ? null : i);
   const [shown, setShown] = React.useState<number | null>(null);
   const list = React.useRef<HTMLOListElement | null>(null);
-  const dateFmt = React.useMemo(() => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }), [locale]);
+  const dateFmt = React.useMemo(() => dateFormat(locale, { dateStyle: 'medium' }), [locale]);
   const say = React.useCallback((d: StatusDay) => L.statusDay(dateFmt.format(toDate(d.date)), wordOf(L, d.state)) + (d.note ? '. ' + d.note : ''), [L, dateFmt]);
 
   const known = days.filter((d) => d.state !== 'none');
   const upShare = known.length ? known.filter((d) => d.state === 'up').length / known.length : 1;
   const incidents = known.filter((d) => d.state !== 'up').length;
-  const percent = new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(upShare);
+  const percent = numberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(upShare);
   const summary = props.summary === undefined ? L.statusSummary(percent, days.length, incidents) : props.summary;
 
   const current = Math.min(Math.max(at ?? days.length - 1, 0), days.length - 1);

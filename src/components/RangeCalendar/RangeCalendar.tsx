@@ -1,4 +1,5 @@
 'use client';
+import { dateFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { useAutoFocus } from '../../internal/focus';
@@ -127,7 +128,7 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   // In the grid's calendar with Latin digits, as its days are (Calendar's formats()); thin and narrow spaces as plain ones,
   // since Node's ICU and the browser's put different spaces around the dash, so a server render would not match.
   const range = (r: DateRange) => (r.start && r.end
-    ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(r.start, r.end).replace(/[\u2009\u202f]/g, ' ')
+    ? dateFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(r.start, r.end).replace(/[\u2009\u202f]/g, ' ')
     : '');
   const status = anchor ? L.chooseEndDate : value.start && value.end ? L.rangeSelected(range(value)) : L.chooseStartDate;
 

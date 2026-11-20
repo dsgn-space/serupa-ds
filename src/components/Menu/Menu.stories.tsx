@@ -214,7 +214,7 @@ export const Submenus: Story = {
 export const Context: Story = {
   render: function Render(_args, ctx) {
     const open = ctx.viewMode === 'docs' ? undefined : true;
-    return <ContextMenu aria-label="File actions" open={open} target={<div tabIndex={0} style={{ width: 280, padding: 16, border: '1px dashed var(--border)', borderRadius: 8 }}>Right-click, or focus and press Shift+F10</div>}>
+    return <ContextMenu aria-label="File actions" open={open} target={<div tabIndex={0} style={{ maxWidth: 280, padding: 16, border: '1px dashed var(--border)', borderRadius: 8 }}>Right-click, or focus and press Shift+F10</div>}>
       <MenuItem icon="open_in_new">Open</MenuItem>
       <MenuItem icon="edit">Rename</MenuItem>
       <MenuSeparator />

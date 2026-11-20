@@ -1,4 +1,5 @@
 'use client';
+import { numberFormat } from '../../internal/intl';
 import * as React from 'react';
 import { cn, domId, omit, useIsoLayoutEffect, useMergedRef } from '../../internal/cn';
 import { named } from '../../internal/component';
@@ -138,7 +139,7 @@ function FieldListRender({ ref, ...props }: FieldListProps<unknown> & React.RefA
   });
 
   const atMax = rows.length >= max;
-  const limit = atMax ? L.fieldListLimit(new Intl.NumberFormat(locale).format(max)) : '';
+  const limit = atMax ? L.fieldListLimit(numberFormat(locale).format(max)) : '';
   const hintId = shows(props.hint) ? base + '-hint' : undefined, errorId = shows(props.error) ? base + '-error' : undefined;
   const rowFor = (value: unknown, at: number) => {
     const label = itemLabel(at), rowError = props.errors ? props.errors[at] : undefined;

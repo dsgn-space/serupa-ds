@@ -34,6 +34,7 @@ const LATIN: Record<string, string> = {
   'CommandPalette/LongText': "the story's own generated labels ('Project number ' + n)",
   'CascadeSelect/LongText': "the story's own generated labels ('Provinsi ' + n)",
   'FormattedNumber/Locales': 'each number passes its own locale',
+  'Duration/Locales': 'the Indonesian line has its own provider, with Latin digits',
   'Meter/CustomValue': "the story's formatValue writes the text", 'Meter/HighIsGood': "the story's formatValue", 'Meter/LowIsGood': "the story's formatValue",
   'Progress/Tones': "the story's formatValue", 'Slider/Marks': "the story's formatValue",
   'Table/StickyHeader': 'invoice numbers (INV-1001) are codes, not amounts',

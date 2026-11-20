@@ -49,7 +49,7 @@ export function SignUp() {
 }
 ```
 
-A bundler hashes and compresses the files for you, so of Before you ship only the advice on trimming the CSS applies. For router links, set the link component once at startup: `configure({ link: Link })`. For another language, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>` (see [Localization](?path=/docs/guides-localization--docs)). The components render on the server too, and types ship with the package.
+A bundler hashes and compresses the files for you, so the only advice in [Before you ship](#4-before-you-ship) that applies is trimming the CSS. For router links, set the link component once at startup: `configure({ link: Link })`. For another language, wrap the app in `<SerupaProvider locale="id-ID" labels={idLabels}>` (see [Localization](?path=/docs/guides-localization--docs)). The components render on the server too, and types ship with the package.
 
 ### Or on a plain page
 
@@ -80,7 +80,7 @@ A bundler hashes and compresses the files for you, so of Before you ship only th
 </html>
 ```
 
-The stylesheet is `components.css` (about 450 KB), not `bundle.css`, because a plain page links it as is and the browser waits for it before drawing anything: `bundle.css` adds every utility class, about 1.5 MB. If the page uses utility classes, link the output of `serupa-purge` instead (see Before you ship). `theme.js` stays in `<head>`, since it has to run before the first paint, and the other scripts go at the end of `<body>`. What else a page needs, its title, landmarks, skip link and focus after a route change, is in [Build a page](?path=/docs/guides-build-a-page--docs). Which component fits a job, among the ones that look alike, is in [Choose a component](?path=/docs/guides-choose-a-component--docs).
+The stylesheet is `components.css` (about 450 KB), not `bundle.css`, because a plain page links it as is and the browser waits for it before drawing anything: `bundle.css` adds every utility class, about 1.5 MB. If the page uses utility classes, link the output of `serupa-purge` instead (see [Before you ship](#4-before-you-ship)). `theme.js` stays in `<head>`, since it has to run before the first paint, and the other scripts go at the end of `<body>`. What else a page needs, its title, landmarks, skip link and focus after a route change, is in [Build a page](?path=/docs/guides-build-a-page--docs). Which component fits a job, among the ones that look alike, is in [Choose a component](?path=/docs/guides-choose-a-component--docs).
 
 ## 3. Pick a theme
 

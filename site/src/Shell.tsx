@@ -54,19 +54,20 @@ export function Shell({ children, aside }: { children: React.ReactNode; aside?: 
     <SkipLink />
     <Navbar sticky size="full" aria-label="Main"
       brand={<a href="/" className="site-brand" aria-label="Serupa, home"><span className="site-brand__mark" aria-hidden="true" />Serupa</a>}
-      actions={<>
+      // Search and the theme switches are for the screen: a printed page leaves them out.
+      actions={<div className="contents" data-print="hide">
         <Button className="site-search" variant="outline" size="sm" leftIcon="search" onClick={() => setSearch(true)}>Search <Kbd keys={['mod', 'K']} size="sm" /></Button>
         <IconButton className="site-search-compact" icon="search" label="Search" variant="ghost" onClick={() => setSearch(true)} />
         <ThemeControls />
-      </>}>
+      </div>}>
       {sections.map((s) => <NavbarLink key={s.id} href={s.path} active={section?.id === s.id}>{s.label}</NavbarLink>)}
       {EXTRA.map(([to, label]) => <NavbarLink key={to} href={to} active={path === to}>{label}</NavbarLink>)}
     </Navbar>
     <CommandPalette commands={commands} open={search} onOpenChange={setSearch} placeholder="Search the docs" emptyText="No page matches" />
     <div className="site-body" data-side={side ? '' : undefined} data-aside={aside ? '' : undefined}>
-      {side && <div className="site-side">{<SectionNav section={side} path={path} />}</div>}
+      {side && <div className="site-side" data-print="hide">{<SectionNav section={side} path={path} />}</div>}
       <main id="main" className="site-main">
-        {side && <div className="site-browse">
+        {side && <div className="site-browse" data-print="hide">
           <Button variant="outline" size="sm" leftIcon="menu" onClick={() => setBrowse(true)}>{side.label}</Button>
           <Drawer open={browse} onOpenChange={setBrowse} title={side.label} placement="start">
             <SectionNav section={side} path={path} />
@@ -74,7 +75,7 @@ export function Shell({ children, aside }: { children: React.ReactNode; aside?: 
         </div>}
         {children}
       </main>
-      {aside && <aside className="site-aside" aria-label="On this page">{aside}</aside>}
+      {aside && <aside className="site-aside" aria-label="On this page" data-print="hide">{aside}</aside>}
     </div>
     <footer className="site-footer">
       <p>Serupa {__VERSION__}, designed and built by Diki.</p>

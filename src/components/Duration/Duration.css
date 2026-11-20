@@ -1,0 +1,8 @@
+/* ---------------------------------------------------------------
+   Duration: inline text in the surrounding font and color ("1 hr, 30 min"). Each unit's number and word stay
+   together, so words wrap only between units; a clock ("1:30:00") stays on one line with tabular digits, so a
+   column of them lines up.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-duration--digital { white-space: nowrap; font-variant-numeric: tabular-nums; }
+}
