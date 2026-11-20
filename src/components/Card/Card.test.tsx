@@ -139,6 +139,17 @@ describe('Card', () => {
     document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
+  test('filled on the page in dark keeps an edge: its fill is the page\'s own (zinc-950), so the border carries its outline; in light it stays borderless', async () => {
+    await render(<Variants />);
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      const f = css(el('fi')), dark = th.endsWith('-dark');
+      expect([th, f.borderTopColor]).toEqual([th, dark ? color('var(--border)') : 'rgba(0, 0, 0, 0)']);
+      if (dark) expect(f.borderTopColor).not.toBe(color('var(--surface-page)'));
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
   test('a divider inside an elevated card reads border-overlay, so it stays visible on the raised fill in dark; on an outline card it keeps border', async () => {
     await render(<Col><Card id="dve" variant="elevated"><div id="dvi" /></Card><Card><div id="dvo" /></Card></Col>);
     for (const id of ['dvi', 'dvo']) el(id).style.borderTop = '1px solid var(--border)';

@@ -42,6 +42,16 @@
           }
         }
       },
+      "border-filled": {
+        "$type": "color",
+        "$value": "{color.border}",
+        "$description": "A filled card's edge in dark, where its fill is the page's own; in light it has none.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--card-border-filled"
+          }
+        }
+      },
       "row-bg-hover": {
         "$type": "color",
         "$value": "{color.surface-hover}",

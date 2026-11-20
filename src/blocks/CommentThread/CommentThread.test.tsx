@@ -277,4 +277,13 @@ describe('Blocks/Comment thread', () => {
     expect(bare.length).toBeGreaterThan(0);
     expect(bare.map((l) => l.getAttribute('role'))).toEqual(bare.map(() => 'list'));
   });
+
+  test('Edit and Delete line up with the comment\'s text: the words, not the ghost buttons\' edges', async () => {
+    await render(<Harness />);
+    const edit = mine().getByRole('button', { name: 'Edit' }).element() as HTMLElement;
+    const body = [...mine().element().querySelectorAll('p')].find((p) => p.textContent === 'Yes, I will try 20px.')!;
+    const rtl = getComputedStyle(body).direction === 'rtl';
+    const e = edit.getBoundingClientRect(), b = body.getBoundingClientRect(), pad = parseFloat(getComputedStyle(edit).paddingInlineStart);
+    expect(Math.abs(rtl ? (e.right - pad) - b.right : (e.left + pad) - b.left)).toBeLessThan(1);
+  });
 });
