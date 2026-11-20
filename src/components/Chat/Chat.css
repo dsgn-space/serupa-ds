@@ -25,6 +25,9 @@
 .dk-chat-message--follow { margin-block-start: calc(var(--spacing-1) - var(--chat-gap, var(--spacing-3))); }
 .dk-chat-message__avatar { display: flex; flex: none; inline-size: var(--spacing-8); }
 .dk-chat-message--own .dk-chat-message__avatar:empty { display: none; }
+/* A conversation where no one shows an avatar (an assistant's replies, AIChat) keeps no empty column for one: the 40px
+   gutter left a 150px bubble at 390px. Where some do, the empty slot stays, so a run of messages lines up. */
+.dk-chat:not(:has(.dk-chat-message__avatar:not(:empty))) .dk-chat-message__avatar { display: none; }
 .dk-chat-message__main { display: flex; flex-direction: column; align-items: flex-start; gap: var(--spacing-1); min-inline-size: var(--spacing-0); }
 .dk-chat-message--own .dk-chat-message__main { align-items: flex-end; }
 .dk-chat-message__head { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--spacing-2); color: var(--chat-muted, var(--text-muted)); font-size: var(--text-xs); line-height: var(--text-xs--line-height); }
