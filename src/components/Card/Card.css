@@ -58,6 +58,15 @@
   min-width: clamp(var(--spacing-0), var(--dk-card-stack), var(--sizing-full));
 }
 .dk-card__footer--between { justify-content: space-between; }
+/* A ghost button first in a footer that starts at the edge (start or between) pulls out by its own padding, so its
+   label lines up with the text above, as a link there would; its hover fill reaches into the card's padding. Not once
+   the footer stacks (under 20rem), where every action takes the row. */
+.dk-card__footer:is(.dk-card__footer--start, .dk-card__footer--between) > .dk-btn--ghost:first-child:not(.dk-btn--icon-only) {
+  margin-inline-start: min(var(--spacing-0), max(calc(var(--spacing-0) - var(--dk-card-ghost-px)), var(--dk-card-stack)));
+}
+.dk-card__footer > .dk-btn--ghost:first-child { --dk-card-ghost-px: var(--button-padding-x-md, var(--spacing-3)); }
+.dk-card__footer > .dk-btn--ghost.dk-btn--size-sm:first-child { --dk-card-ghost-px: var(--button-padding-x-sm, var(--spacing-2)); }
+.dk-card__footer > .dk-btn--ghost.dk-btn--size-lg:first-child { --dk-card-ghost-px: var(--button-padding-x-lg, var(--spacing-5)); }
 
 /* Interactive (href): one link, around the title (or empty, over the card), whose area is stretched over the whole
    card. Buttons and links inside sit above it, so they work on their own. The card shows the link's focus ring. */
