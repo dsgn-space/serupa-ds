@@ -25,6 +25,19 @@ import { Themes } from './Themes';
 // Every Serupa component with an href (Navbar, Sidebar, Card, Button, Link) goes through the site's router.
 configure({ link: RouterLink });
 
+// A tab opened before a new version went live asks for files the host no longer has (each version's are named by their
+// content) once it moves to another page. It loads the address again, the new version's, rather than saying "Something
+// went wrong", but only once in ten seconds, so a file that is really missing shows the error instead of reloading forever.
+const RELOADED = 'serupa-site-reloaded';
+window.addEventListener('vite:preloadError', (event) => {
+  try {
+    if (Date.now() - Number(sessionStorage.getItem(RELOADED)) < 10000) return;
+    sessionStorage.setItem(RELOADED, String(Date.now()));
+  } catch { return; }
+  event.preventDefault();
+  window.location.reload();
+});
+
 function NotFound() {
   React.useEffect(() => { document.title = 'Page not found · Serupa'; }, []);
   return <Shell>

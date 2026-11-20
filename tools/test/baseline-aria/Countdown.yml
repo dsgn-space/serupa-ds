@@ -21,6 +21,11 @@
   - text: Offer ends in
   - 'timer "Offer ends in: 1 hour, 4 minutes, 59 seconds"': 1:04:59
 
+# Live
+- paragraph:
+  - text: Offer ends in
+  - 'timer "Offer ends in: 5 minutes"': 5:00
+
 # LongText
 - paragraph:
   - text: Registration closes in
