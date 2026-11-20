@@ -153,6 +153,9 @@ ol.site-list { list-style: decimal; }
    beat the story's own style attribute. */
 .site-card__stage [style*="min-height"] { min-height: 0 !important; }
 .site-card__stage > div:not([class]):is([style*="min-height"], [style*="padding"]):not([style*="width"]) { display: inline-block !important; padding: 0 !important; }
+/* A plain row a story sets its parts in (ContextualHelp's label and button) fits them too, centered, not drawn at the
+   start of a page-wide row. */
+.site-card__stage > div:not([class])[style*="display: flex"]:not([style*="width"], [style*="height"]) { display: inline-flex !important; }
 /* A floating action button pinned to the screen's corner, or an OfflineBanner to its edge, sits in its card's picture
    instead; over a story taller than the picture it keeps to the picture's corner, as a BottomNav does (Index.tsx). */
 .site-card__stage:not([data-tall]) :is(.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start),

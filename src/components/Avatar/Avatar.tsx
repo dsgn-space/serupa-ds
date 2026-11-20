@@ -23,7 +23,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   alt?: string | undefined;
   /** 'xs' 24px, 'sm' 32px, 'md' 40px (default), 'lg' 48px or 'xl' 64px. */
   size?: AvatarSize | undefined;
-  /** 'circle' (default, people) or 'square' (teams, projects, organisations). */
+  /** 'circle' (default, people) or 'square' (teams, projects, organizations). */
   shape?: 'circle' | 'square' | undefined;
   /** A dot at the bottom end: 'online', 'busy', 'away' or 'offline'. Added to the accessible name. */
   status?: AvatarStatus | undefined;

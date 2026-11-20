@@ -146,7 +146,7 @@ Each is an optional override: set it on the page, a container or one picker. The
 | `--date-picker-popup-bg` | `surface-overlay` | The calendar panel's background. |
 | `--date-picker-popup-text` | `text` | Text in the calendar panel (the Calendar has its own `--calendar-*` tokens). |
 | `--date-picker-popup-border` | `border-overlay` | Its outline. |
-| `--date-picker-popup-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
+| `--date-picker-popup-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--date-picker-popup-shadow` | `elevation-overlay` | Its shadow. |
 | `--date-picker-popup-radius` | `radius-surface` | Its corners (8px). |
 | `--date-picker-popup-padding` | `spacing-3` | Space inside it (12px). |

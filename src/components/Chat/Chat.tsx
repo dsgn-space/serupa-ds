@@ -248,7 +248,7 @@ export type ChatStepStatus = 'running' | 'done' | 'failed';
 export interface ChatStep {
   /** Kept across renders, so a step keeps its place as the list grows. */
   id: string;
-  /** What the step does, in words: "Searching the help centre". */
+  /** What the step does, in words: "Searching the help center". */
   label: React.ReactNode;
   status: ChatStepStatus;
   /** One line more, such as what it found or why it failed. */

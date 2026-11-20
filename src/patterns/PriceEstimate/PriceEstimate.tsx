@@ -61,6 +61,8 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
   const locale = useLocale();
   const money = (n: number) => formatNumber(n, locale, { style: 'currency', currency, minimumFractionDigits: Number.isInteger(n) ? 0 : 2 });
   const [planId, setPlanId] = React.useState(plans[1]?.id ?? plans[0]!.id);
+  // The radios' name is the estimate's own: two estimates on a page (a docs page shows several) don't share one group.
+  const planName = React.useId();
   const [seats, setSeats] = React.useState<number | null>(12);
   const [chosen, setChosen] = React.useState<string[]>([]);
   const [yearly, setYearly] = React.useState(true);
@@ -82,7 +84,7 @@ export function PriceEstimate({ currency = 'USD', plans = demoPlans, extras = de
         <div className="grid grid-cols-1 gap-6 pt-6 md:grid-cols-2">
           <div className="flex flex-col gap-4">
             <Field label="Plan" group>
-              <RadioGroup name="estimate-plan" variant="card" value={planId} onValueChange={(v: string) => setPlanId(v)}>
+              <RadioGroup name={planName} variant="card" value={planId} onValueChange={(v: string) => setPlanId(v)}>
                 {plans.map((p) => <Radio key={p.id} value={p.id} description={`${money(p.perSeat)} a person. ${p.about}.`}>{p.name}</Radio>)}
               </RadioGroup>
             </Field>

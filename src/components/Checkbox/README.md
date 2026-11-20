@@ -76,7 +76,7 @@ Drawn from the `LongLabel` story.
 - **Do:** Say what a tick turns on: "Email me about orders". (`DoPositiveLabel`)
 - **Don't:** A label in the negative, such as "Don't email me", where a tick means no and people have to read it twice. (`DontNegativeLabel`)
 - **Do:** Cards for add-ons that each need a line to choose by, such as a price. (`DoCardsWithDetails`)
-- **Don't:** Cards for options that explain themselves, such as colours to filter by: plain checkboxes read faster. (`DontCardsForShortOptions`)
+- **Don't:** Cards for options that explain themselves, such as colors to filter by: plain checkboxes read faster. (`DontCardsForShortOptions`)
 
 ## States
 
@@ -94,7 +94,7 @@ Drawn from the `LongLabel` story.
 
 ## Accessibility
 
-- A press anywhere within 24px of the box or the row counts (WCAG 2.5.8): when the row is shorter, or the box stands alone, its hit area reaches past what is drawn, so nothing moves. On a touch screen it's 44px high, as Apple and Material ask; in a group it stops halfway into the gap, so neighbours never share a point.
+- A press anywhere within 24px of the box or the row counts (WCAG 2.5.8): when the row is shorter, or the box stands alone, its hit area reaches past what is drawn, so nothing moves. On a touch screen it's 44px high, as Apple and Material ask; in a group it stops halfway into the gap, so neighbors never share a point.
 - It's a real checkbox: Space toggles it, forms submit it, and screen readers announce checked, unchecked and mixed.
 - The label names it. With a description, the checkbox is named by the label alone (`aria-labelledby`) and the description is read after it (`aria-describedby`).
 - The check and dash are decorative (`aria-hidden`).

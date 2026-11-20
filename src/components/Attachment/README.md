@@ -74,7 +74,7 @@ Drawn from the `Upload` story.
 - **Progress:** the bar is a `progressbar` named by the file, with its value; with `null` it has no value, so it's read as busy.
 - **Error:** "Try again" is named with the file ("Try again Pitch.pptx") and described by the message. The message is shown, not announced: say a failure out loud from the code that uploads, with `announce()` or a [Toast](../Toast/README.md).
 - **Remove:** named "Remove Invoice.pdf", so several remove buttons in a row are told apart (WCAG 2.4.6). `removeLabel` changes the words.
-- **Colour:** the kind is in the icon's shape and in words, and a failure in words, never in colour alone (WCAG 1.4.1).
+- **Color:** the kind is in the icon's shape and in words, and a failure in words, never in color alone (WCAG 1.4.1).
 - **Contrast:** the name, kind, size, link and message read 4.5:1, and the icon and the failed outline 3:1, in every theme (`Attachment.test.tsx`).
 - **What's still yours:** announcing when an upload finishes or fails, and where focus goes after a remove.
 
