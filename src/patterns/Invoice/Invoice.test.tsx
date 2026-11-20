@@ -43,6 +43,17 @@ describe('Patterns/Invoice', () => {
     expect(document.querySelectorAll('time[datetime="2025-03-31"]')).toHaveLength(1);
   });
 
+  test('the totals are in the table\'s text size (Amount due one step up, as emphasis), and their figures end where the Amount column\'s do', async () => {
+    const screen = await render(<Invoice invoice={inv()} />);
+    const cells = screen.getByRole('table').getByRole('cell').elements();
+    const amount = cells[cells.length - 1]!;
+    const figure = (el: Element) => { const r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect(); };
+    const due = [...document.querySelectorAll('dd')].at(-1)!;
+    expect(Math.abs(figure(due).right - figure(amount).right)).toBeLessThanOrEqual(0.5);
+    const paid = [...document.querySelectorAll('dd')].at(-2)!;
+    expect(getComputedStyle(paid).fontSize).toBe(getComputedStyle(amount).fontSize);
+  });
+
   test('overdue and paid are said in words', async () => {
     const screen = await render(<Invoice invoice={inv()} today="2025-04-05" />);
     expect(document.getElementById('standing')?.textContent).toMatch(/Overdue$/);

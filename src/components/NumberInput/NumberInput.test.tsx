@@ -41,6 +41,12 @@ function Controlled({ calls, set }: { calls: Array<number | null>; set?: (f: (v:
 }
 
 describe('NumberInput', () => {
+  test('the digits take the alignment of where the field sits: start in a form, end in an end-aligned table column', async () => {
+    const screen = await render(<div><NumberInput aria-label="Start" defaultValue={2} /><div style={{ textAlign: 'end' }}><NumberInput aria-label="End" defaultValue={6} /></div></div>);
+    const align = (name: string) => css(screen.getByRole('spinbutton', { name }).element()).textAlign;
+    expect([align('Start'), align('End')]).toEqual(['start', 'end']);
+  });
+
   test('Infinity as the default (a division by zero) is no number either: an empty field and no valuenow', async () => {
     await mount(<NumberInput aria-label="Ratio" defaultValue={Infinity} />);
     const f = page.getByRole('spinbutton', { name: 'Ratio' }).element() as HTMLInputElement;
