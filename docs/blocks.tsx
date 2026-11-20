@@ -173,13 +173,20 @@ export function ReadmeIntro() {
 }
 /** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
 /** A section whose heading the page writes itself (reserve, such as its title) comes without that heading, so the page
- * doesn't say "Typography" twice; any other reserved name keeps the plain id. */
+ * doesn't say "Typography" twice, and its subsections step up a level under the title. */
 export function ReadmeSections({ headings, reserve }: { headings: string[]; /** Headings the page writes itself, such as its title: theirs keep the plain id. */ reserve?: string[] }) {
   const parts = [ROOT, foundations].flatMap((md) => md.split(/\n(?=## )/));
   const md = headings.map((h) => {
     const part = parts.find((p) => p.startsWith(`## ${h}\n`));
     if (!part) return `> Missing README section: ${h}`;
-    return reserve?.includes(h) ? part.slice(part.indexOf('\n') + 1) : part;
+    if (!reserve?.includes(h)) return part;
+    // Its heading is the page's own title now, so its subsections step up a level (### to ##), outside code: a page
+    // never skips from its title to an h3.
+    let code = false;
+    return part.slice(part.indexOf('\n') + 1).split('\n').map((line) => {
+      if (line.startsWith('```')) code = !code;
+      return !code && /^###+ /.test(line) ? line.slice(1) : line;
+    }).join('\n');
   }).join('\n\n');
   return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
 }
