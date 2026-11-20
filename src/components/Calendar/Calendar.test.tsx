@@ -685,12 +685,12 @@ describe('Calendar: other calendar systems (RX9)', () => {
     warn.mockRestore();
   });
   test('headingLevel sets the month title\'s level to fit the page\'s outline: 2 by default, 2 to 6 taken, anything else 2', async () => {
-    const r = await render(<Calendar data-testid="cal" defaultMonth={new Date(2026, 10, 1)} />);
+    const r = await render(<Calendar data-testid="cal" locale="en-US" defaultMonth={new Date(2026, 10, 1)} />);
     const level = () => page.getByRole('heading', { name: 'November 2026' }).element().tagName;
     expect(level()).toBe('H2');
-    await r.rerender(<Calendar data-testid="cal" defaultMonth={new Date(2026, 10, 1)} headingLevel={4} />);
+    await r.rerender(<Calendar data-testid="cal" locale="en-US" defaultMonth={new Date(2026, 10, 1)} headingLevel={4} />);
     expect([level(), page.getByRole('grid').element().getAttribute('aria-labelledby') === page.getByRole('heading', { name: 'November 2026' }).element().id]).toEqual(['H4', true]);
-    await r.rerender(<Calendar data-testid="cal" defaultMonth={new Date(2026, 10, 1)} headingLevel={9 as 2} />);
+    await r.rerender(<Calendar data-testid="cal" locale="en-US" defaultMonth={new Date(2026, 10, 1)} headingLevel={9 as 2} />);
     expect(level()).toBe('H2');
   });
 });
