@@ -1,7 +1,7 @@
 /* ---------------------------------------------------------------
    Chat: a scrolling column of messages, newest at the bottom, with a "N new messages" button floating over its
    bottom edge while the reader is further up. ChatMessage: others' messages at the start with a 32px avatar, own
-   messages at the end; the text in a bubble (surface-muted for others, primary-subtle for own, 12px corners), the
+   messages at the end; the text in a bubble (surface-hover for others: zinc-100, or zinc-800 in dark, a step above a card or the page rather than a well below it; primary-subtle for own, 12px corners), the
    author and time above it in small muted text, files under it, and "Sending…" or a danger "Not sent" under that.
    ChatDivider: the day, small and muted, centered between two hairlines. ChatComposer: a one-line field that grows
    to six lines, with the send button at its end.
@@ -35,7 +35,7 @@
 .dk-chat-message__bubble {
   max-inline-size: var(--sizing-full); padding: var(--chat-bubble-padding-y, var(--spacing-2)) var(--chat-bubble-padding-x, var(--spacing-3));
   border: var(--border-width-1) solid transparent; border-radius: var(--chat-bubble-radius, var(--radius-container));
-  background: var(--chat-bubble-bg, var(--surface-muted)); --surface-behind: var(--chat-bubble-bg, var(--surface-muted)); color: var(--chat-text, var(--text)); white-space: pre-wrap; overflow-wrap: anywhere;
+  background: var(--chat-bubble-bg, var(--surface-hover)); --surface-behind: var(--chat-bubble-bg, var(--surface-hover)); color: var(--chat-text, var(--text)); white-space: pre-wrap; overflow-wrap: anywhere;
 }
 .dk-chat-message--own .dk-chat-message__bubble { background: var(--chat-own-bubble-bg, var(--primary-subtle)); }
 .dk-chat-message--failed .dk-chat-message__bubble { border-color: var(--chat-failed-border, var(--danger)); }
