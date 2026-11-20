@@ -1,7 +1,7 @@
 // Building blocks for the Storybook pages. Everything here reads tokens.json, README.md and the component
 // guidelines at build time, so the documentation can't drift from the system.
 import * as React from 'react';
-import { DocsContext, Markdown } from '@storybook/addon-docs/blocks';
+import { DocsContext, Markdown, Primary } from '@storybook/addon-docs/blocks';
 import tokens from '../tokens.json';
 import readme from '../README.md?raw';
 import foundations from './foundations.md?raw';
@@ -91,14 +91,22 @@ export function Guide({ source }: { source: string }) {
   // The site's Title already prints the since line under the page name (its docs context carries the props, which
   // Storybook's doesn't), so the guide leaves it out there rather than say it twice.
   const sinceInTitle = Array.isArray((React.useContext(DocsContext) as { docs?: unknown }).docs);
+  // On the site, what the component is comes first, right under the title, then the example: the guide's lead (its
+  // text up to the first code block) is drawn above the first story, which the page's own Primary leaves out there.
+  // Storybook keeps its own order (the .mdx page's), the example first.
+  const body = source.replace(/^# .*\n+/, '');
+  const fence = sinceInTitle ? body.search(/^```/m) : -1, head = body.search(/^## /m);
+  const cut = fence > 0 && (head < 0 || fence < head) ? fence : 0;
   return <>
+    {cut ? <DocMarkdown slugify={slugify}>{relink(body.slice(0, cut))}</DocMarkdown> : null}
+    {cut ? <Primary placed /> : null}
     {name && <div className="sb-copy-guide">
       <CopyButton value={() => forAgent(name, source)} size="sm">Copy for AI</CopyButton>
       <span>The whole guide as Markdown, to paste into a coding agent.</span>
     </div>}
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
     {name && !sinceInTitle && <ComponentSince name={name} />}
-    {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
+    {anatomyAt(body.slice(cut)).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <DocMarkdown key={i} slugify={slugify}>{relink(part)}</DocMarkdown>
       : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />
       : <AnatomyDiagram key={i} {...part} />))}
