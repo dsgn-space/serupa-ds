@@ -452,10 +452,20 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   await context.close();
 }
 
-// A page that shows no changes and no test list doesn't download the changelog or the tests' names, the heaviest data
-// in the docs: they load when a section that reads them is drawn (docs/blocks.tsx), not with every page.
+// A page that shows no changes, no test list and no token explorer doesn't download the changelog, the tests' names
+// or every component's tokens, the heaviest data in the docs: they load when a section that reads them is drawn
+// (docs/blocks.tsx), not with every page.
 {
-  const marker = (/[A-Za-z][A-Za-z ,]{40,}/.exec(fs.readFileSync(path.join(PROJECT, 'CHANGELOG.md'), 'utf8').split('\n').find((l) => /^- .{80,}/.test(l)) ?? '')?.[0] ?? '').slice(0, 40);
+  const changelog = (/[A-Za-z][A-Za-z ,]{40,}/.exec(fs.readFileSync(path.join(PROJECT, 'CHANGELOG.md'), 'utf8').split('\n').find((l) => /^- .{80,}/.test(l)) ?? '')?.[0] ?? '').slice(0, 40);
+  // The longest description of a component token (<Name>.tokens.json), which only the token explorer shows.
+  const said = [];
+  for (const n of fs.readdirSync(path.join(PROJECT, 'src', 'components'))) {
+    const dir = path.join(PROJECT, 'src', 'components', n);
+    for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.tokens.json'))) {
+      JSON.stringify(JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), (k, v) => { if (k === '$description' && typeof v === 'string') said.push(v); return v; });
+    }
+  }
+  const tokens = said.map((d) => /[A-Za-z][A-Za-z ,]{40,}/.exec(d)?.[0] ?? '').sort((a, c) => c.length - a.length)[0]?.slice(0, 40) ?? '';
   const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
   /** @type {Promise<string>[]} */
@@ -463,9 +473,12 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   page.on('response', (r) => { if (r.url().endsWith('.js')) scripts.push(r.text().catch(() => '')); });
   const failed = await openUrl(page, base + '/foundations/colors') || await ready(page, true);
   await page.waitForTimeout(1000);
-  const carried = (await Promise.all(scripts)).some((js) => js.includes(marker));
-  t('/foundations/colors doesn\'t download the changelog', !failed && marker.length === 40 && !carried,
-    failed || (marker.length < 40 ? 'no line of CHANGELOG.md to look for' : `a script it loads carries the changelog ("${marker}")`));
+  const loaded = await Promise.all(scripts);
+  for (const [what, marker] of [['the changelog', changelog], ['every component\'s tokens', tokens]]) {
+    const carried = loaded.some((js) => js.includes(marker));
+    t(`/foundations/colors doesn't download ${what}`, !failed && marker.length === 40 && !carried,
+      failed || (marker.length < 40 ? `nothing of ${what} to look for` : `a script it loads carries ${what} ("${marker}")`));
+  }
   await context.close();
 }
 
