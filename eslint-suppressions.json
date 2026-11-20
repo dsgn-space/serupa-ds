@@ -1,8 +1,5 @@
 {
   "src/components/Accordion/Accordion.tsx": {
-    "jsx-a11y-x/no-static-element-interactions": {
-      "count": 1
-    },
     "react-hooks/immutability": {
       "count": 1
     },

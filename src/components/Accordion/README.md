@@ -59,7 +59,7 @@ Drawn from the `Playground` story.
 ## Accessibility
 
 - Follows the WAI-ARIA accordion pattern: each title is a button inside a heading, with `aria-expanded` and `aria-controls`; an open item's content is a region labelled by its title. Closed items aren't regions, so screen readers' landmark lists hold only what's showing, and with `type="multiple"` and more than six items no panel is a region (the APG's advice against crowding the landmarks); the content still follows its heading.
-- Up and Down move between titles (wrapping, skipping disabled ones), Home and End go to the first and last; Enter and Space open and close.
+- Tab moves between titles, as it does between any buttons, and Enter and Space open and close. The pattern's optional arrow keys are left out: a title acts like every other button on the page, and Up and Down scroll it.
 - Closed content is `hidden="until-found"`, so it's out of the tab order and screen readers skip it, but find-in-page still finds it: a match fires `beforematch`, which opens that item (in `single`, closing the open one). It's set once the closing animation ends. A disabled item's content stays `visibility: hidden` and isn't searchable. Before hydration, and in browsers without `until-found`, closed content is `visibility: hidden` as before.
 - The Expand all button is a plain `<button>` that says "Expand all" or, once every enabled item is open, "Collapse all" (the `expandAll` and `collapseAll` labels in `SerupaProvider`). It has `aria-expanded`, true only once every item is open, since VoiceOver doesn't reliably say a label that changes on its own. Disabled items stay as they are.
 - With `collapsible={false}` the open item's button has `aria-disabled`, since pressing it does nothing.
@@ -71,8 +71,6 @@ Drawn from the `Playground` story.
 | --- | --- |
 | Tab | Through the titles and anything focusable in open items; closed content is skipped. With `showExpandAll`, its button comes first |
 | Enter / Space | Opens or closes the focused item |
-| Down / Up | The next or previous title, wrapping, skipping disabled ones |
-| Home / End | The first or last title |
 
 ## Props
 
@@ -81,7 +79,7 @@ Drawn from the `Playground` story.
 | Prop | Type | Default | What it does |
 | --- | --- | --- | --- |
 | `id` | string | none | Goes to the root `<div>`. |
-| `type` | `'single'` \| `'multiple'` | `'single'` | One open at a time, or any number |
+| `type` | `'single'` \| `'multiple'` | `'multiple'` | Any number open, so people can compare them, or one at a time |
 | `value` | `string[]` | none | The open items (controlled) |
 | `defaultValue` | `string[]` | `[]` | The items open at first. With `single`, only the first counts |
 | `onValueChange` | `(value: string[]) => void` | none | Called when an item opens or closes |

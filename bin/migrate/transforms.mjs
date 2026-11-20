@@ -420,12 +420,34 @@ export const TRANSFORMS = [
       return { text, count, notes: [] };
     },
   },
+  {
+    // It changes what code means, not a name, so it edits only when --from says the code was written for an earlier
+    // major; without --from, code may be 17.0.0's already, and each Accordion with no type is listed to check instead.
+    version: '17.0.0', id: 'accordion-type-single', exts: CODE, withFrom: true,
+    title: 'Accordion: `type` is `"multiple"` by default; one written without a type gets `type="single"`, so it stays one open at a time',
+    run(src, file, listOnly = false) {
+      if (!/\bAccordion\b/.test(src)) return { text: src, count: 0, notes: [] };
+      let count = 0;
+      const notes = [];
+      for (const [s, e] of openTags(src, 'Accordion').reverse()) {
+        const mask = topLevel(src.slice(s, e));
+        if (attrAt('type').test(mask)) continue;
+        // Props spread in may carry a type: leave the tag, and say where to look.
+        if (listOnly) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with no `type`: it is `"multiple"` by default from 17.0.0; add type="single" if it should stay one open at a time (or run with --from)' }); continue; }
+        if (/\{\s*\.\.\./.test(src.slice(s, e))) { notes.unshift({ line: lineOf(src, s), message: 'Accordion with spread props and no `type`: it is `"multiple"` by default now; add type="single" if the spread doesn\'t set one and it should stay one open at a time' }); continue; }
+        src = src.slice(0, s) + ' type="single"' + src.slice(s);
+        count++;
+      }
+      return { text: src, count, notes };
+    },
+  },
 ];
 
 const major = (v) => Number(/^v?(\d+)/.exec(String(v))?.[1]);
 
-/** The changes for a project on `from` (a version, or null for all of them). */
-export const transformsAfter = (from) => (from == null ? TRANSFORMS : TRANSFORMS.filter((t) => major(t.version) > major(from)));
+/** The changes for a project on `from` (a version, or null for all of them; then a change that alters what code means,
+ * rather than a name, only lists where to look). */
+export const transformsAfter = (from) => (from == null ? TRANSFORMS.map((t) => (t.withFrom ? { ...t, run: (src, file) => /** @type {(src: string, file: string, listOnly: boolean) => any} */ (t.run)(src, file, true) } : t)) : TRANSFORMS.filter((t) => major(t.version) > major(from)));
 
 /** One file's text through the changes: the new text, the count per change and what to check by hand. */
 export function migrate(src, file, transforms = TRANSFORMS) {
