@@ -12,81 +12,17 @@ import { Select } from '../../src/components/Select/Select';
 
 # Design principles
 
-These principles guide how Serupa's components, tokens and docs are made, and how the screens built with them should behave. Use them to decide cases a guide doesn't cover, and to settle design reviews.
+These eight principles guide how Serupa's components, tokens and docs are made, and how the screens built with them should behave. They follow the themes of Apple's design principles, put in our own words for the web. Use them to decide cases a guide doesn't cover, and to settle design reviews.
 
-They are for weighing choices, not a checklist to tick. Start every screen from what it is for and who it is for, then let the principles help you choose between good options. When they conflict, accessibility comes first.
+They are for weighing choices, not a checklist to tick. When they conflict, accessibility comes first.
 
-## Accessible
+## Purpose
 
-Everyone can use it, whatever their device, input or ability.
+Know what each screen is for, and make that one job excellent.
 
-- Every component meets WCAG 2.2 AA in every theme, and tests check it.
-- Color is never the only signal. A status has a word; a chart series has a shape.
-- Targets are at least 24px, and 44px on touch screens.
-- Plan for it from the first sketch. Accessibility added at the end costs more and is never as good.
-
-<DoDontExample
-  doText="Pair the color with a word."
-  doExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <Badge tone="danger" dot>Overdue</Badge></span>}
-  dontText="Rely on color alone."
-  dontExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <span aria-hidden="true" style={{ display: 'inline-block', inlineSize: 8, blockSize: 8, borderRadius: 4, background: 'var(--danger)' }} /></span>}
-/>
-
-## Adaptable
-
-Work the way each person works, wherever they are.
-
-- Every action works with a mouse, touch, a keyboard and voice: a visible label that matches the accessible name, nothing that only appears on hover, and no gesture without a button that does the same.
-- Keep things in their place as the screen changes. The same control sits in the same spot at every width, so people don't have to find it again.
-- Bring people back to where they were. A reload, a narrow window or a return visit keeps the tab, the filter and the scroll they left. See [Keeping state](?path=/docs/patterns-page-shell--docs).
-- Give each width its own care: the phone layout is designed, not the desktop one squeezed.
-
-<DoDontExample
-  doText="Keep row actions in a visible button."
-  doExample={<Source language="tsx" dark={false} code={'<IconButton icon="more_horiz" label="More actions for Invoice 1042" />\n// reachable by touch, keyboard and voice ("click More actions")'} />}
-  dontText="Show actions only on hover."
-  dontExample={<Source language="css" dark={false} code={'.row .actions { opacity: 0; }\n.row:hover .actions { opacity: 1; }\n/* nothing to tap on a phone, nothing to name by voice */'} />}
-/>
-
-## Native
-
-Build on what the browser already does well.
-
-- Use native elements first: `<select>`, `<dialog>`, `<input>`. They bring the phone's picker, autofill and screen-reader support with them.
-- Add newer CSS and HTML as progressive enhancement, with today's behavior as the fallback.
-
-<DoDontExample
-  doText="Style the native control."
-  doExample={<div style={{ inlineSize: 260 }}><Field label="Country"><Select options={['Indonesia', 'Malaysia', 'Singapore']} /></Field></div>}
-  dontText="Rebuild a native control with `div` elements."
-  dontExample={<Source language="tsx" dark={false} code={'<div className="dropdown" onClick={toggle}>\n  {open && options.map((o) => (\n    <div onClick={() => pick(o)}>{o}</div>\n  ))}\n</div>'} />}
-/>
-
-## Clear
-
-Say what things do, in the words people use.
-
-- Label actions with what they do: "Delete project", not "OK".
-- Follow conventions people already know: × closes, Escape cancels, Mod+Z undoes, the main action comes last. A familiar pattern beats a clever one.
-- Show what can be used and what just changed: a control looks pressable, a disabled one says why, and a change on screen is announced.
-- Use one word for one thing across the system. See [Content and voice](?path=/docs/foundations-content-and-voice--docs).
-
-<DoDontExample
-  doText="Name buttons after their action."
-  doExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">Keep project</Button><Button destructive>Delete project</Button></div>}
-  dontText="Use Yes and No."
-  dontExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">No</Button><Button destructive>Yes</Button></div>}
-/>
-
-## Focused
-
-Show what matters and leave out the rest.
-
-- Know what the screen is for, and make that one job excellent before adding a second.
-- One primary action per view.
-- Show fewer options up front, and the rest on request.
-- Simple is not the same as bare. Keep what people need close at hand, and move the rest one step away, rather than hiding everything.
-- Add decoration only when it carries meaning. Keep motion short, and turn it off for `prefers-reduced-motion`.
+- Start from who the screen is for and what they came to do, before choosing a single component.
+- One primary action per view. A second job waits until the first is done well.
+- Solve the problem people actually have, not the one the last product solved.
 
 <DoDontExample
   doText="Make one action primary."
@@ -95,14 +31,14 @@ Show what matters and leave out the rest.
   dontExample={<div style={{ display: 'flex', gap: 8 }}><Button>Cancel</Button><Button>Preview</Button><Button>Publish</Button></div>}
 />
 
-## In control
+## Agency
 
 People choose how to reach their goal, and can always change their mind.
 
 - Get out of the way: open on the task or the content, not on a welcome screen, a tour or a banner.
 - Never trap people in a flow. A tour, an onboarding checklist or a multi-step form can be left, skipped or finished later, and keeps what was done.
 - Make mistakes cheap. Act at once and offer Undo rather than asking "Are you sure?"; confirm only what can't be undone. See [Destructive actions](?path=/docs/guides-destructive-actions--docs).
-- Going back costs nothing: Back, Cancel and Escape return to where people were with their work intact.
+- Going back costs nothing: Back, Cancel and Escape return to where people were, with their work intact.
 
 <DoDontExample
   doText="Act at once, and offer Undo."
@@ -111,13 +47,13 @@ People choose how to reach their goal, and can always change their mind.
   dontExample={<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>Archive this project? <Button variant="outline" size="sm">Cancel</Button><Button size="sm">Archive</Button></div>}
 />
 
-## Respectful
+## Responsibility
 
 Act in the interest of the people using it, and earn their trust.
 
-- Ask only for what the task needs. Every field is a cost to the person and a risk to keep.
-- Say why before you ask: next to a field that isn't obvious, and before the browser's prompt for the camera, location or notifications. See [Permission request](?path=/docs/patterns-permission-request--docs).
+- Ask only for what the task needs, and say why before you ask: next to a field that isn't obvious, and before the browser's prompt for the camera, location or notifications. See [Permission request](?path=/docs/patterns-permission-request--docs).
 - Be plain about what happens to people's data, and make the private choice the default.
+- Show what is really happening: progress that reflects real work, no "Saved" before the save finishes.
 - Leaving is as easy as joining: cancelling, unsubscribing and deleting an account take no more steps than signing up.
 
 <DoDontExample
@@ -127,14 +63,69 @@ Act in the interest of the people using it, and earn their trust.
   dontExample={<div style={{ inlineSize: 260 }}><Field label="Phone" required><Input type="tel" /></Field></div>}
 />
 
-## Complete
+<DoDontExample
+  doText="Report real progress."
+  doExample={<div style={{ inlineSize: 260 }}><Progress value={40} label="Uploading 4 of 10 files" /></div>}
+  dontText="Fill a bar on a timer."
+  dontExample={<Source language="tsx" dark={false} code={'useEffect(() => {\n  const t = setInterval(() =>\n    setValue((v) => Math.min(v + 10, 99)), 500);\n  return () => clearInterval(t);\n}, []);'} />}
+/>
 
-Design every state, not just the ideal one.
+## Familiarity
+
+Build on what people already know.
+
+- Use native elements first: `<select>`, `<dialog>`, `<input>`. They bring the phone's picker, autofill and screen-reader support with them.
+- Follow the conventions people expect: × closes, Escape cancels, Mod+Z undoes, the main action comes last. A familiar pattern beats a clever one.
+- Solve the same problem the same way. Components use tokens, never raw values; similar components share sizes, states, keys and words.
+- Show what can be used and what just changed: a control looks pressable, a disabled one says why, and a change on screen is announced.
+
+<DoDontExample
+  doText="Style the native control."
+  doExample={<div style={{ inlineSize: 260 }}><Field label="Country"><Select options={['Indonesia', 'Malaysia', 'Singapore']} /></Field></div>}
+  dontText="Rebuild a native control with `div` elements."
+  dontExample={<Source language="tsx" dark={false} code={'<div className="dropdown" onClick={toggle}>\n  {open && options.map((o) => (\n    <div onClick={() => pick(o)}>{o}</div>\n  ))}\n</div>'} />}
+/>
+
+## Flexibility
+
+Everyone can use it, whatever their device, input or ability.
+
+- Every component meets WCAG 2.2 AA in every theme, and tests check it. Plan for it from the first sketch.
+- Color is never the only signal. A status has a word; a chart series has a shape.
+- Every action works with a mouse, touch, a keyboard and voice. Targets are at least 24px, and 44px on touch screens.
+- Keep things in their place as the screen changes, and bring people back to where they were. See [Keeping state](?path=/docs/patterns-page-shell--docs).
+
+<DoDontExample
+  doText="Pair the color with a word."
+  doExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <Badge tone="danger" dot>Overdue</Badge></span>}
+  dontText="Rely on color alone."
+  dontExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <span aria-hidden="true" style={{ display: 'inline-block', inlineSize: 8, blockSize: 8, borderRadius: 4, background: 'var(--danger)' }} /></span>}
+/>
+
+## Simplicity
+
+Keep what people need close, and let the rest fall away.
+
+- Simple is not bare. Show the few things people use most, and the rest one step away.
+- Use the fewest, plainest words. Label actions with what they do: "Delete project", not "OK". See [Content and voice](?path=/docs/foundations-content-and-voice--docs).
+- Make the order obvious: a clear hierarchy says where people are and what comes next.
+- Ship only what the page needs: no runtime dependencies beyond React, a size budget per component, and icons and fonts that load only what's used.
+
+<DoDontExample
+  doText="Name buttons after their action."
+  doExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">Keep project</Button><Button destructive>Delete project</Button></div>}
+  dontText="Use Yes and No."
+  dontExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">No</Button><Button destructive>Yes</Button></div>}
+/>
+
+## Craft
+
+Care about every detail, in every state.
 
 - Each component covers rest, hover, focus, pressed, invalid, read-only, disabled, loading and empty, at every size and in every theme.
+- Sizes line up across components: a 32px input sits next to a 32px button. Corners nest, numbers don't jump, motion is short and stops for `prefers-reduced-motion`.
 - Errors say how to fix the problem.
-- Sizes line up across components: a 32px input sits next to a 32px button.
-- Care shows in the details people don't name: the corner that nests, the number that doesn't jump, the word that fits. Release is not the end; keep raising the bar.
+- Release is not the end. Changes follow semantic versioning, and the bar keeps rising.
 
 <DoDontExample
   doText="Say how to fix the error."
@@ -143,58 +134,13 @@ Design every state, not just the ideal one.
   dontExample={<div style={{ inlineSize: 260 }}><Field label="Email" error="Invalid input."><Input type="email" defaultValue="ana.example.com" /></Field></div>}
 />
 
-## Honest
-
-Show what is actually happening.
-
-- Respond to input right away.
-- Show progress that reflects real work, and announce the result to screen readers.
-- Don't fake it: no progress on a timer, no "Saved" before the save finishes.
-
-<DoDontExample
-  doText="Report real progress."
-  doExample={<div style={{ inlineSize: 260 }}><Progress value={40} label="Uploading 4 of 10 files" /></div>}
-  dontText="Fill a bar on a timer."
-  dontExample={<Source language="tsx" dark={false} code={'useEffect(() => {\n  const t = setInterval(() =>\n    setValue((v) => Math.min(v + 10, 99)), 500);\n  return () => clearInterval(t);\n}, []);'} />}
-/>
-
-## Lightweight
-
-Ship only what the page needs.
-
-- No runtime dependencies beyond React.
-- Each component has a size budget, checked in CI.
-- Icons and fonts load only the parts a page uses.
-
-<DoDontExample
-  doText="Import the components you use."
-  doExample={<Source language="tsx" dark={false} code={"import { Button, Field, Input } from '@diki-stwn/serupa-ds';\n// fades and slides come with the components, from the motion tokens"} />}
-  dontText="Add a library for one effect."
-  dontExample={<Source language="tsx" dark={false} code={"import { motion } from 'some-animation-library';\n\n<motion.div animate={{ opacity: 1 }} /> // tens of KB for one fade"} />}
-/>
-
-## Consistent
-
-Solve the same problem the same way.
-
-- Components use tokens, never raw values, and a test checks it.
-- Similar components share sizes, states and keys.
-- Changes follow semantic versioning. A renamed prop keeps its old name, with a warning, until the next major.
-
-<DoDontExample
-  doText="Use tokens."
-  doExample={<Source language="css" dark={false} code={'.card {\n  padding: var(--spacing-4);\n  color: var(--text-muted);\n  border-radius: var(--radius-surface);\n}'} />}
-  dontText="Hard-code values."
-  dontExample={<Source language="css" dark={false} code={'.card {\n  padding: 15px;\n  color: #6b7280;\n  border-radius: 7px;\n}'} />}
-/>
-
-## Human
+## Delight
 
 Leave people feeling capable, not processed.
 
 - Decide how a screen should feel: calm for money and health, quick for daily work, warm for a first visit. Let that choose the words, the motion and the pace.
 - Small moments carry the character: an empty list with a next step, an error that helps, a confirmation that says what happens next.
-- Delight comes from the task going well, not from decoration. Never let a flourish slow people down or get in the way.
+- Delight comes from the task going well, not from decoration. Never let a flourish slow people down.
 
 <DoDontExample
   doText="Give an empty screen a way forward."
@@ -205,4 +151,4 @@ Leave people feeling capable, not processed.
 
 ## Influences
 
-These principles draw on Dieter Rams' ten principles for good design, Jakob Nielsen's usability heuristics, the Gestalt principles, the Laws of UX, Microsoft's inclusive design, Apple's Human Interface Guidelines, and the design principles of Shopify Polaris, IBM Carbon, Atlassian, Google Material and Vercel Geist.
+These principles follow the themes of Apple's Human Interface Guidelines design principles, and draw on Dieter Rams' ten principles for good design, Jakob Nielsen's usability heuristics, the Gestalt principles, the Laws of UX, Microsoft's inclusive design, and the design principles of Shopify Polaris, IBM Carbon, Atlassian, Google Material and Vercel Geist.

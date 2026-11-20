@@ -2,4 +2,4 @@
 "@diki-stwn/serupa-ds": patch
 ---
 
-- Changed (Design principles): four new principles, Adaptable, In control, Respectful and Human, each with a Do and a Don't. Accessible, Clear, Focused and Complete say more, and the page says the principles are for weighing choices, not a checklist. No component changes.
+- Changed (Design principles): the principles are now eight, following the themes of Apple's design principles in Serupa's own words: Purpose, Agency, Responsibility, Familiarity, Flexibility, Simplicity, Craft and Delight. The old rules (accessible, native, clear, focused, complete, honest, lightweight, consistent) live on inside them, and each has a Do and a Don't. No component changes.
