@@ -42,7 +42,7 @@ formatDate("2026-11-20", "id", { dateStyle: "long" })                      // "2
 
 - Rendered on the server, a moment with no `timeZone` is written in UTC, since the server can't know the reader's zone, and the page hydrates with the same text. Right after, it's rewritten in the reader's zone. A `"yyyy-mm-dd"` day, and a moment with `timeZone`, are the same on the server and in the browser and never change. Pass `timeZone` when the server knows the reader's zone, so the first text is the final one.
 - It's inline text in the surrounding font and color, and wraps like the sentence around it.
-- It takes the direction of its own words (`dir="auto"`), so an English date in a right-to-left page keeps its order.
+- With a `locale` of its own it carries that locale's direction (`dir`) with its `lang`, so an English date in a right-to-left page keeps its order; without one it takes the page's.
 
 ## Accessibility
 
