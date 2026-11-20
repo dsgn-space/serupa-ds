@@ -110,6 +110,9 @@ describe('Patterns/Messages', () => {
     await page.viewport(380, 800);
     const screen = await render(<Messages conversations={talks()} />);
     await screen.getByRole('link', { name: /Budi Santoso/ }).click();
+    // The conversation pane draws after the click: wait for it before measuring.
+    await expect.element(screen.getByRole('button', { name: 'Back to conversations' })).toBeVisible();
+    await expect.element(screen.getByRole('heading', { level: 2, name: 'Budi Santoso' })).toBeVisible();
     const back = screen.getByRole('button', { name: 'Back to conversations' }).element() as HTMLElement;
     const icon = back.querySelector('svg, [aria-hidden="true"]')!;
     const name = screen.getByRole('heading', { level: 2, name: 'Budi Santoso' }).element();
