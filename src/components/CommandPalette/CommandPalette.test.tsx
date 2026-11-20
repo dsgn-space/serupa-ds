@@ -306,7 +306,8 @@ describe('CommandPalette', () => {
     await render(<Server />);
     await expect.poll(() => document.activeElement).toBe(field());
     const list = () => document.getElementById(field().getAttribute('aria-controls')!)!;
-    const status = () => document.querySelector('dialog [role="status"]')?.textContent ?? null;
+    // The loading row's words. The page's announcer, also a status, moves into an open dialog, so it's left out (empty or not ours).
+    const status = () => [...document.querySelectorAll('dialog [role="status"]')].find((x) => x.querySelector('[data-component="loader"]'))?.textContent ?? null;
     await userEvent.keyboard('10');
     await expect.poll(() => status()).toBe('Searching…');
     expect([list().getAttribute('aria-busy'), document.querySelector('dialog')!.textContent.includes('No matching commands')]).toEqual(['true', false]);
@@ -325,8 +326,8 @@ describe('CommandPalette', () => {
 
   test('loading with nothing typed or listed yet: "Loading…" by default, "Memuat…" in Indonesian', async () => {
     const r = await render(<CommandPalette id="ld" defaultOpen commands={[]} loading />);
-    await expect.poll(() => document.querySelector('dialog [role="status"]')?.textContent).toBe('Loading…');
+    await expect.poll(() => [...document.querySelectorAll('dialog [role="status"]')].find((x) => x.querySelector('[data-component="loader"]'))?.textContent).toBe('Loading…');
     await r.rerender(<SerupaProvider labels={idLabels}><CommandPalette id="ld" defaultOpen commands={[]} loading /></SerupaProvider>);
-    await expect.poll(() => document.querySelector('dialog [role="status"]')?.textContent).toBe('Memuat…');
+    await expect.poll(() => [...document.querySelectorAll('dialog [role="status"]')].find((x) => x.querySelector('[data-component="loader"]'))?.textContent).toBe('Memuat…');
   });
 });
