@@ -62,7 +62,7 @@
 .dk-slider__mark-label > span, .dk-slider__value > span { flex: none; translate: var(--dk-slider-nudge, none); }
 /* A label too long for its room between the marks wraps within it (the slider sets the width, and grows for the lines).
    column-gap above is the space kept between two labels; the label itself is one flex item, so it lays out nothing. */
-.dk-slider__mark-label > [data-wrap] { white-space: normal; text-align: center; inline-size: max-content; max-inline-size: var(--dk-slider-share); overflow-wrap: anywhere; }
+.dk-slider__mark-label > [data-wrap] { white-space: normal; text-wrap: balance; text-align: center; inline-size: max-content; min-inline-size: min-content; max-inline-size: var(--dk-slider-share); }
 .dk-slider__value {
   position: absolute; inset-block-end: calc(var(--sizing-full) + var(--spacing-1\.5)); inset-inline: var(--spacing-0);
   display: flex; justify-content: center; pointer-events: none; opacity: var(--opacity-0);

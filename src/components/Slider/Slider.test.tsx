@@ -561,6 +561,11 @@ describe('Slider at 320px (GM2)', () => {
       const clear = r.slice(1).every((x, i) => x.left >= r[i]!.right + 4);
       expect([r.length, clear, r.every((x) => x.left >= box.left - 0.5 && x.right <= box.right + 0.5), r.every((x) => x.bottom <= box.bottom + 0.5)]).toEqual([3, true, true, true]);
     }
+    // Lines break between words, never inside one: "Completely" stays whole, and "Halfway there" gives up room for it.
+    for (const p of el('lm-l').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')) {
+      const t = p.firstChild!, text = t.textContent!, r = document.createRange();
+      for (const m of text.matchAll(/\S+/g)) { r.setStart(t, m.index); r.setEnd(t, m.index + m[0].length); expect(r.getClientRects().length, m[0]).toBe(1); }
+    }
     // The text after it starts below the wrapped labels, not over them.
     const low = Math.max(...[...el('lm-r').querySelectorAll<HTMLElement>('[aria-hidden] > span > span')].map((p) => rect(p).bottom));
     expect(rect(el('lm-after')).top).toBeGreaterThanOrEqual(low);
