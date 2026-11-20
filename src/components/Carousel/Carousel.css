@@ -16,6 +16,9 @@
   scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
 }
 .dk-carousel__viewport::-webkit-scrollbar { display: none; }
+.dk-carousel__viewport:focus { outline: none; }
+.dk-carousel__viewport:focus-visible { outline: var(--focus-ring-width) solid var(--carousel-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
+@media (forced-colors: active) { .dk-carousel__viewport:focus-visible { outline-color: Highlight; } }
 @media (prefers-reduced-motion: no-preference) { .dk-carousel__viewport { scroll-behavior: smooth; } }
 /* A mouse drag scrolls it by hand: no snapping until it lets go. */
 .dk-carousel__viewport[data-dragging] { scroll-snap-type: none; scroll-behavior: auto; cursor: var(--cursor-grabbing); -webkit-user-select: none; user-select: none; }

@@ -281,7 +281,10 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
     <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('dk-carousel', (multi || props.peek) && 'dk-carousel--multi', props.peek && 'dk-carousel--peek', props.className)} style={style}
       aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined}>
       <div className="dk-carousel__frame">
-        <div className="dk-carousel__viewport" ref={viewport} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
+        {/* A scroll container is a keyboard stop of its own (WCAG 2.1.1, axe's scrollable-region-focusable): focused,
+            the arrow keys scroll it a slide at a time, and it's named by the slides in view ("2 of 5"). */}
+        <div className="dk-carousel__viewport" ref={viewport} role={last > 0 ? 'group' : undefined} tabIndex={last > 0 ? 0 : undefined}
+          aria-label={last > 0 ? (per > 1 ? sds.labels.slidesOf(index + 1, index + per, count) : name(index, count)) : undefined} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
           onPointerUp={onPointerEnd} onPointerCancel={onPointerCancel} onLostPointerCapture={onPointerCancel}
           onDragStart={(e) => e.preventDefault()}   // a picture's own drag would end the swipe
           onClickCapture={(e) => { if (dragged.current && e.detail) { dragged.current = false; e.preventDefault(); e.stopPropagation(); } }}   // a swipe across a link isn't a click

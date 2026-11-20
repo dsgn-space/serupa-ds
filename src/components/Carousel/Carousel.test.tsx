@@ -113,6 +113,12 @@ describe('Carousel', () => {
     expect([changes, state('wh').dots, state('wh').inert]).toEqual([[2], '--1 --1 C0 --1', '1101']);
     v.scrollTo({ left: 0, behavior: 'instant' });
     await expect.poll(at).toBe('0');
+    // A keyboard stop of its own, named by the slide in view: the arrow keys scroll it a slide at a time.
+    expect([v.tabIndex, v.getAttribute('role'), v.getAttribute('aria-label')]).toEqual([0, 'group', '1 of 4']);
+    v.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.poll(at).toBe('1');
+    expect(v.getAttribute('aria-label')).toBe('2 of 4');
     // A controlled parent that keeps its index: the scroll goes back to that slide.
     await render(<div style={{ width: '400px' }}><Carousel id="kept" label="Kept" index={0} onIndexChange={() => {}}>{slides(3, 'k')}</Carousel></div>);
     const k = part('kept', SCROLLER);
@@ -453,7 +459,7 @@ describe('Carousel', () => {
     const w = window.innerWidth, h = window.innerHeight;
     const host = document.createElement('div');
     const width = (e: Element) => e.getBoundingClientRect().width;
-    const slide = () => host.querySelector('[role=group]')!, region = () => host.querySelector('section')!;
+    const slide = () => host.querySelector('[role=group][aria-roledescription]')!, region = () => host.querySelector('section')!;
     const dots = () => [...host.querySelectorAll('button')].filter((b) => /of 5$/.test(b.getAttribute('aria-label') || '') && getComputedStyle(b).display !== 'none');
     try {
       await page.viewport(900, 700);

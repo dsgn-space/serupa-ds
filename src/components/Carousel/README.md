@@ -66,7 +66,7 @@ Drawn from the `Controlled` story.
 
 ## Accessibility
 
-- **Role and name:** the `<section>` is a region named by `label`, with `aria-roledescription` "carousel" (the `carouselRole` label, "korsel" in Indonesian). Each slide is a group named "2 of 5" (`aria-roledescription` from `slideRole`). The slides not shown are `inert` and hidden, so Tab and screen readers only reach the current one (the ones in view, with `perView`). In server HTML, before JavaScript runs, none is: every slide can be scrolled to, read and used.
+- **Role and name:** the `<section>` is a region named by `label`, with `aria-roledescription` "carousel" (the `carouselRole` label, "korsel" in Indonesian). Each slide is a group named "2 of 5" (`aria-roledescription` from `slideRole`). The slides not shown are `inert` and hidden, so Tab and screen readers only reach the current one (the ones in view, with `perView`). In server HTML, before JavaScript runs, none is: every slide can be scrolled to, read and used. The slides' scroll area is a keyboard stop of its own, a group named by the slides in view ("2 of 5"): focused, the arrow keys scroll it a slide at a time, and the index follows.
 - **Keyboard:**
 
   | Key | Does |
