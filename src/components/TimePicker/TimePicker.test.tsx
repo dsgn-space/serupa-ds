@@ -6,6 +6,7 @@ import { THEMES, contrast, css, withMotion, settled, color, press, disabledLook 
 import { Field } from '../Field/Field';
 const described = (e: Element) => (e.getAttribute('aria-describedby') || '').split(' ').filter(Boolean).map((i) => document.getElementById(i)!.textContent).join(' | ');
 import { TimePicker } from './TimePicker';
+import { Schedule as ScheduleOutlined } from '../../material/outlined';
 const modded = (t: Element, key: string) => ['ctrlKey', 'metaKey'].map((m) => { const ev = new KeyboardEvent('keydown', { key, [m]: true, bubbles: true, cancelable: true }); t.dispatchEvent(ev); return ev.defaultPrevented; });
 
 const el = (id: string) => document.getElementById(id) as HTMLInputElement;
@@ -33,6 +34,12 @@ function Ctl(props: { changes: string[]; setRef?: { set?: (v: string | null) => 
 const openTp = async () => { el('tp').focus(); await userEvent.keyboard('{ArrowDown}'); };
 
 describe('TimePicker', () => {
+  test('the button draws the clock outlined, an open face like DatePicker\'s calendar beside it, not the filled solid disc', async () => {
+    const screen = await render(<TimePicker aria-label="Start" />);
+    const d = screen.getByRole('button').element().querySelector('svg path')!.getAttribute('d');
+    expect(d).toBe(ScheduleOutlined.d);
+  });
+
   test('with Ctrl or ⌘ the arrows and Page keys are left to the system and the browser: closed, nothing opens; open, nothing moves (L8E35)', async () => {
     await render(<TimePicker id="tmk" aria-label="Time" />);
     const t = document.getElementById('tmk') as HTMLInputElement;

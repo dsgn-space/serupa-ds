@@ -88,13 +88,16 @@ export function forAgent(name: string, source: string): string {
 export function Guide({ source }: { source: string }) {
   const name = /^# (\w+)/.exec(source)?.[1];
   const slugify = useSlugify();
+  // The site's Title already prints the since line under the page name (its docs context carries the props, which
+  // Storybook's doesn't), so the guide leaves it out there rather than say it twice.
+  const sinceInTitle = Array.isArray((React.useContext(DocsContext) as { docs?: unknown }).docs);
   return <>
     {name && <div className="sb-copy-guide">
       <CopyButton value={() => forAgent(name, source)} size="sm">Copy for AI</CopyButton>
       <span>The whole guide as Markdown, to paste into a coding agent.</span>
     </div>}
     {name && componentStatus[name] && <ComponentStatus status={componentStatus[name]} />}
-    {name && <ComponentSince name={name} />}
+    {name && !sinceInTitle && <ComponentSince name={name} />}
     {anatomyAt(source.replace(/^# .*\n+/, '')).flatMap((part) => (typeof part === 'string' ? doDontAt(part) : [part])).map((part, i) => (typeof part === 'string'
       ? <DocMarkdown key={i} slugify={slugify}>{relink(part)}</DocMarkdown>
       : Array.isArray(part) ? <DoDont key={i} pairs={part.map((p) => ({ do: { ...p.do, text: relink(p.do.text) }, dont: { ...p.dont, text: relink(p.dont.text) } }))} />

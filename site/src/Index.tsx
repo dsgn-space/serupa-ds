@@ -13,8 +13,10 @@ const STATUS = { alpha: 'warning', beta: 'info', deprecated: 'danger' } as const
 
 export function PageCard({ page, headingLevel = 3 }: { page: Page; headingLevel?: 2 | 3 }) {
   return <Card as="li" href={page.path} className="site-card">
-    <CardHeader headingLevel={headingLevel} title={page.name} description={page.summary || undefined}
-      action={page.status !== 'stable' ? <Badge tone={STATUS[page.status]}>{page.status[0]!.toUpperCase() + page.status.slice(1)}</Badge> : undefined} />
+    {/* The status sits beside the name, not in the header's action column, which would hold the summary to a
+        narrower column for the card's whole height. */}
+    <CardHeader headingLevel={headingLevel} description={page.summary || undefined}
+      title={page.status !== 'stable' ? <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">{page.name}<Badge tone={STATUS[page.status]}>{page.status[0]!.toUpperCase() + page.status.slice(1)}</Badge></span> : page.name} />
   </Card>;
 }
 
