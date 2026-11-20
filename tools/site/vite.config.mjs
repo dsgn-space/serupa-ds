@@ -19,6 +19,7 @@ import { describe, DEFAULT_DESCRIPTION } from './head.mjs';
 import { componentProps } from './props.mjs';
 import { siteFacts } from './facts.mjs';
 import { writeHostFiles } from './host.mjs';
+import { drawPages } from './prerender.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..');
 const SITE = path.join(ROOT, 'site');
@@ -131,15 +132,18 @@ function site() {
   };
 }
 
-/** After the build: a page per address with its own head, 404.html, the host's headers and the sitemap. */
+/** After the build: a page per address with its own head and the page drawn into it, 404.html, the host's headers and
+ *  the sitemap. Not for the second build that draws the pages (prerender.mjs), which runs in Node. */
 function host() {
-  let base = '/';
+  let base = '/', mode = 'production', ssr = false;
   return {
     name: 'serupa-site-host',
     apply: 'build',
-    configResolved(config) { base = config.base; },
-    writeBundle(options) {
-      writeHostFiles(/** @type {string} */ (options.dir), { base, siteUrl: process.env.SERUPA_SITE_URL || '', root: ROOT });
+    configResolved(config) { base = config.base; mode = config.mode; ssr = !!config.build.ssr; },
+    async writeBundle(options) {
+      if (ssr) return;
+      writeHostFiles(/** @type {string} */ (options.dir), { base, siteUrl: process.env.SERUPA_SITE_URL || '', root: ROOT,
+        draw: (paths) => drawPages(import.meta.filename, mode, paths) });
     },
   };
 }

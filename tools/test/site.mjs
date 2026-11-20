@@ -132,6 +132,15 @@ const robots = fs.existsSync(path.join(out, 'robots.txt')) ? fs.readFileSync(pat
 t('the sitemap lists every address, and robots.txt points to it', !unmapped.length && robots.includes(`Sitemap: ${SITE_URL}/sitemap.xml`),
   unmapped.length ? `not in sitemap.xml: ${unmapped.slice(0, 8).join(', ')}` : 'robots.txt has no Sitemap line');
 
+// Each page's HTML holds the page itself (tools/site/prerender.mjs), so a visitor reads it before any script has run,
+// and the browser takes it over rather than drawing it again (any mismatch is an error on the page, checked below).
+const undrawn = routes.filter((r) => {
+  const f = path.join(out, r.path === '/' ? 'index.html' : r.path.slice(1) + '.html');
+  const html = fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '';
+  return !/<div id="root"><div class="site/.test(html) || !/<h1[\s>]/.test(html);
+}).map((r) => r.path);
+t(`each of the ${routes.length} addresses has its page drawn in its HTML, with its title`, !undrawn.length, `empty or without an h1: ${undrawn.slice(0, 8).join(', ')}`);
+
 const b = await browser();
 // The site's own pages, which no .mdx gives it: the story, the themes side by side and the patterns as screens.
 const OWN = ['/about', '/themes', '/showcase'];
@@ -211,6 +220,40 @@ await inParallel(opened, workers, async (p, w) => {
   if (p.stories && /<(Primary|Stories|Canvas)\b/.test(read(p.file))) t(`${p.path} shows its stories`, seen.demos > 0, 'the page has no example in a frame');
   if (p.component && read(p.file).includes('<Controls')) t(`${p.path} shows its props`, seen.api, 'the page has no API table');
 });
+
+// With no script at all, a component page shows its text and its examples.
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 }, javaScriptEnabled: false });
+  const page = await context.newPage();
+  const failed = await openUrl(page, base + '/components/button');
+  const seen = failed ? null : await page.evaluate(() => ({ h1: document.querySelector('#article h1')?.textContent?.trim() ?? '', demos: document.querySelectorAll('.site-demo [data-component="button"]').length }));
+  t('/components/button shows its title and its examples with no script', !failed && seen?.h1 === 'Button' && seen.demos > 0, failed || `its h1 is "${seen?.h1}", with ${seen?.demos} buttons in its examples`);
+  await context.close();
+}
+
+// A page scrolled before its scripts arrive stays where the reader is once the browser takes it over.
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  /** @type {() => void} */
+  let go = () => {};
+  const held = new Promise((resolve) => { go = () => resolve(undefined); });
+  await page.route(/\/assets\/index-[^/]*\.js$/, async (route) => { await held; await route.continue(); });
+  // Not to "domcontentloaded": that waits for the scripts, which are held.
+  const failed = await page.goto(base + '/components/button', { waitUntil: 'commit' }).then(() => page.waitForSelector('#article h1')).then(() => '', (e) => String(e.message).split('\n')[0]);
+  let before = 0, after = 0;
+  if (!failed) {
+    await page.evaluate(() => window.scrollTo(0, 900));
+    before = await page.evaluate(() => window.scrollY);
+    go();
+    await ready(page, true);
+    await page.waitForTimeout(500);
+    after = await page.evaluate(() => window.scrollY);
+  }
+  go();
+  t('/components/button stays where it was scrolled to as its scripts arrive', !failed && before > 0 && after === before, failed || `scrolled to ${before}, then moved to ${after}`);
+  await context.close();
+}
 
 // A press inside an example leaves the page where it is. The main region once took focus on any press that landed on
 // nothing focusable (closing a calendar with a press beside it, say), and the browser scrolled its top into view.
