@@ -432,10 +432,10 @@
       "count": 1
     },
     "react-hooks/immutability": {
-      "count": 2
+      "count": 5
     },
     "react-hooks/refs": {
-      "count": 3
+      "count": 4
     }
   },
   "src/components/Textarea/Textarea.tsx": {
@@ -486,7 +486,7 @@
       "count": 1
     },
     "react-hooks/refs": {
-      "count": 8
+      "count": 9
     }
   },
   "src/components/TruncatedText/TruncatedText.tsx": {

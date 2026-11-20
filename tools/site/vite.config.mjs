@@ -2,8 +2,9 @@
 // components. Nothing is written twice: each page is the .mdx Storybook reads, with Storybook's doc blocks swapped
 // for the site's (site/src/blocks.tsx), each example is a story, and each props table comes from the types.
 //   npm run site         on your computer, at http://localhost:6007
-//   npm run build-site   into site-static/ (what tools/test/site.mjs opens)
-// It isn't published anywhere: there is no deploy step.
+//   npm run build-site   into site-static/ (what tools/test/site.mjs opens), with what a host needs to serve it as a
+//                        website (tools/site/host.mjs): a page per address, 404.html, _headers, the sitemap
+// Cloudflare Pages can serve it (tools/README.md, "The docs site"): set SERUPA_SITE_URL there to the site's address.
 import fs from 'node:fs';
 import path from 'node:path';
 import { defineConfig } from 'vite';
@@ -15,6 +16,7 @@ import { buildRegistry, components } from '../build/registry.mjs';
 import { sitePages } from './pages.mjs';
 import { componentProps } from './props.mjs';
 import { siteFacts } from './facts.mjs';
+import { writeHostFiles } from './host.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..');
 const SITE = path.join(ROOT, 'site');
@@ -76,13 +78,27 @@ function site() {
   };
 }
 
+/** After the build: a page per address with its own head, 404.html, the host's headers and the sitemap. */
+function host() {
+  let base = '/';
+  return {
+    name: 'serupa-site-host',
+    apply: 'build',
+    configResolved(config) { base = config.base; },
+    writeBundle(options) {
+      writeHostFiles(/** @type {string} */ (options.dir), { base, siteUrl: process.env.SERUPA_SITE_URL || '', root: ROOT });
+    },
+  };
+}
+
 export default defineConfig({
   root: SITE,
   // The folder the site is served from, for a host that doesn't serve it from its root.
   base: process.env.SERUPA_SITE_BASE || '/',
-  publicDir: false,
+  // The icons, the web manifest and the link-preview picture, copied as they are.
+  publicDir: path.join(SITE, 'public'),
   // Only .mdx is a page: a README.md is read as text (?raw), as Storybook reads it.
-  plugins: [{ enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm], mdExtensions: [] }) }, site()],
+  plugins: [{ enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm], mdExtensions: [] }) }, site(), host()],
   resolve: {
     alias: [
       // The pages import Storybook's doc blocks; here they get the site's, with the same names.

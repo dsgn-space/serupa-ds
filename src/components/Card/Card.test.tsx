@@ -139,6 +139,18 @@ describe('Card', () => {
     document.documentElement.setAttribute('data-theme', 'blue-light');
   });
 
+  test('a divider inside an elevated card reads border-overlay, so it stays visible on the raised fill in dark; on an outline card it keeps border', async () => {
+    await render(<Col><Card id="dve" variant="elevated"><div id="dvi" /></Card><Card><div id="dvo" /></Card></Col>);
+    for (const id of ['dvi', 'dvo']) el(id).style.borderTop = '1px solid var(--border)';
+    for (const th of THEMES.filter((t) => t.endsWith('-dark'))) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect([th, css(el('dvi')).borderTopColor]).toEqual([th, color('var(--border-overlay)')]);
+      expect(css(el('dvi')).borderTopColor).not.toBe(css(el('dve')).backgroundColor);
+      expect([th, css(el('dvo')).borderTopColor]).toEqual([th, color('var(--border)')]);
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
+  });
+
   test('a form field on an elevated card stands out from the card in every dark theme (field-raised), and on an outline card keeps the page\'s field', async () => {
     await render(<Col><Card id="fel" variant="elevated"><input id="fe" /></Card><Card id="fdf"><input id="fd" /></Card></Col>);
     // An <input> reads the shared field fill through --field, as every field does.

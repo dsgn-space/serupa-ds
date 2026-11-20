@@ -282,7 +282,7 @@ Override with tokens (`var(--rounded-full)`), not raw values, so the result stil
 | `--button-outline-bg` | `surface-raised` | Outline background. |
 | `--button-outline-bg-hover` | `secondary` | Outline background on hover. |
 | `--button-outline-text` | `text` | Outline text and icons. |
-| `--button-outline-border` | `border` | Outline border. |
+| `--button-outline-border` | `border-overlay` | Outline border: border-overlay, the same line as border in light and a step above the raised fill in dark, where border would match the fill. |
 | `--button-ghost-bg` | `transparent` | Ghost background (transparent). |
 | `--button-ghost-bg-hover` | `secondary` | Ghost background on hover. |
 | `--button-ghost-text` | `text` | Ghost text and icons. |

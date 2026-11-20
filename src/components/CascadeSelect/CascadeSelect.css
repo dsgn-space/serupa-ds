@@ -43,7 +43,7 @@
   box-sizing: border-box; position: fixed; inset: auto; z-index: var(--cascade-select-z-index, var(--z-popover));
   display: flex; max-inline-size: calc(var(--sizing-screen-w) - var(--spacing-4) - var(--spacing-4)); margin: var(--spacing-0); padding: var(--spacing-1); overflow-x: auto; overscroll-behavior-inline: contain;
   border: var(--border-width-1) solid var(--cascade-select-panel-border, var(--border-overlay)); border-radius: var(--cascade-select-panel-radius, var(--radius-surface));
-  background: var(--cascade-select-panel-bg, var(--surface-overlay)); --surface-behind: var(--cascade-select-panel-bg, var(--surface-overlay)); color: var(--cascade-select-text, var(--text)); box-shadow: var(--cascade-select-panel-shadow, var(--elevation-overlay));
+  background: var(--cascade-select-panel-bg, var(--surface-overlay)); --surface-behind: var(--cascade-select-panel-bg, var(--surface-overlay)); --border: var(--cascade-select-panel-divider, var(--border-overlay)); color: var(--cascade-select-text, var(--text)); box-shadow: var(--cascade-select-panel-shadow, var(--elevation-overlay));
   cursor: default; transform-origin: var(--dk-layer-origin, top);
 }
 /* Motion, as DatePicker's popup: in from @starting-style, out with a fade kept in the top layer; gone at once when
@@ -70,6 +70,7 @@
   display: flex; flex: none; align-items: center; gap: var(--spacing-2); min-block-size: var(--control-height-md); padding: var(--spacing-1) var(--spacing-2); border-radius: var(--radius-inner);
   cursor: var(--cursor-interactive); overflow-wrap: anywhere; touch-action: manipulation;
 }
+@media (pointer: coarse) { .dk-cascade-select__option { min-block-size: var(--spacing-11); } }   /* 44px to pick on a touch screen, as Menu's items */
 @media (hover: hover) { .dk-cascade-select__option:hover:not([aria-disabled="true"]) { background: var(--cascade-select-option-hover, var(--highlight)); } }
 .dk-cascade-select__option:active:not([aria-disabled="true"]) { background: var(--cascade-select-option-bg-pressed, var(--pressed)); }
 /* The chosen path: a tint and a 2px primary bar at the start (right in rtl), at the weight of the others so a long

@@ -46,7 +46,7 @@ export interface SliderProps<V extends SliderValue = SliderValue> extends Omit<R
   formatValue?: ((value: number) => string) | undefined;
   /** A range's thumb names. Default: the sliderMinimum and sliderMaximum labels ("Minimum", "Maximum"). A single thumb is named by aria-label or aria-labelledby. */
   thumbLabels?: [string, string] | undefined;
-  /** Submits the value with a form: one hidden input, or two with the same name for a range. */
+  /** Submits the value with a form: the thumb's range input takes it, or a range's two with the same name. */
   name?: string | undefined;
   /** The id of a form to submit and reset with, when it isn't inside one, as the form attribute of an input. */
   form?: string | undefined;
@@ -84,7 +84,7 @@ function markList(marks: SliderProps['marks'], min: number, max: number, step: n
 }
 
 /* Slider: picks a number, or a range with two thumbs, by dragging along a track or with the keyboard. Each thumb
-   is role="slider" with aria-valuenow, min, max and valuetext. Arrows change it by step (Right and Up raise it;
+   is a native <input type="range"> (role slider) with its value, min, max and aria-valuetext. Arrows change it by step (Right and Up raise it;
    Left and Right swap in right-to-left pages), PageUp, PageDown and Shift+arrows by largeStep steps, Home and End
    go to the ends. A press anywhere on the track moves the nearest thumb there; range thumbs can't cross.
    onValueChange fires as it moves, onValueCommit once when a drag or key press that changed it ends. */
@@ -112,7 +112,7 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   const latest = React.useRef(vals); latest.current = vals;
   const root = React.useRef<HTMLDivElement | null>(null);
   useFormReset(root, () => { if (!controlled) setOwn(props.defaultValue ?? min); }, props.form);
-  const thumbs = React.useRef<(HTMLSpanElement | null)[]>([]);
+  const thumbs = React.useRef<(HTMLInputElement | null)[]>([]);
   const drag = React.useRef<number | null>(null);
   // A disabled <fieldset> around it disables it too, as it does native inputs.
   const inDisabledFieldset = useFieldsetDisabled(root);
@@ -149,6 +149,13 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
     return vs;
   };
   const commit = () => { if (props.onValueCommit) props.onValueCommit(out(latest.current)); };
+  // A change the range input makes itself: a screen reader's adjust gesture (VoiceOver's swipe up or down, TalkBack's
+  // volume keys), which reach only a native range. It moves and commits as a key does; read-only, React puts it back.
+  const onChange = (i: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (still) return;
+    const before = latest.current[i];
+    if (set(i, Number(e.currentTarget.value))[i] !== before) commit();
+  };
   // The values a drag started from: a press on a thumb let go where it was, or a drag back to the start, changed
   // nothing and calls no onValueCommit, as a key at the end doesn't (L8E109).
   const from = React.useRef<number[]>([]);
@@ -183,9 +190,9 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
   // currentTarget is the root its type names, and preventDefault() in it keeps the control's own handling of that key
   // from running.
   const onKeyDownCapture = (e: React.KeyboardEvent<HTMLDivElement>) => { if (rest.onKeyDownCapture) rest.onKeyDownCapture(e); if (rest.onKeyDown) rest.onKeyDown(e); };
-  const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLSpanElement>) => {
+  const onKeyDown = (i: number) => (e: React.KeyboardEvent<HTMLInputElement>) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
-    if (still || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (disabled || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
     const rtl = !vertical && getComputedStyle(e.currentTarget).direction === 'rtl';
     const by = (e.shiftKey ? large : 1) * step, v = at(latest.current, i);
     let n: number;
@@ -200,7 +207,10 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
       case 'End': n = isRange && i === 0 ? at(latest.current, 1) : max; break;
       default: return;
     }
+    // The range input's own step is turned off: the keys move by step and largeStep as written here, in either
+    // direction of text. Read-only, they move nothing.
     e.preventDefault();
+    if (readOnly) return;
     const before = latest.current[i];
     if (set(i, n)[i] !== before) commit();
   };
@@ -284,18 +294,24 @@ function SliderRender({ ref, ...props }: SliderProps & React.RefAttributes<HTMLD
           </span>
         ))}
         {vals.map((v, i) => (
-          <span key={i} ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="dk-slider__thumb" style={{ insetInlineStart: place(pct(v)) + '%' }}
-            role="slider" tabIndex={disabled ? -1 : 0} aria-valuenow={v} aria-valuemin={isRange && i === 1 ? vals[0] : min} aria-valuemax={isRange && i === 0 ? vals[1] : max}
-            aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation={vertical ? 'vertical' : 'horizontal'} aria-disabled={disabled || undefined} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
-            // The error goes where aria-invalid is: on the root <div> it pointed nowhere a screen reader looks (L8E87).
-            aria-errormessage={invalid ? props['aria-errormessage'] : undefined}
-            aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
-            aria-describedby={isRange ? undefined : props['aria-describedby']}
-            onKeyDown={onKeyDown(i)}>{props.showValue ? <span className="dk-slider__value" aria-hidden="true"><span>{text(v)}</span></span> : null}</span>
+          // The thumb is drawn by the span; a native <input type="range"> over it, unseen, takes focus, carries the
+          // value and the name, and is what screen readers adjust: their swipe and volume-key gestures work reliably
+          // only on a native range. Presses go through it to the track, which places the thumb under the pointer.
+          <span key={i} className="dk-slider__thumb" style={{ insetInlineStart: place(pct(v)) + '%' }}>
+            <input ref={(n) => { thumbs.current[i] = n; if (!isRange) nameRef(n); }} className="dk-slider__range" type="range"
+              value={v} min={isRange && i === 1 ? vals[0] : min} max={isRange && i === 0 ? vals[1] : max} step={step}
+              name={props.name} form={props.form} disabled={disabled}
+              aria-valuetext={props.formatValue ? text(v) : undefined} aria-orientation={vertical ? 'vertical' : 'horizontal'} aria-readonly={readOnly || undefined} aria-invalid={invalid || undefined}
+              // The error goes where aria-invalid is: on the root <div> it pointed nowhere a screen reader looks (L8E87).
+              aria-errormessage={invalid ? props['aria-errormessage'] : undefined}
+              aria-label={isRange ? names[i] : props['aria-label']} aria-labelledby={isRange ? undefined : labelledBy}
+              aria-describedby={isRange ? undefined : props['aria-describedby']}
+              onKeyDown={onKeyDown(i)} onChange={onChange(i)} />
+            {props.showValue ? <span className="dk-slider__value" aria-hidden="true"><span>{text(v)}</span></span> : null}
+          </span>
         ))}
       </div>
       {props.inputs ? field(vals.length - 1) : null}
-      {props.name ? vals.map((v, i) => <input key={'in' + i} type="hidden" name={props.name} form={props.form} value={v} disabled={disabled} />) : null}
     </div>
   );
 }

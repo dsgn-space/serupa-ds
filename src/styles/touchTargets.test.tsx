@@ -22,6 +22,10 @@ import { Toolbar } from '../components/Toolbar/Toolbar';
 import { SearchInput } from '../components/SearchInput/SearchInput';
 import { Calendar } from '../components/Calendar/Calendar';
 import { Carousel } from '../components/Carousel/Carousel';
+import { CascadeSelect } from '../components/CascadeSelect/CascadeSelect';
+import { TreeView } from '../components/TreeView/TreeView';
+import { Menubar, MenubarMenu } from '../components/Menubar/Menubar';
+import { MenuItem } from '../components/Menu/Menu';
 
 // Touch-sized targets (EQ1): on a touch screen ((pointer: coarse)) the small controls take a press 44px high (Apple
 // and Material ask for 44 to 48px), the Splitter's 8px handle a 24px-wide one, with nothing moving and no two
@@ -128,13 +132,15 @@ describe('touch-sized buttons inside fields', () => {
 
 // Buttons on a touch screen: an IconButton or a small Button takes a press up to 44px across, as the Design principles
 // promise, with nothing moving. Beside another button it stops halfway into the gap, so a press always goes to the
-// nearer one and never to a neighbour's own face; in an attached group, each keeps exactly its own face.
+// nearer one and never to a neighbour's own face; in an attached group, each keeps exactly its own face. Above and
+// below, a button in a row keeps its full 44px, as one on its own does.
 function Buttons() {
   return <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '64px', padding: '64px', width: '480px' }}>
     <div><IconButton icon="close" label="Close" className="hit-close" /></div>
     <div><Button size="sm" className="hit-small">Edit</Button></div>
     <Toolbar aria-label="Format"><IconButton icon="format_bold" label="Bold" className="hit-bold" /><IconButton icon="format_italic" label="Italic" className="hit-italic" /></Toolbar>
     <ButtonGroup attached aria-label="View"><Button className="hit-day">Day</Button><Button className="hit-week">Week</Button></ButtonGroup>
+    <div style={{ display: 'flex', gap: '8px' }}><Button variant="secondary" className="hit-cancel">Cancel</Button><Button className="hit-save">Save</Button></div>
     <Pagination count={5} className="hit-pages" />
   </div>;
 }
@@ -158,8 +164,12 @@ describe('touch-sized buttons', () => {
       expect(outside('.hit-close', 5)).toEqual(['close', 'close', 'close', 'close']);
       expect(outside('.hit-close', 7)).toEqual(['', '', '', '']);
       expect(outside('.hit-small', 9).slice(0, 2)).toEqual(['small', 'small']);
-      // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap all round (rows of a wrapped toolbar are
-      // 4px apart too), and its own face to the edge.
+      // Two buttons side by side, as in a dialog's footer, and an attached group: each takes a press 5px above and
+      // below it (44px high), as a button on its own does; beside each other they split the gap.
+      expect([...outside('.hit-save', 5).slice(0, 2), ...outside('.hit-cancel', 5).slice(0, 2)]).toEqual(['save', 'save', 'cancel', 'cancel']);
+      expect([...outside('.hit-day', 5).slice(0, 2), ...outside('.hit-week', 5).slice(0, 2)]).toEqual(['day', 'day', 'week', 'week']);
+      // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap between them, and its own face to the
+      // edge.
       // Measured left to right, so it holds in a right-to-left page too.
       $('.hit-bold').scrollIntoView({ block: 'center' });
       const [l, r] = ['.hit-bold', '.hit-italic'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect];
@@ -209,6 +219,47 @@ describe('touch-sized days and dots', () => {
     await coarsePointer(async (active) => {
       if (!active) return;
       expect(rows()).toEqual({ day: [44, 44], dot: ['dot', 'dot'] });
+    });
+  });
+});
+
+// Rows a phone user picks from (EQ1): on a touch screen the options of a Combobox, TimePicker and CascadeSelect, the
+// rows of a TreeView and the names in a Menubar are 44px high, as Menu's items and Sidebar's are; with a mouse they keep
+// their 32px (24px in the menubar).
+function Lists() {
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '320px', padding: '64px', width: '480px' }}>
+    <Combobox aria-label="Fruit" defaultOpen options={['Apple', 'Banana']} />
+    <TimePicker aria-label="Start" defaultOpen />
+    <CascadeSelect aria-label="Region" defaultOpen options={[{ value: 'id', label: 'Indonesia', children: [{ value: 'jk', label: 'Jakarta' }] }]} />
+    <TreeView aria-label="Files" items={[{ id: 'a', label: 'README.md' }, { id: 'b', label: 'package.json' }]} />
+    <Menubar aria-label="Editor"><MenubarMenu label="File"><MenuItem>New</MenuItem></MenubarMenu></Menubar>
+  </div>;
+}
+/** The height of the first of each kind of row, in px. */
+const heights = () => {
+  const first = (role: string, name: string) => document.querySelector<HTMLElement>(`[role="${role}"]${name ? `[aria-label="${name}"] [role]` : ''}`);
+  const h = (el: Element | null | undefined) => (el ? Math.round(el.getBoundingClientRect().height) : 0);
+  const options = [...document.querySelectorAll('[role="option"]')];
+  return {
+    combobox: h(options.find((o) => o.textContent === 'Apple')),
+    time: h(document.querySelector('[role="listbox"] li[role="option"]')),
+    cascade: h(options.find((o) => o.textContent?.includes('Indonesia'))),
+    tree: h(document.querySelector('[role="treeitem"]')?.firstElementChild),
+    menubar: h(first('menuitem', '')),
+  };
+};
+
+describe('touch-sized rows in lists', () => {
+  test('with a mouse: 32px options and tree rows, 24px menubar names', async () => {
+    await render(<Lists />);
+    expect(heights()).toEqual({ combobox: 32, time: 32, cascade: 32, tree: 32, menubar: 24 });
+  });
+
+  test('on a touch screen: 44px, as Menu\'s items are', async () => {
+    await render(<Lists />);
+    await coarsePointer(async (active) => {
+      if (!active) return;
+      expect(heights()).toEqual({ combobox: 44, time: 44, cascade: 44, tree: 44, menubar: 44 });
     });
   });
 });

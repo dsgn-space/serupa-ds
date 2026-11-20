@@ -86,7 +86,7 @@ html, body { background-color: var(--surface-page); }
 [data-theme$="-dark"] a.sbdocs-a:not(.docs-story *) { color: var(--primary) !important; }
 
 /* A docs block that scrolls sideways (the contrast matrix) is in the tab order so a keyboard can scroll it: show where focus is. */
-.sbdocs [role="region"][tabindex="0"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.sbdocs [role="region"][tabindex="0"]:not([class*="dk-"]):focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 /* A token table or swatch grid wider than the page scrolls in its own box (Wide in docs/blocks.tsx), not the page. */
 /* Scrolls only once its content is wider than the page (Wide in docs/blocks.tsx), so a page that fits lays out as before.
    A box that scrolls keeps its child's margins inside; the table's 16px goes on the box, so it still collapses with the text around it. */

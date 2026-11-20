@@ -172,9 +172,22 @@ export function ReadmeIntro() {
   return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
 }
 /** Sections of README.md and docs/foundations.md by their headings (## level), each with its subsections. */
+/** A section whose heading the page writes itself (reserve, such as its title) comes without that heading, so the page
+ * doesn't say "Typography" twice, and its subsections step up a level under the title. */
 export function ReadmeSections({ headings, reserve }: { headings: string[]; /** Headings the page writes itself, such as its title: theirs keep the plain id. */ reserve?: string[] }) {
   const parts = [ROOT, foundations].flatMap((md) => md.split(/\n(?=## )/));
-  const md = headings.map((h) => parts.find((p) => p.startsWith(`## ${h}\n`)) || `> Missing README section: ${h}`).join('\n\n');
+  const md = headings.map((h) => {
+    const part = parts.find((p) => p.startsWith(`## ${h}\n`));
+    if (!part) return `> Missing README section: ${h}`;
+    if (!reserve?.includes(h)) return part;
+    // Its heading is the page's own title now, so its subsections step up a level (### to ##), outside code: a page
+    // never skips from its title to an h3.
+    let code = false;
+    return part.slice(part.indexOf('\n') + 1).split('\n').map((line) => {
+      if (line.startsWith('```')) code = !code;
+      return !code && /^###+ /.test(line) ? line.slice(1) : line;
+    }).join('\n');
+  }).join('\n\n');
   return <DocMarkdown reserve={reserve}>{relink(md)}</DocMarkdown>;
 }
 
@@ -218,7 +231,7 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
     <Wide label={`${group} tokens`}><table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
       <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th>{preview && preview !== 'none' && <th style={cell}>Preview</th>}<th style={cell}>Use</th></tr></thead>
       <tbody>{g.tokens.map((t) => <tr key={t.name}>
-        <td style={cell}><code>--{t.name}</code></td><td style={cell}><code>{val(t.value)}</code></td>
+        <td style={{ ...cell, whiteSpace: 'nowrap' }}><code>--{t.name}</code></td><td style={cell}><code>{val(t.value)}</code></td>
         {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={cell}>{code(t.usage)}</td></tr>)}</tbody>
     </table></Wide>
   </div>;
@@ -378,13 +391,13 @@ export function LabelTable() {
 }
 
 const LEVELS: [string, string, string, string][] = [
-  ['Page', 'surface', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
+  ['Page', 'surface-page', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
   ['Floating', 'surface-overlay', 'border-overlay', 'shadow-lg'], ['Modal', 'surface-overlay', 'border-overlay', 'shadow-xl'],
 ];
 /** The elevation levels drawn with their tokens, on a light and a dark page side by side. */
 export function ElevationLevels() {
   return <div data-token-sheet="elevation-levels" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, margin: '16px 0 24px' }}>
-    {(['light', 'dark'] as const).map((mode) => <div key={mode} data-theme={`blue-${mode}`} style={{ background: 'var(--surface)', color: 'var(--text)', padding: 24, borderRadius: 8, border: '1px solid var(--border)', display: 'grid', gap: 16 }}>
+    {(['light', 'dark'] as const).map((mode) => <div key={mode} data-theme={`blue-${mode}`} style={{ background: 'var(--surface-page)', color: 'var(--text)', padding: 24, borderRadius: 8, border: '1px solid var(--border)', display: 'grid', gap: 16 }}>
       {LEVELS.map(([name, bg, edge, shadow]) => <div key={name} style={{ background: `var(--${bg})`, border: `1px solid ${edge === 'transparent' ? 'transparent' : `var(--${edge})`}`, boxShadow: shadow === 'none' ? 'none' : `var(--${shadow})`, borderRadius: 8, padding: '12px 16px', fontSize: 14 }}>
         <strong>{name}</strong> <span style={{ color: 'var(--text-muted)' }}>{mode}: <code>{bg}</code>{shadow !== 'none' && <>, <code>{shadow}</code></>}</span>
       </div>)}

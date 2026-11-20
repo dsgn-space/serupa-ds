@@ -45,6 +45,8 @@ export interface RangeCalendarProps extends Omit<React.HTMLAttributes<HTMLDivEle
   weekStartsOn?: number | undefined;
   /** A column of week numbers before the days (ISO 8601), as Calendar's weekNumbers. Default: false. */
   weekNumbers?: boolean | undefined;
+  /** Each month title's heading level, 2 (default) to 6, to fit the page's outline. */
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** Moves focus to the start day (or today) when the calendar appears. Default: false. */
   autoFocus?: boolean | undefined;
 }
@@ -55,7 +57,7 @@ const between = (d: Date, s: Date, e: Date) => compare(d, s) > 0 && compare(d, e
 
 function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(words).labels;
-  const rest = omit(props, { weekNumbers: 1, value: 1, defaultValue: 1, onValueChange: 1, months: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, calendar: 1, weekStartsOn: 1, autoFocus: 1, className: 1 } as const);
+  const rest = omit(props, { headingLevel: 1, weekNumbers: 1, value: 1, defaultValue: 1, onValueChange: 1, months: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, calendar: 1, weekStartsOn: 1, autoFocus: 1, className: 1 } as const);
   const root = React.useRef<HTMLDivElement | null>(null);
   const merged = useMergedRef(ref, (n: HTMLDivElement | null) => { root.current = n; });
   // autoFocus lands on the first month's day that holds the Tab stop: the start, else today.
@@ -140,7 +142,7 @@ function RangeCalendarRender({ ref, ...props }: RangeCalendarProps & React.RefAt
   };
   const cal = (m: Date, first: boolean) => (
     <Calendar month={m} onMonthChange={(n) => showMonth(first ? n : system.add(n, -1))} value={first ? value.start : value.end}
-      min={min} max={max} isDateDisabled={props.isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={props.weekStartsOn} weekNumbers={props.weekNumbers} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
+      min={min} max={max} isDateDisabled={props.isDateDisabled} locale={locale} calendar={system.id} weekStartsOn={props.weekStartsOn} weekNumbers={props.weekNumbers} headingLevel={props.headingLevel} hideOutside={two} pairedNav={two ? (first ? 'next' : 'previous') : undefined}
       isDateSelected={marks.isEnd} dayClassName={marks.dayClass} dayLabel={marks.dayLabel} onDayHover={setHover} onValueChange={pick} onLeaveMonth={leave(first)} />
   );
   return (

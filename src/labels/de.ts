@@ -396,4 +396,5 @@ export const labels: SerupaLabels = {
   transferRemoveReason: 'Zuerst die zu entfernenden ankreuzen',
   transferEmpty: 'Keine',
   transferMoved: (items, list) => items + ' nach ' + list + ' verschoben.',
+  tabCloseHint: 'Zum Schließen Entf drücken.',
 };

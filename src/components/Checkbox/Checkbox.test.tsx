@@ -171,7 +171,13 @@ describe('Checkbox', () => {
     await render(<Checkbox id="x" disabled onChange={onChange}>Disabled</Checkbox>);
     const s = css(label('x'));
     expect([disabledLook(label('x')), s.cursor]).toEqual(['neutral', 'not-allowed']);
-    expect(css(input('x')).backgroundColor).toBe(color('var(--surface-muted)'));
+    expect(css(input('x')).backgroundColor).toBe(color('var(--field-readonly)'));
+    // In dark the unticked box is a step up from the card (field-readonly), not the page's recess, which read as a hole.
+    for (const th of ['blue-dark', 'violet-dark']) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect([th, css(input('x')).backgroundColor]).toEqual([th, color('var(--zinc-900)')]);
+    }
+    document.documentElement.setAttribute('data-theme', 'blue-light');
     expect(label('x').className).toMatch(/dk-checkbox--disabled/);
     label('x').click();
     expect(input('x').checked).toBe(false);

@@ -14,8 +14,8 @@
       },
       "bg-disabled": {
         "$type": "color",
-        "$value": "{color.surface-muted}",
-        "$description": "The circle when disabled and unchecked",
+        "$value": "{color.field-readonly}",
+        "$description": "The circle when disabled and unchecked: a disabled field's fill, at or above the surface in dark rather than sunk below it",
         "$extensions": {
           "com.serupa": {
             "cssVar": "--radio-bg-disabled"

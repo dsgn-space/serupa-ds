@@ -70,7 +70,7 @@
 }
 @media (hover: hover) { .dk-btn--primary:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-primary-bg-hover, var(--dk-btn-hover, var(--primary-hover))); } }
 
-.dk-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border)); }
+.dk-btn--outline { background-color: var(--button-outline-bg, var(--surface-raised)); color: var(--button-outline-text, var(--text)); border-color: var(--button-outline-border, var(--border-overlay)); }   /* border-overlay: zinc-200 like border in light; in dark a step above the raised fill (border would match it and vanish) */
 @media (hover: hover) { .dk-btn--outline:hover:not(:disabled, [aria-disabled="true"]) { background-color: var(--button-outline-bg-hover, var(--secondary)); } }
 
 .dk-btn--secondary { background-color: var(--button-secondary-bg, var(--surface-raised)); color: var(--button-secondary-text, var(--primary)); border-color: var(--button-secondary-border, var(--primary)); }   /* an outline in the brand color */
@@ -219,7 +219,9 @@ a.dk-btn[aria-disabled="true"] { pointer-events: none; }
 /* Touch: 44px to press on a touch screen, as the Design principles promise, without moving or redrawing anything. A
    box behind the button reaches past its edges up to 44px on each axis (a 32px IconButton takes a press 6px outside
    it). With another button in the same row it stops halfway into the gap (--dk-touch-gap, set by the rows that hold
-   buttons; 4px, the smallest gap between buttons, when nothing says), so it never takes a press meant for its neighbour. */
+   buttons; 4px, the smallest gap between buttons, when nothing says), so it never takes a press meant for its neighbour.
+   Above and below it keeps its full reach: a row of buttons (a dialog's footer, an attached group) is one line, and a
+   press beside a wrapped row's lines goes to the line below it. */
 @media (pointer: coarse) {
   /* The box is placed from inside the border (--dk-btn-bw), so each reach counts it back out. */
   .dk-btn::after {
@@ -227,7 +229,7 @@ a.dk-btn[aria-disabled="true"] { pointer-events: none; }
     --dk-btn-reach: calc(min(var(--spacing-0), (100% + 2 * var(--dk-btn-bw) - var(--spacing-11)) / 2) - var(--dk-btn-bw));
     content: ""; position: absolute; inset: var(--dk-btn-reach);
   }
-  :is(.dk-btn ~ .dk-btn, .dk-btn:has(~ .dk-btn))::after { --dk-btn-gap: calc(var(--spacing-0) - var(--dk-touch-gap, var(--spacing-1)) / 2 - var(--dk-btn-bw)); inset: max(var(--dk-btn-reach), var(--dk-btn-gap)); }
+  :is(.dk-btn ~ .dk-btn, .dk-btn:has(~ .dk-btn))::after { --dk-btn-gap: calc(var(--spacing-0) - var(--dk-touch-gap, var(--spacing-1)) / 2 - var(--dk-btn-bw)); inset-inline: max(var(--dk-btn-reach), var(--dk-btn-gap)); }
 }
 /* A pressed toggle (aria-pressed) in forced colors: the variants' fills are gone there, so the pressed one takes the
    system highlight, as ToggleButton's does. */

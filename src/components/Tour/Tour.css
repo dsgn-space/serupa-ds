@@ -12,7 +12,7 @@
   margin: var(--spacing-0); padding: var(--tour-padding, var(--space-content)); overflow-y: auto; overscroll-behavior: contain;
   display: flex; flex-direction: column; gap: var(--tour-gap, var(--spacing-3));
   border: var(--tour-border-width, var(--border-width-1)) solid var(--tour-border, var(--border-overlay)); border-radius: var(--tour-radius, var(--radius-surface));
-  background: var(--tour-bg, var(--surface-overlay)); --surface-behind: var(--tour-bg, var(--surface-overlay)); color: var(--tour-text, var(--text));
+  background: var(--tour-bg, var(--surface-overlay)); --surface-behind: var(--tour-bg, var(--surface-overlay)); --border: var(--tour-divider, var(--border-overlay)); color: var(--tour-text, var(--text));
   box-shadow: var(--tour-shadow, var(--elevation-overlay));
   font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
   transform-origin: var(--dk-layer-origin, top);

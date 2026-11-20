@@ -32,7 +32,7 @@
   contain: layout paint;
   margin: var(--spacing-0); padding: var(--combobox-listbox-padding, var(--spacing-1));
   border: var(--border-width-1) solid var(--combobox-listbox-border, var(--border-overlay));
-  border-radius: var(--combobox-listbox-radius, var(--radius-surface)); background: var(--combobox-listbox-bg, var(--surface-overlay)); --surface-behind: var(--combobox-listbox-bg, var(--surface-overlay));
+  border-radius: var(--combobox-listbox-radius, var(--radius-surface)); background: var(--combobox-listbox-bg, var(--surface-overlay)); --surface-behind: var(--combobox-listbox-bg, var(--surface-overlay)); --border: var(--combobox-listbox-divider, var(--border-overlay));
   box-shadow: var(--combobox-listbox-shadow, var(--elevation-overlay));
   color: var(--combobox-option-color, var(--text)); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); text-align: start;
 }
@@ -94,6 +94,7 @@
 /* Touch: the button takes a press up the field's whole height and 10px toward the text, so a finger a little
    off it doesn't land in the text and open the keyboard. */
 @media (pointer: coarse) {
+  .dk-combobox__option { min-height: max(var(--combobox-option-height, var(--control-height-md)), var(--spacing-11)); }   /* 44px to pick on a touch screen, as Menu's items */
   .dk-combobox__button { position: relative; isolation: isolate; }
   .dk-combobox__button::after { content: ""; position: absolute; --dk-under: calc(var(--z-10) * -1); z-index: var(--dk-under); --dk-reach-block: min(var(--spacing-0), calc((100% - var(--dk-input-h)) / 2)); --dk-reach-text: calc(var(--spacing-0) - var(--spacing-2\.5)); inset-block: var(--dk-reach-block); inset-inline: var(--dk-reach-text) var(--spacing-0); }
 }

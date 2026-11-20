@@ -9,11 +9,13 @@
 .dk-toolbar {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--toolbar-gap, var(--spacing-1)); --dk-touch-gap: var(--toolbar-gap, var(--spacing-1));
   padding: var(--toolbar-padding, var(--spacing-1));
-  /* Concentric with the controls inside: their radius plus the padding between (6 + 4 = 10px), so the corners share a
-     centre. --toolbar-radius still sets it outright. */
-  --dk-toolbar-concentric: calc(var(--radius-control) + var(--toolbar-padding, var(--spacing-1)));
+  /* Concentric with the controls inside: their radius plus the padding between (6 + 4 + 1 = 11px), so the corners share a
+     centre (plus the 1px edge). --toolbar-radius still sets it outright. */
+  --dk-toolbar-concentric: calc(var(--radius-control) + var(--toolbar-padding, var(--spacing-1)) + var(--border-width-1));
   border-radius: var(--toolbar-radius, var(--dk-toolbar-concentric, var(--radius-control)));
   background: var(--toolbar-bg, var(--surface)); --surface-behind: var(--toolbar-bg, var(--surface));
+  /* Its own surface needs an edge to read as one in light, where surface is the page's white; dark shows it by fill. */
+  border: var(--border-width-1) solid var(--toolbar-border, var(--border));
   color: var(--toolbar-text, var(--text));
 }
 .dk-toolbar--vertical { display: inline-flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; }

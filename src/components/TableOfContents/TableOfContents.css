@@ -36,7 +36,7 @@
      longer list scrolls inside it, so the last links stay in reach on a page of many headings. */
   max-block-size: calc(var(--sizing-dvh) - var(--table-of-contents-panel-gap, var(--spacing-16))); overflow-y: auto; overscroll-behavior: contain;
   border: var(--border-width-1) solid var(--table-of-contents-panel-border, var(--border-overlay)); border-radius: var(--radius-surface);
-  background: var(--table-of-contents-panel, var(--surface-overlay)); --surface-behind: var(--table-of-contents-panel, var(--surface-overlay)); box-shadow: var(--elevation-overlay);
+  background: var(--table-of-contents-panel, var(--surface-overlay)); --surface-behind: var(--table-of-contents-panel, var(--surface-overlay)); --border: var(--table-of-contents-panel-divider, var(--border-overlay)); box-shadow: var(--elevation-overlay);
   transform-origin: top right; opacity: var(--opacity-0); scale: var(--scale-95); pointer-events: none;
   transition: opacity var(--motion-exit-sm) var(--ease-exit), scale var(--motion-exit-sm) var(--ease-exit);
 }

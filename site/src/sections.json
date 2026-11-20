@@ -1,0 +1,8 @@
+[
+  { "id": "start", "label": "Get started", "path": "/getting-started" },
+  { "id": "foundations", "label": "Foundations", "path": "/foundations", "lead": "The decisions every component is built from: color, type, space, shape, depth and motion, each one a design token." },
+  { "id": "components", "label": "Components", "path": "/components", "lead": "{count} accessible React components, each with its states, props, tokens and a usage guide." },
+  { "id": "patterns", "label": "Patterns", "path": "/patterns", "lead": "Whole screens and flows built from the components, ready to copy: sign-in, checkout, settings, dashboards." },
+  { "id": "blocks", "label": "Blocks", "path": "/blocks", "lead": "Sections of a page, bigger than a component and smaller than a screen: a pricing table, a page header, an FAQ." },
+  { "id": "guides", "label": "Guides", "path": "/guides", "lead": "How the components work together for the jobs every app has: forms, feedback, loading, destructive actions." }
+]

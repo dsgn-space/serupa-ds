@@ -110,7 +110,7 @@ const CONTROLS: { [K in Named]: Control | string } = {
   TransferList: { el: (form) => <TransferList aria-label="Columns" name="cols" form={form} options={[{ value: 'name', label: 'Name' }, { value: 'email', label: 'Email' }]} defaultValue={['email']} />, initial: { cols: 'email' },
     change: async (r) => { await userEvent.click($(r, 'input[value="name"]')); await userEvent.click($(r, 'button')); }, changed: { cols: 'name' } },
   Slider: { el: (form) => <Slider aria-label="Volume" name="volume" form={form} defaultValue={30} />, initial: { volume: '30' },
-    change: async (r) => { $(r, '[role="slider"]').focus(); await userEvent.keyboard('{End}'); }, changed: { volume: '100' } },
+    change: async (r) => { $(r, 'input[type=range]').focus(); await userEvent.keyboard('{End}'); }, changed: { volume: '100' } },
   SegmentedControl: { el: (form) => <SegmentedControl aria-label="View" name="view" form={form} options={[{ value: 'list', label: 'List' }, { value: 'grid', label: 'Grid' }]} defaultValue="list" />, initial: { view: 'list' },
     change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); }, changed: { view: 'grid' } },
   Combobox: { el: (form) => <Combobox aria-label="Fruit" name="fruit" form={form} options={['Apple', 'Banana', 'Cherry']} defaultValue="Apple" />, initial: { fruit: 'Apple' },
