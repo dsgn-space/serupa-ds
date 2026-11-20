@@ -29,6 +29,13 @@ const mode = await commands.ariaMode();
 const update = 'run npm run test:aria:update and commit tools/test/baseline-aria/ if the change is intended';
 const frame = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
+// An id from useId (a link to "#_r_k5_-name") counts up across every root drawn in the run, so it would depend on which
+// stories ran before. Each is named by the order it first appears in in its story's tree instead.
+function sameIds(text: string) {
+  const seen = new Map<string, string>();
+  return text.replace(/_r_[0-9a-z]+_/g, (id) => seen.get(id) ?? (seen.set(id, `_id${seen.size + 1}_`), seen.get(id)!));
+}
+
 // The tree of the whole page while the story is drawn, so what it portals (an open Dialog, a Toaster) is in it too.
 // The shared live regions (internal/announce) are left out: whether they exist yet, where they sit and what they
 // are saying depends on the stories before, not on this one.
@@ -41,7 +48,7 @@ async function tree(ui: React.ReactElement) {
     await new Promise((r) => setTimeout(r, 50));
     const live = [...document.querySelectorAll<HTMLElement>('[data-dk-announcer], [data-dk-announcer-assertive]')];
     for (const el of live) el.hidden = true;
-    try { return await commands.ariaSnapshot('body'); } finally { for (const el of live) el.hidden = false; }
+    try { return sameIds(await commands.ariaSnapshot('body')); } finally { for (const el of live) el.hidden = false; }
   } finally {
     root.unmount();
     host.remove();

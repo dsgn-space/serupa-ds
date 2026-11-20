@@ -4,7 +4,7 @@
   - paragraph:
     - text: Serupa styles your app's screens with components. Content written in Markdown, such as this help page, has
     - link "plain links":
-      - /url: "#install"
+      - /url: "#_id1_"
     - text: ","
     - strong: bold
     - text: ","
@@ -53,7 +53,7 @@
   - paragraph:
     - text: Serupa styles your app's screens with components. Content written in Markdown, such as this help page, has
     - link "plain links":
-      - /url: "#install"
+      - /url: "#_id1_"
     - text: ","
     - strong: bold
     - text: ","
@@ -125,7 +125,7 @@
   - paragraph:
     - text: Serupa styles your app's screens with components. Content written in Markdown, such as this help page, has
     - link "plain links":
-      - /url: "#install"
+      - /url: "#_id1_"
     - text: ","
     - strong: bold
     - text: ","

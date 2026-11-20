@@ -55,12 +55,14 @@ export const WithPresets: Story = {
 /** Do: a heading that says what the day is for, since the grid is named by its month only. */
 export const DoSayWhatFor: Story = {
   name: 'Do: say what the day is for',
-  render: (args) => (
-    <section aria-labelledby="delivery-day">
-      <h3 id="delivery-day" style={{ margin: '0 0 8px', fontSize: 16 }}>Pick a delivery day</h3>
+  // Its own id (useId), so a page that shows this example twice, or beside another, names each by its own heading.
+  render: function Render(args) {
+    const heading = React.useId();
+    return <section aria-labelledby={heading}>
+      <h3 id={heading} style={{ margin: '0 0 8px', fontSize: 16 }}>Pick a delivery day</h3>
       <Calendar {...args} />
-    </section>
-  ),
+    </section>;
+  },
 };
 /** Don't: a calendar on its own, which only says "March 2025". */
 export const DontUnexplained: Story = { name: "Don't: show it with no context" };

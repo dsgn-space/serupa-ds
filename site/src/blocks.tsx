@@ -13,8 +13,9 @@ import { Tab, TabList, TabPanel, Tabs } from '../../src/components/Tabs/Tabs';
 import { Markdown } from './markdown';
 import since from '../../docs/since.json';
 import { sinceText, type Since } from '../../docs/since';
-import type { ComponentDoc, Page } from './pages';
-import { drawAlone, takingOver } from './drawn';
+import { pages, type ComponentDoc, type Page } from './pages';
+import { href } from './router';
+import { Drawn } from './drawn';
 import { StoryView, entryOf, parameter, sourceOf, type StoryEntry } from './stories';
 
 export { Markdown };
@@ -126,10 +127,7 @@ function Stage({ entry, className }: { entry: StoryEntry; className?: string }) 
     return () => seen.disconnect();
   }, []);
   const arm = () => stage.current?.setAttribute(ARMED, '');
-  // A whole screen scrolls inside its frame, so the frame is a stop for the keyboard to scroll it from.
-  const scrolls = parameter(entry, 'layout') === 'fullscreen' && !!className;
-  return <div ref={stage} className={className} data-site-demo="" inert={!awake} {...(mode === 'run' ? { [ARMED]: '' } : {})} onPointerEnter={arm} onFocus={arm}
-    {...(scrolls && mode !== 'held' ? { tabIndex: 0, role: 'group', 'aria-label': `${entry.name}, example` } : {})}>
+  return <div ref={stage} className={className} data-site-demo="" inert={!awake} {...(mode === 'run' ? { [ARMED]: '' } : {})} onPointerEnter={arm} onFocus={arm}>
     {mode === 'held'
       ? <div className="site-held">
         <p>This example opens over the page.</p>
@@ -137,17 +135,6 @@ function Stage({ entry, className }: { entry: StoryEntry; className?: string }) 
       </div>
       : <Drawn key={mode}><StoryView entry={entry} /></Drawn>}
   </div>;
-}
-
-/** A story as the page first shows it. Drawn ahead of time (tools/site/prerender.mjs), it is its HTML on its own, so a
- *  story that throws (an error boundary's example) leaves its frame empty rather than stopping the page. Taking the
- *  page over, the browser keeps that HTML for the first render, then draws the story itself in its place: the page
- *  doesn't move, and the story's own state starts in the browser. */
-function Drawn({ children }: { children: React.ReactNode }) {
-  const [live, setLive] = React.useState(() => typeof window !== 'undefined' && !takingOver());
-  React.useEffect(() => setLive(true), []);
-  if (live) return children;
-  return <div style={{ display: 'contents' }} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: typeof window === 'undefined' ? drawAlone(children) : '' }} />;
 }
 
 /** One story in its frame: the live example, and its code on request. */
@@ -159,8 +146,14 @@ function Demo({ entry }: { entry: StoryEntry }) {
     setOpen((o) => !o);
     if (code == null) void sourceOf(entry).then(setCode, () => setCode(''));
   };
+  // A whole screen (a pattern, a page shell, a bar fixed to the window) is a page of its own in a frame, as it is in
+  // Storybook's canvas: its ids, its fixed parts and its rules on the page (:root:has()) stay inside, so two screens
+  // on one page don't answer each other's labels and links, and its layout answers the frame's width, not the window's.
+  const own = parameter(entry, 'layout') === 'fullscreen' ? pages.find((p) => p.stories === entry.file) : undefined;
   return <div className="site-demo" data-layout={String(parameter(entry, 'layout') ?? 'padded')}>
-    <Stage entry={entry} className="site-demo__stage" />
+    {own
+      ? <div className="site-demo__stage" data-site-demo=""><iframe className="site-demo__frame" title={`${entry.name}, example`} src={href(`/frame/${own.id}--${entry.slug}`)} loading="lazy" /></div>
+      : <Stage entry={entry} className="site-demo__stage" />}
     <div className="site-demo__bar" data-print="hide">
       <Button variant="ghost" size="sm" leftIcon="code" aria-expanded={open} aria-controls={id} onClick={toggle}>{open ? 'Hide code' : 'Show code'}</Button>
     </div>

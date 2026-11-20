@@ -3,13 +3,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SkipLink } from './SkipLink';
 
 // Press Tab in the canvas: the link shows at the top, and Enter moves focus into the main content below.
+// The main content's id is this example's own (useId, then the target's name), so the link moves focus to this
+// example's main wherever else a page has one.
 function Page(props: React.ComponentProps<typeof SkipLink>) {
+  const target = `${React.useId()}-${props.target || 'main'}`;
   return (
     <div className="text-sm text-text">
-      <SkipLink {...props}>{props.children}</SkipLink>
+      <SkipLink {...props} target={target}>{props.children}</SkipLink>
       <p>Press Tab to show the skip link, then Enter to move focus to the main content.</p>
       <nav aria-label="Example" className="flex gap-3 py-2"><a href="#one">One</a><a href="#two">Two</a><a href="#three">Three</a></nav>
-      <main id={props.target || 'main'} className="mt-4 rounded-md border border-border p-4">Main content. The next Tab goes on from here.</main>
+      <main id={target} className="mt-4 rounded-md border border-border p-4">Main content. The next Tab goes on from here.</main>
     </div>
   );
 }
