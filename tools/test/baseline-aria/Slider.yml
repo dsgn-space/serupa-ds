@@ -1,62 +1,62 @@
 # Disabled
-- slider "Volume" [disabled]
+- slider "Volume" [disabled]: "70"
 
 # DoFormatValue
-- slider "Highest price"
+- slider "Highest price": "40"
 
 # DontBareNumber
-- slider "Highest price"
+- slider "Highest price": "40"
 
 # EveryStep
-- slider "Rating"
+- slider "Rating": "3"
 
 # FromTheMiddle
-- slider "Balance"
+- slider "Balance": "-4"
 
 # Invalid
 - text: Volume
-- slider "Volume" [invalid]
+- slider "Volume" [invalid]: "90"
 - text: Keep it under 80 for hearing safety
 
 # Large
-- slider "Volume"
+- slider "Volume": "60"
 
 # LongMarks
-- slider "Volume"
+- slider "Volume": "50"
 
 # Marks
-- slider "Temperature"
+- slider "Temperature": "21"
 
 # Playground
-- slider "Volume"
+- slider "Volume": "50"
 
 # Range
 - 'group "Price: $40 to $120"':
   - text: "Price: $40 to $120"
   - group "Price":
-    - slider "Minimum"
-    - slider "Maximum"
+    - slider "Minimum": "40"
+    - slider "Maximum": "120"
 
 # ReadOnly
-- slider "Volume"
+- slider "Volume": "40"
 
 # SingleWithInput
-- slider "Volume"
+- slider "Volume": "35"
 - spinbutton "Volume": "35"
 
 # Small
-- slider "Volume"
+- slider "Volume": "30"
 
 # Vertical
-- slider "Volume"
-- slider "Treble"
+- slider "Volume": "60"
+- slider "Treble": "4"
 
 # WithInputs
 - group "Price, in dollars":
   - text: Price, in dollars
   - group:
     - spinbutton "Minimum": "40"
-    - slider "Minimum"
-    - slider "Maximum"
+    - slider "Minimum": "40"
+    - slider "Maximum": "120"
     - spinbutton "Maximum": "120"
 
