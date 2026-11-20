@@ -40,6 +40,14 @@
       - option "Use this to invite more people to the workspace"
       - option "This exports the current page as a PDF file"
 
+# Loading
+- paragraph: "Press Control K anywhere, or the button. Last chosen: Nothing yet."
+- button "Search commands"
+- dialog "Command palette":
+  - combobox "Search commands and pages" [expanded]
+  - listbox "Command palette"
+  - status: Loading…
+
 # LongText
 - paragraph: "Press Control K anywhere, or the button. Last chosen: Nothing yet."
 - button "Search commands"
@@ -85,6 +93,23 @@
 # Playground
 - paragraph: "Press Control K anywhere, or the button. Last chosen: Nothing yet."
 - button "Search commands"
+
+# ServerSearch
+- button "Search records"
+- dialog "Command palette":
+  - combobox "Search invoices and refunds" [expanded]
+  - listbox "Command palette":
+    - group "Pages":
+      - text: Pages
+      - option "Home" [selected]
+      - option "Projects"
+      - option "Settings"
+    - group "Actions":
+      - text: Actions
+      - option "New project Control N"
+      - option "Invite people"
+      - option "Switch to dark theme Control Shift L"
+      - option "Export as PDF" [disabled]
 
 # Ungrouped
 - paragraph: "Press Control K anywhere, or the button. Last chosen: Nothing yet."
