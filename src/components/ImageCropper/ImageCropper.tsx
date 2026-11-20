@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useSettings } from '../../internal/provider';
 import { useFieldsetDisabled } from '../../internal/useFieldsetDisabled';
 import { FieldContext, useFieldControl } from '../../internal/field';
@@ -104,9 +104,7 @@ type Gesture = { x: number; y: number; cx: number; cy: number; moved: boolean };
    application: its arrow keys are its own (they move the picture), so a screen reader passes them through rather
    than reading on; its name and description say what they do. Until the picture loads, when it can't, or disabled,
    it's a plain box: nothing in it works, and the failure text is read where it is. */
-/** A picture in a frame of a fixed shape, moved and zoomed to choose the part to keep, such as a profile photo.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const ImageCropper = /* @__PURE__ */ component<HTMLDivElement, ImageCropperProps>('ImageCropper', function ImageCropper(given, ref) {
+function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttributes<HTMLDivElement>) {
   const props = useFieldControl(given);
   const nameRef = useNameCheck('ImageCropper', NAME_HOW.group);
   const fieldLabel = useFieldLabel(props.id);
@@ -267,4 +265,8 @@ export const ImageCropper = /* @__PURE__ */ component<HTMLDivElement, ImageCropp
       </FieldContext.Provider>
     </div>
   );
-});
+}
+
+/** A picture in a frame of a fixed shape, moved and zoomed to choose the part to keep, such as a profile photo.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const ImageCropper = /* @__PURE__ */ named('ImageCropper', ImageCropperRender);

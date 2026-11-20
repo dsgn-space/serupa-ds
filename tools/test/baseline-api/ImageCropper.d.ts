@@ -31,4 +31,4 @@ declare function cropImage(src: string, area: CropArea, options?: {
     quality?: number;
     crossOrigin?: "" | "anonymous" | "use-credentials";
 }): Promise<Blob | null>;
-declare const ImageCropper: React.ForwardRefExoticComponent<ImageCropperProps & React.RefAttributes<HTMLDivElement>>;
+declare const ImageCropper: React.FC<ImageCropperProps & React.RefAttributes<HTMLDivElement>>;
