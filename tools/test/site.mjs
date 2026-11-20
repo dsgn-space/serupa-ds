@@ -359,6 +359,18 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   await context.close();
 }
 
+// The Countdown page's live example ticks on the site, as it would in an app (its other examples hold a fixed time).
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  const failed = await openUrl(page, base + '/components/countdown') || await ready(page, true);
+  const read = () => page.evaluate(() => document.querySelector('#article')?.textContent ?? '');
+  const before = failed ? '' : await read();
+  await page.waitForTimeout(2200);
+  t('/components/countdown has an example that ticks', !failed && before !== await read(), failed || 'nothing on the page changed in two seconds');
+  await context.close();
+}
+
 // On a phone, a page doesn't jump as it arrives: the footer once showed under the loading page, then jumped away when
 // the page came (a layout shift of 0.11; under 0.1 is good, by Core Web Vitals). The CPU runs four times slower, as on
 // a mid-range phone, so the loading page shows for long enough to be measured.
