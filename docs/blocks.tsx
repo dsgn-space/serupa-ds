@@ -272,7 +272,10 @@ const val = (v: Token['value']) => { const s = typeof v === 'string' ? v : Objec
 
 // What a token is for keeps a readable measure when the table is wider than a phone (spacing-96's 384px preview):
 // the table scrolls in its box, and the words don't stand two to a line down a row as tall as a screen.
-const use: React.CSSProperties = { ...cell, minWidth: '14rem' };
+const use: React.CSSProperties = { ...cell, minWidth: '12rem' };
+// A value that names another token breaks only before the name, never inside it: var(--outline-width-2) wraps as
+// "var(" over "--outline-width-2)", not "var(--" over "outline-" over "width-2)".
+const whole = (v: ReturnType<typeof val>) => typeof v !== 'string' ? v : v.split(/(--[\w.-]+)/).map((x, i) => (i % 2 ? <React.Fragment key={i}><wbr /><span style={{ whiteSpace: 'nowrap' }}>{x}</span></React.Fragment> : x));
 
 /** Every token in a group, with its value, what it's for and a live preview. data-token-sheet marks each token block
  * for the visual snapshots (tools/test/visual.mjs), so a changed token value shows as a changed picture. */
@@ -293,7 +296,7 @@ export function TokenTable({ group, preview }: { group: string; preview?: 'space
     <Wide label={`${group} tokens`}><table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
       <thead><tr><th style={cell}>Token</th><th style={cell}>Value</th>{preview && preview !== 'none' && <th style={cell}>Preview</th>}<th style={cell}>Use</th></tr></thead>
       <tbody>{g.tokens.map((t) => <tr key={t.name}>
-        <td style={{ ...cell, whiteSpace: 'nowrap' }}><code>--{t.name}</code></td><td style={cell}><code>{val(t.value)}</code></td>
+        <td style={{ ...cell, whiteSpace: 'nowrap' }}><code>--{t.name}</code></td><td style={cell}><code>{whole(val(t.value))}</code></td>
         {preview && preview !== 'none' && <td style={cell}>{show(t)}</td>}<td style={use}>{code(t.usage)}</td></tr>)}</tbody>
     </table></Wide>
   </div>;
