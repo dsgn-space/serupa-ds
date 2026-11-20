@@ -6175,7 +6175,7 @@
     "stroke-width-1": {
       "$type": "number",
       "$value": 1,
-      "$description": "`stroke-1`. Hairline outlines and dividers in illustrations.",
+      "$description": "`stroke-1`. Hairlines in SVG: Chart's grid lines, axes and bar edges, and the pixel Loader's dividers.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--stroke-width-1"
@@ -6185,7 +6185,7 @@
     "stroke-width-2": {
       "$type": "number",
       "$value": 2,
-      "$description": "`stroke-2`. The usual weight for outline icons (as in Lucide/Heroicons).",
+      "$description": "`stroke-2`. Chart's lines and the gaps between its slices, and the ring Loader's arc and track.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--stroke-width-2"
@@ -6195,7 +6195,7 @@
     "stroke-width-3": {
       "$type": "number",
       "$value": 3,
-      "$description": "`stroke-3`. Bold strokes for large or emphasized icons.",
+      "$description": "`stroke-3`. Progress's ring, and Chart's active point and focus ring.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--stroke-width-3"
@@ -6205,7 +6205,7 @@
     "stroke-width-4": {
       "$type": "number",
       "$value": 4,
-      "$description": "`stroke-4`. Heavy strokes for charts and display graphics.",
+      "$description": "`stroke-4`. The spokes Loader's spokes.",
       "$extensions": {
         "com.serupa": {
           "cssVar": "--stroke-width-4"
