@@ -92,10 +92,10 @@ jobs:
             echo "hold=1" >> "$GITHUB_OUTPUT"
             echo "Held: Update baselines is drawing this pull request's pictures; CI runs on its commit, or again here when nothing changed." | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-      # Where the x86 jobs run: SERUPA_X86_RUNNER (the project's machines), or GitHub's runners for a fork's pull request,
-      # when the variable is unset, or when the project's machines look gone: a job of this repository has waited more
-      # than 10 minutes for a self-hosted runner. On 14 Nov the burst runner was off for an hour and a queue run waited
-      # for it the whole time; now the next run goes to GitHub's runners on its own (tools/runner-watch.mjs reports it).
+      # Where the x86 jobs run: SERUPA_X86_RUNNER (the project's machines) while a self-hosted runner has started a job
+      # in the last 100 minutes, GitHub's runners otherwise, and for a fork's pull request or when the variable is unset.
+      # The burst VM deletes itself after two idle hours, and a job sent to it then waits a day (tools/runner-watch.mjs
+      # --pick; after bringing the machines up, run the Runner ping workflow once so they count).
       - id: runner
         shell: bash
         env:
@@ -106,13 +106,11 @@ jobs:
           PR_RUNNER: ${{ vars.SERUPA_RUNNER || '"ubuntu-24.04"' }}
         run: |
           set -euo pipefail
-          runner="$X86"
-          if [ "$FORK" = true ] || [ -z "$X86" ]; then runner='"ubuntu-24.04"'
-          elif ! stuck=$(node tools/runner-watch.mjs --stuck 10); then
-            echo "::warning title=Runner check::GitHub didn't answer, so the x86 jobs go to $X86 as set."
-          elif [ -n "$stuck" ]; then
-            runner='"ubuntu-24.04"'
-            echo "::warning title=x86 runners look gone::${stuck%%$'\n'*} (and $(( $(wc -l <<< "$stuck") - 1 )) more) has waited over 10 minutes for a self-hosted runner, so this run's x86 jobs go to GitHub's runners."
+          if ! runner=$(node tools/runner-watch.mjs --pick 100); then
+            runner="${X86:-\"ubuntu-24.04\"}"
+            echo "::warning title=Runner check::GitHub didn't answer, so the x86 jobs go to $runner as set."
+          elif [ -n "$X86" ] && [ "$FORK" != true ] && [ "$runner" = '"ubuntu-24.04"' ]; then
+            echo "::warning title=x86 runners look gone::No self-hosted runner has started a job in 100 minutes, so this run's x86 jobs go to GitHub's runners."
           fi
           echo "x86runner=$(echo "$runner" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
           echo "x86 jobs run on: $runner"

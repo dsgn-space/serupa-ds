@@ -1,0 +1,17 @@
+name: Runner ping
+
+# Run this once after bringing the project's x86 machines up (design-system/ibm-burst-runner-github/up.sh). CI,
+# Nightly, Cross-browser and Update baselines send x86 jobs to the machines only while a self-hosted runner has started
+# a job in the last 100 minutes (tools/runner-watch.mjs --pick), so new machines get no work until one does. This job
+# is that start: a few seconds on one runner.
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    timeout-minutes: 5
+    steps:
+      - run: echo "Started on $RUNNER_NAME"

@@ -105,4 +105,35 @@ t('Input brings DatePicker and DateRangePicker (they use .dk-input), and Navbar 
   t('one shard holds every story', ids.every((id) => inShard(id, 1, 1)));
 }
 
+// Runner watch (tools/runner-watch.mjs): where x86 jobs go, and its reports with Issues off.
+{
+  const fs = await import('node:fs');
+  const os = await import('node:os');
+  const path = await import('node:path');
+  const env = { ...process.env };
+  const summary = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'runner-watch-')), 'summary.md');
+  Object.assign(process.env, { GITHUB_REPOSITORY: 'o/r', GH_TOKEN: 'x', GITHUB_STEP_SUMMARY: summary });
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response('{"message":"Issues are disabled for this repo"}', { status: 410 });
+  const log = console.log;
+  console.log = () => {};
+  try {
+    const { pickRunner, keepIssue } = await import('../runner-watch.mjs');
+    const x86 = '["self-hosted","linux","x86"]';
+    const now = Date.parse('2026-11-20T08:00:00Z');
+    t('x86 jobs go to the machines while one started a job in the window', pickRunner({ x86, lastStart: now - 30 * 60_000, now }) === x86);
+    t('x86 jobs go to GitHub\'s runners once the machines have started nothing for 100 minutes (the VM deleted itself)', pickRunner({ x86, lastStart: now - 101 * 60_000, now }) === '"ubuntu-24.04"');
+    t('x86 jobs go to GitHub\'s runners when no self-hosted start is seen', pickRunner({ x86, lastStart: null, now }) === '"ubuntu-24.04"');
+    t('a fork\'s jobs and an unset variable go to GitHub\'s runners', pickRunner({ x86, fork: true, lastStart: now, now }) === '"ubuntu-24.04"' && pickRunner({ x86: '', lastStart: now, now }) === '"ubuntu-24.04"');
+    let said, err;
+    try { said = await keepIssue('Jobs waiting for a runner', 'runner-watch', ['ci (CI, main) has waited 400 minutes'], 'One job waits.'); } catch (e) { err = e.message; }
+    const text = fs.existsSync(summary) ? fs.readFileSync(summary, 'utf8') : '';
+    t('with Issues off (410), the stuck jobs go to the run\'s summary instead of failing to report', !err && /summary/.test(said) && text.includes('has waited 400 minutes'), err || said);
+  } finally {
+    globalThis.fetch = realFetch;
+    console.log = log;
+    for (const k of ['GITHUB_REPOSITORY', 'GH_TOKEN', 'GITHUB_STEP_SUMMARY']) if (k in env) process.env[k] = env[k]; else delete process.env[k];
+  }
+}
+
 done(report('Affected components', R));
