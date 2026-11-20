@@ -5,13 +5,14 @@ import { ErrorBoundary } from '../../src/components/ErrorBoundary/ErrorBoundary'
 import { Loader } from '../../src/components/Loader/Loader';
 import { TableOfContents } from '../../src/components/TableOfContents/TableOfContents';
 import { ApiAtEnd, Controls, DocsContext, type Docs } from './blocks';
+import { takingOver } from './drawn';
 import { elements } from './markdown';
 import { loadPage, loadProps, pagesOf, sectionOf, type ComponentDoc, type Page } from './pages';
 import { href, resolve } from './router';
 import { Shell } from './Shell';
 import { storiesOf } from './stories';
 
-type Loaded = { page: Page; Content: React.ComponentType<{ components?: Record<string, React.ElementType> }>; docs: ComponentDoc[] };
+export type Loaded = { page: Page; Content: React.ComponentType<{ components?: Record<string, React.ElementType> }>; docs: ComponentDoc[] };
 
 // The page's sections: its h2 and h3, without the headings inside a story or the docs' long lists (the tests, the changes).
 const HEADINGS = ['h2', 'h3'].map((h) => `${h}[id]:not([data-site-demo] *, .sb-tested h3, .sb-changes h3, .sb-anatomy *, .sb-dodont *, .sb-unstyled *)`).join(', ');
@@ -53,17 +54,27 @@ function PrevNext({ page }: { page: Page }) {
   </nav>;
 }
 
-export function Doc({ page }: { page: Page }) {
-  const [loaded, setLoaded] = React.useState<Loaded | null>(null);
+/** A page's content and its props, loaded: what a page needs before it can be drawn. */
+export const loadDoc = (page: Page): Promise<Loaded> =>
+  Promise.all([loadPage(page), page.component ? loadProps(page.component) : Promise.resolve([])]).then(([mod, docs]) => ({ page, Content: mod.default, docs }));
+
+/** A docs page. With initial, it starts drawn: its HTML was drawn ahead of time (tools/site/prerender.mjs), or loaded
+ *  before the page was taken over. */
+export function Doc({ page, initial = null }: { page: Page; initial?: Loaded | null }) {
+  const [loaded, setLoaded] = React.useState<Loaded | null>(() => (initial?.page === page ? initial : null));
+  const given = React.useRef(initial?.page);
+  // A page drawn ahead of time may have been scrolled before the browser took it over: it stays where the reader is.
+  const drawnAhead = React.useRef(takingOver() ? page : null);
   const [failed, setFailed] = React.useState<Error | null>(null);
   // How many times the article has been named: the section list reads the headings again when it changes.
   const [named, setNamed] = React.useState(0);
   const article = React.useRef<HTMLElement>(null);
   React.useEffect(() => {
+    if (given.current === page) return;   // it came loaded
+    given.current = undefined;
     let live = true;
     setFailed(null);
-    Promise.all([loadPage(page), page.component ? loadProps(page.component) : Promise.resolve([])])
-      .then(([mod, docs]) => { if (live) setLoaded({ page, Content: mod.default, docs }); }, (e: unknown) => { if (live) setFailed(e instanceof Error ? e : new Error(String(e))); });
+    loadDoc(page).then((d) => { if (live) setLoaded(d); }, (e: unknown) => { if (live) setFailed(e instanceof Error ? e : new Error(String(e))); });
     return () => { live = false; };
   }, [page]);
   // The page that's showing: the last one loaded stays until the next has arrived, so the frame never empties.
@@ -92,7 +103,8 @@ export function Doc({ page }: { page: Page }) {
     });
     links.observe(el, { childList: true, subtree: true });
     const hash = decodeURIComponent(window.location.hash.slice(1));
-    if (hash) document.getElementById(hash)?.scrollIntoView(); else window.scrollTo(0, 0);
+    if (drawnAhead.current !== page) drawnAhead.current = null;   // another page since: it opens at its top
+    if (hash) document.getElementById(hash)?.scrollIntoView(); else if (!drawnAhead.current) window.scrollTo(0, 0);
     return () => { links.disconnect(); keep.disconnect(); };
   }, [ready, page]);
   const docs = React.useMemo<Docs>(() => ({ componentStories: () => storiesOf(shown?.page.stories), page: shown?.page ?? null, docs: shown?.docs ?? [] }), [shown]);

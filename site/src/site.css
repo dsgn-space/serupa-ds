@@ -100,6 +100,24 @@ ol.site-list { list-style: decimal; }
 /* With room, code in a written table breaks only when one word is wider than its column, so a prop's name in the
    first column (onOpenChange) isn't split to give a long Notes column one more character. */
 @media (min-width: 64rem) { .site-table:not(.site-table--props) .site-code { overflow-wrap: break-word; } }
+/* On a phone a written table of three columns or more stands each row as a block: its first cell names the row, and
+   each other cell starts with its column's name (data-label, set in markdown.tsx). Squeezed into the width instead,
+   it broke words a letter a line and ran rows hundreds of pixels tall. The header row stays for screen readers, and
+   the roles in markdown.tsx keep it a table to them; the names drawn here are for the eye only. */
+@media (max-width: 39.99rem) {
+  :is(.site-table--stack, .sb-doc-table--stack) :is(table, thead, tbody, tr, td, th[scope="row"]) { display: block; }
+  table.sb-doc-table--stack { display: block; border: var(--border-width-1) solid var(--border); border-radius: var(--radius-surface); }
+  .sb-doc-table--stack caption { display: block; padding-inline: var(--spacing-3); }
+  :is(.site-table--stack, .sb-doc-table--stack) thead { position: absolute; inline-size: var(--spacing-px); block-size: var(--spacing-px); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :is(.site-table--stack, .sb-doc-table--stack) tr { padding: var(--spacing-3); border-block-end: var(--border-width-1) solid var(--border); }
+  :is(.site-table--stack, .sb-doc-table--stack) tbody tr:last-child { border-block-end: 0; }
+  :is(.site-table.site-table--stack, table.sb-doc-table--stack) :is(td, th[scope="row"]) { padding: 0 !important; border: 0 !important; text-align: start; overflow-wrap: break-word; }
+  :is(.site-table--stack, .sb-doc-table--stack) td :is(.site-code, code) { overflow-wrap: anywhere; }
+  :is(.site-table--stack, .sb-doc-table--stack) tr > :first-child { font-weight: var(--font-semibold) !important; }
+  :is(.site-table--stack, .sb-doc-table--stack) tr > * + td { margin-block-start: var(--spacing-1); }
+  :is(.site-table--stack, .sb-doc-table--stack) tr > * + td::before { content: attr(data-label) ": " / ""; color: var(--text-muted); font-weight: var(--font-medium); }
+  :is(.site-table--stack, .sb-doc-table--stack) td:empty { display: none; }
+}
 
 /* ── A story in its frame ──────────────────────────────────────────────────────────────────────────────────── */
 .site-demo { margin-block-start: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface); overflow: clip; }
@@ -153,6 +171,9 @@ ol.site-list { list-style: decimal; }
    beat the story's own style attribute. */
 .site-card__stage [style*="min-height"] { min-height: 0 !important; }
 .site-card__stage > div:not([class]):is([style*="min-height"], [style*="padding"]):not([style*="width"]) { display: inline-block !important; padding: 0 !important; }
+/* A plain row a story sets its parts in (ContextualHelp's label and button) fits them too, centered, not drawn at the
+   start of a page-wide row. */
+.site-card__stage > div:not([class])[style*="display: flex"]:not([style*="width"], [style*="height"]) { display: inline-flex !important; }
 /* A floating action button pinned to the screen's corner, or an OfflineBanner to its edge, sits in its card's picture
    instead; over a story taller than the picture it keeps to the picture's corner, as a BottomNav does (Index.tsx). */
 .site-card__stage:not([data-tall]) :is(.dk-fab--bottom-end, .dk-fab--bottom-start, .dk-fab--top-end, .dk-fab--top-start),

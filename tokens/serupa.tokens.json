@@ -1247,7 +1247,7 @@
     "field-border": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput): a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
+      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-700}",
@@ -1275,7 +1275,7 @@
     "border-control": {
       "$type": "color",
       "$value": "{color.zinc-500}",
-      "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, SegmentedControl, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
+      "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-400}",
@@ -2015,7 +2015,7 @@
     "chart-1": {
       "$type": "color",
       "$value": "{color.blue-800}",
-      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 1 (blue): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{blue-500}",
@@ -2026,7 +2026,7 @@
     "chart-2": {
       "$type": "color",
       "$value": "{color.orange-600}",
-      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 2 (orange): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{orange-500}",
@@ -2037,7 +2037,7 @@
     "chart-3": {
       "$type": "color",
       "$value": "{color.pink-800}",
-      "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 3 (pink): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{pink-600}",
@@ -2048,7 +2048,7 @@
     "chart-4": {
       "$type": "color",
       "$value": "{color.cyan-600}",
-      "$description": "Alias. Chart series 4 (cyan): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 4 (cyan): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{cyan-500}",
@@ -2059,7 +2059,7 @@
     "chart-5": {
       "$type": "color",
       "$value": "{color.yellow-800}",
-      "$description": "Alias. Chart series 5 (brown): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 5 (brown): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{yellow-700}",
@@ -2070,7 +2070,7 @@
     "chart-6": {
       "$type": "color",
       "$value": "{color.teal-600}",
-      "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 6 (teal): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{teal-600}",
@@ -2081,7 +2081,7 @@
     "chart-7": {
       "$type": "color",
       "$value": "{color.violet-800}",
-      "$description": "Alias. Chart series 7 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 7 (violet): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{violet-500}",
@@ -2092,7 +2092,7 @@
     "chart-8": {
       "$type": "color",
       "$value": "{color.red-600}",
-      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbours differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
+      "$description": "Alias. Chart series 8 (red): a line, bar, slice or marker. Every series is 3:1+ on `surface` and `surface-raised` in every theme; neighbors differ by hue for every reader (OKLab ΔE 15+, 8+ under protanopia and deuteranopia), the first four as every pair (15+, 10+ under protanopia and deuteranopia, 8+ under tritanopia), alternate darker and lighter in light themes, and `chart-gap` keeps them apart.",
       "$extensions": {
         "com.serupa": {
           "dark": "{red-600}",
@@ -2268,7 +2268,7 @@
     "chart-gap": {
       "$type": "color",
       "$value": "{color.white}",
-      "$description": "Alias. The gap drawn between neighbouring bars, slices and areas, so each one has 3:1+ against what touches it (WCAG 1.4.11). The page color: set it to the card's on a raised surface.",
+      "$description": "Alias. The gap drawn between neighboring bars, slices and areas, so each one has 3:1+ against what touches it (WCAG 1.4.11). The page color: set it to the card's on a raised surface.",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-900}",
@@ -8176,22 +8176,22 @@
     "stroke-width-1": {
       "$type": "number",
       "$value": 1,
-      "$description": "`stroke-1`. Hairline outlines and dividers in illustrations."
+      "$description": "`stroke-1`. Hairlines in SVG: Chart's grid lines, axes and bar edges, and the pixel Loader's dividers."
     },
     "stroke-width-2": {
       "$type": "number",
       "$value": 2,
-      "$description": "`stroke-2`. The usual weight for outline icons (as in Lucide/Heroicons)."
+      "$description": "`stroke-2`. Chart's lines and the gaps between its slices, and the ring Loader's arc and track."
     },
     "stroke-width-3": {
       "$type": "number",
       "$value": 3,
-      "$description": "`stroke-3`. Bold strokes for large or emphasized icons."
+      "$description": "`stroke-3`. Progress's ring, and Chart's active point and focus ring."
     },
     "stroke-width-4": {
       "$type": "number",
       "$value": 4,
-      "$description": "`stroke-4`. Heavy strokes for charts and display graphics."
+      "$description": "`stroke-4`. The spokes Loader's spokes."
     }
   },
   "typography": {
@@ -8932,7 +8932,7 @@
     },
     "icon-cap-align": {
       "$value": "-0.125em",
-      "$description": "The vertical-align that centres a 1em icon in running text on the capitals beside it rather than on the x-height (`middle`) or the text's bottom: Link's new-tab icon."
+      "$description": "The vertical-align that centers a 1em icon in running text on the capitals beside it rather than on the x-height (`middle`) or the text's bottom: Link's new-tab icon."
     },
     "sizing-1-2": {
       "$value": "50%",
@@ -10433,15 +10433,7 @@
         "value": 0,
         "unit": "ms"
       },
-      "$description": "`delay-0`."
-    },
-    "delay-75": {
-      "$type": "duration",
-      "$value": {
-        "value": 75,
-        "unit": "ms"
-      },
-      "$description": "`delay-75`."
+      "$description": "No wait: `delay-0` cancels a delay set elsewhere."
     },
     "delay-50": {
       "$type": "duration",
@@ -10451,13 +10443,21 @@
       },
       "$description": "One step of a stagger: the gap between list items arriving (`motion-stagger`)."
     },
+    "delay-75": {
+      "$type": "duration",
+      "$value": {
+        "value": 75,
+        "unit": "ms"
+      },
+      "$description": "One step of the pixel Loader's wave (`--loader-pixel-stagger`)."
+    },
     "delay-100": {
       "$type": "duration",
       "$value": {
         "value": 100,
         "unit": "ms"
       },
-      "$description": "`delay-100`."
+      "$description": "Short: a tooltip waits this long to close once the pointer leaves it."
     },
     "delay-150": {
       "$type": "duration",
@@ -10465,7 +10465,7 @@
         "value": 150,
         "unit": "ms"
       },
-      "$description": "`delay-150`."
+      "$description": "The gap between the dots Loader's dots (`--loader-dots-stagger`)."
     },
     "delay-200": {
       "$type": "duration",
@@ -10473,7 +10473,7 @@
         "value": 200,
         "unit": "ms"
       },
-      "$description": "`delay-200`."
+      "$description": "Offsets one square of the random pixel Loader."
     },
     "delay-300": {
       "$type": "duration",
@@ -10481,7 +10481,7 @@
         "value": 300,
         "unit": "ms"
       },
-      "$description": "Tooltips: wait before showing."
+      "$description": "A loading indicator waits this long before it shows, so a quick wait doesn't flash one."
     },
     "delay-500": {
       "$type": "duration",
@@ -10489,7 +10489,7 @@
         "value": 500,
         "unit": "ms"
       },
-      "$description": "Tooltips: wait before showing."
+      "$description": "A HoverCard waits this long before it opens; a loading indicator, once shown, stays at least this long."
     },
     "delay-700": {
       "$type": "duration",
@@ -10497,7 +10497,7 @@
         "value": 700,
         "unit": "ms"
       },
-      "$description": "`delay-700`."
+      "$description": "Offsets one square of the random pixel Loader."
     },
     "delay-1000": {
       "$type": "duration",
@@ -10505,7 +10505,7 @@
         "value": 1000,
         "unit": "ms"
       },
-      "$description": "`delay-1000`."
+      "$description": "Offsets one square of the random pixel Loader; the longest wait."
     },
     "ease-linear": {
       "$type": "cubicBezier",

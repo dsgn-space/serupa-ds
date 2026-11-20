@@ -48,8 +48,10 @@
 @media (prefers-reduced-motion: reduce) { .dk-tag-group__remove { transition: none; } }
 .dk-tag-group__more {
   margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); background: transparent; color: var(--tag-group-more, var(--primary)); font: inherit; font-size: var(--text-sm); line-height: var(--text-sm--line-height);
-  text-decoration: underline; cursor: var(--cursor-interactive); touch-action: manipulation;
+  text-decoration: underline; text-decoration-thickness: var(--decoration-1); text-underline-offset: var(--underline-offset-2); cursor: var(--cursor-interactive); touch-action: manipulation;
 }
+/* Show more is underlined as a link is (1px, 2px below the words), and answers a pointer as one does: primary-hover, and the underline thickens to 2px. */
+@media (hover: hover) { .dk-tag-group__more:hover { color: var(--tag-group-more-hover, var(--primary-hover)); text-decoration-thickness: var(--decoration-2); } }
 .dk-tag-group__more:focus-visible { outline: var(--focus-ring-width) solid var(--tag-group-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 @media (forced-colors: active) { .dk-tag-group__tag { border-color: CanvasText; } .dk-tag-group__tag--selected { border-width: var(--border-width-2); } }
 }

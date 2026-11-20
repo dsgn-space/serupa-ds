@@ -58,7 +58,7 @@ People give a product their time, their effort and their data, so treat all thre
 
 <DoDontExample
   doText="Act at once, and offer Undo."
-  doExample={<Source language="tsx" dark={false} code={"archive(project);\ntoast.undo('Project archived', () => restore(project));"} />}
+  doExample={<Source language="tsx" dark={false} code={"hide(project);\ntoast.undo({\n  title: 'Project archived',\n  commit: () => archive(project),\n  onUndo: () => show(project),\n});"} />}
   dontText="Ask first for something that can be undone."
   dontExample={<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>Archive this project? <Button variant="outline" size="sm">Cancel</Button><Button size="sm">Archive</Button></div>}
 />

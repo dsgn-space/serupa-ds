@@ -186,7 +186,7 @@ export function ProductPage({ product = demo, currency = 'USD', cartCount = 0, o
     e.preventDefault();
     const gaps = missingOptions(product.options, picked);
     setMissing(gaps);
-    if (gaps.length) { document.querySelector<HTMLInputElement>(`input[name="option-${gaps[0]}"]:not(:disabled)`)?.focus(); return; }
+    if (gaps.length) { e.currentTarget.querySelector<HTMLInputElement>(`input[name="option-${gaps[0]}"]:not(:disabled)`)?.focus(); return; }
     const line: ProductCartLine = { options: picked, quantity: Math.min(Math.max(1, quantity ?? 1), max ?? Infinity) };
     setFailed(false);
     setBusy(true);

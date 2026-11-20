@@ -42,8 +42,25 @@ const alignOf = (p: { align?: string; style?: React.CSSProperties }) => {
   const a = p.align ?? p.style?.textAlign;
   return a === 'right' || a === 'end' ? 'end' as const : a === 'center' ? 'center' as const : undefined;
 };
-function Td(p: Props<'td'>) { return <TableCell align={alignOf(p)}>{p.children}</TableCell>; }
-function Th(p: Props<'th'>) { return <TableHeaderCell align={alignOf(p)}>{p.children}</TableHeaderCell>; }
+/* eslint-disable jsx-a11y-x/no-interactive-element-to-noninteractive-role -- on a phone CSS draws this table as blocks (site.css), and a browser that then drops its table semantics gets them back from the roles */
+function Td(p: Props<'td'> & { 'data-label'?: string }) { return <TableCell align={alignOf(p)} role="cell" data-label={p['data-label']}>{p.children}</TableCell>; }
+function Th(p: Props<'th'>) { return <TableHeaderCell align={alignOf(p)} role="columnheader">{p.children}</TableHeaderCell>; }
+
+type El = React.ReactElement<{ children?: React.ReactNode }>;
+const kids = (node: React.ReactNode) => React.Children.toArray(node).filter(React.isValidElement) as El[];
+/** A written table. With three columns or more, on a phone each row stands as a block, its first cell as the row's
+ * name and each other cell under its column's name (site.css): squeezed into a phone's width, such a table broke
+ * words a letter a line or ran rows hundreds of pixels tall. Each cell carries its column's name for that, and every
+ * part keeps its table role, so a screen reader still reads a table when CSS draws it as blocks. */
+function DocTable({ children }: Props<'table'>) {
+  const [head, ...rest] = kids(children);
+  const names = kids(kids(head?.props.children)[0]?.props.children).map((th) => textOf(th.props.children).trim());
+  const stack = names.length >= 3;
+  const body = stack ? rest.map((section) => React.cloneElement(section, undefined, kids(section.props.children).map((row) =>
+    React.cloneElement(row, undefined, kids(row.props.children).map((cell, i) => React.cloneElement(cell as React.ReactElement<{ 'data-label'?: string }>, { 'data-label': names[i] })))))) : rest;
+  return <Table size="sm" role="table" containerProps={{ className: stack ? 'site-table site-table--stack' : 'site-table' }}>{head}{body}</Table>;
+}
+/* eslint-enable jsx-a11y-x/no-interactive-element-to-noninteractive-role */
 
 /** The elements of a docs page, as Serupa components. */
 export const elements = {
@@ -57,10 +74,10 @@ export const elements = {
   img: ({ src, alt = '' }: Props<'img'>) => <img className="site-img" src={src} alt={alt} />,
   code: Code,
   pre: Pre,
-  table: ({ children }: Props<'table'>) => <Table size="sm" containerProps={{ className: 'site-table' }}>{children}</Table>,
-  thead: ({ children }: Props<'thead'>) => <TableHead>{children}</TableHead>,
-  tbody: ({ children }: Props<'tbody'>) => <TableBody>{children}</TableBody>,
-  tr: ({ children }: Props<'tr'>) => <TableRow>{children}</TableRow>,
+  table: DocTable,
+  thead: ({ children }: Props<'thead'>) => <TableHead role="rowgroup">{children}</TableHead>,
+  tbody: ({ children }: Props<'tbody'>) => <TableBody role="rowgroup">{children}</TableBody>,
+  tr: ({ children }: Props<'tr'>) => <TableRow role="row">{children}</TableRow>,
   th: Th,
   td: Td,
 };

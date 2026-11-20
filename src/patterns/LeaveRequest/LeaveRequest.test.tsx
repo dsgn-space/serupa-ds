@@ -134,3 +134,10 @@ describe('Patterns/Leave request', () => {
     await expect.poll(() => document.querySelectorAll('ul[aria-labelledby="mine"] > li').length).toBe(2);
   });
 });
+
+describe('LeaveRequest: two on one page', () => {
+  test('each keeps its own kind of leave chosen: their radios are not one group', async () => {
+    await render(<>{page()}{page()}</>);
+    await expect.poll(() => [...document.querySelectorAll<HTMLInputElement>('input[type="radio"]')].filter((r) => r.checked).length).toBe(2);
+  });
+});

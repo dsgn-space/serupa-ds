@@ -145,7 +145,7 @@ Each is an optional override: set it on the page or the Toaster. The list lives 
 | `--toast-icon-warning` | `warning` | The icon of a warning toast. |
 | `--toast-icon-danger` | `danger` | The icon of a danger toast. |
 | `--toast-focus-ring` | `focus-ring` | The ring around a toast that F8 moved focus to. |
-| `--toast-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
+| `--toast-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--toast-shadow` | `elevation-overlay` | A toast's shadow. |
 | `--toast-radius` | `radius-surface` | A toast's corners (8px). |
 | `--toast-border-width` | `border-width-1` | A toast's border. |
