@@ -6,6 +6,7 @@ import { afterEach, beforeEach, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { announcerIdle } from '../../../src/internal/announce';
 import { resetWarnings } from '../../../src/internal/warn';
+import { toast } from '../../../src/components/Toast/Toast';
 
 // Every test file starts at the same moment, the one the visual and Storybook checks use (CLOCK in tools/test/lib.mjs),
 // and the clock ticks from there: what a component shows for "today" or "5 minutes ago" can't change with the day the
@@ -24,6 +25,10 @@ FixedDate.now = () => RealDate.now() + shift;
 Object.defineProperty(globalThis, 'Date', { value: FixedDate, writable: true, configurable: true });
 
 afterEach(() => { document.documentElement.setAttribute('data-theme', 'blue-light'); });
+// The toasts live in the page, not in a Toaster, so one test's toasts were still there in the next: with three left
+// over, AccountSecurity's new toast sat behind "+3 more" and its test failed in the order one seed shuffles to
+// (ar-EG, 20 Nov). Every test starts with none.
+afterEach(() => { toast.dismiss(); });
 document.documentElement.setAttribute('data-theme', 'blue-light');
 // No transitions or animations: a test reads the end state, which Firefox and WebKit can otherwise still be
 // easing towards. Tests about motion turn it back on with keepMotion() or withMotion() (helpers.ts).

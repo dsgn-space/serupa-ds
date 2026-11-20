@@ -100,7 +100,7 @@ export function Reviews({ product = 'Featherlight jacket', reviews = demo, pageS
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme Outdoors</p>
-        <Link href="#bag">Bag</Link>
+        <Link underline="hover" href="#bag">Bag</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-4xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: product, href: '#product' }, { label: 'Reviews' }]} title={`Reviews of the ${product}`} />

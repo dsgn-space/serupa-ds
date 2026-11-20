@@ -97,6 +97,10 @@
 
 /* Hidden means hidden, even on elements that set their own display. */
 :where([hidden]:not([hidden="until-found"])) { display: none !important; }
+/* hidden="until-found" (a kept Tab panel, a closed Accordion item) is hidden by content-visibility, as Chrome's and
+   Firefox's own styles do. WebKit doesn't know the value and hides it with display: none, which a display class on the
+   element (a panel that is a flex column) overrides, so every kept panel showed at once. */
+:where([hidden="until-found"]) { content-visibility: hidden; }
 
 /* Chart colors in forced colors: the user's own colors, five of them told apart (the series past the fifth, and the
    ramps, rely on the chart's markers, patterns and text, which a chart draws anyway). The gap is the page. */

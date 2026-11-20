@@ -190,10 +190,12 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
     onBlur: chain('onBlur', () => { focused.current = false; set(false, 'blur'); }),
     onPointerDown: chain('onPointerDown', () => set(false, 'trigger')),
   });
-  // The cut line's full text (visual) is drawn only while there is something to show, and as a <span>: it often sits
-  // in a button or a link, whose content holds no <div>, and whose text shouldn't carry a second copy while it fits.
+  // The cut line's full text (visual) is drawn only while there is something to show: its text shouldn't carry a
+  // second copy while it fits. The tip is a <span>, typed as a <div> (a fixed span lays out as a block too): its trigger
+  // often sits in a button, a link or a line of text, and a <div> there ends the paragraph when the browser reads the
+  // server's HTML.
   if (props.visual && props.disabled) return trigger;
-  const Tip = (props.visual ? 'span' : 'div') as 'div';   // typed as the div it usually is: a fixed span lays out as a block too
+  const Tip = 'span' as 'div';
   return (
     <>
       {trigger}

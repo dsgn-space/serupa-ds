@@ -7,6 +7,7 @@ import { Card } from '../../components/Card/Card';
 import { Alert } from '../../components/Alert/Alert';
 import { Icon } from '../../components/Icon/Icon';
 import { announce } from '../../internal/announce';
+import { useLocale } from '../../internal/provider';
 
 /* Permission request: asks for the camera only when someone chooses to use it, says why first, and has a way on
    when the answer is no. For an app to copy. What it carries:
@@ -33,6 +34,12 @@ export interface PermissionRequestProps {
   onAnswer?: ((answer: PermissionAnswer) => void) | undefined;
 }
 
+/* The call's time, in the reader's own clock (3:00 – 3:30 PM, 15:00–15:30): a fixed "15.00" read as neither. */
+const callTime = (locale: string | undefined) => {
+  const at = (h: number, m: number) => { const d = new Date(2026, 0, 1); d.setHours(h, m, 0, 0); return d; };
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'short', numberingSystem: 'latn' }).formatRange(at(15, 0), at(15, 30)).replace(/[\u2009\u202f]/g, ' ');
+};
+
 const demo = () => new Promise<PermissionAnswer>((resolve) => { setTimeout(() => resolve('granted'), 600); });
 const SAID: Record<PermissionAnswer, string> = {
   granted: 'Camera on.',
@@ -42,6 +49,7 @@ const SAID: Record<PermissionAnswer, string> = {
 
 /** A "join a call" page that asks for the camera only when it's wanted, explains why first, and copes with a no. */
 export function PermissionRequest({ initial = 'before', request = demo, onAnswer }: PermissionRequestProps) {
+  const locale = useLocale();
   const [step, setStep] = React.useState<PermissionStep>(initial);
   const [joined, setJoined] = React.useState(false);
   const join = React.useRef<HTMLButtonElement>(null);
@@ -65,7 +73,7 @@ export function PermissionRequest({ initial = 'before', request = demo, onAnswer
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-2xl flex-col gap-6 px-4 py-8 outline-none">
         <div className="flex flex-col gap-2">
           <Heading level={1}>Weekly design review</Heading>
-          <p className="m-0 text-text-muted">Today, 15.00–15.30 · 6 people invited</p>
+          <p className="m-0 text-text-muted">Today, {callTime(locale)} · 6 people invited</p>
         </div>
         <Card as="section" aria-labelledby="camera-title" className="flex flex-col gap-4">
           <Heading level={2} size="lg" id="camera-title">Camera</Heading>

@@ -30,6 +30,9 @@ describe('Patterns/Referral', () => {
     const link = screen.getByRole('textbox', { name: 'Your invite link' }).element() as HTMLInputElement;
     expect([link.readOnly, link.value]).toEqual([true, 'https://acme.example/r/ana-7k2']);
     expect(screen.getByRole('button', { name: 'Copy link' }).elements()).toHaveLength(1);
+    // Copy is the field's height (its frame), so the pair reads as one control row.
+    const copy = screen.getByRole('button', { name: 'Copy link' }).element();
+    expect(Math.round(copy.getBoundingClientRect().height)).toBe(Math.round(link.parentElement!.getBoundingClientRect().height));   // the field's frame, around the input
     expect(screen.getByRole('table', { name: 'Friends you’ve invited, newest first' }).elements()).toHaveLength(1);
     expect(document.querySelector('main tbody tr')?.textContent).toMatch(/Earned you/);
   });

@@ -106,7 +106,7 @@ export function Poll({ question = 'Where should the summer party be?', options =
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme</p>
-        <Link href="#polls">Polls</Link>
+        <Link underline="hover" href="#polls">Polls</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-2xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Polls', href: '#polls' }, { label: question }]} title={question}

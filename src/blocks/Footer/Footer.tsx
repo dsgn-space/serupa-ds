@@ -81,7 +81,7 @@ export function Footer({ groups, languages = [], language, onLanguageChange, the
             <nav key={g.title} aria-labelledby={`${id}-${i}`} className="flex flex-col gap-3">
               <Heading level={headingLevel} id={`${id}-${i}`} size="sm" className="font-semibold">{g.title}</Heading>
               <ul className="m-0 flex list-none flex-col gap-2 p-0 text-sm">
-                {g.links.map((link) => <li key={link.href + link.label}><Link href={link.href}>{link.label}</Link></li>)}
+                {g.links.map((link) => <li key={link.href + link.label}><Link href={link.href} underline="hover">{link.label}</Link></li>)}
               </ul>
             </nav>
           ))}
