@@ -1247,7 +1247,7 @@
     "field-border": {
       "$type": "color",
       "$value": "{color.zinc-300}",
-      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput): a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
+      "$description": "Alias. Border of form fields (Input, Textarea, Select, Combobox, the pickers, Checkbox, Radio, PinInput) and SegmentedControl's track: a soft line, zinc-300 in light and zinc-700 in dark, a step lighter than the zinc-800 field. It is under the 3:1 WCAG 1.4.11 asks of a control's boundary, a deliberate design choice: the field also shows by its label above it, and in dark by its zinc-800 fill, hover and focus are stronger, and more contrast (`data-contrast=\"more\"` or the system setting) brings back a 3:1+ border. Other controls' edges use `border-control`.",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-700}",
@@ -1275,7 +1275,7 @@
     "border-control": {
       "$type": "color",
       "$value": "{color.zinc-500}",
-      "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, SegmentedControl, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
+      "$description": "Alias. The 3:1 edge of a control that isn't a text or choice field: Slider's track, Switch's track, Progress and Meter's track edge, Carousel's dots, ColorPicker's swatch edge, Stepper's ring and line, Rating's empty stars, Kbd, Splitter, ScrollArea's thumb and Avatar's offline dot. 3:1+ against `surface` in every theme (WCAG 1.4.11).",
       "$extensions": {
         "com.serupa": {
           "dark": "{zinc-400}",
