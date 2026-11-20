@@ -5,7 +5,7 @@ A Button that stays on or off, for a setting that applies right away: bold in a 
 **Also called:** on/off button, state button.
 
 ```jsx
-const { ToggleButton, ButtonGroup } = window.Serupa;
+import { ToggleButton, ButtonGroup } from '@diki-stwn/serupa-ds';
 
 <ToggleButton defaultPressed leftIcon="grid_on">Show grid</ToggleButton>
 <ToggleButton pressed={muted} onPressedChange={setMuted} icon={muted ? 'volume_off' : 'volume_up'} aria-label="Mute" />

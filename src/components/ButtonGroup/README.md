@@ -5,7 +5,7 @@ Related buttons side by side, or stacked: joined into one control with shared bo
 **Also called:** button bar, action group.
 
 ```jsx
-const { ButtonGroup, Button, IconButton, ToggleButton } = window.Serupa;
+import { ButtonGroup, Button, IconButton, ToggleButton } from '@diki-stwn/serupa-ds';
 
 <ButtonGroup aria-label="Clipboard">
   <Button variant="outline" leftIcon="content_copy">Copy</Button>

@@ -5,7 +5,7 @@ A floating action button: the one main action of a screen, such as "New project"
 **Also called:** floating action button.
 
 ```jsx
-const { Fab } = window.Serupa;
+import { Fab } from '@diki-stwn/serupa-ds';
 
 <Fab icon="add" label="New project" onClick={create} />
 <Fab icon="edit" label="Compose" extended />

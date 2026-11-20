@@ -5,7 +5,7 @@ A small picture of a person (a circle) or of a team, project or organisation (a 
 **Also called:** profile picture, user image.
 
 ```jsx
-const { Avatar } = window.Serupa;
+import { Avatar } from '@diki-stwn/serupa-ds';
 
 <Avatar src={user.photo} name={user.name} />
 <Avatar name="Grace Hopper" size="lg" status="online" />

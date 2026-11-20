@@ -347,7 +347,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
 // preload is fetched with CORS, which file:// doesn't do), it's in standards mode, UTF-8, titled, draws its Button in
 // Inter inside main, gets a theme-color, fetches the font once (the preload is the one the page uses) and logs nothing.
 {
-  const html = fs.readFileSync(path.join(PROJECT, 'docs', 'GettingStarted.mdx'), 'utf8').match(/^## Or on a plain page\s+```html\n([\s\S]*?)```/m)?.[1] || '';
+  const html = fs.readFileSync(path.join(PROJECT, 'docs', 'GettingStarted.mdx'), 'utf8').match(/^#{2,3} Or on a plain page\s+```html\n([\s\S]*?)```/m)?.[1] || '';
   const TYPES = { '.css': 'text/css', '.js': 'text/javascript', '.woff2': 'font/woff2' };
   const server = http.createServer((req, res) => {
     const url = decodeURIComponent(new URL(req.url || '/', 'http://x').pathname);

@@ -5,7 +5,7 @@ Shows where the current page sits: links to the pages above it, from the top lev
 **Also called:** breadcrumbs, breadcrumb trail.
 
 ```jsx
-const { Breadcrumb, BreadcrumbItem } = window.Serupa;
+import { Breadcrumb, BreadcrumbItem } from '@diki-stwn/serupa-ds';
 
 <Breadcrumb>
   <BreadcrumbItem href="/" icon="home">Home</BreadcrumbItem>

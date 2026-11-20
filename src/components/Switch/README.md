@@ -5,7 +5,7 @@ An on/off setting that takes effect at once. It's a native checkbox with `role="
 **Also called:** toggle, toggle switch, lightswitch.
 
 ```jsx
-const { Switch } = window.Serupa;
+import { Switch } from '@diki-stwn/serupa-ds';
 
 <Switch checked={wifi} onCheckedChange={setWifi}>Wi-Fi</Switch>
 

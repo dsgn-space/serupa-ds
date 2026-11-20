@@ -249,9 +249,11 @@ export function Palette() {
   const fam: Record<string, Token[]> = {};
   for (const t of T.color.tokens) { const m = SHADES.exec(t.name); if (m && (typeof t.value === 'string' || Object.keys(t.value).length === 1)) (fam[m[1]] ||= []).push(t); }
   return <Wide label="Palette"><div data-token-sheet="palette" style={{ display: 'grid', gap: 8 }}>
-    {Object.entries(fam).map(([f, list]) => <div key={f} style={{ display: 'grid', gridTemplateColumns: '80px repeat(11, 1fr)', gap: 4, alignItems: 'center', fontSize: 12 }}>
-      <strong>{f}</strong>
-      {list.map((t) => <div key={t.name} title={`--${t.name}: ${val(t.value)}`}><div style={{ height: 36, borderRadius: 6, background: `var(--${t.name})` }} /><div>{t.name.split('-')[1]}</div><code style={{ fontSize: 10 }}>{val(t.value)}</code></div>)}
+    {/* The family's name on the swatches' line, and a hairline inside each swatch, so 50 on a light page and 950 on a
+        dark one still show their edge (as an image's outline does). */}
+    {Object.entries(fam).map(([f, list]) => <div key={f} style={{ display: 'grid', gridTemplateColumns: '80px repeat(11, 1fr)', gap: 4, alignItems: 'start', fontSize: 12 }}>
+      <strong style={{ lineHeight: '36px' }}>{f}</strong>
+      {list.map((t) => <div key={t.name} title={`--${t.name}: ${val(t.value)}`}><div style={{ height: 36, borderRadius: 6, background: `var(--${t.name})`, boxShadow: 'inset 0 0 0 1px color-mix(in srgb, var(--text) 10%, transparent)' }} /><div>{t.name.split('-')[1]}</div><code style={{ fontSize: 10 }}>{val(t.value)}</code></div>)}
     </div>)}
   </div></Wide>;
 }

@@ -5,7 +5,7 @@ A label, an optional hint and a message (an error, a warning or "checking…") a
 **Also called:** form field, form label, fieldset.
 
 ```jsx
-const { Field, Input, Textarea } = window.Serupa;
+import { Field, Input, Textarea } from '@diki-stwn/serupa-ds';
 
 <Field label="Email" hint="We only use it for receipts." error={emailError} required>
   <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />

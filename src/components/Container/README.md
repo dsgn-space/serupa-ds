@@ -5,7 +5,7 @@ Centers a page's content with a maximum width, and side padding that grows with 
 **Also called:** wrapper, page width.
 
 ```jsx
-const { Container } = window.Serupa;
+import { Container } from '@diki-stwn/serupa-ds';
 
 <Container as="main">…</Container>
 <Container size="prose">{article}</Container>

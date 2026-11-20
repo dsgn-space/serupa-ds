@@ -5,7 +5,7 @@ A month, a quarter or a year, picked from a grid: for a report's month, a billin
 **Also called:** month picker, month and year picker, quarter picker, fiscal period selector.
 
 ```jsx
-const { PeriodPicker, Field } = window.Serupa;
+import { PeriodPicker, Field } from '@diki-stwn/serupa-ds';
 
 <Field label="Report month">
   <PeriodPicker name="month" value={month} onValueChange={(value, { start, end }) => setMonth(value)} />

@@ -5,7 +5,7 @@ Cells in equal columns, or as many columns as fit, with the same space between t
 **Also called:** layout grid, columns.
 
 ```jsx
-const { Grid, Card } = window.Serupa;
+import { Grid, Card } from '@diki-stwn/serupa-ds';
 
 // As many columns as fit, each at least 256px: one on a phone, two or three on wider screens
 <Grid>{projects.map((p) => <Card key={p.id} title={p.name} />)}</Grid>
