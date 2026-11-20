@@ -157,6 +157,7 @@ Each is an optional override: set it on the page, a container or one navbar. The
 | `--navbar-menu-title-text` | `text-muted` | A group's title in a dropdown panel (4.5:1 on menu-bg). |
 | `--navbar-menu-link-text` | `text` | A dropdown link's text (4.5:1 on menu-bg). |
 | `--navbar-menu-desc-text` | `text-muted` | A dropdown link's description (4.5:1 on menu-bg). |
+| `--navbar-menu-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
 
 **Type**
 

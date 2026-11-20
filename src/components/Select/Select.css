@@ -80,7 +80,7 @@
     max-inline-size: min(calc(var(--sizing-full) - var(--spacing-4)), var(--container-md)); white-space: normal; overflow-wrap: anywhere;
     margin-block: var(--spacing-1); padding: var(--select-picker-padding, var(--spacing-1)); overflow-y: auto; overscroll-behavior: contain;
     border: var(--border-width-1) solid var(--select-picker-border, var(--border-overlay)); border-radius: var(--select-picker-radius, var(--radius-surface));
-    background: var(--select-picker-bg, var(--surface-overlay)); --surface-behind: var(--select-picker-bg, var(--surface-overlay)); color: var(--select-text, var(--text));
+    background: var(--select-picker-bg, var(--surface-overlay)); --surface-behind: var(--select-picker-bg, var(--surface-overlay)); --border: var(--select-picker-divider, var(--border-overlay)); color: var(--select-text, var(--text));
     box-shadow: var(--select-picker-shadow, var(--elevation-overlay));
     font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height);
   }
