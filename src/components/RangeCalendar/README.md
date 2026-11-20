@@ -76,6 +76,7 @@ Drawn from the `Playground` story.
 | `calendar` | as Calendar's | `'gregory'` | The calendar system the months follow (`'persian'`, `'islamic-umalqura'`, `'buddhist'` and more, as in Calendar). The range read out after a pick is in it too. Values stay `Date`s. |
 | `weekStartsOn` | `0`–`6` | the locale's | |
 | `weekNumbers` | boolean | `false` | Week numbers before the days, as Calendar's `weekNumbers` |
+| `headingLevel` | 2 \| 3 \| 4 \| 5 \| 6 | `2` | Each month title's heading level, to fit the page's outline |
 | `autoFocus` | `boolean` | `false` | Focus the start day (or today) when it appears |
 
 `className`, `ref` and other props go to the outer `<div>`.

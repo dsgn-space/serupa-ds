@@ -1,9 +1,9 @@
-// The docs' code compiles (E15): every tsx and jsx block in README.md, docs/ and the component READMEs is
-// type-checked against the built types (dist/index.d.ts), imported by the package's name as a project would, so a
-// renamed prop or a wrong value type in an example fails here instead of in a reader's editor. A block that leaves
-// out its imports gets them (the package's names it uses, React's hooks); a block that is only JSX is checked as a
-// component's return value. A block that isn't meant to compile on its own starts with a `// not compiled: why`
-// line. Build first (npm run build).
+// The docs' code compiles (E15): every tsx and jsx block in README.md, docs/, the component READMEs and the pattern
+// and block guides is type-checked against the built types (dist/index.d.ts), imported by the package's name as a
+// project would, so a renamed prop or a wrong value type in an example fails here instead of in a reader's editor.
+// A block that leaves out its imports gets them (the package's names it uses, React's hooks); a block that is only
+// JSX is checked as a component's return value. A block that isn't meant to compile on its own starts with a
+// `// not compiled: why` line. Build first (npm run build).
 //   node tools/test/doc-snippets.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -30,7 +30,9 @@ const KNOWN = {};
 const COMP = path.join(PROJECT, 'src', 'components');
 const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : /\.mdx?$/.test(e.name) ? [path.join(dir, e.name)] : []));
 const docs = [path.join(PROJECT, 'README.md'), ...walk(path.join(PROJECT, 'docs')).filter((f) => !f.includes('template')),
-  ...fs.readdirSync(COMP).map((d) => path.join(COMP, d, 'README.md')).filter((f) => fs.existsSync(f))];
+  ...fs.readdirSync(COMP).map((d) => path.join(COMP, d, 'README.md')).filter((f) => fs.existsSync(f)),
+  // The pattern and block guides (src/patterns/*/*.mdx, src/blocks/*/*.mdx): a reader copies their code as well.
+  ...['patterns', 'blocks'].flatMap((d) => walk(path.join(PROJECT, 'src', d)))];
 
 // A block, as a module. The component READMEs open with a sketch: the names taken from window.Serupa, then a few
 // JSX examples one after another, with // notes between them and … where content goes. The names become imports, the

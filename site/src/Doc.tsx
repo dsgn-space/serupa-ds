@@ -71,7 +71,12 @@ export function Doc({ page }: { page: Page }) {
   const ready = shown?.page === page;
   React.useEffect(() => {
     if (!ready || !article.current) return;
-    document.title = `${page.name} · Serupa`;
+    // The page keeps its own title: an example that names the tab as a whole page would (the error pages) doesn't
+    // rename the docs page it's shown on, for a reader or a crawler that runs the page.
+    const title = `${page.name} · Serupa`;
+    document.title = title;
+    const keep = new MutationObserver(() => { if (document.title !== title) document.title = title; });
+    keep.observe(document.head, { childList: true, subtree: true, characterData: true });
     const el = article.current;
     nameHeadings(el);
     setNamed((n) => n + 1);
@@ -80,7 +85,7 @@ export function Doc({ page }: { page: Page }) {
     links.observe(el, { childList: true, subtree: true });
     const hash = decodeURIComponent(window.location.hash.slice(1));
     if (hash) document.getElementById(hash)?.scrollIntoView(); else window.scrollTo(0, 0);
-    return () => links.disconnect();
+    return () => { links.disconnect(); keep.disconnect(); };
   }, [ready, page]);
   const docs = React.useMemo<Docs>(() => ({ componentStories: () => storiesOf(shown?.page.stories), page: shown?.page ?? null, docs: shown?.docs ?? [] }), [shown]);
   if (failed) throw failed;

@@ -99,6 +99,7 @@ A month arrow that reaches the month holding `min` or `max` turns disabled, so f
 | `presets` | `boolean \| DatePreset[]` | | Shortcuts in a list after the days: `true` for Today, Tomorrow and In a week, or your own `{ label, value }`. Picking one picks its day and shows its month. |
 | `monthYearPicker` | `boolean` | `false` | Shows native Month and Year menus in the header instead of the title. The title stays for screen readers and still names the grid. |
 | `isDateDisabled` | `(date: Date) => boolean` | | Days to refuse, such as weekends or holidays. |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `2` | The month title's heading level, to fit the page's outline where the calendar sits inline (under an `h2`, say 3). |
 | `locale` | `string` | the nearest `SerupaProvider`'s, else the browser's (en-US until a server-rendered page hydrates) | Month and weekday names, and the first day of the week. When it differs from the provider's, the month title and the grid carry `lang`, so screen readers read the names in that language; the nav buttons keep the page's. |
 | `calendar` | `'gregory'` `'persian'` `'islamic-umalqura'` `'islamic-civil'` `'islamic-tbla'` `'indian'` `'buddhist'` `'japanese'` `'roc'` | `'gregory'` | The calendar system the months follow. Persian, Hijri and Indian have months of their own; Buddhist, Japanese and ROC share the Gregorian months and count years their way. Values stay `Date`s. |
 | `weekStartsOn` | `0`–`6` | the locale's | 0 is Sunday. |

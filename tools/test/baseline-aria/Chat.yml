@@ -63,9 +63,9 @@
 
 # DoDateDividers
 - log "Conversation with Support":
-  - text: 23 Oct 2026 You
+  - text: Oct 23, 2026 You
   - time: 9:00 AM
-  - text: Is the March invoice ready? 24 Oct 2026 Rina Kusuma
+  - text: Is the March invoice ready? Oct 24, 2026 Rina Kusuma
   - time: 9:00 AM
   - text: Yes, it's on its way to your inbox.
 
@@ -86,7 +86,7 @@
 # LoadingOlder
 - log "Conversation with Support":
   - button "Loading earlier messages" [disabled]
-  - text: 24 Oct 2026 Rina Kusuma
+  - text: Oct 24, 2026 Rina Kusuma
   - time: 9:00 AM
   - text: Hi! How can I help you today? You
   - time: 9:01 AM
@@ -108,7 +108,7 @@
 # Older
 - log "Conversation with Support":
   - button "Load earlier messages"
-  - text: 24 Oct 2026 Rina Kusuma
+  - text: Oct 24, 2026 Rina Kusuma
   - time: 9:00 AM
   - text: Hi! How can I help you today? You
   - time: 9:01 AM
@@ -121,7 +121,7 @@
 
 # Playground
 - log "Conversation with Support":
-  - text: 24 Oct 2026 Rina Kusuma
+  - text: Oct 24, 2026 Rina Kusuma
   - time: 9:00 AM
   - text: Hi! How can I help you today? You
   - time: 9:01 AM
@@ -148,7 +148,7 @@
 
 # Statuses
 - log "Conversation with Support":
-  - text: 24 Oct 2026 Rina Kusuma
+  - text: Oct 24, 2026 Rina Kusuma
   - time: 9:00 AM
   - text: Hi! How can I help you today? You
   - time: 9:01 AM
