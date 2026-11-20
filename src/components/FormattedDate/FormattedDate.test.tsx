@@ -57,6 +57,12 @@ describe('FormattedDate', () => {
     expect([el('d').matches(':dir(ltr)'), el('e').matches(':dir(ltr)')]).toEqual([true, true]);
   });
 
+  test('a time and its AM or PM stay on one line, in English and Korean', () => {
+    const at = '2026-11-20T15:45:00Z';
+    const en = formatDate(at, 'en', { timeStyle: 'short', timeZone: 'UTC' }), ko = formatDate(at, 'ko', { dateStyle: false, timeStyle: 'short', timeZone: 'UTC' });
+    expect([/\d[\u00a0\u202f]PM/.test(en), /오후[\u00a0\u202f]3:45/.test(ko)]).toEqual([true, true]);
+  });
+
   test('a range that ends the same day is one <time>', async () => {
     await render(<FormattedDate id="s" value="2026-11-20" to="2026-11-20" locale="en" />);
     expect([el('s').tagName, el('s').getAttribute('datetime'), el('s').textContent]).toEqual(['TIME', '2026-11-20', 'Nov 20, 2026']);
@@ -65,7 +71,7 @@ describe('FormattedDate', () => {
   test('a moment in the browser is in the reader\'s time zone, with the instant in datetime', async () => {
     const at = new Date(2026, 10, 20, 23, 30);
     await render(<FormattedDate id="m" value={at} timeStyle="short" locale="en" />);
-    expect([el('m').getAttribute('datetime'), el('m').textContent]).toEqual([at.toISOString(), new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(at)]);
+    expect([el('m').getAttribute('datetime'), plain(el('m').textContent)]).toEqual([at.toISOString(), plain(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(at))]);
   });
 
   test('in the provider\'s locale, with lang when its own differs: Indonesian words, Arabic digits', async () => {
@@ -98,7 +104,7 @@ describe('FormattedDate', () => {
       expect(plain(el('h').textContent)).toBe(plain(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(at))));
       const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
       const root = hydrateRoot(host, tree);
-      await expect.poll(() => el('h').textContent).toBe(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(at)));
+      await expect.poll(() => plain(el('h').textContent)).toBe(plain(new Intl.DateTimeFormat('en', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(at))));
       expect([el('h').getAttribute('datetime'), errors.mock.calls.length]).toEqual(['2026-11-20T23:30:00.000Z', 0]);
       errors.mockRestore();
       root.unmount();

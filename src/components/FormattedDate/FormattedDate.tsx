@@ -72,6 +72,17 @@ function formatter(locale: string | undefined, options: Intl.DateTimeFormatOptio
   }
 }
 
+// A time and its AM or PM stay on one line ("11:45 AM", "오후 3:00"): where Intl puts a breaking space between them
+// (older ICU does; newer writes a narrow no-break space), it becomes a no-break space. Found by part type, so it holds in every locale.
+const CLOCK = new Set(['hour', 'minute', 'second', 'fractionalSecond']);
+function keepTimeTogether<T extends { type: string; value: string }>(parts: T[]): T[] {
+  return parts.map((p, i) => {
+    const before = parts[i - 1]?.type, after = parts[i + 1]?.type;
+    const joins = p.type === 'literal' && /^[^\S\u00a0\u202f]+$/.test(p.value) && ((CLOCK.has(before!) && after === 'dayPeriod') || (before === 'dayPeriod' && CLOCK.has(after!)));
+    return joins ? { ...p, value: '\u00a0' } : p;
+  });
+}
+
 type Piece = { text: string; source: 'startRange' | 'endRange' | 'shared' };
 function pieces(value: unknown, locale: string | undefined, o: FormatDateOptions, zone?: string): { from: Read; to: Read | null; pieces: Piece[] } | null {
   const from = read(value);
@@ -80,8 +91,7 @@ function pieces(value: unknown, locale: string | undefined, o: FormatDateOptions
   // A range of days takes its end as a day too, so "2026-11-20" to a Date is still a range of days.
   const to = end && from.day && !end.day ? read(`${end.date.getFullYear()}-${String(end.date.getMonth() + 1).padStart(2, '0')}-${String(end.date.getDate()).padStart(2, '0')}`) : end;
   const f = formatter(locale ? canonicalLocale(locale) : undefined, intlOptions(from.day, o, zone), from.day);
-  if (!to) return { from, to: null, pieces: [{ text: f.format(from.date), source: 'shared' }] };
-  const parts = f.formatRangeToParts(from.date, to.date);
+  const parts = keepTimeTogether(to ? f.formatRangeToParts(from.date, to.date) : f.formatToParts(from.date).map((p) => ({ ...p, source: 'shared' as const })));
   const out: Piece[] = [];
   for (const p of parts) {
     const last = out[out.length - 1];
