@@ -83,8 +83,17 @@ for (const line of (fs.existsSync(path.join(out, '_headers')) ? fs.readFileSync(
 const rewrites = (fs.existsSync(path.join(out, '_redirects')) ? fs.readFileSync(path.join(out, '_redirects'), 'utf8') : '').split('\n')
   .map((l) => l.trim().split(/\s+/)).filter((l) => l[2] === '200').map(([from, to]) => ({ match: glob(from), to }));
 const isFile = (f) => f.startsWith(out) && fs.existsSync(f) && fs.statSync(f).isFile();
+// While true, the built files answer 404, as an old version's do once a new one is live, until the browser asks for a
+// page again (which, on the host, would be the new version's, naming its own files).
+let gone = false;
 const server = http.createServer((req, res) => {
   const at = decodeURIComponent(new URL(req.url, 'http://x').pathname).replace(/(.)\/$/, '$1');
+  if (gone && !at.startsWith('/assets/')) gone = false;
+  if (gone) {
+    res.writeHead(404, { 'content-type': 'text/html' });
+    fs.createReadStream(path.join(out, '404.html')).pipe(res);
+    return;
+  }
   const rewrite = rewrites.find((r) => r.match.test(at));
   const asked = rewrite ? rewrite.to : at;
   const f = [path.join(out, asked), path.join(out, asked + '.html'), path.join(out, asked, 'index.html')].find(isFile);
@@ -331,6 +340,23 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   const said = await w.page.evaluate(() => document.querySelector('main h1')?.textContent?.trim() ?? '');
   t('an address with no page answers 404 and says there is no page', response?.status() === 404 && !missing && said === 'Page not found',
     `status ${response?.status()}, heading "${said}"${missing ? `, ${missing}` : ''}`);
+}
+
+// A tab opened before a new version went live asks for files the host no longer has (each version's files are named by
+// their content) as soon as it moves to another page: it loads the page again, the new version's, rather than saying
+// "Something went wrong".
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  const failed = await openUrl(page, base + '/') || await ready(page, false);
+  gone = true;
+  await page.evaluate(() => /** @type {HTMLAnchorElement} */ (document.querySelector('a[href$="/getting-started"]')).click());
+  const shown = failed || await ready(page, true);
+  const broken = await page.evaluate(() => document.body.textContent?.includes('Something went wrong'));
+  gone = false;
+  t('a page still opens when the version it was loaded from is gone (it loads the new one)', !shown && !broken,
+    shown || 'it says "Something went wrong"');
+  await context.close();
 }
 
 // On a phone, a page doesn't jump as it arrives: the footer once showed under the loading page, then jumped away when
