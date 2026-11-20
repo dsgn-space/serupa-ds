@@ -14,19 +14,19 @@ import { Select } from '../../src/components/Select/Select';
 
 Five principles guide how Serupa's components, tokens and docs are made, and how the screens built with them should behave. Use them to decide cases a guide doesn't cover, and to settle design reviews.
 
-They are for weighing choices, not a checklist to tick. When they conflict, accessibility comes first.
+They are for weighing choices, not a checklist to tick. Each one gives the idea, then what it means in practice. When they conflict, accessibility comes first.
 
-## Purposeful
+## Purpose
 
-Every screen has a reason to exist.
+Give everything a reason to exist.
 
-Know the one thing it is for, and give that thing room. Whatever doesn't serve it can go. Focus is a kindness: it spares people from reading what they never needed.
+Know what people came to do, and make that the clearest thing on the screen.
 
+**In practice**
+
+- Start from who the screen is for and what they came to do. One primary action per view.
 - Open on the task or the content, not on a welcome screen, a tour or a banner.
-- Start from who the screen is for and what they came to do, before choosing a single component.
-- One primary action per view. A second job waits until the first is done well.
-- Simple is not bare. Show the few things people use most, and the rest one step away, in an order that says where people are and what comes next.
-- Use the fewest, plainest words. Label actions with what they do: "Delete project", not "OK". See [Content and voice](?path=/docs/foundations-content-and-voice--docs).
+- Use plain words, and name each action for what it does: "Delete project", not "OK". See [Content and voice](?path=/docs/foundations-content-and-voice--docs).
 
 <DoDontExample
   doText="Make one action primary."
@@ -42,17 +42,19 @@ Know the one thing it is for, and give that thing room. Whatever doesn't serve i
   dontExample={<div style={{ display: 'flex', gap: 8 }}><Button variant="outline">No</Button><Button destructive>Yes</Button></div>}
 />
 
-## Trustworthy
+## Trust
 
 Earn trust in every interaction.
 
-Tell the truth about what is happening, protect people's work, and treat their data as if it were your own. Every mistake can be undone, every flow has a way out, and nothing is asked for without a reason.
+People give a product their time, their effort and their data, so treat all three with honesty and care.
 
-- Show what is really happening: respond to input at once, report progress that reflects real work, and never say "Saved" before the save finishes.
-- Make mistakes cheap. Act at once and offer Undo rather than asking "Are you sure?"; confirm only what can't be undone. See [Destructive actions](?path=/docs/guides-destructive-actions--docs).
-- Never trap people in a flow. A tour, an onboarding checklist or a multi-step form can be left, skipped or finished later, and Back, Cancel and Escape return people to where they were with their work intact.
-- Ask only for what the task needs, and say why before you ask: next to a field that isn't obvious, and before the browser's prompt for the camera, location or notifications. See [Permission request](?path=/docs/patterns-permission-request--docs).
-- Make the private choice the default, and leaving as easy as joining: cancelling, unsubscribing and deleting an account take no more steps than signing up.
+**In practice**
+
+- Progress reflects real work, and "Saved" appears only after the save finishes.
+- Act at once and offer Undo rather than asking "Are you sure?"; confirm only what can't be undone. See [Destructive actions](?path=/docs/guides-destructive-actions--docs).
+- A tour, an onboarding checklist or a multi-step form can be left, skipped or finished later, and Back, Cancel and Escape keep people's work.
+- Explain before the browser's prompt for the camera, location or notifications. See [Permission request](?path=/docs/patterns-permission-request--docs).
+- Make the private choice the default.
 
 <DoDontExample
   doText="Act at once, and offer Undo."
@@ -75,16 +77,18 @@ Tell the truth about what is happening, protect people's work, and treat their d
   dontExample={<div style={{ inlineSize: 260 }}><Field label="Phone" required><Input type="tel" /></Field></div>}
 />
 
-## Predictable
+## Familiarity
 
-Familiar beats clever.
+Build on what people already know.
 
-Build on what people already know, and solve the same problem the same way everywhere. What people learn in one place should serve them in every other.
+Use the patterns people already trust, and solve the same problem the same way everywhere.
 
-- Use native elements first: `<select>`, `<dialog>`, `<input>`. They bring the phone's picker, autofill and screen-reader support with them.
-- Follow the conventions people know: × closes, Escape cancels, Mod+Z undoes, the main action comes last. A familiar pattern beats a clever one.
-- Solve the same problem the same way. Components use tokens, never raw values; similar components share sizes, states, keys and words.
-- Show what can be used and what just changed: a control looks pressable, a disabled one says why, and a change on screen is announced.
+**In practice**
+
+- Native elements first: `<select>`, `<dialog>`, `<input>` bring the phone's picker, autofill and screen-reader support.
+- × closes, Escape cancels, Mod+Z undoes, the main action comes last.
+- Components use tokens, never raw values; similar components share sizes, states, keys and words.
+- A disabled control says why, and a change on screen is announced to screen readers.
 
 <DoDontExample
   doText="Style the native control."
@@ -93,17 +97,19 @@ Build on what people already know, and solve the same problem the same way every
   dontExample={<Source language="tsx" dark={false} code={'<div className="dropdown" onClick={toggle}>\n  {open && options.map((o) => (\n    <div onClick={() => pick(o)}>{o}</div>\n  ))}\n</div>'} />}
 />
 
-## Inclusive
+## Inclusion
 
-Made for everyone, from the start.
+Design for everyone from the start.
 
-People arrive with different devices, inputs and abilities. Design for that full range from the first sketch, and the product gets better for everyone, not only easier for some.
+People use different devices, inputs and abilities. Treat accessibility as a requirement, not an afterthought.
 
-- Every component meets WCAG 2.2 AA in every theme, and tests check it. Plan for it from the first sketch.
-- Color is never the only signal. A status has a word; a chart series has a shape.
-- Every action works with a mouse, touch, a keyboard and voice. Targets are at least 24px, and 44px on touch screens.
-- Keep things in their place as the screen changes, and bring people back to where they were. See [Keeping state](?path=/docs/patterns-page-shell--docs).
-- Ship only what the page needs, so it is quick on a slow phone too: no runtime dependencies beyond React, a size budget per component, and icons and fonts that load only what's used.
+**In practice**
+
+- WCAG 2.2 AA in every theme, checked by tests. When principles conflict, accessibility comes first.
+- Color is never the only signal: a status has a word, a chart series has a shape.
+- Targets are at least 24px, and 44px on touch screens. Nothing appears only on hover.
+- State people expect to keep survives a reload. See [Keeping state](?path=/docs/patterns-page-shell--docs).
+- Ship only what the page needs: no runtime dependencies beyond React, and a size budget for every component.
 
 <DoDontExample
   doText="Pair the color with a word."
@@ -112,16 +118,17 @@ People arrive with different devices, inputs and abilities. Design for that full
   dontExample={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>Invoice 1042 <span aria-hidden="true" style={{ display: 'inline-block', inlineSize: 8, blockSize: 8, borderRadius: 4, background: 'var(--danger)' }} /></span>}
 />
 
-## Crafted
+## Craft
 
-Care shows in the details.
+Care about every detail.
 
-Every state, every size and every word is considered, not just the ideal case. People may not name the details, but they feel them, and the details are what make a product feel solid.
+People may never name the details, but they feel them. Delight comes from things working well, not from decoration.
+
+**In practice**
 
 - Each component covers rest, hover, focus, pressed, invalid, read-only, disabled, loading and empty, at every size and in every theme.
-- Sizes line up across components: a 32px input sits next to a 32px button. Corners nest, numbers don't jump, motion is short and stops for `prefers-reduced-motion`.
-- Small moments carry the character: an empty list with a next step, an error that says how to fix it, a confirmation that says what happens next. Delight comes from the task going well, not from decoration.
-- Release is not the end. Changes follow semantic versioning, and the bar keeps rising.
+- Sizes line up across components, corners nest, numbers don't jump, and motion is short and stops for `prefers-reduced-motion`.
+- Changes follow semantic versioning, with migration notes for anything that breaks.
 
 <DoDontExample
   doText="Say how to fix the error."
