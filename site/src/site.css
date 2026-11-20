@@ -94,6 +94,9 @@ ol.site-list { list-style: decimal; }
 .sb-tested li { margin-block: var(--spacing-1); }
 .site-doc [role="region"][tabindex="0"]:not([class*="dk-"]):focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 @media (max-width: 39.99rem) { .site-doc :is(td, th):not(.site-table--props *) { overflow-wrap: anywhere; } }
+/* With room, code in a written table breaks only when one word is wider than its column, so a prop's name in the
+   first column (onOpenChange) isn't split to give a long Notes column one more character. */
+@media (min-width: 64rem) { .site-table:not(.site-table--props) .site-code { overflow-wrap: break-word; } }
 
 /* ── A story in its frame ──────────────────────────────────────────────────────────────────────────────────── */
 .site-demo { margin-block-start: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface); overflow: clip; }
