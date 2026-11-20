@@ -1,6 +1,6 @@
 # Avatar
 
-A small picture of a person (a circle) or of a team, project or organisation (a square). When there's no picture, or it fails to load (also one rendered on the server that failed before the page hydrated), it shows the initials, or a person icon when there's no name either. A picture that is slow to arrive (more than a quarter of a second) shows them too while it loads, then fades in over them, so a slow connection never shows an empty disc.
+A small picture of a person (a circle) or of a team, project or organization (a square). When there's no picture, or it fails to load (also one rendered on the server that failed before the page hydrated), it shows the initials, or a person icon when there's no name either. A picture that is slow to arrive (more than a quarter of a second) shows them too while it loads, then fades in over them, so a slow connection never shows an empty disc.
 
 **Also called:** profile picture, user image.
 
@@ -18,7 +18,7 @@ import { Avatar } from '@diki-stwn/serupa-ds';
 ## When to use
 
 - Showing who someone is: next to a comment, in a list of members, for the signed-in user.
-- A team, project or organisation's picture or initials, as a square.
+- A team, project or organization's picture or initials, as a square.
 - Showing whether a person is online, busy, away or offline.
 
 ## When not to use

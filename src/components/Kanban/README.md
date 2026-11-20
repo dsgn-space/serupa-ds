@@ -79,7 +79,7 @@ type Task = { id: string; title: string };
 - **Handle:** a button named "Move Fix login", described by the keyboard instructions, and `aria-pressed` while the card is picked up.
 - **Announcements:** each step is said politely: "Picked up Fix login. To do, position 1 of 3.", "Fix login, Done, position 2 of 5.", "Fix login moved to Done, position 2 of 5.", and "Canceled. Fix login is back in To do, position 1 of 3."
 - **Without dragging:** the keyboard and the "Move to…" menu both move a card without a drag (WCAG 2.5.7), and the menu also works with a screen reader's virtual cursor.
-- **Over limit:** said in words with a warning icon, not by colour alone (WCAG 1.4.1).
+- **Over limit:** said in words with a warning icon, not by color alone (WCAG 1.4.1).
 - **Contrast:** titles, counts, "Over limit" and card text read 4.5:1, and the handle 3:1, in every theme (`Kanban.test.tsx`).
 - **What's still yours:** the content of each card, and saying so if a move fails to save.
 

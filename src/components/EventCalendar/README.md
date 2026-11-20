@@ -33,7 +33,7 @@ Drawn from the `Month` story.
 1. **Toolbar** (`.dk-event-calendar__toolbar`): Today, Previous and Next, the title and the Month, Week, Day and Agenda switch.
 2. **Title** (`.dk-event-calendar__heading`): the month, week or day shown, said when it changes.
 3. **Grid** (`.dk-event-calendar__grid`): the weeks of the month, with the weekday names above.
-4. **Day** (`.dk-event-calendar__day`): one date and its events; today's date is marked by colour and weight, and in the agenda by colour and an underline, so it never rests on colour alone.
+4. **Day** (`.dk-event-calendar__day`): one date and its events; today's date is marked by color and weight, and in the agenda by color and an underline, so it never rests on color alone.
 5. **Event** (`.dk-event-calendar__event`): a button with the event's time and title, and a bar of its tone at its start.
 6. **More** (`.dk-event-calendar__more`): "+N more", which opens the rest of the day's events.
 

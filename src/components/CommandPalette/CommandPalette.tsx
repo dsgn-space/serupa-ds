@@ -37,7 +37,7 @@ export interface Command {
   label: string;
   /** The heading it's listed under ("Pages", "Actions"), in the order groups first appear. Default: "Commands". */
   group?: string | undefined;
-  /** A line under the label saying more ("Colour scheme, density and language"). Shown muted, read after the label and matched like keywords. */
+  /** A line under the label saying more ("Color scheme, density and language"). Shown muted, read after the label and matched like keywords. */
   description?: string | undefined;
   /** More words that find it, not shown ("preferences" for Settings). */
   keywords?: string[] | undefined;

@@ -88,7 +88,7 @@ The same for Material Symbols and custom icons.
 | `"lg"` | `icon-size-lg` | 24px | Default: toolbars, navigation, standalone |
 | `"xl"` | `icon-size-xl` | 40px | Empty states, illustrations |
 
-Every step is on the 4px spacing grid except `xs`, and each fits inside the line height of the text it sits beside. Inline in running text it's centred on the text (`vertical-align: middle`), so it doesn't make the line taller; in a flex row with `items-center` it's centred the same way.
+Every step is on the 4px spacing grid except `xs`, and each fits inside the line height of the text it sits beside. Inline in running text it's centered on the text (`vertical-align: middle`), so it doesn't make the line taller; in a flex row with `items-center` it's centered the same way.
 
 ### Weight
 

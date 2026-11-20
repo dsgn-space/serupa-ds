@@ -19,6 +19,8 @@ import { PROJECT, report, done } from './lib.mjs';
 const ALLOW = [];
 
 const DASH = /—| -- /g;
+// American spelling (Content and voice), as the tokens, props and CSS spell it.
+const SPELLING = /\b(?:colour(?:s|ed|ing|ful)?|organis(?:ation|ations|e|es|ed|ing)|centre(?:s|d)?|behaviour(?:s|al)?|neighbour(?:s|ing)?)\b/gi;
 // "(GR95)", "(PT12)", "(FU1, GR151)", "(41)": letters and a number, or a two- or three-digit number, alone in brackets.
 const QUEUE_ID = / \((?:[A-Z]{1,4}\d+[a-z]?|\d{2,3})(?:, (?:[A-Z]{1,4}\d+[a-z]?|\d{2,3}))*\)/g;
 const PLEASE = /\b(?:please|sorry|mohon|maaf|silakan)\b/gi;
@@ -43,17 +45,20 @@ const prose = [
   ...changesets(),
 ];
 function changesets() { return walk(path.join(PROJECT, '.changeset'), (f) => /\.md$/.test(f) && f !== 'README.md'); }
-const words = [], dashes = [];
+const words = [], dashes = [], spelled = [];
 for (const f of prose) {
   const code = fs.readFileSync(f, 'utf8').replace(/```[\s\S]*?```/g, (m) => m.replace(/[^\n]/g, ' ')).replace(/`[^`\n]*`/g, (m) => ' '.repeat(m.length));
   // Words in quotes are examples ("not just \"Invalid\"", Content and voice's own "Just add …"); the labels are checked below.
   const text = code.replace(/"[^"\n]*"|“[^”\n]*”/g, (m) => ' '.repeat(m.length));
   for (const w of hits(rel(f), text, WORDS)) words.push(`${rel(f)}:${lineOf(text, w)} "${w}"`);
+  for (const w of hits(rel(f), text, SPELLING)) spelled.push(`${rel(f)}:${lineOf(text, w)} "${w}"`);
   // A table cell that holds only a dash means "none", which isn't joining anything.
   for (const m of code.replace(/\|\s*—\s*(?=\|)/g, (c) => ' '.repeat(c.length)).matchAll(DASH)) dashes.push(`${rel(f)}:${code.slice(0, m.index).split('\n').length}`);
 }
 t(`the guides and docs (${prose.length} files) leave out "simply", "just", "obviously", "easy" and loaded terms`, !words.length,
   `${words.join('; ')}: reword it (Content and voice in docs/foundations.md), or add it to ALLOW in tools/test/voice.mjs with why it reads right`);
+t('their prose spells the American way, as the tokens and CSS do: color, center, behavior, organization', !spelled.length,
+  `${spelled.join('; ')}: respell it (Content and voice in docs/foundations.md)`);
 t('their prose joins its parts with a colon, comma or full stop, not an em dash or " -- "', !dashes.length,
   `${dashes.join('; ')}: a label and its text take a colon ("**Sizes**: each size…"), an aside takes commas or brackets`);
 
@@ -97,6 +102,9 @@ t('and leave ordinary words alone ("not just", "drag files here", "3 characters 
 const dashed = (s) => new RegExp(DASH.source).test(s.replace(/\|\s*—\s*(?=\|)/g, ''));
 t('the dash check catches an em dash or " -- " joining words, and leaves a range or a "none" cell alone',
   ['**Sizes** — each size', 'never alone -- rings vanish'].every(dashed) && !['**50–200**: tinted', '| mask-type | `mask-type-alpha` | — |', 'npm run new -- <Name>'.replace(/npm.*/, '')].some(dashed));
+const misspelled = (s) => new RegExp(SPELLING.source, 'i').test(s);
+t('the spelling check catches "colour", "centred", "behaviour" and "organisation", and leaves "color", "centered" and "Colorado" alone',
+  ['its colour', 'centred on the text', 'the behaviour', 'an organisation'].every(misspelled) && !['its color', 'centered on it', 'Colorado', 'behavioral'].some(misspelled));
 const queued = (s) => new RegExp(QUEUE_ID.source).test(s);
 t('the id check catches "(GR95)", "(PT12)", "(FU1, GR151)" and "(41)", and leaves "(WCAG 2.2)", "(320 px)" and "(1.4.10)" alone',
   ['Fix the bar (GR95).', 'Checkout (PT12):', 'lists (FU1, GR151).', 'the toast (41).'].every(queued) && !['AA (WCAG 2.2).', 'wraps (320 px).', 'reflow (1.4.10).', 'in 2026 (2026)'].some(queued));

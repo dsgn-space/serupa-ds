@@ -47,7 +47,7 @@ Drawn from the `Disabled` story.
 ## Behavior
 
 - A click (or a tap) on a star picks it; with `allowHalf`, the start half of a star picks the half and the end half the whole star, and the hover shows which.
-- Each star takes presses over its height and the whole step to its neighbours, so a press between two stars picks the nearer one. Stars are at least 24px apart, centre to centre (WCAG 2.2's target size, 2.5.8): at `sm` the gap between them is 4px, and md or lg stars shrinking to fit a narrow box stop at 22px. With `allowHalf` each star is still one target; the half's own radio is there for the keyboard and screen readers. The stars up to the pointer light up while it hovers, without picking.
+- Each star takes presses over its height and the whole step to its neighbors, so a press between two stars picks the nearer one. Stars are at least 24px apart, center to center (WCAG 2.2's target size, 2.5.8): at `sm` the gap between them is 4px, and md or lg stars shrinking to fit a narrow box stop at 22px. With `allowHalf` each star is still one target; the half's own radio is there for the keyboard and screen readers. The stars up to the pointer light up while it hovers, without picking.
 - Form reset brings back `defaultValue`, also for a rating outside the form that `form` names. With `name`, the rating is sent with the form as one value.
 - In a right-to-left page the stars run from the right, and halves fill from the right.
 
