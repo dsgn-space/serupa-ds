@@ -70,7 +70,7 @@ Drawn from the `Actions` story.
 
 ## Accessibility
 
-- A field the browser fills in (a saved address, a login) keeps the field's colours, and its border doubles inward until it's focused, so the fill shows in more than colour.
+- A field the browser fills in (a saved address, a login) keeps the field's colors, and its border doubles inward until it's focused, so the fill shows in more than color.
 - On iOS the field's text is 16px at every size, so Safari doesn't zoom the page when it takes focus; the box keeps its height.
 - Every textarea needs a name: a visible `<label htmlFor>` (best) or `aria-label`. A placeholder isn't a label: it disappears as soon as someone types.
 - `invalid` sets `aria-invalid`, but color alone doesn't explain the problem: put the message in text and link it with `aria-describedby`.

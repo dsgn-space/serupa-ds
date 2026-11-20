@@ -108,6 +108,6 @@ Each is an optional override: set it on the page, a container or one TableOfCont
 | `--table-of-contents-dash` | `border-strong` | The rail's dashes (decorative: the links are in its panel). |
 | `--table-of-contents-panel` | `surface-overlay` | The rail's panel, over the page. |
 | `--table-of-contents-panel-border` | `border-overlay` | The rail's panel's edge. |
-| `--table-of-contents-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
+| `--table-of-contents-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 | `--table-of-contents-panel-gap` | `spacing-16` | How much shorter than the window the rail's panel is at most (64px): room for a sticky column's offset above and a margin below. A longer list scrolls inside it. |
 <!-- token-table:end -->

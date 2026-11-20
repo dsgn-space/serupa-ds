@@ -103,7 +103,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 
 - **Accordion**: A stack of items whose content shows and hides under a title button: FAQs, settings groups, long forms split into sections. Also called: collapsible, disclosure, expander, expandable section.
 - **Attachment** (beta): A file shown as one compact row: an icon for its kind, the name, the kind and size, and, while it uploads, a bar. Also called: file, download link.
-- **Avatar**: A small picture of a person (a circle) or of a team, project or organisation (a square). Also called: profile picture, user image.
+- **Avatar**: A small picture of a person (a circle) or of a team, project or organization (a square). Also called: profile picture, user image.
 - **AvatarGroup**: Avatars in an overlapping row, such as the people on a project or the assignees of a task. Also called: avatar stack, facepile.
 - **Card**: A surface that groups related content and its actions: a summary, a settings panel, an item in a grid. Also called: tile.
 - **Carousel**: One slide at a time, with previous and next buttons, a dot per slide and swipe. Also called: content slider, slideshow.

@@ -48,7 +48,7 @@ do, say so and stop here.
    - **Words** come from its `labels.ts`, in English and Indonesian, never written into the JSX (the `serupa/no-literal-words` lint rule).
    - **Waits** in JavaScript are named in `src/internal/timing.ts`, never a number in a `setTimeout` or `setInterval` (the `serupa/no-literal-delay` lint rule).
    - **Values** read tokens: its own component tokens, falling back to the shared ones (the foundation check).
-   - **Tests:** one `test()` per behaviour, found the way people find things (`getByRole`), in random order.
+   - **Tests:** one `test()` per behavior, found the way people find things (`getByRole`), in random order.
    - **A field in a form:** a component that takes a `name` must be in `src/internal/formContract.test.tsx` (the typecheck fails until it is), which holds it to what a native field does: it submits under its name, with `form="…"` too, resets, goes quiet in a disabled fieldset, takes focus from `ref.focus()`, and inside a Field is described by the hint and the error and marked invalid.
    - **Every option shows:** each value of a prop typed as a short union of strings (`variant`, `size`, `placement`) is rendered by a story or set by a test, unless it is the one the component falls back to (`node tools/test/prop-values.mjs`).
    - **Documented on hover:** every prop has its own doc comment, `@internal` ones stay out of the public types, and the component exports its `…Props` type (`node tools/test/public-docs.mjs`, after a build).
@@ -74,7 +74,7 @@ The checks catch a raw duration, an animation that won't reverse or a page that 
 2. **Name its purpose in one line:** where a surface came from, that a value changed, that a press landed. If the only answer is "it looks nice", leave it out.
 3. **Timing comes from a role,** never a number: `motion-press`, `motion-hover`, `motion-enter-*`, `motion-exit-*`, `motion-change-*` or `motion-loop-*`, with `ease-enter`, `ease-exit`, `ease-move` or `ease-settle`. Pick the size by how far it travels. Exits are shorter than entries (`motion-exit-md` is 150ms to `motion-enter-md`'s 200ms), so a closed surface gets out of the way. `node tools/test/motion-tokens.mjs` fails a raw `250ms` or `cubic-bezier()`.
 4. **It reverses from where it is.** A surface closed half way through opening turns back from there, so it enters with a transition, not keyframes. `src/internal/motion.test.tsx` checks this, and that nothing animates layout or runs on mount.
-5. **It grows from its origin.** A popup scales from the edge facing its trigger (`data-side`), not from its centre.
+5. **It grows from its origin.** A popup scales from the edge facing its trigger (`data-side`), not from its center.
 6. **Under reduced motion it only fades:** nothing moves, scales or loops (the motion test checks the stories). Look at it once with the system setting on.
 7. **Hover waits for a pointer.** Hover styles sit in `@media (hover: hover)`, so a tap on a phone doesn't leave a tint behind (`node tools/test/touch-hover.mjs`).
 8. **Watch it slowly.** In Storybook, set the Motion menu to ×10 and watch it frame by frame. Check a swipe or a drag on a real phone too.
@@ -102,14 +102,14 @@ Run once on a new component before the release that first ships it, with the pul
 
 ## The reference component
 
-Combobox is what "done" looks like: when you build or deepen a component, hold it to each line below, and open Combobox's files to see the line met. Its README, `Combobox.test.tsx` and stories are the examples to copy. Each test is named for the behaviour it holds, so a search for the line's words finds it.
+Combobox is what "done" looks like: when you build or deepen a component, hold it to each line below, and open Combobox's files to see the line met. Its README, `Combobox.test.tsx` and stories are the examples to copy. Each test is named for the behavior it holds, so a search for the line's words finds it.
 
 - [ ] **The API follows the conventions** above: `value`, `defaultValue` and `onValueChange`; `open`, `defaultOpen` and `onOpenChange(open, { reason })`; any other state as `x`, `defaultX` and `onXChange` (`inputValue`). Values are typed from the options (`Combobox<'red' | 'green'>`).
 - [ ] **It behaves like a native field in a form:** it submits under `name` (with `form` too), resets, goes quiet in a disabled fieldset, and in a Field it takes the label, hint, error, required and invalid. Its entry in `src/internal/formContract.test.tsx` holds most of this, and its own test covers the rest ("in a Field: labelled…").
 - [ ] **The ARIA pattern, all of it:** roles, states and the keyboard table in the README match the APG pattern, and each row of that table has its test. Keys with Ctrl or ⌘ are left to the system, and keys during an input method's composition are left alone.
 - [ ] **Changes are said:** counts, results, additions and errors go through the shared announcer, once typing pauses, in the locale's digits ("٢ results" in `ar-EG`).
 - [ ] **Its words come from its labels,** in English and Indonesian, including the names of its buttons ("Clear Country").
-- [ ] **Every state shows everywhere:** contrast in every theme (a test), right to left, and forced colors, both as a test of the state shown only by colour and as pictures (`FORCED` in `tools/test/visual.mjs`).
+- [ ] **Every state shows everywhere:** contrast in every theme (a test), right to left, and forced colors, both as a test of the state shown only by color and as pictures (`FORCED` in `tools/test/visual.mjs`).
 - [ ] **Motion passes the motion review:** it enters and leaves with a transition that reverses, only fades under reduced motion, and doesn't move at all when the keyboard opened it.
 - [ ] **It scales:** thousands of options open and narrow quickly (only the rows in view are drawn), and the tests use those sizes.
 - [ ] **Async work is safe:** requests wait for a pause, newer ones abort older ones, late answers are dropped, a failure is said, and Enter or leaving before an answer doesn't lose what was typed.

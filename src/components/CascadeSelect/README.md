@@ -143,7 +143,7 @@ Each is an optional override: set it on the page, a container or one CascadeSele
 | `--cascade-select-option-indicator` | `primary` | The 2px bar at the start of each option on the chosen path (3:1 on option-on). |
 | `--cascade-select-border-disabled` | `disabled-border` | Disabled: the edge. |
 | `--cascade-select-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
-| `--cascade-select-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
+| `--cascade-select-panel-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge color, since in dark `border` is the surface's own color and a line in it vanished |
 
 **Radius**
 

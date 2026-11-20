@@ -22,7 +22,7 @@ What happens next:
 
 ## What the package does
 
-Knowing this helps tell a real issue from expected behaviour:
+Knowing this helps tell a real issue from expected behavior:
 
 - Nothing runs on install. Release tags are prebuilt, so npm only copies files.
 - Nothing loads from another server. The shipped CSS and JavaScript contain no remote URLs or `@import` (checked by
