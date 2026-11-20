@@ -276,6 +276,7 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [ButtonGroup](src/components/ButtonGroup/README.md) | Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. |
 | [CopyButton](src/components/CopyButton/README.md) | A button that copies text to the clipboard: an API key, an invite link, a command. |
 | [Fab](src/components/Fab/README.md) | A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. |
+| [FabMenu](src/components/FabMenu/README.md) (beta) | A floating action button that opens a few related actions, such as "New document", "New folder" and "Upload a file", when a screen's main action comes in kinds. |
 | [IconButton](src/components/IconButton/README.md) | A button that shows only an icon: a menu trigger, a close button, a toolbar action. |
 | [Link](src/components/Link/README.md) | An inline text link: underlined, in the primary color or the surrounding text's. |
 | [SplitButton](src/components/SplitButton/README.md) (beta) | A main action joined to an arrow button that opens a menu of other ways to do it: Publish, with Schedule and Save as draft one click away. |
@@ -358,8 +359,10 @@ Storybook's sidebar lists them by group: Actions, Forms, Feedback, Overlays, Nav
 | [DateRangePicker](src/components/DateRangePicker/README.md) | Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. |
 | [ErrorSummary](src/components/ErrorSummary/README.md) | After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. |
 | [Field](src/components/Field/README.md) | A label, an optional hint and a message (an error, a warning or "checking…") around one form control, wired up for screen readers. |
+| [FieldList](src/components/FieldList/README.md) (beta) | Rows people add and remove in a form, such as phone numbers, emergency contacts or the lines of an invoice. |
 | [FileUpload](src/components/FileUpload/README.md) | A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. |
 | [FilterBar](src/components/FilterBar/README.md) (beta) | The filters on a list or a table, as a row of chips. |
+| [ImageCropper](src/components/ImageCropper/README.md) (beta) | A picture in a frame of a fixed shape, which people move and zoom to choose the part to keep: a profile photo, a team logo, a cover. |
 | [InlineEdit](src/components/InlineEdit/README.md) | Text people can change where it is: a project name, a card title, a slug. |
 | [Input](src/components/Input/README.md) | A single-line text field: a native `<input>` in a box that can hold icons. |
 | [MentionInput](src/components/MentionInput/README.md) (beta) | A multi-line text field where typing "@" opens a list of people to mention, at the caret. |

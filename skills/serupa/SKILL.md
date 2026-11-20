@@ -90,6 +90,7 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **ButtonGroup**: Related buttons side by side, or stacked: joined into one control with shared borders (the default), or spaced apart. Also called: button bar, action group.
 - **CopyButton**: A button that copies text to the clipboard: an API key, an invite link, a command. Also called: copy to clipboard, clipboard button.
 - **Fab**: A floating action button: the one main action of a screen, such as "New project" or "Compose", in a round, raised button fixed to a corner. Also called: floating action button.
+- **FabMenu** (beta): A floating action button that opens a few related actions, such as "New document", "New folder" and "Upload a file", when a screen's main action comes in kinds. Also called: speed dial, FAB menu.
 - **IconButton**: A button that shows only an icon: a menu trigger, a close button, a toolbar action. Also called: icon-only button.
 - **Link**: An inline text link: underlined, in the primary color or the surrounding text's. Also called: anchor, hyperlink.
 - **SplitButton** (beta): A main action joined to an arrow button that opens a menu of other ways to do it: Publish, with Schedule and Save as draft one click away. Also called: button with dropdown, split dropdown button.
@@ -164,8 +165,10 @@ Each component's guide covers when to use it, when not to, its props, its keyboa
 - **DateRangePicker**: Two date fields for the start and end of a range (a stay, a report period, a filter), with a popup of two months to pick both. Also called: range picker, date range input.
 - **ErrorSummary**: After a form fails to submit, a box at the top of the form that says what's wrong, with each error a link to its field. Also called: error list, form error summary.
 - **Field**: A label, an optional hint and a message (an error, a warning or "checking…") around one form control, wired up for screen readers. Also called: form field, form label, fieldset.
+- **FieldList** (beta): Rows people add and remove in a form, such as phone numbers, emergency contacts or the lines of an invoice. Also called: repeater, dynamic fields, form list.
 - **FileUpload**: A drop area with a button for choosing files, and the chosen files listed under it with their size and a remove button. Also called: dropzone, file input, file uploader.
 - **FilterBar** (beta): The filters on a list or a table, as a row of chips. Also called: filters, filter chips, faceted search.
+- **ImageCropper** (beta): A picture in a frame of a fixed shape, which people move and zoom to choose the part to keep: a profile photo, a team logo, a cover. Also called: image crop, avatar editor, photo cropper.
 - **InlineEdit**: Text people can change where it is: a project name, a card title, a slug. Also called: click to edit, editable text.
 - **Input**: A single-line text field: a native `<input>` in a box that can hold icons. Also called: text input, text field.
 - **MentionInput** (beta): A multi-line text field where typing "@" opens a list of people to mention, at the caret. Also called: mentions, @-mentions, user tagging.
