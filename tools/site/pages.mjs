@@ -40,7 +40,7 @@ function statusOf(file, name) {
 
 /**
  * Every page, in no particular order.
- * @returns {{ file: string, title: string, id: string, path: string, section: string, group: string, name: string, summary: string, status: string, stories: string | null, component: string | null }[]}
+ * @returns {{ file: string, title: string, id: string, path: string, section: string, group: string, name: string, summary: string, also: string[], status: string, stories: string | null, component: string | null }[]}
  */
 export function sitePages(root = ROOT) {
   const files = [...walk(path.join(root, 'docs')), ...walk(path.join(root, 'src'))];
@@ -66,10 +66,13 @@ export function sitePages(root = ROOT) {
     // The folder of a component, block or pattern: its guide's first sentence and its status.
     const folder = /^src\/(components|blocks|patterns)\/(\w+)\/\2\.mdx$/.exec(file);
     const readme = folder && path.join(path.dirname(abs), 'README.md');
-    const summary = readme && fs.existsSync(readme) ? summaryOf(fs.readFileSync(readme, 'utf8')) : '';
+    const guide = readme && fs.existsSync(readme) ? fs.readFileSync(readme, 'utf8') : '';
+    const summary = guide ? summaryOf(guide) : '';
+    // The other names it's known by ("snackbar" for Toast), from its guide's "**Also called:**" line, for the search.
+    const also = /^\*\*Also called:\*\* (.+?)\.?\s*$/m.exec(guide)?.[1].split(/,\s*/) ?? [];
     const component = folder?.[1] === 'components' ? folder[2] : null;
     pages.push({
-      file, title, id: storybookId(title), section, group, name, summary, stories, component,
+      file, title, id: storybookId(title), section, group, name, summary, also, stories, component,
       path: '/' + (parts.length > 1 ? [section, name] : [name]).map(storybookId).join('/'),
       status: component ? statusOf(path.join(path.dirname(abs), `${component}.tsx`), component) : 'stable',
     });

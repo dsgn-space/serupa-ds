@@ -95,7 +95,7 @@ export function Index({ section }: { section: NavSection }) {
   React.useEffect(() => { document.title = `${section.label} · Serupa`; window.scrollTo(0, 0); }, [section]);
   const total = pagesOf(section).length;
   const q = query.trim().toLowerCase();
-  const groups = section.groups.map((g) => ({ ...g, pages: g.pages.filter((p) => !q || `${p.name} ${p.summary} ${p.group}`.toLowerCase().includes(q)) })).filter((g) => g.pages.length);
+  const groups = section.groups.map((g) => ({ ...g, pages: g.pages.filter((p) => !q || `${p.name} ${p.summary} ${p.group} ${p.also.join(' ')}`.toLowerCase().includes(q)) })).filter((g) => g.pages.length);
   const found = groups.reduce((n, g) => n + g.pages.length, 0);
   return <Shell>
     <div className="site-index">

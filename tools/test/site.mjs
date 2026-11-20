@@ -531,6 +531,26 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   await context.close();
 }
 
+// The search finds a component by another name it's known by (its README's "**Also called:**" line): "snackbar" is a
+// Toast, "modal" a Dialog, so someone who comes from another system needn't know Serupa's word first.
+{
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  const failed = await openUrl(page, base + '/getting-started') || await ready(page, true);
+  for (const [word, name] of [['snackbar', 'Toast'], ['modal', 'Dialog']]) {
+    let found = '';
+    if (!failed) {
+      await page.getByRole('button', { name: /^Search/ }).first().click();
+      const box = page.getByRole('combobox');
+      await box.fill(word);
+      found = await page.getByRole('option').first().innerText({ timeout: 2000 }).catch(() => '');
+      await page.keyboard.press('Escape');
+    }
+    t(`the search finds ${name} by "${word}"`, !failed && found.split('\n')[0].trim() === name, failed || `its first result is "${found.split('\n')[0] || 'nothing'}"`);
+  }
+  await context.close();
+}
+
 // A page that shows no changes, no test list and no token explorer doesn't download the changelog, the tests' names
 // or every component's tokens, the heaviest data in the docs: they load when a section that reads them is drawn
 // (docs/blocks.tsx), not with every page.
