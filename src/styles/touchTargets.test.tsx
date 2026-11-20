@@ -132,13 +132,15 @@ describe('touch-sized buttons inside fields', () => {
 
 // Buttons on a touch screen: an IconButton or a small Button takes a press up to 44px across, as the Design principles
 // promise, with nothing moving. Beside another button it stops halfway into the gap, so a press always goes to the
-// nearer one and never to a neighbour's own face; in an attached group, each keeps exactly its own face.
+// nearer one and never to a neighbour's own face; in an attached group, each keeps exactly its own face. Above and
+// below, a button in a row keeps its full 44px, as one on its own does.
 function Buttons() {
   return <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '64px', padding: '64px', width: '480px' }}>
     <div><IconButton icon="close" label="Close" className="hit-close" /></div>
     <div><Button size="sm" className="hit-small">Edit</Button></div>
     <Toolbar aria-label="Format"><IconButton icon="format_bold" label="Bold" className="hit-bold" /><IconButton icon="format_italic" label="Italic" className="hit-italic" /></Toolbar>
     <ButtonGroup attached aria-label="View"><Button className="hit-day">Day</Button><Button className="hit-week">Week</Button></ButtonGroup>
+    <div style={{ display: 'flex', gap: '8px' }}><Button variant="secondary" className="hit-cancel">Cancel</Button><Button className="hit-save">Save</Button></div>
     <Pagination count={5} className="hit-pages" />
   </div>;
 }
@@ -162,8 +164,12 @@ describe('touch-sized buttons', () => {
       expect(outside('.hit-close', 5)).toEqual(['close', 'close', 'close', 'close']);
       expect(outside('.hit-close', 7)).toEqual(['', '', '', '']);
       expect(outside('.hit-small', 9).slice(0, 2)).toEqual(['small', 'small']);
-      // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap all round (rows of a wrapped toolbar are
-      // 4px apart too), and its own face to the edge.
+      // Two buttons side by side, as in a dialog's footer, and an attached group: each takes a press 5px above and
+      // below it (44px high), as a button on its own does; beside each other they split the gap.
+      expect([...outside('.hit-save', 5).slice(0, 2), ...outside('.hit-cancel', 5).slice(0, 2)]).toEqual(['save', 'save', 'cancel', 'cancel']);
+      expect([...outside('.hit-day', 5).slice(0, 2), ...outside('.hit-week', 5).slice(0, 2)]).toEqual(['day', 'day', 'week', 'week']);
+      // Two IconButtons in a Toolbar, 4px apart: each takes its half of the gap between them, and its own face to the
+      // edge.
       // Measured left to right, so it holds in a right-to-left page too.
       $('.hit-bold').scrollIntoView({ block: 'center' });
       const [l, r] = ['.hit-bold', '.hit-italic'].map(box).sort((m, n) => m.left - n.left) as [DOMRect, DOMRect];

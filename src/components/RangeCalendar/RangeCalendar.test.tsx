@@ -249,3 +249,8 @@ test('RangeCalendar: every calendar system names its month as Intl does, and its
     await r.unmount();
   }
 });
+
+test('RangeCalendar: headingLevel reaches each month\'s title', async () => {
+  await render(<RangeCalendar months={2} locale="en-US" defaultMonth={new Date(2026, 10, 1)} headingLevel={3} />);
+  expect(page.getByRole('heading').elements().map((h) => h.tagName + ' ' + h.textContent)).toEqual(['H3 November 2026', 'H3 December 2026']);
+});

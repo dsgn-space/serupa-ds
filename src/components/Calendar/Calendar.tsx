@@ -64,6 +64,8 @@ export interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   /** Shortcuts in a list beside the days, after them in reading order: true for "Today", "Tomorrow" and "In a week",
       or your own. Picking one picks its day and shows its month. One whose day can't be picked is disabled. */
   presets?: boolean | DatePreset[] | undefined;
+  /** The month title's heading level, 2 (default) to 6, to fit the page's outline where the calendar sits inline. */
+  headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined;
   /** @internal Extra classes per day, for DateRangePicker. */
   dayClassName?: (date: Date) => string | undefined;
   /** @internal aria-selected per day, for DateRangePicker. */
@@ -163,7 +165,7 @@ const Weeks = /* @__PURE__ */ React.memo(function Weeks(p: WeeksProps) {
   ));
 });
 
-const OWN = { weekNumbers: 1, value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, calendar: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, onLeaveMonth: 1, className: 1 } as const;
+const OWN = { headingLevel: 1, weekNumbers: 1, value: 1, defaultValue: 1, onValueChange: 1, month: 1, defaultMonth: 1, onMonthChange: 1, min: 1, max: 1, isDateDisabled: 1, locale: 1, calendar: 1, weekStartsOn: 1, autoFocus: 1, previousLabel: 1, nextLabel: 1, monthYearPicker: 1, presets: 1, dayClassName: 1, isDateSelected: 1, onDayHover: 1, hideOutside: 1, dayLabel: 1, pairedNav: 1, onLeaveMonth: 1, className: 1 } as const;
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
 
@@ -175,6 +177,7 @@ const never = () => () => {}, yes = () => true, no = () => false;
 export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>('Calendar', function Calendar(props, ref) {
   const sds = useSettings(words);
   const rest = omit(props, OWN);
+  const H = ('h' + ([2, 3, 4, 5, 6].indexOf(props.headingLevel as number) < 0 ? 2 : props.headingLevel)) as 'h2';
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
   const cal = calendarOf(props.calendar, 'Calendar');
   const ws = Number.isFinite(props.weekStartsOn) ? ((Math.floor(props.weekStartsOn!) % 7) + 7) % 7 : firstDayOfWeek(locale);
@@ -373,7 +376,7 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
           disabled={!!min && compare(addDays(month, -1), min) < 0} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); showMonth(cal.add(month, -1)); }} ref={prevNav} />
           : <IconButton icon={icons.ChevronLeft} className="dk-calendar__nav dk-calendar__nav--prev" label={sds.labels.periodPrevious(view === 'months' ? 'month' : 'year')} size="sm" variant="ghost" hideTitle
           disabled={minN(view) != null && pPage - 1 < minN(view)!} onClick={(e) => { handover(e.currentTarget, () => nextNav.current); setPFocus(clampN(view, pFocus - 12)); }} ref={prevNav} />}
-        <h2 className={cn('dk-calendar__title', (props.monthYearPicker || drill) && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month)} lang={lang} aria-live="polite">{view === 'days' ? title : periodTitle}</h2>
+        <H className={cn('dk-calendar__title', (props.monthYearPicker || drill) && 'dk-visually-hidden')} id={titleId} data-month={isoDate(month)} lang={lang} aria-live="polite">{view === 'days' ? title : periodTitle}</H>
         {props.monthYearPicker ? <MonthYear cal={cal} fmt={fmts} month={month} min={min} max={max} today={hydrated ? today : month} names={monthName} lang={lang} monthLabel={sds.labels.month} yearLabel={sds.labels.year} onPick={showMonth} /> : null}
         {drill && view !== 'years' ? <button ref={heading} type="button" className="dk-calendar__heading" lang={lang} aria-describedby={titleId + '-hint'}
           onClick={() => (view === 'days' ? showPeriods('months', cal.index(month)) : (inYear.current = pFocus % 12, showPeriods('years', Math.floor(pFocus / 12))))}>
