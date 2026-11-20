@@ -5,7 +5,7 @@ One choice made through a hierarchy, such as Provinsi › Kabupaten/Kota › Kec
 **Also called:** cascader, cascading dropdown, nested select.
 
 ```jsx
-const { CascadeSelect, Field } = window.Serupa;
+import { CascadeSelect, Field } from '@diki-stwn/serupa-ds';
 
 const regions = [
   { value: "jabar", label: "Jawa Barat", children: [

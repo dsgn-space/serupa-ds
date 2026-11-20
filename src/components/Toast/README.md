@@ -5,7 +5,7 @@ A short message that confirms something happened ("Changes saved", "Moved to tra
 **Also called:** snackbar, notification.
 
 ```jsx
-const { Toaster, toast } = window.Serupa;
+import { Toaster, toast } from '@diki-stwn/serupa-ds';
 
 // once, near the root
 <Toaster />

@@ -203,6 +203,16 @@
             "cssVar": "--slider-length"
           }
         }
+      },
+      "mark-label-gap": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-2}",
+        "$description": "The least space between two mark labels; a label that would come closer wraps within its room (8px).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--slider-mark-label-gap"
+          }
+        }
       }
     },
     "borders": {

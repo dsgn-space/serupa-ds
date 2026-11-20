@@ -5,7 +5,7 @@ A message about the page or a task: something saved, something to know, somethin
 **Also called:** callout, banner, inline message.
 
 ```jsx
-const { Alert, Button } = window.Serupa;
+import { Alert, Button } from '@diki-stwn/serupa-ds';
 
 <Alert>Your trial ends in 3 days.</Alert>
 

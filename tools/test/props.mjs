@@ -107,6 +107,7 @@ const NAME_KEPT = {
   'ComboboxFreeTextProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',
   'ComboboxMultipleProps.loadingText': 'shown in the list while options load, not only said: a …Text prop is shown',
   'TimeZonePickerProps.loadingText': "Combobox's, passed through: shown in the list while options load",
+  'CommandPaletteProps.loadingText': 'shown under the commands while they load, not only said: a …Text prop is shown',
   'TableProps.layout': "'auto' or 'fixed', the table-layout it sets, by the CSS name",
 };
 const nameGaps = new Set();

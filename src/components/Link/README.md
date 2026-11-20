@@ -5,7 +5,7 @@ An inline text link: underlined, in the primary color or the surrounding text's.
 **Also called:** anchor, hyperlink.
 
 ```jsx
-const { Link, Text } = window.Serupa;
+import { Link, Text } from '@diki-stwn/serupa-ds';
 
 <Text>Read <Link href="/docs">the guide</Link> before you start.</Text>
 <Link href="https://status.example.com" external>Status page</Link>

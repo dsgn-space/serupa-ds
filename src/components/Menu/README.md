@@ -5,7 +5,7 @@ A list of actions behind a button: a row's "More" menu, an "Actions" dropdown, a
 **Also called:** dropdown menu, action menu, overflow menu.
 
 ```jsx
-const { Menu, ContextMenu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton, Card } = window.Serupa;
+import { Menu, ContextMenu, MenuItem, MenuGroup, MenuSeparator, Button, IconButton, Card } from '@diki-stwn/serupa-ds';
 
 <Menu trigger={<Button variant="secondary" rightIcon="expand_more">Actions</Button>}>
   <MenuItem icon="edit" shortcut={['mod', 'E']} onSelect={edit}>Edit</MenuItem>

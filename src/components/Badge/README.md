@@ -5,7 +5,7 @@ A short label for status, counts and categories, optionally clickable. One size 
 **Also called:** tag, chip, pill, label.
 
 ```jsx
-const { Badge } = window.Serupa;
+import { Badge } from '@diki-stwn/serupa-ds';
 
 <Badge>Draft</Badge>                                    // subtle, neutral
 <Badge tone="success" dot>Online</Badge>

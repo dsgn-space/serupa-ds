@@ -10,6 +10,7 @@ import { fold } from '../../internal/fold';
 import { announcePause } from '../../internal/timing';
 import type { OpenChangeDetails } from '../../internal/openChange';
 import type { IconData } from '../../material/types';
+import { LoaderRing } from '../../internal/loaderRing';
 import { asIcon } from '../Icon/asIcon';
 import { Dialog, type DialogProps } from '../Dialog/Dialog';
 import { Highlight } from '../Highlight/Highlight';
@@ -65,6 +66,18 @@ export interface CommandPaletteProps extends Omit<DialogProps, 'title' | 'descri
   emptyText?: React.ReactNode | undefined;
   /** How many it lists at most while searching, the best matches first. Default: 50. */
   limit?: number | undefined;
+  /** What's in the search field (controlled): an opening then keeps it, so you can open the palette on a search. Use with onQueryChange. */
+  query?: string | undefined;
+  /** Called with what's typed, as it changes (and with "" when an opening clears it): to fetch the commands that match
+   *  from a server, with filter={false} and loading. */
+  onQueryChange?: ((query: string) => void) | undefined;
+  /** false: lists the commands as given, in their order, as the ones your search found (what was typed is still marked
+   *  in them). Default: true, it filters and sorts them itself. */
+  filter?: boolean | undefined;
+  /** Shows a loading row under what's listed and marks the list busy; "nothing matches" waits until it ends. Default: false. */
+  loading?: boolean | undefined;
+  /** Shown while loading. Default: "Loading…" (labels.loading). */
+  loadingText?: string | undefined;
 }
 
 interface Row { c: Command; i: number; s: number }
@@ -91,7 +104,7 @@ function score(c: Command, q: string): number {
  *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
 export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, CommandPaletteProps>('CommandPalette', function CommandPalette(props, ref) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
-  const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
+  const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, query: 1, onQueryChange: 1, filter: 1, loading: 1, loadingText: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
   // null counts as not passed, as it always has here.
   const [openIn, setOwn, controlled] = useControllable(props.open == null ? undefined : props.open, !!props.defaultOpen, 'CommandPalette', 'open');
   const open = !!openIn;
@@ -103,19 +116,36 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
   const keys = props.hotkey === false ? null : props.hotkey && props.hotkey.length ? props.hotkey : ['mod', 'K'];
   useShortcut(keys || [], () => change(true, { reason: 'trigger' }), { description: labels.commandPalette, enabled: !!keys && !open });
 
-  const [query, setQuery] = React.useState('');
+  const [query, setOwnQuery, queryControlled] = useControllable(props.query ?? undefined, '', 'CommandPalette', 'query');
   const [active, setActive] = React.useState(0);
-  // Each opening starts from an empty field, at the top of the list.
+  // Each opening starts at the top of the list, from an empty field unless the app holds what's in it (query).
   const [was, setWas] = React.useState(open);
-  if (was !== open) { setWas(open); if (open) { setQuery(''); setActive(0); } }
+  if (was !== open) { setWas(open); if (open) { if (!queryControlled) setOwnQuery(''); setActive(0); } }
+
+  // What's typed goes to onQueryChange: at once when the app holds the query, else once it has changed here (the
+  // clearing of a new opening included).
+  const told = React.useRef(query);
+  const onQuery = React.useRef(props.onQueryChange); onQuery.current = props.onQueryChange;
+  React.useEffect(() => {
+    if (told.current === query) return;
+    told.current = query;
+    if (!queryControlled && onQuery.current) onQuery.current(query);
+  }, [query, queryControlled]);
+  const setQuery = (v: string) => {
+    if (!queryControlled) { setOwnQuery(v); return; }
+    told.current = v;
+    if (onQuery.current) onQuery.current(v);
+  };
 
   const q = fold(query.trim());
   const { commands, limit } = props;
+  const own = props.filter !== false, loading = !!props.loading;
   const rows: Row[] = React.useMemo(() => {
+    if (!own) return commands.map((c, i) => ({ c, i, s: 1 }));
     const all = commands.map((c, i) => ({ c, i, s: score(c, q) })).filter((r) => r.s > 0);
     if (!q) return all;
     return all.sort((a, b) => b.s - a.s || a.i - b.i).slice(0, limit && limit > 0 ? limit : 50);
-  }, [commands, q, limit]);
+  }, [commands, q, limit, own]);
   // By group, in the order each first appears among the rows; the rows keep their order inside a group.
   const groups = React.useMemo(() => {
     const m = new Map<string, Row[]>();
@@ -138,7 +168,7 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
 
   // How many match, said once typing stops (the rows change in silence otherwise).
   const empty = typeof props.emptyText === 'string' ? props.emptyText : labels.noCommands;
-  const said = !query.trim() ? '' : usable.length ? labels.commandsCount(usable.length, new Intl.NumberFormat(locale).format(usable.length)) : empty;
+  const said = !query.trim() || loading ? '' : usable.length ? labels.commandsCount(usable.length, new Intl.NumberFormat(locale).format(usable.length)) : empty;
   React.useEffect(() => {
     if (!open || !said) return;
     const t = setTimeout(() => announce(said), announcePause);
@@ -187,7 +217,7 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
         aria-autocomplete="list" aria-activedescendant={currentId || undefined} aria-label={props.placeholder || labels.searchCommands}
         placeholder={props.placeholder || labels.searchCommands} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
         value={query} onChange={(e) => { setQuery(e.currentTarget.value); setActive(0); }} onKeyDown={onKeyDown} />
-      <div ref={list} id={base + '-list'} role="listbox" aria-label={labels.commandPalette} className="dk-command-palette__list">
+      <div ref={list} id={base + '-list'} role="listbox" aria-label={labels.commandPalette} aria-busy={loading || undefined} className="dk-command-palette__list">
         {groups.map(([name, rs], g) => (
           <div key={name} role="group" aria-labelledby={base + '-g' + g} className="dk-command-palette__group">
             <div id={base + '-g' + g} role="presentation" className="dk-command-palette__heading">{name}</div>
@@ -195,7 +225,8 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
           </div>
         ))}
       </div>
-      {!usable.length && query.trim() ? <p className="dk-command-palette__empty">{props.emptyText != null ? props.emptyText : labels.noCommands}</p> : null}
+      {loading ? <p className="dk-command-palette__empty dk-command-palette__loading" role="status"><LoaderRing size="sm" />{props.loadingText || labels.loading}</p> : null}
+      {!usable.length && query.trim() && !loading ? <p className="dk-command-palette__empty">{props.emptyText != null ? props.emptyText : labels.noCommands}</p> : null}
     </Dialog>
   );
 });

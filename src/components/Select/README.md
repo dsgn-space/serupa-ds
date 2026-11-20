@@ -7,7 +7,7 @@ Where the browser lets a page style the list (`appearance: base-select`, in Chro
 **Also called:** dropdown, select input, picker.
 
 ```jsx
-const { Select, Field } = window.Serupa;
+import { Select, Field } from '@diki-stwn/serupa-ds';
 
 <Field label="Role">
   <Select options={["Viewer", "Editor", "Admin"]} value={role} onChange={(e) => setRole(e.target.value)} />

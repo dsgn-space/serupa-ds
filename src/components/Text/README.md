@@ -5,7 +5,7 @@ Body text in the system's type: a paragraph, a caption, an error line. `size`, `
 **Also called:** paragraph, body text.
 
 ```jsx
-const { Text } = window.Serupa;
+import { Text } from '@diki-stwn/serupa-ds';
 
 <Text>Invite people to work on this project with you.</Text>
 <Text size="sm" tone="muted">Last edited 2 hours ago</Text>
