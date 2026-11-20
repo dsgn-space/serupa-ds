@@ -371,6 +371,23 @@ if ((held || !only) && t('some page has a story that waits behind its button', !
   await context.close();
 }
 
+// A page that shows no changes and no test list doesn't download the changelog or the tests' names, the heaviest data
+// in the docs: they load when a section that reads them is drawn (docs/blocks.tsx), not with every page.
+{
+  const marker = (/[A-Za-z][A-Za-z ,]{40,}/.exec(fs.readFileSync(path.join(PROJECT, 'CHANGELOG.md'), 'utf8').split('\n').find((l) => /^- .{80,}/.test(l)) ?? '')?.[0] ?? '').slice(0, 40);
+  const context = await b.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  /** @type {Promise<string>[]} */
+  const scripts = [];
+  page.on('response', (r) => { if (r.url().endsWith('.js')) scripts.push(r.text().catch(() => '')); });
+  const failed = await openUrl(page, base + '/foundations/colors') || await ready(page, true);
+  await page.waitForTimeout(1000);
+  const carried = (await Promise.all(scripts)).some((js) => js.includes(marker));
+  t('/foundations/colors doesn\'t download the changelog', !failed && marker.length === 40 && !carried,
+    failed || (marker.length < 40 ? 'no line of CHANGELOG.md to look for' : `a script it loads carries the changelog ("${marker}")`));
+  await context.close();
+}
+
 // On a phone, a page doesn't jump as it arrives: the footer once showed under the loading page, then jumped away when
 // the page came (a layout shift of 0.11; under 0.1 is good, by Core Web Vitals). The CPU runs four times slower, as on
 // a mid-range phone, so the loading page shows for long enough to be measured.

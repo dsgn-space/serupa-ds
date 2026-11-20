@@ -81,7 +81,15 @@ export function Doc({ page }: { page: Page }) {
     nameHeadings(el);
     setNamed((n) => n + 1);
     pointLinks(el);
-    const links = new MutationObserver(() => pointLinks(el));
+    // Some sections arrive after the page (the changes and the tests load their data when drawn): they get ids, and the
+    // section list reads the headings again.
+    let count = el.querySelectorAll(HEADINGS).length;
+    const links = new MutationObserver(() => {
+      pointLinks(el);
+      nameHeadings(el);
+      const now = el.querySelectorAll(HEADINGS).length;
+      if (now !== count) { count = now; setNamed((n) => n + 1); }
+    });
     links.observe(el, { childList: true, subtree: true });
     const hash = decodeURIComponent(window.location.hash.slice(1));
     if (hash) document.getElementById(hash)?.scrollIntoView(); else window.scrollTo(0, 0);

@@ -14,12 +14,10 @@ import type { IconData } from '../src/material/types';
 import { DEFAULT_LABELS, idLabels, type SerupaLabels } from '../src/internal/labels';
 import labelsSource from '../src/internal/labels.ts?raw';
 import { componentStatus } from './generated/status';
-import changelogSource from '../CHANGELOG.md?raw';
 import pkg from '../package.json';
 import { majorsIn, upcomingMajor, type Major } from './upgrades';
 import { transformsAfter } from '../bin/migrate/transforms.mjs';
 import acr from './acr.json';
-import { componentTests } from './generated/tested';
 import { changesFor } from './changes';
 import since from './since.json';
 import { sinceText, type Since } from './since';
@@ -104,10 +102,26 @@ export function Guide({ source }: { source: string }) {
   </>;
 }
 
+/** Data a block loads when it's drawn, not with every page: the changelog and the tests' names weigh as much as the
+ * rest of the docs together, and only the sections at a page's foot and the upgrade guide read them. Null until it
+ * arrives. */
+function useLoaded<T>(load: () => Promise<T>): T | null {
+  const [data, setData] = React.useState<T | null>(null);
+  React.useEffect(() => {
+    let live = true;
+    void load().then((d) => { if (live) setData(() => d); });
+    return () => { live = false; };
+  }, [load]);
+  return data;
+}
+const loadChangelog = () => import('../CHANGELOG.md?raw').then((m) => m.default);
+const loadTests = () => import('./generated/tested').then((m) => m.componentTests);
+
 /** What changed in a component, release by release (134): the CHANGELOG.md entries that name it, newest first, the
  * latest few open and the rest folded away. */
 export function ComponentChanges({ name }: { name: string }) {
-  const all = changesFor(name, changelogSource);
+  const changelog = useLoaded(loadChangelog);
+  const all = changelog ? changesFor(name, changelog) : [];
   if (!all.length) return null;
   const SHOWN = 5;
   const md = (list: typeof all) => list.map((c) => `- **${c.version}**${c.kind ? ` (${c.kind.toLowerCase()})` : ''}: ${c.text}`).join('\n');
@@ -129,7 +143,8 @@ const plainName = (t: string) => t.replace(/\s*\((?:[A-Z]{0,3}\d+[a-z]?(?:,\s*)?
 /** What a component's tests check (131), by their names, read from its <Name>.test.tsx when the docs are built, so
  * the list is the suite and can't promise more than it runs. Closed by default: it's long, and for the curious. */
 export function TestedBehavior({ name }: { name: string }) {
-  const groups = componentTests[name] || [];
+  const tests = useLoaded(loadTests);
+  const groups = tests?.[name] || [];
   const count = groups.reduce((n, g) => n + g.tests.length, 0);
   if (!count) return null;
   return <section className="sb-tested" aria-labelledby={`tested-${name}`}>
@@ -477,9 +492,11 @@ type Transform = { version: string; id: string; title: string };
 /** The upgrade guide (40): each major's breaking changes, the next one first while its changesets wait for a release,
  * and what `npx serupa-migrate` changes for it. */
 export function UpgradeGuide() {
+  const changelog = useLoaded(loadChangelog);
   const auto = transformsAfter(null) as Transform[];
   const next = upcomingMajor(pkg.version, pendingChangesets, auto.map((t) => t.version));
-  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelogSource)];
+  if (changelog === null) return null;
+  const majors: Major[] = [...(next ? [next] : []), ...majorsIn(changelog)];
   return <>{majors.map((m) => {
     const prev = Number(m.version.split('.')[0]) - 1;
     const mine = auto.filter((t) => t.version === m.version);
