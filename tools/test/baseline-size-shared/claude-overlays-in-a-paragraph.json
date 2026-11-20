@@ -1,0 +1,6 @@
+{
+  "serupa.iife.js": [
+    0.1,
+    "+0.1 KiB on 20 Nov 2026: Tooltip, HoverCard, Popover and Menu draw their panel as a span, so one in a paragraph keeps it whole"
+  ]
+}

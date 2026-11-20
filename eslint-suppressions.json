@@ -106,11 +106,6 @@
       "count": 1
     }
   },
-  "src/components/Popover/Popover.tsx": {
-    "jsx-a11y-x/no-noninteractive-element-interactions": {
-      "count": 1
-    }
-  },
   "src/components/Rating/Rating.tsx": {
     "jsx-a11y-x/interactive-supports-focus": {
       "count": 1
