@@ -15,14 +15,19 @@
 // the Runner watch workflow runs --report every 10 minutes. On 14 Nov the burst runner was off for an hour and a queue
 // run waited for it the whole time, with nothing to say so. It needs GH_TOKEN (actions: read; issues: write for
 // --report) and GITHUB_REPOSITORY. It exits 2 when GitHub doesn't answer, so a caller can tell that from "none".
+import { appendFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+
 const repo = process.env.GITHUB_REPOSITORY;
 const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
 const mode = process.argv[2];
 const minutes = Number(process.argv[3] || 10);
-if (!repo || !token || !['--stuck', '--report'].includes(mode) || !(minutes > 0)) {
-  console.error('usage: GH_TOKEN=… GITHUB_REPOSITORY=owner/name node tools/runner-watch.mjs --stuck|--report <minutes>');
+const main = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (main && (!repo || !token || !['--stuck', '--report', '--pick'].includes(mode) || !(minutes > 0))) {
+  console.error('usage: GH_TOKEN=… GITHUB_REPOSITORY=owner/name node tools/runner-watch.mjs --stuck|--report|--pick <minutes>');
   process.exit(2);
 }
+const GITHUB_RUNNER = '"ubuntu-24.04"';
 const TITLE = 'Jobs waiting for a runner';
 const STALL_TITLE = 'Merges stalled';
 const THROUGHPUT_TITLE = 'Merge queue throughput';
@@ -36,7 +41,7 @@ async function api(path, init = {}) {
     headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json', 'x-github-api-version': '2022-11-28', ...init.headers },
     signal: AbortSignal.timeout(20_000),
   });
-  if (!res.ok) throw new Error(`${init.method || 'GET'} ${path}: ${res.status}`);
+  if (!res.ok) throw Object.assign(new Error(`${init.method || 'GET'} ${path}: ${res.status}`), { status: res.status });
   return res.json();
 }
 
@@ -66,9 +71,46 @@ export async function stuckJobs(limit, now = Date.now(), goneOnly = false) {
   return out.sort((a, b) => b.waited - a.waited).map((j) => j.line);
 }
 
+/**
+ * Where x86 jobs go (a runs-on value, JSON): `x86` when it is set, the pull request isn't a fork's, and a
+ * self-hosted runner started a job in the last `window` minutes (`lastStart`, ms, or null for none seen);
+ * GitHub's runners otherwise.
+ */
+export function pickRunner({ x86, fork = false, lastStart, now = Date.now(), window = 100 }) {
+  if (!x86 || fork) return GITHUB_RUNNER;
+  return lastStart != null && now - lastStart <= window * 60_000 ? x86 : GITHUB_RUNNER;
+}
+
+/** When a self-hosted runner last started a job of this repository within `limit` minutes (ms), or null. */
+async function lastSelfHostedStart(limit, now = Date.now()) {
+  const from = new Date(now - limit * 60_000).toISOString();
+  // Newest first, and stop at the first hit: in a busy hour the newest run has one.
+  const { workflow_runs: runs } = await api(`repos/${repo}/actions/runs?created=>=${from}&per_page=100`);
+  for (const run of runs) {
+    const { jobs } = await api(`repos/${repo}/actions/runs/${run.id}/jobs?filter=latest&per_page=100`);
+    const starts = jobs.filter((j) => j.labels.includes('self-hosted') && j.runner_name && j.started_at).map((j) => Date.parse(j.started_at));
+    if (starts.length) return Math.max(...starts);
+  }
+  return null;
+}
+
+/** The lines in the run's summary, for when the repository has Issues off. */
+function toSummary(title, lines, text) {
+  const out = `### ${title}\n\n${text}\n\n${lines.map((l) => `- ${l}`).join('\n')}\n`;
+  if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, out);
+  for (const l of lines) console.log(`::warning title=${title}::${l}`);
+  return lines.length ? `${lines.length} listed in the run's summary (Issues are off)` : 'none';
+}
+
 /** Opens, updates or closes the one open issue with this title and label: open while there are lines. */
-async function keepIssue(title, label, lines, text) {
-  const open = await api(`repos/${repo}/issues?state=open&labels=${label}&per_page=10`);
+export async function keepIssue(title, label, lines, text) {
+  let open;
+  try {
+    open = await api(`repos/${repo}/issues?state=open&labels=${label}&per_page=10`);
+  } catch (e) {
+    if (e.status === 410) return toSummary(title, lines, text);
+    throw e;
+  }
   const issue = open.find((i) => i.title === title && !i.pull_request);
   const body = `${text}\n\n${lines.slice(0, 30).map((l) => `- ${l}`).join('\n')}${lines.length > 30 ? `\n- and ${lines.length - 30} more` : ''}\n\nRunner watch (\`tools/runner-watch.mjs\`) updates this issue every 10 minutes and closes it once this is over.`;
   if (lines.length && issue) await api(`repos/${repo}/issues/${issue.number}`, { method: 'PATCH', body: JSON.stringify({ body }) });
@@ -131,7 +173,8 @@ async function throughput(now = Date.now()) {
   const pulls = await api(`repos/${repo}/pulls?state=closed&base=main&sort=updated&direction=desc&per_page=100`);
   const merged = [];
   for (const p of pulls.filter((x) => x.merged_at && Date.parse(x.merged_at) >= day)) {
-    const events = await api(`repos/${repo}/issues/${p.number}/timeline?per_page=100`);
+    // With Issues off the timeline may answer 410: then the time in the queue is unknown, the merge still counts.
+    const events = await api(`repos/${repo}/issues/${p.number}/timeline?per_page=100`).catch((e) => (e.status === 410 ? [] : Promise.reject(e)));
     const queued = events.filter((e) => e.event === 'added_to_merge_queue' && e.created_at <= p.merged_at).pop()?.created_at;
     merged.push({ queued, merged: p.merged_at });
   }
@@ -147,6 +190,7 @@ async function throughput(now = Date.now()) {
   return throughputLines(merged, failed, now);
 }
 
+/** Writes the reports; true when jobs wait or merges stall. */
 async function report(lines) {
   console.log(`Waiting for a runner: ${await keepIssue(TITLE, 'runner-watch', lines, `${lines.length} job${lines.length === 1 ? '' : 's'} of this repository ${lines.length === 1 ? 'has' : 'have'} waited over ${minutes} minutes for a self-hosted runner, as of ${stamp()} UTC. The project's x86 machines may be off: see design-system/ibm-burst-runner-github/RUNBOOK.md in the project files. Meanwhile CI sends new runs' x86 jobs to GitHub's runners by itself (the plan job's "x86 jobs run on" line).`)}`);
   const stall = await stalled();
@@ -155,12 +199,22 @@ async function report(lines) {
   if (new Date().getUTCMinutes() < 10) {
     console.log(`Throughput: ${await keepIssue(THROUGHPUT_TITLE, 'runner-watch', await throughput(), `The merge queue as of ${stamp()} UTC. This issue stays open and is rewritten every hour.`)}`);
   }
+  return lines.length > 0 || stall.length > 0;
 }
 
-try {
-  const lines = await stuckJobs(minutes, Date.now(), mode === '--stuck');
-  if (mode === '--stuck') { if (lines.length) console.log(lines.join('\n')); } else await report(lines);
-} catch (e) {
-  console.error(`runner-watch: ${e.message}`);
-  process.exit(2);
+if (main) {
+  try {
+    if (mode === '--pick') {
+      const x86 = process.env.X86 ?? process.env.SERUPA_X86_RUNNER ?? '';
+      const fork = process.env.FORK === 'true';
+      const lastStart = x86 && !fork ? await lastSelfHostedStart(minutes) : null;
+      console.log(pickRunner({ x86, fork, lastStart, window: minutes }).replace(/\s+/g, ''));
+    } else {
+      const lines = await stuckJobs(minutes, Date.now(), mode === '--stuck');
+      if (mode === '--stuck') { if (lines.length) console.log(lines.join('\n')); } else if (await report(lines)) process.exitCode = 1;
+    }
+  } catch (e) {
+    console.error(`runner-watch: ${e.message}`);
+    process.exit(2);
+  }
 }

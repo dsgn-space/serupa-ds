@@ -220,6 +220,37 @@ jobs:
   # coming, and it cancelled the redraw before (314 runner-minutes of cancelled redraws on 12 Nov, 12 of 14 runs). The
   # push that empties the queue (or the first half an hour after the last redraw that ran) redraws everything since
   # that redraw (.github/last-redraw.sh), so a skipped push loses nothing.
+  # Where the x86 jobs go: the project's machines while a self-hosted runner has started a job in the last 100 minutes,
+  # GitHub's runners otherwise. The burst VM deletes itself after two idle hours, and a job sent to it then waits a day
+  # and is cancelled (Nightly and Cross-browser, 18 to 20 Nov). tools/runner-watch.mjs --pick.
+  runner:
+    if: github.event_name == 'push' || github.event.label.name == 'update-visual-baselines' || github.event.label.name == 'update-cross-browser-baselines'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      x86: ${{ steps.pick.outputs.x86 }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: tools/runner-watch.mjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - id: pick
+        env:
+          GH_TOKEN: ${{ github.token }}
+          X86: ${{ vars.SERUPA_X86_RUNNER }}
+          FORK: ${{ github.event.pull_request.head.repo.fork == true }}
+        run: |
+          if ! runner=$(node tools/runner-watch.mjs --pick 100); then
+            if [ "$FORK" = true ]; then runner='"ubuntu-24.04"'; else runner="${X86:-\"ubuntu-24.04\"}"; fi
+            echo "::warning title=Runner check::GitHub didn't answer, so the x86 jobs go to $runner as set."
+          fi
+          echo "x86=$(echo "$runner" | tr -d ' \n')" >> "$GITHUB_OUTPUT"
+          echo "x86 jobs run on: $runner" | tee -a "$GITHUB_STEP_SUMMARY"
+
   settled:
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
@@ -251,7 +282,7 @@ jobs:
   # after it passes the check, under its tolerance, with pictures of the old look (#1648's Faq, drawn before #1602's
   # violet). Commit then opens a pull request with what changed.
   render:
-    needs: [settled]
+    needs: [settled, runner]
     # Not after merging the bot's own pull request: a story that isn't steady would open one after another. After a
     # push, only once the merge queue has nothing building or the last redraw is half an hour old (settled).
     if: >-
@@ -272,7 +303,7 @@ jobs:
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
     # The runner and image CI's Visual jobs use (ci.yml), so the pictures match what CI compares them with.
-    runs-on: ${{ fromJSON((github.event.pull_request.head.repo.fork != true && vars.SERUPA_X86_RUNNER) || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(needs.runner.outputs.x86) }}
     container:
       image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --cpus 4
@@ -351,6 +382,7 @@ jobs:
           retention-days: 1
 
   render-cross:
+    needs: runner
     if: github.event.label.name == 'update-cross-browser-baselines' && github.event.pull_request.head.repo.full_name == github.repository
     name: render (${{ matrix.browser }})
     strategy:
@@ -358,7 +390,7 @@ jobs:
       matrix:
         browser: [firefox, webkit]
     # The runner, image, browsers and fonts of Cross-browser's visual jobs (cross-browser.yml).
-    runs-on: ${{ fromJSON(vars.SERUPA_X86_RUNNER || '"ubuntu-24.04"') }}
+    runs-on: ${{ fromJSON(needs.runner.outputs.x86) }}
     container:
       image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --cpus 4
