@@ -56,6 +56,14 @@ describe('Patterns/Order history', () => {
     await expect.poll(() => active().textContent).toBe(headings()[5]);
   });
 
+  test('two on one page: Show more focuses the first new order on its own page', async () => {
+    const screen = await render(<><OrderHistory pageSize={5} /><OrderHistory pageSize={5} /></>);
+    await screen.getByRole('button', { name: /Show more orders/ }).nth(1).click();
+    const second = () => document.querySelectorAll('main')[1]!.querySelectorAll('h2[data-order-heading]');
+    await expect.poll(() => second().length).toBe(10);
+    await expect.poll(() => active()).toBe(second()[5]);
+  });
+
   test('Buy again says what went into the cart, or that it couldn\'t', async () => {
     let ok = true;
     const onBuyAgain = vi.fn(() => (ok ? Promise.resolve() : Promise.reject(new Error('stock'))));
