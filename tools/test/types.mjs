@@ -67,7 +67,8 @@ R.push({ name: 'every name a README or guide imports from serupa-ds is exported'
 // List's selectionMode and ListSelectAll (13 Nov 2026) take them to 244,397, so 244,800.
 // SplitButton and its props (15 Nov 2026) take them to 245,215, so 245,400.
 // FieldList, generic over its rows, with FieldListRow (20 Nov 2026) takes them to 246,241, so 246,800.
-const BUDGET = { Types: 101000, Instantiations: 246800 };
+// FabMenu and its FabMenuAction type (20 Nov 2026), on top of FieldList, take them to 247,156, so 247,600.
+const BUDGET = { Types: 101000, Instantiations: 247600 };
 const diag = built && spawnSync(process.execPath, [tsc, '-p', path.join(HERE, 'types'), '--extendedDiagnostics'], { cwd: PROJECT, encoding: 'utf8' });
 for (const [what, budget] of Object.entries(BUDGET)) {
   const n = diag ? Number((diag.stdout.match(new RegExp(`^${what}:\\s+(\\d+)`, 'm')) || [])[1]) : NaN;

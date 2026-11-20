@@ -1,0 +1,39 @@
+# Default
+- button "Create"
+
+# Extended
+- button "Create" [expanded]
+- menu "Create":
+  - menuitem "New document"
+  - menuitem "New folder"
+  - menuitem "Upload a file"
+
+# Loading
+- button "Create" [disabled]
+
+# LongText
+- button "Create" [expanded]
+- menu "Create":
+  - menuitem "Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung"
+  - menuitem "A label long enough to wrap twice in a narrow column of a phone screen"
+  - menuitem "New folder"
+  - menuitem "Upload a file"
+
+# Open
+- button "Create" [expanded]
+- menu "Create":
+  - menuitem "New document"
+  - menuitem "New folder"
+  - menuitem "Upload a file"
+
+# Playground
+- button "Create"
+
+# States
+- button "Create" [expanded]
+- menu "Create":
+  - menuitem "New document"
+  - menuitem "New folder"
+  - menuitem "Paste" [disabled]
+  - menuitem "Empty the trash"
+
