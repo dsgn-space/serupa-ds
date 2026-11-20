@@ -8,12 +8,21 @@
 import babel from '@babel/core';
 import compiler from 'babel-plugin-react-compiler';
 
-const CLIENT = /^\s*(\/\/[^\n]*\n\s*|\/\*[\s\S]*?\*\/\s*)*['"]use client['"]/;
+/** True when the file starts with "use client", after any comments. */
+function isClient(code) {
+  let i = 0;
+  for (;;) {
+    while (/\s/.test(code[i] ?? '')) i++;
+    if (code.startsWith('//', i)) { const n = code.indexOf('\n', i); if (n < 0) return false; i = n + 1; }
+    else if (code.startsWith('/*', i)) { const n = code.indexOf('*/', i + 2); if (n < 0) return false; i = n + 2; }
+    else return code.startsWith("'use client'", i) || code.startsWith('"use client"', i);
+  }
+}
 const SOURCE = /[\\/]src[\\/](components|internal)[\\/][^?]*\.tsx$/;
 const NOT_SHIPPED = /\.(test|stories)\.tsx$/;
 
 /** True for a source file the compiler goes over. */
-export const compiles = (file, code) => SOURCE.test(file) && !NOT_SHIPPED.test(file) && CLIENT.test(code);
+export const compiles = (file, code) => SOURCE.test(file) && !NOT_SHIPPED.test(file) && isClient(code);
 
 /** The file compiled (TypeScript and JSX kept for the next step), with its map. */
 export async function compileReact(file, code) {
