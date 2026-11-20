@@ -57,7 +57,7 @@ export const LongText: Story = {
 /** The rail: a dash per section beside the text; point at it, Tab into it or tap it for the full list. */
 export const Rail: Story = {
   args: { variant: 'rail' },
-  decorators: [(Story) => <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 280, paddingInlineStart: 280 }}><Story /></div>],
+  decorators: [(Story) => <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 280, paddingInlineStart: 'min(280px, 40%)' }}><Story /></div>],
 };
 
 // Do and don't, drawn on the guide's page beside each rule (the README's "### Do and don't").

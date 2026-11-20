@@ -20,7 +20,7 @@ export interface RatingProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   defaultValue?: number | null | undefined;
   /** Called with the picked rating, or null when it's cleared. */
   onValueChange?: ((value: number | null) => void) | undefined;
-  /** How many stars. Default: 5. */
+  /** How many stars, up to 20. Default: 5. */
   max?: number | undefined;
   /** Half stars can be picked too (each star is two choices). Default: false. */
   allowHalf?: boolean | undefined;
@@ -54,7 +54,8 @@ function RatingRender({ ref, ...given }: RatingProps & React.RefAttributes<HTMLD
   const nameRef = useNameCheck('Rating', NAME_HOW.group);
   const sds = useSettings(words), locale = useLocale();
   const size = oneOf(SIZES, sizeIn, 'md');
-  const max = typeof maxIn === 'number' && maxIn >= 1 && Number.isFinite(maxIn) ? Math.floor(maxIn) : 5;
+  // At most 20: a count from data gone wrong (a total, an id) drew that many stars, and a page froze on millions.
+  const max = typeof maxIn === 'number' && maxIn >= 1 && Number.isFinite(maxIn) ? Math.min(20, Math.floor(maxIn)) : 5;
   const step = allowHalf ? 0.5 : 1;
   const fit = (n: number | null | undefined) => (typeof n === 'number' && isFinite(n) && n > 0 ? Math.min(max, n) : null);
   const [chosen, setOwn, controlled] = useControllable<number | null>(valueIn, fit(defaultValue), 'Rating', 'value');

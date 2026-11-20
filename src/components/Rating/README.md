@@ -81,7 +81,7 @@ Drawn from the `Disabled` story.
 | `value` | `number \| null` | | The rating (controlled). |
 | `defaultValue` | `number \| null` | | The rating at first (uncontrolled). |
 | `onValueChange` | `(value: number \| null) => void` | | The picked rating, or `null` when it's cleared. |
-| `max` | `number` | `5` | How many stars. |
+| `max` | `number` | `5` | How many stars, up to 20. |
 | `allowHalf` | `boolean` | `false` | Half stars can be picked (two choices per star). |
 | `clearable` | `boolean` | `false` | Picking the current rating again, Backspace or Delete clears it. |
 | `readOnly` | `boolean` | `false` | Shows the rating as one image, with no choices; any fraction is drawn. |
