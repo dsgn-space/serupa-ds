@@ -69,6 +69,16 @@ if (!t('the site builds (npm run build-site)', built.status === 0, (built.stderr
   fail('The site did not build, so its pages can\'t be opened.');
 }
 
+// The site keeps only the utility classes its sources name (tools/site/vite.config.mjs): every page is checked for a
+// class utilities.css has that the built stylesheet lost, which would leave that part of the page unstyled.
+const classesIn = (css) => new Set([...css.matchAll(/\.((?:\\.|[\w-])+)/g)].map((m) => m[1].replace(/\\(.)/g, '$1')));
+const UTILITIES = classesIn(fs.readFileSync(path.join(PROJECT, 'src', 'styles', 'utilities.css'), 'utf8'));
+const SHEETS = fs.readdirSync(path.join(out, 'assets')).filter((f) => f.endsWith('.css')).map((f) => fs.readFileSync(path.join(out, 'assets', f), 'utf8'));
+const STYLED = classesIn(SHEETS.join('\n'));
+// Every page downloads the main stylesheet before it shows anything: with every utility class it was 2.4 MB.
+const sheet = Math.max(...SHEETS.map((css) => Buffer.byteLength(css)));
+t('the site\'s stylesheet is under 1 MB', sheet < 1024 * 1024, `it is ${(sheet / 1024 / 1024).toFixed(2)} MB`);
+
 // Served as Cloudflare Pages serves it (tools/site/host.mjs): /a/b from a/b.html, the rewrites in _redirects (a
 // story's frame is index.html), 404.html with a 404 for any other address, and the headers in _headers, the
 // Content-Security-Policy among them, so a script or style the policy would block on the live site fails here.
@@ -161,7 +171,10 @@ await inParallel(opened, workers, async (p, w) => {
     // is left: it is a line of text that takes no focus.
     over: [...document.querySelectorAll('dialog, [popover]')].filter((e) => e.matches(':modal, :popover-open') && e.getAttribute('role') !== 'tooltip').map((e) => String(e.className || e.localName).split(' ')[0]),
     heldInFrame: document.querySelectorAll('.site-demo .site-held').length,
+    classes: [...new Set([...document.querySelectorAll('[class]')].flatMap((e) => [...e.classList]))],
   }));
+  const unstyled = seen.classes.filter((c) => UTILITIES.has(c) && !STYLED.has(c));
+  t(`${p.path} has the utility classes it uses`, !unstyled.length, `the site's stylesheet left out ${unstyled.slice(0, 8).join(', ')}`);
   // A story that opens something as it arrives waits behind a button (site/src/blocks.tsx): the page itself comes first.
   t(`${p.path} opens nothing over the page on arrival`, !seen.over.length, `open on top of the page: ${[...new Set(seen.over)].join(', ')}`);
   if (seen.heldInFrame && !held) held = p.path;
