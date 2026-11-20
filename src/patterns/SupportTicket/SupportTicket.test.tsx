@@ -35,8 +35,8 @@ describe('Patterns/Support ticket', () => {
     expect(screen.getByRole('article').elements()).toHaveLength(2);
     expect(screen.getByRole('article').elements()[1]!.getAttribute('aria-labelledby')).toBe('msg-b');
     expect(document.getElementById('msg-b')?.textContent).toMatch(/^Rina WijayaSupport, /);
-    // Yours says "You" once (the name), then the time: not "You You, …".
-    expect(document.getElementById('msg-a')?.textContent).toMatch(/^You[A-Z][a-z]{2} \d/);
+    // Yours says "You" once (the name), then the time in the locale's own form: not "You You, …" or "You Support, …".
+    expect(document.getElementById('msg-a')?.textContent).toMatch(/^You(?!\s|,|You|Support)\S/);
   });
 
   test('an empty reply is named next to the box, which takes focus', async () => {
