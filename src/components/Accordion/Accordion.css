@@ -26,6 +26,7 @@
 .dk-accordion__trigger:focus-visible { outline: var(--focus-ring-width) solid var(--accordion-focus-ring, var(--focus-ring)); outline-offset: var(--focus-ring-offset); }
 .dk-accordion--card .dk-accordion__trigger:focus-visible { outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); }
 .dk-accordion__trigger:disabled { color: var(--accordion-text-disabled, var(--disabled-text)); cursor: var(--cursor-disabled); }
+.dk-accordion__trigger:disabled .dk-accordion__icon.dk-icon { color: inherit; }   /* the chevron fades with the title */
 .dk-accordion__trigger[aria-disabled="true"] { cursor: default; }
 /* A word longer than the line (a German compound, a URL) breaks instead of pushing the page sideways (WCAG 1.4.10). */
 .dk-accordion__title { text-wrap: balance; min-width: var(--spacing-0); overflow-wrap: anywhere; }
