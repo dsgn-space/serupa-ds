@@ -32,11 +32,25 @@
 .dk-file-upload__error .dk-icon { flex: none; font-size: var(--spacing-4); height: var(--text-sm--line-height); }   /* centered on the first line */
 .dk-file-upload__list { display: flex; flex-direction: column; gap: var(--file-upload-gap, var(--spacing-2)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
 .dk-file-upload__item {
-  display: flex; align-items: center; gap: var(--spacing-3); padding: var(--file-upload-item-padding, var(--spacing-2)); padding-inline-start: var(--spacing-3);
+  display: grid; grid-template-columns: auto minmax(var(--spacing-0), 1fr); align-items: center; column-gap: var(--spacing-3); padding: var(--file-upload-item-padding, var(--spacing-2)); padding-inline-start: var(--spacing-3);
   border: var(--border-width-1) solid var(--file-upload-item-border, var(--border)); border-radius: var(--file-upload-item-radius, var(--radius-control)); background: var(--file-upload-item-bg, var(--surface)); --surface-behind: var(--file-upload-item-bg, var(--surface));
 }
 .dk-file-upload__file-icon { color: var(--file-upload-icon-color, var(--text-muted)); font-size: var(--spacing-5); }
-.dk-file-upload__file { display: flex; flex-direction: column; flex: auto; min-width: var(--spacing-0); }
+/* As Attachment: the icon and the buttons centre on the name and its size, and the file's lines join the row's grid,
+   so a failure message runs from the name's edge to the row's, under the buttons, instead of being squeezed into a
+   column beside them. */
+.dk-file-upload__item { grid-template-areas: "icon name" "icon size" ". progress" ". error"; }
+.dk-file-upload__item:has(> .dk-icon-btn) { grid-template: "icon name remove" "icon size remove" ". progress ." ". error error" / auto minmax(var(--spacing-0), 1fr) auto; }
+.dk-file-upload__item:has(> .dk-file-upload__retry) { grid-template: "icon name retry" "icon size retry" ". progress ." ". error error" / auto minmax(var(--spacing-0), 1fr) auto; }
+.dk-file-upload__item:has(> .dk-file-upload__retry):has(> .dk-icon-btn) { grid-template: "icon name retry remove" "icon size retry remove" ". progress . ." ". error error error" / auto minmax(var(--spacing-0), 1fr) auto auto; }
+.dk-file-upload__item > :first-child { grid-area: icon; }
+.dk-file-upload__file { display: contents; }
+.dk-file-upload__name { grid-area: name; }
+.dk-file-upload__size { grid-area: size; }
+.dk-file-upload__progress { grid-area: progress; }
+.dk-file-upload__failed { grid-area: error; margin-block-start: var(--spacing-0\.5); }
+.dk-file-upload__retry { grid-area: retry; }
+.dk-file-upload__item > .dk-icon-btn { grid-area: remove; }
 .dk-file-upload__name { display: flex; min-width: var(--spacing-0); white-space: pre; }
 /* Cut, the name takes a tab stop of its own, so the keyboard can show it in full: the ring sits inside its edge, which clips. */
 .dk-file-upload__name:focus-visible { outline: var(--focus-ring-width) solid var(--file-upload-focus-ring, var(--focus-ring)); outline-offset: calc(var(--spacing-0) - var(--focus-ring-width)); border-radius: var(--radius-inner); }

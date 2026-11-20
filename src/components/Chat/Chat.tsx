@@ -145,7 +145,8 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   author?: React.ReactNode | undefined;
   /** A picture of the author, such as <Avatar size="sm" />, beside the message. Decorative: the name says who it is. */
   avatar?: React.ReactNode | undefined;
-  /** When it was sent, shown as relative time ("5 minutes ago") with the full date on hover. */
+  /** When it was sent: relative time today ("5 minutes ago"), the time of day after that ("9:41 AM"), since the day
+   *  divider above says which day. The full date is on hover. */
   time?: Date | number | string | undefined;
   /** Written by the person reading: it sits at the end, in the primary tint, and is read as "You". Default: false. */
   own?: boolean | undefined;
@@ -176,6 +177,8 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   steps?: readonly ChatStep[] | undefined;
 }
 
+const TIME_OF_DAY: Intl.DateTimeFormatOptions = { timeStyle: 'short' };
+
 /** One message in a Chat: author, avatar, time, text and attachments, with sending and failed states.
  *  @beta */
 export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessageProps>('ChatMessage', function ChatMessage(props, ref) {
@@ -200,7 +203,8 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
         {showAuthor || (props.time != null && !props.hideAuthor) ? (
           <div className="dk-chat-message__head">
             {showAuthor ? <span className="dk-chat-message__author">{own && props.author == null ? L.chatYou : props.author}</span> : null}
-            {props.time != null ? <RelativeTime className="dk-chat-message__time" date={props.time} /> : null}
+            {/* Past a day, the time of day: the day divider above already says which day (the full date is on hover). */}
+            {props.time != null ? <RelativeTime className="dk-chat-message__time" date={props.time} absoluteAfter={1} absoluteFormat={TIME_OF_DAY} /> : null}
           </div>
         ) : props.hideAuthor ? <span className="dk-visually-hidden">{own ? L.chatYou : props.author}</span> : null}
         {props.reasoning != null ? (
