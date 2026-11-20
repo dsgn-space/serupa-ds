@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import { THEMES, color, contrast, css, forcedColors, keepMotion, press, safeArea, withMotion, withMoreContrast } from '../../../tools/test/vitest/helpers';
 import { Button } from '../Button/Button';
 import { Menu, MenuItem } from '../Menu/Menu';
@@ -670,5 +670,19 @@ describe('NavbarMenu (RU14)', () => {
     });
     await page.viewport(1000, 700);
     await screen.unmount();
+  });
+});
+
+describe('Navbar in print', () => {
+  // A printed page is narrower than the screen the links were laid out for, and nothing measures the bar again on
+  // paper, so the links have to wrap there by themselves: they used to stay on one row and run under the actions.
+  test('printed, the links wrap beside the brand and the actions go under them, instead of the links running under the actions', async () => {
+    await render(<Main />);
+    await commands.printMedia(true);
+    try {
+      const inner = q('#nav .dk-navbar__inner'), links = q('#nav .dk-navbar__links');
+      expect([getComputedStyle(inner).flexWrap, getComputedStyle(links).flexWrap, getComputedStyle(q('#nav .dk-navbar__nav')).flexBasis]).toEqual(['wrap', 'wrap', '0px']);
+    } finally { await commands.printMedia(false); }
+    expect(getComputedStyle(q('#nav .dk-navbar__links')).flexWrap).toBe('nowrap');
   });
 });

@@ -232,6 +232,20 @@ await inParallel(opened, workers, async (p, w) => {
     !order.lead ? 'no lead paragraph' : !order.leadFirst ? 'the example comes before the lead' : `${order.above} examples above the guide`);
 }
 
+// Printed, a component's page is its guide: the screen's controls (search, the theme switches, the section list,
+// "On this page", each example's Show code and the guide's Copy for AI) are left out, and the bar's links wrap
+// instead of running under each other on the narrower page.
+{
+  const w = workers[0];
+  await w.page.setViewportSize({ width: 1280, height: 900 });
+  await openUrl(w.page, base + '/components/button'); await ready(w.page, true);
+  await w.page.emulateMedia({ media: 'print' });
+  const shown = await w.page.evaluate(() => ['.site-search', '.site-side', '.site-aside', '.site-browse', '.site-demo__bar', '.sb-copy-guide']
+    .filter((s) => [...document.querySelectorAll(s)].some((e) => e.getClientRects().length > 0)));
+  await w.page.emulateMedia({ media: 'screen' });
+  t('/components/button printed leaves out the screen\'s controls', !shown.length, `still printed: ${shown.join(', ')}`);
+}
+
 // Each card on the Components index shows its component, drawn small (site/src/Index.tsx Preview): every card gets
 // one as it comes near the screen, none opens anything over the page, each fits its card's width, is hidden from
 // assistive technology and out of the tab order, and a click on it opens the component's page.

@@ -98,7 +98,7 @@ export function Guide({ source }: { source: string }) {
   return <>
     {cut ? <DocMarkdown slugify={slugify}>{relink(body.slice(0, cut))}</DocMarkdown> : null}
     {cut ? <Primary placed /> : null}
-    {name && <div className="sb-copy-guide">
+    {name && <div className="sb-copy-guide" data-print="hide">
       <CopyButton value={() => forAgent(name, source)} size="sm">Copy for AI</CopyButton>
       <span>The whole guide as Markdown, to paste into a coding agent.</span>
     </div>}
