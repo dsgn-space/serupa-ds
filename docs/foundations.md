@@ -1120,7 +1120,7 @@ Rules of thumb:
 - Carousels: `snap-x snap-mandatory` on the track and `snap-start` (or `snap-center`) on each slide; `scrollbar-none` only if there are other controls.
 - Scrollbars: `scrollbar-thin scrollbar-thumb-border-strong scrollbar-track-transparent` in dense panels; `scrollbar-gutter-stable` stops layouts from jumping when content starts to scroll.
 - `pointer-events-none` on decorative overlays and icons inside inputs; never on something that should be reachable by keyboard, since it doesn't stop focus.
-- `select-none` on drag handles and buttons, `select-all` on codes and IDs people copy.
+- `select-none` on drag handles and buttons, `select-all` on codes and IDs people copy. The components do the same: a double-click on a button, a menu item, a tag you pick, or the label of a checkbox, radio or switch highlights no words, while field labels, cells and other text stay selectable.
 - `touch-manipulation` on buttons removes the double-tap zoom delay; `touch-none` on canvases and sliders that handle gestures themselves.
 - Use `will-change-transform` only while an animation runs, then remove it.
 
