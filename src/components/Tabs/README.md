@@ -53,7 +53,8 @@ Drawn from the `Pill` story.
 - Hidden panels keep their state. Set `keepMounted={false}` on a panel that doesn't need to, so it renders only while it's selected.
 - The browser's find-in-page searches kept panels too. They're `hidden="until-found"`, so a match on another tab selects that tab and shows it, as Accordion opens an item. A disabled tab's panel isn't searched.
 - Show a tab people can't use yet as `disabled` rather than leaving it out, when knowing it exists helps them.
-- Tabs that can be closed: when the selected tab is removed, uncontrolled Tabs select the next enabled tab (or else the previous one) and call `onValueChange`. If focus was on the closed tab (its own close button, or a Delete key you handle), it moves to the tab now selected, not to the page. With `value`, set it to another tab yourself when you remove the selected one; Tabs warns in the console otherwise.
+- Tabs people open and close, such as documents or queries: give each closable `Tab` an `onClose` that removes it, and the `TabList` an `onAdd` and `addLabel` for a "+ New query" button after the tabs. A closable tab has a × at its end for the pointer, and Delete closes it from the keyboard. Leave `onClose` off a tab that must stay, such as a pinned one. (`Closable`)
+- When the selected tab is removed, uncontrolled Tabs select the next enabled tab (or else the previous one) and call `onValueChange`. If focus was on the closed tab (its own close button, or a Delete key you handle), it moves to the tab now selected, not to the page. With `value`, set it to another tab yourself when you remove the selected one; Tabs warns in the console otherwise.
 
 ### Do and don't
 
@@ -69,6 +70,7 @@ Drawn from the `Pill` story.
 - Tab labels keep 4.5:1, and the selected line and pill 3:1 against `surface`, in every theme (`Tabs.test.tsx`). The focus ring sits inside the tab so the scrolling row can't clip it.
 - The selected line or fill slides from the tab selected before. Pick another tab mid-slide and it turns back from where it is, not from the last tab. With reduced motion it moves at once, and so it does when an arrow, Home or End picks the tab.
 - In forced-colors mode the selected tab is marked in `Highlight`.
+- A closable tab's × is for the pointer and is hidden from screen readers: a tab can't hold a second button. The tab's description says "Press Delete to close." instead (`aria-keyshortcuts="Delete"`). The + after the tabs is a button beside the tab list, with `addLabel` as its visible words.
 
 ### Keyboard
 
@@ -78,6 +80,7 @@ Drawn from the `Pill` story.
 | ← → | The previous or next tab, wrapping, following the text direction; disabled tabs are skipped. Also selects it unless `activation="manual"`. With `orientation="vertical"`, ↑ ↓ do this instead |
 | Home, End | The first or last tab |
 | Enter, Space | Selects the focused tab |
+| Delete | Closes the focused tab, when it has `onClose`. Focus goes to the tab selected next, or to the tab beside it |
 
 ## Props
 
@@ -96,8 +99,8 @@ Drawn from the `Pill` story.
 
 ### TabList, Tab and TabPanel
 
-- `TabList`: the row. Give it an `aria-label` when nothing on the page says what the tabs are for. It scrolls sideways when the tabs don't fit (down, when vertical and its height is limited), fading out the edge with more tabs past it, and keeps the selected tab in view.
-- `Tab`: `value` (required), `icon` (a name or element), `disabled`, and every `<button>` prop.
+- `TabList`: the row. Give it an `aria-label` when nothing on the page says what the tabs are for. `onAdd` with `addLabel` ("New query") shows a + after the tabs; select the new tab in it, and focus goes with the selection. It scrolls sideways when the tabs don't fit (down, when vertical and its height is limited), fading out the edge with more tabs past it, and keeps the selected tab in view.
+- `Tab`: `value` (required), `icon` (a name or element), `disabled`, `onClose` (a × at its end and the Delete key close it; remove the tab in it), and every `<button>` prop.
 - `TabPanel`: `value` (required). Hidden panels stay in the page and keep their state; `keepMounted={false}` renders a panel only while it's selected.
 
 Each part takes `className`, `style`, `ref` and other props. `Tabs` has `data-component="tabs"` and `data-variant`; tabs and panels have `data-state="active"` or `"inactive"`.
@@ -123,6 +126,8 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | `--tabs-focus-ring` | `focus-ring` | The keyboard focus ring, on a tab and on the panel. |
 | `--tabs-focus-gap-color` | `surface` | The gap between the focus ring and the selected pill's fill. |
 | `--tabs-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--tabs-close-bg-hover` | `secondary` | A closable tab's × under the pointer. |
+| `--tabs-close-bg-pressed` | `pressed` | A closable tab's × while it's pressed, one step past hover. |
 
 **Sizing**
 
@@ -138,6 +143,7 @@ Each is an optional override: set it on the page, a container or one set of tabs
 | --- | --- | --- |
 | `--tabs-indicator-width` | `border-width-2` | The thickness of the selected tab's line (2px). |
 | `--tabs-radius` | `radius-control` | A tab's corners (6px): the focus ring, and the pills. |
+| `--tabs-close-radius` | `radius-inner` | The corners of a closable tab's ×. |
 
 **Spacing**
 

@@ -1,3 +1,15 @@
+# Closable
+- tablist "Queries":
+  - tab "Overview" [selected]
+  - tab "Q3 revenue"
+  - tab "Churn by plan"
+  - tab "Signups this week"
+- button "New query"
+- tabpanel "Overview": Every saved query, by the last time it ran.
+- tabpanel "Q3 revenue": The results of Q3 revenue.
+- tabpanel "Churn by plan": The results of Churn by plan.
+- tabpanel "Signups this week": The results of Signups this week.
+
 # Controlled
 - tablist "Range":
   - tab "Day"

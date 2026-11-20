@@ -393,4 +393,5 @@ export const labels: SerupaLabels = {
   transferRemoveReason: 'Önce kaldırılacakları işaretleyin',
   transferEmpty: 'Yok',
   transferMoved: (items, list) => items + ', ' + list + ' listesine taşındı.',
+  tabCloseHint: 'Kapatmak için Delete tuşuna basın.',
 };
