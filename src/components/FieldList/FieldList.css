@@ -1,0 +1,21 @@
+/* ---------------------------------------------------------------
+   FieldList: a fieldset with no frame of its own: the legend, written like a field's label, an optional hint, then
+   the rows, each the row's fields side by side (they wrap in a narrow column) with Remove at the end, lined up with
+   the fields' controls, and the row's error under it. Add comes last, with the limit beside it once the list is full.
+   Every value reads one of its own tokens (field-list.tokens.json), which fall back to the shared ones.
+   --------------------------------------------------------------- */
+@layer dk.components {
+.dk-field-list { display: flex; flex-direction: column; gap: var(--field-list-gap, var(--spacing-3)); min-inline-size: var(--spacing-0); margin: var(--spacing-0); padding: var(--spacing-0); border: var(--spacing-0); font-family: var(--font-sans); font-size: var(--text-sm); line-height: var(--text-sm--line-height); }
+.dk-field-list__label { float: inline-start; width: var(--sizing-full); padding: var(--spacing-0); color: var(--field-list-label-color, var(--text)); font-weight: var(--field-list-label-weight, var(--font-medium)); overflow-wrap: anywhere; }
+.dk-field-list__label + * { clear: both; }
+.dk-field-list__hint, .dk-field-list__limit { color: var(--field-list-hint-color, var(--text-muted)); overflow-wrap: anywhere; }
+.dk-field-list__rows { display: flex; flex-direction: column; gap: var(--field-list-gap, var(--spacing-3)); margin: var(--spacing-0); padding: var(--spacing-0); list-style: none; }
+.dk-field-list__row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--field-list-row-gap, var(--spacing-3)); min-inline-size: var(--spacing-0); }
+.dk-field-list__fields { display: flex; flex: 1 1 var(--spacing-0); flex-wrap: wrap; gap: var(--field-list-row-gap, var(--spacing-3)); min-inline-size: var(--spacing-0); }
+.dk-field-list__fields > * { flex: 1 1 var(--field-list-field-min-width, var(--spacing-40)); min-inline-size: var(--spacing-0); }
+.dk-field-list__remove { flex: none; }
+.dk-field-list__row-error { flex-basis: var(--sizing-full); }
+.dk-field-list__error { display: flex; align-items: flex-start; gap: var(--field-list-error-gap, var(--spacing-1)); color: var(--field-list-error-color, var(--danger-text)); overflow-wrap: anywhere; }
+.dk-field-list__error-icon { flex: none; font-size: var(--spacing-4); height: var(--text-sm--line-height); line-height: var(--text-sm--line-height); }
+.dk-field-list__add { display: flex; flex-wrap: wrap; align-items: center; gap: var(--field-list-row-gap, var(--spacing-3)); }
+}

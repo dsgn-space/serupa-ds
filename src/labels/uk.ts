@@ -398,4 +398,5 @@ export const labels: SerupaLabels = {
   transferRemoveReason: 'Спершу позначте, що прибрати',
   transferEmpty: 'Немає',
   transferMoved: (items, list) => items + ': переміщено до «' + list + '».',
+  fieldListLimit: (max) => 'Досягнуто ліміту: ' + max + '.',
 };

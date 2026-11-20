@@ -392,4 +392,5 @@ export const labels: SerupaLabels = {
   transferRemoveReason: '请先勾选要移除的项',
   transferEmpty: '无',
   transferMoved: (items, list) => '已将' + items + '移到' + list + '。',
+  fieldListLimit: (max) => '已达上限：' + max + '。',
 };
