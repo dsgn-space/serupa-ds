@@ -149,7 +149,7 @@ function Demo({ entry }: { entry: StoryEntry }) {
   };
   return <div className="site-demo" data-layout={String(parameter(entry, 'layout') ?? 'padded')}>
     <Stage entry={entry} className="site-demo__stage" />
-    <div className="site-demo__bar">
+    <div className="site-demo__bar" data-print="hide">
       <Button variant="ghost" size="sm" leftIcon="code" aria-expanded={open} aria-controls={id} onClick={toggle}>{open ? 'Hide code' : 'Show code'}</Button>
     </div>
     <div id={id} className="site-demo__code" hidden={!open}>

@@ -47,12 +47,12 @@ export const SplitButton: Story = {
 /** Six buttons in a 288px column: the attached row doesn't fit, so it wraps as separate buttons. */
 export const Narrow: Story = {
   args: { 'aria-label': 'Format', children: ['Bold', 'Italic', 'Underline', 'Strike', 'Code', 'Link'].map((t) => <Button key={t} variant="outline">{t}</Button>) },
-  decorators: [(Story) => <div style={{ width: '288px' }}><Story /></div>],
+  decorators: [(Story) => <div style={{ maxWidth: '288px' }}><Story /></div>],
 };
 
 export const LongLabels: Story = {
   render: (args) => (
-    <div style={{ width: 240 }}>
+    <div style={{ maxWidth: 240 }}>
       <ButtonGroup {...args}>
         <Button variant="outline">Copy every selected row</Button>
         <Button variant="outline">Cut</Button>
