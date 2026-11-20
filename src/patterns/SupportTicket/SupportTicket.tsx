@@ -128,7 +128,7 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: Sup
       <SkipLink />
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         <p className="m-0 text-base font-semibold">Acme help</p>
-        <Link href="#tickets">Your requests</Link>
+        <Link underline="hover" href="#tickets">Your requests</Link>
       </header>
       <main id="main" className="mx-auto flex max-w-3xl flex-col px-4 py-8 outline-none">
         <PageHeader breadcrumb={[{ label: 'Your requests', href: '#tickets' }, { label: ticket.reference }]} title={ticket.subject} />
@@ -161,7 +161,8 @@ export function SupportTicket({ ticket = demo, onReply, onSolve, onReopen }: Sup
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
                         <h3 id={`msg-${m.id}`} className="m-0 flex flex-wrap items-baseline gap-x-2 text-sm font-semibold">
                           <span>{who}</span>
-                          <span className="font-normal text-text-muted">{mine ? 'You' : 'Support'}, <time dateTime={m.at}>{when(m.at)}</time></span>
+                          {/* Yours is named "You" already, so only the time follows; theirs says "Support" too. */}
+                          <span className="font-normal text-text-muted">{mine ? null : 'Support, '}<time dateTime={m.at}>{when(m.at)}</time></span>
                         </h3>
                         <p className="m-0 whitespace-pre-line wrap-break-word">{m.body}</p>
                         {m.files?.length ? <p className="m-0 text-sm text-text-muted">Attached: {m.files.join(', ')}</p> : null}

@@ -134,7 +134,7 @@ export function Referral({ link = 'https://acme.example/r/ana-7k2', reward = 10,
                     onMouseDown={(e) => { focusing.current = document.activeElement !== e.currentTarget; }}
                     onMouseUp={(e) => { if (focusing.current) e.preventDefault(); focusing.current = false; }} />
                 </Field>
-                <CopyButton value={link} copiedLabel="Copied">Copy link</CopyButton>
+                <CopyButton value={link} copiedLabel="Copied" size="md">Copy link</CopyButton>
               </div>
               <form onSubmit={send} noValidate aria-label="Invite by email" className="flex flex-col items-start gap-3">
                 <Field label="Or invite by email" id="referral-emails" hint="Separate addresses with commas or new lines." error={problem ?? undefined} className="w-full">

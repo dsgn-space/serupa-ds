@@ -54,9 +54,11 @@ describe('Popover', () => {
       await expect.poll(() => getComputedStyle(b).scale).toBe('0.97');
       await userEvent.keyboard('[/Space]');
       const pop = page.getByRole('dialog', { name: 'Share' }).element() as HTMLElement;
+      // To a tenth of a px: WebKit lays out in 64ths of a px, and a layer that holds still reads 95.97px one frame and 95.99px the next.
+      const px = (v: string) => Math.round(parseFloat(v) * 10) / 10;
       const seen = new Set<string>();
       for (let t = performance.now(); performance.now() - t < 400;) {
-        if (!pop.hidden) { const cs = getComputedStyle(pop); seen.add(cs.left + ' ' + cs.top); }
+        if (!pop.hidden) { const cs = getComputedStyle(pop); seen.add(px(cs.left) + ' ' + px(cs.top)); }
         await new Promise(requestAnimationFrame);
       }
       expect(getComputedStyle(b).scale).toBe('none');

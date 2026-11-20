@@ -113,6 +113,9 @@ describe('Patterns/Share dialog', () => {
     await screen.getByRole('button', { name: 'Share via…' }).click();
     expect(nativeShare).toHaveBeenCalledWith({ title: 'Q3 plan', url: 'https://acme.example/d/1' });
     await expect.element(screen.getByRole('button', { name: 'Copy link' })).toBeVisible();
+    // The footer's buttons are one height: Copy link, Share via… and Done.
+    const h = (name: string) => Math.round(screen.getByRole('button', { name }).element().getBoundingClientRect().height);
+    expect(new Set(['Copy link', 'Share via…', 'Done'].map(h)).size).toBe(1);
   });
 
   test('with no nativeShare given, the browser’s own share sheet is used when it has one', async () => {

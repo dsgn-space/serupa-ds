@@ -38,6 +38,18 @@ describe('Patterns/Store locator', () => {
     expect(screen.getByRole('link', { name: 'Directions: Acme Kemang' }).elements()).toHaveLength(1);
   });
 
+  test('opening hours fold under a heading button (the system disclosure); today is bold at the list\u2019s own size', async () => {
+    const screen = await render(<StoreLocator now={wed(20, 30)} />);
+    const shop = screen.getByRole('listitem', { name: 'Acme Kemang' });
+    const toggle = shop.getByRole('button', { name: 'Opening hours' });
+    expect([toggle.element().closest('h3') !== null, toggle.element().getAttribute('aria-expanded')]).toEqual([true, 'false']);
+    await toggle.click();
+    await expect.poll(() => toggle.element().getAttribute('aria-expanded')).toBe('true');
+    const term = (day: string) => [...shop.element().querySelectorAll('dt')].find((t) => t.textContent === day)!;
+    const style = (day: string) => [getComputedStyle(term(day)).fontSize, getComputedStyle(term(day)).fontWeight];
+    expect([style('Wednesday')[0], Number(style('Wednesday')[1]) > Number(style('Tuesday')[1])]).toEqual([style('Tuesday')[0], true]);
+  });
+
   test('searching and "Open now only" narrow the list and say how many', async () => {
     const screen = await render(<StoreLocator stores={stores} now={wed(20, 30)} />);
     await screen.getByRole('searchbox').fill('jakarta');

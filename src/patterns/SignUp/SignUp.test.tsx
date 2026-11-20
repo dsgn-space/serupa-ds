@@ -121,6 +121,8 @@ describe('Patterns/Sign-up', () => {
     const screen = await render(<SignUp start="code" onResend={onResend} initial={{ email: 'ana@example.com' }} />);
     const status = () => (screen.container.querySelector('[role="status"]') as HTMLElement).textContent;
     const button = screen.getByRole('button', { name: 'Send a new code' });
+    // An outline button, as Password reset's "Send it again": its frame lines up with Verify's, where a ghost's text sat in.
+    expect(getComputedStyle(button.element()).borderTopColor).not.toBe('rgba(0, 0, 0, 0)');
     await button.click();
     await expect.element(button).toHaveAttribute('aria-busy', 'true');
     (button.element() as HTMLButtonElement).click();
