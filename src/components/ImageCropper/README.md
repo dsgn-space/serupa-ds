@@ -40,11 +40,11 @@ Drawn from the `Playground` story.
 
 - Name it: a [Field](../Field/README.md) label ("Profile photo") or `aria-label`.
 - Match `aspect` and `shape` to where the picture goes: `shape="round"` for an avatar, `aspect={16 / 9}` for a cover. A round crop is still a square picture; the avatar draws the circle.
-- `onCropChange(area)` fires once the picture loads (centred, as large as fits) and after every move or zoom, with `{ x, y, width, height }` in the picture's own whole pixels. Keep the last one for Save.
+- `onCropChange(area)` fires once the picture loads (centered, as large as fits) and after every move or zoom, with `{ x, y, width, height }` in the picture's own whole pixels. Keep the last one for Save.
 - `cropImage(src, area, { width, type, quality })` resolves to a Blob of the crop, `width` pixels wide (default: the crop's own width). A picture from another site needs CORS: give it `crossOrigin="anonymous"` here and in `cropImage`'s options, or crop on the server.
 - The picture always covers the frame, so a crop never has an empty edge, and zoom 1 is as far out as it goes.
 - To start from a crop saved before, give it as `defaultCrop` (or `crop` with `onCropChange`, controlled): the picture is moved and zoomed to show it.
-- A new `src` starts over: centred at `defaultZoom`. While it loads the zoom row waits; if it can't be loaded, the frame says so and the zoom row goes.
+- A new `src` starts over: centered at `defaultZoom`. While it loads the zoom row waits; if it can't be loaded, the frame says so and the zoom row goes.
 
 ### Do and don't
 
@@ -75,7 +75,7 @@ Drawn from the `Playground` story.
 | `aspect` | `number` | `1` | The crop's width over its height: `16 / 9`, `3 / 4`. |
 | `shape` | `'rect' \| 'round'` | `'rect'` | `'round'` dims the picture outside a circle (an ellipse with another aspect). |
 | `crop` | `CropArea \| null` | | The crop (controlled), in the picture's pixels; use with `onCropChange`. |
-| `defaultCrop` | `CropArea \| null` | | The crop at first (uncontrolled), such as a saved one; centred when left out. |
+| `defaultCrop` | `CropArea \| null` | | The crop at first (uncontrolled), such as a saved one; centered when left out. |
 | `defaultZoom` | `number` | `1` | The zoom at first; 1 shows the whole width or height. |
 | `maxZoom` | `number` | `4` | How far in it zooms. |
 | `onCropChange` | `(area: CropArea) => void` | | The crop in the picture's pixels, on load and after each change. |

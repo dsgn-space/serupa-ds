@@ -25,7 +25,7 @@ export interface CropArea {
 
 export interface ImageCropperProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** The picture's address: a URL, or an object URL of a file someone picked (URL.createObjectURL). A new src starts
-   *  over, centred at the first zoom. */
+   *  over, centered at the first zoom. */
   src: string;
   /** The crop's shape as width over height: 1 for a square or circle (default), 16 / 9 for a cover, 3 / 4 for a portrait. */
   aspect?: number | undefined;
@@ -39,7 +39,7 @@ export interface ImageCropperProps extends Omit<React.HTMLAttributes<HTMLDivElem
   /** The crop (controlled), in the picture's own pixels: one onCropChange gave, or one saved before. The picture is
    *  moved and zoomed to show it (kept inside the picture and the zoom range). Use with onCropChange. */
   crop?: CropArea | null | undefined;
-  /** The crop at first (uncontrolled), such as one saved before, in place of the centred one; a new src drops it. */
+  /** The crop at first (uncontrolled), such as one saved before, in place of the centered one; a new src drops it. */
   defaultCrop?: CropArea | null | undefined;
   /** Called with the crop once the picture loads and after every move or zoom, in the picture's own whole pixels.
    *  Give it to cropImage for the cropped picture, or send it with the original for the server to crop. */
@@ -155,7 +155,7 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
     if (!i.naturalWidth || !i.naturalHeight) { setFailed(true); return; }
     const n: [number, number] = [i.naturalWidth, i.naturalHeight];
     setNat(n); setFailed(false);
-    // The first view: the crop given (controlled, or defaultCrop while it's still the first src), or centred.
+    // The first view: the crop given (controlled, or defaultCrop while it's still the first src), or centered.
     const at = props.crop || (props.src === firstSrc.current ? props.defaultCrop : null);
     if (at) { const v = viewOf(n[0], n[1], aspect, maxZoom, at); go(n, v.zoom, v.center[0], v.center[1]); } else go(n, first, 0.5, 0.5);
   };

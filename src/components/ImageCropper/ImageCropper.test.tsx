@@ -40,7 +40,7 @@ describe('ImageCropper', () => {
     expect(document.activeElement).toBe(frame());
   });
 
-  test('once loaded it says the crop in the picture\'s own pixels: the largest of its shape, centred; aspect and defaultZoom shape it', async () => {
+  test('once loaded it says the crop in the picture\'s own pixels: the largest of its shape, centered; aspect and defaultZoom shape it', async () => {
     const a: CropArea[] = [], b: CropArea[] = [], c: CropArea[] = [], d: CropArea[] = [];
     await render(<>
       <ImageCropper aria-label="Square" src={WIDE} onCropChange={(v) => a.push(v)} />
@@ -178,7 +178,7 @@ describe('ImageCropper', () => {
     expect([img.style.left, img.style.top]).toEqual(['-100%', '-50%']);
   });
 
-  test('a new src starts over, centred, and says its crop', async () => {
+  test('a new src starts over, centered, and says its crop', async () => {
     const calls: CropArea[] = [];
     const screen = await render(<ImageCropper aria-label="Photo" src={WIDE} onCropChange={(a) => calls.push(a)} />);
     await loaded(calls);
