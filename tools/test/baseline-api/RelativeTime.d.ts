@@ -12,4 +12,4 @@ declare function relativeTime(date: Date | number | string, now: number, locale?
     format?: "long" | "narrow" | "short";
     numeric?: "always" | "auto";
 }): string;
-declare const RelativeTime: React.ForwardRefExoticComponent<RelativeTimeProps & React.RefAttributes<HTMLTimeElement>>;
+declare const RelativeTime: React.FC<RelativeTimeProps & React.RefAttributes<HTMLTimeElement>>;

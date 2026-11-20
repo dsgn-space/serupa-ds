@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { AnnounceText } from './AnnounceText';
 import { ClearFilters, Suggestions } from './NoResults';
 
@@ -33,13 +33,7 @@ export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   onClearFilters?: (() => void) | undefined;
 }
 
-/* EmptyState: what a page or a panel shows when there's nothing in it yet (or nothing matches): an icon in a
-   circle, a title, a short description and the action that fills it. Centered. After a search that found nothing,
-   suggestions offers other searches and onClearFilters adds a "Clear filters" button. With announce, the title and
-   description go to the shared polite announcer as it appears (a "No results" after a search). className and every
-   other prop go to the wrapper. */
-/** What to show when there's nothing yet: an icon, a title, a description and the action that fills it. */
-export const EmptyState = /* @__PURE__ */ component<HTMLDivElement, EmptyStateProps>('EmptyState', function EmptyState(props, ref) {
+function EmptyStateRender({ ref, ...props }: EmptyStateProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { icon: 1, title: 1, description: 1, actions: 1, size: 1, variant: 1, headingLevel: 1, announce: 1, suggestions: 1, onSuggestion: 1, onClearFilters: 1, className: 1 });
   const size = oneOf(['sm', 'md'] as const, props.size, 'md');
   const variant = oneOf(['plain', 'dashed'] as const, props.variant, 'plain');
@@ -60,4 +54,12 @@ export const EmptyState = /* @__PURE__ */ component<HTMLDivElement, EmptyStatePr
       {props.actions != null || clear ? <div className="dk-empty-state__actions">{props.actions}{clear}</div> : null}
     </div>
   );
-});
+}
+
+/* EmptyState: what a page or a panel shows when there's nothing in it yet (or nothing matches): an icon in a
+   circle, a title, a short description and the action that fills it. Centered. After a search that found nothing,
+   suggestions offers other searches and onClearFilters adds a "Clear filters" button. With announce, the title and
+   description go to the shared polite announcer as it appears (a "No results" after a search). className and every
+   other prop go to the wrapper. */
+/** What to show when there's nothing yet: an icon, a title, a description and the action that fills it. */
+export const EmptyState = /* @__PURE__ */ named('EmptyState', EmptyStateRender);

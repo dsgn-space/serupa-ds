@@ -1,0 +1,10 @@
+{
+  "All components (index.js)": [
+    1,
+    "+1 KiB on 20 Nov 2026: 17.0.0: every component takes ref as a prop (function XRender({ ref, ...props })) instead of React.forwardRef: the destructuring in each of 177 components"
+  ],
+  "serupa.iife.js": [
+    0.9,
+    "+0.9 KiB on 20 Nov 2026: 17.0.0: every component takes ref as a prop (function XRender({ ref, ...props })) instead of React.forwardRef: the destructuring in each of 177 components"
+  ]
+}

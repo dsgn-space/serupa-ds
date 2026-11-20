@@ -15,4 +15,4 @@ interface SplitButtonProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
     defaultOpen?: boolean | undefined;
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
-declare const SplitButton: React.ForwardRefExoticComponent<SplitButtonProps & React.RefAttributes<HTMLDivElement>>;
+declare const SplitButton: React.FC<SplitButtonProps & React.RefAttributes<HTMLDivElement>>;

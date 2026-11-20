@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { FieldContext, type FieldControl } from '../../internal/field';
 import * as icons from '../../material/builtin';
 import { FieldLabel } from '../../internal/fieldLabel';
@@ -65,8 +65,7 @@ type ControlProps = { id?: string; name?: string; invalid?: boolean; disabled?: 
 
 const OWN = { label: 1, hint: 1, error: 1, warning: 1, checking: 1, name: 1, required: 1, optional: 1, disabled: 1, group: 1, orientation: 1, id: 1, children: 1, className: 1 } as const;
 
-/** A label, an optional hint and an error message around one form control, wired up for screen readers. className, ref and other attributes go to the outer element (a <fieldset> with group). */
-export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field', function Field(props, ref) {
+function FieldRender({ ref, ...props }: FieldProps & React.RefAttributes<HTMLElement>) {
   const rest = omit(props, OWN);
   const base = domId('dk-f', React.useId());
   const child = React.Children.count(props.children) === 1 && React.isValidElement(props.children) ? (props.children as React.ReactElement<ControlProps>) : null;
@@ -186,7 +185,10 @@ export const Field = /* @__PURE__ */ component<HTMLElement, FieldProps>('Field',
       {error}
     </div>
   );
-});
+}
+
+/** A label, an optional hint and an error message around one form control, wired up for screen readers. className, ref and other attributes go to the outer element (a <fieldset> with group). */
+export const Field = /* @__PURE__ */ named('Field', FieldRender);
 
 /* The browser's own verdict on the control, shown as the Field's error once people have touched it: when the
    control matches :user-invalid (changed and left, or a submit was tried), the error slot says which constraint it

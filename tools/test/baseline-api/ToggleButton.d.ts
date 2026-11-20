@@ -6,4 +6,4 @@ interface ToggleButtonProps extends Omit<ButtonAsButtonProps, "destructive" | "l
     variant?: "ghost" | "outline" | undefined;
     icon?: IconSource | undefined;
 }
-declare const ToggleButton: React.ForwardRefExoticComponent<ToggleButtonProps & React.RefAttributes<HTMLButtonElement>>;
+declare const ToggleButton: React.FC<ToggleButtonProps & React.RefAttributes<HTMLButtonElement>>;

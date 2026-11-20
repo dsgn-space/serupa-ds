@@ -17,4 +17,4 @@ interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>
     options?: Array<SelectOption | SelectOptionGroup> | undefined;
     readOnly?: boolean | undefined;
 }
-declare const Select: React.ForwardRefExoticComponent<SelectProps & React.RefAttributes<HTMLSelectElement>>;
+declare const Select: React.FC<SelectProps & React.RefAttributes<HTMLSelectElement>>;

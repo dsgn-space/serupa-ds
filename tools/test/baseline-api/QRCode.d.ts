@@ -16,4 +16,4 @@ interface QRCodeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "childr
     status?: QRCodeStatus | undefined;
     onRefresh?: (() => void) | undefined;
 }
-declare const QRCode: React.ForwardRefExoticComponent<QRCodeProps & React.RefAttributes<HTMLDivElement>>;
+declare const QRCode: React.FC<QRCodeProps & React.RefAttributes<HTMLDivElement>>;

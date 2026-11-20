@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControlSize } from '../../internal/controlSize';
 import { cn, domId, isInvalid, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { useFieldControl } from '../../internal/field';
@@ -72,14 +72,7 @@ export interface CascadeSelectProps extends Omit<React.ButtonHTMLAttributes<HTML
 type Loaded = Map<string, CascadeOption[] | 'loading' | 'failed'>;
 const keyOf = (values: string[]) => JSON.stringify(values);
 
-/* CascadeSelect: a button (role="combobox", so a Field's label, error and required reach it) that opens a dialog of
-   side-by-side listboxes, one per level: picking in one shows its children in the next. Up and Down move in a column,
-   Right (Left in right-to-left) goes into the children, Left goes back, Home and End, letters jump; Enter or a click
-   on a last step chooses the path and closes it, Escape closes it without a change. Children can load when an option
-   is opened (loadOptions). Narrower than three columns, it shows one column at a time with a Back button. */
-/** A choice made through a hierarchy, such as Provinsi › Kabupaten/Kota › Kecamatan, in side-by-side columns.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, CascadeSelectProps>('CascadeSelect', function CascadeSelect(props, ref) {
+function CascadeSelectRender({ ref, ...props }: CascadeSelectProps & React.RefAttributes<HTMLButtonElement>) {
   props = useFieldControl(props);
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { options: 1, value: 1, defaultValue: 1, onValueChange: 1, loadOptions: 1, levels: 1, selectParents: 1, placeholder: 1, size: 1, invalid: 1, required: 1, name: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, style: 1, form: 1, disabled: 1, readOnly: 1 } as const);
@@ -291,4 +284,13 @@ export const CascadeSelect = /* @__PURE__ */ component<HTMLButtonElement, Cascad
       </div>
     </div>
   );
-});
+}
+
+/* CascadeSelect: a button (role="combobox", so a Field's label, error and required reach it) that opens a dialog of
+   side-by-side listboxes, one per level: picking in one shows its children in the next. Up and Down move in a column,
+   Right (Left in right-to-left) goes into the children, Left goes back, Home and End, letters jump; Enter or a click
+   on a last step chooses the path and closes it, Escape closes it without a change. Children can load when an option
+   is opened (loadOptions). Narrower than three columns, it shows one column at a time with a Back button. */
+/** A choice made through a hierarchy, such as Provinsi › Kabupaten/Kota › Kecamatan, in side-by-side columns.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const CascadeSelect = /* @__PURE__ */ named('CascadeSelect', CascadeSelectRender);

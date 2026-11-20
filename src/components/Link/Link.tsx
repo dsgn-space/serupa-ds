@@ -4,7 +4,7 @@ import { config } from '../../internal/config';
 import { warnOnce } from '../../internal/warn';
 import { Icon } from '../Icon/Icon';
 import { NewTabNote } from './NewTabNote';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { AutoFocusLink } from './AutoFocusLink';
 import * as icons from '../../material/builtin';
 
@@ -28,10 +28,7 @@ export type LinkProps<C extends React.ElementType = 'a'> = LinkOwnProps & {
   as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, keyof LinkOwnProps | 'as'>;
 
-/* Link: an inline text link, underlined, in the primary color or the surrounding text's. external opens a new
-   tab and says so. `as` renders your router's link instead of an <a>. className and every other prop go to it. */
-/** An inline text link: underlined, primary or the text's color. external opens a new tab and says so. */
-const LinkBase = /* @__PURE__ */ component<HTMLAnchorElement, LinkProps>('Link', function Link(props, ref) {
+function LinkBaseRender({ ref, ...props }: LinkProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { tone: 1, onMedia: 1, underline: 1, external: 1, as: 1, className: 1, children: 1, autoFocus: 1 });
   const tone = oneOf(['primary', 'neutral'] as const, props.tone, 'primary');
   const underline = oneOf(['always', 'hover'] as const, props.underline, 'always');
@@ -61,10 +58,15 @@ const LinkBase = /* @__PURE__ */ component<HTMLAnchorElement, LinkProps>('Link',
   // React only autofocuses form controls: with autoFocus, a small client component focuses the link once it's mounted.
   if (props.autoFocus) return <AutoFocusLink as={props.as || config.link} linkRef={ref} attrs={attrs}>{children}</AutoFocusLink>;
   return React.createElement(props.as || config.link, Object.assign(attrs, { ref: ref }), children);
-});
+}
+
+/* Link: an inline text link, underlined, in the primary color or the surrounding text's. external opens a new
+   tab and says so. `as` renders your router's link instead of an <a>. className and every other prop go to it. */
+/** An inline text link: underlined, primary or the text's color. external opens a new tab and says so. */
+const LinkBase = /* @__PURE__ */ named('Link', LinkBaseRender);
 
 /** An inline text link: underlined, primary or the text's color. external opens a new tab and says so. `as` renders your router's link, typed with its props. */
 export const Link = LinkBase as {
-  <C extends React.ElementType = 'a'>(props: LinkProps<C> & { ref?: React.Ref<React.ComponentRef<C>> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: LinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): React.ReactElement | null;
   displayName?: string | undefined;
 };

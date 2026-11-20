@@ -14,7 +14,7 @@ import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import { LoaderRing } from '../../internal/loaderRing';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import * as icons from '../../material/builtin';
 
 export type BadgeVariant = 'subtle' | 'solid' | 'outline';
@@ -73,8 +73,7 @@ const TONES: readonly BadgeTone[] = ['neutral', 'primary', 'success', 'warning',
 const PLAIN = { useGrouping: false } as const;
 const OWN = { variant: 1, tone: 1, dot: 1, ping: 1, leftIcon: 1, count: 1, max: 1, showZero: 1, onRemove: 1, removeLabel: 1, loading: 1, loadingLabel: 1, className: 1, children: 1 } as const;
 
-/** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
-export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge', function Badge(props, ref) {
+function BadgeRender({ ref, ...props }: BadgeProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings();
   const locale = useLocale();
   const rest = omit(props, OWN);
@@ -179,4 +178,7 @@ export const Badge = /* @__PURE__ */ component<HTMLElement, BadgeProps>('Badge',
   }
   if (interactive && rest.type === undefined) rest.type = 'button';   // never submits a form by accident
   return React.createElement(interactive ? 'button' : 'span', Object.assign(rest, { ref: setNode, className: classes }), ...content);
-});
+}
+
+/** A short label for status, counts and categories. A <span>; a <button> with onClick, a link with href. */
+export const Badge = /* @__PURE__ */ named('Badge', BadgeRender);

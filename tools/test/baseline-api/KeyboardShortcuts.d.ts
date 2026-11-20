@@ -23,4 +23,4 @@ interface KeyboardShortcutsProps extends Omit<DialogProps, "alert" | "children" 
     helpKeys?: false | string[] | undefined;
 }
 declare function useShortcut(keys: string | string[], handler: (event: KeyboardEvent) => void, options?: ShortcutOptions): void;
-declare const KeyboardShortcuts: React.ForwardRefExoticComponent<KeyboardShortcutsProps & React.RefAttributes<HTMLDialogElement>>;
+declare const KeyboardShortcuts: React.FC<KeyboardShortcutsProps & React.RefAttributes<HTMLDialogElement>>;

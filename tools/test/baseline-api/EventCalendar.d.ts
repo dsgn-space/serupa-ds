@@ -49,4 +49,4 @@ interface CalendarSlot {
     end: Date;
     allDay: boolean;
 }
-declare const EventCalendar: React.ForwardRefExoticComponent<EventCalendarProps & React.RefAttributes<HTMLDivElement>>;
+declare const EventCalendar: React.FC<EventCalendarProps & React.RefAttributes<HTMLDivElement>>;

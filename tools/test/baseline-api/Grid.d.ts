@@ -12,4 +12,4 @@ interface GridColumns {
     md?: number | undefined;
     lg?: number | undefined;
 }
-declare const Grid: React.ForwardRefExoticComponent<GridProps & React.RefAttributes<HTMLElement>>;
+declare const Grid: React.FC<GridProps & React.RefAttributes<HTMLElement>>;

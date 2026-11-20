@@ -8,7 +8,7 @@ import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { lastInputKeyboard } from '../../internal/lastInput';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import { warnOnce } from '../../internal/warn';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
@@ -60,12 +60,7 @@ const isNarrow = () => narrowMedia().matches;
 const notNarrow = () => false;
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/* Popover: a small non-modal dialog next to its trigger, for content people interact with (a form, filters,
-   details with links): role="dialog", named by its title. Opening moves focus inside; Escape closes it and
-   returns focus to the trigger; a click outside, or focus moving elsewhere, closes it too. It sits in the top
-   layer, right after the trigger in the tab order. For a hint, use Tooltip; for a list of actions, Menu. */
-/** A small non-modal dialog next to its trigger, for interactive content: a form, filters, details. */
-export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>('Popover', function Popover(props, ref) {
+function PopoverRender({ ref, ...props }: PopoverProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('Popover', NAME_HOW.title);   // warns when it has no accessible name
   const own = domId('dk-pop', React.useId());
   const id = props.id || own;
@@ -152,4 +147,11 @@ export const Popover = /* @__PURE__ */ component<HTMLDivElement, PopoverProps>('
       </div>
     </>
   );
-});
+}
+
+/* Popover: a small non-modal dialog next to its trigger, for content people interact with (a form, filters,
+   details with links): role="dialog", named by its title. Opening moves focus inside; Escape closes it and
+   returns focus to the trigger; a click outside, or focus moving elsewhere, closes it too. It sits in the top
+   layer, right after the trigger in the tab order. For a hint, use Tooltip; for a list of actions, Menu. */
+/** A small non-modal dialog next to its trigger, for interactive content: a form, filters, details. */
+export const Popover = /* @__PURE__ */ named('Popover', PopoverRender);

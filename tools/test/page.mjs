@@ -258,7 +258,7 @@ for (const scheme of /** @type {const} */ (['light', 'dark'])) {
   const p = await b.newPage();
   await p.goto(url);
   await p.waitForSelector('#b');
-  t('debug.js: off by default, and window.Serupa keeps the components and theme', await p.evaluate(() => !document.getElementById('serupa-debug') && !Serupa.debug.isOn() && typeof Serupa.Button === 'object' && typeof Serupa.theme.get === 'function'));
+  t('debug.js: off by default, and window.Serupa keeps the components and theme', await p.evaluate(() => !document.getElementById('serupa-debug') && !Serupa.debug.isOn() && typeof Serupa.Button === 'function' && typeof Serupa.theme.get === 'function'));
   await p.goto(url + '?serupa-debug');
   await p.waitForSelector('#b');
   t('debug.js: ?serupa-debug turns it on and outlines each component', await p.evaluate(() => Serupa.debug.isOn() && getComputedStyle(document.getElementById('b')).outlineStyle === 'dashed'));

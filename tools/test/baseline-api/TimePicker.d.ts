@@ -19,4 +19,4 @@ interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
     defaultOpen?: boolean | undefined;
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
-declare const TimePicker: React.ForwardRefExoticComponent<TimePickerProps & React.RefAttributes<HTMLInputElement>>;
+declare const TimePicker: React.FC<TimePickerProps & React.RefAttributes<HTMLInputElement>>;

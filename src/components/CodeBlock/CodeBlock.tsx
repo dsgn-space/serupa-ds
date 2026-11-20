@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useScrolls } from '../../internal/useScrolls';
 import { cn, domId, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useServerStyles } from '../../internal/serverStyles';
 import { useSettings } from '../../internal/provider';
 import { CopyButton } from '../CopyButton/CopyButton';
@@ -31,9 +31,7 @@ export interface CodeBlockProps extends Omit<React.HTMLAttributes<HTMLDivElement
 
 const OWN = { code: 1, language: 1, title: 1, lineNumbers: 1, startLine: 1, highlight: 1, wrap: 1, copyable: 1, className: 1 } as const;
 
-/** Code to read and copy: a <pre> in a framed box with an optional title, line numbers, marked lines and a copy button. Scrolls sideways (with the keyboard too) or wraps.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const CodeBlock = /* @__PURE__ */ component<HTMLDivElement, CodeBlockProps>('CodeBlock', function CodeBlock(props, ref) {
+function CodeBlockRender({ ref, ...props }: CodeBlockProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, OWN);
   const restyle = useServerStyles(ref);
   const labels = useSettings(words).labels;
@@ -78,4 +76,8 @@ export const CodeBlock = /* @__PURE__ */ component<HTMLDivElement, CodeBlockProp
       </pre>
     </div>
   );
-});
+}
+
+/** Code to read and copy: a <pre> in a framed box with an optional title, line numbers, marked lines and a copy button. Scrolls sideways (with the keyboard too) or wraps.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const CodeBlock = /* @__PURE__ */ named('CodeBlock', CodeBlockRender);

@@ -30,4 +30,4 @@ interface TransferListProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
     availableLabel?: string | undefined;
     chosenLabel?: string | undefined;
 }
-declare const TransferList: React.ForwardRefExoticComponent<TransferListProps & React.RefAttributes<HTMLDivElement>>;
+declare const TransferList: React.FC<TransferListProps & React.RefAttributes<HTMLDivElement>>;

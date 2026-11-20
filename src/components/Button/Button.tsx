@@ -11,7 +11,7 @@ import { block, both, chain, pressKey, releaseKey } from '../../internal/interac
 import { warnOnce } from '../../internal/warn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { ControlSize } from '../../internal/controlSize';
 import { BUTTON_VARIANTS, buttonClass } from './buttonClass';
 import { LoaderRing } from '../../internal/loaderRing';
@@ -93,17 +93,12 @@ export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 const OWN = { variant: 1, size: 1, destructive: 1, onMedia: 1, className: 1, children: 1, leftIcon: 1, rightIcon: 1, icon: 1, loading: 1, loadingLabel: 1, disabledReason: 1, successText: 1, wrap: 1 } as const;
 const isThenable = (v: unknown): v is PromiseLike<unknown> => v != null && typeof (v as PromiseLike<unknown>).then === 'function';
 
-
 function slot(source: IconSource, side: string): React.ReactNode {
   const node = asIcon(source);
   return node == null || node === false ? null : <span className={'dk-btn__icon dk-btn__icon--' + side} aria-hidden key={side}>{node}</span>;
 }
 
-/* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
-/** Button without the overloads, for components built on it (IconButton, Fab, CopyButton, Alert's dismiss) that pass
-    either shape through. Only they draw an icon alone (icon: an icon name or element, in a square at the size's height,
-    in place of children, leftIcon and rightIcon; it needs an aria-label): Button itself has no icon since 15.0.0. */
-export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps & { icon?: IconSource | undefined }>('Button', function Button(props, ref) {
+function ButtonBaseRender({ ref, ...props }: ButtonProps & { icon?: IconSource | undefined } & React.RefAttributes<HTMLElement>) {
   const sds = useSettings();
   // Both shapes (button and link) are HTML attributes; which ones apply depends on href below.
   const rest: React.AllHTMLAttributes<HTMLElement> & DataAttributes = omit(props as ButtonOwnProps & React.AllHTMLAttributes<HTMLElement>, OWN);
@@ -248,13 +243,21 @@ export const ButtonBase = /* @__PURE__ */ component<HTMLElement, ButtonProps & {
   }
   if (rest.type === undefined) rest.type = 'button';   // never submits a form by accident; pass type="submit" to submit
   return React.createElement('button', Object.assign({}, rest, { ref: setNode, className: classes }), ...content);
-});
+}
 
-/** A <button> for actions; pass href for navigation and it renders a link. Built-in micro-interactions: press and a loading cross-fade, plus an opt-in right-icon nudge (--button-icon-nudge); off under reduced motion. Colors, spacing, sizes, borders and motion can be overridden with the --button-* component tokens (button.tokens.json) on the page, a container or one button. */
-export const Button = /* @__PURE__ */ component<HTMLElement, ButtonProps>('Button', function Button(props, ref) {
+/* Button: a <button> for actions; with href, a link (<a>, or the configured link component) for navigation. */
+/** Button without the overloads, for components built on it (IconButton, Fab, CopyButton, Alert's dismiss) that pass
+    either shape through. Only they draw an icon alone (icon: an icon name or element, in a square at the size's height,
+    in place of children, leftIcon and rightIcon; it needs an aria-label): Button itself has no icon since 15.0.0. */
+export const ButtonBase = /* @__PURE__ */ named('Button', ButtonBaseRender);
+
+function ButtonRender({ ref, ...props }: ButtonProps & React.RefAttributes<HTMLElement>) {
   const { icon: _icon, ...forwarded } = props as ButtonProps & { icon?: unknown };   // icon is IconButton's since 15.0.0: one passed anyway draws nothing
   return React.createElement(ButtonBase, Object.assign({}, forwarded, { ref: ref }));
-}) as unknown as {
+}
+
+/** A <button> for actions; pass href for navigation and it renders a link. Built-in micro-interactions: press and a loading cross-fade, plus an opt-in right-icon nudge (--button-icon-nudge); off under reduced motion. Colors, spacing, sizes, borders and motion can be overridden with the --button-* component tokens (button.tokens.json) on the page, a container or one button. */
+export const Button = /* @__PURE__ */ named('Button', ButtonRender) as unknown as {
   (props: ButtonAsButtonProps & React.RefAttributes<HTMLButtonElement>): React.ReactElement | null;
   (props: ButtonAsLinkProps & React.RefAttributes<HTMLAnchorElement>): React.ReactElement | null;
   displayName?: string | undefined;

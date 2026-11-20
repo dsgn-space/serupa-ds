@@ -35,4 +35,4 @@ interface CalendarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defa
     monthYearPicker?: boolean | undefined;
     presets?: boolean | DatePreset[] | undefined;
 }
-declare const Calendar: React.ForwardRefExoticComponent<CalendarProps & React.RefAttributes<HTMLDivElement>>;
+declare const Calendar: React.FC<CalendarProps & React.RefAttributes<HTMLDivElement>>;

@@ -5,7 +5,7 @@ import { oneElement, useTriggerRef } from '../../internal/trigger';
 import type { Placement } from '../../internal/position';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
 import { cardIntent, cardLeave } from '../../internal/timing';
@@ -42,15 +42,7 @@ export interface HoverCardProps extends Omit<React.HTMLAttributes<HTMLDivElement
 
 const OWN = { trigger: 1, children: 1, placement: 1, openDelay: 1, closeDelay: 1, open: 1, defaultOpen: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onBlur: 1, onFocus: 1, onPointerEnter: 1, onPointerLeave: 1 } as const;
 
-/* HoverCard: a preview of what a link points to (a person, a page, a repository), shown while the pointer rests on
-   the link or keyboard focus stays on it, and placed next to it in the top layer. Unlike a Tooltip it may hold links
-   and buttons: the pointer can move onto it, and it comes right after the trigger in the Tab order, so Tab goes from
-   the trigger into it. It stays open while the pointer or focus is on either, and closes a moment after both leave.
-   Escape closes it (and brings focus back to the trigger from inside). A touch screen has no hover: a long press
-   opens it where the browser has interest invokers, and elsewhere it never opens there, so the link itself goes to
-   the details and nothing may live only in the card. */
-/** A preview card for a link, shown on hover and keyboard focus, that may hold links of its own. */
-export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProps>('HoverCard', function HoverCard(props, ref) {
+function HoverCardRender({ ref, ...props }: HoverCardProps & React.RefAttributes<HTMLDivElement>) {
   const own = domId('dk-hcard', React.useId());
   const id = props.id || own;
   const [shown, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'HoverCard', 'open');
@@ -159,4 +151,14 @@ export const HoverCard = /* @__PURE__ */ component<HTMLDivElement, HoverCardProp
       </div>
     </>
   );
-});
+}
+
+/* HoverCard: a preview of what a link points to (a person, a page, a repository), shown while the pointer rests on
+   the link or keyboard focus stays on it, and placed next to it in the top layer. Unlike a Tooltip it may hold links
+   and buttons: the pointer can move onto it, and it comes right after the trigger in the Tab order, so Tab goes from
+   the trigger into it. It stays open while the pointer or focus is on either, and closes a moment after both leave.
+   Escape closes it (and brings focus back to the trigger from inside). A touch screen has no hover: a long press
+   opens it where the browser has interest invokers, and elsewhere it never opens there, so the link itself goes to
+   the details and nothing may live only in the card. */
+/** A preview card for a link, shown on hover and keyboard focus, that may hold links of its own. */
+export const HoverCard = /* @__PURE__ */ named('HoverCard', HoverCardRender);

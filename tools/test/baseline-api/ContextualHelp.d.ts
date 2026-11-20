@@ -14,4 +14,4 @@ interface ContextualHelpProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
     defaultOpen?: boolean | undefined;
     onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
-declare const ContextualHelp: React.ForwardRefExoticComponent<ContextualHelpProps & React.RefAttributes<HTMLDivElement>>;
+declare const ContextualHelp: React.FC<ContextualHelpProps & React.RefAttributes<HTMLDivElement>>;

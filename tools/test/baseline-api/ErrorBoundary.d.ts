@@ -18,6 +18,4 @@ interface ErrorBoundaryProps {
     resetKeys?: ReadonlyArray<unknown> | undefined;
     className?: string | undefined;
 }
-declare const ErrorBoundary: ((props: ErrorBoundaryProps) => React.ReactElement) & {
-    displayName: string;
-};
+declare const ErrorBoundary: React.FC<ErrorBoundaryProps>;

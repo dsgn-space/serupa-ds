@@ -20,5 +20,5 @@ interface AccordionItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
     children?: React.ReactNode | undefined;
     keepMounted?: boolean | undefined;
 }
-declare const Accordion: React.ForwardRefExoticComponent<AccordionProps & React.RefAttributes<HTMLDivElement>>;
-declare const AccordionItem: React.ForwardRefExoticComponent<AccordionItemProps & React.RefAttributes<HTMLDivElement>>;
+declare const Accordion: React.FC<AccordionProps & React.RefAttributes<HTMLDivElement>>;
+declare const AccordionItem: React.FC<AccordionItemProps & React.RefAttributes<HTMLDivElement>>;

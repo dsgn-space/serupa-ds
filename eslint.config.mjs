@@ -55,8 +55,9 @@ export default tseslint.config(
   },
   {
     // The React Compiler rules (D7) on the shipped code: refs read in render, hook arguments changed, impure calls
-    // and setState in an effect. The compiler only sees hooks and plain function components; ours go through
-    // component(), so today this covers the shared hooks in src/internal and the hooks inside component files.
+    // and setState in an effect. The compiler sees hooks and plain function components, and since 17.0.0 every
+    // component is one (function XRender at the top of its file). Findings that were there when it began to see them
+    // are listed in eslint-suppressions.json, and that list only shrinks.
     // Tests and stories stay on the two classic rules.
     files: ['src/**/*.{ts,tsx}'],
     ignores: ['src/**/*.test.{ts,tsx}', 'src/**/*.stories.{ts,tsx}'],

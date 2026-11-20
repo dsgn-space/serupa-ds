@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { cn, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { announce } from '../../internal/announce';
 import { useSettings } from '../../internal/provider';
 import { Icon, type IconSource } from '../Icon/Icon';
@@ -50,13 +50,7 @@ export interface TagGroupProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   empty?: React.ReactNode;
 }
 
-/* TagGroup: short labels people remove or pick, as one grid (role="grid", a row per tag) with a single Tab stop. The
-   arrow keys move between tags (Home and End to the ends), Delete or Backspace removes the focused one with focus
-   moving to the next, and Space or a press picks it when selectionMode allows. The × is the tag's second cell, a
-   button kept out of the Tab order. Past max, the rest wait behind "Show more". */
-/** Short labels people remove or pick, such as the labels on a ticket or the skills on a profile, with one Tab stop and the arrow keys between them.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const TagGroup = /* @__PURE__ */ component<HTMLDivElement, TagGroupProps>('TagGroup', function TagGroup(props, ref) {
+function TagGroupRender({ ref, ...props }: TagGroupProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(allWords).labels;
   const rest = omit(props, { items: 1, label: 1, onRemove: 1, selectionMode: 1, selected: 1, defaultSelected: 1, onSelectedChange: 1, max: 1, empty: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
   const id = React.useId(), labelId = `${id}-label`;
@@ -161,4 +155,12 @@ export const TagGroup = /* @__PURE__ */ component<HTMLDivElement, TagGroupProps>
       ) : null}
     </div>
   );
-});
+}
+
+/* TagGroup: short labels people remove or pick, as one grid (role="grid", a row per tag) with a single Tab stop. The
+   arrow keys move between tags (Home and End to the ends), Delete or Backspace removes the focused one with focus
+   moving to the next, and Space or a press picks it when selectionMode allows. The × is the tag's second cell, a
+   button kept out of the Tab order. Past max, the rest wait behind "Show more". */
+/** Short labels people remove or pick, such as the labels on a ticket or the skills on a profile, with one Tab stop and the arrow keys between them.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const TagGroup = /* @__PURE__ */ named('TagGroup', TagGroupRender);

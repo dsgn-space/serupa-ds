@@ -9,4 +9,4 @@ interface TextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaEl
     showCount?: boolean | undefined;
     actions?: React.ReactNode | undefined;
 }
-declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
+declare const Textarea: React.FC<TextareaProps & React.RefAttributes<HTMLTextAreaElement>>;

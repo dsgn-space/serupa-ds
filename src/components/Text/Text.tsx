@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn, oneOf } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export type TextSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
 export type TextTone = 'default' | 'muted' | 'primary' | 'danger';
@@ -36,8 +36,7 @@ const TONES: readonly TextTone[] = ['default', 'muted', 'primary', 'danger'];
 const WEIGHTS: readonly TextWeight[] = ['normal', 'medium', 'semibold', 'bold'];
 const pick = <T extends string>(list: readonly T[], v: unknown): T | null => (list.indexOf(v as T) < 0 ? null : (v as T));
 
-/** Body text in the system's type: size, tone and weight, each inherited when unset. */
-export const Text = /* @__PURE__ */ component<HTMLElement, TextProps>('Text', function Text(props, ref) {
+function TextRender({ ref, ...props }: TextProps & React.RefAttributes<HTMLElement>) {
   const { as, size, tone, weight, truncate, lines, measure, className, ...rest } = props;
   const clamp = !truncate && lines != null && lines >= 1 ? Math.min(6, Math.floor(lines)) : 0;
   const s = pick(SIZES, size), t = pick(TONES, tone), w = pick(WEIGHTS, weight);
@@ -47,4 +46,7 @@ export const Text = /* @__PURE__ */ component<HTMLElement, TextProps>('Text', fu
     'data-lines': clamp || undefined,
     className: cn('dk-text', s && 'dk-text--' + s, t && 'dk-text--' + t, w && 'dk-text--' + w, truncate && 'dk-text--truncate', clamp && 'dk-text--clamp', measure && 'dk-text--measure', className),
   }));
-});
+}
+
+/** Body text in the system's type: size, tone and weight, each inherited when unset. */
+export const Text = /* @__PURE__ */ named('Text', TextRender);

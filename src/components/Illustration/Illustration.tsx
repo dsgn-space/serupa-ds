@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn, oneOf, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 const NAMES = ['empty', 'search', 'error', 'offline', 'no-access', 'success'] as const;
 export type IllustrationName = (typeof NAMES)[number];
@@ -58,12 +58,7 @@ const PICTURES: Record<IllustrationName, Part[]> = {
   ],
 };
 
-/* Illustration: a small line drawing for an empty state, an error page or a finished flow, drawn from the theme's
-   own colors so it fits every theme. Decorative by default (aria-hidden), since the text beside it says the same;
-   with label it's an image with that name. className and every other prop go to the <svg>. */
-/** A small themed drawing for an empty state: empty, search, error, offline, no-access or success.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Illustration = /* @__PURE__ */ component<SVGSVGElement, IllustrationProps>('Illustration', function Illustration(props, ref) {
+function IllustrationRender({ ref, ...props }: IllustrationProps & React.RefAttributes<SVGSVGElement>) {
   const rest = omit(props, { className: 1, name: 1, size: 1, label: 1 });
   const label = props.label;
   const name = oneOf(NAMES, props.name, 'empty');
@@ -74,4 +69,11 @@ export const Illustration = /* @__PURE__ */ component<SVGSVGElement, Illustratio
       {PICTURES[name].map(([kind, d], i) => <path key={i} className={'dk-illustration__' + kind} d={d} strokeWidth={kind === 'accent' ? 4 : kind === 'line' ? 3 : undefined} />)}
     </svg>
   );
-});
+}
+
+/* Illustration: a small line drawing for an empty state, an error page or a finished flow, drawn from the theme's
+   own colors so it fits every theme. Decorative by default (aria-hidden), since the text beside it says the same;
+   with label it's an image with that name. className and every other prop go to the <svg>. */
+/** A small themed drawing for an empty state: empty, search, error, offline, no-access or success.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Illustration = /* @__PURE__ */ named('Illustration', IllustrationRender);

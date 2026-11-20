@@ -5,7 +5,7 @@ import { useBreakpoint } from '../../internal/media';
 import { useServerStyles } from '../../internal/serverStyles';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { flattenChildren } from '../../internal/children';
 import { useSettings } from '../../internal/provider';
@@ -80,10 +80,7 @@ function usePerView(per: CarouselProps['perView']): number {
 const WHEEL_STEP = 40, WHEEL_QUIET = 150;
 const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, perView: 1, peek: 1, className: 1, style: 1 } as const;
 const SWIPE = 40; // px a swipe must travel to change the slide
-const FLICK = 0.3; // px per ms over the last 100ms: a shorter swipe this fast changes the slide too
-
-/** One slide at a time, with previous and next buttons, dots and swipe. */
-export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('Carousel', function Carousel(props, ref) {
+const FLICK = 0.3; function CarouselRender({ ref, ...props }: CarouselProps & React.RefAttributes<HTMLElement>) {
   const nameRef = useNameCheck('Carousel', NAME_HOW.label);   // warns when it has no accessible name
   const restyle = useServerStyles(ref);
   const sds = useSettings(words);
@@ -298,4 +295,9 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
       ) : null}
     </section>
   );
-});
+}
+
+// px per ms over the last 100ms: a shorter swipe this fast changes the slide too
+
+/** One slide at a time, with previous and next buttons, dots and swipe. */
+export const Carousel = /* @__PURE__ */ named('Carousel', CarouselRender);

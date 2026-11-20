@@ -8,14 +8,13 @@ import { cn, domId, isInvalid, omit, oneOf, useMergedRef, useIsoLayoutEffect } f
 import { Icon } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
 import type { InputProps } from '../Input/Input';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { pressFocuses } from '../../internal/affix';
 import { activeIn } from '../../internal/root';
 import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { en as words } from './labels';
-import { warnOnce } from '../../internal/warn';
 
 export interface PasswordInputProps extends Omit<InputProps, 'type' | 'actions' | 'showCount' | 'prefix' | 'suffix' | 'rightIcon'> {
   /** Shows the password as text (controlled). Use with onRevealedChange. */
@@ -24,12 +23,6 @@ export interface PasswordInputProps extends Omit<InputProps, 'type' | 'actions' 
   defaultRevealed?: boolean | undefined;
   /** Called with the new state when the show/hide button is pressed. */
   onRevealedChange?: ((revealed: boolean) => void) | undefined;
-  /** @deprecated Use revealed, the name MaskedValue gives showing a hidden value; removed in 17.0.0. Read when revealed isn't given. */
-  visible?: boolean | undefined;
-  /** @deprecated Use defaultRevealed; removed in 17.0.0. Read when defaultRevealed isn't given. */
-  defaultVisible?: boolean | undefined;
-  /** @deprecated Use onRevealedChange; removed in 17.0.0. Called as onRevealedChange is, when onRevealedChange isn't given. */
-  onVisibleChange?: ((visible: boolean) => void) | undefined;
   /** The show/hide button's name. Default: "Show password" (its aria-pressed says whether it's shown). */
   toggleLabel?: string | undefined;
   /** While Caps Lock is on and the field has focus, "Caps Lock is on" shows at the end of the field and is read out once. Default: true. */
@@ -41,28 +34,16 @@ const SIZES = ['sm', 'md', 'lg'] as const;
 // What the person does in the field that a late caret restore must not undo.
 const STOP = ['keydown', 'pointerdown', 'input'] as const;
 
-/* PasswordInput: an Input for passwords with a button at the end that shows and hides what was typed. It uses
-   Input's box and tokens. autoComplete defaults to "current-password"; use "new-password" on sign-up forms.
-   While Caps Lock is on, a "Caps Lock is on" hint shows in the field and is read out (capsLockHint={false} turns it
-   off). Pasting is never blocked, so password managers and pasted passwords work (WCAG 3.3.8).
-   className and style go to the box; ref and every other prop to the <input>. */
-/** A password field with a button that shows and hides what was typed. */
-export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, PasswordInputProps>('PasswordInput', function PasswordInput(props, ref) {
+function PasswordInputRender({ ref, ...props }: PasswordInputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('PasswordInput', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
-  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, visible: 1, defaultVisible: 1, onVisibleChange: 1, toggleLabel: 1, capsLockHint: 1 } as const);
+  const rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, className: 1, style: 1, revealed: 1, defaultRevealed: 1, onRevealedChange: 1, toggleLabel: 1, capsLockHint: 1 } as const);
   const size = oneOf(SIZES, useControlSize(props.size), 'md');
   const invalid = isInvalid(props.invalid, rest['aria-invalid']);
   if (invalid) rest['aria-invalid'] = true;
   if (rest.autoComplete === undefined) rest.autoComplete = 'current-password';
-  if (process.env.NODE_ENV !== 'production') {
-    for (const [was, now] of [['visible', 'revealed'], ['defaultVisible', 'defaultRevealed'], ['onVisibleChange', 'onRevealedChange']] as const) {
-      if (props[was] !== undefined) warnOnce('deprecated-prop', `PasswordInput: \`${was}\` is deprecated and removed in 17.0.0. Use \`${now}\`, the name MaskedValue gives showing a hidden value.`, 'deprecated-prop:PasswordInput:' + was);
-    }
-  }
-  // A warning names the prop the caller passes, the deprecated `visible` included.
-  const [revealed, setOwn, controlled] = useControllable(props.revealed ?? props.visible, !!(props.defaultRevealed ?? props.defaultVisible), 'PasswordInput', 'visible' in props && !('revealed' in props) ? 'visible' : 'revealed');
+  const [revealed, setOwn, controlled] = useControllable(props.revealed, !!props.defaultRevealed, 'PasswordInput', 'revealed');
   const shown = !!revealed;
   const left = asIcon(props.leftIcon);
   // Caps Lock, read from the key events while the field has focus (there's no event for the key itself).
@@ -132,8 +113,7 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
   const toggle = () => {
     if (!caret.current || performance.now() - pressed.current > 1000) capture();
     if (!controlled) setOwn(!shown);
-    const told = props.onRevealedChange ?? props.onVisibleChange;
-    if (told) told(!shown);
+    if (props.onRevealedChange) props.onRevealedChange(!shown);
   };
   return (
     <span className={cn('dk-input dk-password-input', 'dk-input--size-' + size, invalid && 'dk-input--invalid', rest.disabled && 'dk-input--disabled', rest.readOnly && 'dk-input--readonly', props.className)}
@@ -147,4 +127,12 @@ export const PasswordInput = /* @__PURE__ */ component<HTMLInputElement, Passwor
       </button>
     </span>
   );
-});
+}
+
+/* PasswordInput: an Input for passwords with a button at the end that shows and hides what was typed. It uses
+   Input's box and tokens. autoComplete defaults to "current-password"; use "new-password" on sign-up forms.
+   While Caps Lock is on, a "Caps Lock is on" hint shows in the field and is read out (capsLockHint={false} turns it
+   off). Pasting is never blocked, so password managers and pasted passwords work (WCAG 3.3.8).
+   className and style go to the box; ref and every other prop to the <input>. */
+/** A password field with a button that shows and hides what was typed. */
+export const PasswordInput = /* @__PURE__ */ named('PasswordInput', PasswordInputRender);

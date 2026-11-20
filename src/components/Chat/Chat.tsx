@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, omit, useMergedRef } from '../../internal/cn';
 import { announce } from '../../internal/announce';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { displayNumber } from '../../internal/numbers';
 import { isComposing } from '../../internal/ime';
@@ -42,12 +42,7 @@ export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
 const atBottom = (el: HTMLElement) => el.scrollHeight - el.scrollTop - el.clientHeight <= NEAR;
 const toEnd = (el: HTMLElement) => { el.scrollTop = el.scrollHeight; };
 
-/* Chat: the conversation, as a log (role="log", so screen readers read each new message as it comes) that scrolls by
-   itself. It sticks to the bottom only while the reader is there: scrolled up, new messages don't move the page, and
-   a "3 new messages" button at the bottom jumps down. Earlier messages loaded at the top keep the reader's place. */
-/** A conversation that stays at its newest message while the reader is there, with day dividers and earlier messages loaded on request.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>('Chat', function Chat(props, ref) {
+function ChatRender({ ref, ...props }: ChatProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), L = sds.labels, locale = useLocale();
   const rest = omit(props, { children: 1, hasOlder: 1, onLoadOlder: 1, loadingOlder: 1, className: 1, 'aria-label': 1, 'aria-labelledby': 1 } as const);
   const scroller = React.useRef<HTMLDivElement | null>(null);
@@ -136,7 +131,14 @@ export const Chat = /* @__PURE__ */ component<HTMLDivElement, ChatProps>('Chat',
       ) : null}
     </div>
   );
-});
+}
+
+/* Chat: the conversation, as a log (role="log", so screen readers read each new message as it comes) that scrolls by
+   itself. It sticks to the bottom only while the reader is there: scrolled up, new messages don't move the page, and
+   a "3 new messages" button at the bottom jumps down. Earlier messages loaded at the top keep the reader's place. */
+/** A conversation that stays at its newest message while the reader is there, with day dividers and earlier messages loaded on request.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Chat = /* @__PURE__ */ named('Chat', ChatRender);
 
 export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** What the message says. Text keeps its line breaks. */
@@ -176,9 +178,7 @@ export interface ChatMessageProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   steps?: readonly ChatStep[] | undefined;
 }
 
-/** One message in a Chat: author, avatar, time, text and attachments, with sending and failed states.
- *  @beta */
-export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessageProps>('ChatMessage', function ChatMessage(props, ref) {
+function ChatMessageRender({ ref, ...props }: ChatMessageProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words), L = sds.labels;
   const rest = omit(props, { children: 1, author: 1, avatar: 1, time: 1, own: 1, hideAuthor: 1, status: 1, onRetry: 1, attachments: 1, streaming: 1, thinking: 1, reasoning: 1, reasoningTime: 1, steps: 1, branch: 1, branches: 1, onBranchChange: 1, className: 1 } as const);
   const own = !!props.own, failed = props.status === 'failed';
@@ -233,7 +233,11 @@ export const ChatMessage = /* @__PURE__ */ component<HTMLDivElement, ChatMessage
       </div>
     </div>
   );
-});
+}
+
+/** One message in a Chat: author, avatar, time, text and attachments, with sending and failed states.
+ *  @beta */
+export const ChatMessage = /* @__PURE__ */ named('ChatMessage', ChatMessageRender);
 
 export type ChatStepStatus = 'running' | 'done' | 'failed';
 export interface ChatStep {
@@ -252,10 +256,7 @@ export interface ChatStepsProps extends React.HTMLAttributes<HTMLOListElement> {
 
 const STEP_ICON = { done: icons.CheckCircle, failed: icons.Error } as const;
 
-/** An assistant's steps on its way to a reply, such as the tools it calls, each in progress, done or failed, in words
- *  as well as by its icon. Put it in a ChatMessage, above the text.
- *  @beta */
-export const ChatSteps = /* @__PURE__ */ component<HTMLOListElement, ChatStepsProps>('ChatSteps', function ChatSteps(props, ref) {
+function ChatStepsRender({ ref, ...props }: ChatStepsProps & React.RefAttributes<HTMLOListElement>) {
   const L = useSettings(words).labels;
   const rest = omit(props, { steps: 1, children: 1, className: 1 } as const);
   const said = { running: L.chatStepRunning, done: L.chatStepDone, failed: L.chatStepFailed };
@@ -275,7 +276,12 @@ export const ChatSteps = /* @__PURE__ */ component<HTMLOListElement, ChatStepsPr
       })}
     </ol>
   );
-});
+}
+
+/** An assistant's steps on its way to a reply, such as the tools it calls, each in progress, done or failed, in words
+ *  as well as by its icon. Put it in a ChatMessage, above the text.
+ *  @beta */
+export const ChatSteps = /* @__PURE__ */ named('ChatSteps', ChatStepsRender);
 
 export type ChatApprovalStatus = 'pending' | 'approved' | 'denied';
 export interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -291,10 +297,7 @@ export interface ChatApprovalProps extends React.HTMLAttributes<HTMLDivElement> 
   onDeny?: (() => void) | undefined;
 }
 
-/** An assistant asks before it acts: what it will do, in words, with Approve and Deny. Once answered (status), it
- *  becomes a one-line record, said to screen readers, and focus moves to it from the button that was pressed.
- *  @beta */
-export const ChatApproval = /* @__PURE__ */ component<HTMLDivElement, ChatApprovalProps>('ChatApproval', function ChatApproval(props, ref) {
+function ChatApprovalRender({ ref, ...props }: ChatApprovalProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(words).labels;
   const rest = omit(props, { children: 1, detail: 1, status: 1, onApprove: 1, onDeny: 1, className: 1 } as const);
   const status: ChatApprovalStatus = props.status === 'approved' || props.status === 'denied' ? props.status : 'pending';
@@ -328,7 +331,12 @@ export const ChatApproval = /* @__PURE__ */ component<HTMLDivElement, ChatApprov
       </div>
     </div>
   );
-});
+}
+
+/** An assistant asks before it acts: what it will do, in words, with Approve and Deny. Once answered (status), it
+ *  becomes a one-line record, said to screen readers, and focus moves to it from the button that was pressed.
+ *  @beta */
+export const ChatApproval = /* @__PURE__ */ named('ChatApproval', ChatApprovalRender);
 
 export type ChatFeedback = 'good' | 'bad';
 export interface ChatReplyActionsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -343,11 +351,7 @@ export interface ChatReplyActionsProps extends Omit<React.HTMLAttributes<HTMLDiv
   onFeedback?: ((feedback: ChatFeedback | null) => void) | undefined;
 }
 
-/** The row under an assistant's reply: Copy, Regenerate, and Helpful / Not helpful, each there only when given. A
- *  rating is a toggle, said back to screen readers ("Thanks, noted"), and pressing it again takes it back. Put it in
- *  ChatMessage's children, after the text.
- *  @beta */
-export const ChatReplyActions = /* @__PURE__ */ component<HTMLDivElement, ChatReplyActionsProps>('ChatReplyActions', function ChatReplyActions(props, ref) {
+function ChatReplyActionsRender({ ref, ...props }: ChatReplyActionsProps & React.RefAttributes<HTMLDivElement>) {
   const L = useSettings(words).labels;
   const rest = omit(props, { copyText: 1, onRegenerate: 1, feedback: 1, onFeedback: 1, className: 1 } as const);
   const now = props.feedback === 'good' || props.feedback === 'bad' ? props.feedback : null;
@@ -368,7 +372,13 @@ export const ChatReplyActions = /* @__PURE__ */ component<HTMLDivElement, ChatRe
       ) : null}
     </div>
   );
-});
+}
+
+/** The row under an assistant's reply: Copy, Regenerate, and Helpful / Not helpful, each there only when given. A
+ *  rating is a toggle, said back to screen readers ("Thanks, noted"), and pressing it again takes it back. Put it in
+ *  ChatMessage's children, after the text.
+ *  @beta */
+export const ChatReplyActions = /* @__PURE__ */ named('ChatReplyActions', ChatReplyActionsRender);
 
 export interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   /** Where the source is. */
@@ -379,10 +389,7 @@ export interface ChatCitationProps extends React.AnchorHTMLAttributes<HTMLAnchor
   children?: React.ReactNode;
 }
 
-/** A numbered source in an assistant's reply ("1 docs.example.com"), as a real link. Wrap it in a HoverCard for a
- *  preview of the page.
- *  @beta */
-export const ChatCitation = /* @__PURE__ */ component<HTMLAnchorElement, ChatCitationProps>('ChatCitation', function ChatCitation(props, ref) {
+function ChatCitationRender({ ref, ...props }: ChatCitationProps & React.RefAttributes<HTMLAnchorElement>) {
   const rest = omit(props, { index: 1, children: 1, className: 1 } as const);
   const num = new Intl.NumberFormat(useLocale());
   let host = '';
@@ -393,7 +400,12 @@ export const ChatCitation = /* @__PURE__ */ component<HTMLAnchorElement, ChatCit
       <span className="dk-chat-citation__source" dir="auto">{props.children != null ? props.children : host}</span>
     </a>
   );
-});
+}
+
+/** A numbered source in an assistant's reply ("1 docs.example.com"), as a real link. Wrap it in a HoverCard for a
+ *  preview of the page.
+ *  @beta */
+export const ChatCitation = /* @__PURE__ */ named('ChatCitation', ChatCitationRender);
 
 export interface ChatDividerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   /** The day the messages after it were sent: "Today", "Yesterday", or the date in the locale's words. */
@@ -416,9 +428,7 @@ const subscribeDay = (cb: () => void) => {
 };
 const getDay = () => dayStart(new Date()), getServerDay = () => null;
 
-/** A line between messages that names the day they were sent, or says what follows.
- *  @beta */
-export const ChatDivider = /* @__PURE__ */ component<HTMLDivElement, ChatDividerProps>('ChatDivider', function ChatDivider(props, ref) {
+function ChatDividerRender({ ref, ...props }: ChatDividerProps & React.RefAttributes<HTMLDivElement>) {
   const locale = useLocale();
   const rest = omit(props, { date: 1, children: 1, className: 1 } as const);
   const today = React.useSyncExternalStore(subscribeDay, getDay, getServerDay);
@@ -438,7 +448,11 @@ export const ChatDivider = /* @__PURE__ */ component<HTMLDivElement, ChatDivider
       <span className="dk-chat-divider__text">{text}</span>
     </div>
   );
-});
+}
+
+/** A line between messages that names the day they were sent, or says what follows.
+ *  @beta */
+export const ChatDivider = /* @__PURE__ */ named('ChatDivider', ChatDividerRender);
 
 export interface ChatComposerProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'defaultValue' | 'children'> {
   /** The text in the field (controlled). Use with onValueChange. */
@@ -466,9 +480,7 @@ export interface ChatComposerProps extends Omit<React.FormHTMLAttributes<HTMLFor
   maxRows?: number | undefined;
 }
 
-/** The field and send button under a Chat: Enter sends, Shift+Enter starts a new line, and a stop button while a reply streams.
- *  @beta */
-export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatComposerProps>('ChatComposer', function ChatComposer(props, ref) {
+function ChatComposerRender({ ref, ...props }: ChatComposerProps & React.RefAttributes<HTMLFormElement>) {
   const sds = useSettings(words), L = sds.labels;
   const rest = omit(props, { value: 1, defaultValue: 1, onValueChange: 1, onSend: 1, streaming: 1, onStop: 1, placeholder: 1, disabled: 1, attachments: 1, actions: 1, maxRows: 1, className: 1, 'aria-label': 1 } as const);
   const [value, setOwn, controlled] = useControllable<string>(props.value, props.defaultValue || '', 'ChatComposer', 'value');
@@ -501,4 +513,8 @@ export const ChatComposer = /* @__PURE__ */ component<HTMLFormElement, ChatCompo
       </div>
     </form>
   );
-});
+}
+
+/** The field and send button under a Chat: Enter sends, Shift+Enter starts a new line, and a stop button while a reply streams.
+ *  @beta */
+export const ChatComposer = /* @__PURE__ */ named('ChatComposer', ChatComposerRender);

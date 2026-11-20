@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useControllable } from '../../internal/controllable';
 import { cn, domId, omit } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useSettings } from '../../internal/provider';
 import { announce } from '../../internal/announce';
 import { isComposing } from '../../internal/ime';
@@ -79,15 +79,7 @@ function score(c: Command, q: string): number {
   return (c.keywords || []).some((k) => fold(k).includes(q)) ? 1 : 0;
 }
 
-/* CommandPalette: a Dialog with a search field over a list of commands and pages, opened with ⌘K or Ctrl+K (hotkey)
-   from anywhere on the page. Typing filters the list (ignoring case and accents, best matches first) and marks what
-   matched; ArrowUp and ArrowDown move through it while focus stays in the field (role="combobox" with
-   aria-activedescendant over a role="listbox"), Enter or a click chooses. Choosing closes the palette, then runs the
-   command's onSelect (or goes to its href) and onSelect. The number of matches is said once typing stops. Other props
-   and ref go to the Dialog's <dialog>. */
-/** A ⌘K search over commands and pages in a dialog: type to filter, arrows to move, Enter to run.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, CommandPaletteProps>('CommandPalette', function CommandPalette(props, ref) {
+function CommandPaletteRender({ ref, ...props }: CommandPaletteProps & React.RefAttributes<HTMLDialogElement>) {
   const sds = useSettings(words), labels = sds.labels, locale = useLocale();
   const rest = omit(props, { commands: 1, onSelect: 1, hotkey: 1, placeholder: 1, emptyText: 1, limit: 1, open: 1, defaultOpen: 1, onOpenChange: 1, className: 1, closeOnBackdrop: 1, finalFocus: 1 } as const);
   // null counts as not passed, as it always has here.
@@ -196,7 +188,17 @@ export const CommandPalette = /* @__PURE__ */ component<HTMLDialogElement, Comma
       {!usable.length && query.trim() ? <p className="dk-command-palette__empty">{props.emptyText != null ? props.emptyText : labels.noCommands}</p> : null}
     </Dialog>
   );
-});
+}
+
+/* CommandPalette: a Dialog with a search field over a list of commands and pages, opened with ⌘K or Ctrl+K (hotkey)
+   from anywhere on the page. Typing filters the list (ignoring case and accents, best matches first) and marks what
+   matched; ArrowUp and ArrowDown move through it while focus stays in the field (role="combobox" with
+   aria-activedescendant over a role="listbox"), Enter or a click chooses. Choosing closes the palette, then runs the
+   command's onSelect (or goes to its href) and onSelect. The number of matches is said once typing stops. Other props
+   and ref go to the Dialog's <dialog>. */
+/** A ⌘K search over commands and pages in a dialog: type to filter, arrows to move, Enter to run.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const CommandPalette = /* @__PURE__ */ named('CommandPalette', CommandPaletteRender);
 
 interface OptionActs { choose: (r: Row) => void; hover: (r: Row) => void }
 

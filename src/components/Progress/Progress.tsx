@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { cn, domId, oneOf, omit, SIZES } from '../../internal/cn';
 import { useServerStyles } from '../../internal/serverStyles';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
 import { announce, ensureAnnouncer } from '../../internal/announce';
@@ -43,13 +43,7 @@ const PERCENT = { style: 'percent', maximumFractionDigits: 0 } as const;
 // past its length (half the 3-unit stroke, 2.3 hundredths of the 66-unit ring), and as much again is left clear.
 const RING_GAP = 4.5;
 
-/* Progress: how far along a task is, when you can tell: an upload, a setup, a quota. variant "bar" (default) or
-   "circle"; size sm, md, lg; tone primary (default), success, warning or danger; an optional label above the
-   bar and the value (45%, in the locale's digits and signs) beside it or inside the ring. Without a value it's
-   indeterminate: an animated segment (or turning arc) for when you can't tell; Loader is the lighter choice for
-   that. Renders role="progressbar" with aria-valuenow / min / max and aria-valuetext. */
-/** How far along a task is: a bar or a ring with role="progressbar"; leave value out when you can't tell. */
-export const Progress = /* @__PURE__ */ component<HTMLDivElement, ProgressProps>('Progress', function Progress(props, ref) {
+function ProgressRender({ ref, ...props }: ProgressProps & React.RefAttributes<HTMLDivElement>) {
   const nameRef = useNameCheck('Progress', NAME_HOW.label);   // warns when it has no accessible name
   const restyle = useServerStyles(ref);
   const rest = omit(props, OWN);
@@ -122,4 +116,12 @@ export const Progress = /* @__PURE__ */ component<HTMLDivElement, ProgressProps>
       </div>
     </div>
   );
-});
+}
+
+/* Progress: how far along a task is, when you can tell: an upload, a setup, a quota. variant "bar" (default) or
+   "circle"; size sm, md, lg; tone primary (default), success, warning or danger; an optional label above the
+   bar and the value (45%, in the locale's digits and signs) beside it or inside the ring. Without a value it's
+   indeterminate: an animated segment (or turning arc) for when you can't tell; Loader is the lighter choice for
+   that. Renders role="progressbar" with aria-valuenow / min / max and aria-valuetext. */
+/** How far along a task is: a bar or a ring with role="progressbar"; leave value out when you can't tell. */
+export const Progress = /* @__PURE__ */ named('Progress', ProgressRender);

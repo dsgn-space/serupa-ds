@@ -11,4 +11,4 @@ interface CountdownProps extends Omit<React.TimeHTMLAttributes<HTMLTimeElement>,
 }
 declare function countdownClock(seconds: number, locale?: string): string;
 declare function countdownWords(seconds: number, locale?: string): string;
-declare const Countdown: React.ForwardRefExoticComponent<CountdownProps & React.RefAttributes<HTMLTimeElement>>;
+declare const Countdown: React.FC<CountdownProps & React.RefAttributes<HTMLTimeElement>>;

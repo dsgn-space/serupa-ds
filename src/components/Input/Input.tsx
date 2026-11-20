@@ -5,7 +5,7 @@ import { useValidityMessages } from '../../internal/validity';
 import { cn, domId, isInvalid, omit, oneOf, useMergedRef, SIZES } from '../../internal/cn';
 import type { IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { activeIn } from '../../internal/root';
 import { useFieldControl } from '../../internal/field';
 import { displayNumber } from '../../internal/numbers';
@@ -95,14 +95,7 @@ function useMask<P extends InputProps>(input: P, mask: string | undefined): P {
   return rest;
 }
 
-/* Input: a single-line text field. size "sm", "md" (default) or "lg" (24, 32, 44px: the control heights, like
-   Button); invalid (a danger border and aria-invalid); leftIcon / rightIcon (decorative, inside the field); prefix / suffix (text inside the field, heard as its description);
-   showCount (a character count at the end, "12 / 50" with maxLength); maxLength (in characters as people see them,
-   applied by Input). Email, URL, username and one-time-code fields get autocapitalize, autocorrect and spellcheck off.
-   Renders <span class="dk-input"> around a native <input>: className and style go to the wrapper, every other
-   prop (type, value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <input>. */
-/** A single-line text field: a native <input> (ref, value, onChange and every input attribute go to it) in a box that holds the icons; className and style go to the box. Label it with <label htmlFor> or aria-label. */
-export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>('Input', function Input(props, ref) {
+function InputRender({ ref, ...props }: InputProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('Input', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   let rest = omit(props, { size: 1, invalid: 1, leftIcon: 1, rightIcon: 1, prefix: 1, suffix: 1, showCount: 1, mask: 1, actions: 1, className: 1, style: 1 } as const);
@@ -143,14 +136,18 @@ export const Input = /* @__PURE__ */ component<HTMLInputElement, InputProps>('In
       {props.actions != null && props.actions !== false ? <span className="dk-input__actions" key="actions"><InputBox.Provider value={{ disabled: !!rest.disabled }}>{props.actions}</InputBox.Provider></span> : null}
     </span>
   );
-});
+}
 
-/* InputAction: a button inside an Input's box, at the end, sized to the field (its height less the box's border and
-   a 2px inset). An icon action (icon + label) is a muted icon named by label, shaded on hover; a text action (label
-   alone, such as "Apply") is in the primary color. type="button", so it never sends a form; disabled with the Input. */
-/** A button inside an Input, at the end of its box: copy, clear, show or "Apply". Pass it in Input's actions.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const InputAction = /* @__PURE__ */ component<HTMLButtonElement, InputActionProps>('InputAction', function InputAction(props, ref) {
+/* Input: a single-line text field. size "sm", "md" (default) or "lg" (24, 32, 44px: the control heights, like
+   Button); invalid (a danger border and aria-invalid); leftIcon / rightIcon (decorative, inside the field); prefix / suffix (text inside the field, heard as its description);
+   showCount (a character count at the end, "12 / 50" with maxLength); maxLength (in characters as people see them,
+   applied by Input). Email, URL, username and one-time-code fields get autocapitalize, autocorrect and spellcheck off.
+   Renders <span class="dk-input"> around a native <input>: className and style go to the wrapper, every other
+   prop (type, value, onChange, placeholder, disabled, readOnly, aria-*…) and ref to the <input>. */
+/** A single-line text field: a native <input> (ref, value, onChange and every input attribute go to it) in a box that holds the icons; className and style go to the box. Label it with <label htmlFor> or aria-label. */
+export const Input = /* @__PURE__ */ named('Input', InputRender);
+
+function InputActionRender({ ref, ...props }: InputActionProps & React.RefAttributes<HTMLButtonElement>) {
   const box = React.useContext(InputBox);
   const rest = omit(props, { icon: 1, label: 1, className: 1 } as const);
   const node = props.icon != null ? asIcon(props.icon) : null;
@@ -162,4 +159,11 @@ export const InputAction = /* @__PURE__ */ component<HTMLButtonElement, InputAct
       {iconOnly ? <span className="dk-input-action__icon" aria-hidden>{node}</span> : props.label}
     </button>
   );
-});
+}
+
+/* InputAction: a button inside an Input's box, at the end, sized to the field (its height less the box's border and
+   a 2px inset). An icon action (icon + label) is a muted icon named by label, shaded on hover; a text action (label
+   alone, such as "Apply") is in the primary color. type="button", so it never sends a form; disabled with the Input. */
+/** A button inside an Input, at the end of its box: copy, clear, show or "Apply". Pass it in Input's actions.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const InputAction = /* @__PURE__ */ named('InputAction', InputActionRender);

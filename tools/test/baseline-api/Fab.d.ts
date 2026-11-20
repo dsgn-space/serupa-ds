@@ -7,4 +7,4 @@ interface FabProps extends Omit<ButtonAsButtonProps, "aria-label" | "children" |
     size?: "md" | "sm" | undefined;
     placement?: FabPosition | undefined;
 }
-declare const Fab: React.ForwardRefExoticComponent<FabProps & React.RefAttributes<HTMLButtonElement>>;
+declare const Fab: React.FC<FabProps & React.RefAttributes<HTMLButtonElement>>;

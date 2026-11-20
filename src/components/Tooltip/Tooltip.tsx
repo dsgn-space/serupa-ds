@@ -169,7 +169,7 @@ export const Tooltip = /* @__PURE__ */ named('Tooltip', function Tooltip(props: 
       : (k === 'aria-describedby' || k === 'aria-labelledby') && typeof own === 'string' && typeof add === 'string' ? own + ' ' + add : add;
   }
   const cp: TriggerProps = { ...child.props, ...fwd };
-  const passedRef = (props as { ref?: React.Ref<HTMLElement> }).ref;
+  const passedRef = (props as React.RefAttributes<HTMLElement>).ref;
   const delay = props.openDelay ?? hoverIntent;
   const touch = (e: React.SyntheticEvent) => 'pointerType' in e && e.pointerType === 'touch';
   const chain = (name: keyof TriggerProps, fn: Handler): Handler => (e) => { const own: unknown = cp[name]; if (typeof own === 'function') (own as Handler)(e); fn(e); };

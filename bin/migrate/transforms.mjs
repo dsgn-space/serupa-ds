@@ -406,6 +406,19 @@ export const TRANSFORMS = [
       }
       return { text: src, count: 0, notes };
     },
+  },  propRename('17.0.0', 'timeline-item-tone', 'TimelineItem', 'status', 'tone', { leftovers: false }),
+  propRename('17.0.0', 'combobox-on-input-value-change', 'Combobox', 'onInputChange', 'onInputValueChange', { leftovers: false }),
+  propRename('17.0.0', 'password-input-revealed', 'PasswordInput', 'visible', 'revealed', { leftovers: false }),
+  propRename('17.0.0', 'password-input-default-revealed', 'PasswordInput', 'defaultVisible', 'defaultRevealed', { leftovers: false }),
+  propRename('17.0.0', 'password-input-on-revealed-change', 'PasswordInput', 'onVisibleChange', 'onRevealedChange', { leftovers: false }),
+  {
+    version: '17.0.0', id: 'timeline-tone-type', exts: CODE,
+    title: '`TimelineStatus` is `TimelineTone`',
+    run(src) {
+      let count = 0;
+      const text = src.replace(/\bTimelineStatus\b/g, () => { count++; return 'TimelineTone'; });
+      return { text, count, notes: [] };
+    },
   },
 ];
 

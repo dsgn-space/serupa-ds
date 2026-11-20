@@ -4,7 +4,7 @@ import { cn, omit, useMergedRef, useIsoLayoutEffect } from '../../internal/cn';
 import { onFontsLoaded } from '../../internal/fontsLoaded';
 import { Icon } from '../Icon/Icon';
 import { VisuallyHidden } from '../VisuallyHidden/VisuallyHidden';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { displayNumber } from '../../internal/numbers';
 import { useLocale, useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
@@ -41,16 +41,7 @@ export interface StepperProps extends React.HTMLAttributes<HTMLElement> {
 
 const OWN = { steps: 1, current: 1, orientation: 1, size: 1, onStepClick: 1, clickable: 1, labels: 1, className: 1 } as const;
 
-/* Stepper: where people are in a task split into steps (sign-up, checkout, setup). Each step has a numbered
-   circle, a title and an optional description; completed steps show a check and fill in primary, the current
-   one is filled and ringed, a step with status "error" turns danger and one with "warning" amber. Horizontal (default), joined by lines, or
-   vertical. A <nav> around an <ol>; the current step has aria-current="step", and completed or error steps say
-   so to screen readers. With onStepClick, completed steps are buttons that go back to them (every step but the
-   current one with clickable="all"). When a horizontal
-   Stepper is too narrow for its titles side by side (a phone, 400% zoom), it keeps the circles and shows one line
-   under them, "Step 2 of 4: Profile"; the titles stay in the list for screen readers. */
-/** Where people are in a task split into steps: numbered circles joined by lines. */
-export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>('Stepper', function Stepper(props, ref) {
+function StepperRender({ ref, ...props }: StepperProps & React.RefAttributes<HTMLElement>) {
   const sds = useSettings(words);
   const locale = useLocale();
   const rest = omit(props, OWN);
@@ -151,4 +142,15 @@ export const Stepper = /* @__PURE__ */ component<HTMLElement, StepperProps>('Ste
       {compact && shown >= 0 ? <p className="dk-stepper__summary" aria-hidden>{L.stepOf(shown + 1, steps.length, new Intl.NumberFormat(locale).format(shown + 1), new Intl.NumberFormat(locale).format(steps.length)) + ': '}<span className="dk-stepper__title">{steps[shown]?.title}</span></p> : null}
     </nav>
   );
-});
+}
+
+/* Stepper: where people are in a task split into steps (sign-up, checkout, setup). Each step has a numbered
+   circle, a title and an optional description; completed steps show a check and fill in primary, the current
+   one is filled and ringed, a step with status "error" turns danger and one with "warning" amber. Horizontal (default), joined by lines, or
+   vertical. A <nav> around an <ol>; the current step has aria-current="step", and completed or error steps say
+   so to screen readers. With onStepClick, completed steps are buttons that go back to them (every step but the
+   current one with clickable="all"). When a horizontal
+   Stepper is too narrow for its titles side by side (a phone, 400% zoom), it keeps the circles and shows one line
+   under them, "Step 2 of 4: Profile"; the titles stay in the list for screen readers. */
+/** Where people are in a task split into steps: numbered circles joined by lines. */
+export const Stepper = /* @__PURE__ */ named('Stepper', StepperRender);

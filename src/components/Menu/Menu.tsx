@@ -10,7 +10,7 @@ import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { Icon, type IconSource } from '../Icon/Icon';
 import { asIcon } from '../Icon/asIcon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { isComposing } from '../../internal/ime';
 import * as icons from '../../material/builtin';
 import type { OpenChangeDetails, OpenChangeReason } from '../../internal/openChange';
@@ -84,13 +84,7 @@ function menuKeys(menuRef: React.RefObject<HTMLDivElement | null>, typed: React.
   };
 }
 
-/* Menu: a list of actions behind a button, following the WAI-ARIA menu button pattern. Enter, Space or ↓ on the
-   button opens it on the first item (↑ on the last); ↑ ↓ move (wrapping), Home and End jump, typing goes to the
-   next item starting with what was typed (internal/typeahead.ts), Enter or Space chooses, Escape closes, and focus
-   goes back to the button. Tab, a click outside or choosing an item closes it. It sits in the top layer next to the button.
-   A MenuSub's panel sits inside the menu's element, so the keys bubble here and work on the panel the focus is in. */
-/** A list of actions behind a button: MenuItem, MenuGroup and MenuSeparator inside. */
-export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>('Menu', function Menu(props, ref) {
+function MenuRender({ ref, ...props }: MenuProps & React.RefAttributes<HTMLDivElement>) {
   const own = domId('dk-menu', React.useId());
   const id = props.id || own;
   const [openIn, setInner, controlled] = useControllable(props.open, !!props.defaultOpen, 'Menu', 'open');
@@ -176,7 +170,15 @@ export const Menu = /* @__PURE__ */ component<HTMLDivElement, MenuProps>('Menu',
       </div>
     </MenuContext.Provider>
   );
-});
+}
+
+/* Menu: a list of actions behind a button, following the WAI-ARIA menu button pattern. Enter, Space or ↓ on the
+   button opens it on the first item (↑ on the last); ↑ ↓ move (wrapping), Home and End jump, typing goes to the
+   next item starting with what was typed (internal/typeahead.ts), Enter or Space chooses, Escape closes, and focus
+   goes back to the button. Tab, a click outside or choosing an item closes it. It sits in the top layer next to the button.
+   A MenuSub's panel sits inside the menu's element, so the keys bubble here and work on the panel the focus is in. */
+/** A list of actions behind a button: MenuItem, MenuGroup and MenuSeparator inside. */
+export const Menu = /* @__PURE__ */ named('Menu', MenuRender);
 
 export interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'role'> {
   /** The area the menu belongs to: one element, such as a Card, a table row or a canvas. A right-click (a long
@@ -199,11 +201,7 @@ export interface ContextMenuProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 }
 const OWN_CONTEXT = { target: 1, children: 1, 'aria-label': 1, open: 1, onOpenChange: 1, disabled: 1, className: 1, style: 1, onKeyDown: 1 } as const;
 
-/* ContextMenu: a Menu opened from an area instead of a button, at the pointer on a right-click (or a long press,
-   which browsers turn into contextmenu) or at the focused element on Shift+F10 or the Menu key. Its items, keys,
-   top layer and closing are Menu's; when it closes after a choice or Escape, focus goes back to where it was. */
-/** A Menu that opens at the pointer on a right-click, or at the focused element on Shift+F10 or the Menu key. */
-export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenuProps>('ContextMenu', function ContextMenu(props, ref) {
+function ContextMenuRender({ ref, ...props }: ContextMenuProps & React.RefAttributes<HTMLDivElement>) {
   const own = domId('dk-ctxmenu', React.useId());
   const id = props.id || own;
   const [openIn, setInner, controlled] = useControllable(props.open, false, 'ContextMenu', 'open');
@@ -279,7 +277,13 @@ export const ContextMenu = /* @__PURE__ */ component<HTMLDivElement, ContextMenu
       </div>
     </MenuContext.Provider>
   );
-});
+}
+
+/* ContextMenu: a Menu opened from an area instead of a button, at the pointer on a right-click (or a long press,
+   which browsers turn into contextmenu) or at the focused element on Shift+F10 or the Menu key. Its items, keys,
+   top layer and closing are Menu's; when it closes after a choice or Escape, focus goes back to where it was. */
+/** A Menu that opens at the pointer on a right-click, or at the focused element on Shift+F10 or the Menu key. */
+export const ContextMenu = /* @__PURE__ */ named('ContextMenu', ContextMenuRender);
 
 /** MenuItem's own props, beside those of the element it renders. */
 export interface MenuItemOwnProps {
@@ -337,8 +341,7 @@ function chord(text: string): string {
   return parts.join('+');
 }
 
-/** One action in a Menu. */
-const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>('MenuItem', function MenuItem(props, ref) {
+function MenuItemBaseRender({ ref, ...props }: MenuItemBaseProps & React.RefAttributes<HTMLElement>) {
   const ctx = React.useContext(MenuContext);
   const rest = omit(props, { onSelect: 1, icon: 1, shortcut: 1, destructive: 1, disabled: 1, className: 1, children: 1, onClick: 1, onKeyDown: 1, onPointerMove: 1, as: 1 });
   const own = { onClick: props.onClick, onKeyDown: props.onKeyDown, onPointerMove: props.onPointerMove };
@@ -383,11 +386,14 @@ const MenuItemBase = /* @__PURE__ */ component<HTMLElement, MenuItemBaseProps>('
     <span className="dk-menu__label">{props.children}</span>,
     // Shown, but not part of the item's name ("Copy", not "Copy command K"): aria-keyshortcuts says it.
     shown ? <kbd className="dk-menu__shortcut" aria-hidden="true">{shown}</kbd> : null);
-});
+}
+
+/** One action in a Menu. */
+const MenuItemBase = /* @__PURE__ */ named('MenuItem', MenuItemBaseRender);
 
 /** One action in a Menu, or with href a link. `as` renders your router's link, typed with its props. */
 export const MenuItem = MenuItemBase as {
-  <C extends React.ElementType = 'a'>(props: MenuItemProps<C> & { ref?: React.Ref<HTMLElement> }): React.ReactElement | null;
+  <C extends React.ElementType = 'a'>(props: MenuItemProps<C> & React.RefAttributes<HTMLElement>): React.ReactElement | null;
   displayName?: string | undefined;
 };
 
@@ -410,15 +416,17 @@ export interface MenuCheckboxItemProps extends CheckableProps {
  *  Enter and a click choose and close, as on any item. */
 const stayOnSpace = (e: React.SyntheticEvent) => { if ((e as React.KeyboardEvent).key === ' ') e.preventDefault(); };
 
+function MenuCheckboxItemRender({ ref, ...props }: MenuCheckboxItemProps & React.RefAttributes<HTMLElement>) {
+  const rest = omit(props, { checked: 1, onCheckedChange: 1, onSelect: 1, icon: 1, shortcut: 1 });
+  const onSelect = (e: React.SyntheticEvent) => { if (props.onCheckedChange) props.onCheckedChange(!props.checked); if (props.onSelect) props.onSelect(e); stayOnSpace(e); };
+  return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: 'menuitemcheckbox', 'aria-checked': !!props.checked }} onSelect={onSelect} />;
+}
+
 /* MenuCheckboxItem: an on/off setting in a Menu (role menuitemcheckbox, aria-checked), with a check before the
    label while it's on. Choosing it asks for the other state and closes the menu, as MenuItem does, except with Space,
    which keeps it open; call event.preventDefault() in onSelect to keep the menu open. */
 /** A setting in a Menu that's on or off, such as "Show grid". */
-export const MenuCheckboxItem = /* @__PURE__ */ component<HTMLElement, MenuCheckboxItemProps>('MenuCheckboxItem', function MenuCheckboxItem(props, ref) {
-  const rest = omit(props, { checked: 1, onCheckedChange: 1, onSelect: 1, icon: 1, shortcut: 1 });
-  const onSelect = (e: React.SyntheticEvent) => { if (props.onCheckedChange) props.onCheckedChange(!props.checked); if (props.onSelect) props.onSelect(e); stayOnSpace(e); };
-  return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: 'menuitemcheckbox', 'aria-checked': !!props.checked }} onSelect={onSelect} />;
-});
+export const MenuCheckboxItem = /* @__PURE__ */ named('MenuCheckboxItem', MenuCheckboxItemRender);
 
 interface RadioCtx { value: string | undefined; choose: (value: string) => void }
 const RadioContext = /* @__PURE__ */ React.createContext<RadioCtx | null>(null);
@@ -430,29 +438,33 @@ export interface MenuRadioGroupProps extends Omit<MenuGroupProps, 'defaultValue'
   onValueChange?: ((value: string) => void) | undefined;
 }
 
-/* MenuRadioGroup: MenuRadioItems of which one is chosen (role menuitemradio, aria-checked), such as a sort order.
-   It's a MenuGroup, so label gives it a heading that names it. */
-/** A group of MenuRadioItems, one of them chosen. */
-export const MenuRadioGroup = /* @__PURE__ */ component<HTMLDivElement, MenuRadioGroupProps>('MenuRadioGroup', function MenuRadioGroup(props, ref) {
+function MenuRadioGroupRender({ ref, ...props }: MenuRadioGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { value: 1, onValueChange: 1 });
   const ask = React.useRef(props.onValueChange); ask.current = props.onValueChange;
   // Choosing the item that's chosen already changes nothing, so it isn't told.
   const ctx = React.useMemo<RadioCtx>(() => ({ value: props.value, choose: (v) => { if (v !== props.value && ask.current) ask.current(v); } }), [props.value]);
   return <RadioContext.Provider value={ctx}><MenuGroup {...rest} ref={ref} /></RadioContext.Provider>;
-});
+}
+
+/* MenuRadioGroup: MenuRadioItems of which one is chosen (role menuitemradio, aria-checked), such as a sort order.
+   It's a MenuGroup, so label gives it a heading that names it. */
+/** A group of MenuRadioItems, one of them chosen. */
+export const MenuRadioGroup = /* @__PURE__ */ named('MenuRadioGroup', MenuRadioGroupRender);
 
 export interface MenuRadioItemProps extends CheckableProps {
   /** The value MenuRadioGroup chooses with this item. */
   value: string;
 }
 
-/** One choice in a MenuRadioGroup. */
-export const MenuRadioItem = /* @__PURE__ */ component<HTMLElement, MenuRadioItemProps>('MenuRadioItem', function MenuRadioItem(props, ref) {
+function MenuRadioItemRender({ ref, ...props }: MenuRadioItemProps & React.RefAttributes<HTMLElement>) {
   const group = React.useContext(RadioContext);
   const rest = omit(props, { value: 1, onSelect: 1, icon: 1, shortcut: 1 });
   const onSelect = (e: React.SyntheticEvent) => { if (group) group.choose(props.value); if (props.onSelect) props.onSelect(e); stayOnSpace(e); };
   return <MenuItem {...rest} ref={ref} icon={props.icon} shortcut={props.shortcut} {...{ role: 'menuitemradio', 'aria-checked': !!group && group.value === props.value }} onSelect={onSelect} />;
-});
+}
+
+/** One choice in a MenuRadioGroup. */
+export const MenuRadioItem = /* @__PURE__ */ named('MenuRadioItem', MenuRadioItemRender);
 
 export interface MenuSubProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** The item's label, which also names the submenu. */
@@ -478,8 +490,7 @@ const inTriangle = (p: Point, a: Point, b: Point, c: Point) => {
   return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
 };
 
-/** An item that opens a submenu of more items. */
-export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>('MenuSub', function MenuSub(props, ref) {
+function MenuSubRender({ ref, ...props }: MenuSubProps & React.RefAttributes<HTMLElement>) {
   const id = domId('dk-menu-sub', React.useId());
   const rest = omit(props, { label: 1, icon: 1, disabled: 1, className: 1, children: 1, onClick: 1, onKeyDown: 1, onPointerMove: 1, onPointerLeave: 1 });
   const [own, setOpen] = React.useState(false);
@@ -574,15 +585,17 @@ export const MenuSub = /* @__PURE__ */ component<HTMLElement, MenuSubProps>('Men
       </div>
     </>
   );
-});
+}
+
+/** An item that opens a submenu of more items. */
+export const MenuSub = /* @__PURE__ */ named('MenuSub', MenuSubRender);
 
 export interface MenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** A small heading over the group, which also names it. */
   label?: React.ReactNode | undefined;
 }
 
-/** Items that belong together, with an optional heading. */
-export const MenuGroup = /* @__PURE__ */ component<HTMLDivElement, MenuGroupProps>('MenuGroup', function MenuGroup(props, ref) {
+function MenuGroupRender({ ref, ...props }: MenuGroupProps & React.RefAttributes<HTMLDivElement>) {
   const rest = omit(props, { label: 1, className: 1, children: 1 });
   const id = domId('dk-mg', React.useId());
   return (
@@ -591,11 +604,16 @@ export const MenuGroup = /* @__PURE__ */ component<HTMLDivElement, MenuGroupProp
       {props.children}
     </div>
   );
-});
+}
+
+/** Items that belong together, with an optional heading. */
+export const MenuGroup = /* @__PURE__ */ named('MenuGroup', MenuGroupRender);
 
 export type MenuSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
 
-/** A line between groups of items. */
-export const MenuSeparator = /* @__PURE__ */ component<HTMLDivElement, MenuSeparatorProps>('MenuSeparator', function MenuSeparator(props, ref) {
+function MenuSeparatorRender({ ref, ...props }: MenuSeparatorProps & React.RefAttributes<HTMLDivElement>) {
   return <div {...props} ref={ref} role="separator" className={cn('dk-menu__separator', props.className)} />;
-});
+}
+
+/** A line between groups of items. */
+export const MenuSeparator = /* @__PURE__ */ named('MenuSeparator', MenuSeparatorRender);

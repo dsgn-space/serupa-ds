@@ -16,4 +16,4 @@ interface LoadMoreProps extends React.HTMLAttributes<HTMLDivElement> {
     label?: React.ReactNode | undefined;
     endText?: React.ReactNode | undefined;
 }
-declare const LoadMore: React.ForwardRefExoticComponent<LoadMoreProps & React.RefAttributes<HTMLDivElement>>;
+declare const LoadMore: React.FC<LoadMoreProps & React.RefAttributes<HTMLDivElement>>;

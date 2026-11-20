@@ -13,4 +13,4 @@ interface FormattedNumberProps extends Omit<React.DataHTMLAttributes<HTMLDataEle
     locale?: string | undefined;
     animate?: boolean | undefined;
 }
-declare const FormattedNumber: React.ForwardRefExoticComponent<FormattedNumberProps & React.RefAttributes<HTMLDataElement>>;
+declare const FormattedNumber: React.FC<FormattedNumberProps & React.RefAttributes<HTMLDataElement>>;

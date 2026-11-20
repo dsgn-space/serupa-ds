@@ -4,7 +4,7 @@ interface BottomNavProps extends React.HTMLAttributes<HTMLElement> {
     hideFrom?: "lg" | "md" | "sm" | false | undefined;
     children?: React.ReactNode;
 }
-declare const BottomNav: React.ForwardRefExoticComponent<BottomNavProps & React.RefAttributes<HTMLElement>>;
+declare const BottomNav: React.FC<BottomNavProps & React.RefAttributes<HTMLElement>>;
 interface BottomNavLinkOwnProps {
     icon: IconSource;
     active?: boolean | undefined;
@@ -15,8 +15,6 @@ type BottomNavLinkProps<C extends React.ElementType = "a"> = BottomNavLinkOwnPro
     as?: C | undefined;
 } & Omit<React.ComponentPropsWithoutRef<C>, "as" | keyof BottomNavLinkOwnProps>;
 declare const BottomNavLink: {
-    <C extends React.ElementType = "a">(props: BottomNavLinkProps<C> & {
-        ref?: React.Ref<React.ComponentRef<C>>;
-    }): null | React.ReactElement;
+    <C extends React.ElementType = "a">(props: BottomNavLinkProps<C> & React.RefAttributes<React.ComponentRef<C>>): null | React.ReactElement;
     displayName?: string | undefined;
 };

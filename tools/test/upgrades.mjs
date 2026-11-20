@@ -178,6 +178,8 @@ t('14.0.0: a removed .dk-combobox__more rule is listed in a stylesheet', fix('.d
 const inner = fix('.dk-btn__label { color: red }\n.dk-btn--primary, [data-component="card"] { color: blue }\n.app-dk-btn__x, .dk-card__header .dk-card__title {}', 'app.css', '15.0.0');
 t('16.0.0: each line that selects an inner part\'s class is listed once, and block, modifier and data selectors are left', inner.notes.length === 2 && inner.notes.every((n) => n.id === 'inner-classes-private') && inner.notes[0].line === 1 && inner.notes[1].line === 3 && /dk-card__header/.test(inner.notes[1].message) && inner.text.startsWith('.dk-btn__label'), JSON.stringify(inner.notes));
 t('16.0.0: a querySelector for an inner part in code is listed too', fix("el.querySelector('.dk-tabs__panel')", 'a.ts', '15.0.0').notes.some((n) => n.id === 'inner-classes-private'));
+const r17 = fix('import type { TimelineStatus } from "@diki-stwn/serupa-ds";\n<TimelineItem status="warning" title="Late" />\n<Combobox onInputChange={f} />\n<PasswordInput visible={v} defaultVisible onVisibleChange={setV} />', 'a.tsx', '16.1.0');
+t('17.0.0: the removed TimelineItem status, Combobox onInputChange and PasswordInput visible names are renamed', r17.text === 'import type { TimelineTone } from "@diki-stwn/serupa-ds";\n<TimelineItem tone="warning" title="Late" />\n<Combobox onInputValueChange={f} />\n<PasswordInput revealed={v} defaultRevealed onRevealedChange={setV} />', r17.text);
 const twice = fix(fix('<IconButton noTitle /><Table captionHidden />').text);
 t('running it twice changes nothing more', !Object.keys(twice.counts).length);
 

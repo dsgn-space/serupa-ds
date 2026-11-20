@@ -4,7 +4,7 @@ import type { IconSource } from '../Icon/Icon';
 import { cn, oneOf } from '../../internal/cn';
 import { ButtonBase, type ButtonAsButtonProps } from '../Button/Button';
 import { Tooltip } from '../Tooltip/Tooltip';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 
 export type FabPosition = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start' | 'static';
 
@@ -49,8 +49,7 @@ function useShrinkOnScroll(on: boolean): boolean {
   return on && shrunk;
 }
 
-/** A floating action button: the screen's main action, round and raised, fixed to a corner. */
-export const Fab = /* @__PURE__ */ component<HTMLButtonElement, FabProps>('Fab', function Fab(props, ref) {
+function FabRender({ ref, ...props }: FabProps & React.RefAttributes<HTMLButtonElement>) {
   const { icon, label, extended, size, placement, className, ...rest } = props;
   const pos = oneOf(POSITIONS, placement, 'bottom-end');
   const sm = size === 'sm';
@@ -65,4 +64,7 @@ export const Fab = /* @__PURE__ */ component<HTMLButtonElement, FabProps>('Fab',
   // yours already says something. The Tooltip stays around an auto FAB either way, so shrinking doesn't remount it.
   const own = rest.title != null || rest['aria-describedby'] != null || rest['aria-labelledby'] != null;
   return own || (extended && !auto) ? button : <Tooltip content={label} role="label" disabled={!!rest.disabled || (auto && !shrunk)}>{button}</Tooltip>;
-});
+}
+
+/** A floating action button: the screen's main action, round and raised, fixed to a corner. */
+export const Fab = /* @__PURE__ */ named('Fab', FabRender);

@@ -16,7 +16,7 @@ const P = path.resolve(import.meta.dirname, '..');
 const API = path.join(P, 'tools', 'test', 'baseline-api');
 export const FILE = path.join(P, 'docs', 'since.json');
 
-// Not props a reader sets: the names every component() wrapper declares, which the baselines began to show in 13.0.0.
+// Not props a reader sets: the names the old component() wrapper declared (13.0.0 to 16.x), and ref, which every component takes as a prop.
 const PLUMBING = new Set(['displayName', 'ref', '$$typeof']);
 /** The member names a .d.ts declares: each `name:` or `name?:` at the start of a line inside a type. */
 export function propsOf(dts) {

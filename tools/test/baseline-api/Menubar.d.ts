@@ -9,5 +9,5 @@ interface MenubarMenuProps extends Omit<React.HTMLAttributes<HTMLButtonElement>,
     disabled?: boolean | undefined;
     defaultOpen?: boolean | undefined;
 }
-declare const Menubar: React.ForwardRefExoticComponent<MenubarProps & React.RefAttributes<HTMLDivElement>>;
-declare const MenubarMenu: React.ForwardRefExoticComponent<MenubarMenuProps & React.RefAttributes<HTMLButtonElement>>;
+declare const Menubar: React.FC<MenubarProps & React.RefAttributes<HTMLDivElement>>;
+declare const MenubarMenu: React.FC<MenubarMenuProps & React.RefAttributes<HTMLButtonElement>>;

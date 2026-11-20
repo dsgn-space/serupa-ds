@@ -7,4 +7,4 @@ interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
     fade?: boolean | undefined;
     "aria-label"?: string | undefined;
 }
-declare const ScrollArea: React.ForwardRefExoticComponent<ScrollAreaProps & React.RefAttributes<HTMLDivElement>>;
+declare const ScrollArea: React.FC<ScrollAreaProps & React.RefAttributes<HTMLDivElement>>;

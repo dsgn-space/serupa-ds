@@ -9,7 +9,7 @@ import { reject } from '../../internal/rejectInput';
 import { useAnchoredLayer } from '../../internal/useAnchoredLayer';
 import { useExit } from '../../internal/useExit';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useFieldControl } from '../../internal/field';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import { useFormReset } from '../../internal/useFormReset';
@@ -57,14 +57,7 @@ export interface TimePickerProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   onOpenChange?: ((open: boolean, details: OpenChangeDetails) => void) | undefined;
 }
 
-/* TimePicker: a field for a time of day with a list of times. People type a time ("2:30 pm", "14:30", "1430",
-   "2p") or pick one from a list every step minutes (default 30) between min and max; the field is an ARIA
-   combobox and the list a listbox. ArrowDown or the clock button opens the list at the chosen (or nearest) time;
-   arrows, Home, End, PageUp and PageDown move, Enter picks, Escape closes. Typed text is read on blur and Enter;
-   text that isn't a time, or one outside min..max, puts back the last good value. Values are "HH:mm", the form
-   <input type="time"> uses; with name a hidden input sends it. */
-/** A time field: type a time or pick one from a list. Values are "HH:mm". */
-export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePickerProps>('TimePicker', function TimePicker(props, ref) {
+function TimePickerRender({ ref, ...props }: TimePickerProps & React.RefAttributes<HTMLInputElement>) {
   const nameRef = useNameCheck('TimePicker', NAME_HOW.field);   // warns when it has no accessible name
   props = useFieldControl(props);   // the props a surrounding Field hands it, at any depth
   const sds = useSettings(words);
@@ -205,4 +198,13 @@ export const TimePicker = /* @__PURE__ */ component<HTMLInputElement, TimePicker
       {rejected && <span id={id + '-rejected'} className="dk-input-rejected">{rejected}</span>}
     </>
   );
-});
+}
+
+/* TimePicker: a field for a time of day with a list of times. People type a time ("2:30 pm", "14:30", "1430",
+   "2p") or pick one from a list every step minutes (default 30) between min and max; the field is an ARIA
+   combobox and the list a listbox. ArrowDown or the clock button opens the list at the chosen (or nearest) time;
+   arrows, Home, End, PageUp and PageDown move, Enter picks, Escape closes. Typed text is read on blur and Enter;
+   text that isn't a time, or one outside min..max, puts back the last good value. Values are "HH:mm", the form
+   <input type="time"> uses; with name a hidden input sends it. */
+/** A time field: type a time or pick one from a list. Values are "HH:mm". */
+export const TimePicker = /* @__PURE__ */ named('TimePicker', TimePickerRender);

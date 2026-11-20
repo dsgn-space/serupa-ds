@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { cn, oneOf, useMergedRef } from '../../internal/cn';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { schemeOf, useThemeChanges } from '../../internal/scheme';
 
 export type LogoSize = 'sm' | 'md' | 'lg';
@@ -35,14 +35,7 @@ function both(a: string | null, b: string | null): string | null {
   return a === null || b === null ? null : a === 'all' ? b : b === 'all' ? a : a + ' and ' + b;
 }
 
-/* Logo: the product's logo as a picture of a fixed height, with versions for a dark theme and a small mark for narrow
-   spaces. A <picture> offers them as <source>s ahead of the full logo, so the browser fetches only the one it shows:
-   the mark below a breakpoint (variant 'auto'), the dark version when the theme is dark. Which theme counts is read
-   from the element's color-scheme in the browser, and from prefers-color-scheme on the server. It isn't a link: put
-   it in the app's own link home (a router link, or <a href="/">). */
-/** The product's logo: light and dark versions, and a small mark for narrow screens, at a set height.
- *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
-export const Logo = /* @__PURE__ */ component<HTMLImageElement, LogoProps>('Logo', function Logo(props, ref) {
+function LogoRender({ ref, ...props }: LogoProps & React.RefAttributes<HTMLImageElement>) {
   const { src, alt, darkSrc, markSrc, markDarkSrc, variant, collapseBelow, size, className, ...rest } = props;
   const img = React.useRef<HTMLImageElement | null>(null);
   const mergedRef = useMergedRef(ref, (n) => { img.current = n; });
@@ -65,4 +58,13 @@ export const Logo = /* @__PURE__ */ component<HTMLImageElement, LogoProps>('Logo
   return offered.length
     ? <picture className="dk-logo__picture">{offered.map(([s, media]) => <source key={s + media} srcSet={s} media={media} />)}{picture}</picture>
     : picture;
-});
+}
+
+/* Logo: the product's logo as a picture of a fixed height, with versions for a dark theme and a small mark for narrow
+   spaces. A <picture> offers them as <source>s ahead of the full logo, so the browser fetches only the one it shows:
+   the mark below a breakpoint (variant 'auto'), the dark version when the theme is dark. Which theme counts is read
+   from the element's color-scheme in the browser, and from prefers-color-scheme on the server. It isn't a link: put
+   it in the app's own link home (a router link, or <a href="/">). */
+/** The product's logo: light and dark versions, and a small mark for narrow screens, at a set height.
+ *  @beta New: its API may still change in a minor release. Take this tag off once it has shipped with its bug bash done (CONTRIBUTING.md). */
+export const Logo = /* @__PURE__ */ named('Logo', LogoRender);

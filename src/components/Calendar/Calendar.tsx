@@ -6,7 +6,7 @@ import { calendarOf, type Cal, type CalendarSystem } from '../../internal/calend
 export type { CalendarSystem } from '../../internal/calendars';
 import { IconButton } from '../IconButton/IconButton';
 import { Icon } from '../Icon/Icon';
-import { component } from '../../internal/component';
+import { named } from '../../internal/component';
 import { useLocale, useOwnLang, useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { useFocusHandover } from '../../internal/focus';
@@ -167,12 +167,7 @@ const OWN = { weekNumbers: 1, value: 1, defaultValue: 1, onValueChange: 1, month
 // For useSyncExternalStore: false in the server render and in hydration, true after it and in a browser-only render.
 const never = () => () => {}, yes = () => true, no = () => false;
 
-/* Calendar: a month of days to pick one from. Follows the ARIA date grid pattern: one Tab stop on the days,
-   arrows move a day or a week, Home and End to the week's start and end, PageUp and PageDown a month (with
-   Shift, a year), Enter or Space picks. Moving past the month shows the next one. Days outside min..max or
-   refused by isDateDisabled are aria-disabled and can't be picked. Month and weekday names follow the locale. */
-/** A month of days to pick one from, with keyboard navigation; used by DatePicker. */
-export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>('Calendar', function Calendar(props, ref) {
+function CalendarRender({ ref, ...props }: CalendarProps & React.RefAttributes<HTMLDivElement>) {
   const sds = useSettings(words);
   const rest = omit(props, OWN);
   const locale = useLocale(props.locale), lang = useOwnLang(props.locale);
@@ -401,7 +396,14 @@ export const Calendar = /* @__PURE__ */ component<HTMLDivElement, CalendarProps>
       {presets ? <PresetList label={sds.labels.presets} items={presets} allowed={(d) => !disabled(d)} current={{ start: value, end: null }} onPick={(it) => { if (it.start) pick(it.start); }} /> : null}
     </div>
   );
-});
+}
+
+/* Calendar: a month of days to pick one from. Follows the ARIA date grid pattern: one Tab stop on the days,
+   arrows move a day or a week, Home and End to the week's start and end, PageUp and PageDown a month (with
+   Shift, a year), Enter or Space picks. Moving past the month shows the next one. Days outside min..max or
+   refused by isDateDisabled are aria-disabled and can't be picked. Month and weekday names follow the locale. */
+/** A month of days to pick one from, with keyboard navigation; used by DatePicker. */
+export const Calendar = /* @__PURE__ */ named('Calendar', CalendarRender);
 
 /* The month and year menus (monthYearPicker): native selects, so they work the same with keys, touch and screen
    readers. Months and years outside min..max aren't offered; a year whose month is out of range clamps to the nearest one.
