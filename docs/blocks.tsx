@@ -212,7 +212,8 @@ function Wide({ label, children }: { label: string; children: React.ReactNode })
 
 const code = (s?: string) => (s || '').split(/`([^`]+)`/).map((x, i) => (i % 2 ? <code key={i}>{x}</code> : x));
 const cell: React.CSSProperties = { padding: '6px 10px', borderBottom: '1px solid var(--border)', verticalAlign: 'middle', textAlign: 'left' };
-const val = (v: Token['value']) => (typeof v === 'string' ? v : Object.values(v)[0]);
+// An alias's value reads as the CSS that resolves it (var(--spacing-1)), not the token file's {spacing-1} syntax.
+const val = (v: Token['value']) => { const s = typeof v === 'string' ? v : Object.values(v)[0]; return typeof s === 'string' ? s.replace(/\{([^}]+)\}/g, (_, n: string) => `var(--${n})`) : s; };
 
 /** Every token in a group, with its value, what it's for and a live preview. data-token-sheet marks each token block
  * for the visual snapshots (tools/test/visual.mjs), so a changed token value shows as a changed picture. */
