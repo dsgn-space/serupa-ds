@@ -17,7 +17,7 @@ function Page(props: Omit<TourProps, 'steps'> & { steps?: (parts: Parts) => Tour
         <Button ref={create} leftIcon="add">New project</Button>
         <IconButton ref={help} icon="help" label="Help" />
       </div>
-      {start ? <p style={{ marginTop: 24 }}><Button variant="outline" onClick={() => setOpen(true)}>Take the tour</Button></p> : null}
+      {start ? <p style={{ marginTop: 24 }}><Button variant="outline" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>Take the tour</Button></p> : null}
       <Tour {...rest} steps={steps({ search, create, help })} open={open} onOpenChange={setOpen} />
     </div>
   );

@@ -78,9 +78,11 @@ function holdBack<K extends 'showModal' | 'showPopover' | 'togglePopover'>(proto
   proto[method] = function held(this: HTMLElement, ...args: never[]) {
     const stage = this.closest('[data-site-demo]');
     // A tooltip is the exception: it is a line of text beside its button, takes no focus and covers nothing to use.
-    // So is a menu or popover in an anatomy diagram: the diagram opens it to copy it in place, then closes it and puts
-    // the page's scroll and focus back (docs/anatomy.tsx); held, the diagram had only the button to number.
-    if (!stage || stage.hasAttribute(ARMED) || this.getAttribute('role') === 'tooltip' || (method !== 'showModal' && stage.closest('.sb-anatomy'))) return real.apply(this, args);
+    // So is an overlay in an anatomy diagram: the diagram copies it in place, then closes it and puts the page's
+    // scroll and focus back (docs/anatomy.tsx); held, the diagram had only a button to number. A modal dialog opens
+    // there as a plain one (show), so for that moment it doesn't cover the page or make the rest of it inert.
+    if (!stage || stage.hasAttribute(ARMED) || this.getAttribute('role') === 'tooltip') return real.apply(this, args);
+    if (stage.closest('.sb-anatomy')) return method === 'showModal' ? (this as HTMLElement as HTMLDialogElement).show() : real.apply(this, args);
     // The story's effects run before its stage's, so the stage may not be listening yet: leave it a note as well.
     stage.setAttribute('data-site-held', '');
     stage.dispatchEvent(new CustomEvent(HELD));
