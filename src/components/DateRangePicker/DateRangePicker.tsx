@@ -1,4 +1,5 @@
 'use client';
+import { dateFormat } from '../../internal/intl';
 import * as React from 'react';
 import { useControlSize } from '../../internal/controlSize';
 import { useMergedRef, cn, domId, isInvalid, oneOf, SIZES } from '../../internal/cn';
@@ -186,7 +187,7 @@ function DateRangePickerRender({ ref, ...props }: DateRangePickerProps & React.R
   useAnchoredLayer(open, panel, box, { placement: 'bottom-start', offsetVar: '--dk-drp-offset', onOutside: () => close(false, 'outside'), onFocusOutside: () => close(false, 'blur'), inside: button });
 
   // A full range is said, as RangeCalendar says it ("Selected range: Nov 1 – 30, 2026"): the next day picked starts a new one.
-  const rangeText = (a: Date, b: Date) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(a, b).replace(/[\u2009\u202f]/g, ' ');
+  const rangeText = (a: Date, b: Date) => dateFormat(locale, { dateStyle: 'medium', calendar: system.id, numberingSystem: 'latn' }).formatRange(a, b).replace(/[\u2009\u202f]/g, ' ');
   const pick = (d: Date) => {
     if (picking === 'start' || !value.start || compare(d, value.start) < 0) { commit({ start: d, end: null }); setPicking('end'); return; }
     commit({ start: value.start, end: d });
