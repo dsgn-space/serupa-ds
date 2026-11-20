@@ -14,8 +14,15 @@ export const SITE_NAME = 'Serupa';
 export const HOME_TITLE = 'Serupa design system';
 export const DEFAULT_DESCRIPTION = 'Serupa is a design system by Diki: design tokens, a theme for every accent color and accessible React components, with the guides for using them.';
 
-/** Markdown as plain text: links as their words, no code ticks, emphasis or inline HTML tags (a component's <Name> stays). */
-const plain = (s) => s.replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/<\/?(?:kbd|code|em|strong|b|i|abbr|span|br)\b[^>]*>/g, '').replace(/[`*_]/g, '').replace(/\s+/g, ' ').trim();
+/** The inline HTML tags Markdown text may hold (a component's <Name> isn't one, and stays). */
+const TAGS = /<\/?(?:kbd|code|em|strong|b|i|abbr|span|br)\b[^>]*>/g;
+/** Markdown as plain text: links as their words, no code ticks, emphasis or inline HTML tags. The tags go until none
+ * is left, so one hidden inside another (`<<b>b>`) doesn't come back whole. */
+const plain = (s) => {
+  let text = s.replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1');
+  for (let before = ''; before !== text;) { before = text; text = text.replace(TAGS, ''); }
+  return text.replace(/[`*_]/g, '').replace(/\s+/g, ' ').trim();
+};
 /** The first sentence of a paragraph. */
 const sentence = (s) => (/^.*?[.!?](?=\s|$)/.exec(s) || [s])[0];
 /** The first paragraph of prose in Markdown: not a heading, a list, a table, a quote, code or a tag. */
