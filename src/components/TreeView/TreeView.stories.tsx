@@ -31,6 +31,11 @@ export const Multiple: Story = {
   args: { selectionMode: 'multiple', defaultExpanded: ['src', 'components', 'docs'], defaultValue: ['button', 'index', 'intro'] },
 };
 
+/** cascade: a checkbox on each item. Checking a folder checks everything in it, and a folder with some of its files checked shows a dash. */
+export const Cascade: Story = {
+  args: { selectionMode: 'multiple', cascade: true, defaultExpanded: ['src', 'components', 'docs'], defaultValue: ['components', 'intro'] },
+};
+
 export const NoSelection: Story = {
   args: { selectionMode: 'none', 'aria-label': 'Contents', defaultValue: [], defaultExpanded: ['docs'] },
 };

@@ -46,7 +46,7 @@
   padding: var(--toast-padding, var(--spacing-4));
   border: var(--toast-border-width, var(--border-width-1)) solid var(--toast-border, var(--border-overlay));
   border-radius: var(--toast-radius, var(--radius-surface));
-  background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay));
+  background: var(--toast-bg, var(--surface-overlay)); --surface-behind: var(--toast-bg, var(--surface-overlay)); --border: var(--toast-divider, var(--border-overlay));
   color: var(--toast-title-color, var(--text));
   box-shadow: var(--toast-shadow, var(--elevation-overlay));
   font-family: var(--font-sans);
@@ -119,5 +119,14 @@
   .dk-toast > .dk-toast__action { min-inline-size: auto; white-space: normal; overflow-wrap: break-word; text-align: start; height: auto; min-height: var(--button-height-sm, var(--control-height-sm)); padding-block: var(--button-padding-y-wrap-sm, var(--spacing-0\.5)); }
   .dk-toast__close { grid-area: close; }
 }
+/* An action label of more than a word or two (data-action="below", Toast.tsx) goes under the text at any width, in
+   the same way: beside it, a title and description of a few words each ran to eight lines in a narrow column. A short
+   one ("Undo", "View") stays beside the text, where the toast reads as one line. */
+.dk-toast[data-action="below"] { display: grid; grid-template: "text close" "action ." / minmax(var(--spacing-0), 1fr) auto; }
+.dk-toast[data-action="below"]:has(> .dk-toast__icon) { grid-template: "icon text close" ". action ." / auto minmax(var(--spacing-0), 1fr) auto; }
+.dk-toast[data-action="below"] > .dk-toast__icon { grid-area: icon; }
+.dk-toast[data-action="below"] > .dk-toast__content { grid-area: text; }
+.dk-toast[data-action="below"] > .dk-toast__action { grid-area: action; justify-self: start; }
+.dk-toast[data-action="below"] > .dk-toast__close { grid-area: close; }
 @media (forced-colors: active) { .dk-toast { border-color: CanvasText; } .dk-toaster__more { border: var(--border-width-1) solid CanvasText; } }
 }

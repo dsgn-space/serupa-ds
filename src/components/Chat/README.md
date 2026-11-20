@@ -145,7 +145,7 @@ While the reader is further up and new messages arrive, a "3 new messages" butto
 | `children` | `ReactNode` | | The text; line breaks are kept. |
 | `author` | `ReactNode` | | Who wrote it. |
 | `avatar` | `ReactNode` | | A picture beside it, such as `<Avatar size="sm" />`. |
-| `time` | `Date \| number \| string` | | When it was sent, as relative time. |
+| `time` | `Date \| number \| string` | | When it was sent: relative time today ("5 minutes ago"), the time of day after that ("9:41 AM"), since the day divider above says which day. The full date is on hover. |
 | `own` | `boolean` | `false` | The reader's own message. |
 | `hideAuthor` | `boolean` | `false` | For later messages in a row from the same person. |
 | `status` | `'sending' \| 'failed'` | | An own message on its way, or one that didn't go. |

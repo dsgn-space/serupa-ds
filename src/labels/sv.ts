@@ -393,4 +393,6 @@ export const labels: SerupaLabels = {
   transferRemoveReason: 'Kryssa först i dem du vill ta bort',
   transferEmpty: 'Inga',
   transferMoved: (items, list) => items + ' flyttades till ' + list + '.',
+  fieldListLimit: (max) => 'Gränsen är nådd: ' + max + '.',
+  tabCloseHint: 'Tryck på Delete för att stänga.',
 };

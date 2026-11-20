@@ -109,6 +109,7 @@ Each is an optional override: set it on the page, a container or one popover. Th
 | `--popover-border` | `border-overlay` | The panel's border. |
 | `--popover-title-color` | `text` | The title. |
 | `--popover-focus-ring` | `focus-ring` | The panel's focus ring, when it takes focus itself. |
+| `--popover-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
 | `--popover-shadow` | `elevation-overlay` | The panel's shadow. |
 | `--popover-radius` | `radius-surface` | The panel's corners (8px). |
 | `--popover-border-width` | `border-width-1` | The panel's border (1px). |

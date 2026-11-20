@@ -204,6 +204,7 @@ Each is an optional override: set it on the page, a container or one menu. The l
 | `--menu-danger-bg-active` | `danger-subtle` | A highlighted destructive item's background. |
 | `--menu-separator` | `border` | The line between groups. |
 | `--menu-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--menu-divider` | `border-overlay` | What a divider or separator inside it reads as `border`: its own edge colour, since in dark `border` is the surface's own colour and a line in it vanished |
 
 **Shadow**
 

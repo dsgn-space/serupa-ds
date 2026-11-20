@@ -21,6 +21,10 @@
 .dk-table__foot .dk-table__row:first-child .dk-table__cell { border-top: var(--table-border-width, var(--border-width-1)) solid var(--table-border, var(--border)); font-weight: var(--font-medium); }
 .dk-table__body:has(+ .dk-table__foot) .dk-table__row:last-child .dk-table__cell { border-bottom: var(--spacing-0); }
 .dk-table__header { background: var(--table-header-bg, var(--surface-muted)); --surface-behind: var(--table-header-bg, var(--surface-muted)); color: var(--table-header-text, var(--text-muted)); font-weight: var(--table-header-weight, var(--font-medium)); white-space: nowrap; }
+/* A row header (scope="row", in the body or the foot) names its row: it reads as the row's first cell, in the row's
+   text and on the row's fill (so it shades with the row on hover and selection), not as a column heading in the
+   header's muted band. */
+.dk-table__body .dk-table__header, .dk-table__foot .dk-table__header { background: none; --surface-behind: inherit; color: inherit; white-space: normal; }
 .dk-table__cell--center { text-align: center; }
 .dk-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
 /* The row background eases only while the pointer is over the body, so a row's hover and a click on its own box still

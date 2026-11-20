@@ -12,7 +12,7 @@ import { useSettings } from '../../internal/provider';
 import * as icons from '../../material/builtin';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
 import { en as words } from './labels';
-import { project, rubber, settleTime, speed, track as sample, type Samples } from '../../internal/fling';
+import { project, speed, track as sample, type Samples } from '../../internal/fling';
 import { useControllable } from '../../internal/controllable';
 
 export interface CarouselProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
@@ -72,15 +72,17 @@ function usePerView(per: CarouselProps['perView']): number {
 
 /* Carousel: one slide at a time with previous and next buttons, a dot per slide and swipe. The outer
    <section> is a region named by label (aria-roledescription "carousel"); each slide is a group named
-   "2 of 5", and the slides not shown are inert. It never moves on its own. Slides slide in from the side
-   (at once with reduced motion), and the row runs right to left in RTL. className and every other prop go
-   to the <section>. With perView, two or more slides show side by side: index is the first one shown, the
-   buttons and swipe still move one slide, and the dots count pages. */
-// A swipe's wheel distance that moves a slide, and how long its events must stop before the next swipe counts.
-const WHEEL_STEP = 40, WHEEL_QUIET = 150;
+   "2 of 5", and the slides not shown are inert. It never moves on its own. The slides sit in a native scroll
+   container with scroll snap: a touch swipe, a trackpad and Shift with the wheel scroll it with the platform's own
+   momentum, one slide per gesture (scroll-snap-stop), and the index follows where it settles. The buttons, dots
+   and a controlled index scroll it there, smoothly (at once with reduced motion). Before JavaScript runs, the
+   slides already scroll and snap, and none is inert. className and every other prop go to the <section>. With
+   perView, two or more slides show side by side: index is the first one shown, the buttons still move one slide,
+   and the dots count pages. */
 const OWN = { children: 1, label: 1, index: 1, defaultIndex: 1, onIndexChange: 1, loop: 1, arrows: 1, dots: 1, previousLabel: 1, nextLabel: 1, slideLabel: 1, perView: 1, peek: 1, className: 1, style: 1 } as const;
-const SWIPE = 40; // px a swipe must travel to change the slide
-const FLICK = 0.3; // px per ms over the last 100ms: a shorter swipe this fast changes the slide too
+const SWIPE = 40; // px a mouse drag must travel to change the slide
+const FLICK = 0.3; // px per ms over the last 100ms: a shorter drag this fast changes the slide too
+const QUIET = 120; // ms without scrolling that counts as settled, where scrollend isn't there
 
 /** One slide at a time, with previous and next buttons, dots and swipe. */
 export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('Carousel', function Carousel(props, ref) {
@@ -108,38 +110,95 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
   const name = props.slideLabel || ((i: number, n: number) => sds.labels.slideOf(i + 1, n));
   const dotsRef = React.useRef<HTMLDivElement>(null);
   const viewport = React.useRef<HTMLDivElement>(null);
-  const drag = React.useRef<{ x: number; y: number; id: number; s: Samples } | null>(null);
   const track = React.useRef<HTMLDivElement>(null);
-  // How long the track takes to settle after a swipe (from the distance left and the speed); null: the CSS default.
-  const [settle, setSettle] = React.useState<number | null>(null);
-  // A loop going on past the last slide (or back past the first) carries on that way instead of rewinding: the
-  // first slides are shown again after the last (or the last before the first), the track moves there, and once it
-  // stops it's put back at the real index without a transition. virt is where the track stands meanwhile.
-  const [wrap, setWrap] = React.useState<{ virt: number; edge: 'after' | 'before' } | null>(null);
-  const [snap, setSnap] = React.useState(false);
-  const [offset, setOffset] = React.useState(0);
+  const drag = React.useRef<{ x: number; from: number; id: number; s: Samples } | null>(null);
+  const [dragging, setDragging] = React.useState(false);
   const dragged = React.useRef(false);   // a drag just ended: the click that follows it doesn't count
   const prevBtn = React.useRef<HTMLButtonElement>(null), nextBtn = React.useRef<HTMLButtonElement>(null);
   const refocus = React.useRef<'prev' | 'next' | 'dot' | null>(null);
+  // Off-screen slides are inert only once the page runs: in server HTML, before JavaScript, every slide can be
+  // scrolled to and read. Set before the first paint, so a page rendered in the browser never shows them live.
+  const [live, setLive] = React.useState(false);
+  useIsoLayoutEffect(() => { setLive(true); }, []);
+  // A scroll that settled where a controlled parent didn't follow: a render to scroll back to its index.
+  const [recheck, setRecheck] = React.useState(0);
+  // The slide the view is scrolling to for the index, until it gets there.
+  const heading = React.useRef<number | null>(null);
 
-  const go = (i: number, ms: number | null = null) => {
+  const go = (i: number) => {
     const next = loop ? ((i % (last + 1)) + last + 1) % (last + 1) : clamp(i);
     if (next === index) return;
-    setSettle(ms);
-    const moves = !!track.current && parseFloat(getComputedStyle(track.current).transitionDuration) > 0;
-    // Only when the slides shown again are out of view, so none is in two places (count >= 2 per view).
-    if (loop && moves && !wrap && count >= 2 * per) {
-      if (i === last + 1 && index === last) setWrap({ virt: count, edge: 'after' });
-      else if (i === -1 && index === 0) setWrap({ virt: -per, edge: 'before' });
-    }
     if (!controlled) setOwn(next);
     if (props.onIndexChange) props.onIndexChange(next);
   };
   const rtl = () => !!viewport.current && getComputedStyle(viewport.current).direction === 'rtl';
-  // The direction as laid out (a dir attribute or CSS direction), so the track and chevrons can follow it.
+  // The direction as laid out (a dir attribute or CSS direction), so the chevrons can follow it.
   const [dir, setDir] = React.useState<'ltr' | 'rtl'>('ltr');
   // every render: an ancestor's dir or direction can change without a render of ours; reading it is a style lookup, not a layout.
   useIsoLayoutEffect(() => { const d = rtl() ? 'rtl' : 'ltr'; if (d !== dir) setDir(d); });
+
+  // How far to scroll (in scrollLeft's sign) to put slide i at the start of the view.
+  const delta = (i: number) => {
+    const v = viewport.current, s = track.current?.children[i];
+    if (!v || !s) return 0;
+    const vr = v.getBoundingClientRect(), sr = s.getBoundingClientRect();
+    return rtl() ? sr.right - vr.right : sr.left - vr.left;
+  };
+  // The index the scroll is at: the slide whose start is nearest the view's start, or the last at the far end (where
+  // a peek or the last full view can't line up a slide's start).
+  const scrolledTo = () => {
+    const v = viewport.current;
+    if (!v || last < 1) return index;
+    if (Math.abs(v.scrollLeft) >= v.scrollWidth - v.clientWidth - 1) return last;
+    let best = 0, near = Infinity;
+    for (let i = 0; i <= last; i++) { const d = Math.abs(delta(i)); if (d < near) { near = d; best = i; } }
+    return best;
+  };
+  const latest = React.useRef({ index, go, scrolledTo, controlled });
+  React.useInsertionEffect(function () { latest.current = { index, go, scrolledTo, controlled }; });   // every render: what the scroll listeners read
+  // Where a scroll settled (a swipe, a trackpad, Shift and the wheel, the find bar): that slide becomes the index.
+  // scrollsnapchange and scrollend say so where they're supported, and a quiet moment after the last scroll anywhere.
+  useIsoLayoutEffect(() => {
+    const v = viewport.current;
+    if (!v || last < 1) return;
+    let quiet = 0;
+    const settled = () => {
+      window.clearTimeout(quiet);
+      if (drag.current) return;   // a mouse drag decides on release
+      const l = latest.current, n = l.scrolledTo();
+      // While the view heads for a slide the index asked for, a scroll that ends on the way (a drag's own, or an
+      // earlier one) isn't where people stopped.
+      if (heading.current != null) { if (n === heading.current) heading.current = null; return; }
+      if (n === l.index) return;
+      l.go(n);
+      l.index = n;   // scrollsnapchange and scrollend can both come before the render
+      if (l.controlled) setRecheck((k) => k + 1);   // the parent may keep its index: scroll back to it
+    };
+    const onScroll = () => { window.clearTimeout(quiet); quiet = window.setTimeout(settled, QUIET); };
+    // People take over: a press or a wheel stops the view heading anywhere, so where they stop counts.
+    const mine = () => { heading.current = null; };
+    v.addEventListener('scroll', onScroll, { passive: true });
+    v.addEventListener('scrollend', settled);
+    v.addEventListener('scrollsnapchange', settled);
+    v.addEventListener('pointerdown', mine);
+    v.addEventListener('wheel', mine, { passive: true });
+    return () => { v.removeEventListener('pointerdown', mine); v.removeEventListener('wheel', mine); v.removeEventListener('scroll', onScroll); v.removeEventListener('scrollend', settled); v.removeEventListener('scrollsnapchange', settled); window.clearTimeout(quiet); };
+  }, [last]);
+  // The index scrolls the view: at once on the first render and with reduced motion, smoothly otherwise. Nothing
+  // happens when the scroll is already there (a swipe that settled), or while a mouse drag holds it; a drag let go
+  // of short of a slide comes back here.
+  // Smoothly is the viewport's scroll-behavior (Carousel.css: smooth unless motion is reduced), which 'auto' follows.
+  const first = React.useRef(true);
+  useIsoLayoutEffect(() => {
+    const v = viewport.current, at = first.current;
+    first.current = false;
+    if (!v || dragging) return;
+    // Where it heads, from where it is now, inside the scroll's range (scrollLeft runs negative right to left).
+    const max = v.scrollWidth - v.clientWidth, to = Math.min(rtl() ? 0 : max, Math.max(rtl() ? -max : 0, v.scrollLeft + delta(index)));
+    if (Math.abs(to - v.scrollLeft) < 1) return;
+    heading.current = at ? null : index;
+    v.scrollTo({ left: to, behavior: at ? 'instant' : 'auto' });
+  }, [index, recheck, per, count, dragging]);
 
   const onDotsKey = (e: React.KeyboardEvent) => {
     // With Alt, Ctrl or ⌘ the keys are the browser's or the system's (Alt+← goes back a page): leave them (L8E28).
@@ -161,34 +220,6 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
     if (!loop && (to <= 0 || to >= last)) refocus.current = step > 0 ? 'prev' : 'next';   // this button hides at the end: keep focus on the other
     go(to);
   };
-  /* A sideways swipe on a trackpad, or Shift and the wheel, moves one slide per gesture, as dragging does: the
-     wheel events of one swipe (its momentum included) count once, until they stop for a moment. Up and down still
-     scroll the page. Listened to directly, not passively, so the swipe doesn't also scroll the page sideways or go
-     back a page (carousel, swipe-to-reveal guides). */
-  const wheelTo = React.useRef(index);
-  React.useInsertionEffect(function () { wheelTo.current = index; });   // every render: the index the next swipe moves from
-  const goRef = React.useRef(go);
-  React.useInsertionEffect(function () { goRef.current = go; });   // every render: the latest go, for the listener
-  useIsoLayoutEffect(() => {
-    const v = viewport.current;
-    if (!v || last < 1) return;
-    let sum = 0, used = false, quiet = 0;
-    const onWheel = (e: WheelEvent) => {
-      const dx = e.deltaX || (e.shiftKey ? e.deltaY : 0);
-      if (e.ctrlKey || Math.abs(dx) <= Math.abs(e.shiftKey ? 0 : e.deltaY)) return;
-      e.preventDefault();
-      window.clearTimeout(quiet);
-      quiet = window.setTimeout(() => { sum = 0; used = false; }, WHEEL_QUIET);
-      if (used) return;
-      sum += dx;
-      if (Math.abs(sum) < WHEEL_STEP) return;
-      used = true;
-      const forward = (sum > 0) !== (getComputedStyle(v).direction === 'rtl');
-      goRef.current(wheelTo.current + (forward ? 1 : -1));
-    };
-    v.addEventListener('wheel', onWheel, { passive: false });
-    return () => { v.removeEventListener('wheel', onWheel); window.clearTimeout(quiet); };
-  }, [last]);
   // every render: puts focus back after a key or button moved the slides, once the render has moved them.
   useIsoLayoutEffect(() => {
     const r = refocus.current;
@@ -201,83 +232,71 @@ export const Carousel = /* @__PURE__ */ component<HTMLElement, CarouselProps>('C
     }
   });
 
+  // A mouse doesn't scroll a scroll container by dragging, so a drag with it does: the snap lets go while it's held,
+  // and on release it moves one slide (40px or a flick) or goes back. Touch and pens scroll natively.
   const onPointerDown = (e: React.PointerEvent) => {
-    if (last < 1 || (e.pointerType === 'mouse' && e.button !== 0)) return;
-    drag.current = { x: e.clientX, y: e.clientY, id: e.pointerId, s: [{ t: e.timeStamp, p: e.clientX }] };
+    if (last < 1 || e.pointerType !== 'mouse' || e.button !== 0 || !viewport.current) return;
+    drag.current = { x: e.clientX, from: viewport.current.scrollLeft, id: e.pointerId, s: [{ t: e.timeStamp, p: e.clientX }] };
     dragged.current = false;
   };
   const onPointerMove = (e: React.PointerEvent) => {
-    const d = drag.current;
-    if (!d || d.id !== e.pointerId) return;
+    const d = drag.current, v = viewport.current;
+    if (!d || d.id !== e.pointerId || !v) return;
     const dx = e.clientX - d.x;
-    if (offset === 0 && Math.abs(dx) < 8) return;
-    if (offset === 0 && Math.abs(e.clientY - d.y) > Math.abs(dx)) { drag.current = null; return; }
-    if (offset === 0 && viewport.current) try { viewport.current.setPointerCapture(e.pointerId); } catch { /* the pointer is already gone */ }
-    dragged.current = true;
-    sample(d.s, e.timeStamp, e.clientX);   // for the speed the finger had as it let go
-    const forward = (dx < 0) !== rtl(), w = viewport.current ? viewport.current.clientWidth : 0;
-    setOffset(!loop && (forward ? index >= last : index <= 0) ? rubber(dx, w) : dx);
+    if (!dragged.current && Math.abs(dx) < 8) return;
+    // The snap lets go at once (data-dragging), not a render later, or this first move would snap back.
+    if (!dragged.current) { dragged.current = true; v.setAttribute('data-dragging', ''); setDragging(true); try { v.setPointerCapture(e.pointerId); } catch { /* the pointer is already gone */ } }
+    sample(d.s, e.timeStamp, e.clientX);   // for the speed the mouse had as it let go
+    v.scrollLeft = d.from - dx;
   };
   const onPointerEnd = (e: React.PointerEvent) => {
     const d = drag.current;
     if (!d || d.id !== e.pointerId) return;
     drag.current = null;
-    const dx = e.clientX - d.x;
-    const v = speed(d.s);   // px per ms, signed like dx
-    const flick = Math.abs(dx) > 10 && Math.abs(v) > FLICK && Math.sign(v) === Math.sign(dx);
-    const step = (viewport.current ? viewport.current.clientWidth : 0) / per;
-    // Where the release is heading (KW11, fling.ts): a swipe let go of while pulling back to under 40px springs back.
-    const to = dx + project(v);
-    setOffset(0);
-    if (flick || (Math.abs(dx) >= SWIPE && Math.sign(to) === Math.sign(dx) && Math.abs(to) >= SWIPE)) {
-      // The slide nearest where it's heading: one at least, and a view at most, so a hard flick can't skip slides unseen.
-      const n = Math.max(1, Math.min(Math.floor(per), Math.round(Math.abs(to) / Math.max(1, step))));
-      // Carries on at the finger's speed (fling.ts), over the distance left to that slide.
-      const ms = settleTime(Math.max(0, n * step - Math.abs(dx)), Math.sign(v) === Math.sign(dx) ? v : 0);
-      setSettle(ms);   // also when there's no slide that way, and the rubber band goes back
-      go(index + n * ((dx < 0) !== rtl() ? 1 : -1), ms);
-    } else setSettle(offset ? settleTime(offset, 0) : null);   // back to where it was, briskly
+    if (!dragged.current) return;
+    const dx = e.clientX - d.x, sp = speed(d.s);
+    const flick = Math.abs(dx) > 10 && Math.abs(sp) > FLICK && Math.sign(sp) === Math.sign(dx);
+    // Where the release is heading (KW11, fling.ts): a drag let go of while pulling back to under 40px springs back.
+    const to = dx + project(sp), far = Math.abs(dx) >= SWIPE && Math.sign(to) === Math.sign(dx) && Math.abs(to) >= SWIPE;
+    const n = flick || far ? index + ((dx < 0) !== rtl() ? 1 : -1) : index;
+    setDragging(false);   // the index, new or the same, scrolls the view to its slide
+    go(loop ? n : clamp(n));
   };
-  // The track stopped after a loop carried on: put it at the real index at once, then let it move again.
-  const onTrackEnd = (e: React.TransitionEvent) => {
-    if (e.target !== e.currentTarget || e.propertyName !== 'transform' || !wrap) return;
-    setSnap(true); setWrap(null);
+  // The pointer left or the browser took it before a drag began: change nothing.
+  const onPointerCancel = (e: React.PointerEvent) => {
+    if (!drag.current || drag.current.id !== e.pointerId) return;
+    drag.current = null; dragged.current = false;
+    setDragging(false);   // back to the slide it was on
   };
-  React.useEffect(() => {
-    if (!snap) return;
-    let f = requestAnimationFrame(() => { f = requestAnimationFrame(() => setSnap(false)); });   // two: one paints the snap
-    return () => cancelAnimationFrame(f);
-  }, [snap]);
-  // The browser took the gesture (a scroll) or the pointer left before a drag began: put the slide back, change nothing.
-  const onPointerCancel = (e: React.PointerEvent) => { if (drag.current && drag.current.id === e.pointerId) { drag.current = null; dragged.current = false; setOffset(0); } };
-  const onPointerLeave = (e: React.PointerEvent) => { if (offset === 0) onPointerCancel(e); };
 
-  const style = { ...props.style, '--dk-carousel-index': wrap ? wrap.virt : index, '--dk-carousel-count': count,
-    ...(settle != null ? { '--dk-carousel-settle': settle + 'ms', '--dk-carousel-ease': 'var(--ease-fling)' } : null),
-    ...(perMap ? { '--dk-carousel-per-base': perMap.base, '--dk-carousel-per-sm': perMap.sm, '--dk-carousel-per-md': perMap.md, '--dk-carousel-per-lg': perMap.lg } as Record<string, number> : { '--dk-carousel-per': per }),
-    '--dk-carousel-drag': offset + 'px' } as React.CSSProperties;
+  const style = { ...props.style, '--dk-carousel-count': count,
+    ...(perMap ? { '--dk-carousel-per-base': perMap.base, '--dk-carousel-per-sm': perMap.sm, '--dk-carousel-per-md': perMap.md, '--dk-carousel-per-lg': perMap.lg } as Record<string, number> : { '--dk-carousel-per': per }) } as React.CSSProperties;
   const multi = perMap ? Math.max(perMap.base, perMap.sm, perMap.md, perMap.lg) > 1 : per > 1;
   // The widths where a dot is past the last page, so CSS hides it there until the dots are counted again after mount.
   const pastAt = (k: number) => perMap ? (['sm', 'md', 'lg'] as const).filter((b) => k >= Math.ceil(count / perMap[b])).join(' ') || undefined : undefined;
-  const shown = (i: number) => i >= index && i < index + per;
+  const shown = (i: number) => !live || (i >= index && i < index + per);
   const prevOff = !loop && index === 0, nextOff = !loop && index >= last;
 
   return (
     <section {...rest} ref={(n) => { restyle(n); nameRef(n); }} className={cn('dk-carousel', (multi || props.peek) && 'dk-carousel--multi', props.peek && 'dk-carousel--peek', props.className)} style={style}
-      aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined} data-end={props.peek && !loop && index >= last && index > 0 ? '' : undefined}>
-      <div className="dk-carousel__viewport" ref={viewport} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
-        onPointerUp={onPointerEnd} onPointerCancel={onPointerCancel} onPointerLeave={onPointerLeave}
-        onDragStart={(e) => e.preventDefault()}   // a picture's own drag would end the swipe
-        onClickCapture={(e) => { if (dragged.current && e.detail) { dragged.current = false; e.preventDefault(); e.stopPropagation(); } }}   // a swipe across a link isn't a click
-        data-dragging={offset ? '' : undefined}>
-        <div className="dk-carousel__track" aria-live="polite" ref={track} onTransitionEnd={onTrackEnd} data-snap={snap ? '' : undefined}>
-          {slides.map((s, i) => (
-            <div key={(s as React.ReactElement).key ?? i} className="dk-carousel__slide" role="group" aria-roledescription={sds.labels.slideRole} aria-label={name(i, count)}
-              aria-hidden={shown(i) ? undefined : true} inert={!shown(i)} data-active={shown(i) ? '' : undefined}
-              data-wrap={wrap && (wrap.edge === 'after' ? i < per : i >= count - per) ? wrap.edge : undefined}>
-              {s}
-            </div>
-          ))}
+      aria-roledescription={sds.labels.carouselRole} aria-label={props.label ?? rest['aria-label']} data-component="carousel" data-index={index} data-dir={dir} data-per-map={perMap ? '' : undefined}>
+      <div className="dk-carousel__frame">
+        {/* A scroll container is a keyboard stop of its own (WCAG 2.1.1, axe's scrollable-region-focusable): focused,
+            the arrow keys scroll it a slide at a time, and it's named by the slides in view ("2 of 5"). */}
+        <div className="dk-carousel__viewport" ref={viewport} role={last > 0 ? 'group' : undefined} tabIndex={last > 0 ? 0 : undefined}
+          aria-label={last > 0 ? (per > 1 ? sds.labels.slidesOf(index + 1, index + per, count) : name(index, count)) : undefined} onPointerDown={onPointerDown} onPointerMove={onPointerMove}
+          onPointerUp={onPointerEnd} onPointerCancel={onPointerCancel} onLostPointerCapture={onPointerCancel}
+          onDragStart={(e) => e.preventDefault()}   // a picture's own drag would end the swipe
+          onClickCapture={(e) => { if (dragged.current && e.detail) { dragged.current = false; e.preventDefault(); e.stopPropagation(); } }}   // a swipe across a link isn't a click
+          data-dragging={dragging ? '' : undefined}>
+          <div className="dk-carousel__track" aria-live="polite" ref={track}>
+            {slides.map((s, i) => (
+              <div key={(s as React.ReactElement).key ?? i} className="dk-carousel__slide" role="group" aria-roledescription={sds.labels.slideRole} aria-label={name(i, count)}
+                aria-hidden={shown(i) ? undefined : true} inert={!shown(i)} data-active={shown(i) ? '' : undefined}>
+                {s}
+              </div>
+            ))}
+          </div>
         </div>
         {props.arrows !== false && last > 0 ? <>
           <IconButton className="dk-carousel__arrow dk-carousel__arrow--prev" label={props.previousLabel || sds.labels.previousSlide} size="sm" variant="secondary" shape="round" hideTitle

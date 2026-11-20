@@ -110,7 +110,7 @@ const CONTROLS: { [K in Named]: Control | string } = {
   TransferList: { el: (form) => <TransferList aria-label="Columns" name="cols" form={form} options={[{ value: 'name', label: 'Name' }, { value: 'email', label: 'Email' }]} defaultValue={['email']} />, initial: { cols: 'email' },
     change: async (r) => { await userEvent.click($(r, 'input[value="name"]')); await userEvent.click($(r, 'button')); }, changed: { cols: 'name' } },
   Slider: { el: (form) => <Slider aria-label="Volume" name="volume" form={form} defaultValue={30} />, initial: { volume: '30' },
-    change: async (r) => { $(r, '[role="slider"]').focus(); await userEvent.keyboard('{End}'); }, changed: { volume: '100' } },
+    change: async (r) => { $(r, 'input[type=range]').focus(); await userEvent.keyboard('{End}'); }, changed: { volume: '100' } },
   SegmentedControl: { el: (form) => <SegmentedControl aria-label="View" name="view" form={form} options={[{ value: 'list', label: 'List' }, { value: 'grid', label: 'Grid' }]} defaultValue="list" />, initial: { view: 'list' },
     change: async (r) => { await userEvent.click($(r, '[role="radio"][aria-checked="false"]')); }, changed: { view: 'grid' } },
   Combobox: { el: (form) => <Combobox aria-label="Fruit" name="fruit" form={form} options={['Apple', 'Banana', 'Cherry']} defaultValue="Apple" />, initial: { fruit: 'Apple' },
@@ -140,6 +140,7 @@ const CONTROLS: { [K in Named]: Control | string } = {
   FileUpload: { el: (form) => <FileUpload name="attachment" form={form} files={[file]} onFilesChange={() => {}} />, initial: { attachment: 'notes.txt' } },
   // A button's name and value go only with the button that submits the form, as with <button name>.
   Field: 'a label around a control: its name only picks the control\'s message from FormErrors',
+  FieldList: 'the start of its rows\' field names (phones[0].number): the fields inside submit their own values',
   CopyButton: 'a button', InputAction: 'a button', Fab: 'a button', FabMenu: 'a button that opens a menu', Tab: 'a button', ToggleButton: 'a button',
   Attachment: "the file's name, shown and read", ChatComposer: "the <form> element's own name attribute, not a value", Avatar: "the person's name, shown as initials", Icon: "the icon's name", Illustration: "the picture's name",
 };

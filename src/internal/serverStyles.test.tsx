@@ -41,7 +41,7 @@ describe('server HTML under a strict Content Security Policy', () => {
     let root: Root | undefined;
     flushSync(() => { root = hydrateRoot(host, ui); });
     await expect.poll(() => [share(), seen('#m .dk-meter__fill', '#m .dk-meter__track')], { message: `the fill's style: ${document.querySelector(fill)?.getAttribute('style')}` }).toEqual([40, 70]);
-    const thumb = document.querySelector('#s [role=slider]') as HTMLElement, rail = document.querySelector('#s') as HTMLElement;
+    const thumb = document.querySelector('#s input[type=range]') as HTMLElement, rail = document.querySelector('#s') as HTMLElement;
     expect(thumb.getBoundingClientRect().left - rail.getBoundingClientRect().left).toBeGreaterThan(20);
     expect(stars()).toEqual([100, 100, 100, 100, 30]);   // 4.3 stars, not five full ones (GR10)
     root?.unmount(); host.remove();
@@ -57,7 +57,7 @@ describe('server HTML under a strict Content Security Policy', () => {
     flushSync(() => { root = hydrateRoot(host, ui); });
     const seen = (f: string, t: string) => { const a = document.querySelector(f)!.getBoundingClientRect(), b = document.querySelector(t)!.getBoundingClientRect(); return Math.round((Math.min(a.right, b.right) - Math.max(a.left, b.left)) / b.width * 100); };
     await expect.poll(() => [seen('#p .dk-progress__fill', '#p .dk-progress__track'), seen('#m .dk-meter__fill', '#m .dk-meter__track')]).toEqual([40, 70]);
-    const thumb = document.querySelector('#s [role=slider]') as HTMLElement, rail = document.querySelector('#s') as HTMLElement;
+    const thumb = document.querySelector('#s input[type=range]') as HTMLElement, rail = document.querySelector('#s') as HTMLElement;
     expect(thumb.getBoundingClientRect().left - rail.getBoundingClientRect().left).toBeGreaterThan(20);
     expect(stars()).toEqual([100, 100, 100, 100, 30]);   // 4.3 stars, not five full ones (GR10)
     root?.unmount(); host.remove();

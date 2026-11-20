@@ -1,0 +1,180 @@
+# AtMax
+- group "Phone numbers":
+  - text: Phone numbers
+  - list:
+    - listitem:
+      - group "Phone 1":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile" [selected]
+          - option "Work"
+          - option "Home"
+        - text: Number
+        - textbox "Number": 0812 3456 7890
+        - button "Remove Phone 1"
+    - listitem:
+      - group "Phone 2":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile"
+          - option "Work" [selected]
+          - option "Home"
+        - text: Number
+        - textbox "Number": 021 555 0199
+        - button "Remove Phone 2"
+  - button "Add phone" [disabled]
+
+# AtMin
+- group "Phone numbers":
+  - text: Phone numbers
+  - list:
+    - listitem:
+      - group "Phone 1":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile" [selected]
+          - option "Work"
+          - option "Home"
+        - text: Number
+        - textbox "Number"
+  - button "Add phone"
+
+# Disabled
+- group "Phone numbers":
+  - text: Phone numbers
+  - list:
+    - listitem:
+      - group "Phone 1":
+        - text: Kind
+        - combobox "Kind" [disabled]:
+          - option "Mobile" [disabled] [selected]
+          - option "Work" [disabled]
+          - option "Home" [disabled]
+        - text: Number
+        - textbox "Number" [disabled]: 0812 3456 7890
+        - button "Remove Phone 1" [disabled]
+    - listitem:
+      - group "Phone 2":
+        - text: Kind
+        - combobox "Kind" [disabled]:
+          - option "Mobile" [disabled]
+          - option "Work" [disabled] [selected]
+          - option "Home" [disabled]
+        - text: Number
+        - textbox "Number" [disabled]: 021 555 0199
+        - button "Remove Phone 2" [disabled]
+  - button "Add phone" [disabled]
+
+# Empty
+- group "Phone numbers":
+  - text: Phone numbers We call the first one first.
+  - button "Add phone"
+
+# Errors
+- group "Phone numbers":
+  - text: Phone numbers
+  - list:
+    - listitem:
+      - group "Phone 1":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile" [selected]
+          - option "Work"
+          - option "Home"
+        - text: Number
+        - textbox "Number": 0812 3456 7890
+        - button "Remove Phone 1"
+    - listitem:
+      - group "Phone 2":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile"
+          - option "Work" [selected]
+          - option "Home"
+        - text: Number
+        - textbox "Number" [invalid]: 021 555 0199
+        - button "Remove Phone 2"
+        - text: Enter a number with its area code
+  - text: Add a mobile number we can text
+  - button "Add phone"
+
+# LongText
+- group "Telefonnummern für Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung und alle Rückfragen":
+  - text: Telefonnummern für Donaudampfschifffahrtsgesellschaftskapitänswitwenrentenversicherung und alle Rückfragen
+  - list:
+    - listitem:
+      - group "Phone 1":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile"
+          - option "Work" [selected]
+          - option "Home"
+        - text: Number
+        - textbox "Number": +49 30 1234 5678 9012 3456 7890 1234
+  - button "Add phone"
+
+# Playground
+- group "Phone numbers":
+  - text: Phone numbers
+  - list:
+    - listitem:
+      - group "Phone 1":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile" [selected]
+          - option "Work"
+          - option "Home"
+        - text: Number
+        - textbox "Number": 0812 3456 7890
+        - button "Remove Phone 1"
+    - listitem:
+      - group "Phone 2":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile"
+          - option "Work" [selected]
+          - option "Home"
+        - text: Number
+        - textbox "Number": 021 555 0199
+        - button "Remove Phone 2"
+  - button "Add phone"
+
+# Reorderable
+- group "Phone numbers":
+  - text: Phone numbers
+  - list:
+    - listitem:
+      - button "Reorder Phone 1"
+      - group "Phone 1":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile" [selected]
+          - option "Work"
+          - option "Home"
+        - text: Number
+        - textbox "Number": 0812 3456 7890
+        - button "Remove Phone 1"
+    - listitem:
+      - button "Reorder Phone 2"
+      - group "Phone 2":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile"
+          - option "Work" [selected]
+          - option "Home"
+        - text: Number
+        - textbox "Number": 021 555 0199
+        - button "Remove Phone 2"
+    - listitem:
+      - button "Reorder Phone 3"
+      - group "Phone 3":
+        - text: Kind
+        - combobox "Kind":
+          - option "Mobile"
+          - option "Work"
+          - option "Home" [selected]
+        - text: Number
+        - textbox "Number": 022 420 1188
+        - button "Remove Phone 3"
+  - button "Add phone"
+
