@@ -146,4 +146,19 @@ describe('Patterns/List and detail', () => {
     await render(<SerupaProvider locale="ar-EG"><ListDetail /></SerupaProvider>);
     expect(bodyText()).toContain('Messages (٤)');
   });
+
+  test('phone: the Back button\'s arrow lines up with the message\'s heading under it', async () => {
+    await page.viewport(390, 800);
+    try {
+      const screen = await render(<ListDetail />);
+      await screen.getByRole('link', { name: /New photos/ }).click();
+      const back = screen.getByRole('button', { name: 'Back to messages' }).element() as HTMLElement;
+      const icon = back.querySelector('svg, [aria-hidden="true"]')!.getBoundingClientRect();
+      const heading = (screen.getByRole('heading', { level: 2 }).elements().find((h) => latin(h.textContent) === 'New photos for the home page'))!.getBoundingClientRect();
+      const rtl = getComputedStyle(back).direction === 'rtl';
+      expect(Math.abs(rtl ? icon.right - heading.right : icon.left - heading.left)).toBeLessThan(3);
+    } finally {
+      await page.viewport(900, 700);
+    }
+  });
 });
