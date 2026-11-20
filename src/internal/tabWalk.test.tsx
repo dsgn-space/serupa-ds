@@ -23,6 +23,10 @@ async function walk(from: HTMLElement, to: HTMLElement, shift: boolean): Promise
   let escapes = 0, jumped = false;
   for (let i = 0; i < STEPS; i++) {
     await userEvent.tab({ shift });
+    // Firefox lets Tab out of a modal dialog to its own toolbar, as it should (no trap): the page loses focus but
+    // document.activeElement stays on the last element, and an Escape there goes to the toolbar. The next Tab comes
+    // back into the page.
+    if (!document.hasFocus()) continue;
     const at = document.activeElement;
     if (at === to) return null;
     if (at && at !== document.body && (at.closest('[aria-hidden="true"]') || at.closest('[inert]')))

@@ -732,7 +732,7 @@ describe('TableVirtualBody (51)', () => {
     window.dispatchEvent(new Event('afterprint'));
     await frames(); await frames();
     expect([drawn().length < 40, drawn()[0]!.getAttribute('aria-rowindex'), Math.abs(f.scrollTop - at) < 1]).toEqual([true, first, true]);
-  });
+  }, 40_000);   // 5,000 rows drawn and laid out at once: WebKit on the CI runner took more than the default 15 s.
   test('a row with focus stays in the page when it scrolls away, so focus is never lost', async () => {
     await render(<Big />);
     await frames();
