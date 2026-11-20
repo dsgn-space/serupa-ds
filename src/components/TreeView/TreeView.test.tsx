@@ -429,3 +429,89 @@ describe('TreeView: motion', () => {
     expect(turn()).not.toBe('0s');
   }));
 });
+
+describe('TreeView: cascade, a checkbox tree', () => {
+  const FILES: TreeViewItem[] = [
+    { id: 'src', label: 'src', children: [
+      { id: 'a', label: 'a.ts' },
+      { id: 'b', label: 'b.ts' },
+      { id: 'lib', label: 'lib', children: [{ id: 'c', label: 'c.ts' }, { id: 'd', label: 'd.ts', disabled: true }] },
+    ] },
+    { id: 'readme', label: 'README.md' },
+  ];
+  const OPEN = ['src', 'lib'];
+  const checked = (): Record<string, string | null> => Object.fromEntries(items().map((i) => [i.dataset.id ?? '', i.getAttribute('aria-checked')]));
+  function Tree(props: { cascadeValue?: 'all' | 'leaves'; value?: string[]; defaultValue?: string[] }) {
+    const [got, setGot] = React.useState<string[] | null>(null);
+    return <><TreeView aria-label="Files" items={FILES} selectionMode="multiple" cascade defaultExpanded={OPEN} onValueChange={setGot} {...props} /><output id="got">{got ? got.join() : ''}</output></>;
+  }
+
+  test('each item is checked, unchecked or mixed, not selected: a checkbox tree', async () => {
+    await render(<Tree defaultValue={['a']} />);
+    expect(checked()).toEqual({ src: 'mixed', a: 'true', b: 'false', lib: 'false', c: 'false', d: 'false', readme: 'false' });
+    expect([items().some((i) => i.hasAttribute('aria-selected')), document.querySelector('[role=tree]')!.hasAttribute('aria-multiselectable')]).toEqual([false, false]);
+    // The box is drawn for the eye only: the item's aria-checked says it.
+    expect(row('a').querySelector('[data-state]')!.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  test('checking a folder checks everything in it that can change; a disabled item keeps its state, so the folder stays mixed', async () => {
+    await render(<Tree />);
+    await userEvent.click(row('src'));
+    expect(checked()).toEqual({ src: 'mixed', a: 'true', b: 'true', lib: 'mixed', c: 'true', d: 'false', readme: 'false' });
+    expect(el('got').textContent).toBe('a,b,c');
+  });
+
+  test('Space on a mixed folder checks the rest, and again clears the branch; value lists every fully checked item', async () => {
+    await render(<Tree defaultValue={['a']} />);
+    item('src').focus();
+    await userEvent.keyboard(' ');
+    expect(el('got').textContent).toBe('a,b,c');
+    await userEvent.keyboard(' ');
+    expect([el('got').textContent, checked().src]).toEqual(['', 'false']);
+    item('lib').focus();
+    await userEvent.keyboard(' ');
+    // lib's only usable file is c; lib isn't fully checked (d can't be), so it isn't in value.
+    expect([el('got').textContent, checked().lib]).toEqual(['c', 'mixed']);
+  });
+
+  test('a folder whose items are all checked is checked, and is in value unless cascadeValue="leaves"', async () => {
+    await render(<><Tree defaultValue={['a', 'b']} /></>);
+    await userEvent.click(row('readme'));
+    expect(el('got').textContent).toBe('a,b,readme');
+  });
+
+  test('cascadeValue="leaves" reports only items with no children; a folder id in value checks the folder\'s items', async () => {
+    await render(<Tree cascadeValue="leaves" defaultValue={['lib']} />);
+    expect([checked().c, checked().d, checked().lib]).toEqual(['true', 'true', 'true']);
+    await userEvent.click(row('a'));
+    expect(el('got').textContent).toBe('a,c,d');
+  });
+
+  test('Ctrl+A checks everything that can change; Shift with an arrow checks as it moves', async () => {
+    await render(<Tree />);
+    item('src').focus();
+    await userEvent.keyboard('{Control>}a{/Control}');
+    expect(el('got').textContent).toBe('a,b,c,readme');
+    await userEvent.keyboard('{Control>}a{/Control}');
+    expect(el('got').textContent).toBe('a,b,c,readme');
+  });
+
+  test('Shift+Down checks the item it moves to', async () => {
+    await render(<Tree />);
+    item('src').focus();
+    await userEvent.keyboard('{ArrowDown}{Shift>}{ArrowDown}{/Shift}');
+    expect(el('got').textContent).toBe('b');
+  });
+
+  test('as Checkbox\'s, in every theme: a checked box 3:1 on the row and its mark 4.5:1 on it; an unchecked box\'s soft border 1.3:1', async () => {
+    await render(<Tree defaultValue={['a']} />);
+    const on = row('a').querySelector<HTMLElement>('[data-state]')!, off = row('b').querySelector<HTMLElement>('[data-state]')!;
+    const bg = (e: HTMLElement) => css(e.closest<HTMLElement>('[role=tree]')).backgroundColor;
+    for (const th of THEMES) {
+      document.documentElement.setAttribute('data-theme', th);
+      expect(contrast(css(on).backgroundColor, bg(on)), th + ' checked').toBeGreaterThanOrEqual(3);
+      expect(contrast(css(off).borderTopColor, bg(off)), th + ' unchecked').toBeGreaterThanOrEqual(1.3);
+      expect(contrast(css(on).color, css(on).backgroundColor), th + ' mark').toBeGreaterThanOrEqual(4.5);
+    }
+  });
+});

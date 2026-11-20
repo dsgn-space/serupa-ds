@@ -91,6 +91,46 @@
             "cssVar": "--tree-view-text-disabled"
           }
         }
+      },
+      "check-border": {
+        "$type": "color",
+        "$value": "{color.field-border}",
+        "$description": "With cascade: an unchecked box's border, the soft field border, as Checkbox's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tree-view-check-border"
+          }
+        }
+      },
+      "check-bg": {
+        "$type": "color",
+        "$value": "{color.field}",
+        "$description": "With cascade: an unchecked box's fill.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tree-view-check-bg"
+          }
+        }
+      },
+      "check-bg-checked": {
+        "$type": "color",
+        "$value": "{color.primary}",
+        "$description": "With cascade: a checked or mixed box's fill and border (3:1 on the row).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tree-view-check-bg-checked"
+          }
+        }
+      },
+      "check-mark": {
+        "$type": "color",
+        "$value": "{color.on-primary}",
+        "$description": "With cascade: the check or dash on a filled box.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tree-view-check-mark"
+          }
+        }
       }
     },
     "radius": {
@@ -111,6 +151,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tree-view-item-radius"
+          }
+        }
+      },
+      "check-radius": {
+        "$type": "dimension",
+        "$value": "{radius.radius-inner}",
+        "$description": "With cascade: the box's corners.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tree-view-check-radius"
           }
         }
       }
@@ -165,6 +215,16 @@
         "$extensions": {
           "com.serupa": {
             "cssVar": "--tree-view-item-height"
+          }
+        }
+      },
+      "check-size": {
+        "$type": "dimension",
+        "$value": "{spacing.spacing-4}",
+        "$description": "With cascade: the box's size (16px), as Checkbox's.",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tree-view-check-size"
           }
         }
       }

@@ -18,6 +18,9 @@ const files: TreeViewItem[] = [
 
 // several picked
 <TreeView aria-label="Files" items={files} selectionMode="multiple" value={picked} onValueChange={setPicked} />
+
+// checkboxes: a folder checks or clears everything under it
+<TreeView aria-label="Files" items={files} cascade value={picked} onValueChange={setPicked} />
 ```
 
 ## When to use
@@ -51,6 +54,7 @@ Drawn from the `Multiple` story.
 - Give an item `textValue` when its label isn't plain text, so typing still finds it.
 - A disabled item can still be focused and read, so people know it's there, but it can't be picked, opened or closed.
 - When the focused item leaves the page from outside (you take it out of `items`, or close its parent through `expanded`), focus goes to its nearest parent in view, else the item now in its place, not to the page.
+- `cascade` gives each row a checkbox, for picking files to share or permissions to grant. Checking a folder checks every item under it, and a folder with only some of its items checked shows a dash (mixed). Disabled items keep their state when a folder above them changes. `value` holds every checked item, folders included; set `cascadeValue="leaves"` to get only the items with no children, such as the files to upload. (`Cascade`)
 - Your `onKeyDown` runs before the tree's own keys, so `e.preventDefault()` in it keeps the tree from acting on that key.
 
 ### Loading and failed
@@ -74,7 +78,7 @@ const children = kids === 'loading' ? [{ id: 'docs-wait', label: 'Loading…', d
 
 ## Accessibility
 
-- **Role and name:** a `role="tree"` of `role="treeitem"`s with `aria-level`, `aria-posinset`, `aria-setsize` and `aria-expanded`. The children of an open item are in a `role="group"`. Picked items have `aria-selected`. With `selectionMode="multiple"`, the tree has `aria-multiselectable`. Name it with `aria-label` or `aria-labelledby`.
+- **Role and name:** a `role="tree"` of `role="treeitem"`s with `aria-level`, `aria-posinset`, `aria-setsize` and `aria-expanded`. The children of an open item are in a `role="group"`. Picked items have `aria-selected`. With `selectionMode="multiple"`, the tree has `aria-multiselectable`. With `cascade`, rows have `aria-checked` (`true`, `false` or `"mixed"`) in place of `aria-selected`, and the box beside each label is hidden from screen readers, since `aria-checked` already says it. Name it with `aria-label` or `aria-labelledby`.
 - **Keyboard:** the [WAI-ARIA tree pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/). It has one Tab stop: the item used last, or else the first picked one, or else the first.
 
 | Key | Does |
@@ -83,12 +87,12 @@ const children = kids === 'loading' ? [{ id: 'docs-wait', label: 'Loading…', d
 | Right arrow | Opens a closed item, or moves to an open item's first child (Left right to left) |
 | Left arrow | Closes an open item, or moves to its parent (Right right to left) |
 | Home / End | Moves to the first or last item in view |
-| Enter / Space | Picks the item (toggles it with `selectionMode="multiple"`), or opens and closes it with `"none"` |
+| Enter / Space | Picks the item (toggles it with `selectionMode="multiple"`), or opens and closes it with `"none"`. With `cascade`, checks or clears it and everything under it: a mixed folder checks everything |
 | * | Opens every sibling of the item |
 | A letter | Moves to the next item starting with what was typed. Letters within half a second make one word, and a Space between them is part of it ("my files" finds "my files", not "my file") |
 | Shift + Down / Up | With `"multiple"`: moves and picks |
 | Shift + Space | With `"multiple"`: picks every item from the one picked last |
-| Ctrl / Cmd + A | With `"multiple"`: picks every item in view |
+| Ctrl / Cmd + A | With `"multiple"`: picks every item in view. With `cascade`: checks every item, or clears them all when all are checked |
 
 - **Pointer:** a click on a row picks it (Shift+click picks a range with `"multiple"`), and a click on its chevron opens or closes it without picking. The chevron is a 24px target (WCAG 2.5.8) around its 20px icon.
 - **Contrast:** labels read 4.5:1 on the background, and the picked row's on its highlight, in every theme (`TreeView.test.tsx`). With more contrast the picked row also has a 2px bar at its start.
@@ -101,6 +105,8 @@ const children = kids === 'loading' ? [{ id: 'docs-wait', label: 'Loading…', d
 | `id` | string | none | Goes to the root `<ul role="tree">`. |
 | `items` | `TreeViewItem[]` | | `{ id, label, textValue?, icon?, children?, disabled? }`, nested. |
 | `selectionMode` | `'single'` \| `'multiple'` \| `'none'` | `'single'` | One picked item, any number, or none (items only open and close). |
+| `cascade` | boolean | `false` | A checkbox on each row; a folder checks and clears everything under it, and shows mixed when only some are checked. Takes the place of `selectionMode`. |
+| `cascadeValue` | `'all'` \| `'leaves'` | `'all'` | With `cascade`: whether `value` lists every checked item, folders included, or only the checked items with no children. |
 | `value` | `string[]` | | The picked ids (controlled). |
 | `defaultValue` | `string[]` | `[]` | The picked ids at first. |
 | `onValueChange` | `(value: string[]) => void` | | Called when the picked ids change. |
@@ -116,6 +122,8 @@ const children = kids === 'loading' ? [{ id: 'docs-wait', label: 'Loading…', d
 Each is an optional override: set it on the page, a container or one TreeView. The list lives in `src/components/TreeView/tree-view.tokens.json` (also in `design-tokens/components/`).
 
 <!-- token-table:start (made from tree-view.tokens.json by npm run tokens: edit the descriptions there) -->
+**Colors**
+
 | Token | Default | Use |
 | --- | --- | --- |
 | `--tree-view-bg` | `surface` | The background. |
@@ -127,11 +135,32 @@ Each is an optional override: set it on the page, a container or one TreeView. T
 | `--tree-view-focus-ring` | `focus-ring` | The ring inside the focused row. |
 | `--tree-view-item-bg-pressed` | `pressed` | A row's fill while it's held down. |
 | `--tree-view-text-disabled` | `disabled-text` | Disabled: the text, icon or mark, in place of fading it (3:1 or more on its background, more with more contrast). |
+| `--tree-view-check-border` | `field-border` | With cascade: an unchecked box's border, the soft field border, as Checkbox's. |
+| `--tree-view-check-bg` | `field` | With cascade: an unchecked box's fill. |
+| `--tree-view-check-bg-checked` | `primary` | With cascade: a checked or mixed box's fill and border (3:1 on the row). |
+| `--tree-view-check-mark` | `on-primary` | With cascade: the check or dash on a filled box. |
+
+**Radius**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--tree-view-radius` | `radius-control` | The tree's corners (6px). |
 | `--tree-view-item-radius` | `radius-inner` | A row's corners (4px). |
+| `--tree-view-check-radius` | `radius-inner` | With cascade: the box's corners. |
+
+**Spacing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--tree-view-padding` | `spacing-1` | Space inside the tree (4px). |
 | `--tree-view-indent` | `spacing-4` | How much further in each level starts (16px). |
 | `--tree-view-item-padding-x` | `spacing-1` | Space at a row's start and end (4px). |
 | `--tree-view-gap` | `spacing-1` | Space between the chevron, icon and label (4px). |
+
+**Sizing**
+
+| Token | Default | Use |
+| --- | --- | --- |
 | `--tree-view-item-height` | `control-height-md` | A row's least height (32px). |
+| `--tree-view-check-size` | `spacing-4` | With cascade: the box's size (16px), as Checkbox's. |
 <!-- token-table:end -->
