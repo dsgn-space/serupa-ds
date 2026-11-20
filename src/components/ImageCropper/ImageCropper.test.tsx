@@ -180,10 +180,10 @@ describe('ImageCropper', () => {
     await expect.element(page.getByRole('slider', { name: 'Zoom' })).toHaveAttribute('aria-valuetext', '100%');
   });
 
-  test('a picture that can\'t be loaded says so in the frame, and moving and zooming are off', async () => {
+  test('a picture that can\'t be loaded says so in the frame; moving is off and the zoom row goes', async () => {
     await render(<ImageCropper aria-label="Photo" src="data:image/png;base64,broken" />);
     await expect.element(page.getByText('The picture couldn’t be loaded.')).toBeVisible();
-    await expect.element(page.getByRole('slider', { name: 'Zoom' })).toBeDisabled();
+    await expect.element(page.getByRole('slider', { name: 'Zoom' })).not.toBeInTheDocument();
     expect([frame().tabIndex, frame().getAttribute('role'), frame().dataset.state]).toEqual([-1, null, 'error']);
   });
 

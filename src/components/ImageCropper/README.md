@@ -44,7 +44,7 @@ Drawn from the `Playground` story.
 - `cropImage(src, area, { width, type, quality })` resolves to a Blob of the crop, `width` pixels wide (default: the crop's own width). A picture from another site needs CORS: give it `crossOrigin="anonymous"` here and in `cropImage`'s options, or crop on the server.
 - The picture always covers the frame, so a crop never has an empty edge, and zoom 1 is as far out as it goes.
 - To start from a crop saved before, give it as `defaultCrop` (or `crop` with `onCropChange`, controlled): the picture is moved and zoomed to show it.
-- A new `src` starts over: centred at `defaultZoom`.
+- A new `src` starts over: centred at `defaultZoom`. While it loads the zoom row waits; if it can't be loaded, the frame says so and the zoom row goes.
 
 ### Do and don't
 

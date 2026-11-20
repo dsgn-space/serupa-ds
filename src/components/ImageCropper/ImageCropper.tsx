@@ -8,6 +8,7 @@ import { FieldContext, useFieldControl } from '../../internal/field';
 import { useFieldLabel } from '../../internal/fieldLabel';
 import { delegateFocus } from '../../internal/focus';
 import { NAME_HOW, useNameCheck } from '../../internal/nameCheck';
+import { useServerStyles } from '../../internal/serverStyles';
 import * as icons from '../../material/builtin';
 import { Icon } from '../Icon/Icon';
 import { IconButton } from '../IconButton/IconButton';
@@ -161,7 +162,7 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
   // A picture that loaded before hydration fires no load event for React: read it as it's attached.
   const imgRef = (i: HTMLImageElement | null) => { if (i && i.complete && i.naturalWidth) loaded(i); };
 
-  const live = !disabled && !!area, off = disabled || failed;
+  const live = !disabled && !!area, off = disabled;
   const pointers = React.useRef(new Map<number, { x: number; y: number }>());
   const start = React.useRef<Gesture | null>(null);
   const pinch = React.useRef<{ d: number; z: number } | null>(null);
@@ -237,7 +238,9 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
     width: pct(nat[0] / area.width), height: pct(nat[1] / area.height), left: pct(-area.x / area.width), top: pct(-area.y / area.height),
   } : undefined;
   const labelledBy = props['aria-labelledby'] || (props['aria-label'] ? undefined : fieldLabel);
-  const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, () => frame.current); nameRef(n); });
+  // Under a strict CSP the server's style attributes (the frame's shape, the picture's place) are ignored until set again.
+  const restyle = useServerStyles<HTMLDivElement>();
+  const mergedRef = useMergedRef(ref, (n) => { root.current = n; delegateFocus(n, () => frame.current); nameRef(n); restyle(n); });
   const percent = (z: number) => Math.round(z * 100) + '%';
   return (
     <div {...rest} ref={mergedRef} role="group" aria-labelledby={labelledBy}
@@ -255,13 +258,14 @@ function ImageCropperRender({ ref, ...given }: ImageCropperProps & React.RefAttr
           <span className="dk-image-cropper__grid" aria-hidden="true" />
         </div>
         <span id={base + '-how'} hidden>{L.cropHint}</span>
-        {/* While the picture loads the zoom row is on but does nothing yet, so it doesn't flash from off to on. */}
-        <div className="dk-image-cropper__zoom">
+        {/* While the picture loads the zoom row is on but does nothing yet, so it doesn't flash from off to on; when
+            the picture can't be loaded there's nothing to zoom, so the row goes rather than turning off. */}
+        {failed ? null : <div className="dk-image-cropper__zoom">
           <IconButton icon={icons.Remove} label={L.cropZoomOut} size="sm" disabled={off || zoom <= 1} onClick={() => zoomTo(zoom - STEP)} />
           <Slider className="dk-image-cropper__slider" size="sm" aria-label={L.cropZoom} min={1} max={maxZoom} step={0.01} largeStep={10}
             value={zoom} disabled={off} formatValue={percent} onValueChange={(z) => zoomTo(z)} />
           <IconButton icon={icons.Add} label={L.cropZoomIn} size="sm" disabled={off || zoom >= maxZoom} onClick={() => zoomTo(zoom + STEP)} />
-        </div>
+        </div>}
       </FieldContext.Provider>
     </div>
   );

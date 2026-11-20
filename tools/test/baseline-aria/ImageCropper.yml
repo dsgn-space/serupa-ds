@@ -12,11 +12,7 @@
   - button "Zoom in" [disabled]
 
 # Failed
-- group "Profile photo":
-  - text: The picture couldn’t be loaded.
-  - button "Zoom out" [disabled]
-  - slider "Zoom" [disabled]: "1"
-  - button "Zoom in" [disabled]
+- group "Profile photo": The picture couldn’t be loaded.
 
 # Playground
 - group "Profile photo":
