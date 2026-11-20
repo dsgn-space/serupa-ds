@@ -7,7 +7,8 @@ import { pageForStorybook } from './pages';
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 /** A site path ("/components/button") as an address, under the folder the site is served from. */
 export const href = (to: string) => BASE + to;
-const current = () => (window.location.pathname.startsWith(BASE) ? window.location.pathname.slice(BASE.length) : window.location.pathname).replace(/\/+$/, '') || '/';
+/** The site path in the address bar. */
+export const current = () => (window.location.pathname.startsWith(BASE) ? window.location.pathname.slice(BASE.length) : window.location.pathname).replace(/\/+$/, '') || '/';
 
 const listeners = new Set<() => void>();
 const subscribe = (fn: () => void) => { listeners.add(fn); return () => { listeners.delete(fn); }; };
@@ -22,9 +23,16 @@ export function navigate(to: string, { replace = false } = {}) {
   else if (!same) window.scrollTo(0, 0);
 }
 
+// The path a page is drawn for ahead of time, into its HTML (tools/site/prerender.mjs), where there is no address bar.
+let drawing = '/';
+/** Draws the next render for this path, outside a browser. */
+export const drawFor = (path: string) => { drawing = path; };
+
 /** The current site path, without a trailing slash: "/" or "/components/button". */
 export function usePath(): string {
-  return React.useSyncExternalStore(subscribe, current, () => '/');
+  // In the browser the page drawn ahead of time is taken over at the address it was drawn for, so the first render
+  // reads the address too.
+  return React.useSyncExternalStore(subscribe, current, () => (typeof window === 'undefined' ? drawing : current()));
 }
 
 /** Where a link in the docs leads on the site: a Storybook link's page, or the href as it is. */

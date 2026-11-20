@@ -195,9 +195,19 @@ export function ComponentSince({ name }: { name: string }) {
 }
 
 const ROOT = readme;
-/** The README's introduction, before its first section. */
+// True on the docs site, whose build defines it (tools/site/vite.config.mjs); Storybook leaves it undefined.
+declare const __SITE__: boolean | undefined;
+const onSite = typeof __SITE__ !== 'undefined' && __SITE__;
+
+/** The README's introduction, before its first section. On the site it leaves out the paragraph on running the docs
+ * from the repo (Storybook and the site at localhost), which is for someone with the repo open, not a visitor. */
 export function ReadmeIntro() {
-  return <Markdown>{relink(ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, ''))}</Markdown>;
+  const intro = ROOT.slice(0, ROOT.indexOf('\n## ')).replace(/^# .*\n+/, '');
+  return <Markdown>{relink(onSite ? intro.replace(/^The documentation is Storybook\b.*\n?/m, '') : intro)}</Markdown>;
+}
+/** What is said in Storybook only, such as its toolbar's tabs. */
+export function InStorybook({ children }: { children: React.ReactNode }) {
+  return onSite ? null : <>{children}</>;
 }
 const slug = (heading: string) => heading.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
 /** The page each `##` section of docs/foundations.md is on, by its id. In the file one section links to another with
@@ -453,18 +463,20 @@ const word = (v: SerupaLabels[keyof SerupaLabels]) => {
   if (typeof v !== 'function') return v;
   try { return v('n' as unknown as number); } catch { return '(built from its arguments)'; }
 };
+/* eslint-disable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role -- on a phone CSS draws this table as blocks (site.css), and a browser that then drops its table semantics gets them back from the roles */
 /** Every word the components say on their own, in English and Indonesian, with where it's used. */
 export function LabelTable() {
   const facts = useLoaded(loadFacts);
   if (!facts) return null;
   // Each component's own words (src/components/<Name>/labels.ts), whose doc comments say where each is used too.
   const labelUse = { ...sharedLabelUse, ...facts.componentLabelUse };
-  return <table className="sb-doc-table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
-    <thead><tr><th style={cell}>Key</th><th style={cell}>English</th><th style={cell}>Indonesian (<code>idLabels</code>)</th><th style={cell}>Where</th></tr></thead>
-    <tbody>{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k}>
-      <td style={cell}><code>{k}</code></td><td style={cell}>{word(DEFAULT_LABELS[k])}</td><td style={cell}>{word(idLabels[k])}</td><td style={cell}>{labelUse[k]}</td></tr>)}</tbody>
+  return <table className="sb-doc-table sb-doc-table--stack" role="table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+    <thead role="rowgroup"><tr role="row"><th style={cell} role="columnheader">Key</th><th style={cell} role="columnheader">English</th><th style={cell} role="columnheader">Indonesian (<code>idLabels</code>)</th><th style={cell} role="columnheader">Where</th></tr></thead>
+    <tbody role="rowgroup">{(Object.keys(DEFAULT_LABELS) as (keyof SerupaLabels)[]).map((k) => <tr key={k} role="row">
+      <td style={cell} role="cell"><code>{k}</code></td><td style={cell} role="cell" data-label="English">{word(DEFAULT_LABELS[k])}</td><td style={cell} role="cell" data-label="Indonesian (idLabels)">{word(idLabels[k])}</td><td style={cell} role="cell" data-label="Where">{labelUse[k]}</td></tr>)}</tbody>
   </table>;
 }
+/* eslint-enable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role */
 
 const LEVELS: [string, string, string, string][] = [
   ['Page', 'surface-page', 'transparent', 'none'], ['Resting', 'surface', 'border', 'shadow-xs'], ['Raised', 'surface-raised', 'border', 'shadow-md'],
@@ -592,15 +604,17 @@ export function ConformanceSummary() {
     {partial.length > 0 && <ul>{partial.map((x) => <li key={x.id}><strong>{x.id} {x.name}</strong>: {code(x.remarks)}</li>)}</ul>}
   </>;
 }
+/* eslint-disable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role -- on a phone CSS draws this table as blocks (site.css), and a browser that then drops its table semantics gets them back from the roles */
 /** The Accessibility Conformance Report (18): every WCAG criterion at A and AA, as VPAT 2.5's table has it. */
 export function ConformanceReport() {
-  return <table className="sb-doc-table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
+  return <table className="sb-doc-table sb-doc-table--stack" role="table" style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>
     <caption style={{ textAlign: 'start', fontWeight: 600, paddingBlock: 8 }}>{ACR.standard} Level A and AA: {ACR.product}, version {ACR.reviewed.version}</caption>
-    <thead><tr><th style={cell} scope="col">Criteria</th><th style={cell} scope="col">Conformance level</th><th style={cell} scope="col">Remarks and explanations</th></tr></thead>
-    <tbody>{ACR.criteria.map((x) => <tr key={x.id}>
-      <th style={{ ...cell, fontWeight: 'normal' }} scope="row">{x.id} {x.name} (Level {x.level})</th>
-      <td style={cell}>{x.conformance}</td>
-      <td style={cell}>{code(x.remarks)}</td>
+    <thead role="rowgroup"><tr role="row"><th style={cell} scope="col" role="columnheader">Criteria</th><th style={cell} scope="col" role="columnheader">Conformance level</th><th style={cell} scope="col" role="columnheader">Remarks and explanations</th></tr></thead>
+    <tbody role="rowgroup">{ACR.criteria.map((x) => <tr key={x.id} role="row">
+      <th style={{ ...cell, fontWeight: 'normal' }} scope="row" role="rowheader">{x.id} {x.name} (Level {x.level})</th>
+      <td style={cell} role="cell" data-label="Conformance level">{x.conformance}</td>
+      <td style={cell} role="cell" data-label="Remarks and explanations">{code(x.remarks)}</td>
     </tr>)}</tbody>
   </table>;
 }
+/* eslint-enable jsx-a11y-x/no-redundant-roles, jsx-a11y-x/no-interactive-element-to-noninteractive-role */

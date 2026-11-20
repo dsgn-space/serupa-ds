@@ -122,6 +122,16 @@
           }
         }
       },
+      "more-hover": {
+        "$type": "color",
+        "$value": "{color.primary-hover}",
+        "$description": "The Show more and Show less button's words on hover, as a link's (4.5:1 on the page).",
+        "$extensions": {
+          "com.serupa": {
+            "cssVar": "--tag-group-more-hover"
+          }
+        }
+      },
       "icon": {
         "$type": "color",
         "$value": "{color.text-muted}",

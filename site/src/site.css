@@ -103,6 +103,24 @@ ol.site-list { list-style: decimal; }
 /* …and a name in the first column stays on one line: motion-stagger-limit, not motion-stagger- over limit. A hyphen is
    a break the browser takes on its own, so break-word alone doesn't keep it. */
 @media (min-width: 64rem) { .site-table:not(.site-table--props) td:first-child > .site-code:only-child { white-space: nowrap; } }
+/* On a phone a written table of three columns or more stands each row as a block: its first cell names the row, and
+   each other cell starts with its column's name (data-label, set in markdown.tsx). Squeezed into the width instead,
+   it broke words a letter a line and ran rows hundreds of pixels tall. The header row stays for screen readers, and
+   the roles in markdown.tsx keep it a table to them; the names drawn here are for the eye only. */
+@media (max-width: 39.99rem) {
+  :is(.site-table--stack, .sb-doc-table--stack) :is(table, thead, tbody, tr, td, th[scope="row"]) { display: block; }
+  table.sb-doc-table--stack { display: block; border: var(--border-width-1) solid var(--border); border-radius: var(--radius-surface); }
+  .sb-doc-table--stack caption { display: block; padding-inline: var(--spacing-3); }
+  :is(.site-table--stack, .sb-doc-table--stack) thead { position: absolute; inline-size: var(--spacing-px); block-size: var(--spacing-px); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :is(.site-table--stack, .sb-doc-table--stack) tr { padding: var(--spacing-3); border-block-end: var(--border-width-1) solid var(--border); }
+  :is(.site-table--stack, .sb-doc-table--stack) tbody tr:last-child { border-block-end: 0; }
+  :is(.site-table.site-table--stack, table.sb-doc-table--stack) :is(td, th[scope="row"]) { padding: 0 !important; border: 0 !important; text-align: start; overflow-wrap: break-word; }
+  :is(.site-table--stack, .sb-doc-table--stack) td :is(.site-code, code) { overflow-wrap: anywhere; }
+  :is(.site-table--stack, .sb-doc-table--stack) tr > :first-child { font-weight: var(--font-semibold) !important; }
+  :is(.site-table--stack, .sb-doc-table--stack) tr > * + td { margin-block-start: var(--spacing-1); }
+  :is(.site-table--stack, .sb-doc-table--stack) tr > * + td::before { content: attr(data-label) ": " / ""; color: var(--text-muted); font-weight: var(--font-medium); }
+  :is(.site-table--stack, .sb-doc-table--stack) td:empty { display: none; }
+}
 
 /* ── A story in its frame ──────────────────────────────────────────────────────────────────────────────────── */
 .site-demo { margin-block-start: var(--spacing-4); border: var(--border-width-1) solid var(--border); border-radius: var(--radius-container); background: var(--surface); overflow: clip; }

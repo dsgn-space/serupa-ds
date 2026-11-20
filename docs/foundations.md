@@ -348,7 +348,7 @@ Text rules of thumb:
 
 Icons are **Material Symbols**, **Rounded** style, **Fill** on, weight 400, plus custom icons drawn to the same rules. Use no other icon set or style. Each icon is an inline SVG, so there's nothing to load and nothing flashes.
 
-Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations/Icons page in Storybook, which searches all of them and copies the name. You can also pass an icon imported from `@diki-stwn/serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
+Use the `Icon` component (`<Icon name="delete" />`) or pass a name to Button (`leftIcon="add"`, `icon="settings"`). Every Material Symbol works by name; find one on the Foundations › Icons page of the docs, which searches all of them and copies the name. You can also pass an icon imported from `@diki-stwn/serupa-ds/icons` (`icon={RocketLaunch}`). Details are in the Icon guidelines.
 
 - **Sizes:** the `icon-size-*` tokens, `<Icon size="xs">` to `"xl"`: 14px (`sm` buttons, `text-xs`), 16px (`md` buttons, inline with `text-sm`), 20px (`lg` buttons, list rows, `text-base`), 24px (default, toolbars and navigation), 40px (empty states).
 - **Weight:** match the text beside the icon: weight 400 as drawn for regular and medium text, `weight="semibold"` or `weight="bold"` (the `icon-weight-*` tokens) next to semibold or bold text and headings.
@@ -1256,10 +1256,10 @@ How values read on a screen: numbers, money, dates, values that are missing and 
 
 | Value | Write it | With |
 | --- | --- | --- |
-| A day | The month as a word, so it can't be read two ways: "24 Oct 2026" | `Intl.DateTimeFormat` with `dateStyle: "medium"` and `useLocale()` |
-| A day and a time | The locale's own order and clock, 12 or 24 hours: "24 Oct 2026, 14:30" | `dateStyle: "medium", timeStyle: "short"` |
-| A time people must match across places | The time zone with it: "14:30 WIB", "9:00 AM GMT+7" | `timeZoneName: "short"` |
-| A range | An en dash, with spaces only when either side has one: "1–5 Oct", "24 Oct 2026 – 3 Jan 2027" | `formatRange()` of `Intl.DateTimeFormat` |
+| A day | The month as a word, so it can't be read two ways: "24 Oct 2026" | `FormattedDate`, `formatDate()` |
+| A day and a time | The locale's own order and clock, 12 or 24 hours: "24 Oct 2026, 14:30" | `timeStyle="short"` |
+| A time people must match across places | The time zone with it: "14:30 WIB", "9:00 AM GMT+7" | `options={{ timeZoneName: "short" }}` with the parts, or `timeStyle="long"` |
+| A range | An en dash, with spaces only when either side has one: "1–5 Oct", "24 Oct 2026 – 3 Jan 2027" | `to` |
 | Something recent, where how long ago matters more than when | Words, then the date after a week: "3 minutes ago", "Yesterday", "24 Oct 2026" | `RelativeTime` |
 | Time left until a deadline | A count that runs down | `Countdown` |
 

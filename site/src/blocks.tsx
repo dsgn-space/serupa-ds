@@ -14,6 +14,7 @@ import { Markdown } from './markdown';
 import since from '../../docs/since.json';
 import { sinceText, type Since } from '../../docs/since';
 import type { ComponentDoc, Page } from './pages';
+import { drawAlone, takingOver } from './drawn';
 import { StoryView, entryOf, parameter, sourceOf, type StoryEntry } from './stories';
 
 export { Markdown };
@@ -134,8 +135,19 @@ function Stage({ entry, className }: { entry: StoryEntry; className?: string }) 
         <p>This example opens over the page.</p>
         <Button variant="outline" leftIcon="play_arrow" onClick={() => setMode('run')}>Open the example<span className="sr-only">: {entry.name}</span></Button>
       </div>
-      : <StoryView key={mode} entry={entry} />}
+      : <Drawn key={mode}><StoryView entry={entry} /></Drawn>}
   </div>;
+}
+
+/** A story as the page first shows it. Drawn ahead of time (tools/site/prerender.mjs), it is its HTML on its own, so a
+ *  story that throws (an error boundary's example) leaves its frame empty rather than stopping the page. Taking the
+ *  page over, the browser keeps that HTML for the first render, then draws the story itself in its place: the page
+ *  doesn't move, and the story's own state starts in the browser. */
+function Drawn({ children }: { children: React.ReactNode }) {
+  const [live, setLive] = React.useState(() => typeof window !== 'undefined' && !takingOver());
+  React.useEffect(() => setLive(true), []);
+  if (live) return children;
+  return <div style={{ display: 'contents' }} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: typeof window === 'undefined' ? drawAlone(children) : '' }} />;
 }
 
 /** One story in its frame: the live example, and its code on request. */
@@ -179,6 +191,17 @@ export function Primary({ placed }: { placed?: boolean }) {
   return first ? <Demo entry={first} /> : null;
 }
 
+// A Do or Don't story's description opens with its verdict ("Do: a label above the field, …"), which its heading
+// ("Do: a label above") has just said: under the heading it starts at the advice.
+const VERDICT = /^(Do|Don['’]t):\s*/;
+const lead = (entry: { name: string; description: string }) => {
+  const said = VERDICT.exec(entry.description), named = VERDICT.exec(entry.name);
+  const word = (m: RegExpExecArray) => (m[1] ?? '').replace('’', "'");
+  if (!said || !named || word(named) !== word(said)) return entry.description;
+  const rest = entry.description.slice(said[0].length);
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
+};
+
 /** Every story of the page, each under its name. */
 export function Stories({ title, includePrimary = true }: { title?: string; includePrimary?: boolean }) {
   const all = useDocs().componentStories();
@@ -187,7 +210,7 @@ export function Stories({ title, includePrimary = true }: { title?: string; incl
     {title ? <Heading level={2} className="site-h site-h2">{title}</Heading> : null}
     {list.map((entry) => <section key={entry.id} className="site-story" aria-labelledby={entry.slug}>
       <Heading level={3} id={entry.slug} className="site-h site-h3">{entry.name}</Heading>
-      {entry.description && <Markdown plain>{entry.description}</Markdown>}
+      {entry.description && <Markdown plain>{lead(entry)}</Markdown>}
       <Demo entry={entry} />
     </section>)}
   </>;
