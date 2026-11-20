@@ -110,7 +110,8 @@ export default defineConfig({
       { find: /^.*\/\.storybook\/icon-arg$/, replacement: path.join(SITE, 'src', 'icon-arg.ts') },
     ],
   },
-  define: { __VERSION__: js(version) },
+  // __SITE__ tells a docs block it draws on the site, not in Storybook (docs/blocks.tsx).
+  define: { __VERSION__: js(version), __SITE__: 'true' },
   // Keep :dir(rtl) as the package ships it (see .storybook/main.ts).
   css: { lightningcss: { exclude: Features.DirSelector } },
   build: {

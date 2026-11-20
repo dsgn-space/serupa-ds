@@ -179,8 +179,16 @@ await inParallel(opened, workers, async (p, w) => {
   // busy runner (/components/chat, 228px wider once on 14 Nov, fine on the next run).
   await w.page.waitForFunction(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth, null, { timeout: 2000, polling: 100 }).catch(() => {});
   const wide = await w.page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => done(document.documentElement.scrollWidth - document.documentElement.clientWidth)))));
+  // A written table of three columns or more stands each row as a block on a phone, each cell after the first under
+  // its column's name: squeezed into 320px instead, it broke words a letter a line (site.css, markdown.tsx).
+  const squeezed = await w.page.evaluate(() => [...document.querySelectorAll('#article .site-table:not(.site-table--props) table')]
+    .filter((t) => !t.closest('[data-site-demo]') && t.querySelectorAll('thead th').length >= 3)
+    .filter((t) => [...t.querySelectorAll('tbody tr')].some((tr) => getComputedStyle(tr).display !== 'block'
+      || [...tr.children].slice(1).some((td) => td.textContent.trim() && !td.getAttribute('data-label'))))
+    .map((t) => [...t.querySelectorAll('thead th')].map((th) => th.textContent.trim()).join(' | ')));
   await w.page.setViewportSize({ width: 1280, height: 800 });
   t(`${p.path} doesn't scroll sideways at 320px`, wide <= 0, `the page is ${wide}px wider than the screen`);
+  t(`${p.path}: its written tables stack their rows at 320px`, !squeezed.length, `squeezed into the width: ${squeezed.slice(0, 3).join('; ')}`);
   // Storybook's own links have been pointed at the site's pages by now; one that is left has no page here.
   const lost = seen.links.filter((h) => h.startsWith('?path=') || (h.startsWith('/') && !known.has(h.split('#')[0].replace(/\/$/, '') || '/')));
   t(`${p.path}: every link to another page of the site leads to one`, !lost.length, `no page for ${lost.slice(0, 8).join(', ')}`);
